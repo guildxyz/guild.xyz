@@ -6,6 +6,7 @@ import {
   AccordionPanel,
   Box,
   Divider,
+  Flex,
   FormControl,
   FormLabel,
   Icon,
@@ -24,7 +25,7 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import useTokenData from "hooks/useTokenData"
 import { Plus } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, NftRequirementType, Requirement, SelectOption } from "types"
 import capitalize from "utils/capitalize"
 import ChainPicker from "../ChainPicker"
@@ -76,6 +77,14 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const address = useWatch({ name: `requirements.${index}.address` })
   const nftRequirementType = useWatch({
     name: `requirements.${index}.nftRequirementType`,
+  })
+
+  const {
+    fields: traitFields,
+    append: appendTrait,
+    remove: removeTrait,
+  } = useFieldArray({
+    name: `requirements.${index}.data.traitTypes`,
   })
 
   const { nftType, isLoading: isNftTypeLoading } = useNftType(address, chain)
@@ -315,17 +324,37 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         <Stack spacing={0} w="full">
           <FormLabel>Metadata:</FormLabel>
 
-          <Stack spacing={4}>
-            <AttributePicker
-              parentFieldIndex={index}
-              index={0}
-              isMetadataLoading={isMetadataLoading}
-              metadata={metadata}
-              nftCustomAttributeNames={nftCustomAttributeNames}
-            />
+          {isMetadataLoading ? (
+            <Flex w="full" pt={4} justifyContent="center">
+              <Spinner />
+            </Flex>
+          ) : (
+            <Stack spacing={4}>
+              {traitFields?.map((traitField, traitFieldIndex) => (
+                <AttributePicker
+                  key={traitField.id}
+                  parentFieldIndex={index}
+                  index={traitFieldIndex}
+                  isMetadataLoading={isMetadataLoading}
+                  metadata={metadata}
+                  nftCustomAttributeNames={nftCustomAttributeNames}
+                  onRemove={removeTrait}
+                />
+              ))}
 
-            <Button leftIcon={<Icon as={Plus} />}>Define attribute</Button>
-          </Stack>
+              <Button
+                leftIcon={<Icon as={Plus} />}
+                onClick={() =>
+                  appendTrait({
+                    trait_type: null,
+                    value: null,
+                  })
+                }
+              >
+                Define attribute
+              </Button>
+            </Stack>
+          )}
         </Stack>
       )}
 

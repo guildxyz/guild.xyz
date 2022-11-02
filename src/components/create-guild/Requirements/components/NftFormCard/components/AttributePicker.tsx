@@ -3,19 +3,21 @@ import {
   Flex,
   FormControl,
   HStack,
+  Icon,
   Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Spinner,
   Stack,
   Text,
   VStack,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import { TrashSimple } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, SelectOption } from "types"
@@ -29,6 +31,7 @@ type Props = {
   nftCustomAttributeNames: { label: string; value: string }[]
   parentFieldIndex: number
   index: number
+  onRemove: (index: number) => void
 }
 
 const AttributePicker = ({
@@ -37,6 +40,7 @@ const AttributePicker = ({
   nftCustomAttributeNames,
   parentFieldIndex,
   index,
+  onRemove,
 }: Props): JSX.Element => {
   const {
     control,
@@ -111,11 +115,7 @@ const AttributePicker = ({
 
   return (
     <Box p={2} borderWidth={1} borderRadius="lg">
-      {isMetadataLoading ? (
-        <Flex w="full" pt={4} justifyContent="center">
-          <Spinner />
-        </Flex>
-      ) : nftCustomAttributeNames?.length ? (
+      {nftCustomAttributeNames?.length ? (
         <Stack>
           <FormControl isDisabled={!nftCustomAttributeNames?.length}>
             {/* <FormLabel>Custom attribute:</FormLabel> */}
@@ -414,6 +414,18 @@ const AttributePicker = ({
           </HStack>
         </FormControl>
       )}
+
+      <Flex mt={2} justifyContent="end">
+        <Button
+          leftIcon={<Icon as={TrashSimple} />}
+          size="xs"
+          colorScheme="red"
+          variant="ghost"
+          onClick={() => onRemove(index)}
+        >
+          Remove
+        </Button>
+      </Flex>
     </Box>
   )
 }
