@@ -32,8 +32,8 @@ const OAuth = () => {
   useEffect(() => {
     if (!router.isReady || typeof window === "undefined") return
 
-    // We navigate to the index page if the dcauth page is used incorrectly
-    // For example if someone just manually goes to /dcauth
+    // We navigate to the index page if the oauth page is used incorrectly
+    // For example if someone just manually goes to /oauth
 
     let params: OAuthResponse = {}
 

@@ -116,7 +116,7 @@ const RPC = {
     },
     rpcUrls: ["https://rpc.gnosischain.com"],
     blockExplorerUrls: ["https://gnosisscan.io"],
-    apiUrl: "https://blockscout.com/xdai/mainnet",
+    apiUrl: "https://api.gnosisscan.io",
     iconUrls: ["/networkLogos/gnosis.svg"],
   },
   FANTOM: {

@@ -42,7 +42,7 @@ type Props = {
 }
 
 // We don't open the modal on these routes
-const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/dcauth", "/googleauth"]
+const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({
   isModalOpen,
