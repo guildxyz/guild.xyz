@@ -60,11 +60,18 @@ const StyledSelect = forwardRef(
             pointerEvents: "none",
             ...props.chakraStyles?.placeholder,
           }),
+          dropdownIndicator: (provided) => ({
+            ...provided,
+            pl: 0,
+            pr: 2,
+            bgColor: "transparent",
+          }),
         }}
         components={{
           Option: CustomSelectOption,
           MenuList: CustomMenuList,
           ClearIndicator: CustomClearIndicator,
+          IndicatorSeparator: null,
           ...props.components,
         }}
         menuPortalTarget={document?.getElementById("chakra-react-select-portal")}
