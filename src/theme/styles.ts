@@ -5,6 +5,11 @@ const styles = {
     html: {
       scrollBehavior: "smooth",
     },
+    "@media screen and (prefers-reduced-motion: reduce)": {
+      html: {
+        scrollBehavior: "auto",
+      },
+    },
     "tbody > tr:last-child > td": {
       border: 0,
     },
