@@ -26,7 +26,6 @@ import {
   ImageSquare,
   ListChecks,
   Plus,
-  SpotifyLogo,
   TwitterLogo,
   Wrench,
 } from "phosphor-react"
@@ -67,16 +66,7 @@ const requirementButtons: {
   ],
   integrations: [
     {
-      icon: (
-        <Center
-          padding={1}
-          backgroundColor="#1DB954"
-          borderRadius="full"
-          overflow={"hidden"}
-        >
-          <SpotifyLogo />
-        </Center>
-      ),
+      icon: <Img src="/requirementLogos/spotify.svg" boxSize={6} />,
       label: "Spotify",
       type: "SPOTIFY",
     },

@@ -84,7 +84,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   SPOTIFY: {
     icon: SpotifyLogo,
     name: "Spotify",
-    colorScheme: "green",
+    colorScheme: "SPOTIFY",
     gatedEntity: "account",
     paramName: "spotifyId",
   },
