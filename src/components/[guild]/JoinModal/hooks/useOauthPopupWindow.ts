@@ -45,10 +45,10 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   oauthOptions: OAuthOptions
 ) => {
   const toast = useToast()
+  const [hasClickedOpen, setHasClickedOpen] = useState<boolean>(false)
   const [csrfToken, setCsrfToken] = useLocalStorage(
     `oauth_csrf_token_${oauthOptions.client_id}`,
-    randomBytes(16).toString("hex"),
-    true
+    null
   )
 
   const redirectUri =
@@ -63,6 +63,13 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   const { onOpen, windowInstance } = usePopupWindow(
     `${url}?${Object.entries(oauthOptions).map(([key, value]) => `${key}=${value}`).join("&")}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}`
   )
+
+  useEffect(() => {
+    if (csrfToken && hasClickedOpen) {
+      onOpen()
+    }
+  }, [csrfToken, hasClickedOpen])
+
   const [error, setError] = useState(null)
   const [authData, setAuthData] = useState<OAuthData<OAuthResponse>>(null)
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false)
@@ -112,7 +119,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           }, 500)
         }
 
-        setCsrfToken(randomBytes(16).toString("hex"))
         window.localStorage.removeItem("oauth_popup_data")
         setIsAuthenticating(false)
         window.localStorage.setItem("oauth_window_should_close", "true")
@@ -124,7 +130,12 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     error,
     onOpen: () => {
       setError(null)
-      onOpen()
+      if (typeof csrfToken === "string" && csrfToken.length > 0) {
+        onOpen()
+      } else {
+        setHasClickedOpen(true)
+        setCsrfToken(randomBytes(16).toString("hex"))
+      }
     },
     isAuthenticating,
   }
