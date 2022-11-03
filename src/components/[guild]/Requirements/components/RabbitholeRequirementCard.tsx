@@ -11,7 +11,7 @@ type Props = {
 const RabbitholeRequirementCard = ({ requirement }: Props) => (
   <RequirementCard
     requirement={requirement}
-    image={<Img src="/requirementLogos/rabbithole.jpg" />}
+    image={<Img src="/requirementLogos/rabbithole.png" />}
   >
     {`Have an NFT from the `}
     <DataBlock>

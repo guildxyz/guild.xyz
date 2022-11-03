@@ -11,7 +11,7 @@ type Props = {
 const CaskRequirementCard = ({ requirement }: Props) => (
   <RequirementCard
     requirement={requirement}
-    image={<Img src="/requirementLogos/cask.jpg" />}
+    image={<Img src="/requirementLogos/cask.png" />}
   >
     {`Subscribe to plan `}
     <DataBlock>{`#${requirement.data.planId}`}</DataBlock>
