@@ -1,3 +1,4 @@
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { randomBytes } from "crypto"
 import useLocalStorage from "hooks/useLocalStorage"
 import usePopupWindow from "hooks/usePopupWindow"
@@ -44,6 +45,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   url: string,
   oauthOptions: OAuthOptions
 ) => {
+  const { addDatadogError } = useDatadog()
   const toast = useToast()
   const [hasClickedOpen, setHasClickedOpen] = useState<boolean>(false)
   const [csrfToken, setCsrfToken] = useLocalStorage(
@@ -93,6 +95,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
             clearInterval(interval)
             const title = data?.error ?? "Unknown error"
             const errorDescription = data?.errorDescription ?? ""
+            addDatadogError(`OAuth error - ${title}`, { error: errorDescription })
             reject({ error: title, errorDescription })
             toast({ status: "error", title, description: errorDescription })
           }
