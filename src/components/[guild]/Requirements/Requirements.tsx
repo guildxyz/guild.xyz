@@ -5,6 +5,8 @@ import LogicDivider from "../LogicDivider"
 import HundredNOneRequirementCard from "./components/101RequirementCard"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
+import DiscordJoinRequirementCard from "./components/DiscordJoinRequirementCard"
+import DiscordMemberSinceRequirementCard from "./components/DiscordMemberSinceRequirementCard"
 import DiscordRoleRequirementCard from "./components/DiscordRoleRequirementCard"
 import DiscoRequirementCard from "./components/DiscoRequirementCard"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
@@ -52,6 +54,8 @@ const REQUIREMENT_CARDS = {
   TWITTER_FOLLOWER_COUNT: TwitterFollowerCountRequirementCard,
   GITHUB_STARRING: GithubRequirementCard,
   DISCORD_ROLE: DiscordRoleRequirementCard,
+  DISCORD_MEMBER_SINCE: DiscordMemberSinceRequirementCard,
+  DISCORD_JOIN: DiscordJoinRequirementCard,
   CONTRACT: ContractStateRequirementCard,
   NOOX: NooxRequirementCard,
   DISCO: DiscoRequirementCard,

@@ -7,7 +7,6 @@ import {
   Input,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
-import useGateables from "hooks/useGateables"
 import useServerData from "hooks/useServerData"
 import {
   useController,
@@ -16,6 +15,7 @@ import {
   useWatch,
 } from "react-hook-form"
 import shortenHex from "utils/shortenHex"
+import ServerPicker from "./ServerPicker"
 
 type Props = {
   index: number
@@ -24,17 +24,6 @@ type Props = {
 const DiscordRole = ({ index }: Props) => {
   const { errors } = useFormState()
   const { register, setValue } = useFormContext()
-
-  const { field: serverField } = useController({
-    name: `requirements.${index}.data.serverId`,
-    rules: {
-      required: "Please select a server",
-      pattern: {
-        value: /^[0-9]*$/i,
-        message: "Please input a valid Discord server id",
-      },
-    },
-  })
 
   const { field: roleField } = useController({
     name: `requirements.${index}.data.roleId`,
@@ -47,20 +36,9 @@ const DiscordRole = ({ index }: Props) => {
     },
   })
 
-  const { gateables, isLoading } = useGateables("DISCORD")
-
-  const serverOptions = (gateables ?? []).map(({ img, name, id }) => ({
-    value: id,
-    img,
-    label: name,
-  }))
-
-  const selectedServer = serverOptions.find(
-    (reqType) => reqType.value === serverField.value
-  )
-
-  const isUnknownServer = !!serverField.value && !selectedServer
-
+  const serverId = useWatch({
+    name: `requirements.${index}.data.serverId`,
+  })
   const serverName = useWatch({
     name: `requirements.${index}.data.serverName`,
   })
@@ -68,7 +46,7 @@ const DiscordRole = ({ index }: Props) => {
   const {
     data: { roles },
     isLoading: isServerDataLoading,
-  } = useServerData(selectedServer?.value)
+  } = useServerData(serverId)
 
   const roleOptions = (roles ?? []).map(({ id, name }) => ({
     label: name,
@@ -84,78 +62,16 @@ const DiscordRole = ({ index }: Props) => {
 
   return (
     <>
-      <FormControl
-        isRequired
-        isInvalid={!!errors?.requirements?.[index]?.data?.serverId?.message}
-      >
-        <FormLabel>Server</FormLabel>
-        <StyledSelect
-          isCreatable
-          formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
-          isLoading={isLoading}
-          options={serverOptions}
-          name={serverField.name}
-          onBlur={serverField.onBlur}
-          onChange={(newValue: {
-            label: string
-            value: string
-            __isNew__?: boolean
-          }) => {
-            if (!newValue?.__isNew__) {
-              setValue(`requirements.${index}.data.serverName`, newValue?.label)
-            } else {
-              setValue(`requirements.${index}.data.serverName`, undefined)
-            }
-            serverField.onChange(newValue?.value)
-          }}
-          ref={serverField.ref}
-          value={
-            selectedServer ?? {
-              __isNew__: true,
-              value: serverField.value,
-              label: serverField.value,
-            }
-          }
-        />
-
-        <FormHelperText>Select a server or paste a server id</FormHelperText>
-
-        <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.serverId?.message}
-        </FormErrorMessage>
-      </FormControl>
-
-      <Collapse in={isUnknownServer}>
-        <FormControl
-          isRequired
-          isInvalid={!!errors?.requirements?.[index]?.data?.serverName?.message}
-        >
-          <FormLabel>Server name</FormLabel>
-          <Input
-            {...register(`requirements.${index}.data.serverName`, {
-              required: isUnknownServer && "Please provide a server name",
-            })}
-          />
-
-          <FormErrorMessage>
-            {errors?.requirements?.[index]?.data?.serverName?.message}
-          </FormErrorMessage>
-
-          <FormHelperText>
-            Future members will see this name in the requirement
-          </FormHelperText>
-        </FormControl>
-      </Collapse>
+      <ServerPicker index={index} />
 
       <FormControl
         isRequired
         isDisabled={
-          !selectedServer &&
-          (!serverField.value ||
-            typeof serverName !== "string" ||
-            serverName?.length <= 0 ||
-            !!errors?.requirements?.[index]?.data?.serverName?.message ||
-            !!errors?.requirements?.[index]?.data?.serverId?.message)
+          !serverId ||
+          typeof serverName !== "string" ||
+          serverName?.length <= 0 ||
+          !!errors?.requirements?.[index]?.data?.serverName?.message ||
+          !!errors?.requirements?.[index]?.data?.serverId?.message
         }
         isInvalid={!!errors?.requirements?.[index]?.data?.roleId?.message}
       >

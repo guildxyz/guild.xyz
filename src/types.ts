@@ -100,6 +100,8 @@ type RequirementType =
   | "NOUNS"
   | "DISCORD"
   | "DISCORD_ROLE"
+  | "DISCORD_MEMBER_SINCE"
+  | "DISCORD_JOIN"
   | "NOOX"
   | "DISCO"
   | "LENS"
@@ -214,10 +216,12 @@ type Requirement = {
       }
     }
     galaxyId?: string
+    // Discord
     serverId?: string
     roleId?: string
     serverName?: string
     roleName?: string
+    memberSince?: number
     // CONTRACT
     expected?: string
     resultIndex?: number
@@ -346,7 +350,10 @@ const RequirementTypeColors = {
   TWITTER_FOLLOWER_COUNT: "var(--chakra-colors-twitter-400)",
   GITHUB: "var(--chakra-colors-GITHUB-400)",
   GITHUB_STARRING: "var(--chakra-colors-GITHUB-400)",
+  DISCORD: "var(--chakra-colors-DISCORD-400)",
   DISCORD_ROLE: "var(--chakra-colors-DISCORD-400)",
+  DISCORD_MEMBER_SINCE: "var(--chakra-colors-DISCORD-400)",
+  DISCORD_JOIN: "var(--chakra-colors-DISCORD-400)",
   NOOX: "#7854f7",
   DISCO: "#bee4e0",
   LENS_PROFILE: "#BEFB5A",

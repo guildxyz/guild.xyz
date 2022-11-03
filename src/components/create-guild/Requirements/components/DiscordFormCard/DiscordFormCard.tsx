@@ -1,8 +1,9 @@
 import { Divider, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
-import { useEffect } from "react"
 import { useController, useFormState } from "react-hook-form"
 import { Requirement } from "types"
+import DiscordJoin from "./components/DiscordJoin"
+import DiscordMemberSince from "./components/DiscordMemberSince"
 import DiscordRole from "./components/DiscordRole"
 
 type Props = {
@@ -16,6 +17,16 @@ const discordRequirementTypes = [
     value: "DISCORD_ROLE",
     DiscordRequirement: DiscordRole,
   },
+  {
+    label: "Member since",
+    value: "DISCORD_MEMBER_SINCE",
+    DiscordRequirement: DiscordMemberSince,
+  },
+  {
+    label: "Joined before",
+    value: "DISCORD_JOIN",
+    DiscordRequirement: DiscordJoin,
+  },
 ]
 
 const DiscordFormCard = ({ index }: Props) => {
@@ -26,7 +37,7 @@ const DiscordFormCard = ({ index }: Props) => {
     rules: { required: "It's required to select a type" },
   })
 
-  useEffect(() => onChange("DISCORD_ROLE"), [])
+  // useEffect(() => onChange("DISCORD_ROLE"), [])
 
   const { errors } = useFormState()
 

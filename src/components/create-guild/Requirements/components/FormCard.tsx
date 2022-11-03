@@ -29,6 +29,8 @@ const typeLabel = (type) => {
       return "GALXE"
 
     case "DISCORD_ROLE":
+    case "DISCORD_MEMBER_SINCE":
+    case "DISCORD_JOIN":
       return "DISCORD"
 
     case "LENS_PROFILE":

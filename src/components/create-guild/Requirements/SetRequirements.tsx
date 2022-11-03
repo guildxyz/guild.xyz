@@ -72,6 +72,8 @@ const REQUIREMENT_FORMCARDS = {
   GITHUB_STARRING: GithubFormCard,
   DISCORD: DiscordFormCard,
   DISCORD_ROLE: DiscordFormCard,
+  DISCORD_MEMBER_SINCE: DiscordFormCard,
+  DISCORD_JOIN: DiscordFormCard,
   NOOX: NooxFormCard,
   DISCO: DiscoFormCard,
   LENS_PROFILE: LensFormCard,
