@@ -24,6 +24,7 @@ const DiscordFormCard = ({ baseFieldPath, field }: FormCardProps) => {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
     name: `${baseFieldPath}.type`,
+    defaultValue: "DISCORD_ROLE",
     rules: { required: "It's required to select a type" },
   })
 

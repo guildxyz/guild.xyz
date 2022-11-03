@@ -24,6 +24,7 @@ const GithubFormCard = ({ baseFieldPath }: FormCardProps) => {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
     name: `${baseFieldPath}.type`,
+    defaultValue: "GITHUB_STARRING",
     rules: { required: "It's required to select a type" },
   })
 
