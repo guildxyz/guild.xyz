@@ -4,6 +4,7 @@ import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
 import HundredNOneRequirementCard from "./components/101RequirementCard"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
+import CaskRequirementCard from "./components/CaskRequirementCard"
 import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
 import DiscordJoinRequirementCard from "./components/DiscordJoinRequirementCard"
 import DiscordMemberSinceRequirementCard from "./components/DiscordMemberSinceRequirementCard"
@@ -66,6 +67,7 @@ const REQUIREMENT_CARDS = {
   LENS_MIRROR: LensRequirementCard,
   OTTERSPACE: OtterspaceRequirementCard,
   ORANGE: OrangeRequirementCard,
+  CASK: CaskRequirementCard,
   "101": HundredNOneRequirementCard,
   RABBITHOLE: RabbitholeRequirementCard,
   KYC_DAO: KycDAORequirementCard,
