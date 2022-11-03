@@ -13,6 +13,7 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       site: "datadoghq.eu",
       service: "guild.xyz",
       env: "prod",
+      silentMultipleInit: true,
       sampleRate: 100,
       trackInteractions: true,
       version: "1.0.0",
