@@ -28,7 +28,7 @@ import {
 import CreatePoapForm from "./components/CreatePoapForm"
 import Distribution from "./components/Distribution"
 import PoapListItem from "./components/PoapListItem"
-import Requirements from "./components/Requirements"
+import PoapRequirements from "./components/Requirements"
 import UploadMintLinks from "./components/UploadMintLinks"
 import usePoapLinks from "./hooks/usePoapLinks"
 
@@ -44,7 +44,7 @@ const steps = [
   {
     label: "Requirements",
     description: "Optional",
-    content: Requirements,
+    content: PoapRequirements,
   },
   {
     label: "Distribute",

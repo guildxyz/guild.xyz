@@ -97,11 +97,20 @@ const checkKeyPair = (
   }).then((result) => [result, userId])
 
 const useKeyPair = () => {
+  // Using the defauld Datadog implementation here, so the useDatadog, useUser, and useKeypair hooks don't call each other
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const { account } = useWeb3React()
 
   const { data: user, error: userError } = useSWRImmutable<User>(
     account ? `/user/${account}` : null
   )
+
+  const defaultCustomAttributes = {
+    userId: user?.id,
+    userAddress: account?.toLowerCase(),
+  }
 
   const {
     data: { keyPair, pubKey },
@@ -118,9 +127,6 @@ const useKeyPair = () => {
 
   const toast = useToast()
 
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
-
   const { data: isKeyPairValidData } = useSWRImmutable(
     keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
     checkKeyPair,
@@ -130,6 +136,7 @@ const useKeyPair = () => {
       onSuccess: ([isKeyPairValid, userId]) => {
         if (!isKeyPairValid) {
           addDatadogAction("Invalid keypair", {
+            ...defaultCustomAttributes,
             data: { userId, pubKey: keyPair.publicKey },
           })
 
@@ -165,7 +172,10 @@ const useKeyPair = () => {
         if (error?.code !== 4001) {
           addDatadogError(
             `Failed to set keypair`,
-            { error: error?.message || error?.toString?.() || error },
+            {
+              ...defaultCustomAttributes,
+              error: error?.message || error?.toString?.() || error,
+            },
             "custom"
           )
         }
@@ -207,7 +217,10 @@ const useKeyPair = () => {
           if (error?.code !== 4001) {
             addDatadogError(
               `Keypair generation error`,
-              { error: error?.message || error?.toString?.() || error },
+              {
+                ...defaultCustomAttributes,
+                error: error?.message || error?.toString?.() || error,
+              },
               "custom"
             )
           }

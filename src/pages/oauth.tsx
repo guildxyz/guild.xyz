@@ -32,8 +32,8 @@ const OAuth = () => {
   useEffect(() => {
     if (!router.isReady || typeof window === "undefined") return
 
-    // We navigate to the index page if the dcauth page is used incorrectly
-    // For example if someone just manually goes to /dcauth
+    // We navigate to the index page if the oauth page is used incorrectly
+    // For example if someone just manually goes to /oauth
 
     let params: OAuthResponse = {}
 
@@ -63,7 +63,11 @@ const OAuth = () => {
 
     const csrfTokenStorageKey = `oauth_csrf_token_${clientId}`
 
-    if (csrfToken !== JSON.parse(window.localStorage.getItem(csrfTokenStorageKey))) {
+    const csrfFromLS = JSON.parse(window.localStorage.getItem(csrfTokenStorageKey))
+
+    window.localStorage.removeItem(csrfTokenStorageKey)
+
+    if (csrfToken !== csrfFromLS) {
       window.localStorage.setItem(
         "oauth_popup_data",
         JSON.stringify({
@@ -76,8 +80,6 @@ const OAuth = () => {
         })
       )
       return
-    } else {
-      window.localStorage.removeItem(csrfTokenStorageKey)
     }
 
     delete params.error

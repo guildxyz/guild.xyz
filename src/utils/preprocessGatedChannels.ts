@@ -6,7 +6,7 @@ const preprocessGatedChannels = (gatedChannels: GatedChannels) => {
   if (gatedChannelEntries.length <= 0) return undefined
 
   return gatedChannelEntries.reduce((acc, [categoryId, { channels }]) => {
-    const channelEntries = Object.entries(channels)
+    const channelEntries = Object.entries(channels ?? {})
     const filtered = channelEntries.filter(([, { isChecked }]) => isChecked)
 
     if (filtered.length === channelEntries.length) {

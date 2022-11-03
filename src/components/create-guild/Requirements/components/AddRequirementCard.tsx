@@ -77,7 +77,7 @@ const requirementButtons: {
         </Center>
       ),
       label: "Discord",
-      type: "DISCORD",
+      type: "DISCORD_ROLE",
     },
 
     {
@@ -107,7 +107,7 @@ const requirementButtons: {
         </Center>
       ),
       label: "GitHub",
-      type: "GITHUB",
+      type: "GITHUB_STARRING",
     },
 
     {
@@ -127,8 +127,8 @@ const requirementButtons: {
     },
     {
       icon: <Img src="/requirementLogos/mirror.svg" boxSize={6} />,
-      label: "Mirror Edition",
-      type: "MIRROR",
+      label: "Mirror",
+      type: "MIRROR_COLLECT",
     },
     {
       icon: <Img src="/requirementLogos/juicebox.png" height={6} />,
@@ -170,6 +170,23 @@ const requirementButtons: {
       icon: <Img src="/requirementLogos/orange.png" boxSize={6} />,
       label: "Orange",
       type: "ORANGE",
+    },
+    {
+      icon: <Img src="/requirementLogos/101.png" boxSize={6} rounded={"full"} />,
+      label: "101",
+      type: "101",
+    },
+    {
+      icon: (
+        <Img src="/requirementLogos/rabbithole.jpg" boxSize={6} rounded={"full"} />
+      ),
+      label: "Rabbithole",
+      type: "RABBITHOLE",
+    },
+    {
+      icon: <Img src="/requirementLogos/kycdao.svg" boxSize={6} />,
+      label: "kycDAO",
+      type: "KYC_DAO",
     },
     {
       icon: <Img src="/requirementLogos/cask.jpg" boxSize={6} rounded={"full"} />,

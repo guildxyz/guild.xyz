@@ -91,6 +91,7 @@ const DiscordRole = ({ index }: Props) => {
         <FormLabel>Server</FormLabel>
         <StyledSelect
           isCreatable
+          formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
           isLoading={isLoading}
           options={serverOptions}
           name={serverField.name}
@@ -162,6 +163,7 @@ const DiscordRole = ({ index }: Props) => {
         <StyledSelect
           noOptionsMessage={() => null}
           isCreatable
+          formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
           isLoading={isServerDataLoading}
           options={roleOptions}
           name={roleField.name}

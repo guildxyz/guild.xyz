@@ -2,6 +2,7 @@ import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/re
 import React, { useState } from "react"
 import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
+import HundredNOneRequirementCard from "./components/101RequirementCard"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import CaskRequirementCard from "./components/CaskRequirementCard"
 import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
@@ -12,6 +13,7 @@ import FreeRequirementCard from "./components/FreeRequirementCard"
 import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
 import GithubRequirementCard from "./components/GithubRequirementCard"
 import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
+import KycDAORequirementCard from "./components/KycDAORequirementCard"
 import LensRequirementCard from "./components/LensRequirementCard"
 import MirrorRequirementCard from "./components/MirrorRequirementCard"
 import NftRequirementCard from "./components/NftRequirementCard"
@@ -20,6 +22,7 @@ import OrangeRequirementCard from "./components/OrangeRequirementCard"
 import OtterspaceRequirementCard from "./components/OtterspaceRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
 import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequirementCard"
+import RabbitholeRequirementCard from "./components/RabbitholeRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
 import TwitterBioRequirementCard from "./components/TwitterBioRequirementCard"
@@ -39,6 +42,7 @@ const REQUIREMENT_CARDS = {
   POAP: PoapRequirementCard,
   GITPOAP: GitPoapRequirementCard,
   MIRROR: MirrorRequirementCard,
+  MIRROR_COLLECT: MirrorRequirementCard,
   SNAPSHOT: SnapshotRequirementCard,
   ALLOWLIST: AllowlistRequirementCard,
   JUICEBOX: JuiceboxRequirementCard,
@@ -60,6 +64,9 @@ const REQUIREMENT_CARDS = {
   OTTERSPACE: OtterspaceRequirementCard,
   ORANGE: OrangeRequirementCard,
   CASK: CaskRequirementCard,
+  "101": HundredNOneRequirementCard,
+  RABBITHOLE: RabbitholeRequirementCard,
+  KYC_DAO: KycDAORequirementCard,
 }
 
 type Props = {

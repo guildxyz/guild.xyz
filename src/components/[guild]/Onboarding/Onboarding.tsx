@@ -6,10 +6,10 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
 import { Player } from "@lottiefiles/react-lottie-player"
 import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Card from "components/common/Card"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { useEffect, useState } from "react"
 import useGuild from "../hooks/useGuild"
 import AddRolesAndRequirements from "./components/AddRolesAndRequirements"
@@ -49,7 +49,7 @@ const steps = [
 ]
 
 const Onboarding = (): JSX.Element => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+  const { addDatadogAction } = useDatadog()
   const { onboardingComplete } = useGuild()
 
   const { localStep, setLocalStep } = useOnboardingContext()

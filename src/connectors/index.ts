@@ -44,8 +44,8 @@ const RPC = {
     apiUrl: "https://api.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
     rpcUrls: [
-      process.env.ALCHEMY_KEY
-        ? `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`
+      process.env.MAINNET_ALCHEMY_KEY
+        ? `https://eth-mainnet.g.alchemy.com/v2/${process.env.MAINNET_ALCHEMY_KEY}`
         : "",
       "https://cloudflare-eth.com",
     ].filter((url) => !!url),
@@ -78,8 +78,8 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912",
     },
     rpcUrls: [
-      process.env.ALCHEMY_KEY
-        ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`
+      process.env.POLYGON_ALCHEMY_KEY
+        ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.POLYGON_ALCHEMY_KEY}`
         : "",
       "https://polygon-rpc.com",
     ].filter((url) => !!url),
@@ -116,7 +116,7 @@ const RPC = {
     },
     rpcUrls: ["https://rpc.gnosischain.com"],
     blockExplorerUrls: ["https://gnosisscan.io"],
-    apiUrl: "https://blockscout.com/xdai/mainnet",
+    apiUrl: "https://api.gnosisscan.io",
     iconUrls: ["/networkLogos/gnosis.svg"],
   },
   FANTOM: {
@@ -305,8 +305,8 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     rpcUrls: [
-      process.env.ALCHEMY_KEY
-        ? `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`
+      process.env.GOERLI_ALCHEMY_KEY
+        ? `https://eth-goerli.g.alchemy.com/v2/${process.env.GOERLI_ALCHEMY_KEY}`
         : "",
       "https://ethereum-goerli-rpc.allthatnode.com/",
     ].filter((url) => !!url),

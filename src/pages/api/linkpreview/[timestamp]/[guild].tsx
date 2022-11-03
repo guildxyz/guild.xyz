@@ -4,6 +4,11 @@ import fetcher from "utils/fetcher"
 
 export const config = {
   runtime: "experimental-edge",
+  unstable_allowDynamic: [
+    "/src/hooks/useLocalStorage.ts",
+    "/src/hooks/useTimeInaccuracy.ts",
+    "/src/utils/fetcher.ts",
+  ],
 }
 
 const interFont = fetch(
@@ -51,6 +56,7 @@ const handler = async (req, _) => {
     ]
 
     const safeGuildDescription = guild.description?.replaceAll("\n", "")
+    const isLightMode = guild.theme?.mode === "LIGHT"
 
     return new ImageResponse(
       (
@@ -58,7 +64,7 @@ const handler = async (req, _) => {
           style={{
             display: "flex",
             position: "relative",
-            backgroundColor: "#27272a",
+            backgroundColor: isLightMode ? "#f4f4f5" : "#27272a",
             width: "800px",
             height: "450px",
             fontFamily: "Inter var, Inter, sans-serif",
@@ -75,7 +81,7 @@ const handler = async (req, _) => {
               height: "450px",
               opacity: 0.6,
             }}
-            src={`${baseUrl}/img/guilders.svg`}
+            src={`${baseUrl}/img/guilders${isLightMode ? "-dark" : ""}.svg`}
             alt="Guilders"
           />
 
@@ -88,8 +94,9 @@ const handler = async (req, _) => {
               left: 0,
               right: 0,
               backgroundColor: "transparent",
-              backgroundImage:
-                "linear-gradient(to right, rgba(39, 39, 42, 1) 0%, rgba(39, 39, 42, 1) 55%, rgba(39, 39, 42, 0) 85%, rgba(39, 39, 42, 0))",
+              backgroundImage: isLightMode
+                ? "linear-gradient(to right, rgba(244, 244, 245, 1) 0%, rgba(244, 244, 245, 1) 55%, rgba(244, 244, 245, 0) 85%, rgba(244, 244, 245, 0))"
+                : "linear-gradient(to right, rgba(39, 39, 42, 1) 0%, rgba(39, 39, 42, 1) 55%, rgba(39, 39, 42, 0) 85%, rgba(39, 39, 42, 0))",
             }}
           />
 
@@ -121,7 +128,7 @@ const handler = async (req, _) => {
                   marginRight: "16px",
                   width: "48px",
                   height: "48px",
-                  backgroundColor: "#52525b",
+                  backgroundColor: isLightMode ? "#3f3f46" : "#52525b",
                   borderRadius: "50%",
                   overflow: "hidden",
                 }}
@@ -135,7 +142,7 @@ const handler = async (req, _) => {
                   }}
                   src={
                     guild.imageUrl?.startsWith("http")
-                      ? guild.imageUrl
+                      ? `${baseUrl}/_next/image?url=${guild.imageUrl}&w=48&q=75`
                       : `${baseUrl}${guild.imageUrl}`
                   }
                   alt={guild.name}
@@ -146,7 +153,7 @@ const handler = async (req, _) => {
                   width: "356px",
                   fontFamily: "Dystopian, sans-serif",
                   fontSize: "48px",
-                  color: "white",
+                  color: isLightMode ? "#27272A" : "white",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -165,8 +172,8 @@ const handler = async (req, _) => {
                   paddingLeft: "16px",
                   paddingRight: "16px",
                   height: "32px",
-                  backgroundColor: "#52525b",
-                  color: "white",
+                  backgroundColor: isLightMode ? "#d4d4d8" : "#52525b",
+                  color: isLightMode ? "#27272A" : "white",
                   fontWeight: "bold",
                   borderRadius: "6px",
                   fontSize: "18px",
@@ -180,8 +187,8 @@ const handler = async (req, _) => {
                   paddingLeft: "16px",
                   paddingRight: "16px",
                   height: "32px",
-                  backgroundColor: "#52525b",
-                  color: "white",
+                  backgroundColor: isLightMode ? "#d4d4d8" : "#52525b",
+                  color: isLightMode ? "#27272A" : "white",
                   fontWeight: "bold",
                   borderRadius: "6px",
                   fontSize: "18px",
@@ -197,7 +204,7 @@ const handler = async (req, _) => {
                 fontFamily: "Dystopian, sans-serif",
                 fontSize: "24px",
                 fontWeight: "bold",
-                color: "white",
+                color: isLightMode ? "#27272A" : "white",
               }}
             >
               {`${safeGuildDescription?.slice(0, 80)}${
@@ -226,7 +233,7 @@ const handler = async (req, _) => {
                   width: "20px",
                   height: "20px",
                 }}
-                src={`${baseUrl}/guildLogos/logo.svg`}
+                src={`${baseUrl}/guildLogos/logo${isLightMode ? "-dark" : ""}.svg`}
                 alt="Guild.xyz"
               />
               <div
@@ -234,7 +241,7 @@ const handler = async (req, _) => {
                   fontFamily: "Dystopian, sans-serif",
                   fontSize: "24px",
                   fontWeight: "bold",
-                  color: "white",
+                  color: isLightMode ? "#27272A" : "white",
                   lineHeight: 1.2,
                 }}
               >

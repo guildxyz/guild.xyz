@@ -1,5 +1,4 @@
 import { useDisclosure } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
@@ -7,6 +6,7 @@ import { WalletConnect } from "@web3-react/walletconnect"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import { useRouter } from "next/router"
 import { createContext, PropsWithChildren, useEffect } from "react"
+import useDatadog from "../Datadog/useDatadog"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 
@@ -31,9 +31,9 @@ const Web3Connection = createContext<{
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+  const { addDatadogAction } = useDatadog()
 
-  const { connector, isActive } = useWeb3React()
+  const { connector, isActive, account } = useWeb3React()
 
   const {
     isOpen: isWalletSelectorModalOpen,
@@ -57,7 +57,9 @@ const Web3ConnectionManager = ({
 
   useEffect(() => {
     if (!isActive || !triedEager) return
-    addDatadogAction("Successfully connected wallet")
+    addDatadogAction("Successfully connected wallet", {
+      userAddress: account?.toLowerCase(),
+    })
   }, [isActive, triedEager])
 
   // Sending actions to datadog
