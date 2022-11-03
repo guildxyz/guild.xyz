@@ -1,4 +1,5 @@
 import { Img } from "@chakra-ui/react"
+import DataBlock from "components/common/DataBlock"
 import { Requirement } from "types"
 import shortenHex from "utils/shortenHex"
 import RequirementCard from "./common/RequirementCard"
@@ -12,9 +13,11 @@ const CaskRequirementCard = ({ requirement }: Props) => (
     requirement={requirement}
     image={<Img src="/requirementLogos/cask.jpg" />}
   >
-    {`Subscribe to ${requirement.data.planId} from ${shortenHex(
-      requirement.data.provider
-    )}`}
+    {`Subscribe to plan `}
+    <DataBlock>{`#${requirement.data.planId}`}</DataBlock>
+    {` by `}
+    <DataBlock>{shortenHex(requirement.data.provider)}</DataBlock>
+    {` on Cask Protocol`}
   </RequirementCard>
 )
 
