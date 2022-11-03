@@ -7,11 +7,19 @@ import useKeyPair from "./useKeyPair"
 type Gateables = {
   DISCORD: Array<{ img: string; name: string; owner: boolean; id: string }>
   GITHUB: any[] // TODO
+  SPOTIFY: Array<{
+    value: string
+    label: string
+    img?: string
+    details?: string
+  }>
 } & Record<PlatformName, unknown>
 
 const useGateables = <K extends keyof Gateables>(
   platformName: K,
-  swrConfig?: SWRConfiguration
+  swrConfig?: SWRConfiguration,
+  body?: any,
+  shouldFetchProp?: boolean
 ) => {
   const { keyPair } = useKeyPair()
 
@@ -22,18 +30,19 @@ const useGateables = <K extends keyof Gateables>(
 
   const fetcherWithSign = useFetcherWithSign()
 
-  const shouldFetch = isConnected && !!keyPair && platformName?.length > 0
+  const shouldFetch =
+    isConnected && !!keyPair && platformName?.length > 0 && (shouldFetchProp ?? true)
 
   const { data, isValidating, mutate, error } = useSWR<Gateables[K]>(
     shouldFetch
-      ? ["/guild/listGateables", { method: "POST", body: { platformName } }]
+      ? ["/guild/listGateables", { method: "POST", body: { platformName, ...body } }]
       : null,
     (url: string, options) =>
-      fetcherWithSign(url, options).then((body) => {
-        if ("errorMsg" in body) {
-          throw body
+      fetcherWithSign(url, options).then((b) => {
+        if ("errorMsg" in b) {
+          throw b
         }
-        return body ?? []
+        return b ?? []
       }),
     swrConfig
   )
@@ -41,6 +50,7 @@ const useGateables = <K extends keyof Gateables>(
   return {
     gateables: data,
     isLoading: !data && !error && isValidating,
+    isValidating,
     mutate,
     error,
   }
