@@ -6,6 +6,7 @@ import {
   InputGroup,
   InputLeftElement,
   Spinner,
+  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -55,7 +56,7 @@ const MirrorV2FormCard = ({ index }: Props): JSX.Element => {
   const { isLoading, image, name } = useMirrorEdition(address)
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainInfo>Works on Optimism</ChainInfo>
 
       <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.address}>
@@ -91,7 +92,7 @@ const MirrorV2FormCard = ({ index }: Props): JSX.Element => {
           {errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 
