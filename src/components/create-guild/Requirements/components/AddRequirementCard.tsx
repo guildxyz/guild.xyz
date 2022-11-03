@@ -77,7 +77,7 @@ const requirementButtons: {
         </Center>
       ),
       label: "Discord",
-      type: "DISCORD",
+      type: "DISCORD_ROLE",
     },
 
     {
@@ -107,7 +107,7 @@ const requirementButtons: {
         </Center>
       ),
       label: "GitHub",
-      type: "GITHUB",
+      type: "GITHUB_STARRING",
     },
 
     {
