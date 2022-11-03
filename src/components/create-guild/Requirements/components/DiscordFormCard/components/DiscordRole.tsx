@@ -48,19 +48,16 @@ const DiscordRole = ({ index }: Props) => {
   })
 
   const { gateables, isLoading } = useGateables("DISCORD")
-  console.log("🚀 ~ gateables", gateables)
 
   const serverOptions = (gateables ?? []).map(({ img, name, id }) => ({
     value: id,
     img,
     label: name,
   }))
-  console.log("🚀 ~ serverOptions", serverOptions)
 
   const selectedServer = serverOptions.find(
     (reqType) => reqType.value === serverField.value
   )
-  console.log("🚀 ~ selectedServer", selectedServer)
 
   const isUnknownServer = !!serverField.value && !selectedServer
 
@@ -76,14 +73,12 @@ const DiscordRole = ({ index }: Props) => {
   const roleOptions = (roles ?? []).map(({ id, name }) => ({
     label: name,
     value: id,
-    details: id && shortenHex(id),
+    details: shortenHex(id),
   }))
-  console.log("🚀 ~ roleOptions", roleOptions)
 
   const selectedRole = roleOptions.find(
     (reqType) => reqType.value === roleField.value
   )
-  console.log("🚀 ~ selectedRole", selectedRole)
 
   const isUnknownRole = !!roleField.value && !selectedRole
 
