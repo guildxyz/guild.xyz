@@ -149,7 +149,7 @@ const integrations: Array<RequirementButton> = [
     type: "101",
   },
   {
-    icon: "/requirementLogos/rabbithole.jpg",
+    icon: "/requirementLogos/rabbithole.png",
     label: "Rabbithole",
     type: "RABBITHOLE",
   },
@@ -159,7 +159,7 @@ const integrations: Array<RequirementButton> = [
     type: "KYC_DAO",
   },
   {
-    icon: "/requirementLogos/cask.jpg",
+    icon: "/requirementLogos/cask.png",
     label: "Cask",
     type: "CASK",
   },
