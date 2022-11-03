@@ -41,14 +41,18 @@ const RoleCard = memo(({ role }: Props) => {
 
   const { colorMode } = useColorMode()
 
-  const { asPath, replace } = useRouter()
+  const router = useRouter()
 
   const refreshRouter = () => {
-    const hash = asPath.split("#")[1]
+    if (!router.isReady) return
+    const [pathname, hash] = router.asPath.split("#")
     if (!hash) return
 
     if (hash.split("-")[1] === role.id?.toString()) {
-      replace(asPath)
+      router.replace({
+        pathname,
+        hash,
+      })
     }
   }
 

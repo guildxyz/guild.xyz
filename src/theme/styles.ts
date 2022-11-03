@@ -3,7 +3,7 @@ import { mode } from "@chakra-ui/theme-tools"
 const styles = {
   global: (props) => ({
     html: {
-      scrollBehavior: "smooth",
+      scrollBehavior: "smooth!important",
     },
     "@media screen and (prefers-reduced-motion: reduce)": {
       html: {

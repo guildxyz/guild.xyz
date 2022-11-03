@@ -90,16 +90,10 @@ guild.xyz/${urlName} @guildxyz`)}`}
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
 
-      router.replace(
-        {
-          pathname: router.asPath,
-          hash: `role-${response_.id}`,
-        },
-        undefined,
-        {
-          shallow: true,
-        }
-      )
+      router.replace({
+        pathname: router.asPath.split("#")[0],
+        hash: `role-${response_.id}`,
+      })
     },
   })
 
