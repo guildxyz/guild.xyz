@@ -2,6 +2,9 @@ import { mode } from "@chakra-ui/theme-tools"
 
 const styles = {
   global: (props) => ({
+    html: {
+      scrollBehavior: "smooth",
+    },
     "tbody > tr:last-child > td": {
       border: 0,
     },

@@ -92,10 +92,8 @@ guild.xyz/${urlName} @guildxyz`)}`}
 
       router.replace(
         {
-          pathname: window.location.href.split("?")[0],
-          query: {
-            role: response_?.id,
-          },
+          pathname: router.asPath,
+          hash: `role-${response_.id}`,
         },
         undefined,
         {

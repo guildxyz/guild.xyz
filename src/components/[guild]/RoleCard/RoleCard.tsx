@@ -12,7 +12,7 @@ import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
-import { memo, useEffect, useRef, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import { Role } from "types"
 import parseDescription from "utils/parseDescription"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -41,25 +41,22 @@ const RoleCard = memo(({ role }: Props) => {
 
   const { colorMode } = useColorMode()
 
-  const { query } = useRouter()
-  const [shouldScroll, setShouldScroll] = useState(false)
-  const roleCardEl = useRef<HTMLDivElement>()
+  const { asPath, replace } = useRouter()
 
-  useEffect(() => {
-    if (!query.role) return
-    setShouldScroll(+query.role.toString() === role.id)
-  }, [query])
+  const refreshRouter = () => {
+    const hash = asPath.split("#")[1]
+    if (!hash) return
 
-  const scrollToCard = () => {
-    if (!roleCardEl.current || !shouldScroll) return
-    roleCardEl.current.scrollIntoView({ behavior: "smooth" })
-    setShouldScroll(false)
+    if (hash.split("-")[1] === role.id?.toString()) {
+      replace(asPath)
+    }
   }
 
   return (
     <Card
-      ref={roleCardEl}
-      scrollMarginTop={"calc(var(--chakra-space-11) + (2 * var(--chakra-space-3)))"}
+      id={`role-${role.id}`}
+      overflow="visible" // So scroll-margin-top works properly
+      scrollMarginTop={"calc(var(--chakra-space-12) + var(--chakra-space-6))"}
     >
       <SimpleGrid columns={{ base: 1, md: 2 }}>
         <Flex
@@ -112,6 +109,7 @@ const RoleCard = memo(({ role }: Props) => {
           pb={{ base: 14, md: 5 }}
           position="relative"
           bgColor={colorMode === "light" ? "gray.50" : "blackAlpha.300"}
+          borderRightRadius="2xl"
         >
           <HStack mb={{ base: 4, md: 6 }}>
             <Text
@@ -127,7 +125,7 @@ const RoleCard = memo(({ role }: Props) => {
               Requirements to qualify
             </Text>
             <Spacer />
-            <AccessIndicator roleId={role.id} onLoad={scrollToCard} />
+            <AccessIndicator roleId={role.id} onLoad={refreshRouter} />
           </HStack>
 
           <Requirements requirements={role.requirements} logic={role.logic} />
