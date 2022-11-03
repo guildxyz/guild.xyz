@@ -11,24 +11,10 @@ import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import platforms, { platformIdToName } from "platforms"
 import { useMemo } from "react"
 import { Role, RolePlatform } from "types"
-import capitalize from "utils/capitalize"
 
 type Props = {
   role: Role // should change to just roleId when we won't need memberCount anymore
   platform: RolePlatform
-}
-
-const getRewardLabel = (platform: RolePlatform) => {
-  switch (platform.guildPlatform.platformId) {
-    case platforms.DISCORD.id:
-      return "Role in: "
-
-    case platforms.GOOGLE.id:
-      return `${capitalize(platform.platformRoleData?.role ?? "reader")} access to: `
-
-    default:
-      return "Access to: "
-  }
 }
 
 const Reward = ({ role, platform }: Props) => {
@@ -75,7 +61,12 @@ const Reward = ({ role, platform }: Props) => {
         />
       </Circle>
       <Text px="2" maxW="calc(100% - var(--chakra-sizes-12))">
-        {getRewardLabel(platform)}
+        {
+          // prettier-ignore
+          platforms[platformIdToName?.[platform?.guildPlatform?.platformId]]?.rewardLabel ??
+          platforms[platformIdToName?.[platform?.guildPlatform?.platformId]]?.getRewardLabel?.(platform) ??
+          "Access to: "
+        }
         <Tooltip label={state.tooltipLabel} hasArrow>
           <Button
             variant="link"

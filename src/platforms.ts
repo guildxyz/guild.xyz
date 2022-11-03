@@ -19,7 +19,8 @@ import {
   TwitterLogo,
 } from "phosphor-react"
 import React from "react"
-import { GuildPlatform } from "types"
+import { GuildPlatform, RolePlatform } from "types"
+import capitalize from "utils/capitalize"
 
 type PlatformData = {
   id: number
@@ -68,10 +69,14 @@ type PlatformData = {
     | {
         gatedEntity: string
         creationDescription: string
+        rewardLabel?: string
+        getRewardLabel?: (platform: RolePlatform) => string
       }
     | {
         gatedEntity?: never
         creationDescription?: never
+        rewardLabel?: never
+        getRewardLabel?: never
       }
   )
 
@@ -85,6 +90,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "TELEGRAM",
     gatedEntity: "group",
     creationDescription: "Token gate your group",
+
     paramName: "telegramId",
     cardPropsHook: useTelegramCardProps,
     CreationGridSelectButton: TelegramSelectButton,
@@ -97,6 +103,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "DISCORD",
     gatedEntity: "server",
     creationDescription: "Manage roles & guard server",
+    rewardLabel: "Role in: ",
     paramName: "discordId",
     cardPropsHook: useDiscordCardProps,
     cardSettingsComponent: DiscordCardSettings,
@@ -150,6 +157,8 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "blue",
     gatedEntity: "document",
     creationDescription: "Token gate documents",
+    getRewardLabel: (platform) =>
+      `${capitalize(platform.platformRoleData?.role ?? "reader")} access to: `,
     paramName: "googleId",
     cardPropsHook: useGoogleCardProps,
     cardSettingsComponent: GoogleCardSettings,
