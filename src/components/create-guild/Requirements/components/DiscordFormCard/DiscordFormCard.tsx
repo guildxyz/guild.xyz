@@ -23,7 +23,7 @@ const discordRequirementTypes = [
     DiscordRequirement: DiscordMemberSince,
   },
   {
-    label: "Joined before",
+    label: "Registered before",
     value: "DISCORD_JOIN",
     DiscordRequirement: DiscordJoin,
   },
