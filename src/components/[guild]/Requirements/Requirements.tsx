@@ -78,7 +78,7 @@ const REQUIREMENT_CARDS: Partial<
   "101": HundredNOneRequirementCard,
   RABBITHOLE: RabbitholeRequirementCard,
   KYC_DAO: KycDAORequirementCard,
-  SPOTIFY_FOLLOW: SpotifyFollowArtistRequirementCard,
+  SPOTIFY_FOLLOW_ARTIST: SpotifyFollowArtistRequirementCard,
   SPOTIFY_FOLLOW_USER: SpotifyFollowUserRequirementCard,
   SPOTIFY_FOLLOW_PLAYLIST: SpotifyFollowPlaylistRequirementCard,
   SPOTIFY_NAME: SpotifyNameRequirementCard,

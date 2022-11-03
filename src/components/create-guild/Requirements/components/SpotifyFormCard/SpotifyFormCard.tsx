@@ -21,7 +21,7 @@ type Props = {
 const spotifyRequirementTypes = [
   {
     label: "Follow an artist",
-    value: "SPOTIFY_FOLLOW",
+    value: "SPOTIFY_FOLLOW_ARTIST",
     Requirement: ({ index }: Props) => (
       <SpotifySearch index={index} type="artist" label="Artist to follow" />
     ),
@@ -101,13 +101,13 @@ const SpotifyFormCard = ({ index, field }: Props) => {
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
-    defaultValue: "SPOTIFY_FOLLOW",
+    defaultValue: "SPOTIFY_FOLLOW_ARTIST",
     name: `requirements.${index}.type`,
     rules: { required: "It's required to select a type" },
   })
 
   useEffect(() => {
-    if (value === "SPOTIFY") onChange("SPOTIFY_FOLLOW")
+    if (value === "SPOTIFY") onChange("SPOTIFY_FOLLOW_ARTIST")
   }, [value])
 
   const { errors } = useFormState()
@@ -139,7 +139,7 @@ const SpotifyFormCard = ({ index, field }: Props) => {
       <FormControl isInvalid={!!errors?.requirements?.[index]?.type?.message}>
         <FormLabel>Type</FormLabel>
         <StyledSelect
-          defaultValue={"SPOTIFY_FOLLOW"}
+          defaultValue={"SPOTIFY_FOLLOW_ARTIST"}
           options={spotifyRequirementTypes}
           name={name}
           onBlur={onBlur}

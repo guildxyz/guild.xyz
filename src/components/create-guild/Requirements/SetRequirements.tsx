@@ -85,7 +85,7 @@ const REQUIREMENT_FORMCARDS = {
   RABBITHOLE: RabbitholeFormCard,
   KYC_DAO: KycDAOFormCard,
   SPOTIFY: SpotifyFormCard,
-  SPOTIFY_FOLLOW: SpotifyFormCard,
+  SPOTIFY_FOLLOW_ARTIST: SpotifyFormCard,
   SPOTIFY_FOLLOW_USER: SpotifyFormCard,
   SPOTIFY_FOLLOW_PLAYLIST: SpotifyFormCard,
   SPOTIFY_SAVED_ALBUM: SpotifyFormCard,
