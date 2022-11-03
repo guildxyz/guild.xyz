@@ -31,6 +31,7 @@ import GalaxyFormCard from "./components/GalaxyFormCard"
 import GithubFormCard from "./components/GithubFormCard"
 import GitPoapFormCard from "./components/GitPoapFormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
+import KycDAOFormCard from "./components/KycDAOFormCard"
 import LensFormCard from "./components/LensFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import MirrorV2FormCard from "./components/MirrorV2FormCard/MirrorV2FormCard"
@@ -81,6 +82,7 @@ const REQUIREMENT_FORMCARDS = {
   ORANGE: OrangeFormCard,
   101: HundredNOneFormCard,
   RABBITHOLE: RabbitholeFormCard,
+  KYC_DAO: KycDAOFormCard,
 }
 
 type Props = {

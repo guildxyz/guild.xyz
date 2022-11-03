@@ -111,6 +111,7 @@ type RequirementType =
   | "ORANGE"
   | "101"
   | "RABBITHOLE"
+  | "KYC_DAO"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -153,6 +154,7 @@ type PlatformGuildData = {
   DISCORD: {
     role?: never
     inviteChannel: string
+    invite?: string
     joinButton?: boolean
     mimeType?: never
     iconLink?: never
@@ -355,6 +357,7 @@ const RequirementTypeColors = {
   101: "#000000",
   ORANGE: "#ff5d24",
   RABBITHOLE: "#7f23dc",
+  KYC_DAO: "#3D65F2",
 }
 
 type SnapshotStrategy = {

@@ -183,6 +183,11 @@ const requirementButtons: {
       label: "Rabbithole",
       type: "RABBITHOLE",
     },
+    {
+      icon: <Img src="/requirementLogos/kycdao.svg" boxSize={6} />,
+      label: "kycDAO",
+      type: "KYC_DAO",
+    },
   ],
 }
 

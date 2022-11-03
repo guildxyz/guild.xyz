@@ -12,6 +12,7 @@ import FreeRequirementCard from "./components/FreeRequirementCard"
 import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
 import GithubRequirementCard from "./components/GithubRequirementCard"
 import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
+import KycDAORequirementCard from "./components/KycDAORequirementCard"
 import LensRequirementCard from "./components/LensRequirementCard"
 import MirrorRequirementCard from "./components/MirrorRequirementCard"
 import NftRequirementCard from "./components/NftRequirementCard"
@@ -63,6 +64,7 @@ const REQUIREMENT_CARDS = {
   ORANGE: OrangeRequirementCard,
   "101": HundredNOneRequirementCard,
   RABBITHOLE: RabbitholeRequirementCard,
+  KYC_DAO: KycDAORequirementCard,
 }
 
 type Props = {
