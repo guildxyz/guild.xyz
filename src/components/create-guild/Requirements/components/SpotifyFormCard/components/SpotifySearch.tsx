@@ -18,6 +18,14 @@ const SpotifySearch = ({ index, type, label }: Props) => {
     name: `requirements.${index}.data.params.label`,
   })
 
+  useEffect(() => {
+    if (type === "artist") {
+      setValue(`requirements.${index}.data.type`, "artist")
+    } else {
+      setValue(`requirements.${index}.data.type`, undefined)
+    }
+  }, [type])
+
   const { field } = useController({
     name: `requirements.${index}.data.id`,
     rules: {

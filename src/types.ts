@@ -245,6 +245,8 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
+
+    type?: string
     params?:
       | ContractParamType
       | DiscoParamType
