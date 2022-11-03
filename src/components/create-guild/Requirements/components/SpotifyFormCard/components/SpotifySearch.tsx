@@ -55,10 +55,7 @@ const SpotifySearch = ({ index, type, label }: Props) => {
           setValue(`requirements.${index}.data.params.label`, selected?.label)
           setValue(`requirements.${index}.data.params.img`, selected?.img)
           if (selected?.details) {
-            setValue(
-              `requirements.${index}.data.params.spotifyArtist`,
-              selected?.details
-            )
+            setValue(`requirements.${index}.data.params.artist`, selected?.details)
           }
           field.onChange(selected?.value)
         }}
