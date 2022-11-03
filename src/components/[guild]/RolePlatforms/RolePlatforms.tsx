@@ -87,8 +87,8 @@ const RolePlatforms = ({ roleId }: Props) => {
               platforms[type]
 
             let PlatformCardSettings = cardSettingsComponent
-            // only show Google access level settings for new platforms
-            if (type === "GOOGLE" && !rolePlatform.isNew) PlatformCardSettings = null
+            // only show Google access level settings and Discord role settings for new platforms
+            if (!rolePlatform.isNew) PlatformCardSettings = null
 
             return (
               <RolePlatformProvider

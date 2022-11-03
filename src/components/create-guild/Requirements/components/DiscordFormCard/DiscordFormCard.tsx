@@ -6,7 +6,6 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
-import { useEffect } from "react"
 import { useController, useFormState } from "react-hook-form"
 import { FormCardProps } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -28,8 +27,6 @@ const DiscordFormCard = ({ baseFieldPath, field }: FormCardProps) => {
     rules: { required: "It's required to select a type" },
   })
 
-  useEffect(() => onChange("DISCORD_ROLE"), [])
-
   const { errors } = useFormState()
 
   const selected = discordRequirementTypes.find((reqType) => reqType.value === value)
@@ -41,7 +38,6 @@ const DiscordFormCard = ({ baseFieldPath, field }: FormCardProps) => {
       >
         <FormLabel>Type</FormLabel>
         <StyledSelect
-          defaultValue={"DISCORD_ROLE"}
           options={discordRequirementTypes}
           name={name}
           onBlur={onBlur}

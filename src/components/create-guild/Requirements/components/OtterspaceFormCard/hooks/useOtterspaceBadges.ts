@@ -45,7 +45,7 @@ const fetchBadges = async (endpoint: string) => {
 
 const useOtterspaceBadges = () =>
   useSWRImmutable<SelectOption[]>(
-    `https://api.thegraph.com/subgraphs/name/otterspace-xyz/badges-optimism-alpha`,
+    `https://api.thegraph.com/subgraphs/name/otterspace-xyz/badges-optimism`,
     fetchBadges
   )
 

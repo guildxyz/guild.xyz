@@ -6,7 +6,6 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
-import { useEffect } from "react"
 import { useController, useFormState } from "react-hook-form"
 import { FormCardProps } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -28,8 +27,6 @@ const GithubFormCard = ({ baseFieldPath }: FormCardProps) => {
     rules: { required: "It's required to select a type" },
   })
 
-  useEffect(() => onChange("GITHUB_STARRING"), [])
-
   const { errors } = useFormState()
 
   const selected = githubRequirementTypes.find((reqType) => reqType.value === value)
@@ -41,7 +38,6 @@ const GithubFormCard = ({ baseFieldPath }: FormCardProps) => {
       >
         <FormLabel>Type</FormLabel>
         <StyledSelect
-          defaultValue={"GITHUB_STARRING"}
           options={githubRequirementTypes}
           name={name}
           onBlur={onBlur}

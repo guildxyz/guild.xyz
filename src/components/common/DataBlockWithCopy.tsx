@@ -19,6 +19,7 @@ const DataBlockWithCopy = ({ text }: Props): JSX.Element => {
           <Text as="span">{hasCopied ? "Copied" : "Click to copy"}</Text>
         </HStack>
       }
+      placement="top"
       shouldWrapChildren
     >
       <DataBlock>

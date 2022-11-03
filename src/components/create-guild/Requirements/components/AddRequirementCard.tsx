@@ -153,6 +153,16 @@ const integrations: Array<RequirementButton> = [
     label: "Rabbithole",
     type: "RABBITHOLE",
   },
+  {
+    icon: "/requirementLogos/kycdao.svg",
+    label: "kycDAO",
+    type: "KYC_DAO",
+  },
+  {
+    icon: "/requirementLogos/cask.jpg",
+    label: "Cask",
+    type: "CASK",
+  },
 ]
 
 const AddRequirementCard = ({ onAdd }): JSX.Element => {
