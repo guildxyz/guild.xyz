@@ -12,7 +12,7 @@ type Props = {
 
 const DiscordRoleRequirementCard = ({ requirement }: Props) => {
   const {
-    data: { serverName, roles, isAdmin, serverIcon },
+    data: { serverName, roles, isAdmin },
   } = useServerData(requirement.data.serverId)
 
   const role =
@@ -23,7 +23,7 @@ const DiscordRoleRequirementCard = ({ requirement }: Props) => {
   return (
     <RequirementCard
       requirement={requirement}
-      image={serverIcon || <Icon as={DiscordLogo} boxSize={6} />}
+      image={<Icon as={DiscordLogo} boxSize={6} />}
       footer={
         <ConnectRequirementPlatformButton
           platform="DISCORD"
@@ -31,11 +31,11 @@ const DiscordRoleRequirementCard = ({ requirement }: Props) => {
         />
       }
     >
-      {`Have the "`}
+      {`Have the `}
       <DataBlock>{role?.name || requirement.data.roleName}</DataBlock>
-      {`" role in the "`}
+      {` role in the `}
       <DataBlock>{serverName || requirement.data.serverName}</DataBlock>
-      {`" server`}
+      {` server`}
     </RequirementCard>
   )
 }

@@ -12,14 +12,14 @@ type Props = {
 
 const DiscordMemberSinceRequirementCard = ({ requirement }: Props): JSX.Element => {
   const {
-    data: { serverName, serverIcon },
+    data: { serverName },
   } = useServerData(requirement.data.serverId)
   const formattedDate = new Date(requirement.data.memberSince).toLocaleDateString()
 
   return (
     <RequirementCard
       requirement={requirement}
-      image={serverIcon || <Icon as={DiscordLogo} boxSize={6} />}
+      image={<Icon as={DiscordLogo} boxSize={6} />}
       footer={
         <ConnectRequirementPlatformButton
           platform="DISCORD"
@@ -27,9 +27,9 @@ const DiscordMemberSinceRequirementCard = ({ requirement }: Props): JSX.Element 
         />
       }
     >
-      {`Be a member of the "`}
+      {`Be a member of the `}
       <DataBlock>{serverName || requirement.data.serverName}</DataBlock>
-      {`" server at least since `}
+      {` server at least since `}
       <DataBlock>{formattedDate}</DataBlock>
     </RequirementCard>
   )
