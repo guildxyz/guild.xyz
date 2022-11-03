@@ -19,6 +19,9 @@ const TokenApiURLs = {
     "https://raw.githubusercontent.com/Crocoswap/tokenlists/main/aeb.tokenlist.json",
   ],
   ARBITRUM: ["https://bridge.arbitrum.io/token-list-42161.json"],
+  NOVA: [
+    "https://tokens.coingecko.com/arbitrum-nova/all.json",
+  ],
   CELO: [
     "https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap.token-list.json",
   ],
