@@ -86,6 +86,7 @@ const REQUIREMENT_FORMCARDS = {
   KYC_DAO: KycDAOFormCard,
   SPOTIFY: SpotifyFormCard,
   SPOTIFY_FOLLOW: SpotifyFormCard,
+  SPOTIFY_FOLLOW_USER: SpotifyFormCard,
   SPOTIFY_FOLLOW_PLAYLIST: SpotifyFormCard,
   SPOTIFY_SAVED_ALBUM: SpotifyFormCard,
   SPOTIFY_SAVED_EPISODE: SpotifyFormCard,

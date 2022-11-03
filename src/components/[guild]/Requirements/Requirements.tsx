@@ -30,6 +30,7 @@ import SpotifyFollowArtistRequirementCard from "./components/Spotify/SpotifyFoll
 import SpotifyFollowerCountRequirementCard from "./components/Spotify/SpotifyFollowerCountRequirementCard"
 import SpotifyFollowPlaylistRequirementCard from "./components/Spotify/SpotifyFollowPlaylistRequirementCard"
 import SpotifyFollowPodcastRequirementCard from "./components/Spotify/SpotifyFollowPodcastRequirementCard"
+import SpotifyFollowUserRequirementCard from "./components/Spotify/SpotifyFollowUserRequirementCard"
 import SpotifyLikeAlbumRequirementCard from "./components/Spotify/SpotifyLikeAlbumRequirementCard"
 import SpotifyLikeTrackRequirementCard from "./components/Spotify/SpotifyLikeTrackRequirementCard"
 import SpotifyNameRequirementCard from "./components/Spotify/SpotifyNameRequirementCard"
@@ -78,6 +79,7 @@ const REQUIREMENT_CARDS: Partial<
   RABBITHOLE: RabbitholeRequirementCard,
   KYC_DAO: KycDAORequirementCard,
   SPOTIFY_FOLLOW: SpotifyFollowArtistRequirementCard,
+  SPOTIFY_FOLLOW_USER: SpotifyFollowUserRequirementCard,
   SPOTIFY_FOLLOW_PLAYLIST: SpotifyFollowPlaylistRequirementCard,
   SPOTIFY_NAME: SpotifyNameRequirementCard,
   SPOTIFY_FOLLOWER_COUNT: SpotifyFollowerCountRequirementCard,

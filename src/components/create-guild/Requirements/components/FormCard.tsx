@@ -38,6 +38,7 @@ const typeLabel = (type) => {
       return "LENS"
 
     case "SPOTIFY_FOLLOW":
+    case "SPOTIFY_FOLLOW_USER":
     case "SPOTIFY_FOLLOW_PLAYLIST":
     case "SPOTIFY_SAVED_ALBUM":
     case "SPOTIFY_SAVED_EPISODE":

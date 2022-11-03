@@ -5,10 +5,11 @@ import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPla
 import useIsConnected from "hooks/useIsConnected"
 import { Lock } from "phosphor-react"
 import { useEffect } from "react"
-import { useController, useFormState } from "react-hook-form"
+import { useController, useFormContext, useFormState } from "react-hook-form"
 import { Requirement } from "types"
 import SearchValue from "../TwitterFormCard/components/SearchValue"
 import SpotifyFollowerCount from "./components/SpotifyFollowerCount"
+import SpotifyFollowUser from "./components/SpotifyFollowUser"
 import SpotifySearch from "./components/SpotifySearch"
 import SpotifyTop from "./components/SpotifyTop"
 
@@ -88,9 +89,15 @@ const spotifyRequirementTypes = [
     value: "SPOTIFY_NAME",
     Requirement: SearchValue,
   },
+  {
+    label: "Follow me",
+    value: "SPOTIFY_FOLLOW_USER",
+    Requirement: SpotifyFollowUser,
+  },
 ]
 
 const SpotifyFormCard = ({ index, field }: Props) => {
+  const { setValue } = useFormContext()
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
@@ -137,6 +144,7 @@ const SpotifyFormCard = ({ index, field }: Props) => {
           name={name}
           onBlur={onBlur}
           onChange={(newValue: { label: string; value: string }) => {
+            setValue(`requirements.${index}.data`, {})
             onChange(newValue?.value)
           }}
           ref={ref}
