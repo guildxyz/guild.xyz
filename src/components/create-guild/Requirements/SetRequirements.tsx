@@ -42,6 +42,7 @@ import OtterspaceFormCard from "./components/OtterspaceFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import RabbitholeFormCard from "./components/RabbitholeFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
+import SoundFormCard from "./components/SoundFormCard/SoundFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import TwitterFormCard from "./components/TwitterFormCard"
 import UnlockFormCard from "./components/UnlockFormCard"
@@ -83,6 +84,7 @@ const REQUIREMENT_FORMCARDS = {
   101: HundredNOneFormCard,
   RABBITHOLE: RabbitholeFormCard,
   KYC_DAO: KycDAOFormCard,
+  SOUND: SoundFormCard,
 }
 
 type Props = {

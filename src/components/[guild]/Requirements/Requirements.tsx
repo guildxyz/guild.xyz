@@ -23,6 +23,7 @@ import PoapRequirementCard from "./components/PoapRequirementCard"
 import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequirementCard"
 import RabbitholeRequirementCard from "./components/RabbitholeRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
+import SoundRequirementCard from "./components/SoundRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
 import TwitterBioRequirementCard from "./components/TwitterBioRequirementCard"
 import TwitterFollowerCountRequirementCard from "./components/TwitterFollowerCountRequirementCard"
@@ -65,6 +66,7 @@ const REQUIREMENT_CARDS = {
   "101": HundredNOneRequirementCard,
   RABBITHOLE: RabbitholeRequirementCard,
   KYC_DAO: KycDAORequirementCard,
+  SOUND: SoundRequirementCard,
 }
 
 type Props = {

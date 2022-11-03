@@ -188,6 +188,11 @@ const requirementButtons: {
       label: "kycDAO",
       type: "KYC_DAO",
     },
+    {
+      icon: <Img src="/requirementLogos/sound.png" boxSize={6} rounded={"full"} />,
+      label: "Sound",
+      type: "SOUND",
+    },
   ],
 }
 

@@ -58,6 +58,9 @@ const typeColor = (type) => {
     case "101":
       return "white"
 
+    case "SOUND":
+      return "white"
+
     default:
       return undefined
   }

@@ -112,6 +112,7 @@ type RequirementType =
   | "101"
   | "RABBITHOLE"
   | "KYC_DAO"
+  | "SOUND"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -222,6 +223,7 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
+    title?: string
     params?: ContractParamType | DiscoParamType | RabbitholeParamType
   }
   name: string
@@ -358,6 +360,7 @@ const RequirementTypeColors = {
   ORANGE: "#ff5d24",
   RABBITHOLE: "#7f23dc",
   KYC_DAO: "#3D65F2",
+  SOUND: "#1b1b23",
 }
 
 type SnapshotStrategy = {
