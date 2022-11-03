@@ -7,6 +7,7 @@ import {
   HStack,
   Icon,
   Stack,
+  Tag,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
@@ -21,6 +22,7 @@ type Props = {
   >
   title: JSX.Element | string
   description?: string
+  disabledText?: string
 } & Omit<CheckboxProps, "icon" | "colorScheme" | "title">
 
 const CheckboxColorCard = forwardRef(
@@ -30,12 +32,12 @@ const CheckboxColorCard = forwardRef(
       icon,
       title,
       description,
+      disabledText,
       children,
       ...rest
     }: PropsWithChildren<Props>,
     ref: any
   ) => {
-    const cardBgColor = useColorModeValue("gray.50", "whiteAlpha.50")
     const iconBgColor = useColorModeValue("gray.200", "gray.600")
 
     const [isChecked, setIsChecked] = useState(rest.defaultChecked)
@@ -43,7 +45,6 @@ const CheckboxColorCard = forwardRef(
     return (
       <ColorCard
         color={isChecked ? `${colorScheme}.500` : "transparent"}
-        bgColor={cardBgColor}
         transition="border-color 0.24s ease"
       >
         <Stack spacing={0}>
@@ -55,7 +56,7 @@ const CheckboxColorCard = forwardRef(
             flexDirection="row-reverse"
             justifyContent="space-between"
             colorScheme={colorScheme}
-            color="white"
+            isDisabled={!!disabledText}
             _checked={{
               "> .chakra-checkbox__control[data-checked]": {
                 bgColor: `var(--chakra-colors-${colorScheme}-500)`,
@@ -78,13 +79,17 @@ const CheckboxColorCard = forwardRef(
               </Circle>
 
               <Stack spacing={1}>
-                {typeof title === "string" ? (
-                  <Text as="span" fontWeight="bold">
-                    {title}
-                  </Text>
-                ) : (
-                  title
-                )}
+                <HStack>
+                  {typeof title === "string" ? (
+                    <Text as="span" fontWeight="bold">
+                      {title}
+                    </Text>
+                  ) : (
+                    title
+                  )}
+
+                  {disabledText && <Tag>{disabledText}</Tag>}
+                </HStack>
                 <Text color="gray">{description}</Text>
               </Stack>
             </HStack>

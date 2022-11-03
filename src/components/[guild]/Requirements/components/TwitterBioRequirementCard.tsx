@@ -1,5 +1,5 @@
 import { Icon } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
+import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { TwitterLogo } from "phosphor-react"
 import { Requirement } from "types"
 import ConnectRequirementPlatformButton from "./common/ConnectRequirementPlatformButton"
@@ -16,7 +16,7 @@ const TwitterBioRequirementCard = ({ requirement }: Props) => (
     footer={<ConnectRequirementPlatformButton platform="TWITTER" />}
   >
     {`Have "`}
-    <DataBlock>{requirement.data.id}</DataBlock>
+    <DataBlockWithCopy text={requirement.data.id} />
     {`" in your bio`}
   </RequirementCard>
 )

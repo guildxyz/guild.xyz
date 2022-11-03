@@ -19,7 +19,7 @@ import MonetizePoap from "./components/MonetizePoap"
 import VoiceParticipation from "./components/VoiceParticipation"
 import usePoapEventDetails from "./components/VoiceParticipation/hooks/usePoapEventDetails"
 
-const Requirements = (): JSX.Element => {
+const PoapRequirements = (): JSX.Element => {
   const { poaps, isLoading } = useGuild()
   const { poapData, nextStep } = useCreatePoapContext()
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
@@ -56,6 +56,7 @@ const Requirements = (): JSX.Element => {
             </CheckboxColorCard>
 
             <CheckboxColorCard
+              disabledText="Temporarily disabled"
               icon={SpeakerHigh}
               title="Voice participation"
               description="Users will have to be in a voice channel at the time of the event"
@@ -93,4 +94,4 @@ const SetRequirementSkeleton = (): JSX.Element => {
   )
 }
 
-export default Requirements
+export default PoapRequirements

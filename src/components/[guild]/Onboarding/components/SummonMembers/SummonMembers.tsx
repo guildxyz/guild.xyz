@@ -1,8 +1,8 @@
 import { Text, useDisclosure, Wrap } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { Check, DiscordLogo, TwitterLogo } from "phosphor-react"
 import platforms from "platforms"
 import PaginationButtons from "../PaginationButtons"
@@ -22,8 +22,8 @@ export type SummonMembersForm = {
   button: string
 }
 
-const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
+  const { addDatadogAction } = useDatadog()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { guildPlatforms, urlName } = useGuild()

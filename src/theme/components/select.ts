@@ -15,11 +15,9 @@ const sizes: Record<string, PartsStyleObject<typeof parts>> = {
   },
 }
 
-const baseStyleField: SystemStyleFunction = (props) => {
-  return {
-    bg: mode("white", "blackAlpha.300")(props),
-  }
-}
+const baseStyleField: SystemStyleFunction = (props) => ({
+  bg: mode("white", "blackAlpha.300")(props),
+})
 
 const baseStyle: PartsStyleFunction<typeof parts> = (props) => ({
   field: baseStyleField(props),

@@ -12,6 +12,7 @@ const CustomSelectOption = ({
    * and a simple CSS hover is enough for us. Source:
    * https://github.com/JedWatson/react-select/issues/3128
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { onMouseMove, onMouseOver, ...filteredInnerProps } = innerProps
 
   const focusedBg = useColorModeValue("blackAlpha.100", "gray.600")

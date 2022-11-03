@@ -22,7 +22,7 @@ type Props = {
   field: Requirement
 }
 
-const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
+const JuiceboxFormCard = ({ index }: Props): JSX.Element => {
   const {
     control,
     setValue,

@@ -26,7 +26,7 @@ export type NooxBadge = {
   imageThumbnail: string
 }
 
-const NooxFormCard = ({ index, field }: Props) => {
+const NooxFormCard = ({ index }: Props) => {
   const {
     control,
     formState: { errors },

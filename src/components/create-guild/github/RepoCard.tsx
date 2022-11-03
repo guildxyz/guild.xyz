@@ -16,7 +16,7 @@ const RepoCard = ({
   onSelection: (platformGuildId: string) => void
   platformGuildId: string
   repositoryName: string
-  description: string
+  description?: string
 }) => {
   const {
     onSubmit: onCreateGuild,

@@ -1,7 +1,7 @@
 import { usePrevious } from "@chakra-ui/react"
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import { useEffect } from "react"
@@ -14,10 +14,10 @@ const useConnectPlatform = (
   onSuccess?: () => void,
   isReauth?: boolean // Temporary, once /connect works without it, we can remove this
 ) => {
+  const { addDatadogAction, addDatadogError } = useDatadog()
+
   const user = useUser()
   const { mutate: mutateUser, platformUsers } = useUser()
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
 
   const { onOpen, authData, isAuthenticating, ...rest } = useOauthPopupWindow(
     platform,
@@ -58,7 +58,7 @@ const useConnectPlatform = (
       onSuccess?.()
     },
     onError: (err) => {
-      addDatadogError("3rd party account connection error", { error: err }, "custom")
+      addDatadogError("3rd party account connection error", { error: err })
     },
   })
 

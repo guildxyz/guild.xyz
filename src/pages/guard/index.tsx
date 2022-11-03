@@ -3,7 +3,7 @@ import Card from "components/common/Card"
 import NavMenu from "components/common/Layout/components/NavMenu"
 import LandingButton from "components/index/LandingButton"
 import useOAuthWithCallback from "components/[guild]/JoinModal/hooks/useOAuthWithCallback"
-import { motion, useTransform, useViewportScroll } from "framer-motion"
+import { motion, useScroll, useTransform } from "framer-motion"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import { useRouter } from "next/router"
@@ -17,7 +17,7 @@ const META_DESCRIPTION =
 const MotionBox = motion(Box)
 
 const Page = (): JSX.Element => {
-  const { scrollY } = useViewportScroll()
+  const { scrollY } = useScroll()
   const y = useTransform(scrollY, [0, 1], [0, 0.25], {
     clamp: false,
   })

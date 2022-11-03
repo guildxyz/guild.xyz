@@ -1,3 +1,3 @@
-import Requirements from "./Requirements"
+import PoapRequirements from "./PoapRequirements"
 
-export default Requirements
+export default PoapRequirements

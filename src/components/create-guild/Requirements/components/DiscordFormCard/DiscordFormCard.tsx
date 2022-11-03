@@ -18,7 +18,7 @@ const discordRequirementTypes = [
   },
 ]
 
-const DiscordFormCard = ({ index, field }: Props) => {
+const DiscordFormCard = ({ index }: Props) => {
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
