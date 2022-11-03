@@ -27,7 +27,7 @@ const customFilterOption = (candidate, input) =>
   candidate.label?.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.value?.toLowerCase() === input?.toLowerCase()
 
-const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
+const UnlockFormCard = ({ index }: Props): JSX.Element => {
   const {
     control,
     setValue,

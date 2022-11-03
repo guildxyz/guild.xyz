@@ -64,6 +64,8 @@ const EligibleMembers = (): JSX.Element => {
       <Button
         size="xs"
         borderRadius="md"
+        isLoading={isVoiceParticipantsLoading}
+        loadingText="Refreshing"
         leftIcon={<Icon as={Users} />}
         onClick={onOpen}
       >

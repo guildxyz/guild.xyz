@@ -55,6 +55,7 @@ const WalletAuthButtonWithBalance = ({ token }: Props): JSX.Element => {
       colorScheme="gray"
       onClick={openWalletSelectorModal}
       iconSpacing={account && 3}
+      datadogActionName={!account && "Connect (JoinModal)"}
     />
   )
 }

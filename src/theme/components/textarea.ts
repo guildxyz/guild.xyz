@@ -12,7 +12,7 @@ const sizes: Record<string, SystemStyleObject> = {
   lg: Input.sizes.lg.field ?? {},
 }
 
-export default {
+const styles = {
   baseStyle: {
     paddingY: "12px",
   },
@@ -22,3 +22,5 @@ export default {
     focusBorderColor: "primary.500",
   },
 }
+
+export default styles

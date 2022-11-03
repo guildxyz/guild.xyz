@@ -23,7 +23,7 @@ const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.data?.details?.includes(input)
 
-const GitPoapFormCard = ({ index, field }: Props): JSX.Element => {
+const GitPoapFormCard = ({ index }: Props): JSX.Element => {
   const {
     control,
     formState: { errors },

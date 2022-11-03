@@ -246,7 +246,7 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
               <Button
                 colorScheme="indigo"
                 rightIcon={<Icon as={ArrowRight} />}
-                onClick={methods.handleSubmit(onSubmit, console.log)}
+                onClick={methods.handleSubmit(onSubmit)}
                 isLoading={isLoading || isSigning}
                 loadingText={loadingText}
                 isDisabled={

@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, Select, Text, Tooltip } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { Info } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -31,7 +31,7 @@ const EntryChannel = ({
   errorMessage,
   ...rest
 }: Props) => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+  const { addDatadogAction } = useDatadog()
 
   const { register, setValue } = useFormContext()
 
@@ -70,7 +70,7 @@ const EntryChannel = ({
             Create a new channel for me
           </option>
         )}
-        {channels?.map((channel, i) => (
+        {channels?.map((channel) => (
           <option key={channel.id} value={channel.id}>
             {channel.name}
           </option>

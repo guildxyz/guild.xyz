@@ -2,6 +2,7 @@ import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/re
 import React, { useState } from "react"
 import { Logic, Requirement, RequirementType } from "types"
 import LogicDivider from "../LogicDivider"
+import HundredNOneRequirementCard from "./components/101RequirementCard"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
 import DiscordRoleRequirementCard from "./components/DiscordRoleRequirementCard"
@@ -11,13 +12,16 @@ import FreeRequirementCard from "./components/FreeRequirementCard"
 import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
 import GithubRequirementCard from "./components/GithubRequirementCard"
 import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
+import KycDAORequirementCard from "./components/KycDAORequirementCard"
 import LensRequirementCard from "./components/LensRequirementCard"
 import MirrorRequirementCard from "./components/MirrorRequirementCard"
 import NftRequirementCard from "./components/NftRequirementCard"
 import NooxRequirementCard from "./components/NooxRequirementCard"
+import OrangeRequirementCard from "./components/OrangeRequirementCard"
 import OtterspaceRequirementCard from "./components/OtterspaceRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
 import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequirementCard"
+import RabbitholeRequirementCard from "./components/RabbitholeRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
 import SpotifyTopArtistsRequirementCard from "./components/Spotify/SoptifyTopArtistsRequirementCard"
 import SpotifyTopTracksRequirementCard from "./components/Spotify/SoptifyTopTracksRequirementCard"
@@ -49,6 +53,7 @@ const REQUIREMENT_CARDS: Partial<
   POAP: PoapRequirementCard,
   GITPOAP: GitPoapRequirementCard,
   MIRROR: MirrorRequirementCard,
+  MIRROR_COLLECT: MirrorRequirementCard,
   SNAPSHOT: SnapshotRequirementCard,
   ALLOWLIST: AllowlistRequirementCard,
   JUICEBOX: JuiceboxRequirementCard,
@@ -68,6 +73,10 @@ const REQUIREMENT_CARDS: Partial<
   LENS_COLLECT: LensRequirementCard,
   LENS_MIRROR: LensRequirementCard,
   OTTERSPACE: OtterspaceRequirementCard,
+  ORANGE: OrangeRequirementCard,
+  "101": HundredNOneRequirementCard,
+  RABBITHOLE: RabbitholeRequirementCard,
+  KYC_DAO: KycDAORequirementCard,
   SPOTIFY_FOLLOW: SpotifyFollowArtistRequirementCard,
   SPOTIFY_FOLLOW_PLAYLIST: SpotifyFollowPlaylistRequirementCard,
   SPOTIFY_NAME: SpotifyNameRequirementCard,

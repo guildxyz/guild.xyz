@@ -83,6 +83,7 @@ type RequirementType =
   | "POAP"
   | "GITPOAP"
   | "MIRROR"
+  | "MIRROR_COLLECT"
   | "UNLOCK"
   | "SNAPSHOT"
   | "JUICEBOX"
@@ -107,6 +108,10 @@ type RequirementType =
   | "LENS_COLLECT"
   | "LENS_MIRROR"
   | "OTTERSPACE"
+  | "ORANGE"
+  | "101"
+  | "RABBITHOLE"
+  | "KYC_DAO"
   | "SPOTIFY"
   | "SPOTIFY_FOLLOW"
   | "SPOTIFY_FOLLOW_PLAYLIST"
@@ -166,6 +171,7 @@ type PlatformGuildData = {
   DISCORD: {
     role?: never
     inviteChannel: string
+    invite?: string
     joinButton?: boolean
     mimeType?: never
     iconLink?: never
@@ -205,6 +211,11 @@ type SpotifyParamType = {
   artist: string
 }
 
+type RabbitholeParamType = {
+  trait_type: string
+  value: string
+}[]
+
 type Requirement = {
   id: number
   data?: {
@@ -234,9 +245,11 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
-    params?: ContractParamType | DiscoParamType | SpotifyParamType
-
-    type?: string
+    params?:
+      | ContractParamType
+      | DiscoParamType
+      | RabbitholeParamType
+      | SpotifyParamType
   }
   name: string
   type: RequirementType
@@ -336,48 +349,53 @@ type GuildFormType = Partial<
   requirements?: Requirement[]
 }
 
-enum RequirementTypeColors {
-  ERC721 = "var(--chakra-colors-green-400)",
-  ERC1155 = "var(--chakra-colors-green-400)",
-  CONTRACT = "var(--chakra-colors-gray-400)",
-  NOUNS = "var(--chakra-colors-green-400)",
-  POAP = "#8076FA",
-  GITPOAP = "#307AE8",
-  MIRROR = "var(--chakra-colors-gray-300)",
-  ERC20 = "var(--chakra-colors-indigo-400)",
-  COIN = "var(--chakra-colors-indigo-400)",
-  SNAPSHOT = "var(--chakra-colors-orange-400)",
-  ALLOWLIST = "var(--chakra-colors-gray-200)",
-  UNLOCK = "var(--chakra-colors-salmon-400)",
-  JUICEBOX = "var(--chakra-colors-yellow-500)",
-  GALAXY = "var(--chakra-colors-black)",
-  FREE = "var(--chakra-colors-cyan-400)",
-  TWITTER = "var(--chakra-colors-twitter-400)",
-  TWITTER_FOLLOW = "var(--chakra-colors-twitter-400)",
-  TWITTER_NAME = "var(--chakra-colors-twitter-400)",
-  TWITTER_BIO = "var(--chakra-colors-twitter-400)",
-  TWITTER_FOLLOWER_COUNT = "var(--chakra-colors-twitter-400)",
-  GITHUB = "var(--chakra-colors-GITHUB-400)",
-  GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
-  DISCORD_ROLE = "var(--chakra-colors-DISCORD-400)",
-  NOOX = "#7854f7",
-  DISCO = "#bee4e0",
-  LENS_PROFILE = "#BEFB5A",
-  LENS_FOLLOW = "#BEFB5A",
-  LENS_COLLECT = "#BEFB5A",
-  LENS_MIRROR = "#BEFB5A",
-  OTTERSPACE = "#a6ea8e",
-  SPOTIFY = "#1DB954",
-  SPOTIFY_FOLLOW = "#1DB954",
-  SPOTIFY_FOLLOW_PLAYLIST = "#1DB954",
-  SPOTIFY_SAVED_ALBUM = "#1DB954",
-  SPOTIFY_SAVED_EPISODE = "#1DB954",
-  SPOTIFY_SAVED_SHOW = "#1DB954",
-  SPOTIFY_SAVED_TRACK = "#1DB954",
-  SPOTIFY_FOLLOWER_COUNT = "#1DB954",
-  SPOTIFY_NAME = "#1DB954",
-  SPOTIFY_TOP_ARTISTS = "#1DB954",
-  SPOTIFY_TOP_TRACKS = "#1DB954",
+const RequirementTypeColors = {
+  ERC721: "var(--chakra-colors-green-400)",
+  ERC1155: "var(--chakra-colors-green-400)",
+  CONTRACT: "var(--chakra-colors-gray-400)",
+  NOUNS: "var(--chakra-colors-green-400)",
+  POAP: "#8076FA",
+  GITPOAP: "#307AE8",
+  MIRROR: "var(--chakra-colors-gray-300)",
+  MIRROR_COLLECT: "var(--chakra-colors-gray-300)",
+  ERC20: "var(--chakra-colors-indigo-400)",
+  COIN: "var(--chakra-colors-indigo-400)",
+  SNAPSHOT: "var(--chakra-colors-orange-400)",
+  ALLOWLIST: "var(--chakra-colors-gray-200)",
+  UNLOCK: "var(--chakra-colors-salmon-400)",
+  JUICEBOX: "var(--chakra-colors-yellow-500)",
+  GALAXY: "var(--chakra-colors-black)",
+  FREE: "var(--chakra-colors-cyan-400)",
+  TWITTER: "var(--chakra-colors-twitter-400)",
+  TWITTER_FOLLOW: "var(--chakra-colors-twitter-400)",
+  TWITTER_NAME: "var(--chakra-colors-twitter-400)",
+  TWITTER_BIO: "var(--chakra-colors-twitter-400)",
+  TWITTER_FOLLOWER_COUNT: "var(--chakra-colors-twitter-400)",
+  GITHUB: "var(--chakra-colors-GITHUB-400)",
+  GITHUB_STARRING: "var(--chakra-colors-GITHUB-400)",
+  DISCORD_ROLE: "var(--chakra-colors-DISCORD-400)",
+  NOOX: "#7854f7",
+  DISCO: "#bee4e0",
+  LENS_PROFILE: "#BEFB5A",
+  LENS_FOLLOW: "#BEFB5A",
+  LENS_COLLECT: "#BEFB5A",
+  LENS_MIRROR: "#BEFB5A",
+  OTTERSPACE: "#a6ea8e",
+  101: "#000000",
+  ORANGE: "#ff5d24",
+  RABBITHOLE: "#7f23dc",
+  KYC_DAO: "#3D65F2",
+  SPOTIFY: "#1DB954",
+  SPOTIFY_FOLLOW: "#1DB954",
+  SPOTIFY_FOLLOW_PLAYLIST: "#1DB954",
+  SPOTIFY_SAVED_ALBUM: "#1DB954",
+  SPOTIFY_SAVED_EPISODE: "#1DB954",
+  SPOTIFY_SAVED_SHOW: "#1DB954",
+  SPOTIFY_SAVED_TRACK: "#1DB954",
+  SPOTIFY_FOLLOWER_COUNT: "#1DB954",
+  SPOTIFY_NAME: "#1DB954",
+  SPOTIFY_TOP_ARTISTS: "#1DB954",
+  SPOTIFY_TOP_TRACKS: "#1DB954",
 }
 
 type SnapshotStrategy = {

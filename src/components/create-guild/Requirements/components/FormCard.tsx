@@ -49,6 +49,12 @@ const typeLabel = (type) => {
     case "SPOTIFY_TOP_ARTISTS":
       return "SPOTIFY"
 
+    case "MIRROR_COLLECT":
+      return "MIRROR"
+
+    case "KYC_DAO":
+      return "KYCDAO"
+
     default:
       return type
   }
@@ -59,6 +65,9 @@ const typeColor = (type) => {
       return "gray.700"
 
     case "GALAXY":
+      return "white"
+
+    case "101":
       return "white"
 
     default:

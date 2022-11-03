@@ -1,6 +1,5 @@
 import { SimpleGrid, SimpleGridProps } from "@chakra-ui/react"
 import OptionCard from "components/common/OptionCard"
-import { useRouter } from "next/router"
 import platforms from "platforms"
 import { PlatformName } from "types"
 import DiscordSelectButton from "./components/DiscordSelectButton"
@@ -25,7 +24,7 @@ const platformsData: Record<
   }
 > = {
   DISCORD: {
-    description: "Manage roles & guard server",
+    description: "Token gate roles",
     Btn: DiscordSelectButton,
   },
   TELEGRAM: {
@@ -42,25 +41,21 @@ const platformsData: Record<
   },
 }
 
-const PlatformsGrid = ({ onSelection, columns = { base: 1, md: 2 } }: Props) => {
-  const router = useRouter()
-
-  return (
-    <SimpleGrid columns={columns} gap={{ base: 4, md: 6 }}>
-      {Object.entries(platformsData).map(([platformName, { description, Btn }]) => (
-        <OptionCard
-          key={platformName}
-          size="lg"
-          title={platforms[platformName].name}
-          image={`/platforms/${platformName.toLowerCase()}.png`}
-          bgImage={`/platforms/${platformName.toLowerCase()}_bg.png`}
-          description={description}
-        >
-          {Btn && <Btn onSelection={onSelection} />}
-        </OptionCard>
-      ))}
-    </SimpleGrid>
-  )
-}
+const PlatformsGrid = ({ onSelection, columns = { base: 1, md: 2 } }: Props) => (
+  <SimpleGrid columns={columns} gap={{ base: 4, md: 6 }}>
+    {Object.entries(platformsData).map(([platformName, { description, Btn }]) => (
+      <OptionCard
+        key={platformName}
+        size="lg"
+        title={platforms[platformName].name}
+        image={`/platforms/${platformName.toLowerCase()}.png`}
+        bgImage={`/platforms/${platformName.toLowerCase()}_bg.png`}
+        description={description}
+      >
+        {Btn && <Btn onSelection={onSelection} />}
+      </OptionCard>
+    ))}
+  </SimpleGrid>
+)
 
 export default PlatformsGrid

@@ -57,6 +57,7 @@ const styles = {
       },
       overlay: {
         backdropFilter: "blur(4px)",
+        height: "100%",
       },
     }
   },

@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
-import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
 
 export type Memberships = Array<{
   guildId: number
@@ -11,7 +11,7 @@ const useMemberships = () => {
 
   const shouldFetch = !!account
 
-  const { data } = useSWR<Memberships>(
+  const { data } = useSWRImmutable<Memberships>(
     shouldFetch ? `/user/membership/${account}` : null
   )
 

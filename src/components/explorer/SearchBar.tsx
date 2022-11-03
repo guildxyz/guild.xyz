@@ -6,10 +6,10 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 type Props = {
   placeholder?: string
@@ -22,7 +22,7 @@ const SearchBar = ({
   search,
   setSearch,
 }: Props): JSX.Element => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+  const { addDatadogAction } = useDatadog()
 
   const [localValue, setLocalValue] = useState(search)
   const debouncedValue = useDebouncedState(localValue)
