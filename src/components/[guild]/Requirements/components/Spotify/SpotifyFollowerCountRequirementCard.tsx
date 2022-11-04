@@ -18,8 +18,7 @@ const SpotifyFollowerCountRequirementCard = ({ requirement }: Props) => {
       image={img ?? <Icon as={SpotifyLogo} boxSize={6} />}
       footer={<ConnectRequirementPlatformButton platform="SPOTIFY" />}
     >
-      Have at least {Math.floor(requirement.data.minAmount)}{" "}
-      {pluralize(Math.floor(requirement.data.minAmount), "follower")}
+      Have at least {pluralize(Math.floor(requirement.data.minAmount), "follower")}
     </RequirementCard>
   )
 }
