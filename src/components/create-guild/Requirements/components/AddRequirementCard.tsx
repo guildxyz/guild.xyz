@@ -170,7 +170,7 @@ const integrations: Array<RequirementButton> = [
 const TRANSITION_DURATION_MS = 250
 const HOME_MAXHEIGHT = "550px"
 
-const AddRequirementCard = ({ onAdd }): JSX.Element => {
+const AddRequirement = ({ onAdd }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [selectedType, setSelectedType] = useState<string>()
   const [height, setHeight] = useState("auto")
@@ -249,10 +249,10 @@ const AddRequirementCard = ({ onAdd }): JSX.Element => {
             height={height}
             transition={`transform ${TRANSITION_DURATION_MS}ms, height ${TRANSITION_DURATION_MS}ms`}
           >
-            <RequirementTypes ref={homeRef} {...{ setSelectedType }} />
+            <AddRequirementHome ref={homeRef} {...{ setSelectedType }} />
             <AnimatePresence>
               {selectedType && (
-                <RequirementForm
+                <AddRequirementForm
                   ref={formRef}
                   {...{ onAdd, handleClose, selectedType }}
                 />
@@ -265,7 +265,7 @@ const AddRequirementCard = ({ onAdd }): JSX.Element => {
   )
 }
 
-const RequirementForm = forwardRef(
+const AddRequirementForm = forwardRef(
   ({ onAdd, handleClose, selectedType }: any, ref: any) => {
     const FormComponent = REQUIREMENT_FORMCARDS[selectedType]
     const methods = useForm({ mode: "all" })
@@ -298,7 +298,7 @@ const RequirementForm = forwardRef(
   }
 )
 
-const RequirementTypes = forwardRef(({ setSelectedType }: any, ref: any) => (
+const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => (
   <ModalBody ref={ref} maxHeight={HOME_MAXHEIGHT}>
     <Heading size="sm" mb="3">
       General
@@ -347,4 +347,4 @@ const RequirementTypes = forwardRef(({ setSelectedType }: any, ref: any) => (
   </ModalBody>
 ))
 
-export default AddRequirementCard
+export default AddRequirement

@@ -30,7 +30,7 @@ import {
   useWatch,
 } from "react-hook-form"
 import { Requirement, RequirementType } from "types"
-import AddRequirementCard from "./components/AddRequirementCard"
+import AddRequirement from "./components/AddRequirementCard"
 import BalancyCounterWithPopover from "./components/BalancyCounter"
 import BalancyFooter from "./components/BalancyFooter"
 import REQUIREMENT_FORMCARDS from "./formCards"
@@ -149,7 +149,7 @@ const SetRequirements = (): JSX.Element => {
         }
       })}
 
-      {!freeEntry && <AddRequirementCard onAdd={addRequirement} />}
+      {!freeEntry && <AddRequirement onAdd={addRequirement} />}
 
       {/* <FormErrorMessage id="requirements-error-message">
         {errors.requirements?.message as string}
