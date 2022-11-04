@@ -23,6 +23,7 @@ import HundredNOneFormCard from "./components/101FormCard"
 import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
 import BalancyCounter from "./components/BalancyCounter"
+import CaskFormCard from "./components/CaskFormCard"
 import ContractStateFormCard from "./components/ContractStateFormCard/ContractStateFormCard"
 import DiscoFormCard from "./components/DiscoFormCard"
 import DiscordFormCard from "./components/DiscordFormCard"
@@ -81,6 +82,7 @@ const REQUIREMENT_FORMCARDS = {
   LENS_MIRROR: LensFormCard,
   OTTERSPACE: OtterspaceFormCard,
   ORANGE: OrangeFormCard,
+  CASK: CaskFormCard,
   101: HundredNOneFormCard,
   RABBITHOLE: RabbitholeFormCard,
   KYC_DAO: KycDAOFormCard,

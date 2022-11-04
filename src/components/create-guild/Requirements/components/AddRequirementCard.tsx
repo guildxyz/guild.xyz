@@ -83,7 +83,7 @@ const requirementButtons: {
         </Center>
       ),
       label: "Discord",
-      type: "DISCORD",
+      type: "DISCORD_ROLE",
     },
 
     {
@@ -113,7 +113,7 @@ const requirementButtons: {
         </Center>
       ),
       label: "GitHub",
-      type: "GITHUB",
+      type: "GITHUB_STARRING",
     },
 
     {
@@ -193,6 +193,11 @@ const requirementButtons: {
       icon: <Img src="/requirementLogos/kycdao.svg" boxSize={6} />,
       label: "kycDAO",
       type: "KYC_DAO",
+    },
+    {
+      icon: <Img src="/requirementLogos/cask.jpg" boxSize={6} rounded={"full"} />,
+      label: "Cask",
+      type: "CASK",
     },
   ],
 }

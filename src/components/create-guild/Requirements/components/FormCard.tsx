@@ -66,9 +66,8 @@ const typeColor = (type) => {
       return "gray.700"
 
     case "GALAXY":
-      return "white"
-
     case "101":
+    case "CASK":
       return "white"
 
     default:
