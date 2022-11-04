@@ -1,6 +1,7 @@
 import { Icon } from "@chakra-ui/react"
 import { SpotifyLogo } from "phosphor-react"
 import { Requirement, SpotifyParamType } from "types"
+import pluralize from "utils/pluralize"
 import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatformButton"
 import RequirementCard from "../common/RequirementCard"
 
@@ -17,7 +18,8 @@ const SpotifyFollowerCountRequirementCard = ({ requirement }: Props) => {
       image={img ?? <Icon as={SpotifyLogo} boxSize={6} />}
       footer={<ConnectRequirementPlatformButton platform="SPOTIFY" />}
     >
-      Have at least {Math.floor(requirement.data.minAmount)} followers
+      Have at least {Math.floor(requirement.data.minAmount)}{" "}
+      {pluralize(Math.floor(requirement.data.minAmount), "follower")}
     </RequirementCard>
   )
 }
