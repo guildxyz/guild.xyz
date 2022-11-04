@@ -62,7 +62,11 @@ const SpotifySearch = ({ index, type, label }: Props) => {
         isClearable
         options={options}
         isLoading={isValidating}
-        onInputChange={(val) => setSearchValue(val)}
+        onInputChange={(val, { action }) => {
+          if (action !== "input-blur" && action !== "menu-close") {
+            setSearchValue(val)
+          }
+        }}
         inputValue={searchValue}
         placeholder="Search..."
       />
