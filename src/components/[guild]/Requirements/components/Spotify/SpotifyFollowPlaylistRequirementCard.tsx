@@ -11,7 +11,8 @@ const SpotifyFollowPlaylistRequirementCard = ({
 }: {
   requirement: Requirement
 }) => {
-  const { img, label } = (requirement?.data?.params as SpotifyParamType) ?? {}
+  const { img, label, artist } =
+    (requirement?.data?.params as SpotifyParamType) ?? {}
 
   return (
     <RequirementCard
@@ -29,7 +30,8 @@ const SpotifyFollowPlaylistRequirementCard = ({
         </Wrap>
       }
     >
-      Follow the <DataBlock>{label}</DataBlock> playlist
+      Follow the <DataBlock>{label}</DataBlock> playlist by{" "}
+      <DataBlock>{artist}</DataBlock>
     </RequirementCard>
   )
 }
