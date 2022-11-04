@@ -245,9 +245,11 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
             overflow={"hidden"}
             w="200%"
             columns={2}
+            // fixes Safari height glitch (ModalBody being taller than this wrapper element on small screens so it's not fully scrollable)
+            templateRows="1fr auto"
             transform={selectedType ? "translateX(-50%)" : "translateX(0px)"}
-            height={height}
-            transition={`transform ${TRANSITION_DURATION_MS}ms, height ${TRANSITION_DURATION_MS}ms`}
+            maxHeight={height}
+            transition={`transform ${TRANSITION_DURATION_MS}ms, max-height ${TRANSITION_DURATION_MS}ms`}
           >
             <AddRequirementHome ref={homeRef} {...{ setSelectedType }} />
             <AnimatePresence>
@@ -281,7 +283,14 @@ const AddRequirementForm = forwardRef(
     })
 
     return (
-      <Box ref={ref} alignSelf="start">
+      <Box
+        ref={ref}
+        alignSelf="start"
+        maxHeight={"full"}
+        overflow={"hidden"}
+        display={"flex"}
+        flexDirection={"column"}
+      >
         <FormProvider {...methods}>
           <ModalBody>
             <FormComponent baseFieldPath="" />
@@ -299,7 +308,7 @@ const AddRequirementForm = forwardRef(
 )
 
 const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => (
-  <ModalBody ref={ref} maxHeight={HOME_MAXHEIGHT}>
+  <ModalBody ref={ref} maxHeight={HOME_MAXHEIGHT} h="full">
     <Heading size="sm" mb="3">
       General
     </Heading>
