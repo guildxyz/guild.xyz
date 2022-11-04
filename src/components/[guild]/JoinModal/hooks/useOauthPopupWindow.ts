@@ -103,6 +103,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           if (type === "OAUTH_SUCCESS") {
             clearInterval(interval)
 
+            generateNewCSRFToken(undefined)
             if (recievedCsrfToken !== csrfToken) {
               const title = "CSRF Error"
               const errorDescription =
