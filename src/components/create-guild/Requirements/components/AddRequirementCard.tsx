@@ -22,6 +22,7 @@ import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
+import { AnimatePresence, usePresence } from "framer-motion"
 import {
   ArrowLeft,
   CaretRight,
@@ -171,28 +172,21 @@ const HOME_MAXHEIGHT = "550px"
 
 const AddRequirementCard = ({ onAdd }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [selectedType, setSelectedTypeInitial] = useState<string>()
-  const [isFormActive, setIsFormActive] = useState(false)
+  const [selectedType, setSelectedType] = useState<string>()
   const [height, setHeight] = useState("auto")
   const addCardRef = useRef()
   const homeRef = useRef(null)
   const formRef = useRef(null)
 
-  const setSelectedType = (value) => {
-    setSelectedTypeInitial(value)
-    setIsFormActive(true)
-  }
-
   const handleClose = () => {
     onClose()
     setTimeout(() => {
-      setSelectedTypeInitial(null)
-      setIsFormActive(false)
-    }, 200)
+      setSelectedType(null)
+    }, 300)
   }
 
   useEffect(() => {
-    if (isFormActive) {
+    if (selectedType) {
       setHeight(formRef.current?.getBoundingClientRect().height)
 
       // set height to auto after the transition is done so the content can change
@@ -210,13 +204,8 @@ const AddRequirementCard = ({ onAdd }): JSX.Element => {
         if (homeRef.current) homeRef.current.style.height = "auto"
         setHeight(HOME_MAXHEIGHT)
       }, 10)
-
-      // unmount the form component after the transition is done
-      setTimeout(() => {
-        setSelectedTypeInitial(null)
-      }, TRANSITION_DURATION_MS)
     }
-  }, [isFormActive, homeRef, formRef])
+  }, [selectedType, homeRef, formRef])
 
   return (
     <>
@@ -235,7 +224,7 @@ const AddRequirementCard = ({ onAdd }): JSX.Element => {
           <ModalCloseButton />
           <ModalHeader>
             <HStack>
-              {isFormActive && (
+              {selectedType && (
                 <IconButton
                   rounded={"full"}
                   aria-label="Back"
@@ -243,11 +232,11 @@ const AddRequirementCard = ({ onAdd }): JSX.Element => {
                   mb="-3px"
                   icon={<ArrowLeft size={20} />}
                   variant="ghost"
-                  onClick={() => setIsFormActive(false)}
+                  onClick={() => setSelectedType(null)}
                 />
               )}
               <Text w="calc(100% - 70px)" noOfLines={1}>{`Add ${
-                isFormActive ? selectedType : ""
+                selectedType ?? ""
               } requirement`}</Text>
             </HStack>
           </ModalHeader>
@@ -256,17 +245,19 @@ const AddRequirementCard = ({ onAdd }): JSX.Element => {
             overflow={"hidden"}
             w="200%"
             columns={2}
-            transform={isFormActive ? "translateX(-50%)" : "translateX(0px)"}
+            transform={selectedType ? "translateX(-50%)" : "translateX(0px)"}
             height={height}
             transition={`transform ${TRANSITION_DURATION_MS}ms, height ${TRANSITION_DURATION_MS}ms`}
           >
             <RequirementTypes ref={homeRef} {...{ setSelectedType }} />
-            {selectedType && (
-              <RequirementForm
-                ref={formRef}
-                {...{ onAdd, handleClose, selectedType }}
-              />
-            )}
+            <AnimatePresence>
+              {selectedType && (
+                <RequirementForm
+                  ref={formRef}
+                  {...{ onAdd, handleClose, selectedType }}
+                />
+              )}
+            </AnimatePresence>
           </SimpleGrid>
         </ModalContent>
       </Modal>
@@ -278,6 +269,11 @@ const RequirementForm = forwardRef(
   ({ onAdd, handleClose, selectedType }: any, ref: any) => {
     const FormComponent = REQUIREMENT_FORMCARDS[selectedType]
     const methods = useForm({ mode: "all" })
+
+    const [isPresent, safeToRemove] = usePresence()
+    useEffect(() => {
+      if (!isPresent) setTimeout(safeToRemove, TRANSITION_DURATION_MS)
+    }, [isPresent])
 
     const onSubmit = methods.handleSubmit((data) => {
       onAdd({ type: selectedType, ...data })
