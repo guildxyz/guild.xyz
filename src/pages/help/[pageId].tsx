@@ -1,5 +1,7 @@
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
+import CategorySection from "components/explorer/CategorySection"
+import PageCard from "components/help/pageCard"
 import { GetStaticPaths } from "next"
 import { NotionAPI } from "notion-client"
 import "prismjs/themes/prism-tomorrow.css"
@@ -12,28 +14,39 @@ type CustomPageLinkProps = {
   className: string
 }
 
-const CustomLink = ({
+function CustomLink({
   className,
   href,
   children,
-}: PropsWithChildren<CustomPageLinkProps>) => (
-  <a
-    className={className}
-    href={`/help${
-      href.slice(0, 9) +
-      "-" +
-      href.slice(9, 13) +
-      "-" +
-      href.slice(13, 17) +
-      "-" +
-      href.slice(17, 21) +
-      "-" +
-      href.slice(21)
-    }`}
-  >
-    {children}
-  </a>
-)
+}: PropsWithChildren<CustomPageLinkProps>) {
+  const linkId =
+    href.slice(1, 9) +
+    "-" +
+    href.slice(9, 13) +
+    "-" +
+    href.slice(13, 17) +
+    "-" +
+    href.slice(17, 21) +
+    "-" +
+    href.slice(21)
+
+  return (
+    <a className={className} href={`/help/${linkId}`}>
+      {children}
+    </a>
+  )
+}
+
+async function getAllPages() {
+  const { Client } = require("@notionhq/client")
+
+  const notion = new Client({ auth: process.env.NOTION_API_KEY })
+  const databaseId = process.env.NOTION_DATABASE_ID
+  const response = await notion.databases.query({
+    database_id: databaseId,
+  })
+  return response.results
+}
 
 async function getIds() {
   const { Client } = require("@notionhq/client")
@@ -67,18 +80,33 @@ async function getPage(params: any) {
   return blockMap
 }
 
+function getPageLinkDatas(blockMap, params: any, allPages: any) {
+  const linkedPageIds = blockMap.block[params.pageId.toString()]?.value.properties[
+    "xBM?"
+  ]
+    ?.filter((link) => link.length > 1)
+    .map((linkObj) => linkObj[1][0][1])
+  const linkedPageContents = allPages.filter((page) =>
+    linkedPageIds?.includes(page.id)
+  )
+  return linkedPageContents
+}
+
 export async function getStaticProps({ params }) {
   const blockMap = await getPage(params)
+  const allPages = await getAllPages()
+  const linkedPageContents = getPageLinkDatas(blockMap, params, allPages)
 
   return {
     props: {
       blockMap,
+      linkedPageContents,
       params,
     },
   }
 }
 
-function Page({ blockMap, params }) {
+function Page({ blockMap, linkedPageContents, params }) {
   return (
     <>
       <LinkPreviewHead path="" />
@@ -96,6 +124,13 @@ function Page({ blockMap, params }) {
             PageLink: CustomLink,
           }}
         />
+        {linkedPageContents && (
+          <CategorySection fallbackText={"no tags"}>
+            {linkedPageContents?.map((page) => (
+              <PageCard pageData={page} key={page.id} echosystem={true} />
+            ))}
+          </CategorySection>
+        )}
       </Layout>
     </>
   )

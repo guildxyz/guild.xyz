@@ -5,6 +5,7 @@ import { Users } from "phosphor-react"
 
 type Props = {
   pageData: any // TODO: PageCardBase type
+  echosystem?: boolean
 }
 
 const PageCard = ({ pageData }: Props): JSX.Element => (
