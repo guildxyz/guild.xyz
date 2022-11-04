@@ -6,12 +6,18 @@ import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatfo
 import { RequirementLinkButton } from "../common/RequirementButton"
 import RequirementCard from "../common/RequirementCard"
 
+const termToLabel = {
+  short: "last couple of weeks",
+  medium: "last 6 months",
+  long: "last years",
+}
+
 const SpotifyTopTracksRequirementCard = ({
   requirement,
 }: {
   requirement: Requirement
 }) => {
-  const { img, label, artist } =
+  const { img, label, artist, term } =
     (requirement?.data?.params as SpotifyParamType) ?? {}
 
   return (
@@ -32,9 +38,11 @@ const SpotifyTopTracksRequirementCard = ({
     >
       Have <DataBlock>{label}</DataBlock> by{" "}
       <DataBlock>{artist ?? "Unknown artist"}</DataBlock> in your top{" "}
-      <DataBlock>{requirement?.data?.minAmount}</DataBlock> listened tracks
+      <DataBlock>{requirement?.data?.minAmount}</DataBlock> listened tracks in the{" "}
+      {termToLabel[term]}
     </RequirementCard>
   )
 }
 
+export { termToLabel }
 export default SpotifyTopTracksRequirementCard

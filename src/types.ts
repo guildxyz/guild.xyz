@@ -211,6 +211,7 @@ type SpotifyParamType = {
   label: string
   img: string
   artist: string
+  term?: "short" | "medium" | "long"
 }
 
 type RabbitholeParamType = {

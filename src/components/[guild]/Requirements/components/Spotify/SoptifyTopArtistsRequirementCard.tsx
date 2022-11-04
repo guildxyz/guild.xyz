@@ -5,13 +5,14 @@ import { Requirement, SpotifyParamType } from "types"
 import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatformButton"
 import { RequirementLinkButton } from "../common/RequirementButton"
 import RequirementCard from "../common/RequirementCard"
+import { termToLabel } from "./SoptifyTopTracksRequirementCard"
 
 const SpotifyTopArtistsRequirementCard = ({
   requirement,
 }: {
   requirement: Requirement
 }) => {
-  const { img, label } = (requirement?.data?.params as SpotifyParamType) ?? {}
+  const { img, label, term } = (requirement?.data?.params as SpotifyParamType) ?? {}
 
   return (
     <RequirementCard
@@ -30,7 +31,8 @@ const SpotifyTopArtistsRequirementCard = ({
       }
     >
       Have <DataBlock>{label}</DataBlock> in your top{" "}
-      <DataBlock>{requirement?.data?.minAmount}</DataBlock> listened artists
+      <DataBlock>{requirement?.data?.minAmount}</DataBlock> listened artists in the{" "}
+      {termToLabel[term]}
     </RequirementCard>
   )
 }
