@@ -10,7 +10,7 @@ const Card = ({
   isFullWidthOnMobile = false,
   children,
   ...rest
-}: PropsWithChildren<Props>) => {
+}: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
