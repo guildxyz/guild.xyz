@@ -1,4 +1,5 @@
 import {
+  Box,
   Heading,
   HStack,
   Icon,
@@ -29,7 +30,7 @@ import {
   ListChecks,
   Wrench,
 } from "phosphor-react"
-import { FC, useRef, useState } from "react"
+import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { RequirementType } from "types"
 import REQUIREMENT_FORMCARDS from "../formCards"
@@ -165,26 +166,68 @@ const integrations: Array<RequirementButton> = [
   },
 ]
 
+const TRANSITION_DURATION_MS = 250
+const HOME_MAXHEIGHT = "550px"
+
 const AddRequirementCard = ({ onAdd }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [selectedType, setSelectedType] = useState<string>()
-  const ref = useRef()
+  const [selectedType, setSelectedTypeInitial] = useState<string>()
+  const [isFormActive, setIsFormActive] = useState(false)
+  const [height, setHeight] = useState("auto")
+  const addCardRef = useRef()
+  const homeRef = useRef(null)
+  const formRef = useRef(null)
+
+  const setSelectedType = (value) => {
+    setSelectedTypeInitial(value)
+    setIsFormActive(true)
+  }
 
   const handleClose = () => {
     onClose()
-    setSelectedType(null)
+    setTimeout(() => {
+      setSelectedTypeInitial(null)
+      setIsFormActive(false)
+    }, 200)
   }
+
+  useEffect(() => {
+    if (isFormActive) {
+      setHeight(formRef.current?.getBoundingClientRect().height)
+
+      // set height to auto after the transition is done so the content can change
+      setTimeout(() => {
+        // the form is always taller than 200px, and it's better than 0 for animating back
+        if (homeRef.current) homeRef.current.style.height = "200px"
+        setHeight("auto")
+      }, TRANSITION_DURATION_MS)
+    } else {
+      // set current height back to explicit value from auto so it can animate
+      if (formRef.current) setHeight(formRef.current.getBoundingClientRect().height)
+
+      // 10ms setTimeout to ensure these happen after the setHeight above has completed
+      setTimeout(() => {
+        if (homeRef.current) homeRef.current.style.height = "auto"
+        setHeight(HOME_MAXHEIGHT)
+      }, 10)
+
+      // unmount the form component after the transition is done
+      setTimeout(() => {
+        setSelectedTypeInitial(null)
+      }, TRANSITION_DURATION_MS)
+    }
+  }, [isFormActive, homeRef, formRef])
 
   return (
     <>
       <CardMotionWrapper>
-        <AddCard ref={ref} text="Add requirement" onClick={onOpen} />
+        <AddCard ref={addCardRef} text="Add requirement" onClick={onOpen} />
       </CardMotionWrapper>
       <Modal
         isOpen={isOpen}
         onClose={handleClose}
         scrollBehavior="inside"
-        finalFocusRef={ref}
+        finalFocusRef={addCardRef}
         // colorScheme={"dark"}
       >
         <ModalOverlay />
@@ -192,7 +235,7 @@ const AddRequirementCard = ({ onAdd }): JSX.Element => {
           <ModalCloseButton />
           <ModalHeader>
             <HStack>
-              {selectedType && (
+              {isFormActive && (
                 <IconButton
                   rounded={"full"}
                   aria-label="Back"
@@ -200,51 +243,67 @@ const AddRequirementCard = ({ onAdd }): JSX.Element => {
                   mb="-3px"
                   icon={<ArrowLeft size={20} />}
                   variant="ghost"
-                  onClick={() => setSelectedType(null)}
+                  onClick={() => setIsFormActive(false)}
                 />
               )}
               <Text w="calc(100% - 70px)" noOfLines={1}>{`Add ${
-                selectedType ?? ""
+                isFormActive ? selectedType : ""
               } requirement`}</Text>
             </HStack>
           </ModalHeader>
-          {selectedType ? (
-            <RequirementForm {...{ onAdd, handleClose, selectedType }} />
-          ) : (
-            <RequirementTypes {...{ setSelectedType }} />
-          )}
+
+          <SimpleGrid
+            overflow={"hidden"}
+            w="200%"
+            columns={2}
+            transform={isFormActive ? "translateX(-50%)" : "translateX(0px)"}
+            height={height}
+            transition={`transform ${TRANSITION_DURATION_MS}ms, height ${TRANSITION_DURATION_MS}ms`}
+          >
+            <RequirementTypes ref={homeRef} {...{ setSelectedType }} />
+            {selectedType && (
+              <RequirementForm
+                ref={formRef}
+                {...{ onAdd, handleClose, selectedType }}
+              />
+            )}
+          </SimpleGrid>
         </ModalContent>
       </Modal>
     </>
   )
 }
 
-const RequirementForm = ({ onAdd, handleClose, selectedType }) => {
-  const FormComponent = REQUIREMENT_FORMCARDS[selectedType]
-  const methods = useForm({ mode: "all" })
+const RequirementForm = forwardRef(
+  ({ onAdd, handleClose, selectedType }: any, ref: any) => {
+    const FormComponent = REQUIREMENT_FORMCARDS[selectedType]
+    const methods = useForm({ mode: "all" })
 
-  const onSubmit = methods.handleSubmit((data) => {
-    onAdd({ type: selectedType, ...data })
-    handleClose()
-  })
+    const onSubmit = methods.handleSubmit((data) => {
+      onAdd({ type: selectedType, ...data })
+      handleClose()
+    })
 
-  return (
-    <FormProvider {...methods}>
-      <ModalBody>
-        <FormComponent baseFieldPath="" />
-      </ModalBody>
-      <ModalFooter gap="3">
-        <BalancyFooter baseFieldPath={null} />
-        <Button colorScheme="green" onClick={onSubmit} ml="auto">
-          Add requirement
-        </Button>
-      </ModalFooter>
-    </FormProvider>
-  )
-}
+    return (
+      <Box ref={ref} alignSelf="start">
+        <FormProvider {...methods}>
+          <ModalBody>
+            <FormComponent baseFieldPath="" />
+          </ModalBody>
+          <ModalFooter gap="3">
+            <BalancyFooter baseFieldPath={null} />
+            <Button colorScheme="green" onClick={onSubmit} ml="auto">
+              Add requirement
+            </Button>
+          </ModalFooter>
+        </FormProvider>
+      </Box>
+    )
+  }
+)
 
-const RequirementTypes = ({ setSelectedType }) => (
-  <ModalBody maxHeight={{ sm: "550px" }}>
+const RequirementTypes = forwardRef(({ setSelectedType }: any, ref: any) => (
+  <ModalBody ref={ref} maxHeight={HOME_MAXHEIGHT}>
     <Heading size="sm" mb="3">
       General
     </Heading>
@@ -290,6 +349,6 @@ const RequirementTypes = ({ setSelectedType }) => (
       ))}
     </Stack>
   </ModalBody>
-)
+))
 
 export default AddRequirementCard
