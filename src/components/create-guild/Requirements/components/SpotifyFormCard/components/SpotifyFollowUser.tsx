@@ -12,15 +12,22 @@ const SpotifyFollowUser = ({ index }: Props) => {
 
   const { gateables } = useGateables("SPOTIFY", undefined, { q: "", type: "user" })
 
+  const user = gateables as any as {
+    value: string
+    label: string
+    img?: string
+    details?: string
+  }
+
   useEffect(() => {
-    if (gateables?.[0]) {
-      setValue(`requirements.${index}.data.id`, gateables[0].value)
-      setValue(`requirements.${index}.data.params.label`, gateables[0].value)
-      if (gateables[0].img) {
-        setValue(`requirements.${index}.data.params.img`, gateables[0].img)
+    if (user?.value) {
+      setValue(`requirements.${index}.data.id`, user.value)
+      setValue(`requirements.${index}.data.params.label`, user.value)
+      if (user.img) {
+        setValue(`requirements.${index}.data.params.img`, user.img)
       }
     }
-  }, [gateables])
+  }, [user])
 
   return (
     <>
