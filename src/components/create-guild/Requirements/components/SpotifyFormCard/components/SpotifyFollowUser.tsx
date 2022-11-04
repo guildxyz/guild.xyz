@@ -13,10 +13,6 @@ const SpotifyFollowUser = ({ index }: Props) => {
   const { gateables } = useGateables("SPOTIFY", undefined, { q: "", type: "user" })
 
   useEffect(() => {
-    setValue(`requirements.${index}.data.type`, "user")
-  }, [])
-
-  useEffect(() => {
     if (gateables?.[0]) {
       setValue(`requirements.${index}.data.id`, gateables[0].value)
       setValue(`requirements.${index}.data.params.label`, gateables[0].value)
