@@ -167,7 +167,7 @@ const integrations: Array<RequirementButton> = [
   },
 ]
 
-const TRANSITION_DURATION_MS = 250
+const TRANSITION_DURATION_MS = 200
 const HOME_MAXHEIGHT = "550px"
 
 const AddRequirement = ({ onAdd }): JSX.Element => {
