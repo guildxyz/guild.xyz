@@ -85,6 +85,8 @@ const REQUIREMENT_FORMCARDS = {
   RABBITHOLE: RabbitholeFormCard,
   KYC_DAO: KycDAOFormCard,
   SOUND: SoundFormCard,
+  SOUND_OWN_SONG: SoundFormCard,
+  SOUND_SUPPORT: SoundFormCard,
 }
 
 type Props = {

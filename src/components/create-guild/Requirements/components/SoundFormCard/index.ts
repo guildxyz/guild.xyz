@@ -1,3 +1,1 @@
-import SoundFormCard from "./SoundFormCard"
-
-export default SoundFormCard
+export { default } from "./SoundFormCard"

@@ -1,70 +1,75 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react"
-import FormErrorMessage from "components/common/FormErrorMessage"
-import { Controller, useFormContext } from "react-hook-form"
+import { Divider, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
+import StyledSelect from "components/common/StyledSelect"
+import { useController, useFormState } from "react-hook-form"
 import { Requirement } from "types"
+import SoundOwnASong from "./components/SoundOwnASong"
+import SupportArtist from "./components/SupportArtist"
 
 type Props = {
   index: number
   field: Requirement
 }
 
-const SoundFormCard = ({ index, field }: Props) => {
-  const baseFieldName = `requirements.${index}`
+const soundRequirementTypes = [
+  {
+    label: "Support an artist",
+    value: "SOUND_SUPPORT",
+    SoundRequirement: SupportArtist,
+  },
+  {
+    label: "Own a song",
+    value: "SOUND_OWN_SONG",
+    SoundRequirement: SoundOwnASong,
+  },
+  // {
+  //   label: "Twitter",
+  //   value: "TWITTER_NAME",
+  //   SoundRequirement: Following,
+  // },
+  // {
+  //   label: "Bio includes text",
+  //   value: "TWITTER_BIO",
+  //   TwitterRequirement: SearchValue,
+  // },
+]
 
+const SoundFormCard = ({ index, field }: Props) => {
   const {
-    control,
-    formState: { errors },
-  } = useFormContext()
+    field: { name, onBlur, onChange, ref, value },
+  } = useController({
+    name: `requirements.${index}.type`,
+    rules: { required: "It's required to select a type" },
+  })
+
+  const { errors } = useFormState()
+
+  const selected = soundRequirementTypes.find((reqType) => reqType.value === value)
 
   return (
     <>
-      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
-        <FormLabel>Data ID:</FormLabel>
-        <Controller
-          name={`requirements.${index}.data.id` as const}
-          control={control}
-          rules={{ required: "This field is required." }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <Input
-              type="text"
-              ref={ref}
-              value={value ?? ""}
-              placeholder="Data id"
-              onChange={(newChange) => {
-                const newValue = newChange.target.value
-                const split = newValue.split("/")
-                onChange(split[split.length - 1])
-              }}
-              onBlur={onBlur}
-            />
-          )}
+      <FormControl isInvalid={!!errors?.requirements?.[index]?.type?.message}>
+        <FormLabel>Type</FormLabel>
+        <StyledSelect
+          options={soundRequirementTypes}
+          name={name}
+          onBlur={onBlur}
+          onChange={(newValue: { label: string; value: string }) => {
+            onChange(newValue?.value)
+          }}
+          ref={ref}
+          value={selected}
         />
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {errors?.requirements?.[index]?.type?.message}
         </FormErrorMessage>
       </FormControl>
 
-      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.title}>
-        <FormLabel>Title:</FormLabel>
-        <Controller
-          name={`requirements.${index}.data.title` as const}
-          control={control}
-          rules={{ required: "This field is required." }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <Input
-              type="text"
-              ref={ref}
-              value={value ?? ""}
-              placeholder="Data id"
-              onChange={onChange}
-              onBlur={onBlur}
-            />
-          )}
-        />
-        <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.title?.message}
-        </FormErrorMessage>
-      </FormControl>
+      {selected?.SoundRequirement && (
+        <>
+          <Divider />
+          <selected.SoundRequirement index={index} field={field} />
+        </>
+      )}
     </>
   )
 }
