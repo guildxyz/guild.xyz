@@ -23,6 +23,7 @@ enum Chains {
   METIS = 1088,
   CRONOS = 25,
   BOBA = 288,
+  BOBA_AVAX = 43288,
   PALM = 11297108109,
 }
 
@@ -262,6 +263,22 @@ const RPC = {
     iconUrls: ["/networkLogos/boba.svg"],
     rpcUrls: ["https://mainnet.boba.network"],
   },
+  BOBA_AVAX: {
+    chainId: 43288,
+    chainName: "Boba-Avax L2",
+    nativeCurrency: {
+      name: "Boba",
+      symbol: "BOBA",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/20285/small/BOBA.png?1636811576",
+    },
+    blockExplorerUrls: ["https://blockexplorer.avax.boba.network"],
+    apiUrl: "https://blockexplorer.avax.boba.network/api",
+    iconUrls: ["/networkLogos/boba.svg"],
+    rpcUrls: ["https://avax.boba.network"],
+  },
   PALM: {
     chainId: 11297108109,
     chainName: "Palm",
@@ -378,6 +395,10 @@ const blockExplorerIcons = {
     dark: "/explorerLogos/cronos-dark.svg",
   },
   "https://blockexplorer.boba.network": {
+    light: "/explorerLogos/boba-light.svg",
+    dark: "/networkLogos/boba.svg",
+  },
+  "https://blockexplorer.avax.boba.network": {
     light: "/explorerLogos/boba-light.svg",
     dark: "/networkLogos/boba.svg",
   },
