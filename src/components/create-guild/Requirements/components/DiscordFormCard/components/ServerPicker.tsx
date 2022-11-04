@@ -86,7 +86,9 @@ const ServerPicker = ({ index }: Props): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      <Collapse in={isUnknownServer}>
+      <Collapse
+        in={!errors?.requirements?.[index]?.data?.serverId && isUnknownServer}
+      >
         <FormControl
           isRequired
           isInvalid={!!errors?.requirements?.[index]?.data?.serverName?.message}
