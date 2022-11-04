@@ -1,9 +1,14 @@
-import { FormControl, FormLabel } from "@chakra-ui/react"
+import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import useDebouncedState from "hooks/useDebouncedState"
 import useGateables from "hooks/useGateables"
 import { useEffect, useState } from "react"
-import { useController, useFormContext, useWatch } from "react-hook-form"
+import {
+  useController,
+  useFormContext,
+  useFormState,
+  useWatch,
+} from "react-hook-form"
 
 type Props = {
   index: number
@@ -25,6 +30,8 @@ const SpotifySearch = ({ index, type, label }: Props) => {
     },
   })
 
+  const { errors } = useFormState()
+
   const [searchValue, setSearchValue] = useState<string>("")
   useEffect(() => setSearchValue(requirementLabel), [])
   const debouncedSearchValue = useDebouncedState(searchValue)
@@ -43,7 +50,7 @@ const SpotifySearch = ({ index, type, label }: Props) => {
   const selectedOption = options.find((option) => option.value === field.value)
 
   return (
-    <FormControl>
+    <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.id?.message}>
       <FormLabel>{label}</FormLabel>
 
       <StyledSelect
@@ -70,6 +77,10 @@ const SpotifySearch = ({ index, type, label }: Props) => {
         inputValue={searchValue}
         placeholder="Search..."
       />
+
+      <FormErrorMessage>
+        {errors?.requirements?.[index]?.data?.id?.message}
+      </FormErrorMessage>
     </FormControl>
   )
 }
