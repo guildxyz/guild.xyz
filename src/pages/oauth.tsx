@@ -63,11 +63,7 @@ const OAuth = () => {
 
     const csrfTokenStorageKey = `oauth_csrf_token_${clientId}`
 
-    const csrfFromLS = JSON.parse(window.localStorage.getItem(csrfTokenStorageKey))
-
-    window.localStorage.removeItem(csrfTokenStorageKey)
-
-    if (csrfToken !== csrfFromLS) {
+    if (csrfToken !== JSON.parse(window.localStorage.getItem(csrfTokenStorageKey))) {
       window.localStorage.setItem(
         "oauth_popup_data",
         JSON.stringify({
@@ -80,6 +76,8 @@ const OAuth = () => {
         })
       )
       return
+    } else {
+      window.localStorage.removeItem(csrfTokenStorageKey)
     }
 
     delete params.error
