@@ -2,7 +2,9 @@ import { Divider, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/re
 import StyledSelect from "components/common/StyledSelect"
 import { useController, useFormState } from "react-hook-form"
 import { Requirement } from "types"
+import BeArtist from "./components/SoundBeAnArtist"
 import SoundOwnASong from "./components/SoundOwnASong"
+import Top10Collector from "./components/SoundTop10Collector"
 import SupportArtist from "./components/SupportArtist"
 
 type Props = {
@@ -11,6 +13,11 @@ type Props = {
 }
 
 const soundRequirementTypes = [
+  {
+    label: "Be an artist",
+    value: "SOUND_ARTIST",
+    SoundRequirement: BeArtist,
+  },
   {
     label: "Support an artist",
     value: "SOUND_SUPPORT",
@@ -21,16 +28,11 @@ const soundRequirementTypes = [
     value: "SOUND_OWN_SONG",
     SoundRequirement: SoundOwnASong,
   },
-  // {
-  //   label: "Twitter",
-  //   value: "TWITTER_NAME",
-  //   SoundRequirement: Following,
-  // },
-  // {
-  //   label: "Bio includes text",
-  //   value: "TWITTER_BIO",
-  //   TwitterRequirement: SearchValue,
-  // },
+  {
+    label: "Be a top 10 collector",
+    value: "SOUND_TOP10",
+    SoundRequirement: Top10Collector,
+  },
 ]
 
 const SoundFormCard = ({ index, field }: Props) => {

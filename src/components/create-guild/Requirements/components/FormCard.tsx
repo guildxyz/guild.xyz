@@ -43,6 +43,12 @@ const typeLabel = (type) => {
     case "KYC_DAO":
       return "KYCDAO"
 
+    case "SOUND_ARTIST":
+    case "SOUND_SUPPORT":
+    case "SOUND_OWN_SONG":
+    case "SOUND_TOP10":
+      return "SOUND"
+
     default:
       return type
   }
@@ -59,6 +65,10 @@ const typeColor = (type) => {
       return "white"
 
     case "SOUND":
+    case "SOUND_ARTIST":
+    case "SOUND_SUPPORT":
+    case "SOUND_OWN_SONG":
+    case "SOUND_TOP10":
       return "white"
 
     default:

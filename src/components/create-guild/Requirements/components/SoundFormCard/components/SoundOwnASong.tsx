@@ -12,7 +12,7 @@ const SoundOwnASong = ({ index }: { index: number; field?: Requirement }) => {
   return (
     <>
       <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
-        <FormLabel>Data ID:</FormLabel>
+        <FormLabel>SoundHandle:</FormLabel>
         <Controller
           name={`requirements.${index}.data.id` as const}
           control={control}
@@ -33,12 +33,12 @@ const SoundOwnASong = ({ index }: { index: number; field?: Requirement }) => {
           )}
         />
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.type?.message}
+          {errors?.requirements?.[index]?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
 
       <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.title}>
-        <FormLabel>Title:</FormLabel>
+        <FormLabel>Song title:</FormLabel>
         <Controller
           name={`requirements.${index}.data.title` as const}
           control={control}
@@ -48,7 +48,7 @@ const SoundOwnASong = ({ index }: { index: number; field?: Requirement }) => {
               type="text"
               ref={ref}
               value={value ?? ""}
-              placeholder="Data id"
+              placeholder=""
               onChange={onChange}
               onBlur={onBlur}
             />

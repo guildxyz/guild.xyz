@@ -115,6 +115,8 @@ type RequirementType =
   | "SOUND"
   | "SOUND_SUPPORT"
   | "SOUND_OWN_SONG"
+  | "SOUND_ARTIST"
+  | "SOUND_TOP10"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -365,6 +367,8 @@ const RequirementTypeColors = {
   SOUND: "#1b1b23",
   SOUND_SUPPORT: "#1b1b23",
   SOUND_OWN_SONG: "#1b1b23",
+  SOUND_ARTIST: "#1b1b23",
+  SOUND_TOP10: "#1b1b23",
 }
 
 type SnapshotStrategy = {

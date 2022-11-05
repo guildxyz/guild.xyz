@@ -87,6 +87,8 @@ const REQUIREMENT_FORMCARDS = {
   SOUND: SoundFormCard,
   SOUND_OWN_SONG: SoundFormCard,
   SOUND_SUPPORT: SoundFormCard,
+  SOUND_ARTIST: SoundFormCard,
+  SOUND_TOP10: SoundFormCard,
 }
 
 type Props = {

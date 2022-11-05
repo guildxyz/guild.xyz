@@ -3,7 +3,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext } from "react-hook-form"
 import { Requirement } from "types"
 
-const SupportArtist = ({ index }: { index: number; field?: Requirement }) => {
+const Top10Collector = ({ index }: { index: number; field?: Requirement }) => {
   const {
     control,
     formState: { errors },
@@ -12,7 +12,7 @@ const SupportArtist = ({ index }: { index: number; field?: Requirement }) => {
   return (
     <>
       <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
-        <FormLabel>SoundHande:</FormLabel>
+        <FormLabel>SoundHandle:</FormLabel>
         <Controller
           name={`requirements.${index}.data.id` as const}
           control={control}
@@ -40,4 +40,4 @@ const SupportArtist = ({ index }: { index: number; field?: Requirement }) => {
   )
 }
 
-export default SupportArtist
+export default Top10Collector
