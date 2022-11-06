@@ -13,7 +13,6 @@ const LensRequirementCard = ({ requirement, ...rest }: Props) => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={"requirementLogos/lens.png"}
       footer={
         ["LENS_COLLECT", "LENS_MIRROR"].includes(requirement.type) && (

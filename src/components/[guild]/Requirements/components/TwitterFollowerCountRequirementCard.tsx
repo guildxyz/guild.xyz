@@ -10,7 +10,6 @@ type Props = {
 
 const TwitterFollowerCountRequirementCard = ({ requirement, ...rest }: Props) => (
   <RequirementCard
-    requirement={requirement}
     image={<Icon as={TwitterLogo} boxSize={6} />}
     footer={<ConnectRequirementPlatformButton platform="TWITTER" />}
     {...rest}

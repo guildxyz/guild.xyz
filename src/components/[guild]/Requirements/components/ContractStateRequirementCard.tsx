@@ -26,7 +26,6 @@ const ContractStateRequirementCard = ({ requirement, ...rest }: Props) => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={<Icon as={Function} boxSize={6} />}
       footer={
         <>

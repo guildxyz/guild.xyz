@@ -48,7 +48,6 @@ const AllowlistRequirementCard = ({ requirement, ...rest }: Props): JSX.Element 
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={<Icon as={ListPlus} boxSize={6} />}
       footer={
         <Flex justifyContent="start">

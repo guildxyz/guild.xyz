@@ -10,7 +10,6 @@ type Props = {
 
 const OrangeRequirementCard = ({ requirement }: Props) => (
   <RequirementCard
-    requirement={requirement}
     image={<Img src="/requirementLogos/orange.png" />}
     footer={
       <RequirementLinkButton

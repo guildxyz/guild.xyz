@@ -18,7 +18,6 @@ const KycDAORequirementCard = ({ requirement }: Props): JSX.Element => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={
         <Text as="span" fontWeight="bold" fontSize="xx-small">
           KYC

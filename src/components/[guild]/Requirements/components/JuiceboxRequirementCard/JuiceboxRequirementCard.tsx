@@ -12,7 +12,6 @@ const JuiceboxRequirementCard = ({ requirement, ...rest }: Props) => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={isLoading ? "" : project?.logoUri}
       loading={isLoading}
       {...rest}

@@ -18,7 +18,6 @@ const HundredNOneRequirementCard = ({ requirement }: Props) => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={
         <Img
           src={

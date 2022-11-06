@@ -11,7 +11,6 @@ type Props = {
 
 const TwitterFollowRequirementCard = ({ requirement, ...rest }: Props) => (
   <RequirementCard
-    requirement={requirement}
     image={
       requirement.data.id ? (
         typeof window !== "undefined" ? (

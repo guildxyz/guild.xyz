@@ -11,7 +11,6 @@ const GitPoapRequirementCard = ({ requirement, ...rest }: Props) => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={isLoading ? "" : poap?.image_url}
       loading={isLoading}
       {...rest}

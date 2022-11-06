@@ -16,7 +16,6 @@ const NooxRequirementCard = ({ requirement, ...rest }: Props) => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={badgeData?.image}
       footer={
         <RequirementLinkButton

@@ -13,7 +13,6 @@ const TokenRequirementCard = ({ requirement, ...rest }: Props) => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={
         data?.logoURI ?? (
           <Text as="span" fontWeight="bold" fontSize="xx-small">

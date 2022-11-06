@@ -10,11 +10,7 @@ type Props = {
 const DiscoRequirementCard = ({ requirement, ...rest }: Props) => {
   const param = requirement.data.params as DiscoParamType
   return (
-    <RequirementCard
-      requirement={requirement}
-      image={<Img src="/requirementLogos/disco.png" />}
-      {...rest}
-    >
+    <RequirementCard image={<Img src="/requirementLogos/disco.png" />} {...rest}>
       {`Have a Disco.xyz `}
       {param.credType ? `${param.credType}` : `account`}
       {param.credIssuence

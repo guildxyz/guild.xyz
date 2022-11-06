@@ -48,7 +48,6 @@ const NftRequirementCard = ({ requirement, ...rest }: Props) => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={
         shouldRenderImage && (isValidating || data?.image) ? (
           isValidating ? (

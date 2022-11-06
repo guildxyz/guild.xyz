@@ -12,7 +12,6 @@ const GalaxyRequirementCard = ({ requirement, ...rest }: Props): JSX.Element => 
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={isLoading ? "" : campaign?.thumbnail}
       loading={isLoading}
       {...rest}

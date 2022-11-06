@@ -22,7 +22,6 @@ const DiscordRoleRequirementCard = ({ requirement }: Props) => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={serverIcon || <Icon as={DiscordLogo} boxSize={6} />}
       footer={
         <ConnectRequirementPlatformButton

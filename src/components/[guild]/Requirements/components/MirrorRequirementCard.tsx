@@ -17,7 +17,6 @@ const MirrorRequirementCard = ({ requirement, ...rest }: Props): JSX.Element => 
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={
         isLoading
           ? ""

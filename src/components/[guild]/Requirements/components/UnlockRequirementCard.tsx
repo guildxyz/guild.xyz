@@ -8,7 +8,6 @@ type Props = {
 
 const UnlockRequirementCard = ({ requirement, ...rest }: Props) => (
   <RequirementCard
-    requirement={requirement}
     image={`https://locksmith.unlock-protocol.com/lock/${requirement.address}/icon`}
     footer={<BlockExplorerUrl requirement={requirement} />}
     {...rest}
