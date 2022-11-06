@@ -8,8 +8,8 @@ type Props = {
   requirement: Requirement
 }
 
-const CaskRequirementCard = ({ requirement }: Props) => (
-  <RequirementCard image={<Img src="/requirementLogos/cask.png" />}>
+const CaskRequirementCard = ({ requirement, ...rest }: Props) => (
+  <RequirementCard image={<Img src="/requirementLogos/cask.png" />} {...rest}>
     {`Subscribe to plan `}
     <DataBlock>{`#${requirement.data.planId}`}</DataBlock>
     {` by `}

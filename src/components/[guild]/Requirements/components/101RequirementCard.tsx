@@ -9,7 +9,7 @@ type Props = {
   requirement: Requirement
 }
 
-const HundredNOneRequirementCard = ({ requirement }: Props) => {
+const HundredNOneRequirementCard = ({ requirement, ...rest }: Props) => {
   const { data, isValidating } = use101Courses()
 
   const badge = data?.find(
@@ -34,6 +34,7 @@ const HundredNOneRequirementCard = ({ requirement }: Props) => {
           View course
         </RequirementLinkButton>
       }
+      {...rest}
     >
       {`Have the badge of the `}
       <DataBlock isLoading={!badge && isValidating}>

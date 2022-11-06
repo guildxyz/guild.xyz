@@ -8,7 +8,7 @@ type Props = {
   requirement: Requirement
 }
 
-const OrangeRequirementCard = ({ requirement }: Props) => (
+const OrangeRequirementCard = ({ requirement, ...rest }: Props) => (
   <RequirementCard
     image={<Img src="/requirementLogos/orange.png" />}
     footer={
@@ -19,6 +19,7 @@ const OrangeRequirementCard = ({ requirement }: Props) => (
         View campaign
       </RequirementLinkButton>
     }
+    {...rest}
   >
     {`Have the badge of Orange campaign `}
     <DataBlock>{`#${requirement.data.id}`}</DataBlock>
