@@ -1,15 +1,27 @@
 import { Text } from "@chakra-ui/react"
 import useTokenData from "hooks/useTokenData"
+import { useEffect } from "react"
+import { UseFormSetValue } from "react-hook-form"
 import { Requirement } from "types"
 import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import RequirementCard from "./common/RequirementCard"
 
 type Props = {
   requirement: Requirement
+  setValueForBalancy: UseFormSetValue<any>
 }
 
-const TokenRequirementCard = ({ requirement, ...rest }: Props) => {
+const TokenRequirementCard = ({
+  requirement,
+  setValueForBalancy,
+  ...rest
+}: Props) => {
   const { data, isValidating } = useTokenData(requirement.chain, requirement.address)
+
+  useEffect(() => {
+    if (setValueForBalancy && data.decimals)
+      setValueForBalancy("balancyDecimals", data.decimals)
+  }, [setValueForBalancy, data.decimals])
 
   return (
     <RequirementCard

@@ -20,8 +20,9 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import Section from "components/common/Section"
+import FreeRequirementCard from "components/[guild]/Requirements/components/FreeRequirementCard"
 import REQUIREMENT_CARDS from "components/[guild]/Requirements/requirementCards"
-import { useEffect, useMemo, useRef } from "react"
+import { useCallback, useEffect, useMemo, useRef } from "react"
 import {
   FormProvider,
   useFieldArray,
@@ -117,36 +118,28 @@ const SetRequirements = (): JSX.Element => {
       {!freeEntry && isMobile && <BalancyCounterWithPopover mb="6" />}
       {controlledFields.map((field: Requirement, i) => {
         const type: RequirementType = getValues(`requirements.${i}.type`)
-        const RequirementCard = REQUIREMENT_CARDS[type]
 
         if (type === "FREE")
           return (
             <CardMotionWrapper>
               <Card px="6" py="4">
-                <RequirementCard />
+                <FreeRequirementCard />
               </Card>
             </CardMotionWrapper>
           )
 
-        if (RequirementCard) {
-          return (
-            <CardMotionWrapper key={field.id}>
-              <RequirementEditableCard
-                type={type}
-                field={field}
-                index={i}
-                removeRequirement={remove}
-                updateRequirement={update}
-              >
-                <RequirementCard
-                  requirement={field}
-                  footer={<BalancyFooter baseFieldPath={`requirements.${i}`} />}
-                />
-              </RequirementEditableCard>
-              <LogicPicker />
-            </CardMotionWrapper>
-          )
-        }
+        return (
+          <CardMotionWrapper key={field.id}>
+            <RequirementEditableCard
+              type={type}
+              field={field}
+              index={i}
+              removeRequirement={remove}
+              updateRequirement={update}
+            />
+            <LogicPicker />
+          </CardMotionWrapper>
+        )
       })}
 
       {!freeEntry && <AddRequirement onAdd={addRequirement} />}
@@ -164,9 +157,9 @@ const RequirementEditableCard = ({
   field,
   removeRequirement,
   updateRequirement,
-  children,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const RequirementCardComponent = REQUIREMENT_CARDS[type]
   const FormComponent = REQUIREMENT_FORMCARDS[type]
   const ref = useRef()
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
@@ -190,11 +183,26 @@ const RequirementEditableCard = ({
     onClose()
   })
 
+  // temporary to set values for balancy so it works without opening the edit modal
+  const { setValue } = useFormContext()
+  const setValueForBalancy = useCallback(
+    (path, data) => {
+      setValue(`requirements.${index}.${path}`, data)
+    },
+    [index, setValue]
+  )
+
+  if (!RequirementCardComponent || !FormComponent) return null
+
   return (
     <>
       <Card px="6" py="4" pos="relative">
         <HStack pr="3">
-          {children}
+          <RequirementCardComponent
+            requirement={field}
+            footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
+            setValueForBalancy={setValueForBalancy}
+          />
           <Button ref={ref} size="sm" onClick={onOpen}>
             Edit
           </Button>

@@ -15,7 +15,8 @@ import {
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { UseFormSetValue } from "react-hook-form"
 import { FixedSizeList } from "react-window"
 import { Requirement } from "types"
 import { RequirementButton } from "./common/RequirementButton"
@@ -23,10 +24,20 @@ import RequirementCard from "./common/RequirementCard"
 
 type Props = {
   requirement: Requirement
+  setValueForBalancy: UseFormSetValue<any>
 }
 
-const AllowlistRequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
+const AllowlistRequirementCard = ({
+  requirement,
+  setValueForBalancy,
+  ...rest
+}: Props): JSX.Element => {
   const { addresses, hideAllowlist } = requirement.data
+
+  useEffect(() => {
+    if (setValueForBalancy && addresses)
+      setValueForBalancy("data.validAddresses", addresses)
+  }, [setValueForBalancy, addresses])
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [search, setSearch] = useState("")
