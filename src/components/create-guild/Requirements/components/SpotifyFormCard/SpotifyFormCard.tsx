@@ -9,6 +9,7 @@ import { useController, useFormContext, useFormState } from "react-hook-form"
 import { Requirement } from "types"
 import SearchValue from "../TwitterFormCard/components/SearchValue"
 import SpotifyFollowerCount from "./components/SpotifyFollowerCount"
+import SpotifyFollowMe from "./components/SpotifyFollowMe"
 import SpotifyFollowUser from "./components/SpotifyFollowUser"
 import SpotifySearch from "./components/SpotifySearch"
 import SpotifyTop from "./components/SpotifyTop"
@@ -91,6 +92,11 @@ const spotifyRequirementTypes = [
   },
   {
     label: "Follow me",
+    value: "SPOTIFY_FOLLOW_ME",
+    Requirement: SpotifyFollowMe,
+  },
+  {
+    label: "Follow someone",
     value: "SPOTIFY_FOLLOW_USER",
     Requirement: SpotifyFollowUser,
   },

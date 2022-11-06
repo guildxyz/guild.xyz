@@ -1,16 +1,34 @@
-import { Text } from "@chakra-ui/react"
+import { FormControl, FormLabel, Input } from "@chakra-ui/react"
+import useDebouncedState from "hooks/useDebouncedState"
 import useGateables from "hooks/useGateables"
 import { useEffect } from "react"
-import { useFormContext } from "react-hook-form"
+import { useController, useForm, useFormContext } from "react-hook-form"
 
 type Props = {
   index: number
 }
 
+const LINK_REGEX =
+  /^(?:https\:\/\/)?(?:www\.)?open\.spotify\.com\/user\/(.*?)(?:\?.*)?$/
+
 const SpotifyFollowUser = ({ index }: Props) => {
   const { setValue } = useFormContext()
 
-  const { gateables } = useGateables("SPOTIFY", undefined, { q: "", type: "user" })
+  const usernameForm = useForm({ mode: "all", defaultValues: { usernameInput: "" } })
+  const { field } = useController({
+    name: "usernameInput",
+    control: usernameForm.control,
+    rules: {
+      required: "This field is required",
+    },
+  })
+
+  const debouncedInputUsername = useDebouncedState(field.value)
+
+  const { gateables, error } = useGateables("SPOTIFY", undefined, {
+    id: debouncedInputUsername,
+    type: "user",
+  })
 
   const user = gateables as any as {
     value: string
@@ -29,9 +47,30 @@ const SpotifyFollowUser = ({ index }: Props) => {
     }
   }, [user])
 
+  useEffect(() => {
+    if (error) {
+      usernameForm.setError("usernameInput", { message: "Invalid username" })
+    }
+  }, [error])
+
   return (
     <>
-      <Text>Members need to follow you on Spotify to have access</Text>
+      <FormControl>
+        <FormLabel>Username or profile link</FormLabel>
+
+        <Input
+          value={field.value}
+          onChange={(event) => {
+            const usernameOrLink = event.target.value
+
+            if (LINK_REGEX.test(usernameOrLink)) {
+              field.onChange(usernameOrLink?.match?.(LINK_REGEX)?.[1] ?? "")
+            } else {
+              field.onChange(usernameOrLink)
+            }
+          }}
+        />
+      </FormControl>
     </>
   )
 }

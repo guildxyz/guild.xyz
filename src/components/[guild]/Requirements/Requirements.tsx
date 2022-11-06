@@ -82,6 +82,7 @@ const REQUIREMENT_CARDS: Partial<
   KYC_DAO: KycDAORequirementCard,
   SPOTIFY_FOLLOW_ARTIST: SpotifyFollowArtistRequirementCard,
   SPOTIFY_FOLLOW_USER: SpotifyFollowUserRequirementCard,
+  SPOTIFY_FOLLOW_ME: SpotifyFollowUserRequirementCard,
   SPOTIFY_FOLLOW_PLAYLIST: SpotifyFollowPlaylistRequirementCard,
   SPOTIFY_NAME: SpotifyNameRequirementCard,
   SPOTIFY_FOLLOWER_COUNT: SpotifyFollowerCountRequirementCard,

@@ -89,6 +89,7 @@ const REQUIREMENT_FORMCARDS = {
   SPOTIFY: SpotifyFormCard,
   SPOTIFY_FOLLOW_ARTIST: SpotifyFormCard,
   SPOTIFY_FOLLOW_USER: SpotifyFormCard,
+  SPOTIFY_FOLLOW_ME: SpotifyFormCard,
   SPOTIFY_FOLLOW_PLAYLIST: SpotifyFormCard,
   SPOTIFY_SAVED_ALBUM: SpotifyFormCard,
   SPOTIFY_SAVED_EPISODE: SpotifyFormCard,
