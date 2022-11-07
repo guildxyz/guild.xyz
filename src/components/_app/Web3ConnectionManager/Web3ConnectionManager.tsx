@@ -33,7 +33,7 @@ const Web3ConnectionManager = ({
 }: PropsWithChildren<any>): JSX.Element => {
   const { addDatadogAction } = useDatadog()
 
-  const { connector, isActive } = useWeb3React()
+  const { connector, isActive, account } = useWeb3React()
 
   const {
     isOpen: isWalletSelectorModalOpen,
@@ -57,7 +57,9 @@ const Web3ConnectionManager = ({
 
   useEffect(() => {
     if (!isActive || !triedEager) return
-    addDatadogAction("Successfully connected wallet")
+    addDatadogAction("Successfully connected wallet", {
+      userAddress: account?.toLowerCase(),
+    })
   }, [isActive, triedEager])
 
   // Sending actions to datadog

@@ -4,6 +4,11 @@ import fetcher from "utils/fetcher"
 
 export const config = {
   runtime: "experimental-edge",
+  unstable_allowDynamic: [
+    "/src/hooks/useLocalStorage.ts",
+    "/src/hooks/useTimeInaccuracy.ts",
+    "/src/utils/fetcher.ts",
+  ],
 }
 
 const interFont = fetch(
@@ -244,7 +249,7 @@ const GuildCard = ({ guild, baseUrl }: GuildCardProps): JSX.Element => (
         }}
         src={
           guild.imageUrl?.startsWith("http")
-            ? guild.imageUrl
+            ? `${baseUrl}/_next/image?url=${guild.imageUrl}&w=48&q=75`
             : `${baseUrl}${guild.imageUrl}`
         }
         alt={guild.name}

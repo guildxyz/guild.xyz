@@ -83,6 +83,7 @@ type RequirementType =
   | "POAP"
   | "GITPOAP"
   | "MIRROR"
+  | "MIRROR_COLLECT"
   | "UNLOCK"
   | "SNAPSHOT"
   | "JUICEBOX"
@@ -108,7 +109,10 @@ type RequirementType =
   | "LENS_MIRROR"
   | "OTTERSPACE"
   | "ORANGE"
+  | "CASK"
   | "101"
+  | "RABBITHOLE"
+  | "KYC_DAO"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -151,6 +155,7 @@ type PlatformGuildData = {
   DISCORD: {
     role?: never
     inviteChannel: string
+    invite?: string
     joinButton?: boolean
     mimeType?: never
     iconLink?: never
@@ -184,6 +189,11 @@ type DiscoParamType = {
   credIssuer: string
 }
 
+type RabbitholeParamType = {
+  trait_type: string
+  value: string
+}[]
+
 type Requirement = {
   id: number
   data?: {
@@ -192,6 +202,9 @@ type Requirement = {
     maxAmount?: number
     addresses?: Array<string> // (ALLOWLIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
+    name?: string
+    provider?: string
+    planId?: number
     strategy?: {
       name: string
       params: Record<string, any>
@@ -213,7 +226,7 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
-    params?: ContractParamType | DiscoParamType
+    params?: ContractParamType | DiscoParamType | RabbitholeParamType
   }
   name: string
   type: RequirementType
@@ -321,6 +334,7 @@ const RequirementTypeColors = {
   POAP: "#8076FA",
   GITPOAP: "#307AE8",
   MIRROR: "var(--chakra-colors-gray-300)",
+  MIRROR_COLLECT: "var(--chakra-colors-gray-300)",
   ERC20: "var(--chakra-colors-indigo-400)",
   COIN: "var(--chakra-colors-indigo-400)",
   SNAPSHOT: "var(--chakra-colors-orange-400)",
@@ -346,6 +360,9 @@ const RequirementTypeColors = {
   OTTERSPACE: "#a6ea8e",
   101: "#000000",
   ORANGE: "#ff5d24",
+  RABBITHOLE: "#7f23dc",
+  KYC_DAO: "#3D65F2",
+  CASK: "#7a4db6",
 }
 
 type SnapshotStrategy = {
@@ -576,5 +593,6 @@ export type {
   PoapEventDetails,
   ContractParamType,
   DiscoParamType,
+  RabbitholeParamType,
 }
 export { ValidationMethod, RequirementTypeColors }
