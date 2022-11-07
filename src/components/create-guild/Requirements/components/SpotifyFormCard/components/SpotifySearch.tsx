@@ -129,6 +129,7 @@ const SpotifySearch = ({ index, type, label }: Props) => {
           onChange={(selected) => {
             setSelectValue(selected?.value)
           }}
+          filterOption={() => true}
           options={options}
           isLoading={isValidating}
           onInputChange={(val, { action }) => {
