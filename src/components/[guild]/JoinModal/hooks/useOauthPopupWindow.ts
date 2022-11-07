@@ -48,7 +48,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   const { addDatadogError } = useDatadog()
   const toast = useToast()
 
-  const { data: csrfToken, mutate: generateNewCSRFToken } = useSWRImmutable(
+  const { data: csrfToken, mutate: mutateCSRFToken } = useSWRImmutable(
     ["CSRFToken", oauthOptions.client_id],
     () => randomBytes(16).toString("hex"),
     { revalidateOnMount: false }
@@ -103,11 +103,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           if (type === "OAUTH_SUCCESS") {
             clearInterval(interval)
 
-            generateNewCSRFToken(undefined)
+            mutateCSRFToken(undefined, { revalidate: false })
             if (recievedCsrfToken !== csrfToken) {
               const title = "CSRF Error"
               const errorDescription =
-                "CSRF token mismatch, this indicates possible csrf attack."
+                "CSRF token mismatch, this indicates possible CSRF attack."
 
               addDatadogError(`OAuth error - ${title}`, { error: errorDescription })
               reject({ error: title, errorDescription })
