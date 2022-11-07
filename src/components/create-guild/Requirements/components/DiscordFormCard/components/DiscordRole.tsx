@@ -15,18 +15,16 @@ import {
   useFormState,
   useWatch,
 } from "react-hook-form"
+import { FormCardProps } from "types"
+import parseFromObject from "utils/parseFromObject"
 import shortenHex from "utils/shortenHex"
 
-type Props = {
-  index: number
-}
-
-const DiscordRole = ({ index }: Props) => {
+const DiscordRole = ({ baseFieldPath }: FormCardProps) => {
   const { errors } = useFormState()
   const { register, setValue } = useFormContext()
 
   const { field: serverField } = useController({
-    name: `requirements.${index}.data.serverId`,
+    name: `${baseFieldPath}.data.serverId`,
     rules: {
       required: "Please select a server",
       pattern: {
@@ -37,7 +35,7 @@ const DiscordRole = ({ index }: Props) => {
   })
 
   const { field: roleField } = useController({
-    name: `requirements.${index}.data.roleId`,
+    name: `${baseFieldPath}.data.roleId`,
     rules: {
       required: "Please select a role",
       pattern: {
@@ -62,7 +60,7 @@ const DiscordRole = ({ index }: Props) => {
   const isUnknownServer = !!serverField.value && !selectedServer
 
   const serverName = useWatch({
-    name: `requirements.${index}.data.serverName`,
+    name: `${baseFieldPath}.data.serverName`,
   })
 
   const {
@@ -86,7 +84,7 @@ const DiscordRole = ({ index }: Props) => {
     <>
       <FormControl
         isRequired
-        isInvalid={!!errors?.requirements?.[index]?.data?.serverId?.message}
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.serverId?.message}
       >
         <FormLabel>Server</FormLabel>
         <StyledSelect
@@ -102,9 +100,9 @@ const DiscordRole = ({ index }: Props) => {
             __isNew__?: boolean
           }) => {
             if (!newValue?.__isNew__) {
-              setValue(`requirements.${index}.data.serverName`, newValue?.label)
+              setValue(`${baseFieldPath}.data.serverName`, newValue?.label)
             } else {
-              setValue(`requirements.${index}.data.serverName`, undefined)
+              setValue(`${baseFieldPath}.data.serverName`, undefined)
             }
             serverField.onChange(newValue?.value)
           }}
@@ -121,24 +119,26 @@ const DiscordRole = ({ index }: Props) => {
         <FormHelperText>Select a server or paste a server id</FormHelperText>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.serverId?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.serverId?.message}
         </FormErrorMessage>
       </FormControl>
 
       <Collapse in={isUnknownServer}>
         <FormControl
           isRequired
-          isInvalid={!!errors?.requirements?.[index]?.data?.serverName?.message}
+          isInvalid={
+            !!parseFromObject(errors, baseFieldPath)?.data?.serverName?.message
+          }
         >
           <FormLabel>Server name</FormLabel>
           <Input
-            {...register(`requirements.${index}.data.serverName`, {
+            {...register(`${baseFieldPath}.data.serverName`, {
               required: isUnknownServer && "Please provide a server name",
             })}
           />
 
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.data?.serverName?.message}
+            {parseFromObject(errors, baseFieldPath)?.data?.serverName?.message}
           </FormErrorMessage>
 
           <FormHelperText>
@@ -154,10 +154,10 @@ const DiscordRole = ({ index }: Props) => {
           (!serverField.value ||
             typeof serverName !== "string" ||
             serverName?.length <= 0 ||
-            !!errors?.requirements?.[index]?.data?.serverName?.message ||
-            !!errors?.requirements?.[index]?.data?.serverId?.message)
+            !!parseFromObject(errors, baseFieldPath)?.data?.serverName?.message ||
+            !!parseFromObject(errors, baseFieldPath)?.data?.serverId?.message)
         }
-        isInvalid={!!errors?.requirements?.[index]?.data?.roleId?.message}
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.roleId?.message}
       >
         <FormLabel>Role</FormLabel>
         <StyledSelect
@@ -174,9 +174,9 @@ const DiscordRole = ({ index }: Props) => {
             __isNew__?: boolean
           }) => {
             if (!newValue?.__isNew__) {
-              setValue(`requirements.${index}.data.roleName`, newValue?.label)
+              setValue(`${baseFieldPath}.data.roleName`, newValue?.label)
             } else {
-              setValue(`requirements.${index}.data.roleName`, undefined)
+              setValue(`${baseFieldPath}.data.roleName`, undefined)
             }
             roleField.onChange(newValue?.value)
           }}
@@ -191,7 +191,7 @@ const DiscordRole = ({ index }: Props) => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.roleId?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.roleId?.message}
         </FormErrorMessage>
 
         <FormHelperText>Select a role or paste a role id</FormHelperText>
@@ -200,17 +200,19 @@ const DiscordRole = ({ index }: Props) => {
       <Collapse in={isUnknownRole}>
         <FormControl
           isRequired
-          isInvalid={!!errors?.requirements?.[index]?.data?.roleName?.message}
+          isInvalid={
+            !!parseFromObject(errors, baseFieldPath)?.data?.roleName?.message
+          }
         >
           <FormLabel>Role name</FormLabel>
           <Input
-            {...register(`requirements.${index}.data.roleName`, {
+            {...register(`${baseFieldPath}.data.roleName`, {
               required: isUnknownRole && "Please provide a role name",
             })}
           />
 
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.data?.roleName?.message}
+            {parseFromObject(errors, baseFieldPath)?.data?.roleName?.message}
           </FormErrorMessage>
 
           <FormHelperText>

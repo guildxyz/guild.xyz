@@ -50,7 +50,7 @@ const PlatformCard = ({
 
   return (
     <ColorCard
-      gridColumn={{ md: actionRow && "span 2" }}
+      // gridColumn={{ md: actionRow && "span 2" }}
       order={actionRow && -1}
       color={`${platforms[type].colorScheme}.500`}
       pt={{ base: 10, sm: 11 }}

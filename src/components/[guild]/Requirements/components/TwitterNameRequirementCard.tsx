@@ -9,15 +9,15 @@ type Props = {
   requirement: Requirement
 }
 
-const TwitterNameRequirementCard = ({ requirement }: Props) => (
+const TwitterNameRequirementCard = ({ requirement, ...rest }: Props) => (
   <RequirementCard
-    requirement={requirement}
     image={<Icon as={TwitterLogo} boxSize={6} />}
     footer={<ConnectRequirementPlatformButton platform="TWITTER" />}
+    {...rest}
   >
     {`Have "`}
     <DataBlockWithCopy text={requirement.data.id} />
-    {`" in your username`}
+    {`" in your Twitter username`}
   </RequirementCard>
 )
 

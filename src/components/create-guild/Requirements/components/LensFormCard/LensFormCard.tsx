@@ -1,15 +1,11 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react"
+import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import useLensProfiles from "./hooks/useLensProfiles"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 const typeOptions = [
   {
@@ -30,22 +26,22 @@ const typeOptions = [
   },
 ]
 
-const LensFormCard = ({ index, field }: Props) => {
+const LensFormCard = ({ baseFieldPath, field }: FormCardProps) => {
   const {
     control,
     setValue,
     formState: { errors },
   } = useFormContext()
 
-  const type = useWatch({ name: `requirements.${index}.type` })
+  const type = useWatch({ name: `${baseFieldPath}.type` })
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl isRequired>
         <FormLabel>Type:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.type` as const}
+          name={`${baseFieldPath}.type` as const}
           control={control}
           rules={{
             required: "This field is required.",
@@ -58,7 +54,7 @@ const LensFormCard = ({ index, field }: Props) => {
               value={typeOptions?.find((option) => option.value === value)}
               onChange={(newSelectedOption: SelectOption) => {
                 onChange(newSelectedOption.value)
-                setValue(`requirements.${index}.data`, "")
+                setValue(`${baseFieldPath}.data`, "")
               }}
               onBlur={onBlur}
             />
@@ -67,11 +63,14 @@ const LensFormCard = ({ index, field }: Props) => {
       </FormControl>
 
       {["LENS_COLLECT", "LENS_MIRROR"].includes(type) && (
-        <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
+        <FormControl
+          isRequired
+          isInvalid={parseFromObject(errors, baseFieldPath)?.data?.id}
+        >
           <FormLabel>Post ID:</FormLabel>
 
           <Controller
-            name={`requirements.${index}.data.id` as const}
+            name={`${baseFieldPath}.data.id` as const}
             control={control}
             rules={{
               required: "This field is required.",
@@ -92,24 +91,24 @@ const LensFormCard = ({ index, field }: Props) => {
           />
 
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.data?.id?.message}
+            {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
           </FormErrorMessage>
         </FormControl>
       )}
 
-      {type === "LENS_FOLLOW" && <FollowSelect {...{ index, field }} />}
-    </>
+      {type === "LENS_FOLLOW" && <FollowSelect {...{ baseFieldPath, field }} />}
+    </Stack>
   )
 }
 
-const FollowSelect = ({ index, field }: Props) => {
+const FollowSelect = ({ baseFieldPath, field }: FormCardProps) => {
   const {
     control,
     formState: { errors },
   } = useFormContext()
   // provide default value so there's options data on role edit
   // split before "." because I couldn't get the graphql query to work with "." in it
-  const [search, setSearch] = useState(field.data?.id?.split(".")?.[0] ?? "")
+  const [search, setSearch] = useState(field?.data?.id?.split(".")?.[0] ?? "")
 
   const { handles, restCount, isLoading } = useLensProfiles(search)
 
@@ -119,11 +118,14 @@ const FollowSelect = ({ index, field }: Props) => {
     options.push({ label: `${restCount} more`, value: 0, isDisabled: true })
 
   return (
-    <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
+    <FormControl
+      isRequired
+      isInvalid={parseFromObject(errors, baseFieldPath)?.data?.id}
+    >
       <FormLabel>Profile username:</FormLabel>
 
       <Controller
-        name={`requirements.${index}.data.id` as const}
+        name={`${baseFieldPath}.data.id` as const}
         control={control}
         rules={{
           required: "This field is required.",
@@ -153,7 +155,7 @@ const FollowSelect = ({ index, field }: Props) => {
       />
 
       <FormErrorMessage>
-        {errors?.requirements?.[index]?.data?.id?.message}
+        {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
       </FormErrorMessage>
     </FormControl>
   )

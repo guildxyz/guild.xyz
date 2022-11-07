@@ -8,12 +8,11 @@ type Props = {
   requirement: Requirement
 }
 
-const LensRequirementCard = ({ requirement }: Props) => {
+const LensRequirementCard = ({ requirement, ...rest }: Props) => {
   requirement.chain = "POLYGON"
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={"requirementLogos/lens.png"}
       footer={
         ["LENS_COLLECT", "LENS_MIRROR"].includes(requirement.type) && (
@@ -25,6 +24,7 @@ const LensRequirementCard = ({ requirement }: Props) => {
           </RequirementLinkButton>
         )
       }
+      {...rest}
     >
       {(() => {
         switch (requirement.type) {
