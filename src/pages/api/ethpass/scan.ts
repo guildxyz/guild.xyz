@@ -7,9 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       try {
         const payload = await fetch(
-          `${
-            process.env.API_HOST || "https://api.ethpass.xyz"
-          }/api/v0/scan/?data=${data}`,
+          `https://api.ethpass.xyz/api/v0/scan/?data=${data}`,
           {
             method: "GET",
             headers: new Headers({

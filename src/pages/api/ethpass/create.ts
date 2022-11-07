@@ -57,28 +57,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         // Request to create pass
-        const payload = await fetch(
-          `${process.env.API_HOST || "https://api.ethpass.xyz"}/api/v0/passes`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              chain: {
-                name: "evm",
-                network: chainId,
-              },
-              image,
-              pass,
-              platform,
-              signature,
-              signatureMessage,
-              barcode,
-            }),
-            headers: new Headers({
-              "content-type": "application/json",
-              "x-api-key": process.env.ETHPASS_API_KEY,
-            }),
-          }
-        )
+        const payload = await fetch("https://api.ethpass.xyz/api/v0/passes", {
+          method: "POST",
+          body: JSON.stringify({
+            chain: {
+              name: "evm",
+              network: chainId,
+            },
+            image,
+            pass,
+            platform,
+            signature,
+            signatureMessage,
+            barcode,
+          }),
+          headers: new Headers({
+            "content-type": "application/json",
+            "x-api-key": process.env.ETHPASS_API_KEY,
+          }),
+        })
         if (payload.status === 200) {
           const json = await payload.json()
           return res.status(200).json(json)
