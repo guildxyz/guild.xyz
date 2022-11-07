@@ -84,7 +84,6 @@ const Page = (): JSX.Element => {
         setScanResult({ success: false })
       }
     } catch (error) {
-      console.log("## Scan Error", error)
       setScanResult({ success: false, error })
     }
   }
@@ -189,7 +188,7 @@ const Page = (): JSX.Element => {
             </Flex>
           </Flex>
 
-          <Modal isOpen={pending} onClose={reset}>
+          <Modal isOpen={pending} onClose={reset} closeOnOverlayClick={scanResult}>
             <ModalOverlay />
             <ModalContent>
               <ModalHeader pr={{ base: 6, md: 10 }}>{renderIcon()}</ModalHeader>
@@ -201,7 +200,7 @@ const Page = (): JSX.Element => {
                   <Button onClick={reset}>Scan another pass</Button>
                 </ModalFooter>
               ) : (
-                <ModalFooter justifyContent="center">
+                <ModalFooter justifyContent="center" marginTop="-24px">
                   <Flex gap={4}>
                     <Spinner />
                     <Text fontSize="lg" fontWeight="semibold">
