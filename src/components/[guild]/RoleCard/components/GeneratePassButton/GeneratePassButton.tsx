@@ -2,15 +2,6 @@ import {
   Button,
   ChakraProps,
   Flex,
-  Image,
-  Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -26,10 +17,12 @@ import { Web3Provider } from "@ethersproject/providers"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { Cardholder } from "phosphor-react"
 import QRCode from "qrcode"
 import { useState } from "react"
 import { Role } from "types"
+import DownloadModal from "./components/DownloadModal"
 
 type Props = {
   role: Role
@@ -50,11 +43,12 @@ const STYLES: ChakraProps = {
 }
 
 const GeneratePassButton = ({ role }: Props): JSX.Element => {
-  const { hasAccess, data } = useAccess(role.id)
+  const isMobile = useBreakpointValue({ base: true, md: false })
   const isMember = useIsMember()
+  const { hasAccess } = useAccess(role.id)
   const { name, imageUrl, id } = useGuild()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const isMobile = useBreakpointValue({ base: true, md: false })
+  const showErrorToast = useShowErrorToast()
 
   const [platform, setPlatform] = useState("")
   const [fileUrl, setFileUrl] = useState("")
@@ -73,7 +67,7 @@ const GeneratePassButton = ({ role }: Props): JSX.Element => {
       signatureMessage = `Sign this message to generate a pass with guild.xyz \n${Date.now()}`
       signature = await signer.signMessage(signatureMessage)
     } catch (error) {
-      console.log("## Signature Error", error)
+      showErrorToast("User denied message signature")
       return
     }
 
@@ -110,7 +104,6 @@ const GeneratePassButton = ({ role }: Props): JSX.Element => {
       if (response.status === 200) {
         const json = await response.json()
 
-        console.log("## POST Result", json)
         setFileUrl(json.fileURL)
         QRCode.toDataURL(json.fileURL, {}, function (error, url) {
           if (error) throw error
@@ -118,17 +111,17 @@ const GeneratePassButton = ({ role }: Props): JSX.Element => {
         })
         onOpen()
       } else if (response.status === 401) {
-        console.log(`Unable to verify ownership: ${response.statusText}`)
+        showErrorToast(`Unable to verify ownership: ${response.statusText}`)
       } else {
         try {
           const { error, message } = await response.json()
-          console.log(error || message)
+          showErrorToast(error || message)
         } catch {
-          console.log(`${response.status}: ${response.statusText}`)
+          showErrorToast(`${response.status}: ${response.statusText}`)
         }
       }
     } catch (error) {
-      console.log("## POST Error", error)
+      showErrorToast(error)
     } finally {
       setIsLoading(false)
     }
@@ -202,56 +195,13 @@ const GeneratePassButton = ({ role }: Props): JSX.Element => {
           )}
         </Popover>
 
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent alignItems="center">
-            <ModalHeader pr={{ base: 6, md: 10 }}>Pass Generated</ModalHeader>
-            <ModalCloseButton />
-
-            <ModalBody>
-              <Flex
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="center"
-                textAlign="center"
-                gap={4}
-              >
-                <Text>{`Scan QR code using your device.`}</Text>
-                <Image
-                  src={qrCode}
-                  alt="Donwload Pass"
-                  borderRadius="xl"
-                  maxWidth={250}
-                  maxHeight={250}
-                />
-
-                <Text>Or tap below to download directly on your mobile device.</Text>
-                <a href={fileUrl}>
-                  <Image
-                    src={`/img/${
-                      platform && platform === "apple" ? "apple" : "google"
-                    }-wallet-add.svg`}
-                    alt="Add To Wallet"
-                    cursor="pointer"
-                    height="50px"
-                  />
-                </a>
-              </Flex>
-            </ModalBody>
-
-            <ModalFooter>
-              <Link
-                href="https://ethpass.xyz/"
-                target="_blank"
-                rel="noreferrer"
-                fontSize="sm"
-                fontWeight="medium"
-              >
-                powered by ethpass
-              </Link>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+        <DownloadModal
+          platform={platform}
+          qrCode={qrCode}
+          fileUrl={fileUrl}
+          isOpen={isOpen}
+          onClose={onClose}
+        />
       </>
     )
 }

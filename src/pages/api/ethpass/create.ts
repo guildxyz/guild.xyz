@@ -35,13 +35,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             secondaryFields: [
               {
                 key: "secondary1",
-                label: "Role Name",
+                label: "Role",
                 value: guildRoleName,
                 textAlignment: "PKTextAlignmentLeft",
               },
               {
                 key: "secondary2",
-                label: "Role ID",
+                label: "ID",
                 value: guildRoleId,
                 textAlignment: "PKTextAlignmentLeft",
               },
