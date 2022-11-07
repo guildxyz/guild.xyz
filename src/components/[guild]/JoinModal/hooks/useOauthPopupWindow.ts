@@ -146,7 +146,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     error,
     onOpen: () => {
       setError(null)
-      generateNewCSRFToken()
+      if (typeof csrfToken === "string" && csrfToken.length > 0) {
+        onOpen()
+      } else {
+        mutateCSRFToken()
+      }
     },
     isAuthenticating,
   }
