@@ -113,6 +113,11 @@ type RequirementType =
   | "101"
   | "RABBITHOLE"
   | "KYC_DAO"
+  | "GUILD"
+  | "GUILD_ROLE"
+  | "GUILD_ADMIN"
+  | "GUILD_USER_SINCE"
+  | "GUILD_MINGUILDS"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -227,6 +232,9 @@ type Requirement = {
     resultIndex?: number
     resultMatch?: string
     params?: ContractParamType | DiscoParamType | RabbitholeParamType
+    // GUILD
+    urlName?: string
+    creationDate?: string
   }
   name: string
   type: RequirementType
@@ -363,6 +371,11 @@ const RequirementTypeColors = {
   RABBITHOLE: "#7f23dc",
   KYC_DAO: "#3D65F2",
   CASK: "#7a4db6",
+  GUILD: "var(--chakra-colors-gray-800)",
+  GUILD_ROLE: "var(--chakra-colors-gray-800)",
+  GUILD_ADMIN: "var(--chakra-colors-gray-800)",
+  GUILD_USER_SINCE: "var(--chakra-colors-gray-800)",
+  GUILD_MINGUILDS: "var(--chakra-colors-gray-800)",
 }
 
 type SnapshotStrategy = {
