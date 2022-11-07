@@ -4,8 +4,17 @@ import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import { getRequirementLabel } from "components/create-guild/Requirements/formCards"
 import { PropsWithChildren } from "react"
-import { RequirementType, RequirementTypeColors } from "types"
+import { RequirementType } from "types"
 import useBalancy from "../create-guild/Requirements/hooks/useBalancy"
+
+const RequirementTypeColors = {
+  ERC721: "var(--chakra-colors-green-400)",
+  ERC1155: "var(--chakra-colors-green-400)",
+  NOUNS: "var(--chakra-colors-green-400)",
+  ERC20: "var(--chakra-colors-indigo-400)",
+  COIN: "var(--chakra-colors-indigo-400)",
+  ALLOWLIST: "var(--chakra-colors-gray-200)",
+}
 
 type Props = {
   baseFieldPath: string
