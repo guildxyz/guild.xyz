@@ -48,11 +48,21 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   const { addDatadogError } = useDatadog()
   const toast = useToast()
 
-  const { data: csrfToken, mutate: mutateCSRFToken } = useSWRImmutable(
+  const {
+    data: csrfToken,
+    mutate: mutateCSRFToken,
+    isValidating,
+  } = useSWRImmutable(
     ["CSRFToken", oauthOptions.client_id],
     () => randomBytes(16).toString("hex"),
     { revalidateOnMount: false }
   )
+
+  useEffect(() => {
+    if (!isValidating && !csrfToken) {
+      mutateCSRFToken()
+    }
+  }, [isValidating, csrfToken])
 
   const redirectUri =
     typeof window !== "undefined" &&
@@ -68,12 +78,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   const [error, setError] = useState(null)
   const [authData, setAuthData] = useState<OAuthData<OAuthResponse>>(null)
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (typeof csrfToken === "string" && csrfToken.length > 0) {
-      onOpen()
-    }
-  }, [csrfToken])
 
   /** On a window creation, we set a new listener */
   useEffect(() => {
