@@ -3,8 +3,8 @@ import { PropsWithChildren } from "react"
 import { Rest } from "types"
 
 type Props<LabelType extends string> = {
-  type: LabelType
-  backgroundColor: ChakraProps["color"]
+  type?: LabelType
+  backgroundColor?: ChakraProps["color"]
   color?: ChakraProps["color"]
   label?: string
   fallbackColor?: ChakraProps["color"]
@@ -20,24 +20,17 @@ const ColorCardLabel = <LabelType extends string>({
   ...rest
 }: PropsWithChildren<Props<LabelType>>): JSX.Element => (
   <HStack
-    spacing={0}
     position="absolute"
     h={7}
     overflow="hidden"
-    alignItems="stretch"
+    backgroundColor={backgroundColor}
+    color={color || fallbackColor}
+    px={4}
+    py={1}
     {...rest}
   >
     {children}
-    <Text
-      as="span"
-      px={4}
-      py={1}
-      backgroundColor={backgroundColor}
-      color={color || fallbackColor}
-      fontSize="sm"
-      fontWeight="extrabold"
-      borderTopLeftRadius="xl"
-    >
+    <Text as="span" fontSize="sm" fontWeight="extrabold" borderTopLeftRadius="xl">
       {label ?? type}
     </Text>
   </HStack>

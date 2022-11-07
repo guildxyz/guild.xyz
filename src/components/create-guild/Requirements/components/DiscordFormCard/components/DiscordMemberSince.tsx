@@ -2,13 +2,13 @@ import MemberSinceInput from "./MemberSinceInput"
 import ServerPicker from "./ServerPicker"
 
 type Props = {
-  index: number
+  baseFieldPath: string
 }
 
-const DiscordMemberSince = ({ index }: Props): JSX.Element => (
+const DiscordMemberSince = ({ baseFieldPath }: Props): JSX.Element => (
   <>
-    <ServerPicker index={index} />
-    <MemberSinceInput index={index} label="Joined server before" />
+    <ServerPicker baseFieldPath={baseFieldPath} />
+    <MemberSinceInput baseFieldPath={baseFieldPath} label="Joined server before" />
   </>
 )
 

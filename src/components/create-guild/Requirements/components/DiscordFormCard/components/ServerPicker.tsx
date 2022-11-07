@@ -9,17 +9,18 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import useGateables from "hooks/useGateables"
 import { useController, useFormContext, useFormState } from "react-hook-form"
+import parseFromObject from "utils/parseFromObject"
 
 type Props = {
-  index: number
+  baseFieldPath: string
 }
 
-const ServerPicker = ({ index }: Props): JSX.Element => {
+const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
   const { errors } = useFormState()
   const { register, setValue } = useFormContext()
 
   const { field: serverField } = useController({
-    name: `requirements.${index}.data.serverId`,
+    name: `${baseFieldPath}.data.serverId`,
     rules: {
       required: "Please select a server",
       pattern: {
@@ -47,7 +48,7 @@ const ServerPicker = ({ index }: Props): JSX.Element => {
     <>
       <FormControl
         isRequired
-        isInvalid={!!errors?.requirements?.[index]?.data?.serverId?.message}
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.serverId?.message}
       >
         <FormLabel>Server</FormLabel>
         <StyledSelect
@@ -63,9 +64,9 @@ const ServerPicker = ({ index }: Props): JSX.Element => {
             __isNew__?: boolean
           }) => {
             if (!newValue?.__isNew__) {
-              setValue(`requirements.${index}.data.serverName`, newValue?.label)
+              setValue(`${baseFieldPath}.data.serverName`, newValue?.label)
             } else {
-              setValue(`requirements.${index}.data.serverName`, undefined)
+              setValue(`${baseFieldPath}.data.serverName`, undefined)
             }
             serverField.onChange(newValue?.value)
           }}
@@ -82,26 +83,26 @@ const ServerPicker = ({ index }: Props): JSX.Element => {
         <FormHelperText>Select a server or paste a server id</FormHelperText>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.serverId?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.serverId?.message}
         </FormErrorMessage>
       </FormControl>
 
-      <Collapse
-        in={!errors?.requirements?.[index]?.data?.serverId && isUnknownServer}
-      >
+      <Collapse in={isUnknownServer}>
         <FormControl
           isRequired
-          isInvalid={!!errors?.requirements?.[index]?.data?.serverName?.message}
+          isInvalid={
+            !!parseFromObject(errors, baseFieldPath)?.data?.serverName?.message
+          }
         >
           <FormLabel>Server name</FormLabel>
           <Input
-            {...register(`requirements.${index}.data.serverName`, {
+            {...register(`${baseFieldPath}.data.serverName`, {
               required: isUnknownServer && "Please provide a server name",
             })}
           />
 
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.data?.serverName?.message}
+            {parseFromObject(errors, baseFieldPath)?.data?.serverName?.message}
           </FormErrorMessage>
 
           <FormHelperText>

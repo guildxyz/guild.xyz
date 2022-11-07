@@ -6,33 +6,30 @@ import {
   InputGroup,
   InputLeftElement,
   Spinner,
+  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement } from "types"
+import { FormCardProps } from "types"
+import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../ChainInfo"
 import useMirrorEdition from "./hooks/useMirrorEdition"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 const SIMPLE_ADDRESS_REGEX = /0x[A-F0-9]{40}/i
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const MirrorV2FormCard = ({ index }: Props): JSX.Element => {
+const MirrorV2FormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const {
     register,
     setValue,
     formState: { errors },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
   useEffect(() => {
     if (!register) return
-    register(`requirements.${index}.chain`, {
+    register(`${baseFieldPath}.chain`, {
       value: "OPTIMISM",
     })
   }, [register])
@@ -42,7 +39,7 @@ const MirrorV2FormCard = ({ index }: Props): JSX.Element => {
     name: addressInputName,
     onBlur: onAddressInputBlur,
     onChange: onAddressInputChange,
-  } = register(`requirements.${index}.address`, {
+  } = register(`${baseFieldPath}.address`, {
     required: "This field is required",
     pattern: {
       value: ADDRESS_REGEX,
@@ -50,15 +47,18 @@ const MirrorV2FormCard = ({ index }: Props): JSX.Element => {
     },
   })
 
-  const address = useWatch({ name: `requirements.${index}.address` })
+  const address = useWatch({ name: `${baseFieldPath}.address` })
 
   const { isLoading, image, name } = useMirrorEdition(address)
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainInfo>Works on Optimism</ChainInfo>
 
-      <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.address}>
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
+      >
         <FormLabel>Address:</FormLabel>
         <InputGroup>
           {image && (
@@ -79,8 +79,7 @@ const MirrorV2FormCard = ({ index }: Props): JSX.Element => {
               }
 
               const matchedValue = newValue.match(SIMPLE_ADDRESS_REGEX)?.[0]
-              if (matchedValue)
-                setValue(`requirements.${index}.address`, matchedValue)
+              if (matchedValue) setValue(`${baseFieldPath}.address`, matchedValue)
             }}
           />
         </InputGroup>
@@ -88,10 +87,10 @@ const MirrorV2FormCard = ({ index }: Props): JSX.Element => {
         <FormHelperText>{isLoading ? <Spinner size="sm" /> : name}</FormHelperText>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.address?.message}
+          {parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

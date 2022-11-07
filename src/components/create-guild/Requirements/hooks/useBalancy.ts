@@ -1,4 +1,3 @@
-import { BigNumber } from "@ethersproject/bignumber"
 import { parseUnits } from "@ethersproject/units"
 import { Chains } from "connectors"
 import useDebouncedState from "hooks/useDebouncedState"
@@ -19,7 +18,8 @@ type SupportedChain = "ETHEREUM" | "POLYGON" | "GNOSIS"
 type BalancyRequirement = {
   chain: SupportedChain
   tokenAddress: string
-  amount: BigNumber
+  minAmount?: string
+  maxAmount?: string
 }
 
 /** These are objects, so we can just index them when filtering requirements */
@@ -77,7 +77,7 @@ const fetchHolders = async (
 }
 
 const useBalancy = (
-  index = -1
+  baseFieldPath?: string
 ): {
   addresses: string[]
   holders: number
@@ -86,7 +86,7 @@ const useBalancy = (
   inaccuracy: number
 } => {
   const requirements = useWatch({ name: "requirements" })
-  const requirement = useWatch({ name: `requirements.${index}` })
+  const requirement = useWatch({ name: baseFieldPath })
   const logic = useWatch({ name: "logic" })
 
   const debouncedRequirements = useDebouncedState(requirements)
@@ -94,7 +94,7 @@ const useBalancy = (
 
   // Fixed logic for single requirement to avoid unnecessary refetch when changing logic
   const balancyLogic =
-    index >= 0
+    baseFieldPath !== undefined
       ? "OR"
       : logic === "NAND" || logic === "NOR"
       ? logic.substring(1)
@@ -102,10 +102,10 @@ const useBalancy = (
 
   const renderedRequirements = useMemo<Requirement[]>(
     () =>
-      (index >= 0 ? [debouncedRequirement] : debouncedRequirements)?.filter(
-        ({ type }) => type !== null
-      ) ?? [],
-    [debouncedRequirements, index, debouncedRequirement]
+      (baseFieldPath !== undefined
+        ? [debouncedRequirement]
+        : debouncedRequirements) ?? [],
+    [debouncedRequirements, baseFieldPath, debouncedRequirement]
   )
 
   const mappedRequirements = useMemo(() => {
@@ -151,19 +151,17 @@ const useBalancy = (
             }
 
             return {
-              chain,
+              chain: chain as SupportedChain,
               tokenAddress: address,
               minAmount: balancyMinAmount,
               maxAmount: balancyMaxAmount,
-            }
+            } as BalancyRequirement
           }
         ) ?? []
 
-    const obj: Record<SupportedChain, BalancyRequirement[]> | Record<null, null> = {}
+    const obj: Record<SupportedChain | string, BalancyRequirement[]> = {}
 
     filteredRequirements?.forEach((req) => {
-      // TODO: we'll need to rework this part of the logic once we support negated requirements!
-      if (!BALANCY_SUPPORTED_CHAINS[req.chain]) return
       if (!obj[req.chain]) obj[req.chain] = []
 
       obj[req.chain].push(req)
@@ -176,9 +174,7 @@ const useBalancy = (
 
   const [holders, setHolders] = useState<BalancyResponse>(undefined)
   const { data, isValidating } = useSWR(
-    shouldFetch
-      ? ["balancy_holders", balancyLogic, mappedRequirements, index]
-      : null,
+    shouldFetch ? ["balancy_holders", balancyLogic, mappedRequirements] : null,
     fetchHolders,
     {
       revalidateIfStale: false,
@@ -203,7 +199,7 @@ const useBalancy = (
 
   useEffect(() => {
     if (!data) return
-    if (index >= 0) {
+    if (baseFieldPath !== undefined) {
       setHolders(data)
       return
     }
@@ -233,14 +229,21 @@ const useBalancy = (
     })
   }, [data, renderedRequirements])
 
+  const mappedRequirementsLength = Object.values(mappedRequirements).reduce(
+    (acc, curr) => acc + curr.length,
+    0
+  )
+
   return {
     addresses: holders?.addresses,
-    holders: holders?.addresses?.length,
+    holders:
+      requirement?.type === "ALLOWLIST"
+        ? requirement.data?.validAddresses?.length
+        : holders?.addresses?.length,
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
     inaccuracy:
-      renderedRequirements.length -
-      (Object.keys(mappedRequirements).length + allowlists.length), // Always non-negative
+      renderedRequirements.length - (mappedRequirementsLength + allowlists.length), // Always non-negative
   }
 }
 

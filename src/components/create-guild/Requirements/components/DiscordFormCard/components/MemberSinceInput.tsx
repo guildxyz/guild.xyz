@@ -1,26 +1,27 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext, useFormState } from "react-hook-form"
+import parseFromObject from "utils/parseFromObject"
 
 type Props = {
-  index: number
+  baseFieldPath: string
   label: string
 }
 
-const MemberSinceInput = ({ index, label }: Props): JSX.Element => {
+const MemberSinceInput = ({ baseFieldPath, label }: Props): JSX.Element => {
   const { errors } = useFormState()
   const { control } = useFormContext()
 
   return (
     <FormControl
       isRequired
-      isInvalid={!!errors?.requirements?.[index]?.data?.memberSince}
+      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.memberSince}
     >
       <FormLabel>{label}</FormLabel>
 
       <Controller
         control={control}
-        name={`requirements.${index}.data.memberSince`}
+        name={`${baseFieldPath}.data.memberSince`}
         defaultValue={null}
         rules={{
           required: "This field is required.",
@@ -41,7 +42,7 @@ const MemberSinceInput = ({ index, label }: Props): JSX.Element => {
       />
 
       <FormErrorMessage>
-        {errors?.requirements?.[index]?.data?.memberSince?.message}
+        {parseFromObject(errors, baseFieldPath).data?.memberSince?.message}
       </FormErrorMessage>
     </FormControl>
   )

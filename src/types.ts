@@ -556,6 +556,11 @@ type VoiceRequirementParams = {
   voiceEventStartedAt?: number
 }
 
+type FormCardProps = {
+  baseFieldPath: string
+  field?: Requirement
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -600,6 +605,7 @@ export type {
   PoapEventDetails,
   ContractParamType,
   DiscoParamType,
+  FormCardProps,
   RabbitholeParamType,
 }
 export { ValidationMethod, RequirementTypeColors }

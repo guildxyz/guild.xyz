@@ -27,7 +27,7 @@ const options = [
   },
 ]
 
-const LogicPicker = () => {
+const BalancyLogicPicker = () => {
   const {
     control,
     formState: { errors },
@@ -52,7 +52,7 @@ const LogicPicker = () => {
   return (
     <FormControl isInvalid={!!errors?.logic}>
       <FormLabel>Requirements logic</FormLabel>
-      <SimpleGrid {...group} columns={{ base: 2, sm: 4 }} gap={{ base: 2, md: 4 }}>
+      <SimpleGrid {...group} columns={{ base: 2, sm: 4 }} gap={{ base: 2, md: 5 }}>
         {options.map((option) => {
           const radio = getRadioProps({ value: option.value })
           return <LogicOption key={option.value} {...radio} {...option} />
@@ -63,4 +63,4 @@ const LogicPicker = () => {
   )
 }
 
-export default LogicPicker
+export default BalancyLogicPicker

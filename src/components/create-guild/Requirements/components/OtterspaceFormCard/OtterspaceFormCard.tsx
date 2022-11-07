@@ -1,16 +1,12 @@
-import { FormControl, FormLabel } from "@chakra-ui/react"
+import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext } from "react-hook-form"
-import { Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import useOtterspaceBadges from "./hooks/useOtterspaceBadges"
 
-type Props = {
-  index: number
-  field: Requirement
-}
-
-const OtterspaceFormCard = ({ index }: Props) => {
+const OtterspaceFormCard = ({ baseFieldPath }: FormCardProps) => {
   const {
     control,
     formState: { errors },
@@ -19,12 +15,12 @@ const OtterspaceFormCard = ({ index }: Props) => {
   const { data } = useOtterspaceBadges()
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl isRequired>
         <FormLabel>Badge:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.id` as const}
+          name={`${baseFieldPath}.data.id` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -43,10 +39,10 @@ const OtterspaceFormCard = ({ index }: Props) => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

@@ -18,7 +18,6 @@ const DiscordMemberSinceRequirementCard = ({ requirement }: Props): JSX.Element 
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={<Icon as={DiscordLogo} boxSize={6} />}
       footer={
         <ConnectRequirementPlatformButton

@@ -1,10 +1,10 @@
-import { CloseButton, HStack, Spinner, Text, VStack } from "@chakra-ui/react"
+import { Box, CloseButton, HStack, Spinner, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import { PropsWithChildren } from "react"
 import { RequirementType, RequirementTypeColors } from "types"
-import useBalancy from "../hooks/useBalancy"
+import useBalancy from "../create-guild/Requirements/hooks/useBalancy"
 
 const typeLabel = (type) => {
   switch (type) {
@@ -65,18 +65,18 @@ const typeColor = (type) => {
 }
 
 type Props = {
-  index: number
+  baseFieldPath: string
   type: RequirementType
   onRemove: () => void
 }
 
-const FormCard = ({
+const BalancyFormCard = ({
   type,
-  index,
+  baseFieldPath,
   onRemove,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { holders, isLoading } = useBalancy(index)
+  const { holders, isLoading } = useBalancy(baseFieldPath)
 
   return (
     <CardMotionWrapper>
@@ -92,9 +92,9 @@ const FormCard = ({
           zIndex="1"
           onClick={onRemove}
         />
-        <VStack spacing={4} alignItems="start" pt={4} h="full">
+        <Box pt={4} h="full">
           {children}
-        </VStack>
+        </Box>
         <ColorCardLabel
           type={type}
           backgroundColor={RequirementTypeColors[type]}
@@ -121,12 +121,16 @@ const FormCard = ({
               } this requirement`}
             </Text>
           </HStack>
+        ) : isLoading ? (
+          <Spinner color="gray" size="sm" mt={5} />
         ) : (
-          isLoading && <Spinner color="gray" size="sm" mt={5} />
+          <Text color="gray" mt="5">
+            Fill inputs to calculate eligible addresses
+          </Text>
         )}
       </ColorCard>
     </CardMotionWrapper>
   )
 }
 
-export default FormCard
+export default BalancyFormCard

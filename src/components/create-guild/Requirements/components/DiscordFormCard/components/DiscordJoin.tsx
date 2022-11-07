@@ -1,12 +1,12 @@
 import MemberSinceInput from "./MemberSinceInput"
 
 type Props = {
-  index: number
+  baseFieldPath: string
 }
 
-const DiscordJoin = ({ index }: Props): JSX.Element => (
+const DiscordJoin = ({ baseFieldPath }: Props): JSX.Element => (
   <>
-    <MemberSinceInput index={index} label="Registered before" />
+    <MemberSinceInput baseFieldPath={baseFieldPath} label="Registered before" />
   </>
 )
 

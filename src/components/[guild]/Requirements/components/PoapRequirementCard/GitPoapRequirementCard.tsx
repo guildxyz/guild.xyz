@@ -6,14 +6,14 @@ type Props = {
   requirement: Requirement
 }
 
-const GitPoapRequirementCard = ({ requirement }: Props) => {
+const GitPoapRequirementCard = ({ requirement, ...rest }: Props) => {
   const { poap, isLoading } = usePoap(requirement?.data?.id)
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={isLoading ? "" : poap?.image_url}
       loading={isLoading}
+      {...rest}
     >
       {`Own the ${
         poap?.name ? poap.name.replace("GitPOAP: ", "") : requirement.data?.id
