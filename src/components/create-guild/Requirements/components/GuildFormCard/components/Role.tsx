@@ -56,7 +56,7 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
   const mergedGuildOptions = useMemo(() => {
     if (!guildOptions) return []
 
-    if (foundGuild)
+    if (foundGuild && !guildOptions?.find((g) => g.value === foundGuild.urlName))
       return [
         ...guildOptions,
         {

@@ -224,7 +224,7 @@ type Requirement = {
     }
     galaxyId?: string
     serverId?: string
-    roleId?: string
+    roleId?: string | number
     serverName?: string
     roleName?: string
     // CONTRACT
