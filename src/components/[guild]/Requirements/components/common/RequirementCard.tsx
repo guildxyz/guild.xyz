@@ -49,6 +49,9 @@ const RequirementCard = ({
                 src={image}
                 alt={requirement.address}
                 maxWidth={"var(--chakra-space-11)"}
+                objectFit="cover"
+                objectPosition={"center"}
+                height="full"
               />
             ) : (
               image
