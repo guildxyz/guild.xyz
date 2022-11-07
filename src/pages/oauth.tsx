@@ -59,26 +59,7 @@ const OAuth = () => {
       return
     }
 
-    const [clientId, csrfToken] = params.state?.split(";") ?? [undefined, undefined]
-
-    const csrfTokenStorageKey = `oauth_csrf_token_${clientId}`
-
-    if (csrfToken !== JSON.parse(window.localStorage.getItem(csrfTokenStorageKey))) {
-      window.localStorage.setItem(
-        "oauth_popup_data",
-        JSON.stringify({
-          type: "OAUTH_ERROR",
-          data: {
-            error: "CSRF Error",
-            errorDescription:
-              "CSRF token mismatch, this indicates possible csrf attack.",
-          },
-        })
-      )
-      return
-    } else {
-      window.localStorage.removeItem(csrfTokenStorageKey)
-    }
+    const csrfToken = params.state
 
     delete params.error
     delete params.error_description
@@ -89,6 +70,7 @@ const OAuth = () => {
       JSON.stringify({
         type: "OAUTH_SUCCESS",
         data: params,
+        csrfToken,
       })
     )
   }, [router])
