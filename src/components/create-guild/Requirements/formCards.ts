@@ -68,4 +68,47 @@ const REQUIREMENT_FORMCARDS = {
   GUILD_MINGUILDS: GuildFormCard,
 }
 
+const getRequirementLabel = (type) => {
+  switch (type) {
+    case "ERC1155":
+    case "ERC721":
+    case "NOUNS":
+      return "NFT"
+
+    case "CONTRACT":
+      return "CONTRACT STATE"
+
+    case "TWITTER_FOLLOW":
+    case "TWITTER_BIO":
+    case "TWITTER_NAME":
+    case "TWITTER_FOLLOWER_COUNT":
+      return "TWITTER"
+
+    case "GITHUB_STARRING":
+      return "GITHUB"
+
+    case "GALAXY":
+      return "GALXE"
+
+    case "DISCORD_ROLE":
+      return "DISCORD"
+
+    case "LENS_PROFILE":
+    case "LENS_FOLLOW":
+    case "LENS_COLLECT":
+    case "LENS_MIRROR":
+      return "LENS"
+
+    case "MIRROR_COLLECT":
+      return "MIRROR"
+
+    case "KYC_DAO":
+      return "KYCDAO"
+
+    default:
+      return type
+  }
+}
+
 export default REQUIREMENT_FORMCARDS
+export { getRequirementLabel }

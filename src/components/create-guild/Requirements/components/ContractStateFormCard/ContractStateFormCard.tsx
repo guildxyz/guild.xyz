@@ -10,7 +10,7 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Info } from "phosphor-react"
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { FormCardProps, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -80,6 +80,10 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
       })),
     [methodData]
   )
+
+  useEffect(() => {
+    setValue(`${baseFieldPath}.data.resultIndex`, 0)
+  }, [outputOptions])
 
   const outputType = outputOptions?.[resultIndex ?? 0]?.type
 
@@ -233,6 +237,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
         {outputOptions?.length > 1 && (
           <Controller
             name={`${baseFieldPath}.data.resultIndex` as const}
+            defaultValue={0}
             control={control}
             rules={{ required: "This field is required." }}
             render={({ field: { onChange, onBlur, value, ref } }) => (

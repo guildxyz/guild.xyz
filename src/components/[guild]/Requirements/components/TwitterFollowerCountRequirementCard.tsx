@@ -14,7 +14,7 @@ const TwitterFollowerCountRequirementCard = ({ requirement, ...rest }: Props) =>
     footer={<ConnectRequirementPlatformButton platform="TWITTER" />}
     {...rest}
   >
-    {`Have at least ${Math.floor(requirement.data.minAmount)} followers`}
+    {`Have at least ${Math.floor(requirement.data.minAmount)} followers on Twitter`}
   </RequirementCard>
 )
 
