@@ -109,8 +109,10 @@ type RequirementType =
   | "LENS_MIRROR"
   | "OTTERSPACE"
   | "ORANGE"
+  | "CASK"
   | "101"
   | "RABBITHOLE"
+  | "KYC_DAO"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -209,6 +211,9 @@ type Requirement = {
     maxAmount?: number
     addresses?: Array<string> // (ALLOWLIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
+    name?: string
+    provider?: string
+    planId?: number
     strategy?: {
       name: string
       params: Record<string, any>
@@ -358,6 +363,8 @@ const RequirementTypeColors = {
   101: "#000000",
   ORANGE: "#ff5d24",
   RABBITHOLE: "#7f23dc",
+  KYC_DAO: "#3D65F2",
+  CASK: "#7a4db6",
 }
 
 type SnapshotStrategy = {

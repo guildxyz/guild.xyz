@@ -40,6 +40,9 @@ const typeLabel = (type) => {
     case "MIRROR_COLLECT":
       return "MIRROR"
 
+    case "KYC_DAO":
+      return "KYCDAO"
+
     default:
       return type
   }
@@ -50,9 +53,8 @@ const typeColor = (type) => {
       return "gray.700"
 
     case "GALAXY":
-      return "white"
-
     case "101":
+    case "CASK":
       return "white"
 
     default:

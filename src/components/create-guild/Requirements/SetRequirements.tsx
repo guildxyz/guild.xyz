@@ -23,6 +23,7 @@ import HundredNOneFormCard from "./components/101FormCard"
 import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
 import BalancyCounter from "./components/BalancyCounter"
+import CaskFormCard from "./components/CaskFormCard"
 import ContractStateFormCard from "./components/ContractStateFormCard/ContractStateFormCard"
 import DiscoFormCard from "./components/DiscoFormCard"
 import DiscordFormCard from "./components/DiscordFormCard"
@@ -31,6 +32,7 @@ import GalaxyFormCard from "./components/GalaxyFormCard"
 import GithubFormCard from "./components/GithubFormCard"
 import GitPoapFormCard from "./components/GitPoapFormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
+import KycDAOFormCard from "./components/KycDAOFormCard"
 import LensFormCard from "./components/LensFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import MirrorV2FormCard from "./components/MirrorV2FormCard/MirrorV2FormCard"
@@ -79,8 +81,10 @@ const REQUIREMENT_FORMCARDS = {
   LENS_MIRROR: LensFormCard,
   OTTERSPACE: OtterspaceFormCard,
   ORANGE: OrangeFormCard,
+  CASK: CaskFormCard,
   101: HundredNOneFormCard,
   RABBITHOLE: RabbitholeFormCard,
+  KYC_DAO: KycDAOFormCard,
 }
 
 type Props = {

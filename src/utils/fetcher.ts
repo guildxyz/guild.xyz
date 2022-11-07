@@ -39,7 +39,13 @@ const fetcher = async (
   }
 
   if (isGuildApiCall || isServerless)
-    datadogRum?.addAction(`FETCH ${resource}`, { url: `${api}${resource}`, options })
+    datadogRum?.addAction(`FETCH ${resource}`, {
+      url: `${api}${resource}`,
+      options,
+      userAddress: resource.includes("checkPubKey")
+        ? body.address?.toLowerCase()
+        : undefined,
+    })
 
   return fetch(`${api}${resource}`, options)
     .catch((err) => {
