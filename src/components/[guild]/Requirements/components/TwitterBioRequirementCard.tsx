@@ -17,7 +17,7 @@ const TwitterBioRequirementCard = ({ requirement, ...rest }: Props) => (
   >
     {`Have "`}
     <DataBlockWithCopy text={requirement.data.id} />
-    {`" in your bio`}
+    {`" in your Twitter bio`}
   </RequirementCard>
 )
 

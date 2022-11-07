@@ -17,7 +17,7 @@ const TwitterNameRequirementCard = ({ requirement, ...rest }: Props) => (
   >
     {`Have "`}
     <DataBlockWithCopy text={requirement.data.id} />
-    {`" in your username`}
+    {`" in your Twitter username`}
   </RequirementCard>
 )
 
