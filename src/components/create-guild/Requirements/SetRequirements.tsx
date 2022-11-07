@@ -20,6 +20,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import Section from "components/common/Section"
+import { getRequirementLabel } from "components/create-guild/Requirements/formCards"
 import FreeRequirementCard from "components/[guild]/Requirements/components/FreeRequirementCard"
 import REQUIREMENT_CARDS from "components/[guild]/Requirements/requirementCards"
 import { useCallback, useEffect, useMemo, useRef } from "react"
@@ -234,7 +235,9 @@ const RequirementEditableCard = ({
                 onCloseAndClear()
               }}
             />
-            <ModalHeader>Edit requirement</ModalHeader>
+            <ModalHeader>{`Edit ${getRequirementLabel(
+              type
+            )} requirement`}</ModalHeader>
             <ModalBody>
               <FormComponent baseFieldPath={``} field={field} />
             </ModalBody>

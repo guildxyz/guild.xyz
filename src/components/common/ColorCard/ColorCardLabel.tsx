@@ -16,7 +16,7 @@ const ColorCardLabel = <LabelType extends string>({
   color,
   label,
   children,
-  fallbackColor = "blackAlpha.600",
+  fallbackColor = "blackAlpha.700",
   ...rest
 }: PropsWithChildren<Props<LabelType>>): JSX.Element => (
   <HStack
