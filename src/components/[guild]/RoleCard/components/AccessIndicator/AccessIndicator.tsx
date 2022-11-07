@@ -4,7 +4,6 @@ import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { ArrowCounterClockwise, Check, LockSimple, Warning, X } from "phosphor-react"
-import { useEffect } from "react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
@@ -12,7 +11,6 @@ import useTwitterRateLimitWarning from "./hooks/useTwitterRateLimitWarning"
 
 type Props = {
   roleId: number
-  onLoad?: () => void
 }
 
 const reconnectionErrorMessages = new Set<string>([
@@ -20,17 +18,13 @@ const reconnectionErrorMessages = new Set<string>([
   "Please reatuhenticate to Discord",
 ])
 
-const AccessIndicator = ({ roleId, onLoad }: Props): JSX.Element => {
+const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const { hasAccess, error, isLoading, data } = useAccess(roleId)
   const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
 
   const { isActive } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
-
-  useEffect(() => {
-    if (!isLoading && (data || error)) onLoad?.()
-  }, [isLoading, data, error])
 
   if (!isActive)
     return (

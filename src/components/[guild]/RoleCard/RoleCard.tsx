@@ -11,7 +11,6 @@ import {
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
-import { useRouter } from "next/router"
 import { memo, useEffect, useState } from "react"
 import { Role } from "types"
 import parseDescription from "utils/parseDescription"
@@ -40,21 +39,6 @@ const RoleCard = memo(({ role }: Props) => {
   }, [isAdmin])
 
   const { colorMode } = useColorMode()
-
-  const router = useRouter()
-
-  const refreshRouter = () => {
-    if (!router.isReady) return
-    const [pathname, hash] = router.asPath.split("#")
-    if (!hash) return
-
-    if (hash.split("-")[1] === role.id?.toString()) {
-      router.replace({
-        pathname,
-        hash,
-      })
-    }
-  }
 
   return (
     <Card
@@ -129,7 +113,7 @@ const RoleCard = memo(({ role }: Props) => {
               Requirements to qualify
             </Text>
             <Spacer />
-            <AccessIndicator roleId={role.id} onLoad={refreshRouter} />
+            <AccessIndicator roleId={role.id} />
           </HStack>
 
           <Requirements requirements={role.requirements} logic={role.logic} />
