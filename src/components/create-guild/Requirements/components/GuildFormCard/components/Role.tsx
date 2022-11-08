@@ -20,6 +20,10 @@ type Props = {
   baseFieldPath: string
 }
 
+const customFilterOption = (candidate, input) =>
+  candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
+  candidate.value.includes(input?.replace("https://guild.xyz/", ""))
+
 const GUILD_URL_REGEX = /^[a-z0-9\-]*$/i
 
 const Role = ({ baseFieldPath }: Props): JSX.Element => {
@@ -42,8 +46,9 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
   const debouncedSearchValue = useDebouncedState(searchValue)
 
   const { isLoading, ...fetchedGuild } = useGuild(
-    searchValue && debouncedSearchValue.match(GUILD_URL_REGEX)
-      ? debouncedSearchValue
+    searchValue &&
+      debouncedSearchValue?.replace("https://guild.xyz/", "").match(GUILD_URL_REGEX)
+      ? debouncedSearchValue.replace("https://guild.xyz/", "")
       : urlNameField.value
   )
   const [foundGuild, setFoundGuild] = useState<Guild>()
@@ -117,6 +122,7 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
             ref={urlNameField.ref}
             value={selectedGuild ?? null}
             onInputChange={(newValue) => setSearchValue(newValue)}
+            filterOption={customFilterOption}
           />
         </InputGroup>
 
