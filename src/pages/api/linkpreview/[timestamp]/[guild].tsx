@@ -78,7 +78,7 @@ const handler = async (req, _) => {
               top: 0,
               right: 0,
               width: "320px",
-              height: "450px",
+              height: "450px!important",
               opacity: 0.6,
             }}
             src={`${baseUrl}/img/guilders${isLightMode ? "-dark" : ""}.svg`}
