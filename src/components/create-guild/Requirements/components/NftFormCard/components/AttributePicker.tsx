@@ -12,6 +12,7 @@ import {
   NumberInputStepper,
   Stack,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -43,6 +44,8 @@ const AttributePicker = ({
   index,
   onRemove,
 }: Props): JSX.Element => {
+  const bgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
+
   const {
     control,
     register,
@@ -111,7 +114,7 @@ const AttributePicker = ({
   }, [nftCustomAttributeValues])
 
   return (
-    <Box p={2} borderWidth={1} borderRadius="lg">
+    <Box p={2} borderRadius="xl" bgColor={bgColor}>
       {nftCustomAttributeNames?.length ? (
         <Stack>
           <FormControl isDisabled={!nftCustomAttributeNames?.length}>
@@ -400,6 +403,7 @@ const AttributePicker = ({
         <Button
           leftIcon={<Icon as={TrashSimple} />}
           size="xs"
+          borderRadius="md"
           colorScheme="red"
           variant="ghost"
           onClick={() => onRemove(index)}

@@ -328,7 +328,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
               <Spinner />
             </Flex>
           ) : (
-            <Stack spacing={4}>
+            <Stack spacing={2}>
               {traitFields?.map((traitField, traitFieldIndex) => (
                 <AttributePicker
                   key={traitField.id}
