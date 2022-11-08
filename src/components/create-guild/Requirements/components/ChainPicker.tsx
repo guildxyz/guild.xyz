@@ -28,7 +28,7 @@ type Props = {
 const mappedChains: Array<{ img: string; label: string; value: Chain }> =
   defaultSupportedChains.map((chainName: Chain) => ({
     img: RPC[chainName]?.iconUrls?.[0] || "",
-    label: chainName,
+    label: RPC[chainName]?.chainName,
     value: chainName,
   }))
 
