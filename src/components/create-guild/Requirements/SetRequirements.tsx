@@ -1,42 +1,17 @@
-import {
-  Button,
-  Checkbox,
-  CloseButton,
-  HStack,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useBreakpointValue,
-  useColorModeValue,
-  useDisclosure,
-} from "@chakra-ui/react"
+import { Checkbox, Text, useBreakpointValue } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import DiscardAlert from "components/common/DiscardAlert"
-import { Modal } from "components/common/Modal"
 import Section from "components/common/Section"
 import FreeRequirementCard from "components/[guild]/Requirements/components/FreeRequirementCard"
-import REQUIREMENT_CARDS from "components/[guild]/Requirements/requirementCards"
-import { useCallback, useEffect, useMemo, useRef } from "react"
-import {
-  FormProvider,
-  useFieldArray,
-  useForm,
-  useFormContext,
-  useWatch,
-} from "react-hook-form"
+import { useEffect, useMemo } from "react"
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { Requirement, RequirementType } from "types"
-import AddRequirement from "./components/AddRequirementCard"
+import AddRequirement from "./components/AddRequirement"
 import BalancyCounterWithPopover from "./components/BalancyCounter"
-import BalancyFooter from "./components/BalancyFooter"
-import REQUIREMENT_FORMCARDS from "./formCards"
+import LogicPicker from "./components/LogicPicker"
+import RequirementEditableCard from "./components/RequirementEditableCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
-import LogicPicker from "./LogicPicker"
 
 const SetRequirements = (): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -148,111 +123,6 @@ const SetRequirements = (): JSX.Element => {
         {errors.requirements?.message as string}
       </FormErrorMessage> */}
     </Section>
-  )
-}
-
-const RequirementEditableCard = ({
-  index,
-  type,
-  field,
-  removeRequirement,
-  updateRequirement,
-}) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const RequirementCardComponent = REQUIREMENT_CARDS[type]
-  const FormComponent = REQUIREMENT_FORMCARDS[type]
-  const ref = useRef()
-  const removeButtonColor = useColorModeValue("gray.700", "gray.400")
-  const methods = useForm({ mode: "all", defaultValues: field })
-
-  const {
-    isOpen: isAlertOpen,
-    onOpen: onAlertOpen,
-    onClose: onAlertClose,
-  } = useDisclosure()
-
-  const onCloseAndClear = () => {
-    methods.reset()
-    onAlertClose()
-    onClose()
-  }
-
-  const onSubmit = methods.handleSubmit((data) => {
-    updateRequirement(index, data)
-    methods.reset(undefined, { keepValues: true })
-    onClose()
-  })
-
-  // temporary to set values for balancy so it works without opening the edit modal
-  const { setValue } = useFormContext()
-  const setValueForBalancy = useCallback(
-    (path, data) => {
-      setValue(`requirements.${index}.${path}`, data)
-    },
-    [index, setValue]
-  )
-
-  if (!RequirementCardComponent || !FormComponent) return null
-
-  return (
-    <>
-      <Card px="6" py="4" pos="relative">
-        <HStack pr="3">
-          <RequirementCardComponent
-            requirement={field}
-            footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
-            setValueForBalancy={setValueForBalancy}
-          />
-          <Button ref={ref} size="sm" onClick={onOpen}>
-            Edit
-          </Button>
-        </HStack>
-        <CloseButton
-          position="absolute"
-          top={2}
-          right={2}
-          color={removeButtonColor}
-          borderRadius={"full"}
-          size="sm"
-          onClick={() => removeRequirement(index)}
-          aria-label="Remove requirement"
-        />
-      </Card>
-      <Modal
-        isOpen={isOpen}
-        onClose={methods.formState.isDirty ? onAlertOpen : onClose}
-        scrollBehavior="inside"
-        finalFocusRef={ref}
-        // colorScheme={"dark"}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <FormProvider {...methods}>
-            <ModalCloseButton
-              onClick={(e) => {
-                e.preventDefault()
-                onCloseAndClear()
-              }}
-            />
-            <ModalHeader>Edit requirement</ModalHeader>
-            <ModalBody>
-              <FormComponent baseFieldPath={``} field={field} />
-            </ModalBody>
-            <ModalFooter gap="3">
-              <BalancyFooter baseFieldPath={null} />
-              <Button colorScheme={"green"} onClick={onSubmit} ml="auto">
-                Done
-              </Button>
-            </ModalFooter>
-          </FormProvider>
-        </ModalContent>
-      </Modal>
-      <DiscardAlert
-        isOpen={isAlertOpen}
-        onClose={onAlertClose}
-        onDiscard={onCloseAndClear}
-      />
-    </>
   )
 }
 

@@ -2,66 +2,18 @@ import { Box, CloseButton, HStack, Spinner, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
+import { getRequirementLabel } from "components/create-guild/Requirements/formCards"
 import { PropsWithChildren } from "react"
-import { RequirementType, RequirementTypeColors } from "types"
+import { RequirementType } from "types"
 import useBalancy from "../create-guild/Requirements/hooks/useBalancy"
 
-const typeLabel = (type) => {
-  switch (type) {
-    case "ERC1155":
-    case "ERC721":
-    case "NOUNS":
-      return "NFT"
-
-    case "CONTRACT":
-      return "CONTRACT STATE"
-
-    case "TWITTER_FOLLOW":
-    case "TWITTER_BIO":
-    case "TWITTER_NAME":
-    case "TWITTER_FOLLOWER_COUNT":
-      return "TWITTER"
-
-    case "GITHUB_STARRING":
-      return "GITHUB"
-
-    case "GALAXY":
-      return "GALXE"
-
-    case "DISCORD_ROLE":
-    case "DISCORD_MEMBER_SINCE":
-    case "DISCORD_JOIN":
-      return "DISCORD"
-
-    case "LENS_PROFILE":
-    case "LENS_FOLLOW":
-    case "LENS_COLLECT":
-    case "LENS_MIRROR":
-      return "LENS"
-
-    case "MIRROR_COLLECT":
-      return "MIRROR"
-
-    case "KYC_DAO":
-      return "KYCDAO"
-
-    default:
-      return type
-  }
-}
-const typeColor = (type) => {
-  switch (type) {
-    case "ALLOWLIST":
-      return "gray.700"
-
-    case "GALAXY":
-    case "101":
-    case "CASK":
-      return "white"
-
-    default:
-      return undefined
-  }
+const RequirementTypeColors = {
+  ERC721: "var(--chakra-colors-green-400)",
+  ERC1155: "var(--chakra-colors-green-400)",
+  NOUNS: "var(--chakra-colors-green-400)",
+  ERC20: "var(--chakra-colors-indigo-400)",
+  COIN: "var(--chakra-colors-indigo-400)",
+  ALLOWLIST: "var(--chakra-colors-gray-200)",
 }
 
 type Props = {
@@ -98,8 +50,7 @@ const BalancyFormCard = ({
         <ColorCardLabel
           type={type}
           backgroundColor={RequirementTypeColors[type]}
-          label={typeLabel(type)}
-          color={typeColor(type)}
+          label={getRequirementLabel(type)}
           top={"-px"}
           left={"-px"}
           borderTopLeftRadius="2xl"

@@ -34,6 +34,7 @@ const TwitterFollowRequirementCard = ({ requirement, ...rest }: Props) => (
     >
       @{requirement.data.id}
     </Link>
+    {` on Twitter`}
   </RequirementCard>
 )
 

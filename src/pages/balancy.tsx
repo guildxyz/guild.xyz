@@ -1,4 +1,4 @@
-import { SimpleGrid, Stack, useColorMode } from "@chakra-ui/react"
+import { IconButton, SimpleGrid, Stack, useColorMode } from "@chakra-ui/react"
 import AddBalancyRequirementCard from "components/balancy/AddBalancyRequirementCard"
 import BalancyBar from "components/balancy/BalancyBar"
 import BalancyFormCard from "components/balancy/BalancyFormCard"
@@ -6,6 +6,7 @@ import BalancyLogicPicker from "components/balancy/BalancyLogicPicker"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import REQUIREMENT_FORMCARDS from "components/create-guild/Requirements/formCards"
+import { TwitterLogo } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { Requirement, RequirementType } from "types"
@@ -49,6 +50,18 @@ const Page = (): JSX.Element => {
       background="gray.500"
       textColor="white"
       backgroundOffset={46}
+      action={
+        <IconButton
+          as="a"
+          target="_blank"
+          href={"https://twitter.com/balancy_io"}
+          rel="noopener"
+          borderRadius={"full"}
+          h="10"
+          aria-label="Balancy twitter"
+          icon={<TwitterLogo />}
+        />
+      }
     >
       <FormProvider {...methods}>
         <BalancyBar />
