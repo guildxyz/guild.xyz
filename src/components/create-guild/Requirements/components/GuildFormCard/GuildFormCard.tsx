@@ -1,7 +1,8 @@
 import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
-import { useController, useFormState } from "react-hook-form"
+import { useEffect } from "react"
+import { useController, useFormContext, useFormState } from "react-hook-form"
 import { FormCardProps } from "types"
 import parseFromObject from "utils/parseFromObject"
 import Admin from "./components/Admin"
@@ -40,9 +41,18 @@ const GuildFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
     rules: { required: "It's required to select a type" },
   })
 
-  const { errors } = useFormState()
+  const { errors, touchedFields } = useFormState()
+  const { resetField } = useFormContext()
 
   const selected = guildRequirementTypes.find((reqType) => reqType.value === value)
+
+  useEffect(() => {
+    if (!touchedFields?.data) return
+    resetField(`${baseFieldPath}.data.urlName`)
+    resetField(`${baseFieldPath}.data.roleId`)
+    resetField(`${baseFieldPath}.data.minAmount`)
+    resetField(`${baseFieldPath}.data.creationDate`)
+  }, [value])
 
   return (
     <Stack spacing={4} alignItems="start">
