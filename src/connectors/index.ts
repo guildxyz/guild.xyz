@@ -218,7 +218,7 @@ const RPC = {
     rpcUrls: ["https://mainnet.optimism.io"],
   },
   MOONBEAM: {
-    chainId: 1285,
+    chainId: 1284,
     chainName: "Moonbeam",
     nativeCurrency: {
       name: "Moonbeam",
