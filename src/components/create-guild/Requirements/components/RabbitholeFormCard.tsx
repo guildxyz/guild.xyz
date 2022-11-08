@@ -2,12 +2,8 @@ import { FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext } from "react-hook-form"
-import { Requirement, SelectOption } from "types"
-
-type Props = {
-  index: number
-  field: Requirement
-}
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 
 const options = [
   { label: "Intro to DeFi", value: "0x2fAcE815247A997eAa29881C16F75FD83f4Df65b" },
@@ -15,9 +11,7 @@ const options = [
   { label: "Intro to DAOs", value: "0xc9A42690912F6Bd134DBc4e2493158b3D72cAd21" },
 ]
 
-const RabbitholeFormCard = ({ index, field }: Props) => {
-  const baseFieldName = `requirements.${index}`
-
+const RabbitholeFormCard = ({ baseFieldPath }: FormCardProps) => {
   const {
     control,
     formState: { errors },
@@ -25,10 +19,13 @@ const RabbitholeFormCard = ({ index, field }: Props) => {
 
   return (
     <>
-      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>
+      <FormControl
+        isRequired
+        isInvalid={parseFromObject(errors, baseFieldPath)?.address}
+      >
         <FormLabel>Skill:</FormLabel>
         <Controller
-          name={`${baseFieldName}.address`}
+          name={`${baseFieldPath}.address`}
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -46,7 +43,7 @@ const RabbitholeFormCard = ({ index, field }: Props) => {
           )}
         />
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.address?.message}
+          {parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>
       </FormControl>
     </>

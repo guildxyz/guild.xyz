@@ -19,6 +19,7 @@ const TokenApiURLs = {
     "https://raw.githubusercontent.com/Crocoswap/tokenlists/main/aeb.tokenlist.json",
   ],
   ARBITRUM: ["https://bridge.arbitrum.io/token-list-42161.json"],
+  NOVA: [],
   CELO: [
     "https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap.token-list.json",
   ],
@@ -31,6 +32,7 @@ const TokenApiURLs = {
   ],
   OPTIMISM: ["https://static.optimism.io/optimism.tokenlist.json"],
   MOONRIVER: ["https://tokens.coingecko.com/moonriver/all.json"],
+  MOONBEAM: [],
   RINKEBY: [
     "https://raw.githubusercontent.com/Uniswap/default-token-list/main/src/tokens/rinkeby.json",
   ],

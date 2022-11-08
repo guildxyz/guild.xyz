@@ -1,31 +1,27 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react"
+import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext } from "react-hook-form"
-import { Requirement } from "types"
-
-type Props = {
-  index: number
-  field: Requirement
-}
+import { FormCardProps } from "types"
+import parseFromObject from "utils/parseFromObject"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const CaskFormCard = ({ index, field }: Props) => {
+const CaskFormCard = ({ baseFieldPath, field }: FormCardProps) => {
   const {
     control,
     formState: { errors },
   } = useFormContext()
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl
         isRequired
-        isInvalid={errors?.requirements?.[index]?.data?.provider}
+        isInvalid={parseFromObject(errors, baseFieldPath)?.data?.provider}
       >
         <FormLabel>Provider:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.provider` as const}
+          name={`${baseFieldPath}.data.provider` as const}
           control={control}
           rules={{
             required: "This field is required.",
@@ -48,18 +44,18 @@ const CaskFormCard = ({ index, field }: Props) => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.provider?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.provider?.message}
         </FormErrorMessage>
       </FormControl>
 
       <FormControl
         isRequired
-        isInvalid={errors?.requirements?.[index]?.data?.planId}
+        isInvalid={parseFromObject(errors, baseFieldPath)?.data?.planId}
       >
         <FormLabel>Plan ID:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.planId` as const}
+          name={`${baseFieldPath}.data.planId` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -75,10 +71,10 @@ const CaskFormCard = ({ index, field }: Props) => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.planId?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.planId?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

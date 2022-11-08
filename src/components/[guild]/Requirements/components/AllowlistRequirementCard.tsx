@@ -15,7 +15,8 @@ import {
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { UseFormSetValue } from "react-hook-form"
 import { FixedSizeList } from "react-window"
 import { Requirement } from "types"
 import { RequirementButton } from "./common/RequirementButton"
@@ -23,10 +24,20 @@ import RequirementCard from "./common/RequirementCard"
 
 type Props = {
   requirement: Requirement
+  setValueForBalancy: UseFormSetValue<any>
 }
 
-const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
+const AllowlistRequirementCard = ({
+  requirement,
+  setValueForBalancy,
+  ...rest
+}: Props): JSX.Element => {
   const { addresses, hideAllowlist } = requirement.data
+
+  useEffect(() => {
+    if (setValueForBalancy && addresses)
+      setValueForBalancy("data.validAddresses", addresses)
+  }, [setValueForBalancy, addresses])
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [search, setSearch] = useState("")
@@ -48,7 +59,6 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={<Icon as={ListPlus} boxSize={6} />}
       footer={
         <Flex justifyContent="start">
@@ -95,6 +105,7 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
           </Modal>
         </Flex>
       }
+      {...rest}
     >
       Be included in allowlist
     </RequirementCard>

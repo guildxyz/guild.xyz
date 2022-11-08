@@ -326,45 +326,6 @@ type GuildFormType = Partial<
   requirements?: Requirement[]
 }
 
-const RequirementTypeColors = {
-  ERC721: "var(--chakra-colors-green-400)",
-  ERC1155: "var(--chakra-colors-green-400)",
-  CONTRACT: "var(--chakra-colors-gray-400)",
-  NOUNS: "var(--chakra-colors-green-400)",
-  POAP: "#8076FA",
-  GITPOAP: "#307AE8",
-  MIRROR: "var(--chakra-colors-gray-300)",
-  MIRROR_COLLECT: "var(--chakra-colors-gray-300)",
-  ERC20: "var(--chakra-colors-indigo-400)",
-  COIN: "var(--chakra-colors-indigo-400)",
-  SNAPSHOT: "var(--chakra-colors-orange-400)",
-  ALLOWLIST: "var(--chakra-colors-gray-200)",
-  UNLOCK: "var(--chakra-colors-salmon-400)",
-  JUICEBOX: "var(--chakra-colors-yellow-500)",
-  GALAXY: "var(--chakra-colors-black)",
-  FREE: "var(--chakra-colors-cyan-400)",
-  TWITTER: "var(--chakra-colors-twitter-400)",
-  TWITTER_FOLLOW: "var(--chakra-colors-twitter-400)",
-  TWITTER_NAME: "var(--chakra-colors-twitter-400)",
-  TWITTER_BIO: "var(--chakra-colors-twitter-400)",
-  TWITTER_FOLLOWER_COUNT: "var(--chakra-colors-twitter-400)",
-  GITHUB: "var(--chakra-colors-GITHUB-400)",
-  GITHUB_STARRING: "var(--chakra-colors-GITHUB-400)",
-  DISCORD_ROLE: "var(--chakra-colors-DISCORD-400)",
-  NOOX: "#7854f7",
-  DISCO: "#bee4e0",
-  LENS_PROFILE: "#BEFB5A",
-  LENS_FOLLOW: "#BEFB5A",
-  LENS_COLLECT: "#BEFB5A",
-  LENS_MIRROR: "#BEFB5A",
-  OTTERSPACE: "#a6ea8e",
-  101: "#000000",
-  ORANGE: "#ff5d24",
-  RABBITHOLE: "#7f23dc",
-  KYC_DAO: "#3D65F2",
-  CASK: "#7a4db6",
-}
-
 type SnapshotStrategy = {
   name: string
   params: Record<string, Record<string, string>>
@@ -549,6 +510,11 @@ type VoiceRequirementParams = {
   voiceEventStartedAt?: number
 }
 
+type FormCardProps = {
+  baseFieldPath: string
+  field?: Requirement
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -593,6 +559,7 @@ export type {
   PoapEventDetails,
   ContractParamType,
   DiscoParamType,
+  FormCardProps,
   RabbitholeParamType,
 }
-export { ValidationMethod, RequirementTypeColors }
+export { ValidationMethod }

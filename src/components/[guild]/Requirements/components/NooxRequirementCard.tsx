@@ -9,14 +9,13 @@ type Props = {
   requirement: Requirement
 }
 
-const NooxRequirementCard = ({ requirement }: Props) => {
+const NooxRequirementCard = ({ requirement, ...rest }: Props) => {
   const { data, isValidating } = useSWRImmutable<NooxBadge[]>("/api/noox")
 
   const badgeData = data?.find((badge) => badge.id === requirement.data.id)
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={badgeData?.image}
       footer={
         <RequirementLinkButton
@@ -27,6 +26,7 @@ const NooxRequirementCard = ({ requirement }: Props) => {
           View on Noox
         </RequirementLinkButton>
       }
+      {...rest}
     >
       {`Have the `}
       <Skeleton as="span" isLoaded={!!badgeData}>

@@ -9,7 +9,7 @@ type Props = {
   requirement: Requirement
 }
 
-const KycDAORequirementCard = ({ requirement }: Props): JSX.Element => {
+const KycDAORequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
   const { isLoading, kycDAOContracts } = useKycDAOContracts()
 
   const contractData = kycDAOContracts?.find(
@@ -18,13 +18,13 @@ const KycDAORequirementCard = ({ requirement }: Props): JSX.Element => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={
         <Text as="span" fontWeight="bold" fontSize="xx-small">
           KYC
         </Text>
       }
       footer={<BlockExplorerUrl requirement={requirement} />}
+      {...rest}
     >
       <Text as="span">{`Get verified as `}</Text>
       <Skeleton as="span" isLoaded={!isLoading}>

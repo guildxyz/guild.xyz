@@ -207,9 +207,11 @@ const handler = async (req, _) => {
                 color: isLightMode ? "#27272A" : "white",
               }}
             >
-              {`${safeGuildDescription?.slice(0, 80)}${
-                safeGuildDescription?.length > 80 ? "..." : ""
-              }` || (
+              {guild.description ? (
+                `${safeGuildDescription?.slice(0, 80)}${
+                  safeGuildDescription?.length > 80 ? "..." : ""
+                }`
+              ) : (
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <div style={{ marginBottom: "4px" }}>
                     {"That's a great party in there!"}
