@@ -16,7 +16,11 @@ const TokenRequirementCard = ({
   setValueForBalancy,
   ...rest
 }: Props) => {
-  const { data, isValidating } = useTokenData(requirement.chain, requirement.address)
+  const { data, isValidating } = useTokenData(
+    requirement.chain,
+    requirement.address,
+    { skipFetch: requirement.symbol !== "-" }
+  )
 
   useEffect(() => {
     if (setValueForBalancy && data.decimals)

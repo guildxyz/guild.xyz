@@ -5,32 +5,41 @@ import useTokens from "./useTokens"
 
 const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
 
-const useTokenData = (chain: string, address: string, onFinish?: () => void) => {
-  const shouldFetch =
-    false &&
-    /^0x[A-F0-9]{40}$/i.test(address) &&
-    chain &&
-    address !== "0x0000000000000000000000000000000000000000"
-
-  const tokensFromApi = useTokens(chain)
+const useTokenData = (
+  chain: string,
+  address: string,
+  options?: {
+    onFinish?: () => void
+    skipFetch?: boolean
+  }
+) => {
+  const { tokens, isLoading } = useTokens(chain)
 
   const tokenDataFromApi = useMemo(() => {
-    if (!address || !tokensFromApi) return null
+    if (!address || !tokens) return null
 
     const lowerCaseAddress = address.toLowerCase()
     if (lowerCaseAddress === ENS_ADDRESS)
       return { name: "ENS", symbol: "ENS", decimals: undefined, logoURI: undefined }
-    return tokensFromApi.tokens?.find(
-      (token) => token.address?.toLowerCase() === lowerCaseAddress
-    )
-  }, [tokensFromApi, address])
+    return tokens?.find((token) => token.address?.toLowerCase() === lowerCaseAddress)
+  }, [tokens, address])
+
+  const shouldFetch =
+    !options?.skipFetch &&
+    !isLoading &&
+    !tokenDataFromApi &&
+    /^0x[A-F0-9]{40}$/i.test(address) &&
+    chain &&
+    address !== "0x0000000000000000000000000000000000000000"
 
   const swrResponse = useSWRImmutable<Token>(
     shouldFetch ? `/util/symbol/${address}/${chain}` : null,
     {
       errorRetryInterval: 100,
       shouldRetryOnError: address?.toLowerCase() !== ENS_ADDRESS,
-      ...(onFinish ? { onSuccess: onFinish, onError: onFinish } : {}),
+      ...(options?.onFinish
+        ? { onSuccess: options?.onFinish, onError: options?.onFinish }
+        : {}),
     }
   )
 
