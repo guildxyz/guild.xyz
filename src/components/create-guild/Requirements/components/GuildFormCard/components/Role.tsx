@@ -22,7 +22,7 @@ type Props = {
 
 const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
-  candidate.value.includes(input?.replace("https://guild.xyz/", ""))
+  candidate.data?.details?.includes(input?.replace("https://guild.xyz/", ""))
 
 const GUILD_URL_REGEX = /^[a-z0-9\-]*$/i
 

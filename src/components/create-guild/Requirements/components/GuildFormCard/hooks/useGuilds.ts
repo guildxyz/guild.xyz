@@ -10,6 +10,7 @@ const fetchGuilds = (_: string): Promise<SelectOption<number>[]> =>
         img: guild.imageUrl,
         label: guild.name,
         value: guild.id,
+        details: guild.urlName,
       }))
     )
     .catch((_) => [])
