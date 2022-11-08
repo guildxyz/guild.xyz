@@ -229,6 +229,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/22459/small/glmr.png?1641880985",
     },
     blockExplorerUrls: ["https://moonbeam.moonscan.io"],
+    apiUrl: "https://api-moonbeam.moonscan.io/api",
     iconUrls: ["/networkLogos/moonbeam.svg"],
     rpcUrls: ["https://rpc.api.moonbeam.network"],
   },
