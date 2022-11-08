@@ -5,8 +5,7 @@ import { useEffect } from "react"
 import { useController, useFormContext, useFormState } from "react-hook-form"
 import { FormCardProps } from "types"
 import parseFromObject from "utils/parseFromObject"
-import Admin from "./components/Admin"
-import MinGuilds from "./components/MinGuilds"
+import MinAmountInput from "./components/MinAmountInput"
 import Role from "./components/Role"
 import UserSince from "./components/UserSince"
 
@@ -19,7 +18,7 @@ const guildRequirementTypes = [
   {
     label: "Be a guild admin",
     value: "GUILD_ADMIN",
-    GuildRequirement: Admin,
+    GuildRequirement: MinAmountInput,
   },
   {
     label: "Be a user since",
@@ -29,7 +28,7 @@ const guildRequirementTypes = [
   {
     label: "Be a member of guilds",
     value: "GUILD_MINGUILDS",
-    GuildRequirement: MinGuilds,
+    GuildRequirement: MinAmountInput,
   },
 ]
 

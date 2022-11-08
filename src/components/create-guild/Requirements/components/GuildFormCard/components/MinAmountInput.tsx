@@ -15,7 +15,7 @@ type Props = {
   baseFieldPath: string
 }
 
-const MinGuilds = ({ baseFieldPath }: Props): JSX.Element => {
+const MinAmountInput = ({ baseFieldPath }: Props): JSX.Element => {
   const { errors } = useFormState()
   const { control } = useFormContext()
 
@@ -61,4 +61,4 @@ const MinGuilds = ({ baseFieldPath }: Props): JSX.Element => {
   )
 }
 
-export default MinGuilds
+export default MinAmountInput
