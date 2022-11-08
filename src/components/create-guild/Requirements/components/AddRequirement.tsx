@@ -70,11 +70,6 @@ const general: Array<RequirementButton> = [
 
 const integrations: Array<RequirementButton> = [
   {
-    icon: "/requirementLogos/guild.png",
-    label: "Guild.xyz",
-    type: "GUILD",
-  },
-  {
     icon: "/requirementLogos/twitter.svg",
     label: "Twitter",
     type: "TWITTER",
@@ -88,6 +83,11 @@ const integrations: Array<RequirementButton> = [
     icon: "/platforms/discord.png",
     label: "Discord",
     type: "DISCORD",
+  },
+  {
+    icon: "/requirementLogos/guild.png",
+    label: "Guild.xyz",
+    type: "GUILD",
   },
   {
     icon: "/requirementLogos/unlock.png",
