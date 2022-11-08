@@ -14,11 +14,13 @@ import dynamic from "next/dynamic"
 import NextLink from "next/link"
 import {
   Code,
+  Cpu,
   DiscordLogo,
   House,
   Info,
   List,
   MagnifyingGlass,
+  Plus,
   RocketLaunch,
   TwitterLogo,
 } from "phosphor-react"
@@ -59,7 +61,7 @@ const NavMenu = (): JSX.Element => {
             templateColumns={{ base: "1fr", sm: "1fr 150px", md: "1fr 150px 150px" }}
             gap={{ base: 2, sm: "8" }}
           >
-            <NavGroup title="About">
+            <NavGroup title="Navigation">
               <NextLink passHref href="/">
                 <NavButton
                   leftIcon={<House />}
@@ -76,35 +78,22 @@ const NavMenu = (): JSX.Element => {
                   Explore all guilds
                 </NavButton>
               </NextLink>
-              <NavButton
-                target="_blank"
-                href="https://docs.guild.xyz/guild"
-                rel="noopener"
-                leftIcon={<Info />}
-                data-dd-action-name="Navigation menu - Guide"
-              >
-                Guide
-              </NavButton>
-            </NavGroup>
-            <NavGroup title="Socials">
-              <NavButton
-                target="_blank"
-                href="https://discord.gg/guildxyz"
-                rel="noopener"
-                leftIcon={<DiscordLogo />}
-                data-dd-action-name="Navigation menu - Discord"
-              >
-                Discord
-              </NavButton>
-              <NavButton
-                target="_blank"
-                href="https://twitter.com/guildxyz"
-                rel="noopener"
-                leftIcon={<TwitterLogo />}
-                data-dd-action-name="Navigation menu - Twitter"
-              >
-                Twitter
-              </NavButton>
+              <NextLink passHref href="/create-guild">
+                <NavButton
+                  leftIcon={<Plus />}
+                  data-dd-action-name="Navigation menu - Balancy playground"
+                >
+                  Create guild
+                </NavButton>
+              </NextLink>
+              <NextLink passHref href="/balancy">
+                <NavButton
+                  leftIcon={<Cpu />}
+                  data-dd-action-name="Navigation menu - Balancy playground"
+                >
+                  Balancy playground
+                </NavButton>
+              </NextLink>
             </NavGroup>
             <NavGroup title="Other">
               <NavButton
@@ -124,6 +113,36 @@ const NavMenu = (): JSX.Element => {
                 data-dd-action-name="Navigation menu - Code"
               >
                 Code
+              </NavButton>
+              <NavButton
+                target="_blank"
+                href="https://docs.guild.xyz/guild"
+                rel="noopener"
+                leftIcon={<Info />}
+                data-dd-action-name="Navigation menu - Guide"
+              >
+                Guide
+              </NavButton>
+            </NavGroup>
+
+            <NavGroup title="Socials">
+              <NavButton
+                target="_blank"
+                href="https://discord.gg/guildxyz"
+                rel="noopener"
+                leftIcon={<DiscordLogo />}
+                data-dd-action-name="Navigation menu - Discord"
+              >
+                Discord
+              </NavButton>
+              <NavButton
+                target="_blank"
+                href="https://twitter.com/guildxyz"
+                rel="noopener"
+                leftIcon={<TwitterLogo />}
+                data-dd-action-name="Navigation menu - Twitter"
+              >
+                Twitter
               </NavButton>
             </NavGroup>
           </Grid>

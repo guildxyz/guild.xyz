@@ -1,27 +1,23 @@
-import { FormControl, FormLabel } from "@chakra-ui/react"
+import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useEffect } from "react"
 import { Controller, useFormContext } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../ChainInfo"
 import useKycDAOContracts from "./hooks/useKycDAOContracts"
 
-type Props = {
-  index: number
-  field: Requirement
-}
-
-const KycDAOFormCard = ({ index }: Props): JSX.Element => {
+const KycDAOFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const {
     control,
     register,
     formState: { errors },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
   useEffect(() => {
     if (!register) return
-    register(`requirements.${index}.chain`, {
+    register(`${baseFieldPath}.chain`, {
       value: "POLYGON",
     })
   }, [register])
@@ -29,14 +25,17 @@ const KycDAOFormCard = ({ index }: Props): JSX.Element => {
   const { isLoading, kycDAOContracts } = useKycDAOContracts()
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainInfo>Works on Polygon</ChainInfo>
 
-      <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.address}>
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
+      >
         <FormLabel>Contract:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.address` as const}
+          name={`${baseFieldPath}.address` as const}
           control={control}
           rules={{
             required: "This field is required.",
@@ -56,10 +55,10 @@ const KycDAOFormCard = ({ index }: Props): JSX.Element => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.address?.message}
+          {parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

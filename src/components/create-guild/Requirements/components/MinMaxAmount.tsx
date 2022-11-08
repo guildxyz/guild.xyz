@@ -16,17 +16,18 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Question } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
-import { GuildFormType, Requirement } from "types"
+import { Requirement } from "types"
+import parseFromObject from "utils/parseFromObject"
 
 type Props = {
-  index: number
+  baseFieldPath: string
   field: Requirement
   format?: "INT" | "FLOAT"
   hideSetMaxButton?: boolean
 }
 
 const MinMaxAmount = ({
-  index,
+  baseFieldPath,
   field,
   format = "INT",
   hideSetMaxButton = false,
@@ -35,15 +36,15 @@ const MinMaxAmount = ({
     control,
     unregister,
     formState: { errors },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
-  const [showMax, setShowMax] = useState(!isNaN(field.data?.maxAmount))
+  const [showMax, setShowMax] = useState(!isNaN(field?.data?.maxAmount))
 
   const toggleShowMax = () => setShowMax(!showMax)
 
   useEffect(() => {
     if (showMax) return
-    unregister(`requirements.${index}.data.maxAmount`)
+    unregister(`${baseFieldPath}.data.maxAmount`)
   }, [showMax])
 
   const handleChange = (newValue, onChange) => {
@@ -81,12 +82,13 @@ const MinMaxAmount = ({
       </Flex>
 
       <HStack w="full" spacing={2} alignItems="start">
-        <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.minAmount}>
+        <FormControl
+          isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
+        >
           <Controller
-            name={`requirements.${index}.data.minAmount` as const}
+            name={`${baseFieldPath}.data.minAmount` as const}
             control={control}
             rules={{
-              required: "This field is required.",
               min: {
                 value: 0,
                 message: "Amount must be positive",
@@ -110,7 +112,7 @@ const MinMaxAmount = ({
           />
 
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.data?.minAmount?.message}
+            {parseFromObject(errors, baseFieldPath)?.data?.minAmount?.message}
           </FormErrorMessage>
         </FormControl>
 
@@ -121,10 +123,10 @@ const MinMaxAmount = ({
             </Text>
 
             <FormControl
-              isInvalid={!!errors?.requirements?.[index]?.data?.maxAmount}
+              isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.maxAmount}
             >
               <Controller
-                name={`requirements.${index}.data.maxAmount` as const}
+                name={`${baseFieldPath}.data.maxAmount` as const}
                 control={control}
                 rules={{
                   required: "This field is required.",
@@ -151,7 +153,7 @@ const MinMaxAmount = ({
               />
 
               <FormErrorMessage>
-                {errors?.requirements?.[index]?.data?.maxAmount?.message}
+                {parseFromObject(errors, baseFieldPath)?.data?.maxAmount?.message}
               </FormErrorMessage>
             </FormControl>
           </>

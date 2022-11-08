@@ -1,26 +1,25 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react"
+import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext } from "react-hook-form"
-import { Requirement } from "types"
+import { FormCardProps } from "types"
+import parseFromObject from "utils/parseFromObject"
 
-type Props = {
-  index: number
-  field: Requirement
-}
-
-const OrangeFormCard = ({ index, field }: Props) => {
+const OrangeFormCard = ({ baseFieldPath, field }: FormCardProps) => {
   const {
     control,
     formState: { errors },
   } = useFormContext()
 
   return (
-    <>
-      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
+    <Stack spacing={4} alignItems="start">
+      <FormControl
+        isRequired
+        isInvalid={parseFromObject(errors, baseFieldPath)?.data?.id}
+      >
         <FormLabel>Campaign ID:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.id` as const}
+          name={`${baseFieldPath}.data.id` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -40,10 +39,10 @@ const OrangeFormCard = ({ index, field }: Props) => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

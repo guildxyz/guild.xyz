@@ -2,15 +2,11 @@ import { FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext } from "react-hook-form"
-import { Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import use101Courses from "./hooks/use101Courses"
 
-type Props = {
-  index: number
-  field: Requirement
-}
-
-const HundredNOneFormCard = ({ index }: Props) => {
+const HundredNOneFormCard = ({ baseFieldPath }: FormCardProps) => {
   const {
     control,
     formState: { errors },
@@ -26,11 +22,14 @@ const HundredNOneFormCard = ({ index }: Props) => {
 
   return (
     <>
-      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
+      <FormControl
+        isRequired
+        isInvalid={parseFromObject(errors, baseFieldPath)?.data?.id}
+      >
         <FormLabel>Course:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.id` as const}
+          name={`${baseFieldPath}.data.id` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -50,7 +49,7 @@ const HundredNOneFormCard = ({ index }: Props) => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
     </>

@@ -1,80 +1,34 @@
-import { CloseButton, HStack, Spinner, Text, VStack } from "@chakra-ui/react"
+import { Box, CloseButton, HStack, Spinner, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
+import { getRequirementLabel } from "components/create-guild/Requirements/formCards"
 import { PropsWithChildren } from "react"
-import { RequirementType, RequirementTypeColors } from "types"
-import useBalancy from "../hooks/useBalancy"
+import { RequirementType } from "types"
+import useBalancy from "../create-guild/Requirements/hooks/useBalancy"
 
-const typeLabel = (type) => {
-  switch (type) {
-    case "ERC1155":
-    case "ERC721":
-    case "NOUNS":
-      return "NFT"
-
-    case "CONTRACT":
-      return "CONTRACT STATE"
-
-    case "TWITTER_FOLLOW":
-    case "TWITTER_BIO":
-    case "TWITTER_NAME":
-    case "TWITTER_FOLLOWER_COUNT":
-      return "TWITTER"
-
-    case "GITHUB_STARRING":
-      return "GITHUB"
-
-    case "GALAXY":
-      return "GALXE"
-
-    case "DISCORD_ROLE":
-      return "DISCORD"
-
-    case "LENS_PROFILE":
-    case "LENS_FOLLOW":
-    case "LENS_COLLECT":
-    case "LENS_MIRROR":
-      return "LENS"
-
-    case "MIRROR_COLLECT":
-      return "MIRROR"
-
-    case "KYC_DAO":
-      return "KYCDAO"
-
-    default:
-      return type
-  }
-}
-const typeColor = (type) => {
-  switch (type) {
-    case "ALLOWLIST":
-      return "gray.700"
-
-    case "GALAXY":
-    case "101":
-    case "CASK":
-      return "white"
-
-    default:
-      return undefined
-  }
+const RequirementTypeColors = {
+  ERC721: "var(--chakra-colors-green-400)",
+  ERC1155: "var(--chakra-colors-green-400)",
+  NOUNS: "var(--chakra-colors-green-400)",
+  ERC20: "var(--chakra-colors-indigo-400)",
+  COIN: "var(--chakra-colors-indigo-400)",
+  ALLOWLIST: "var(--chakra-colors-gray-200)",
 }
 
 type Props = {
-  index: number
+  baseFieldPath: string
   type: RequirementType
   onRemove: () => void
 }
 
-const FormCard = ({
+const BalancyFormCard = ({
   type,
-  index,
+  baseFieldPath,
   onRemove,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { holders, isLoading } = useBalancy(index)
+  const { holders, isLoading } = useBalancy(baseFieldPath)
 
   return (
     <CardMotionWrapper>
@@ -90,14 +44,13 @@ const FormCard = ({
           zIndex="1"
           onClick={onRemove}
         />
-        <VStack spacing={4} alignItems="start" pt={4} h="full">
+        <Box pt={4} h="full">
           {children}
-        </VStack>
+        </Box>
         <ColorCardLabel
           type={type}
           backgroundColor={RequirementTypeColors[type]}
-          label={typeLabel(type)}
-          color={typeColor(type)}
+          label={getRequirementLabel(type)}
           top={"-px"}
           left={"-px"}
           borderTopLeftRadius="2xl"
@@ -119,12 +72,16 @@ const FormCard = ({
               } this requirement`}
             </Text>
           </HStack>
+        ) : isLoading ? (
+          <Spinner color="gray" size="sm" mt={5} />
         ) : (
-          isLoading && <Spinner color="gray" size="sm" mt={5} />
+          <Text color="gray" mt="5">
+            Fill inputs to calculate eligible addresses
+          </Text>
         )}
       </ColorCard>
     </CardMotionWrapper>
   )
 }
 
-export default FormCard
+export default BalancyFormCard
