@@ -424,6 +424,10 @@ const blockExplorerIcons = {
     light: "/networkLogos/moonriver.svg",
     dark: "/networkLogos/moonriver.svg",
   },
+  "https://moonbeam.moonscan.io": {
+    light: "/networkLogos/moonbeam.svg",
+    dark: "/networkLogos/moonbeam.svg",
+  },
   "https://andromeda-explorer.metis.io": {
     light: "/networkLogos/metis.svg",
     dark: "/explorerLogos/metis-dark.svg",
