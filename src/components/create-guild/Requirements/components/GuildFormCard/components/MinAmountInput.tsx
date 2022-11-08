@@ -32,6 +32,7 @@ const MinAmountInput = ({
 
   return (
     <FormControl
+      isRequired
       isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
     >
       <FormLabel>{label}</FormLabel>
@@ -40,6 +41,7 @@ const MinAmountInput = ({
         name={`${baseFieldPath}.data.minAmount` as const}
         control={control}
         rules={{
+          required: "This field is required.",
           min: {
             value: min,
             message: `Amount must be greater than ${min}`,
