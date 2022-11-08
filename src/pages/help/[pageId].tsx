@@ -15,6 +15,7 @@ type CustomPageLinkProps = {
 }
 
 function CustomLink({
+  // TODO: nice format to link
   className,
   href,
   children,
@@ -35,6 +36,10 @@ function CustomLink({
       {children}
     </a>
   )
+}
+
+function CustomCollection(props) {
+  // return <div>f2</div>
 }
 
 async function getAllPages() {
@@ -80,22 +85,47 @@ async function getPage(params: any) {
   return blockMap
 }
 
-function getPageLinkDatas(blockMap, params: any, allPages: any) {
+async function getLinks(blockMap, params: any) {
+  const allPages = await getAllPages()
+  const linkedPageContents = getLinkedPages(blockMap, params, allPages)
+  const linkedPagesByTags = getLinkedPagesByTags(blockMap, params, allPages)
+  const links = [...new Set([...linkedPageContents, ...linkedPagesByTags])]
+  console.log(links)
+
+  return links
+}
+
+const getLinkedPagesByTags = (blockMap, params, allPages) => {
+  const linkedTags =
+    blockMap.block[params.pageId.toString()]?.value.properties["aY]V"][0][0].split(
+      ","
+    )
+
+  const linkedPagesByTags = allPages.filter(
+    (page) =>
+      page.properties.relatedcontentsbytags.multi_select
+        .map((tagObject) => tagObject.name)
+        .some((tag) => linkedTags.includes(tag)) && page.id !== params.pageId
+  )
+
+  return linkedPagesByTags
+}
+
+function getLinkedPages(blockMap: any, params: any, allPages: any) {
   const linkedPageIds = blockMap.block[params.pageId.toString()]?.value.properties[
     "xBM?"
   ]
     ?.filter((link) => link.length > 1)
     .map((linkObj) => linkObj[1][0][1])
-  const linkedPageContents = allPages.filter((page) =>
-    linkedPageIds?.includes(page.id)
+  const linkedPageContents = allPages.filter(
+    (page) => linkedPageIds?.includes(page.id) && page.id !== params.pageId
   )
   return linkedPageContents
 }
 
 export async function getStaticProps({ params }) {
   const blockMap = await getPage(params)
-  const allPages = await getAllPages()
-  const linkedPageContents = getPageLinkDatas(blockMap, params, allPages)
+  const linkedPageContents = await getLinks(blockMap, params)
 
   return {
     props: {
