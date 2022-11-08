@@ -9,6 +9,7 @@ const GuildAdmin = ({ baseFieldPath }: Props): JSX.Element => (
     baseFieldPath={baseFieldPath}
     label="Members count"
     helperText="Minimum amount of guild members"
+    defaultValue={0}
   />
 )
 

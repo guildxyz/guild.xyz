@@ -16,12 +16,16 @@ type Props = {
   baseFieldPath: string
   label: string
   helperText?: string
+  min?: number
+  defaultValue?: number
 }
 
 const MinAmountInput = ({
   baseFieldPath,
   label,
   helperText,
+  min = 0,
+  defaultValue,
 }: Props): JSX.Element => {
   const { errors } = useFormState()
   const { control } = useFormContext()
@@ -37,10 +41,11 @@ const MinAmountInput = ({
         control={control}
         rules={{
           min: {
-            value: 0,
-            message: "Amount must be positive",
+            value: min,
+            message: `Amount must be greater than ${min}`,
           },
         }}
+        defaultValue={defaultValue}
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <NumberInput
             ref={ref}
@@ -50,7 +55,8 @@ const MinAmountInput = ({
               onChange(isNaN(parsedValue) ? "" : parsedValue)
             }}
             onBlur={onBlur}
-            min={1}
+            min={min}
+            defaultValue={defaultValue}
           >
             <NumberInputField />
             <NumberInputStepper>
