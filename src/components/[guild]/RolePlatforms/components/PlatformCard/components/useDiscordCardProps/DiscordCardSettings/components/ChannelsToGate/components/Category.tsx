@@ -1,12 +1,10 @@
 import { Checkbox, Stack } from "@chakra-ui/react"
-import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import Channel from "./Channel"
 
 type Props = {
   rolePlatformIndex: number
   categoryId: string
-  isGuarded: boolean
 }
 
 export type GatedChannels = Record<
@@ -17,7 +15,7 @@ export type GatedChannels = Record<
   }
 >
 
-const Category = ({ rolePlatformIndex, categoryId, isGuarded }: Props) => {
+const Category = ({ rolePlatformIndex, categoryId }: Props) => {
   const { setValue } = useFormContext()
 
   // TODO: typing
@@ -29,13 +27,9 @@ const Category = ({ rolePlatformIndex, categoryId, isGuarded }: Props) => {
     name: `rolePlatforms.${rolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels`,
   })
 
-  const sumIsChecked = useMemo(
-    () =>
-      Object.values(channels ?? {}).reduce<number>(
-        (acc, curr: any) => acc + +curr.isChecked,
-        0
-      ),
-    [channels]
+  const sumIsChecked = Object.values(channels ?? {}).reduce<number>(
+    (acc, curr: any) => acc + +curr.isChecked,
+    0
   )
 
   const channelsLength = Object.keys(channels ?? {}).length
@@ -44,8 +38,8 @@ const Category = ({ rolePlatformIndex, categoryId, isGuarded }: Props) => {
     <>
       {categoryId !== "-" && (
         <Checkbox
-          isChecked={isGuarded || sumIsChecked === channelsLength}
-          isDisabled={isGuarded}
+          isChecked={sumIsChecked === channelsLength}
+          isDisabled={true} // Temporarily disabled
           isIndeterminate={sumIsChecked > 0 && sumIsChecked < channelsLength}
           onChange={(e) => {
             Object.entries(channels).forEach(
@@ -73,7 +67,6 @@ const Category = ({ rolePlatformIndex, categoryId, isGuarded }: Props) => {
             rolePlatformIndex={rolePlatformIndex}
             categoryId={categoryId}
             channelId={channelId}
-            isGuarded={isGuarded}
           />
         ))}
       </Stack>

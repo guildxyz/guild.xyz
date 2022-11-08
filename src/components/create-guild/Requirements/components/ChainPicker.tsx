@@ -14,13 +14,12 @@ import {
   RPC,
   supportedChains as defaultSupportedChains,
 } from "connectors"
-import { useEffect, useMemo } from "react"
+import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { SelectOption } from "types"
 
 type Props = {
   controlName: string
-  defaultChain: Chain
   supportedChains?: Array<Chain>
   onChange?: () => void
   isDisabled?: boolean
@@ -29,13 +28,12 @@ type Props = {
 const mappedChains: Array<{ img: string; label: string; value: Chain }> =
   defaultSupportedChains.map((chainName: Chain) => ({
     img: RPC[chainName]?.iconUrls?.[0] || "",
-    label: chainName,
+    label: RPC[chainName]?.chainName,
     value: chainName,
   }))
 
 const ChainPicker = ({
   controlName,
-  defaultChain,
   supportedChains = defaultSupportedChains,
   onChange: onChangeHandler,
   isDisabled,
@@ -45,23 +43,26 @@ const ChainPicker = ({
   const { chainId } = useWeb3React()
   const chain = useWatch({ name: controlName })
 
-  const mappedSupportedChains = useMemo(
-    () =>
-      supportedChains
-        ? mappedChains?.filter((_chain) => supportedChains.includes(_chain.value))
-        : mappedChains,
-    [supportedChains]
-  )
+  const mappedSupportedChains = supportedChains
+    ? mappedChains?.filter((_chain) => supportedChains.includes(_chain.value))
+    : mappedChains
 
-  // If default chain is null (create page), the ChainPicker component will use the user's current chain (if it's supported in the requirement) or ETHEREUM. Otherwise (edit page), it'll use the provided default chain
+  /**
+   * Timeouted setValue on mount instead of defaultValue, because for some reason
+   * useWatch({ name: `${baseFieldPath}.chain` }) in other components returns
+   * undefined before selecting an option otherways
+   */
   useEffect(() => {
     if (chain) return
-    setValue(
-      controlName,
-      supportedChains.includes(Chains[chainId] as Chain)
-        ? Chains[chainId]
-        : "ETHEREUM"
-    )
+
+    setTimeout(() => {
+      setValue(
+        controlName,
+        supportedChains.includes(Chains[chainId] as Chain)
+          ? Chains[chainId]
+          : "ETHEREUM"
+      )
+    }, 0)
   }, [chainId])
 
   return (
@@ -74,7 +75,6 @@ const ChainPicker = ({
           </InputLeftElement>
           <Controller
             name={controlName}
-            defaultValue={defaultChain}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <StyledSelect
                 ref={ref}

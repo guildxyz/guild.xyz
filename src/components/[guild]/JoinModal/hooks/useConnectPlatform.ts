@@ -1,7 +1,7 @@
 import { usePrevious } from "@chakra-ui/react"
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import { useEffect } from "react"
@@ -21,11 +21,15 @@ const platformAuthHooks: Record<PlatformName, (scope?: string) => any> = {
   GOOGLE: useGoogleAuth,
 }
 
-const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
+const useConnectPlatform = (
+  platform: PlatformName,
+  onSuccess?: () => void,
+  isReauth?: boolean // Temporary, once /connect works without it, we can remove this
+) => {
+  const { addDatadogAction, addDatadogError } = useDatadog()
+
   const user = useUser()
   const { mutate: mutateUser, platformUsers } = useUser()
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
   const { onOpen, authData, isAuthenticating, ...rest } =
     platformAuthHooks[platform]()
   const prevAuthData = usePrevious(authData)
@@ -53,7 +57,7 @@ const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
     })
 
   const { onSubmit, isLoading, response } = useSubmitWithSign<
-    { platformName: PlatformName; authData: any },
+    { platformName: PlatformName; authData: any; reauth?: boolean },
     any
   >(submit, {
     onSuccess: () => {
@@ -62,19 +66,19 @@ const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
       onSuccess?.()
     },
     onError: (err) => {
-      addDatadogError("3rd party account connection error", { error: err }, "custom")
+      addDatadogError("3rd party account connection error", { error: err })
     },
   })
 
   useEffect(() => {
     // couldn't prevent spamming requests without all these three conditions
     if (!platformUsers || !authData || prevAuthData) return
-    const alreadyConnected = platformUsers.some(
-      (platformAccount) => platformAccount.platformName === platform
-    )
-    if (alreadyConnected) return
+    // const alreadyConnected = platformUsers.some(
+    //   (platformAccount) => platformAccount.platformName === platform
+    // )
+    // if (alreadyConnected) return
 
-    onSubmit({ platformName: platform, authData })
+    onSubmit({ platformName: platform, authData, reauth: isReauth || undefined })
   }, [authData, platformUsers])
 
   return {

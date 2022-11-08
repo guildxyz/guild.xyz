@@ -64,6 +64,8 @@ const EligibleMembers = (): JSX.Element => {
       <Button
         size="xs"
         borderRadius="md"
+        isLoading={isVoiceParticipantsLoading}
+        loadingText="Refreshing"
         leftIcon={<Icon as={Users} />}
         onClick={onOpen}
       >
@@ -79,7 +81,7 @@ const EligibleMembers = (): JSX.Element => {
             icon={<Icon as={ArrowsClockwise} />}
             size="xs"
             borderRadius="md"
-            onClick={mutateVoiceParticipants}
+            onClick={() => mutateVoiceParticipants()}
             isDisabled={!canFetch}
           />
         </Tooltip>

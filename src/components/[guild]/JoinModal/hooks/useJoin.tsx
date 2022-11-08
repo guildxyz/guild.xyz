@@ -1,9 +1,9 @@
 import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -40,10 +40,10 @@ export type JoinData =
     }
 
 const useJoin = (onSuccess?: () => void) => {
+  const { addDatadogAction, addDatadogError } = useDatadog()
+
   const router = useRouter()
   const { account } = useWeb3React()
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
 
   const guild = useGuild()
   const user = useUser()
@@ -127,7 +127,7 @@ guild.xyz/${guild.urlName} @guildxyz`
       })
     },
     onError: (err) => {
-      addDatadogError(`Guild join error`, { error: err }, "custom")
+      addDatadogError(`Guild join error`, { error: err })
     },
   })
 

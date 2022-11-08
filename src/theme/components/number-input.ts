@@ -38,9 +38,11 @@ const sizes = {
   lg: getSize("lg"),
 }
 
-export default {
+const styles = {
   parts: parts.keys,
   sizes,
   variants,
   defaultProps,
 }
+
+export default styles

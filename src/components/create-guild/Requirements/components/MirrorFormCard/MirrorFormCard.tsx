@@ -1,116 +1,61 @@
 import {
   FormControl,
+  FormHelperText,
   FormLabel,
+  Input,
   InputGroup,
-  InputLeftElement,
+  Spinner,
+  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import React, { useMemo } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption } from "types"
+import { useFormContext, useWatch } from "react-hook-form"
+import { FormCardProps } from "types"
+import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../ChainInfo"
-import useMirrorEditions from "./hooks/useMirror"
+import useMirrorEdition from "../MirrorV2FormCard/hooks/useMirrorEdition"
 
-type Props = {
-  index: number
-  field: Requirement
-}
+const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const customFilterOption = (candidate, input) =>
-  candidate?.label?.toLowerCase().includes(input?.toLowerCase()) ||
-  candidate?.value?.toString().startsWith(input) ||
-  candidate?.data?.address?.toLowerCase() === input.toLowerCase()
-
-const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
+const MirrorFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const {
-    control,
-    setValue,
+    register,
     formState: { errors },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
-  const id = useWatch({ name: `requirements.${index}.data.id` })
-  const address = useWatch({ name: `requirements.${index}.address` })
+  const address = useWatch({ name: `${baseFieldPath}.address` })
 
-  const { isLoading, editions } = useMirrorEditions()
-  const mappedEditions = useMemo(
-    () =>
-      editions?.map((edition) => ({
-        img: edition.image,
-        label: edition.title,
-        value: edition.editionId,
-        details: `#${edition.editionId}`,
-        address: edition.editionContractAddress,
-      })),
-    [editions]
-  )
-
-  const editionById = useMemo(
-    () =>
-      editions?.find(
-        (edition) =>
-          edition.editionId === parseInt(id) &&
-          edition.editionContractAddress === address
-      ) || null,
-    [editions, id, address]
-  )
+  const { isLoading, name } = useMirrorEdition(address, "ETHEREUM")
 
   return (
-    <>
-      <ChainInfo>Works on ETHEREUM</ChainInfo>
+    <Stack spacing={4} alignItems="start">
+      <ChainInfo>Works on Ethereum</ChainInfo>
 
-      <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.data?.id}>
-        <FormLabel>Edition:</FormLabel>
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
+      >
+        <FormLabel>Address:</FormLabel>
         <InputGroup>
-          {id && editionById && (
-            <InputLeftElement>
-              <OptionImage img={editionById?.image} alt={editionById?.title} />
-            </InputLeftElement>
-          )}
-          <Controller
-            name={`requirements.${index}.data.id` as const}
-            control={control}
-            defaultValue={field.data?.id}
-            rules={{
-              required: "This field is required.",
-            }}
-            render={({ field: { onChange, onBlur, value: selectValue, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                isClearable
-                isLoading={isLoading}
-                options={mappedEditions}
-                placeholder="Search..."
-                value={mappedEditions?.find(
-                  (edition) =>
-                    edition.value?.toString() == selectValue &&
-                    edition.address?.toLowerCase() === address?.toLowerCase()
-                )}
-                defaultValue={
-                  editions &&
-                  mappedEditions?.find(
-                    (edition) =>
-                      edition.value?.toString() == field.data?.id &&
-                      edition.address?.toLowerCase() === field.address
-                  )
-                }
-                onChange={(newValue: SelectOption) => {
-                  onChange(newValue?.value)
-                  setValue(`requirements.${index}.address`, newValue?.address)
-                }}
-                onBlur={onBlur}
-                filterOption={customFilterOption}
-              />
-            )}
+          <Input
+            isDisabled
+            {...register(`${baseFieldPath}.address`, {
+              required: "This field is required",
+              pattern: {
+                value: ADDRESS_REGEX,
+                message:
+                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+              },
+            })}
           />
         </InputGroup>
 
+        <FormHelperText>{isLoading ? <Spinner size="sm" /> : name}</FormHelperText>
+
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

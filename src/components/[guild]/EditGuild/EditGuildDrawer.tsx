@@ -42,14 +42,12 @@ import useEditGuild from "./hooks/useEditGuild"
 
 type Props = {
   isOpen: boolean
-  onOpen: () => void
   onClose: () => void
 }
 
 const EditGuildDrawer = ({
   finalFocusRef,
   isOpen,
-  onOpen,
   onClose,
 }: Omit<DrawerProps & Props, "children">): JSX.Element => {
   const {
@@ -250,11 +248,9 @@ const EditGuildDrawer = ({
       </Drawer>
 
       <DiscardAlert
-        {...{
-          isOpen: isAlertOpen,
-          onClose: onAlertClose,
-          onDiscard: onCloseAndClear,
-        }}
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        onDiscard={onCloseAndClear}
       />
     </>
   )

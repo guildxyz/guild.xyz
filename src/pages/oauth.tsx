@@ -2,8 +2,11 @@ import AuthRedirect from "components/AuthRedirect"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
 
-// clientId,scrfToken
-type OauthState = [string | number, string]
+type OAuthResponse = {
+  error_description?: string
+  error?: string
+  state?: string
+} & Record<string, any>
 
 const OAuth = () => {
   const router = useRouter()
@@ -29,42 +32,23 @@ const OAuth = () => {
   useEffect(() => {
     if (!router.isReady || typeof window === "undefined") return
 
-    // We navigate to the index page if the dcauth page is used incorrectly
-    // For example if someone just manually goes to /dcauth
+    // We navigate to the index page if the oauth page is used incorrectly
+    // For example if someone just manually goes to /oauth
 
-    let code = null
-    let error = null
-    let errorDescription = null
-    let clientId = null
-    let csrfToken = null
+    let params: OAuthResponse = {}
 
     if (typeof router.query?.state !== "string") {
       if (!window.location.hash) router.push("/")
       const fragment = new URLSearchParams(window.location.hash.slice(1))
-
-      if (
-        !fragment.has("state") ||
-        (!fragment.has("code") &&
-          (!fragment.has("error") || !fragment.has("error_description")))
-      )
-        router.push("/")
-
-      code = fragment.get("code")
-      error = fragment.get("error")
-      errorDescription = fragment.get("error_description")
-      const state = fragment.get("state").split(";") as OauthState
-      clientId = state[0]
-      csrfToken = state[1]
+      params = Object.fromEntries(fragment.entries())
     } else {
-      code = router.query.code
-      error = router.query.error
-      errorDescription = router.query.error_description
-      const state = (router.query.state as string).split(";") as OauthState
-      clientId = state[0]
-      csrfToken = state[1]
+      params = router.query
     }
 
-    if (error) {
+    if (Object.keys(params).length <= 0) router.push("/")
+
+    if (params.error) {
+      const { error, errorDescription } = params
       window.localStorage.setItem(
         "oauth_popup_data",
         JSON.stringify({
@@ -75,30 +59,18 @@ const OAuth = () => {
       return
     }
 
-    const csrfTokenStorageKey = `oauth_csrf_token_${clientId}`
+    const csrfToken = params.state
 
-    if (csrfToken !== JSON.parse(window.localStorage.getItem(csrfTokenStorageKey))) {
-      window.localStorage.setItem(
-        "oauth_popup_data",
-        JSON.stringify({
-          type: "OAUTH_ERROR",
-          data: {
-            error: "CSRF Error",
-            errorDescription:
-              "CSRF token mismatch, this indicates possible csrf attack.",
-          },
-        })
-      )
-      return
-    } else {
-      window.localStorage.removeItem(csrfTokenStorageKey)
-    }
+    delete params.error
+    delete params.error_description
+    delete params.state
 
     window.localStorage.setItem(
       "oauth_popup_data",
       JSON.stringify({
         type: "OAUTH_SUCCESS",
-        data: code,
+        data: params,
+        csrfToken,
       })
     )
   }, [router])

@@ -29,16 +29,12 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
 
 const AddRoleButton = (): JSX.Element => {
-  const { id, guildPlatforms } = useGuild()
-  const discordPlatform = guildPlatforms?.find(
-    (p) => p.platformId === PlatformType.DISCORD
-  )
+  const { id } = useGuild()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const finalFocusRef = useRef(null)
@@ -110,11 +106,7 @@ const AddRoleButton = (): JSX.Element => {
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     (...props) => {
       methods.clearErrors("requirements")
-      if (
-        !formRequirements ||
-        formRequirements?.length === 0 ||
-        formRequirements?.every(({ type }) => !type)
-      ) {
+      if (!formRequirements || formRequirements?.length === 0) {
         methods.setError(
           "requirements",
           {
@@ -153,7 +145,7 @@ const AddRoleButton = (): JSX.Element => {
       <Drawer
         isOpen={isOpen}
         placement="left"
-        size={{ base: "full", md: "xl" }}
+        size={{ base: "full", md: "lg" }}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         finalFocusRef={finalFocusRef}
       >
@@ -175,8 +167,8 @@ const AddRoleButton = (): JSX.Element => {
                     </HStack>
                   </Box>
                   <Description />
-                  <SetRequirements maxCols={2} />
                 </Section>
+                <SetRequirements />
               </VStack>
             </FormProvider>
           </DrawerBody>
@@ -200,11 +192,9 @@ const AddRoleButton = (): JSX.Element => {
       </Drawer>
 
       <DiscardAlert
-        {...{
-          isOpen: isAlertOpen,
-          onClose: onAlertClose,
-          onDiscard: onCloseAndClear,
-        }}
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        onDiscard={onCloseAndClear}
       />
     </>
   )

@@ -2,49 +2,8 @@ import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/re
 import React, { useState } from "react"
 import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
-import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
-import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
-import FreeRequirementCard from "./components/FreeRequirementCard"
-import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
-import GithubRequirementCard from "./components/GithubRequirementCard"
-import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
-import MirrorRequirementCard from "./components/MirrorRequirementCard"
-import NftRequirementCard from "./components/NftRequirementCard"
-import NooxRequirementCard from "./components/NooxRequirementCard"
-import PoapRequirementCard from "./components/PoapRequirementCard"
-import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequirementCard"
-import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
-import TokenRequirementCard from "./components/TokenRequirementCard"
-import TwitterBioRequirementCard from "./components/TwitterBioRequirementCard"
-import TwitterFollowerCountRequirementCard from "./components/TwitterFollowerCountRequirementCard"
-import TwitterFollowRequirementCard from "./components/TwitterFollowRequirementCard"
-import TwitterNameRequirementCard from "./components/TwitterNameRequirementCard"
-import UnlockRequirementCard from "./components/UnlockRequirementCard"
-
-const REQUIREMENT_CARDS = {
-  FREE: FreeRequirementCard,
-  ERC20: TokenRequirementCard,
-  COIN: TokenRequirementCard,
-  ERC721: NftRequirementCard,
-  ERC1155: NftRequirementCard,
-  NOUNS: NftRequirementCard,
-  UNLOCK: UnlockRequirementCard,
-  POAP: PoapRequirementCard,
-  GITPOAP: GitPoapRequirementCard,
-  MIRROR: MirrorRequirementCard,
-  SNAPSHOT: SnapshotRequirementCard,
-  ALLOWLIST: AllowlistRequirementCard,
-  JUICEBOX: JuiceboxRequirementCard,
-  GALAXY: GalaxyRequirementCard,
-  TWITTER_NAME: TwitterNameRequirementCard,
-  TWITTER_BIO: TwitterBioRequirementCard,
-  TWITTER_FOLLOW: TwitterFollowRequirementCard,
-  TWITTER_FOLLOWER_COUNT: TwitterFollowerCountRequirementCard,
-  GITHUB_STARRING: GithubRequirementCard,
-  CONTRACT: ContractStateRequirementCard,
-  NOOX: NooxRequirementCard,
-}
+import REQUIREMENT_CARDS from "./requirementCards"
 
 type Props = {
   requirements: Requirement[]

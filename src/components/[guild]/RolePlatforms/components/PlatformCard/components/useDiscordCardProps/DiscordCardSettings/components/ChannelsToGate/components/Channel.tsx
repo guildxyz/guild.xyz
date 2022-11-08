@@ -5,10 +5,9 @@ type Props = {
   rolePlatformIndex: number
   categoryId: string
   channelId: string
-  isGuarded: boolean
 }
 
-const Channel = ({ rolePlatformIndex, categoryId, channelId, isGuarded }: Props) => {
+const Channel = ({ rolePlatformIndex, categoryId, channelId }: Props) => {
   const {
     field: { name: fieldName, onBlur, onChange, ref },
   } = useController({
@@ -28,8 +27,8 @@ const Channel = ({ rolePlatformIndex, categoryId, channelId, isGuarded }: Props)
       name={fieldName}
       ref={ref}
       onBlur={onBlur}
-      isChecked={isGuarded || isChecked}
-      isDisabled={isGuarded}
+      isChecked={isChecked}
+      isDisabled={true} // Temporarily disabled
       onChange={(e) => onChange({ name, isChecked: e.target.checked })}
     >
       {name}

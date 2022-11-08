@@ -66,9 +66,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     guildPoapChainId
   )
 
-  const { setStep } = useCreatePoapContext()
-
-  const { setPoapData } = useCreatePoapContext()
+  const { setStep, setPoapData } = useCreatePoapContext()
 
   const isExpired = useMemo(() => {
     if (!poap) return false
@@ -90,7 +88,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
         : poaps.find((p) => p.poapIdentifier === poap.id)?.activated,
     [poap, poaps]
   )
-  const isReady = useMemo(() => poapLinks && poapLinks?.total > 0, [poapLinks])
+  const isReady = poapLinks && poapLinks?.total > 0
 
   const tooltipLabel = isExpired
     ? "Your POAP has expired."

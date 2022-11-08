@@ -8,36 +8,33 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import useJuicebox from "./hooks/useJuicebox"
 
-type Props = {
-  index: number
-  field: Requirement
-}
-
-const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
+const JuiceboxFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const {
     control,
     setValue,
     formState: { errors },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
   // Setting up a default address for now, it isn't editable in the UI
   useEffect(() => {
     setValue(
-      `requirements.${index}.address`,
+      `${baseFieldPath}.address`,
       "0xee2eBCcB7CDb34a8A822b589F9E8427C24351bfc"
     )
   }, [setValue])
 
-  const id = useWatch({ name: `requirements.${index}.data.id` })
+  const id = useWatch({ name: `${baseFieldPath}.data.id` })
 
   const { projects, isLoading } = useJuicebox()
   const mappedOptions = useMemo(
@@ -50,14 +47,14 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
     [projects]
   )
 
-  const pickedProject = useMemo(
-    () => mappedOptions?.find((project) => project.value === id),
-    [id, mappedOptions]
-  )
+  const pickedProject = mappedOptions?.find((project) => project.value === id)
 
   return (
-    <>
-      <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.data?.id}>
+    <Stack spacing={4} alignItems="start">
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+      >
         <FormLabel>Project:</FormLabel>
 
         <InputGroup>
@@ -67,9 +64,8 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
             </InputLeftElement>
           )}
           <Controller
-            name={`requirements.${index}.data.id` as const}
+            name={`${baseFieldPath}.data.id` as const}
             control={control}
-            defaultValue={field.data?.id}
             rules={{
               required: "This field is required.",
             }}
@@ -81,9 +77,6 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
                 options={mappedOptions}
                 placeholder="Search..."
                 value={mappedOptions?.find((option) => option.value === selectValue)}
-                defaultValue={mappedOptions?.find(
-                  (option) => option.value === field.data?.id
-                )}
                 onChange={(selectedOption: SelectOption) =>
                   onChange(selectedOption?.value)
                 }
@@ -94,17 +87,18 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
         </InputGroup>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
 
-      <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.minAmount}>
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
+      >
         <FormLabel>Minimum amount staked:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.minAmount` as const}
+          name={`${baseFieldPath}.data.minAmount` as const}
           control={control}
-          defaultValue={field.data?.minAmount}
           rules={{
             required: "This field is required.",
             min: {
@@ -118,7 +112,6 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
             <NumberInput
               ref={ref}
               value={numberInputValue}
-              defaultValue={field.data?.minAmount}
               onChange={(newValue) => {
                 const parsedValue = parseInt(newValue)
                 onChange(isNaN(parsedValue) ? "" : parsedValue)
@@ -136,10 +129,10 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.minAmount?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.minAmount?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

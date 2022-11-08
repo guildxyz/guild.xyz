@@ -5,7 +5,6 @@ import {
   Heading,
   HStack,
   Spinner,
-  Tag,
   Text,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
@@ -27,13 +26,13 @@ import OnboardingProvider from "components/[guild]/Onboarding/components/Onboard
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import useIsSuperAdmin from "hooks/useIsSuperAdmin"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
+import Head from "next/head"
 import ErrorPage from "pages/_error"
 import React, { useEffect, useMemo, useState } from "react"
-import { SWRConfig, useSWRConfig } from "swr"
+import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
@@ -75,8 +74,7 @@ const GuildPage = (): JSX.Element => {
   const [DynamicMembersExporter, setDynamicMembersExporter] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
-  const isSuperAdmin = useIsSuperAdmin()
-  const { isAdmin, isOwner } = useGuildPermission()
+  const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
 
   const members = useUniqueMembers(roles)
@@ -138,17 +136,16 @@ const GuildPage = (): JSX.Element => {
 
         {!showOnboarding && (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            {isOwner || isMember ? (
-              isAdmin ? (
-                <HStack>
-                  {DynamicAddRewardButton && <DynamicAddRewardButton />}
-                  {isSuperAdmin && <LeaveButton />}
-                </HStack>
-              ) : (
+            {isMember ? (
+              <HStack>
+                {DynamicAddRewardButton && <DynamicAddRewardButton />}
                 <LeaveButton />
-              )
+              </HStack>
             ) : (
-              <JoinButton />
+              <HStack>
+                {DynamicAddRewardButton && <DynamicAddRewardButton />}
+                <JoinButton />
+              </HStack>
             )}
           </Tabs>
         )}
@@ -179,14 +176,15 @@ const GuildPage = (): JSX.Element => {
           <Section
             title="Members"
             titleRightElement={
-              <HStack justifyContent="space-between" w="full">
-                <Tag size="sm" maxH={6} pt={1}>
+              <HStack justifyContent="end" w="full">
+                {/* <HStack justifyContent="space-between" w="full"> */}
+                {/* <Tag size="sm" maxH={6} pt={1}>
                   {isLoading ? (
                     <Spinner size="xs" />
                   ) : (
                     members?.filter((address) => !!address)?.length ?? 0
                   )}
-                </Tag>
+                </Tag> */}
                 {DynamicMembersExporter && <DynamicMembersExporter />}
               </HStack>
             }
@@ -208,16 +206,6 @@ type Props = {
 }
 
 const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
-  /**
-   * Manually triggering mutate on mount because useSWRImmutable doesn't do because
-   * of the fallback
-   */
-  const { mutate } = useSWRConfig()
-  useEffect(() => {
-    if (!fallback) return
-    mutate(Object.keys(fallback)[0])
-  }, [])
-
   const guild = useGuild()
 
   if (!fallback) {
@@ -239,6 +227,13 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       <LinkPreviewHead
         path={fallback ? Object.values(fallback)[0].urlName : guild.urlName}
       />
+      <Head>
+        <title>{fallback ? Object.values(fallback)[0].name : guild.name}</title>
+        <meta
+          property="og:title"
+          content={fallback ? Object.values(fallback)[0].name : guild.name}
+        />
+      </Head>
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
           <JoinModalProvider>

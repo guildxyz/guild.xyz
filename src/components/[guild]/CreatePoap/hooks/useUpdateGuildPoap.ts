@@ -6,8 +6,9 @@ import useToast from "hooks/useToast"
 import { GuildPoap } from "types"
 import fetcher from "utils/fetcher"
 import { useCreatePoapContext } from "../components/CreatePoapContext"
+import usePoapEventDetails from "../components/Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 
-type UpdatePoapData = { id: number; expiryDate: number }
+type UpdatePoapData = { id: number; expiryDate?: number; activate?: boolean }
 
 const updateGuildPoap = async ({
   validation,
@@ -19,24 +20,36 @@ const updateGuildPoap = async ({
     body: data,
   })
 
-const useUpdateGuildPoap = () => {
+const useUpdateGuildPoap = (type: "UPDATE" | "ACTIVATE" = "UPDATE") => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { mutateGuild } = useGuild()
+  const { poaps, mutateGuild } = useGuild()
   const { poapData, setPoapData } = useCreatePoapContext()
   const { poap, mutatePoap } = usePoap(poapData?.fancy_id)
+  const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
+  const { mutatePoapEventDetails } = usePoapEventDetails()
 
   return useSubmitWithSign<UpdatePoapData, GuildPoap>(updateGuildPoap, {
     onError: (error) => showErrorToast(error?.error?.message ?? error?.error),
-    onSuccess: async () => {
+    onSuccess: async (response) => {
       // Mutating guild and POAP data, so the user can see the fresh data in the POAPs list
-      await mutateGuild()
-      await mutatePoap()
+      const mutatePoapEventDetailsWithResponse = mutatePoapEventDetails({
+        ...response,
+        contracts: guildPoap?.poapContracts,
+      })
+      await Promise.all([
+        mutateGuild,
+        mutatePoap,
+        mutatePoapEventDetailsWithResponse,
+      ])
       setPoapData(poap)
       toast({
         status: "success",
-        title: "Successfully updated POAP",
+        title:
+          type === "ACTIVATE"
+            ? "Successfully activated POAP"
+            : "Successfully updated POAP",
       })
     },
   })

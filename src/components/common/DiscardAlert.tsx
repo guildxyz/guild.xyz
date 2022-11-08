@@ -4,23 +4,21 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  AlertDialogProps,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import { useRef } from "react"
-import { Rest } from "types"
 
 type Props = {
-  isOpen: boolean
   onDiscard: () => void
-  onClose: () => void
-} & Rest
+} & Omit<AlertDialogProps, "leastDestructiveRef" | "children">
 
-const DiscardAlert = ({ isOpen, onClose, onDiscard }: Props): JSX.Element => {
+const DiscardAlert = ({ onClose, onDiscard, ...rest }: Props): JSX.Element => {
   const cancelRef = useRef()
 
   return (
-    <Alert {...{ isOpen, onClose }} leastDestructiveRef={cancelRef}>
+    <Alert leastDestructiveRef={cancelRef} onClose={onClose} {...rest}>
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader>Discard changes?</AlertDialogHeader>

@@ -29,7 +29,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useSendJoin from "components/[guild]/Onboarding/components/SummonMembers/hooks/useSendJoin"
 import useServerData from "hooks/useServerData"
 import { ArrowRight, DiscordLogo } from "phosphor-react"
-import { useEffect, useMemo } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useCreatePoapContext } from "../../../CreatePoapContext"
 import usePoapEventDetails from "../../../Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
@@ -66,15 +66,7 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
     data: { categories },
   } = useServerData(discordServerId)
 
-  const mappedChannels = useMemo(() => {
-    if (!categories?.length) return []
-
-    return (
-      Object.values(categories)
-        ?.map((category) => category.channels)
-        ?.flat() ?? []
-    )
-  }, [categories])
+  const mappedChannels = categories?.map((category) => category.channels)?.flat()
 
   const shouldShowGuildImage = imageUrl.includes("http")
 
@@ -246,7 +238,7 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
               <Button
                 colorScheme="indigo"
                 rightIcon={<Icon as={ArrowRight} />}
-                onClick={methods.handleSubmit(onSubmit, console.log)}
+                onClick={methods.handleSubmit(onSubmit)}
                 isLoading={isLoading || isSigning}
                 loadingText={loadingText}
                 isDisabled={

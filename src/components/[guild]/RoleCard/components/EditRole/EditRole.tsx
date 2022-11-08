@@ -119,11 +119,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     (...props) => {
       methods.clearErrors("requirements")
-      if (
-        !formRequirements ||
-        formRequirements?.length === 0 ||
-        formRequirements?.every(({ type }) => !type)
-      ) {
+      if (!formRequirements || formRequirements?.length === 0) {
         methods.setError(
           "requirements",
           {
@@ -163,7 +159,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       <Drawer
         isOpen={isOpen}
         placement="left"
-        size={{ base: "full", md: "xl" }}
+        size={{ base: "full", md: "lg" }}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         finalFocusRef={btnRef}
       >
@@ -185,8 +181,8 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                     </HStack>
                   </Box>
                   <Description />
-                  <SetRequirements maxCols={2} />
                 </Section>
+                <SetRequirements />
               </VStack>
             </FormProvider>
           </DrawerBody>
@@ -211,11 +207,9 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       </Drawer>
 
       <DiscardAlert
-        {...{
-          isOpen: isAlertOpen,
-          onClose: onAlertClose,
-          onDiscard: onCloseAndClear,
-        }}
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        onDiscard={onCloseAndClear}
       />
     </>
   )

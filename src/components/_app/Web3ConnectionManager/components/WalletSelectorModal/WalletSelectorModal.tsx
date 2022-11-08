@@ -42,7 +42,7 @@ type Props = {
 }
 
 // We don't open the modal on these routes
-const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/dcauth", "/googleauth"]
+const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({
   isModalOpen,
@@ -154,17 +154,21 @@ const WalletSelectorModal = ({
               </Text>
             )}
             <Stack spacing="0">
-              {connectors.map(([conn, connectorHooks], index) => (
-                <CardMotionWrapper key={conn.toString()}>
-                  <ConnectorButton
-                    connector={conn}
-                    connectorHooks={connectorHooks}
-                    error={error}
-                    setError={setError}
-                    setIsWalletConnectActivating={setIsWalletConnectActivating}
-                  />
-                </CardMotionWrapper>
-              ))}
+              {connectors.map(([conn, connectorHooks]) => {
+                if (!conn || !connectorHooks) return null
+
+                return (
+                  <CardMotionWrapper key={conn.constructor.name}>
+                    <ConnectorButton
+                      connector={conn}
+                      connectorHooks={connectorHooks}
+                      error={error}
+                      setError={setError}
+                      setIsWalletConnectActivating={setIsWalletConnectActivating}
+                    />
+                  </CardMotionWrapper>
+                )
+              })}
             </Stack>
             {isConnected && !keyPair && (
               <Box animation={"fadeIn .3s .1s both"}>

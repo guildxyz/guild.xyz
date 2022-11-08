@@ -39,7 +39,6 @@ const RolePlatforms = ({ roleId }: Props) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const cols = useBreakpointValue({ base: 1, md: 2 })
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
   const rewardsLabel = useBreakpointValue({
     base: "/ accesses",
@@ -68,7 +67,7 @@ const RolePlatforms = ({ roleId }: Props) => {
         </>
       }
     >
-      <SimpleGrid columns={cols} spacing={{ base: 5, md: 6 }}>
+      <SimpleGrid spacing={{ base: 3 }}>
         {!fields || fields?.length <= 0 ? (
           <AddCard text={"Add reward"} onClick={onOpen} />
         ) : (
@@ -87,8 +86,8 @@ const RolePlatforms = ({ roleId }: Props) => {
               platforms[type]
 
             let PlatformCardSettings = cardSettingsComponent
-            // only show Google access level settings for new platforms
-            if (type === "GOOGLE" && !rolePlatform.isNew) PlatformCardSettings = null
+            // only show Google access level settings and Discord role settings for new platforms
+            if (!rolePlatform.isNew) PlatformCardSettings = null
 
             return (
               <RolePlatformProvider

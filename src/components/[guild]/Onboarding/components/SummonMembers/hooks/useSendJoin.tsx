@@ -1,13 +1,14 @@
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import useGuild from "components/[guild]/hooks/useGuild"
+import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 import { SummonMembersForm } from "../SummonMembers"
 
 const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
+  const { addDatadogAction, addDatadogError } = useDatadog()
+
   const { mutateGuild } = useGuild()
 
   const toast = useToast()
@@ -21,14 +22,16 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
 
   const useSubmitResponse = useSubmitWithSign(sendJoin, {
     onError: (error) => {
+      const simpleError = error?.errors?.[0]?.msg
+      const processedError = processConnectorError(error)
+
       toast({
         status: "error",
         title: `Failed to send ${type === "JOIN" ? "join" : "claim"} button`,
-        description: error?.errors?.[0]?.msg,
+        description: simpleError ?? processedError,
       })
 
-      if (type === "JOIN")
-        addDatadogError("Discord button send error", { error }, "custom")
+      if (type === "JOIN") addDatadogError("Discord button send error", { error })
     },
     onSuccess: () => {
       toast({

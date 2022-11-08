@@ -17,10 +17,6 @@ const DiscordLabel = () => {
     defaultValue: {},
   })
 
-  const isGuarded = useWatch({
-    name: `rolePlatforms.${index}.platformRoleData.isGuarded`,
-  })
-
   const numOfGatedChannels = useMemo(
     () =>
       Object.values(gatedChannels ?? {})
@@ -64,11 +60,7 @@ const DiscordLabel = () => {
     )
   }, [categories, platformRoleId])
 
-  return (
-    <Text>
-      {isGuarded ? "Guard server" : pluralize(numOfGatedChannels, "gated channel")}
-    </Text>
-  )
+  return <Text>{pluralize(numOfGatedChannels, "gated channel")}</Text>
 }
 
 export default DiscordLabel

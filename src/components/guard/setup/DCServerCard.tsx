@@ -10,7 +10,12 @@ import { useEffect } from "react"
 import useGuildByPlatformId from "./hooks/useDiscordGuildByPlatformId"
 
 type Props = {
-  serverData: { id: string; name: string; img: string; owner: boolean }
+  serverData: {
+    id: string
+    name: string
+    img: string
+    owner: boolean
+  }
   onSelect?: (id: string) => void
   onCancel?: () => void
 }
@@ -18,13 +23,13 @@ type Props = {
 const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element => {
   const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
     usePopupWindow(
-      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=268717137&scope=bot%20applications.commands`
+      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=268782673&scope=bot%20applications.commands`
     )
 
   const router = useRouter()
 
   const {
-    data: { isAdmin, channels, serverId },
+    data: { isAdmin, channels },
   } = useServerData(serverData.id, {
     refreshInterval: !!activeAddBotPopup ? 2000 : 0,
     refreshWhenHidden: true,
@@ -50,7 +55,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     <OptionCard
       title={serverData.name}
       description={serverData.owner ? "Owner" : "Admin"}
-      image={serverData.img}
+      image={serverData.img || "/default_discord_icon.png"}
     >
       {onCancel ? (
         <Button

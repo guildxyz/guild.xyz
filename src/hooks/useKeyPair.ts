@@ -74,7 +74,8 @@ const setKeyPair = async ({
 
   /**
    * This rejects, when IndexedDB is not available, like in Firefox private window.
-   * Ignoring this error is fine, since we are falling back to just storing it in memory.
+   * Ignoring this error is fine, since we are falling back to just storing it in
+   * memory.
    */
   await setKeyPairToIdb(userId, payload).catch(() => {})
 
@@ -96,11 +97,20 @@ const checkKeyPair = (
   }).then((result) => [result, userId])
 
 const useKeyPair = () => {
+  // Using the defauld Datadog implementation here, so the useDatadog, useUser, and useKeypair hooks don't call each other
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const { account } = useWeb3React()
 
   const { data: user, error: userError } = useSWRImmutable<User>(
     account ? `/user/${account}` : null
   )
+
+  const defaultCustomAttributes = {
+    userId: user?.id,
+    userAddress: account?.toLowerCase(),
+  }
 
   const {
     data: { keyPair, pubKey },
@@ -111,14 +121,11 @@ const useKeyPair = () => {
     revalidateIfStale: true,
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
-    refreshInterval: 2000,
+    refreshInterval: 0,
     fallbackData: { pubKey: undefined, keyPair: undefined },
   })
 
   const toast = useToast()
-
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
 
   const { data: isKeyPairValidData } = useSWRImmutable(
     keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
@@ -129,14 +136,16 @@ const useKeyPair = () => {
       onSuccess: ([isKeyPairValid, userId]) => {
         if (!isKeyPairValid) {
           addDatadogAction("Invalid keypair", {
+            ...defaultCustomAttributes,
             data: { userId, pubKey: keyPair.publicKey },
           })
 
           toast({
-            status: "error",
-            title: "Invalid signing key",
+            status: "warning",
+            title: "Session expired",
             description:
-              "Browser's signing key is invalid, please generate a new one",
+              "You've connected your account from a new device, so you have to sign a new message to stay logged in",
+            duration: 5000,
           })
 
           deleteKeyPairFromIdb(userId).then(() => {
@@ -163,7 +172,10 @@ const useKeyPair = () => {
         if (error?.code !== 4001) {
           addDatadogError(
             `Failed to set keypair`,
-            { error: error?.message || error?.toString?.() || error },
+            {
+              ...defaultCustomAttributes,
+              error: error?.message || error?.toString?.() || error,
+            },
             "custom"
           )
         }
@@ -205,7 +217,10 @@ const useKeyPair = () => {
           if (error?.code !== 4001) {
             addDatadogError(
               `Keypair generation error`,
-              { error: error?.message || error?.toString?.() || error },
+              {
+                ...defaultCustomAttributes,
+                error: error?.message || error?.toString?.() || error,
+              },
               "custom"
             )
           }

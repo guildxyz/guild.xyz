@@ -9,8 +9,9 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react"
+import DataBlock from "components/common/DataBlock"
 import { CaretDown, Function } from "phosphor-react"
-import { Requirement } from "types"
+import { ContractParamType, Requirement } from "types"
 import shortenHex from "utils/shortenHex"
 import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import { RequirementButton } from "./common/RequirementButton"
@@ -20,17 +21,16 @@ type Props = {
   requirement: Requirement
 }
 
-const ContractStateRequirementCard = ({ requirement }: Props) => {
+const ContractStateRequirementCard = ({ requirement, ...rest }: Props) => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={<Icon as={Function} boxSize={6} />}
       footer={
         <>
           <HStack divider={<Divider orientation="vertical" h="4" />} spacing="4">
-            <BlockExplorerUrl requirement={requirement} />
+            <BlockExplorerUrl requirement={requirement} {...rest} />
             <RequirementButton
               rightIcon={
                 <Icon
@@ -55,14 +55,18 @@ const ContractStateRequirementCard = ({ requirement }: Props) => {
               borderRadius="md"
             >
               <Tbody fontWeight="normal" fontSize="xs">
-                {requirement.data.params.map((param, i) => (
+                {(requirement.data.params as ContractParamType)?.map((param, i) => (
                   <Tr key={i}>
                     <Td>{`${i + 1}. input param`}</Td>
                     <Td>{param}</Td>
                   </Tr>
                 ))}
                 <Tr fontWeight={"semibold"}>
-                  <Td>{`Expected ${requirement.data.resultIndex + 1}. output`}</Td>
+                  <Td>{`Expected ${
+                    requirement.data.resultIndex !== undefined
+                      ? `${requirement.data.resultIndex + 1}. `
+                      : ""
+                  }output`}</Td>
                   <Td>
                     {`${requirement.data.resultMatch} ${requirement.data.expected}`}
                   </Td>
@@ -72,9 +76,11 @@ const ContractStateRequirementCard = ({ requirement }: Props) => {
           </Collapse>
         </>
       }
+      {...rest}
     >
-      Satisfy custom query of <pre>{requirement.data.id.split("(")[0]}</pre> on the
-      <pre>{shortenHex(requirement.address, 3)}</pre> contract
+      Satisfy custom query of{" "}
+      <DataBlock>{requirement.data.id.split("(")[0]}</DataBlock> on the{" "}
+      <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock> contract
     </RequirementCard>
   )
 }

@@ -1,15 +1,27 @@
-import { GroupBase, Props, Select, SelectInstance } from "chakra-react-select"
+import {
+  CreatableProps,
+  CreatableSelect,
+  GroupBase,
+  Props,
+  Select,
+  SelectInstance,
+} from "chakra-react-select"
 import { forwardRef, Ref } from "react"
 import CustomClearIndicator from "./components/CustomClearIndicator"
 import CustomMenuList from "./components/CustomMenuList"
 import CustomSelectOption from "./components/CustomSelectOption"
 
+type StyledSelectProps = (
+  | ({ isCreatable: true } & CreatableProps<any, any, any>)
+  | ({ isCreatable?: never } & Props)
+) & { as?: any }
+
 const StyledSelect = forwardRef(
   (
-    props: Props & { as?: any },
+    { isCreatable, ...props }: StyledSelectProps,
     ref: Ref<SelectInstance<unknown, boolean, GroupBase<unknown>>>
   ): JSX.Element => {
-    const SelectComponent = props.as ?? Select
+    const SelectComponent = props.as ?? (isCreatable ? CreatableSelect : Select)
     return (
       <SelectComponent
         ref={ref}
@@ -20,8 +32,6 @@ const StyledSelect = forwardRef(
             ...provided,
             width: "full",
             maxWidth: "full",
-            overflow: "hidden",
-            padding: "1px",
             ...props.chakraStyles?.container,
           }),
           control: (provided) => ({
@@ -29,7 +39,7 @@ const StyledSelect = forwardRef(
             width: "full",
             ...props.chakraStyles?.control,
           }),
-          inputContainer: (provided) => ({
+          inputContainer: () => ({
             // ...provided,
             display: "flex",
             ...props.chakraStyles?.inputContainer,
@@ -48,11 +58,18 @@ const StyledSelect = forwardRef(
             pointerEvents: "none",
             ...props.chakraStyles?.placeholder,
           }),
+          dropdownIndicator: (provided) => ({
+            ...provided,
+            pl: 0,
+            pr: 2,
+            bgColor: "transparent",
+          }),
         }}
         components={{
           Option: CustomSelectOption,
           MenuList: CustomMenuList,
           ClearIndicator: CustomClearIndicator,
+          IndicatorSeparator: null,
           ...props.components,
         }}
         menuPortalTarget={document?.getElementById("chakra-react-select-portal")}

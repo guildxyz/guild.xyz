@@ -3,7 +3,7 @@ import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useDCAuth from "components/[guild]/JoinModal/hooks/useDCAuth"
+import useIsConnected from "hooks/useIsConnected"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
@@ -39,13 +39,13 @@ const defaultValues: GuildFormType = {
 const CreateDiscordGuildPage = (): JSX.Element => {
   const router = useRouter()
 
-  const { authorization } = useDCAuth("guilds")
+  const isConnected = useIsConnected("DISCORD")
 
   useEffect(() => {
-    if (!authorization) {
+    if (!isConnected) {
       router.push("/create-guild")
     }
-  }, [authorization])
+  }, [isConnected])
 
   const methods = useForm<GuildFormType>({ mode: "all", defaultValues })
 

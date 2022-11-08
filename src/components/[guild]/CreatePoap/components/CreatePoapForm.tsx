@@ -415,7 +415,14 @@ const CreatePoapForm = (): JSX.Element => {
                               {...(poapData?.id ? {} : getInputProps())}
                               hidden
                             />
-                            <Text as="span" display="block" maxW={40} noOfLines={1}>
+                            <Text
+                              as="span"
+                              maxW={{ base: 44, md: 28 }}
+                              noOfLines={1}
+                              sx={{
+                                display: "block",
+                              }}
+                            >
                               {isDragActive
                                 ? "Drop the file here"
                                 : acceptedFiles?.[0]?.name || "Choose image"}
@@ -627,8 +634,7 @@ const CreatePoapForm = (): JSX.Element => {
                 <Button
                   colorScheme="indigo"
                   onClick={handleSubmit(
-                    poapData?.id ? onUpdatePoapSubmit : onSubmit,
-                    console.log
+                    poapData?.id ? onUpdatePoapSubmit : onSubmit
                   )}
                   isDisabled={
                     isCreatePoapLoading ||

@@ -165,6 +165,21 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
 
   const formattedPrice = formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
 
+  const payButtonLabel = isWrongChain
+    ? "Switch chain"
+    : hasPaid
+    ? "Paid fee"
+    : vaultData?.token === NULL_ADDRESS ||
+      allowance?.gte(vaultData?.fee ?? BigNumber.from(0))
+    ? `Pay ${formattedPrice} ${symbol}`
+    : `Approve ${formattedPrice} ${symbol} & Pay`
+
+  const payButtonActionName = isWrongChain
+    ? "Switch chain"
+    : hasPaid
+    ? "Paid fee"
+    : "Pay (ClaimModal)"
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} size="lg">
@@ -226,16 +241,8 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                         }
                         loadingText={loadingText ?? "Loading"}
                         title={hasPaid ? "Fee paid" : "Pay fee"}
-                        buttonLabel={
-                          isWrongChain
-                            ? "Switch chain"
-                            : hasPaid
-                            ? "Paid fee"
-                            : vaultData?.token === NULL_ADDRESS ||
-                              allowance?.gte(vaultData?.fee ?? BigNumber.from(0))
-                            ? `Pay ${formattedPrice} ${symbol}`
-                            : `Approve ${formattedPrice} ${symbol} & Pay`
-                        }
+                        buttonLabel={payButtonLabel}
+                        datadogActionName={payButtonActionName}
                         colorScheme="blue"
                         icon={
                           isWrongChain ? (
@@ -260,7 +267,11 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                                 icon={<CaretDown />}
                                 colorScheme="blue"
                                 borderLeftRadius={0}
-                                isDisabled={!isActive}
+                                isDisabled={
+                                  !isActive ||
+                                  (poapEventDetails?.voiceChannelId &&
+                                    !voiceEligibility)
+                                }
                               />
                               <MenuList zIndex="modal">
                                 {guildPoap.poapContracts.map((poapContract) => (
@@ -306,6 +317,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           !isActive ||
                           !userId
                         }
+                        data-dd-aciton-name="Get minting link"
                       >
                         Get minting link
                       </ModalButton>

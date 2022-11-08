@@ -7,14 +7,14 @@ type Props = {
   requirement: Requirement
 }
 
-const GalaxyRequirementCard = ({ requirement }: Props): JSX.Element => {
+const GalaxyRequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
   const { campaign, isLoading } = useGalaxyCampaign(requirement?.data?.galaxyId)
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={isLoading ? "" : campaign?.thumbnail}
       loading={isLoading}
+      {...rest}
     >
       <Text as="span">{`Participate in the `}</Text>
       <Skeleton as="span" isLoaded={!isLoading}>
