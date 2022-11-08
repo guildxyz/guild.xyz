@@ -9,11 +9,11 @@ type Props = {
   requirement: Requirement
 }
 
-const GithubRequirementCard = ({ requirement }: Props) => (
+const GithubRequirementCard = ({ requirement, ...rest }: Props) => (
   <RequirementCard
-    requirement={requirement}
     image={<Icon as={GithubLogo} boxSize={6} />}
     footer={<ConnectRequirementPlatformButton platform="GITHUB" />}
+    {...rest}
   >
     Give a star to the{" "}
     <Link

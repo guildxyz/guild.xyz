@@ -3,11 +3,11 @@ import { ImageData } from "@nouns/assets"
 import DataBlock from "components/common/DataBlock"
 import { NOUNS_BACKGROUNDS } from "components/create-guild/Requirements/components/NftFormCard/hooks/useNftMetadata"
 import { Fragment, useMemo } from "react"
+import useSWRImmutable from "swr/immutable"
 import { Requirement, Trait } from "types"
 import shortenHex from "utils/shortenHex"
-import OpenseaUrl from "../common/OpenseaUrl"
-import RequirementCard from "../common/RequirementCard"
-import useNftImage from "./hooks/useNftImage"
+import OpenseaUrl from "./common/OpenseaUrl"
+import RequirementCard from "./common/RequirementCard"
 
 type Props = {
   requirement: Requirement
@@ -28,9 +28,9 @@ const getNounsRequirementType = (trait: Trait) =>
     : ImageData.images?.[imageDataTypeMap[trait.trait_type]]?.[+trait.value]
         ?.filename
 
-const NftRequirementCard = ({ requirement }: Props) => {
-  const { nftImage, isLoading } = useNftImage(
-    requirement.chain === "ETHEREUM" ? requirement.address : null
+const NftRequirementCard = ({ requirement, ...rest }: Props) => {
+  const { data, isValidating } = useSWRImmutable<{ image: string }>(
+    requirement.address ? `/api/opensea-asset-data/${requirement.address}` : null
   )
 
   const shouldRenderImage = useMemo(
@@ -43,13 +43,12 @@ const NftRequirementCard = ({ requirement }: Props) => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={
-        shouldRenderImage && (isLoading || nftImage) ? (
-          isLoading ? (
+        shouldRenderImage && (isValidating || data?.image) ? (
+          isValidating ? (
             ""
           ) : (
-            nftImage
+            data?.image
           )
         ) : (
           <Text as="span" fontWeight="bold" fontSize="xs">
@@ -57,8 +56,9 @@ const NftRequirementCard = ({ requirement }: Props) => {
           </Text>
         )
       }
-      loading={isLoading}
+      loading={isValidating}
       footer={<OpenseaUrl requirement={requirement} />}
+      {...rest}
     >
       {`Own ${
         requirement.data?.id
@@ -74,7 +74,7 @@ const NftRequirementCard = ({ requirement }: Props) => {
       requirement.address?.toLowerCase() ===
         "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
         "ENS"
-      ) : requirement.name === "-" ? (
+      ) : !requirement.name || requirement.name === "-" ? (
         <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
       ) : (
         requirement.name

@@ -9,7 +9,7 @@ type Props = {
   requirement: Requirement
 }
 
-const MirrorRequirementCard = ({ requirement }: Props): JSX.Element => {
+const MirrorRequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
   const { isLoading, name, image } = useMirrorEdition(
     requirement.address,
     requirement.chain
@@ -17,7 +17,6 @@ const MirrorRequirementCard = ({ requirement }: Props): JSX.Element => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={
         isLoading
           ? ""
@@ -28,6 +27,7 @@ const MirrorRequirementCard = ({ requirement }: Props): JSX.Element => {
             )
       }
       footer={<BlockExplorerUrl requirement={requirement} />}
+      {...rest}
     >
       <Text as="span">{`Own the `}</Text>
       <Skeleton as="span" isLoaded={!isLoading}>

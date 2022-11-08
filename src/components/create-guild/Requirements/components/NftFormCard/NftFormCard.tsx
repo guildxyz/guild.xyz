@@ -26,19 +26,15 @@ import useTokenData from "hooks/useTokenData"
 import { Plus } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, NftRequirementType, Requirement, SelectOption } from "types"
+import { FormCardProps, NftRequirementType, SelectOption } from "types"
 import capitalize from "utils/capitalize"
+import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../ChainPicker"
 import MinMaxAmount from "../MinMaxAmount"
 import AttributePicker from "./components/AttributePicker"
 import useNftMetadata from "./hooks/useNftMetadata"
 import useNfts from "./hooks/useNfts"
 import useNftType from "./hooks/useNftType"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 type NftRequirementTypeOption = {
   label: string
@@ -62,7 +58,7 @@ const nftRequirementTypeOptions: Array<NftRequirementTypeOption> = [
   },
 ]
 
-const NftFormCard = ({ index, field }: Props): JSX.Element => {
+const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
   const {
     control,
     register,
@@ -70,13 +66,13 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue,
     clearErrors,
     formState: { errors, touchedFields },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
-  const type = useWatch({ name: `requirements.${index}.type` })
-  const chain = useWatch({ name: `requirements.${index}.chain` })
-  const address = useWatch({ name: `requirements.${index}.address` })
+  const type = useWatch({ name: `${baseFieldPath}.type` })
+  const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const address = useWatch({ name: `${baseFieldPath}.address` })
   const nftRequirementType = useWatch({
-    name: `requirements.${index}.nftRequirementType`,
+    name: `${baseFieldPath}.nftRequirementType`,
   })
 
   const {
@@ -84,7 +80,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     append: appendTrait,
     remove: removeTrait,
   } = useFieldArray({
-    name: `requirements.${index}.data.traitTypes`,
+    name: `${baseFieldPath}.data.traitTypes`,
   })
 
   const { nftType, isLoading: isNftTypeLoading } = useNftType(address, chain)
@@ -93,11 +89,11 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     if (isNftTypeLoading) return
 
     if (nftType === "ERC1155" && type !== "ERC1155")
-      setValue(`requirements.${index}.type`, "ERC1155")
+      setValue(`${baseFieldPath}.type`, "ERC1155")
     if (nftType === "SIMPLE" && type === "ERC1155")
-      setValue(`requirements.${index}.type`, "ERC721")
+      setValue(`${baseFieldPath}.type`, "ERC721")
     if (nftType === "NOUNS" && type !== "NOUNS")
-      setValue(`requirements.${index}.type`, "NOUNS")
+      setValue(`${baseFieldPath}.type`, "NOUNS")
   }, [nftType, isNftTypeLoading])
 
   const [addressInput, setAddressInput] = useState("")
@@ -149,34 +145,34 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Reset form on chain change
   const resetForm = () => {
-    if (!touchedFields?.requirements?.[index]?.address) return
-    setValue(`requirements.${index}.address`, null)
-    setValue(`requirements.${index}.data.traitTypes`, [])
-    setValue(`requirements.${index}.data.id`, null)
-    setValue(`requirements.${index}.data.minAmount`, undefined)
-    setValue(`requirements.${index}.data.maxAmount`, undefined)
-    setValue(`requirements.${index}.nftRequirementType`, null)
+    if (!parseFromObject(touchedFields, baseFieldPath)?.address) return
+    setValue(`${baseFieldPath}.address`, null)
+    setValue(`${baseFieldPath}.data.traitTypes`, [])
+    setValue(`${baseFieldPath}.data.id`, null)
+    setValue(`${baseFieldPath}.data.minAmount`, undefined)
+    setValue(`${baseFieldPath}.data.maxAmount`, undefined)
+    setValue(`${baseFieldPath}.nftRequirementType`, null)
     clearErrors([
-      `requirements.${index}.address`,
-      `requirements.${index}.data.traitTypes`,
-      `requirements.${index}.data.id`,
-      `requirements.${index}.data.minAmount`,
-      `requirements.${index}.data.maxAmount`,
-      `requirements.${index}.nftRequirementType`,
+      `${baseFieldPath}.address`,
+      `${baseFieldPath}.data.traitTypes`,
+      `${baseFieldPath}.data.id`,
+      `${baseFieldPath}.data.minAmount`,
+      `${baseFieldPath}.data.maxAmount`,
+      `${baseFieldPath}.nftRequirementType`,
     ])
   }
 
   // Reset key, value, interval, amount fields on nftRequirementType change
   const resetDetails = () => {
-    setValue(`requirements.${index}.data.traitTypes`, [])
-    setValue(`requirements.${index}.data.id`, null)
-    setValue(`requirements.${index}.data.minAmount`, undefined)
-    setValue(`requirements.${index}.data.maxAmount`, undefined)
+    setValue(`${baseFieldPath}.data.traitTypes`, [])
+    setValue(`${baseFieldPath}.data.id`, null)
+    setValue(`${baseFieldPath}.data.minAmount`, undefined)
+    setValue(`${baseFieldPath}.data.maxAmount`, undefined)
     clearErrors([
-      `requirements.${index}.data.traitTypes`,
-      `requirements.${index}.data.id`,
-      `requirements.${index}.data.minAmount`,
-      `requirements.${index}.data.maxAmount`,
+      `${baseFieldPath}.data.traitTypes`,
+      `${baseFieldPath}.data.id`,
+      `${baseFieldPath}.data.minAmount`,
+      `${baseFieldPath}.data.maxAmount`,
     ])
   }
 
@@ -185,13 +181,16 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     candidate.value.toLowerCase() === input?.toLowerCase()
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainPicker
-        controlName={`requirements.${index}.chain` as const}
+        controlName={`${baseFieldPath}.chain` as const}
         onChange={resetForm}
       />
 
-      <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.address}>
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
+      >
         <FormLabel>NFT:</FormLabel>
         <InputGroup>
           {address &&
@@ -211,7 +210,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               </InputLeftAddon>
             ))}
           <Controller
-            name={`requirements.${index}.address` as const}
+            name={`${baseFieldPath}.address` as const}
             control={control}
             rules={{
               required: "This field is required.",
@@ -249,11 +248,11 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                 onChange={(selectedOption: SelectOption) => {
                   onChange(selectedOption?.value)
                   setPickedNftSlug(selectedOption?.slug)
-                  setValue(`requirements.${index}.type`, "ERC721")
-                  setValue(`requirements.${index}.data.traitTypes`, [])
-                  setValue(`requirements.${index}.data.minAmount`, undefined)
-                  setValue(`requirements.${index}.data.maxAmount`, undefined)
-                  setValue(`requirements.${index}.nftRequirementType`, null)
+                  setValue(`${baseFieldPath}.type`, "ERC721")
+                  setValue(`${baseFieldPath}.data.traitTypes`, [])
+                  setValue(`${baseFieldPath}.data.minAmount`, undefined)
+                  setValue(`${baseFieldPath}.data.maxAmount`, undefined)
+                  setValue(`${baseFieldPath}.nftRequirementType`, null)
                 }}
                 onBlur={onBlur}
                 onInputChange={(text, _) => {
@@ -278,17 +277,17 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         </InputGroup>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.address?.message}
+          {parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>
       </FormControl>
 
       <FormControl
         isRequired
-        isInvalid={!!errors?.requirements?.[index]?.nftRequirementType}
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.nftRequirementType}
       >
         <FormLabel>Requirement type:</FormLabel>
         <Controller
-          name={`requirements.${index}.nftRequirementType` as const}
+          name={`${baseFieldPath}.nftRequirementType` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({
@@ -316,7 +315,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.nftRequirementType?.message}
+          {parseFromObject(errors, baseFieldPath)?.nftRequirementType?.message}
         </FormErrorMessage>
       </FormControl>
 
@@ -333,7 +332,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               {traitFields?.map((traitField, traitFieldIndex) => (
                 <AttributePicker
                   key={traitField.id}
-                  parentFieldIndex={index}
+                  baseFieldPath={baseFieldPath}
                   index={traitFieldIndex}
                   isMetadataLoading={isMetadataLoading}
                   metadata={metadata}
@@ -359,7 +358,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       )}
 
       {nftRequirementType === "AMOUNT" && (
-        <MinMaxAmount field={field} index={index} />
+        <MinMaxAmount field={field} baseFieldPath={baseFieldPath} />
       )}
 
       {nftType === "ERC1155" && nftRequirementType === "AMOUNT" && (
@@ -374,26 +373,27 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                 <AccordionIcon />
               </AccordionButton>
               <AccordionPanel px={0} overflow="hidden">
-                <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.id}>
+                <FormControl
+                  isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+                >
                   <FormLabel>ID:</FormLabel>
                   <Input
-                    {...register(`requirements.${index}.data.id` as const, {
+                    {...register(`${baseFieldPath}.data.id` as const, {
                       required:
-                        getValues(`requirements.${index}.nftRequirementType`) ===
+                        getValues(`${baseFieldPath}.nftRequirementType`) ===
                         "CUSTOM_ID",
                       validate: (value) =>
                         value &&
                         nftType === "ERC1155" &&
-                        getValues(`requirements.${index}.nftRequirementType`) ===
-                          "AMOUNT"
+                        getValues(`${baseFieldPath}.nftRequirementType`) === "AMOUNT"
                           ? /^[0-9]*$/i.test(value) || "ID can only contain numbers"
                           : undefined,
                     })}
-                    defaultValue={field.data?.id}
+                    defaultValue={field?.data?.id}
                     placeholder="Any index"
                   />
                   <FormErrorMessage>
-                    {errors?.requirements?.[index]?.data?.id?.message}
+                    {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
                   </FormErrorMessage>
                 </FormControl>
               </AccordionPanel>
@@ -405,28 +405,28 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       {nftRequirementType === "CUSTOM_ID" && (
         <FormControl
           isRequired
-          isInvalid={!!errors?.requirements?.[index]?.data?.id}
+          isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
         >
           <FormLabel>Custom ID:</FormLabel>
           <Input
-            {...register(`requirements.${index}.data.id` as const, {
+            {...register(`${baseFieldPath}.data.id` as const, {
               required:
-                getValues(`requirements.${index}.nftRequirementType`) === "CUSTOM_ID"
+                getValues(`${baseFieldPath}.nftRequirementType`) === "CUSTOM_ID"
                   ? "This field is required."
                   : undefined,
               validate: (value) =>
-                getValues(`requirements.${index}.nftRequirementType`) === "CUSTOM_ID"
+                getValues(`${baseFieldPath}.nftRequirementType`) === "CUSTOM_ID"
                   ? /^[0-9]*$/i.test(value) || "ID can only contain numbers"
                   : undefined,
             })}
-            defaultValue={field.data?.id}
+            defaultValue={field?.data?.id}
           />
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.data?.id?.message}
+            {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
           </FormErrorMessage>
         </FormControl>
       )}
-    </>
+    </Stack>
   )
 }
 

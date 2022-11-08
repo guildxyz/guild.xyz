@@ -5,7 +5,8 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { PropsWithChildren, useEffect, useRef, useState } from "react"
+import useIsStuck from "hooks/useIsStuck"
+import { PropsWithChildren } from "react"
 import useGuild from "../hooks/useGuild"
 import { useThemeContext } from "../ThemeContext"
 import TabButton from "./components/TabButton"
@@ -15,34 +16,17 @@ type Props = {
 }
 
 const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => {
-  const tabsRef = useRef()
-  const [isSticky, setIsSticky] = useState(false)
+  const { ref, isStuck } = useIsStuck()
   const { colorMode } = useColorMode()
   const { textColor } = useThemeContext()
-  const tabButtonColor = isSticky && colorMode === "light" ? "black" : textColor
+  const tabButtonColor = isStuck && colorMode === "light" ? "black" : textColor
 
   const { urlName } = useGuild()
   const bgColor = useColorModeValue("white", "gray.800")
 
-  useEffect(() => {
-    const current = tabsRef.current || null
-    const defaultOffsetTop = window.pageYOffset + current.getBoundingClientRect().top
-
-    const handleScroll = () => {
-      const scroll = document.documentElement.scrollTop
-      setIsSticky(scroll > defaultOffsetTop)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [])
-
   return (
     <Stack
-      ref={tabsRef}
+      ref={ref}
       direction="row"
       justifyContent="space-between"
       alignItems={"center"}
@@ -52,7 +36,7 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
       mt={-3}
       mb={2}
       width="full"
-      zIndex={isSticky ? "banner" : "auto"}
+      zIndex={isStuck ? "banner" : "auto"}
       _before={{
         content: `""`,
         position: "fixed",
@@ -64,8 +48,8 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
         bgColor: bgColor,
         boxShadow: "md",
         transition: "opacity 0.2s ease, visibility 0.1s ease",
-        visibility: isSticky ? "visible" : "hidden",
-        opacity: isSticky ? 1 : 0,
+        visibility: isStuck ? "visible" : "hidden",
+        opacity: isStuck ? 1 : 0,
       }}
     >
       <Box

@@ -28,7 +28,7 @@ type Props = {
 const mappedChains: Array<{ img: string; label: string; value: Chain }> =
   defaultSupportedChains.map((chainName: Chain) => ({
     img: RPC[chainName]?.iconUrls?.[0] || "",
-    label: chainName,
+    label: RPC[chainName]?.chainName,
     value: chainName,
   }))
 
@@ -51,15 +51,22 @@ const ChainPicker = ({
     [supportedChains]
   )
 
-  // If default chain is null (create page), the ChainPicker component will use the user's current chain (if it's supported in the requirement) or ETHEREUM. Otherwise (edit page), it'll use the provided default chain
+  /**
+   * Timeouted setValue on mount instead of defaultValue, because for some reason
+   * useWatch({ name: `${baseFieldPath}.chain` }) in other components returns
+   * undefined before selecting an option otherways
+   */
   useEffect(() => {
     if (chain) return
-    setValue(
-      controlName,
-      supportedChains.includes(Chains[chainId] as Chain)
-        ? Chains[chainId]
-        : "ETHEREUM"
-    )
+
+    setTimeout(() => {
+      setValue(
+        controlName,
+        supportedChains.includes(Chains[chainId] as Chain)
+          ? Chains[chainId]
+          : "ETHEREUM"
+      )
+    }, 0)
   }, [chainId])
 
   return (
