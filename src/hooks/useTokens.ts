@@ -39,7 +39,7 @@ const TokenApiURLs = {
   METIS: ["https://tokens.coingecko.com/metis-andromeda/all.json"],
   CRONOS: ["https://tokens.coingecko.com/cronos/all.json"],
   BOBA: ["https://tokens.coingecko.com/boba/all.json"],
-  BOBA_AVAX: [],
+  BOBA_AVAX: ["https://tokens.coingecko.com/boba/all.json"],
   PALM: [],
 }
 
