@@ -11,15 +11,16 @@ import useDebouncedState from "hooks/useDebouncedState"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { useController, useFormState } from "react-hook-form"
-import { Requirement } from "types"
+import { FormCardProps } from "types"
+import parseFromObject from "utils/parseFromObject"
 
 const TWITTER_LINK_CHECK_REGEX = /twitter\.com\/(.*)$/i
 
-const Following = ({ index }: { index: number; field?: Requirement }) => {
+const Following = ({ baseFieldPath }: FormCardProps) => {
   const { errors } = useFormState()
 
   const { field } = useController({
-    name: `requirements.${index}.data.id`,
+    name: `${baseFieldPath}.data.id`,
     rules: {
       required: "Please paste a link or enter a username",
     },
@@ -35,7 +36,9 @@ const Following = ({ index }: { index: number; field?: Requirement }) => {
   }, [debouncedUsername])
 
   return (
-    <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.id?.message}>
+    <FormControl
+      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+    >
       <FormLabel>User to follow</FormLabel>
 
       <HStack>
@@ -89,7 +92,7 @@ const Following = ({ index }: { index: number; field?: Requirement }) => {
       </HStack>
       <FormHelperText>Paste a link or enter a username</FormHelperText>
       <FormErrorMessage>
-        {errors?.requirements?.[index]?.data?.id?.message}
+        {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
       </FormErrorMessage>
     </FormControl>
   )

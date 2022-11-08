@@ -1,22 +1,25 @@
 import { FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react"
 import { useFormContext, useFormState } from "react-hook-form"
-import { Requirement } from "types"
+import { FormCardProps } from "types"
+import parseFromObject from "utils/parseFromObject"
 
-const SearchValue = ({ index }: { index: number; field?: Requirement }) => {
+const SearchValue = ({ baseFieldPath }: FormCardProps) => {
   const { register } = useFormContext()
   const { errors } = useFormState()
 
   return (
     <>
-      <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.id?.message}>
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+      >
         <FormLabel>Text</FormLabel>
         <Input
-          {...register(`requirements.${index}.data.id`, {
+          {...register(`${baseFieldPath}.data.id`, {
             required: "This field if required",
           })}
         />
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
     </>

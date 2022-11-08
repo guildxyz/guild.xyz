@@ -1,4 +1,5 @@
 import DataBlock from "components/common/DataBlock"
+import Link from "components/common/Link"
 import { Requirement } from "types"
 import { RequirementLinkButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
@@ -7,12 +8,11 @@ type Props = {
   requirement: Requirement
 }
 
-const LensRequirementCard = ({ requirement }: Props) => {
+const LensRequirementCard = ({ requirement, ...rest }: Props) => {
   requirement.chain = "POLYGON"
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={"requirementLogos/lens.png"}
       footer={
         ["LENS_COLLECT", "LENS_MIRROR"].includes(requirement.type) && (
@@ -24,6 +24,7 @@ const LensRequirementCard = ({ requirement }: Props) => {
           </RequirementLinkButton>
         )
       }
+      {...rest}
     >
       {(() => {
         switch (requirement.type) {
@@ -47,7 +48,14 @@ const LensRequirementCard = ({ requirement }: Props) => {
             return (
               <>
                 {`Follow `}
-                <DataBlock>{requirement.data.id}</DataBlock>
+                <Link
+                  href={`https://lensfrens.xyz/${requirement.data.id}`}
+                  isExternal
+                  color="#BEFB5A"
+                  fontWeight="medium"
+                >
+                  {requirement.data.id}
+                </Link>
                 {` on Lens protocol`}
               </>
             )

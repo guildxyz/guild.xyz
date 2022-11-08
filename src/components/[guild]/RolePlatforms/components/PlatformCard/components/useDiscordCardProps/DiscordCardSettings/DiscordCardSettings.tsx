@@ -12,8 +12,6 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import { useRef } from "react"
-import ChannelsToGate from "./components/ChannelsToGate"
-import DiscordLabel from "./components/DiscordLabel"
 import RoleToManage from "./components/RoleToManage"
 
 const DiscordCardSettings = (): JSX.Element => {
@@ -26,7 +24,7 @@ const DiscordCardSettings = (): JSX.Element => {
       flexDirection={{ base: "column", md: "row" }}
       alignItems={{ base: "stretch", md: "center" }}
     >
-      <DiscordLabel />
+      {/* <DiscordLabel /> */}
 
       <Button
         size="sm"
@@ -48,8 +46,10 @@ const DiscordCardSettings = (): JSX.Element => {
           <ModalHeader>Discord settings</ModalHeader>
           <ModalBody>
             <VStack spacing={8} alignItems="start">
-              {isNew && <RoleToManage />}
-              <ChannelsToGate />
+              {/* {isNew &&  */}
+              <RoleToManage />
+              {/* } */}
+              {/* <ChannelsToGate /> */}
             </VStack>
           </ModalBody>
 

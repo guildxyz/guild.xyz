@@ -24,6 +24,7 @@ type Props = {
   action?: ReactNode | undefined
   background?: string
   backgroundImage?: string
+  backgroundOffset?: number
 } & HeaderProps
 
 const Layout = ({
@@ -35,6 +36,7 @@ const Layout = ({
   action,
   background,
   backgroundImage,
+  backgroundOffset = 128,
   showBackButton,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
@@ -45,7 +47,7 @@ const Layout = ({
     if ((!background && !backgroundImage) || !childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
-    setBgHeight(`${rect.top + (window?.scrollY ?? 0) + 128}px`)
+    setBgHeight(`${rect.top + (window?.scrollY ?? 0) + backgroundOffset}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, description, childrenWrapper?.current, action])
 

@@ -1,8 +1,9 @@
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { randomBytes } from "crypto"
-import useLocalStorage from "hooks/useLocalStorage"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
+import useSWRImmutable from "swr/immutable"
 
 type OAuthData<Data> = {
   redirect_url: string
@@ -44,12 +45,24 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   url: string,
   oauthOptions: OAuthOptions
 ) => {
+  const { addDatadogError } = useDatadog()
   const toast = useToast()
-  const [csrfToken, setCsrfToken] = useLocalStorage(
-    `oauth_csrf_token_${oauthOptions.client_id}`,
-    randomBytes(16).toString("hex"),
-    true
+
+  const {
+    data: csrfToken,
+    mutate: mutateCSRFToken,
+    isValidating,
+  } = useSWRImmutable(
+    ["CSRFToken", oauthOptions.client_id],
+    () => randomBytes(16).toString("hex"),
+    { revalidateOnMount: false }
   )
+
+  useEffect(() => {
+    if (!isValidating && !csrfToken) {
+      mutateCSRFToken()
+    }
+  }, [isValidating, csrfToken])
 
   const redirectUri =
     typeof window !== "undefined" &&
@@ -57,12 +70,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
   oauthOptions.response_type = oauthOptions.response_type ?? "code"
 
-  const state = `${oauthOptions.client_id};${csrfToken}`
-
   // prettier-ignore
   const { onOpen, windowInstance } = usePopupWindow(
-    `${url}?${Object.entries(oauthOptions).map(([key, value]) => `${key}=${value}`).join("&")}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}`
+    `${url}?${Object.entries(oauthOptions).map(([key, value]) => `${key}=${value}`).join("&")}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(csrfToken)}`
   )
+
   const [error, setError] = useState(null)
   const [authData, setAuthData] = useState<OAuthData<OAuthResponse>>(null)
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false)
@@ -79,9 +91,12 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     new Promise<OAuthData<OAuthResponse>>((resolve, reject) => {
       const interval = setInterval(() => {
         try {
-          const { data, type } = JSON.parse(
-            window.localStorage.getItem("oauth_popup_data")
-          )
+          const {
+            data,
+            type,
+            csrfToken: recievedCsrfToken,
+          } = JSON.parse(window.localStorage.getItem("oauth_popup_data"))
+
           if (type === "OAUTH_ERROR") {
             clearInterval(interval)
             const title = data?.error ?? "Unknown error"
@@ -91,11 +106,23 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           }
           if (type === "OAUTH_SUCCESS") {
             clearInterval(interval)
-            resolve({
-              redirect_url: redirectUri,
-              scope: oauthOptions.scope,
-              ...(data as OAuthResponse),
-            })
+
+            mutateCSRFToken(undefined, { revalidate: false })
+            if (recievedCsrfToken !== csrfToken) {
+              const title = "CSRF Error"
+              const errorDescription =
+                "CSRF token mismatch, this indicates possible CSRF attack."
+
+              addDatadogError(`OAuth error - ${title}`, { error: errorDescription })
+              reject({ error: title, errorDescription })
+              toast({ status: "error", title, description: errorDescription })
+            } else {
+              resolve({
+                redirect_url: redirectUri,
+                scope: oauthOptions.scope,
+                ...(data as OAuthResponse),
+              })
+            }
           }
         } catch {}
       }, 500)
@@ -112,7 +139,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           }, 500)
         }
 
-        setCsrfToken(randomBytes(16).toString("hex"))
         window.localStorage.removeItem("oauth_popup_data")
         setIsAuthenticating(false)
         window.localStorage.setItem("oauth_window_should_close", "true")
@@ -124,7 +150,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     error,
     onOpen: () => {
       setError(null)
-      onOpen()
+      if (typeof csrfToken === "string" && csrfToken.length > 0) {
+        onOpen()
+      } else {
+        mutateCSRFToken()
+      }
     },
     isAuthenticating,
   }

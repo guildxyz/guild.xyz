@@ -78,6 +78,16 @@ module.exports = {
           has: [
             {
               type: "host",
+              value: "balancy.guild.xyz",
+            },
+          ],
+          destination: "/balancy/",
+        },
+        {
+          source: "/",
+          has: [
+            {
+              type: "host",
               value: "lego.guild.xyz",
             },
           ],
@@ -167,6 +177,17 @@ module.exports = {
         {
           source: "/sitemap.xml",
           destination: "/api/sitemap.xml",
+        },
+        {
+          source: "/api/ddrum",
+          has: [
+            {
+              type: "query",
+              key: "ddforward",
+              value: "https://(?<ddforward>.*)",
+            },
+          ],
+          destination: "https://:ddforward",
         },
       ],
     }

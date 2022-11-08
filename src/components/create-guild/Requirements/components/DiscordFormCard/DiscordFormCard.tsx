@@ -1,14 +1,15 @@
-import { Divider, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
+import {
+  Divider,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Stack,
+} from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
-import { useEffect } from "react"
 import { useController, useFormState } from "react-hook-form"
-import { Requirement } from "types"
+import { FormCardProps } from "types"
+import parseFromObject from "utils/parseFromObject"
 import DiscordRole from "./components/DiscordRole"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 const discordRequirementTypes = [
   {
@@ -18,26 +19,26 @@ const discordRequirementTypes = [
   },
 ]
 
-const DiscordFormCard = ({ index }: Props) => {
+const DiscordFormCard = ({ baseFieldPath, field }: FormCardProps) => {
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
-    name: `requirements.${index}.type`,
+    name: `${baseFieldPath}.type`,
+    defaultValue: "DISCORD_ROLE",
     rules: { required: "It's required to select a type" },
   })
-
-  useEffect(() => onChange("DISCORD_ROLE"), [])
 
   const { errors } = useFormState()
 
   const selected = discordRequirementTypes.find((reqType) => reqType.value === value)
 
   return (
-    <>
-      <FormControl isInvalid={!!errors?.requirements?.[index]?.type?.message}>
+    <Stack spacing={4} alignItems="start">
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
+      >
         <FormLabel>Type</FormLabel>
         <StyledSelect
-          defaultValue={"DISCORD_ROLE"}
           options={discordRequirementTypes}
           name={name}
           onBlur={onBlur}
@@ -49,17 +50,17 @@ const DiscordFormCard = ({ index }: Props) => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.type?.message}
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
         </FormErrorMessage>
       </FormControl>
 
       {selected?.DiscordRequirement && (
         <>
           <Divider />
-          <selected.DiscordRequirement index={index} />
+          <selected.DiscordRequirement baseFieldPath={baseFieldPath} />
         </>
       )}
-    </>
+    </Stack>
   )
 }
 

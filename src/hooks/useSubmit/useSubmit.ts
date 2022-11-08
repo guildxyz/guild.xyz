@@ -7,6 +7,7 @@ import { Chains, RPC } from "connectors"
 import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
 import useKeyPair from "hooks/useKeyPair"
+import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import { useState } from "react"
 import useSWR from "swr"
@@ -128,6 +129,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   )
 
   const timeInaccuracy = useTimeInaccuracy()
+  const [, setShouldFetchTimestamp] = useLocalStorage("shouldFetchTimestamp", false)
 
   const defaultLoadingText =
     forcePrompt || !keyPair ? DEFAULT_SIGN_LOADING_TEXT : undefined
@@ -172,7 +174,14 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
         })
         .finally(() => setIsSigning(false))
 
-      return fetch({ data: data as DataType, validation })
+      return fetch({ data: data as DataType, validation }).catch((e) => {
+        if (e?.message === "Invalid or expired timestamp!") {
+          setShouldFetchTimestamp(true)
+          location?.reload()
+        }
+
+        throw e
+      })
     },
     options
   )

@@ -9,20 +9,23 @@ const fetch1000Badges = (endpoint: string, skip: number) =>
     },
     body: {
       query: `{
-      badgeSpecs(first:1000 skip:${skip}) {
-        id
-        name
-        image
-      }
-    }
-    `,
+        badgeSpecs(first:1000 skip:${skip}) {
+          id
+          metadata {
+            name
+            image
+          }
+        }
+      }`,
     },
   }).then((res) =>
-    res?.data?.badgeSpecs?.map((badge) => ({
-      value: badge.id,
-      label: badge.name,
-      img: badge.image.replace("ipfs://", "https://ipfs.fleek.co/ipfs/"),
-    }))
+    res?.data?.badgeSpecs
+      ?.filter((badge) => !!badge.metadata?.name)
+      ?.map((badge) => ({
+        value: badge.id,
+        label: badge.metadata.name,
+        img: badge.metadata.image.replace("ipfs://", "https://ipfs.fleek.co/ipfs/"),
+      }))
   )
 
 // We can only fetch 1000 badges at once, so we need to fetch them in multiple requests
