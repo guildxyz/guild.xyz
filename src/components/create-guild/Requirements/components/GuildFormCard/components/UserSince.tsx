@@ -30,9 +30,13 @@ const UserSince = ({ baseFieldPath }: Props): JSX.Element => {
             type="date"
             ref={ref}
             onBlur={onBlur}
-            onChange={onChange}
-            value={value}
-            max={new Date().toISOString()}
+            onChange={(e) => {
+              const valueAsTimestamp = new Date(e.target.value)
+              onChange(valueAsTimestamp)
+            }}
+            value={value ? new Date(value).toISOString().split("T")[0] : ""}
+            min={new Date("2022-07-11").toISOString().split("T")[0]}
+            max={new Date().toISOString().split("T")[0]}
           />
         )}
       />

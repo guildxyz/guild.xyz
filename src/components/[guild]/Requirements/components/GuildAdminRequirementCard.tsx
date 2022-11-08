@@ -7,7 +7,7 @@ type Props = {
 
 const GuildAdminRequirementCard = ({ requirement }: Props): JSX.Element => (
   <RequirementCard image="requirementLogos/guild.png">
-    {`Be an admin in at least ${requirement.data.minAmount} guilds`}
+    {`Be an admin in a guild with at least ${requirement.data.minAmount} members`}
   </RequirementCard>
 )
 

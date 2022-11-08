@@ -1,5 +1,6 @@
 import {
   FormControl,
+  FormHelperText,
   FormLabel,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -13,9 +14,15 @@ import parseFromObject from "utils/parseFromObject"
 
 type Props = {
   baseFieldPath: string
+  label: string
+  helperText?: string
 }
 
-const MinAmountInput = ({ baseFieldPath }: Props): JSX.Element => {
+const MinAmountInput = ({
+  baseFieldPath,
+  label,
+  helperText,
+}: Props): JSX.Element => {
   const { errors } = useFormState()
   const { control } = useFormContext()
 
@@ -23,7 +30,7 @@ const MinAmountInput = ({ baseFieldPath }: Props): JSX.Element => {
     <FormControl
       isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
     >
-      <FormLabel>Number of guilds</FormLabel>
+      <FormLabel>{label}</FormLabel>
 
       <Controller
         name={`${baseFieldPath}.data.minAmount` as const}
@@ -53,6 +60,8 @@ const MinAmountInput = ({ baseFieldPath }: Props): JSX.Element => {
           </NumberInput>
         )}
       />
+
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
 
       <FormErrorMessage>
         {parseFromObject(errors, baseFieldPath)?.data?.minAmount?.message}
