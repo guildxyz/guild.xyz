@@ -233,7 +233,7 @@ type Requirement = {
     resultMatch?: string
     params?: ContractParamType | DiscoParamType | RabbitholeParamType
     // GUILD
-    urlName?: string
+    guildId?: string
     creationDate?: string
   }
   name: string
@@ -353,9 +353,9 @@ type MirrorEdition = {
   image: string
 }
 
-type SelectOption = {
+type SelectOption<T = string> = {
   label: string
-  value: string
+  value: T
   img?: string
 } & Rest
 

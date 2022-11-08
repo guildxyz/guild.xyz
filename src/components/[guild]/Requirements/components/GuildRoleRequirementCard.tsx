@@ -9,7 +9,7 @@ type Props = {
 }
 
 const GuildRoleRequirementCard = ({ requirement }: Props): JSX.Element => {
-  const { name, roles, isLoading } = useGuild(requirement.data.urlName)
+  const { name, roles, isLoading } = useGuild(requirement.data.guildId)
   const role = roles?.find((r) => r.id === requirement.data.roleId)
 
   return (

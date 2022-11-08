@@ -29,8 +29,8 @@ const GUILD_URL_REGEX = /^[a-z0-9\-]*$/i
 const Role = ({ baseFieldPath }: Props): JSX.Element => {
   const { errors } = useFormState()
 
-  const { field: urlNameField } = useController({
-    name: `${baseFieldPath}.data.urlName`,
+  const { field: guildIdField } = useController({
+    name: `${baseFieldPath}.data.guildId`,
     rules: {
       required: "Please select a guild",
       pattern: {
@@ -49,7 +49,7 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
     searchValue &&
       debouncedSearchValue?.replace("https://guild.xyz/", "").match(GUILD_URL_REGEX)
       ? debouncedSearchValue.replace("https://guild.xyz/", "")
-      : urlNameField.value
+      : guildIdField.value
   )
   const [foundGuild, setFoundGuild] = useState<Guild>()
 
@@ -61,13 +61,13 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
   const mergedGuildOptions = useMemo(() => {
     if (!guildOptions) return []
 
-    if (foundGuild && !guildOptions?.find((g) => g.value === foundGuild.urlName))
+    if (foundGuild && !guildOptions?.find((g) => g.value === foundGuild.id))
       return [
         ...guildOptions,
         {
           img: foundGuild.imageUrl,
           label: foundGuild.name,
-          value: foundGuild.urlName,
+          value: foundGuild.id,
         },
       ]
 
@@ -75,7 +75,7 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
   }, [guildOptions, foundGuild])
 
   const selectedGuild = mergedGuildOptions?.find(
-    (guild) => guild.value === urlNameField.value
+    (guild) => guild.value === guildIdField.value
   )
 
   const { field: roleIdField } = useController({
@@ -102,7 +102,7 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
     <>
       <FormControl
         isRequired
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.urlName?.message}
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.guildId?.message}
       >
         <FormLabel>Guild</FormLabel>
 
@@ -116,10 +116,10 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
             // formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
             isLoading={isGuildsLoading || isLoading}
             options={mergedGuildOptions}
-            name={urlNameField.name}
-            onBlur={urlNameField.onBlur}
-            onChange={(newValue) => urlNameField.onChange(newValue?.value)}
-            ref={urlNameField.ref}
+            name={guildIdField.name}
+            onBlur={guildIdField.onBlur}
+            onChange={(newValue) => guildIdField.onChange(newValue?.value)}
+            ref={guildIdField.ref}
             value={selectedGuild ?? null}
             onInputChange={(newValue) => setSearchValue(newValue)}
             filterOption={customFilterOption}
@@ -129,13 +129,13 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
         <FormHelperText>Select a guild or paste guild URL name</FormHelperText>
 
         <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.urlName?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.guildId?.message}
         </FormErrorMessage>
       </FormControl>
 
       <FormControl
         isRequired
-        isDisabled={!urlNameField.value || isLoading}
+        isDisabled={!guildIdField.value || isLoading}
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.roleId?.message}
       >
         <FormLabel>Role</FormLabel>

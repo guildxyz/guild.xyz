@@ -48,7 +48,7 @@ const GuildFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
 
   useEffect(() => {
     if (!touchedFields?.data) return
-    resetField(`${baseFieldPath}.data.urlName`)
+    resetField(`${baseFieldPath}.data.guildId`)
     resetField(`${baseFieldPath}.data.roleId`)
     resetField(`${baseFieldPath}.data.minAmount`)
     resetField(`${baseFieldPath}.data.creationDate`)
