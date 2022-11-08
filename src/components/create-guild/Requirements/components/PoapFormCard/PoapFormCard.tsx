@@ -47,10 +47,7 @@ const PoapFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const [pastedId, setPastedId] = useState(null)
   const { isPoapByIdLoading, poap } = usePoapById(pastedId)
 
-  const isLoading = useMemo(
-    () => isGuildsPoapsLoading || isPoapsLoading || isPoapByIdLoading,
-    [isGuildsPoapsLoading, isPoapsLoading, isPoapByIdLoading]
-  )
+  const isLoading = isGuildsPoapsLoading || isPoapsLoading || isPoapByIdLoading
 
   const mappedPoaps = useMemo(() => {
     if (isLoading) return []

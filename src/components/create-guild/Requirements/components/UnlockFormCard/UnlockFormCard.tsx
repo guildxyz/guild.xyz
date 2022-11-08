@@ -45,10 +45,7 @@ const UnlockFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
     [locks]
   )
 
-  const pickedLock = useMemo(
-    () => mappedLocks?.find((lock) => lock.value === address),
-    [address, mappedLocks]
-  )
+  const pickedLock = mappedLocks?.find((lock) => lock.value === address)
 
   // Reset form on chain change
   const resetForm = () => {

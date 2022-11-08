@@ -113,10 +113,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
     data: { name: nftName, symbol: nftSymbol },
   } = useTokenData(chain, address)
 
-  const nftImage = useMemo(
-    () => mappedNfts?.find((nft) => nft.value === address)?.img,
-    [address, mappedNfts]
-  )
+  const nftImage = mappedNfts?.find((nft) => nft.value === address)?.img
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(

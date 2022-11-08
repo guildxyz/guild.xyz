@@ -90,13 +90,9 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
     }
   }, [tokenDecimals])
 
-  const tokenImage = useMemo(
-    () =>
-      mappedTokens?.find(
-        (token) => token.value?.toLowerCase() === address?.toLowerCase()
-      )?.img,
-    [address]
-  )
+  const tokenImage = mappedTokens?.find(
+    (token) => token.value?.toLowerCase() === address?.toLowerCase()
+  )?.img
 
   return (
     <Stack spacing={4} alignItems="start">

@@ -34,12 +34,13 @@ const TokenPicker = (): JSX.Element => {
   } = useFormContext<MonetizePoapForm>()
 
   const { tokens, isLoading: isTokensLoading } = useTokens(Chains[chainId])
+
   const mappedTokens = useMemo(
     () =>
-      tokens?.map((t) => ({
-        img: t.logoURI,
-        label: t.name,
-        value: t.address,
+      tokens?.map((token) => ({
+        img: token.logoURI,
+        label: token.name,
+        value: token.address,
       })),
     [tokens]
   )
@@ -55,15 +56,11 @@ const TokenPicker = (): JSX.Element => {
     isValidating: isTokenSymbolValidating,
   } = useTokenData(Chains[chainId], token)
 
-  // Saving this in a useMemo, because we're using it for form validation
-  const tokenDataFetched = useMemo(
-    () =>
-      typeof tokenName === "string" &&
-      tokenName !== "-" &&
-      typeof tokenSymbol === "string" &&
-      tokenSymbol !== "-",
-    [tokenName, tokenSymbol]
-  )
+  const tokenDataFetched =
+    typeof tokenName === "string" &&
+    tokenName !== "-" &&
+    typeof tokenSymbol === "string" &&
+    tokenSymbol !== "-"
 
   const tokenImage = mappedTokens?.find(
     (t) => t.value?.toLowerCase() === token?.toLowerCase()
