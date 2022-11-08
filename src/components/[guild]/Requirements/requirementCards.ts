@@ -7,6 +7,7 @@ import DiscoRequirementCard from "./components/DiscoRequirementCard"
 import FreeRequirementCard from "./components/FreeRequirementCard"
 import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
 import GithubRequirementCard from "./components/GithubRequirementCard"
+import GuildMinGuildsRequirementCard from "./components/GuildMinGuildsRequirementCard"
 import GuildRoleRequirementCard from "./components/GuildRoleRequirementCard"
 import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
 import KycDAORequirementCard from "./components/KycDAORequirementCard"
@@ -66,7 +67,7 @@ const REQUIREMENT_CARDS = {
   GUILD_ROLE: GuildRoleRequirementCard,
   // GUILD_ADMIN: GuildRequirementCard,
   // GUILD_USER_SINCE: GuildRequirementCard,
-  // GUILD_MINGUILDS: GuildRequirementCard,
+  GUILD_MINGUILDS: GuildMinGuildsRequirementCard,
 }
 
 export default REQUIREMENT_CARDS
