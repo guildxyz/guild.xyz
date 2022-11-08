@@ -1,4 +1,4 @@
-import { GatedChannels } from "components/[guild]/RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate/components/Category"
+import { GatedChannels } from "components/[guild]/RolePlatforms/components/PlatformCard/components/useDiscordCardProps/DiscordCardSettings/components/ChannelsToGate/components/Category"
 
 const preprocessGatedChannels = (gatedChannels: GatedChannels) => {
   const gatedChannelEntries = Object.entries(gatedChannels ?? {})
@@ -6,7 +6,7 @@ const preprocessGatedChannels = (gatedChannels: GatedChannels) => {
   if (gatedChannelEntries.length <= 0) return undefined
 
   return gatedChannelEntries.reduce((acc, [categoryId, { channels }]) => {
-    const channelEntries = Object.entries(channels)
+    const channelEntries = Object.entries(channels ?? {})
     const filtered = channelEntries.filter(([, { isChecked }]) => isChecked)
 
     if (filtered.length === channelEntries.length) {

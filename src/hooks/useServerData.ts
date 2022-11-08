@@ -1,5 +1,5 @@
 import { Channel as EntryChannel } from "components/create-guild/EntryChannel"
-import useSWR from "swr"
+import useSWR, { SWRConfiguration } from "swr"
 
 export type Channel = { id: string; name: string; roles: string[] }
 
@@ -46,25 +46,27 @@ const fallbackData = {
   roles: [],
 }
 
-const useServerData = (
-  serverId: string,
-  { authorization, ...swrOptions }: Record<string, any> = {
-    authorization: undefined,
-  }
-) => {
+const useServerData = (serverId: string, swrOptions?: SWRConfiguration) => {
   const shouldFetch = serverId?.length >= 0
 
   const { data, isValidating, error, mutate } = useSWR<ServerData>(
-    shouldFetch
-      ? [`/discord/server/${serverId}`, { method: "POST", body: { authorization } }]
-      : null,
+    shouldFetch ? [`/discord/server/${serverId}`, { method: "POST" }] : null,
     {
       fallbackData,
+      revalidateOnFocus: false,
       ...swrOptions,
     }
   )
 
-  return { data, isLoading: isValidating, error, mutate }
+  return {
+    data: {
+      ...data,
+      channels: data.categories?.map((category) => category.channels)?.flat(),
+    },
+    isLoading: isValidating,
+    error,
+    mutate,
+  }
 }
 
 export default useServerData

@@ -1,50 +1,47 @@
-import { Contract } from "@ethersproject/contracts"
-import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useSWR, { KeyedMutator } from "swr"
+import fetcher from "utils/fetcher"
 
-const fallback = { id: null, token: null, fee: null }
+type GetVaultResponse = {
+  eventId: number
+  owner: string
+  token: string
+  fee: string
+  collected: string
+}
 
-const fetchPoapVault = async (_: string, contract: Contract, eventId: number) =>
-  contract
-    .queryFilter?.(contract.filters.VaultRegistered?.(null, eventId))
-    .then((events) => {
-      const event = events.find((e) => e.event === "VaultRegistered")
-
-      if (!event) return fallback
-
-      const [rawId, , , token, fee] = event.args
-      const id = typeof rawId !== "undefined" ? parseInt(rawId.toString()) : null
-
-      return {
-        id,
-        token,
-        fee,
-      }
-    })
-    .catch((_) => fallback)
+const fetchPoapVault = async (
+  _: string,
+  vaultId: number,
+  chainId: number
+): Promise<GetVaultResponse> =>
+  fetcher(`/api/poap/get-poap-vault/${vaultId}/${chainId}`)
 
 const usePoapVault = (
-  eventId: number
+  vaultId: number,
+  chainId: number
 ): {
-  vaultData: { id: number; token: string; fee: number }
+  vaultData: GetVaultResponse
   isVaultLoading: boolean
   mutateVaultData: KeyedMutator<any>
+  vaultError: any
 } => {
-  const feeCollectorContract = useFeeCollectorContract()
-
-  const {
-    data: vaultData,
-    isValidating: isVaultLoading,
-    mutate: mutateVaultData,
-  } = useSWR(
-    feeCollectorContract ? ["poapVault", feeCollectorContract, eventId] : null,
+  const { data, isValidating, mutate, error } = useSWR(
+    typeof vaultId === "number" && typeof chainId === "number"
+      ? ["poapVault", vaultId, chainId]
+      : null,
     fetchPoapVault,
     {
       revalidateOnFocus: false,
+      shouldRetryOnError: false,
     }
   )
 
-  return { vaultData, isVaultLoading, mutateVaultData }
+  return {
+    vaultData: data,
+    isVaultLoading: !data && isValidating,
+    mutateVaultData: mutate,
+    vaultError: error,
+  }
 }
 
 export default usePoapVault

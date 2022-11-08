@@ -1,11 +1,12 @@
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { Guild, Requirement } from "types"
+import { Guild, PlatformType, Requirement } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
@@ -14,8 +15,7 @@ import preprocessRequirements from "utils/preprocessRequirements"
 type RoleOrGuild = Guild & { requirements?: Array<Requirement> }
 
 const useCreateGuild = () => {
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
+  const { addDatadogAction, addDatadogError } = useDatadog()
   const matchMutate = useMatchMutate()
 
   const toast = useToast()
@@ -34,8 +34,10 @@ const useCreateGuild = () => {
 
   const useSubmitResponse = useSubmitWithSign<any, RoleOrGuild>(fetchData, {
     onError: (error_) => {
-      addDatadogError(`Guild creation error`, { error: error_ }, "custom")
-      showErrorToast(error_)
+      addDatadogError(`Guild creation error`, { error: error_ })
+
+      const processedError = processConnectorError(error_)
+      showErrorToast(processedError || error_)
     },
     onSuccess: (response_) => {
       addDatadogAction(`Successful guild creation`)
@@ -43,7 +45,7 @@ const useCreateGuild = () => {
 
       toast({
         title: `Guild successfully created!`,
-        description: "You're being redirected to it's page",
+        description: "You're being redirected to its page",
         status: "success",
       })
       router.push(`/${response_.urlName}`)
@@ -59,7 +61,7 @@ const useCreateGuild = () => {
       const data = {
         ...data_,
         // prettier-ignore
-        ...(data_.guildPlatforms?.[0]?.platformName === "TELEGRAM" && data_.requirements?.length && {
+        ...(data_.guildPlatforms?.[0]?.platformId === PlatformType.TELEGRAM && data_.requirements?.length && {
             requirements: undefined,
             roles: [
               {

@@ -1,5 +1,5 @@
 module.exports = {
-  webpack(config) {
+  webpack(config, options) {
     config.module.rules.push({
       test: /\.svg$/,
       use: [
@@ -13,8 +13,27 @@ module.exports = {
       ],
     })
 
+    /**
+     * Filtering packages which can't be used in the edge runtime, to avoid build
+     * warnings and errors
+     */
+    if (options.isServer && options.nextRuntime === "edge") {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        "@datadog/browser-rum": false,
+        "@datadog/rum-react-integration": false,
+        "@chakra-ui/react": false,
+        "@web3-react/coinbase-wallet": false,
+        "@web3-react/core": false,
+        "@web3-react/metamask": false,
+        "@web3-react/walletconnect": false,
+        "@ethersproject/keccak256": false,
+      }
+    }
+
     return config
   },
+  productionBrowserSourceMaps: true,
   images: {
     domains: [
       "storageapi.fleek.co",
@@ -22,7 +41,14 @@ module.exports = {
       "cdn.discordapp.com",
       "guild-xyz.mypinata.cloud",
       "assets.poap.xyz",
+      "pbs.twimg.com",
+      "abs.twimg.com",
+      "localhost",
+      "guild.xyz",
     ],
+  },
+  experimental: {
+    scrollRestoration: true,
   },
   async rewrites() {
     return {
@@ -52,10 +78,31 @@ module.exports = {
           has: [
             {
               type: "host",
+              value: "balancy.guild.xyz",
+            },
+          ],
+          destination: "/balancy/",
+        },
+        {
+          source: "/",
+          has: [
+            {
+              type: "host",
               value: "lego.guild.xyz",
             },
           ],
           destination: "/lego/",
+        },
+        {
+          source: "/arc",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          // Redirecting to the "home page", because we had an incorrect QR code on the packaging
+          destination: "/lego",
         },
         {
           source: "/light",
@@ -131,6 +178,17 @@ module.exports = {
           source: "/sitemap.xml",
           destination: "/api/sitemap.xml",
         },
+        {
+          source: "/api/ddrum",
+          has: [
+            {
+              type: "query",
+              key: "ddforward",
+              value: "https://(?<ddforward>.*)",
+            },
+          ],
+          destination: "https://:ddforward",
+        },
       ],
     }
   },
@@ -141,6 +199,11 @@ module.exports = {
         destination:
           "https://abalone-professor-5d6.notion.site/Welcome-to-the-guilds-of-Guild-d9604333bee9478497b05455437f03c1",
         permanent: false,
+      },
+      {
+        source: "/developer-meetup-202216:31",
+        destination: "/developer-meetup-2022",
+        permanent: true,
       },
       {
         source: "/guild/:path*",

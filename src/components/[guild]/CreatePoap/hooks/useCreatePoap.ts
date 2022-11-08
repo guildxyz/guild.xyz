@@ -17,7 +17,7 @@ const fetchData = async (data: CreatePoapForm) => {
     else formData.append(key, extendedData[key]?.toString() || "")
   }
 
-  return fetch("/api/create-poap", {
+  return fetch("/api/poap", {
     method: "POST",
     body: formData,
     headers: {
@@ -33,7 +33,7 @@ const useCreatePoap = () => {
   const showErrorToast = useShowErrorToast()
 
   return useSubmit<CreatePoapForm, CreatePoapForm & CreatedPoapData>(fetchData, {
-    onError: (error) => showErrorToast(error?.error),
+    onError: (error) => showErrorToast(error?.error?.message ?? error?.error),
   })
 }
 

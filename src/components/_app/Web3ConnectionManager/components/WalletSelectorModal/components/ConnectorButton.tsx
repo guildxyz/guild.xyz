@@ -1,20 +1,24 @@
 import { Img } from "@chakra-ui/react"
-import { useRumError } from "@datadog/rum-react-integration"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React, Web3ReactHooks } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
+import GuildAvatar from "components/common/GuildAvatar"
+import useDatadog from "components/_app/Datadog/useDatadog"
+import useKeyPair from "hooks/useKeyPair"
 import { Dispatch, SetStateAction, useRef, useState } from "react"
 import { isMobile } from "react-device-detect"
 import { WalletError } from "types"
+import shortenHex from "utils/shortenHex"
 
 type Props = {
   connector: MetaMask | WalletConnect | CoinbaseWallet
   connectorHooks: Web3ReactHooks
   error: WalletError & Error
   setError: Dispatch<SetStateAction<WalletError & Error>>
+  setIsWalletConnectActivating: (boolean) => void
 }
 
 const ConnectorButton = ({
@@ -22,8 +26,9 @@ const ConnectorButton = ({
   connectorHooks,
   error,
   setError,
+  setIsWalletConnectActivating,
 }: Props): JSX.Element => {
-  const addDatadogError = useRumError()
+  const { addDatadogAction, addDatadogError } = useDatadog()
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -32,13 +37,21 @@ const ConnectorButton = ({
   }
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
-  const { connector: activeConnector } = useWeb3React()
+  const {
+    connector: activeConnector,
+    account,
+    isActive: isAnyConnectorActive,
+  } = useWeb3React()
   const { useIsActive } = connectorHooks
   const isActive = useIsActive()
+  const { ready } = useKeyPair()
 
   const [isActivating, setIsActivating] = useState(false)
 
   const activate = () => {
+    if (connector instanceof WalletConnect) setIsWalletConnectActivating(true)
+    else setIsWalletConnectActivating(false)
+
     setError(null)
     setIsActivating(true)
     activeConnector?.deactivate()
@@ -46,13 +59,16 @@ const ConnectorButton = ({
       .activate()
       .catch((err) => {
         setError(err)
-        addDatadogError("Wallet connection error", { error: err }, "custom")
+        if (err?.code === 4001) {
+          addDatadogAction("Wallet connection error", { data: err })
+        } else {
+          addDatadogError("Wallet connection error", { error: err })
+        }
       })
       .finally(() => setIsActivating(false))
   }
 
-  const isMetaMaskInstalled =
-    typeof window !== "undefined" && MetaMaskOnboarding.isMetaMaskInstalled()
+  const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
 
   const iconUrl =
     connector instanceof MetaMask
@@ -72,37 +88,42 @@ const ConnectorButton = ({
 
   if (connector instanceof MetaMask && isMobile && !isMetaMaskInstalled) return null
 
-  if (connector instanceof WalletConnect && isMobile && isMetaMaskInstalled)
-    return null
+  if (account && !isActive && ready && isAnyConnectorActive) return null
 
   return (
     <Button
+      mb="4"
       onClick={
         connector instanceof MetaMask && !isMetaMaskInstalled
           ? handleOnboarding
           : activate
       }
       rightIcon={
-        <Img
-          src={`/walletLogos/${iconUrl}`}
-          boxSize={6}
-          alt={`${connectorName} logo`}
-        />
+        isActive && ready ? (
+          <GuildAvatar address={account} size={5} />
+        ) : (
+          <Img
+            src={`/walletLogos/${iconUrl}`}
+            boxSize={6}
+            alt={`${connectorName} logo`}
+          />
+        )
       }
       disabled={
         isActivating ||
+        (account && isActive && !ready) ||
         (isActive && activeConnector.constructor === connector.constructor)
       }
-      isLoading={isActivating && !error}
+      isLoading={(isActivating || (account && isActive && !ready)) && !error}
       spinnerPlacement="end"
       loadingText={`${connectorName} - connecting...`}
-      isFullWidth
+      w="full"
       size="xl"
       justifyContent="space-between"
       border={isActive && "2px"}
       borderColor="primary.500"
     >
-      {`${connectorName} ${isActive ? " - connected" : ""}`}
+      {!account || !isActive ? `${connectorName}` : shortenHex(account)}
     </Button>
   )
 }

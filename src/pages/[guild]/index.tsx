@@ -1,27 +1,39 @@
-import { Spinner, Stack, Tag, useBreakpointValue } from "@chakra-ui/react"
+import {
+  Box,
+  Center,
+  Collapse,
+  Heading,
+  HStack,
+  Spinner,
+  Text,
+} from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
+import AccessHub from "components/[guild]/AccessHub"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import JoinButton from "components/[guild]/JoinButton"
+import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
-import JoinButton from "components/[guild]/RolesByPlatform/components/JoinButton"
-import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
-import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import { AnimateSharedLayout } from "framer-motion"
-import useGuildMembers from "hooks/useGuildMembers"
+import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
+import Head from "next/head"
+import ErrorPage from "pages/_error"
 import React, { useEffect, useMemo, useState } from "react"
-import { SWRConfig, unstable_serialize, useSWRConfig } from "swr"
-import { Guild, PlatformType } from "types"
+import { SWRConfig } from "swr"
+import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
@@ -29,13 +41,13 @@ const GuildPage = (): JSX.Element => {
     name,
     description,
     imageUrl,
-    guildPlatforms,
     showMembers,
     roles,
-    admins,
     isLoading,
     onboardingComplete,
   } = useGuild()
+
+  useAutoStatusUpdate()
 
   const { data: roleAccesses } = useAccess()
 
@@ -56,32 +68,40 @@ const GuildPage = (): JSX.Element => {
     return accessedRoles.concat(otherRoles)
   }, [roles, roleAccesses])
 
-  const [DynamicGuildMenu, setDynamicGuildMenu] = useState(null)
+  const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
+  const [DynamicAddRewardButton, setDynamicAddRewardButton] = useState(null)
+  const [DynamicMembersExporter, setDynamicMembersExporter] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
+  const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
-  const { isAdmin, isOwner } = useGuildPermission()
-  const members = useGuildMembers()
-  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
-  const guildLogoSize = useBreakpointValue({ base: 56, lg: 72 })
-  const guildLogoIconSize = useBreakpointValue({ base: 28, lg: 36 })
+  const members = useUniqueMembers(roles)
+  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   useEffect(() => {
     if (isAdmin) {
-      const GuildMenu = dynamic(() => import("components/[guild]/GuildMenu"))
+      const EditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
       const AddRoleButton = dynamic(() => import("components/[guild]/AddRoleButton"))
-      setDynamicGuildMenu(GuildMenu)
+      const AddRewardButton = dynamic(
+        () => import("components/[guild]/AddRewardButton")
+      )
+      const MembersExporter = dynamic(
+        () => import("components/[guild]/Members/components/MembersExporter")
+      )
+      setDynamicEditGuildButton(EditGuildButton)
       setDynamicAddRoleButton(AddRoleButton)
+      setDynamicAddRewardButton(AddRewardButton)
+      setDynamicMembersExporter(MembersExporter)
 
-      if (
-        !onboardingComplete &&
-        guildPlatforms?.[0]?.platformId === PlatformType.DISCORD
-      ) {
+      if (!onboardingComplete) {
         const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
         setDynamicOnboarding(Onboarding)
       }
+    } else {
+      setDynamicEditGuildButton(null)
+      setDynamicAddRoleButton(null)
     }
   }, [isAdmin])
 
@@ -89,6 +109,9 @@ const GuildPage = (): JSX.Element => {
   const DynamicOnboardingProvider = DynamicOnboarding
     ? OnboardingProvider
     : React.Fragment
+
+  const showOnboarding = DynamicOnboarding && !onboardingComplete
+  const showAccessHub = (isMember || isAdmin) && !showOnboarding
 
   return (
     <DynamicOnboardingProvider>
@@ -100,58 +123,79 @@ const GuildPage = (): JSX.Element => {
         image={
           <GuildLogo
             imageUrl={imageUrl}
-            size={guildLogoSize}
-            iconSize={guildLogoIconSize}
+            size={{ base: "56px", lg: "72px" }}
             mt={{ base: 1, lg: 2 }}
             bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
           />
         }
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
-        action={DynamicGuildMenu && <DynamicGuildMenu />}
+        action={DynamicEditGuildButton && <DynamicEditGuildButton />}
       >
         {DynamicOnboarding && <DynamicOnboarding />}
 
-        <Tabs>
-          {guildPlatforms?.[0]?.platformId !== PlatformType.TELEGRAM &&
-          DynamicAddRoleButton &&
-          isMember ? (
-            <DynamicAddRoleButton />
-          ) : isMember ? (
-            <LeaveButton />
-          ) : (
-            <JoinButton platform={guildPlatforms?.[0]?.platformId} />
-          )}
-        </Tabs>
+        {!showOnboarding && (
+          <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
+            {isMember ? (
+              <HStack>
+                {DynamicAddRewardButton && <DynamicAddRewardButton />}
+                <LeaveButton />
+              </HStack>
+            ) : (
+              <HStack>
+                {DynamicAddRewardButton && <DynamicAddRewardButton />}
+                <JoinButton />
+              </HStack>
+            )}
+          </Tabs>
+        )}
 
-        <Stack spacing={12}>
-          <Stack spacing={4}>
-            <AnimateSharedLayout>
-              {sortedRoles?.map((role) => (
-                <RoleCard key={role.id} role={role} />
-              ))}
-            </AnimateSharedLayout>
-          </Stack>
+        <Collapse in={showAccessHub} unmountOnExit>
+          <AccessHub />
+        </Collapse>
 
-          {showMembers && (
-            <>
-              <Section
-                title="Members"
-                titleRightElement={
-                  <Tag size="sm">
-                    {isLoading ? (
-                      <Spinner size="xs" />
-                    ) : (
-                      members?.filter((address) => !!address)?.length ?? 0
-                    )}
-                  </Tag>
-                }
-              >
-                <Members isLoading={isLoading} admins={admins} members={members} />
-              </Section>
-            </>
-          )}
-        </Stack>
+        <Section
+          title={(showAccessHub || showOnboarding) && "Roles"}
+          titleRightElement={
+            (showAccessHub || showOnboarding) &&
+            DynamicAddRoleButton && (
+              <Box my="-2 !important" ml="auto !important">
+                <DynamicAddRoleButton />
+              </Box>
+            )
+          }
+          spacing={4}
+          mb="12"
+        >
+          {sortedRoles?.map((role) => (
+            <RoleCard key={role.id} role={role} />
+          ))}
+        </Section>
+
+        {(showMembers || isAdmin) && (
+          <Section
+            title="Members"
+            titleRightElement={
+              <HStack justifyContent="end" w="full">
+                {/* <HStack justifyContent="space-between" w="full"> */}
+                {/* <Tag size="sm" maxH={6} pt={1}>
+                  {isLoading ? (
+                    <Spinner size="xs" />
+                  ) : (
+                    members?.filter((address) => !!address)?.length ?? 0
+                  )}
+                </Tag> */}
+                {DynamicMembersExporter && <DynamicMembersExporter />}
+              </HStack>
+            }
+          >
+            {showMembers ? (
+              <Members members={members} />
+            ) : (
+              <Text>Members are hidden</Text>
+            )}
+          </Section>
+        )}
       </Layout>
     </DynamicOnboardingProvider>
   )
@@ -162,23 +206,39 @@ type Props = {
 }
 
 const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
-  /**
-   * Manually triggering mutate on mount because useSWRImmutable doesn't do because
-   * of the fallback
-   */
-  const { mutate } = useSWRConfig()
-  useEffect(() => {
-    mutate(Object.keys(fallback)[0])
-  }, [])
+  const guild = useGuild()
 
-  const urlName = Object.values(fallback)[0].urlName
+  if (!fallback) {
+    if (guild.isLoading)
+      return (
+        <Center h="100vh" w="screen">
+          <Spinner />
+          <Heading fontFamily={"display"} size="md" ml="4" mb="1">
+            Loading guild...
+          </Heading>
+        </Center>
+      )
+
+    if (!guild.id) return <ErrorPage statusCode={404} />
+  }
 
   return (
     <>
-      <LinkPreviewHead path={urlName} />
-      <SWRConfig value={{ fallback }}>
+      <LinkPreviewHead
+        path={fallback ? Object.values(fallback)[0].urlName : guild.urlName}
+      />
+      <Head>
+        <title>{fallback ? Object.values(fallback)[0].name : guild.name}</title>
+        <meta
+          property="og:title"
+          content={fallback ? Object.values(fallback)[0].name : guild.name}
+        />
+      </Head>
+      <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
-          <GuildPage />
+          <JoinModalProvider>
+            <GuildPage />
+          </JoinModalProvider>
         </ThemeProvider>
       </SWRConfig>
     </>
@@ -192,25 +252,30 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
 
   if (!data?.id)
     return {
-      notFound: true,
+      props: {},
       revalidate: 10,
     }
 
   // Removing the members list, and then we refetch them on client side. This way the members won't be included in the SSG source code.
-  const dataWithoutMembers = { ...data }
-  dataWithoutMembers.roles?.forEach((role) => (role.members = []))
+  const filteredData = { ...data }
+  filteredData.roles?.forEach((role) => (role.members = []))
+
+  // Fetching requirements client-side in this case
+  if (filteredData.roles?.some((role) => role.requirements?.length > 10)) {
+    filteredData.roles?.forEach((role) => (role.requirements = []))
+  }
 
   return {
     props: {
       fallback: {
-        [unstable_serialize([endpoint, undefined])]: dataWithoutMembers,
+        [endpoint]: filteredData,
       },
     },
     revalidate: 10,
   }
 }
 
-const SSG_PAGES_COUNT = 100
+const SSG_PAGES_COUNT = 24
 const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Guild[]) =>
     Array.isArray(_)

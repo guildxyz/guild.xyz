@@ -1,33 +1,9 @@
-import { Box, Collapse, useColorModeValue, VStack } from "@chakra-ui/react"
+import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
 import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
-import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
-import FreeRequirementCard from "./components/FreeRequirementCard"
-import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
-import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
-import MirrorRequirementCard from "./components/MirrorRequirementCard"
-import NftRequirementCard from "./components/NftRequirementCard"
-import PoapRequirementCard from "./components/PoapRequirementCard"
-import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
-import TokenRequirementCard from "./components/TokenRequirementCard"
-import UnlockRequirementCard from "./components/UnlockRequirementCard"
-
-const REQUIREMENT_CARDS = {
-  FREE: FreeRequirementCard,
-  ERC20: TokenRequirementCard,
-  COIN: TokenRequirementCard,
-  ERC721: NftRequirementCard,
-  ERC1155: NftRequirementCard,
-  UNLOCK: UnlockRequirementCard,
-  POAP: PoapRequirementCard,
-  MIRROR: MirrorRequirementCard,
-  SNAPSHOT: SnapshotRequirementCard,
-  ALLOWLIST: AllowlistRequirementCard,
-  JUICEBOX: JuiceboxRequirementCard,
-  GALAXY: GalaxyRequirementCard,
-}
+import REQUIREMENT_CARDS from "./requirementCards"
 
 type Props = {
   requirements: Requirement[]
@@ -35,9 +11,10 @@ type Props = {
 }
 
 const Requirements = ({ requirements, logic }: Props) => {
-  const sliceIndex = requirements.length - 3
-  const shownRequirements = requirements.slice(0, 3)
-  const hiddenRequirements = sliceIndex > 0 ? requirements.slice(-sliceIndex) : []
+  const sliceIndex = (requirements?.length ?? 0) - 3
+  const shownRequirements = (requirements ?? []).slice(0, 3)
+  const hiddenRequirements =
+    sliceIndex > 0 ? (requirements ?? []).slice(-sliceIndex) : []
 
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
   const shadowColor = useColorModeValue(
@@ -47,17 +24,21 @@ const Requirements = ({ requirements, logic }: Props) => {
 
   return (
     <VStack spacing="0">
-      {shownRequirements.map((requirement, i) => {
-        const RequirementCard = REQUIREMENT_CARDS[requirement.type]
+      {!requirements?.length ? (
+        <Spinner />
+      ) : (
+        shownRequirements.map((requirement, i) => {
+          const RequirementCard = REQUIREMENT_CARDS[requirement.type]
 
-        if (RequirementCard)
-          return (
-            <React.Fragment key={i}>
-              <RequirementCard requirement={requirement} />
-              {i < shownRequirements.length - 1 && <LogicDivider logic={logic} />}
-            </React.Fragment>
-          )
-      })}
+          if (RequirementCard)
+            return (
+              <React.Fragment key={i}>
+                <RequirementCard requirement={requirement} />
+                {i < shownRequirements.length - 1 && <LogicDivider logic={logic} />}
+              </React.Fragment>
+            )
+        })
+      )}
 
       <Collapse
         in={isRequirementsExpanded}

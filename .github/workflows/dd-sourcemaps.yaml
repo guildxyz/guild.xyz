@@ -1,0 +1,29 @@
+name: Upload sourcemaps to DataDog
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload-sourcemaps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Cache Node Modules
+        id: node-cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Install Dependencies
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - run: echo "DATADOG_SITE=datadoghq.eu" >> $GITHUB_ENV
+      - run: echo "DATADOG_API_KEY=${{ secrets.DATADOG_API_KEY }}" >> $GITHUB_ENV
+      - run: npm run build
+      - run: npm run dd:sourcemaps

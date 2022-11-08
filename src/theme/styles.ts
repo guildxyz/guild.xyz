@@ -2,6 +2,9 @@ import { mode } from "@chakra-ui/theme-tools"
 
 const styles = {
   global: (props) => ({
+    "tbody > tr:last-child > td": {
+      border: 0,
+    },
     /**
      * Hacky solution to the bug that toasts just partially follow the color mode if
      * user switches after they're initialized. We're changing the background of
@@ -30,9 +33,7 @@ const styles = {
     ".chakra-input__left-element ~ * > div": {
       paddingInlineStart: 5,
     },
-    ".chakra-ui-dark *::-webkit-calendar-picker-indicator": {
-      filter: "invert(1)",
-    },
+    "@keyframes fadeIn": { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
   }),
 }
 

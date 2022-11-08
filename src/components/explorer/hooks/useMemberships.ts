@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
-import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
 
-type Response = Array<{
+export type Memberships = Array<{
   guildId: number
   roleIds: number[]
 }>
@@ -11,11 +11,8 @@ const useMemberships = () => {
 
   const shouldFetch = !!account
 
-  const { data } = useSWR<Response>(
-    shouldFetch ? `/user/membership/${account}` : null,
-    {
-      refreshInterval: 10000,
-    }
+  const { data } = useSWRImmutable<Memberships>(
+    shouldFetch ? `/user/membership/${account}` : null
   )
 
   return data

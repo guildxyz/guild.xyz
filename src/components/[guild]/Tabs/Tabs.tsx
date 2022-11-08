@@ -5,48 +5,38 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { PropsWithChildren, useEffect, useRef, useState } from "react"
+import useIsStuck from "hooks/useIsStuck"
+import { PropsWithChildren } from "react"
 import useGuild from "../hooks/useGuild"
 import { useThemeContext } from "../ThemeContext"
 import TabButton from "./components/TabButton"
 
-const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
-  const tabsRef = useRef()
-  const [isSticky, setIsSticky] = useState(false)
+type Props = {
+  tabTitle: string
+}
+
+const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => {
+  const { ref, isStuck } = useIsStuck()
   const { colorMode } = useColorMode()
   const { textColor } = useThemeContext()
-  const tabButtonColor = isSticky && colorMode === "light" ? "black" : textColor
+  const tabButtonColor = isStuck && colorMode === "light" ? "black" : textColor
 
   const { urlName } = useGuild()
   const bgColor = useColorModeValue("white", "gray.800")
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const current = tabsRef.current || null
-      const rect = current?.getBoundingClientRect()
-
-      setIsSticky(rect?.top <= 0)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [])
-
   return (
     <Stack
-      ref={tabsRef}
+      ref={ref}
       direction="row"
       justifyContent="space-between"
+      alignItems={"center"}
       position="sticky"
       top={0}
       py={3}
       mt={-3}
-      mb={3}
+      mb={2}
       width="full"
-      zIndex={isSticky ? "banner" : "auto"}
+      zIndex={isStuck ? "banner" : "auto"}
       _before={{
         content: `""`,
         position: "fixed",
@@ -58,8 +48,8 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
         bgColor: bgColor,
         boxShadow: "md",
         transition: "opacity 0.2s ease, visibility 0.1s ease",
-        visibility: isSticky ? "visible" : "hidden",
-        opacity: isSticky ? 1 : 0,
+        visibility: isStuck ? "visible" : "hidden",
+        opacity: isStuck ? 1 : 0,
       }}
     >
       <Box
@@ -67,7 +57,7 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
         ml={-8}
         minW="0"
         sx={{
-          "-webkit-mask-image":
+          WebkitMaskImage:
             "linear-gradient(to right, transparent 0px, black 40px, black calc(100% - 40px), transparent)",
         }}
       >
@@ -82,7 +72,7 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
             scrollbarWidth: "none",
           }}
         >
-          <TabButton href={`${urlName}`}>Roles</TabButton>
+          <TabButton href={`${urlName}`}>{tabTitle}</TabButton>
           {/* <TabButton href="#" disabled tooltipText="Stay tuned!">
             More tabs soon
           </TabButton> */}

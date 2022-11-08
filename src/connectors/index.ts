@@ -6,27 +6,6 @@ import initializeCoinbaseWalletConnector from "./coinbaseWallet"
 import initializeMetaMaskConnector from "./metaMask"
 import initializeWalletConnectConnector from "./walletConnect"
 
-const supportedChains = [
-  "ETHEREUM",
-  "POLYGON",
-  "AVALANCHE",
-  "GNOSIS",
-  "FANTOM",
-  "ARBITRUM",
-  "CELO",
-  "HARMONY",
-  "BSC",
-  "OPTIMISM",
-  "MOONBEAM",
-  "MOONRIVER",
-  "METIS",
-  "CRONOS",
-  "BOBA",
-  "PALM",
-  "RINKEBY",
-  "GOERLI",
-]
-
 enum Chains {
   ETHEREUM = 1,
   BSC = 56,
@@ -35,6 +14,7 @@ enum Chains {
   GNOSIS = 100,
   FANTOM = 250,
   ARBITRUM = 42161,
+  NOVA = 42170,
   CELO = 42220,
   HARMONY = 1666600000,
   GOERLI = 5,
@@ -45,8 +25,11 @@ enum Chains {
   METIS = 1088,
   CRONOS = 25,
   BOBA = 288,
+  BOBA_AVAX = 43288,
   PALM = 11297108109,
 }
+
+export type Chain = keyof typeof Chains
 
 const RPC = {
   ETHEREUM: {
@@ -61,11 +44,17 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://etherscan.io"],
+    apiUrl: "https://api.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
-    rpcUrls: ["https://main-light.eth.linkpool.io"],
+    rpcUrls: [
+      process.env.MAINNET_ALCHEMY_KEY
+        ? `https://eth-mainnet.g.alchemy.com/v2/${process.env.MAINNET_ALCHEMY_KEY}`
+        : "",
+      "https://cloudflare-eth.com",
+    ].filter((url) => !!url),
   },
   BSC: {
-    chainId: "0x38",
+    chainId: 56,
     chainName: "BSC",
     nativeCurrency: {
       name: "Binance Coin",
@@ -75,12 +64,13 @@ const RPC = {
       logoURI:
         "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png?1547034615",
     },
-    rpcUrls: ["https://bsc-dataseed.binance.org"],
+    rpcUrls: ["https://bsc-dataseed1.binance.org"],
     blockExplorerUrls: ["https://bscscan.com"],
+    apiUrl: "https://api.bscscan.com",
     iconUrls: ["/networkLogos/bsc.svg"],
   },
   POLYGON: {
-    chainId: "0x89",
+    chainId: 137,
     chainName: "Polygon",
     nativeCurrency: {
       name: "Polygon",
@@ -90,8 +80,14 @@ const RPC = {
       logoURI:
         "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912",
     },
-    rpcUrls: ["https://polygon-rpc.com"],
+    rpcUrls: [
+      process.env.POLYGON_ALCHEMY_KEY
+        ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.POLYGON_ALCHEMY_KEY}`
+        : "",
+      "https://polygon-rpc.com",
+    ].filter((url) => !!url),
     blockExplorerUrls: ["https://polygonscan.com"],
+    apiUrl: "https://api.polygonscan.com",
     iconUrls: ["/networkLogos/polygon.svg"],
   },
   AVALANCHE: {
@@ -107,6 +103,7 @@ const RPC = {
     },
     rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
     blockExplorerUrls: ["https://snowtrace.io"],
+    apiUrl: "https://api.snowtrace.io",
     iconUrls: ["/networkLogos/avalanche.svg"],
   },
   GNOSIS: {
@@ -120,8 +117,9 @@ const RPC = {
       logoURI:
         "https://assets.coingecko.com/coins/images/11062/small/xdai.png?1614727492",
     },
-    rpcUrls: ["https://rpc.xdaichain.com/"],
-    blockExplorerUrls: ["https://blockscout.com/xdai/mainnet"],
+    rpcUrls: ["https://rpc.gnosischain.com"],
+    blockExplorerUrls: ["https://gnosisscan.io"],
+    apiUrl: "https://api.gnosisscan.io",
     iconUrls: ["/networkLogos/gnosis.svg"],
   },
   FANTOM: {
@@ -137,6 +135,7 @@ const RPC = {
     },
     rpcUrls: ["https://rpc.ftm.tools"],
     blockExplorerUrls: ["https://ftmscan.com"],
+    apiUrl: "https://api.ftmscan.com",
     iconUrls: ["/networkLogos/fantom.svg"],
   },
   ARBITRUM: {
@@ -152,7 +151,24 @@ const RPC = {
     },
     rpcUrls: ["https://arb1.arbitrum.io/rpc"],
     blockExplorerUrls: ["https://arbiscan.io"],
+    apiUrl: "https://api.arbiscan.io",
     iconUrls: ["/networkLogos/arbitrum.svg"],
+  },
+  NOVA: {
+    chainId: 42170,
+    chainName: "Arbitrum Nova",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://nova.arbitrum.io/rpc"],
+    blockExplorerUrls: ["https://nova.arbiscan.io"],
+    apiUrl: "https://api-nova.arbiscan.io",
+    iconUrls: ["/networkLogos/nova.svg"],
   },
   CELO: {
     chainId: 42220,
@@ -167,6 +183,7 @@ const RPC = {
     },
     rpcUrls: ["https://forno.celo.org"],
     blockExplorerUrls: ["https://explorer.celo.org"],
+    apiUrl: "https://explorer.celo.org",
     iconUrls: ["/networkLogos/celo.svg"],
   },
   HARMONY: {
@@ -191,11 +208,12 @@ const RPC = {
       name: "Ether",
       symbol: "ETH",
       decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      address: "0x0000000000000000000000000000000000000000",
       logoURI:
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://optimistic.etherscan.io"],
+    apiUrl: "https://api-optimistic.etherscan.io",
     iconUrls: ["/networkLogos/optimism.svg"],
     rpcUrls: ["https://mainnet.optimism.io"],
   },
@@ -221,11 +239,12 @@ const RPC = {
       name: "Moonriver",
       symbol: "MOVR",
       decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      address: "0x0000000000000000000000000000000000000000",
       logoURI:
         "https://assets.coingecko.com/coins/images/17984/small/9285.png?1630028620",
     },
     blockExplorerUrls: ["https://moonriver.moonscan.io"],
+    apiUrl: "https://api-moonriver.moonscan.io",
     iconUrls: ["/networkLogos/moonriver.svg"],
     rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
   },
@@ -241,6 +260,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/15595/small/metis.PNG?1621298076",
     },
     blockExplorerUrls: ["https://andromeda-explorer.metis.io"],
+    apiUrl: "https://andromeda-explorer.metis.io",
     iconUrls: ["/networkLogos/metis.svg"],
     rpcUrls: ["https://andromeda.metis.io/?owner=1088"],
   },
@@ -256,6 +276,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/7310/small/oCw2s3GI_400x400.jpeg?1645172042",
     },
     blockExplorerUrls: ["https://cronos.org/explorer"],
+    apiUrl: "https://cronos.org/explorer",
     iconUrls: ["/networkLogos/cronos.svg"],
     rpcUrls: ["https://evm.cronos.org"],
   },
@@ -271,8 +292,25 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://blockexplorer.boba.network"],
+    apiUrl: "https://api.bobascan.com",
     iconUrls: ["/networkLogos/boba.svg"],
     rpcUrls: ["https://mainnet.boba.network"],
+  },
+  BOBA_AVAX: {
+    chainId: 43288,
+    chainName: "Boba-Avax L2",
+    nativeCurrency: {
+      name: "Boba",
+      symbol: "BOBA",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/20285/small/BOBA.png?1636811576",
+    },
+    blockExplorerUrls: ["https://blockexplorer.avax.boba.network"],
+    apiUrl: "https://blockexplorer.avax.boba.network/api",
+    iconUrls: ["/networkLogos/boba.svg"],
+    rpcUrls: ["https://avax.boba.network"],
   },
   PALM: {
     chainId: 11297108109,
@@ -285,6 +323,7 @@ const RPC = {
       logoURI: "/networkLogos/palm.png",
     },
     blockExplorerUrls: ["https://explorer.palm.io"],
+    apiUrl: "https://explorer.palm.io",
     iconUrls: ["/networkLogos/palm.png"],
     rpcUrls: ["https://palm-mainnet.infura.io/v3/84722b0c96da4e09a6305118494aeeaa"],
   },
@@ -295,13 +334,14 @@ const RPC = {
       name: "Rinkeby Ether",
       symbol: "rETH",
       decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      address: "0x0000000000000000000000000000000000000000",
       logoURI:
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://rinkeby.etherscan.io"],
+    apiUrl: "https://api-rinkeby.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
-    rpcUrls: ["https://ethereum-rinkeby-rpc.allthatnode.com/"],
+    rpcUrls: ["https://rinkeby-light.eth.linkpool.io"],
   },
   GOERLI: {
     chainId: 5,
@@ -310,15 +350,23 @@ const RPC = {
       name: "Ether",
       symbol: "ETH",
       decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      address: "0x0000000000000000000000000000000000000000",
       logoURI:
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
-    rpcUrls: ["https://ethereum-goerli-rpc.allthatnode.com/"],
+    rpcUrls: [
+      process.env.GOERLI_ALCHEMY_KEY
+        ? `https://eth-goerli.g.alchemy.com/v2/${process.env.GOERLI_ALCHEMY_KEY}`
+        : "",
+      "https://ethereum-goerli-rpc.allthatnode.com/",
+    ].filter((url) => !!url),
     blockExplorerUrls: ["https://goerli.etherscan.io"],
+    apiUrl: "https://api-goerli.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
   },
 }
+
+const supportedChains = Object.keys(RPC) as Chain[]
 
 const RPC_URLS = {}
 
@@ -343,7 +391,7 @@ const blockExplorerIcons = {
     light: "/explorerLogos/snowtrace.svg",
     dark: "/explorerLogos/snowtrace.svg",
   },
-  "https://blockscout.com/xdai/mainnet": {
+  "https://gnosisscan.io": {
     light: "/networkLogos/gnosis.svg",
     dark: "/networkLogos/gnosis.svg",
   },
@@ -354,6 +402,10 @@ const blockExplorerIcons = {
   "https://arbiscan.io": {
     light: "/networkLogos/arbitrum.svg",
     dark: "/networkLogos/arbitrum.svg",
+  },
+  "https://nova.arbiscan.io": {
+    light: "/networkLogos/nova.svg",
+    dark: "/networkLogos/nova.svg",
   },
   "https://explorer.celo.org": {
     light: "/networkLogos/celo.svg",
@@ -380,6 +432,10 @@ const blockExplorerIcons = {
     dark: "/explorerLogos/cronos-dark.svg",
   },
   "https://blockexplorer.boba.network": {
+    light: "/explorerLogos/boba-light.svg",
+    dark: "/networkLogos/boba.svg",
+  },
+  "https://blockexplorer.avax.boba.network": {
     light: "/explorerLogos/boba-light.svg",
     dark: "/networkLogos/boba.svg",
   },

@@ -19,6 +19,7 @@ const TokenApiURLs = {
     "https://raw.githubusercontent.com/Crocoswap/tokenlists/main/aeb.tokenlist.json",
   ],
   ARBITRUM: ["https://bridge.arbitrum.io/token-list-42161.json"],
+  NOVA: ["https://tokens.coingecko.com/arbitrum-nova/all.json"],
   CELO: [
     "https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap.token-list.json",
   ],
@@ -32,12 +33,14 @@ const TokenApiURLs = {
   OPTIMISM: ["https://static.optimism.io/optimism.tokenlist.json"],
   MOONBEAM: ["https://tokens.coingecko.com/moonbeam/all.json"],
   MOONRIVER: ["https://tokens.coingecko.com/moonriver/all.json"],
+  MOONBEAM: [],
   RINKEBY: [
     "https://raw.githubusercontent.com/Uniswap/default-token-list/main/src/tokens/rinkeby.json",
   ],
   METIS: ["https://tokens.coingecko.com/metis-andromeda/all.json"],
   CRONOS: ["https://tokens.coingecko.com/cronos/all.json"],
   BOBA: ["https://tokens.coingecko.com/boba/all.json"],
+  BOBA_AVAX: ["https://tokens.coingecko.com/boba/all.json"],
   PALM: [],
 }
 

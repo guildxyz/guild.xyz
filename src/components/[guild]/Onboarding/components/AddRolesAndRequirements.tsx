@@ -16,9 +16,10 @@ const AddRolesAndRequirements = ({ activeStep, prevStep, nextStep }: Props) => {
   return (
     <>
       <Text>
-        You can have multiple roles with different requirements. By default there's
-        an open one that anyone can get by just connecting their wallet. Go ahead and
-        set requirements for it, or add a new role below!
+        Your guild consists of roles that the members can satisfy the requirements of
+        to gain access to their rewards. By default there's an open one that anyone
+        can get by just connecting their wallet. Go ahead and edit it, and add new
+        roles below!
       </Text>
       <PaginationButtons
         activeStep={activeStep}

@@ -1,36 +1,40 @@
 import {
   Box,
-  Divider,
+  Collapse,
   HStack,
   Icon,
   Img,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Stack,
   Text,
-  useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { Step, Steps } from "chakra-ui-steps"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { AnimatePresence, motion } from "framer-motion"
-import { Plus } from "phosphor-react"
+import { motion } from "framer-motion"
+import { ArrowLeft, CaretDown, Plus } from "phosphor-react"
+import capitalize from "utils/capitalize"
 import {
   CreatePoapProvider,
   useCreatePoapContext,
 } from "./components/CreatePoapContext"
 import CreatePoapForm from "./components/CreatePoapForm"
-import MonetizePoap from "./components/MonetizePoap"
+import Distribution from "./components/Distribution"
 import PoapListItem from "./components/PoapListItem"
-import SetupBot from "./components/SetupBot"
+import PoapRequirements from "./components/Requirements"
 import UploadMintLinks from "./components/UploadMintLinks"
+import usePoapLinks from "./hooks/usePoapLinks"
 
 const steps = [
   {
-    label: "Create a POAP",
+    label: "Set POAP data",
     content: CreatePoapForm,
   },
   {
@@ -38,12 +42,13 @@ const steps = [
     content: UploadMintLinks,
   },
   {
-    label: "Monetize POAP",
-    content: MonetizePoap,
+    label: "Requirements",
+    description: "Optional",
+    content: PoapRequirements,
   },
   {
-    label: "Set up bot",
-    content: SetupBot,
+    label: "Distribute",
+    content: Distribution,
   },
 ]
 
@@ -53,120 +58,210 @@ type Props = {
   onClose: () => void
 }
 
-const MotionBox = motion(Box)
+type WrapperProps = {
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
+  discordServerId: string
+}
+
 const MotionModalContent = motion(ModalContent)
 
 const CreatePoap = ({ isOpen }: Props): JSX.Element => {
-  const poapListBg = useColorModeValue("gray.50", "blackAlpha.300")
-  const modalBg = useColorModeValue(undefined, "gray.800")
-
   const { poaps } = useGuild()
   const {
     activeStep,
+    setStep,
     poapData,
     shouldCreatePoap,
     setShouldCreatePoap,
+    setPoapData,
     onCloseHandler,
   } = useCreatePoapContext()
+  const { poapLinks } = usePoapLinks(poapData?.id)
+
+  const getStepState = (index: number): "error" | "loading" | undefined => {
+    if (index === 1 && activeStep !== 1 && !poapLinks?.total) return "error"
+    return undefined
+  }
+
+  const expiredPoaps = poaps?.filter((poap) => {
+    const currentTime = Date.now() / 1000
+    return poap.expiryDate <= currentTime
+  })
+
+  const activePoaps = poaps?.filter((poap) => {
+    const currentTime = Date.now() / 1000
+    return poap.expiryDate > currentTime
+  })
+
+  const { isOpen: isExpiredOpen, onToggle } = useDisclosure({
+    defaultIsOpen: !activePoaps.length,
+  })
+
+  const viewPoapsList = () => {
+    setPoapData(null)
+    setShouldCreatePoap(false)
+    setStep(0)
+  }
 
   return (
-    <Modal isOpen={isOpen} onClose={onCloseHandler} size="4xl">
+    <Modal
+      isOpen={isOpen}
+      onClose={onCloseHandler}
+      size="3xl"
+      scrollBehavior={
+        poaps?.length && !poapData?.id && !shouldCreatePoap ? "inside" : "outside"
+      }
+      colorScheme={"dark"}
+    >
       <ModalOverlay />
       <MotionModalContent
         mt={16}
         mb={{ base: 0, md: 16 }}
         initial={{
           maxWidth: !poaps?.length
-            ? "var(--chakra-sizes-4xl)"
+            ? "var(--chakra-sizes-3xl)"
             : "var(--chakra-sizes-lg)",
         }}
         animate={{
           maxWidth:
             poapData?.id || shouldCreatePoap || !poaps?.length
-              ? "var(--chakra-sizes-4xl)"
+              ? "var(--chakra-sizes-3xl)"
               : "var(--chakra-sizes-lg)",
         }}
       >
-        <ModalHeader bgColor={modalBg}>
-          <HStack>
-            <Img
-              position="relative"
-              top={0.5}
-              src="/requirementLogos/poap.svg"
-              boxSize={6}
-            />
-            <Text as="span">
-              {shouldCreatePoap
-                ? "Create a POAP"
-                : poaps?.length && activeStep === 0
-                ? "Choose a POAP"
-                : "Drop POAP"}
-            </Text>
-          </HStack>
+        <ModalHeader>
+          <Stack alignItems="start">
+            {(shouldCreatePoap || poapData?.id || !poaps?.length) && (
+              <Button
+                variant="link"
+                fontFamily="body"
+                color="gray"
+                fontSize="xs"
+                leftIcon={<Icon as={ArrowLeft} />}
+                onClick={viewPoapsList}
+              >
+                View POAPs list
+              </Button>
+            )}
+            <HStack alignItems="start">
+              <Img
+                position="relative"
+                top={1.5}
+                src="/requirementLogos/poap.svg"
+                boxSize={6}
+              />
+              <Text as="span">
+                {poapData?.id
+                  ? "Manage POAP"
+                  : shouldCreatePoap
+                  ? "Create POAP"
+                  : poaps?.length && activeStep === 0
+                  ? "Manage POAPs"
+                  : "Drop POAP"}
+              </Text>
+            </HStack>
+          </Stack>
         </ModalHeader>
-        <ModalBody bgColor={modalBg}>
-          <AnimatePresence initial={false} exitBeforeEnter>
-            <MotionBox
-              key={
-                poaps?.length && !poapData?.id && !shouldCreatePoap
-                  ? "select-poap"
-                  : "create-poap"
-              }
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.24 }}
-            >
-              {poaps?.length && !poapData?.id && !shouldCreatePoap ? (
-                <Stack spacing={4} mx="auto" maxW="md">
-                  <Stack
-                    p={4}
-                    bgColor={poapListBg}
-                    borderRadius="2xl"
-                    divider={<Divider />}
-                  >
-                    {poaps.map((poap) => (
+        <ModalCloseButton />
+
+        {poaps?.length && !poapData?.id && !shouldCreatePoap ? (
+          <>
+            <ModalBody className="custom-scrollbar">
+              <Stack spacing="8">
+                {!!activePoaps?.length && (
+                  <Stack>
+                    {activePoaps.map((poap) => (
                       <PoapListItem key={poap?.id} poapFancyId={poap?.fancyId} />
                     ))}
                   </Stack>
+                )}
 
-                  <HStack>
-                    <Divider />
-                    <Text as="span" fontWeight="bold" fontSize="sm" color="gray">
-                      OR
-                    </Text>
-                    <Divider />
-                  </HStack>
-
-                  <Button
-                    colorScheme="indigo"
-                    leftIcon={<Icon as={Plus} />}
-                    onClick={() => setShouldCreatePoap(true)}
+                {!!expiredPoaps?.length && (
+                  <Box>
+                    <Button
+                      variant="link"
+                      size="sm"
+                      fontWeight="bold"
+                      color="gray"
+                      rightIcon={
+                        <Icon
+                          as={CaretDown}
+                          transform={isExpiredOpen && "rotate(-180deg)"}
+                          transition="transform .3s"
+                        />
+                      }
+                      onClick={onToggle}
+                    >
+                      {capitalize(`${isExpiredOpen ? "" : "view "}expired POAPs`)}
+                    </Button>
+                    <Box mx="-2">
+                      <Collapse in={isExpiredOpen}>
+                        <Stack px="2" pb="2" pt="4">
+                          {expiredPoaps.map((poap) => (
+                            <PoapListItem
+                              key={poap?.id}
+                              poapFancyId={poap?.fancyId}
+                            />
+                          ))}
+                        </Stack>
+                      </Collapse>
+                    </Box>
+                  </Box>
+                )}
+              </Stack>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                w="full"
+                colorScheme="indigo"
+                leftIcon={<Icon as={Plus} />}
+                onClick={() => setShouldCreatePoap(true)}
+              >
+                Create a POAP
+              </Button>
+            </ModalFooter>
+          </>
+        ) : (
+          <ModalBody>
+            <Box animation={poaps?.length && "fadeIn .3s .2s both"}>
+              <Steps
+                textAlign={"left"}
+                colorScheme="indigo"
+                size="sm"
+                activeStep={activeStep}
+                onClickStep={poapData?.id ? setStep : undefined}
+              >
+                {steps.map(({ label, description, content: Content }, index) => (
+                  <Step
+                    label={label}
+                    description={description}
+                    key={label}
+                    state={getStepState(index)}
+                    isKeepError
                   >
-                    Create a POAP
-                  </Button>
-                </Stack>
-              ) : (
-                <Steps colorScheme="indigo" size="sm" activeStep={activeStep}>
-                  {steps.map(({ label, content: Content }) => (
-                    <Step label={label} key={label}>
-                      <Box pt={{ base: 6, md: 12 }}>
-                        <Content />
-                      </Box>
-                    </Step>
-                  ))}
-                </Steps>
-              )}
-            </MotionBox>
-          </AnimatePresence>
-        </ModalBody>
+                    <Box pt={{ base: 6, md: 12 }}>
+                      <Content />
+                    </Box>
+                  </Step>
+                ))}
+              </Steps>
+            </Box>
+          </ModalBody>
+        )}
       </MotionModalContent>
     </Modal>
   )
 }
 
-const CreatePoapWrapper = ({ isOpen, onClose, onOpen }: Props): JSX.Element => (
-  <CreatePoapProvider onClose={onClose}>
+const CreatePoapWrapper = ({
+  isOpen,
+  onClose,
+  onOpen,
+  discordServerId,
+}: WrapperProps): JSX.Element => (
+  <CreatePoapProvider onClose={onClose} discordServerId={discordServerId}>
     <CreatePoap {...{ isOpen, onClose, onOpen }} />
   </CreatePoapProvider>
 )

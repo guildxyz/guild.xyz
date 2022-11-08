@@ -1,15 +1,15 @@
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import useGuild from "components/[guild]/hooks/useGuild"
+import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 import { SummonMembersForm } from "../SummonMembers"
 
 const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
+  const { addDatadogAction, addDatadogError } = useDatadog()
 
-  const { guildPlatforms } = useGuild()
+  const { mutateGuild } = useGuild()
 
   const toast = useToast()
 
@@ -22,20 +22,23 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
 
   const useSubmitResponse = useSubmitWithSign(sendJoin, {
     onError: (error) => {
+      const simpleError = error?.errors?.[0]?.msg
+      const processedError = processConnectorError(error)
+
       toast({
         status: "error",
-        title: `Falied to send ${type === "JOIN" ? "join" : "claim"} button`,
-        description: error?.errors?.[0]?.msg,
+        title: `Failed to send ${type === "JOIN" ? "join" : "claim"} button`,
+        description: simpleError ?? processedError,
       })
 
-      if (type === "JOIN")
-        addDatadogError("Discord button send error", { error }, "custom")
+      if (type === "JOIN") addDatadogError("Discord button send error", { error })
     },
     onSuccess: () => {
       toast({
         status: "success",
         title: `${type === "JOIN" ? "Join" : "Claim"} button sent!`,
       })
+      mutateGuild()
       onSuccess?.()
       if (type === "JOIN") addDatadogAction("Successfully sent Discord button")
     },
@@ -46,7 +49,6 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
     onSubmit: (data) =>
       useSubmitResponse.onSubmit({
         ...data,
-        serverId: guildPlatforms?.[0]?.platformGuildId,
         isJoinButton: type === "JOIN",
       }),
   }

@@ -17,10 +17,11 @@ import { File, Upload } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { useCreatePoapContext } from "../components/CreatePoapContext"
+import usePoapLinks from "../hooks/usePoapLinks"
 import useUploadMintLinks from "../hooks/useUploadMintLinks"
 
 const UploadMintLinks = (): JSX.Element => {
-  const { nextStep } = useCreatePoapContext()
+  const { poapData, nextStep, onCloseHandler } = useCreatePoapContext()
 
   const methods = useForm<{ mintLinks: string }>({ mode: "all" })
   const mintLinksInputValue = useWatch({
@@ -28,20 +29,27 @@ const UploadMintLinks = (): JSX.Element => {
     name: "mintLinks",
   })
 
-  const { onSubmit, isLoading, response } = useUploadMintLinks()
+  const { poapLinks } = usePoapLinks(poapData?.id)
+  const [initialTotalLinks, setInitialTotalLinks] = useState<number>(undefined)
+
+  useEffect(() => {
+    if (!poapLinks || typeof initialTotalLinks !== "undefined") return
+    setInitialTotalLinks(poapLinks.total)
+  }, [poapLinks])
+
+  const { onSubmit, isLoading, loadingText, response } = useUploadMintLinks()
 
   useEffect(() => {
     if (!response) return
-    nextStep()
+    if (initialTotalLinks === 0) nextStep()
+    else onCloseHandler()
   }, [response])
 
   const [mintLinks, setMintLinks] = useState<string[]>(null)
 
-  const { poapData } = useCreatePoapContext()
-
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
-    accept: "text/plain",
+    accept: { "text/plain": [".txt"] },
     onDrop: (accepted) => {
       if (accepted.length > 0) parseTxt(accepted[0])
     },
@@ -71,7 +79,6 @@ const UploadMintLinks = (): JSX.Element => {
         return
       }
 
-      // console.log("GOOOOD.")
       methods.setValue("mintLinks", lines.join("\n"))
     }
 
@@ -85,10 +92,10 @@ const UploadMintLinks = (): JSX.Element => {
 
   return (
     <VStack spacing={6} alignItems={{ base: "start", md: "center" }}>
-      <Text textAlign={{ base: "left", md: "center" }} mb={{ base: 0, md: 4 }}>
-        Please paste your mint links for the <b>{poapData?.name}</b> POAP in the
-        textarea below. Once you set up the bot, we'll send these links to the users
-        who'd like to claim your POAP
+      <Text w="full">
+        {initialTotalLinks > 0
+          ? `You've uploaded ${initialTotalLinks} mint links so far.`
+          : "The POAP Curation Body will review your petition according to the POAP drop policies and you'll receive a confirmation email after it is reviewed. Then, you'll be able to upload the received mint links in the form below."}
       </Text>
 
       <Stack w="full" spacing={4}>
@@ -96,7 +103,9 @@ const UploadMintLinks = (): JSX.Element => {
           isInvalid={!!fileRejections?.[0] || !!regexError}
           textAlign="left"
         >
-          <FormLabel>Upload mint links</FormLabel>
+          <FormLabel>{`Upload ${
+            initialTotalLinks > 0 ? "more " : ""
+          } mint links`}</FormLabel>
           <Button {...getRootProps()} as="label" leftIcon={<File />} h={10}>
             <input {...getInputProps()} hidden />
             {isDragActive ? "Drop the file here" : "Upload .txt"}
@@ -150,7 +159,7 @@ const UploadMintLinks = (): JSX.Element => {
           colorScheme="indigo"
           onClick={() => onSubmit({ poapId: poapData?.id, links: mintLinks })}
           isLoading={isLoading}
-          loadingText="Saving mint links..."
+          loadingText={loadingText}
           isDisabled={!mintLinks?.length || isLoading || response}
           leftIcon={<Icon as={Upload} />}
         >

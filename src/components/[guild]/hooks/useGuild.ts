@@ -1,77 +1,42 @@
-import { useSubmitWithSign } from "hooks/useSubmit"
+import useIsSuperAdmin from "hooks/useIsSuperAdmin"
+import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
-import { useEffect, useMemo, useState } from "react"
-import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
 import { Guild } from "types"
+import { useFetcherWithSign } from "utils/fetcher"
+import useUser from "./useUser"
 
 const useGuild = (guildId?: string | number) => {
   const router = useRouter()
 
-  const { isSigning, onSubmit, response, signLoadingText } = useSubmitWithSign(
-    async ({ validation }) => ({
-      method: "POST",
-      validation,
-      timestamp: Date.now(),
-      body: {},
-    })
-  )
-
-  const { data: validation, mutate: mutateValidation } = useSWR(
-    "guildValidation",
-    () => undefined,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      refreshInterval: 0,
-      revalidateOnMount: false,
-      revalidateOnReconnect: false,
-    }
-  )
-
-  useEffect(() => {
-    if (response) mutateValidation(response, { revalidate: false })
-  }, [response, mutateValidation])
-
-  const [prevGuild, setPrevGuild] = useState<Guild>(undefined)
+  const { addresses } = useUser()
+  const isSuperAdmin = useIsSuperAdmin()
 
   const id = guildId ?? router.query.guild
 
-  const endpoint = validation ? `/guild/details/${id}` : `/guild/${id}`
+  const { ready, keyPair } = useKeyPair()
+  const fetcherWithSign = useFetcherWithSign()
 
-  const { data, isValidating, error } = useSWR<Guild>(
-    id ? [endpoint, validation] : null,
-    null,
-    validation
-      ? {
-          refreshInterval: 0,
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-          revalidateIfStale: false,
-          revalidateOnMount: true,
-          fallbackData: prevGuild,
-        }
-      : {
-          revalidateOnMount: true,
-          fallbackData: prevGuild,
-        }
+  const { data, mutate, isValidating } = useSWRImmutable<Guild>(
+    id ? `/guild/${id}` : null
   )
 
-  useEffect(() => {
-    if (data) setPrevGuild(data)
-  }, [data])
+  const isAdmin = !!data?.admins?.some(
+    (admin) => admin.address === addresses?.[0].toLowerCase()
+  )
 
-  const fetchedAsOwner = useMemo(
-    () => !!data && data !== prevGuild && !error && !!validation,
-    [data, error, validation] // Do not include prevGuild, as it would "cancel" the true value when it gets the "admin guild"
+  const { data: dataDetails, mutate: mutateDetails } = useSWRImmutable<Guild>(
+    id && ready && keyPair && (isAdmin || isSuperAdmin)
+      ? [`/guild/details/${id}`, { method: "POST", body: {} }]
+      : null,
+    fetcherWithSign
   )
 
   return {
-    ...(data ?? prevGuild),
-    isSigning,
-    isLoading: isValidating,
-    signLoadingText,
-    fetchAsOwner: () => onSubmit(),
-    fetchedAsOwner,
+    ...(dataDetails ?? data),
+    isDetailed: !!dataDetails,
+    isLoading: !data && isValidating,
+    mutateGuild: data ? mutateDetails : mutate,
   }
 }
 

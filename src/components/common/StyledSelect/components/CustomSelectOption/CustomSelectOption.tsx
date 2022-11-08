@@ -12,11 +12,10 @@ const CustomSelectOption = ({
    * and a simple CSS hover is enough for us. Source:
    * https://github.com/JedWatson/react-select/issues/3128
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { onMouseMove, onMouseOver, ...filteredInnerProps } = innerProps
 
   const focusedBg = useColorModeValue("blackAlpha.100", "gray.600")
-
-  if (isDisabled) return null
 
   return (
     <Flex
@@ -24,11 +23,12 @@ const CustomSelectOption = ({
       py={2}
       width="full"
       alignItems={"center"}
-      cursor="pointer"
+      cursor={isDisabled ? "not-allowed" : "pointer"}
       transition="0.2s ease"
       bgColor={isFocused ? focusedBg : undefined}
-      _hover={{ bgColor: focusedBg }}
+      _hover={!isDisabled && { bgColor: focusedBg }}
       title={data.label}
+      opacity={isDisabled && ".3"}
       {...filteredInnerProps}
     >
       {data.img &&
@@ -37,7 +37,7 @@ const CustomSelectOption = ({
         ) : (
           data.img
         ))}
-      <Text fontWeight="semibold" as="span" isTruncated>
+      <Text fontWeight="semibold" as="span" noOfLines={1}>
         {data.label}
       </Text>
       {data.details && (
@@ -50,7 +50,7 @@ const CustomSelectOption = ({
           minW="max-content"
           fontSize="sm"
           fontWeight="semibold"
-          isTruncated
+          noOfLines={1}
         >
           {data.details}
         </Text>

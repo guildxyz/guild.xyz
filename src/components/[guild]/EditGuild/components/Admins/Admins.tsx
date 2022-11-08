@@ -1,16 +1,16 @@
 import {
-  Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Tag,
   usePrevious,
 } from "@chakra-ui/react"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import GuildAvatar from "components/common/GuildAvatar"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildMembers from "hooks/useGuildMembers"
-import { LockSimple } from "phosphor-react"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useUniqueMembers from "hooks/useUniqueMembers"
 import { useMemo } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import useSWR from "swr"
@@ -37,21 +37,14 @@ const fetchMemberOptions = (_: string, members: string[], provider: Web3Provider
 
 const Admins = () => {
   const { formState } = useFormContext()
-  const {
-    admins: guildAdmins,
-    fetchAsOwner,
-    fetchedAsOwner,
-    showMembers,
-    isSigning,
-    isLoading: isGuildLoading,
-    signLoadingText,
-  } = useGuild()
+  const { roles, admins: guildAdmins } = useGuild()
+  const { isOwner } = useGuildPermission()
   const ownerAddress = useMemo(
     () => guildAdmins?.find((admin) => admin.isOwner)?.address,
     [guildAdmins]
   )
   const { provider } = useWeb3React()
-  const members = useGuildMembers()
+  const members = useUniqueMembers(roles)
 
   const {
     field: { onChange, ref, value: admins, onBlur },
@@ -100,63 +93,50 @@ const Admins = () => {
 
   const isLoading = !guildAdmins || !options || !adminOptions || !memberOptions
 
-  const loadingText =
-    signLoadingText || (isGuildLoading && "Loading admins") || "Loading"
-
   return (
     <>
       <FormControl w="full" isInvalid={!!formState.errors.admins}>
-        <FormLabel>Admins</FormLabel>
+        <FormLabel>
+          Admins {!isOwner && <Tag>only editable by the Guild owner</Tag>}
+        </FormLabel>
 
-        {!showMembers && !fetchedAsOwner ? (
-          <Button
-            onClick={fetchAsOwner}
-            isLoading={isSigning || isGuildLoading}
-            loadingText={loadingText}
-            spinnerPlacement="end"
-            rightIcon={<LockSimple />}
-            variant="outline"
-            w="full"
-            justifyContent={"space-between"}
-          >
-            Sign to view admins
-          </Button>
-        ) : (
-          <AdminSelect
-            placeholder={!isLoading && "Add address or search members"}
-            name="admins"
-            ref={(el) => {
-              ref(el)
-              if (!el?.inputRef) return
-              setTimeout(() => {
-                el.inputRef?.addEventListener("paste", (event) => {
-                  const pastedData = event.clipboardData
-                    .getData("text")
-                    ?.trim()
-                    ?.toLowerCase()
+        <AdminSelect
+          placeholder={!isLoading && "Add address or search members"}
+          name="admins"
+          ref={(el) => {
+            ref(el)
+            if (!el?.inputRef) return
+            setTimeout(() => {
+              el.inputRef?.addEventListener("paste", (event) => {
+                const pastedData = event.clipboardData
+                  .getData("text")
+                  ?.trim()
+                  ?.toLowerCase()
 
-                  if (!ADDRESS_REGEX.test(pastedData)) return
-                  event.preventDefault()
-                  if (admins.includes(pastedData)) return
-                  onChange([...admins, pastedData])
-                  el.inputRef.focus()
-                })
-              }, 100)
-            }}
-            value={adminOptions}
-            isMulti
-            options={memberOptions ?? prevMemberOptions}
-            onBlur={onBlur}
-            onChange={(selectedOption: SelectOption[]) => {
-              onChange(selectedOption?.map((option) => option.value.toLowerCase()))
-            }}
-            isLoading={isLoading}
-            isClearable={false}
-            chakraStyles={{ valueContainer: (base) => ({ ...base, py: 2 }) }}
-          />
-        )}
+                if (!ADDRESS_REGEX.test(pastedData)) return
+                event.preventDefault()
+                if (admins.includes(pastedData)) return
+                onChange([...admins, pastedData])
+                el.inputRef.focus()
+              })
+            }, 100)
+          }}
+          value={adminOptions}
+          isMulti
+          options={memberOptions ?? prevMemberOptions}
+          onBlur={onBlur}
+          onChange={(selectedOption: SelectOption[]) => {
+            onChange(selectedOption?.map((option) => option.value.toLowerCase()))
+          }}
+          isLoading={isLoading}
+          isClearable={false}
+          isDisabled={!isOwner}
+          chakraStyles={{ valueContainer: (base) => ({ ...base, py: 2 }) }}
+        />
 
-        <FormErrorMessage>{formState.errors.admins?.message}</FormErrorMessage>
+        <FormErrorMessage>
+          {formState.errors.admins?.message as string}
+        </FormErrorMessage>
       </FormControl>
     </>
   )

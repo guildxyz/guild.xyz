@@ -1,6 +1,9 @@
-import { Tag, TagLeftIcon, Text, useDisclosure } from "@chakra-ui/react"
+import { Text, useDisclosure, Wrap } from "@chakra-ui/react"
+import Button from "components/common/Button"
+import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { Check } from "phosphor-react"
+import useDatadog from "components/_app/Datadog/useDatadog"
+import { Check, DiscordLogo, TwitterLogo } from "phosphor-react"
 import { PlatformType } from "types"
 import PaginationButtons from "../PaginationButtons"
 import SendDiscordJoinButtonModal from "./components/SendDiscordJoinButtonModal"
@@ -13,44 +16,80 @@ type Props = {
 
 export type SummonMembersForm = {
   channelId: string
+  serverId: string
   title: string
   description: string
   button: string
 }
 
-const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
+const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
+  const { addDatadogAction } = useDatadog()
+
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { guildPlatforms } = useGuild()
+  const { guildPlatforms, urlName } = useGuild()
 
   const discordPlatform = guildPlatforms?.find(
     (p) => p.platformId === PlatformType.DISCORD
   )
-  const hasJoinButton = discordPlatform.platformGuildData?.joinButton !== false
+  const hasJoinButton = discordPlatform?.platformGuildData?.joinButton !== false
+
+  const { onSubmit, isLoading, response } = useEditGuild()
+  const handleFinish = () => {
+    onSubmit({ onboardingComplete: true })
+  }
 
   return (
     <>
-      {hasJoinButton ? (
-        <Tag colorScheme={"DISCORD"} variant="solid">
-          <TagLeftIcon as={Check} />
-          Join button already sent to Discord
-        </Tag>
-      ) : (
-        <Text>
-          If you're satisfied with everything, it's time to invite your community to
-          join!
-        </Text>
-      )}
+      <Text mb="2">
+        If you're satisfied with everything, it's time to invite your community to
+        join!
+      </Text>
+      <Wrap>
+        {discordPlatform &&
+          (hasJoinButton ? (
+            <Button h="10" isDisabled colorScheme="DISCORD" leftIcon={<Check />}>
+              Join button sent to Discord
+            </Button>
+          ) : (
+            <Button
+              h="10"
+              onClick={onOpen}
+              colorScheme="DISCORD"
+              leftIcon={<DiscordLogo />}
+            >
+              Send Discord join button
+            </Button>
+          ))}
+        <Button
+          as="a"
+          h="10"
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+            `Just summoned my guild on @guildxyz! Join me on my noble quest: guild.xyz/${urlName}`
+          )}`}
+          target="_blank"
+          leftIcon={<TwitterLogo />}
+          colorScheme="TWITTER"
+          onClick={() => {
+            addDatadogAction("click on Share [onboarding]")
+          }}
+        >
+          Share
+        </Button>
+      </Wrap>
       <PaginationButtons
         activeStep={activeStep}
         prevStep={prevStep}
-        nextStep={hasJoinButton ? nextStep : onOpen}
-        nextLabel={hasJoinButton ? "Finish" : "Send Discord join button"}
+        nextStep={handleFinish}
+        nextLabel="Finish"
+        nextLoading={isLoading || response}
       />
-      <SendDiscordJoinButtonModal
-        isOpen={isOpen}
-        onClose={onClose}
-        onSuccess={nextStep}
-      />
+      {discordPlatform && (
+        <SendDiscordJoinButtonModal
+          isOpen={isOpen}
+          onClose={onClose}
+          serverId={discordPlatform.platformGuildId}
+        />
+      )}
     </>
   )
 }

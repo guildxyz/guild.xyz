@@ -13,7 +13,7 @@ import { Alert } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { SignOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
-import useIsMember from "../RolesByPlatform/components/JoinButton/hooks/useIsMember"
+import useIsMember from "../hooks/useIsMember"
 import useLeaveGuild from "./hooks/useLeaveGuild"
 
 const LeaveButton = () => {

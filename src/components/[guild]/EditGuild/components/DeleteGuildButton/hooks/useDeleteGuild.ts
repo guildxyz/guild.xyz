@@ -8,7 +8,7 @@ import { useFormContext } from "react-hook-form"
 import fetcher from "utils/fetcher"
 
 type Data = {
-  deleteFromDiscord?: boolean
+  removePlatformAccess?: number
 }
 
 const useDeleteGuild = () => {
@@ -43,6 +43,7 @@ const useDeleteGuild = () => {
       router.push("/explorer")
     },
     onError: (error) => showErrorToast(error),
+    forcePrompt: true,
   })
 }
 

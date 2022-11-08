@@ -53,6 +53,11 @@ const processWalletError = (error: WalletError): ErrorInfo => {
         title: "Limit exceeded",
         description: "Request exceeds defined limit",
       }
+    case -32000:
+      return {
+        title: "Insufficient funds",
+        description: "Insufficient funds for gas * price + value",
+      }
     default:
       console.error(error)
       return {

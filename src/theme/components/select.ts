@@ -1,10 +1,10 @@
 import { selectAnatomy as parts } from "@chakra-ui/anatomy"
 import {
-  mode,
   PartsStyleFunction,
   PartsStyleObject,
   SystemStyleFunction,
-} from "@chakra-ui/theme-tools"
+} from "@chakra-ui/react"
+import { mode } from "@chakra-ui/theme-tools"
 import Input from "./input"
 
 const sizes: Record<string, PartsStyleObject<typeof parts>> = {
@@ -15,11 +15,9 @@ const sizes: Record<string, PartsStyleObject<typeof parts>> = {
   },
 }
 
-const baseStyleField: SystemStyleFunction = (props) => {
-  return {
-    bg: mode("white", "blackAlpha.300")(props),
-  }
-}
+const baseStyleField: SystemStyleFunction = (props) => ({
+  bg: mode("white", "blackAlpha.300")(props),
+})
 
 const baseStyle: PartsStyleFunction<typeof parts> = (props) => ({
   field: baseStyleField(props),

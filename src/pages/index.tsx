@@ -24,8 +24,9 @@ const Page = (): JSX.Element => {
   const { triedEager } = useContext(Web3Connection)
 
   useEffect(() => {
-    if (!hasNavigated && triedEager && account) router.push("/explorer")
-  }, [hasNavigated, account, triedEager])
+    if (router.isReady && !hasNavigated && triedEager && account)
+      router.push("/explorer")
+  }, [hasNavigated, account, triedEager, router])
 
   // Setting up the dark mode, because this is a "static" page
   const { setColorMode } = useColorMode()
@@ -39,6 +40,7 @@ const Page = (): JSX.Element => {
       <LinkPreviewHead path="" />
       <Head>
         <title>Guild</title>
+        <meta name="og:title" content="Guild" />
         <meta
           name="description"
           content="Automated membership management for the platforms your community already use."

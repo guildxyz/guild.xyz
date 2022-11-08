@@ -1,3 +1,3 @@
-import EditGuild from "./EditGuild"
+import EditGuildButton from "./EditGuildButton"
 
-export default EditGuild
+export default EditGuildButton

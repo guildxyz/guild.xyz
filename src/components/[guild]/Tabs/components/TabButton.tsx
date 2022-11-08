@@ -1,4 +1,5 @@
-import { Box, Button, Tooltip } from "@chakra-ui/react"
+import { Box, Tooltip } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
 import { useRouter } from "next/router"
 import { PropsWithChildren } from "react"
@@ -18,7 +19,7 @@ const TabButton = ({
   ...rest
 }: PropsWithChildren<Props>): JSX.Element => {
   const router = useRouter()
-  const path = router.asPath.split("/")
+  const path = router.asPath.split("?")[0].split("/")
   const currentPath = path.pop()
   const isActive = currentPath === href
 

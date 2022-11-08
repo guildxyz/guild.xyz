@@ -1,14 +1,17 @@
-import { Chains } from "connectors"
+import { Chain, Chains } from "connectors"
 import useSWRImmutable from "swr/immutable"
-import { SupportedChains } from "types"
 import fetcher from "utils/fetcher"
 
 const CHAINS_ENDPOINTS = {
-  1: "unlock",
-  100: "xdai",
-  56: "bsc",
-  137: "polygon",
+  1: "mainnet",
+  5: "goerli",
   10: "optimism",
+  56: "bsc",
+  100: "gnosis",
+  137: "polygon",
+  42161: "arbitrum",
+  42220: "celo",
+  43114: "avalanche",
 }
 
 type Data = {
@@ -55,17 +58,17 @@ const fetchLocks = async (endpoint: string) => {
   return locks
 }
 
-const useLocks = (chain: SupportedChains) => {
+const useLocks = (chain: Chain) => {
   const chainId = Chains[chain]
 
   const { isValidating, data } = useSWRImmutable<Data[]>(
     chainId
-      ? `https://api.thegraph.com/subgraphs/name/unlock-protocol/${CHAINS_ENDPOINTS[chainId]}`
+      ? `https://api.thegraph.com/subgraphs/name/unlock-protocol/${CHAINS_ENDPOINTS[chainId]}-v2`
       : null,
     fetchLocks
   )
 
-  return { locks: data, isLoading: isValidating }
+  return { locks: data?.filter((lock) => !!lock), isLoading: isValidating }
 }
 
 export default useLocks

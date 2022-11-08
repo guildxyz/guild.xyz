@@ -1,8 +1,9 @@
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import useUser from "components/[guild]/hooks/useUser"
-import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import { useRouter } from "next/router"
+import { Poap } from "types"
 import fetcher from "utils/fetcher"
 
 type ClaimPoapBody = {
@@ -15,19 +16,21 @@ const fetchClaim = async (body: ClaimPoapBody) =>
     body,
   })
 
-const useClaimPoap = (onSuccess?: () => void) => {
-  const router = useRouter()
-
+const useClaimPoap = (poap: Poap) => {
   const { id } = useUser()
-  const { poap } = usePoap(router.query.fancyId?.toString())
-
   const showErrorToast = useShowErrorToast()
+
+  const { mutate: mutatePoapLinks } = usePoapLinks(poap?.id)
+  const triggerConfetti = useJsConfetti()
 
   return useSubmit<ClaimPoapBody, string>(
     async () => fetchClaim({ poapId: poap?.id, userId: id }),
     {
       onError: (error) => showErrorToast(error),
-      onSuccess: () => onSuccess?.(),
+      onSuccess: () => {
+        mutatePoapLinks()
+        triggerConfetti()
+      },
     }
   )
 }

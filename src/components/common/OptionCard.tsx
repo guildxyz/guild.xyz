@@ -1,4 +1,14 @@
-import { Box, Center, Grid, HStack, Img, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Center,
+  ChakraProps,
+  Grid,
+  HStack,
+  Img,
+  Skeleton,
+  SkeletonCircle,
+  Text,
+} from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { PropsWithChildren } from "react"
 
@@ -8,7 +18,7 @@ type Props = {
   description?: string
   image: string
   bgImage?: string
-}
+} & ChakraProps
 
 const OptionCard = ({
   size = "md",
@@ -17,8 +27,9 @@ const OptionCard = ({
   image,
   bgImage,
   children,
+  ...rest
 }: PropsWithChildren<Props>): JSX.Element => (
-  <Card>
+  <Card {...rest}>
     <Center
       py={size === "lg" ? { base: 12, md: 20 } : 8}
       position="relative"
@@ -53,9 +64,8 @@ const OptionCard = ({
       <Grid w="full">
         <Text
           as="h4"
-          isTruncated
-          fontSize={size === "lg" && { md: "lg" }}
-          fontWeight={{ base: size === "lg" ? "extrabold" : "bold", md: "bold" }}
+          noOfLines={1}
+          fontWeight={size === "lg" ? "extrabold" : "bold"}
           title={title}
         >
           {title}
@@ -69,4 +79,29 @@ const OptionCard = ({
   </Card>
 )
 
+type SkeletonProps = {
+  size?: "md" | "lg"
+}
+
+const OptionSkeletonCard = ({ size = "md" }: SkeletonProps) => (
+  <Card>
+    <Center py={size === "lg" ? { base: 12, md: 20 } : 8} bg="blackAlpha.100">
+      <SkeletonCircle pos="relative" boxSize={{ base: 20, md: 24 }} />
+    </Center>
+    <HStack
+      px={{ base: 5, md: size === "md" && 4 }}
+      py={size === "lg" ? 5 : 4}
+      spacing={6}
+      justifyContent="space-between"
+    >
+      <Grid gap={2.5}>
+        <Skeleton h={4} w={120} />
+        <Skeleton h={3} w={50} />
+      </Grid>
+      <Skeleton h={10} borderRadius="xl" w={100} opacity={0.4} />
+    </HStack>
+  </Card>
+)
+
 export default OptionCard
+export { OptionSkeletonCard }

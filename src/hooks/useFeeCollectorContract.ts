@@ -1,15 +1,10 @@
-import { useWeb3React } from "@web3-react/core"
 import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
 import useContract from "./useContract"
 
-enum FeeCollectorChain {
-  "0xeeA657619b91CeC1B8F4E82449DBcC7074f68894" = 5,
-}
+const FEE_COLLECTOR_ADDRESS = "0x8c82A71B629DB618847682cD3155e6742304B710"
 
-const useFeeCollectorContract = () => {
-  const { chainId } = useWeb3React()
-  return useContract(FeeCollectorChain[chainId], FEE_COLLECTOR_ABI, true)
-}
+const useFeeCollectorContract = () =>
+  useContract(FEE_COLLECTOR_ADDRESS, FEE_COLLECTOR_ABI, true)
 
 export default useFeeCollectorContract
-export { FeeCollectorChain }
+export { FEE_COLLECTOR_ADDRESS }

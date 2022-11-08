@@ -19,7 +19,7 @@ const Footer = (): JSX.Element => (
     >
       <SimpleGrid columns={6} gap={8}>
         <GridItem
-          colSpan={{ base: 3, md: 2 }}
+          colSpan={{ base: 3, md: 1 }}
           display="flex"
           alignItems="center"
           justifyContent={{ base: "center", md: "unset" }}
@@ -30,7 +30,7 @@ const Footer = (): JSX.Element => (
             maxH={{ base: "120px", lg: "140px" }}
           />
         </GridItem>
-        <GridItem colSpan={{ base: 3, md: 4 }}>
+        <GridItem colSpan={{ base: 3, md: 5 }}>
           <Stack
             w="full"
             h="full"
@@ -84,6 +84,15 @@ const Footer = (): JSX.Element => (
               fontFamily="display"
             >
               brand kit
+            </Link>
+            <Link
+              href="/privacy-policy"
+              fontSize={{ base: "xl", lg: "2xl" }}
+              whiteSpace="nowrap"
+              fontWeight="bold"
+              fontFamily="display"
+            >
+              privacy policy
             </Link>
           </Stack>
         </GridItem>

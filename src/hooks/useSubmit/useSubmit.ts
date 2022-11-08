@@ -1,23 +1,32 @@
+import { hexStripZeros } from "@ethersproject/bytes"
 import { keccak256 } from "@ethersproject/keccak256"
-import { Web3Provider } from "@ethersproject/providers"
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
-import { WalletConnect } from "@web3-react/walletconnect"
+import { Chains, RPC } from "connectors"
 import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
+import useKeyPair from "hooks/useKeyPair"
+import useLocalStorage from "hooks/useLocalStorage"
+import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import { useState } from "react"
-import { ValidationMethod, WalletConnectConnectionData } from "types"
-import useLocalStorage from "../useLocalStorage"
-
-import getFixedTimestamp from "./utils/getFixedTimestamp"
-import gnosisSafeSignCallback, {
-  MethodSignCallback,
-} from "./utils/gnosisSafeSignCallback"
+import useSWR from "swr"
+import { ValidationMethod } from "types"
+import { bufferToHex, strToBuffer } from "utils/bufferUtils"
+import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 type Options<ResponseType> = {
   onSuccess?: (response: ResponseType) => void
   onError?: (error: any) => void
 }
+
+type FetcherFunction<DataType, ResponseType> = ({
+  data,
+  validation,
+}: {
+  data: DataType
+  validation: Validation
+}) => Promise<ResponseType>
 
 const useSubmit = <DataType, ResponseType>(
   fetch: (data?: DataType) => Promise<ResponseType>,
@@ -45,44 +54,39 @@ const useSubmit = <DataType, ResponseType>(
     response,
     isLoading,
     error,
+    reset: () => {
+      setIsLoading(false)
+      setError(undefined)
+      setResponse(undefined)
+    },
   }
 }
 
-export type ValidationData = {
-  address: string
-  library: Web3Provider
-}
-
-export type WithValidation<D> = { data: D; validation: ValidationData }
+export type WithValidation<D> = { data: D; validation: Validation }
 
 export type Validation = {
-  params: {
-    method: ValidationMethod
-    addr: string
-    nonce: string
-    hash?: string
-    msg: string
-    chainId: string
-    ts: string
-  }
+  params: MessageParams
   sig: string
 }
 
 const DEFAULT_MESSAGE = "Please sign this message"
 
-const methodPeerMetaDatas = {
-  [ValidationMethod.EIP1271]: [
-    {
-      urlPrefix: "https://wallet.ambire.com",
-      nameRegex: /Ambire Wallet/i,
-    },
-    {
-      urlPrefix: "https://apps.gnosis-safe.io",
-      nameRegex: /Gnosis Safe Multisig/i,
-      signCallback: gnosisSafeSignCallback,
-      callbackLoadingText: "Safe transaction in progress",
-    },
-  ],
+const signCallbacks = [
+  {
+    nameRegex: /Gnosis Safe Multisig/i,
+    signCallback: gnosisSafeSignCallback,
+    loadingText: "Safe transaction in progress",
+  },
+]
+
+type MessageParams = {
+  msg: string
+  addr: string
+  method: ValidationMethod
+  chainId?: string
+  hash?: string
+  nonce: string
+  ts: string
 }
 
 const getMessage = ({
@@ -93,92 +97,91 @@ const getMessage = ({
   hash,
   nonce,
   ts,
-}: {
-  msg: string
-  addr: string
-  method: ValidationMethod
-  chainId: string
-  hash?: string
-  nonce: string
-  ts: string
-}) =>
+}: MessageParams) =>
   `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
     chainId ? `\nChainId: ${chainId}` : ""
   }${hash ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
 
 const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
 
-const useSubmitWithSign = <DataType, ResponseType>(
-  fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
+const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
+  fetch: FetcherFunction<DataType, ResponseType>,
   {
     message = DEFAULT_MESSAGE,
+    forcePrompt = false,
+    keyPair,
     ...options
-  }: Options<ResponseType> & { message?: string } = { message: DEFAULT_MESSAGE }
+  }: Options<ResponseType> & {
+    message?: string
+    forcePrompt?: boolean
+    keyPair: CryptoKeyPair
+  } = {
+    message: DEFAULT_MESSAGE,
+    forcePrompt: false,
+    keyPair: undefined,
+  }
 ) => {
-  const { account, provider, chainId, connector } = useWeb3React()
-  const [
-    {
-      peerMeta: { name, url },
-    },
-  ] = useLocalStorage<Partial<WalletConnectConnectionData>>("walletconnect", {
-    peerMeta: { name: "", url: "", description: "", icons: [] },
-  })
-
-  const isWalletConnect = connector instanceof WalletConnect
-
-  const [method, signCallback, callbackLoadingText] = Object.entries(
-    methodPeerMetaDatas
-  ).reduce<[number, MethodSignCallback, string]>(
-    (acc, [methodId, metaDatas]) => {
-      if (!!acc[0]) return acc
-      const wallet = metaDatas.find(
-        ({ urlPrefix, nameRegex }) =>
-          url.startsWith(urlPrefix) && nameRegex.test(name)
-      )
-      if (wallet) {
-        return [+methodId, wallet.signCallback, wallet.callbackLoadingText]
-      }
-      return acc
-    },
-    [undefined, undefined, undefined]
+  const { account, provider, chainId } = useWeb3React()
+  const { data: peerMeta } = useSWR<any>(
+    typeof window !== "undefined" ? "walletConnectPeerMeta" : null,
+    () => JSON.parse(window.localStorage.getItem("walletconnect")).peerMeta,
+    { refreshInterval: 200, revalidateOnMount: true }
   )
+
+  const timeInaccuracy = useTimeInaccuracy()
+  const [, setShouldFetchTimestamp] = useLocalStorage("shouldFetchTimestamp", false)
+
+  const defaultLoadingText =
+    forcePrompt || !keyPair ? DEFAULT_SIGN_LOADING_TEXT : undefined
 
   const [isSigning, setIsSigning] = useState<boolean>(false)
-  const [signLoadingText, setSignLoadingText] = useState<string>(
-    DEFAULT_SIGN_LOADING_TEXT
-  )
+  const [signLoadingText, setSignLoadingText] = useState<string>(defaultLoadingText)
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
+      setSignLoadingText(defaultLoadingText)
       setIsSigning(true)
       const validation = await sign({
         provider,
         address: account,
         payload: data ?? {},
-        chainId:
-          method === ValidationMethod.STANDARD ? undefined : chainId.toString(),
-        method: isWalletConnect
-          ? method ?? ValidationMethod.STANDARD
-          : ValidationMethod.STANDARD,
+        chainId: chainId.toString(),
+        forcePrompt,
+        keyPair,
         msg: message,
+        ts: Date.now() + timeInaccuracy,
       })
         .catch((error) => {
-          console.error(error)
+          if (error.code === 4001) {
+            console.info(error.message)
+          } else {
+            console.error(error)
+          }
           throw error
         })
         .then(async (val) => {
-          if (signCallback) {
-            setSignLoadingText(callbackLoadingText || DEFAULT_SIGN_LOADING_TEXT)
+          const callbackData = signCallbacks.find(({ nameRegex }) =>
+            nameRegex.test(peerMeta?.name)
+          )
+          if ((forcePrompt || !keyPair) && callbackData) {
+            setSignLoadingText(callbackData.loadingText || defaultLoadingText)
             const msg = getMessage(val.params)
-            await signCallback(msg, account, provider).finally(() =>
-              setSignLoadingText(DEFAULT_SIGN_LOADING_TEXT)
-            )
+            await callbackData
+              .signCallback(msg, account, chainId)
+              .finally(() => setSignLoadingText(defaultLoadingText))
           }
           return val
         })
         .finally(() => setIsSigning(false))
 
-      return fetch({ data: data as DataType, validation })
+      return fetch({ data: data as DataType, validation }).catch((e) => {
+        if (e?.message === "Invalid or expired timestamp!") {
+          setShouldFetchTimestamp(true)
+          location?.reload()
+        }
+
+        throw e
+      })
     },
     options
   )
@@ -190,49 +193,105 @@ const useSubmitWithSign = <DataType, ResponseType>(
   }
 }
 
-type SignProps = {
+const useSubmitWithSign = <DataType, ResponseType>(
+  fetch: FetcherFunction<DataType, ResponseType>,
+  {
+    message = DEFAULT_MESSAGE,
+    forcePrompt = false,
+    ...options
+  }: Options<ResponseType> & {
+    message?: string
+    forcePrompt?: boolean
+  } = {
+    message: DEFAULT_MESSAGE,
+    forcePrompt: false,
+  }
+) => {
+  const { keyPair } = useKeyPair()
+  return useSubmitWithSignWithParamKeyPair(fetch, {
+    message,
+    forcePrompt,
+    ...options,
+    keyPair,
+  })
+}
+
+export type SignProps = {
   provider: Web3Provider
   address: string
   payload: any
   chainId: string
-  method: ValidationMethod
-  msg: string
+  forcePrompt: boolean
+  keyPair?: CryptoKeyPair
+  msg?: string
+  ts: number
 }
 
 const sign = async ({
   provider,
   address,
   payload,
-  chainId,
-  method,
-  msg,
+  chainId: paramChainId,
+  keyPair,
+  forcePrompt,
+  msg = DEFAULT_MESSAGE,
+  ts,
 }: SignProps): Promise<Validation> => {
-  const addr = address.toLowerCase()
-  const nonce = randomBytes(32).toString("base64")
+  const payloadToSign = { ...payload }
+  delete payloadToSign?.keyPair
 
-  const hash =
-    Object.keys(payload).length > 0
-      ? keccak256(toUtf8Bytes(stringify(payload)))
-      : undefined
-  const ts = await getFixedTimestamp().catch(() => Date.now().toString())
-
-  const message = getMessage({ msg, addr, method, chainId, hash, nonce, ts })
-
-  const sig = await provider.getSigner(addr).signMessage(message)
-
-  return {
-    params: {
-      chainId,
-      msg,
-      method,
-      addr: address.toLowerCase(),
-      nonce,
-      hash,
-      ts,
-    },
-    sig,
+  const params: MessageParams = {
+    addr: address.toLowerCase(),
+    nonce: randomBytes(32).toString("base64"),
+    ts: ts.toString(),
+    hash:
+      Object.keys(payloadToSign).length > 0
+        ? keccak256(toUtf8Bytes(stringify(payloadToSign)))
+        : undefined,
+    method: null,
+    msg,
+    chainId: undefined,
   }
+  let sig = null
+
+  if (!!keyPair && !forcePrompt) {
+    params.method = ValidationMethod.KEYPAIR
+    sig = await window.crypto.subtle
+      .sign(
+        { name: "ECDSA", hash: "SHA-512" },
+        keyPair.privateKey,
+        strToBuffer(getMessage(params))
+      )
+      .then((signatureBuffer) => bufferToHex(signatureBuffer))
+  } else {
+    const rpcUrl = RPC[Chains[paramChainId]]?.rpcUrls?.[0]
+    const prov =
+      typeof rpcUrl === "string" && rpcUrl.length > 0
+        ? new JsonRpcProvider(rpcUrl)
+        : provider
+
+    const bytecode = await prov.getCode(address).catch((error) => {
+      console.error("Retrieving bytecode failed", error)
+      return null
+    })
+
+    const isSmartContract = bytecode && hexStripZeros(bytecode) !== "0x"
+
+    params.method = isSmartContract
+      ? ValidationMethod.EIP1271
+      : ValidationMethod.STANDARD
+
+    if (isSmartContract) {
+      params.chainId = paramChainId
+    }
+
+    sig = await provider
+      .getSigner(address.toLowerCase())
+      .signMessage(getMessage(params))
+  }
+
+  return { params, sig }
 }
 
 export default useSubmit
-export { useSubmitWithSign }
+export { useSubmitWithSignWithParamKeyPair, sign, useSubmitWithSign }

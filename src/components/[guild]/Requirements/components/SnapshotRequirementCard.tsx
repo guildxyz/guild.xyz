@@ -19,13 +19,12 @@ type Props = {
   requirement: Requirement
 }
 
-const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => {
+const SnapshotRequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
     <RequirementCard
-      requirement={requirement}
-      image="/requirementLogos/snapshot.jpg"
+      image="/requirementLogos/snapshot.png"
       footer={
         <>
           <RequirementButton
@@ -44,27 +43,24 @@ const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => {
             <Table
               variant="simple"
               w="full"
-              overflow="hidden"
-              sx={{ tableLayout: "fixed" }}
+              sx={{ tableLayout: "fixed", borderCollapse: "unset" }}
+              size="sm"
+              bg="blackAlpha.100"
+              borderWidth="1px"
+              borderRadius="md"
             >
               <Thead>
                 <Tr>
-                  <Th pl={0} pr={2} py={1}>
-                    Param
-                  </Th>
-                  <Th px={0} py={1}>
-                    Value
-                  </Th>
+                  <Th>Param</Th>
+                  <Th>Value</Th>
                 </Tr>
               </Thead>
               <Tbody fontWeight="normal" fontSize="xs">
                 {Object.entries(requirement.data?.strategy?.params || {})?.map(
                   ([name, value]) => (
                     <Tr key={name}>
-                      <Td pl={0} pr={2} py={0.5}>
-                        {name}
-                      </Td>
-                      <Td px={0} py={0.5}>
+                      <Td>{name}</Td>
+                      <Td>
                         {value?.toString()?.startsWith("0x") ? (
                           <CopyableAddress
                             address={value.toString()}
@@ -83,6 +79,7 @@ const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => {
           </Collapse>
         </>
       }
+      {...rest}
     >
       {`Satisfy the ${requirement.data?.strategy?.name} snapshot strategy`}
     </RequirementCard>

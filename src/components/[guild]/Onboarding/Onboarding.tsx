@@ -1,23 +1,17 @@
 import {
   Box,
   Collapse,
-  Heading,
   HStack,
   Text,
   useBreakpointValue,
   useColorModeValue,
-  VStack,
-  Wrap,
 } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
 import { Player } from "@lottiefiles/react-lottie-player"
 import { Step, Steps, useSteps } from "chakra-ui-steps"
-import Button from "components/common/Button"
 import Card from "components/common/Card"
-import type { AnimationItem } from "lottie-web"
-import { useRouter } from "next/router"
-import { TwitterLogo } from "phosphor-react"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { useEffect, useState } from "react"
+import useGuild from "../hooks/useGuild"
 import AddRolesAndRequirements from "./components/AddRolesAndRequirements"
 import { useOnboardingContext } from "./components/OnboardingProvider"
 import PaginationButtons from "./components/PaginationButtons"
@@ -33,7 +27,7 @@ const GUILD_CASTLE_COMPLETED_FRAME = 38
 
 const steps = [
   {
-    label: "Add roles & requirements",
+    label: "Roles, requirements, rewards",
     content: AddRolesAndRequirements,
   },
   {
@@ -55,13 +49,14 @@ const steps = [
 ]
 
 const Onboarding = (): JSX.Element => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+  const { addDatadogAction } = useDatadog()
+  const { onboardingComplete } = useGuild()
 
   const { localStep, setLocalStep } = useOnboardingContext()
   const { nextStep, prevStep, activeStep, setStep } = useSteps({
     initialStep: localStep,
   })
-  const router = useRouter()
+
   const orientation = useBreakpointValue<"vertical" | "horizontal">({
     base: "vertical",
     md: "horizontal",
@@ -69,14 +64,12 @@ const Onboarding = (): JSX.Element => {
   const isDarkMode = useColorModeValue(false, true)
 
   useEffect(() => {
-    setLocalStep(activeStep >= steps.length ? undefined : activeStep)
+    setLocalStep(activeStep === steps.length ? undefined : activeStep)
   }, [activeStep])
 
   const [prevActiveStep, setPrevActiveStep] = useState(-1)
 
-  const [shareCardDismissed, setShareCardDismissed] = useState<boolean>(false)
-
-  const [player, setPlayer] = useState<AnimationItem>()
+  const [player, setPlayer] = useState<any>()
 
   useEffect(() => {
     if (!player) return
@@ -91,7 +84,7 @@ const Onboarding = (): JSX.Element => {
   }, [activeStep, player])
 
   return (
-    <Collapse in={!shareCardDismissed} unmountOnExit>
+    <Collapse in={!onboardingComplete} unmountOnExit>
       <Card
         borderColor="primary.500"
         borderWidth={3}
@@ -112,109 +105,53 @@ const Onboarding = (): JSX.Element => {
         }
         sx={{ "*": { zIndex: 1 } }}
       >
-        {activeStep !== steps.length ? (
-          <>
-            <Steps
-              onClickStep={
-                orientation === "horizontal"
-                  ? (step) => {
-                      addDatadogAction(`click on step ${step + 1} [onboarding]`)
-                      setStep(step)
-                    }
-                  : undefined
-              }
-              activeStep={activeStep}
-              colorScheme="primary"
-              orientation={orientation}
-              size="sm"
-            >
-              {steps.map(({ label, content: Content }) => (
-                <Step label={label} key={label}>
-                  <Box pt={{ md: 6 }} textAlign="left">
-                    <Content {...{ activeStep, prevStep, nextStep }} />
-                  </Box>
-                </Step>
-              ))}
-            </Steps>
-            <HStack
-              spacing={3}
-              pos="absolute"
-              bottom={6}
-              opacity={0.8}
-              d={{ base: "none", md: "flex" }}
-            >
-              <Player
-                autoplay
-                keepLastFrame
-                speed={0.5}
-                src="/logo_lottie.json"
-                style={{
-                  height: 17,
-                  width: 17,
-                  opacity: 0.5,
-                }}
-                lottieRef={(instance) => {
-                  setPlayer(instance)
-                }}
-              />
-              <Text colorScheme="gray" fontSize={"sm"} fontWeight="medium">
-                guild {(activeStep + 1) * 25}% ready
-              </Text>
-            </HStack>
-          </>
-        ) : (
-          <VStack px={4} pt={3} pb="3" width="full">
-            <HStack mb="2">
-              <Player
-                autoplay
-                keepLastFrame
-                speed={2}
-                src="/logo_lottie.json"
-                style={{
-                  height: 20,
-                  width: 20,
-                }}
-                lottieRef={(instance) => {
-                  setPlayer(instance)
-                }}
-              />
-              <Heading fontSize="xl" textAlign="center">
-                Your guild is ready!
-              </Heading>
-            </HStack>
-            <Text textAlign="center">
-              Summon more members by sharing it on Twitter
-            </Text>
-            <Wrap mx="auto" pt="2">
-              <Button
-                as="a"
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  `Just summoned my guild on @guildxyz! Join me on my noble quest: guild.xyz/${router.query.guild}`
-                )}`}
-                target="_blank"
-                leftIcon={<TwitterLogo />}
-                colorScheme="TWITTER"
-                onClick={() => {
-                  addDatadogAction("click on Share [onboarding]")
-                  setShareCardDismissed(true)
-                }}
-                h="10"
-              >
-                Share
-              </Button>
-              <Button
-                variant={"ghost"}
-                onClick={() => {
-                  addDatadogAction("click on Dismiss [onboarding]")
-                  setShareCardDismissed(true)
-                }}
-                h="10"
-              >
-                Dismiss
-              </Button>
-            </Wrap>
-          </VStack>
-        )}
+        <Steps
+          onClickStep={
+            orientation === "horizontal"
+              ? (step) => {
+                  addDatadogAction(`click on step ${step + 1} [onboarding]`)
+                  setStep(step)
+                }
+              : undefined
+          }
+          activeStep={activeStep}
+          colorScheme="primary"
+          orientation={orientation}
+          size="sm"
+        >
+          {steps.map(({ label, content: Content }) => (
+            <Step label={label} key={label}>
+              <Box pt={{ md: 6 }} textAlign="left">
+                <Content {...{ activeStep, prevStep, nextStep }} />
+              </Box>
+            </Step>
+          ))}
+        </Steps>
+        <HStack
+          spacing={3}
+          pos="absolute"
+          bottom={6}
+          opacity={0.8}
+          display={{ base: "none", md: "flex" }}
+        >
+          <Player
+            autoplay
+            keepLastFrame
+            speed={0.5}
+            src="/logo_lottie.json"
+            style={{
+              height: 17,
+              width: 17,
+              opacity: 0.5,
+            }}
+            lottieRef={(instance) => {
+              setPlayer(instance)
+            }}
+          />
+          <Text colorScheme="gray" fontSize={"sm"} fontWeight="medium">
+            guild {(activeStep + 1) * 25}% ready
+          </Text>
+        </HStack>
       </Card>
     </Collapse>
   )

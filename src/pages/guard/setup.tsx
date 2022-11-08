@@ -4,7 +4,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import EntryChannel from "components/create-guild/EntryChannel"
 import Disclaimer from "components/guard/setup/ServerSetupCard/components/Disclaimer"
 import PickSecurityLevel from "components/guard/setup/ServerSetupCard/components/PickSecurityLevel"
-import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
+import useIsConnected from "hooks/useIsConnected"
 import useServerData from "hooks/useServerData"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
@@ -48,13 +48,13 @@ const defaultValues = {
 const Page = (): JSX.Element => {
   const router = useRouter()
 
-  const { authorization } = useDCAuth("guilds")
+  const isConnected = useIsConnected("DISCORD")
 
   useEffect(() => {
-    if (!authorization) {
+    if (!isConnected) {
       router.push("/guard")
     }
-  }, [authorization])
+  }, [isConnected])
 
   const methods = useFormContext<GuildFormType>()
   const { errors } = useFormState()
@@ -73,7 +73,10 @@ const Page = (): JSX.Element => {
   return (
     <Layout title={selectedServer ? "Set up Guild Guard" : "Select a server"}>
       <FormProvider {...methods}>
-        <DiscordGuildSetup {...{ defaultValues, selectedServer }}>
+        <DiscordGuildSetup
+          {...{ defaultValues, selectedServer }}
+          fieldName="guildPlatforms.0.platformGuildId"
+        >
           <EntryChannel
             channels={channels}
             label="Entry channel"
@@ -87,7 +90,7 @@ const Page = (): JSX.Element => {
             errorMessage={errors.guildPlatform?.[0]?.inviteChannel}
           />
 
-          <PickSecurityLevel />
+          <PickSecurityLevel rolePlatformIndex={0} />
 
           <Disclaimer />
         </DiscordGuildSetup>

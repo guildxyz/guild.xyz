@@ -4,7 +4,6 @@ import {
   Heading,
   HStack,
   Text,
-  useBreakpointValue,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
@@ -25,6 +24,7 @@ type Props = {
   action?: ReactNode | undefined
   background?: string
   backgroundImage?: string
+  backgroundOffset?: number
 } & HeaderProps
 
 const Layout = ({
@@ -36,18 +36,18 @@ const Layout = ({
   action,
   background,
   backgroundImage,
+  backgroundOffset = 128,
   showBackButton,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
-  const isMobile = useBreakpointValue({ base: true, sm: false })
 
   useIsomorphicLayoutEffect(() => {
     if ((!background && !backgroundImage) || !childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
-    setBgHeight(`${rect.top + (window?.scrollY ?? 0) + (isMobile ? 128 : 116)}px`)
+    setBgHeight(`${rect.top + (window?.scrollY ?? 0) + backgroundOffset}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, description, childrenWrapper?.current, action])
 
@@ -76,7 +76,7 @@ const Layout = ({
         }
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
-        d="flex"
+        display="flex"
         flexDir={"column"}
       >
         {(background || backgroundImage) && (
@@ -132,7 +132,7 @@ const Layout = ({
                 w="full"
                 fontWeight="semibold"
                 color={textColor}
-                mb="-8px !important"
+                mb="-2 !important"
               >
                 {parseDescription(description)}
               </Text>

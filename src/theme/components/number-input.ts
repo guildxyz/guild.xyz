@@ -1,5 +1,5 @@
 import { numberInputAnatomy as parts } from "@chakra-ui/anatomy"
-import type { PartsStyleObject } from "@chakra-ui/theme-tools"
+import { PartsStyleObject } from "@chakra-ui/react"
 import Input from "./input"
 
 const { variants, defaultProps } = Input
@@ -38,9 +38,11 @@ const sizes = {
   lg: getSize("lg"),
 }
 
-export default {
+const styles = {
   parts: parts.keys,
   sizes,
   variants,
   defaultProps,
 }
+
+export default styles

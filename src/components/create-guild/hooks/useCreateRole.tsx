@@ -1,16 +1,17 @@
 import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useGuild from "components/[guild]/hooks/useGuild"
+import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
-import { unstable_serialize, useSWRConfig } from "swr"
+import { useSWRConfig } from "swr"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
@@ -19,9 +20,8 @@ import preprocessRequirements from "utils/preprocessRequirements"
 
 type RoleOrGuild = Role & { guildId: number }
 
-const useCreateRole = () => {
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
+const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
+  const { addDatadogAction, addDatadogError } = useDatadog()
   const toastIdRef = useRef<ToastId>()
   const { account } = useWeb3React()
 
@@ -31,7 +31,7 @@ const useCreateRole = () => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
-  const router = useRouter()
+  const { urlName, mutateGuild } = useGuild()
   const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   const fetchData = async ({
@@ -45,46 +45,43 @@ const useCreateRole = () => {
 
   const useSubmitResponse = useSubmitWithSign<any, RoleOrGuild>(fetchData, {
     onError: (error_) => {
-      addDatadogError(`Role creation error`, { error: error_ }, "custom")
-      showErrorToast(error_)
+      addDatadogError(`Role creation error`, { error: error_ })
+
+      const processedError = processConnectorError(error_)
+      showErrorToast(processedError || error_)
     },
     onSuccess: (response_) => {
-      if (router.query.guild) {
-        addDatadogAction(`Successful role creation`)
-        triggerConfetti()
+      addDatadogAction(`Successful role creation`)
 
-        toastIdRef.current = toast({
-          duration: 8000,
-          title: "Role successfully created",
-          description: (
-            <>
-              <Text>Let your guild know by sharing it on Twitter</Text>
-              <Button
-                as="a"
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I've just added a new role to my guild. Check it out, maybe you have access 😉
-guild.xyz/${router.query.guild} @guildxyz`)}`}
-                target="_blank"
-                bg={tweetButtonBackground}
-                leftIcon={<TwitterLogo weight="fill" />}
-                size="sm"
-                onClick={() => toast.close(toastIdRef.current)}
-                mt={3}
-                mb="1"
-                borderRadius="lg"
-              >
-                Share
-              </Button>
-            </>
-          ),
-          status: "success",
-        })
-      }
-      mutate(
-        unstable_serialize([
-          `/guild/${router.query.guild ?? response_.guildId}`,
-          undefined,
-        ])
-      )
+      if (mode === "CONFETTI") triggerConfetti()
+
+      toastIdRef.current = toast({
+        duration: 8000,
+        title: "Role successfully created",
+        description: (
+          <>
+            <Text>Let your guild know by sharing it on Twitter</Text>
+            <Button
+              as="a"
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I've just added a new role to my guild. Check it out, maybe you have access 😉
+guild.xyz/${urlName} @guildxyz`)}`}
+              target="_blank"
+              bg={tweetButtonBackground}
+              leftIcon={<TwitterLogo weight="fill" />}
+              size="sm"
+              onClick={() => toast.close(toastIdRef.current)}
+              mt={3}
+              mb="1"
+              borderRadius="lg"
+            >
+              Share
+            </Button>
+          </>
+        ),
+        status: "success",
+      })
+
+      mutateGuild()
       mutate(`/guild/access/${response_.guildId}/${account}`)
 
       matchMutate(/^\/guild\/address\//)
@@ -95,17 +92,16 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
   return {
     ...useSubmitResponse,
     onSubmit: (data) => {
-      // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-      data.requirements = preprocessRequirements(data?.requirements || [])
-      data.rolePlatforms[0].platformRoleData.gatedChannels = preprocessGatedChannels(
-        data.rolePlatforms?.[0]?.platformRoleData?.gatedChannels
-      )
+      data.requirements = preprocessRequirements(data?.requirements)
 
-      if (data.roleType === "NEW") {
-        delete data.rolePlatforms[0].rolePlatformId
-        delete data.activationInterval
-        delete data.includeUnauthenticated
-      }
+      data.rolePlatforms = data.rolePlatforms.map((rolePlatform) => {
+        if (rolePlatform.platformRoleData?.gatedChannels)
+          rolePlatform.platformRoleData.gatedChannels = preprocessGatedChannels(
+            rolePlatform.platformRoleData.gatedChannels
+          )
+        return rolePlatform
+      })
+
       delete data.roleType
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))

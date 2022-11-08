@@ -14,17 +14,11 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Link from "components/common/Link"
-import {
-  ArrowSquareOut,
-  Copy,
-  DownloadSimple,
-  Question,
-  Warning,
-} from "phosphor-react"
+import { ArrowRight, Copy, DownloadSimple, Question, Warning } from "phosphor-react"
 import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
-const BalancyCounter = ({ ...rest }) => {
+const BalancyCounterWithPopover = ({ ...rest }) => {
   const { holders, addresses, isLoading, inaccuracy, usedLogic } = useBalancy()
 
   const logic = useWatch({ name: "logic" })
@@ -43,21 +37,21 @@ const BalancyCounter = ({ ...rest }) => {
         <HStack>
           {inaccuracy > 0 && (
             <Tooltip
-              label={`We couldn't calculate holders for ${inaccuracy} requirement${
+              label={`Couldn't calculate holders for ${inaccuracy} requirement${
                 inaccuracy > 1 ? "s" : ""
               }.`}
             >
               <Warning color="gray" />
             </Tooltip>
           )}
-          <Text size="sm" color="gray" fontWeight="medium">
+          <Text fontSize="sm" color="gray" fontWeight="medium">
             {inaccuracy > 0 ? (usedLogic === "OR" ? "at least" : "at most") : ""}{" "}
             {isLoading ? <Spinner size="sm" color="gray" mx={2} /> : holders}{" "}
             {["NAND", "NOR"].includes(logic)
               ? `excluded address${holders > 1 ? "es" : ""}`
               : `potential member${holders > 1 ? "s" : ""}`}
           </Text>
-          <Popover trigger="hover" openDelay={0}>
+          <Popover trigger="hover" openDelay={0} size="lg">
             <PopoverTrigger>
               <Question color="gray" />
             </PopoverTrigger>
@@ -97,7 +91,7 @@ const BalancyCounter = ({ ...rest }) => {
                   fontSize="sm"
                   fontWeight={"medium"}
                 >
-                  Powered by{" "}
+                  {/* Powered by{" "}
                   <Link
                     href="https://twitter.com/balancy_io"
                     fontWeight="semibold"
@@ -105,6 +99,10 @@ const BalancyCounter = ({ ...rest }) => {
                   >
                     Balancy
                     <Icon as={ArrowSquareOut} mx="1" />
+                  </Link>*/}
+                  <Link href="/balancy" fontWeight="semibold" colorScheme={"blue"}>
+                    Go to Balancy playground
+                    <Icon as={ArrowRight} mx="1" />
                   </Link>
                 </Text>
               </PopoverBody>
@@ -118,4 +116,4 @@ const BalancyCounter = ({ ...rest }) => {
   )
 }
 
-export default BalancyCounter
+export default BalancyCounterWithPopover

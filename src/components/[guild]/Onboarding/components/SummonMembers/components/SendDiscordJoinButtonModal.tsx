@@ -9,12 +9,12 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import EntryChannel from "components/create-guild/EntryChannel"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import useDebouncedState from "hooks/useDebouncedState"
 import useServerData from "hooks/useServerData"
 import { useEffect } from "react"
@@ -24,19 +24,28 @@ import { SummonMembersForm } from "../SummonMembers"
 import PanelBody from "./PanelBody"
 import PanelButton from "./PanelButton"
 
-const SendDiscordJoinButtonModal = ({ isOpen, onClose, onSuccess }) => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+const SendDiscordJoinButtonModal = ({
+  isOpen,
+  onClose,
+  onSuccess = undefined,
+  serverId,
+}) => {
+  const { addDatadogAction } = useDatadog()
+
   const { isLoading, isSigning, onSubmit, signLoadingText } = useSendJoin(
     "JOIN",
-    onSuccess
+    () => {
+      onClose()
+      onSuccess?.()
+    }
   )
 
   const loadingText = signLoadingText || "Sending"
 
-  const { guildPlatforms, description, name } = useGuild()
+  const { description, name } = useGuild()
   const {
     data: { channels },
-  } = useServerData(guildPlatforms?.[0]?.platformGuildId)
+  } = useServerData(serverId)
 
   const methods = useForm<SummonMembersForm>({
     mode: "onSubmit",
@@ -45,6 +54,7 @@ const SendDiscordJoinButtonModal = ({ isOpen, onClose, onSuccess }) => {
       description: description || "Join this guild and get your role(s)!",
       button: `Join ${name ?? "Guild"}`,
       channelId: "0",
+      serverId,
     },
   })
 
@@ -106,7 +116,7 @@ const SendDiscordJoinButtonModal = ({ isOpen, onClose, onSuccess }) => {
             onClick={methods.handleSubmit((data) => {
               addDatadogAction("click on Send [discord join button]")
               onSubmit(data)
-            }, console.log)}
+            })}
             isLoading={isLoading || isSigning}
             loadingText={loadingText}
             isDisabled={isLoading || isSigning}

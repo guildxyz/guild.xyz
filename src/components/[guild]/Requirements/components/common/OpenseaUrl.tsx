@@ -10,12 +10,11 @@ type Props = {
 const OpenseaUrl = ({ requirement }: Props): JSX.Element => {
   const { data, isValidating } = useSWRImmutable(
     requirement.chain === "ETHEREUM"
-      ? `/api/opensea-asset-data?address=${requirement?.address}`
+      ? `/api/opensea-asset-data/${requirement?.address}`
       : null
   )
 
-  if (!data && isValidating)
-    return <RequirementButton isLoading loadingText="Loading..." iconSpacing="2" />
+  if (!data && isValidating) return <RequirementButton isLoading />
 
   if (!data && !isValidating) return <BlockExplorerUrl requirement={requirement} />
 

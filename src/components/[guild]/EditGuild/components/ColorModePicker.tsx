@@ -13,11 +13,10 @@ import { Moon, Sun } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 
 type Props = {
-  label?: string
   fieldName: string
 }
 
-const ColorModePicker = ({ label, fieldName }: Props): JSX.Element => {
+const ColorModePicker = ({ fieldName }: Props): JSX.Element => {
   const {
     register,
     formState: { errors },
@@ -28,7 +27,7 @@ const ColorModePicker = ({ label, fieldName }: Props): JSX.Element => {
 
   return (
     <VStack spacing={2} alignItems="start">
-      <FormControl isInvalid={errors[fieldName]}>
+      <FormControl isInvalid={!!errors[fieldName]}>
         <FormLabel>Color mode</FormLabel>
         <RadioGroup
           defaultValue={localThemeMode}
@@ -44,7 +43,7 @@ const ColorModePicker = ({ label, fieldName }: Props): JSX.Element => {
             </Radio>
           </HStack>
         </RadioGroup>
-        <FormErrorMessage>{errors[fieldName]?.message}</FormErrorMessage>
+        <FormErrorMessage>{errors[fieldName]?.message as string}</FormErrorMessage>
       </FormControl>
     </VStack>
   )

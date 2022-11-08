@@ -1,19 +1,12 @@
 import { useDisclosure } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import { useRouter } from "next/router"
-import {
-  createContext,
-  Dispatch,
-  PropsWithChildren,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react"
+import { createContext, PropsWithChildren, useEffect } from "react"
+import useDatadog from "../Datadog/useDatadog"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 
@@ -25,8 +18,6 @@ const Web3Connection = createContext<{
   isNetworkModalOpen: boolean
   openNetworkModal: () => void
   closeNetworkModal: () => void
-  listedChainIDs: number[]
-  setListedChainIDs: Dispatch<SetStateAction<number[]>>
 }>({
   isWalletSelectorModalOpen: false,
   openWalletSelectorModal: () => {},
@@ -35,17 +26,14 @@ const Web3Connection = createContext<{
   isNetworkModalOpen: false,
   openNetworkModal: () => {},
   closeNetworkModal: () => {},
-  listedChainIDs: null,
-  setListedChainIDs: () => {},
 })
 
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+  const { addDatadogAction } = useDatadog()
 
-  const { connector, isActive } = useWeb3React()
-  const [listedChainIDs, setListedChainIDs] = useState<number[]>(null)
+  const { connector, isActive, account } = useWeb3React()
 
   const {
     isOpen: isWalletSelectorModalOpen,
@@ -63,17 +51,15 @@ const Web3ConnectionManager = ({
   const triedEager = useEagerConnect()
 
   useEffect(() => {
-    if (
-      triedEager &&
-      !isActive &&
-      (router.query.discordId || router.query.focusGuard || router.query.redirectUrl)
-    )
+    if (triedEager && !isActive && router.query.redirectUrl)
       openWalletSelectorModal()
   }, [triedEager, isActive, router.query])
 
   useEffect(() => {
     if (!isActive || !triedEager) return
-    addDatadogAction("Successfully connected wallet")
+    addDatadogAction("Successfully connected wallet", {
+      userAddress: account?.toLowerCase(),
+    })
   }, [isActive, triedEager])
 
   // Sending actions to datadog
@@ -88,11 +74,6 @@ const Web3ConnectionManager = ({
       addDatadogAction(`Successfully connected wallet [CoinbaseWallet]`)
   }, [connector])
 
-  const closeNetworkModalHandler = () => {
-    closeNetworkModal()
-    setListedChainIDs([])
-  }
-
   return (
     <Web3Connection.Provider
       value={{
@@ -102,9 +83,7 @@ const Web3ConnectionManager = ({
         triedEager,
         isNetworkModalOpen,
         openNetworkModal,
-        closeNetworkModal: closeNetworkModalHandler,
-        listedChainIDs,
-        setListedChainIDs,
+        closeNetworkModal,
       }}
     >
       {children}
@@ -113,13 +92,12 @@ const Web3ConnectionManager = ({
           isModalOpen: isWalletSelectorModalOpen,
           openModal: openWalletSelectorModal,
           closeModal: closeWalletSelectorModal,
-          openNetworkModal: closeNetworkModalHandler,
         }}
       />
       <NetworkModal
         {...{
           isOpen: isNetworkModalOpen,
-          onClose: closeNetworkModalHandler,
+          onClose: closeNetworkModal,
         }}
       />
     </Web3Connection.Provider>

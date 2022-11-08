@@ -1,6 +1,5 @@
 import {
   Box,
-  Divider,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -9,7 +8,6 @@ import {
   FormLabel,
   HStack,
   Icon,
-  useBreakpointValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -30,18 +28,16 @@ import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
-import { FormProvider, useForm } from "react-hook-form"
-import { PlatformType } from "types"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
-import DiscordSettings from "./components/DiscordSettings"
+import RolePlatforms from "../RolePlatforms"
 
 const AddRoleButton = (): JSX.Element => {
-  const { id, guildPlatforms, roles } = useGuild()
+  const { id } = useGuild()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const finalFocusRef = useRef(null)
-  const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
     useCreateRole()
@@ -53,16 +49,8 @@ const AddRoleButton = (): JSX.Element => {
     logic: "AND",
     requirements: [],
     roleType: "NEW",
-    activationInterval: 0,
-    includeUnauthenticated: true,
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-    rolePlatforms: [
-      {
-        ...roles?.[0]?.rolePlatforms?.[0],
-        platformRoleData: {},
-        platformRoleId: null,
-      },
-    ],
+    rolePlatforms: [],
   }
 
   const methods = useForm({
@@ -110,8 +98,27 @@ const AddRoleButton = (): JSX.Element => {
     },
   })
 
+  const formRequirements = useWatch({
+    name: "requirements",
+    control: methods.control,
+  })
+
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    methods.handleSubmit(onSubmit),
+    (...props) => {
+      methods.clearErrors("requirements")
+      if (!formRequirements || formRequirements?.length === 0) {
+        methods.setError(
+          "requirements",
+          {
+            message: "Set some requirements, or make the role free",
+          },
+          { shouldFocus: true }
+        )
+        document.getElementById("free-entry-checkbox")?.focus()
+      } else {
+        return methods.handleSubmit(onSubmit)(...props)
+      }
+    },
     iconUploader.isUploading
   )
 
@@ -125,6 +132,7 @@ const AddRoleButton = (): JSX.Element => {
         <Button
           ref={finalFocusRef}
           variant="ghost"
+          size="sm"
           leftIcon={<Icon as={Plus} />}
           onClick={onOpen}
           data-dd-action-name={
@@ -137,7 +145,7 @@ const AddRoleButton = (): JSX.Element => {
       <Drawer
         isOpen={isOpen}
         placement="left"
-        size={drawerSize}
+        size={{ base: "full", md: "lg" }}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         finalFocusRef={finalFocusRef}
       >
@@ -148,15 +156,7 @@ const AddRoleButton = (): JSX.Element => {
 
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                {
-                  // This is solved in rolePlatforms PR
-                  guildPlatforms?.[0]?.platformId === PlatformType.DISCORD && (
-                    <>
-                      <DiscordSettings />
-                      <Divider />
-                    </>
-                  )
-                }
+                <RolePlatforms />
 
                 <Section title={"General"} spacing="6">
                   <Box>
@@ -167,8 +167,8 @@ const AddRoleButton = (): JSX.Element => {
                     </HStack>
                   </Box>
                   <Description />
-                  <SetRequirements maxCols={2} />
                 </Section>
+                <SetRequirements />
               </VStack>
             </FormProvider>
           </DrawerBody>
@@ -192,11 +192,9 @@ const AddRoleButton = (): JSX.Element => {
       </Drawer>
 
       <DiscardAlert
-        {...{
-          isOpen: isAlertOpen,
-          onClose: onAlertClose,
-          onDiscard: onCloseAndClear,
-        }}
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        onDiscard={onCloseAndClear}
       />
     </>
   )
