@@ -226,6 +226,7 @@ type Requirement = {
     serverName?: string
     roleName?: string
     memberSince?: number
+    fromNow?: boolean
     // CONTRACT
     expected?: string
     resultIndex?: number
@@ -566,5 +567,4 @@ export type {
   FormCardProps,
   RabbitholeParamType,
 }
-
 export { ValidationMethod }
