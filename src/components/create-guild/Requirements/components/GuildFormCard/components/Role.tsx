@@ -86,6 +86,7 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
         value: /^[0-9]*$/i,
         message: "Please input a valid role ID",
       },
+      validate: () => !!selectedRole || "Please select a role",
     },
   })
 
@@ -113,7 +114,6 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
             </InputLeftElement>
           )}
           <StyledSelect
-            // formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
             isLoading={isGuildsLoading || isLoading}
             options={mergedGuildOptions}
             name={guildIdField.name}
