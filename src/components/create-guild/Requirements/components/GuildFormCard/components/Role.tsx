@@ -11,7 +11,7 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
-import { useController, useFormState } from "react-hook-form"
+import { useController, useFormContext, useFormState } from "react-hook-form"
 import { Guild } from "types"
 import parseFromObject from "utils/parseFromObject"
 import useGuilds from "../hooks/useGuilds"
@@ -27,6 +27,7 @@ const customFilterOption = (candidate, input) =>
 const GUILD_URL_REGEX = /^[a-z0-9\-]*$/i
 
 const Role = ({ baseFieldPath }: Props): JSX.Element => {
+  const { resetField } = useFormContext()
   const { errors } = useFormState()
 
   const { field: guildIdField } = useController({
@@ -118,7 +119,10 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
             options={mergedGuildOptions}
             name={guildIdField.name}
             onBlur={guildIdField.onBlur}
-            onChange={(newValue) => guildIdField.onChange(newValue?.value)}
+            onChange={(newValue) => {
+              resetField(`${baseFieldPath}.data.roleId`)
+              guildIdField.onChange(newValue?.value)
+            }}
             ref={guildIdField.ref}
             value={selectedGuild ?? null}
             onInputChange={(newValue) => setSearchValue(newValue)}
