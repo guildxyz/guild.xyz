@@ -14,15 +14,18 @@ enum Chains {
   GNOSIS = 100,
   FANTOM = 250,
   ARBITRUM = 42161,
+  NOVA = 42170,
   CELO = 42220,
   HARMONY = 1666600000,
   GOERLI = 5,
   OPTIMISM = 10,
+  MOONBEAM = 1284,
   MOONRIVER = 1285,
   RINKEBY = 4,
   METIS = 1088,
   CRONOS = 25,
   BOBA = 288,
+  BOBA_AVAX = 43288,
   PALM = 11297108109,
 }
 
@@ -151,6 +154,22 @@ const RPC = {
     apiUrl: "https://api.arbiscan.io",
     iconUrls: ["/networkLogos/arbitrum.svg"],
   },
+  NOVA: {
+    chainId: 42170,
+    chainName: "Arbitrum Nova",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://nova.arbitrum.io/rpc"],
+    blockExplorerUrls: ["https://nova.arbiscan.io"],
+    apiUrl: "https://api-nova.arbiscan.io",
+    iconUrls: ["/networkLogos/nova.svg"],
+  },
   CELO: {
     chainId: 42220,
     chainName: "Celo Mainnet",
@@ -197,6 +216,22 @@ const RPC = {
     apiUrl: "https://api-optimistic.etherscan.io",
     iconUrls: ["/networkLogos/optimism.svg"],
     rpcUrls: ["https://mainnet.optimism.io"],
+  },
+  MOONBEAM: {
+    chainId: 1284,
+    chainName: "Moonbeam",
+    nativeCurrency: {
+      name: "Moonbeam",
+      symbol: "GLMR",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      logoURI:
+        "https://assets.coingecko.com/coins/images/22459/small/glmr.png?1641880985",
+    },
+    blockExplorerUrls: ["https://moonbeam.moonscan.io"],
+    apiUrl: "https://api-moonbeam.moonscan.io",
+    iconUrls: ["/networkLogos/moonbeam.svg"],
+    rpcUrls: ["https://rpc.api.moonbeam.network"],
   },
   MOONRIVER: {
     chainId: 1285,
@@ -261,6 +296,22 @@ const RPC = {
     apiUrl: "https://api.bobascan.com",
     iconUrls: ["/networkLogos/boba.svg"],
     rpcUrls: ["https://mainnet.boba.network"],
+  },
+  BOBA_AVAX: {
+    chainId: 43288,
+    chainName: "Boba-Avax L2",
+    nativeCurrency: {
+      name: "Boba",
+      symbol: "BOBA",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/20285/small/BOBA.png?1636811576",
+    },
+    blockExplorerUrls: ["https://blockexplorer.avax.boba.network"],
+    apiUrl: "https://blockexplorer.avax.boba.network",
+    iconUrls: ["/networkLogos/boba.svg"],
+    rpcUrls: ["https://avax.boba.network"],
   },
   PALM: {
     chainId: 11297108109,
@@ -353,6 +404,10 @@ const blockExplorerIcons = {
     light: "/networkLogos/arbitrum.svg",
     dark: "/networkLogos/arbitrum.svg",
   },
+  "https://nova.arbiscan.io": {
+    light: "/networkLogos/nova.svg",
+    dark: "/networkLogos/nova.svg",
+  },
   "https://explorer.celo.org": {
     light: "/networkLogos/celo.svg",
     dark: "/networkLogos/celo.svg",
@@ -369,6 +424,10 @@ const blockExplorerIcons = {
     light: "/networkLogos/moonriver.svg",
     dark: "/networkLogos/moonriver.svg",
   },
+  "https://moonbeam.moonscan.io": {
+    light: "/networkLogos/moonbeam.svg",
+    dark: "/networkLogos/moonbeam.svg",
+  },
   "https://andromeda-explorer.metis.io": {
     light: "/networkLogos/metis.svg",
     dark: "/explorerLogos/metis-dark.svg",
@@ -378,6 +437,10 @@ const blockExplorerIcons = {
     dark: "/explorerLogos/cronos-dark.svg",
   },
   "https://blockexplorer.boba.network": {
+    light: "/explorerLogos/boba-light.svg",
+    dark: "/networkLogos/boba.svg",
+  },
+  "https://blockexplorer.avax.boba.network": {
     light: "/explorerLogos/boba-light.svg",
     dark: "/networkLogos/boba.svg",
   },

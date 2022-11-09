@@ -47,10 +47,7 @@ const JuiceboxFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
     [projects]
   )
 
-  const pickedProject = useMemo(
-    () => mappedOptions?.find((project) => project.value === id),
-    [id, mappedOptions]
-  )
+  const pickedProject = mappedOptions?.find((project) => project.value === id)
 
   return (
     <Stack spacing={4} alignItems="start">
