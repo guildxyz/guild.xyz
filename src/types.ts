@@ -145,6 +145,13 @@ type GuildBase = {
   memberCount: number
 }
 
+type PageDetailsCardData = {
+  id: string
+  title: string
+  tags?: Array<string>
+  icon?: string
+}
+
 type GuildAdmin = {
   id: number
   address: string
@@ -533,6 +540,7 @@ export type {
   Role,
   GuildPlatform,
   GuildBase,
+  PageDetailsCardData,
   Guild,
   Requirement,
   RequirementType,
@@ -562,5 +570,4 @@ export type {
   FormCardProps,
   RabbitholeParamType,
 }
-
 export { ValidationMethod }
