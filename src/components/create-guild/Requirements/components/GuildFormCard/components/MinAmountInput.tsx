@@ -44,7 +44,10 @@ const MinAmountInput = ({
           required: "This field is required.",
           min: {
             value: min,
-            message: `Amount must be greater than ${min}`,
+            message:
+              min - 1 >= 0
+                ? `Amount must be greater than ${min - 1}`
+                : "Amount must be positive",
           },
         }}
         defaultValue={defaultValue}
