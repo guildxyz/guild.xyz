@@ -45,7 +45,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   url: string,
   oauthOptions: OAuthOptions
 ) => {
-  const { addDatadogError } = useDatadog()
+  const { addDatadogError, addDatadogAction } = useDatadog()
   const toast = useToast()
 
   const {
@@ -96,6 +96,10 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
             type,
             csrfToken: recievedCsrfToken,
           } = JSON.parse(window.localStorage.getItem("oauth_popup_data"))
+
+          addDatadogAction(
+            `CSRF - Main window recieved CSRF token: ${recievedCsrfToken}. Should equal: ${csrfToken}`
+          )
 
           if (type === "OAUTH_ERROR") {
             clearInterval(interval)

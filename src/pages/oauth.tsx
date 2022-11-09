@@ -1,4 +1,5 @@
 import AuthRedirect from "components/AuthRedirect"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
 
@@ -10,6 +11,7 @@ type OAuthResponse = {
 
 const OAuth = () => {
   const router = useRouter()
+  const { addDatadogAction } = useDatadog()
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -60,6 +62,8 @@ const OAuth = () => {
     }
 
     const csrfToken = params.state
+
+    addDatadogAction(`CSRF - OAuth window recieved CSRF token: ${csrfToken}`)
 
     delete params.error
     delete params.error_description
