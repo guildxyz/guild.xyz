@@ -1,13 +1,11 @@
-import MemberSinceInput from "./MemberSinceInput"
-
 type Props = {
   baseFieldPath: string
 }
 
-const DiscordJoin = ({ baseFieldPath }: Props): JSX.Element => (
-  <>
-    <MemberSinceInput baseFieldPath={baseFieldPath} label="Registered before" />
-  </>
-)
+const DiscordJoin = ({ baseFieldPath }: Props): JSX.Element => {
+  // TODO
+
+  return null
+}
 
 export default DiscordJoin
