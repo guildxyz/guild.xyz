@@ -3,6 +3,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext } from "react-hook-form"
 import { FormCardProps } from "types"
 import parseFromObject from "utils/parseFromObject"
+import ChainInfo from "./ChainInfo"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
@@ -14,6 +15,7 @@ const CaskFormCard = ({ baseFieldPath, field }: FormCardProps) => {
 
   return (
     <Stack spacing={4} alignItems="start">
+      <ChainInfo>Works on Polygon</ChainInfo>
       <FormControl
         isRequired
         isInvalid={parseFromObject(errors, baseFieldPath)?.data?.provider}
