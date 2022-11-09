@@ -7,7 +7,7 @@ type Props = {
 }
 
 const GuildAdminRequirementCard = ({ requirement }: Props): JSX.Element => (
-  <RequirementCard image="requirementLogos/guild.png">
+  <RequirementCard image="/requirementLogos/guild.png">
     {"Be an admin in "}
     {requirement.data.minAmount === 0
       ? "any guild"
