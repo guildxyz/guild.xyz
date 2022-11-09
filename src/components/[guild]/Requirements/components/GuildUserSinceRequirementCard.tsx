@@ -7,7 +7,9 @@ type Props = {
 
 const GuildUserSinceRequirementCard = ({ requirement }: Props): JSX.Element => (
   <RequirementCard image="requirementLogos/guild.png">
-    {`Be a Guild.xyz user at least since ${requirement.data.creationDate}`}
+    {`Be a Guild.xyz user at least since ${
+      requirement.data.creationDate?.split("T")[0]
+    }`}
   </RequirementCard>
 )
 
