@@ -70,14 +70,19 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
   oauthOptions.response_type = oauthOptions.response_type ?? "code"
 
+  const state = `${oauthOptions.client_id};${csrfToken}`
+
   // prettier-ignore
   const { onOpen, windowInstance } = usePopupWindow(
-    `${url}?${Object.entries(oauthOptions).map(([key, value]) => `${key}=${value}`).join("&")}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(csrfToken)}`
+    `${url}?${Object.entries(oauthOptions).map(([key, value]) => `${key}=${value}`).join("&")}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}`
   )
 
   const [error, setError] = useState(null)
   const [authData, setAuthData] = useState<OAuthData<OAuthResponse>>(null)
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false)
+
+  const dataKey = `oauth_popup_data_${oauthOptions.client_id}`
+  const shouldCloseKey = `oauth_window_should_close_${oauthOptions.client_id}`
 
   /** On a window creation, we set a new listener */
   useEffect(() => {
@@ -85,7 +90,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
     const windowInstanceOpenInitially = !windowInstance.closed
 
-    window.localStorage.removeItem("oauth_popup_data")
     setIsAuthenticating(true)
 
     new Promise<OAuthData<OAuthResponse>>((resolve, reject) => {
@@ -95,7 +99,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
             data,
             type,
             csrfToken: recievedCsrfToken,
-          } = JSON.parse(window.localStorage.getItem("oauth_popup_data"))
+          } = JSON.parse(window.localStorage.getItem(dataKey))
 
           addDatadogAction(
             `CSRF - Main window recieved CSRF token: ${recievedCsrfToken}. Should equal: ${csrfToken}`
@@ -111,7 +115,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           if (type === "OAUTH_SUCCESS") {
             clearInterval(interval)
 
-            mutateCSRFToken(undefined, { revalidate: false })
             if (recievedCsrfToken !== csrfToken) {
               const title = "CSRF Error"
               const errorDescription =
@@ -143,9 +146,10 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           }, 500)
         }
 
-        window.localStorage.removeItem("oauth_popup_data")
+        window.localStorage.removeItem(dataKey)
         setIsAuthenticating(false)
-        window.localStorage.setItem("oauth_window_should_close", "true")
+        window.localStorage.setItem(shouldCloseKey, "true")
+        mutateCSRFToken(undefined, { revalidate: false })
       })
   }, [windowInstance])
 
