@@ -87,7 +87,9 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
         value: /^[0-9]*$/i,
         message: "Please input a valid role ID",
       },
-      validate: () => !!selectedRole || "Please select a role",
+      validate: (value) =>
+        !!roleOptions?.find((role) => role.value === value) ||
+        "Please select a role",
     },
   })
 
