@@ -27,7 +27,7 @@ const DiscordJoin = ({ baseFieldPath }: Props): JSX.Element => {
           ref={memberSinceField.ref}
           name={memberSinceField.name}
           value={
-            memberSinceField.value
+            typeof memberSinceField.value === "number"
               ? new Date(memberSinceField.value).toISOString().split("T")[0]
               : ""
           }

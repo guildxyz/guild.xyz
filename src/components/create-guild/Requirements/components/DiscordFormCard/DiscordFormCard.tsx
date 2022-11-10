@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Stack,
+  usePrevious,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import { useEffect } from "react"
@@ -54,9 +55,26 @@ const DiscordFormCard = ({ baseFieldPath }: FormCardProps) => {
 
   const selected = discordRequirementTypes.find((reqType) => reqType.value === value)
 
+  const prevValue = usePrevious(value)
+
   useEffect(() => {
+    if (
+      value === "DISCORD_JOIN_FROM_NOW" &&
+      (prevValue === "DISCORD_JOIN" || prevValue === "DISCORD_MEMBER_SINCE")
+    ) {
+      resetField(`${baseFieldPath}.data.memberSince`, {
+        defaultValue: 86400000,
+      })
+    } else if (
+      (value === "DISCORD_JOIN" || value === "DISCORD_MEMBER_SINCE") &&
+      prevValue === "DISCORD_JOIN_FROM_NOW"
+    ) {
+      resetField(`${baseFieldPath}.data.memberSince`, {
+        defaultValue: Date.now(),
+      })
+    }
+
     if (!touchedFields.data) return
-    resetField(`${baseFieldPath}.data.memberSince`)
     resetField(`${baseFieldPath}.data.serverId`)
     resetField(`${baseFieldPath}.data.serverName`)
     resetField(`${baseFieldPath}.data.roleId`)
