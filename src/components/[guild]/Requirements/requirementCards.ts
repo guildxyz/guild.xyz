@@ -20,10 +20,7 @@ import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequ
 import RabbitholeRequirementCard from "./components/RabbitholeRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
-import TwitterBioRequirementCard from "./components/TwitterBioRequirementCard"
-import TwitterFollowerCountRequirementCard from "./components/TwitterFollowerCountRequirementCard"
-import TwitterFollowRequirementCard from "./components/TwitterFollowRequirementCard"
-import TwitterNameRequirementCard from "./components/TwitterNameRequirementCard"
+import TwitterRequirementCard from "./components/TwitterRequirementCard"
 import UnlockRequirementCard from "./components/UnlockRequirementCard"
 
 const REQUIREMENT_CARDS = {
@@ -42,10 +39,10 @@ const REQUIREMENT_CARDS = {
   ALLOWLIST: AllowlistRequirementCard,
   JUICEBOX: JuiceboxRequirementCard,
   GALAXY: GalaxyRequirementCard,
-  TWITTER_NAME: TwitterNameRequirementCard,
-  TWITTER_BIO: TwitterBioRequirementCard,
-  TWITTER_FOLLOW: TwitterFollowRequirementCard,
-  TWITTER_FOLLOWER_COUNT: TwitterFollowerCountRequirementCard,
+  TWITTER_NAME: TwitterRequirementCard,
+  TWITTER_BIO: TwitterRequirementCard,
+  TWITTER_FOLLOW: TwitterRequirementCard,
+  TWITTER_FOLLOWER_COUNT: TwitterRequirementCard,
   GITHUB_STARRING: GithubRequirementCard,
   DISCORD_ROLE: DiscordRoleRequirementCard,
   CONTRACT: ContractStateRequirementCard,
