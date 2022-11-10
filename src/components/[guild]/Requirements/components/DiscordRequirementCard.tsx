@@ -10,7 +10,7 @@ type Props = {
   requirement: Requirement
 }
 
-const DiscordRoleRequirementCard = ({ requirement, ...rest }: Props) => {
+const DiscordRequirementCard = ({ requirement, ...rest }: Props) => {
   const {
     data: { serverName, roles, isAdmin, serverIcon },
   } = useServerData(requirement.data.serverId)
@@ -40,4 +40,4 @@ const DiscordRoleRequirementCard = ({ requirement, ...rest }: Props) => {
   )
 }
 
-export default DiscordRoleRequirementCard
+export default DiscordRequirementCard

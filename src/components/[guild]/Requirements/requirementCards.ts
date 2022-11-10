@@ -2,7 +2,7 @@ import HundredNOneRequirementCard from "./components/101RequirementCard"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import CaskRequirementCard from "./components/CaskRequirementCard"
 import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
-import DiscordRoleRequirementCard from "./components/DiscordRoleRequirementCard"
+import DiscordRequirementCard from "./components/DiscordRequirementCard"
 import DiscoRequirementCard from "./components/DiscoRequirementCard"
 import FreeRequirementCard from "./components/FreeRequirementCard"
 import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
@@ -44,7 +44,7 @@ const REQUIREMENT_CARDS = {
   TWITTER_FOLLOW: TwitterRequirementCard,
   TWITTER_FOLLOWER_COUNT: TwitterRequirementCard,
   GITHUB_STARRING: GithubRequirementCard,
-  DISCORD_ROLE: DiscordRoleRequirementCard,
+  DISCORD_ROLE: DiscordRequirementCard,
   CONTRACT: ContractStateRequirementCard,
   NOOX: NooxRequirementCard,
   DISCO: DiscoRequirementCard,
