@@ -6,7 +6,8 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
-import { useController, useFormState } from "react-hook-form"
+import { useEffect } from "react"
+import { useController, useFormContext, useFormState } from "react-hook-form"
 import { FormCardProps } from "types"
 import parseFromObject from "utils/parseFromObject"
 import DiscordJoin from "./components/DiscordJoin"
@@ -38,6 +39,9 @@ const discordRequirementTypes = [
 ]
 
 const DiscordFormCard = ({ baseFieldPath }: FormCardProps) => {
+  const { touchedFields } = useFormState()
+  const { resetField } = useFormContext()
+
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
@@ -49,6 +53,15 @@ const DiscordFormCard = ({ baseFieldPath }: FormCardProps) => {
   const { errors } = useFormState()
 
   const selected = discordRequirementTypes.find((reqType) => reqType.value === value)
+
+  useEffect(() => {
+    if (!touchedFields.data) return
+    resetField(`${baseFieldPath}.data.memberSince`)
+    resetField(`${baseFieldPath}.data.serverId`)
+    resetField(`${baseFieldPath}.data.serverName`)
+    resetField(`${baseFieldPath}.data.roleId`)
+    resetField(`${baseFieldPath}.data.roleName`)
+  }, [value])
 
   return (
     <Stack spacing={4} alignItems="start">

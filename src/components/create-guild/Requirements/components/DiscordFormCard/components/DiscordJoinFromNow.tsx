@@ -22,7 +22,6 @@ type Props = {
 type MemberSinceFormat = "DAY" | "MONTH" | "YEAR"
 
 const dayInMs = 86400000
-const defaultDate = Date.now() - dayInMs
 
 const multipliers = {
   DAY: dayInMs,
@@ -39,7 +38,7 @@ const DiscordJoinFromNow = ({ baseFieldPath }: Props): JSX.Element => {
 
   const { field: memberSinceField } = useController({
     name: `${baseFieldPath}.data.memberSince`,
-    defaultValue: defaultDate,
+    defaultValue: dayInMs,
   })
 
   useEffect(() => {
