@@ -185,7 +185,7 @@ const GuildPage = (): JSX.Element => {
             title="Members"
             titleRightElement={
               <HStack justifyContent="space-between" w="full">
-                <Tag size="sm" maxH={6} pt={1}>
+                <Tag size="sm" maxH={6} pt={0.5}>
                   {isLoading ? <Spinner size="xs" /> : memberCount}
                 </Tag>
                 {DynamicMembersExporter && <DynamicMembersExporter />}
