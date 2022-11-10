@@ -46,15 +46,6 @@ const handler = async (req, _) => {
 
     const roles = guild.roles?.map((role) => role.name)
 
-    const members: string[] = [
-      ...new Set(
-        guild.roles
-          .map((role) => role.members)
-          ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-          ?.filter((member) => typeof member === "string") || []
-      ),
-    ]
-
     const safeGuildDescription = guild.description?.replaceAll("\n", "")
     const isLightMode = guild.theme?.mode === "LIGHT"
 
@@ -178,7 +169,7 @@ const handler = async (req, _) => {
                   borderRadius: "6px",
                   fontSize: "18px",
                 }}
-              >{`${members?.length || 0} members`}</div>
+              >{`${guild?.memberCount} members`}</div>
 
               <div
                 style={{
