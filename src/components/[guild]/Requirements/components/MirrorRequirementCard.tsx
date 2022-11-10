@@ -1,6 +1,6 @@
 import { Skeleton, Text } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
-import useMirrorEdition from "components/create-guild/Requirements/components/MirrorV2FormCard/hooks/useMirrorEdition"
+import useMirrorEdition from "components/create-guild/Requirements/components/MirrorFormCard/hooks/useMirrorEdition"
 import { RequirementCardComponentProps } from "types"
 import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import RequirementCard from "./common/RequirementCard"

@@ -11,7 +11,6 @@ import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import KycDAOFormCard from "./components/KycDAOFormCard"
 import LensFormCard from "./components/LensFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
-import MirrorV2FormCard from "./components/MirrorV2FormCard"
 import NftFormCard from "./components/NftFormCard"
 import NooxFormCard from "./components/NooxFormCard"
 import OrangeFormCard from "./components/OrangeFormCard"
@@ -30,7 +29,7 @@ const REQUIREMENT_FORMCARDS = {
   POAP: PoapFormCard,
   GITPOAP: GitPoapFormCard,
   MIRROR: MirrorFormCard,
-  MIRROR_COLLECT: MirrorV2FormCard,
+  MIRROR_COLLECT: MirrorFormCard,
   SNAPSHOT: SnapshotFormCard,
   ALLOWLIST: AllowlistFormCard,
   ERC721: NftFormCard,
