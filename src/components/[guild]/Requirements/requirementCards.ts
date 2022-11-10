@@ -1,64 +1,171 @@
-import HundredNOneRequirementCard from "./components/101RequirementCard"
-import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
-import CaskRequirementCard from "./components/CaskRequirementCard"
-import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
-import DiscordRequirementCard from "./components/DiscordRequirementCard"
-import DiscoRequirementCard from "./components/DiscoRequirementCard"
-import FreeRequirementCard from "./components/FreeRequirementCard"
-import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
-import GithubRequirementCard from "./components/GithubRequirementCard"
-import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
-import KycDAORequirementCard from "./components/KycDAORequirementCard"
-import LensRequirementCard from "./components/LensRequirementCard"
-import MirrorRequirementCard from "./components/MirrorRequirementCard"
-import NftRequirementCard from "./components/NftRequirementCard"
-import NooxRequirementCard from "./components/NooxRequirementCard"
-import OrangeRequirementCard from "./components/OrangeRequirementCard"
-import OtterspaceRequirementCard from "./components/OtterspaceRequirementCard"
-import PoapRequirementCard from "./components/PoapRequirementCard"
-import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequirementCard"
-import RabbitholeRequirementCard from "./components/RabbitholeRequirementCard"
-import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
-import TokenRequirementCard from "./components/TokenRequirementCard"
-import TwitterRequirementCard from "./components/TwitterRequirementCard"
-import UnlockRequirementCard from "./components/UnlockRequirementCard"
+// TODO: mirror formcards, github
 
-const REQUIREMENT_CARDS = {
-  FREE: FreeRequirementCard,
-  ERC20: TokenRequirementCard,
-  COIN: TokenRequirementCard,
-  ERC721: NftRequirementCard,
-  ERC1155: NftRequirementCard,
-  NOUNS: NftRequirementCard,
-  UNLOCK: UnlockRequirementCard,
-  POAP: PoapRequirementCard,
-  GITPOAP: GitPoapRequirementCard,
-  MIRROR: MirrorRequirementCard,
-  MIRROR_COLLECT: MirrorRequirementCard,
-  SNAPSHOT: SnapshotRequirementCard,
-  ALLOWLIST: AllowlistRequirementCard,
-  JUICEBOX: JuiceboxRequirementCard,
-  GALAXY: GalaxyRequirementCard,
-  TWITTER_NAME: TwitterRequirementCard,
-  TWITTER_BIO: TwitterRequirementCard,
-  TWITTER_FOLLOW: TwitterRequirementCard,
-  TWITTER_FOLLOWER_COUNT: TwitterRequirementCard,
-  GITHUB_STARRING: GithubRequirementCard,
-  DISCORD_ROLE: DiscordRequirementCard,
-  CONTRACT: ContractStateRequirementCard,
-  NOOX: NooxRequirementCard,
-  DISCO: DiscoRequirementCard,
-  LENS: LensRequirementCard,
-  LENS_PROFILE: LensRequirementCard,
-  LENS_FOLLOW: LensRequirementCard,
-  LENS_COLLECT: LensRequirementCard,
-  LENS_MIRROR: LensRequirementCard,
-  OTTERSPACE: OtterspaceRequirementCard,
-  ORANGE: OrangeRequirementCard,
-  CASK: CaskRequirementCard,
-  "101": HundredNOneRequirementCard,
-  RABBITHOLE: RabbitholeRequirementCard,
-  KYC_DAO: KycDAORequirementCard,
-}
+import {
+  CurrencyCircleDollar,
+  ImageSquare,
+  ListChecks,
+  Wallet,
+  Wrench,
+} from "phosphor-react"
 
-export default REQUIREMENT_CARDS
+const REQUIREMENTS_ARRAY = [
+  {
+    icon: Wallet,
+    name: "Free",
+    fileNameBase: "Free",
+    types: ["FREE"],
+  },
+  {
+    icon: CurrencyCircleDollar,
+    name: "Token",
+    fileNameBase: "Token",
+    types: ["ERC20", "COIN"],
+  },
+  {
+    icon: ImageSquare,
+    name: "NFT",
+    fileNameBase: "Nft",
+    types: ["ERC721", "ERC1155", "NOUNS"],
+  },
+  {
+    icon: ListChecks,
+    name: "Allowlist",
+    fileNameBase: "Allowlist",
+    types: ["ALLOWLIST"],
+  },
+  {
+    icon: Wrench,
+    name: "Custom contract query",
+    fileNameBase: "ContractState",
+    types: ["CONTRACT"],
+  },
+  {
+    icon: "/requirementLogos/twitter.svg",
+    name: "Twitter",
+    fileNameBase: "Twitter",
+    types: [
+      "TWITTER",
+      "TWITTER_NAME",
+      "TWITTER_BIO",
+      "TWITTER_FOLLOW",
+      "TWITTER_FOLLOWER_COUNT",
+    ],
+  },
+  {
+    icon: "/platforms/github.png",
+    name: "GitHub",
+    fileNameBase: "Github",
+    types: ["GITHUB", "GITHUB_STARRING"],
+  },
+  {
+    icon: "/platforms/discord.png",
+    name: "Discord",
+    fileNameBase: "Discord",
+    types: ["DISCORD", "DISCORD_ROLE"],
+  },
+  {
+    icon: "/requirementLogos/unlock.png",
+    name: "Unlock",
+    fileNameBase: "Unlock",
+    types: ["UNLOCK"],
+  },
+  {
+    icon: "/requirementLogos/poap.svg",
+    name: "Poap",
+    fileNameBase: "Poap",
+    types: ["POAP"],
+  },
+  {
+    icon: "/requirementLogos/gitpoap.svg",
+    name: "GitPOAP",
+    fileNameBase: "GitPoap",
+    types: ["GITPOAP"],
+  },
+  {
+    icon: "/requirementLogos/mirror.svg",
+    name: "Mirror",
+    fileNameBase: "Mirror",
+    types: ["MIRROR", "MIRROR_COLLECT"],
+  },
+  {
+    icon: "/requirementLogos/snapshot.png",
+    name: "Snapshot",
+    fileNameBase: "Snapshot",
+    types: ["SNAPSHOT"],
+    disabled: true,
+  },
+  {
+    icon: "/requirementLogos/juicebox.png",
+    name: "Juicebox",
+    fileNameBase: "Juicebox",
+    types: ["JUICEBOX"],
+  },
+  {
+    icon: "/requirementLogos/galaxy.svg",
+    name: "Galxe",
+    fileNameBase: "Galaxy",
+    types: ["GALAXY"],
+  },
+  {
+    icon: "/requirementLogos/noox.svg",
+    name: "Noox",
+    fileNameBase: "Noox",
+    types: ["NOOX"],
+  },
+  {
+    icon: "/requirementLogos/disco.png",
+    name: "Disco",
+    fileNameBase: "Disco",
+    types: ["DISCO"],
+  },
+  {
+    icon: "/requirementLogos/lens.png",
+    name: "Lens",
+    fileNameBase: "Lens",
+    types: ["LENS", "LENS_PROFILE", "LENS_FOLLOW", "LENS_COLLECT", "LENS_MIRROR"],
+  },
+  {
+    icon: "/requirementLogos/otterspace.png",
+    name: "Otterspace",
+    fileNameBase: "Otterspace",
+    types: ["OTTERSPACE"],
+  },
+  {
+    icon: "/requirementLogos/orange.png",
+    name: "Orange",
+    fileNameBase: "Orange",
+    types: ["ORANGE"],
+  },
+  {
+    icon: "/requirementLogos/cask.png",
+    name: "Cask",
+    fileNameBase: "Cask",
+    types: ["CASK"],
+  },
+  {
+    icon: "/requirementLogos/101.png",
+    name: "101",
+    fileNameBase: "101",
+    types: ["101"],
+  },
+  {
+    icon: "/requirementLogos/rabbithole.png",
+    name: "Rabbithole",
+    fileNameBase: "Rabbithole",
+    types: ["RABBITHOLE"],
+  },
+  {
+    icon: "/requirementLogos/kycdao.svg",
+    name: "kycDAO",
+    fileNameBase: "Kyc",
+    types: ["KYC_DAO"],
+  },
+]
+
+// transform it to an object with types as keys so we don't have to use .find() every time
+const REQUIREMENTS = REQUIREMENTS_ARRAY.reduce(
+  (acc, curr) => (curr.types.map((type) => (acc[type] = curr)), acc),
+  {}
+)
+
+export default REQUIREMENTS

@@ -1,9 +1,23 @@
-import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
+import {
+  Box,
+  Collapse,
+  Skeleton,
+  Spinner,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
+import dynamic from "next/dynamic"
 import React, { useState } from "react"
-import { Logic, Requirement } from "types"
+import {
+  Logic,
+  Requirement,
+  RequirementCardComponentProps,
+  RequirementType,
+} from "types"
 import LogicDivider from "../LogicDivider"
+import RequirementCard from "./components/common/RequirementCard"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
-import REQUIREMENT_CARDS from "./requirementCards"
+import REQUIREMENTS from "./requirementCards"
 
 type Props = {
   requirements: Requirement[]
@@ -28,12 +42,12 @@ const Requirements = ({ requirements, logic }: Props) => {
         <Spinner />
       ) : (
         shownRequirements.map((requirement, i) => {
-          const RequirementCard = REQUIREMENT_CARDS[requirement.type]
+          const RequirementComponent = getRequirementComponent(requirement.type)
 
-          if (RequirementCard)
+          if (RequirementComponent)
             return (
               <React.Fragment key={i}>
-                <RequirementCard requirement={requirement} />
+                <RequirementComponent requirement={requirement} />
                 {i < shownRequirements.length - 1 && <LogicDivider logic={logic} />}
               </React.Fragment>
             )
@@ -46,12 +60,12 @@ const Requirements = ({ requirements, logic }: Props) => {
         style={{ width: "100%" }}
       >
         {hiddenRequirements.map((requirement, i) => {
-          const RequirementCard = REQUIREMENT_CARDS[requirement.type]
-          if (RequirementCard)
+          const RequirementComponent = getRequirementComponent(requirement.type)
+          if (RequirementComponent)
             return (
               <React.Fragment key={i}>
                 {i === 0 && <LogicDivider logic={logic} />}
-                <RequirementCard requirement={requirement} />
+                <RequirementComponent requirement={requirement} />
                 {i < hiddenRequirements.length - 1 && <LogicDivider logic={logic} />}
               </React.Fragment>
             )
@@ -82,5 +96,19 @@ const Requirements = ({ requirements, logic }: Props) => {
     </VStack>
   )
 }
+
+const getRequirementComponent = (
+  type: RequirementType
+): React.ComponentType<RequirementCardComponentProps> =>
+  dynamic(
+    () => import(`./components/${REQUIREMENTS[type].fileNameBase}RequirementCard`),
+    {
+      loading: () => (
+        <RequirementCard loading={true}>
+          <Skeleton>Loading requirement...</Skeleton>
+        </RequirementCard>
+      ),
+    }
+  )
 
 export default Requirements
