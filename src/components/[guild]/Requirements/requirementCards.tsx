@@ -1,14 +1,31 @@
-// TODO: mirror formcards, github
-
+import { Skeleton } from "@chakra-ui/react"
+import RequirementCard from "components/[guild]/Requirements/components/common/RequirementCard"
+import dynamic from "next/dynamic"
 import {
   CurrencyCircleDollar,
+  Icon,
   ImageSquare,
   ListChecks,
   Wallet,
   Wrench,
 } from "phosphor-react"
+import { ComponentType } from "react"
+import { FormCardProps, RequirementCardComponentProps, RequirementType } from "types"
 
-const REQUIREMENTS_ARRAY = [
+type Req = {
+  icon: string | Icon
+  name: string
+  fileNameBase: string
+  types: RequirementType[]
+  disabled?: boolean
+}
+
+type ReqWithComponent = Req & {
+  displayComponent: ComponentType<RequirementCardComponentProps>
+  formComponent: ComponentType<FormCardProps>
+}
+
+export const REQUIREMENTS_DATA: Req[] = [
   {
     icon: Wallet,
     name: "Free",
@@ -157,15 +174,41 @@ const REQUIREMENTS_ARRAY = [
   {
     icon: "/requirementLogos/kycdao.svg",
     name: "kycDAO",
-    fileNameBase: "Kyc",
+    fileNameBase: "KycDAO",
     types: ["KYC_DAO"],
   },
 ]
 
-// transform it to an object with types as keys so we don't have to use .find() every time
-const REQUIREMENTS = REQUIREMENTS_ARRAY.reduce(
-  (acc, curr) => (curr.types.map((type) => (acc[type] = curr)), acc),
-  {}
+const REQUIREMENTS_WITH_COMPONENTS: ReqWithComponent[] = REQUIREMENTS_DATA.map(
+  (obj) => ({
+    ...obj,
+    displayComponent: dynamic<RequirementCardComponentProps>(
+      () =>
+        import(
+          `components/[guild]/Requirements/components/${obj.fileNameBase}RequirementCard`
+        ),
+      {
+        loading: () => (
+          <RequirementCard loading={true}>
+            <Skeleton>Loading requirement...</Skeleton>
+          </RequirementCard>
+        ),
+      }
+    ),
+    formComponent: dynamic<FormCardProps>(
+      () =>
+        import(
+          `components/create-guild/Requirements/components/${obj.fileNameBase}FormCard`
+        )
+    ),
+  })
 )
+
+// transform it to an object with types as keys so we don't have to use .find() every time
+const REQUIREMENTS: Record<RequirementType, ReqWithComponent> =
+  REQUIREMENTS_WITH_COMPONENTS.reduce(
+    (acc, curr) => (curr.types.map((type) => (acc[type] = curr)), acc),
+    {} as any
+  )
 
 export default REQUIREMENTS

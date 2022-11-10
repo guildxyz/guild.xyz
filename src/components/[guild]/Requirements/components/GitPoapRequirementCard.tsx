@@ -1,6 +1,6 @@
 import { RequirementCardComponentProps } from "types"
-import RequirementCard from "../common/RequirementCard"
-import usePoap from "./hooks/usePoap"
+import RequirementCard from "./common/RequirementCard"
+import usePoap from "./PoapRequirementCard/hooks/usePoap"
 
 const GitPoapRequirementCard = ({
   requirement,

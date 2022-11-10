@@ -1,21 +1,7 @@
-import {
-  Box,
-  Collapse,
-  Skeleton,
-  Spinner,
-  useColorModeValue,
-  VStack,
-} from "@chakra-ui/react"
-import dynamic from "next/dynamic"
+import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
-import {
-  Logic,
-  Requirement,
-  RequirementCardComponentProps,
-  RequirementType,
-} from "types"
+import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
-import RequirementCard from "./components/common/RequirementCard"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
 import REQUIREMENTS from "./requirementCards"
 
@@ -42,7 +28,8 @@ const Requirements = ({ requirements, logic }: Props) => {
         <Spinner />
       ) : (
         shownRequirements.map((requirement, i) => {
-          const RequirementComponent = getRequirementComponent(requirement.type)
+          const RequirementComponent =
+            REQUIREMENTS[requirement.type].displayComponent
 
           if (RequirementComponent)
             return (
@@ -60,7 +47,9 @@ const Requirements = ({ requirements, logic }: Props) => {
         style={{ width: "100%" }}
       >
         {hiddenRequirements.map((requirement, i) => {
-          const RequirementComponent = getRequirementComponent(requirement.type)
+          const RequirementComponent =
+            REQUIREMENTS[requirement.type].displayComponent
+
           if (RequirementComponent)
             return (
               <React.Fragment key={i}>
@@ -96,19 +85,5 @@ const Requirements = ({ requirements, logic }: Props) => {
     </VStack>
   )
 }
-
-const getRequirementComponent = (
-  type: RequirementType
-): React.ComponentType<RequirementCardComponentProps> =>
-  dynamic(
-    () => import(`./components/${REQUIREMENTS[type].fileNameBase}RequirementCard`),
-    {
-      loading: () => (
-        <RequirementCard loading={true}>
-          <Skeleton>Loading requirement...</Skeleton>
-        </RequirementCard>
-      ),
-    }
-  )
 
 export default Requirements

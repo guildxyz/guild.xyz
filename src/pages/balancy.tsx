@@ -5,11 +5,22 @@ import BalancyFormCard from "components/balancy/BalancyFormCard"
 import BalancyLogicPicker from "components/balancy/BalancyLogicPicker"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import REQUIREMENT_FORMCARDS from "components/create-guild/Requirements/formCards"
+import AllowlistFormCard from "components/create-guild/Requirements/components/AllowlistFormCard"
+import NftFormCard from "components/create-guild/Requirements/components/NftFormCard"
+import TokenFormCard from "components/create-guild/Requirements/components/TokenFormCard"
 import { TwitterLogo } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { Requirement, RequirementType } from "types"
+
+const REQUIREMENT_FORMCARDS = {
+  ERC20: TokenFormCard,
+  COIN: TokenFormCard,
+  ALLOWLIST: AllowlistFormCard,
+  ERC721: NftFormCard,
+  ERC1155: NftFormCard,
+  NOUNS: NftFormCard,
+}
 
 const Page = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
