@@ -102,6 +102,7 @@ type RequirementType =
   | "DISCORD_ROLE"
   | "DISCORD_MEMBER_SINCE"
   | "DISCORD_JOIN"
+  | "DISCORD_JOIN_FROM_NOW"
   | "NOOX"
   | "DISCO"
   | "LENS"

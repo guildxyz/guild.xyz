@@ -2,6 +2,7 @@ import HundredNOneRequirementCard from "./components/101RequirementCard"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import CaskRequirementCard from "./components/CaskRequirementCard"
 import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
+import DiscordJoinFromNowRequirementCard from "./components/DiscordJoinFromNowRequirementCard"
 import DiscordJoinRequirementCard from "./components/DiscordJoinRequirementCard"
 import DiscordMemberSinceRequirementCard from "./components/DiscordMemberSinceRequirementCard"
 import DiscordRoleRequirementCard from "./components/DiscordRoleRequirementCard"
@@ -52,6 +53,7 @@ const REQUIREMENT_CARDS = {
   DISCORD_ROLE: DiscordRoleRequirementCard,
   DISCORD_MEMBER_SINCE: DiscordMemberSinceRequirementCard,
   DISCORD_JOIN: DiscordJoinRequirementCard,
+  DISCORD_JOIN_FROM_NOW: DiscordJoinFromNowRequirementCard,
   CONTRACT: ContractStateRequirementCard,
   NOOX: NooxRequirementCard,
   DISCO: DiscoRequirementCard,

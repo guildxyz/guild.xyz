@@ -10,6 +10,7 @@ import { useController, useFormState } from "react-hook-form"
 import { FormCardProps } from "types"
 import parseFromObject from "utils/parseFromObject"
 import DiscordJoin from "./components/DiscordJoin"
+import DiscordJoinFromNow from "./components/DiscordJoinFromNow"
 import DiscordMemberSince from "./components/DiscordMemberSince"
 import DiscordRole from "./components/DiscordRole"
 
@@ -29,9 +30,14 @@ const discordRequirementTypes = [
     value: "DISCORD_JOIN",
     DiscordRequirement: DiscordJoin,
   },
+  {
+    label: "Registered since",
+    value: "DISCORD_JOIN_FROM_NOW",
+    DiscordRequirement: DiscordJoinFromNow,
+  },
 ]
 
-const DiscordFormCard = ({ baseFieldPath, field }: FormCardProps) => {
+const DiscordFormCard = ({ baseFieldPath }: FormCardProps) => {
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
