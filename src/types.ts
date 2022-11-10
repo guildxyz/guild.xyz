@@ -1,4 +1,5 @@
 import type { Chain } from "connectors"
+import { PropsWithChildren } from "react"
 
 type Token = {
   address: string
@@ -515,6 +516,16 @@ type FormCardProps = {
   field?: Requirement
 }
 
+type RequirementCardProps = PropsWithChildren<{
+  loading?: boolean
+  image?: string | JSX.Element
+  footer?: JSX.Element
+}>
+
+type RequirementCardComponentProps = {
+  requirement: Requirement
+} & RequirementCardProps
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -560,7 +571,8 @@ export type {
   ContractParamType,
   DiscoParamType,
   FormCardProps,
+  RequirementCardProps,
+  RequirementCardComponentProps,
   RabbitholeParamType,
 }
-
 export { ValidationMethod }

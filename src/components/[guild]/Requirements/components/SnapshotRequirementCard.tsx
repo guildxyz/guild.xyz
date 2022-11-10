@@ -11,15 +11,14 @@ import {
 } from "@chakra-ui/react"
 import CopyableAddress from "components/common/CopyableAddress"
 import { CaretDown } from "phosphor-react"
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import { RequirementButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const SnapshotRequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
+const SnapshotRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps): JSX.Element => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (

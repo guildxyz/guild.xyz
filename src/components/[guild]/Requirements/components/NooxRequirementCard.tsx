@@ -1,15 +1,14 @@
 import { Skeleton } from "@chakra-ui/react"
 import { NooxBadge } from "components/create-guild/Requirements/components/NooxFormCard"
 import useSWRImmutable from "swr/immutable"
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import { RequirementLinkButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const NooxRequirementCard = ({ requirement, ...rest }: Props) => {
+const NooxRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => {
   const { data, isValidating } = useSWRImmutable<NooxBadge[]>("/api/noox")
 
   const badgeData = data?.find((badge) => badge.id === requirement.data.id)

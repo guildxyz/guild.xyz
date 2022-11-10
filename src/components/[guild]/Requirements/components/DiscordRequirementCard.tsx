@@ -2,15 +2,14 @@ import { Icon } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import useServerData from "hooks/useServerData"
 import { DiscordLogo } from "phosphor-react"
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import ConnectRequirementPlatformButton from "./common/ConnectRequirementPlatformButton"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const DiscordRequirementCard = ({ requirement, ...rest }: Props) => {
+const DiscordRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => {
   const {
     data: { serverName, roles, isAdmin, serverIcon },
   } = useServerData(requirement.data.serverId)

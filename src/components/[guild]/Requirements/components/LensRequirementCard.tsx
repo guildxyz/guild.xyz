@@ -1,14 +1,13 @@
 import DataBlock from "components/common/DataBlock"
 import Link from "components/common/Link"
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import { RequirementLinkButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const LensRequirementCard = ({ requirement, ...rest }: Props) => {
+const LensRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => {
   requirement.chain = "POLYGON"
 
   return (

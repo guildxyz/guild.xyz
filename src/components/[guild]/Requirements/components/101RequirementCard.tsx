@@ -1,15 +1,14 @@
 import { Img } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import use101Courses from "components/create-guild/Requirements/components/101FormCard/hooks/use101Courses"
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import { RequirementLinkButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const HundredNOneRequirementCard = ({ requirement, ...rest }: Props) => {
+const HundredNOneRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => {
   const { data, isValidating } = use101Courses()
 
   const badge = data?.find(

@@ -1,13 +1,12 @@
 import { Skeleton, Text } from "@chakra-ui/react"
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import RequirementCard from "../common/RequirementCard"
 import useJuiceboxProject from "./hooks/useJuiceboxProject"
 
-type Props = {
-  requirement: Requirement
-}
-
-const JuiceboxRequirementCard = ({ requirement, ...rest }: Props) => {
+const JuiceboxRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => {
   const { project, isLoading } = useJuiceboxProject(requirement?.data?.id)
 
   return (

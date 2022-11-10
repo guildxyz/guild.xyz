@@ -1,15 +1,14 @@
 import { Icon, Link } from "@chakra-ui/react"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { TwitterLogo } from "phosphor-react"
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import ConnectRequirementPlatformButton from "./common/ConnectRequirementPlatformButton"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const TwitterRequirementCard = ({ requirement, ...rest }: Props) => (
+const TwitterRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => (
   <RequirementCard
     image={
       requirement.type === "TWITTER_FOLLOW" && requirement.data.id ? (

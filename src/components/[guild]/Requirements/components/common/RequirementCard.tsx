@@ -8,20 +8,14 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
-import { PropsWithChildren } from "react"
-
-type Props = {
-  loading?: boolean
-  image: string | JSX.Element
-  footer?: JSX.Element
-}
+import { RequirementCardProps } from "types"
 
 const RequirementCard = ({
   loading,
   image,
   footer,
   children,
-}: PropsWithChildren<Props>): JSX.Element => {
+}: RequirementCardProps): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (

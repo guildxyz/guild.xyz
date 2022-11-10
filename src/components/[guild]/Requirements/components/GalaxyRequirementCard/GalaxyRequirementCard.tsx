@@ -1,13 +1,12 @@
 import { Skeleton, Text } from "@chakra-ui/react"
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import RequirementCard from "../common/RequirementCard"
 import useGalaxyCampaign from "./hooks/useGalaxyCampaign"
 
-type Props = {
-  requirement: Requirement
-}
-
-const GalaxyRequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
+const GalaxyRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps): JSX.Element => {
   const { campaign, isLoading } = useGalaxyCampaign(requirement?.data?.galaxyId)
 
   return (

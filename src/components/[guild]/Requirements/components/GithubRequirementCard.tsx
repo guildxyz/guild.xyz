@@ -1,15 +1,14 @@
 import { Icon } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import { GithubLogo } from "phosphor-react"
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import ConnectRequirementPlatformButton from "./common/ConnectRequirementPlatformButton"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const GithubRequirementCard = ({ requirement, ...rest }: Props) => (
+const GithubRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => (
   <RequirementCard
     image={<Icon as={GithubLogo} boxSize={6} />}
     footer={<ConnectRequirementPlatformButton platform="GITHUB" />}

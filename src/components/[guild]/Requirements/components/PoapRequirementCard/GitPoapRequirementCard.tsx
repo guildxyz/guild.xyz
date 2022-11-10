@@ -1,12 +1,11 @@
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import RequirementCard from "../common/RequirementCard"
 import usePoap from "./hooks/usePoap"
 
-type Props = {
-  requirement: Requirement
-}
-
-const GitPoapRequirementCard = ({ requirement, ...rest }: Props) => {
+const GitPoapRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => {
   const { poap, isLoading } = usePoap(requirement?.data?.id)
 
   return (

@@ -1,13 +1,12 @@
 import { Skeleton } from "@chakra-ui/react"
 import useOtterspaceBadges from "components/create-guild/Requirements/components/OtterspaceFormCard/hooks/useOtterspaceBadges"
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const OtterspaceRequirementCard = ({ requirement, ...rest }: Props) => {
+const OtterspaceRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => {
   const { data, isValidating } = useOtterspaceBadges()
   const badge = data?.find((b) => b.value === requirement.data.id)
 

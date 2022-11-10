@@ -11,17 +11,16 @@ import {
 } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import { CaretDown, Function } from "phosphor-react"
-import { ContractParamType, Requirement } from "types"
+import { ContractParamType, RequirementCardComponentProps } from "types"
 import shortenHex from "utils/shortenHex"
 import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import { RequirementButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const ContractStateRequirementCard = ({ requirement, ...rest }: Props) => {
+const ContractStateRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (

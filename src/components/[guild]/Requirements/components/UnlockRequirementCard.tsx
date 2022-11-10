@@ -1,12 +1,11 @@
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const UnlockRequirementCard = ({ requirement, ...rest }: Props) => (
+const UnlockRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => (
   <RequirementCard
     image={`https://locksmith.unlock-protocol.com/lock/${requirement.address}/icon`}
     footer={<BlockExplorerUrl requirement={requirement} />}

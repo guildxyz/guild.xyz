@@ -1,15 +1,14 @@
 import { Skeleton, Text } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import useKycDAOContracts from "components/create-guild/Requirements/components/KycDAOFormCard/hooks/useKycDAOContracts"
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const KycDAORequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
+const KycDAORequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps): JSX.Element => {
   const { isLoading, kycDAOContracts } = useKycDAOContracts()
 
   const contractData = kycDAOContracts?.find(

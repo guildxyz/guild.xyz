@@ -1,14 +1,13 @@
 import { Img } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
-import { Requirement } from "types"
+import { RequirementCardComponentProps } from "types"
 import { RequirementLinkButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const OrangeRequirementCard = ({ requirement, ...rest }: Props) => (
+const OrangeRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => (
   <RequirementCard
     image={<Img src="/requirementLogos/orange.png" />}
     footer={

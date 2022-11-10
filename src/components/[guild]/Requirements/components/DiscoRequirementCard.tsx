@@ -1,13 +1,12 @@
 import { Img } from "@chakra-ui/react"
-import { DiscoParamType, Requirement } from "types"
+import { DiscoParamType, RequirementCardComponentProps } from "types"
 import shortenHex from "utils/shortenHex"
 import RequirementCard from "./common/RequirementCard"
 
-type Props = {
-  requirement: Requirement
-}
-
-const DiscoRequirementCard = ({ requirement, ...rest }: Props) => {
+const DiscoRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => {
   const param = requirement.data.params as DiscoParamType
   return (
     <RequirementCard image={<Img src="/requirementLogos/disco.png" />} {...rest}>

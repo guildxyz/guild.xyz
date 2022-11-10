@@ -3,14 +3,10 @@ import { ImageData } from "@nouns/assets"
 import DataBlock from "components/common/DataBlock"
 import { NOUNS_BACKGROUNDS } from "components/create-guild/Requirements/components/NftFormCard/hooks/useNftMetadata"
 import useSWRImmutable from "swr/immutable"
-import { Requirement } from "types"
+import { Requirement, RequirementCardComponentProps } from "types"
 import shortenHex from "utils/shortenHex"
 import OpenseaUrl from "./common/OpenseaUrl"
 import RequirementCard from "./common/RequirementCard"
-
-type Props = {
-  requirement: Requirement
-}
 
 const imageDataTypeMap = {
   body: "bodies",
@@ -27,7 +23,10 @@ const getNounsRequirementType = (attribute: Requirement["data"]["attribute"]) =>
     : ImageData.images?.[imageDataTypeMap[attribute.trait_type]]?.[+attribute.value]
         ?.filename
 
-const NftRequirementCard = ({ requirement, ...rest }: Props) => {
+const NftRequirementCard = ({
+  requirement,
+  ...rest
+}: RequirementCardComponentProps) => {
   const { data, isValidating } = useSWRImmutable<{ image: string }>(
     requirement.address ? `/api/opensea-asset-data/${requirement.address}` : null
   )
