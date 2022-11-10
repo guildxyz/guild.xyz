@@ -70,7 +70,7 @@ const ConnectorButton = ({
 
   const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
   const isBraveWallet =
-    typeof window !== "undefined" && (window.ethereum as any).isBraveWallet
+    typeof window !== "undefined" && (window.ethereum as any)?.isBraveWallet
 
   const iconUrl =
     connector instanceof MetaMask
