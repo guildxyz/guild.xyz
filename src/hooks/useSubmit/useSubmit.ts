@@ -4,7 +4,6 @@ import { keccak256 } from "@ethersproject/keccak256"
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { Chains, RPC } from "connectors"
 import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
@@ -139,8 +138,6 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   const [isSigning, setIsSigning] = useState<boolean>(false)
   const [signLoadingText, setSignLoadingText] = useState<string>(defaultLoadingText)
 
-  const { addDatadogError, addDatadogAction } = useDatadog()
-
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
       setSignLoadingText(defaultLoadingText)
@@ -157,9 +154,9 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
       })
         .catch((error) => {
           if (error.code === 4001) {
-            addDatadogAction("User rejected signature request")
+            datadogRum?.addAction("User rejected signature request")
           } else {
-            addDatadogError("Sign error", { error })
+            datadogRum?.addError("Sign error", { error })
           }
           throw error
         })
