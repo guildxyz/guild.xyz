@@ -1,8 +1,10 @@
+import { datadogRum } from "@datadog/browser-rum"
 import { hexStripZeros } from "@ethersproject/bytes"
 import { keccak256 } from "@ethersproject/keccak256"
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { Chains, RPC } from "connectors"
 import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
@@ -137,6 +139,8 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   const [isSigning, setIsSigning] = useState<boolean>(false)
   const [signLoadingText, setSignLoadingText] = useState<string>(defaultLoadingText)
 
+  const { addDatadogError, addDatadogAction } = useDatadog()
+
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
       setSignLoadingText(defaultLoadingText)
@@ -153,9 +157,9 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
       })
         .catch((error) => {
           if (error.code === 4001) {
-            console.info(error.message)
+            addDatadogAction("User rejected signature request")
           } else {
-            console.error(error)
+            addDatadogError("Sign error", { error })
           }
           throw error
         })
@@ -271,7 +275,7 @@ const sign = async ({
         : provider
 
     const bytecode = await prov.getCode(address).catch((error) => {
-      console.error("Retrieving bytecode failed", error)
+      datadogRum?.addError("Retrieving bytecode failed", { error })
       return null
     })
 
