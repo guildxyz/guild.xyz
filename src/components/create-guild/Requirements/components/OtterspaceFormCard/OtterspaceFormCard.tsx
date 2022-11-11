@@ -1,21 +1,31 @@
 import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
-import { Controller, useFormContext } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { FormCardProps, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
+import ChainPicker from "../ChainPicker"
 import useOtterspaceBadges from "./hooks/useOtterspaceBadges"
 
 const OtterspaceFormCard = ({ baseFieldPath }: FormCardProps) => {
   const {
     control,
+    resetField,
     formState: { errors },
   } = useFormContext()
 
-  const { data } = useOtterspaceBadges()
+  const chain = useWatch({ name: `${baseFieldPath}.chain` })
+
+  const { data } = useOtterspaceBadges(chain)
 
   return (
     <Stack spacing={4} alignItems="start">
+      <ChainPicker
+        controlName={`${baseFieldPath}.chain` as const}
+        supportedChains={["OPTIMISM", "GOERLI"]}
+        onChange={() => resetField(`${baseFieldPath}.data.id`)}
+      />
+
       <FormControl isRequired>
         <FormLabel>Badge:</FormLabel>
 
