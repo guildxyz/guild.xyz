@@ -1,0 +1,28 @@
+@import "react-notion-x/src/styles.css";
+:root {
+  --fg-color: var(--chakra-colors-chakra-body-text) !important;
+  --fg-color-2: var(--chakra-colors-chakra-body-text) !important;
+  --fg-color-3: var(--chakra-colors-chakra-body-text) !important;
+  --fg-color-5: var(--chakra-colors-gray-600) !important;
+}
+
+.notion {
+  font-family: var(--chakra-fonts-body);
+  line-height: var(--chakra-lineHeights-base);
+}
+
+.notion-page {
+  width: var(--chakra-sizes-full) !important;
+  padding: 0 !important;
+}
+
+.notion-simple-table {
+  font-family: var(--chakra-fonts-body);
+  line-height: var(--chakra-lineHeights-base);
+  border-radius: var(--chakra-radii-2xl);
+}
+
+.notion-simple-table tr td,
+.notion-simple-table tr:last-child td {
+  border: 1px solid var(--chakra-colors-gray-600);
+}
