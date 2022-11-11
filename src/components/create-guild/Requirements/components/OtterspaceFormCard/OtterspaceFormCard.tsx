@@ -1,6 +1,13 @@
-import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputLeftElement,
+  Stack,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { FormCardProps, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -15,8 +22,11 @@ const OtterspaceFormCard = ({ baseFieldPath }: FormCardProps) => {
   } = useFormContext()
 
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const badgeId = useWatch({ name: `${baseFieldPath}.data.id` })
 
   const { data } = useOtterspaceBadges(chain)
+
+  const pickedBadge = data?.find((option) => option.value === badgeId)
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -29,24 +39,32 @@ const OtterspaceFormCard = ({ baseFieldPath }: FormCardProps) => {
       <FormControl isRequired>
         <FormLabel>Badge:</FormLabel>
 
-        <Controller
-          name={`${baseFieldPath}.data.id` as const}
-          control={control}
-          rules={{ required: "This field is required." }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              isClearable
-              options={data}
-              value={data?.find((option) => option.value === value) ?? ""}
-              placeholder="Choose badge"
-              onChange={(newSelectedOption: SelectOption) => {
-                onChange(newSelectedOption?.value)
-              }}
-              onBlur={onBlur}
-            />
+        <InputGroup>
+          {pickedBadge && (
+            <InputLeftElement>
+              <OptionImage img={pickedBadge?.img} alt={pickedBadge?.label} />
+            </InputLeftElement>
           )}
-        />
+
+          <Controller
+            name={`${baseFieldPath}.data.id` as const}
+            control={control}
+            rules={{ required: "This field is required." }}
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <StyledSelect
+                ref={ref}
+                isClearable
+                options={data}
+                value={data?.find((option) => option.value === value) ?? ""}
+                placeholder="Choose badge"
+                onChange={(newSelectedOption: SelectOption) => {
+                  onChange(newSelectedOption?.value)
+                }}
+                onBlur={onBlur}
+              />
+            )}
+          />
+        </InputGroup>
 
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
