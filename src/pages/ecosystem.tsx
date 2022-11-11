@@ -1,7 +1,7 @@
+import PageDetailsCard from "components/brain/pageDetailsCard"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
-import PageDetailsCard from "components/pageDetailsCard"
 import { GetStaticProps } from "next"
 import { PageDetailsCardData } from "types"
 export const getStaticProps: GetStaticProps = async () => {

@@ -5,14 +5,14 @@ import { Users } from "phosphor-react"
 import { PageDetailsCardData } from "types"
 
 type Props = {
-  pageData: PageDetailsCardData // TODO: PageCardBase type
+  pageData: PageDetailsCardData
 }
 
 const EMBED_IMAGE_SIZE = "30px"
 
 const PageDetailsCard = ({ pageData }: Props): JSX.Element => (
   <Link
-    href={`/help/${pageData.id}`}
+    href={`/brain/${pageData.id}`}
     prefetch={false}
     _hover={{ textDecor: "none" }}
     borderRadius="2xl"
@@ -25,7 +25,7 @@ const PageDetailsCard = ({ pageData }: Props): JSX.Element => (
         <Image src={pageData.icon} alt="Card image" />
       </Box>
       <Wrap zIndex="1">
-        {pageData.tags.map((tag, index) => (
+        {pageData.tags?.map((tag, index) => (
           <Tag as="li" key={index}>
             <TagLeftIcon as={Users} />
             <TagLabel>{tag}</TagLabel>
