@@ -1,4 +1,4 @@
-import { Img, Text } from "@chakra-ui/react"
+import { Img, Link, Text } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Requirement } from "types"
@@ -9,7 +9,7 @@ type Props = {
 }
 
 const GuildRoleRequirementCard = ({ requirement }: Props): JSX.Element => {
-  const { name, roles, isLoading } = useGuild(requirement.data.guildId)
+  const { name, roles, urlName, isLoading } = useGuild(requirement.data.guildId)
   const role = roles?.find((r) => r.id === requirement.data.roleId)
 
   return (
@@ -26,7 +26,13 @@ const GuildRoleRequirementCard = ({ requirement }: Props): JSX.Element => {
       <Text as="span">{"Have the "}</Text>
       <DataBlock isLoading={isLoading}>{role?.name ?? "unknown"}</DataBlock>
       <Text as="span">{" role in the "}</Text>
-      <DataBlock isLoading={isLoading}>{name ?? "unknown"}</DataBlock>
+      <Link
+        href={`https://guild.xyz/${urlName ?? requirement.data.guildId}`}
+        isExternal={true}
+        colorScheme="blue"
+      >
+        {name ?? `#${requirement.data.guildId}`}
+      </Link>
       <Text as="span">{" guild"}</Text>
     </RequirementCard>
   )
