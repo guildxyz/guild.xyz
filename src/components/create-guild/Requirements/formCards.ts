@@ -7,6 +7,7 @@ import DiscordFormCard from "./components/DiscordFormCard"
 import GalaxyFormCard from "./components/GalaxyFormCard"
 import GithubFormCard from "./components/GithubFormCard"
 import GitPoapFormCard from "./components/GitPoapFormCard"
+import GuildFormCard from "./components/GuildFormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import KycDAOFormCard from "./components/KycDAOFormCard"
 import LensFormCard from "./components/LensFormCard"
@@ -60,6 +61,11 @@ const REQUIREMENT_FORMCARDS = {
   101: HundredNOneFormCard,
   RABBITHOLE: RabbitholeFormCard,
   KYC_DAO: KycDAOFormCard,
+  GUILD: GuildFormCard,
+  GUILD_ROLE: GuildFormCard,
+  GUILD_ADMIN: GuildFormCard,
+  GUILD_USER_SINCE: GuildFormCard,
+  GUILD_MINGUILDS: GuildFormCard,
 }
 
 const getRequirementLabel = (type) => {

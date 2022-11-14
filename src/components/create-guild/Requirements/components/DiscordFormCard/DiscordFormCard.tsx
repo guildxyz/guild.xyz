@@ -19,7 +19,7 @@ const discordRequirementTypes = [
   },
 ]
 
-const DiscordFormCard = ({ baseFieldPath, field }: FormCardProps) => {
+const DiscordFormCard = ({ baseFieldPath }: FormCardProps) => {
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({

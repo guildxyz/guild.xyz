@@ -7,6 +7,10 @@ import DiscoRequirementCard from "./components/DiscoRequirementCard"
 import FreeRequirementCard from "./components/FreeRequirementCard"
 import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
 import GithubRequirementCard from "./components/GithubRequirementCard"
+import GuildAdminRequirementCard from "./components/GuildAdminRequirementCard"
+import GuildMinGuildsRequirementCard from "./components/GuildMinGuildsRequirementCard"
+import GuildRoleRequirementCard from "./components/GuildRoleRequirementCard"
+import GuildUserSinceRequirementCard from "./components/GuildUserSinceRequirementCard"
 import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
 import KycDAORequirementCard from "./components/KycDAORequirementCard"
 import LensRequirementCard from "./components/LensRequirementCard"
@@ -62,6 +66,10 @@ const REQUIREMENT_CARDS = {
   "101": HundredNOneRequirementCard,
   RABBITHOLE: RabbitholeRequirementCard,
   KYC_DAO: KycDAORequirementCard,
+  GUILD_ROLE: GuildRoleRequirementCard,
+  GUILD_ADMIN: GuildAdminRequirementCard,
+  GUILD_USER_SINCE: GuildUserSinceRequirementCard,
+  GUILD_MINGUILDS: GuildMinGuildsRequirementCard,
 }
 
 export default REQUIREMENT_CARDS

@@ -85,6 +85,11 @@ const integrations: Array<RequirementButton> = [
     type: "DISCORD",
   },
   {
+    icon: "/requirementLogos/guild.png",
+    label: "Guild.xyz",
+    type: "GUILD",
+  },
+  {
     icon: "/requirementLogos/unlock.png",
     label: "Unlock",
     type: "UNLOCK",
