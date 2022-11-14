@@ -20,7 +20,7 @@ const DiscordJoin = ({ baseFieldPath }: Props): JSX.Element => {
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.memberSince}
       >
-        <FormLabel>Registration date</FormLabel>
+        <FormLabel>Registrated before</FormLabel>
 
         <Input
           type="date"

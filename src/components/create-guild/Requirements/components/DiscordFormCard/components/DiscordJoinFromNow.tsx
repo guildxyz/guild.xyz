@@ -51,7 +51,7 @@ const DiscordJoinFromNow = ({ baseFieldPath }: Props): JSX.Element => {
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath).data?.memberSince}
       >
-        <FormLabel>Member since</FormLabel>
+        <FormLabel>Minimum account age</FormLabel>
 
         <InputGroup>
           <NumberInput

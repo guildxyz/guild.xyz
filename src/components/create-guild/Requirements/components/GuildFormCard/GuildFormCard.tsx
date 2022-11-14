@@ -17,7 +17,7 @@ const guildRequirementTypes = [
     GuildRequirement: Role,
   },
   {
-    label: "Be a user since",
+    label: "Account age",
     value: "GUILD_USER_SINCE",
     GuildRequirement: UserSince,
   },

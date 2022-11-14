@@ -23,17 +23,17 @@ const discordRequirementTypes = [
     DiscordRequirement: DiscordRole,
   },
   {
-    label: "Member since",
+    label: "Be member of server since",
     value: "DISCORD_MEMBER_SINCE",
     DiscordRequirement: DiscordMemberSince,
   },
   {
-    label: "Registered before",
+    label: "Account age (absolute)",
     value: "DISCORD_JOIN",
     DiscordRequirement: DiscordJoin,
   },
   {
-    label: "Registered since",
+    label: "Account age (relative)",
     value: "DISCORD_JOIN_FROM_NOW",
     DiscordRequirement: DiscordJoinFromNow,
   },
