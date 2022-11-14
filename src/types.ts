@@ -219,6 +219,15 @@ type Requirement = {
       params: Record<string, any>
     } // SNAPSHOT
     traitTypes?: Trait[]
+    // Deprecated, but we'll support it too for a while
+    attribute?: {
+      trait_type?: string
+      value?: string
+      interval?: {
+        min: number
+        max: number
+      }
+    }
     galaxyId?: string
     serverId?: string
     roleId?: string
