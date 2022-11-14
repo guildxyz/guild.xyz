@@ -6,8 +6,11 @@ type Props = {
   requirement: Requirement
 }
 
-const GuildMinGuildsRequirementCard = ({ requirement }: Props): JSX.Element => (
-  <RequirementCard image="/requirementLogos/guild.png">
+const GuildMinGuildsRequirementCard = ({
+  requirement,
+  ...rest
+}: Props): JSX.Element => (
+  <RequirementCard image="/requirementLogos/guild.png" {...rest}>
     {`Be a member of at least ${pluralize(requirement.data.minAmount, "guild")}`}
   </RequirementCard>
 )

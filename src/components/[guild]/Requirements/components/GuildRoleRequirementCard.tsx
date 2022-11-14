@@ -8,7 +8,7 @@ type Props = {
   requirement: Requirement
 }
 
-const GuildRoleRequirementCard = ({ requirement }: Props): JSX.Element => {
+const GuildRoleRequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
   const { name, roles, urlName, isLoading } = useGuild(requirement.data.guildId)
   const role = roles?.find((r) => r.id === requirement.data.roleId)
 
@@ -22,6 +22,7 @@ const GuildRoleRequirementCard = ({ requirement }: Props): JSX.Element => {
           role.imageUrl
         ))
       }
+      {...rest}
     >
       <Text as="span">{"Have the "}</Text>
       <DataBlock isLoading={isLoading}>{role?.name ?? "unknown"}</DataBlock>
