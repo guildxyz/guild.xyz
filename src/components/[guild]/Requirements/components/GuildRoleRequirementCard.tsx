@@ -1,4 +1,4 @@
-import { Img, Skeleton, Text } from "@chakra-ui/react"
+import { Img, Text } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Requirement } from "types"
@@ -24,13 +24,9 @@ const GuildRoleRequirementCard = ({ requirement }: Props): JSX.Element => {
       }
     >
       <Text as="span">{"Have the "}</Text>
-      <Skeleton as="span" isLoaded={!isLoading}>
-        {isLoading ? "Loading..." : <DataBlock>{role?.name ?? "unknown"}</DataBlock>}
-      </Skeleton>
+      <DataBlock isLoading={isLoading}>{role?.name ?? "unknown"}</DataBlock>
       <Text as="span">{" role in the "}</Text>
-      <Skeleton as="span" isLoaded={!isLoading}>
-        {isLoading ? "Loading..." : <DataBlock>{name ?? "unknown"}</DataBlock>}
-      </Skeleton>
+      <DataBlock isLoading={isLoading}>{name ?? "unknown"}</DataBlock>
       <Text as="span">{" guild"}</Text>
     </RequirementCard>
   )
