@@ -60,7 +60,7 @@ const ChainPicker = ({
         controlName,
         supportedChains.includes(Chains[chainId] as Chain)
           ? Chains[chainId]
-          : "ETHEREUM"
+          : supportedChains[0]
       )
     }, 0)
   }, [chainId])
