@@ -14,7 +14,7 @@ import {
   RPC,
   supportedChains as defaultSupportedChains,
 } from "connectors"
-import { useEffect, useMemo } from "react"
+import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { SelectOption } from "types"
 
@@ -43,13 +43,9 @@ const ChainPicker = ({
   const { chainId } = useWeb3React()
   const chain = useWatch({ name: controlName })
 
-  const mappedSupportedChains = useMemo(
-    () =>
-      supportedChains
-        ? mappedChains?.filter((_chain) => supportedChains.includes(_chain.value))
-        : mappedChains,
-    [supportedChains]
-  )
+  const mappedSupportedChains = supportedChains
+    ? mappedChains?.filter((_chain) => supportedChains.includes(_chain.value))
+    : mappedChains
 
   /**
    * Timeouted setValue on mount instead of defaultValue, because for some reason
@@ -64,7 +60,7 @@ const ChainPicker = ({
         controlName,
         supportedChains.includes(Chains[chainId] as Chain)
           ? Chains[chainId]
-          : "ETHEREUM"
+          : supportedChains[0]
       )
     }, 0)
   }, [chainId])

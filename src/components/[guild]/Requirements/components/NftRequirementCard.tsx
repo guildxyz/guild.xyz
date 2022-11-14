@@ -2,7 +2,7 @@ import { Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import DataBlock from "components/common/DataBlock"
 import { NOUNS_BACKGROUNDS } from "components/create-guild/Requirements/components/NftFormCard/hooks/useNftMetadata"
-import { Fragment, useMemo } from "react"
+import { Fragment } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Requirement, Trait } from "types"
 import shortenHex from "utils/shortenHex"
@@ -33,13 +33,8 @@ const NftRequirementCard = ({ requirement, ...rest }: Props) => {
     requirement.address ? `/api/opensea-asset-data/${requirement.address}` : null
   )
 
-  const shouldRenderImage = useMemo(
-    () =>
-      requirement.chain === "ETHEREUM" &&
-      requirement.name &&
-      requirement.name !== "-",
-    [requirement]
-  )
+  const shouldRenderImage =
+    requirement.chain === "ETHEREUM" && requirement.name && requirement.name !== "-"
 
   return (
     <RequirementCard

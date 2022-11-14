@@ -32,6 +32,9 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         )
           requirement.data.addresses = []
 
+        // Deleting ID here, we don't want to update it, and it might also cause bugs
+        delete processedRequirement.id
+
         return processedRequirement
       })
   )

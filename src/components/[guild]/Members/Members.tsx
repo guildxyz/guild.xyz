@@ -12,10 +12,7 @@ const BATCH_SIZE = 48
 const Members = ({ members }: Props): JSX.Element => {
   const { isLoading, admins } = useGuild()
 
-  const ownerAddress = useMemo(
-    () => admins?.find((admin) => admin?.isOwner)?.address,
-    [admins]
-  )
+  const ownerAddress = admins?.find((admin) => admin?.isOwner)?.address
 
   const adminsSet = useMemo(
     () => new Set(admins?.map((admin) => admin.address) ?? []),
@@ -50,10 +47,7 @@ const Members = ({ members }: Props): JSX.Element => {
     setRenderedMembersCount((prevValue) => prevValue + BATCH_SIZE)
   }, [members, renderedMembersCount])
 
-  const renderedMembers = useMemo(
-    () => sortedMembers?.slice(0, renderedMembersCount) || [],
-    [sortedMembers, renderedMembersCount]
-  )
+  const renderedMembers = sortedMembers?.slice(0, renderedMembersCount) || []
 
   if (isLoading) return <Text>Loading members...</Text>
 

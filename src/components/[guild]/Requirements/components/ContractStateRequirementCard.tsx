@@ -55,7 +55,7 @@ const ContractStateRequirementCard = ({ requirement, ...rest }: Props) => {
               borderRadius="md"
             >
               <Tbody fontWeight="normal" fontSize="xs">
-                {(requirement.data.params as ContractParamType).map((param, i) => (
+                {(requirement.data.params as ContractParamType)?.map((param, i) => (
                   <Tr key={i}>
                     <Td>{`${i + 1}. input param`}</Td>
                     <Td>{param}</Td>
