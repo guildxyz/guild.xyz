@@ -3,7 +3,7 @@ import { useRumAction } from "@datadog/rum-react-integration"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import Section from "components/common/Section"
-import FreeRequirementCard from "components/[guild]/Requirements/components/FreeRequirementCard"
+import FreeRequirement from "components/[guild]/Requirements/components/FreeRequirement"
 import { useEffect, useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { Requirement, RequirementType } from "types"
@@ -98,7 +98,7 @@ const SetRequirements = (): JSX.Element => {
           return (
             <CardMotionWrapper>
               <Card px="6" py="4">
-                <FreeRequirementCard />
+                <FreeRequirement />
               </Card>
             </CardMotionWrapper>
           )

@@ -20,7 +20,7 @@ import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
-import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
+import usePoap from "components/[guild]/Requirements/components/PoapRequirement/hooks/usePoap"
 import { Chains, RPC } from "connectors"
 import {
   ArrowSquareOut,

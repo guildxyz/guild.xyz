@@ -24,7 +24,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
 import REQUIREMENTS, {
   REQUIREMENTS_DATA,
-} from "components/[guild]/Requirements/requirementCards"
+} from "components/[guild]/Requirements/requirements"
 import { AnimatePresence, usePresence } from "framer-motion"
 import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"

@@ -3,7 +3,7 @@ import { TransactionResponse } from "@ethersproject/providers"
 import { formatUnits, parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
-import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
+import usePoap from "components/[guild]/Requirements/components/PoapRequirement/hooks/usePoap"
 import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useFeeCollectorContract, {

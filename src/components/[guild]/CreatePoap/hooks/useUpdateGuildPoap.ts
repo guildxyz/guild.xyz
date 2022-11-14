@@ -1,5 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
+import usePoap from "components/[guild]/Requirements/components/PoapRequirement/hooks/usePoap"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"

@@ -8,7 +8,7 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
+import usePoap from "components/[guild]/Requirements/components/PoapRequirement/hooks/usePoap"
 import { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { FormCardProps, SelectOption } from "types"

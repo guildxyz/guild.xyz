@@ -1,3 +1,3 @@
-import Requirements from "./Requirements"
+import RoleRequirements from "./RoleRequirements"
 
-export default Requirements
+export default RoleRequirements

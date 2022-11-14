@@ -14,7 +14,7 @@ import {
 import Card from "components/common/Card"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
-import REQUIREMENTS from "components/[guild]/Requirements/requirementCards"
+import REQUIREMENTS from "components/[guild]/Requirements/requirements"
 import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import BalancyFooter from "./BalancyFooter"
@@ -27,7 +27,7 @@ const RequirementEditableCard = ({
   updateRequirement,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const RequirementCardComponent = REQUIREMENTS[type].displayComponent
+  const RequirementComponent = REQUIREMENTS[type].displayComponent
   const FormComponent = REQUIREMENTS[type].formComponent
   const ref = useRef()
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
@@ -60,13 +60,13 @@ const RequirementEditableCard = ({
     [index, setValue]
   )
 
-  if (!RequirementCardComponent || !FormComponent) return null
+  if (!RequirementComponent || !FormComponent) return null
 
   return (
     <>
       <Card px="6" py="4" pos="relative">
         <HStack pr="3">
-          <RequirementCardComponent
+          <RequirementComponent
             requirement={field}
             footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
             setValueForBalancy={setValueForBalancy}

@@ -516,15 +516,15 @@ type FormCardProps = {
   field?: Requirement
 }
 
-type RequirementCardProps = PropsWithChildren<{
+type RequirementProps = PropsWithChildren<{
   loading?: boolean
   image?: string | JSX.Element
   footer?: JSX.Element
 }>
 
-type RequirementCardComponentProps = {
+type RequirementComponentProps = {
   requirement: Requirement
-} & RequirementCardProps
+} & RequirementProps
 
 export type {
   WalletConnectConnectionData,
@@ -571,8 +571,8 @@ export type {
   ContractParamType,
   DiscoParamType,
   FormCardProps,
-  RequirementCardProps,
-  RequirementCardComponentProps,
+  RequirementProps,
+  RequirementComponentProps,
   RabbitholeParamType,
 }
 export { ValidationMethod }
