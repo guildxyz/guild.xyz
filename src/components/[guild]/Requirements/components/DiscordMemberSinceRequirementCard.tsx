@@ -10,15 +10,11 @@ type Props = {
   requirement: Requirement
 }
 
-const DiscordRoleRequirementCard = ({ requirement, ...rest }: Props) => {
+const DiscordMemberSinceRequirementCard = ({ requirement }: Props): JSX.Element => {
   const {
-    data: { serverName, roles, isAdmin },
+    data: { serverName },
   } = useServerData(requirement.data.serverId)
-
-  const role =
-    typeof isAdmin === "boolean"
-      ? roles?.find(({ id }) => id === requirement.data.roleId)
-      : undefined
+  const formattedDate = new Date(requirement.data.memberSince).toLocaleDateString()
 
   return (
     <RequirementCard
@@ -29,15 +25,13 @@ const DiscordRoleRequirementCard = ({ requirement, ...rest }: Props) => {
           roleId={requirement?.roleId}
         />
       }
-      {...rest}
     >
-      {`Have the `}
-      <DataBlock>{role?.name || requirement.data.roleName}</DataBlock>
-      {` role in the `}
+      {`Be member of the `}
       <DataBlock>{serverName || requirement.data.serverName}</DataBlock>
-      {` server`}
+      {` server since at least `}
+      <DataBlock>{formattedDate}</DataBlock>
     </RequirementCard>
   )
 }
 
-export default DiscordRoleRequirementCard
+export default DiscordMemberSinceRequirementCard

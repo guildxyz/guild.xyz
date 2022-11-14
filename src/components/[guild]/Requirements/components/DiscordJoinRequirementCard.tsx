@@ -1,6 +1,5 @@
 import { Icon } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
-import useServerData from "hooks/useServerData"
 import { DiscordLogo } from "phosphor-react"
 import { Requirement } from "types"
 import ConnectRequirementPlatformButton from "./common/ConnectRequirementPlatformButton"
@@ -10,15 +9,8 @@ type Props = {
   requirement: Requirement
 }
 
-const DiscordRoleRequirementCard = ({ requirement, ...rest }: Props) => {
-  const {
-    data: { serverName, roles, isAdmin },
-  } = useServerData(requirement.data.serverId)
-
-  const role =
-    typeof isAdmin === "boolean"
-      ? roles?.find(({ id }) => id === requirement.data.roleId)
-      : undefined
+const DiscordJoinRequirementCard = ({ requirement }: Props): JSX.Element => {
+  const formattedDate = new Date(requirement.data.memberSince).toLocaleDateString()
 
   return (
     <RequirementCard
@@ -29,15 +21,11 @@ const DiscordRoleRequirementCard = ({ requirement, ...rest }: Props) => {
           roleId={requirement?.roleId}
         />
       }
-      {...rest}
     >
-      {`Have the `}
-      <DataBlock>{role?.name || requirement.data.roleName}</DataBlock>
-      {` role in the `}
-      <DataBlock>{serverName || requirement.data.serverName}</DataBlock>
-      {` server`}
+      {`Be a Discord user since at least `}
+      <DataBlock>{formattedDate}</DataBlock>
     </RequirementCard>
   )
 }
 
-export default DiscordRoleRequirementCard
+export default DiscordJoinRequirementCard

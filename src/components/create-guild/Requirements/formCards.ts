@@ -49,6 +49,9 @@ const REQUIREMENT_FORMCARDS = {
   GITHUB_STARRING: GithubFormCard,
   DISCORD: DiscordFormCard,
   DISCORD_ROLE: DiscordFormCard,
+  DISCORD_MEMBER_SINCE: DiscordFormCard,
+  DISCORD_JOIN: DiscordFormCard,
+  DISCORD_JOIN_FROM_NOW: DiscordFormCard,
   NOOX: NooxFormCard,
   DISCO: DiscoFormCard,
   LENS_PROFILE: LensFormCard,
@@ -91,6 +94,9 @@ const getRequirementLabel = (type) => {
       return "GALXE"
 
     case "DISCORD_ROLE":
+    case "DISCORD_MEMBER_SINCE":
+    case "DISCORD_JOIN":
+    case "DISCORD_JOIN_FROM_NOW":
       return "DISCORD"
 
     case "LENS_PROFILE":

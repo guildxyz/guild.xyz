@@ -100,6 +100,9 @@ type RequirementType =
   | "NOUNS"
   | "DISCORD"
   | "DISCORD_ROLE"
+  | "DISCORD_MEMBER_SINCE"
+  | "DISCORD_JOIN"
+  | "DISCORD_JOIN_FROM_NOW"
   | "NOOX"
   | "DISCO"
   | "LENS"
@@ -223,10 +226,13 @@ type Requirement = {
       }
     }
     galaxyId?: string
+    // Discord
     serverId?: string
     roleId?: string | number
     serverName?: string
     roleName?: string
+    memberSince?: number
+    fromNow?: boolean
     // CONTRACT
     expected?: string
     resultIndex?: number
