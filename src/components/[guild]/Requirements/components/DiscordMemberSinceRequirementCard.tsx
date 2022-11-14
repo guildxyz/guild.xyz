@@ -26,9 +26,9 @@ const DiscordMemberSinceRequirementCard = ({ requirement }: Props): JSX.Element 
         />
       }
     >
-      {`Be a member of the `}
+      {`Be member of the `}
       <DataBlock>{serverName || requirement.data.serverName}</DataBlock>
-      {` server at least since `}
+      {` server since at least `}
       <DataBlock>{formattedDate}</DataBlock>
     </RequirementCard>
   )

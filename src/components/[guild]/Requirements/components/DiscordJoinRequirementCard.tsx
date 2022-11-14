@@ -22,7 +22,7 @@ const DiscordJoinRequirementCard = ({ requirement }: Props): JSX.Element => {
         />
       }
     >
-      {`Be a Discord user at least since `}
+      {`Be a Discord user since at least `}
       <DataBlock>{formattedDate}</DataBlock>
     </RequirementCard>
   )

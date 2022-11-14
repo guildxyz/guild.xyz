@@ -33,7 +33,7 @@ const DiscordJoinFromNowRequirementCard = ({ requirement }: Props): JSX.Element 
         />
       }
     >
-      {`Be a Discord user for `}
+      {`Have a Discord account older than `}
       <DataBlock>{formattedMemberSince}</DataBlock>
     </RequirementCard>
   )
