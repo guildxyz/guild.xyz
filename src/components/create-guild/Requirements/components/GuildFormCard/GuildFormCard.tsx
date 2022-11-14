@@ -22,12 +22,12 @@ const guildRequirementTypes = [
     GuildRequirement: UserSince,
   },
   {
-    label: "Be a member of {n} guilds",
+    label: "Memberships count",
     value: "GUILD_MINGUILDS",
     GuildRequirement: MinGuilds,
   },
   {
-    label: "Be an admin of a guild with {n} members",
+    label: "Admin status",
     value: "GUILD_ADMIN",
     GuildRequirement: GuildAdmin,
   },
