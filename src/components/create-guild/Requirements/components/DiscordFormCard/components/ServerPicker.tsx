@@ -87,7 +87,7 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      <Collapse in={isUnknownServer}>
+      <Collapse in={isUnknownServer} style={{ width: "100%" }}>
         <FormControl
           isRequired
           isInvalid={

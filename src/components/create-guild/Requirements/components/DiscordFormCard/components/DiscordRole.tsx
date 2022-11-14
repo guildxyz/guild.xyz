@@ -111,7 +111,7 @@ const DiscordRole = ({ baseFieldPath }: FormCardProps) => {
         <FormHelperText>Select a role or paste a role id</FormHelperText>
       </FormControl>
 
-      <Collapse in={isUnknownRole}>
+      <Collapse in={isUnknownRole} style={{ width: "100%" }}>
         <FormControl
           isRequired
           isInvalid={
