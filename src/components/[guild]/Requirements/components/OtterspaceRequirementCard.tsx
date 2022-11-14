@@ -8,7 +8,7 @@ type Props = {
 }
 
 const OtterspaceRequirementCard = ({ requirement, ...rest }: Props) => {
-  const { data, isValidating } = useOtterspaceBadges()
+  const { data, isValidating } = useOtterspaceBadges(requirement.chain)
   const badge = data?.find((b) => b.value === requirement.data.id)
 
   return (
