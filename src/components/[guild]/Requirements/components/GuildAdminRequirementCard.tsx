@@ -8,10 +8,11 @@ type Props = {
 
 const GuildAdminRequirementCard = ({ requirement }: Props): JSX.Element => (
   <RequirementCard image="/requirementLogos/guild.png">
-    {"Be an admin in "}
-    {requirement.data.minAmount === 0
-      ? "any guild"
-      : `a guild with at least ${pluralize(requirement.data.minAmount, "member")}`}
+    {`Be an admin of a guild${
+      requirement.data.minAmount > 0
+        ? ` with at least ${pluralize(requirement.data.minAmount, "member")}`
+        : ""
+    }`}
   </RequirementCard>
 )
 

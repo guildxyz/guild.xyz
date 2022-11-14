@@ -17,19 +17,19 @@ const guildRequirementTypes = [
     GuildRequirement: Role,
   },
   {
-    label: "Be a guild admin",
-    value: "GUILD_ADMIN",
-    GuildRequirement: GuildAdmin,
-  },
-  {
     label: "Be a user since",
     value: "GUILD_USER_SINCE",
     GuildRequirement: UserSince,
   },
   {
-    label: "Be a member of guilds",
+    label: "Be a member of {n} guilds",
     value: "GUILD_MINGUILDS",
     GuildRequirement: MinGuilds,
+  },
+  {
+    label: "Be an admin of a guild with {n} members",
+    value: "GUILD_ADMIN",
+    GuildRequirement: GuildAdmin,
   },
 ]
 
