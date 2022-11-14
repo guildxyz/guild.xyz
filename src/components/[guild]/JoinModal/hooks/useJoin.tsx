@@ -5,7 +5,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
@@ -53,14 +53,8 @@ const useJoin = (onSuccess?: () => void) => {
   const toastIdRef = useRef<ToastId>()
   const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
-  const submit = ({
-    data,
-    validation,
-  }: WithValidation<unknown>): Promise<Response> =>
-    fetcher(`/user/join`, {
-      body: data,
-      validation,
-    }).then((body) => {
+  const submit = (signedValidation: SignedValdation): Promise<Response> =>
+    fetcher(`/user/join`, signedValidation).then((body) => {
       if (body === "rejected") {
         // eslint-disable-next-line @typescript-eslint/no-throw-literal
         throw "Something went wrong, join request rejected."
@@ -76,7 +70,7 @@ const useJoin = (onSuccess?: () => void) => {
       )
     })
 
-  const useSubmitResponse = useSubmitWithSign<any, Response>(submit, {
+  const useSubmitResponse = useSubmitWithSign<Response>(submit, {
     onSuccess: (response) => {
       // mutate user in case they connected new platforms during the join flow
       user?.mutate?.()

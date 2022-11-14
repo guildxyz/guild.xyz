@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useFieldArray, useFormContext, useFormState } from "react-hook-form"
 import fetcher from "utils/fetcher"
@@ -21,14 +21,13 @@ const useRemovePlatform = () => {
     name: "rolePlatforms",
   })
 
-  const submit = async ({ validation, data }: WithValidation<Data>) =>
+  const submit = async (signedValidation: SignedValdation) =>
     fetcher(`/role/${roleId}/platform/${guildPlatformId}`, {
       method: "DELETE",
-      body: data,
-      validation,
+      ...signedValidation,
     })
 
-  return useSubmitWithSign<Data, any>(submit, {
+  return useSubmitWithSign<any>(submit, {
     onSuccess: () => {
       toast({
         title: `Platform removed!`,

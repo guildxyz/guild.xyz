@@ -1,3 +1,4 @@
+import { datadogRum } from "@datadog/browser-rum"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import { createStore, del, get, set } from "idb-keyval"
@@ -22,9 +23,13 @@ const deleteKeyPairFromIdb = (userId: number) => del(userId, getStore())
 const setKeyPairToIdb = (userId: number, keys: StoredKeyPair) =>
   set(userId, keys, getStore())
 
-const generateKeyPair = () => {
+const generateKeyPair = async () => {
+  const keyPair: StoredKeyPair = {
+    pubKey: undefined,
+    keyPair: undefined,
+  }
   try {
-    return window.crypto.subtle.generateKey(
+    const generatedKeys = await window.crypto.subtle.generateKey(
       {
         name: "ECDSA",
         namedCurve: "P-256",
@@ -32,9 +37,27 @@ const generateKeyPair = () => {
       false,
       ["sign", "verify"]
     )
+
+    try {
+      const generatedPubKey = await window.crypto.subtle.exportKey(
+        "raw",
+        generatedKeys.publicKey
+      )
+
+      const generatedPubKeyHex = bufferToHex(generatedPubKey)
+      keyPair.pubKey = generatedPubKeyHex
+      keyPair.keyPair = generatedKeys
+      return keyPair
+    } catch {
+      throw new Error("Pubkey export error")
+    }
   } catch (error) {
-    console.error(error)
-    throw new Error("Generating a key pair is unsupported in this browser.")
+    if (error?.code !== 4001) {
+      datadogRum.addError(`Keypair generation error`, {
+        error: error?.message || error?.toString?.() || error,
+      })
+    }
+    throw error
   }
 }
 
@@ -55,20 +78,18 @@ const setKeyPair = async ({
   account,
   mutateKeyPair,
   validation,
-  payload,
+  generatedKeyPair,
 }: {
   account: string
   validation: Validation
   mutateKeyPair: KeyedMutator<StoredKeyPair>
-  payload: StoredKeyPair
+  generatedKeyPair: StoredKeyPair
 }) => {
   const { userId } = await fetcher("/user/pubKey", {
     body: {
-      payload: {
-        pubKey: payload.pubKey,
-      },
-      ...validation,
+      pubKey: generatedKeyPair.pubKey,
     },
+    validation,
     method: "POST",
   })
 
@@ -77,12 +98,12 @@ const setKeyPair = async ({
    * Ignoring this error is fine, since we are falling back to just storing it in
    * memory.
    */
-  await setKeyPairToIdb(userId, payload).catch(() => {})
+  await setKeyPairToIdb(userId, generatedKeyPair).catch(() => {})
 
   await mutate(`/user/${account}`)
   await mutateKeyPair()
 
-  return payload
+  return generatedKeyPair
 }
 
 const checkKeyPair = (
@@ -125,9 +146,17 @@ const useKeyPair = () => {
     fallbackData: { pubKey: undefined, keyPair: undefined },
   })
 
+  const { data: generatedKeyPair } = useSWRImmutable(
+    "generatedKeyPair",
+    generateKeyPair,
+    {
+      fallbackData: { pubKey: undefined, keyPair: undefined },
+    }
+  )
+
   const toast = useToast()
 
-  const { data: isKeyPairValidData } = useSWRImmutable(
+  const { data: isKeyPairValidData, mutate: generateNewKeyPair } = useSWRImmutable(
     keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
     checkKeyPair,
     {
@@ -156,18 +185,16 @@ const useKeyPair = () => {
     }
   )
 
-  const setSubmitResponse = useSubmitWithSignWithParamKeyPair<
-    StoredKeyPair,
-    StoredKeyPair
-  >(
-    ({ data, validation }) =>
-      setKeyPair({ account, mutateKeyPair, validation, payload: data }),
+  const setSubmitResponse = useSubmitWithSignWithParamKeyPair<void, StoredKeyPair>(
+    ({ validation }) =>
+      setKeyPair({ account, mutateKeyPair, validation, generatedKeyPair }),
     {
       keyPair,
       forcePrompt: true,
       message:
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
       onError: (error) => {
+        generateNewKeyPair()
         console.error("setKeyPair error", error)
         if (error?.code !== 4001) {
           addDatadogError(
@@ -180,7 +207,7 @@ const useKeyPair = () => {
           )
         }
       },
-      onSuccess: (generatedKeyPair) => mutateKeyPair(generatedKeyPair),
+      onSuccess: () => mutateKeyPair(generatedKeyPair),
     }
   )
 
@@ -191,44 +218,7 @@ const useKeyPair = () => {
     pubKey,
     keyPair,
     isValid: isKeyPairValidData?.[0] ?? false,
-    set: {
-      ...setSubmitResponse,
-      onSubmit: async () => {
-        const body: StoredKeyPair = {
-          pubKey: undefined,
-          keyPair: undefined,
-        }
-        try {
-          const generatedKeys = await generateKeyPair()
-
-          try {
-            const generatedPubKey = await window.crypto.subtle.exportKey(
-              "raw",
-              generatedKeys.publicKey
-            )
-
-            const generatedPubKeyHex = bufferToHex(generatedPubKey)
-            body.pubKey = generatedPubKeyHex
-            body.keyPair = generatedKeys
-          } catch {
-            throw new Error("Pubkey export error")
-          }
-        } catch (error) {
-          if (error?.code !== 4001) {
-            addDatadogError(
-              `Keypair generation error`,
-              {
-                ...defaultCustomAttributes,
-                error: error?.message || error?.toString?.() || error,
-              },
-              "custom"
-            )
-          }
-          throw error
-        }
-        return setSubmitResponse.onSubmit(body)
-      },
-    },
+    set: setSubmitResponse,
   }
 }
 

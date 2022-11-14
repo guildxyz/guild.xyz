@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { GuildPoap } from "types"
 import fetcher from "utils/fetcher"
@@ -10,14 +10,10 @@ import usePoapEventDetails from "../components/Requirements/components/VoicePart
 
 type UpdatePoapData = { id: number; expiryDate?: number; activate?: boolean }
 
-const updateGuildPoap = async ({
-  validation,
-  data,
-}: WithValidation<UpdatePoapData>) =>
+const updateGuildPoap = async (signedValidation: SignedValdation) =>
   fetcher(`/assets/poap`, {
     method: "PATCH",
-    validation,
-    body: data,
+    ...signedValidation,
   })
 
 const useUpdateGuildPoap = (type: "UPDATE" | "ACTIVATE" = "UPDATE") => {
@@ -30,7 +26,7 @@ const useUpdateGuildPoap = (type: "UPDATE" | "ACTIVATE" = "UPDATE") => {
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
   const { mutatePoapEventDetails } = usePoapEventDetails()
 
-  return useSubmitWithSign<UpdatePoapData, GuildPoap>(updateGuildPoap, {
+  return useSubmitWithSign<GuildPoap>(updateGuildPoap, {
     onError: (error) => showErrorToast(error?.error?.message ?? error?.error),
     onSuccess: async (response) => {
       // Mutating guild and POAP data, so the user can see the fresh data in the POAPs list

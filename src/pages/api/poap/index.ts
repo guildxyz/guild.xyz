@@ -38,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const image = files?.image
-        if (image) {
+        if (image && !Array.isArray(image)) {
           const fileType = image.mimetype?.replace("image/", "") ?? "png"
           const fileInstance = fs.createReadStream(image.filepath)
           formData.append("image", fileInstance, `image.${fileType}`)

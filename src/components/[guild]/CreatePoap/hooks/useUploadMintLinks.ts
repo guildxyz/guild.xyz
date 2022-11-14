@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
@@ -23,10 +23,7 @@ const useUploadMintLinks = () => {
 
   const [loadingText, setLoadingText] = useState<string>(null)
 
-  const uploadMintLinks = async ({
-    validation,
-    data,
-  }: WithValidation<UploadMintLinksData>) => {
+  const uploadMintLinks = async (signedValidation: SignedValdation) => {
     // Temporarily disabled this feature, we'll need another solution for it.
     // setLoadingText("Validating mint links")
     // const checkMintLinksRes: { validated: boolean } = await fetcher(
@@ -40,11 +37,11 @@ const useUploadMintLinks = () => {
 
     setLoadingText("Saving mint links")
 
-    return fetcher("/assets/poap/links", { validation, body: data })
+    return fetcher("/assets/poap/links", signedValidation)
   }
 
   return {
-    ...useSubmitWithSign<UploadMintLinksData, any>(uploadMintLinks, {
+    ...useSubmitWithSign<any>(uploadMintLinks, {
       onError: (error) =>
         showErrorToast(error?.error?.message ?? error?.error ?? error),
       onSuccess: () => {

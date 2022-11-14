@@ -41,10 +41,10 @@ const GoogleSelectButton = ({ onSelection }: Props) => {
   const fetcherWithSign = useFetcherWithSign()
 
   const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
-    ({ data, validation }) =>
+    (signedValidation) =>
       fetcher("/user/connect", {
         method: "POST",
-        body: { payload: data, ...validation },
+        ...signedValidation,
       }).then(() => manageKeyPairAfterUserMerge(fetcherWithSign, user, account)),
     { onSuccess: () => onSelection("GOOGLE") }
   )

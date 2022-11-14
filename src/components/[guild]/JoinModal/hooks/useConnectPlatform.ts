@@ -3,7 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
@@ -36,11 +36,8 @@ const useConnectPlatform = (
   const { account } = useWeb3React()
   const fetcherWithSign = useFetcherWithSign()
 
-  const submit = ({ data, validation }: WithValidation<unknown>) =>
-    fetcher("/user/connect", {
-      body: data,
-      validation,
-    }).then((body) => {
+  const submit = (signedValidation: SignedValdation) =>
+    fetcher("/user/connect", signedValidation).then((body) => {
       if (body === "rejected") {
         // eslint-disable-next-line @typescript-eslint/no-throw-literal
         throw "Something went wrong, connect request rejected."
@@ -56,10 +53,11 @@ const useConnectPlatform = (
       )
     })
 
-  const { onSubmit, isLoading, response } = useSubmitWithSign<
-    { platformName: PlatformName; authData: any; reauth?: boolean },
-    any
-  >(submit, {
+  const { onSubmit, isLoading, response } = useSubmitWithSign<{
+    platformName: PlatformName
+    authData: any
+    reauth?: boolean
+  }>(submit, {
     onSuccess: () => {
       addDatadogAction("Successfully connected 3rd party account")
       mutateUser()
