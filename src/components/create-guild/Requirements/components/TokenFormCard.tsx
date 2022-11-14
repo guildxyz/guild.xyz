@@ -77,7 +77,9 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
     data: { name: tokenName, symbol: tokenSymbol, decimals: tokenDecimals },
     isValidating: isTokenSymbolValidating,
     error,
-  } = useTokenData(chain, address, () => trigger(`${baseFieldPath}.address`))
+  } = useTokenData(chain, address, {
+    onFinish: () => trigger(`${baseFieldPath}.address`),
+  })
 
   useEffect(() => {
     try {
