@@ -180,7 +180,7 @@ export const REQUIREMENTS_DATA: Req[] = [
 ]
 
 const REQUIREMENTS_WITH_COMPONENTS: ReqWithComponent[] = REQUIREMENTS_DATA.map(
-  (obj) => ({
+  (obj, i) => ({
     ...obj,
     displayComponent: dynamic<RequirementCardComponentProps>(
       () =>
@@ -195,12 +195,14 @@ const REQUIREMENTS_WITH_COMPONENTS: ReqWithComponent[] = REQUIREMENTS_DATA.map(
         ),
       }
     ),
-    formComponent: dynamic<FormCardProps>(
-      () =>
-        import(
-          `components/create-guild/Requirements/components/${obj.fileNameBase}FormCard`
-        )
-    ),
+    formComponent:
+      i !== 0 &&
+      dynamic<FormCardProps>(
+        () =>
+          import(
+            `components/create-guild/Requirements/components/${obj.fileNameBase}FormCard`
+          )
+      ),
   })
 )
 
