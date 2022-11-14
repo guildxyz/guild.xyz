@@ -32,7 +32,7 @@ const AccountModal = ({ isOpen, onClose }) => {
 
   const connectorName = (c) =>
     c instanceof MetaMask
-      ? (window.ethereum as any).isBraveWallet
+      ? (window.ethereum as any)?.isBraveWallet
         ? "Brave Wallet"
         : "MetaMask"
       : c instanceof WalletConnect

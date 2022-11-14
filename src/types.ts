@@ -306,6 +306,7 @@ type Guild = {
   description?: string
   imageUrl: string
   showMembers: boolean
+  memberCount: number
   hideFromExplorer: boolean
   createdAt: string
   admins: GuildAdmin[]
