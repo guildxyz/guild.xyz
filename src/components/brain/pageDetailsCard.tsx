@@ -16,14 +16,14 @@ const PageDetailsCard = ({ pageData }: Props): JSX.Element => (
     prefetch={false}
     _hover={{ textDecor: "none" }}
     borderRadius="2xl"
-    w="full"
-    h="full"
   >
     <DisplayCard title={pageData.title}>
-      <Box m={1} boxSize={EMBED_IMAGE_SIZE}>
-        {/* TODO: handle if there is no image */}
-        <Image src={pageData.icon} alt="Card image" />
-      </Box>
+      {pageData.icon ? (
+        <Box boxSize={EMBED_IMAGE_SIZE}>
+          {/* TODO: handle if there is no image */}
+          <Image referrerPolicy="no-referrer" src={pageData.icon} alt="Card image" />
+        </Box>
+      ) : null}
       <Wrap zIndex="1">
         {pageData.tags?.map((tag, index) => (
           <Tag as="li" key={index}>
