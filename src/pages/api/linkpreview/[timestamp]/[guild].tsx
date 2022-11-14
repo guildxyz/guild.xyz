@@ -169,7 +169,9 @@ const handler = async (req, _) => {
                   borderRadius: "6px",
                   fontSize: "18px",
                 }}
-              >{`${guild?.memberCount} members`}</div>
+              >{`${new Intl.NumberFormat("en", { notation: "compact" }).format(
+                guild?.memberCount ?? 0
+              )} members`}</div>
 
               <div
                 style={{
