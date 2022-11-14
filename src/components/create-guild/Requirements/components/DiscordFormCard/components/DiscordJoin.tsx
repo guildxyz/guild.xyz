@@ -10,8 +10,9 @@ type Props = {
 const DiscordJoin = ({ baseFieldPath }: Props): JSX.Element => {
   const { errors } = useFormState()
 
-  const { field: memberSinceField } = useController({
+  const { field } = useController({
     name: `${baseFieldPath}.data.memberSince`,
+    shouldUnregister: true,
   })
 
   return (
@@ -24,18 +25,18 @@ const DiscordJoin = ({ baseFieldPath }: Props): JSX.Element => {
 
         <Input
           type="date"
-          ref={memberSinceField.ref}
-          name={memberSinceField.name}
+          ref={field.ref}
+          name={field.name}
           value={
-            typeof memberSinceField.value === "number"
-              ? new Date(memberSinceField.value).toISOString().split("T")[0]
+            field.value && !isNaN(field.value)
+              ? new Date(field.value).toISOString().split("T")[0]
               : ""
           }
           onChange={(e) => {
             const valueAsTimestamp = new Date(e.target.value).getTime()
-            memberSinceField.onChange(valueAsTimestamp)
+            field.onChange(valueAsTimestamp)
           }}
-          onBlur={memberSinceField.onBlur}
+          onBlur={field.onBlur}
           max={new Date().toISOString().split("T")[0]}
         />
 

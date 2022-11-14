@@ -38,7 +38,11 @@ const DiscordMemberSince = ({ baseFieldPath }: Props): JSX.Element => {
                 const valueAsTimestamp = new Date(e.target.value).getTime()
                 onChange(valueAsTimestamp)
               }}
-              value={value ? new Date(value).toISOString().split("T")[0] : ""}
+              value={
+                value && !isNaN(value)
+                  ? new Date(value).toISOString().split("T")[0]
+                  : ""
+              }
               max={new Date().toISOString().split("T")[0]}
             />
           )}

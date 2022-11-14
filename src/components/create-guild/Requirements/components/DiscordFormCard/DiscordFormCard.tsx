@@ -4,10 +4,8 @@ import {
   FormErrorMessage,
   FormLabel,
   Stack,
-  usePrevious,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
-import { useEffect } from "react"
 import { useController, useFormContext, useFormState } from "react-hook-form"
 import { FormCardProps } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -40,8 +38,8 @@ const discordRequirementTypes = [
 ]
 
 const DiscordFormCard = ({ baseFieldPath }: FormCardProps) => {
-  const { touchedFields } = useFormState()
   const { resetField } = useFormContext()
+  const { errors } = useFormState()
 
   const {
     field: { name, onBlur, onChange, ref, value },
@@ -50,35 +48,15 @@ const DiscordFormCard = ({ baseFieldPath }: FormCardProps) => {
     rules: { required: "It's required to select a type" },
   })
 
-  const { errors } = useFormState()
-
   const selected = discordRequirementTypes.find((reqType) => reqType.value === value)
 
-  const prevValue = usePrevious(value)
-
-  useEffect(() => {
-    if (
-      value === "DISCORD_JOIN_FROM_NOW" &&
-      (prevValue === "DISCORD_JOIN" || prevValue === "DISCORD_MEMBER_SINCE")
-    ) {
-      resetField(`${baseFieldPath}.data.memberSince`, {
-        defaultValue: 86400000,
-      })
-    } else if (
-      (value === "DISCORD_JOIN" || value === "DISCORD_MEMBER_SINCE") &&
-      prevValue === "DISCORD_JOIN_FROM_NOW"
-    ) {
-      resetField(`${baseFieldPath}.data.memberSince`, {
-        defaultValue: Date.now(),
-      })
-    }
-
-    if (!touchedFields.data) return
+  const resetFields = () => {
+    resetField(`${baseFieldPath}.data.memberSince`)
     resetField(`${baseFieldPath}.data.serverId`)
     resetField(`${baseFieldPath}.data.serverName`)
     resetField(`${baseFieldPath}.data.roleId`)
     resetField(`${baseFieldPath}.data.roleName`)
-  }, [value])
+  }
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -91,6 +69,7 @@ const DiscordFormCard = ({ baseFieldPath }: FormCardProps) => {
           name={name}
           onBlur={onBlur}
           onChange={(newValue: { label: string; value: string }) => {
+            resetFields()
             onChange(newValue?.value)
           }}
           ref={ref}

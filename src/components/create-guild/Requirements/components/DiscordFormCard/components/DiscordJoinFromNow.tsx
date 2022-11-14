@@ -36,14 +36,15 @@ const DiscordJoinFromNow = ({ baseFieldPath }: Props): JSX.Element => {
     "DAY" | "MONTH" | "YEAR"
   >("DAY")
 
-  const { field: memberSinceField } = useController({
+  const { field } = useController({
     name: `${baseFieldPath}.data.memberSince`,
     defaultValue: dayInMs,
+    shouldUnregister: true,
   })
 
   useEffect(() => {
     if (!touchedFields.data) return
-    memberSinceField.onChange(multipliers[memberSinceFormat])
+    field.onChange(multipliers[memberSinceFormat])
   }, [memberSinceFormat])
 
   return (
@@ -68,12 +69,12 @@ const DiscordJoinFromNow = ({ baseFieldPath }: Props): JSX.Element => {
               },
             }}
             value={
-              typeof memberSinceField.value === "number"
-                ? memberSinceField.value / multipliers[memberSinceFormat]
+              field.value && !isNaN(field.value)
+                ? field.value / multipliers[memberSinceFormat]
                 : ""
             }
             onChange={(_, newValue) =>
-              memberSinceField.onChange(
+              field.onChange(
                 typeof newValue === "number"
                   ? newValue * multipliers[memberSinceFormat]
                   : ""
