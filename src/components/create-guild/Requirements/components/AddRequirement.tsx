@@ -26,7 +26,7 @@ import { AnimatePresence, usePresence } from "framer-motion"
 import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements/requirements"
+import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
 import BalancyFooter from "./BalancyFooter"
 
 const general = REQUIREMENTS_DATA.slice(1, 5)

@@ -1,6 +1,6 @@
 import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
-import REQUIREMENTS from "requirements/requirements"
+import REQUIREMENTS from "requirements"
 import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"

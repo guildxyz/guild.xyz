@@ -1,6 +1,6 @@
 import type { Chain } from "connectors"
 import { PropsWithChildren } from "react"
-import { RequirementType } from "requirements/requirements"
+import { RequirementType } from "requirements"
 
 type Token = {
   address: string

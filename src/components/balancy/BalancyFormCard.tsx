@@ -3,7 +3,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import { PropsWithChildren } from "react"
-import REQUIREMENTS, { RequirementType } from "requirements/requirements"
+import REQUIREMENTS, { RequirementType } from "requirements"
 import useBalancy from "../create-guild/Requirements/hooks/useBalancy"
 
 const RequirementTypeColors = {
