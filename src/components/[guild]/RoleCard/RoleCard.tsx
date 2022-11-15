@@ -17,7 +17,6 @@ import parseDescription from "utils/parseDescription"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Requirements from "../Requirements"
 import AccessIndicator from "./components/AccessIndicator"
-import MemberCount from "./components/MemberCount"
 import Reward from "./components/Reward"
 
 type Props = {
@@ -60,7 +59,7 @@ const RoleCard = memo(({ role }: Props) => {
               </Heading>
             </HStack>
 
-            <MemberCount memberCount={role.memberCount} />
+            {/* <MemberCount memberCount={role.memberCount} /> */}
 
             {DynamicEditRole && (
               <>
