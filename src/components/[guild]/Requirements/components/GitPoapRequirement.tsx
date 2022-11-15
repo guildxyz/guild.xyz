@@ -1,6 +1,6 @@
+import { usePoap } from "components/create-guild/Requirements/components/PoapForm/hooks/usePoaps"
 import { RequirementComponentProps } from "types"
 import Requirement from "./common/Requirement"
-import usePoap from "./PoapRequirement/hooks/usePoap"
 
 const GitPoapRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
   const { poap, isLoading } = usePoap(requirement?.data?.id)

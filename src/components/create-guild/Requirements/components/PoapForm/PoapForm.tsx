@@ -9,8 +9,8 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import { usePoap } from "components/create-guild/Requirements/components/PoapForm/hooks/usePoaps"
 import useGuild from "components/[guild]/hooks/useGuild"
-import usePoap from "components/[guild]/Requirements/components/PoapRequirement/hooks/usePoap"
 import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps, SelectOption } from "types"
@@ -18,7 +18,7 @@ import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../ChainInfo"
 import useGuildsPoaps from "./hooks/useGuildsPoaps"
 import usePoapById from "./hooks/usePoapById"
-import usePoaps from "./hooks/usePoaps"
+import { usePoaps } from "./hooks/usePoaps"
 
 const FANCY_ID_REGEX = /^[0-9]*$/i
 
