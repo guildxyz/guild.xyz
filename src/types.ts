@@ -160,56 +160,17 @@ type RabbitholeParamType = {
 
 type Requirement = {
   id: number
-  data?: {
-    hideAllowlist?: boolean
-    minAmount?: number
-    maxAmount?: number
-    addresses?: Array<string> // (ALLOWLIST)
-    id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
-    name?: string
-    provider?: string
-    planId?: number
-    strategy?: {
-      name: string
-      params: Record<string, any>
-    } // SNAPSHOT
-    attribute?: {
-      trait_type?: string
-      value?: string
-      interval?: {
-        min: number
-        max: number
-      }
-    }
-    galaxyId?: string
-    // Discord
-    serverId?: string
-    roleId?: string | number
-    serverName?: string
-    roleName?: string
-    memberSince?: number
-    fromNow?: boolean
-    // CONTRACT
-    expected?: string
-    resultIndex?: number
-    resultMatch?: string
-    params?: ContractParamType | DiscoParamType | RabbitholeParamType
-    // GUILD
-    guildId?: string
-    creationDate?: string
-  }
-  name: string
   type: RequirementType
-  chain: Chain
-  roleId: number
-  symbol: string
   address: string
+  chain: Chain
+  data?: Record<string, any>
+  roleId: number
+  name: string
+  symbol: string
   decimals?: number
 
   // Props used inside the forms on the UI
   nftRequirementType?: string
-
-  // These props are only used when we fetch requirements from the backend and display them on the UI
   balancyDecimals?: number
 }
 
