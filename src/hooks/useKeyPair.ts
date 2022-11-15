@@ -127,12 +127,10 @@ const useKeyPair = () => {
 
   const toast = useToast()
 
-  const { data: isKeyPairValidData } = useSWRImmutable(
+  const { data: isKeyPairValidSWRData } = useSWRImmutable(
     keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
     checkKeyPair,
     {
-      fallbackData: [false, undefined],
-      revalidateOnMount: true,
       onSuccess: ([isKeyPairValid, userId]) => {
         if (!isKeyPairValid) {
           addDatadogAction("Invalid keypair", {
@@ -155,6 +153,8 @@ const useKeyPair = () => {
       },
     }
   )
+
+  const isKeyPairValidData = isKeyPairValidSWRData ?? [false, undefined]
 
   const setSubmitResponse = useSubmitWithSignWithParamKeyPair<
     StoredKeyPair,
