@@ -30,7 +30,7 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { NftRequirementType, RequirementFormProps, SelectOption } from "types"
+import { RequirementFormProps, SelectOption } from "types"
 import capitalize from "utils/capitalize"
 import isNumber from "utils/isNumber"
 import parseFromObject from "utils/parseFromObject"
@@ -42,7 +42,7 @@ import useNftType from "./hooks/useNftType"
 
 type NftRequirementTypeOption = {
   label: string
-  value: NftRequirementType
+  value: "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i

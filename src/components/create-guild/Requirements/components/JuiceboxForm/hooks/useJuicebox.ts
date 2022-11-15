@@ -1,5 +1,11 @@
 import useSWRImmutable from "swr/immutable"
-import { JuiceboxProject } from "types"
+
+type JuiceboxProject = {
+  id: string
+  uri: string
+  name: string
+  logoUri: string
+}
 
 export const useJuicebox = () => {
   const { data, isValidating } =

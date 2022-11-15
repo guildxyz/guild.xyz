@@ -1,7 +1,14 @@
 import { Img } from "@chakra-ui/react"
-import { DiscoParamType, RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "types"
 import shortenHex from "utils/shortenHex"
 import Requirement from "./common/Requirement"
+
+type DiscoParamType = {
+  credType: string
+  credIssuence: "before" | "after"
+  credIssuenceDate: string
+  credIssuer: string
+}
 
 const DiscoRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
   const param = requirement.data.params as DiscoParamType

@@ -1,5 +1,13 @@
+import { Chain } from "connectors"
 import useSWRImmutable from "swr/immutable"
-import { GalaxyCampaign } from "types"
+
+type GalaxyCampaign = {
+  id: string
+  numberID: number
+  name: string
+  thumbnail: string
+  chain: Chain
+}
 
 export const useGalaxyCampaigns = () => {
   const { data, isValidating } = useSWRImmutable<GalaxyCampaign[]>(

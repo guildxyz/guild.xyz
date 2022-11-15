@@ -76,8 +76,6 @@ type NFT = {
   slug: string
 }
 
-type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
-
 type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
 
 type PlatformAccount = {
@@ -143,20 +141,6 @@ type PlatformRoleData = {
     role: "reader" | "commenter" | "writer"
   }
 }
-
-type ContractParamType = string[]
-
-type DiscoParamType = {
-  credType: string
-  credIssuence: "before" | "after"
-  credIssuenceDate: string
-  credIssuer: string
-}
-
-type RabbitholeParamType = {
-  trait_type: string
-  value: string
-}[]
 
 type Requirement = {
   id: number
@@ -257,25 +241,6 @@ type GuildFormType = Partial<
   requirements?: Requirement[]
 }
 
-type SnapshotStrategy = {
-  name: string
-  params: Record<string, Record<string, string>>
-}
-
-type JuiceboxProject = {
-  id: string
-  uri: string
-  name: string
-  logoUri: string
-}
-
-type MirrorEdition = {
-  editionContractAddress: string
-  editionId: number
-  title: string
-  image: string
-}
-
 type SelectOption<T = string> = {
   label: string
   value: T
@@ -368,14 +333,6 @@ enum ValidationMethod {
   STANDARD = 1,
   KEYPAIR = 2,
   EIP1271 = 3,
-}
-
-type GalaxyCampaign = {
-  id: string
-  numberID: number
-  name: string
-  thumbnail: string
-  chain: Chain
 }
 
 type MonetizePoapForm = {
@@ -477,20 +434,15 @@ export type {
   Guild,
   Requirement,
   RequirementType,
-  SnapshotStrategy,
-  JuiceboxProject,
-  MirrorEdition,
   RolePlatform,
   ThemeMode,
   Logic,
   PlatformAccountDetails,
   SelectOption,
-  NftRequirementType,
   GuildFormType,
   CreatePoapForm,
   CreatedPoapData,
   PlatformName,
-  GalaxyCampaign,
   MonetizePoapForm,
   RequestMintLinksForm,
   GoogleFile,
@@ -498,11 +450,8 @@ export type {
   VoiceParticipationForm,
   VoiceRequirementParams,
   PoapEventDetails,
-  ContractParamType,
-  DiscoParamType,
   RequirementFormProps,
   RequirementProps,
   RequirementComponentProps,
-  RabbitholeParamType,
 }
 export { ValidationMethod }

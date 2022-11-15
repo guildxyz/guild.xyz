@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import { CaretDown, Function } from "phosphor-react"
-import { ContractParamType, RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "types"
 import shortenHex from "utils/shortenHex"
 import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import Requirement from "./common/Requirement"
@@ -54,7 +54,7 @@ const ContractStateRequirement = ({
               borderRadius="md"
             >
               <Tbody fontWeight="normal" fontSize="xs">
-                {(requirement.data.params as ContractParamType)?.map((param, i) => (
+                {(requirement.data.params as string[])?.map((param, i) => (
                   <Tr key={i}>
                     <Td>{`${i + 1}. input param`}</Td>
                     <Td>{param}</Td>
