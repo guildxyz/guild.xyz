@@ -44,9 +44,9 @@ const typeLabel = (type) => {
       return "KYCDAO"
 
     case "SOUND_ARTIST":
-    case "SOUND_SUPPORT":
-    case "SOUND_OWN_SONG":
-    case "SOUND_TOP10":
+    case "SOUND_ARTIST_BACKED":
+    case "SOUND_COLLECTED":
+    case "SOUND_TOP_COLLECTOR":
       return "SOUND"
 
     default:
@@ -66,9 +66,9 @@ const typeColor = (type) => {
 
     case "SOUND":
     case "SOUND_ARTIST":
-    case "SOUND_SUPPORT":
-    case "SOUND_OWN_SONG":
-    case "SOUND_TOP10":
+    case "SOUND_ARTIST_BACKED":
+    case "SOUND_COLLECTED":
+    case "SOUND_TOP_COLLECTOR":
       return "white"
 
     default:

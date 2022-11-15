@@ -113,10 +113,10 @@ type RequirementType =
   | "RABBITHOLE"
   | "KYC_DAO"
   | "SOUND"
-  | "SOUND_SUPPORT"
-  | "SOUND_OWN_SONG"
+  | "SOUND_ARTIST_BACKED"
+  | "SOUND_COLLECTED"
   | "SOUND_ARTIST"
-  | "SOUND_TOP10"
+  | "SOUND_TOP_COLLECTOR"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -365,10 +365,10 @@ const RequirementTypeColors = {
   RABBITHOLE: "#7f23dc",
   KYC_DAO: "#3D65F2",
   SOUND: "#1b1b23",
-  SOUND_SUPPORT: "#1b1b23",
-  SOUND_OWN_SONG: "#1b1b23",
+  SOUND_ARTIST_BACKED: "#1b1b23",
+  SOUND_COLLECTED: "#1b1b23",
   SOUND_ARTIST: "#1b1b23",
-  SOUND_TOP10: "#1b1b23",
+  SOUND_TOP_COLLECTOR: "#1b1b23",
 }
 
 type SnapshotStrategy = {

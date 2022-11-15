@@ -67,6 +67,10 @@ const REQUIREMENT_CARDS = {
   RABBITHOLE: RabbitholeRequirementCard,
   KYC_DAO: KycDAORequirementCard,
   SOUND: SoundRequirementCard,
+  SOUND_COLLECTED: SoundRequirementCard,
+  SOUND_ARTIST_BACKED: SoundRequirementCard,
+  SOUND_ARTIST: SoundRequirementCard,
+  SOUND_TOP_COLLECTOR: SoundRequirementCard,
 }
 
 type Props = {

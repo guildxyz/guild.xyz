@@ -1,13 +1,28 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react"
+import { FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { Controller, useFormContext } from "react-hook-form"
-import { Requirement } from "types"
+import StyledSelect from "components/common/StyledSelect"
+import { useState } from "react"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { Requirement, SelectOption } from "types"
+import { useSoundArtists } from "../hooks/useSound"
 
 const SupportArtist = ({ index }: { index: number; field?: Requirement }) => {
   const {
     control,
     formState: { errors },
   } = useFormContext()
+
+  const [search, setSearch] = useState(
+    useWatch({ name: `requirements.${index}.data.id` })
+  )
+
+  const { artists, isLoading } = useSoundArtists(search)
+
+  const artistOptions = artists?.map((artist) => ({
+    label: artist[0].name,
+    value: artist[0].soundHandle,
+    img: artist[0].image,
+  }))
 
   return (
     <>
@@ -18,17 +33,25 @@ const SupportArtist = ({ index }: { index: number; field?: Requirement }) => {
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
-            <Input
-              type="text"
+            <StyledSelect
               ref={ref}
-              value={value ?? ""}
-              placeholder="You can insert URL too"
-              onChange={(newChange) => {
-                const newValue = newChange.target.value
-                const split = newValue.split("/")
-                onChange(split[split.length - 1])
+              isClearable
+              options={artistOptions}
+              placeholder="Search for an artist"
+              value={artistOptions?.find((option) => option.value === value)}
+              onChange={(newSelectedOption: SelectOption) => {
+                onChange(newSelectedOption?.value)
               }}
+              onInputChange={(inputValue) => setSearch(inputValue.split(".")[0])}
+              isLoading={isLoading}
               onBlur={onBlur}
+              // so restCount stays visible
+              filterOption={() => true}
+              menuIsOpen={search ? undefined : false}
+              components={{
+                DropdownIndicator: () => null,
+                IndicatorSeparator: () => null,
+              }}
             />
           )}
         />

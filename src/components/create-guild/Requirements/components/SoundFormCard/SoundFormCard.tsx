@@ -20,17 +20,17 @@ const soundRequirementTypes = [
   },
   {
     label: "Support an artist",
-    value: "SOUND_SUPPORT",
+    value: "SOUND_ARTIST_BACKED",
     SoundRequirement: SupportArtist,
   },
   {
     label: "Own a song",
-    value: "SOUND_OWN_SONG",
+    value: "SOUND_COLLECTED",
     SoundRequirement: SoundOwnASong,
   },
   {
     label: "Be a top 10 collector",
-    value: "SOUND_TOP10",
+    value: "SOUND_TOP_COLLECTOR",
     SoundRequirement: Top10Collector,
   },
 ]
