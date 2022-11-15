@@ -1,4 +1,13 @@
-import { Box, Center, Collapse, Heading, HStack, Spinner } from "@chakra-ui/react"
+import {
+  Box,
+  Center,
+  Collapse,
+  Heading,
+  HStack,
+  Spinner,
+  Tag,
+  Text,
+} from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -13,6 +22,7 @@ import useIsMember from "components/[guild]/hooks/useIsMember"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
+import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import Tabs from "components/[guild]/Tabs/Tabs"
@@ -34,7 +44,9 @@ const GuildPage = (): JSX.Element => {
     imageUrl,
     admins,
     showMembers,
+    memberCount,
     roles,
+    isLoading,
     onboardingComplete,
   } = useGuild()
 
@@ -168,25 +180,23 @@ const GuildPage = (): JSX.Element => {
           ))}
         </Section>
 
-        {/* {(showMembers || isAdmin) && ( */}
-        {isAdmin && (
+        {(showMembers || isAdmin) && (
           <Section
             title="Members"
             titleRightElement={
-              // <HStack justifyContent="space-between" w="full">
-              <HStack justifyContent="end" w="full">
-                {/* <Tag size="sm" maxH={6} pt={0.5}>
+              <HStack justifyContent="space-between" w="full">
+                <Tag size="sm" maxH={6} pt={0.5}>
                   {isLoading ? <Spinner size="xs" /> : memberCount}
-                </Tag> */}
+                </Tag>
                 {DynamicMembersExporter && <DynamicMembersExporter />}
               </HStack>
             }
           >
-            {/* {showMembers ? (
+            {showMembers ? (
               <Members members={members} />
             ) : (
               <Text>Members are hidden</Text>
-            )} */}
+            )}
           </Section>
         )}
       </Layout>

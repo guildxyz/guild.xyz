@@ -155,7 +155,7 @@ const handler = async (req, _) => {
             </div>
 
             <div style={{ display: "flex", marginBottom: "24px" }}>
-              {/* <div
+              <div
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -171,7 +171,7 @@ const handler = async (req, _) => {
                 }}
               >{`${new Intl.NumberFormat("en", { notation: "compact" }).format(
                 guild?.memberCount ?? 0
-              )} members`}</div> */}
+              )} members`}</div>
 
               <div
                 style={{
