@@ -1,4 +1,4 @@
-import { Box, Image, Tag, TagLabel, TagLeftIcon, Wrap } from "@chakra-ui/react"
+import { Image, Tag, TagLabel, TagLeftIcon, Wrap } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import Link from "components/common/Link"
 import { Users } from "phosphor-react"
@@ -7,8 +7,6 @@ import { PageDetailsCardData } from "types"
 type Props = {
   pageData: PageDetailsCardData
 }
-
-const EMBED_IMAGE_SIZE = "30px"
 
 const PageDetailsCard = ({ pageData }: Props): JSX.Element => (
   <Link
@@ -19,10 +17,16 @@ const PageDetailsCard = ({ pageData }: Props): JSX.Element => (
   >
     <DisplayCard title={pageData.title}>
       {pageData.icon ? (
-        <Box boxSize={EMBED_IMAGE_SIZE}>
-          {/* TODO: handle if there is no image */}
-          <Image referrerPolicy="no-referrer" src={pageData.icon} alt="Card image" />
-        </Box>
+        <Image
+          referrerPolicy="no-referrer"
+          src={pageData.icon}
+          alt="Card image"
+          w="100px"
+          position="absolute"
+          right="5%"
+          top="19%"
+          z-index="0"
+        />
       ) : null}
       <Wrap zIndex="1">
         {pageData.tags?.map((tag, index) => (
