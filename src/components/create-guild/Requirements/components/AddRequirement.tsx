@@ -105,7 +105,7 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
                 />
               )}
               <Text w="calc(100% - 70px)" noOfLines={1}>{`Add ${
-                selectedType ?? ""
+                REQUIREMENTS[selectedType]?.name ?? ""
               } requirement`}</Text>
             </HStack>
           </ModalHeader>
