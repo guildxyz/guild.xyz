@@ -1,4 +1,3 @@
-import useIsSuperAdmin from "hooks/useIsSuperAdmin"
 import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
 import useSWRImmutable from "swr/immutable"
@@ -9,8 +8,7 @@ import useUser from "./useUser"
 const useGuild = (guildId?: string | number) => {
   const router = useRouter()
 
-  const { addresses } = useUser()
-  const isSuperAdmin = useIsSuperAdmin()
+  const { addresses, isSuperAdmin } = useUser()
 
   const id = guildId ?? router.query.guild
 
