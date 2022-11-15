@@ -211,8 +211,8 @@ const REQUIREMENTS: Record<RequirementType, RequirementData> =
     {} as any
   )
 
-const a = REQUIREMENTS_DATA.flatMap((obj) => obj.types)
-export type RequirementType = typeof a[number]
+const requirementTypes = REQUIREMENTS_DATA.flatMap((obj) => obj.types)
+export type RequirementType = typeof requirementTypes[number]
 
 type RequirementData = {
   icon: string | Icon

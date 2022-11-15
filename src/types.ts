@@ -207,7 +207,6 @@ type Requirement = {
   decimals?: number
 
   // Props used inside the forms on the UI
-  active?: boolean
   nftRequirementType?: string
 
   // These props are only used when we fetch requirements from the backend and display them on the UI

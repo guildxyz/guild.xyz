@@ -78,7 +78,6 @@ const types = {
 
 const GuildRequirement = (props: RequirementComponentProps) => {
   const Component = types[props.requirement.type]
-  console.log(props.requirement.type)
   return <Component {...props} />
 }
 
