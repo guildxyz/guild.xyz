@@ -18,7 +18,7 @@ const PageDetailsCard = ({ pageData }: Props): JSX.Element => (
     <DisplayCard title={pageData.title}>
       {pageData.icon ? (
         <Image
-          referrerPolicy="no-referrer"
+          referrerPolicy="origin"
           src={pageData.icon}
           alt="Card image"
           w="100px"

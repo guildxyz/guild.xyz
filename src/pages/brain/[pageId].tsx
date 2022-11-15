@@ -1,6 +1,7 @@
 import {
   Button,
   Image,
+  Img,
   Link,
   Tag,
   TagLabel,
@@ -27,7 +28,6 @@ import { PropsWithChildren } from "react"
 import { NotionRenderer } from "react-notion-x"
 import "react-notion-x/src/styles.css"
 import { PageDetailsCardData } from "types"
-
 type CustomPageLinkProps = {
   href: string
   children: any
@@ -87,7 +87,11 @@ function Header(props) {
               isExternal={link.name !== "Guild"}
             >
               <Button colorScheme="alpha" color="whiteAlpha.900" height={8}>
-                <TagLeftIcon as={link.icon} />
+                {link.name === "Guild" ? (
+                  <Img src="/guildLogos/logo.svg" w="16px" mr="8px"></Img>
+                ) : (
+                  <TagLeftIcon as={link.icon} />
+                )}
                 {link.name}
               </Button>
             </Link>
