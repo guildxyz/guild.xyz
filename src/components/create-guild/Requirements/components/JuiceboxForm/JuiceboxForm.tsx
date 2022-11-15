@@ -17,7 +17,7 @@ import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import useJuicebox from "./hooks/useJuicebox"
+import { useJuicebox } from "./hooks/useJuicebox"
 
 const JuiceboxForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {

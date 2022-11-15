@@ -1,11 +1,17 @@
 import useSWRImmutable from "swr/immutable"
 import { JuiceboxProject } from "types"
 
-const useJuicebox = () => {
+export const useJuicebox = () => {
   const { data, isValidating } =
     useSWRImmutable<Array<JuiceboxProject>>("/assets/juicebox")
 
   return { projects: data, isLoading: isValidating }
 }
 
-export default useJuicebox
+export const useJuiceboxProject = (id: string) => {
+  const { data, isValidating } = useSWRImmutable<JuiceboxProject>(
+    id ? `/assets/juicebox/${id}` : null
+  )
+
+  return { project: data, isLoading: isValidating }
+}

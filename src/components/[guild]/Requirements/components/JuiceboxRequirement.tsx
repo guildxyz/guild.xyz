@@ -1,7 +1,7 @@
 import { Skeleton, Text } from "@chakra-ui/react"
+import { useJuiceboxProject } from "components/create-guild/Requirements/components/JuiceboxForm/hooks/useJuicebox"
 import { RequirementComponentProps } from "types"
-import Requirement from "../common/Requirement"
-import useJuiceboxProject from "./hooks/useJuiceboxProject"
+import Requirement from "./common/Requirement"
 
 const JuiceboxRequirement = ({
   requirement,
