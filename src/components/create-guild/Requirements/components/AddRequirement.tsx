@@ -188,7 +188,6 @@ const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => (
           key={requirementButton.types[0]}
           minH={24}
           onClick={() => setSelectedType(requirementButton.types[0])}
-          isDisabled={requirementButton.disabled}
         >
           <VStack w="full" whiteSpace={"break-spaces"}>
             <Icon as={requirementButton.icon as FC} boxSize={6} />
@@ -204,7 +203,7 @@ const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => (
       {integrations.map((requirementButton) => (
         <Tooltip
           key={requirementButton.types[0]}
-          isDisabled={!requirementButton.disabled}
+          isDisabled={!(requirementButton as any).disabled}
           label="Temporarily unavailable"
           hasArrow
         >
@@ -215,7 +214,7 @@ const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => (
             rightIcon={<Icon as={CaretRight} />}
             iconSpacing={4}
             onClick={() => setSelectedType(requirementButton.types[0])}
-            isDisabled={requirementButton.disabled}
+            isDisabled={(requirementButton as any).disabled}
             sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
           >
             {requirementButton.name}

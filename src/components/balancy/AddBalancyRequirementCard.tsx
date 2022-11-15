@@ -3,9 +3,9 @@ import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
+import { RequirementType } from "components/[guild]/Requirements/requirements"
 import { CurrencyCircleDollar, ImageSquare, ListChecks, Plus } from "phosphor-react"
 import { FC } from "react"
-import { RequirementType } from "types"
 
 type RequirementButton = {
   icon: FC

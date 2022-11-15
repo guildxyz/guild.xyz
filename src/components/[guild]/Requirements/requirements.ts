@@ -9,22 +9,9 @@ import {
   Wrench,
 } from "phosphor-react"
 import { ComponentType } from "react"
-import { FormCardProps, RequirementComponentProps, RequirementType } from "types"
+import { FormCardProps, RequirementComponentProps } from "types"
 
-type Req = {
-  icon: string | Icon
-  name: string
-  fileNameBase: string
-  types: RequirementType[]
-  disabled?: boolean
-}
-
-type ReqWithComponent = Req & {
-  displayComponent: ComponentType<RequirementComponentProps>
-  formComponent: ComponentType<FormCardProps>
-}
-
-export const REQUIREMENTS_DATA: Req[] = [
+export const REQUIREMENTS_DATA = [
   {
     icon: Wallet,
     name: "Free",
@@ -194,36 +181,47 @@ export const REQUIREMENTS_DATA: Req[] = [
     fileNameBase: "KycDAO",
     types: ["KYC_DAO"],
   },
-]
+] as const
 
-const REQUIREMENTS_WITH_COMPONENTS: ReqWithComponent[] = REQUIREMENTS_DATA.map(
-  (obj, i) => ({
-    ...obj,
-    displayComponent: dynamic<RequirementComponentProps>(
+const REQUIREMENTS_WITH_COMPONENTS = REQUIREMENTS_DATA.map((obj, i) => ({
+  ...obj,
+  displayComponent: dynamic<RequirementComponentProps>(
+    () =>
+      import(
+        `components/[guild]/Requirements/components/${obj.fileNameBase}Requirement`
+      ),
+    {
+      loading: RequirementSkeleton,
+    }
+  ),
+  formComponent:
+    i !== 0 &&
+    dynamic<FormCardProps>(
       () =>
         import(
-          `components/[guild]/Requirements/components/${obj.fileNameBase}Requirement`
-        ),
-      {
-        loading: RequirementSkeleton,
-      }
+          `components/create-guild/Requirements/components/${obj.fileNameBase}FormCard`
+        )
     ),
-    formComponent:
-      i !== 0 &&
-      dynamic<FormCardProps>(
-        () =>
-          import(
-            `components/create-guild/Requirements/components/${obj.fileNameBase}FormCard`
-          )
-      ),
-  })
-)
+}))
 
 // transform it to an object with types as keys so we don't have to use .find() every time
-const REQUIREMENTS: Record<RequirementType, ReqWithComponent> =
+const REQUIREMENTS: Record<RequirementType, RequirementData> =
   REQUIREMENTS_WITH_COMPONENTS.reduce(
     (acc, curr) => (curr.types.map((type) => (acc[type] = curr)), acc),
     {} as any
   )
+
+const a = REQUIREMENTS_DATA.flatMap((obj) => obj.types)
+export type RequirementType = typeof a[number]
+
+type RequirementData = {
+  icon: string | Icon
+  name: string
+  fileNameBase: string
+  readonly types: string[]
+  disabled?: boolean
+  displayComponent: ComponentType<RequirementComponentProps>
+  formComponent: ComponentType<FormCardProps>
+}
 
 export default REQUIREMENTS
