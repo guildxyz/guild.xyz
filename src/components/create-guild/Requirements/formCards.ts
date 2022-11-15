@@ -111,6 +111,12 @@ const getRequirementLabel = (type) => {
     case "KYC_DAO":
       return "KYCDAO"
 
+    case "GUILD_ROLE":
+    case "GUILD_ADMIN":
+    case "GUILD_USER_SINCE":
+    case "GUILD_MINGUILDS":
+      return "GUILD"
+
     default:
       return type
   }
