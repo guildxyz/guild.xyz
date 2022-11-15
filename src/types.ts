@@ -141,6 +141,8 @@ type User = {
   id: number
   addresses: Array<string>
   platformUsers: PlatformAccountDetails[]
+  signingKey?: string
+  isSuperAdmin: boolean
 }
 
 type GuildBase = {
