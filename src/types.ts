@@ -101,6 +101,9 @@ type RequirementType =
   | "NOUNS"
   | "DISCORD"
   | "DISCORD_ROLE"
+  | "DISCORD_MEMBER_SINCE"
+  | "DISCORD_JOIN"
+  | "DISCORD_JOIN_FROM_NOW"
   | "NOOX"
   | "DISCO"
   | "LENS"
@@ -114,6 +117,11 @@ type RequirementType =
   | "101"
   | "RABBITHOLE"
   | "KYC_DAO"
+  | "GUILD"
+  | "GUILD_ROLE"
+  | "GUILD_ADMIN"
+  | "GUILD_USER_SINCE"
+  | "GUILD_MINGUILDS"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -219,15 +227,21 @@ type Requirement = {
       }
     }
     galaxyId?: string
+    // Discord
     serverId?: string
-    roleId?: string
+    roleId?: string | number
     serverName?: string
     roleName?: string
+    memberSince?: number
+    fromNow?: boolean
     // CONTRACT
     expected?: string
     resultIndex?: number
     resultMatch?: string
     params?: ContractParamType | DiscoParamType | RabbitholeParamType
+    // GUILD
+    guildId?: string
+    creationDate?: string
   }
   name: string
   type: RequirementType
@@ -301,6 +315,7 @@ type Guild = {
   description?: string
   imageUrl: string
   showMembers: boolean
+  memberCount: number
   hideFromExplorer: boolean
   createdAt: string
   admins: GuildAdmin[]
@@ -346,9 +361,9 @@ type MirrorEdition = {
   image: string
 }
 
-type SelectOption = {
+type SelectOption<T = string> = {
   label: string
-  value: string
+  value: T
   img?: string
 } & Rest
 

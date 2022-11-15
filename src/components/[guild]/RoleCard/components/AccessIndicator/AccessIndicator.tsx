@@ -5,7 +5,7 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { ArrowCounterClockwise, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
-  ACCESS_INDICATOR_STYLES
+  ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
 import useTwitterRateLimitWarning from "./hooks/useTwitterRateLimitWarning"
 

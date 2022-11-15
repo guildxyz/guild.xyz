@@ -77,7 +77,25 @@ export const REQUIREMENTS_DATA: Req[] = [
     icon: "/platforms/discord.png",
     name: "Discord",
     fileNameBase: "Discord",
-    types: ["DISCORD", "DISCORD_ROLE"],
+    types: [
+      "DISCORD",
+      "DISCORD_ROLE",
+      "DISCORD_JOIN",
+      "DISCORD_JOIN_FROM_NOW",
+      "DISCORD_MEMBER_SINCE",
+    ],
+  },
+  {
+    icon: "/requirementLogos/guild.png",
+    name: "Guild.xyz",
+    fileNameBase: "Guild",
+    types: [
+      "GUILD",
+      "GUILD_ROLE",
+      "GUILD_MINGUILDS",
+      "GUILD_ADMIN",
+      "GUILD_USER_SINCE",
+    ],
   },
   {
     icon: "/requirementLogos/unlock.png",

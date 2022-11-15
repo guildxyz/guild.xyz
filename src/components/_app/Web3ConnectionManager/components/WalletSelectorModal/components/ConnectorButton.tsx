@@ -1,4 +1,4 @@
-import { Img } from "@chakra-ui/react"
+import { Center, Img } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React, Web3ReactHooks } from "@web3-react/core"
@@ -70,7 +70,7 @@ const ConnectorButton = ({
 
   const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
   const isBraveWallet =
-    typeof window !== "undefined" && (window.ethereum as any).isBraveWallet
+    typeof window !== "undefined" && (window.ethereum as any)?.isBraveWallet
 
   const iconUrl =
     connector instanceof MetaMask
@@ -108,11 +108,14 @@ const ConnectorButton = ({
         isActive && ready ? (
           <GuildAvatar address={account} size={5} />
         ) : (
-          <Img
-            src={`/walletLogos/${iconUrl}`}
-            boxSize={6}
-            alt={`${connectorName} logo`}
-          />
+          <Center boxSize={6}>
+            <Img
+              src={`/walletLogos/${iconUrl}`}
+              maxW={6}
+              maxH={6}
+              alt={`${connectorName} logo`}
+            />
+          </Center>
         )
       }
       disabled={
