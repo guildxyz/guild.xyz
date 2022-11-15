@@ -141,6 +141,7 @@ type User = {
   id: number
   addresses: Array<string>
   platformUsers: PlatformAccountDetails[]
+  signingKey?: string
 }
 
 type GuildBase = {
