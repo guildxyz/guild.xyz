@@ -27,7 +27,6 @@ import Card from "components/common/Card"
 import Footer from "components/common/Layout/components/Footer"
 import Header from "components/common/Layout/components/Header"
 import Link from "components/common/Link"
-import { usePoap } from "components/create-guild/Requirements/components/PoapForm/hooks/usePoaps"
 import ClaimModal from "components/[guild]/claim-poap/components/ClaimModal"
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
@@ -37,6 +36,7 @@ import { Chains, RPC } from "connectors"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { DownloadSimple } from "phosphor-react"
+import { usePoap } from "requirements/formComponents/PoapForm/hooks/usePoaps"
 
 const Page = (): JSX.Element => {
   const router = useRouter()

@@ -2,10 +2,8 @@ import { Box, CloseButton, HStack, Spinner, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
-import REQUIREMENTS, {
-  RequirementType,
-} from "components/[guild]/Requirements/requirements"
 import { PropsWithChildren } from "react"
+import REQUIREMENTS, { RequirementType } from "requirements/requirements"
 import useBalancy from "../create-guild/Requirements/hooks/useBalancy"
 
 const RequirementTypeColors = {

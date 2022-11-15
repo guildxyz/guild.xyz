@@ -19,7 +19,6 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
-import { usePoap } from "components/create-guild/Requirements/components/PoapForm/hooks/usePoaps"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import {
@@ -30,6 +29,7 @@ import {
   Upload,
 } from "phosphor-react"
 import { useMemo } from "react"
+import { usePoap } from "requirements/formComponents/PoapForm/hooks/usePoaps"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
 import { useCreatePoapContext } from "../CreatePoapContext"

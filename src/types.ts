@@ -1,6 +1,6 @@
-import { RequirementType } from "components/[guild]/Requirements/requirements"
 import type { Chain } from "connectors"
 import { PropsWithChildren } from "react"
+import { RequirementType } from "requirements/requirements"
 
 type Token = {
   address: string

@@ -14,9 +14,9 @@ import {
 import Card from "components/common/Card"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
-import REQUIREMENTS from "components/[guild]/Requirements/requirements"
 import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
+import REQUIREMENTS from "requirements/requirements"
 import BalancyFooter from "./BalancyFooter"
 
 const RequirementEditableCard = ({

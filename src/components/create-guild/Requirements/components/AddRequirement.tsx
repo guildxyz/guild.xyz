@@ -22,13 +22,11 @@ import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
-import REQUIREMENTS, {
-  REQUIREMENTS_DATA,
-} from "components/[guild]/Requirements/requirements"
 import { AnimatePresence, usePresence } from "framer-motion"
 import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements/requirements"
 import BalancyFooter from "./BalancyFooter"
 
 const general = REQUIREMENTS_DATA.slice(1, 5)
