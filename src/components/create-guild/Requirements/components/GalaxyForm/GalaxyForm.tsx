@@ -9,14 +9,13 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import useGalaxyCampaign from "components/[guild]/Requirements/components/GalaxyRequirement/hooks/useGalaxyCampaign"
 import { Chain } from "connectors"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../ChainPicker"
-import useGalaxyCampaigns from "./hooks/useGalaxyCampaigns"
+import { useGalaxyCampaign, useGalaxyCampaigns } from "./hooks/useGalaxyCampaigns"
 
 const convertToSupportedChain = (chain: string): Chain => {
   if (chain === "MATIC") return "POLYGON"
