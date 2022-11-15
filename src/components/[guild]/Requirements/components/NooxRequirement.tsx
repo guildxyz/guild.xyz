@@ -1,5 +1,5 @@
 import { Skeleton } from "@chakra-ui/react"
-import { NooxBadge } from "components/create-guild/Requirements/components/NooxFormCard"
+import { NooxBadge } from "components/create-guild/Requirements/components/NooxForm"
 import useSWRImmutable from "swr/immutable"
 import { RequirementComponentProps } from "types"
 import Requirement from "./common/Requirement"

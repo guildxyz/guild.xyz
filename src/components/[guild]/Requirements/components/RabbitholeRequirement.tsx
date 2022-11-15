@@ -1,6 +1,6 @@
 import { Img } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
-import { rabbitholeCourses } from "components/create-guild/Requirements/components/RabbitholeFormCard"
+import { rabbitholeCourses } from "components/create-guild/Requirements/components/RabbitholeForm"
 import { RequirementComponentProps } from "types"
 import Requirement from "./common/Requirement"
 

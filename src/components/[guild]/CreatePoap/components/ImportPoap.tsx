@@ -13,7 +13,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import usePoapById from "components/create-guild/Requirements/components/PoapFormCard/hooks/usePoapById"
+import usePoapById from "components/create-guild/Requirements/components/PoapForm/hooks/usePoapById"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"

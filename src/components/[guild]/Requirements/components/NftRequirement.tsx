@@ -1,7 +1,7 @@
 import { Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import DataBlock from "components/common/DataBlock"
-import { NOUNS_BACKGROUNDS } from "components/create-guild/Requirements/components/NftFormCard/hooks/useNftMetadata"
+import { NOUNS_BACKGROUNDS } from "components/create-guild/Requirements/components/NftForm/hooks/useNftMetadata"
 import useSWRImmutable from "swr/immutable"
 import { Requirement as RequirementType, RequirementComponentProps } from "types"
 import shortenHex from "utils/shortenHex"

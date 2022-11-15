@@ -9,7 +9,7 @@ import {
   Wrench,
 } from "phosphor-react"
 import { ComponentType } from "react"
-import { FormCardProps, RequirementComponentProps } from "types"
+import { RequirementComponentProps, RequirementFormProps } from "types"
 
 export const REQUIREMENTS_DATA = [
   {
@@ -196,10 +196,10 @@ const REQUIREMENTS_WITH_COMPONENTS = REQUIREMENTS_DATA.map((obj, i) => ({
   ),
   formComponent:
     i !== 0 &&
-    dynamic<FormCardProps>(
+    dynamic<RequirementFormProps>(
       () =>
         import(
-          `components/create-guild/Requirements/components/${obj.fileNameBase}FormCard`
+          `components/create-guild/Requirements/components/${obj.fileNameBase}Form`
         )
     ),
 }))
@@ -221,7 +221,7 @@ type RequirementData = {
   readonly types: string[]
   disabled?: boolean
   displayComponent: ComponentType<RequirementComponentProps>
-  formComponent: ComponentType<FormCardProps>
+  formComponent: ComponentType<RequirementFormProps>
 }
 
 export default REQUIREMENTS

@@ -5,22 +5,22 @@ import BalancyFormCard from "components/balancy/BalancyFormCard"
 import BalancyLogicPicker from "components/balancy/BalancyLogicPicker"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import AllowlistFormCard from "components/create-guild/Requirements/components/AllowlistFormCard"
-import NftFormCard from "components/create-guild/Requirements/components/NftFormCard"
-import TokenFormCard from "components/create-guild/Requirements/components/TokenFormCard"
+import AllowlistForm from "components/create-guild/Requirements/components/AllowlistForm"
+import NftForm from "components/create-guild/Requirements/components/NftForm"
+import TokenForm from "components/create-guild/Requirements/components/TokenForm"
 import { RequirementType } from "components/[guild]/Requirements/requirements"
 import { TwitterLogo } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { Requirement } from "types"
 
-const REQUIREMENT_FORMCARDS = {
-  ERC20: TokenFormCard,
-  COIN: TokenFormCard,
-  ALLOWLIST: AllowlistFormCard,
-  ERC721: NftFormCard,
-  ERC1155: NftFormCard,
-  NOUNS: NftFormCard,
+const REQUIREMENT_FORMS = {
+  ERC20: TokenForm,
+  COIN: TokenForm,
+  ALLOWLIST: AllowlistForm,
+  ERC721: NftForm,
+  ERC1155: NftForm,
+  NOUNS: NftForm,
 }
 
 const Page = (): JSX.Element => {
@@ -86,8 +86,8 @@ const Page = (): JSX.Element => {
           >
             {controlledFields.map((field: Requirement, i) => {
               const type: RequirementType = getValues(`requirements.${i}.type`)
-              const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
-              if (RequirementFormCard) {
+              const RequirementForm = REQUIREMENT_FORMS[type]
+              if (RequirementForm) {
                 return (
                   <BalancyFormCard
                     baseFieldPath={`requirements.${i}`}
@@ -95,7 +95,7 @@ const Page = (): JSX.Element => {
                     onRemove={() => remove(i)}
                     key={field.id}
                   >
-                    <RequirementFormCard
+                    <RequirementForm
                       field={field}
                       baseFieldPath={`requirements.${i}`}
                     />

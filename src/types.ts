@@ -481,7 +481,7 @@ type VoiceRequirementParams = {
   voiceEventStartedAt?: number
 }
 
-type FormCardProps = {
+type RequirementFormProps = {
   baseFieldPath: string
   field?: Requirement
 }
@@ -540,7 +540,7 @@ export type {
   PoapEventDetails,
   ContractParamType,
   DiscoParamType,
-  FormCardProps,
+  RequirementFormProps,
   RequirementProps,
   RequirementComponentProps,
   RabbitholeParamType,

@@ -1,6 +1,6 @@
 import { Img } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
-import use101Courses from "components/create-guild/Requirements/components/101FormCard/hooks/use101Courses"
+import use101Courses from "components/create-guild/Requirements/components/101Form/hooks/use101Courses"
 import { RequirementComponentProps } from "types"
 import Requirement from "./common/Requirement"
 import { RequirementLinkButton } from "./common/RequirementButton"

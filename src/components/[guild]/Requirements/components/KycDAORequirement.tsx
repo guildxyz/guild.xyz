@@ -1,6 +1,6 @@
 import { Skeleton, Text } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
-import useKycDAOContracts from "components/create-guild/Requirements/components/KycDAOFormCard/hooks/useKycDAOContracts"
+import useKycDAOContracts from "components/create-guild/Requirements/components/KycDAOForm/hooks/useKycDAOContracts"
 import { RequirementComponentProps } from "types"
 import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import Requirement from "./common/Requirement"

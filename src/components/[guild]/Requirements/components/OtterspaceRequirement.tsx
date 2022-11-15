@@ -1,5 +1,5 @@
 import { Skeleton } from "@chakra-ui/react"
-import useOtterspaceBadges from "components/create-guild/Requirements/components/OtterspaceFormCard/hooks/useOtterspaceBadges"
+import useOtterspaceBadges from "components/create-guild/Requirements/components/OtterspaceForm/hooks/useOtterspaceBadges"
 import { RequirementComponentProps } from "types"
 import Requirement from "./common/Requirement"
 
