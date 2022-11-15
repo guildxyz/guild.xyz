@@ -10,6 +10,12 @@ export const getStaticProps: GetStaticProps = async () => {
   const databaseId = process.env.NOTION_DATABASE_ID
   const response = await notion.databases.query({
     database_id: databaseId,
+    filter: {
+      property: "kind",
+      select: {
+        equals: "ecosystem",
+      },
+    },
   })
 
   const cards: Array<PageDetailsCardData> = response.results.map((page) => ({
