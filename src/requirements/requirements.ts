@@ -9,7 +9,7 @@ import {
 } from "phosphor-react"
 import { ComponentType } from "react"
 import { RequirementComponentProps, RequirementFormProps } from "types"
-import { RequirementSkeleton } from "./displayComponents/common/Requirement"
+import { RequirementSkeleton } from "./common/Requirement"
 
 export const REQUIREMENTS_DATA = [
   {
@@ -186,7 +186,7 @@ export const REQUIREMENTS_DATA = [
 const REQUIREMENTS_WITH_COMPONENTS = REQUIREMENTS_DATA.map((obj, i) => ({
   ...obj,
   displayComponent: dynamic<RequirementComponentProps>(
-    () => import(`requirements/displayComponents/${obj.fileNameBase}Requirement`),
+    () => import(`requirements/${obj.fileNameBase}/${obj.fileNameBase}Requirement`),
     {
       loading: RequirementSkeleton,
     }
@@ -194,7 +194,7 @@ const REQUIREMENTS_WITH_COMPONENTS = REQUIREMENTS_DATA.map((obj, i) => ({
   formComponent:
     i !== 0 &&
     dynamic<RequirementFormProps>(
-      () => import(`requirements/formComponents/${obj.fileNameBase}Form`)
+      () => import(`requirements/${obj.fileNameBase}/${obj.fileNameBase}Form`)
     ),
 }))
 

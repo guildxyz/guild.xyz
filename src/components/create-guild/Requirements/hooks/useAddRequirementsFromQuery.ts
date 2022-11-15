@@ -2,8 +2,8 @@ import { Chain } from "connectors"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { UseFieldArrayAppend } from "react-hook-form"
-import useLocks from "requirements/formComponents/UnlockForm/hooks/useLocks"
-import { unlockSupportedChains } from "requirements/formComponents/UnlockForm/UnlockForm"
+import useLocks from "requirements/Unlock/hooks/useLocks"
+import { unlockSupportedChains } from "requirements/Unlock/UnlockForm"
 
 const useAddRequirementsFromQuery = (
   append: UseFieldArrayAppend<any, "requirements">

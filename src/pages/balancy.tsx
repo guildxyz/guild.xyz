@@ -8,10 +8,10 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { TwitterLogo } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
-import AllowlistForm from "requirements/formComponents/AllowlistForm"
-import NftForm from "requirements/formComponents/NftForm"
-import TokenForm from "requirements/formComponents/TokenForm"
+import AllowlistForm from "requirements/Allowlist/AllowlistForm"
+import NftForm from "requirements/Nft/NftForm"
 import { RequirementType } from "requirements/requirements"
+import TokenForm from "requirements/Token/TokenForm"
 import { Requirement } from "types"
 
 const REQUIREMENT_FORMS = {

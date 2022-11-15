@@ -36,7 +36,7 @@ import { Chains, RPC } from "connectors"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { DownloadSimple } from "phosphor-react"
-import { usePoap } from "requirements/formComponents/PoapForm/hooks/usePoaps"
+import { usePoap } from "requirements/Poap/hooks/usePoaps"
 
 const Page = (): JSX.Element => {
   const router = useRouter()

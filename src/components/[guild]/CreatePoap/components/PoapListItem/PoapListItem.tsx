@@ -29,7 +29,7 @@ import {
   Upload,
 } from "phosphor-react"
 import { useMemo } from "react"
-import { usePoap } from "requirements/formComponents/PoapForm/hooks/usePoaps"
+import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
 import { useCreatePoapContext } from "../CreatePoapContext"
