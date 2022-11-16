@@ -184,24 +184,6 @@ function getLinkedPages(blockMap: any, params: any, allPages: any) {
   return linkedPageContents
 }
 
-export async function getStaticProps({ params }) {
-  const blockMap = await getPage(params)
-  const allPages = await getAllPages()
-  const linkedPageContents = await getLinks(allPages, blockMap, params)
-  const pageLogo = allPages.find((page) => page.id === params.pageId).icon?.file?.url
-    ? allPages.find((page) => page.id === params.pageId).icon?.file?.url
-    : null
-
-  return {
-    props: {
-      blockMap,
-      linkedPageContents,
-      params,
-      pageLogo,
-    },
-  }
-}
-
 function PageDetails({ blockMap, linkedPageContents, params, pageLogo }) {
   return (
     <>
@@ -233,6 +215,25 @@ function PageDetails({ blockMap, linkedPageContents, params, pageLogo }) {
       </Layout>
     </>
   )
+}
+
+export async function getStaticProps({ params }) {
+  const blockMap = await getPage(params)
+  const allPages = await getAllPages()
+  const linkedPageContents = await getLinks(allPages, blockMap, params)
+  const pageLogo = allPages.find((page) => page.id === params.pageId).icon?.file?.url
+    ? allPages.find((page) => page.id === params.pageId).icon?.file?.url
+    : null
+
+  return {
+    props: {
+      blockMap,
+      linkedPageContents,
+      params,
+      pageLogo,
+    },
+    revalidate: 10,
+  }
 }
 
 export default PageDetails
