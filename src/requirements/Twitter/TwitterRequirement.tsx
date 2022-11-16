@@ -1,7 +1,7 @@
 import { Icon, Link } from "@chakra-ui/react"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { TwitterLogo } from "phosphor-react"
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatformButton"
 import Requirement from "../common/Requirement"
 

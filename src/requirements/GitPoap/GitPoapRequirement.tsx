@@ -1,4 +1,4 @@
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import Requirement from "../common/Requirement"
 import { usePoap } from "../Poap/hooks/usePoaps"
 

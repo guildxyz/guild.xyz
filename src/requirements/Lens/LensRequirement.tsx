@@ -1,6 +1,6 @@
 import DataBlock from "components/common/DataBlock"
 import Link from "components/common/Link"
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import Requirement from "../common/Requirement"
 import { RequirementLinkButton } from "../common/RequirementButton"
 

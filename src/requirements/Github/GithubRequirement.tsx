@@ -1,7 +1,7 @@
 import { Icon } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import { GithubLogo } from "phosphor-react"
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatformButton"
 import Requirement from "../common/Requirement"
 

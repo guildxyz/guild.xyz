@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext } from "react-hook-form"
-import { RequirementFormProps } from "types"
+import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../common/ChainInfo"
 

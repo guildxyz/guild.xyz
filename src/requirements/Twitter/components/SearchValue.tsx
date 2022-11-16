@@ -1,6 +1,6 @@
 import { FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react"
 import { useFormContext, useFormState } from "react-hook-form"
-import { RequirementFormProps } from "types"
+import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 
 const SearchValue = ({ baseFieldPath }: RequirementFormProps) => {

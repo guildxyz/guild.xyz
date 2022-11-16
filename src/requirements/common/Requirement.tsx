@@ -9,7 +9,13 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
-import { RequirementProps } from "types"
+import { PropsWithChildren } from "react"
+
+export type RequirementProps = PropsWithChildren<{
+  loading?: boolean
+  image?: string | JSX.Element
+  footer?: JSX.Element
+}>
 
 const Requirement = ({
   loading,

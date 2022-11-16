@@ -2,7 +2,7 @@ import { Text } from "@chakra-ui/react"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
 import { UseFormSetValue } from "react-hook-form"
-import type { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import BlockExplorerUrl from "../common/BlockExplorerUrl"
 import Requirement from "../common/Requirement"
 

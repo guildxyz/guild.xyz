@@ -1,5 +1,5 @@
 import { Skeleton } from "@chakra-ui/react"
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import Requirement from "../common/Requirement"
 import useOtterspaceBadges from "./hooks/useOtterspaceBadges"
 

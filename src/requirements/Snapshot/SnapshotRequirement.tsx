@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import CopyableAddress from "components/common/CopyableAddress"
 import { CaretDown } from "phosphor-react"
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import Requirement from "../common/Requirement"
 import { RequirementButton } from "../common/RequirementButton"
 

@@ -1,5 +1,5 @@
 import { Img } from "@chakra-ui/react"
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import shortenHex from "utils/shortenHex"
 import Requirement from "../common/Requirement"
 

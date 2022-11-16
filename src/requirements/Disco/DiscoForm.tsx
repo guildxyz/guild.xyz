@@ -2,7 +2,8 @@ import { Box, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormProps, SelectOption } from "types"
+import { RequirementFormProps } from "requirements"
+import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 const options = [

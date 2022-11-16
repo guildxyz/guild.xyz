@@ -1,5 +1,5 @@
+import { RequirementFormProps } from "requirements"
 import MinMaxAmount from "requirements/common/MinMaxAmount"
-import { RequirementFormProps } from "types"
 
 const FollowerCount = ({ baseFieldPath, field }: RequirementFormProps) => (
   <MinMaxAmount

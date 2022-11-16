@@ -14,7 +14,7 @@ import {
   useFormState,
   useWatch,
 } from "react-hook-form"
-import { RequirementFormProps } from "types"
+import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import shortenHex from "utils/shortenHex"
 import ServerPicker from "./ServerPicker"

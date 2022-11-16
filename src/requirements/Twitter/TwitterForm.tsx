@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import { useController, useFormState } from "react-hook-form"
-import { RequirementFormProps } from "types"
+import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import FollowerCount from "./components/FollowerCount"
 import Following from "./components/Following"

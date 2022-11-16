@@ -1,6 +1,6 @@
 import { Skeleton, Text } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import BlockExplorerUrl from "../common/BlockExplorerUrl"
 import Requirement from "../common/Requirement"
 import useMirrorEdition from "./hooks/useMirrorEdition"

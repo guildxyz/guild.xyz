@@ -1,5 +1,4 @@
 import type { Chain } from "connectors"
-import { PropsWithChildren } from "react"
 import { RequirementType } from "requirements"
 
 type Token = {
@@ -398,21 +397,6 @@ type VoiceRequirementParams = {
   voiceEventStartedAt?: number
 }
 
-type RequirementFormProps = {
-  baseFieldPath: string
-  field?: Requirement
-}
-
-type RequirementProps = PropsWithChildren<{
-  loading?: boolean
-  image?: string | JSX.Element
-  footer?: JSX.Element
-}>
-
-type RequirementComponentProps = {
-  requirement: Requirement
-} & RequirementProps
-
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -450,8 +434,5 @@ export type {
   VoiceParticipationForm,
   VoiceRequirementParams,
   PoapEventDetails,
-  RequirementFormProps,
-  RequirementProps,
-  RequirementComponentProps,
 }
 export { ValidationMethod }

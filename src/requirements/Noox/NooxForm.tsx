@@ -9,8 +9,9 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Controller, useFormContext } from "react-hook-form"
+import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
-import { RequirementFormProps, SelectOption } from "types"
+import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 export type NooxBadge = {

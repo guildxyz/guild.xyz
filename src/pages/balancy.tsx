@@ -14,7 +14,7 @@ import NftForm from "requirements/Nft/NftForm"
 import TokenForm from "requirements/Token/TokenForm"
 import { Requirement } from "types"
 
-const REQUIREMENT_FORMS = {
+const FORM_COMPONENTS = {
   ERC20: TokenForm,
   COIN: TokenForm,
   ALLOWLIST: AllowlistForm,
@@ -86,7 +86,7 @@ const Page = (): JSX.Element => {
           >
             {controlledFields.map((field: Requirement, i) => {
               const type: RequirementType = getValues(`requirements.${i}.type`)
-              const RequirementForm = REQUIREMENT_FORMS[type]
+              const RequirementForm = FORM_COMPONENTS[type]
               if (RequirementForm) {
                 return (
                   <BalancyFormCard

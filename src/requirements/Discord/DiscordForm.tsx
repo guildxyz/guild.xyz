@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import { useController, useFormContext, useFormState } from "react-hook-form"
-import { RequirementFormProps } from "types"
+import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import DiscordJoin from "./components/DiscordJoin"
 import DiscordJoinFromNow from "./components/DiscordJoinFromNow"

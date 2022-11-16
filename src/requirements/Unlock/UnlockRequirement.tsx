@@ -1,4 +1,4 @@
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import BlockExplorerUrl from "../common/BlockExplorerUrl"
 import Requirement from "../common/Requirement"
 

@@ -1,6 +1,6 @@
 import { Skeleton } from "@chakra-ui/react"
+import { RequirementComponentProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
-import { RequirementComponentProps } from "types"
 import Requirement from "../common/Requirement"
 import { RequirementLinkButton } from "../common/RequirementButton"
 import { NooxBadge } from "./NooxForm"

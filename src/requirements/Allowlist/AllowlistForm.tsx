@@ -12,7 +12,7 @@ import useDropzone from "hooks/useDropzone"
 import { useRouter } from "next/router"
 import { File } from "phosphor-react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "types"
+import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i

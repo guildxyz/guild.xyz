@@ -18,7 +18,7 @@ import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import { UseFormSetValue } from "react-hook-form"
 import { FixedSizeList } from "react-window"
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import Requirement from "../common/Requirement"
 import { RequirementButton } from "../common/RequirementButton"
 

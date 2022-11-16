@@ -1,6 +1,6 @@
 import { Img } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import Requirement from "../common/Requirement"
 import { RequirementLinkButton } from "../common/RequirementButton"
 import use101Courses from "./hooks/use101Courses"

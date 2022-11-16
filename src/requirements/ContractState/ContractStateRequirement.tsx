@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import { CaretDown, Function } from "phosphor-react"
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import shortenHex from "utils/shortenHex"
 import BlockExplorerUrl from "../common/BlockExplorerUrl"
 import Requirement from "../common/Requirement"

@@ -11,7 +11,7 @@ import useDebouncedState from "hooks/useDebouncedState"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { useController, useFormState } from "react-hook-form"
-import { RequirementFormProps } from "types"
+import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 
 const TWITTER_LINK_CHECK_REGEX = /twitter\.com\/(.*)$/i

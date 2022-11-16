@@ -1,7 +1,7 @@
 import { Img, Link, Text } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { RequirementComponentProps } from "types"
+import { RequirementComponentProps } from "requirements"
 import pluralize from "utils/pluralize"
 import Requirement from "../common/Requirement"
 
