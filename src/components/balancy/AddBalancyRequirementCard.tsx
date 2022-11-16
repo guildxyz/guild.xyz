@@ -5,7 +5,7 @@ import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import { CurrencyCircleDollar, ImageSquare, ListChecks, Plus } from "phosphor-react"
 import { FC } from "react"
-import { RequirementType } from "types"
+import { RequirementType } from "requirements"
 
 type RequirementButton = {
   icon: FC

@@ -34,7 +34,7 @@
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
     "@ethersproject/keccak256": "^5.7.0",
-    "@ethersproject/providers": "^5.7.1",
+    "@ethersproject/providers": "^5.7.2",
     "@ethersproject/strings": "^5.7.0",
     "@ethersproject/units": "^5.7.0",
     "@lottiefiles/react-lottie-player": "^3.4.7",

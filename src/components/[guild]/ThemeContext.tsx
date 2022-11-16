@@ -1,4 +1,4 @@
-import { Box, Portal, useColorMode } from "@chakra-ui/react"
+import { useColorMode } from "@chakra-ui/react"
 import Color from "color"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useColorPalette from "hooks/useColorPalette"
@@ -69,12 +69,12 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
         textColor,
       }}
     >
-      <Box ref={ref} sx={generatedColors}>
-        {/* using Portal with it's parent's ref so it mounts children as they would normally be,
-          but ensures that modals, popovers, etc are mounted inside instead at the end of the
-          body so they'll use the provided css variables */}
-        <Portal containerRef={ref}>{children}</Portal>
-      </Box>
+      <style>
+        {`:root {${Object.entries(generatedColors ?? {})
+          .map(([key, value]) => `${key}: ${value};`)
+          .join("")}}`}
+      </style>
+      {children}
     </ThemeContext.Provider>
   )
 })

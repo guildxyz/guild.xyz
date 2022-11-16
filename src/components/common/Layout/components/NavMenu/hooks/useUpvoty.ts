@@ -11,7 +11,8 @@ const useUpvoty = () => {
   const redirectUrl = router.query.redirectUrl ?? DEFAULT_URL
 
   const { data: upvotyJWT, error } = useSWRImmutable(
-    account ? `/user/upvotyAuth/${account}` : null
+    // Temporarily disabled
+    false && account ? `/user/upvotyAuth/${account}` : null
   )
 
   const urlWithAuth = upvotyJWT
@@ -24,7 +25,9 @@ const useUpvoty = () => {
 
   return {
     url: urlWithAuth ?? DEFAULT_URL,
-    isRedirecting: router.query.redirectUrl,
+    // Temporarily disabled
+    // isRedirecting: router.query.redirectUrl,
+    isRedirecting: false,
     upvotyAuthError: error,
   }
 }
