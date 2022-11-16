@@ -30,7 +30,7 @@ import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
 import BalancyFooter from "./BalancyFooter"
 
 const general = REQUIREMENTS_DATA.slice(1, 5)
-const integrations = REQUIREMENTS_DATA.slice(5, -1)
+const integrations = REQUIREMENTS_DATA.slice(5)
 // call undocumented preload() from next/dynamic, so the components are already loaded when they mount, which is needed for the height animation
 Object.values(REQUIREMENTS).forEach((a: any) => a.formComponent?.render?.preload?.())
 
