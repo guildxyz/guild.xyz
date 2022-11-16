@@ -69,7 +69,7 @@ export const REQUIREMENTS_DATA = [
   },
   {
     icon: "/requirementLogos/guild.png",
-    name: "Guild.xyz",
+    name: "Guild",
     fileNameBase: "Guild",
     types: [
       "GUILD",
@@ -166,7 +166,7 @@ export const REQUIREMENTS_DATA = [
   },
   {
     icon: "/requirementLogos/rabbithole.png",
-    name: "Rabbithole",
+    name: "RabbitHole",
     fileNameBase: "Rabbithole",
     types: ["RABBITHOLE"],
   },
