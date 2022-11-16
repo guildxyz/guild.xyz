@@ -11,7 +11,7 @@ import {
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
-import { memo, useEffect, useState } from "react"
+import { memo } from "react"
 import { Role } from "types"
 import parseDescription from "utils/parseDescription"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -24,19 +24,10 @@ type Props = {
   role: Role
 }
 
+const DynamicEditRole = dynamic(() => import("./components/EditRole"))
+
 const RoleCard = memo(({ role }: Props) => {
   const { isAdmin } = useGuildPermission()
-
-  const [DynamicEditRole, setDynamicEditRole] = useState(null)
-
-  useEffect(() => {
-    if (isAdmin) {
-      const EditRole = dynamic(() => import("./components/EditRole"))
-      setDynamicEditRole(EditRole)
-    } else {
-      setDynamicEditRole(null)
-    }
-  }, [isAdmin])
 
   const { colorMode } = useColorMode()
 
@@ -62,7 +53,7 @@ const RoleCard = memo(({ role }: Props) => {
 
             <MemberCount memberCount={role.memberCount} />
 
-            {DynamicEditRole && (
+            {isAdmin && (
               <>
                 <Spacer />
                 <DynamicEditRole roleId={role.id} />
