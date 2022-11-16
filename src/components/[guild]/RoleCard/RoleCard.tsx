@@ -32,12 +32,12 @@ const RoleCard = memo(({ role }: Props) => {
   const { colorMode } = useColorMode()
 
   return (
-    <Card
-      id={`role-${role.id}`}
-      overflow="visible" // So scroll-margin-top works properly
-      scrollMarginTop={"calc(var(--chakra-space-12) + var(--chakra-space-6))"}
-    >
-      <SimpleGrid columns={{ base: 1, md: 2 }}>
+    <Card>
+      <SimpleGrid
+        id={`role-${role.id}`}
+        scrollMarginTop={"calc(var(--chakra-space-12) + var(--chakra-space-6))"}
+        columns={{ base: 1, md: 2 }}
+      >
         <Flex
           direction="column"
           p={5}
@@ -88,7 +88,6 @@ const RoleCard = memo(({ role }: Props) => {
           pb={{ base: 14, md: 5 }}
           position="relative"
           bgColor={colorMode === "light" ? "gray.50" : "blackAlpha.300"}
-          borderRightRadius="2xl"
         >
           <HStack mb={{ base: 4, md: 6 }}>
             <Text
