@@ -7,8 +7,10 @@ import useSWRImmutable from "swr/immutable"
 import { User } from "types"
 import { bufferToHex } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
-import { Validation } from "./useSubmit"
-import { useSubmitWithSignWithParamKeyPair } from "./useSubmit/useSubmit"
+import {
+  SignedValdation,
+  useSubmitWithSignWithParamKeyPair,
+} from "./useSubmit/useSubmit"
 import useToast from "./useToast"
 
 type StoredKeyPair = {
@@ -77,20 +79,17 @@ const getKeyPair = async (_: string, id: number) => {
 const setKeyPair = async ({
   account,
   mutateKeyPair,
-  validation,
   generatedKeyPair,
+  signedValidation,
 }: {
   account: string
-  validation: Validation
   mutateKeyPair: KeyedMutator<StoredKeyPair>
   generatedKeyPair: StoredKeyPair
+  signedValidation: SignedValdation
 }) => {
   const { userId } = await fetcher("/user/pubKey", {
-    body: {
-      pubKey: generatedKeyPair.pubKey,
-    },
-    validation,
     method: "POST",
+    ...signedValidation,
   })
 
   /**
@@ -142,6 +141,7 @@ const useKeyPair = () => {
     "generatedKeyPair",
     generateKeyPair,
     {
+      revalidateOnMount: true,
       fallbackData: { pubKey: undefined, keyPair: undefined },
     }
   )
@@ -176,11 +176,16 @@ const useKeyPair = () => {
   )
 
   const setSubmitResponse = useSubmitWithSignWithParamKeyPair<
-    StoredKeyPair,
+    { pubKey: string },
     StoredKeyPair
   >(
-    ({ validation }) =>
-      setKeyPair({ account, mutateKeyPair, validation, generatedKeyPair }),
+    (signedValidation: SignedValdation) =>
+      setKeyPair({
+        account,
+        mutateKeyPair,
+        generatedKeyPair,
+        signedValidation,
+      }),
     {
       keyPair,
       forcePrompt: true,
@@ -210,7 +215,11 @@ const useKeyPair = () => {
     pubKey,
     keyPair,
     isValid,
-    set: setSubmitResponse,
+    set: {
+      ...setSubmitResponse,
+      onSubmit: () =>
+        setSubmitResponse.onSubmit({ pubKey: generatedKeyPair.pubKey }),
+    },
   }
 }
 

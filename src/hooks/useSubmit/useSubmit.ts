@@ -238,13 +238,11 @@ const sign = async ({
   msg = DEFAULT_MESSAGE,
   ts,
 }: SignProps): Promise<[string, Validation]> => {
-  const signedPayload = JSON.stringify(payload)
-
   const params: MessageParams = {
     addr: address.toLowerCase(),
     nonce: randomBytes(32).toString("base64"),
     ts: ts.toString(),
-    hash: payload !== "{}" ? keccak256(toUtf8Bytes(signedPayload)) : undefined,
+    hash: payload !== "{}" ? keccak256(toUtf8Bytes(payload)) : undefined,
     method: null,
     msg,
     chainId: undefined,
@@ -287,7 +285,7 @@ const sign = async ({
       .signMessage(getMessage(params))
   }
 
-  return [signedPayload, { params, sig }]
+  return [payload, { params, sig }]
 }
 
 export default useSubmit

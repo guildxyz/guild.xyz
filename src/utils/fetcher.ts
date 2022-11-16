@@ -16,7 +16,7 @@ const fetcher = async (
   const api = isGuildApiCall ? process.env.NEXT_PUBLIC_API : ""
 
   const options = {
-    ...(body
+    ...(body || signedPayload
       ? {
           method: "POST",
           body: JSON.stringify(
@@ -31,7 +31,7 @@ const fetcher = async (
       : {}),
     ...init,
     headers: {
-      ...(body ? { "Content-Type": "application/json" } : {}),
+      ...(body || signedPayload ? { "Content-Type": "application/json" } : {}),
       ...init.headers,
     },
   }
@@ -88,13 +88,13 @@ const fetcherWithSign = async (
   resource: string,
   { body, ...rest }: Record<string, any> = {}
 ) => {
-  const validation = await sign({
+  const [signedPayload, validation] = await sign({
     forcePrompt: false,
     ...signProps,
-    payload: body,
+    payload: JSON.stringify(body),
   })
 
-  return fetcher(resource, { body, validation, ...rest })
+  return fetcher(resource, { signedPayload, validation, ...rest })
 }
 
 const useFetcherWithSign = () => {
