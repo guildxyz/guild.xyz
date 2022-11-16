@@ -1,106 +1,24 @@
-import {
-  Box,
-  Checkbox,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  HStack,
-  SimpleGrid,
-  Text,
-  useBreakpointValue,
-} from "@chakra-ui/react"
-import useDatadog from "components/_app/Datadog/useDatadog"
+import { Checkbox, Text, useBreakpointValue } from "@chakra-ui/react"
+import { useRumAction } from "@datadog/rum-react-integration"
+import Card from "components/common/Card"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
+import Section from "components/common/Section"
 import { useEffect, useMemo } from "react"
-import {
-  useFieldArray,
-  useFormContext,
-  useFormState,
-  useWatch,
-} from "react-hook-form"
-import { Requirement, RequirementType } from "types"
-import LogicPicker from "../LogicPicker"
-import HundredNOneFormCard from "./components/101FormCard"
-import AddRequirementCard from "./components/AddRequirementCard"
-import AllowlistFormCard from "./components/AllowlistFormCard"
-import BalancyCounter from "./components/BalancyCounter"
-import ContractStateFormCard from "./components/ContractStateFormCard/ContractStateFormCard"
-import DiscoFormCard from "./components/DiscoFormCard"
-import DiscordFormCard from "./components/DiscordFormCard"
-import FormCard from "./components/FormCard"
-import GalaxyFormCard from "./components/GalaxyFormCard"
-import GithubFormCard from "./components/GithubFormCard"
-import GitPoapFormCard from "./components/GitPoapFormCard"
-import JuiceboxFormCard from "./components/JuiceboxFormCard"
-import KycDAOFormCard from "./components/KycDAOFormCard"
-import LensFormCard from "./components/LensFormCard"
-import MirrorFormCard from "./components/MirrorFormCard"
-import MirrorV2FormCard from "./components/MirrorV2FormCard/MirrorV2FormCard"
-import NftFormCard from "./components/NftFormCard"
-import NooxFormCard from "./components/NooxFormCard"
-import OrangeFormCard from "./components/OrangeFormCard"
-import OtterspaceFormCard from "./components/OtterspaceFormCard"
-import PoapFormCard from "./components/PoapFormCard"
-import RabbitholeFormCard from "./components/RabbitholeFormCard"
-import SnapshotFormCard from "./components/SnapshotFormCard"
-import TokenFormCard from "./components/TokenFormCard"
-import TwitterFormCard from "./components/TwitterFormCard"
-import UnlockFormCard from "./components/UnlockFormCard"
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
+import { RequirementType } from "requirements"
+import FreeRequirement from "requirements/Free/FreeRequirement"
+import { Requirement } from "types"
+import AddRequirement from "./components/AddRequirement"
+import BalancyCounterWithPopover from "./components/BalancyCounter"
+import LogicPicker from "./components/LogicPicker"
+import RequirementEditableCard from "./components/RequirementEditableCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
-const REQUIREMENT_FORMCARDS = {
-  ERC20: TokenFormCard,
-  COIN: TokenFormCard,
-  CONTRACT: ContractStateFormCard,
-  POAP: PoapFormCard,
-  GITPOAP: GitPoapFormCard,
-  MIRROR: MirrorFormCard,
-  MIRROR_COLLECT: MirrorV2FormCard,
-  SNAPSHOT: SnapshotFormCard,
-  ALLOWLIST: AllowlistFormCard,
-  ERC721: NftFormCard,
-  ERC1155: NftFormCard,
-  NOUNS: NftFormCard,
-  JUICEBOX: JuiceboxFormCard,
-  UNLOCK: UnlockFormCard,
-  GALAXY: GalaxyFormCard,
-  TWITTER: TwitterFormCard,
-  TWITTER_FOLLOW: TwitterFormCard,
-  TWITTER_NAME: TwitterFormCard,
-  TWITTER_FOLLOWER_COUNT: TwitterFormCard,
-  TWITTER_BIO: TwitterFormCard,
-  GITHUB: GithubFormCard,
-  GITHUB_STARRING: GithubFormCard,
-  DISCORD: DiscordFormCard,
-  DISCORD_ROLE: DiscordFormCard,
-  NOOX: NooxFormCard,
-  DISCO: DiscoFormCard,
-  LENS_PROFILE: LensFormCard,
-  LENS_FOLLOW: LensFormCard,
-  LENS_COLLECT: LensFormCard,
-  LENS_MIRROR: LensFormCard,
-  OTTERSPACE: OtterspaceFormCard,
-  ORANGE: OrangeFormCard,
-  101: HundredNOneFormCard,
-  RABBITHOLE: RabbitholeFormCard,
-  KYC_DAO: KycDAOFormCard,
-}
+const SetRequirements = (): JSX.Element => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const { control, getValues, watch, clearErrors } = useFormContext()
 
-type Props = {
-  maxCols?: number
-}
-
-const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
-  const { addDatadogAction } = useDatadog()
-  const { control, getValues, setValue, watch, clearErrors } = useFormContext()
-
-  const { errors } = useFormState()
-
-  /**
-   * TODO: UseFieldArrays's remove function doesn't work correctly with
-   * AnimatePresence for some reason, so as workaround we don't remove fields, just
-   * set their type to `null` and filter them out at submit
-   */
-  const { fields, append, replace } = useFieldArray({
+  const { fields, append, replace, remove, update } = useFieldArray({
     name: "requirements",
     control,
   })
@@ -108,11 +26,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const requirements = useWatch({ name: "requirements" })
 
   useEffect(() => {
-    if (
-      !requirements ||
-      requirements?.length === 0 ||
-      requirements?.every(({ type }) => !type)
-    ) {
+    if (!requirements || requirements?.length === 0) {
       // setError("requirements", {
       //   message: "Set some requirements, or make the role free",
       // })
@@ -123,21 +37,12 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
 
   useAddRequirementsFromQuery(append)
 
-  const addRequirement = (type: RequirementType) => {
-    append({
-      type,
-      address: null,
-      data: {},
-    })
+  const addRequirement = (data) => {
+    append(data)
 
     // Sending actions to datadog
     addDatadogAction("Added a requirement")
-    addDatadogAction(`Added a requirement [${type}]`)
-  }
-
-  const removeRequirement = (index: number) => {
-    setValue(`requirements.${index}.type`, null)
-    clearErrors(`requirements.${index}`)
+    addDatadogAction(`Added a requirement [${data.type}]`)
   }
 
   // Watching the nested fields too, so we can properly update the list
@@ -160,13 +65,10 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const isMobile = useBreakpointValue({ base: true, sm: false })
 
   return (
-    <>
-      <LogicPicker />
-      <FormControl isInvalid={!!errors.requirements?.message}>
-        <HStack mb={2}>
-          <FormLabel m="0" htmlFor="-">
-            Requirements
-          </FormLabel>
+    <Section
+      title="Requirements"
+      titleRightElement={
+        <>
           <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
             {`- or `}
           </Text>
@@ -182,53 +84,46 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
           >
             Free entry
           </Checkbox>
-          {!freeEntry && !isMobile && <BalancyCounter ml="auto !important" />}
-        </HStack>
+          {!freeEntry && !isMobile && (
+            <BalancyCounterWithPopover ml="auto !important" />
+          )}
+        </>
+      }
+      spacing={0}
+    >
+      {!freeEntry && isMobile && <BalancyCounterWithPopover mb="6" />}
+      {controlledFields.map((field: Requirement, i) => {
+        const type: RequirementType = getValues(`requirements.${i}.type`)
 
-        {!freeEntry && isMobile && <BalancyCounter />}
-        <SimpleGrid
-          position="relative"
-          opacity={freeEntry ? 0.5 : 1}
-          columns={{ base: 1, md: 2, lg: maxCols }}
-          spacing={{ base: 5, md: 6 }}
-          pb="20"
-        >
-          {controlledFields.map((field: Requirement, i) => {
-            const type: RequirementType = getValues(`requirements.${i}.type`)
-            const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
+        if (type === "FREE")
+          return (
+            <CardMotionWrapper>
+              <Card px="6" py="4">
+                <FreeRequirement />
+              </Card>
+            </CardMotionWrapper>
+          )
 
-            if (RequirementFormCard) {
-              return (
-                <FormCard
-                  index={i}
-                  type={type}
-                  onRemove={() => removeRequirement(i)}
-                  key={field.id}
-                >
-                  <RequirementFormCard field={field} index={i} />
-                </FormCard>
-              )
-            }
-          })}
+        return (
+          <CardMotionWrapper key={field.id}>
+            <RequirementEditableCard
+              type={type}
+              field={field}
+              index={i}
+              removeRequirement={remove}
+              updateRequirement={update}
+            />
+            <LogicPicker />
+          </CardMotionWrapper>
+        )
+      })}
 
-          <AddRequirementCard
-            initial={!controlledFields?.find((field) => !!field.type)}
-            onAdd={addRequirement}
-          />
+      {!freeEntry && <AddRequirement onAdd={addRequirement} />}
 
-          <Box
-            display={freeEntry ? "block" : "none"}
-            position="absolute"
-            inset={0}
-            bgColor="transparent"
-          />
-        </SimpleGrid>
-
-        <FormErrorMessage id="requirements-error-message">
-          {errors.requirements?.message as string}
-        </FormErrorMessage>
-      </FormControl>
-    </>
+      {/* <FormErrorMessage id="requirements-error-message">
+        {errors.requirements?.message as string}
+      </FormErrorMessage> */}
+    </Section>
   )
 }
 

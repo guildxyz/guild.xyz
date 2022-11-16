@@ -1,3 +1,4 @@
+import { datadogRum } from "@datadog/browser-rum"
 import { hexStripZeros } from "@ethersproject/bytes"
 import { keccak256 } from "@ethersproject/keccak256"
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
@@ -153,9 +154,9 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
       })
         .catch((error) => {
           if (error.code === 4001) {
-            console.info(error.message)
+            datadogRum?.addAction("User rejected signature request")
           } else {
-            console.error(error)
+            datadogRum?.addError("Sign error", { error })
           }
           throw error
         })
@@ -271,7 +272,7 @@ const sign = async ({
         : provider
 
     const bytecode = await prov.getCode(address).catch((error) => {
-      console.error("Retrieving bytecode failed", error)
+      datadogRum?.addError("Retrieving bytecode failed", { error })
       return null
     })
 

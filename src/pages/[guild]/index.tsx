@@ -5,6 +5,7 @@ import {
   Heading,
   HStack,
   Spinner,
+  Tag,
   Text,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
@@ -32,17 +33,31 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useMemo } from "react"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
+
+const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
+const DynamicAddRoleButton = dynamic(
+  () => import("components/[guild]/AddRoleButton")
+)
+const DynamicAddRewardButton = dynamic(
+  () => import("components/[guild]/AddRewardButton")
+)
+const DynamicMembersExporter = dynamic(
+  () => import("components/[guild]/Members/components/MembersExporter")
+)
+const DynamicOnboarding = dynamic(() => import("components/[guild]/Onboarding"))
 
 const GuildPage = (): JSX.Element => {
   const {
     name,
     description,
     imageUrl,
+    admins,
     showMembers,
+    memberCount,
     roles,
     isLoading,
     onboardingComplete,
@@ -71,49 +86,22 @@ const GuildPage = (): JSX.Element => {
 
   useAutoScrollToRole(sortedRoles)
 
-  const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
-  const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
-  const [DynamicAddRewardButton, setDynamicAddRewardButton] = useState(null)
-  const [DynamicMembersExporter, setDynamicMembersExporter] = useState(null)
-  const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
-
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
 
-  const members = useUniqueMembers(roles)
+  // Passing the admin addresses here to make sure that we render all admin avatars in the members list
+  const members = useUniqueMembers(
+    roles,
+    admins?.map((admin) => admin.address)
+  )
+
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
-  useEffect(() => {
-    if (isAdmin) {
-      const EditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
-      const AddRoleButton = dynamic(() => import("components/[guild]/AddRoleButton"))
-      const AddRewardButton = dynamic(
-        () => import("components/[guild]/AddRewardButton")
-      )
-      const MembersExporter = dynamic(
-        () => import("components/[guild]/Members/components/MembersExporter")
-      )
-      setDynamicEditGuildButton(EditGuildButton)
-      setDynamicAddRoleButton(AddRoleButton)
-      setDynamicAddRewardButton(AddRewardButton)
-      setDynamicMembersExporter(MembersExporter)
-
-      if (!onboardingComplete) {
-        const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
-        setDynamicOnboarding(Onboarding)
-      }
-    } else {
-      setDynamicEditGuildButton(null)
-      setDynamicAddRoleButton(null)
-    }
-  }, [isAdmin])
-
   // not importing it dinamically because that way the whole page flashes once when it loads
-  const DynamicOnboardingProvider = DynamicOnboarding
-    ? OnboardingProvider
-    : React.Fragment
+  const DynamicOnboardingProvider =
+    isAdmin && !onboardingComplete ? OnboardingProvider : React.Fragment
 
-  const showOnboarding = DynamicOnboarding && !onboardingComplete
+  const showOnboarding = isAdmin && !onboardingComplete
   const showAccessHub = (isMember || isAdmin) && !showOnboarding
 
   return (
@@ -133,20 +121,20 @@ const GuildPage = (): JSX.Element => {
         }
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
-        action={DynamicEditGuildButton && <DynamicEditGuildButton />}
+        action={isAdmin && <DynamicEditGuildButton />}
       >
-        {DynamicOnboarding && <DynamicOnboarding />}
-
-        {!showOnboarding && (
+        {showOnboarding ? (
+          <DynamicOnboarding />
+        ) : (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
             {isMember ? (
               <HStack>
-                {DynamicAddRewardButton && <DynamicAddRewardButton />}
+                {isAdmin && <DynamicAddRewardButton />}
                 <LeaveButton />
               </HStack>
             ) : (
               <HStack>
-                {DynamicAddRewardButton && <DynamicAddRewardButton />}
+                {isAdmin && <DynamicAddRewardButton />}
                 <JoinButton />
               </HStack>
             )}
@@ -160,8 +148,7 @@ const GuildPage = (): JSX.Element => {
         <Section
           title={(showAccessHub || showOnboarding) && "Roles"}
           titleRightElement={
-            (showAccessHub || showOnboarding) &&
-            DynamicAddRoleButton && (
+            (showAccessHub || showOnboarding) && (
               <Box my="-2 !important" ml="auto !important">
                 <DynamicAddRoleButton />
               </Box>
@@ -179,16 +166,11 @@ const GuildPage = (): JSX.Element => {
           <Section
             title="Members"
             titleRightElement={
-              <HStack justifyContent="end" w="full">
-                {/* <HStack justifyContent="space-between" w="full"> */}
-                {/* <Tag size="sm" maxH={6} pt={1}>
-                  {isLoading ? (
-                    <Spinner size="xs" />
-                  ) : (
-                    members?.filter((address) => !!address)?.length ?? 0
-                  )}
-                </Tag> */}
-                {DynamicMembersExporter && <DynamicMembersExporter />}
+              <HStack justifyContent="space-between" w="full">
+                <Tag size="sm" maxH={6} pt={0.5}>
+                  {isLoading ? <Spinner size="xs" /> : memberCount}
+                </Tag>
+                {isAdmin && <DynamicMembersExporter />}
               </HStack>
             }
           >

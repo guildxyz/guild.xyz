@@ -15,7 +15,7 @@ type Props = {
 
 const reconnectionErrorMessages = new Set<string>([
   "Discord API error: You are being rate limited.",
-  "Please reatuhenticate to Discord",
+  "Please reauthenticate to Discord",
 ])
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {

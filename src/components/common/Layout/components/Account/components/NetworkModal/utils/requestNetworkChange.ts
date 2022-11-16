@@ -28,7 +28,16 @@ const requestNetworkChange =
 
           await ethereum.request({
             method: "wallet_addEthereumChain",
-            params: [{ ...RPC[targetNetwork], chainId }],
+            params: [
+              {
+                chainId,
+                chainName: RPC[targetNetwork]?.chainName,
+                rpcUrls: RPC[targetNetwork]?.rpcUrls,
+                nativeCurrency: RPC[targetNetwork]?.nativeCurrency,
+                blockExplorerUrls: RPC[targetNetwork]?.blockExplorerUrls,
+                iconUrls: RPC[targetNetwork]?.iconUrls,
+              },
+            ],
           })
         } catch (addError) {
           console.error("Failed to add network to MetaMask")

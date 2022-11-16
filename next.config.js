@@ -78,6 +78,16 @@ module.exports = {
           has: [
             {
               type: "host",
+              value: "balancy.guild.xyz",
+            },
+          ],
+          destination: "/balancy/",
+        },
+        {
+          source: "/",
+          has: [
+            {
+              type: "host",
               value: "lego.guild.xyz",
             },
           ],

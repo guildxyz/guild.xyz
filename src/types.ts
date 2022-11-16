@@ -1,4 +1,5 @@
 import type { Chain } from "connectors"
+import { RequirementType } from "requirements"
 
 type Token = {
   address: string
@@ -74,47 +75,6 @@ type NFT = {
   slug: string
 }
 
-type RequirementType =
-  | "COIN"
-  | "ERC20"
-  | "ERC721"
-  | "ERC1155"
-  | "CONTRACT"
-  | "POAP"
-  | "GITPOAP"
-  | "MIRROR"
-  | "MIRROR_COLLECT"
-  | "UNLOCK"
-  | "SNAPSHOT"
-  | "JUICEBOX"
-  | "GALAXY"
-  | "ALLOWLIST"
-  | "FREE"
-  | "TWITTER"
-  | "TWITTER_FOLLOW"
-  | "TWITTER_NAME"
-  | "TWITTER_BIO"
-  | "TWITTER_FOLLOWER_COUNT"
-  | "GITHUB"
-  | "GITHUB_STARRING"
-  | "NOUNS"
-  | "DISCORD"
-  | "DISCORD_ROLE"
-  | "NOOX"
-  | "DISCO"
-  | "LENS"
-  | "LENS_PROFILE"
-  | "LENS_FOLLOW"
-  | "LENS_COLLECT"
-  | "LENS_MIRROR"
-  | "OTTERSPACE"
-  | "ORANGE"
-  | "101"
-  | "RABBITHOLE"
-  | "KYC_DAO"
-
-type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
-
 type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
 
 type PlatformAccount = {
@@ -132,6 +92,8 @@ type User = {
   id: number
   addresses: Array<string>
   platformUsers: PlatformAccountDetails[]
+  signingKey?: string
+  isSuperAdmin: boolean
 }
 
 type GuildBase = {
@@ -179,64 +141,19 @@ type PlatformRoleData = {
   }
 }
 
-type ContractParamType = string[]
-
-type DiscoParamType = {
-  credType: string
-  credIssuence: "before" | "after"
-  credIssuenceDate: string
-  credIssuer: string
-}
-
-type RabbitholeParamType = {
-  trait_type: string
-  value: string
-}[]
-
 type Requirement = {
   id: number
-  data?: {
-    hideAllowlist?: boolean
-    minAmount?: number
-    maxAmount?: number
-    addresses?: Array<string> // (ALLOWLIST)
-    id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
-    strategy?: {
-      name: string
-      params: Record<string, any>
-    } // SNAPSHOT
-    attribute?: {
-      trait_type?: string
-      value?: string
-      interval?: {
-        min: number
-        max: number
-      }
-    }
-    galaxyId?: string
-    serverId?: string
-    roleId?: string
-    serverName?: string
-    roleName?: string
-    // CONTRACT
-    expected?: string
-    resultIndex?: number
-    resultMatch?: string
-    params?: ContractParamType | DiscoParamType | RabbitholeParamType
-  }
-  name: string
   type: RequirementType
-  chain: Chain
-  roleId: number
-  symbol: string
   address: string
+  chain: Chain
+  data?: Record<string, any>
+  roleId: number
+  name: string
+  symbol: string
   decimals?: number
 
   // Props used inside the forms on the UI
-  active?: boolean
   nftRequirementType?: string
-
-  // These props are only used when we fetch requirements from the backend and display them on the UI
   balancyDecimals?: number
 }
 
@@ -296,6 +213,7 @@ type Guild = {
   description?: string
   imageUrl: string
   showMembers: boolean
+  memberCount: number
   hideFromExplorer: boolean
   createdAt: string
   admins: GuildAdmin[]
@@ -322,66 +240,9 @@ type GuildFormType = Partial<
   requirements?: Requirement[]
 }
 
-const RequirementTypeColors = {
-  ERC721: "var(--chakra-colors-green-400)",
-  ERC1155: "var(--chakra-colors-green-400)",
-  CONTRACT: "var(--chakra-colors-gray-400)",
-  NOUNS: "var(--chakra-colors-green-400)",
-  POAP: "#8076FA",
-  GITPOAP: "#307AE8",
-  MIRROR: "var(--chakra-colors-gray-300)",
-  MIRROR_COLLECT: "var(--chakra-colors-gray-300)",
-  ERC20: "var(--chakra-colors-indigo-400)",
-  COIN: "var(--chakra-colors-indigo-400)",
-  SNAPSHOT: "var(--chakra-colors-orange-400)",
-  ALLOWLIST: "var(--chakra-colors-gray-200)",
-  UNLOCK: "var(--chakra-colors-salmon-400)",
-  JUICEBOX: "var(--chakra-colors-yellow-500)",
-  GALAXY: "var(--chakra-colors-black)",
-  FREE: "var(--chakra-colors-cyan-400)",
-  TWITTER: "var(--chakra-colors-twitter-400)",
-  TWITTER_FOLLOW: "var(--chakra-colors-twitter-400)",
-  TWITTER_NAME: "var(--chakra-colors-twitter-400)",
-  TWITTER_BIO: "var(--chakra-colors-twitter-400)",
-  TWITTER_FOLLOWER_COUNT: "var(--chakra-colors-twitter-400)",
-  GITHUB: "var(--chakra-colors-GITHUB-400)",
-  GITHUB_STARRING: "var(--chakra-colors-GITHUB-400)",
-  DISCORD_ROLE: "var(--chakra-colors-DISCORD-400)",
-  NOOX: "#7854f7",
-  DISCO: "#bee4e0",
-  LENS_PROFILE: "#BEFB5A",
-  LENS_FOLLOW: "#BEFB5A",
-  LENS_COLLECT: "#BEFB5A",
-  LENS_MIRROR: "#BEFB5A",
-  OTTERSPACE: "#a6ea8e",
-  101: "#000000",
-  ORANGE: "#ff5d24",
-  RABBITHOLE: "#7f23dc",
-  KYC_DAO: "#3D65F2",
-}
-
-type SnapshotStrategy = {
-  name: string
-  params: Record<string, Record<string, string>>
-}
-
-type JuiceboxProject = {
-  id: string
-  uri: string
-  name: string
-  logoUri: string
-}
-
-type MirrorEdition = {
-  editionContractAddress: string
-  editionId: number
-  title: string
-  image: string
-}
-
-type SelectOption = {
+type SelectOption<T = string> = {
   label: string
-  value: string
+  value: T
   img?: string
 } & Rest
 
@@ -473,14 +334,6 @@ enum ValidationMethod {
   EIP1271 = 3,
 }
 
-type GalaxyCampaign = {
-  id: string
-  numberID: number
-  name: string
-  thumbnail: string
-  chain: Chain
-}
-
 type MonetizePoapForm = {
   chainId: number
   token: string
@@ -565,20 +418,15 @@ export type {
   Guild,
   Requirement,
   RequirementType,
-  SnapshotStrategy,
-  JuiceboxProject,
-  MirrorEdition,
   RolePlatform,
   ThemeMode,
   Logic,
   PlatformAccountDetails,
   SelectOption,
-  NftRequirementType,
   GuildFormType,
   CreatePoapForm,
   CreatedPoapData,
   PlatformName,
-  GalaxyCampaign,
   MonetizePoapForm,
   RequestMintLinksForm,
   GoogleFile,
@@ -586,8 +434,5 @@ export type {
   VoiceParticipationForm,
   VoiceRequirementParams,
   PoapEventDetails,
-  ContractParamType,
-  DiscoParamType,
-  RabbitholeParamType,
 }
-export { ValidationMethod, RequirementTypeColors }
+export { ValidationMethod }
