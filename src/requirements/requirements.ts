@@ -176,6 +176,12 @@ export const REQUIREMENTS_DATA = [
     fileNameBase: "KycDAO",
     types: ["KYC_DAO"],
   },
+  {
+    icon: "/requirementLogos/sismo.svg",
+    name: "Sismo",
+    fileNameBase: "Sismo",
+    types: ["SISMO"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
