@@ -52,7 +52,7 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.type}
       >
-        <FormLabel>Type</FormLabel>
+        <FormLabel>Environment</FormLabel>
 
         <Controller
           name={`${baseFieldPath}.data.type` as const}
@@ -63,7 +63,7 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
               ref={ref}
               options={typeOptions}
               value={typeOptions?.find((option) => option.value === value) ?? ""}
-              placeholder="Choose badge"
+              placeholder="Select environment"
               onChange={(newSelectedOption: SelectOption) =>
                 onChange(newSelectedOption?.value)
               }
@@ -80,7 +80,7 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       <FormControl
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
-        isDisabled={isValidating}
+        isDisabled={!type || isValidating}
       >
         <FormLabel>Badge</FormLabel>
 
