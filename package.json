@@ -25,7 +25,7 @@
     "@chakra-ui/anatomy": "^2.0.7",
     "@chakra-ui/react": "^2.3.5",
     "@chakra-ui/theme-tools": "^2.0.12",
-    "@datadog/browser-rum": "^4.20.0",
+    "@datadog/browser-rum": "^4.23.1",
     "@datadog/rum-react-integration": "github:DataDog/rum-react-integration-examples",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
