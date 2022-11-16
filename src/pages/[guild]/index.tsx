@@ -15,7 +15,6 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import useAccess from "components/[guild]/hooks/useAccess"
-import useAutoScrollToRole from "components/[guild]/hooks/useAutoScrollToRole"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -83,8 +82,6 @@ const GuildPage = (): JSX.Element => {
     )
     return accessedRoles.concat(otherRoles)
   }, [roles, roleAccesses])
-
-  useAutoScrollToRole(sortedRoles)
 
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()

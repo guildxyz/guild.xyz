@@ -53,7 +53,7 @@ const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
       const processedError = processConnectorError(error_)
       showErrorToast(processedError || error_)
     },
-    onSuccess: (response_) => {
+    onSuccess: async (response_) => {
       addDatadogAction(`Successful role creation`)
 
       if (mode === "CONFETTI") triggerConfetti()
@@ -84,12 +84,15 @@ guild.xyz/${urlName} @guildxyz`)}`}
         status: "success",
       })
 
-      mutateGuild()
       mutate(`/guild/access/${response_.guildId}/${account}`)
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
 
+      await mutateGuild(async (curr) => ({
+        ...curr,
+        roles: [...curr.roles, response_],
+      }))
       router.replace({
         pathname: router.asPath.split("#")[0],
         hash: `role-${response_.id}`,
