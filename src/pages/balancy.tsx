@@ -5,11 +5,23 @@ import BalancyFormCard from "components/balancy/BalancyFormCard"
 import BalancyLogicPicker from "components/balancy/BalancyLogicPicker"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import REQUIREMENT_FORMCARDS from "components/create-guild/Requirements/formCards"
 import { TwitterLogo } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
-import { Requirement, RequirementType } from "types"
+import { RequirementType } from "requirements"
+import AllowlistForm from "requirements/Allowlist/AllowlistForm"
+import NftForm from "requirements/Nft/NftForm"
+import TokenForm from "requirements/Token/TokenForm"
+import { Requirement } from "types"
+
+const FORM_COMPONENTS = {
+  ERC20: TokenForm,
+  COIN: TokenForm,
+  ALLOWLIST: AllowlistForm,
+  ERC721: NftForm,
+  ERC1155: NftForm,
+  NOUNS: NftForm,
+}
 
 const Page = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
@@ -74,8 +86,8 @@ const Page = (): JSX.Element => {
           >
             {controlledFields.map((field: Requirement, i) => {
               const type: RequirementType = getValues(`requirements.${i}.type`)
-              const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
-              if (RequirementFormCard) {
+              const RequirementForm = FORM_COMPONENTS[type]
+              if (RequirementForm) {
                 return (
                   <BalancyFormCard
                     baseFieldPath={`requirements.${i}`}
@@ -83,7 +95,7 @@ const Page = (): JSX.Element => {
                     onRemove={() => remove(i)}
                     key={field.id}
                   >
-                    <RequirementFormCard
+                    <RequirementForm
                       field={field}
                       baseFieldPath={`requirements.${i}`}
                     />

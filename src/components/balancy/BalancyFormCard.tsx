@@ -2,9 +2,8 @@ import { Box, CloseButton, HStack, Spinner, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
-import { getRequirementLabel } from "components/create-guild/Requirements/formCards"
 import { PropsWithChildren } from "react"
-import { RequirementType } from "types"
+import REQUIREMENTS, { RequirementType } from "requirements"
 import useBalancy from "../create-guild/Requirements/hooks/useBalancy"
 
 const RequirementTypeColors = {
@@ -50,7 +49,7 @@ const BalancyFormCard = ({
         <ColorCardLabel
           type={type}
           backgroundColor={RequirementTypeColors[type]}
-          label={getRequirementLabel(type)}
+          label={REQUIREMENTS[type].name.toUpperCase()}
           top={"-px"}
           left={"-px"}
           borderTopLeftRadius="2xl"

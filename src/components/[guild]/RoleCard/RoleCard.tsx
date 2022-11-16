@@ -15,7 +15,7 @@ import { memo, useEffect, useState } from "react"
 import { Role } from "types"
 import parseDescription from "utils/parseDescription"
 import useGuildPermission from "../hooks/useGuildPermission"
-import Requirements from "../Requirements"
+import RoleRequirements from "../Requirements"
 import AccessIndicator from "./components/AccessIndicator"
 import MemberCount from "./components/MemberCount"
 import Reward from "./components/Reward"
@@ -111,7 +111,7 @@ const RoleCard = memo(({ role }: Props) => {
             <AccessIndicator roleId={role.id} />
           </HStack>
 
-          <Requirements requirements={role.requirements} logic={role.logic} />
+          <RoleRequirements requirements={role.requirements} logic={role.logic} />
         </Flex>
       </SimpleGrid>
     </Card>
