@@ -14,6 +14,7 @@ import { PropsWithChildren } from "react"
 export type RequirementProps = PropsWithChildren<{
   loading?: boolean
   image?: string | JSX.Element
+  withImgBg?: boolean
   footer?: JSX.Element
 }>
 
@@ -21,6 +22,7 @@ const Requirement = ({
   loading,
   image,
   footer,
+  withImgBg = true,
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -36,14 +38,19 @@ const Requirement = ({
           <Circle
             size={"var(--chakra-space-11)"}
             backgroundColor={
-              colorMode === "light" ? "blackAlpha.100" : "blackAlpha.300"
+              withImgBg &&
+              (colorMode === "light" ? "blackAlpha.100" : "blackAlpha.300")
             }
             alignItems="center"
             justifyContent="center"
-            overflow="hidden"
+            overflow={withImgBg ? "hidden" : undefined}
           >
             {typeof image === "string" ? (
-              <Img src={image} maxWidth={"var(--chakra-space-11)"} />
+              <Img
+                src={image}
+                maxWidth={"var(--chakra-space-11)"}
+                maxHeight={"var(--chakra-space-11)"}
+              />
             ) : (
               image
             )}
