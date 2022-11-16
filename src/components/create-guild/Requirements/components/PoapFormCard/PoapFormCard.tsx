@@ -4,6 +4,7 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
+  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
@@ -12,16 +13,12 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../ChainInfo"
 import useGuildsPoaps from "./hooks/useGuildsPoaps"
 import usePoapById from "./hooks/usePoapById"
 import usePoaps from "./hooks/usePoaps"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 const FANCY_ID_REGEX = /^[0-9]*$/i
 
@@ -29,15 +26,15 @@ const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.data?.details?.includes(input)
 
-const PoapFormCard = ({ index }: Props): JSX.Element => {
+const PoapFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const {
     control,
     formState: { errors },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
-  const type = useWatch({ name: `requirements.${index}.type` })
+  const type = useWatch({ name: `${baseFieldPath}.type` })
 
-  const dataId = useWatch({ name: `requirements.${index}.data.id`, control })
+  const dataId = useWatch({ name: `${baseFieldPath}.data.id`, control })
   const { poap: poapDetails } = usePoap(dataId)
 
   const { poaps: guildsPoapsList } = useGuild()
@@ -50,10 +47,7 @@ const PoapFormCard = ({ index }: Props): JSX.Element => {
   const [pastedId, setPastedId] = useState(null)
   const { isPoapByIdLoading, poap } = usePoapById(pastedId)
 
-  const isLoading = useMemo(
-    () => isGuildsPoapsLoading || isPoapsLoading || isPoapByIdLoading,
-    [isGuildsPoapsLoading, isPoapsLoading, isPoapByIdLoading]
-  )
+  const isLoading = isGuildsPoapsLoading || isPoapsLoading || isPoapByIdLoading
 
   const mappedPoaps = useMemo(() => {
     if (isLoading) return []
@@ -115,12 +109,12 @@ const PoapFormCard = ({ index }: Props): JSX.Element => {
   }, [guildsPoaps, poaps, poap, isLoading])
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainInfo>Works on both ETHEREUM and GNOSIS</ChainInfo>
 
       <FormControl
         isRequired
-        isInvalid={type && !!errors?.requirements?.[index]?.data?.id}
+        isInvalid={type && !!parseFromObject(errors, baseFieldPath)?.data?.id}
       >
         <FormLabel>POAP:</FormLabel>
         <InputGroup>
@@ -130,7 +124,7 @@ const PoapFormCard = ({ index }: Props): JSX.Element => {
             </InputLeftElement>
           )}
           <Controller
-            name={`requirements.${index}.data.id` as const}
+            name={`${baseFieldPath}.data.id` as const}
             control={control}
             rules={{
               required: "This field is required.",
@@ -158,10 +152,10 @@ const PoapFormCard = ({ index }: Props): JSX.Element => {
         <FormHelperText>Search by name or paste ID</FormHelperText>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

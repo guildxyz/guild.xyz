@@ -2,25 +2,21 @@ import { Box, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { Requirement, SelectOption } from "types"
-
-type Props = {
-  index: number
-  field: Requirement
-}
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 
 const options = [
   { label: "Before", value: "before" },
   { label: "After", value: "after" },
 ]
 
-const DiscoFormCard = ({ index }: Props) => {
+const DiscoFormCard = ({ baseFieldPath }: FormCardProps) => {
   const {
     control,
     formState: { errors },
   } = useFormContext()
 
-  const baseFieldName = `requirements.${index}.data.params`
+  const baseFieldName = `${baseFieldPath}.data.params`
 
   const credIssuence = useWatch({ name: `${baseFieldName}.credIssuence` })
   const credIssuanceDate = useWatch({ name: `${baseFieldName}.credIssuenceDate` })
@@ -61,8 +57,10 @@ const DiscoFormCard = ({ index }: Props) => {
   }
 
   return (
-    <>
-      <FormControl isInvalid={errors?.requirements?.[index]?.data?.params?.credType}>
+    <Stack spacing={4} alignItems="start">
+      <FormControl
+        isInvalid={parseFromObject(errors, baseFieldPath)?.data?.params?.credType}
+      >
         <FormLabel>Credential type:</FormLabel>
         <Controller
           name={`${baseFieldName}.credType`}
@@ -80,7 +78,7 @@ const DiscoFormCard = ({ index }: Props) => {
           )}
         />
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.params?.credType?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.params?.credType?.message}
         </FormErrorMessage>
       </FormControl>
 
@@ -88,7 +86,9 @@ const DiscoFormCard = ({ index }: Props) => {
         <FormLabel>Issuance date:</FormLabel>
         <Stack spacing="2" direction={{ base: "column", sm: "row" }} w="full">
           <FormControl
-            isInvalid={errors?.requirements?.[index]?.data?.params?.credIssuence}
+            isInvalid={
+              parseFromObject(errors, baseFieldPath)?.data?.params?.credIssuence
+            }
           >
             <Controller
               name={`${baseFieldName}.credIssuence`}
@@ -109,11 +109,16 @@ const DiscoFormCard = ({ index }: Props) => {
               )}
             />
             <FormErrorMessage>
-              {errors?.requirements?.[index]?.data?.params?.credIssuence?.message}
+              {
+                parseFromObject(errors, baseFieldPath)?.data?.params?.credIssuence
+                  ?.message
+              }
             </FormErrorMessage>
           </FormControl>
           <FormControl
-            isInvalid={errors?.requirements?.[index]?.data?.params?.credIssuenceDate}
+            isInvalid={
+              parseFromObject(errors, baseFieldPath)?.data?.params?.credIssuenceDate
+            }
           >
             <Controller
               name={`${baseFieldName}.credIssuenceDate`}
@@ -138,8 +143,8 @@ const DiscoFormCard = ({ index }: Props) => {
             />
             <FormErrorMessage>
               {
-                errors?.requirements?.[index]?.data?.params?.credIssuenceDate
-                  ?.message
+                parseFromObject(errors, baseFieldPath)?.data?.params
+                  ?.credIssuenceDate?.message
               }
             </FormErrorMessage>
           </FormControl>
@@ -163,7 +168,7 @@ const DiscoFormCard = ({ index }: Props) => {
           )}
         />
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

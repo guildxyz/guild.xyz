@@ -3,17 +3,18 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import { useSoundArtists, useSoundSongs } from "../hooks/useSound"
 
-const SoundOwnASong = ({ index }: { index: number; field?: Requirement }) => {
+const SoundOwnASong = ({ baseFieldPath }: FormCardProps) => {
   const {
     control,
     formState: { errors },
   } = useFormContext()
 
   const [search, setSearch] = useState(
-    useWatch({ name: `requirements.${index}.data.id` })
+    useWatch({ name: `${baseFieldPath}.data.id` })
   )
 
   const { artists, isLoading } = useSoundArtists(search)
@@ -36,10 +37,13 @@ const SoundOwnASong = ({ index }: { index: number; field?: Requirement }) => {
 
   return (
     <>
-      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
+      <FormControl
+        isRequired
+        isInvalid={parseFromObject(errors, baseFieldPath)?.data?.id}
+      >
         <FormLabel>SoundHandle:</FormLabel>
         <Controller
-          name={`requirements.${index}.data.id` as const}
+          name={`${baseFieldPath}.data.id` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -71,14 +75,17 @@ const SoundOwnASong = ({ index }: { index: number; field?: Requirement }) => {
           )}
         />
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
 
-      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.title}>
+      <FormControl
+        isRequired
+        isInvalid={parseFromObject(errors, baseFieldPath)?.data?.title}
+      >
         <FormLabel>Song title:</FormLabel>
         <Controller
-          name={`requirements.${index}.data.title` as const}
+          name={`${baseFieldPath}.data.title` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -105,7 +112,7 @@ const SoundOwnASong = ({ index }: { index: number; field?: Requirement }) => {
           )}
         />
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.title?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.title?.message}
         </FormErrorMessage>
       </FormControl>
     </>

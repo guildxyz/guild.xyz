@@ -60,7 +60,7 @@ const Reward = ({ role, platform }: Props) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, account])
+  }, [isMember, hasAccess, account, accessButtonProps])
 
   return (
     <HStack pt="3" spacing={0} alignItems={"flex-start"}>

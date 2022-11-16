@@ -12,8 +12,6 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
   // see the comment in Requirements.tsx at line 42
   return (
     requirements
-      // Filtering only the active requirements
-      .filter((requirement) => !!requirement.type)
       // Setting unused props to undefined, so we don't send them to the API
       .map((requirement) => {
         const processedRequirement = {
@@ -38,6 +36,9 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
           !requirement.data?.hideAllowlist
         )
           requirement.data.addresses = []
+
+        // Deleting ID here, we don't want to update it, and it might also cause bugs
+        delete processedRequirement.id
 
         return processedRequirement
       })

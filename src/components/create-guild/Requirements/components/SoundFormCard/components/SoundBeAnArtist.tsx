@@ -1,9 +1,11 @@
-import { FormHelperText } from "@chakra-ui/react"
-import { Requirement } from "types"
+import { FormControl, FormHelperText } from "@chakra-ui/react"
+import { FormCardProps } from "types"
 
-const BeArtist = ({ index }: { index: number; field?: Requirement }) => (
+const BeArtist = ({ baseFieldPath }: FormCardProps) => (
   <>
-    <FormHelperText>You don't have to input anything</FormHelperText>
+    <FormControl>
+      <FormHelperText>You don't have to input anything</FormHelperText>
+    </FormControl>
   </>
 )
 

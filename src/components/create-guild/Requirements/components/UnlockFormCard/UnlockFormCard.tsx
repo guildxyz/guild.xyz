@@ -3,6 +3,7 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
+  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
@@ -10,7 +11,8 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import { Chains } from "connectors"
 import { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../ChainPicker"
 import useLocks, { CHAINS_ENDPOINTS } from "./hooks/useLocks"
 
@@ -18,24 +20,19 @@ const supportedChains = Object.keys(CHAINS_ENDPOINTS).map(
   (chainId) => Chains[chainId]
 )
 
-type Props = {
-  index: number
-  field: Requirement
-}
-
 const customFilterOption = (candidate, input) =>
   candidate.label?.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.value?.toLowerCase() === input?.toLowerCase()
 
-const UnlockFormCard = ({ index }: Props): JSX.Element => {
+const UnlockFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const {
     control,
     setValue,
     formState: { errors, touchedFields },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
-  const chain = useWatch({ name: `requirements.${index}.chain` })
-  const address = useWatch({ name: `requirements.${index}.address` })
+  const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const address = useWatch({ name: `${baseFieldPath}.address` })
 
   const { locks, isLoading } = useLocks(chain)
   const mappedLocks = useMemo(
@@ -48,26 +45,26 @@ const UnlockFormCard = ({ index }: Props): JSX.Element => {
     [locks]
   )
 
-  const pickedLock = useMemo(
-    () => mappedLocks?.find((lock) => lock.value === address),
-    [address, mappedLocks]
-  )
+  const pickedLock = mappedLocks?.find((lock) => lock.value === address)
 
   // Reset form on chain change
   const resetForm = () => {
-    if (!touchedFields?.requirements?.[index]?.address) return
-    setValue(`requirements.${index}.address`, null)
+    if (!parseFromObject(touchedFields, baseFieldPath)?.address) return
+    setValue(`${baseFieldPath}.address`, null)
   }
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainPicker
-        controlName={`requirements.${index}.chain` as const}
+        controlName={`${baseFieldPath}.chain` as const}
         supportedChains={supportedChains}
         onChange={resetForm}
       />
 
-      <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.address}>
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
+      >
         <FormLabel>Lock:</FormLabel>
 
         <InputGroup>
@@ -77,7 +74,7 @@ const UnlockFormCard = ({ index }: Props): JSX.Element => {
             </InputLeftElement>
           )}
           <Controller
-            name={`requirements.${index}.address` as const}
+            name={`${baseFieldPath}.address` as const}
             control={control}
             rules={{
               required: "This field is required.",
@@ -103,10 +100,10 @@ const UnlockFormCard = ({ index }: Props): JSX.Element => {
         </InputGroup>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.address?.message}
+          {parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

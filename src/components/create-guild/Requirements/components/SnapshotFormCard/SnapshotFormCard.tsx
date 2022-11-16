@@ -1,22 +1,18 @@
-import { FormControl, FormLabel, Icon, Input, Text } from "@chakra-ui/react"
+import { FormControl, FormLabel, Icon, Input, Stack, Text } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
 import StyledSelect from "components/common/StyledSelect"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
 import capitalize from "utils/capitalize"
+import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "./../ChainInfo"
 import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
 
-type Props = {
-  index: number
-  field: Requirement
-}
-
-const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
+const SnapshotFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
   const [defaultValueObject, setDefaultValueObject] = useState(null)
 
   useEffect(() => {
@@ -32,7 +28,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
   } = useFormContext()
 
   const dataStrategyName = useWatch({
-    name: `requirements.${index}.data.strategy.name`,
+    name: `${baseFieldPath}.data.strategy.name`,
     control,
   })
 
@@ -52,24 +48,21 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
   useEffect(() => {
     if (!strategyParams) return
     // Delete fields of the previous strategy
-    const prevValues = getValues(`requirements.${index}.data.strategy.params`)
+    const prevValues = getValues(`${baseFieldPath}.data.strategy.params`)
     Object.keys(prevValues || {}).forEach((prevParam) => {
       const strategyParamsNames = ["min"].concat(
         strategyParams.map((param) => param.name)
       )
       if (!strategyParamsNames?.includes(prevParam)) {
-        setValue(
-          `requirements.${index}.data.strategy.params.${prevParam}`,
-          undefined
-        )
+        setValue(`${baseFieldPath}.data.strategy.params.${prevParam}`, undefined)
       }
     })
 
     // Set up default values when picked strategy changes
     strategyParams.forEach((param) => {
       setValue(
-        `requirements.${index}.data.strategy.params.${param.name}`,
-        dirtyFields?.requirements?.[index]?.data?.strategy?.name
+        `${baseFieldPath}.data.strategy.params.${param.name}`,
+        parseFromObject(dirtyFields, baseFieldPath)?.data?.strategy?.name
           ? param.defaultValue
           : defaultValueObject?.[param.name]
       )
@@ -78,21 +71,21 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
 
   // We don't display this input rn, just sending a default 0 value to the API
   useEffect(() => {
-    setValue(`requirements.${index}.data.strategy.params.min`, 0)
+    setValue(`${baseFieldPath}.data.strategy.params.min`, 0)
   }, [])
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainInfo>Works on ETHEREUM</ChainInfo>
 
       <FormControl
         position="relative"
         isRequired
-        isInvalid={!!errors?.requirements?.[index]?.data?.strategy?.name}
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.strategy?.name}
       >
         <FormLabel>Strategy:</FormLabel>
         <Controller
-          name={`requirements.${index}.data.strategy.name` as const}
+          name={`${baseFieldPath}.data.strategy.name` as const}
           control={control}
           rules={{
             required: "This field is required.",
@@ -111,7 +104,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
           )}
         />
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.strategy?.name?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.strategy?.name?.message}
         </FormErrorMessage>
       </FormControl>
 
@@ -120,14 +113,16 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
           key={`${dataStrategyName}-${param.name}`}
           isRequired
           isInvalid={
-            !!errors?.requirements?.[index]?.data?.strategy?.params?.[param.name]
+            !!parseFromObject(errors, baseFieldPath)?.data?.strategy?.params?.[
+              param.name
+            ]
           }
           mb={2}
         >
           <FormLabel>{capitalize(param.name)}</FormLabel>
           <Input
             {...register(
-              `requirements.${index}.data.strategy.params.${param.name}` as const,
+              `${baseFieldPath}.data.strategy.params.${param.name}` as const,
               {
                 required: "This field is required.",
                 valueAsNumber: typeof param.defaultValue === "number",
@@ -137,8 +132,9 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
           />
           <FormErrorMessage>
             {
-              errors?.requirements?.[index]?.data?.strategy?.params?.[param.name]
-                ?.message as string
+              parseFromObject(errors, baseFieldPath)?.data?.strategy?.params?.[
+                param.name
+              ]?.message as string
             }
           </FormErrorMessage>
         </FormControl>
@@ -151,7 +147,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
         <Text fontSize="sm">Snapshot strategies</Text>
         <Icon ml={1} as={ArrowSquareOut} />
       </Link>
-    </>
+    </Stack>
   )
 }
 

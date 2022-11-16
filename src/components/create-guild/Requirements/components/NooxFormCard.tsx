@@ -3,18 +3,15 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
+  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Controller, useFormContext } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
-import { Requirement, SelectOption } from "types"
-
-type Props = {
-  index: number
-  field: Requirement
-}
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 
 export type NooxBadge = {
   id: string
@@ -26,7 +23,7 @@ export type NooxBadge = {
   imageThumbnail: string
 }
 
-const NooxFormCard = ({ index }: Props) => {
+const NooxFormCard = ({ baseFieldPath }: FormCardProps) => {
   const {
     control,
     formState: { errors },
@@ -42,16 +39,16 @@ const NooxFormCard = ({ index }: Props) => {
   }))
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl
         isRequired
-        isInvalid={error || errors?.requirements?.[index]?.data?.id}
+        isInvalid={error || parseFromObject(errors, baseFieldPath)?.data?.id}
       >
         <FormLabel>Badge:</FormLabel>
 
         <InputGroup>
           <Controller
-            name={`requirements.${index}.data.id` as const}
+            name={`${baseFieldPath}.data.id` as const}
             control={control}
             rules={{ required: "This field is required." }}
             render={({ field: { onChange, onBlur, value, ref } }) => {
@@ -89,10 +86,10 @@ const NooxFormCard = ({ index }: Props) => {
 
         <FormErrorMessage>
           {(error && "Couldn't fetch Noox badges") ||
-            errors?.requirements?.[index]?.data?.id?.message}
+            parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

@@ -1,3 +1,4 @@
+import { Chain } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
 import fetcher from "utils/fetcher"
@@ -36,16 +37,18 @@ const fetchBadges = async (endpoint: string) => {
 
   do {
     newBadges = await fetch1000Badges(endpoint, skip)
-    badges = badges.concat(newBadges)
+    badges = badges.concat(newBadges ?? [])
     skip += 1000
   } while (newBadges?.length > 0)
 
   return badges
 }
 
-const useOtterspaceBadges = () =>
+const useOtterspaceBadges = (chain: Chain) =>
   useSWRImmutable<SelectOption[]>(
-    `https://api.thegraph.com/subgraphs/name/otterspace-xyz/badges-optimism`,
+    chain
+      ? `https://api.thegraph.com/subgraphs/name/otterspace-xyz/badges-${chain.toLowerCase()}`
+      : null,
     fetchBadges
   )
 

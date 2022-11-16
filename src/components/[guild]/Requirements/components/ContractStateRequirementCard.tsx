@@ -21,17 +21,16 @@ type Props = {
   requirement: Requirement
 }
 
-const ContractStateRequirementCard = ({ requirement }: Props) => {
+const ContractStateRequirementCard = ({ requirement, ...rest }: Props) => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={<Icon as={Function} boxSize={6} />}
       footer={
         <>
           <HStack divider={<Divider orientation="vertical" h="4" />} spacing="4">
-            <BlockExplorerUrl requirement={requirement} />
+            <BlockExplorerUrl requirement={requirement} {...rest} />
             <RequirementButton
               rightIcon={
                 <Icon
@@ -56,7 +55,7 @@ const ContractStateRequirementCard = ({ requirement }: Props) => {
               borderRadius="md"
             >
               <Tbody fontWeight="normal" fontSize="xs">
-                {(requirement.data.params as ContractParamType).map((param, i) => (
+                {(requirement.data.params as ContractParamType)?.map((param, i) => (
                   <Tr key={i}>
                     <Td>{`${i + 1}. input param`}</Td>
                     <Td>{param}</Td>
@@ -77,6 +76,7 @@ const ContractStateRequirementCard = ({ requirement }: Props) => {
           </Collapse>
         </>
       }
+      {...rest}
     >
       Satisfy custom query of{" "}
       <DataBlock>{requirement.data.id.split("(")[0]}</DataBlock> on the{" "}

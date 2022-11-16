@@ -7,11 +7,12 @@ import {
 } from "components/create-guild/Requirements/components/SoundFormCard/hooks/useSound"
 import { Requirement } from "types"
 import RequirementCard from "./common/RequirementCard"
+
 type Props = {
   requirement: Requirement
 }
 
-const SoundRequirementCard = ({ requirement }: Props) => {
+const SoundRequirementCard = ({ requirement, ...rest }: Props) => {
   const { artists, isLoading } = useSoundArtists(requirement.data.id)
 
   const songs = useSoundSongs(artists?.map((artist) => artist[0].id))
@@ -22,7 +23,6 @@ const SoundRequirementCard = ({ requirement }: Props) => {
 
   return (
     <RequirementCard
-      requirement={requirement}
       image={(() => {
         switch (requirement.type) {
           case "SOUND_ARTIST":
@@ -50,6 +50,7 @@ const SoundRequirementCard = ({ requirement }: Props) => {
             )
         }
       })()}
+      {...rest}
     >
       {(() => {
         switch (requirement.type) {

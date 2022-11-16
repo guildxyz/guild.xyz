@@ -32,12 +32,16 @@ const fetchBadges = (endpoint: string) =>
               image
             }
           }
+          contract {
+            chainId
+          }
         }
       }`,
     },
   }).then((res) =>
     res?.data?.badges.filter(
       (badge) =>
+        badge.contract.chainId === 137 &&
         badge.courses[0] &&
         // Temporarily filtering out [Testnet] and [archive] badges so we don't get duplicate IDs here
         !badge.courses[0].title?.toLowerCase()?.includes("[testnet]") &&

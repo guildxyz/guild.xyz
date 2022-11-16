@@ -5,6 +5,7 @@ import {
   Heading,
   HStack,
   Spinner,
+  Tag,
   Text,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
@@ -41,7 +42,9 @@ const GuildPage = (): JSX.Element => {
     name,
     description,
     imageUrl,
+    admins,
     showMembers,
+    memberCount,
     roles,
     isLoading,
     onboardingComplete,
@@ -77,7 +80,12 @@ const GuildPage = (): JSX.Element => {
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
 
-  const members = useUniqueMembers(roles)
+  // Passing the admin addresses here to make sure that we render all admin avatars in the members list
+  const members = useUniqueMembers(
+    roles,
+    admins?.map((admin) => admin.address)
+  )
+
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   useEffect(() => {
@@ -176,15 +184,10 @@ const GuildPage = (): JSX.Element => {
           <Section
             title="Members"
             titleRightElement={
-              <HStack justifyContent="end" w="full">
-                {/* <HStack justifyContent="space-between" w="full"> */}
-                {/* <Tag size="sm" maxH={6} pt={1}>
-                  {isLoading ? (
-                    <Spinner size="xs" />
-                  ) : (
-                    members?.filter((address) => !!address)?.length ?? 0
-                  )}
-                </Tag> */}
+              <HStack justifyContent="space-between" w="full">
+                <Tag size="sm" maxH={6} pt={0.5}>
+                  {isLoading ? <Spinner size="xs" /> : memberCount}
+                </Tag>
                 {DynamicMembersExporter && <DynamicMembersExporter />}
               </HStack>
             }

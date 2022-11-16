@@ -19,13 +19,12 @@ type Props = {
   requirement: Requirement
 }
 
-const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => {
+const SnapshotRequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
     <RequirementCard
-      requirement={requirement}
-      image="/requirementLogos/snapshot.jpg"
+      image="/requirementLogos/snapshot.png"
       footer={
         <>
           <RequirementButton
@@ -80,6 +79,7 @@ const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => {
           </Collapse>
         </>
       }
+      {...rest}
     >
       {`Satisfy the ${requirement.data?.strategy?.name} snapshot strategy`}
     </RequirementCard>

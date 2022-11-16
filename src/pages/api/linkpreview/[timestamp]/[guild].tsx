@@ -46,15 +46,6 @@ const handler = async (req, _) => {
 
     const roles = guild.roles?.map((role) => role.name)
 
-    const members: string[] = [
-      ...new Set(
-        guild.roles
-          .map((role) => role.members)
-          ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-          ?.filter((member) => typeof member === "string") || []
-      ),
-    ]
-
     const safeGuildDescription = guild.description?.replaceAll("\n", "")
     const isLightMode = guild.theme?.mode === "LIGHT"
 
@@ -78,7 +69,7 @@ const handler = async (req, _) => {
               top: 0,
               right: 0,
               width: "320px",
-              height: "450px",
+              height: "450px!important",
               opacity: 0.6,
             }}
             src={`${baseUrl}/img/guilders${isLightMode ? "-dark" : ""}.svg`}
@@ -178,7 +169,9 @@ const handler = async (req, _) => {
                   borderRadius: "6px",
                   fontSize: "18px",
                 }}
-              >{`${members?.length || 0} members`}</div>
+              >{`${new Intl.NumberFormat("en", { notation: "compact" }).format(
+                guild?.memberCount ?? 0
+              )} members`}</div>
 
               <div
                 style={{
@@ -207,9 +200,11 @@ const handler = async (req, _) => {
                 color: isLightMode ? "#27272A" : "white",
               }}
             >
-              {`${safeGuildDescription?.slice(0, 80)}${
-                safeGuildDescription?.length > 80 ? "..." : ""
-              }` || (
+              {guild.description ? (
+                `${safeGuildDescription?.slice(0, 80)}${
+                  safeGuildDescription?.length > 80 ? "..." : ""
+                }`
+              ) : (
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <div style={{ marginBottom: "4px" }}>
                     {"That's a great party in there!"}

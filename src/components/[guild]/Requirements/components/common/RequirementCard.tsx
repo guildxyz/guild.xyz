@@ -9,17 +9,14 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
-import { Requirement } from "types"
 
 type Props = {
-  requirement: Requirement
   loading?: boolean
   image: string | JSX.Element
   footer?: JSX.Element
 }
 
 const RequirementCard = ({
-  requirement,
   loading,
   image,
   footer,
@@ -45,11 +42,7 @@ const RequirementCard = ({
             overflow="hidden"
           >
             {typeof image === "string" ? (
-              <Img
-                src={image}
-                alt={requirement.address}
-                maxWidth={"var(--chakra-space-11)"}
-              />
+              <Img src={image} maxWidth={"var(--chakra-space-11)"} />
             ) : (
               image
             )}
