@@ -33,7 +33,11 @@ const RoleCard = memo(({ role }: Props) => {
 
   return (
     <Card>
-      <SimpleGrid columns={{ base: 1, md: 2 }}>
+      <SimpleGrid
+        id={`role-${role.id}`}
+        scrollMarginTop={"calc(var(--chakra-space-12) + var(--chakra-space-6))"}
+        columns={{ base: 1, md: 2 }}
+      >
         <Flex
           direction="column"
           p={5}

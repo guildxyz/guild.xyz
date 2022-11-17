@@ -9,6 +9,7 @@ import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
 import { useSWRConfig } from "swr"
@@ -22,6 +23,8 @@ type RoleOrGuild = Role & { guildId: number }
 
 const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
   const { addDatadogAction, addDatadogError } = useDatadog()
+
+  const router = useRouter()
   const toastIdRef = useRef<ToastId>()
   const { account } = useWeb3React()
 
@@ -50,7 +53,7 @@ const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
       const processedError = processConnectorError(error_)
       showErrorToast(processedError || error_)
     },
-    onSuccess: (response_) => {
+    onSuccess: async (response_) => {
       addDatadogAction(`Successful role creation`)
 
       if (mode === "CONFETTI") triggerConfetti()
@@ -81,11 +84,19 @@ guild.xyz/${urlName} @guildxyz`)}`}
         status: "success",
       })
 
-      mutateGuild()
       mutate(`/guild/access/${response_.guildId}/${account}`)
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
+
+      await mutateGuild(async (curr) => ({
+        ...curr,
+        roles: [...curr.roles, response_],
+      }))
+      router.replace({
+        pathname: router.asPath.split("#")[0],
+        hash: `role-${response_.id}`,
+      })
     },
   })
 
