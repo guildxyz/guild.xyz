@@ -120,7 +120,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
               const errorDescription =
                 "CSRF token mismatch, this indicates possible CSRF attack."
 
-              addDatadogError(`OAuth error - ${title}`, { error: errorDescription })
+              addDatadogError(`OAuth error - ${title}`, {
+                error: errorDescription,
+                recievedCsrfToken,
+                csrfToken,
+              })
               reject({ error: title, errorDescription })
               toast({ status: "error", title, description: errorDescription })
             } else {
