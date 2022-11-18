@@ -15,7 +15,7 @@ const fetchSismoBadges = (_: string, type: SismoBadgeType) =>
         res.items?.map((badge) => ({
           label: badge.name,
           img: badge.image,
-          value: badge.collectionId,
+          value: badge.collectionId.toString(),
         })) ?? []
     )
     .catch(() => [])
