@@ -2,6 +2,14 @@ import { mode } from "@chakra-ui/theme-tools"
 
 const styles = {
   global: (props) => ({
+    html: {
+      scrollBehavior: "smooth!important",
+    },
+    "@media screen and (prefers-reduced-motion: reduce)": {
+      html: {
+        scrollBehavior: "auto",
+      },
+    },
     "tbody > tr:last-child > td": {
       border: 0,
     },

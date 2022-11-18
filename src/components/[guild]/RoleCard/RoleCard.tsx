@@ -32,7 +32,20 @@ const RoleCard = memo(({ role }: Props) => {
   const { colorMode } = useColorMode()
 
   return (
-    <Card>
+    <Card
+      id={`role-${role.id}`}
+      scrollMarginTop={"calc(var(--chakra-space-12) + var(--chakra-space-6))"}
+      // scrollMarginTop doesn't work with overflow="hidden"
+      overflow="clip"
+      sx={{
+        ":target": {
+          boxShadow: "var(--chakra-shadows-outline)",
+        },
+      }}
+      onClick={() => {
+        if (window.location.hash === `#role-${role.id}`) window.location.hash = "!"
+      }}
+    >
       <SimpleGrid columns={{ base: 1, md: 2 }}>
         <Flex
           direction="column"
@@ -50,9 +63,7 @@ const RoleCard = memo(({ role }: Props) => {
                 {role.name}
               </Heading>
             </HStack>
-
             <MemberCount memberCount={role.memberCount} />
-
             {isAdmin && (
               <>
                 <Spacer />
@@ -60,13 +71,11 @@ const RoleCard = memo(({ role }: Props) => {
               </>
             )}
           </HStack>
-
           {role.description && (
             <Text mb={6} wordBreak="break-word">
               {parseDescription(role.description)}
             </Text>
           )}
-
           <Box mt="auto">
             {role.rolePlatforms?.map((platform) => (
               <Reward
@@ -77,7 +86,6 @@ const RoleCard = memo(({ role }: Props) => {
             ))}
           </Box>
         </Flex>
-
         <Flex
           direction="column"
           p={5}
@@ -101,7 +109,6 @@ const RoleCard = memo(({ role }: Props) => {
             <Spacer />
             <AccessIndicator roleId={role.id} />
           </HStack>
-
           <RoleRequirements requirements={role.requirements} logic={role.logic} />
         </Flex>
       </SimpleGrid>
