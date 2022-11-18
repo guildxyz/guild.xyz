@@ -39,6 +39,7 @@ const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
   ): Promise<RoleOrGuild> => fetcher("/role", signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {
+    forcePrompt: true,
     onError: (error_) => {
       addDatadogError(`Role creation error`, { error: error_ })
 

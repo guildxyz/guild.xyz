@@ -28,6 +28,7 @@ const useRemovePlatform = () => {
     })
 
   return useSubmitWithSign<any>(submit, {
+    forcePrompt: true,
     onSuccess: () => {
       toast({
         title: `Platform removed!`,

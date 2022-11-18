@@ -28,6 +28,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
     })
 
   const useSubmitResponse = useSubmitWithSign<any>(submit, {
+    forcePrompt: true,
     onSuccess: (newGuild) => {
       if (onSuccess) onSuccess()
       guild.mutateGuild()
