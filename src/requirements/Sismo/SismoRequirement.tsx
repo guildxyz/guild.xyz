@@ -13,7 +13,9 @@ const SismoRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
       <Skeleton as="span" isLoaded={!!data}>
         {isValidating ? "Loading..." : badge?.label}
       </Skeleton>
-      {` Sismo badge`}
+      {` Sismo badge${
+        requirement.data.type === "PLAYGROUND" ? " (Playground)" : ""
+      }`}
     </Requirement>
   )
 }
