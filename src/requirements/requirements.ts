@@ -325,6 +325,18 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["KYC_DAO"],
   },
+  {
+    icon: "/requirementLogos/sismo.svg",
+    name: "Sismo",
+    fileNameBase: "Sismo",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Sismo/SismoRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Sismo/SismoForm")
+    ),
+    types: ["SISMO"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
