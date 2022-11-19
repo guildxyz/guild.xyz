@@ -7,6 +7,7 @@ import { ArrowCounterClockwise, Check, LockSimple, Warning, X } from "phosphor-r
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
+import useDiscordRateLimitWarning from "./hooks/useDiscordRateLimitWarning"
 import useTwitterRateLimitWarning from "./hooks/useTwitterRateLimitWarning"
 
 type Props = {
@@ -20,6 +21,8 @@ const reconnectionErrorMessages = new Set<string>([
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const { hasAccess, error, isLoading, data } = useAccess(roleId)
+
+  const discordRateLimitWarning = useDiscordRateLimitWarning(data ?? error, roleId)
   const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
 
   const { isActive } = useWeb3React()
@@ -83,6 +86,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
           label="Couldn’t check access"
           icon={Warning}
         />
+        {discordRateLimitWarning}
         {twitterRateLimitWarning}
       </>
     )
@@ -90,6 +94,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   return (
     <>
       <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
+      {discordRateLimitWarning}
       {twitterRateLimitWarning}
     </>
   )
