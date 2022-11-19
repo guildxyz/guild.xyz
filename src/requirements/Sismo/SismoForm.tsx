@@ -30,6 +30,7 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
     control,
     register,
+    setValue,
     formState: { errors },
   } = useFormContext()
 
@@ -64,9 +65,10 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
               options={typeOptions}
               value={typeOptions?.find((option) => option.value === value) ?? ""}
               placeholder="Select environment"
-              onChange={(newSelectedOption: SelectOption) =>
+              onChange={(newSelectedOption: SelectOption) => {
+                setValue(`${baseFieldPath}.data.id`, null)
                 onChange(newSelectedOption?.value)
-              }
+              }}
               onBlur={onBlur}
             />
           )}
