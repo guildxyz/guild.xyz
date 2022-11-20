@@ -145,6 +145,7 @@ const GuildPage = (): JSX.Element => {
         <Section
           title={(showAccessHub || showOnboarding) && "Roles"}
           titleRightElement={
+            isAdmin &&
             (showAccessHub || showOnboarding) && (
               <Box my="-2 !important" ml="auto !important">
                 <DynamicAddRoleButton />
