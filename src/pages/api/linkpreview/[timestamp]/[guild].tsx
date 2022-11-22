@@ -8,6 +8,9 @@ export const config = {
     "/src/hooks/useLocalStorage.ts",
     "/src/hooks/useTimeInaccuracy.ts",
     "/src/utils/fetcher.ts",
+    "/src/hooks/useSubmit/useSubmit.ts",
+    "/src/hooks/useKeyPair.ts",
+    "/src/utils/fetcher.ts",
   ],
 }
 
