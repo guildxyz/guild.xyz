@@ -251,7 +251,16 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Lens/LensForm")
     ),
-    types: ["LENS", "LENS_PROFILE", "LENS_FOLLOW", "LENS_COLLECT", "LENS_MIRROR"],
+    types: [
+      "LENS",
+      "LENS_PROFILE",
+      "LENS_FOLLOW",
+      "LENS_COLLECT",
+      "LENS_MIRROR",
+      "LENS_TOTAL_FOLLOWERS",
+      "LENS_TOTAL_POSTS",
+      "LENS_FOLLOWED_BY",
+    ],
   },
   {
     icon: "/requirementLogos/otterspace.png",
