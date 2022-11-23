@@ -337,6 +337,18 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["SISMO"],
   },
+  {
+    icon: "/networkLogos/optimism.svg",
+    name: "OP Social Contract",
+    fileNameBase: "Optimism",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Optimism/OptimismRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Optimism/OptimismForm")
+    ),
+    types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
