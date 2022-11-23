@@ -16,7 +16,7 @@ const typeOptions = [
   },
   {
     value: "OPTIMISM_PFP",
-    label: "Have an Optimism pfp",
+    label: "Have an Optimist PFP",
   },
 ]
 
