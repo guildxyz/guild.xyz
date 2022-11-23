@@ -5,8 +5,9 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { ArrowCounterClockwise, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
-  ACCESS_INDICATOR_STYLES
+  ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
+import useDiscordRateLimitWarning from "./hooks/useDiscordRateLimitWarning"
 import useTwitterRateLimitWarning from "./hooks/useTwitterRateLimitWarning"
 
 type Props = {
@@ -16,10 +17,13 @@ type Props = {
 const reconnectionErrorMessages = new Set<string>([
   "Discord API error: You are being rate limited.",
   "Please reauthenticate to Discord",
+  "Please reauthenticate to Twitter",
 ])
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const { hasAccess, error, isLoading, data } = useAccess(roleId)
+
+  const discordRateLimitWarning = useDiscordRateLimitWarning(data ?? error, roleId)
   const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
 
   const { isActive } = useWeb3React()
@@ -83,6 +87,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
           label="Couldn’t check access"
           icon={Warning}
         />
+        {discordRateLimitWarning}
         {twitterRateLimitWarning}
       </>
     )
@@ -90,6 +95,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   return (
     <>
       <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
+      {discordRateLimitWarning}
       {twitterRateLimitWarning}
     </>
   )

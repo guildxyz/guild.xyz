@@ -16,6 +16,10 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
       .map((requirement) => {
         const processedRequirement = {
           ...requirement,
+          data: {
+            ...requirement.data,
+            validAddresses: undefined,
+          },
           nftRequirementType: undefined,
         }
 
@@ -36,6 +40,9 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
           !requirement.data?.hideAllowlist
         )
           requirement.data.addresses = []
+
+        // Deleting ID here, we don't want to update it, and it might also cause bugs
+        delete processedRequirement.id
 
         return processedRequirement
       })

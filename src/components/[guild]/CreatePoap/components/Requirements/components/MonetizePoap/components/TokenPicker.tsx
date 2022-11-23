@@ -28,7 +28,6 @@ const TokenPicker = (): JSX.Element => {
   const { chainId } = useWeb3React()
   const {
     control,
-    getValues,
     setValue,
     formState: { errors },
   } = useFormContext<MonetizePoapForm>()
@@ -54,6 +53,8 @@ const TokenPicker = (): JSX.Element => {
   const {
     data: { name: tokenName, symbol: tokenSymbol },
     isValidating: isTokenSymbolValidating,
+
+    error,
   } = useTokenData(Chains[chainId], token)
 
   const tokenDataFetched =
@@ -104,12 +105,7 @@ const TokenPicker = (): JSX.Element => {
               message:
                 "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
             },
-            validate: () =>
-              // Using `getValues` instead of `useWatch` here, so the validation is triggered when the input value changes
-              !getValues("token") ||
-              isTokenSymbolValidating ||
-              tokenDataFetched ||
-              "Failed to fetch token data",
+            validate: () => !error || "Failed to fetch token data",
           }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <StyledSelect

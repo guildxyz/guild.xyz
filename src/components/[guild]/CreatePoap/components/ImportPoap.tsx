@@ -13,10 +13,10 @@ import {
   Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import usePoapById from "components/create-guild/Requirements/components/PoapFormCard/hooks/usePoapById"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import usePoapById from "requirements/Poap/hooks/usePoapById"
 import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
 import useSavePoap from "../hooks/useSavePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
