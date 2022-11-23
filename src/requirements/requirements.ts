@@ -339,7 +339,7 @@ export const REQUIREMENTS_DATA = [
   },
   {
     icon: "/networkLogos/optimism.svg",
-    name: "OP Social Contract",
+    name: "OP Attestation",
     fileNameBase: "Optimism",
     displayComponent: dynamic<RequirementComponentProps>(
       () => import("requirements/Optimism/OptimismRequirement")

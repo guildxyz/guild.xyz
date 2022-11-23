@@ -10,23 +10,19 @@ const OptimismRequirement = ({
   <Requirement image={"networkLogos/optimism.svg"} {...rest}>
     {requirement.type === "OPTIMISM_ATTESTATION" ? (
       <>
-        {"Have "}
-        {requirement.data.val ? (
+        {"Have an attestation from "}
+        <DataBlock>{shortenHex(requirement.data.creator, 3)}</DataBlock>
+        {" with key "}
+        <DataBlock>{requirement.data.key}</DataBlock>
+        {requirement.data.val && (
           <>
-            {"the "}
+            {" and value "}
             <DataBlock>{requirement.data.val}</DataBlock>
           </>
-        ) : (
-          "an"
         )}
-        {" attestation from "}
-        <DataBlock>{shortenHex(requirement.data.creator, 3)}</DataBlock>
-        {" in the "}
-        <DataBlock>{requirement.data.key}</DataBlock>
-        {" theme"}
       </>
     ) : (
-      "Have an Optimism profile pic"
+      "Have an Optimist PFP"
     )}
   </Requirement>
 )
