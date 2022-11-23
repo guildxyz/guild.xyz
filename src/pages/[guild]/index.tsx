@@ -48,6 +48,7 @@ const DynamicMembersExporter = dynamic(
   () => import("components/[guild]/Members/components/MembersExporter")
 )
 const DynamicOnboarding = dynamic(() => import("components/[guild]/Onboarding"))
+const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 
 const GuildPage = (): JSX.Element => {
   const {
@@ -74,7 +75,7 @@ const GuildPage = (): JSX.Element => {
 
     // prettier-ignore
     const accessedRoles = [], otherRoles = []
-    byMembers.forEach((role) =>
+    byMembers?.forEach((role) =>
       (roleAccesses?.find(({ roleId }) => roleId === role.id)?.access
         ? accessedRoles
         : otherRoles
@@ -155,9 +156,11 @@ const GuildPage = (): JSX.Element => {
           spacing={4}
           mb="12"
         >
-          {sortedRoles?.map((role) => (
-            <RoleCard key={role.id} role={role} />
-          ))}
+          {sortedRoles?.length ? (
+            sortedRoles.map((role) => <RoleCard key={role.id} role={role} />)
+          ) : (
+            <DynamicNoRolesAlert />
+          )}
         </Section>
 
         {(showMembers || isAdmin) && (
@@ -166,7 +169,7 @@ const GuildPage = (): JSX.Element => {
             titleRightElement={
               <HStack justifyContent="space-between" w="full">
                 <Tag size="sm" maxH={6} pt={0.5}>
-                  {isLoading ? <Spinner size="xs" /> : memberCount}
+                  {isLoading ? <Spinner size="xs" /> : memberCount ?? 0}
                 </Tag>
                 {isAdmin && <DynamicMembersExporter />}
               </HStack>
