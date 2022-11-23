@@ -1,5 +1,4 @@
 import { GroupBase, Select } from "chakra-react-select"
-import { Dispatch, SetStateAction } from "react"
 
 export type FilterOption = {
   value: string
@@ -9,11 +8,10 @@ export type FilterOption = {
 
 type Props = {
   filter: Array<FilterOption>
-  setFilter: Dispatch<SetStateAction<FilterOption[]>>
-  filterPages: any // TODO: type
+  setFilterData
 }
 
-const MultiSelect = ({ filter, filterPages }: Props): JSX.Element => (
+const MultiSelect = ({ filter, setFilterData }: Props): JSX.Element => (
   <Select<FilterOption, true, GroupBase<FilterOption>>
     isMulti
     options={filter}
@@ -29,7 +27,7 @@ const MultiSelect = ({ filter, filterPages }: Props): JSX.Element => (
         zIndex: 2,
       }),
     }}
-    onChange={(e) => filterPages(e)}
+    onChange={(e) => setFilterData(e)}
   />
 )
 
