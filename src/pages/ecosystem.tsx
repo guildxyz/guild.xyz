@@ -1,4 +1,5 @@
-import { usePrevious } from "@chakra-ui/react"
+import { GridItem, SimpleGrid, usePrevious } from "@chakra-ui/react"
+import MultiSelect, { FilterOption } from "components/brain/multiSelect"
 import PageDetailsCard from "components/brain/pageDetailsCard"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
@@ -15,6 +16,23 @@ function Ecosystem({ cards }) {
   const [search, setSearch] = useState<string>("")
   const [renderedCards, setCard] = useState(cards)
   const prevSearch = usePrevious(search)
+  const [filter, setFilter] = useState<Array<FilterOption>>([
+    { value: "requirement", label: "requirement" },
+    { value: "reward", label: "reward" },
+    { value: "core", label: "core" },
+    { value: "build with Guild", label: "build with Guild" },
+    { value: "web2", label: "web2" },
+    { value: "web3", label: "web3" },
+  ])
+
+  const filterPages = (filterData: Array<FilterOption>) => {
+    const filteredCards = cards.filter((card) =>
+      filterData
+        .map((filterElement) => filterElement.value)
+        .every((filterTag) => card.tags.includes(filterTag))
+    )
+    setCard(filteredCards)
+  }
 
   useEffect(() => {
     if (prevSearch === search || prevSearch === undefined) return
@@ -25,7 +43,17 @@ function Ecosystem({ cards }) {
     <>
       <LinkPreviewHead path="" />
       <Layout title="Ecosystem" showBackButton={false}>
-        <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
+        <SimpleGrid
+          templateColumns={{ base: "auto 50px", md: "1fr 1fr 3fr" }}
+          gap={{ base: 2, md: "6" }}
+          mb={16}
+        >
+          <GridItem colSpan={{ base: 1, md: 2 }}>
+            <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
+          </GridItem>
+          <MultiSelect {...{ filter, setFilter, filterPages }} />
+        </SimpleGrid>
+
         <CategorySection fallbackText={"There are no pages"} mt="32px">
           {renderedCards.map((card) => (
             <PageDetailsCard pageData={card} key={card.id} />
