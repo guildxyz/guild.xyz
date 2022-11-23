@@ -62,11 +62,26 @@ function CustomLink({ href, children }: PropsWithChildren<CustomPageLinkProps>) 
 
 function Header(props) {
   const shortDescription = props?.block?.properties?.["[Fn:"]?.[0]?.[0]
-  const tags = props?.block?.properties?.["`SJU"]?.[0]?.[0].split(",") // TODO: detect undefined
+  const tags = props?.block?.properties?.["`SJU"]?.[0]?.[0]
+    .split(",")
+    .filter((tag) => tag !== "")
   const guildId = props?.block?.properties?.JqtI?.[0]?.[0]
   const websiteURL = props?.block?.properties?.uRBq?.[0]?.[0]
   const twitterURL = props?.block?.properties?.["ByX="]?.[0]?.[0]
   const discordURL = props?.block?.properties?.["Uw?a"]?.[0]?.[0]
+  const isContentTypePage = props?.block?.properties?.KYWu?.[0]?.[0] === "content"
+
+  if (
+    shortDescription === undefined &&
+    (tags === undefined || tags.length === 0) &&
+    guildId === undefined &&
+    websiteURL === undefined &&
+    twitterURL === undefined &&
+    discordURL === undefined
+  )
+    return
+  if (isContentTypePage) return
+
   let links: Array<GuildLinks> = [
     { name: "Guild", url: guildId, icon: HouseSimple },
     { name: "website", url: websiteURL, icon: Globe },
@@ -77,7 +92,6 @@ function Header(props) {
 
   return (
     <Card h="100%" p="24px" mb="24px" w="100%">
-      {/* TODO: width 100% */}
       <Wrap justify="space-between" alignItems="center" mb="16px">
         <Wrap zIndex="1">
           {links?.map((link, index) => (
@@ -174,7 +188,7 @@ const getLinkedPagesByTags = (blockMap, params, allPages) => {
 function getLinkedPages(blockMap: any, params: any, allPages: any) {
   const linkedPageIds = blockMap.block[
     params.pageId.toString()
-  ]?.value?.properties?.["xBM?"]
+  ]?.value?.properties?._mkI
     ?.filter((link) => link.length > 1)
     .map((linkObj) => linkObj[1][0][1])
   const linkedPageContents = allPages.filter(
@@ -221,7 +235,8 @@ export async function getStaticProps({ params }) {
   const blockMap = await getPage(params)
   const allPages = await getAllPages()
   const linkedPageContents = await getLinks(allPages, blockMap, params)
-  const pageLogo = allPages.find((page) => page.id === params.pageId).icon?.file?.url
+  const pageLogo = allPages.find((page) => page.id === params.pageId)?.icon?.file
+    ?.url
     ? allPages.find((page) => page.id === params.pageId).icon?.file?.url
     : null
 

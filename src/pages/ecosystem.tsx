@@ -19,7 +19,7 @@ function Ecosystem({ cards }) {
     { value: "web2", label: "web2" },
     { value: "web3", label: "web3" },
   ]
-  const [filterData, setFilterData] = useState([])
+  const [filterData, setFilterData] = useState<Array<FilterOption>>([])
 
   const renderedCards = useMemo(
     () =>
