@@ -53,17 +53,10 @@ const Attestation = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      <FormControl
-        isRequired
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.val}
-      >
+      <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.val}>
         <FormLabel>Value</FormLabel>
 
-        <Input
-          {...register(`${baseFieldPath}.data.val`, {
-            required: "This field is required.",
-          })}
-        />
+        <Input {...register(`${baseFieldPath}.data.val`)} />
 
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.data?.val?.message}
