@@ -6,7 +6,6 @@ import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
-
 import parseFromObject from "utils/parseFromObject"
 
 const SupportArtist = ({ baseFieldPath }: RequirementFormProps) => {
