@@ -6,13 +6,12 @@ import {
   Tag,
   TagLabel,
   TagLeftIcon,
-  Text,
   Wrap,
 } from "@chakra-ui/react"
 import PageDetailsCard from "components/brain/pageDetailsCard"
-import Card from "components/common/Card"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import CategorySection from "components/explorer/CategorySection"
 import { GetStaticPaths } from "next"
 import { NotionAPI } from "notion-client"
@@ -61,7 +60,6 @@ function CustomLink({ href, children }: PropsWithChildren<CustomPageLinkProps>) 
 }
 
 function Header(props) {
-  const shortDescription = props?.block?.properties?.["[Fn:"]?.[0]?.[0]
   const tags = props?.block?.properties?.["`SJU"]?.[0]?.[0]
     .split(",")
     .filter((tag) => tag !== "")
@@ -72,7 +70,6 @@ function Header(props) {
   const isContentTypePage = props?.block?.properties?.KYWu?.[0]?.[0] === "content"
 
   if (
-    shortDescription === undefined &&
     (tags === undefined || tags.length === 0) &&
     guildId === undefined &&
     websiteURL === undefined &&
@@ -91,8 +88,8 @@ function Header(props) {
   links = links.filter((link) => link.url !== undefined)
 
   return (
-    <Card h="100%" p="24px" mb="24px" w="100%">
-      <Wrap justify="space-between" alignItems="center" mb="16px">
+    <Section mb="16px">
+      <Wrap justify="space-between" alignItems="center">
         <Wrap zIndex="1">
           {links?.map((link, index) => (
             <Link
@@ -119,10 +116,7 @@ function Header(props) {
           ))}
         </Wrap>
       </Wrap>
-      <Text fontStyle="italic" fontSize="sm" color="gray.300">
-        {shortDescription}
-      </Text>
-    </Card>
+    </Section>
   )
 }
 
