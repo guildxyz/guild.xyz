@@ -11,7 +11,7 @@ const RealTimeQueryEngine = (): JSX.Element => (
         <Box position="relative" width="full">
           <Img
             width="full"
-            src="/landing/real-time-query-engine.png"
+            src="/landing/real-time-query-engine.webp"
             alt="Guard against phishing attack"
           />
 

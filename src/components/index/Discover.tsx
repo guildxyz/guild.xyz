@@ -27,7 +27,7 @@ const openGraphData = [
   },
   {
     url: "https://www.daomasters.xyz/tools/guild",
-    image: "/landing/daomasters-guild-tutorial.jpg",
+    image: "/landing/daomasters-guild-tutorial.webp",
     title: "DAO Masters - Guild.xyz",
     description: "This is an easy, self-serve way to set up a gated community.",
   },
