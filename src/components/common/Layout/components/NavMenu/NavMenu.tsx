@@ -53,8 +53,8 @@ const NavMenu = (): JSX.Element => (
     <PopoverContent w="auto" minW="xs" borderRadius={"lg"} py="2">
       <PopoverBody px={{ base: 2, sm: 3 }}>
         <Grid
-          templateColumns={{ base: "1fr", sm: "1fr 150px", md: "1fr 150px 150px" }}
-          gap={{ base: 2, sm: "8" }}
+          templateColumns={{ base: "1fr", sm: "1fr 150px" }}
+          gap={{ base: 2, sm: 12 }}
         >
           <NavGroup title="Navigation">
             <NextLink passHref href="/">
@@ -62,7 +62,7 @@ const NavMenu = (): JSX.Element => (
                 leftIcon={<House />}
                 data-dd-action-name="Navigation menu - Landing"
               >
-                What's Guild.xyz?
+                About Guild.xyz
               </NavButton>
             </NextLink>
             <NextLink passHref href="/explorer">
@@ -93,27 +93,6 @@ const NavMenu = (): JSX.Element => (
           <NavGroup title="Other">
             <NavButton
               target="_blank"
-              href="https://github.com/agoraxyz/guild.xyz"
-              rel="noopener"
-              leftIcon={<Code />}
-              data-dd-action-name="Navigation menu - Code"
-            >
-              Code
-            </NavButton>
-            <NavButton
-              target="_blank"
-              href="https://docs.guild.xyz/guild"
-              rel="noopener"
-              leftIcon={<Info />}
-              data-dd-action-name="Navigation menu - Guide"
-            >
-              Guide
-            </NavButton>
-          </NavGroup>
-
-          <NavGroup title="Socials">
-            <NavButton
-              target="_blank"
               href="https://discord.gg/guildxyz"
               rel="noopener"
               leftIcon={<DiscordLogo />}
@@ -129,6 +108,24 @@ const NavMenu = (): JSX.Element => (
               data-dd-action-name="Navigation menu - Twitter"
             >
               Twitter
+            </NavButton>
+            <NavButton
+              target="_blank"
+              href="https://github.com/agoraxyz/guild.xyz"
+              rel="noopener"
+              leftIcon={<Code />}
+              data-dd-action-name="Navigation menu - Code"
+            >
+              Code
+            </NavButton>
+            <NavButton
+              target="_blank"
+              href="https://docs.guild.xyz/guild"
+              rel="noopener"
+              leftIcon={<Info />}
+              data-dd-action-name="Navigation menu - Guide"
+            >
+              Guide
             </NavButton>
           </NavGroup>
         </Grid>
