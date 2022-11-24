@@ -23,7 +23,14 @@ const useAutoStatusUpdate = () => {
     try {
       const accesses = roleAccesses ?? error
 
-      if (!account || !accesses?.length || !roleMemberships?.length) return
+      if (
+        !account ||
+        !Array.isArray(accesses) ||
+        !Array.isArray(roleMemberships) ||
+        !accesses?.length ||
+        !roleMemberships?.length
+      )
+        return
 
       const roleMembershipsSet = new Set(roleMemberships)
 
