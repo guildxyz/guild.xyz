@@ -1,7 +1,6 @@
-import { Image, Tag, TagLabel, TagLeftIcon, Wrap } from "@chakra-ui/react"
+import { Image, Tag, TagLabel, Wrap } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import Link from "components/common/Link"
-import { Users } from "phosphor-react"
 import { PageDetailsCardData } from "types"
 
 type Props = {
@@ -31,7 +30,6 @@ const PageDetailsCard = ({ pageData }: Props): JSX.Element => (
       <Wrap zIndex="1">
         {pageData.tags?.map((tag, index) => (
           <Tag as="li" key={index}>
-            <TagLeftIcon as={Users} />
             <TagLabel>{tag}</TagLabel>
           </Tag>
         ))}
