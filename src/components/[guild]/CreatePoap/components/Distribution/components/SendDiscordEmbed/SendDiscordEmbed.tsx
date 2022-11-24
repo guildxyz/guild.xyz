@@ -66,7 +66,8 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
     data: { categories },
   } = useServerData(discordServerId)
 
-  const mappedChannels = categories?.map((category) => category.channels)?.flat()
+  const mappedChannels =
+    categories?.map((category) => category.channels)?.flat() ?? []
 
   const shouldShowGuildImage = imageUrl.includes("http")
 

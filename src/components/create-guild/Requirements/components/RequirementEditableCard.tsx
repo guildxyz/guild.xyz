@@ -14,11 +14,9 @@ import {
 import Card from "components/common/Card"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
-import { getRequirementLabel } from "components/create-guild/Requirements/formCards"
-import REQUIREMENT_CARDS from "components/[guild]/Requirements/requirementCards"
 import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
-import REQUIREMENT_FORMCARDS from "../formCards"
+import REQUIREMENTS from "requirements"
 import BalancyFooter from "./BalancyFooter"
 
 const RequirementEditableCard = ({
@@ -29,8 +27,8 @@ const RequirementEditableCard = ({
   updateRequirement,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const RequirementCardComponent = REQUIREMENT_CARDS[type]
-  const FormComponent = REQUIREMENT_FORMCARDS[type]
+  const RequirementComponent = REQUIREMENTS[type].displayComponent
+  const FormComponent = REQUIREMENTS[type].formComponent
   const ref = useRef()
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
   const methods = useForm({ mode: "all", defaultValues: field })
@@ -62,13 +60,13 @@ const RequirementEditableCard = ({
     [index, setValue]
   )
 
-  if (!RequirementCardComponent || !FormComponent) return null
+  if (!RequirementComponent || !FormComponent) return null
 
   return (
     <>
       <Card px="6" py="4" pos="relative">
         <HStack pr="3">
-          <RequirementCardComponent
+          <RequirementComponent
             requirement={field}
             footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
             setValueForBalancy={setValueForBalancy}
@@ -104,9 +102,7 @@ const RequirementEditableCard = ({
                 onCloseAndClear()
               }}
             />
-            <ModalHeader>{`Edit ${getRequirementLabel(
-              type
-            )} requirement`}</ModalHeader>
+            <ModalHeader>{`Edit ${REQUIREMENTS[type].name} requirement`}</ModalHeader>
             <ModalBody>
               <FormComponent baseFieldPath={``} field={field} />
             </ModalBody>

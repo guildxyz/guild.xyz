@@ -23,21 +23,25 @@ import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useIsStuck from "hooks/useIsStuck"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
 
-const AddRoleButton = (): JSX.Element => {
+const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
   const { id } = useGuild()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const finalFocusRef = useRef(null)
+  const { ref: finalFocusRef, isStuck } = useIsStuck()
+  useEffect(() => {
+    setIsStuck?.(isStuck)
+  }, [isStuck])
 
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
     useCreateRole()

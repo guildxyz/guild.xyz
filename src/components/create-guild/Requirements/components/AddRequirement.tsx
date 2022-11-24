@@ -23,159 +23,17 @@ import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
 import { AnimatePresence, usePresence } from "framer-motion"
-import {
-  ArrowLeft,
-  CaretRight,
-  CurrencyCircleDollar,
-  ImageSquare,
-  ListChecks,
-  Wrench,
-} from "phosphor-react"
+import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { RequirementType } from "types"
-import REQUIREMENT_FORMCARDS from "../formCards"
+import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
 import BalancyFooter from "./BalancyFooter"
 
-type RequirementButton = {
-  icon: FC | string
-  label: string
-  type: RequirementType
-  color?: string
-  disabled?: boolean
-}
+const general = REQUIREMENTS_DATA.slice(1, 5)
+const integrations = REQUIREMENTS_DATA.slice(5)
 
-const general: Array<RequirementButton> = [
-  {
-    icon: CurrencyCircleDollar,
-    label: "Token",
-    type: "ERC20",
-  },
-  {
-    icon: ImageSquare,
-    label: "NFT",
-    type: "ERC721",
-  },
-  {
-    icon: ListChecks,
-    label: "Allowlist",
-    type: "ALLOWLIST",
-  },
-  {
-    icon: Wrench,
-    label: "Custom contract query",
-    type: "CONTRACT",
-  },
-]
-
-const integrations: Array<RequirementButton> = [
-  {
-    icon: "/requirementLogos/twitter.svg",
-    label: "Twitter",
-    type: "TWITTER",
-  },
-  {
-    icon: "/platforms/github.png",
-    label: "GitHub",
-    type: "GITHUB",
-  },
-  {
-    icon: "/platforms/discord.png",
-    label: "Discord",
-    type: "DISCORD",
-  },
-  {
-    icon: "/requirementLogos/guild.png",
-    label: "Guild.xyz",
-    type: "GUILD",
-  },
-  {
-    icon: "/requirementLogos/unlock.png",
-    label: "Unlock",
-    type: "UNLOCK",
-  },
-  {
-    icon: "/requirementLogos/poap.svg",
-    label: "POAP",
-    type: "POAP",
-  },
-  {
-    icon: "/requirementLogos/gitpoap.svg",
-    label: "GitPOAP",
-    type: "GITPOAP",
-  },
-  {
-    icon: "/requirementLogos/mirror.svg",
-    label: "Mirror",
-    type: "MIRROR_COLLECT",
-  },
-  {
-    icon: "/requirementLogos/juicebox.png",
-    label: "Juicebox",
-    type: "JUICEBOX",
-  },
-  {
-    icon: "/requirementLogos/snapshot.png",
-    label: "Snapshot",
-    type: "SNAPSHOT",
-    disabled: true,
-  },
-  {
-    icon: "/requirementLogos/galaxy.svg",
-    label: "Galxe",
-    type: "GALAXY",
-  },
-  {
-    icon: "/requirementLogos/noox.svg",
-    label: "Noox",
-    type: "NOOX",
-  },
-  {
-    icon: "/requirementLogos/lens.png",
-    label: "Lens",
-    type: "LENS_PROFILE",
-  },
-  {
-    icon: "/requirementLogos/otterspace.png",
-    label: "Otterspace",
-    type: "OTTERSPACE",
-  },
-  {
-    icon: "/requirementLogos/disco.png",
-    label: "Disco",
-    type: "DISCO",
-  },
-  {
-    icon: "/requirementLogos/orange.png",
-    label: "Orange",
-    type: "ORANGE",
-  },
-  {
-    icon: "/requirementLogos/101.png",
-    label: "101",
-    type: "101",
-  },
-  {
-    icon: "/requirementLogos/rabbithole.png",
-    label: "Rabbithole",
-    type: "RABBITHOLE",
-  },
-  {
-    icon: "/requirementLogos/kycdao.svg",
-    label: "kycDAO",
-    type: "KYC_DAO",
-  },
-  {
-    icon: "/requirementLogos/cask.png",
-    label: "Cask",
-    type: "CASK",
-  },
-  {
-    icon: "/requirementLogos/sound.png",
-    label: "Sound",
-    type: "SOUND",
-  },
-]
+// call undocumented preload() from next/dynamic, so the components are already loaded when they mount, which is needed for the height animation
+Object.values(REQUIREMENTS).forEach((a: any) => a.formComponent?.render?.preload?.())
 
 const TRANSITION_DURATION_MS = 200
 const HOME_MAXHEIGHT = "550px"
@@ -246,7 +104,7 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
                 />
               )}
               <Text w="calc(100% - 70px)" noOfLines={1}>{`Add ${
-                selectedType ?? ""
+                REQUIREMENTS[selectedType]?.name ?? ""
               } requirement`}</Text>
             </HStack>
           </ModalHeader>
@@ -279,7 +137,8 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
 
 const AddRequirementForm = forwardRef(
   ({ onAdd, handleClose, selectedType }: any, ref: any) => {
-    const FormComponent = REQUIREMENT_FORMCARDS[selectedType]
+    const FormComponent = REQUIREMENTS[selectedType].formComponent
+
     const methods = useForm({ mode: "all" })
 
     const [isPresent, safeToRemove] = usePresence()
@@ -323,16 +182,15 @@ const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => (
       General
     </Heading>
     <SimpleGrid columns={2} gap="2">
-      {general.map((requirementButton: RequirementButton, index: number) => (
+      {general.map((requirementButton) => (
         <Button
-          key={requirementButton.type}
+          key={requirementButton.types[0]}
           minH={24}
-          onClick={() => setSelectedType(requirementButton.type)}
-          isDisabled={requirementButton.disabled}
+          onClick={() => setSelectedType(requirementButton.types[0])}
         >
           <VStack w="full" whiteSpace={"break-spaces"}>
             <Icon as={requirementButton.icon as FC} boxSize={6} />
-            <Text as="span">{requirementButton.label}</Text>
+            <Text as="span">{requirementButton.name}</Text>
           </VStack>
         </Button>
       ))}
@@ -341,10 +199,10 @@ const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => (
       Integrations
     </Heading>
     <Stack>
-      {integrations.map((requirementButton: RequirementButton, index: number) => (
+      {integrations.map((requirementButton) => (
         <Tooltip
-          key={requirementButton.type}
-          isDisabled={!requirementButton.disabled}
+          key={requirementButton.types[0]}
+          isDisabled={!(requirementButton as any).disabled}
           label="Temporarily unavailable"
           hasArrow
         >
@@ -354,11 +212,11 @@ const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => (
             leftIcon={<Img src={requirementButton.icon as string} boxSize="6" />}
             rightIcon={<Icon as={CaretRight} />}
             iconSpacing={4}
-            onClick={() => setSelectedType(requirementButton.type)}
-            isDisabled={requirementButton.disabled}
+            onClick={() => setSelectedType(requirementButton.types[0])}
+            isDisabled={(requirementButton as any).disabled}
             sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
           >
-            {requirementButton.label}
+            {requirementButton.name}
           </Button>
         </Tooltip>
       ))}

@@ -11,7 +11,7 @@ const TokenBasedMembership = (): JSX.Element => (
       <Box position="relative" width="full">
         <Img
           width="full"
-          src="/landing/token-based-membership.png"
+          src="/landing/token-based-membership.webp"
           alt="Token-enabled membership"
         />
 
