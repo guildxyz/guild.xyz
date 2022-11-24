@@ -14,6 +14,7 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
             w="full"
             src="/landing/guild-guard.webp"
             alt="Guard against phishing attacks"
+            loading="lazy"
           />
 
           <Img
@@ -24,6 +25,7 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
             maxW="30%"
             src="/landing/robot.svg"
             alt="Guild Guard Robot"
+            loading="lazy"
           />
 
           <Img
@@ -34,6 +36,7 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
             maxW="30%"
             src="/landing/reka-eth.webp"
             alt="Brunya"
+            loading="lazy"
           />
         </Box>
       </Flex>

@@ -12,7 +12,8 @@ const RealTimeQueryEngine = (): JSX.Element => (
           <Img
             width="full"
             src="/landing/real-time-query-engine.webp"
-            alt="Guard against phishing attack"
+            alt="Real-time query engine"
+            loading="lazy"
           />
 
           <Img
@@ -23,6 +24,7 @@ const RealTimeQueryEngine = (): JSX.Element => (
             maxW="none"
             src="/landing/unicorn.svg"
             alt="Unicorn"
+            loading="lazy"
           />
         </Box>
       </Flex>

@@ -13,6 +13,7 @@ const PlatformAgnosticCommunities = (): JSX.Element => (
             minW="full"
             src="/landing/platform-agnostic-communities.webp"
             alt="Platform-agnostic communities"
+            loading="lazy"
           />
 
           <Img
@@ -22,6 +23,7 @@ const PlatformAgnosticCommunities = (): JSX.Element => (
             height="90%"
             src="/landing/rocket.svg"
             alt="Rocket"
+            loading="lazy"
           />
         </Box>
       </Flex>

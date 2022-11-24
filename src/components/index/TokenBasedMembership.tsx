@@ -13,6 +13,7 @@ const TokenBasedMembership = (): JSX.Element => (
           width="full"
           src="/landing/token-based-membership.webp"
           alt="Token-enabled membership"
+          loading="lazy"
         />
 
         <Img
@@ -23,6 +24,7 @@ const TokenBasedMembership = (): JSX.Element => (
           maxW="40%"
           src="/landing/bunny.svg"
           alt="Bunny"
+          loading="lazy"
         />
       </Box>
     }

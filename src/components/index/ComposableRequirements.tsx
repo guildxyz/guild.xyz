@@ -11,6 +11,7 @@ const ComposableRequirements = (): JSX.Element => (
           width="full"
           src="/landing/composable-membership-requirements.webp"
           alt="Composable membership requirements"
+          loading="lazy"
         />
 
         <Img
@@ -21,6 +22,7 @@ const ComposableRequirements = (): JSX.Element => (
           maxW="none"
           src="/landing/composable-membership-requirements-icons.webp"
           alt="Composable membership requirements - icons"
+          loading="lazy"
         />
       </Box>
     }
