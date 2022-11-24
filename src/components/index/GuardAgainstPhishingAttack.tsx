@@ -12,7 +12,7 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
         <Box position="relative" width="full">
           <Img
             w="full"
-            src="/landing/guild-guard.png"
+            src="/landing/guild-guard.webp"
             alt="Guard against phishing attacks"
           />
 
@@ -32,7 +32,7 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
             top={{ base: "auto", md: 4 }}
             bottom={{ base: 2, md: "auto" }}
             maxW="30%"
-            src="/landing/reka-eth.png"
+            src="/landing/reka-eth.webp"
             alt="Brunya"
           />
         </Box>
