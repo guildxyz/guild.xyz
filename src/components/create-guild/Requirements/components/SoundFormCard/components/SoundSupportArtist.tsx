@@ -3,9 +3,9 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import useSWRImmutable from "swr/immutable"
 import { FormCardProps, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import { useSoundArtists } from "../hooks/useSound"
 
 const SupportArtist = ({ baseFieldPath }: FormCardProps) => {
   const {
@@ -17,13 +17,20 @@ const SupportArtist = ({ baseFieldPath }: FormCardProps) => {
     useWatch({ name: `${baseFieldPath}.data.id` })
   )
 
-  const { artists, isLoading } = useSoundArtists(search)
+  const { data: artistsData, isValidating: artistsLoading } = useSWRImmutable(
+    search?.length > 0 ? `/api/sound-artists?searchQuery=${search}` : null
+  )
 
-  const artistOptions = artists?.map((artist) => ({
+  const artistOptions = artistsData?.map((artist) => ({
     label: artist[0].name,
     value: artist[0].soundHandle,
     img: artist[0].image,
   }))
+
+  const splitInput = (inputValue) => {
+    const split = inputValue.split("/")
+    return split[split.length - 1]
+  }
 
   return (
     <>
@@ -31,7 +38,7 @@ const SupportArtist = ({ baseFieldPath }: FormCardProps) => {
         isRequired
         isInvalid={parseFromObject(errors, baseFieldPath)?.data?.id}
       >
-        <FormLabel>SoundHande:</FormLabel>
+        <FormLabel>Artist:</FormLabel>
         <Controller
           name={`${baseFieldPath}.data.id` as const}
           control={control}
@@ -46,8 +53,10 @@ const SupportArtist = ({ baseFieldPath }: FormCardProps) => {
               onChange={(newSelectedOption: SelectOption) => {
                 onChange(newSelectedOption?.value)
               }}
-              onInputChange={(inputValue) => setSearch(inputValue.split(".")[0])}
-              isLoading={isLoading}
+              onInputChange={(text, _) => {
+                setSearch(splitInput(text))
+              }}
+              isLoading={artistsLoading}
               onBlur={onBlur}
               // so restCount stays visible
               filterOption={() => true}

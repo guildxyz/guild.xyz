@@ -3,9 +3,9 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import useSWRImmutable from "swr/immutable"
 import { FormCardProps, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import { useSoundArtists, useSoundSongs } from "../hooks/useSound"
 
 const SoundOwnASong = ({ baseFieldPath }: FormCardProps) => {
   const {
@@ -17,23 +17,36 @@ const SoundOwnASong = ({ baseFieldPath }: FormCardProps) => {
     useWatch({ name: `${baseFieldPath}.data.id` })
   )
 
-  const { artists, isLoading } = useSoundArtists(search)
+  const handle = useWatch({ name: `${baseFieldPath}.data.id` })
 
-  const artistOptions = artists?.map((artist) => ({
+  const { data: artistsData, isValidating: artistsLoading } = useSWRImmutable(
+    search?.length > 0 ? `/api/sound-artists?searchQuery=${search}` : null
+  )
+
+  const artistOptions = artistsData?.map((artist) => ({
     label: artist[0].name,
     value: artist[0].soundHandle,
     img: artist[0].image,
   }))
 
-  const [id, setId] = useState(undefined)
+  const [id, setId] = useState(
+    artistsData?.find((artist) => artist[0].soundHandle == handle)
+  )
 
-  const songs = useSoundSongs(id != undefined ? id[0]?.id : "")
+  const { data: songsData, isValidating: songsLoading } = useSWRImmutable(
+    `/api/sound-songs?id=${id != undefined ? id[0]?.id : ""}`
+  )
 
-  const songOptions = songs?.songs?.map((song) => ({
+  const songOptions = songsData?.map((song) => ({
     label: song[0].title,
     value: song[0].title,
     img: song[0].image,
   }))
+
+  const splitInput = (inputValue) => {
+    const split = inputValue.split("/")
+    return split[split.length - 1]
+  }
 
   return (
     <>
@@ -41,7 +54,7 @@ const SoundOwnASong = ({ baseFieldPath }: FormCardProps) => {
         isRequired
         isInvalid={parseFromObject(errors, baseFieldPath)?.data?.id}
       >
-        <FormLabel>SoundHandle:</FormLabel>
+        <FormLabel>Artist:</FormLabel>
         <Controller
           name={`${baseFieldPath}.data.id` as const}
           control={control}
@@ -56,13 +69,15 @@ const SoundOwnASong = ({ baseFieldPath }: FormCardProps) => {
               onChange={(newSelectedOption: SelectOption) => {
                 onChange(newSelectedOption?.value)
                 setId(
-                  artists?.find(
+                  artistsData?.find(
                     (artist) => artist[0].soundHandle == newSelectedOption?.value
                   )
                 )
               }}
-              onInputChange={(inputValue) => setSearch(inputValue.split(".")[0])}
-              isLoading={isLoading}
+              onInputChange={(text, _) => {
+                setSearch(splitInput(text))
+              }}
+              isLoading={artistsLoading}
               onBlur={onBlur}
               // so restCount stays visible
               filterOption={() => true}
@@ -92,22 +107,15 @@ const SoundOwnASong = ({ baseFieldPath }: FormCardProps) => {
             <StyledSelect
               ref={ref}
               isClearable
-              isDisabled={!id}
+              isDisabled={!handle}
               options={songOptions}
               placeholder="Pick a song"
-              value={songOptions?.find((option) => option.value === value)}
+              value={songOptions?.find((option) => option.value === value) ?? ""}
               onChange={(newSelectedOption: SelectOption) =>
                 onChange(newSelectedOption?.value)
               }
-              //isLoading={isLoading}
+              isLoading={songsLoading}
               onBlur={onBlur}
-              // so restCount stays visible
-              // filterOption={() => true}
-              // menuIsOpen={search ? undefined : false}
-              // components={{
-              //   DropdownIndicator: () => null,
-              //   IndicatorSeparator: () => null,
-              // }}
             />
           )}
         />

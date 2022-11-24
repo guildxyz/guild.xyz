@@ -1,10 +1,7 @@
 import { Img } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
 import Link from "components/common/Link"
-import {
-  useSoundArtists,
-  useSoundSongs,
-} from "components/create-guild/Requirements/components/SoundFormCard/hooks/useSound"
+import slugify from "slugify"
+import useSWRImmutable from "swr/immutable"
 import { Requirement } from "types"
 import RequirementCard from "./common/RequirementCard"
 
@@ -13,11 +10,15 @@ type Props = {
 }
 
 const SoundRequirementCard = ({ requirement, ...rest }: Props) => {
-  const { artists, isLoading } = useSoundArtists(requirement.data.id)
+  const { data: artistsData, isValidating: artistsLoading } = useSWRImmutable(
+    `/api/sound-artists?searchQuery=${requirement.data?.id}`
+  )
 
-  const songs = useSoundSongs(artists?.map((artist) => artist[0].id))
+  const { data: songsData, isValidating: songsLoading } = useSWRImmutable(
+    `/api/sound-songs?id=${artistsData?.map((artist) => artist[0].id)}`
+  )
 
-  const songImageUrl = songs?.songs
+  const songImageUrl = songsData
     ?.filter((title) => title[0].title == requirement.data.title)
     .map((song) => song[0].image)
 
@@ -29,24 +30,23 @@ const SoundRequirementCard = ({ requirement, ...rest }: Props) => {
             return <Img src="/requirementLogos/sound.png" />
 
           case "SOUND_ARTIST_BACKED":
-            return (
-              <Img
-                src={
-                  artists?.map((artist) => artist[0].image) ??
-                  "/requirementLogos/sound.png"
-                }
-              />
+            return artistsData?.map((artist) => artist[0].image) ? (
+              <Img src={artistsData?.map((artist) => artist[0].image)} />
+            ) : (
+              <Img src="/requirementLogos/sound.png" />
             )
+
           case "SOUND_COLLECTED":
-            return <Img src={songImageUrl ?? "/requirementLogos/sound.png"} />
+            return songsData?.map((song) => song[0].image) ? (
+              <Img src={songImageUrl} />
+            ) : (
+              <Img src="/requirementLogos/sound.png" />
+            )
           case "SOUND_TOP_COLLECTOR":
-            return (
-              <Img
-                src={
-                  artists?.map((artist) => artist[0].image) ??
-                  "/requirementLogos/sound.png"
-                }
-              />
+            return artistsData?.map((artist) => artist[0].image) ? (
+              <Img src={artistsData?.map((artist) => artist[0].image)} />
+            ) : (
+              <Img src="/requirementLogos/sound.png" />
             )
         }
       })()}
@@ -58,7 +58,12 @@ const SoundRequirementCard = ({ requirement, ...rest }: Props) => {
             return (
               <>
                 {`Be an artist on `}
-                <Link href={`https://www.sound.xyz/`} isExternal fontWeight="medium">
+                <Link
+                  href={`https://www.sound.xyz/`}
+                  isExternal
+                  colorScheme={"blue"}
+                  fontWeight="medium"
+                >
                   Sound.xyz
                 </Link>
               </>
@@ -71,24 +76,56 @@ const SoundRequirementCard = ({ requirement, ...rest }: Props) => {
                   href={`https://www.sound.xyz/${requirement.data.id}`}
                   isExternal
                   fontWeight="medium"
+                  colorScheme={"blue"}
                 >
-                  <DataBlock>{requirement.data.id}</DataBlock>
+                  {requirement.data.id}
                 </Link>
-                {` on Sound.xyz`}
+                {` on `}
+                <Link
+                  href={`https://www.sound.xyz/`}
+                  isExternal
+                  fontWeight="medium"
+                  colorScheme={"blue"}
+                >
+                  Sound.xyz
+                </Link>
               </>
             )
           case "SOUND_COLLECTED":
             return (
               <>
                 {`Own the `}
-                <DataBlock>{requirement.data.title}</DataBlock>
+                <Link
+                  href={`https://www.sound.xyz/${requirement.data.id}/${slugify(
+                    requirement.data.title,
+                    {
+                      lower: true,
+                      strict: true,
+                    }
+                  )}`}
+                  isExternal
+                  fontWeight="medium"
+                  colorScheme={"blue"}
+                >
+                  {requirement.data.title}
+                </Link>
                 {` song from `}
                 <Link
                   href={`https://www.sound.xyz/${requirement.data.id}`}
                   isExternal
                   fontWeight="medium"
+                  colorScheme={"blue"}
                 >
-                  <DataBlock>{requirement.data.id}</DataBlock>
+                  {requirement.data.id}
+                </Link>
+                {` on `}
+                <Link
+                  href={`https://www.sound.xyz/`}
+                  isExternal
+                  fontWeight="medium"
+                  colorScheme={"blue"}
+                >
+                  Sound.xyz
                 </Link>
               </>
             )
@@ -96,7 +133,23 @@ const SoundRequirementCard = ({ requirement, ...rest }: Props) => {
             return (
               <>
                 {`Be in the top 10 collector of `}
-                <DataBlock>{requirement.data.id}</DataBlock>
+                <Link
+                  href={`https://www.sound.xyz/${requirement.data.id}`}
+                  isExternal
+                  fontWeight="medium"
+                  colorScheme={"blue"}
+                >
+                  {requirement.data.id}
+                </Link>
+                {` on `}
+                <Link
+                  href={`https://www.sound.xyz/`}
+                  isExternal
+                  fontWeight="medium"
+                  colorScheme={"blue"}
+                >
+                  Sound.xyz
+                </Link>
               </>
             )
         }

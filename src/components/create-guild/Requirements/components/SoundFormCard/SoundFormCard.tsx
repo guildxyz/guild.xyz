@@ -6,24 +6,22 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
-import { useController, useFormState } from "react-hook-form"
+import { useController, useFormContext, useFormState } from "react-hook-form"
 import { FormCardProps } from "types"
 import parseFromObject from "utils/parseFromObject"
-import BeArtist from "./components/SoundBeAnArtist"
 import SoundOwnASong from "./components/SoundOwnASong"
+import SoundSupportArtist from "./components/SoundSupportArtist"
 import Top10Collector from "./components/SoundTop10Collector"
-import SupportArtist from "./components/SupportArtist"
 
 const soundRequirementTypes = [
   {
     label: "Be an artist",
     value: "SOUND_ARTIST",
-    SoundRequirement: BeArtist,
   },
   {
     label: "Support an artist",
     value: "SOUND_ARTIST_BACKED",
-    SoundRequirement: SupportArtist,
+    SoundRequirement: SoundSupportArtist,
   },
   {
     label: "Own a song",
@@ -45,6 +43,8 @@ const SoundFormCard = ({ baseFieldPath, field }: FormCardProps) => {
     rules: { required: "It's required to select a type" },
   })
 
+  const { resetField } = useFormContext()
+
   const { errors } = useFormState()
 
   const selected = soundRequirementTypes.find((reqType) => reqType.value === value)
@@ -60,6 +60,7 @@ const SoundFormCard = ({ baseFieldPath, field }: FormCardProps) => {
           name={name}
           onBlur={onBlur}
           onChange={(newValue: { label: string; value: string }) => {
+            resetField(`${baseFieldPath}.data.id`, { defaultValue: "" })
             onChange(newValue?.value)
           }}
           ref={ref}
