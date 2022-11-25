@@ -192,7 +192,9 @@ const Page = (): JSX.Element => {
                   </Text>
                 </HStack>
 
-                <Skeleton isLoaded={poapLinks && !isPoapLinksLoading}>
+                <Skeleton
+                  isLoaded={!!poapLinks || (poapLinks && !isPoapLinksLoading)}
+                >
                   <Tag
                     fontWeight="bold"
                     textTransform="uppercase"
