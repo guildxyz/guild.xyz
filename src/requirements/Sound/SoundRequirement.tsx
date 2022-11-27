@@ -11,7 +11,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
   )
 
   const { data: songsData, isValidating: songsLoading } = useSWRImmutable(
-    `/api/sound-songs?id=${artistsData?.map((artist) => artist[0].id)}`
+    `/api/sound-songs?id=${artistsData?.map((artist) => artist.id)}`
   )
 
   const songImageUrl = songsData
@@ -26,8 +26,8 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
             return <Img src="/requirementLogos/sound.png" />
 
           case "SOUND_ARTIST_BACKED":
-            return artistsData?.map((artist) => artist[0].image) ? (
-              <Img src={artistsData?.map((artist) => artist[0].image)} />
+            return artistsData?.map((artist) => artist.image) ? (
+              <Img src={artistsData?.map((artist) => artist.image)} />
             ) : (
               <Img src="/requirementLogos/sound.png" />
             )
@@ -39,8 +39,8 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
               <Img src="/requirementLogos/sound.png" />
             )
           case "SOUND_TOP_COLLECTOR":
-            return artistsData?.map((artist) => artist[0].image) ? (
-              <Img src={artistsData?.map((artist) => artist[0].image)} />
+            return artistsData?.map((artist) => artist.image) ? (
+              <Img src={artistsData?.map((artist) => artist.image)} />
             ) : (
               <Img src="/requirementLogos/sound.png" />
             )

@@ -36,14 +36,12 @@ const handler: NextApiHandler = async (req, res) => {
   const searchQuery = req.query.searchQuery.toString()
 
   const soundArtists = await fetchArtists(searchQuery).then((data) =>
-    data?.map((info) => [
-      {
-        name: info?.name,
-        soundHandle: info?.soundHandle,
-        image: info?.user?.avatar?.url ?? "/requirementLogos/sound.png",
-        id: info?.id,
-      },
-    ])
+    data?.map((info) => ({
+      name: info?.name,
+      soundHandle: info?.soundHandle,
+      image: info?.user?.avatar?.url,
+      id: info?.id,
+    }))
   )
 
   res.status(200).json(soundArtists)
