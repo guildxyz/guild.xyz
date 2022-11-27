@@ -53,12 +53,10 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   const soundSongs = await fetchSongs().then((data) =>
-    data?.map((info) => [
-      {
-        title: info?.node?.title,
-        image: info?.node?.coverImage?.url ?? "/requirementLogos/sound.png",
-      },
-    ])
+    data?.map((info) => ({
+      title: info?.node?.title,
+      image: info?.node?.coverImage?.url,
+    }))
   )
 
   res.status(200).json(soundSongs)

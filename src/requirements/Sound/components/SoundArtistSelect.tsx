@@ -1,7 +1,8 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import { PropsWithChildren, useState } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { Controller, useFormContext } from "react-hook-form"
+import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -11,20 +12,16 @@ type Props = {
   handleArtistId?: (id: string) => void
 }
 
-const ArtistSelect = ({
-  baseFieldPathProp,
-  handleArtistId,
-}: PropsWithChildren<Props>) => {
+const ArtistSelect = (
+  { baseFieldPathProp, handleArtistId }: PropsWithChildren<Props>,
+  { field }: RequirementFormProps
+) => {
   const {
     control,
     formState: { errors },
   } = useFormContext()
 
-  const [search, setSearch] = useState(
-    useWatch({ name: `${baseFieldPathProp}.data.id` })
-  )
-
-  // const handle = useWatch({ name: `${baseFieldPathProp}.data.id` })
+  const [search, setSearch] = useState(field?.data?.id)
 
   const { data: artistsData, isValidating: artistsLoading } = useSWRImmutable(
     search?.length > 0 ? `/api/sound-artists?searchQuery=${search}` : null
@@ -73,13 +70,6 @@ const ArtistSelect = ({
               }}
               isLoading={artistsLoading}
               onBlur={onBlur}
-              // so restCount stays visible
-              filterOption={() => true}
-              menuIsOpen={search ? undefined : false}
-              components={{
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
-              }}
             />
           )}
         />

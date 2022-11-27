@@ -24,13 +24,13 @@ const SoundOwnASong = ({ baseFieldPath }: RequirementFormProps) => {
   }
 
   const { data: songsData, isValidating: songsLoading } = useSWRImmutable(
-    `/api/sound-songs?id=${artistId != undefined ? artistId : ""}`
+    artistId != undefined ? `/api/sound-songs?id=${artistId}` : null
   )
 
   const songOptions = songsData?.map((song) => ({
-    label: song[0].title,
-    value: song[0].title,
-    img: song[0].image,
+    label: song.title,
+    value: song.title,
+    img: song.image,
   }))
 
   return (

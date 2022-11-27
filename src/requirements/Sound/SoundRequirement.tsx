@@ -7,16 +7,18 @@ import useSWRImmutable from "swr/immutable"
 
 const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
   const { data: artistsData, isValidating: artistsLoading } = useSWRImmutable(
-    `/api/sound-artists?searchQuery=${requirement.data?.id}`
+    requirement.data?.id
+      ? `/api/sound-artists?searchQuery=${requirement.data.id}`
+      : null
   )
 
   const { data: songsData, isValidating: songsLoading } = useSWRImmutable(
-    `/api/sound-songs?id=${artistsData?.map((artist) => artist.id)}`
+    artistsData ? `/api/sound-songs?id=${artistsData[0]?.id}` : null
   )
 
   const songImageUrl = songsData
-    ?.filter((title) => title[0].title == requirement.data.title)
-    .map((song) => song[0].image)
+    ?.filter((song) => song.title == requirement.data.title)
+    .map((song) => song.image)
 
   return (
     <Requirement
@@ -26,24 +28,15 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
             return <Img src="/requirementLogos/sound.png" />
 
           case "SOUND_ARTIST_BACKED":
-            return artistsData?.map((artist) => artist.image) ? (
-              <Img src={artistsData?.map((artist) => artist.image)} />
-            ) : (
-              <Img src="/requirementLogos/sound.png" />
-            )
+          case "SOUND_TOP_COLLECTOR":
+            if (artistsData?.map((artist) => artist.image))
+              return <Img src={artistsData?.map((artist) => artist.image)} />
 
           case "SOUND_COLLECTED":
-            return songsData?.map((song) => song[0].image) ? (
-              <Img src={songImageUrl} />
-            ) : (
-              <Img src="/requirementLogos/sound.png" />
-            )
-          case "SOUND_TOP_COLLECTOR":
-            return artistsData?.map((artist) => artist.image) ? (
-              <Img src={artistsData?.map((artist) => artist.image)} />
-            ) : (
-              <Img src="/requirementLogos/sound.png" />
-            )
+            if (songsData?.map((song) => song.image))
+              return <Img src={songImageUrl} />
+          default:
+            return <Img src="/requirementLogos/sound.png" />
         }
       })()}
       {...rest}
@@ -51,19 +44,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
       {(() => {
         switch (requirement.type) {
           case "SOUND_ARTIST":
-            return (
-              <>
-                {`Be an artist on `}
-                <Link
-                  href={`https://www.sound.xyz/`}
-                  isExternal
-                  colorScheme={"blue"}
-                  fontWeight="medium"
-                >
-                  Sound.xyz
-                </Link>
-              </>
-            )
+            return <>{`Be an artist`}</>
           case "SOUND_ARTIST_BACKED":
             return (
               <>
@@ -75,15 +56,6 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
                   colorScheme={"blue"}
                 >
                   {requirement.data.id}
-                </Link>
-                {` on `}
-                <Link
-                  href={`https://www.sound.xyz/`}
-                  isExternal
-                  fontWeight="medium"
-                  colorScheme={"blue"}
-                >
-                  Sound.xyz
                 </Link>
               </>
             )
@@ -114,15 +86,6 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
                 >
                   {requirement.data.id}
                 </Link>
-                {` on `}
-                <Link
-                  href={`https://www.sound.xyz/`}
-                  isExternal
-                  fontWeight="medium"
-                  colorScheme={"blue"}
-                >
-                  Sound.xyz
-                </Link>
               </>
             )
           case "SOUND_TOP_COLLECTOR":
@@ -137,19 +100,19 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
                 >
                   {requirement.data.id}
                 </Link>
-                {` on `}
-                <Link
-                  href={`https://www.sound.xyz/`}
-                  isExternal
-                  fontWeight="medium"
-                  colorScheme={"blue"}
-                >
-                  Sound.xyz
-                </Link>
               </>
             )
         }
       })()}
+      {` on `}
+      <Link
+        href={`https://www.sound.xyz/`}
+        isExternal
+        fontWeight="medium"
+        colorScheme={"blue"}
+      >
+        Sound.xyz
+      </Link>
     </Requirement>
   )
 }
