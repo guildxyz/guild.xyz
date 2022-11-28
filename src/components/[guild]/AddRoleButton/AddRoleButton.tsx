@@ -30,12 +30,16 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
 
 const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
-  const { id } = useGuild()
+  const { id, guildPlatforms } = useGuild()
+  const discordPlatform = guildPlatforms?.find(
+    (p) => p.platformId === PlatformType.DISCORD
+  )
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { ref: finalFocusRef, isStuck } = useIsStuck()
@@ -54,7 +58,16 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
     requirements: [],
     roleType: "NEW",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-    rolePlatforms: [],
+    rolePlatforms: discordPlatform
+      ? [
+          {
+            guildPlatformId: discordPlatform.id,
+            platformRoleData: {},
+            platformRoleId: null,
+            isNew: true,
+          },
+        ]
+      : [],
   }
 
   const methods = useForm({
