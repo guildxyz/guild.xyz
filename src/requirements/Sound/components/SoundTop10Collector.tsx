@@ -1,10 +1,10 @@
 import { RequirementFormProps } from "requirements"
 import ArtistSelect from "./SoundArtistSelect"
 
-const Top10Collector = ({ baseFieldPath }: RequirementFormProps) => (
+const SoundTop10Collector = ({ baseFieldPath }: RequirementFormProps) => (
   <>
-    <ArtistSelect baseFieldPathProp={baseFieldPath} />
+    <ArtistSelect baseFieldPath={baseFieldPath} />
   </>
 )
 
-export default Top10Collector
+export default SoundTop10Collector

@@ -1,7 +1,6 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
-import { useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
@@ -9,7 +8,7 @@ import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ArtistSelect from "./SoundArtistSelect"
 
-const SoundOwnASong = ({ baseFieldPath }: RequirementFormProps) => {
+const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
   const {
     control,
     formState: { errors },
@@ -17,14 +16,12 @@ const SoundOwnASong = ({ baseFieldPath }: RequirementFormProps) => {
 
   const handle = useWatch({ name: `${baseFieldPath}.data.id` })
 
-  const [artistId, setArtistId] = useState("")
-
-  const handleArtistId = (id: string) => {
-    setArtistId(id)
-  }
+  const { data: artist, isValidating: artistLoading } = useSWRImmutable(
+    handle ? `/api/sound/sound-artistbyhandle?soundHandle=${handle}` : null
+  )
 
   const { data: songsData, isValidating: songsLoading } = useSWRImmutable(
-    artistId != undefined ? `/api/sound-songs?id=${artistId}` : null
+    artist ? `/api/sound/sound-songs?id=${artist.id}` : null
   )
 
   const songOptions = songsData?.map((song) => ({
@@ -35,10 +32,7 @@ const SoundOwnASong = ({ baseFieldPath }: RequirementFormProps) => {
 
   return (
     <>
-      <ArtistSelect
-        handleArtistId={handleArtistId}
-        baseFieldPathProp={baseFieldPath}
-      />
+      <ArtistSelect baseFieldPath={baseFieldPath} field={field} />
       <FormControl
         isRequired
         isInvalid={parseFromObject(errors, baseFieldPath)?.data?.title}
@@ -52,14 +46,14 @@ const SoundOwnASong = ({ baseFieldPath }: RequirementFormProps) => {
             <StyledSelect
               ref={ref}
               isClearable
-              isDisabled={!handle}
+              isDisabled={!artist}
               options={songOptions}
               placeholder="Pick a song"
               value={songOptions?.find((option) => option.value === value) ?? ""}
-              onChange={(newSelectedOption: SelectOption) =>
+              onChange={(newSelectedOption: SelectOption) => {
                 onChange(newSelectedOption?.value)
-              }
-              isLoading={songsLoading}
+              }}
+              isLoading={songsLoading && artistLoading}
               onBlur={onBlur}
             />
           )}

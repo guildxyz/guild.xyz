@@ -12,7 +12,6 @@ const fetchArtists = (searchQuery: string) =>
       query: `{
         search(input: {limit: 20, text: "${searchQuery}"}) {
           artists {
-            id
             name
             soundHandle
             user {
@@ -26,6 +25,7 @@ const fetchArtists = (searchQuery: string) =>
     },
   }).then((res) =>
     res?.data?.search?.artists?.filter(
+      // filtering out all the unnecessary matches apart from soundHandle and artist name
       (artist) =>
         artist.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         artist.soundHandle.toLowerCase().includes(searchQuery.toLowerCase())

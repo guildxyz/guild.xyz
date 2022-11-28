@@ -11,7 +11,7 @@ import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import SoundOwnASong from "./components/SoundOwnASong"
 import SoundSupportArtist from "./components/SoundSupportArtist"
-import Top10Collector from "./components/SoundTop10Collector"
+import SoundTop10Collector from "./components/SoundTop10Collector"
 
 const soundRequirementTypes = [
   {
@@ -31,7 +31,7 @@ const soundRequirementTypes = [
   {
     label: "Be a top 10 collector",
     value: "SOUND_TOP_COLLECTOR",
-    SoundRequirement: Top10Collector,
+    SoundRequirement: SoundTop10Collector,
   },
 ]
 

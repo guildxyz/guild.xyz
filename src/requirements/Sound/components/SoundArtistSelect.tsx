@@ -2,29 +2,26 @@ import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import { PropsWithChildren, useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
-import { SelectOption } from "types"
+import { Requirement, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 type Props = {
-  baseFieldPathProp: string
-  handleArtistId?: (id: string) => void
+  baseFieldPath: string
+  field?: Requirement
 }
 
-const ArtistSelect = (
-  { baseFieldPathProp, handleArtistId }: PropsWithChildren<Props>,
-  { field }: RequirementFormProps
-) => {
+const ArtistSelect = ({ baseFieldPath, field }: PropsWithChildren<Props>) => {
   const {
     control,
     formState: { errors },
+    resetField,
   } = useFormContext()
 
   const [search, setSearch] = useState(field?.data?.id)
 
   const { data: artistsData, isValidating: artistsLoading } = useSWRImmutable(
-    search?.length > 0 ? `/api/sound-artists?searchQuery=${search}` : null
+    search?.length > 0 ? `/api/sound/sound-artists?searchQuery=${search}` : null
   )
 
   const artistOptions = artistsData?.map((artist) => ({
@@ -42,11 +39,11 @@ const ArtistSelect = (
     <>
       <FormControl
         isRequired
-        isInvalid={parseFromObject(errors, baseFieldPathProp)?.data?.id}
+        isInvalid={parseFromObject(errors, baseFieldPath)?.data?.id}
       >
         <FormLabel>Artist:</FormLabel>
         <Controller
-          name={`${baseFieldPathProp}.data.id` as const}
+          name={`${baseFieldPath}.data.id` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -58,12 +55,7 @@ const ArtistSelect = (
               value={artistOptions?.find((option) => option.value === value)}
               onChange={(newSelectedOption: SelectOption) => {
                 onChange(newSelectedOption?.value)
-                if (handleArtistId)
-                  handleArtistId(
-                    artistsData?.find(
-                      (artist) => artist.soundHandle == newSelectedOption?.value
-                    ).id
-                  )
+                resetField(`${baseFieldPath}.data.title`, { defaultValue: "" })
               }}
               onInputChange={(text, _) => {
                 setSearch(splitInput(text))
@@ -74,7 +66,7 @@ const ArtistSelect = (
           )}
         />
         <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPathProp)?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
     </>

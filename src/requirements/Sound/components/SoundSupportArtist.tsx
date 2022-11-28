@@ -1,10 +1,10 @@
 import { RequirementFormProps } from "requirements"
 import ArtistSelect from "./SoundArtistSelect"
 
-const SupportArtist = ({ baseFieldPath }: RequirementFormProps) => (
+const SoundSupportArtist = ({ baseFieldPath }: RequirementFormProps) => (
   <>
-    <ArtistSelect baseFieldPathProp={baseFieldPath} />
+    <ArtistSelect baseFieldPath={baseFieldPath} />
   </>
 )
 
-export default SupportArtist
+export default SoundSupportArtist

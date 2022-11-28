@@ -6,14 +6,14 @@ import slugify from "slugify"
 import useSWRImmutable from "swr/immutable"
 
 const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
-  const { data: artistsData, isValidating: artistsLoading } = useSWRImmutable(
+  const { data: artistData, isValidating: artistLoading } = useSWRImmutable(
     requirement.data?.id
-      ? `/api/sound-artists?searchQuery=${requirement.data.id}`
+      ? `/api/sound/sound-artistbyhandle?soundHandle=${requirement.data.id}`
       : null
   )
 
   const { data: songsData, isValidating: songsLoading } = useSWRImmutable(
-    artistsData ? `/api/sound-songs?id=${artistsData[0]?.id}` : null
+    artistData ? `/api/sound/sound-songs?id=${artistData?.id}` : null
   )
 
   const songImageUrl = songsData
@@ -26,12 +26,9 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
         switch (requirement.type) {
           case "SOUND_ARTIST":
             return <Img src="/requirementLogos/sound.png" />
-
           case "SOUND_ARTIST_BACKED":
           case "SOUND_TOP_COLLECTOR":
-            if (artistsData?.map((artist) => artist.image))
-              return <Img src={artistsData?.map((artist) => artist.image)} />
-
+            if (artistData?.image) return <Img src={artistData?.image} />
           case "SOUND_COLLECTED":
             if (songsData?.map((song) => song.image))
               return <Img src={songImageUrl} />
@@ -55,7 +52,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
                   fontWeight="medium"
                   colorScheme={"blue"}
                 >
-                  {requirement.data.id}
+                  {artistData?.name}
                 </Link>
               </>
             )
@@ -84,21 +81,21 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
                   fontWeight="medium"
                   colorScheme={"blue"}
                 >
-                  {requirement.data.id}
+                  {artistData?.name}
                 </Link>
               </>
             )
           case "SOUND_TOP_COLLECTOR":
             return (
               <>
-                {`Be in the top 10 collector of `}
+                {`Be in the top 10 collectors of `}
                 <Link
                   href={`https://www.sound.xyz/${requirement.data.id}`}
                   isExternal
                   fontWeight="medium"
                   colorScheme={"blue"}
                 >
-                  {requirement.data.id}
+                  {artistData?.name}
                 </Link>
               </>
             )
