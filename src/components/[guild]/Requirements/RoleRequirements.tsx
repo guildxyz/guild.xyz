@@ -1,9 +1,9 @@
 import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
-import REQUIREMENTS from "requirements"
 import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
+import RequirementDisplayComponent from "./components/RequirementDisplayComponent"
 
 type Props = {
   requirements: Requirement[]
@@ -27,18 +27,12 @@ const RoleRequirements = ({ requirements, logic }: Props) => {
       {!requirements?.length ? (
         <Spinner />
       ) : (
-        shownRequirements.map((requirement, i) => {
-          const RequirementComponent =
-            REQUIREMENTS[requirement.type]?.displayComponent
-
-          if (RequirementComponent)
-            return (
-              <React.Fragment key={i}>
-                <RequirementComponent requirement={requirement} />
-                {i < shownRequirements.length - 1 && <LogicDivider logic={logic} />}
-              </React.Fragment>
-            )
-        })
+        shownRequirements.map((requirement, i) => (
+          <React.Fragment key={i}>
+            <RequirementDisplayComponent requirement={requirement} />
+            {i < shownRequirements.length - 1 && <LogicDivider logic={logic} />}
+          </React.Fragment>
+        ))
       )}
 
       <Collapse
@@ -46,19 +40,13 @@ const RoleRequirements = ({ requirements, logic }: Props) => {
         animateOpacity={false}
         style={{ width: "100%" }}
       >
-        {hiddenRequirements.map((requirement, i) => {
-          const RequirementComponent =
-            REQUIREMENTS[requirement.type]?.displayComponent
-
-          if (RequirementComponent)
-            return (
-              <React.Fragment key={i}>
-                {i === 0 && <LogicDivider logic={logic} />}
-                <RequirementComponent requirement={requirement} />
-                {i < hiddenRequirements.length - 1 && <LogicDivider logic={logic} />}
-              </React.Fragment>
-            )
-        })}
+        {hiddenRequirements.map((requirement, i) => (
+          <React.Fragment key={i}>
+            {i === 0 && <LogicDivider logic={logic} />}
+            <RequirementDisplayComponent requirement={requirement} />
+            {i < hiddenRequirements.length - 1 && <LogicDivider logic={logic} />}
+          </React.Fragment>
+        ))}
       </Collapse>
 
       {hiddenRequirements.length > 0 && (
