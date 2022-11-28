@@ -9,9 +9,13 @@ import { GetStaticProps } from "next"
 import { useMemo, useState } from "react"
 import { PageDetailsCardData } from "types"
 
-function Ecosystem({ cards }) {
+type Props = {
+  cards: PageDetailsCardData[]
+}
+
+const Ecosystem = ({ cards: cards }: Props): JSX.Element => {
   const [search, setSearch] = useState<string>("")
-  const filter: Array<FilterOption> = [
+  const filterOptions: Array<FilterOption> = [
     { value: "requirement", label: "requirement" },
     { value: "reward", label: "reward" },
     { value: "core", label: "core" },
@@ -20,14 +24,13 @@ function Ecosystem({ cards }) {
     { value: "web3", label: "web3" },
   ]
   const [filterData, setFilterData] = useState<Array<FilterOption>>([])
-
   const renderedCards = useMemo(
     () =>
       cards
         .filter((card) =>
           filterData
             .map((filterElement) => filterElement.value)
-            .every((filterTag) => card.tags.includes(filterTag))
+            .every((filterTag) => card?.tags.includes(filterTag))
         )
         .filter((card) => card.title.toLowerCase().includes(search.toLowerCase())),
     [cards, filterData, search]
@@ -40,15 +43,14 @@ function Ecosystem({ cards }) {
         <SimpleGrid
           templateColumns={{ base: "auto 50px", md: "1fr 1fr 3fr" }}
           gap={{ base: 2, md: "6" }}
-          mb={16}
+          mb={8}
         >
           <GridItem colSpan={{ base: 1, md: 2 }}>
-            <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
+            <SearchBar placeholder="Search pages" {...{ search, setSearch }} />
           </GridItem>
-          <MultiSelect {...{ filter, setFilterData }} />
+          <MultiSelect {...{ filterOptions, setFilterData }} />
         </SimpleGrid>
-
-        <CategorySection fallbackText={"There are no pages"} mt="32px">
+        <CategorySection fallbackText={"There are no pages"}>
           {renderedCards.map((card) => (
             <PageDetailsCard pageData={card} key={card.id} />
           ))}

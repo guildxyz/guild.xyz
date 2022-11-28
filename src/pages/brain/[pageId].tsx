@@ -27,6 +27,7 @@ import { PropsWithChildren } from "react"
 import { NotionRenderer } from "react-notion-x"
 import "react-notion-x/src/styles.css"
 import { PageDetailsCardData } from "types"
+
 type CustomPageLinkProps = {
   href: string
   children: any
@@ -40,7 +41,7 @@ type GuildLinks = {
   >
 }
 
-function CustomLink({ href, children }: PropsWithChildren<CustomPageLinkProps>) {
+const CustomLink = ({ href, children }: PropsWithChildren<CustomPageLinkProps>) => {
   const linkId =
     href.slice(1, 9) +
     "-" +
@@ -59,7 +60,7 @@ function CustomLink({ href, children }: PropsWithChildren<CustomPageLinkProps>) 
   )
 }
 
-function Header(props) {
+const Header = (props) => {
   const tags = props?.block?.properties?.["`SJU"]?.[0]?.[0]
     .split(",")
     .filter((tag) => tag !== "")
@@ -79,13 +80,12 @@ function Header(props) {
     return
   if (isContentTypePage) return
 
-  let links: Array<GuildLinks> = [
+  const links: Array<GuildLinks> = [
     { name: "Guild", url: guildId, icon: HouseSimple },
     { name: "website", url: websiteURL, icon: Globe },
     { name: "Twitter", url: twitterURL, icon: TwitterLogo },
     { name: "Discord", url: discordURL, icon: DiscordLogo },
-  ]
-  links = links.filter((link) => link.url !== undefined)
+  ].filter((link) => link.url !== undefined)
 
   return (
     <Section mb="16px">
@@ -120,7 +120,42 @@ function Header(props) {
   )
 }
 
-async function getAllPages() {
+const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
+  <>
+    <LinkPreviewHead path="" />
+    <Layout
+      title={blockMap.block[params.pageId.toString()]?.value.properties.title[0][0]}
+      image={
+        pageLogo ? (
+          <Image src={pageLogo} width="56px" mt="8px" alt="page logo"></Image>
+        ) : null
+      }
+    >
+      <NotionRenderer
+        recordMap={blockMap}
+        components={{
+          Collection: Header,
+          PageLink: CustomLink,
+        }}
+      />
+      {linkedPageContents && (
+        <CategorySection fallbackText={"no tags"} mt="24px">
+          {linkedPageContents?.map((page) => (
+            <PageDetailsCard pageData={page} key={page.id} />
+          ))}
+        </CategorySection>
+      )}
+    </Layout>
+  </>
+)
+
+const getPage = async (params) => {
+  const notion = new NotionAPI()
+  const blockMap = await notion.getPage(params.pageId.toString())
+  return blockMap
+}
+
+const getAllPages = async () => {
   const { Client } = require("@notionhq/client")
   const notion = new Client({ auth: process.env.NOTION_API_KEY })
   const databaseId = process.env.NOTION_DATABASE_ID
@@ -130,31 +165,10 @@ async function getAllPages() {
   return response.results
 }
 
-async function getIds() {
-  const pages = await getAllPages()
-  const ids = pages.map((page) => JSON.parse(`{"params":{"pageId":"${page.id}"}}`))
-  return ids
-}
-
-export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
-  const paths = await getIds()
-  return {
-    paths,
-    fallback: "blocking",
-  }
-}
-
-async function getPage(params: any) {
-  const notion = new NotionAPI()
-  const blockMap = await notion.getPage(params.pageId.toString())
-  return blockMap
-}
-
-async function getLinks(allPages, blockMap, params: any) {
-  const linkedPageContents = getLinkedPages(blockMap, params, allPages)
+const getRelatedPageLinks = (allPages, blockMap, params) => {
+  const linkedPageContents = getLinkedPagesByName(blockMap, params, allPages)
   const linkedPagesByTags = getLinkedPagesByTags(blockMap, params, allPages)
   const links = [...new Set([...linkedPageContents, ...linkedPagesByTags])]
-
   const cards: Array<PageDetailsCardData> = links.map((page) => ({
     id: page.id,
     title: page.properties.title.title[0].plain_text,
@@ -162,6 +176,19 @@ async function getLinks(allPages, blockMap, params: any) {
     icon: page.icon?.file?.url ? page.icon.file.url : null,
   }))
   return cards
+}
+
+const getLinkedPagesByName = (blockMap, params, allPages) => {
+  const linkedPageIds = blockMap.block[
+    params.pageId.toString()
+  ]?.value?.properties?._mkI
+    ?.filter((link) => link.length > 1)
+    .map((linkObj) => linkObj[1][0][1])
+  const linkedPageContents = allPages.filter(
+    (page) => linkedPageIds?.includes(page.id) && page.id !== params.pageId
+  )
+
+  return linkedPageContents
 }
 
 const getLinkedPagesByTags = (blockMap, params, allPages) => {
@@ -179,56 +206,24 @@ const getLinkedPagesByTags = (blockMap, params, allPages) => {
   return linkedPagesByTags
 }
 
-function getLinkedPages(blockMap: any, params: any, allPages: any) {
-  const linkedPageIds = blockMap.block[
-    params.pageId.toString()
-  ]?.value?.properties?._mkI
-    ?.filter((link) => link.length > 1)
-    .map((linkObj) => linkObj[1][0][1])
-  const linkedPageContents = allPages.filter(
-    (page) => linkedPageIds?.includes(page.id) && page.id !== params.pageId
-  )
-
-  return linkedPageContents
+const getIds = async () => {
+  const pages = await getAllPages()
+  const ids = pages.map((page) => JSON.parse(`{"params":{"pageId":"${page.id}"}}`))
+  return ids
 }
 
-function PageDetails({ blockMap, linkedPageContents, params, pageLogo }) {
-  return (
-    <>
-      <LinkPreviewHead path="" />
-      <Layout
-        title={
-          blockMap.block[params.pageId.toString()]?.value.properties.title[0][0]
-        }
-        image={
-          pageLogo ? (
-            <Image src={pageLogo} width="56px" mt="8px" alt="page logo"></Image>
-          ) : null
-        }
-      >
-        <NotionRenderer
-          recordMap={blockMap}
-          components={{
-            Collection: Header,
-            PageLink: CustomLink,
-          }}
-        />
-        {linkedPageContents && (
-          <CategorySection fallbackText={"no tags"} mt="24px">
-            {linkedPageContents?.map((page) => (
-              <PageDetailsCard pageData={page} key={page.id} />
-            ))}
-          </CategorySection>
-        )}
-      </Layout>
-    </>
-  )
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+  const paths = await getIds()
+  return {
+    paths,
+    fallback: "blocking",
+  }
 }
 
-export async function getStaticProps({ params }) {
+export const getStaticProps = async ({ params }) => {
   const blockMap = await getPage(params)
   const allPages = await getAllPages()
-  const linkedPageContents = await getLinks(allPages, blockMap, params)
+  const linkedPageContents = await getRelatedPageLinks(allPages, blockMap, params)
   const pageLogo = allPages.find((page) => page.id === params.pageId)?.icon?.file
     ?.url
     ? allPages.find((page) => page.id === params.pageId).icon?.file?.url

@@ -7,14 +7,14 @@ export type FilterOption = {
 }
 
 type Props = {
-  filter: Array<FilterOption>
+  filterOptions: Array<FilterOption>
   setFilterData
 }
 
-const MultiSelect = ({ filter, setFilterData }: Props): JSX.Element => (
+const MultiSelect = ({ filterOptions, setFilterData }: Props): JSX.Element => (
   <Select<FilterOption, true, GroupBase<FilterOption>>
     isMulti
-    options={filter}
+    options={filterOptions}
     placeholder="Filter pages"
     chakraStyles={{
       control: (provided) => ({
