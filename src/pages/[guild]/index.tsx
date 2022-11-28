@@ -32,7 +32,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import React, { useMemo } from "react"
+import React, { useMemo, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -48,6 +48,7 @@ const DynamicMembersExporter = dynamic(
   () => import("components/[guild]/Members/components/MembersExporter")
 )
 const DynamicOnboarding = dynamic(() => import("components/[guild]/Onboarding"))
+const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 
 const GuildPage = (): JSX.Element => {
   const {
@@ -74,7 +75,7 @@ const GuildPage = (): JSX.Element => {
 
     // prettier-ignore
     const accessedRoles = [], otherRoles = []
-    byMembers.forEach((role) =>
+    byMembers?.forEach((role) =>
       (roleAccesses?.find(({ roleId }) => roleId === role.id)?.access
         ? accessedRoles
         : otherRoles
@@ -93,6 +94,7 @@ const GuildPage = (): JSX.Element => {
   )
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+  const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
   // not importing it dinamically because that way the whole page flashes once when it loads
   const DynamicOnboardingProvider =
@@ -124,16 +126,14 @@ const GuildPage = (): JSX.Element => {
           <DynamicOnboarding />
         ) : (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            {isMember ? (
-              <HStack>
-                {isAdmin && <DynamicAddRewardButton />}
-                <LeaveButton />
-              </HStack>
+            {!isMember ? (
+              <JoinButton />
+            ) : !isAdmin ? (
+              <LeaveButton />
+            ) : isAddRoleStuck ? (
+              <DynamicAddRoleButton />
             ) : (
-              <HStack>
-                {isAdmin && <DynamicAddRewardButton />}
-                <JoinButton />
-              </HStack>
+              <DynamicAddRewardButton />
             )}
           </Tabs>
         )}
@@ -148,16 +148,18 @@ const GuildPage = (): JSX.Element => {
             isAdmin &&
             (showAccessHub || showOnboarding) && (
               <Box my="-2 !important" ml="auto !important">
-                <DynamicAddRoleButton />
+                <DynamicAddRoleButton setIsStuck={setIsAddRoleStuck} />
               </Box>
             )
           }
           spacing={4}
           mb="12"
         >
-          {sortedRoles?.map((role) => (
-            <RoleCard key={role.id} role={role} />
-          ))}
+          {sortedRoles?.length ? (
+            sortedRoles.map((role) => <RoleCard key={role.id} role={role} />)
+          ) : (
+            <DynamicNoRolesAlert />
+          )}
         </Section>
 
         {(showMembers || isAdmin) && (
@@ -166,7 +168,7 @@ const GuildPage = (): JSX.Element => {
             titleRightElement={
               <HStack justifyContent="space-between" w="full">
                 <Tag size="sm" maxH={6} pt={0.5}>
-                  {isLoading ? <Spinner size="xs" /> : memberCount}
+                  {isLoading ? <Spinner size="xs" /> : memberCount ?? 0}
                 </Tag>
                 {isAdmin && <DynamicMembersExporter />}
               </HStack>
