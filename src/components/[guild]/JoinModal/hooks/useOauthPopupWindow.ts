@@ -113,9 +113,9 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
             clearInterval(interval)
 
             if (recievedCsrfToken !== csrfToken) {
-              const title = "CSRF Error"
+              const title = "Error"
               const errorDescription =
-                "CSRF token mismatch, this indicates possible CSRF attack."
+                "Authentication attempt can't be validated. Refresh and try connecting again"
 
               addDatadogError(`OAuth error - ${title}`, {
                 error: errorDescription,
