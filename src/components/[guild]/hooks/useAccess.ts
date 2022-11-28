@@ -8,19 +8,18 @@ const useAccess = (roleId?: number) => {
 
   const shouldFetch = account
 
-  const { data, isValidating, error, mutate } = useSWR(
+  const { data, isValidating, mutate } = useSWR(
     shouldFetch ? `/guild/access/${id}/${account}` : null,
     { shouldRetryOnError: false }
   )
 
-  const hasAccess = roleId
-    ? (data ?? error)?.find?.((role) => role.roleId === roleId)?.access
-    : (data ?? error)?.some?.(({ access }) => access)
+  const roleData = roleId && data?.find?.((role) => role.roleId === roleId)
+
+  const hasAccess = roleId ? roleData?.access : data?.some?.(({ access }) => access)
 
   return {
-    data,
+    data: roleData ?? data,
     hasAccess,
-    error,
     isLoading: isValidating,
     mutate,
   }

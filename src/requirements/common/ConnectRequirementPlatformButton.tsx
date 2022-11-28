@@ -16,8 +16,7 @@ type Props = {
 const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
   const { platformUsers } = useUser()
 
-  const { mutate: mutateAccesses, data, error } = useAccess()
-  const accesses = data || error
+  const { mutate: mutateAccesses, data: accesses } = useAccess()
   const toast = useToast()
   const onSuccess = () => {
     mutateAccesses()
