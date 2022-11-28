@@ -16,7 +16,7 @@ const usePoapLinks = (
     isValidating: isPoapLinksLoading,
     mutate,
   } = useSWR(poapId ? `/assets/poap/links/${poapId}` : null, {
-    refreshInterval: guildPoap.expiryDate <= Date.now() / 1000 ? 10000 : 0,
+    refreshInterval: guildPoap?.expiryDate <= Date.now() / 1000 ? 10000 : 0,
   })
 
   return { poapLinks, isPoapLinksLoading, mutate }
