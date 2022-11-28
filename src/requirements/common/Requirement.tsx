@@ -16,6 +16,7 @@ export type RequirementProps = PropsWithChildren<{
   image?: string | JSX.Element
   withImgBg?: boolean
   footer?: JSX.Element
+  rightElement?: JSX.Element
 }>
 
 const Requirement = ({
@@ -23,13 +24,20 @@ const Requirement = ({
   image,
   footer,
   withImgBg = true,
+  rightElement,
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
-    <SimpleGrid spacing={4} w="full" py={2} templateColumns="auto 1fr">
-      <Box mt="3px">
+    <SimpleGrid
+      spacing={4}
+      w="full"
+      py={2}
+      templateColumns={`auto 1fr ${rightElement ? "auto" : ""}`}
+      alignItems="center"
+    >
+      <Box mt="3px" alignSelf={"start"}>
         <SkeletonCircle
           minW={"var(--chakra-space-11)"}
           boxSize={"var(--chakra-space-11)"}
@@ -61,6 +69,7 @@ const Requirement = ({
         <Text wordBreak="break-word">{children}</Text>
         {footer}
       </VStack>
+      {rightElement}
     </SimpleGrid>
   )
 }
