@@ -346,6 +346,18 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["SISMO"],
   },
+  {
+    icon: "/requirementLogos/gitcoin-passport.svg",
+    name: "Gitcoin Passport",
+    fileNameBase: "GitcoinPassport",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/GitcoinPassport/GitcoinPassportForm")
+    ),
+    types: ["GITCOIN", "GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
