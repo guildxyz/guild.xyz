@@ -1,22 +1,27 @@
 import useSWRImmutable from "swr/immutable"
+import fetcher from "utils/fetcher"
 
 type SnapshotStrategy = {
-  name: string
-  params: Record<string, Record<string, string>>
+  key: string
+  schema?: {
+    definitions: {
+      Strategy: {
+        title: string
+        properties: Record<string, any>
+        required: string[]
+      }
+    }
+  }
 }
 
 const fetchSnapshots = async () =>
-  fetch(`${process.env.NEXT_PUBLIC_GUILD_API}/strategies`).then((rawData) =>
-    rawData.json()
-  )
+  fetcher("https://score.snapshot.org/api/strategies").catch(() => {})
 
 const useSnapshots = (): {
-  strategies: Array<SnapshotStrategy>
+  strategies: Record<string, SnapshotStrategy>
   isLoading: boolean
 } => {
-  const { data, isValidating } = useSWRImmutable("snapshots", fetchSnapshots, {
-    revalidateOnFocus: false,
-  })
+  const { data, isValidating } = useSWRImmutable("snapshots", fetchSnapshots)
 
   return { strategies: data, isLoading: isValidating }
 }

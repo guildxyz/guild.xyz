@@ -191,7 +191,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Snapshot/SnapshotForm")
     ),
     types: ["SNAPSHOT"],
-    disabled: true,
   },
   {
     icon: "/requirementLogos/juicebox.png",
