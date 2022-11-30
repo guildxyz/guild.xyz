@@ -346,6 +346,24 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["SISMO"],
   },
+  {
+    icon: "/requirementLogos/tessera.svg",
+    name: "Tessera",
+    fileNameBase: "Tessera",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Tessera/TesseraRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Tessera/TesseraForm")
+    ),
+    types: [
+      "TESSERA",
+      "TESSERA_HOLD",
+      "TESSERA_VAULTSHARE",
+      "TESSERA_LISTINGS",
+      "TESSERA_USER_SINCE",
+    ],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
