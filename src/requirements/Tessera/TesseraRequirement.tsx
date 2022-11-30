@@ -2,6 +2,7 @@ import DataBlock from "components/common/DataBlock"
 import { RequirementComponentProps } from "requirements"
 import Requirement from "requirements/common/Requirement"
 import pluralize from "utils/pluralize"
+import TesseraUrl from "./components/TesseraUrl"
 import useTesseraVault from "./hooks/useTesseraVault"
 
 const TesseraRequirement = ({
@@ -17,6 +18,7 @@ const TesseraRequirement = ({
           ? ""
           : vault?.imageUrl ?? "/requirementLogos/tessera.svg"
       }
+      footer={<TesseraUrl collectionSlug={requirement.data.vault} />}
       {...rest}
     >
       {(() => {
