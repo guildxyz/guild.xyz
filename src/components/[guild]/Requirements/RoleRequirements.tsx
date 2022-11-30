@@ -28,10 +28,7 @@ const RoleRequirements = ({ role }: Props) => {
       ) : (
         shownRequirements.map((requirement, i) => (
           <React.Fragment key={i}>
-            <RequirementDisplayComponent
-              requirement={requirement}
-              roleId={role.id}
-            />
+            <RequirementDisplayComponent requirement={requirement} />
             {i < shownRequirements.length - 1 && <LogicDivider logic={role.logic} />}
           </React.Fragment>
         ))
@@ -45,10 +42,7 @@ const RoleRequirements = ({ role }: Props) => {
         {hiddenRequirements.map((requirement, i) => (
           <React.Fragment key={i}>
             {i === 0 && <LogicDivider logic={role.logic} />}
-            <RequirementDisplayComponent
-              requirement={requirement}
-              roleId={role.id}
-            />
+            <RequirementDisplayComponent requirement={requirement} />
             {i < hiddenRequirements.length - 1 && (
               <LogicDivider logic={role.logic} />
             )}
