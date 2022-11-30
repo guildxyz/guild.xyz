@@ -1,16 +1,29 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useFormContext } from "react-hook-form"
+import StyledSelect from "components/common/StyledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
-
-const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+import useTesseraVaults from "../hooks/useTesseraVaults"
 
 const VaultField = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+  const { errors } = useFormState()
+  const { vaults, isLoading } = useTesseraVaults()
+
   const {
-    register,
-    formState: { errors },
-  } = useFormContext()
+    field: { name, onBlur, onChange, ref, value },
+  } = useController({
+    name: `${baseFieldPath}.data.vault`,
+    rules: { required: "This field is required." },
+  })
+
+  const selectedVault = vaults?.find((v) => v.value === value)
 
   return (
     <FormControl
@@ -19,17 +32,24 @@ const VaultField = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     >
       <FormLabel>Vault</FormLabel>
 
-      <Input
-        {...register(`${baseFieldPath}.data.vault`, {
-          required: "This field is required",
-          pattern: {
-            value: ADDRESS_REGEX,
-            message:
-              "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-          },
-        })}
-        placeholder="Vault address"
-      />
+      <InputGroup>
+        {selectedVault && (
+          <InputLeftElement>
+            <OptionImage img={selectedVault.img} alt={selectedVault.label} />
+          </InputLeftElement>
+        )}
+        <StyledSelect
+          ref={ref}
+          name={name}
+          options={vaults}
+          onChange={(newValue: { label: string; value: string }) => {
+            onChange(newValue?.value)
+          }}
+          value={selectedVault ?? ""}
+          onBlur={onBlur}
+          isClearable
+        />
+      </InputGroup>
 
       <FormErrorMessage>
         {parseFromObject(errors, baseFieldPath)?.data?.vault?.message}
