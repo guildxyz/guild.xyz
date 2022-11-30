@@ -41,22 +41,35 @@ const RequirementDisplayComponent = ({ requirement, roleId }: Props) => {
       requirement={requirement}
       rightElement={
         data && (
-          <Popover placement="left" trigger="hover">
+          <Popover placement="left" trigger="hover" openDelay={100}>
             <PopoverTrigger>
               <Circle
-                bg={gateReq?.access ? "green.300" : "gray.500"}
+                bg={
+                  gateReq?.access
+                    ? "green.300"
+                    : gateReq?.access === null
+                    ? "orange.300"
+                    : "gray.500"
+                }
                 size={2}
                 transition="transform .2s"
                 _hover={{ transform: "scale(1.5)" }}
               />
             </PopoverTrigger>
-            <PopoverContent width={gateReq?.access && "2xs"}>
+            <PopoverContent width={gateReq?.access !== false && "2xs"}>
               {gateReq?.access ? (
                 <PopoverHeader fontWeight={"semibold"} border="0" px="3">
                   <Tag colorScheme="green" mr="2.5">
                     <Check />
                   </Tag>
                   Requirement satisfied
+                </PopoverHeader>
+              ) : gateReq?.access === null ? (
+                <PopoverHeader fontWeight={"semibold"} border="0" px="3">
+                  <Tag colorScheme="orange" mr="2.5">
+                    <Warning />
+                  </Tag>
+                  Couldn't check access
                 </PopoverHeader>
               ) : (
                 <>
