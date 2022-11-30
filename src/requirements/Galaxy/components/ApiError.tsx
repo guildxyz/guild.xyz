@@ -22,11 +22,9 @@ const ApiError = (): JSX.Element => {
   if (!galxeApiError) return null
 
   return (
-    <HStack fontSize="xs" spacing={1}>
-      <Icon color="red.500" as={Warning} />
-      <Text color="gray" as="span">
-        Galxe API currently unavailable
-      </Text>
+    <HStack color="orange.200" fontSize="xs" spacing={1}>
+      <Icon as={Warning} />
+      <Text as="span">Galxe's API currently unavailable</Text>
     </HStack>
   )
 }
