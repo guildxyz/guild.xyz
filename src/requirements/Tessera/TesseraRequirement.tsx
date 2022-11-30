@@ -26,10 +26,7 @@ const TesseraRequirement = ({
               <>
                 {`Hold ${
                   requirement.data.minAmount > 0
-                    ? `at least ${requirement.data.minAmount} ${pluralize(
-                        requirement.data.minAmount,
-                        "fraction"
-                      )}`
+                    ? `at least ${pluralize(requirement.data.minAmount, "fraction")}`
                     : "a fraction"
                 } of the `}
                 <DataBlock>{vault?.name ?? requirement.data.vault}</DataBlock>
@@ -49,9 +46,17 @@ const TesseraRequirement = ({
               </>
             )
           case "TESSERA_LISTINGS":
-            return "TODO"
+            return (
+              <>
+                {`List at least ${pluralize(requirement.data.minAmount, "NFT")}${
+                  requirement.data.minVaultShare
+                    ? ` with at least ${requirement.data.minVaultShare} share`
+                    : ""
+                } on Tessera`}
+              </>
+            )
           case "TESSERA_USER_SINCE":
-            return `Be a Guild.xyz user at least since ${
+            return `Be a Tessera user at least since ${
               requirement.data.minDate?.split("T")[0]
             }`
         }
