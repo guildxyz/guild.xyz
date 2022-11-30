@@ -13,6 +13,7 @@ const Listings = ({ baseFieldPath }: RequirementFormProps): JSX.Element => (
       baseFieldPath={baseFieldPath}
       label="Minimum vault share"
       fieldName="minVaultShare"
+      min={0.00001}
       max={1}
       format="FLOAT"
       helperText="A number between 0 and 1"

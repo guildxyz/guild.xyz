@@ -18,6 +18,7 @@ type Props = {
   baseFieldPath: string
   label: string
   fieldName: string
+  min?: number
   max?: number
   helperText?: string
 } & FormControlProps
@@ -27,6 +28,7 @@ const NumberField = ({
   baseFieldPath,
   label,
   fieldName,
+  min,
   max,
   helperText,
   ...rest
@@ -54,14 +56,16 @@ const NumberField = ({
         control={control}
         rules={{
           required: rest.isRequired ? "This field is required." : undefined,
-          min: {
-            value: 0,
-            message: "Amount must be positive",
-          },
+          min: min
+            ? {
+                value: min,
+                message: `Must be greater than ${min - 1}`,
+              }
+            : undefined,
           max: max
             ? {
                 value: max,
-                message: `Must be less than ${max}`,
+                message: `Must be less than ${max + 1}`,
               }
             : undefined,
         }}
