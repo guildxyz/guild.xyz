@@ -29,6 +29,7 @@ export type RequirementData = {
   fileNameBase: string
   readonly types: string[]
   disabled?: boolean
+  isPlatform?: boolean
   displayComponent: ComponentType<RequirementComponentProps>
   formComponent: ComponentType<RequirementFormProps>
 }
