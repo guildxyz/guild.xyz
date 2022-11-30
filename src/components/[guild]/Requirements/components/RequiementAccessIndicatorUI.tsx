@@ -16,7 +16,6 @@ type Props = {
   colorScheme: string
   icon: FC
   circleBg?: string
-  popoverWidth?: string
 }
 
 const CIRCLE_HOVER_STYLES = {
@@ -33,7 +32,6 @@ const RequiementAccessIndicatorUI = ({
   colorScheme,
   icon,
   circleBg,
-  popoverWidth,
   children,
 }: PropsWithChildren<Props>) => {
   // blackAlpha.300 on top of gray.700 => #35353A
@@ -46,7 +44,7 @@ const RequiementAccessIndicatorUI = ({
         bg={`linear-gradient(to right, transparent 0px, ${cardBg} var(--chakra-space-4))`}
         height={"full"}
       >
-        <Popover placement="left" trigger="hover" closeDelay={100} openDelay={200}>
+        <Popover placement="left" trigger="hover" closeDelay={100} strategy="fixed">
           {({ isOpen, onClose }) => (
             <>
               <PopoverTrigger>
@@ -71,7 +69,7 @@ const RequiementAccessIndicatorUI = ({
                   </Tag>
                 </Circle>
               </PopoverTrigger>
-              <PopoverContent width={popoverWidth}>
+              <PopoverContent width="unset" maxW={{ base: "2xs", md: "xs" }}>
                 {children}
                 <PopoverArrow />
               </PopoverContent>

@@ -27,11 +27,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
 
   if (reqAccessData?.access)
     return (
-      <RequiementAccessIndicatorUI
-        colorScheme={"green"}
-        icon={Check}
-        popoverWidth={"4xs"}
-      >
+      <RequiementAccessIndicatorUI colorScheme={"green"} icon={Check}>
         <PopoverHeader fontWeight={"semibold"} border="0" px="3">
           <Text as="span" mr="2">
             🎉
@@ -43,11 +39,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
 
   if (reqAccessData?.access === null)
     return (
-      <RequiementAccessIndicatorUI
-        colorScheme={"orange"}
-        icon={Warning}
-        popoverWidth={"4xs"}
-      >
+      <RequiementAccessIndicatorUI colorScheme={"orange"} icon={Warning}>
         <PopoverHeader fontWeight={"semibold"} border="0" px="3">
           Couldn't check access
         </PopoverHeader>
