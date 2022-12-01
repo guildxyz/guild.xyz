@@ -7,7 +7,9 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
+import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { ArrowSquareIn, Check, Warning, X } from "phosphor-react"
+import { useContext } from "react"
 import REQUIREMENTS from "requirements"
 import { Requirement } from "types"
 import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
@@ -17,6 +19,8 @@ type Props = {
 }
 
 const RequiementAccessIndicator = ({ requirement }: Props) => {
+  const { openAccountModal } = useContext(Web3Connection)
+
   const { data: accessData } = useAccess(requirement.roleId)
   if (!accessData) return null
 
@@ -71,7 +75,11 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
         <PopoverBody pt="0">{`Expected amount is ${requirement.data.minAmount} but you have ${reqAccessData?.amount}`}</PopoverBody>
       )}
       <PopoverFooter display="flex" justifyContent={"flex-end"} border="0" pt="2">
-        <Button size="sm" rightIcon={<Icon as={ArrowSquareIn} />}>
+        <Button
+          size="sm"
+          rightIcon={<Icon as={ArrowSquareIn} />}
+          onClick={openAccountModal}
+        >
           {`View connected ${isPlatform ? "account" : "addresses"}`}
         </Button>
       </PopoverFooter>
