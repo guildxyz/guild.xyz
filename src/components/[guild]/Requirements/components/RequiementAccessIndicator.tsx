@@ -59,7 +59,12 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
       </RequiementAccessIndicatorUI>
     )
 
-  if (reqAccessData?.access === null)
+  if (reqAccessData?.access === null) {
+    const errorMsg = (
+      accessData?.errors?.find((err) => err.requirementId === requirement.id) ??
+      accessData?.warnings?.find((err) => err.requirementId === requirement.id)
+    ).msg
+
     return (
       <RequiementAccessIndicatorUI
         colorScheme={"orange"}
@@ -68,10 +73,11 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
         isAlwaysOpen={accessData?.access === null}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
-          Couldn't check access
+          {errorMsg ? `Error: ${errorMsg}` : `Couldn't check access`}
         </PopoverHeader>
       </RequiementAccessIndicatorUI>
     )
+  }
 
   if (
     accessData?.warnings
