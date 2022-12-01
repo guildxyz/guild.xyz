@@ -1,4 +1,4 @@
-import { Icon } from "@chakra-ui/react"
+import { ButtonProps, Icon } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
@@ -11,9 +11,9 @@ import { PlatformName } from "types"
 type Props = {
   platform: PlatformName
   roleId?: number
-}
+} & ButtonProps
 
-const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
+const ConnectRequirementPlatformButton = ({ platform, roleId, ...rest }: Props) => {
   const { platformUsers } = useUser()
 
   const { mutate: mutateAccesses, data: accesses } = useAccess()
@@ -56,6 +56,7 @@ const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
       colorScheme={platform}
       leftIcon={<Icon as={platforms[platform].icon} />}
       iconSpacing="1"
+      {...rest}
     >
       {`${isReconnection ? "Reconnect" : "Connect"} ${platforms[platform].name}`}
     </Button>

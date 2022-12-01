@@ -71,7 +71,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
     return (
       <AccessIndicatorUI
         colorScheme="blue"
-        label={"Connect below to check access"}
+        label={"Auth needed to check access"}
         icon={LockSimple}
       />
     )

@@ -12,7 +12,7 @@ import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import { useContext } from "react"
 import REQUIREMENTS from "requirements"
 import ConnectRequirementPlatformButton from "requirements/common/ConnectRequirementPlatformButton"
-import { Requirement } from "types"
+import { PlatformName, Requirement } from "types"
 import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
 
 type Props = {
@@ -41,7 +41,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
   const reqAccessData = accessData?.requirements?.find(
     (obj) => obj.requirementId === requirement.id
   )
-  const isPlatform = REQUIREMENTS[requirement.type]?.isPlatform
+  const reqObj = REQUIREMENTS[requirement.type]
 
   if (reqAccessData?.access)
     return (
@@ -73,6 +73,32 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
       </RequiementAccessIndicatorUI>
     )
 
+  if (
+    accessData?.warnings
+      ?.find((err) => err.requirementId === requirement.id)
+      ?.msg.includes("account isn't connected")
+  )
+    return (
+      <RequiementAccessIndicatorUI
+        colorScheme={"blue"}
+        circleBgSwatch={{ light: 300, dark: 300 }}
+        icon={LockSimple}
+        isAlwaysOpen={!accessData?.access}
+      >
+        <PopoverHeader {...POPOVER_HEADER_STYLES}>
+          Connect account to check access
+        </PopoverHeader>
+        <PopoverFooter {...POPOVER_FOOTER_STYLES}>
+          <ConnectRequirementPlatformButton
+            platform={reqObj?.types?.[0] as PlatformName}
+            roleId={requirement?.roleId}
+            size="sm"
+            iconSpacing={2}
+          />
+        </PopoverFooter>
+      </RequiementAccessIndicatorUI>
+    )
+
   return (
     <RequiementAccessIndicatorUI
       colorScheme={"gray"}
@@ -82,11 +108,11 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
     >
       <PopoverHeader {...POPOVER_HEADER_STYLES}>
         {`Requirement not satisfied with your connected ${
-          isPlatform ? "account" : "addresses"
+          reqObj?.isPlatform ? "account" : "addresses"
         }`}
       </PopoverHeader>
       {requirement.data?.minAmount && (
-        <PopoverBody pt="0">{`Expected amount is ${requirement.data.minAmount} but you have ${reqAccessData?.amount}`}</PopoverBody>
+        <PopoverBody pt="0">{`Expected amount is ${requirement.data.minAmount} but you only have ${reqAccessData?.amount}`}</PopoverBody>
       )}
       <PopoverFooter {...POPOVER_FOOTER_STYLES}>
         <Button
@@ -94,7 +120,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
           rightIcon={<Icon as={ArrowSquareIn} />}
           onClick={openAccountModal}
         >
-          {`View connected ${isPlatform ? "account" : "addresses"}`}
+          {`View connected ${reqObj?.isPlatform ? "account" : "addresses"}`}
         </Button>
       </PopoverFooter>
     </RequiementAccessIndicatorUI>
