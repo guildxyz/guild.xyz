@@ -1,5 +1,6 @@
 import {
   Box,
+  Collapse,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -14,6 +15,7 @@ import {
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
+import ErrorAlert from "components/common/ErrorAlert"
 import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
@@ -34,6 +36,8 @@ import { PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
+
+const noRequirementsErrorMessage = "Set some requirements, or make the role free"
 
 const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
   const { id, guildPlatforms } = useGuild()
@@ -127,7 +131,7 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
         methods.setError(
           "requirements",
           {
-            message: "Set some requirements, or make the role free",
+            message: noRequirementsErrorMessage,
           },
           { shouldFocus: true }
         )
@@ -186,6 +190,15 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
                   <Description />
                 </Section>
                 <SetRequirements />
+
+                <Collapse
+                  in={!!methods.formState.errors?.requirements}
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  <ErrorAlert label={noRequirementsErrorMessage} />
+                </Collapse>
               </VStack>
             </FormProvider>
           </DrawerBody>

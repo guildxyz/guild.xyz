@@ -32,6 +32,8 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
+import useGuildPermission from "../hooks/useGuildPermission"
+import LeaveButton from "../LeaveButton"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
@@ -61,6 +63,7 @@ const EditGuildDrawer = ({
     guildPlatforms,
     hideFromExplorer,
   } = useGuild()
+  const { isOwner } = useGuildPermission()
 
   const defaultValues = {
     name,
@@ -177,7 +180,7 @@ const EditGuildDrawer = ({
           <DrawerContent>
             <DrawerBody className="custom-scrollbar">
               <DrawerHeader title="Edit guild">
-                <DeleteGuildButton />
+                {isOwner ? <DeleteGuildButton /> : <LeaveButton />}
               </DrawerHeader>
               <VStack spacing={10} alignItems="start">
                 <Section title="General" spacing="6">
