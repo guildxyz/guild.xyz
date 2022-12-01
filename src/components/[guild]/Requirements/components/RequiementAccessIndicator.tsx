@@ -8,14 +8,28 @@ import {
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
-import { ArrowSquareIn, Check, Warning, X } from "phosphor-react"
+import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import { useContext } from "react"
 import REQUIREMENTS from "requirements"
+import ConnectRequirementPlatformButton from "requirements/common/ConnectRequirementPlatformButton"
 import { Requirement } from "types"
 import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
 
 type Props = {
   requirement: Requirement
+}
+
+const POPOVER_HEADER_STYLES = {
+  fontWeight: "semibold",
+  border: "0",
+  px: "3",
+}
+
+const POPOVER_FOOTER_STYLES = {
+  display: "flex",
+  justifyContent: "flex-end",
+  border: "0",
+  pt: "2",
 }
 
 const RequiementAccessIndicator = ({ requirement }: Props) => {
@@ -36,7 +50,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
         circleBgSwatch={{ light: 400, dark: 300 }}
         icon={Check}
       >
-        <PopoverHeader fontWeight={"semibold"} border="0" px="3">
+        <PopoverHeader {...POPOVER_HEADER_STYLES}>
           <Text as="span" mr="2">
             🎉
           </Text>
@@ -53,7 +67,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
         icon={Warning}
         isAlwaysOpen={accessData?.access === null}
       >
-        <PopoverHeader fontWeight={"semibold"} border="0" px="3">
+        <PopoverHeader {...POPOVER_HEADER_STYLES}>
           Couldn't check access
         </PopoverHeader>
       </RequiementAccessIndicatorUI>
@@ -66,7 +80,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
       icon={X}
       isAlwaysOpen={accessData?.access === false}
     >
-      <PopoverHeader fontWeight={"semibold"} border="0" px="3">
+      <PopoverHeader {...POPOVER_HEADER_STYLES}>
         {`Requirement not satisfied with your connected ${
           isPlatform ? "account" : "addresses"
         }`}
@@ -74,7 +88,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
       {requirement.data?.minAmount && (
         <PopoverBody pt="0">{`Expected amount is ${requirement.data.minAmount} but you have ${reqAccessData?.amount}`}</PopoverBody>
       )}
-      <PopoverFooter display="flex" justifyContent={"flex-end"} border="0" pt="2">
+      <PopoverFooter {...POPOVER_FOOTER_STYLES}>
         <Button
           size="sm"
           rightIcon={<Icon as={ArrowSquareIn} />}
