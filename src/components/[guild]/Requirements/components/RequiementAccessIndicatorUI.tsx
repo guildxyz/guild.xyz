@@ -1,6 +1,5 @@
 import {
   Center,
-  Circle,
   Flex,
   Icon,
   Popover,
@@ -8,6 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Tag,
+  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { FC, PropsWithChildren } from "react"
@@ -15,9 +15,11 @@ import { FC, PropsWithChildren } from "react"
 type Props = {
   colorScheme: string
   icon: FC
-  circleBg?: string
+  circleBgSwatch?: { light: number; dark: number }
+  isAlwaysOpen?: boolean
 }
 
+const CIRCLE_SIZE = 2.5
 const CIRCLE_HOVER_STYLES = {
   bg: "unset",
   width: 7,
@@ -31,14 +33,21 @@ const CIRCLE_HOVER_STYLES = {
 const RequiementAccessIndicatorUI = ({
   colorScheme,
   icon,
-  circleBg,
+  circleBgSwatch,
+  isAlwaysOpen,
   children,
 }: PropsWithChildren<Props>) => {
   // blackAlpha.300 on top of gray.700 => #35353A
   const cardBg = useColorModeValue("var(--chakra-colors-gray-50)", "#35353A")
+  const { colorMode } = useColorMode()
 
   return (
-    <Flex width={2} height="full" justifyContent={"flex-end"} alignItems="center">
+    <Flex
+      width={CIRCLE_SIZE}
+      height="full"
+      justifyContent={"flex-end"}
+      alignItems="center"
+    >
       <Center
         pl="6"
         bg={`linear-gradient(to right, transparent 0px, ${cardBg} var(--chakra-space-4))`}
@@ -48,9 +57,10 @@ const RequiementAccessIndicatorUI = ({
           {({ isOpen, onClose }) => (
             <>
               <PopoverTrigger>
-                <Circle
-                  bg={circleBg ?? `${colorScheme}.300`}
-                  size={2}
+                <Center
+                  bg={`${colorScheme}.${circleBgSwatch[colorMode]}`}
+                  boxSize={CIRCLE_SIZE}
+                  borderRadius={8}
                   transition="all .2s"
                   overflow={"hidden"}
                   pos="relative"
@@ -60,14 +70,14 @@ const RequiementAccessIndicatorUI = ({
                       opacity: 0,
                       transition: "opacity .2s",
                     },
-                    ...(isOpen ? CIRCLE_HOVER_STYLES : {}),
+                    ...(isOpen || isAlwaysOpen ? CIRCLE_HOVER_STYLES : {}),
                   }}
                   _hover={CIRCLE_HOVER_STYLES}
                 >
-                  <Tag colorScheme={colorScheme} pos="absolute" px="1.5" py="1.5">
-                    <Icon as={icon} />
+                  <Tag colorScheme={colorScheme} pos="absolute" px="2" py="2">
+                    <Icon as={icon} boxSize={3} />
                   </Tag>
-                </Circle>
+                </Center>
               </PopoverTrigger>
               <PopoverContent width="unset" maxW={{ base: "2xs", md: "xs" }}>
                 {children}
