@@ -20,6 +20,7 @@ type Props = {
   fieldName: string
   min?: number
   max?: number
+  step?: number
   helperText?: string
 } & FormControlProps
 
@@ -30,6 +31,7 @@ const NumberField = ({
   fieldName,
   min,
   max,
+  step,
   helperText,
   ...rest
 }: Props) => {
@@ -59,13 +61,13 @@ const NumberField = ({
           min: min
             ? {
                 value: min,
-                message: `Must be greater than ${min - 1}`,
+                message: `Must be greater than or equal to ${min}`,
               }
             : undefined,
           max: max
             ? {
                 value: max,
-                message: `Must be less than ${max + 1}`,
+                message: `Must be less than or equal to ${max}`,
               }
             : undefined,
         }}
@@ -77,6 +79,7 @@ const NumberField = ({
             onBlur={onBlur}
             min={0}
             max={max}
+            step={step}
           >
             <NumberInputField />
             <NumberInputStepper>
