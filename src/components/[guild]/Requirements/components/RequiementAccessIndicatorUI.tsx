@@ -19,7 +19,7 @@ type Props = {
   isAlwaysOpen?: boolean
 }
 
-const CIRCLE_SIZE = 2.5
+const CIRCLE_SIZE = 2
 const CIRCLE_HOVER_STYLES = {
   bg: "unset",
   width: 7,
