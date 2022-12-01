@@ -41,7 +41,7 @@ const Ecosystem = ({ cards: cards }: Props): JSX.Element => {
       <LinkPreviewHead path="" />
       <Layout title="Ecosystem" showBackButton={false}>
         <SimpleGrid
-          templateColumns={{ base: "auto 50px", md: "1fr 1fr 3fr" }}
+          templateColumns={{ md: "2fr 0fr 3fr" }}
           gap={{ base: 2, md: "6" }}
           mb={8}
         >

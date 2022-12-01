@@ -89,7 +89,7 @@ const Header = (props) => {
 
   return (
     <Section mb="16px">
-      <Wrap justify="space-between" alignItems="center">
+      <Wrap justify="space-between" alignItems="center" spacing="16px">
         <Wrap zIndex="1">
           {links?.map((link, index) => (
             <Link
