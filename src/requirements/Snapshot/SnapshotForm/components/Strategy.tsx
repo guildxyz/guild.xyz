@@ -19,7 +19,6 @@ import StyledSelect from "components/common/StyledSelect"
 import { TrashSimple } from "phosphor-react"
 import { useMemo } from "react"
 import { Controller, useController, useFormContext } from "react-hook-form"
-import ChainPicker from "requirements/common/ChainPicker"
 import useSnapshots from "requirements/Snapshot/hooks/useSnapshots"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -70,10 +69,6 @@ const Strategy = ({ baseFieldPath, index, onRemove }: Props): JSX.Element => {
   return (
     <Box p={4} borderRadius="xl" bgColor={bgColor}>
       <Stack spacing={4} alignItems="start">
-        <ChainPicker
-          controlName={`${baseFieldPath}.data.strategies.${index}.chainId`}
-        />
-
         <FormControl
           position="relative"
           isRequired
@@ -190,18 +185,20 @@ const Strategy = ({ baseFieldPath, index, onRemove }: Props): JSX.Element => {
         )}
       </Stack>
 
-      <Flex mt={2} justifyContent="end">
-        <Button
-          leftIcon={<Icon as={TrashSimple} />}
-          size="xs"
-          borderRadius="md"
-          colorScheme="red"
-          variant="ghost"
-          onClick={() => onRemove(index)}
-        >
-          Remove
-        </Button>
-      </Flex>
+      {index > 0 && (
+        <Flex mt={2} justifyContent="end">
+          <Button
+            leftIcon={<Icon as={TrashSimple} />}
+            size="xs"
+            borderRadius="md"
+            colorScheme="red"
+            variant="ghost"
+            onClick={() => onRemove(index)}
+          >
+            Remove
+          </Button>
+        </Flex>
+      )}
     </Box>
   )
 }
