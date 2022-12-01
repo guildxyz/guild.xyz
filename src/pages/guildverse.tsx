@@ -13,7 +13,7 @@ type Props = {
   cards: PageDetailsCardData[]
 }
 
-const Ecosystem = ({ cards: cards }: Props): JSX.Element => {
+const Guildverse = ({ cards: cards }: Props): JSX.Element => {
   const [search, setSearch] = useState<string>("")
   const filterOptions: Array<FilterOption> = [
     { value: "requirement", label: "requirement" },
@@ -39,14 +39,14 @@ const Ecosystem = ({ cards: cards }: Props): JSX.Element => {
   return (
     <>
       <LinkPreviewHead path="" />
-      <Layout title="Ecosystem" showBackButton={false}>
+      <Layout title="Guildverse" showBackButton={false}>
         <SimpleGrid
           templateColumns={{ md: "2fr 0fr 3fr" }}
           gap={{ base: 2, md: "6" }}
           mb={8}
         >
           <GridItem colSpan={{ base: 1, md: 2 }}>
-            <SearchBar placeholder="Search pages" {...{ search, setSearch }} />
+            <SearchBar placeholder="Search" {...{ search, setSearch }} />
           </GridItem>
           <MultiSelect {...{ filterOptions, setFilterData }} />
         </SimpleGrid>
@@ -72,6 +72,12 @@ export const getStaticProps: GetStaticProps = async () => {
         equals: "ecosystem",
       },
     },
+    sorts: [
+      {
+        property: "defaultOrder(1-5)",
+        direction: "descending",
+      },
+    ],
   })
 
   const cards: Array<PageDetailsCardData> = response.results.map((page) => ({
@@ -88,4 +94,4 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 }
 
-export default Ecosystem
+export default Guildverse

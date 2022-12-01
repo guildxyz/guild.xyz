@@ -15,7 +15,7 @@ const MultiSelect = ({ filterOptions, setFilterData }: Props): JSX.Element => (
   <Select<FilterOption, true, GroupBase<FilterOption>>
     isMulti
     options={filterOptions}
-    placeholder="Filter pages"
+    placeholder="Filter"
     chakraStyles={{
       control: (provided) => ({
         ...provided,

@@ -14,6 +14,7 @@
 .notion-page {
   width: var(--chakra-sizes-full) !important;
   padding: 0 !important;
+  display: inline-block;
 }
 
 .notion-simple-table {
@@ -25,4 +26,8 @@
 .notion-simple-table tr td,
 .notion-simple-table tr:last-child td {
   border: 1px solid var(--chakra-colors-gray-600);
+}
+
+.chakra-link {
+  text-decoration: none !important;
 }
