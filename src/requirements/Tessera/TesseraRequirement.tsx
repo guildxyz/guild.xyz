@@ -53,7 +53,7 @@ const TesseraRequirement = ({
                 {`List at least ${pluralize(
                   requirement.data.minAmount,
                   "NFT"
-                )} on Tessara${
+                )} on Tessera${
                   !isNaN(requirement.data.minVaultShare)
                     ? `, at least ${requirement.data.minVaultShare * 100}% of each`
                     : ""
