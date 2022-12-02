@@ -35,7 +35,7 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
         ...receivedRequirement,
         data: {
           ...receivedRequirement.data,
-          traitTypes: [
+          attributes: [
             {
               trait_type: receivedRequirement.data?.attribute?.trait_type,
               interval: receivedRequirement.data.attribute.interval,
@@ -92,10 +92,10 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
         requirement.name
       )}
 
-      {requirement.data?.traitTypes?.length ? (
+      {requirement.data?.attributes?.length ? (
         <>
           {" with "}
-          {requirement.data.traitTypes.map((trait, index) => {
+          {requirement.data.attributes.map((trait, index) => {
             const attributeValue =
               requirement.type === "NOUNS"
                 ? getNounsRequirementType(trait)
@@ -108,7 +108,7 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
                         ? `${trait.interval.min}-${trait.interval.max}`
                         : attributeValue
                     } ${trait.trait_type}${
-                      index < requirement.data.traitTypes.length - 1 ? ", " : ""
+                      index < requirement.data.attributes.length - 1 ? ", " : ""
                     }`
                   : ""}
               </Fragment>

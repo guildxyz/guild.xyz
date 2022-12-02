@@ -60,7 +60,7 @@ const AttributePicker = ({
   const { nftType } = useNftType(address, chain)
 
   const traitType = useWatch({
-    name: `${baseFieldPath}.data.traitTypes.${index}.trait_type`,
+    name: `${baseFieldPath}.data.attributes.${index}.trait_type`,
   })
 
   const nftCustomAttributeValues = useMemo(() => {
@@ -96,18 +96,18 @@ const AttributePicker = ({
   useEffect(() => {
     if (
       nftCustomAttributeValues?.length === 2 &&
-      !getValues(`${baseFieldPath}.data.traitTypes.${index}.interval.min`) &&
-      !getValues(`${baseFieldPath}.data.traitTypes.${index}.interval.max`) &&
+      !getValues(`${baseFieldPath}.data.attributes.${index}.interval.min`) &&
+      !getValues(`${baseFieldPath}.data.attributes.${index}.interval.max`) &&
       nftCustomAttributeValues
         ?.map((attributeValue) => parseInt(attributeValue.value))
         .every(isNumber)
     ) {
       setValue(
-        `${baseFieldPath}.data.traitTypes.${index}.interval.min`,
+        `${baseFieldPath}.data.attributes.${index}.interval.min`,
         parseInt(nftCustomAttributeValues[0]?.value)
       )
       setValue(
-        `${baseFieldPath}.data.traitTypes.${index}.interval.max`,
+        `${baseFieldPath}.data.attributes.${index}.interval.max`,
         parseInt(nftCustomAttributeValues[1]?.value)
       )
     }
@@ -121,7 +121,7 @@ const AttributePicker = ({
             {/* <FormLabel>Custom attribute:</FormLabel> */}
 
             <Controller
-              name={`${baseFieldPath}.data.traitTypes.${index}.trait_type` as const}
+              name={`${baseFieldPath}.data.attributes.${index}.trait_type` as const}
               control={control}
               render={({
                 field: { onChange, onBlur, value: keySelectValue, ref },
@@ -144,14 +144,14 @@ const AttributePicker = ({
                   }
                   onChange={(newValue: SelectOption) => {
                     onChange(newValue?.value)
-                    setValue(`${baseFieldPath}.data.traitTypes.${index}.value`, null)
+                    setValue(`${baseFieldPath}.data.attributes.${index}.value`, null)
                     setValue(
-                      `${baseFieldPath}.data.traitTypes.${index}.interval`,
+                      `${baseFieldPath}.data.attributes.${index}.interval`,
                       null
                     )
                     clearErrors([
-                      `${baseFieldPath}.data.traitTypes.${index}.value`,
-                      `${baseFieldPath}.data.traitTypes.${index}.interval`,
+                      `${baseFieldPath}.data.attributes.${index}.value`,
+                      `${baseFieldPath}.data.attributes.${index}.interval`,
                     ])
                   }}
                   onBlur={onBlur}
@@ -170,14 +170,14 @@ const AttributePicker = ({
                   isDisabled={!traitType}
                   isInvalid={
                     traitType?.length &&
-                    !!parseFromObject(errors, baseFieldPath)?.data?.traitTypes?.[
+                    !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
                       index
                     ]?.interval?.min
                   }
                 >
                   <Controller
                     name={
-                      `${baseFieldPath}.data.traitTypes.${index}.interval.min` as const
+                      `${baseFieldPath}.data.attributes.${index}.interval.min` as const
                     }
                     control={control}
                     rules={{
@@ -188,10 +188,10 @@ const AttributePicker = ({
                       },
                       max: {
                         value: getValues(
-                          `${baseFieldPath}.data.traitTypes.${index}.interval.max`
+                          `${baseFieldPath}.data.attributes.${index}.interval.max`
                         ),
                         message: `Maximum: ${getValues(
-                          `${baseFieldPath}.data.traitTypes.${index}.interval.max`
+                          `${baseFieldPath}.data.attributes.${index}.interval.max`
                         )}`,
                       },
                     }}
@@ -210,7 +210,7 @@ const AttributePicker = ({
                         onBlur={onBlur}
                         min={+nftCustomAttributeValues[0]?.value}
                         max={getValues(
-                          `${baseFieldPath}.data.traitTypes.${index}.interval.max`
+                          `${baseFieldPath}.data.attributes.${index}.interval.max`
                         )}
                       >
                         <NumberInputField />
@@ -223,7 +223,7 @@ const AttributePicker = ({
                   />
                   <FormErrorMessage>
                     {
-                      parseFromObject(errors, baseFieldPath)?.data?.traitTypes?.[
+                      parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
                         index
                       ]?.interval?.min?.message
                     }
@@ -238,24 +238,24 @@ const AttributePicker = ({
                   isDisabled={!traitType}
                   isInvalid={
                     traitType?.length &&
-                    !!parseFromObject(errors, baseFieldPath)?.data?.traitTypes?.[
+                    !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
                       index
                     ]?.interval?.max
                   }
                 >
                   <Controller
                     name={
-                      `${baseFieldPath}.data.traitTypes.${index}.interval.max` as const
+                      `${baseFieldPath}.data.attributes.${index}.interval.max` as const
                     }
                     control={control}
                     rules={{
                       required: "This field is required.",
                       min: {
                         value: getValues(
-                          `${baseFieldPath}.data.traitTypes.${index}.interval.min`
+                          `${baseFieldPath}.data.attributes.${index}.interval.min`
                         ),
                         message: `Minimum: ${getValues(
-                          `${baseFieldPath}.data.traitTypes.${index}.interval.min`
+                          `${baseFieldPath}.data.attributes.${index}.interval.min`
                         )}`,
                       },
                       max: {
@@ -277,7 +277,7 @@ const AttributePicker = ({
                         onChange={onChange}
                         onBlur={onBlur}
                         min={getValues(
-                          `${baseFieldPath}.data.traitTypes.${index}.interval.min`
+                          `${baseFieldPath}.data.attributes.${index}.interval.min`
                         )}
                         max={+nftCustomAttributeValues[1]?.value}
                       >
@@ -292,7 +292,7 @@ const AttributePicker = ({
 
                   <FormErrorMessage>
                     {
-                      parseFromObject(errors, baseFieldPath)?.data?.traitTypes?.[
+                      parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
                         index
                       ]?.interval?.max?.message
                     }
@@ -303,22 +303,22 @@ const AttributePicker = ({
           ) : (
             <FormControl
               isRequired={
-                !!getValues(`${baseFieldPath}.data.traitTypes.${index}.trait_type`)
+                !!getValues(`${baseFieldPath}.data.attributes.${index}.trait_type`)
               }
               isInvalid={
-                !!parseFromObject(errors, baseFieldPath)?.data?.traitTypes?.[index]
+                !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
                   ?.value
               }
               isDisabled={!nftCustomAttributeNames?.length}
             >
               {/* <FormLabel>Custom attribute value:</FormLabel> */}
               <Controller
-                name={`${baseFieldPath}.data.traitTypes.${index}.value` as const}
+                name={`${baseFieldPath}.data.attributes.${index}.value` as const}
                 control={control}
                 rules={{
                   required:
                     getValues(
-                      `${baseFieldPath}.data.traitTypes.${index}.trait_type`
+                      `${baseFieldPath}.data.attributes.${index}.trait_type`
                     ) && "This field is required.",
                 }}
                 render={({
@@ -345,7 +345,7 @@ const AttributePicker = ({
 
               <FormErrorMessage>
                 {
-                  parseFromObject(errors, baseFieldPath)?.data?.traitTypes?.[index]
+                  parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
                     ?.value?.message
                 }
               </FormErrorMessage>
@@ -359,7 +359,7 @@ const AttributePicker = ({
           <HStack w="full" spacing={2} alignItems="start">
             <FormControl>
               <Input
-                {...register(`${baseFieldPath}.data.traitTypes.${index}.trait_type`)}
+                {...register(`${baseFieldPath}.data.attributes.${index}.trait_type`)}
                 // TODO: do we need this?
                 // defaultValue={field.data?.attribute?.trait_type}
                 placeholder="Key"
@@ -370,18 +370,18 @@ const AttributePicker = ({
             </Text>
             <FormControl
               isRequired={
-                !!getValues(`${baseFieldPath}.data.traitTypes.${index}.trait_type`)
+                !!getValues(`${baseFieldPath}.data.attributes.${index}.trait_type`)
               }
               isInvalid={
-                !!parseFromObject(errors, baseFieldPath)?.data?.traitTypes?.[index]
+                !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
                   ?.value
               }
             >
               <Input
-                {...register(`${baseFieldPath}.data.traitTypes.${index}.value`, {
+                {...register(`${baseFieldPath}.data.attributes.${index}.value`, {
                   required:
                     getValues(
-                      `${baseFieldPath}.data.traitTypes.${index}.trait_type`
+                      `${baseFieldPath}.data.attributes.${index}.trait_type`
                     ) && "This field is required.",
                 })}
                 // TODO: do we need this?
@@ -390,7 +390,7 @@ const AttributePicker = ({
               />
               <FormErrorMessage>
                 {
-                  parseFromObject(errors, baseFieldPath)?.data?.traitTypes?.[index]
+                  parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
                     ?.value?.message
                 }
               </FormErrorMessage>

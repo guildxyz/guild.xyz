@@ -81,7 +81,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
     append: appendTrait,
     remove: removeTrait,
   } = useFieldArray({
-    name: `${baseFieldPath}.data.traitTypes`,
+    name: `${baseFieldPath}.data.attributes`,
   })
 
   const { nftType, isLoading: isNftTypeLoading } = useNftType(address, chain)
@@ -145,14 +145,14 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
   const resetForm = () => {
     if (!parseFromObject(touchedFields, baseFieldPath)?.address) return
     setValue(`${baseFieldPath}.address`, null)
-    setValue(`${baseFieldPath}.data.traitTypes`, [])
+    setValue(`${baseFieldPath}.data.attributes`, [])
     setValue(`${baseFieldPath}.data.id`, null)
     setValue(`${baseFieldPath}.data.minAmount`, undefined)
     setValue(`${baseFieldPath}.data.maxAmount`, undefined)
     setValue(`${baseFieldPath}.nftRequirementType`, null)
     clearErrors([
       `${baseFieldPath}.address`,
-      `${baseFieldPath}.data.traitTypes`,
+      `${baseFieldPath}.data.attributes`,
       `${baseFieldPath}.data.id`,
       `${baseFieldPath}.data.minAmount`,
       `${baseFieldPath}.data.maxAmount`,
@@ -162,12 +162,12 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
 
   // Reset key, value, interval, amount fields on nftRequirementType change
   const resetDetails = () => {
-    setValue(`${baseFieldPath}.data.traitTypes`, [])
+    setValue(`${baseFieldPath}.data.attributes`, [])
     setValue(`${baseFieldPath}.data.id`, null)
     setValue(`${baseFieldPath}.data.minAmount`, undefined)
     setValue(`${baseFieldPath}.data.maxAmount`, undefined)
     clearErrors([
-      `${baseFieldPath}.data.traitTypes`,
+      `${baseFieldPath}.data.attributes`,
       `${baseFieldPath}.data.id`,
       `${baseFieldPath}.data.minAmount`,
       `${baseFieldPath}.data.maxAmount`,
@@ -247,7 +247,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
                   onChange(selectedOption?.value)
                   setPickedNftSlug(selectedOption?.slug)
                   setValue(`${baseFieldPath}.type`, "ERC721")
-                  setValue(`${baseFieldPath}.data.traitTypes`, [])
+                  setValue(`${baseFieldPath}.data.attributes`, [])
                   setValue(`${baseFieldPath}.data.minAmount`, undefined)
                   setValue(`${baseFieldPath}.data.maxAmount`, undefined)
                   setValue(`${baseFieldPath}.nftRequirementType`, null)

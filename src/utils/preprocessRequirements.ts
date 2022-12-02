@@ -26,8 +26,8 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         if (requirement.address === "0x0000000000000000000000000000000000000000")
           requirement.address = undefined
 
-        if (!requirement.data?.traitTypes?.length)
-          requirement.data.traitTypes = undefined
+        if (!requirement.data?.attributes?.length)
+          requirement.data.attributes = undefined
 
         if (
           requirement.type === "ALLOWLIST" &&

@@ -16,7 +16,7 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
       newRequirement.type === "NOUNS"
     )
       newRequirement.nftRequirementType =
-        newRequirement.data?.traitTypes?.length ||
+        newRequirement.data?.attributes?.length ||
         newRequirement.data?.attribute?.trait_type
           ? "ATTRIBUTE"
           : typeof newRequirement?.data?.id === "string"
@@ -30,7 +30,7 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
         value: newRequirement.data.attribute.value,
       }
 
-      newRequirement.data.traitTypes = [convertedTrait]
+      newRequirement.data.attributes = [convertedTrait]
       delete newRequirement.data.attribute
     }
 
