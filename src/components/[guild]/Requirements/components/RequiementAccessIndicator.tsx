@@ -59,31 +59,11 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
       </RequiementAccessIndicatorUI>
     )
 
-  if (reqAccessData?.access === null) {
-    const errorMsg = (
-      accessData?.errors?.find((err) => err.requirementId === requirement.id) ??
-      accessData?.warnings?.find((err) => err.requirementId === requirement.id)
-    ).msg
+  const error =
+    accessData?.errors?.find((err) => err.requirementId === requirement.id) ??
+    accessData?.warnings?.find((err) => err.requirementId === requirement.id)
 
-    return (
-      <RequiementAccessIndicatorUI
-        colorScheme={"orange"}
-        circleBgSwatch={{ light: 300, dark: 300 }}
-        icon={Warning}
-        isAlwaysOpen={accessData?.access === null}
-      >
-        <PopoverHeader {...POPOVER_HEADER_STYLES}>
-          {errorMsg ? `Error: ${errorMsg}` : `Couldn't check access`}
-        </PopoverHeader>
-      </RequiementAccessIndicatorUI>
-    )
-  }
-
-  if (
-    accessData?.warnings
-      ?.find((err) => err.requirementId === requirement.id)
-      ?.msg.includes("account isn't connected")
-  )
+  if (error?.msg?.includes("account isn't connected"))
     return (
       <RequiementAccessIndicatorUI
         colorScheme={"blue"}
@@ -105,12 +85,27 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
       </RequiementAccessIndicatorUI>
     )
 
+  if (reqAccessData?.access === null || error) {
+    return (
+      <RequiementAccessIndicatorUI
+        colorScheme={"orange"}
+        circleBgSwatch={{ light: 300, dark: 300 }}
+        icon={Warning}
+        isAlwaysOpen={!accessData?.access}
+      >
+        <PopoverHeader {...POPOVER_HEADER_STYLES}>
+          {error.msg ? `Error: ${error.msg}` : `Couldn't check access`}
+        </PopoverHeader>
+      </RequiementAccessIndicatorUI>
+    )
+  }
+
   return (
     <RequiementAccessIndicatorUI
       colorScheme={"gray"}
       circleBgSwatch={{ light: 300, dark: 500 }}
       icon={X}
-      isAlwaysOpen={accessData?.access === false}
+      isAlwaysOpen={!accessData?.access}
     >
       <PopoverHeader {...POPOVER_HEADER_STYLES}>
         {`Requirement not satisfied with your connected ${
