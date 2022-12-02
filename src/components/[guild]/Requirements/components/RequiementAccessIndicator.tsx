@@ -12,7 +12,7 @@ import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import { useContext } from "react"
 import REQUIREMENTS from "requirements"
 import ConnectRequirementPlatformButton from "requirements/common/ConnectRequirementPlatformButton"
-import { PlatformName, Requirement } from "types"
+import { Requirement } from "types"
 import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
 
 type Props = {
@@ -76,8 +76,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
         </PopoverHeader>
         <PopoverFooter {...POPOVER_FOOTER_STYLES}>
           <ConnectRequirementPlatformButton
-            platform={reqObj?.types?.[0] as PlatformName}
-            roleId={requirement?.roleId}
+            requirement={requirement}
             size="sm"
             iconSpacing={2}
           />
