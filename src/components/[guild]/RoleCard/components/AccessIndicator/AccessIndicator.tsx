@@ -21,10 +21,10 @@ const reconnectionErrorMessages = new Set<string>([
 ])
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
-  const { hasAccess, error, isLoading, data } = useAccess(roleId)
+  const { hasAccess, isLoading, data } = useAccess(roleId)
 
-  const discordRateLimitWarning = useDiscordRateLimitWarning(data ?? error, roleId)
-  const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
+  const discordRateLimitWarning = useDiscordRateLimitWarning(data, roleId)
+  const twitterRateLimitWarning = useTwitterRateLimitWarning(data, roleId)
 
   const { isActive } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
@@ -52,9 +52,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   if (isLoading)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
-  const roleError = (data ?? error)?.find?.((err) => err.roleId === roleId)
-
-  if (roleError?.errors?.some((err) => reconnectionErrorMessages.has(err.msg))) {
+  if (data?.errors?.some((err) => reconnectionErrorMessages.has(err.msg))) {
     return (
       <AccessIndicatorUI
         colorScheme="orange"
@@ -65,7 +63,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   }
 
   if (
-    roleError?.warnings?.some(
+    data?.warnings?.some(
       (err) =>
         typeof err.msg === "string" && err.msg.includes("account isn't connected")
     )
@@ -79,7 +77,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
     )
   }
 
-  if (Array.isArray(error) && roleError?.errors)
+  if (data?.errors)
     return (
       <>
         <AccessIndicatorUI

@@ -32,7 +32,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import React, { useMemo } from "react"
+import React, { useMemo, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -94,6 +94,7 @@ const GuildPage = (): JSX.Element => {
   )
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+  const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
   // not importing it dinamically because that way the whole page flashes once when it loads
   const DynamicOnboardingProvider =
@@ -125,16 +126,14 @@ const GuildPage = (): JSX.Element => {
           <DynamicOnboarding />
         ) : (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            {isMember ? (
-              <HStack>
-                {isAdmin && <DynamicAddRewardButton />}
-                <LeaveButton />
-              </HStack>
+            {!isMember ? (
+              <JoinButton />
+            ) : !isAdmin ? (
+              <LeaveButton />
+            ) : isAddRoleStuck ? (
+              <DynamicAddRoleButton />
             ) : (
-              <HStack>
-                {isAdmin && <DynamicAddRewardButton />}
-                <JoinButton />
-              </HStack>
+              <DynamicAddRewardButton />
             )}
           </Tabs>
         )}
@@ -149,7 +148,7 @@ const GuildPage = (): JSX.Element => {
             isAdmin &&
             (showAccessHub || showOnboarding) && (
               <Box my="-2 !important" ml="auto !important">
-                <DynamicAddRoleButton />
+                <DynamicAddRoleButton setIsStuck={setIsAddRoleStuck} />
               </Box>
             )
           }

@@ -29,7 +29,7 @@ const RoleRequirements = ({ requirements, logic }: Props) => {
       ) : (
         shownRequirements.map((requirement, i) => {
           const RequirementComponent =
-            REQUIREMENTS[requirement.type].displayComponent
+            REQUIREMENTS[requirement.type]?.displayComponent
 
           if (RequirementComponent)
             return (
@@ -48,7 +48,7 @@ const RoleRequirements = ({ requirements, logic }: Props) => {
       >
         {hiddenRequirements.map((requirement, i) => {
           const RequirementComponent =
-            REQUIREMENTS[requirement.type].displayComponent
+            REQUIREMENTS[requirement.type]?.displayComponent
 
           if (RequirementComponent)
             return (
