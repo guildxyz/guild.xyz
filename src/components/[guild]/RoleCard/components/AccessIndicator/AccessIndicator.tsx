@@ -3,7 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { ArrowCounterClockwise, Check, LockSimple, Warning, X } from "phosphor-react"
+import { Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
@@ -56,8 +56,8 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
     return (
       <AccessIndicatorUI
         colorScheme="orange"
-        label={"Reconnect below to check access"}
-        icon={ArrowCounterClockwise}
+        label={"Reconnect needed to check access"}
+        icon={Warning}
       />
     )
   }
