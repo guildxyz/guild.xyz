@@ -40,7 +40,7 @@ const TesseraRequirement = ({
               <>
                 {`Hold ${
                   requirement.data.minShare > 0
-                    ? `at least ${requirement.data.minShare}%`
+                    ? `at least ${requirement.data.minShare * 100}%`
                     : "any percentage"
                 } of the fractions of the `}
                 <DataBlock>{vault?.name ?? requirement.data.vault}</DataBlock>
@@ -50,11 +50,14 @@ const TesseraRequirement = ({
           case "TESSERA_LISTINGS":
             return (
               <>
-                {`List at least ${pluralize(requirement.data.minAmount, "NFT")}${
-                  requirement.data.minVaultShare
-                    ? ` with at least ${requirement.data.minVaultShare} share`
+                {`List at least ${pluralize(
+                  requirement.data.minAmount,
+                  "NFT"
+                )} on Tessara${
+                  !isNaN(requirement.data.minVaultShare)
+                    ? `, at least ${requirement.data.minVaultShare * 100}% of each`
                     : ""
-                } on Tessera`}
+                }`}
               </>
             )
           case "TESSERA_USER_SINCE":
