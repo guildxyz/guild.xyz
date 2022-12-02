@@ -3,7 +3,6 @@ import { TransactionResponse } from "@ethersproject/providers"
 import { formatUnits, parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
-import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useFeeCollectorContract, {
@@ -14,7 +13,9 @@ import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { useRouter } from "next/router"
+import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import ERC20_ABI from "static/abis/erc20Abi.json"
+import fetcher from "utils/fetcher"
 import processWalletError from "utils/processWalletError"
 import useUserPoapEligibility from "./useUserPoapEligibility"
 
@@ -39,6 +40,10 @@ const usePayFee = (vaultId: number, chainId: number) => {
   const erc20Contract = useContract(vaultData?.token, ERC20_ABI, true)
 
   const fetchPayFee = async () => {
+    await fetcher(`/api/poap/can-claim/${poap?.id}`).catch((e) => {
+      throw new Error(e?.error ?? "An unknown error occurred")
+    })
+
     // Convert fee to the correct unit
     const feeInNumber = +formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
     const fee = parseUnits(feeInNumber.toString(), decimals ?? 18)

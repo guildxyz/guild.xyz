@@ -1,5 +1,5 @@
 import { parseUnits } from "@ethersproject/units"
-import { Chains } from "connectors"
+import { Chain, Chains } from "connectors"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useWatch } from "react-hook-form"
@@ -23,13 +23,16 @@ type BalancyRequirement = {
 }
 
 /** These are objects, so we can just index them when filtering requirements */
-const BALANCY_SUPPORTED_TYPES = {
+const BALANCY_SUPPORTED_TYPES: Record<
+  "ERC20" | "ERC721" | "ERC1155" | "NOUNS",
+  boolean
+> = {
   ERC20: true,
   ERC721: true,
   ERC1155: true,
   NOUNS: true,
 }
-const BALANCY_SUPPORTED_CHAINS = {
+const BALANCY_SUPPORTED_CHAINS: Partial<Record<Chain, boolean>> = {
   ETHEREUM: true,
   POLYGON: true,
   GNOSIS: true,
@@ -247,4 +250,5 @@ const useBalancy = (
   }
 }
 
+export { BALANCY_SUPPORTED_CHAINS }
 export default useBalancy

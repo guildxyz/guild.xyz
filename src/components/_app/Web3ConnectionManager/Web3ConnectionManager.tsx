@@ -3,6 +3,7 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
+import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import { useRouter } from "next/router"
 import { createContext, PropsWithChildren, useEffect } from "react"
@@ -10,30 +11,25 @@ import useDatadog from "../Datadog/useDatadog"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 
-const Web3Connection = createContext<{
-  isWalletSelectorModalOpen: boolean
-  openWalletSelectorModal: () => void
-  closeWalletSelectorModal: () => void
-  triedEager: boolean
-  isNetworkModalOpen: boolean
-  openNetworkModal: () => void
-  closeNetworkModal: () => void
-}>({
+const Web3Connection = createContext({
+  triedEager: false,
   isWalletSelectorModalOpen: false,
   openWalletSelectorModal: () => {},
   closeWalletSelectorModal: () => {},
-  triedEager: false,
   isNetworkModalOpen: false,
   openNetworkModal: () => {},
   closeNetworkModal: () => {},
+  isAccountModalOpen: false,
+  openAccountModal: () => {},
+  closeAccountModal: () => {},
 })
 
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
   const { addDatadogAction } = useDatadog()
-
   const { connector, isActive, account } = useWeb3React()
+  const router = useRouter()
 
   const {
     isOpen: isWalletSelectorModalOpen,
@@ -45,7 +41,11 @@ const Web3ConnectionManager = ({
     onOpen: openNetworkModal,
     onClose: closeNetworkModal,
   } = useDisclosure()
-  const router = useRouter()
+  const {
+    isOpen: isAccountModalOpen,
+    onOpen: openAccountModal,
+    onClose: closeAccountModal,
+  } = useDisclosure()
 
   // try to eagerly connect to an injected provider, if it exists and has granted access already
   const triedEager = useEagerConnect()
@@ -84,22 +84,19 @@ const Web3ConnectionManager = ({
         isNetworkModalOpen,
         openNetworkModal,
         closeNetworkModal,
+        isAccountModalOpen,
+        openAccountModal,
+        closeAccountModal,
       }}
     >
       {children}
       <WalletSelectorModal
-        {...{
-          isModalOpen: isWalletSelectorModalOpen,
-          openModal: openWalletSelectorModal,
-          closeModal: closeWalletSelectorModal,
-        }}
+        isOpen={isWalletSelectorModalOpen}
+        onOpen={openWalletSelectorModal}
+        onClose={closeWalletSelectorModal}
       />
-      <NetworkModal
-        {...{
-          isOpen: isNetworkModalOpen,
-          onClose: closeNetworkModal,
-        }}
-      />
+      <NetworkModal isOpen={isNetworkModalOpen} onClose={closeNetworkModal} />
+      <AccountModal isOpen={isAccountModalOpen} onClose={closeAccountModal} />
     </Web3Connection.Provider>
   )
 }

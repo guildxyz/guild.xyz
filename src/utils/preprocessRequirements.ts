@@ -16,6 +16,10 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
       .map((requirement) => {
         const processedRequirement = {
           ...requirement,
+          data: {
+            ...requirement.data,
+            validAddresses: undefined,
+          },
           nftRequirementType: undefined,
         }
 
