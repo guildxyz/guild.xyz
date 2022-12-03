@@ -369,8 +369,6 @@ const AttributePicker = ({
                   `${baseFieldPath}.data.attributes.${index}.trait_type`,
                   { required: "Required" }
                 )}
-                // TODO: do we need this?
-                // defaultValue={field.data?.attribute?.trait_type}
                 placeholder="Key"
               />
               <FormErrorMessage>
@@ -394,8 +392,6 @@ const AttributePicker = ({
                 {...register(`${baseFieldPath}.data.attributes.${index}.value`, {
                   required: "Required",
                 })}
-                // TODO: do we need this?
-                // defaultValue={field.data?.attribute?.value}
                 placeholder="Value"
               />
               <FormErrorMessage>
