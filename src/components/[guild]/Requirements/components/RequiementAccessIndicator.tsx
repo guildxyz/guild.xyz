@@ -19,19 +19,6 @@ type Props = {
   requirement: Requirement
 }
 
-const POPOVER_HEADER_STYLES = {
-  fontWeight: "semibold",
-  border: "0",
-  px: "3",
-}
-
-const POPOVER_FOOTER_STYLES = {
-  display: "flex",
-  justifyContent: "flex-end",
-  border: "0",
-  pt: "2",
-}
-
 const RequiementAccessIndicator = ({ requirement }: Props) => {
   const { openAccountModal } = useContext(Web3Connection)
 
@@ -125,6 +112,19 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
       </PopoverFooter>
     </RequiementAccessIndicatorUI>
   )
+}
+
+const POPOVER_HEADER_STYLES = {
+  fontWeight: "semibold",
+  border: "0",
+  px: "3",
+}
+
+const POPOVER_FOOTER_STYLES = {
+  display: "flex",
+  justifyContent: "flex-end",
+  border: "0",
+  pt: "2",
 }
 
 export default RequiementAccessIndicator
