@@ -30,7 +30,8 @@ const getNounsRequirementType = (trait: Trait) =>
 
 const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) => {
   // Converting the requirement to the new format if needed
-  const requirement = receivedRequirement.data?.attribute
+  const requirement = Object.entries(receivedRequirement.data?.attribute ?? {})
+    .length
     ? {
         ...receivedRequirement,
         data: {
@@ -42,6 +43,7 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
               value: receivedRequirement.data.attribute.value,
             },
           ],
+          attribute: undefined,
         },
       }
     : receivedRequirement
