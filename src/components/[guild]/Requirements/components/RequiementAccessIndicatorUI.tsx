@@ -5,12 +5,13 @@ import {
   Popover,
   PopoverArrow,
   PopoverContent,
+  PopoverHeader,
   PopoverTrigger,
   Tag,
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { FC, PropsWithChildren } from "react"
+import { FC, PropsWithChildren, useState } from "react"
 
 type Props = {
   colorScheme: string
@@ -40,6 +41,7 @@ const RequiementAccessIndicatorUI = ({
   // blackAlpha.300 on top of gray.700 => #35353A
   const cardBg = useColorModeValue("var(--chakra-colors-gray-50)", "#35353A")
   const { colorMode } = useColorMode()
+  const [openCount, setOpenCount] = useState(0)
 
   return (
     <Flex
@@ -53,7 +55,13 @@ const RequiementAccessIndicatorUI = ({
         bg={`linear-gradient(to right, transparent 0px, ${cardBg} var(--chakra-space-4))`}
         height={"full"}
       >
-        <Popover placement="left" trigger="hover" closeDelay={100} strategy="fixed">
+        <Popover
+          placement="left"
+          trigger="hover"
+          closeDelay={100}
+          strategy="fixed"
+          onOpen={() => setOpenCount((count) => count + 1)}
+        >
           {({ isOpen, onClose }) => (
             <>
               <PopoverTrigger>
@@ -80,7 +88,13 @@ const RequiementAccessIndicatorUI = ({
                 </Center>
               </PopoverTrigger>
               <PopoverContent width="unset" maxW={{ base: "2xs", md: "xs" }}>
-                {children}
+                {!isAlwaysOpen && [5, 10].includes(openCount) ? (
+                  <PopoverHeader border="0">
+                    {openCount === 5 ? "👀" : "🙈 You like that anim don't ya?"}
+                  </PopoverHeader>
+                ) : (
+                  children
+                )}
                 <PopoverArrow />
               </PopoverContent>
             </>
