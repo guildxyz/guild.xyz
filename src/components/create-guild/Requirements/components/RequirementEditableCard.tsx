@@ -1,7 +1,6 @@
 import {
   Button,
   CloseButton,
-  HStack,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -64,17 +63,17 @@ const RequirementEditableCard = ({
 
   return (
     <>
-      <Card px="6" py="4" pos="relative">
-        <HStack pr="3">
-          <RequirementComponent
-            requirement={field}
-            footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
-            setValueForBalancy={setValueForBalancy}
-          />
-          <Button ref={ref} size="sm" onClick={onOpen}>
-            Edit
-          </Button>
-        </HStack>
+      <Card px="6" py="4" pr="8" pos="relative">
+        <RequirementComponent
+          requirement={field}
+          footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
+          setValueForBalancy={setValueForBalancy}
+          rightElement={
+            <Button ref={ref} size="sm" onClick={onOpen}>
+              Edit
+            </Button>
+          }
+        />
         <CloseButton
           position="absolute"
           top={2}
