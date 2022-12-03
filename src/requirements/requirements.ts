@@ -83,6 +83,7 @@ export const REQUIREMENTS_DATA = [
       "TWITTER_FOLLOW",
       "TWITTER_FOLLOWER_COUNT",
     ],
+    isPlatform: true,
   },
   {
     icon: "/platforms/github.png",
@@ -95,6 +96,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Github/GithubForm")
     ),
     types: ["GITHUB", "GITHUB_STARRING"],
+    isPlatform: true,
   },
   {
     icon: "/platforms/discord.png",
@@ -113,6 +115,7 @@ export const REQUIREMENTS_DATA = [
       "DISCORD_JOIN_FROM_NOW",
       "DISCORD_MEMBER_SINCE",
     ],
+    isPlatform: true,
   },
   {
     icon: "/requirementLogos/guild.png",
