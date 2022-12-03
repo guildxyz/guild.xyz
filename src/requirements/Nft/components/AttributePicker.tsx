@@ -357,21 +357,34 @@ const AttributePicker = ({
           {/* <FormLabel>Metadata:</FormLabel> */}
 
           <HStack w="full" spacing={2} alignItems="start">
-            <FormControl>
+            <FormControl
+              isRequired
+              isInvalid={
+                !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
+                  ?.trait_type
+              }
+            >
               <Input
-                {...register(`${baseFieldPath}.data.attributes.${index}.trait_type`)}
+                {...register(
+                  `${baseFieldPath}.data.attributes.${index}.trait_type`,
+                  { required: "Required" }
+                )}
                 // TODO: do we need this?
                 // defaultValue={field.data?.attribute?.trait_type}
                 placeholder="Key"
               />
+              <FormErrorMessage>
+                {
+                  parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
+                    ?.trait_type?.message
+                }
+              </FormErrorMessage>
             </FormControl>
             <Text as="span" h={10} lineHeight={10}>
               :
             </Text>
             <FormControl
-              isRequired={
-                !!getValues(`${baseFieldPath}.data.attributes.${index}.trait_type`)
-              }
+              isRequired
               isInvalid={
                 !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
                   ?.value
@@ -379,10 +392,7 @@ const AttributePicker = ({
             >
               <Input
                 {...register(`${baseFieldPath}.data.attributes.${index}.value`, {
-                  required:
-                    getValues(
-                      `${baseFieldPath}.data.attributes.${index}.trait_type`
-                    ) && "This field is required.",
+                  required: "Required",
                 })}
                 // TODO: do we need this?
                 // defaultValue={field.data?.attribute?.value}
