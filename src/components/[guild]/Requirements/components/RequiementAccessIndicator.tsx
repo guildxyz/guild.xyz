@@ -98,7 +98,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
           reqObj?.isPlatform ? "account" : "addresses"
         }`}
       </PopoverHeader>
-      {requirement.data?.minAmount && (
+      {reqAccessData?.amount !== undefined && requirement.data?.minAmount && (
         <PopoverBody pt="0">{`Expected amount is ${requirement.data.minAmount} but you only have ${reqAccessData?.amount}`}</PopoverBody>
       )}
       <PopoverFooter {...POPOVER_FOOTER_STYLES}>
