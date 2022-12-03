@@ -1,13 +1,17 @@
 import { Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import DataBlock from "components/common/DataBlock"
-import { RequirementComponentProps } from "requirements"
+import { Fragment } from "react"
 import useSWRImmutable from "swr/immutable"
-import { Requirement as RequirementType } from "types"
+import { Requirement as RequirementType, Trait } from "types"
 import shortenHex from "utils/shortenHex"
 import OpenseaUrl from "../common/OpenseaUrl"
 import Requirement from "../common/Requirement"
 import { NOUNS_BACKGROUNDS } from "./hooks/useNftMetadata"
+
+type Props = {
+  requirement: RequirementType
+}
 
 const imageDataTypeMap = {
   body: "bodies",
@@ -16,26 +20,40 @@ const imageDataTypeMap = {
   glasses: "glasses",
 }
 
-const getNounsRequirementType = (attribute: RequirementType["data"]["attribute"]) =>
-  !attribute
+const getNounsRequirementType = (trait: Trait) =>
+  !trait
     ? undefined
-    : attribute.trait_type === "background"
-    ? NOUNS_BACKGROUNDS?.[attribute.value]
-    : ImageData.images?.[imageDataTypeMap[attribute.trait_type]]?.[+attribute.value]
+    : trait.trait_type === "background"
+    ? NOUNS_BACKGROUNDS?.[trait.value]
+    : ImageData.images?.[imageDataTypeMap[trait.trait_type]]?.[+trait.value]
         ?.filename
 
-const NftRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
+const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) => {
+  // Converting the requirement to the new format if needed
+  const requirement = Object.entries(receivedRequirement.data?.attribute ?? {})
+    .length
+    ? {
+        ...receivedRequirement,
+        data: {
+          ...receivedRequirement.data,
+          attributes: [
+            {
+              trait_type: receivedRequirement.data?.attribute?.trait_type,
+              interval: receivedRequirement.data.attribute.interval,
+              value: receivedRequirement.data.attribute.value,
+            },
+          ],
+          attribute: undefined,
+        },
+      }
+    : receivedRequirement
+
   const { data, isValidating } = useSWRImmutable<{ image: string }>(
     requirement.address ? `/api/opensea-asset-data/${requirement.address}` : null
   )
 
   const shouldRenderImage =
     requirement.chain === "ETHEREUM" && requirement.name && requirement.name !== "-"
-
-  const attributeValue =
-    requirement.type === "NOUNS"
-      ? getNounsRequirementType(requirement.data?.attribute)
-      : requirement.data?.attribute?.value
 
   return (
     <Requirement
@@ -76,21 +94,36 @@ const NftRequirement = ({ requirement, ...rest }: RequirementComponentProps) => 
         requirement.name
       )}
 
-      {requirement.data?.attribute?.trait_type
-        ? ` ${
-            attributeValue || requirement.data?.attribute?.interval
-              ? ` with ${
-                  requirement.data?.attribute?.interval
-                    ? `${requirement.data?.attribute?.interval?.min}-${requirement.data?.attribute?.interval?.max}`
-                    : attributeValue
-                } ${requirement.data?.attribute?.trait_type}`
-              : ""
-          }`
-        : ` NFT${
-            requirement.data?.maxAmount > 0 || requirement.data?.minAmount > 1
-              ? "s"
-              : ""
-          }`}
+      {requirement.data?.attributes?.length ? (
+        <>
+          {" with "}
+          {requirement.data.attributes.map((trait, index) => {
+            const attributeValue =
+              requirement.type === "NOUNS"
+                ? getNounsRequirementType(trait)
+                : trait.value
+            return (
+              <Fragment key={`${trait.trait_type}-${trait.value}`}>
+                {attributeValue || trait.interval
+                  ? `${
+                      trait.interval
+                        ? `${trait.interval.min}-${trait.interval.max}`
+                        : attributeValue
+                    } ${trait.trait_type}${
+                      index < requirement.data.attributes.length - 1 ? ", " : ""
+                    }`
+                  : ""}
+              </Fragment>
+            )
+          })}
+        </>
+      ) : (
+        ` NFT${
+          requirement.data?.maxAmount > 0 || requirement.data?.minAmount > 1
+            ? "s"
+            : ""
+        }`
+      )}
     </Requirement>
   )
 }
