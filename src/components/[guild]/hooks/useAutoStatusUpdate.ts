@@ -12,7 +12,7 @@ const useAutoStatusUpdate = () => {
   const { account } = useWeb3React()
   const { id } = useGuild()
 
-  const { data: roleAccesses, error } = useAccess()
+  const { data: accesses } = useAccess()
   const memberships = useMemberships()
 
   const roleMemberships = memberships?.find(
@@ -21,8 +21,6 @@ const useAutoStatusUpdate = () => {
 
   useEffect(() => {
     try {
-      const accesses = roleAccesses ?? error
-
       if (
         !account ||
         !Array.isArray(accesses) ||
@@ -43,7 +41,7 @@ const useAutoStatusUpdate = () => {
       )
 
       const shouldSendStatusUpdate =
-        !error &&
+        !accesses.some((roleAccess) => roleAccess.errors) &&
         (accessedRoleIds.some(
           (accessedRoleId) => !roleMembershipsSet.has(accessedRoleId)
         ) ||
@@ -61,7 +59,7 @@ const useAutoStatusUpdate = () => {
     } catch (err) {
       addDatadogError("Automatic statusUpdate error", { error: err })
     }
-  }, [roleAccesses, roleMemberships, account, id, error])
+  }, [accesses, roleMemberships, account, id])
 }
 
 export default useAutoStatusUpdate

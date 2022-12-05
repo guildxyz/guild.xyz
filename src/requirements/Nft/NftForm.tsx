@@ -9,34 +9,30 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  HStack,
+  Icon,
   Input,
   InputGroup,
   InputLeftAddon,
   InputLeftElement,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Spinner,
   Stack,
   Text,
-  VStack,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"
+import { Plus } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
 import capitalize from "utils/capitalize"
-import isNumber from "utils/isNumber"
 import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../common/ChainPicker"
 import MinMaxAmount from "../common/MinMaxAmount"
+import AttributePicker from "./components/AttributePicker"
 import useNftMetadata from "./hooks/useNftMetadata"
 import useNfts from "./hooks/useNfts"
 import useNftType from "./hooks/useNftType"
@@ -76,11 +72,16 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
   const type = useWatch({ name: `${baseFieldPath}.type` })
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
   const address = useWatch({ name: `${baseFieldPath}.address` })
-  const traitType = useWatch({
-    name: `${baseFieldPath}.data.attribute.trait_type`,
-  })
   const nftRequirementType = useWatch({
     name: `${baseFieldPath}.nftRequirementType`,
+  })
+
+  const {
+    fields: traitFields,
+    append: appendTrait,
+    remove: removeTrait,
+  } = useFieldArray({
+    name: `${baseFieldPath}.data.attributes`,
   })
 
   const { nftType, isLoading: isNftTypeLoading } = useNftType(address, chain)
@@ -133,56 +134,6 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
     [metadata]
   )
 
-  const nftCustomAttributeValues = useMemo(() => {
-    const mappedAttributeValues =
-      metadata?.[traitType]?.map(
-        nftType === "NOUNS"
-          ? (attributeValue, i) => ({
-              label: capitalize(attributeValue.toString()),
-              value: i.toString(),
-            })
-          : (attributeValue) => ({
-              label: capitalize(attributeValue.toString()),
-              value: attributeValue,
-            })
-      ) || []
-
-    // For interval-like attribute values, only return the 2 numbers in an array (don't prepend the "Any attribute value" option)
-    if (
-      nftType !== "NOUNS" &&
-      mappedAttributeValues?.length === 2 &&
-      mappedAttributeValues
-        ?.map((attributeValue) => parseInt(attributeValue.value))
-        .every(isNumber)
-    )
-      return mappedAttributeValues
-
-    return [{ label: "Any attribute values", value: "" }].concat(
-      mappedAttributeValues
-    )
-  }, [metadata, traitType, nftType])
-
-  // Setting the "default values" this way, to avoid errors with the min-max inputs
-  useEffect(() => {
-    if (
-      nftCustomAttributeValues?.length === 2 &&
-      !getValues(`${baseFieldPath}.data.attribute.interval.min`) &&
-      !getValues(`${baseFieldPath}.data.attribute.interval.max`) &&
-      nftCustomAttributeValues
-        ?.map((attributeValue) => parseInt(attributeValue.value))
-        .every(isNumber)
-    ) {
-      setValue(
-        `${baseFieldPath}.data.attribute.interval.min`,
-        parseInt(nftCustomAttributeValues[0]?.value)
-      )
-      setValue(
-        `${baseFieldPath}.data.attribute.interval.max`,
-        parseInt(nftCustomAttributeValues[1]?.value)
-      )
-    }
-  }, [nftCustomAttributeValues])
-
   const mappedNftRequirementTypeOptions =
     Object.keys(metadata || {})?.length ||
     chain === "ETHEREUM" ||
@@ -194,18 +145,14 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
   const resetForm = () => {
     if (!parseFromObject(touchedFields, baseFieldPath)?.address) return
     setValue(`${baseFieldPath}.address`, null)
-    setValue(`${baseFieldPath}.data.attribute.trait_type`, null)
-    setValue(`${baseFieldPath}.data.attribute.value`, null)
-    setValue(`${baseFieldPath}.data.attribute.interval`, null)
+    setValue(`${baseFieldPath}.data.attributes`, [])
     setValue(`${baseFieldPath}.data.id`, null)
     setValue(`${baseFieldPath}.data.minAmount`, undefined)
     setValue(`${baseFieldPath}.data.maxAmount`, undefined)
     setValue(`${baseFieldPath}.nftRequirementType`, null)
     clearErrors([
       `${baseFieldPath}.address`,
-      `${baseFieldPath}.data.attribute.trait_type`,
-      `${baseFieldPath}.data.attribute.value`,
-      `${baseFieldPath}.data.attribute.interval`,
+      `${baseFieldPath}.data.attributes`,
       `${baseFieldPath}.data.id`,
       `${baseFieldPath}.data.minAmount`,
       `${baseFieldPath}.data.maxAmount`,
@@ -215,16 +162,12 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
 
   // Reset key, value, interval, amount fields on nftRequirementType change
   const resetDetails = () => {
-    setValue(`${baseFieldPath}.data.attribute.trait_type`, null)
-    setValue(`${baseFieldPath}.data.attribute.value`, null)
-    setValue(`${baseFieldPath}.data.attribute.interval`, null)
+    setValue(`${baseFieldPath}.data.attributes`, [])
     setValue(`${baseFieldPath}.data.id`, null)
     setValue(`${baseFieldPath}.data.minAmount`, undefined)
     setValue(`${baseFieldPath}.data.maxAmount`, undefined)
     clearErrors([
-      `${baseFieldPath}.data.attribute.trait_type`,
-      `${baseFieldPath}.data.attribute.value`,
-      `${baseFieldPath}.data.attribute.interval`,
+      `${baseFieldPath}.data.attributes`,
       `${baseFieldPath}.data.id`,
       `${baseFieldPath}.data.minAmount`,
       `${baseFieldPath}.data.maxAmount`,
@@ -304,9 +247,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
                   onChange(selectedOption?.value)
                   setPickedNftSlug(selectedOption?.slug)
                   setValue(`${baseFieldPath}.type`, "ERC721")
-                  setValue(`${baseFieldPath}.data.attribute.trait_type`, null)
-                  setValue(`${baseFieldPath}.data.attribute.value`, null)
-                  setValue(`${baseFieldPath}.data.attribute.interval`, null)
+                  setValue(`${baseFieldPath}.data.attributes`, [])
                   setValue(`${baseFieldPath}.data.minAmount`, undefined)
                   setValue(`${baseFieldPath}.data.maxAmount`, undefined)
                   setValue(`${baseFieldPath}.nftRequirementType`, null)
@@ -377,286 +318,41 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
       </FormControl>
 
       {nftRequirementType === "ATTRIBUTE" && (
-        <>
+        <Stack spacing={0} w="full">
+          <FormLabel>Metadata:</FormLabel>
+
           {isMetadataLoading ? (
             <Flex w="full" pt={4} justifyContent="center">
               <Spinner />
             </Flex>
-          ) : Object.keys(metadata ?? {}).length ? (
-            <>
-              <FormControl isDisabled={!metadata}>
-                <FormLabel>Custom attribute:</FormLabel>
-
-                <Controller
-                  name={`${baseFieldPath}.data.attribute.trait_type` as const}
-                  control={control}
-                  render={({
-                    field: { onChange, onBlur, value: keySelectValue, ref },
-                  }) => (
-                    <StyledSelect
-                      ref={ref}
-                      isLoading={isMetadataLoading}
-                      options={
-                        nftCustomAttributeNames?.length > 0
-                          ? nftCustomAttributeNames
-                          : []
-                      }
-                      placeholder="Attribute"
-                      value={
-                        keySelectValue
-                          ? nftCustomAttributeNames?.find(
-                              (attributeName) =>
-                                attributeName.value === keySelectValue
-                            )
-                          : null
-                      }
-                      onChange={(newValue: SelectOption) => {
-                        onChange(newValue?.value)
-                        setValue(`${baseFieldPath}.data.attribute.value`, null)
-                        setValue(`${baseFieldPath}.data.attribute.interval`, null)
-                        clearErrors([
-                          `${baseFieldPath}.data.attribute.value`,
-                          `${baseFieldPath}.data.attribute.interval`,
-                        ])
-                      }}
-                      onBlur={onBlur}
-                    />
-                  )}
-                />
-              </FormControl>
-
-              {nftCustomAttributeValues?.length === 2 &&
-              nftCustomAttributeValues
-                .map((attributeValue) => parseInt(attributeValue.value))
-                .every(isNumber) ? (
-                <VStack alignItems="start">
-                  <HStack spacing={2} alignItems="start">
-                    <FormControl
-                      isDisabled={!traitType}
-                      isInvalid={
-                        traitType?.length &&
-                        !!parseFromObject(errors, baseFieldPath)?.data?.attribute
-                          ?.interval?.min
-                      }
-                    >
-                      <Controller
-                        name={
-                          `${baseFieldPath}.data.attribute.interval.min` as const
-                        }
-                        control={control}
-                        rules={{
-                          required: "This field is required.",
-                          min: {
-                            value: nftCustomAttributeValues[0]?.value,
-                            message: `Minimum: ${nftCustomAttributeValues[0]?.value}`,
-                          },
-                          max: {
-                            value: getValues(
-                              `${baseFieldPath}.data.attribute.interval.max`
-                            ),
-                            message: `Maximum: ${getValues(
-                              `${baseFieldPath}.data.attribute.interval.max`
-                            )}`,
-                          },
-                        }}
-                        render={({
-                          field: {
-                            onChange,
-                            onBlur,
-                            value: value0NumberInputValue,
-                            ref,
-                          },
-                        }) => (
-                          <NumberInput
-                            ref={ref}
-                            value={value0NumberInputValue || undefined}
-                            onChange={onChange}
-                            onBlur={onBlur}
-                            min={+nftCustomAttributeValues[0]?.value}
-                            max={getValues(
-                              `${baseFieldPath}.data.attribute.interval.max`
-                            )}
-                          >
-                            <NumberInputField />
-                            <NumberInputStepper>
-                              <NumberIncrementStepper />
-                              <NumberDecrementStepper />
-                            </NumberInputStepper>
-                          </NumberInput>
-                        )}
-                      />
-                      <FormErrorMessage>
-                        {
-                          parseFromObject(errors, baseFieldPath)?.data?.attribute
-                            ?.interval?.min?.message
-                        }
-                      </FormErrorMessage>
-                    </FormControl>
-
-                    <Text as="span" h={1} pt={2}>
-                      -
-                    </Text>
-
-                    <FormControl
-                      isDisabled={!traitType}
-                      isInvalid={
-                        traitType?.length &&
-                        !!parseFromObject(errors, baseFieldPath)?.data?.attribute
-                          ?.interval?.max
-                      }
-                    >
-                      <Controller
-                        name={
-                          `${baseFieldPath}.data.attribute.interval.max` as const
-                        }
-                        control={control}
-                        rules={{
-                          required: "This field is required.",
-                          min: {
-                            value: getValues(
-                              `${baseFieldPath}.data.attribute.interval.min`
-                            ),
-                            message: `Minimum: ${getValues(
-                              `${baseFieldPath}.data.attribute.interval.min`
-                            )}`,
-                          },
-                          max: {
-                            value: nftCustomAttributeValues[1]?.value,
-                            message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
-                          },
-                        }}
-                        render={({
-                          field: {
-                            onChange,
-                            onBlur,
-                            value: value1NumberInputValue,
-                            ref,
-                          },
-                        }) => (
-                          <NumberInput
-                            ref={ref}
-                            value={value1NumberInputValue || undefined}
-                            onChange={onChange}
-                            onBlur={onBlur}
-                            min={getValues(
-                              `${baseFieldPath}.data.attribute.interval.min`
-                            )}
-                            max={+nftCustomAttributeValues[1]?.value}
-                          >
-                            <NumberInputField />
-                            <NumberInputStepper>
-                              <NumberIncrementStepper />
-                              <NumberDecrementStepper />
-                            </NumberInputStepper>
-                          </NumberInput>
-                        )}
-                      />
-
-                      <FormErrorMessage>
-                        {
-                          parseFromObject(errors, baseFieldPath)?.data?.attribute
-                            ?.interval?.max?.message
-                        }
-                      </FormErrorMessage>
-                    </FormControl>
-                  </HStack>
-                </VStack>
-              ) : (
-                <FormControl
-                  isRequired={
-                    !!getValues(`${baseFieldPath}.data.attribute.trait_type`)
-                  }
-                  isInvalid={
-                    !!parseFromObject(errors, baseFieldPath)?.data?.attribute?.value
-                  }
-                  isDisabled={!metadata}
-                >
-                  <FormLabel>Custom attribute value:</FormLabel>
-                  <Controller
-                    name={`${baseFieldPath}.data.attribute.value` as const}
-                    control={control}
-                    rules={{
-                      required:
-                        getValues(`${baseFieldPath}.data.attribute.trait_type`) &&
-                        "This field is required.",
-                    }}
-                    render={({
-                      field: { onChange, onBlur, value: valueSelectValue, ref },
-                    }) => (
-                      <StyledSelect
-                        ref={ref}
-                        options={
-                          nftCustomAttributeValues?.length > 0
-                            ? nftCustomAttributeValues
-                            : []
-                        }
-                        placeholder="Any attribute values"
-                        value={
-                          nftCustomAttributeValues?.find(
-                            (attributeValue) =>
-                              attributeValue.value === valueSelectValue
-                          ) || ""
-                        }
-                        onChange={(newValue: SelectOption) =>
-                          onChange(newValue.value)
-                        }
-                        onBlur={onBlur}
-                      />
-                    )}
-                  />
-
-                  <FormErrorMessage>
-                    {
-                      parseFromObject(errors, baseFieldPath)?.data?.attribute?.value
-                        ?.message
-                    }
-                  </FormErrorMessage>
-                </FormControl>
-              )}
-            </>
           ) : (
-            <FormControl>
-              <FormLabel>Metadata:</FormLabel>
+            <Stack spacing={2}>
+              {traitFields?.map((traitField, traitFieldIndex) => (
+                <AttributePicker
+                  key={traitField.id}
+                  baseFieldPath={baseFieldPath}
+                  index={traitFieldIndex}
+                  isMetadataLoading={isMetadataLoading}
+                  metadata={metadata}
+                  nftCustomAttributeNames={nftCustomAttributeNames}
+                  onRemove={removeTrait}
+                />
+              ))}
 
-              <HStack w="full" spacing={2} alignItems="start">
-                <FormControl>
-                  <Input
-                    {...register(`${baseFieldPath}.data.attribute.trait_type`)}
-                    defaultValue={field?.data?.attribute?.trait_type}
-                    placeholder="Key"
-                  />
-                </FormControl>
-                <Text as="span" h={10} lineHeight={10}>
-                  :
-                </Text>
-                <FormControl
-                  isRequired={
-                    !!getValues(`${baseFieldPath}.data.attribute.trait_type`)
-                  }
-                  isInvalid={
-                    !!parseFromObject(errors, baseFieldPath)?.data?.attribute?.value
-                  }
-                >
-                  <Input
-                    {...register(`${baseFieldPath}.data.attribute.value`, {
-                      required:
-                        getValues(`${baseFieldPath}.data.attribute.trait_type`) &&
-                        "This field is required.",
-                    })}
-                    defaultValue={field?.data?.attribute?.value}
-                    placeholder="Value"
-                  />
-                  <FormErrorMessage>
-                    {
-                      parseFromObject(errors, baseFieldPath)?.data?.attribute?.value
-                        ?.message
-                    }
-                  </FormErrorMessage>
-                </FormControl>
-              </HStack>
-            </FormControl>
+              <Button
+                leftIcon={<Icon as={Plus} />}
+                onClick={() =>
+                  appendTrait({
+                    trait_type: null,
+                    value: null,
+                  })
+                }
+              >
+                Define attribute
+              </Button>
+            </Stack>
           )}
-        </>
+        </Stack>
       )}
 
       {nftRequirementType === "AMOUNT" && (

@@ -15,7 +15,7 @@ import { SelectOption } from "types"
 import pluralize from "utils/pluralize"
 import useDiscordRoleMemberCounts from "../hooks/useDiscordRoleMemberCount"
 
-const ExistingRoleSettings = () => {
+const GuildifyExistingRole = () => {
   const { errors, dirtyFields } = useFormState()
   const { setValue } = useFormContext()
   const { roles: guildRoles } = useGuild()
@@ -86,4 +86,4 @@ const ExistingRoleSettings = () => {
   )
 }
 
-export default ExistingRoleSettings
+export default GuildifyExistingRole

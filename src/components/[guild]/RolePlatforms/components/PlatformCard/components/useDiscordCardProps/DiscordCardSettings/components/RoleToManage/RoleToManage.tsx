@@ -3,7 +3,7 @@ import RadioSelect from "components/common/RadioSelect"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import { useController, useFormContext, useFormState } from "react-hook-form"
 import ExistingRoleIcon from "./components/ExistingRoleIcon"
-import ExistingRoleSettings from "./components/ExistingRoleSettings"
+import GuildifyExistingRole from "./components/GuildifyExistingRole"
 import NewRoleIcon from "./components/NewRoleIcon"
 
 const roleOptions = [
@@ -16,7 +16,7 @@ const roleOptions = [
     value: "EXISTING",
     title: "Guildify an already existing role on my server",
     icon: ExistingRoleIcon,
-    children: <ExistingRoleSettings />,
+    children: <GuildifyExistingRole />,
   },
 ]
 
