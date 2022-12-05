@@ -2,6 +2,7 @@ import { FormControl, FormLabel, Icon, Input, Stack, Text } from "@chakra-ui/rea
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
+import { Chain, supportedChains } from "connectors"
 import { ArrowSquareOut, Plus } from "phosphor-react"
 import { useEffect } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
@@ -9,6 +10,8 @@ import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
 import Strategy from "./SnapshotForm/components/Strategy"
+
+const unsupportedChains: Chain[] = ["RINKEBY", "NOVA"]
 
 const SnapshotForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
@@ -27,8 +30,12 @@ const SnapshotForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
 
   return (
     <Stack spacing={4} alignItems="start" w="full">
-      {/* TODO: why don't we use the baseFieldPath.chain for this? */}
-      <ChainPicker controlName={`${baseFieldPath}.data.chainId`} />
+      <ChainPicker
+        controlName={`${baseFieldPath}.chain`}
+        supportedChains={supportedChains.filter(
+          (c) => !unsupportedChains.includes(c)
+        )}
+      />
 
       <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.space}>
         <FormLabel>Space</FormLabel>
