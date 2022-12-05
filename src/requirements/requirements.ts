@@ -350,7 +350,7 @@ export const REQUIREMENTS_DATA = [
     types: ["SISMO"],
   },
   {
-    icon: "/requirementLogos/rep3.jpeg",
+    icon: "/requirementLogos/rep3.png",
     name: "Rep3",
     dileNameBase: "Rep3",
     displayComponent: dynamic<RequirementComponentProps>(

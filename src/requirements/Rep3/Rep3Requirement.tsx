@@ -9,7 +9,7 @@ const Rep3Requirement = ({
   ...rest
 }: RequirementComponentProps): JSX.Element => (
   <Requirement
-    image={"/requirementLogos/rep3.jpeg"}
+    image={"/requirementLogos/rep3.png"}
     footer={<BlockExplorerUrl requirement={requirement} {...rest} />}
   >
     {`Have membership level of ${requirement.data.id} in `}
