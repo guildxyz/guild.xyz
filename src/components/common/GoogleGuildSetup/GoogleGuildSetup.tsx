@@ -185,7 +185,7 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
       <ModalContent minW={{ base: "auto", md: "2xl" }}>
         <ModalHeader>Add document</ModalHeader>
         {onClose && <ModalCloseButton />}
-        <ModalBody as={Stack} spacing="4">
+        <ModalBody as={Stack} spacing="4" pb="2">
           <Text>
             Invite the official Guild.xyz email address as an editor to the file you
             want to gate so it can manage accesses:
