@@ -1,7 +1,7 @@
 import { NextApiHandler } from "next"
 import fetcher from "utils/fetcher"
 
-const fetchArtists = (artistId: string) =>
+const fetchArtist = (artistId: string) =>
   fetcher("https://api.sound.xyz/graphql", {
     headers: {
       Accept: "application/json",
@@ -26,7 +26,7 @@ const fetchArtists = (artistId: string) =>
 const handler: NextApiHandler = async (req, res) => {
   const soundHandle = req.query.soundHandle.toString()
 
-  const soundArtists = await fetchArtists(soundHandle).then((artist) => ({
+  const soundArtists = await fetchArtist(soundHandle).then((artist) => ({
     name: artist?.name,
     image: artist?.user?.avatar?.url,
     id: artist?.id,

@@ -6,18 +6,19 @@ import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import ArtistSelect from "./SoundArtistSelect"
+import SoundArtistSelect from "./SoundArtistSelect"
 
 const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
   const {
     control,
     formState: { errors },
+    resetField,
   } = useFormContext()
 
   const handle = useWatch({ name: `${baseFieldPath}.data.id` })
 
   const { data: artist, isValidating: artistLoading } = useSWRImmutable(
-    handle ? `/api/sound/sound-artistbyhandle?soundHandle=${handle}` : null
+    handle ? `/api/sound/sound-artist-by-handle?soundHandle=${handle}` : null
   )
 
   const { data: songsData, isValidating: songsLoading } = useSWRImmutable(
@@ -32,7 +33,13 @@ const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
 
   return (
     <>
-      <ArtistSelect baseFieldPath={baseFieldPath} field={field} />
+      <SoundArtistSelect
+        baseFieldPath={baseFieldPath}
+        field={field}
+        onChange={() =>
+          resetField(`${baseFieldPath}.data.title`, { defaultValue: "" })
+        }
+      />
       <FormControl
         isRequired
         isInvalid={parseFromObject(errors, baseFieldPath)?.data?.title}
@@ -53,7 +60,7 @@ const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
               onChange={(newSelectedOption: SelectOption) => {
                 onChange(newSelectedOption?.value)
               }}
-              isLoading={songsLoading && artistLoading}
+              isLoading={songsLoading || artistLoading}
               onBlur={onBlur}
             />
           )}

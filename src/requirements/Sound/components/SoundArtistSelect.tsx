@@ -9,13 +9,17 @@ import parseFromObject from "utils/parseFromObject"
 type Props = {
   baseFieldPath: string
   field?: Requirement
+  onChange?: (selectedOption: string) => void
 }
 
-const ArtistSelect = ({ baseFieldPath, field }: PropsWithChildren<Props>) => {
+const SoundArtistSelect = ({
+  baseFieldPath,
+  field,
+  onChange: onChangeFn,
+}: PropsWithChildren<Props>) => {
   const {
     control,
     formState: { errors },
-    resetField,
   } = useFormContext()
 
   const [search, setSearch] = useState(field?.data?.id)
@@ -36,41 +40,39 @@ const ArtistSelect = ({ baseFieldPath, field }: PropsWithChildren<Props>) => {
   }
 
   return (
-    <>
-      <FormControl
-        isRequired
-        isInvalid={parseFromObject(errors, baseFieldPath)?.data?.id}
-      >
-        <FormLabel>Artist:</FormLabel>
-        <Controller
-          name={`${baseFieldPath}.data.id` as const}
-          control={control}
-          rules={{ required: "This field is required." }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              isClearable
-              options={artistOptions}
-              placeholder="Search for an artist"
-              value={artistOptions?.find((option) => option.value === value)}
-              onChange={(newSelectedOption: SelectOption) => {
-                onChange(newSelectedOption?.value)
-                resetField(`${baseFieldPath}.data.title`, { defaultValue: "" })
-              }}
-              onInputChange={(text, _) => {
-                setSearch(splitInput(text))
-              }}
-              isLoading={artistsLoading}
-              onBlur={onBlur}
-            />
-          )}
-        />
-        <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
-        </FormErrorMessage>
-      </FormControl>
-    </>
+    <FormControl
+      isRequired
+      isInvalid={parseFromObject(errors, baseFieldPath)?.data?.id}
+    >
+      <FormLabel>Artist:</FormLabel>
+      <Controller
+        name={`${baseFieldPath}.data.id` as const}
+        control={control}
+        rules={{ required: "This field is required." }}
+        render={({ field: { onChange, onBlur, value, ref } }) => (
+          <StyledSelect
+            ref={ref}
+            isClearable
+            options={artistOptions}
+            placeholder="Search for an artist"
+            value={artistOptions?.find((option) => option.value === value)}
+            onChange={(newSelectedOption: SelectOption) => {
+              onChange(newSelectedOption?.value)
+              onChangeFn?.(newSelectedOption?.value)
+            }}
+            onInputChange={(text, _) => {
+              if (text) setSearch(splitInput(text))
+            }}
+            isLoading={artistsLoading}
+            onBlur={onBlur}
+          />
+        )}
+      />
+      <FormErrorMessage>
+        {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+      </FormErrorMessage>
+    </FormControl>
   )
 }
 
-export default ArtistSelect
+export default SoundArtistSelect

@@ -9,9 +9,8 @@ import StyledSelect from "components/common/StyledSelect"
 import { useController, useFormContext, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
+import SoundArtistSelect from "./components/SoundArtistSelect"
 import SoundOwnASong from "./components/SoundOwnASong"
-import SoundSupportArtist from "./components/SoundSupportArtist"
-import SoundTop10Collector from "./components/SoundTop10Collector"
 
 const soundRequirementTypes = [
   {
@@ -21,7 +20,7 @@ const soundRequirementTypes = [
   {
     label: "Support an artist",
     value: "SOUND_ARTIST_BACKED",
-    SoundRequirement: SoundSupportArtist,
+    SoundRequirement: SoundArtistSelect,
   },
   {
     label: "Own a song",
@@ -31,7 +30,7 @@ const soundRequirementTypes = [
   {
     label: "Be a top 10 collector",
     value: "SOUND_TOP_COLLECTOR",
-    SoundRequirement: SoundTop10Collector,
+    SoundRequirement: SoundArtistSelect,
   },
 ]
 
