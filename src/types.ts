@@ -141,6 +141,15 @@ type PlatformRoleData = {
   }
 }
 
+type Trait = {
+  trait_type?: string
+  value?: string
+  interval?: {
+    min: number
+    max: number
+  }
+}
+
 type Requirement = {
   id: number
   type: RequirementType
@@ -416,6 +425,7 @@ export type {
   GuildPlatform,
   GuildBase,
   Guild,
+  Trait,
   Requirement,
   RequirementType,
   RolePlatform,
