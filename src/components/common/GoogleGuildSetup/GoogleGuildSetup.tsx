@@ -4,6 +4,7 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
@@ -15,10 +16,13 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
+import useUser from "components/[guild]/hooks/useUser"
+import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence } from "framer-motion"
-import { Check, CopySimple } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { Check, CopySimple, PencilSimple } from "phosphor-react"
+import { useContext, useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PlatformType } from "types"
 import AddCard from "../AddCard"
 import CardMotionWrapper from "../CardMotionWrapper"
 import { Modal } from "../Modal"
@@ -165,38 +169,64 @@ const GoogleGuildSetup = ({
   return <AddDocumentModal isOpen={true} />
 }
 
+const GUILD_EMAIL_ADDRESS = "guild-xyz@guildxyz.iam.gserviceaccount.com"
 const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
-  const guildGoogleEmailAddress = "guild-xyz@guildxyz.iam.gserviceaccount.com"
-  const { hasCopied, onCopy } = useClipboard(guildGoogleEmailAddress)
+  const { platformUsers } = useUser()
+  const googleAcc = platformUsers?.find(
+    (acc) => acc.platformId === PlatformType.GOOGLE
+  )
+
+  const { hasCopied, onCopy } = useClipboard(GUILD_EMAIL_ADDRESS)
+  const { openAccountModal } = useContext(Web3Connection)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalOverlay />
       <ModalContent minW={{ base: "auto", md: "2xl" }}>
-        <ModalHeader>Share your documents with Guild.xyz</ModalHeader>
+        <ModalHeader>Add document</ModalHeader>
         {onClose && <ModalCloseButton />}
         <ModalBody as={Stack} spacing="4">
-          <Text as="span" w="full">
-            Invite the official Guild.xyz email address,
-            <ButtonGroup isAttached display="flex" my="2">
-              <Button variant="outline" isDisabled opacity="1 !important">
-                {guildGoogleEmailAddress}
-              </Button>
-              <Button
-                flexShrink="0"
-                onClick={onCopy}
-                colorScheme="blue"
-                rightIcon={hasCopied ? <Check /> : <CopySimple />}
-              >
-                {hasCopied ? "Copied" : `Copy`}
-              </Button>
-            </ButtonGroup>
-            as an editor to the file you want to gate so it can manage accesses.
+          <Text>
+            Invite the official Guild.xyz email address as an editor to the file you
+            want to gate so it can manage accesses:
           </Text>
+          <ButtonGroup isAttached display="flex" my="2">
+            <Button
+              variant="outline"
+              isDisabled
+              opacity="1 !important"
+              fontWeight={"bold"}
+            >
+              {GUILD_EMAIL_ADDRESS}
+            </Button>
+            <Button
+              flexShrink="0"
+              onClick={onCopy}
+              colorScheme="blue"
+              rightIcon={hasCopied ? <Check /> : <CopySimple />}
+              fontWeight={"bold"}
+            >
+              {hasCopied ? "Copied" : `Copy`}
+            </Button>
+          </ButtonGroup>
+
           <video src="/videos/google-config-guide.webm" muted autoPlay loop>
             Your browser does not support the HTML5 video tag.
           </video>
         </ModalBody>
+        <ModalFooter pb="8" pt="5">
+          <Text colorScheme={"gray"}>
+            You have to be the owner of the file with your connected account:{" "}
+            <Button
+              variant="link"
+              color="inherit"
+              onClick={openAccountModal}
+              rightIcon={<PencilSimple />}
+            >
+              {googleAcc?.username}
+            </Button>
+          </Text>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   )
