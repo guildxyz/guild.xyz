@@ -349,6 +349,18 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["SISMO"],
   },
+  {
+    icon: "/requirementLogos/rep3.jpeg",
+    name: "Rep3",
+    dileNameBase: "Rep3",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Rep3/Rep3Requirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Rep3/Rep3Form")
+    ),
+    types: ["REP3"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
