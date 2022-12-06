@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
+  Text,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -82,6 +83,10 @@ const GuildifyExistingRole = () => {
           {errors.rolePlatforms?.[index]?.platformRoleId?.message}
         </FormErrorMessage>
       </FormControl>
+      <Text fontWeight={"normal"} colorScheme="gray" mt="6">
+        Existing members with the role but without Guild.xyz auth won't lose access.
+        You'll be able to purge them later (coming soon)
+      </Text>
     </Box>
   )
 }

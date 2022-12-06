@@ -9,7 +9,6 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
 
   if (freeRequirement) return [freeRequirement]
 
-  // see the comment in Requirements.tsx at line 42
   return (
     requirements
       // Setting unused props to undefined, so we don't send them to the API
@@ -26,7 +25,7 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         if (requirement.address === "0x0000000000000000000000000000000000000000")
           requirement.address = undefined
 
-        if (!requirement.data?.attributes?.length)
+        if (requirement.data?.attributes && !requirement.data.attributes.length)
           requirement.data.attributes = undefined
 
         if (

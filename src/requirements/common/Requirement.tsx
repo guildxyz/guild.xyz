@@ -12,7 +12,7 @@ import {
 import { PropsWithChildren } from "react"
 
 export type RequirementProps = PropsWithChildren<{
-  loading?: boolean
+  isImageLoading?: boolean
   image?: string | JSX.Element
   withImgBg?: boolean
   footer?: JSX.Element
@@ -20,7 +20,7 @@ export type RequirementProps = PropsWithChildren<{
 }>
 
 const Requirement = ({
-  loading,
+  isImageLoading,
   image,
   footer,
   withImgBg = true,
@@ -41,7 +41,7 @@ const Requirement = ({
         <SkeletonCircle
           minW={"var(--chakra-space-11)"}
           boxSize={"var(--chakra-space-11)"}
-          isLoaded={!loading}
+          isLoaded={!isImageLoading}
         >
           <Circle
             size={"var(--chakra-space-11)"}
@@ -75,7 +75,7 @@ const Requirement = ({
 }
 
 export const RequirementSkeleton = () => (
-  <Requirement loading={true}>
+  <Requirement isImageLoading={true}>
     <Skeleton>Loading requirement...</Skeleton>
   </Requirement>
 )
