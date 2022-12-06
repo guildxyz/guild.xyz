@@ -6,13 +6,13 @@ import useSWRImmutable from "swr/immutable"
 import slugify from "utils/slugify"
 
 const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
-  const { data: artistData } = useSWRImmutable(
+  const { data: artistData, isValidating: isArtistLoading } = useSWRImmutable(
     requirement.data?.id
       ? `/api/sound/sound-artist-by-handle?soundHandle=${requirement.data.id}`
       : null
   )
 
-  const { data: songsData, isValidating: songsLoading } = useSWRImmutable(
+  const { data: songsData, isValidating: isSongsLoading } = useSWRImmutable(
     artistData && requirement.data.title
       ? `/api/sound/sound-songs?id=${artistData?.id}`
       : null
@@ -20,7 +20,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
 
   return (
     <Requirement
-      loading={songsLoading}
+      isImageLoading={isArtistLoading || isSongsLoading}
       image={(() => {
         switch (requirement.type) {
           case "SOUND_ARTIST_BACKED":
