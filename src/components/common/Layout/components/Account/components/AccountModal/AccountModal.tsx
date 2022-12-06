@@ -89,11 +89,10 @@ const AccountModal = ({ isOpen, onClose }) => {
             </HStack>
           </Stack>
         </ModalBody>
-        {(isLoading || platformUsers || addresses) && (
-          <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
-            <AccountConnections />
-          </ModalFooter>
-        )}
+
+        <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
+          <AccountConnections />
+        </ModalFooter>
       </ModalContent>
     </Modal>
   )
