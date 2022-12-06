@@ -193,7 +193,17 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Snapshot/SnapshotForm")
     ),
-    types: ["SNAPSHOT"],
+    types: [
+      "SNAPSHOT",
+      "SNAPSHOT_STRATEGY",
+      "SNAPSHOT_SPACE_ADMIN",
+      "SNAPSHOT_SPACE_AUTHOR",
+      "SNAPSHOT_FOLLOW",
+      "SNAPSHOT_FOLLOW_SINCE",
+      "SNAPSHOT_VOTES",
+      "SNAPSHOT_PROPOSALS",
+      "SNAPSHOT_MAJORITY_VOTES",
+    ],
   },
   {
     icon: "/requirementLogos/juicebox.png",

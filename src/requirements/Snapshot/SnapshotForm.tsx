@@ -1,78 +1,117 @@
-import { FormControl, FormLabel, Icon, Input, Stack, Text } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import Link from "components/common/Link"
-import { Chain, supportedChains } from "connectors"
-import { ArrowSquareOut, Plus } from "phosphor-react"
-import { useEffect } from "react"
-import { useFieldArray, useFormContext } from "react-hook-form"
+import StyledSelect from "components/common/StyledSelect"
+import { useController, useFormContext, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
-import Strategy from "./SnapshotForm/components/Strategy"
+import FollowSince from "./components/FollowSince"
+import Proposals from "./components/Proposals"
+import SpaceInput from "./components/SpaceSelect"
+import Strategy from "./components/Strategy"
+import Votes from "./components/Votes"
+import MajorityVotes from "./MajorityVotes"
 
-const unsupportedChains: Chain[] = ["RINKEBY", "NOVA"]
+const snapshotRequirementTypes = [
+  {
+    label: "Satisfy a strategy",
+    value: "SNAPSHOT_STRATEGY",
+    SnapshotRequirement: Strategy,
+  },
+  {
+    label: "Be a space admin",
+    value: "SNAPSHOT_SPACE_ADMIN",
+    SnapshotRequirement: SpaceInput,
+  },
+  {
+    label: "Be a space author",
+    value: "SNAPSHOT_SPACE_AUTHOR",
+    SnapshotRequirement: SpaceInput,
+  },
+  {
+    label: "Follow a space",
+    value: "SNAPSHOT_FOLLOW",
+    SnapshotRequirement: SpaceInput,
+  },
+  {
+    label: "Follow a space since",
+    value: "SNAPSHOT_FOLLOW_SINCE",
+    SnapshotRequirement: FollowSince,
+  },
+  {
+    label: "Has voted [x] times",
+    value: "SNAPSHOT_VOTES",
+    SnapshotRequirement: Votes,
+  },
+  {
+    label: "Made at least [x] proposals",
+    value: "SNAPSHOT_PROPOSALS",
+    SnapshotRequirement: Proposals,
+  },
+  {
+    label: "Voted with majority in a defined rate",
+    value: "SNAPSHOT_MAJORITY_VOTES",
+    SnapshotRequirement: MajorityVotes,
+  },
+]
 
 const SnapshotForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext()
+  const { resetField } = useFormContext()
 
-  const { fields, append, remove } = useFieldArray({
-    name: `${baseFieldPath}.data.strategies`,
+  const {
+    field: { name, onBlur, onChange, ref, value },
+  } = useController({
+    name: `${baseFieldPath}.type`,
+    rules: { required: "It's required to select a type" },
   })
 
-  useEffect(() => {
-    if (fields?.length) return
-    setTimeout(() => append({}), 600)
-  }, [])
+  const { errors } = useFormState()
+
+  const selected = snapshotRequirementTypes.find(
+    (reqType) => reqType.value === value
+  )
+
+  const resetFields = () => {
+    resetField(`${baseFieldPath}.data.block`)
+    resetField(`${baseFieldPath}.data.strategies`)
+    resetField(`${baseFieldPath}.data.space`)
+    resetField(`${baseFieldPath}.data.since`)
+    resetField(`${baseFieldPath}.data.minTimes`)
+    resetField(`${baseFieldPath}.data.proposal`)
+    resetField(`${baseFieldPath}.data.minAmount`)
+    resetField(`${baseFieldPath}.data.state`)
+    resetField(`${baseFieldPath}.data.successfulOnly`)
+    resetField(`${baseFieldPath}.data.minRatio`)
+  }
 
   return (
     <Stack spacing={4} alignItems="start" w="full">
-      <ChainPicker
-        controlName={`${baseFieldPath}.chain`}
-        supportedChains={supportedChains.filter(
-          (c) => !unsupportedChains.includes(c)
-        )}
-      />
-
-      <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.space}>
-        <FormLabel>Space</FormLabel>
-
-        <Input {...register(`${baseFieldPath}.data.space`)} />
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
+      >
+        <FormLabel>Type</FormLabel>
+        <StyledSelect
+          options={snapshotRequirementTypes}
+          name={name}
+          onBlur={onBlur}
+          onChange={(newValue: { label: string; value: string }) => {
+            resetFields()
+            onChange(newValue?.value)
+          }}
+          ref={ref}
+          value={selected}
+        />
 
         <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.space?.message}
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
         </FormErrorMessage>
       </FormControl>
 
-      <Text as="span" fontWeight="medium">
-        Strategies
-      </Text>
-
-      <Stack spacing={2} w="full">
-        {fields?.map((field, fieldIndex) => (
-          <Strategy
-            key={field.id}
-            index={fieldIndex}
-            baseFieldPath={baseFieldPath}
-            onRemove={remove}
-          />
-        ))}
-
-        <Button leftIcon={<Icon as={Plus} />} onClick={() => append({})}>
-          Add strategy
-        </Button>
-      </Stack>
-
-      <Link
-        href="https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies"
-        isExternal
-      >
-        <Text fontSize="sm">Snapshot strategies</Text>
-        <Icon ml={1} as={ArrowSquareOut} />
-      </Link>
+      {selected?.SnapshotRequirement && (
+        <>
+          <Divider />
+          <selected.SnapshotRequirement baseFieldPath={baseFieldPath} />
+        </>
+      )}
     </Stack>
   )
 }

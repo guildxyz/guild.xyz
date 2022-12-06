@@ -29,7 +29,7 @@ type Props = {
   onRemove: (index: number) => void
 }
 
-const Strategy = ({ baseFieldPath, index, onRemove }: Props): JSX.Element => {
+const SingleStrategy = ({ baseFieldPath, index, onRemove }: Props): JSX.Element => {
   const bgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   const {
@@ -202,4 +202,4 @@ const Strategy = ({ baseFieldPath, index, onRemove }: Props): JSX.Element => {
   )
 }
 
-export default Strategy
+export default SingleStrategy
