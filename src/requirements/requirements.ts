@@ -349,6 +349,24 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["SISMO"],
   },
+  {
+    icon: "/requirementLogos/sound.png",
+    name: "Sound",
+    fileNameBase: "Sound",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Sound/SoundRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Sound/SoundForm")
+    ),
+    types: [
+      "SOUND",
+      "SOUND_ARTIST_BACKED",
+      "SOUND_COLLECTED",
+      "SOUND_ARTIST",
+      "SOUND_TOP_COLLECTOR",
+    ],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
