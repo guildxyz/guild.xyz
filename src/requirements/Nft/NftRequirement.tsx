@@ -70,7 +70,7 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
           </Text>
         )
       }
-      loading={isValidating}
+      isImageLoading={isValidating}
       footer={<OpenseaUrl requirement={requirement} />}
       {...rest}
     >
