@@ -24,18 +24,18 @@ const Votes = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     <>
       <FormControl
         isRequired
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minTimes}
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
       >
         <FormLabel>Number of votes</FormLabel>
 
         <Controller
-          name={`${baseFieldPath}.data.minTimes` as const}
+          name={`${baseFieldPath}.data.minAmount` as const}
           control={control}
           rules={{
             required: "This field is required.",
             min: {
-              value: 0,
-              message: "Amount must be positive",
+              value: 1,
+              message: "Amount must be greater than or equal to 1",
             },
           }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -47,7 +47,7 @@ const Votes = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
                 onChange(isNaN(parsedValue) ? "" : parsedValue)
               }}
               onBlur={onBlur}
-              min={0}
+              min={1}
             >
               <NumberInputField />
               <NumberInputStepper>
@@ -59,18 +59,17 @@ const Votes = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         />
 
         <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.minTimes?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.minAmount?.message}
         </FormErrorMessage>
       </FormControl>
 
-      <ProposalSelect baseFieldPath={baseFieldPath} />
-
       <SpaceSelect
         baseFieldPath={baseFieldPath}
-        helperText="Assigned automatically"
-        isDisabled
+        helperText="Assigned automatically if you select a proposal"
         optional
       />
+
+      <ProposalSelect baseFieldPath={baseFieldPath} />
     </>
   )
 }

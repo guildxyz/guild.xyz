@@ -2,7 +2,7 @@ import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useMemo } from "react"
-import { useController, useFormState } from "react-hook-form"
+import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -20,7 +20,10 @@ const SpaceSelect = ({
   isDisabled,
   helperText,
 }: Props): JSX.Element => {
-  const { errors } = useFormState()
+  const {
+    resetField,
+    formState: { errors },
+  } = useFormContext()
 
   const {
     field: { ref, name, value, onChange, onBlur },
@@ -57,7 +60,10 @@ const SpaceSelect = ({
         isLoading={isSpacesLoading}
         options={mappedSpaces}
         value={mappedSpaces?.find((s) => s.value === value) ?? ""}
-        onChange={(newValue: SelectOption) => onChange(newValue?.value)}
+        onChange={(newValue: SelectOption) => {
+          resetField(`${baseFieldPath}.data.proposal`)
+          onChange(newValue?.value)
+        }}
         onBlur={onBlur}
       />
 

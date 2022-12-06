@@ -3,6 +3,7 @@ import DataBlock from "components/common/DataBlock"
 import { CaretDown } from "phosphor-react"
 import { Fragment } from "react"
 import { RequirementComponentProps } from "requirements"
+import pluralize from "utils/pluralize"
 import Requirement from "../common/Requirement"
 import { RequirementButton } from "../common/RequirementButton"
 import StrategyParamsTable from "./components/StrategyParamsTable"
@@ -147,7 +148,7 @@ const SnapshotRequirement = ({
           case "SNAPSHOT_VOTES":
             return (
               <>
-                {`Vote ${requirement.data.minTimes} times`}
+                {`Vote ${pluralize(requirement.data.minTimes, "time")}`}
                 {requirement.data.space && (
                   <>
                     {` in the `}
@@ -177,7 +178,7 @@ const SnapshotRequirement = ({
               <>
                 {`Make at least ${requirement.data.minAmount}${
                   requirement.data.successfulOnly ? " successful" : ""
-                } proposals`}
+                } proposal${requirement.data.minAmount > 1 ? "s" : ""}`}
                 {requirement.data.space && (
                   <>
                     {` in the `}
@@ -194,15 +195,16 @@ const SnapshotRequirement = ({
                 )}
                 {requirement.data.state && (
                   <>
-                    {` which are in an `}
+                    {` that are `}
                     <DataBlock>{requirement.data.state}</DataBlock>
-                    {` state`}
                   </>
                 )}
               </>
             )
           case "SNAPSHOT_MAJORITY_VOTES":
-            return `Vote with majority in the rate of ${requirement.data.minRatio}`
+            return `Vote with majority in the rate of ${(
+              requirement.data.minRatio * 100
+            ).toFixed(0)}%`
         }
       })()}
     </Requirement>

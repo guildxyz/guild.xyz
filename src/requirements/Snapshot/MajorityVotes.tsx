@@ -29,8 +29,8 @@ const MajorityVotes = ({ baseFieldPath }: RequirementFormProps): JSX.Element => 
     rules: {
       required: "This field is required.",
       min: {
-        value: 0,
-        message: "Amount must be positive",
+        value: 0.01,
+        message: "Amount must be greater than 0",
       },
       max: {
         value: 1,

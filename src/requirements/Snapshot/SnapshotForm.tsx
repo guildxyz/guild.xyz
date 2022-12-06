@@ -19,12 +19,12 @@ const snapshotRequirementTypes = [
     SnapshotRequirement: Strategy,
   },
   {
-    label: "Be a space admin",
+    label: "Be an admin of a space",
     value: "SNAPSHOT_SPACE_ADMIN",
     SnapshotRequirement: SpaceInput,
   },
   {
-    label: "Be a space author",
+    label: "Be an author of a space",
     value: "SNAPSHOT_SPACE_AUTHOR",
     SnapshotRequirement: SpaceInput,
   },

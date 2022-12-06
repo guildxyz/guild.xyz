@@ -1,5 +1,6 @@
-import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/react"
+import { FormControl, FormLabel } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
+import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useMemo, useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
@@ -65,9 +66,21 @@ const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
         }}
         onInputChange={(text, _) => setSearch(text)}
         onBlur={onBlur}
+        components={{
+          MenuList: (props) => (
+            <CustomMenuList
+              {...props}
+              noResultText={
+                debouncedSearch?.length < 3
+                  ? "Start typing..."
+                  : isProposalsLoading
+                  ? "Loading"
+                  : "No results"
+              }
+            />
+          ),
+        }}
       />
-
-      <FormHelperText>Type at least 3 characters</FormHelperText>
     </FormControl>
   )
 }
