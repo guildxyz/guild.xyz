@@ -85,7 +85,7 @@ const GuildifyExistingRole = () => {
       </FormControl>
       <Text fontWeight={"normal"} colorScheme="gray" mt="6">
         Existing members with the role but without Guild.xyz auth won't lose access.
-        You'll be able to purge them later (coming soon)
+        You'll be able to remove them later (coming soon)
       </Text>
     </Box>
   )
