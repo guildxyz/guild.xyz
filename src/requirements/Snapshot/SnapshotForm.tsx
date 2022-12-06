@@ -8,6 +8,7 @@ import FollowSince from "./components/FollowSince"
 import Proposals from "./components/Proposals"
 import SpaceInput from "./components/SpaceSelect"
 import Strategy from "./components/Strategy"
+import UserSince from "./components/UserSince"
 import Votes from "./components/Votes"
 import MajorityVotes from "./MajorityVotes"
 
@@ -36,6 +37,11 @@ const snapshotRequirementTypes = [
     label: "Follow a space since",
     value: "SNAPSHOT_FOLLOW_SINCE",
     SnapshotRequirement: FollowSince,
+  },
+  {
+    label: "Be a user since",
+    value: "SNAPSHOT_USER_SINCE",
+    SnapshotRequirement: UserSince,
   },
   {
     label: "Has voted [x] times",
