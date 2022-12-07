@@ -367,6 +367,18 @@ export const REQUIREMENTS_DATA = [
       "SOUND_TOP_COLLECTOR",
     ],
   },
+  {
+    icon: "/requirementLogos/yup.svg",
+    name: "Yup",
+    fileNameBase: "Yup",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Yup/YupRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Yup/YupForm")
+    ),
+    types: ["YUP", "YUP_SCORE", "YUP_ADAPTER_SCORE"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
