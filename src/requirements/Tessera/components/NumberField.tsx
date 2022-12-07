@@ -46,10 +46,7 @@ const NumberField = ({
 
   const handleChange = (newValue, onChange) => {
     if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
-    let parsedValue =
-      format === "INT" || format === "PERCENTAGE"
-        ? parseInt(newValue)
-        : parseFloat(newValue)
+    let parsedValue = format === "INT" ? parseInt(newValue) : parseFloat(newValue)
 
     if (!isNaN(parsedValue) && format === "PERCENTAGE") parsedValue /= 100
 
@@ -91,8 +88,8 @@ const NumberField = ({
               w="full"
               ref={ref}
               value={
-                !isNaN(value) && format === "PERCENTAGE"
-                  ? (value * 100).toFixed(0)
+                typeof value === "number" && format === "PERCENTAGE"
+                  ? value * 100
                   : value ?? ""
               }
               onChange={(newValue) => handleChange(newValue, onChange)}
