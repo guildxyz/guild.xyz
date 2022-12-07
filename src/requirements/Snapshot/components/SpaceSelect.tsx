@@ -14,6 +14,9 @@ type Props = RequirementFormProps & {
   helperText?: string
 }
 
+const customFilterOption = (candidate, input) =>
+  candidate.label.toLowerCase().includes(input?.toLowerCase())
+
 const SpaceSelect = ({
   baseFieldPath,
   optional,
@@ -66,6 +69,7 @@ const SpaceSelect = ({
           onChange(newValue?.value)
         }}
         onBlur={onBlur}
+        filterOption={customFilterOption}
       />
 
       <FormErrorMessage>
