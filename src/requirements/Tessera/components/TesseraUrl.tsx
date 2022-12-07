@@ -10,7 +10,7 @@ const TesseraUrl = ({ collectionSlug }: Props): JSX.Element => {
   return (
     <RequirementLinkButton
       href={`https://tessera.co/collections/${collectionSlug}`}
-      imageUrl="/requirementLogos/tessera.svg"
+      imageUrl="/explorerLogos/tessera.svg"
     >
       View on Tessera
     </RequirementLinkButton>
