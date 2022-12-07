@@ -16,6 +16,7 @@ import { Controller, useFormContext } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 
 type Props = {
+  // Important note: we save percentage values as a number between 0 and 1, but display them on the UI as a number between 0 and 100!
   format?: "INT" | "FLOAT" | "PERCENTAGE"
   baseFieldPath: string
   label: string
