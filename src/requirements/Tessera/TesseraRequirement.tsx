@@ -40,7 +40,7 @@ const TesseraRequirement = ({
               <>
                 {`Hold ${
                   requirement.data.minShare > 0
-                    ? `at least ${(requirement.data.minShare * 100).toFixed(0)}%`
+                    ? `at least ${(requirement.data.minShare * 100).toFixed(2)}%`
                     : "any percentage"
                 } of the fractions of the `}
                 <DataBlock>{vault?.name ?? requirement.data.vault}</DataBlock>
@@ -56,7 +56,7 @@ const TesseraRequirement = ({
                 )} on Tessera${
                   !isNaN(requirement.data.minVaultShare)
                     ? `, at least ${(requirement.data.minVaultShare * 100).toFixed(
-                        0
+                        2
                       )}% of each`
                     : ""
                 }`}
