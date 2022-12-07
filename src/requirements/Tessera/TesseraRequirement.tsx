@@ -1,3 +1,4 @@
+import { Circle, Img } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import { RequirementComponentProps } from "requirements"
 import Requirement from "requirements/common/Requirement"
@@ -16,7 +17,11 @@ const TesseraRequirement = ({
       image={
         requirement.data.vault && isLoading
           ? ""
-          : vault?.imageUrl ?? "/requirementLogos/tessera.svg"
+          : vault?.imageUrl ?? (
+              <Circle bgColor="#0F031C" size="var(--chakra-space-11)">
+                <Img boxSize={5} src="/requirementLogos/tessera.svg" alt="Tessera" />
+              </Circle>
+            )
       }
       footer={<TesseraUrl collectionSlug={requirement.data.vault} />}
       {...rest}
