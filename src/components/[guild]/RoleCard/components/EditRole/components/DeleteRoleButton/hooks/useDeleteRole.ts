@@ -9,7 +9,7 @@ type Data = {
   removePlatformAccess?: number
 }
 
-const useDeleteRole = (roleId: number) => {
+const useDeleteRole = (roleId: number, onSuccess?: () => void) => {
   const { mutateGuild } = useGuild()
   const matchMutate = useMatchMutate()
   const toast = useToast()
@@ -28,6 +28,7 @@ const useDeleteRole = (roleId: number) => {
         title: `Role deleted!`,
         status: "success",
       })
+      onSuccess?.()
 
       mutateGuild()
       matchMutate(/^\/guild\?order/)

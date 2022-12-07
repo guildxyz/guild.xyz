@@ -16,13 +16,20 @@ import useDeleteRole from "./hooks/useDeleteRole"
 
 type Props = {
   roleId: number
+  onDrawerClose: () => void
 }
 
-const DeleteRoleButton = ({ roleId }: Props): JSX.Element => {
+const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
   const [removeAccess, setRemoveAccess] = useState(0)
-  const { onSubmit, isLoading, signLoadingText } = useDeleteRole(roleId)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
+
+  const onSuccess = () => {
+    onClose()
+    onDrawerClose()
+  }
+
+  const { onSubmit, isLoading, signLoadingText } = useDeleteRole(roleId, onSuccess)
 
   return (
     <>
