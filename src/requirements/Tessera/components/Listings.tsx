@@ -8,6 +8,7 @@ const Listings = ({ baseFieldPath }: RequirementFormProps): JSX.Element => (
       baseFieldPath={baseFieldPath}
       label="Minimum amount"
       fieldName="minAmount"
+      min={1}
     />
 
     <NumberField
