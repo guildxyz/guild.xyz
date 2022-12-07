@@ -9,6 +9,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext } from "react-hook-form"
@@ -34,6 +35,9 @@ const NumberField = ({
   step,
   ...rest
 }: Props) => {
+  const addonBg = useColorModeValue("gray.100", "gray.700")
+  const addonBorder = useColorModeValue("gray.200", "gray.600")
+
   const {
     control,
     formState: { errors },
@@ -118,7 +122,11 @@ const NumberField = ({
           )}
         />
 
-        {format === "PERCENTAGE" && <InputRightAddon>%</InputRightAddon>}
+        {format === "PERCENTAGE" && (
+          <InputRightAddon bgColor={addonBg} borderColor={addonBorder}>
+            %
+          </InputRightAddon>
+        )}
       </InputGroup>
 
       <FormErrorMessage>
