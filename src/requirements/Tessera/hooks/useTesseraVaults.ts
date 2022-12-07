@@ -10,7 +10,7 @@ type PartialTessaraVault = {
 const useTesseraVaults = (): { vaults: SelectOption[]; isLoading: boolean } => {
   const { data: response, isValidating: isLoading } = useSWRImmutable<{
     data: PartialTessaraVault[]
-  }>("https://api-develop.fractional.xyz/vaults")
+  }>("https://api.tessera.co/vaults")
 
   return {
     vaults:
