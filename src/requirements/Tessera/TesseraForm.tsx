@@ -17,7 +17,7 @@ const tesseraRequirementTypes = [
     TesseraRequirement: Hold,
   },
   {
-    label: "Hold a percentage of fractions",
+    label: "Hold percentage of an NFT",
     value: "TESSERA_VAULTSHARE",
     TesseraRequirement: Vaultshare,
   },
