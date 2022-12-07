@@ -1,8 +1,8 @@
-import { Checkbox, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
+import { Checkbox, Stack, Text, Wrap } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import Section from "components/common/Section"
+import { SectionTitle } from "components/common/Section"
 import { useEffect, useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { RequirementType } from "requirements"
@@ -62,35 +62,34 @@ const SetRequirements = (): JSX.Element => {
       ? replace([{ type: "FREE", data: {}, chain: null, address: null }])
       : replace([])
 
-  const isMobile = useBreakpointValue({ base: true, sm: false })
-
   return (
-    <Section
-      title="Requirements"
-      titleRightElement={
-        <>
-          <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
-            {`- or `}
-          </Text>
-          <Checkbox
-            id="free-entry-checkbox"
-            flexGrow={0}
-            fontWeight="normal"
-            size="sm"
-            spacing={1}
-            defaultChecked={freeEntry}
-            onChange={onFreeEntryChange}
-            isInvalid={false}
-          >
-            Free entry
-          </Checkbox>
-          {!freeEntry && !isMobile && (
-            <BalancyCounterWithPopover ml="auto !important" />
-          )}
-        </>
-      }
-    >
-      {!freeEntry && isMobile && <BalancyCounterWithPopover mb="6" />}
+    <Stack spacing="5" w="full">
+      <Wrap spacing="3">
+        <SectionTitle
+          title="Requirements"
+          titleRightElement={
+            <>
+              <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+                {`- or `}
+              </Text>
+              <Checkbox
+                id="free-entry-checkbox"
+                flexGrow={0}
+                fontWeight="normal"
+                size="sm"
+                spacing={1}
+                defaultChecked={freeEntry}
+                onChange={onFreeEntryChange}
+                isInvalid={false}
+              >
+                Free entry
+              </Checkbox>
+            </>
+          }
+        />
+        {!freeEntry && <BalancyCounterWithPopover ml="auto !important" pl="5" />}
+      </Wrap>
+
       <Stack spacing={0}>
         {controlledFields.map((field: Requirement, i) => {
           const type: RequirementType = getValues(`requirements.${i}.type`)
@@ -121,7 +120,7 @@ const SetRequirements = (): JSX.Element => {
       {/* <FormErrorMessage id="requirements-error-message">
         {errors.requirements?.message as string}
       </FormErrorMessage> */}
-    </Section>
+    </Stack>
   )
 }
 
