@@ -1,8 +1,9 @@
 import {
   FormControl,
   FormControlProps,
-  FormHelperText,
   FormLabel,
+  InputGroup,
+  InputRightAddon,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -14,14 +15,13 @@ import { Controller, useFormContext } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 
 type Props = {
-  format?: "INT" | "FLOAT"
+  format?: "INT" | "FLOAT" | "PERCENTAGE"
   baseFieldPath: string
   label: string
   fieldName: string
   min?: number
   max?: number
   step?: number
-  helperText?: string
 } & FormControlProps
 
 const NumberField = ({
@@ -32,7 +32,6 @@ const NumberField = ({
   min,
   max,
   step,
-  helperText,
   ...rest
 }: Props) => {
   const {
@@ -42,7 +41,13 @@ const NumberField = ({
 
   const handleChange = (newValue, onChange) => {
     if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
-    const parsedValue = format === "INT" ? parseInt(newValue) : parseFloat(newValue)
+    let parsedValue =
+      format === "INT" || format === "PERCENTAGE"
+        ? parseInt(newValue)
+        : parseFloat(newValue)
+
+    if (!isNaN(parsedValue) && format === "PERCENTAGE") parsedValue /= 100
+
     return onChange(isNaN(parsedValue) ? "" : parsedValue)
   }
 
@@ -53,44 +58,68 @@ const NumberField = ({
     >
       <FormLabel>{label}</FormLabel>
 
-      <Controller
-        name={`${baseFieldPath}.data.${fieldName}` as const}
-        control={control}
-        rules={{
-          required: rest.isRequired ? "This field is required." : undefined,
-          min: min
-            ? {
-                value: min,
-                message: `Must be greater than or equal to ${min}`,
+      <InputGroup w="full">
+        <Controller
+          name={`${baseFieldPath}.data.${fieldName}` as const}
+          control={control}
+          rules={{
+            required: rest.isRequired ? "This field is required." : undefined,
+            min: min
+              ? {
+                  value: min,
+                  message: `Must be greater than or equal to ${
+                    format === "PERCENTAGE" ? min * 100 : min
+                  }`,
+                }
+              : undefined,
+            max: max
+              ? {
+                  value: max,
+                  message: `Must be less than or equal to ${
+                    format === "PERCENTAGE" ? max * 100 : max
+                  }`,
+                }
+              : undefined,
+          }}
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <NumberInput
+              w="full"
+              ref={ref}
+              value={
+                !isNaN(value) && format === "PERCENTAGE"
+                  ? (value * 100).toFixed(0)
+                  : value ?? ""
               }
-            : undefined,
-          max: max
-            ? {
-                value: max,
-                message: `Must be less than or equal to ${max}`,
+              onChange={(newValue) => handleChange(newValue, onChange)}
+              onBlur={onBlur}
+              min={format === "PERCENTAGE" && min ? min * 100 : undefined}
+              max={format === "PERCENTAGE" && max ? max * 100 : undefined}
+              step={step}
+              sx={
+                format === "PERCENTAGE" && {
+                  "> input": {
+                    borderRightRadius: 0,
+                  },
+                  "div div:first-of-type": {
+                    borderTopRightRadius: 0,
+                  },
+                  "div div:last-of-type": {
+                    borderBottomRightRadius: 0,
+                  },
+                }
               }
-            : undefined,
-        }}
-        render={({ field: { onChange, onBlur, value, ref } }) => (
-          <NumberInput
-            ref={ref}
-            value={value ?? ""}
-            onChange={(newValue) => handleChange(newValue, onChange)}
-            onBlur={onBlur}
-            min={0}
-            max={max}
-            step={step}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-        )}
-      />
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          )}
+        />
 
-      {helperText && <FormHelperText>{helperText}</FormHelperText>}
+        {format === "PERCENTAGE" && <InputRightAddon>%</InputRightAddon>}
+      </InputGroup>
 
       <FormErrorMessage>
         {parseFromObject(errors, baseFieldPath)?.data?.[fieldName]?.message}

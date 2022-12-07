@@ -11,11 +11,9 @@ const Vaultshare = ({ baseFieldPath }: RequirementFormProps): JSX.Element => (
       baseFieldPath={baseFieldPath}
       label="Minimum share percentage"
       fieldName="minShare"
-      min={0.001}
+      min={0.01}
       max={1}
-      step={0.01}
-      format="FLOAT"
-      helperText="A number between 0 and 1"
+      format="PERCENTAGE"
     />
   </>
 )

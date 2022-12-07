@@ -42,6 +42,7 @@ const VaultField = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
           ref={ref}
           name={name}
           options={vaults}
+          isLoading={isLoading}
           onChange={(newValue: { label: string; value: string }) => {
             onChange(newValue?.value)
           }}
