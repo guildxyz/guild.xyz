@@ -148,7 +148,7 @@ const SnapshotRequirement = ({
           case "SNAPSHOT_VOTES":
             return (
               <>
-                {`Vote ${pluralize(requirement.data.minTimes, "time")}`}
+                {`Vote ${pluralize(requirement.data.minAmount, "time")}`}
                 {requirement.data.space && (
                   <>
                     {` in the `}
