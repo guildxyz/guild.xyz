@@ -109,7 +109,7 @@ const RoleCard = memo(({ role }: Props) => {
             <Spacer />
             <AccessIndicator roleId={role.id} />
           </HStack>
-          <RoleRequirements requirements={role.requirements} logic={role.logic} />
+          <RoleRequirements role={role} />
         </Flex>
       </SimpleGrid>
     </Card>
