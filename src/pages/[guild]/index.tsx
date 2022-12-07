@@ -5,6 +5,7 @@ import {
   Heading,
   HStack,
   Spinner,
+  Stack,
   Tag,
   Text,
 } from "@chakra-ui/react"
@@ -152,11 +153,14 @@ const GuildPage = (): JSX.Element => {
               </Box>
             )
           }
-          spacing={4}
           mb="12"
         >
           {sortedRoles?.length ? (
-            sortedRoles.map((role) => <RoleCard key={role.id} role={role} />)
+            <Stack spacing={4}>
+              {sortedRoles.map((role) => (
+                <RoleCard key={role.id} role={role} />
+              ))}
+            </Stack>
           ) : (
             <DynamicNoRolesAlert />
           )}

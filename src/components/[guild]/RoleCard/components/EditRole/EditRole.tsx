@@ -172,7 +172,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <RolePlatforms roleId={roleId} />
-                <Section title="General" spacing="6">
+                <Section title="General">
                   <Box>
                     <FormLabel>Logo and name</FormLabel>
                     <HStack spacing={2} alignItems="start">

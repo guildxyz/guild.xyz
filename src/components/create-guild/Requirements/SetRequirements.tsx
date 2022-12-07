@@ -1,4 +1,4 @@
-import { Checkbox, Text, useBreakpointValue } from "@chakra-ui/react"
+import { Checkbox, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -89,36 +89,34 @@ const SetRequirements = (): JSX.Element => {
           )}
         </>
       }
-      spacing={0}
     >
       {!freeEntry && isMobile && <BalancyCounterWithPopover mb="6" />}
-      {controlledFields.map((field: Requirement, i) => {
-        const type: RequirementType = getValues(`requirements.${i}.type`)
-
-        if (type === "FREE")
+      <Stack spacing={0}>
+        {controlledFields.map((field: Requirement, i) => {
+          const type: RequirementType = getValues(`requirements.${i}.type`)
+          if (type === "FREE")
+            return (
+              <CardMotionWrapper>
+                <Card px="6" py="4">
+                  <FreeRequirement />
+                </Card>
+              </CardMotionWrapper>
+            )
           return (
-            <CardMotionWrapper>
-              <Card px="6" py="4">
-                <FreeRequirement />
-              </Card>
+            <CardMotionWrapper key={field.id}>
+              <RequirementEditableCard
+                type={type}
+                field={field}
+                index={i}
+                removeRequirement={remove}
+                updateRequirement={update}
+              />
+              <LogicPicker />
             </CardMotionWrapper>
           )
-
-        return (
-          <CardMotionWrapper key={field.id}>
-            <RequirementEditableCard
-              type={type}
-              field={field}
-              index={i}
-              removeRequirement={remove}
-              updateRequirement={update}
-            />
-            <LogicPicker />
-          </CardMotionWrapper>
-        )
-      })}
-
-      {!freeEntry && <AddRequirement onAdd={addRequirement} />}
+        })}
+        {!freeEntry && <AddRequirement onAdd={addRequirement} />}
+      </Stack>
 
       {/* <FormErrorMessage id="requirements-error-message">
         {errors.requirements?.message as string}
