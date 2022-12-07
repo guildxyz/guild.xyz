@@ -15,13 +15,7 @@ import Section from "components/common/Section"
 import CategorySection from "components/explorer/CategorySection"
 import { GetStaticPaths } from "next"
 import { NotionAPI } from "notion-client"
-import {
-  DiscordLogo,
-  Globe,
-  HouseSimple,
-  IconProps,
-  TwitterLogo,
-} from "phosphor-react"
+import { DiscordLogo, Globe, IconProps, TwitterLogo } from "phosphor-react"
 
 import { PropsWithChildren } from "react"
 import { NotionRenderer } from "react-notion-x"
@@ -36,7 +30,7 @@ type CustomPageLinkProps = {
 type GuildLinks = {
   name: string
   url: string
-  icon: React.ForwardRefExoticComponent<
+  icon?: React.ForwardRefExoticComponent<
     IconProps & React.RefAttributes<SVGSVGElement>
   >
 }
@@ -81,7 +75,7 @@ const Header = (props) => {
   if (isContentTypePage) return
 
   const links: Array<GuildLinks> = [
-    { name: "Guild", url: guildId, icon: HouseSimple },
+    { name: "Guild", url: guildId },
     { name: "website", url: websiteURL, icon: Globe },
     { name: "Twitter", url: twitterURL, icon: TwitterLogo },
     { name: "Discord", url: discordURL, icon: DiscordLogo },
