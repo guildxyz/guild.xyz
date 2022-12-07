@@ -40,6 +40,7 @@ const SpaceSelect = ({
       spaces?.map((space) => ({
         label: space.name,
         value: space.id,
+        details: space.id,
       })) ?? [],
     [spaces]
   )

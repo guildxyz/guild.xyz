@@ -3,7 +3,7 @@ import StyledSelect from "components/common/StyledSelect"
 import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useMemo, useState } from "react"
-import { useController, useFormContext } from "react-hook-form"
+import { useController, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -16,6 +16,7 @@ type Props = RequirementFormProps & {
 
 const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
   const {
+    control,
     setValue,
     formState: { errors },
   } = useFormContext()
@@ -26,10 +27,12 @@ const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
     name: `${baseFieldPath}.data.proposal`,
   })
 
+  const spaceId = useWatch({ control, name: `${baseFieldPath}.data.space` })
+
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebouncedState(search)
 
-  const { proposals, isProposalsLoading } = useProposals(debouncedSearch)
+  const { proposals, isProposalsLoading } = useProposals(debouncedSearch, spaceId)
   const mappedProposals = useMemo<SelectOption[]>(
     () =>
       proposals?.map((proposal) => ({
@@ -71,7 +74,7 @@ const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
             <CustomMenuList
               {...props}
               noResultText={
-                debouncedSearch?.length < 3
+                !spaceId && debouncedSearch?.length < 3
                   ? "Start typing..."
                   : isProposalsLoading
                   ? "Loading"
