@@ -39,7 +39,7 @@
     "@ethersproject/units": "^5.7.0",
     "@lottiefiles/react-lottie-player": "^3.4.9",
     "@metamask/onboarding": "^1.0.1",
-    "@nouns/assets": "^0.4.0",
+    "@nouns/assets": "^0.4.1",
     "@vercel/og": "^0.0.21",
     "@web3-react/coinbase-wallet": "8.0.32-beta.0",
     "@web3-react/core": "8.0.32-beta.0",
