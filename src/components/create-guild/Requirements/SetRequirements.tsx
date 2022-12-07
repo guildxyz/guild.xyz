@@ -3,6 +3,7 @@ import { useRumAction } from "@datadog/rum-react-integration"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
+import { AnimatePresence } from "framer-motion"
 import { useEffect, useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { RequirementType } from "requirements"
@@ -90,32 +91,35 @@ const SetRequirements = (): JSX.Element => {
         {!freeEntry && <BalancyCounterWithPopover ml="auto !important" pl="5" />}
       </Wrap>
 
-      <Stack spacing={0}>
-        {controlledFields.map((field: Requirement, i) => {
-          const type: RequirementType = getValues(`requirements.${i}.type`)
-          if (type === "FREE")
-            return (
-              <CardMotionWrapper>
-                <Card px="6" py="4">
-                  <FreeRequirement />
-                </Card>
-              </CardMotionWrapper>
-            )
-          return (
-            <CardMotionWrapper key={field.id}>
-              <RequirementEditableCard
-                type={type}
-                field={field}
-                index={i}
-                removeRequirement={remove}
-                updateRequirement={update}
-              />
-              <LogicPicker />
-            </CardMotionWrapper>
-          )
-        })}
-        {!freeEntry && <AddRequirement onAdd={addRequirement} />}
-      </Stack>
+      {freeEntry ? (
+        <CardMotionWrapper>
+          <Card px="6" py="4">
+            <FreeRequirement />
+          </Card>
+        </CardMotionWrapper>
+      ) : (
+        <Stack spacing={0}>
+          <AnimatePresence>
+            {controlledFields.map((field: Requirement, i) => {
+              const type: RequirementType = getValues(`requirements.${i}.type`)
+
+              return (
+                <CardMotionWrapper key={field.id}>
+                  <RequirementEditableCard
+                    type={type}
+                    field={field}
+                    index={i}
+                    removeRequirement={remove}
+                    updateRequirement={update}
+                  />
+                  <LogicPicker />
+                </CardMotionWrapper>
+              )
+            })}
+            <AddRequirement onAdd={addRequirement} />
+          </AnimatePresence>
+        </Stack>
+      )}
 
       {/* <FormErrorMessage id="requirements-error-message">
         {errors.requirements?.message as string}
