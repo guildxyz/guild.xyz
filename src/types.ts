@@ -150,6 +150,7 @@ type PageDetailsCardData = {
   title: string
   tags?: Array<string>
   icon?: string
+  iconBgColor?: string
   backgroundImage?: string
 }
 

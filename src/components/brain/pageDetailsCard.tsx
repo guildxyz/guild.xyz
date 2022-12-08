@@ -1,6 +1,16 @@
-import { Image, Tag, TagLabel, Wrap } from "@chakra-ui/react"
-import DisplayBrainCard from "components/common/DisplayBrainCard"
+import {
+  Box,
+  Flex,
+  Image,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  Text,
+  Wrap,
+} from "@chakra-ui/react"
+import Card from "components/common/Card"
 import Link from "components/common/Link"
+import { Users } from "phosphor-react"
 import { PageDetailsCardData } from "types"
 
 type Props = {
@@ -14,54 +24,79 @@ const PageDetailsCard = ({ pageData }: Props): JSX.Element => (
     _hover={{ textDecor: "none" }}
     borderRadius="2xl"
   >
-    <DisplayBrainCard title={pageData.title}>
-      {pageData.backgroundImage && (
-        <Image
-          src={pageData.backgroundImage}
-          alt="background image"
-          w="100%"
-          top={-2}
-          position="absolute"
-          opacity="80%"
-          _before={{
-            content: `""`,
-            opacity: "100%",
-            position: "absolute",
-            transition: "opacity 0.2s",
-          }}
-          _hover={{
-            _before: {
-              opacity: "100%",
-            },
-          }}
-          _active={{
-            _before: {
-              opacity: "100%",
-            },
-          }}
-        />
-      )}
-      {pageData.icon ? (
-        <Image
-          referrerPolicy="origin"
-          src={pageData.icon}
-          alt="Card image"
-          w="100px"
-          position="absolute"
-          right="12px"
-          bottom="0"
-          pb="12px"
-          z-index="0"
-        />
-      ) : null}
-      <Wrap zIndex="1" maxW="190px" pl="16px">
-        {pageData.tags?.map((tag, index) => (
-          <Tag as="li" background="rgba(0, 0, 0, 0.77)" key={index}>
-            <TagLabel>{tag}</TagLabel>
-          </Tag>
-        ))}
-      </Wrap>
-    </DisplayBrainCard>
+    <Card position="relative" w="full" role="group">
+      <Flex h="180px" flexDirection="column">
+        <Flex h="62%">
+          <Box>
+            {pageData.backgroundImage ? (
+              <Image
+                w="full"
+                filter="blur(8px)"
+                src={pageData.backgroundImage}
+                alt="background image"
+                transition="filter 0.3s"
+                _groupHover={{ filter: "blur(4px)" }}
+              />
+            ) : null}
+          </Box>
+          <Wrap alignSelf="flex-end" position="absolute" right="8px" mb="10px">
+            <Tag backgroundColor="gray.800">
+              <TagLeftIcon as={Users} />
+              <TagLabel>reward</TagLabel>
+            </Tag>
+          </Wrap>
+        </Flex>
+        <Flex
+          position="relative"
+          width="full"
+          h="38%"
+          background="#1A1A1E"
+          justifyContent="flex-end"
+          alignItems="center"
+          pr="16px"
+        >
+          {pageData.icon ? (
+            <Box
+              position="absolute"
+              left="12px"
+              top="-80px"
+              rounded="50%"
+              outline={"2px solid var(--chakra-colors-blackAlpha-500)"}
+              w="100px"
+              h="100px"
+              backgroundColor={
+                pageData.iconBgColor ? pageData.iconBgColor : "#1A1A1E"
+              }
+              justifyContent="center"
+              alignContent="center"
+              display="grid"
+            >
+              <Image
+                objectFit="cover"
+                src={pageData.icon}
+                alt="background image"
+                maxH="100px"
+                maxW="100px"
+                padding={pageData.iconBgColor ? "8px" : null}
+              />
+            </Box>
+          ) : null}
+          <Text
+            as="span"
+            fontFamily="display"
+            fontSize="2xl"
+            fontWeight="bold"
+            letterSpacing="wide"
+            maxW="full"
+            noOfLines={1}
+            zIndex={1}
+            pl="16px"
+          >
+            {pageData.title}
+          </Text>
+        </Flex>
+      </Flex>
+    </Card>
   </Link>
 )
 
