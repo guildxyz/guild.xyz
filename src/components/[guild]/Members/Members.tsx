@@ -62,7 +62,7 @@ const Members = ({ members }: Props): JSX.Element => {
           ref={membersEl}
           columns={{ base: 3, sm: 4, md: 6, lg: 8 }}
           gap={{ base: 6, md: 8 }}
-          mt={3}
+          pt={3}
         >
           {renderedMembers?.map((address) => (
             <Member

@@ -170,7 +170,7 @@ const GuildPage = (): JSX.Element => {
           <Section
             title="Members"
             titleRightElement={
-              <HStack justifyContent="space-between" w="full">
+              <HStack justifyContent="space-between" w="full" my="-2 !important">
                 <Tag size="sm" maxH={6} pt={0.5}>
                   {isLoading ? <Spinner size="xs" /> : memberCount ?? 0}
                 </Tag>

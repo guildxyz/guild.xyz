@@ -1,49 +1,30 @@
-import { Alert, AlertIcon, AlertTitle, Collapse, Progress } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { useState } from "react"
-import useSWR from "swr"
-
-type RoleStatus = {
-  status: "CREATED" | "STARTED" | "STOPPED" | "FINISHED" | "FAILED"
-  progress: {
-    total: number
-    accessCheckDone: number
-    actionsDone: number
-    failed: number
-  }
-}
-
-type Response = RoleStatus[]
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  Collapse,
+  Progress,
+  Spinner,
+} from "@chakra-ui/react"
+import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 
 const ActiveStatusUpdates = () => {
-  const { id } = useGuild()
-  const [isActive, setIsActive] = useState(false)
-
-  const { data, isValidating } = useSWR<Response>(`/statusUpdate/guild/${id}`, {
-    refreshInterval: isActive && 1000,
-    onSuccess: (res) => {
-      if (res[0].status === "CREATED" || res[0].status === "STARTED")
-        setIsActive(true)
-      else setIsActive(false)
-    },
-  })
-
-  const d = data?.[0]
-  const { accessCheckDone, total, failed } = d?.progress ?? {}
+  const { status, progress } = useActiveStatusUpdates()
 
   return (
-    <Collapse in={isActive}>
+    <Collapse in={status === "STARTED"}>
       <Alert status="info" pos="relative" pb="6">
-        <AlertIcon mt="0" />
-        <AlertTitle>{`Syncing ${accessCheckDone}/${total} members. Failed: ${failed}`}</AlertTitle>
+        <AlertIcon mt="2px" boxSize="5" as={Spinner} />
+        <AlertTitle>{`Syncing ${progress.accessCheckDone}/${progress.total} members`}</AlertTitle>
         <Progress
-          value={total / accessCheckDone}
+          value={(progress.total / progress.accessCheckDone) * 100}
           colorScheme="blue"
           pos="absolute"
           bottom="0"
           left="0"
           right="0"
           size="sm"
+          transition="width .3s"
         />
       </Alert>
     </Collapse>
