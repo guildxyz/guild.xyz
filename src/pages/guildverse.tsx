@@ -67,10 +67,20 @@ export const getStaticProps: GetStaticProps = async () => {
   const response = await notion.databases.query({
     database_id: databaseId,
     filter: {
-      property: "kind",
-      select: {
-        equals: "ecosystem",
-      },
+      and: [
+        {
+          property: "kind",
+          select: {
+            equals: "ecosystem",
+          },
+        },
+        {
+          property: "visibility",
+          checkbox: {
+            equals: true,
+          },
+        },
+      ],
     },
     sorts: [
       {
