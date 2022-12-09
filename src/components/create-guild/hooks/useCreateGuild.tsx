@@ -50,6 +50,9 @@ const useCreateGuild = () => {
       })
       router.push(`/${response_.urlName}`)
 
+      if (response_.guildPlatforms[0].platformId === PlatformType.DISCORD)
+        fetcher(`/statusUpdate/guildify/${response_.id}?force=true`, { body: {} })
+
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
     },

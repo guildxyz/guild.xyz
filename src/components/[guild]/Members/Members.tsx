@@ -2,6 +2,7 @@ import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useMemo, useRef, useState } from "react"
 import useGuild from "../hooks/useGuild"
+import ActiveStatusUpdates from "./components/ActiveStatusUpdates"
 import Member from "./components/Member"
 
 type Props = {
@@ -55,6 +56,7 @@ const Members = ({ members }: Props): JSX.Element => {
 
   return (
     <>
+      <ActiveStatusUpdates />
       {!isLoading && (
         <SimpleGrid
           ref={membersEl}
