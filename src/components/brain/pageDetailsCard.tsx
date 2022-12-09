@@ -31,6 +31,8 @@ const PageDetailsCard = ({ pageData }: Props): JSX.Element => (
             {pageData.backgroundImage ? (
               <Image
                 w="full"
+                position="absolute"
+                bottom="60px"
                 filter="blur(8px)"
                 src={pageData.backgroundImage}
                 alt="background image"
