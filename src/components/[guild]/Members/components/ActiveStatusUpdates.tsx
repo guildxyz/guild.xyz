@@ -15,9 +15,9 @@ const ActiveStatusUpdates = () => {
     <Collapse in={status === "STARTED"}>
       <Alert status="info" pos="relative" pb="6">
         <AlertIcon mt="2px" boxSize="5" as={Spinner} />
-        <AlertTitle>{`Syncing ${progress.accessCheckDone}/${progress.total} members`}</AlertTitle>
+        <AlertTitle>{`Syncing ${progress.actionsDone}/${progress.total} members`}</AlertTitle>
         <Progress
-          value={(progress.total / progress.accessCheckDone) * 100}
+          value={(progress.actionsDone / progress.total) * 100}
           colorScheme="blue"
           pos="absolute"
           bottom="0"

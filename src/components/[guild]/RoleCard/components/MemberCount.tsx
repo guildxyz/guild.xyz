@@ -20,7 +20,7 @@ const MemberCount = ({ memberCount, roleId }: Props) => {
   if (status === "STARTED")
     return (
       <Tooltip
-        label={`Syncing ${progress.accessCheckDone}/${progress.total} members`}
+        label={`Syncing ${progress.actionsDone}/${progress.total} members`}
         hasArrow
       >
         <Tag colorScheme="blue" mt="5px !important" ml="4 !important">
