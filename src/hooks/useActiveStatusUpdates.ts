@@ -11,11 +11,17 @@ type RoleStatus = {
     actionsDone: number
     failed: number
   }
+  params?: {
+    guildify: boolean
+    updateDb: boolean
+    updatePlatforms: boolean
+    forcePlatformUpdates: boolean
+  }
 }
 
 type Response = RoleStatus[]
 
-const defaultData = {
+const defaultData: Omit<RoleStatus, "roleId"> = {
   status: null,
   progress: {
     total: 0,
