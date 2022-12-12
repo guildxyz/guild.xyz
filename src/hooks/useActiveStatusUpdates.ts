@@ -25,6 +25,9 @@ const defaultData = {
   },
 }
 
+const isRoleSyncing = (role) =>
+  role.status === "CREATED" || role.status === "STARTED"
+
 const useActiveStatusUpdates = (roleId?: number) => {
   const { id } = useGuild()
   const [isActive, setIsActive] = useState(false)
@@ -32,8 +35,7 @@ const useActiveStatusUpdates = (roleId?: number) => {
   const { data, isValidating } = useSWR<Response>(`/statusUpdate/guild/${id}`, {
     refreshInterval: isActive && 5000,
     onSuccess: (res) => {
-      if (res[0].status === "CREATED" || res[0].status === "STARTED")
-        setIsActive(true)
+      if (res.some(isRoleSyncing)) setIsActive(true)
       else setIsActive(false)
     },
   })
@@ -44,9 +46,7 @@ const useActiveStatusUpdates = (roleId?: number) => {
   if (roleId) {
     res = data.find((role) => role.roleId === roleId)
   } else {
-    const activeRoles = data.filter(
-      (role) => role.status === "CREATED" || role.status === "STARTED"
-    )
+    const activeRoles = data.filter(isRoleSyncing)
     if (!activeRoles) return defaultData
 
     // we're returning the status of the role with the most members instead of aggregating them for now
