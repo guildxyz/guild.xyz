@@ -172,7 +172,7 @@ const GuildPage = (): JSX.Element => {
           <Section
             title="Members"
             titleRightElement={
-              <HStack justifyContent="space-between" w="full">
+              <HStack justifyContent="space-between" w="full" my="-2 !important">
                 {/* Temporary until the BE returns members again  */}
                 <Tooltip
                   label="Members are temporarily hidden, only admins are shown"
