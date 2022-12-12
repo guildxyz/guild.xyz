@@ -23,18 +23,18 @@ const MemberCount = ({ memberCount, roleId }: Props) => {
         label={`Syncing ${progress.accessCheckDone}/${progress.total} members`}
         hasArrow
       >
-        <Tag colorScheme="blue" mt="1 !important" ml="4 !important">
-          <TagLeftIcon as={Users} />
-          <TagLabel>{memberCount}</TagLabel>
+        <Tag colorScheme="blue" mt="5px !important" ml="4 !important">
+          <TagLeftIcon as={Users} boxSize={"16px"} />
+          <TagLabel mb="-1px">{memberCount}</TagLabel>
           <TagRightIcon as={Spinner} />
         </Tag>
       </Tooltip>
     )
 
   return (
-    <Tag bg="unset" color="gray" size="lg" mt="1 !important">
-      <TagLeftIcon as={Users} />
-      <TagLabel>{memberCount}</TagLabel>
+    <Tag bg="unset" color="gray" mt="6px !important">
+      <TagLeftIcon as={Users} boxSize={"16px"} />
+      <TagLabel mb="-1px">{memberCount}</TagLabel>
     </Tag>
   )
 }
