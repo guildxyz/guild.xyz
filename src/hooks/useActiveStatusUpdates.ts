@@ -29,7 +29,7 @@ const isRoleSyncing = (role) =>
   role.status === "CREATED" || role.status === "STARTED"
 
 const useActiveStatusUpdates = (roleId?: number) => {
-  const { id } = useGuild()
+  const { id, mutateGuild } = useGuild()
   const [isActive, setIsActive] = useState(false)
 
   const { data, isValidating } = useSWR<Response>(`/statusUpdate/guild/${id}`, {
@@ -37,8 +37,10 @@ const useActiveStatusUpdates = (roleId?: number) => {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     onSuccess: (res) => {
-      if (res.some(isRoleSyncing)) setIsActive(true)
-      else setIsActive(false)
+      if (res.some(isRoleSyncing)) {
+        setIsActive(true)
+        mutateGuild()
+      } else setIsActive(false)
     },
   })
 
