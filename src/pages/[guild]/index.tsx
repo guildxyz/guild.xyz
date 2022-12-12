@@ -8,6 +8,7 @@ import {
   Stack,
   Tag,
   Text,
+  Tooltip,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
@@ -33,6 +34,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
+import { CloudSlash } from "phosphor-react"
 import React, { useMemo, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
@@ -171,9 +173,18 @@ const GuildPage = (): JSX.Element => {
             title="Members"
             titleRightElement={
               <HStack justifyContent="space-between" w="full">
-                <Tag size="sm" maxH={6} pt={0.5}>
+                {/* Temporary until the BE returns members again  */}
+                <Tooltip
+                  label="Members are temporarily hidden, only admins are shown"
+                  hasArrow
+                >
+                  <Tag size="sm" maxH={6}>
+                    <CloudSlash />
+                  </Tag>
+                </Tooltip>
+                {/* <Tag size="sm" maxH={6} pt={0.5}>
                   {isLoading ? <Spinner size="xs" /> : memberCount ?? 0}
-                </Tag>
+                </Tag> */}
                 {isAdmin && <DynamicMembersExporter />}
               </HStack>
             }
