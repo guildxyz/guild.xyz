@@ -34,6 +34,8 @@ const useActiveStatusUpdates = (roleId?: number) => {
 
   const { data, isValidating } = useSWR<Response>(`/statusUpdate/guild/${id}`, {
     refreshInterval: isActive && 5000,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
     onSuccess: (res) => {
       if (res.some(isRoleSyncing)) setIsActive(true)
       else setIsActive(false)
