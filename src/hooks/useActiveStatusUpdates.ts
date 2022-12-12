@@ -62,7 +62,7 @@ const useActiveStatusUpdates = (roleId?: number) => {
     res = largestRole
   }
 
-  return res
+  return res ?? defaultData
 }
 
 export default useActiveStatusUpdates
