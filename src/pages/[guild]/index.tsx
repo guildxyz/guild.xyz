@@ -52,6 +52,9 @@ const DynamicMembersExporter = dynamic(
 )
 const DynamicOnboarding = dynamic(() => import("components/[guild]/Onboarding"))
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
+const DynamicActiveStatusUpdates = dynamic(
+  () => import("components/[guild]/ActiveStatusUpdates")
+)
 
 const GuildPage = (): JSX.Element => {
   const {
@@ -189,11 +192,14 @@ const GuildPage = (): JSX.Element => {
               </HStack>
             }
           >
-            {showMembers ? (
-              <Members members={members} />
-            ) : (
-              <Text>Members are hidden</Text>
-            )}
+            <Box>
+              {isAdmin && <DynamicActiveStatusUpdates />}
+              {showMembers ? (
+                <Members members={members} />
+              ) : (
+                <Text>Members are hidden</Text>
+              )}
+            </Box>
           </Section>
         )}
       </Layout>

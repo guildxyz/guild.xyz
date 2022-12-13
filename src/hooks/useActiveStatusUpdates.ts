@@ -1,4 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { useState } from "react"
 import useSWR from "swr"
 
@@ -37,18 +38,22 @@ const isRoleSyncing = (role) =>
 const useActiveStatusUpdates = (roleId?: number) => {
   const { id, mutateGuild } = useGuild()
   const [isActive, setIsActive] = useState(false)
+  const { isAdmin } = useGuildPermission()
 
-  const { data, isValidating } = useSWR<Response>(`/statusUpdate/guild/${id}`, {
-    refreshInterval: isActive && 5000,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    onSuccess: (res) => {
-      if (res.some(isRoleSyncing)) {
-        setIsActive(true)
-        mutateGuild()
-      } else setIsActive(false)
-    },
-  })
+  const { data, isValidating } = useSWR<Response>(
+    isAdmin ? `/statusUpdate/guild/${id}` : null,
+    {
+      refreshInterval: isActive && 5000,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      onSuccess: (res) => {
+        if (res.some(isRoleSyncing)) {
+          setIsActive(true)
+          mutateGuild()
+        } else setIsActive(false)
+      },
+    }
+  )
 
   if (!data) return defaultData
 
