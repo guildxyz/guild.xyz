@@ -6,7 +6,7 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
-import { useController, useFormState } from "react-hook-form"
+import { useController, useFormContext, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import TwitterAccountAge from "./components/TwitterAccountAge"
@@ -78,6 +78,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   })
 
   const { errors } = useFormState()
+  const { setValue } = useFormContext()
 
   const selected = twitterRequirementTypes.find((reqType) => reqType.value === value)
 
@@ -93,6 +94,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           onBlur={onBlur}
           onChange={(newValue: { label: string; value: string }) => {
             onChange(newValue?.value)
+            setValue(`${baseFieldPath}.data.id`, "")
           }}
           ref={ref}
           value={selected}
