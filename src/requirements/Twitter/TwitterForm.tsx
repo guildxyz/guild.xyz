@@ -9,20 +9,20 @@ import StyledSelect from "components/common/StyledSelect"
 import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
-import FollowerCount from "./components/FollowerCount"
-import SearchValue from "./components/SearchValue"
+import TwitterFollowerCount from "./components/TwitterFollowerCount"
 import TwitterListInput from "./components/TwitterListInput"
+import TwitterTextToInclude from "./components/TwitterTextToInclude"
 import TwitterTweetInput from "./components/TwitterTweetInput"
 import TwitterUserInput from "./components/TwitterUserInput"
 
 const twitterRequirementTypes = [
   {
-    label: "Follow somebody",
+    label: "Follow user",
     value: "TWITTER_FOLLOW",
     TwitterRequirement: TwitterUserInput,
   },
   {
-    label: "Be followed by somebody",
+    label: "Be followed by user",
     value: "TWITTER_FOLLOWED_BY",
     TwitterRequirement: TwitterUserInput,
   },
@@ -49,17 +49,17 @@ const twitterRequirementTypes = [
   {
     label: "Number of followers",
     value: "TWITTER_FOLLOWER_COUNT",
-    TwitterRequirement: FollowerCount,
+    TwitterRequirement: TwitterFollowerCount,
   },
   {
     label: "Username includes text",
     value: "TWITTER_NAME",
-    TwitterRequirement: SearchValue,
+    TwitterRequirement: TwitterTextToInclude,
   },
   {
     label: "Bio includes text",
     value: "TWITTER_BIO",
-    TwitterRequirement: SearchValue,
+    TwitterRequirement: TwitterTextToInclude,
   },
 ]
 
