@@ -27,7 +27,7 @@ type CustomPageLinkProps = {
   children: any
 }
 
-type GuildLinks = {
+type Links = {
   name: string
   url: string
   icon?: React.ForwardRefExoticComponent<
@@ -74,17 +74,22 @@ const Header = (props) => {
     return
   if (isContentTypePage) return
 
-  const links: Array<GuildLinks> = [
+  const links: Array<Links> = [
     { name: "Guild", url: guildId },
     { name: "website", url: websiteURL, icon: Globe },
     { name: "Twitter", url: twitterURL, icon: TwitterLogo },
     { name: "Discord", url: discordURL, icon: DiscordLogo },
-  ].filter((link) => link.url !== undefined)
+  ].filter((link) => link.url !== undefined && link.url !== "")
+
+  links.map((link) => {
+    if (link.name === "Guild") return
+    link.url = !link.url.startsWith("http") ? "http://" + link.url : link.url
+  })
 
   return (
     <Section mb="16px">
-      <Wrap justify="space-between" alignItems="center" spacing="16px">
-        <Wrap zIndex="1">
+      <Wrap justify="space-between">
+        <Wrap>
           {links?.map((link, index) => (
             <Link
               key={index}
@@ -102,7 +107,7 @@ const Header = (props) => {
             </Link>
           ))}
         </Wrap>
-        <Wrap zIndex="1">
+        <Wrap>
           {tags?.map((tag, index) => (
             <Tag as="li" key={index}>
               <TagLabel>{tag}</TagLabel>
@@ -162,8 +167,8 @@ const getAllPages = async () => {
 const getRelatedPageLinks = (allPages, blockMap, params) => {
   const linkedPageContents = getLinkedPagesByName(blockMap, params, allPages)
   const linkedPagesByTags = getLinkedPagesByTags(blockMap, params, allPages)
-  const links = [...new Set([...linkedPageContents, ...linkedPagesByTags])]
-  const cards: Array<PageDetailsCardData> = links.map((page) => ({
+  const Links = [...new Set([...linkedPageContents, ...linkedPagesByTags])]
+  const cards: Array<PageDetailsCardData> = Links.map((page) => ({
     id: page.id,
     title: page.properties.title.title[0].plain_text,
     tags: page.properties.tags.multi_select.map((tag) => tag.name),
