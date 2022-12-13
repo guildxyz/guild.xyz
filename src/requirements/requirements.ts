@@ -85,6 +85,8 @@ export const REQUIREMENTS_DATA = [
       "TWITTER_FOLLOWER_COUNT",
       "TWITTER_LIKE",
       "TWITTER_RETWEET",
+      "TWITTER_LIST_MEMBER",
+      "TWITTER_LIST_FOLLOW",
     ],
     isPlatform: true,
   },

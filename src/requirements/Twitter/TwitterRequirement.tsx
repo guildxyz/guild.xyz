@@ -4,6 +4,7 @@ import { TwitterLogo } from "phosphor-react"
 import { RequirementComponentProps } from "requirements"
 import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatformButton"
 import Requirement from "../common/Requirement"
+import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
 
@@ -73,6 +74,20 @@ const TwitterRequirement = ({ requirement, ...rest }: RequirementComponentProps)
             <>
               {`Retweet `}
               <TwitterTweetLink requirement={requirement} />
+            </>
+          )
+        case "TWITTER_LIST_MEMBER":
+          return (
+            <>
+              {`Be a member of `}
+              <TwitterListLink requirement={requirement} />
+            </>
+          )
+        case "TWITTER_LIST_FOLLOW":
+          return (
+            <>
+              {`Follow `}
+              <TwitterListLink requirement={requirement} />
             </>
           )
       }
