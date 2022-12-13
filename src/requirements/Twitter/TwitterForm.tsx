@@ -11,6 +11,7 @@ import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import FollowerCount from "./components/FollowerCount"
 import SearchValue from "./components/SearchValue"
+import TwitterTweetInput from "./components/TwitterTweetInput"
 import TwitterUserInput from "./components/TwitterUserInput"
 
 const twitterRequirementTypes = [
@@ -23,6 +24,16 @@ const twitterRequirementTypes = [
     label: "Be followed by somebody",
     value: "TWITTER_FOLLOWED_BY",
     TwitterRequirement: TwitterUserInput,
+  },
+  {
+    label: "Retweet tweet",
+    value: "TWITTER_RETWEET",
+    TwitterRequirement: TwitterTweetInput,
+  },
+  {
+    label: "Like tweet",
+    value: "TWITTER_LIKE",
+    TwitterRequirement: TwitterTweetInput,
   },
   {
     label: "Number of followers",

@@ -1,9 +1,11 @@
-import { Icon, Link } from "@chakra-ui/react"
+import { Icon } from "@chakra-ui/react"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { TwitterLogo } from "phosphor-react"
 import { RequirementComponentProps } from "requirements"
 import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatformButton"
 import Requirement from "../common/Requirement"
+import TwitterTweetLink from "./components/TwitterTweetLink"
+import TwitterUserLink from "./components/TwitterUserLink"
 
 const TwitterRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
   <Requirement
@@ -47,15 +49,30 @@ const TwitterRequirement = ({ requirement, ...rest }: RequirementComponentProps)
           return (
             <>
               {`Follow `}
-              <Link
-                href={`https://twitter.com/${requirement.data.id}`}
-                isExternal
-                colorScheme={"blue"}
-                fontWeight="medium"
-              >
-                @{requirement.data.id}
-              </Link>
+              <TwitterUserLink requirement={requirement} />
               {` on Twitter`}
+            </>
+          )
+        case "TWITTER_FOLLOWED_BY":
+          return (
+            <>
+              {`Be followed by `}
+              <TwitterUserLink requirement={requirement} />
+              {` on Twitter`}
+            </>
+          )
+        case "TWITTER_LIKE":
+          return (
+            <>
+              {`Like `}
+              <TwitterTweetLink requirement={requirement} />
+            </>
+          )
+        case "TWITTER_RETWEET":
+          return (
+            <>
+              {`Retweet `}
+              <TwitterTweetLink requirement={requirement} />
             </>
           )
       }
