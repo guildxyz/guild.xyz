@@ -30,9 +30,9 @@ const TwitterTweetInput = ({ baseFieldPath }: RequirementFormProps) => {
         onChange={({ target: { value } }) => {
           if (value.length <= 0) return field.onChange(value)
 
-          const linkMatch = value.split("/")
+          const splittedLink = value.split("?")[0].split("/")
 
-          return field.onChange(linkMatch[linkMatch.length - 1])
+          return field.onChange(splittedLink[splittedLink.length - 1])
         }}
       />
       <FormHelperText>Paste tweet URL</FormHelperText>
