@@ -1,5 +1,5 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react"
-import MultiSelect, { FilterOption } from "components/brain/multiSelect"
+import FilterSelect, { FilterOption } from "components/brain/filterSelect"
 import PageDetailsCard from "components/brain/pageDetailsCard"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
@@ -48,7 +48,7 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
           <GridItem colSpan={{ base: 1, md: 2 }}>
             <SearchBar placeholder="Search" {...{ search, setSearch }} />
           </GridItem>
-          <MultiSelect {...{ filterOptions, setFilterData }} />
+          <FilterSelect {...{ filterOptions, setFilterData }} />
         </SimpleGrid>
         <CategorySection fallbackText={"There are no pages"}>
           {renderedCards.map((card) => (

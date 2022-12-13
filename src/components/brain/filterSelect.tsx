@@ -11,7 +11,7 @@ type Props = {
   setFilterData
 }
 
-const MultiSelect = ({ filterOptions, setFilterData }: Props): JSX.Element => (
+const FilterSelect = ({ filterOptions, setFilterData }: Props): JSX.Element => (
   <Select<FilterOption, true, GroupBase<FilterOption>>
     isMulti
     options={filterOptions}
@@ -31,4 +31,4 @@ const MultiSelect = ({ filterOptions, setFilterData }: Props): JSX.Element => (
   />
 )
 
-export default MultiSelect
+export default FilterSelect
