@@ -20,6 +20,11 @@ const twitterRequirementTypes = [
     TwitterRequirement: TwitterUserInput,
   },
   {
+    label: "Be followed by somebody",
+    value: "TWITTER_FOLLOWED_BY",
+    TwitterRequirement: TwitterUserInput,
+  },
+  {
     label: "Number of followers",
     value: "TWITTER_FOLLOWER_COUNT",
     TwitterRequirement: FollowerCount,
