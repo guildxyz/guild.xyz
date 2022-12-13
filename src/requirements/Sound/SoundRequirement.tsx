@@ -58,7 +58,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
           case "SOUND_ARTIST_BACKED":
             return (
               <>
-                {`Support `}
+                {`Collect any song from `}
                 <ArtistLink {...{ artistData, requirement }} />
                 {` on Sound.xyz`}
               </>
@@ -66,7 +66,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
           case "SOUND_COLLECTED":
             return (
               <>
-                {`Own the `}
+                {`Collect the `}
                 <Link
                   href={`https://www.sound.xyz/${requirement.data.id}/${slugify(
                     requirement.data.title
