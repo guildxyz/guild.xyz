@@ -28,19 +28,14 @@ const twitterRequirementTypes = [
     TwitterRequirement: TwitterUserInput,
   },
   {
-    label: "Retweet tweet",
-    value: "TWITTER_RETWEET",
-    TwitterRequirement: TwitterTweetInput,
-  },
-  {
     label: "Like tweet",
     value: "TWITTER_LIKE",
     TwitterRequirement: TwitterTweetInput,
   },
   {
-    label: "Be a member of list",
-    value: "TWITTER_LIST_MEMBER",
-    TwitterRequirement: TwitterListInput,
+    label: "Retweet tweet",
+    value: "TWITTER_RETWEET",
+    TwitterRequirement: TwitterTweetInput,
   },
   {
     label: "Follow list",
@@ -48,17 +43,22 @@ const twitterRequirementTypes = [
     TwitterRequirement: TwitterListInput,
   },
   {
-    label: "Number of followers",
+    label: "Be a member of list",
+    value: "TWITTER_LIST_MEMBER",
+    TwitterRequirement: TwitterListInput,
+  },
+  {
+    label: "Have at least x followers",
     value: "TWITTER_FOLLOWER_COUNT",
     TwitterRequirement: TwitterFollowerCount,
   },
   {
-    label: "Username includes text",
+    label: "Have specific text in username",
     value: "TWITTER_NAME",
     TwitterRequirement: TwitterTextToInclude,
   },
   {
-    label: "Bio includes text",
+    label: "Have specific text in bio",
     value: "TWITTER_BIO",
     TwitterRequirement: TwitterTextToInclude,
   },
