@@ -1,4 +1,5 @@
 import { Icon } from "@chakra-ui/react"
+import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { TwitterLogo } from "phosphor-react"
 import { RequirementComponentProps } from "requirements"
@@ -88,6 +89,17 @@ const TwitterRequirement = ({ requirement, ...rest }: RequirementComponentProps)
             <>
               {`Follow `}
               <TwitterListLink requirement={requirement} />
+            </>
+          )
+        case "TWITTER_ACCOUNT_AGE":
+          const formattedDate = new Date(
+            requirement.data.minAmount
+          ).toLocaleDateString()
+
+          return (
+            <>
+              {`Be a Twitter user since at least `}
+              <DataBlock>{formattedDate}</DataBlock>
             </>
           )
       }

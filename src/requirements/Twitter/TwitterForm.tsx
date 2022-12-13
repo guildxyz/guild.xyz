@@ -9,6 +9,7 @@ import StyledSelect from "components/common/StyledSelect"
 import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
+import TwitterAccountAge from "./components/TwitterAccountAge"
 import TwitterFollowerCount from "./components/TwitterFollowerCount"
 import TwitterListInput from "./components/TwitterListInput"
 import TwitterTextToInclude from "./components/TwitterTextToInclude"
@@ -60,6 +61,11 @@ const twitterRequirementTypes = [
     label: "Bio includes text",
     value: "TWITTER_BIO",
     TwitterRequirement: TwitterTextToInclude,
+  },
+  {
+    label: "Account age",
+    value: "TWITTER_ACCOUNT_AGE",
+    TwitterRequirement: TwitterAccountAge,
   },
 ]
 
