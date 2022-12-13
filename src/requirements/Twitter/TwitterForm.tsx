@@ -10,14 +10,14 @@ import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import FollowerCount from "./components/FollowerCount"
-import Following from "./components/Following"
 import SearchValue from "./components/SearchValue"
+import TwitterUserInput from "./components/TwitterUserInput"
 
 const twitterRequirementTypes = [
   {
     label: "Follow somebody",
     value: "TWITTER_FOLLOW",
-    TwitterRequirement: Following,
+    TwitterRequirement: TwitterUserInput,
   },
   {
     label: "Number of followers",
