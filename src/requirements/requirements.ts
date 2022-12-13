@@ -365,6 +365,7 @@ export const REQUIREMENTS_DATA = [
       "SOUND_COLLECTED",
       "SOUND_ARTIST",
       "SOUND_TOP_COLLECTOR",
+      "SOUND_NFTS",
     ],
   },
 ] as const
