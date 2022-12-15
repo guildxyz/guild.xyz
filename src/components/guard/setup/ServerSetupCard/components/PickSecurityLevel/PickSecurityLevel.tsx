@@ -7,13 +7,13 @@ import KeepAccessInfoText from "./components/KeepAccessInfoText"
 
 const options = [
   {
-    value: 0,
+    value: "0",
     title: "Authenticate existing members",
     description: "Ensure that no bots can stay in your server",
     icon: Lock,
   },
   {
-    value: 1,
+    value: "1",
     title: "Keep access for existing members",
     description: "Only guard for bots joining after now",
     icon: LockSimpleOpen,
@@ -40,7 +40,7 @@ const PickSecurityLevel = ({ rolePlatformIndex }): JSX.Element => {
         options={options}
         name={`rolePlatforms.${rolePlatformIndex}.platformRoleData.grantAccessToExistingUsers`}
         onChange={(newValue) => field.onChange(Boolean(+newValue))}
-        value={+field.value}
+        value={field.value}
         colorScheme="DISCORD"
       />
 

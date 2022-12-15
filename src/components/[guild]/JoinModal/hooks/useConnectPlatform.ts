@@ -3,6 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import { useEffect } from "react"
 import { PlatformName } from "types"
@@ -27,6 +28,7 @@ const useConnectPlatform = (
   isReauth?: boolean // Temporary, once /connect works without it, we can remove this
 ) => {
   const { addDatadogAction, addDatadogError } = useDatadog()
+  const showErrorToast = useShowErrorToast()
 
   const user = useUser()
   const { mutate: mutateUser, platformUsers } = useUser()
@@ -66,6 +68,7 @@ const useConnectPlatform = (
       onSuccess?.()
     },
     onError: (err) => {
+      showErrorToast(err)
       addDatadogError("3rd party account connection error", { error: err })
     },
   })

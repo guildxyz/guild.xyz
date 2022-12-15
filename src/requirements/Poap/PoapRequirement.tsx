@@ -8,7 +8,7 @@ const PoapRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
   return (
     <Requirement
       image={isLoading ? "" : poap?.image_url}
-      loading={isLoading}
+      isImageLoading={isLoading}
       {...rest}
     >
       {`Own the ${poap?.name ?? requirement.data?.id} POAP`}

@@ -83,6 +83,7 @@ export const REQUIREMENTS_DATA = [
       "TWITTER_FOLLOW",
       "TWITTER_FOLLOWER_COUNT",
     ],
+    isPlatform: true,
   },
   {
     icon: "/platforms/github.png",
@@ -95,6 +96,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Github/GithubForm")
     ),
     types: ["GITHUB", "GITHUB_STARRING"],
+    isPlatform: true,
   },
   {
     icon: "/platforms/discord.png",
@@ -113,6 +115,7 @@ export const REQUIREMENTS_DATA = [
       "DISCORD_JOIN_FROM_NOW",
       "DISCORD_MEMBER_SINCE",
     ],
+    isPlatform: true,
   },
   {
     icon: "/requirementLogos/guild.png",
@@ -251,7 +254,16 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Lens/LensForm")
     ),
-    types: ["LENS", "LENS_PROFILE", "LENS_FOLLOW", "LENS_COLLECT", "LENS_MIRROR"],
+    types: [
+      "LENS",
+      "LENS_PROFILE",
+      "LENS_FOLLOW",
+      "LENS_COLLECT",
+      "LENS_MIRROR",
+      "LENS_TOTAL_FOLLOWERS",
+      "LENS_TOTAL_POSTS",
+      "LENS_FOLLOWED_BY",
+    ],
   },
   {
     icon: "/requirementLogos/otterspace.png",
@@ -348,6 +360,25 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Optimism/OptimismForm")
     ),
     types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
+  },
+  {
+    icon: "/requirementLogos/sound.png",
+    name: "Sound",
+    fileNameBase: "Sound",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Sound/SoundRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Sound/SoundForm")
+    ),
+    types: [
+      "SOUND",
+      "SOUND_ARTIST_BACKED",
+      "SOUND_COLLECTED",
+      "SOUND_ARTIST",
+      "SOUND_TOP_COLLECTOR",
+      "SOUND_NFTS",
+    ],
   },
 ] as const
 

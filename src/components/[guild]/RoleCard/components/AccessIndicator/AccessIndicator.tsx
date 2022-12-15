@@ -3,7 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { ArrowCounterClockwise, Check, LockSimple, Warning, X } from "phosphor-react"
+import { Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
@@ -21,10 +21,10 @@ const reconnectionErrorMessages = new Set<string>([
 ])
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
-  const { hasAccess, error, isLoading, data } = useAccess(roleId)
+  const { hasAccess, isLoading, data } = useAccess(roleId)
 
-  const discordRateLimitWarning = useDiscordRateLimitWarning(data ?? error, roleId)
-  const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
+  const discordRateLimitWarning = useDiscordRateLimitWarning(data, roleId)
+  const twitterRateLimitWarning = useTwitterRateLimitWarning(data, roleId)
 
   const { isActive } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
@@ -52,20 +52,18 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   if (isLoading)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
-  const roleError = (data ?? error)?.find?.((err) => err.roleId === roleId)
-
-  if (roleError?.errors?.some((err) => reconnectionErrorMessages.has(err.msg))) {
+  if (data?.errors?.some((err) => reconnectionErrorMessages.has(err.msg))) {
     return (
       <AccessIndicatorUI
         colorScheme="orange"
-        label={"Reconnect below to check access"}
-        icon={ArrowCounterClockwise}
+        label={"Reconnect needed to check access"}
+        icon={Warning}
       />
     )
   }
 
   if (
-    roleError?.warnings?.some(
+    data?.warnings?.some(
       (err) =>
         typeof err.msg === "string" && err.msg.includes("account isn't connected")
     )
@@ -73,13 +71,13 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
     return (
       <AccessIndicatorUI
         colorScheme="blue"
-        label={"Connect below to check access"}
+        label={"Auth needed to check access"}
         icon={LockSimple}
       />
     )
   }
 
-  if (Array.isArray(error) && roleError?.errors)
+  if (data?.errors)
     return (
       <>
         <AccessIndicatorUI

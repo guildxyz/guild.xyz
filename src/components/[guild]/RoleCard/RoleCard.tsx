@@ -53,7 +53,7 @@ const RoleCard = memo(({ role }: Props) => {
           borderRightWidth={{ base: 0, md: 1 }}
           borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
         >
-          <HStack justifyContent="space-between" mb={6} spacing={4}>
+          <HStack justifyContent="space-between" mb={6} spacing={3}>
             <HStack spacing={4}>
               <GuildLogo
                 imageUrl={role.imageUrl}
@@ -63,7 +63,7 @@ const RoleCard = memo(({ role }: Props) => {
                 {role.name}
               </Heading>
             </HStack>
-            <MemberCount memberCount={role.memberCount} />
+            <MemberCount memberCount={role.memberCount} roleId={role.id} />
             {isAdmin && (
               <>
                 <Spacer />
@@ -109,7 +109,7 @@ const RoleCard = memo(({ role }: Props) => {
             <Spacer />
             <AccessIndicator roleId={role.id} />
           </HStack>
-          <RoleRequirements requirements={role.requirements} logic={role.logic} />
+          <RoleRequirements role={role} />
         </Flex>
       </SimpleGrid>
     </Card>

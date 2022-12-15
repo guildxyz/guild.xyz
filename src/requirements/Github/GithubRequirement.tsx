@@ -8,7 +8,7 @@ import Requirement from "../common/Requirement"
 const GithubRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
   <Requirement
     image={<Icon as={GithubLogo} boxSize={6} />}
-    footer={<ConnectRequirementPlatformButton platform="GITHUB" />}
+    footer={<ConnectRequirementPlatformButton requirement={requirement} />}
     {...rest}
   >
     Give a star to the{" "}

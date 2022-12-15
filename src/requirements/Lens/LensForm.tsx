@@ -1,4 +1,14 @@
-import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Stack,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useState } from "react"
@@ -24,6 +34,18 @@ const typeOptions = [
   {
     value: "LENS_MIRROR",
     label: "Mirror a post",
+  },
+  {
+    value: "LENS_TOTAL_FOLLOWERS",
+    label: "Have at least [x] followers",
+  },
+  {
+    value: "LENS_TOTAL_POSTS",
+    label: "Have at least [x] posts",
+  },
+  {
+    value: "LENS_FOLLOWED_BY",
+    label: "Be followed by",
   },
 ]
 
@@ -55,7 +77,9 @@ const LensForm = ({ baseFieldPath, field }: RequirementFormProps) => {
               value={typeOptions?.find((option) => option.value === value)}
               onChange={(newSelectedOption: SelectOption) => {
                 onChange(newSelectedOption.value)
-                setValue(`${baseFieldPath}.data`, "")
+                // Resetting fields separately to avoid validation bugs
+                setValue(`${baseFieldPath}.data.id`, "")
+                setValue(`${baseFieldPath}.data.min`, "")
               }}
               onBlur={onBlur}
             />
@@ -97,12 +121,68 @@ const LensForm = ({ baseFieldPath, field }: RequirementFormProps) => {
         </FormControl>
       )}
 
-      {type === "LENS_FOLLOW" && <FollowSelect {...{ baseFieldPath, field }} />}
+      {["LENS_FOLLOW", "LENS_FOLLOWED_BY"].includes(type) && (
+        <LensProfileSelect
+          {...{ baseFieldPath, field }}
+          placeholder={`Search user ${type === "LENS_FOLLOW" ? "to follow" : ""}`}
+        />
+      )}
+
+      {["LENS_TOTAL_FOLLOWERS", "LENS_TOTAL_POSTS"].includes(type) && (
+        <FormControl
+          isRequired
+          isInvalid={parseFromObject(errors, baseFieldPath)?.data?.min}
+        >
+          <FormLabel>{`Number of ${
+            type === "LENS_TOTAL_POSTS" ? "posts" : "followers"
+          }:`}</FormLabel>
+
+          <Controller
+            name={`${baseFieldPath}.data.min` as const}
+            control={control}
+            rules={{
+              required: "This field is required.",
+              min: {
+                value: 1,
+                message: "Amount must be positive",
+              },
+            }}
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <NumberInput
+                ref={ref}
+                value={value ?? ""}
+                onChange={(newValue) => {
+                  const parsedValue = parseInt(newValue)
+                  onChange(isNaN(parsedValue) ? "" : parsedValue)
+                }}
+                onBlur={onBlur}
+                min={1}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
+
+          <FormErrorMessage>
+            {parseFromObject(errors, baseFieldPath)?.data?.min?.message}
+          </FormErrorMessage>
+        </FormControl>
+      )}
     </Stack>
   )
 }
 
-const FollowSelect = ({ baseFieldPath, field }: RequirementFormProps) => {
+type LensProfileSelectProps = RequirementFormProps & { placeholder?: string }
+
+const LensProfileSelect = ({
+  baseFieldPath,
+  field,
+  placeholder,
+}: LensProfileSelectProps) => {
   const {
     control,
     formState: { errors },
@@ -136,8 +216,8 @@ const FollowSelect = ({ baseFieldPath, field }: RequirementFormProps) => {
             ref={ref}
             isClearable
             options={options}
-            placeholder="Search user to follow"
-            value={options?.find((option) => option.value === value)}
+            placeholder={placeholder}
+            value={value ? options?.find((option) => option.value === value) : null}
             onChange={(newSelectedOption: SelectOption) =>
               onChange(newSelectedOption?.value)
             }

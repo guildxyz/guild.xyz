@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
+  Text,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -15,7 +16,7 @@ import { SelectOption } from "types"
 import pluralize from "utils/pluralize"
 import useDiscordRoleMemberCounts from "../hooks/useDiscordRoleMemberCount"
 
-const ExistingRoleSettings = () => {
+const GuildifyExistingRole = () => {
   const { errors, dirtyFields } = useFormState()
   const { setValue } = useFormContext()
   const { roles: guildRoles } = useGuild()
@@ -82,8 +83,12 @@ const ExistingRoleSettings = () => {
           {errors.rolePlatforms?.[index]?.platformRoleId?.message}
         </FormErrorMessage>
       </FormControl>
+      <Text fontWeight={"normal"} colorScheme="gray" mt="6">
+        Existing members with the role but without Guild.xyz auth won't lose access.
+        You'll be able to remove them later (coming soon)
+      </Text>
     </Box>
   )
 }
 
-export default ExistingRoleSettings
+export default GuildifyExistingRole

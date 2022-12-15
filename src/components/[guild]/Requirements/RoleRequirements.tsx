@@ -1,20 +1,19 @@
 import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
-import REQUIREMENTS from "requirements"
-import { Logic, Requirement } from "types"
+import { Role } from "types"
 import LogicDivider from "../LogicDivider"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
+import RequirementDisplayComponent from "./components/RequirementDisplayComponent"
 
 type Props = {
-  requirements: Requirement[]
-  logic: Logic
+  role: Role
 }
 
-const RoleRequirements = ({ requirements, logic }: Props) => {
-  const sliceIndex = (requirements?.length ?? 0) - 3
-  const shownRequirements = (requirements ?? []).slice(0, 3)
+const RoleRequirements = ({ role }: Props) => {
+  const sliceIndex = (role.requirements?.length ?? 0) - 3
+  const shownRequirements = (role.requirements ?? []).slice(0, 3)
   const hiddenRequirements =
-    sliceIndex > 0 ? (requirements ?? []).slice(-sliceIndex) : []
+    sliceIndex > 0 ? (role.requirements ?? []).slice(-sliceIndex) : []
 
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
   const shadowColor = useColorModeValue(
@@ -24,21 +23,15 @@ const RoleRequirements = ({ requirements, logic }: Props) => {
 
   return (
     <VStack spacing="0">
-      {!requirements?.length ? (
+      {!role.requirements?.length ? (
         <Spinner />
       ) : (
-        shownRequirements.map((requirement, i) => {
-          const RequirementComponent =
-            REQUIREMENTS[requirement.type].displayComponent
-
-          if (RequirementComponent)
-            return (
-              <React.Fragment key={i}>
-                <RequirementComponent requirement={requirement} />
-                {i < shownRequirements.length - 1 && <LogicDivider logic={logic} />}
-              </React.Fragment>
-            )
-        })
+        shownRequirements.map((requirement, i) => (
+          <React.Fragment key={i}>
+            <RequirementDisplayComponent requirement={requirement} />
+            {i < shownRequirements.length - 1 && <LogicDivider logic={role.logic} />}
+          </React.Fragment>
+        ))
       )}
 
       <Collapse
@@ -46,25 +39,21 @@ const RoleRequirements = ({ requirements, logic }: Props) => {
         animateOpacity={false}
         style={{ width: "100%" }}
       >
-        {hiddenRequirements.map((requirement, i) => {
-          const RequirementComponent =
-            REQUIREMENTS[requirement.type].displayComponent
-
-          if (RequirementComponent)
-            return (
-              <React.Fragment key={i}>
-                {i === 0 && <LogicDivider logic={logic} />}
-                <RequirementComponent requirement={requirement} />
-                {i < hiddenRequirements.length - 1 && <LogicDivider logic={logic} />}
-              </React.Fragment>
-            )
-        })}
+        {hiddenRequirements.map((requirement, i) => (
+          <React.Fragment key={i}>
+            {i === 0 && <LogicDivider logic={role.logic} />}
+            <RequirementDisplayComponent requirement={requirement} />
+            {i < hiddenRequirements.length - 1 && (
+              <LogicDivider logic={role.logic} />
+            )}
+          </React.Fragment>
+        ))}
       </Collapse>
 
       {hiddenRequirements.length > 0 && (
         <>
           <ExpandRequirementsButton
-            logic={logic}
+            logic={role.logic}
             hiddenRequirements={hiddenRequirements.length}
             isRequirementsExpanded={isRequirementsExpanded}
             setIsRequirementsExpanded={setIsRequirementsExpanded}

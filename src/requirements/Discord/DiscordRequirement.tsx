@@ -15,12 +15,7 @@ const DiscordRequirement = ({ requirement, ...rest }: RequirementComponentProps)
   return (
     <Requirement
       image={<Icon as={DiscordLogo} boxSize={6} />}
-      footer={
-        <ConnectRequirementPlatformButton
-          platform="DISCORD"
-          roleId={requirement?.roleId}
-        />
-      }
+      footer={<ConnectRequirementPlatformButton requirement={requirement} />}
       {...rest}
     >
       {(() => {

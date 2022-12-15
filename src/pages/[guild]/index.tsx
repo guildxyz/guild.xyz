@@ -5,8 +5,10 @@ import {
   Heading,
   HStack,
   Spinner,
+  Stack,
   Tag,
   Text,
+  Tooltip,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
@@ -32,7 +34,8 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import React, { useMemo } from "react"
+import { CloudSlash } from "phosphor-react"
+import React, { useMemo, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -49,6 +52,9 @@ const DynamicMembersExporter = dynamic(
 )
 const DynamicOnboarding = dynamic(() => import("components/[guild]/Onboarding"))
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
+const DynamicActiveStatusUpdates = dynamic(
+  () => import("components/[guild]/ActiveStatusUpdates")
+)
 
 const GuildPage = (): JSX.Element => {
   const {
@@ -94,6 +100,7 @@ const GuildPage = (): JSX.Element => {
   )
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+  const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
   // not importing it dinamically because that way the whole page flashes once when it loads
   const DynamicOnboardingProvider =
@@ -125,16 +132,14 @@ const GuildPage = (): JSX.Element => {
           <DynamicOnboarding />
         ) : (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            {isMember ? (
-              <HStack>
-                {isAdmin && <DynamicAddRewardButton />}
-                <LeaveButton />
-              </HStack>
+            {!isMember ? (
+              <JoinButton />
+            ) : !isAdmin ? (
+              <LeaveButton />
+            ) : isAddRoleStuck ? (
+              <DynamicAddRoleButton />
             ) : (
-              <HStack>
-                {isAdmin && <DynamicAddRewardButton />}
-                <JoinButton />
-              </HStack>
+              <DynamicAddRewardButton />
             )}
           </Tabs>
         )}
@@ -149,15 +154,18 @@ const GuildPage = (): JSX.Element => {
             isAdmin &&
             (showAccessHub || showOnboarding) && (
               <Box my="-2 !important" ml="auto !important">
-                <DynamicAddRoleButton />
+                <DynamicAddRoleButton setIsStuck={setIsAddRoleStuck} />
               </Box>
             )
           }
-          spacing={4}
           mb="12"
         >
           {sortedRoles?.length ? (
-            sortedRoles.map((role) => <RoleCard key={role.id} role={role} />)
+            <Stack spacing={4}>
+              {sortedRoles.map((role) => (
+                <RoleCard key={role.id} role={role} />
+              ))}
+            </Stack>
           ) : (
             <DynamicNoRolesAlert />
           )}
@@ -167,19 +175,31 @@ const GuildPage = (): JSX.Element => {
           <Section
             title="Members"
             titleRightElement={
-              <HStack justifyContent="space-between" w="full">
-                <Tag size="sm" maxH={6} pt={0.5}>
+              <HStack justifyContent="space-between" w="full" my="-2 !important">
+                {/* Temporary until the BE returns members again  */}
+                <Tooltip
+                  label="Members are temporarily hidden, only admins are shown"
+                  hasArrow
+                >
+                  <Tag size="sm" maxH={6}>
+                    <CloudSlash />
+                  </Tag>
+                </Tooltip>
+                {/* <Tag size="sm" maxH={6} pt={0.5}>
                   {isLoading ? <Spinner size="xs" /> : memberCount ?? 0}
-                </Tag>
+                </Tag> */}
                 {isAdmin && <DynamicMembersExporter />}
               </HStack>
             }
           >
-            {showMembers ? (
-              <Members members={members} />
-            ) : (
-              <Text>Members are hidden</Text>
-            )}
+            <Box>
+              {isAdmin && <DynamicActiveStatusUpdates />}
+              {showMembers ? (
+                <Members members={members} />
+              ) : (
+                <Text>Members are hidden</Text>
+              )}
+            </Box>
           </Section>
         )}
       </Layout>
