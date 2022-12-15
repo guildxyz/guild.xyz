@@ -350,18 +350,6 @@ export const REQUIREMENTS_DATA = [
     types: ["SISMO"],
   },
   {
-    icon: "/networkLogos/optimism.svg",
-    name: "OP Attestation",
-    fileNameBase: "Optimism",
-    displayComponent: dynamic<RequirementComponentProps>(
-      () => import("requirements/Optimism/OptimismRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Optimism/OptimismForm")
-    ),
-    types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
-  },
-  {
     icon: "/requirementLogos/sound.png",
     name: "Sound",
     fileNameBase: "Sound",
@@ -379,6 +367,18 @@ export const REQUIREMENTS_DATA = [
       "SOUND_TOP_COLLECTOR",
       "SOUND_NFTS",
     ],
+  },
+  {
+    icon: "/networkLogos/optimism.svg",
+    name: "OP Attestation",
+    fileNameBase: "Optimism",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Optimism/OptimismRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Optimism/OptimismForm")
+    ),
+    types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
   },
 ] as const
 
