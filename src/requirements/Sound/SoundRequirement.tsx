@@ -1,4 +1,5 @@
 import { Img } from "@chakra-ui/react"
+import DataBlock from "components/common/DataBlock"
 import Link from "components/common/Link"
 import { RequirementComponentProps } from "requirements"
 import Requirement from "requirements/common/Requirement"
@@ -58,7 +59,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
           case "SOUND_ARTIST_BACKED":
             return (
               <>
-                {`Support `}
+                {`Collect any song from `}
                 <ArtistLink {...{ artistData, requirement }} />
                 {` on Sound.xyz`}
               </>
@@ -66,7 +67,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
           case "SOUND_COLLECTED":
             return (
               <>
-                {`Own the `}
+                {`Collect the `}
                 <Link
                   href={`https://www.sound.xyz/${requirement.data.id}/${slugify(
                     requirement.data.title
@@ -88,6 +89,22 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
                 {`Be in the top 10 collectors of `}
                 <ArtistLink {...{ artistData, requirement }} />
                 {` on Sound.xyz`}
+              </>
+            )
+          case "SOUND_NFTS":
+            return (
+              <>
+                {`Own at least `}
+                <DataBlock>{requirement.data.minAmount}</DataBlock>
+                {` songs on `}
+                <Link
+                  href={`https://www.sound.xyz/`}
+                  isExternal
+                  fontWeight="medium"
+                  colorScheme={"blue"}
+                >
+                  Sound.xyz
+                </Link>
               </>
             )
         }

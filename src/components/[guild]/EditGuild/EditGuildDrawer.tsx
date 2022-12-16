@@ -183,10 +183,10 @@ const EditGuildDrawer = ({
                 {isOwner ? <DeleteGuildButton /> : <LeaveButton />}
               </DrawerHeader>
               <VStack spacing={10} alignItems="start">
-                <Section title="General" spacing="6">
+                <Section title="General">
                   <Stack
                     w="full"
-                    spacing="6"
+                    spacing="5"
                     direction={{ base: "column", md: "row" }}
                   >
                     <Box>
@@ -201,11 +201,11 @@ const EditGuildDrawer = ({
                   <Description />
                 </Section>
 
-                <Section title="Appearance" spacing="6">
+                <Section title="Appearance">
                   <Stack
                     direction={{ base: "column", md: "row" }}
                     justifyContent={"space-between"}
-                    spacing="6"
+                    spacing="5"
                     sx={{
                       "> *": {
                         flex: "1 0",

@@ -16,13 +16,20 @@ import useDeleteRole from "./hooks/useDeleteRole"
 
 type Props = {
   roleId: number
+  onDrawerClose: () => void
 }
 
-const DeleteRoleButton = ({ roleId }: Props): JSX.Element => {
-  const [removeAccess, setRemoveAccess] = useState(0)
-  const { onSubmit, isLoading, signLoadingText } = useDeleteRole(roleId)
+const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
+  const [removeAccess, setRemoveAccess] = useState("0")
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
+
+  const onSuccess = () => {
+    onClose()
+    onDrawerClose()
+  }
+
+  const { onSubmit, isLoading, signLoadingText } = useDeleteRole(roleId, onSuccess)
 
   return (
     <>
@@ -43,7 +50,7 @@ const DeleteRoleButton = ({ roleId }: Props): JSX.Element => {
               <ShouldKeepPlatformAccesses
                 keepAccessDescription="Everything on the platforms will remain as is for existing members, but accesses by this role won’t be managed anymore"
                 revokeAccessDescription="Existing members will lose every access granted by this role"
-                onChange={(newValue) => setRemoveAccess(+newValue)}
+                onChange={(newValue) => setRemoveAccess(newValue)}
                 value={removeAccess}
               />
             </AlertDialogBody>
