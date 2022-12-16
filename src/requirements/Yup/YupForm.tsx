@@ -6,6 +6,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
@@ -29,7 +30,7 @@ const YupForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     })) ?? []
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
@@ -97,7 +98,7 @@ const YupForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
           {parseFromObject(errors, baseFieldPath)?.data?.adapter?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 
