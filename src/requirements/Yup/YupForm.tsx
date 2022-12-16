@@ -1,75 +1,103 @@
-import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
-import { useController, useFormContext } from "react-hook-form"
+import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import AdapterScore from "./components/AdapterScore"
-import Score from "./components/Score"
-
-const yupRequirementTypes = [
-  {
-    label: "Have at least [x] Yup score",
-    value: "YUP_SCORE",
-    YupRequirement: Score,
-  },
-  {
-    label: "Have at least [x] Yup score of an adapter",
-    value: "YUP_ADAPTER_SCORE",
-    YupRequirement: AdapterScore,
-  },
-]
+import useAdapters from "./hooks/useAdapters"
 
 const YupForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
-    field: { name, onBlur, onChange, ref, value },
-  } = useController({
-    name: `${baseFieldPath}.type`,
-    rules: { required: "It's required to select a type" },
-  })
-
-  const {
-    resetField,
+    control,
     formState: { errors },
   } = useFormContext()
 
-  const selected = yupRequirementTypes.find((reqType) => reqType.value === value)
-
-  const resetFields = () => {
-    resetField(`${baseFieldPath}.data.minAmount`)
-    resetField(`${baseFieldPath}.data.adapter`)
-  }
+  const { adapters, isAdatpersLoading } = useAdapters()
+  const mappedAdapters: SelectOption[] =
+    adapters?.map((adapter) => ({
+      label: adapter,
+      value: adapter,
+    })) ?? []
 
   return (
-    <Stack spacing={4} alignItems="start">
+    <>
       <FormControl
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
       >
-        <FormLabel>Type</FormLabel>
-        <StyledSelect
-          options={yupRequirementTypes}
-          name={name}
-          onBlur={onBlur}
-          onChange={(newValue: { label: string; value: string }) => {
-            resetFields()
-            onChange(newValue?.value)
+        <FormLabel>Minimum score</FormLabel>
+
+        <Controller
+          name={`${baseFieldPath}.data.minAmount` as const}
+          control={control}
+          rules={{
+            required: "This field is required.",
+            min: {
+              value: 0,
+              message: "Amount must be positive",
+            },
           }}
-          ref={ref}
-          value={selected}
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <NumberInput
+              ref={ref}
+              value={value ?? ""}
+              onChange={(newValue) => {
+                if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
+                const parsedValue = parseFloat(newValue)
+                return onChange(isNaN(parsedValue) ? "" : parsedValue)
+              }}
+              onBlur={onBlur}
+              min={0}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          )}
         />
 
         <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.type?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.minAmount?.message}
         </FormErrorMessage>
       </FormControl>
 
-      {selected?.YupRequirement && (
-        <>
-          <Divider />
-          <selected.YupRequirement baseFieldPath={baseFieldPath} />
-        </>
-      )}
-    </Stack>
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.adapter}
+      >
+        <FormLabel>Adapter</FormLabel>
+
+        <Controller
+          name={`${baseFieldPath}.data.adapter` as const}
+          control={control}
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <StyledSelect
+              ref={ref}
+              isClearable
+              isLoading={isAdatpersLoading}
+              options={mappedAdapters}
+              value={mappedAdapters.find((a) => a.value === value) ?? ""}
+              onChange={(newValue: SelectOption) => onChange(newValue?.value)}
+              onBlur={onBlur}
+            />
+          )}
+        />
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.data?.adapter?.message}
+        </FormErrorMessage>
+      </FormControl>
+    </>
   )
 }
 

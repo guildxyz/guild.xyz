@@ -377,7 +377,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Yup/YupForm")
     ),
-    types: ["YUP", "YUP_SCORE", "YUP_ADAPTER_SCORE"],
+    types: ["YUP"],
   },
 ] as const
 
