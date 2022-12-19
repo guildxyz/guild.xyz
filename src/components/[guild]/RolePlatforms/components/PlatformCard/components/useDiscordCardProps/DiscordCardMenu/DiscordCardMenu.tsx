@@ -5,6 +5,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Spinner,
   Stack,
   Tag,
   Text,
@@ -13,7 +14,16 @@ import {
 import CreatePoap from "components/[guild]/CreatePoap"
 import useGuild from "components/[guild]/hooks/useGuild"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
-import { ChatDots, DotsThree, Gear } from "phosphor-react"
+import { useSubmitWithSign } from "hooks/useSubmit"
+import {
+  ArrowsCounterClockwise,
+  ChatDots,
+  Check,
+  DotsThree,
+  Gear,
+} from "phosphor-react"
+import { mutate } from "swr"
+import fetcher from "utils/fetcher"
 import DiscordRewardSettings from "./components/DiscordRewardSettings.tsx"
 
 type Props = {
@@ -37,11 +47,24 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     onClose: onSettingsClose,
   } = useDisclosure()
 
-  const { poaps } = useGuild()
+  const { id, poaps } = useGuild()
+
+  const syncMembersFromDiscord = async ({ validation, data }) =>
+    fetcher(`/statusUpdate/guildify/${id}`, {
+      validation,
+      body: {},
+    })
+
+  const { response, isLoading, onSubmit } = useSubmitWithSign(
+    syncMembersFromDiscord,
+    {
+      onSuccess: () => mutate(`/statusUpdate/guild/${id}`),
+    }
+  )
 
   return (
     <>
-      <Menu placement="bottom-end">
+      <Menu placement="bottom-end" closeOnSelect={false}>
         <MenuButton
           as={IconButton}
           icon={<DotsThree />}
@@ -77,6 +100,21 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
           </MenuItem>
           <MenuItem icon={<ChatDots />} onClick={onSendJoinButtonOpen}>
             Send join button
+          </MenuItem>
+          <MenuItem
+            icon={
+              response ? (
+                <Check />
+              ) : isLoading ? (
+                <Spinner boxSize="1em" mb="-2px" />
+              ) : (
+                <ArrowsCounterClockwise />
+              )
+            }
+            onClick={() => onSubmit()}
+            isDisabled={isLoading || response}
+          >
+            Sync members from Discord
           </MenuItem>
           <MenuItem icon={<Gear />} onClick={onSettingsOpen}>
             Settings
