@@ -1,6 +1,6 @@
 import useSWRImmutable from "swr/immutable"
 
-const useAdapters = (): { adapters: string[]; isAdatpersLoading: boolean } => {
+const useYupAdapters = (): { adapters: string[]; isAdatpersLoading: boolean } => {
   const { data, isValidating } = useSWRImmutable("https://api.yup.io/score/weights")
 
   const adapters = Object.keys(data?.data ?? {})
@@ -11,4 +11,4 @@ const useAdapters = (): { adapters: string[]; isAdatpersLoading: boolean } => {
   }
 }
 
-export default useAdapters
+export default useYupAdapters

@@ -14,7 +14,7 @@ import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import useAdapters from "./hooks/useAdapters"
+import useYupAdapters from "./hooks/useYupAdapters"
 
 const YupForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
@@ -22,7 +22,7 @@ const YupForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
-  const { adapters, isAdatpersLoading } = useAdapters()
+  const { adapters, isAdatpersLoading } = useYupAdapters()
   const mappedAdapters: SelectOption[] =
     adapters?.map((adapter) => ({
       label: adapter,
