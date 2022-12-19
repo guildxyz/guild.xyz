@@ -41,13 +41,9 @@ const TesseraRequirement = ({
                 {`List at least ${pluralize(
                   requirement.data.minAmount,
                   "NFT"
-                )} on Tessera${
-                  !isNaN(requirement.data.minVaultShare)
-                    ? `, at least ${(requirement.data.minVaultShare * 100).toFixed(
-                        2
-                      )}% of each`
-                    : ""
-                }`}
+                )} on Tessera with `}
+                <DataBlock>{requirement.data.vaultState}</DataBlock>
+                {` vault state`}
               </>
             )
           case "TESSERA_USER_SINCE":

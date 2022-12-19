@@ -46,7 +46,7 @@ const TesseraForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     if (!touchedFields?.data) return
     resetField(`${baseFieldPath}.data.vault`)
     resetField(`${baseFieldPath}.data.minAmount`)
-    resetField(`${baseFieldPath}.data.minVaultShare`)
+    resetField(`${baseFieldPath}.data.vaultState`)
     resetField(`${baseFieldPath}.data.minDate`)
   }, [value])
 
