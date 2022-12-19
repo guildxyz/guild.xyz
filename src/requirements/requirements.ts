@@ -395,7 +395,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/rep3.png",
     name: "Rep3",
-    dileNameBase: "Rep3",
+    fileNameBase: "Rep3",
     displayComponent: dynamic<RequirementComponentProps>(
       () => import("requirements/Rep3/Rep3Requirement")
     ),
