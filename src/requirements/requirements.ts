@@ -392,6 +392,18 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["YUP"],
   },
+  {
+    icon: "/requirementLogos/rep3.png",
+    name: "Rep3",
+    fileNameBase: "Rep3",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Rep3/Rep3Requirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Rep3/Rep3Form")
+    ),
+    types: ["REP3"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
