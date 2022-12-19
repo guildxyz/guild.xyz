@@ -14,6 +14,7 @@ import {
 import CreatePoap from "components/[guild]/CreatePoap"
 import useGuild from "components/[guild]/hooks/useGuild"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import {
   ArrowsCounterClockwise,
@@ -48,6 +49,7 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   } = useDisclosure()
 
   const { id, poaps } = useGuild()
+  const showErrorToast = useShowErrorToast()
 
   const syncMembersFromDiscord = async ({ validation, data }) =>
     fetcher(`/statusUpdate/guildify/${id}`, {
@@ -59,6 +61,7 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     syncMembersFromDiscord,
     {
       onSuccess: () => mutate(`/statusUpdate/guild/${id}`),
+      onError: (err) => showErrorToast(err),
     }
   )
 
