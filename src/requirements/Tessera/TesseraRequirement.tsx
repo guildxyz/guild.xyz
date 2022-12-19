@@ -55,7 +55,7 @@ const TesseraRequirement = ({
                 )} on Tessera `}
                 {requirement.data.vaultState && (
                   <>
-                    {`that are in `}
+                    {`that ${requirement.data.minAmount > 1 ? "are" : "is"} in `}
                     <DataBlock>{requirement.data.vaultState}</DataBlock>
                     {` state`}
                   </>
