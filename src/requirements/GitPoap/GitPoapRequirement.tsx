@@ -8,7 +8,7 @@ const GitPoapRequirement = ({ requirement, ...rest }: RequirementComponentProps)
   return (
     <Requirement
       image={isLoading ? "" : poap?.image_url}
-      loading={isLoading}
+      isImageLoading={isLoading}
       {...rest}
     >
       {`Own the ${

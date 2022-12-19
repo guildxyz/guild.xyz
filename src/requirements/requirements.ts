@@ -350,6 +350,49 @@ export const REQUIREMENTS_DATA = [
     types: ["SISMO"],
   },
   {
+    icon: "/requirementLogos/sound.png",
+    name: "Sound",
+    fileNameBase: "Sound",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Sound/SoundRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Sound/SoundForm")
+    ),
+    types: [
+      "SOUND",
+      "SOUND_ARTIST_BACKED",
+      "SOUND_COLLECTED",
+      "SOUND_ARTIST",
+      "SOUND_TOP_COLLECTOR",
+      "SOUND_NFTS",
+    ],
+  },
+  {
+    icon: "/networkLogos/optimism.svg",
+    name: "OP Attestation",
+    fileNameBase: "Optimism",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Optimism/OptimismRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Optimism/OptimismForm")
+    ),
+    types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
+  },
+  {
+    icon: "/requirementLogos/yup.svg",
+    name: "Yup",
+    fileNameBase: "Yup",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Yup/YupRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Yup/YupForm")
+    ),
+    types: ["YUP"],
+  },
+  {
     icon: "/requirementLogos/rep3.png",
     name: "Rep3",
     dileNameBase: "Rep3",

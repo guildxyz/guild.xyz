@@ -1,3 +1,4 @@
+import { Text } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"
@@ -56,6 +57,10 @@ const CreateDiscordGuildPage = (): JSX.Element => {
 
   return (
     <Layout title="Create Guild on Discord">
+      <Text colorScheme={"gray"} fontSize="lg" fontWeight="semibold" mt="-8" mb="10">
+        Adding the bot and creating the Guild won't change anything on your server
+        yet
+      </Text>
       <FormProvider {...methods}>
         <DiscordGuildSetup
           {...{ defaultValues, selectedServer }}

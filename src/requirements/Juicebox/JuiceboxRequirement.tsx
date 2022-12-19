@@ -12,7 +12,7 @@ const JuiceboxRequirement = ({
   return (
     <Requirement
       image={isLoading ? "" : project?.logoUri}
-      loading={isLoading}
+      isImageLoading={isLoading}
       {...rest}
     >
       {!isLoading && !project ? (
