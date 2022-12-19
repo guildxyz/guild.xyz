@@ -1,16 +1,16 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react"
+import PageDetailsCard from "components/brain/BrainCard"
 import FilterSelect, { FilterOption } from "components/brain/filterSelect"
-import PageDetailsCard from "components/brain/pageDetailsCard"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
 import SearchBar from "components/explorer/SearchBar"
 import { GetStaticProps } from "next"
 import { useMemo, useState } from "react"
-import { PageDetailsCardData } from "types"
+import { BrainCardData } from "types"
 
 type Props = {
-  cards: PageDetailsCardData[]
+  cards: BrainCardData[]
 }
 
 const Guildverse = ({ cards: cards }: Props): JSX.Element => {
@@ -84,20 +84,17 @@ export const getStaticProps: GetStaticProps = async () => {
     },
     sorts: [
       {
-        property: "defaultOrder(1-5)",
-        direction: "descending",
+        property: "defaultOrder",
+        direction: "ascending",
       },
     ],
   })
 
-  const cards: Array<PageDetailsCardData> = response.results.map((page) => ({
+  const cards: Array<BrainCardData> = response.results.map((page) => ({
     id: page.id,
     title: page.properties.title.title[0].plain_text,
     tags: page.properties.tags.multi_select.map((tag) => tag.name),
     icon: page.icon?.file?.url ? page.icon.file.url : null,
-    iconBgColor: page.properties.iconBgColor.rich_text[0]?.plain_text
-      ? page.properties.iconBgColor.rich_text[0]?.plain_text
-      : null,
     backgroundImage: page.cover?.external?.url ? page.cover.external.url : null,
   }))
 

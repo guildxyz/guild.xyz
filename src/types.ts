@@ -145,7 +145,7 @@ type GuildBase = {
   memberCount: number
 }
 
-type PageDetailsCardData = {
+type BrainCardData = {
   id: string
   title: string
   tags?: Array<string>
@@ -542,7 +542,7 @@ export type {
   Role,
   GuildPlatform,
   GuildBase,
-  PageDetailsCardData,
+  BrainCardData,
   Guild,
   Requirement,
   RequirementType,

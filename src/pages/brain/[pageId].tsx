@@ -8,7 +8,7 @@ import {
   TagLeftIcon,
   Wrap,
 } from "@chakra-ui/react"
-import PageDetailsCard from "components/brain/pageDetailsCard"
+import BrainCard from "components/brain/BrainCard"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
@@ -20,7 +20,7 @@ import { DiscordLogo, Globe, IconProps, TwitterLogo } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { NotionRenderer } from "react-notion-x"
 import "react-notion-x/src/styles.css"
-import { PageDetailsCardData } from "types"
+import { BrainCardData } from "types"
 
 type CustomPageLinkProps = {
   href: string
@@ -87,8 +87,8 @@ const Header = (props) => {
   })
 
   return (
-    <Section mb="16px">
-      <Wrap justify="space-between">
+    <Section>
+      <Wrap justify="space-between" pb="8px">
         <Wrap>
           {links?.map((link, index) => (
             <Link
@@ -125,9 +125,9 @@ const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
     <Layout
       title={blockMap.block[params.pageId.toString()]?.value.properties.title[0][0]}
       image={
-        pageLogo ? (
+        pageLogo && (
           <Image src={pageLogo} width="56px" mt="8px" alt="page logo"></Image>
-        ) : null
+        )
       }
     >
       <NotionRenderer
@@ -140,7 +140,7 @@ const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
       {linkedPageContents && (
         <CategorySection fallbackText={"no tags"} mt="24px">
           {linkedPageContents?.map((page) => (
-            <PageDetailsCard pageData={page} key={page.id} />
+            <BrainCard pageData={page} key={page.id} />
           ))}
         </CategorySection>
       )}
@@ -168,7 +168,7 @@ const getRelatedPageLinks = (allPages, blockMap, params) => {
   const linkedPageContents = getLinkedPagesByName(blockMap, params, allPages)
   const linkedPagesByTags = getLinkedPagesByTags(blockMap, params, allPages)
   const Links = [...new Set([...linkedPageContents, ...linkedPagesByTags])]
-  const cards: Array<PageDetailsCardData> = Links.map((page) => ({
+  const cards: Array<BrainCardData> = Links.map((page) => ({
     id: page.id,
     title: page.properties.title.title[0].plain_text,
     tags: page.properties.tags.multi_select.map((tag) => tag.name),
