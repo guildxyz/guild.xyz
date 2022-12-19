@@ -11,7 +11,7 @@ import UserSince from "./components/UserSince"
 
 const tesseraRequirementTypes = [
   {
-    label: "Hold fractions of an NFT",
+    label: "Hold fraction of an NFT",
     value: "TESSERA_HOLD",
     TesseraRequirement: Hold,
   },
@@ -21,7 +21,7 @@ const tesseraRequirementTypes = [
     TesseraRequirement: Listings,
   },
   {
-    label: "Signed the ToS before",
+    label: "Account age",
     value: "TESSERA_USER_SINCE",
     TesseraRequirement: UserSince,
   },

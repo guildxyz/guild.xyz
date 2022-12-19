@@ -47,7 +47,7 @@ const TesseraRequirement = ({
               </>
             )
           case "TESSERA_USER_SINCE":
-            return `Be a Tessera user at least since ${
+            return `Be a Tessera user since at least ${
               requirement.data.minDate?.split("T")[0]
             }`
         }

@@ -44,7 +44,7 @@ const UserSince = ({
   ...rest
 }: RequirementComponentProps): JSX.Element => (
   <Requirement image="/requirementLogos/guild.png" {...rest}>
-    {`Be a Guild.xyz user at least since ${
+    {`Be a Guild.xyz user since at least ${
       requirement.data.creationDate?.split("T")[0]
     }`}
   </Requirement>
