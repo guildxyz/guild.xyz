@@ -10,7 +10,8 @@ const Rep3Requirement = ({
 }: RequirementComponentProps): JSX.Element => (
   <Requirement
     image={"/requirementLogos/rep3.png"}
-    footer={<BlockExplorerUrl requirement={requirement} {...rest} />}
+    footer={<BlockExplorerUrl requirement={requirement} />}
+    {...rest}
   >
     {`Have a level ${requirement.data.id} rep3 membership NFT in DAO: `}
     <DataBlock>{requirement.name ?? shortenHex(requirement.address, 3)}</DataBlock>
