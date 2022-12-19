@@ -35,18 +35,6 @@ const TesseraRequirement = ({
                 {" NFT"}
               </>
             )
-          case "TESSERA_VAULTSHARE":
-            return (
-              <>
-                {`Hold ${
-                  requirement.data.minShare > 0
-                    ? `at least ${(requirement.data.minShare * 100).toFixed(2)}%`
-                    : "any percentage"
-                } of the fractions of the `}
-                <DataBlock>{vault?.name ?? requirement.data.vault}</DataBlock>
-                {" NFT"}
-              </>
-            )
           case "TESSERA_LISTINGS":
             return (
               <>

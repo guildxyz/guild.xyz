@@ -8,18 +8,12 @@ import parseFromObject from "utils/parseFromObject"
 import Hold from "./components/Hold"
 import Listings from "./components/Listings"
 import UserSince from "./components/UserSince"
-import Vaultshare from "./components/Vaultshare"
 
 const tesseraRequirementTypes = [
   {
     label: "Hold fractions of an NFT",
     value: "TESSERA_HOLD",
     TesseraRequirement: Hold,
-  },
-  {
-    label: "Hold percentage of an NFT",
-    value: "TESSERA_VAULTSHARE",
-    TesseraRequirement: Vaultshare,
   },
   {
     label: "List NFTs",
@@ -52,7 +46,6 @@ const TesseraForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     if (!touchedFields?.data) return
     resetField(`${baseFieldPath}.data.vault`)
     resetField(`${baseFieldPath}.data.minAmount`)
-    resetField(`${baseFieldPath}.data.minShare`)
     resetField(`${baseFieldPath}.data.minVaultShare`)
     resetField(`${baseFieldPath}.data.minDate`)
   }, [value])

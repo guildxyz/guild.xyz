@@ -414,13 +414,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Tessera/TesseraForm")
     ),
-    types: [
-      "TESSERA",
-      "TESSERA_HOLD",
-      "TESSERA_VAULTSHARE",
-      "TESSERA_LISTINGS",
-      "TESSERA_USER_SINCE",
-    ],
+    types: ["TESSERA", "TESSERA_HOLD", "TESSERA_LISTINGS", "TESSERA_USER_SINCE"],
   },
 ] as const
 
