@@ -45,7 +45,7 @@ const Rep3Form = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
       >
-        <FormLabel>Contract address</FormLabel>
+        <FormLabel>Badge contract address</FormLabel>
 
         <Input
           {...register(`${baseFieldPath}.address`, {

@@ -12,8 +12,8 @@ const Rep3Requirement = ({
     image={"/requirementLogos/rep3.png"}
     footer={<BlockExplorerUrl requirement={requirement} {...rest} />}
   >
-    {`Have membership level of ${requirement.data.id} in `}
-    {requirement.name ?? <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>}
+    {`Have a level ${requirement.data.id} rep3 membership NFT in DAO: `}
+    <DataBlock>{requirement.name ?? shortenHex(requirement.address, 3)}</DataBlock>
   </Requirement>
 )
 
