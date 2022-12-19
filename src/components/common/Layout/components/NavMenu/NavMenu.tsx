@@ -124,15 +124,14 @@ const NavMenu = (): JSX.Element => {
               >
                 Guide
               </NavButton>
-              <NavButton
-                target="_blank"
-                href="/guildverse"
-                rel="noopener"
-                leftIcon={<Brain />}
-                data-dd-action-name="Navigation menu - Guildverse"
-              >
-                Guildverse
-              </NavButton>
+              <NextLink passHref href="/guildverse">
+                <NavButton
+                  leftIcon={<Brain />}
+                  data-dd-action-name="Navigation menu - Guildverse"
+                >
+                  Guildverse
+                </NavButton>
+              </NextLink>
             </NavGroup>
 
             <NavGroup title="Socials">
