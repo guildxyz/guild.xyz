@@ -23,7 +23,11 @@ const ActiveStatusUpdates = () => {
             params?.guildify ? "from Discord into your guild" : ""
           }`}</AlertTitle>
           <Progress
-            value={0 && (progress.actionsDone / progress.total) * 100}
+            value={
+              status === null
+                ? 100
+                : (progress.actionsDone / progress.total) * 100 || 1
+            }
             colorScheme="blue"
             bg={colorMode === "light" ? "blue.50" : null}
             pos="absolute"
