@@ -1,24 +1,19 @@
 import useSWRImmutable from "swr/immutable"
-import { SelectOption } from "types"
+import { Rest } from "types"
 
 type PartialTessaraVault = {
   slug: string
   name: string
   imageUrl: string
-}
+} & Rest
 
-const useTesseraVaults = (): { vaults: SelectOption[]; isLoading: boolean } => {
+const useTesseraVaults = () => {
   const { data: response, isValidating: isLoading } = useSWRImmutable<{
     data: PartialTessaraVault[]
   }>("https://api.tessera.co/vaults")
 
   return {
-    vaults:
-      response?.data?.map((vault) => ({
-        label: vault.name,
-        value: vault.slug,
-        img: vault.imageUrl,
-      })) ?? [],
+    data: response?.data,
     isLoading,
   }
 }

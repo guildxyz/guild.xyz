@@ -405,7 +405,7 @@ export const REQUIREMENTS_DATA = [
     types: ["REP3"],
   },
   {
-    icon: "/requirementLogos/tessera.svg",
+    icon: "/explorerLogos/tessera.svg",
     name: "Tessera",
     fileNameBase: "Tessera",
     displayComponent: dynamic<RequirementComponentProps>(
@@ -414,7 +414,13 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Tessera/TesseraForm")
     ),
-    types: ["TESSERA", "TESSERA_HOLD", "TESSERA_LISTINGS", "TESSERA_USER_SINCE"],
+    types: [
+      "TESSERA",
+      "TESSERA_HOLD",
+      "TESSERA_HOLD_COLLECTION",
+      "TESSERA_LISTINGS",
+      "TESSERA_USER_SINCE",
+    ],
   },
 ] as const
 

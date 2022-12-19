@@ -18,7 +18,6 @@ const Listings = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
     name: `${baseFieldPath}.data.vaultState`,
-    rules: { required: "This field is required." },
   })
 
   return (
@@ -32,7 +31,6 @@ const Listings = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       />
 
       <FormControl
-        isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.vaultState}
       >
         <FormLabel>Vault state</FormLabel>

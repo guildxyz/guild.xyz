@@ -6,17 +6,23 @@ import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import Hold from "./components/Hold"
+import HoldCollection from "./components/HoldCollection"
 import Listings from "./components/Listings"
 import UserSince from "./components/UserSince"
 
 const tesseraRequirementTypes = [
   {
-    label: "Hold fraction of an NFT",
+    label: "Hold Raes of a vault",
     value: "TESSERA_HOLD",
     TesseraRequirement: Hold,
   },
   {
-    label: "List NFTs",
+    label: "Hold Raes from a collection",
+    value: "TESSERA_HOLD_COLLECTION",
+    TesseraRequirement: HoldCollection,
+  },
+  {
+    label: "List Raes for sale",
     value: "TESSERA_LISTINGS",
     TesseraRequirement: Listings,
   },

@@ -13,7 +13,7 @@ const UserSince = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       isRequired
       isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minDate}
     >
-      <FormLabel>Date</FormLabel>
+      <FormLabel>Registered before</FormLabel>
 
       <Controller
         control={control}

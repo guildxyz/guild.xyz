@@ -14,7 +14,14 @@ import useTesseraVaults from "../hooks/useTesseraVaults"
 
 const VaultField = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const { errors } = useFormState()
-  const { vaults, isLoading } = useTesseraVaults()
+  const { data, isLoading } = useTesseraVaults()
+
+  const vaults =
+    data?.map((vault) => ({
+      label: vault.name,
+      value: vault.slug,
+      img: vault.imageUrl,
+    })) ?? []
 
   const {
     field: { name, onBlur, onChange, ref, value },

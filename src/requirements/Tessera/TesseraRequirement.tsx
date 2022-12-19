@@ -16,7 +16,7 @@ const TesseraRequirement = ({
       image={
         requirement.data.vault && isLoading
           ? ""
-          : vault?.imageUrl ?? "/requirementLogos/tessera.svg"
+          : vault?.imageUrl ?? "/requirementLogos/tessera.png"
       }
       footer={<TesseraUrl collectionSlug={requirement.data.vault} />}
       {...rest}
@@ -28,11 +28,22 @@ const TesseraRequirement = ({
               <>
                 {`Hold ${
                   requirement.data.minAmount > 0
-                    ? `at least ${pluralize(requirement.data.minAmount, "fraction")}`
-                    : "a fraction"
+                    ? `at least ${pluralize(requirement.data.minAmount, "Rae")}`
+                    : "a Rae"
                 } of the `}
                 <DataBlock>{vault?.name ?? requirement.data.vault}</DataBlock>
                 {" NFT"}
+              </>
+            )
+          case "TESSERA_HOLD_COLLECTION":
+            return (
+              <>
+                {`Hold ${
+                  requirement.data.minAmount > 0
+                    ? `at least ${pluralize(requirement.data.minAmount, "Rae")}`
+                    : "a Rae"
+                } of any vault that contains an NFT from `}
+                <DataBlock>{requirement.data.collection}</DataBlock>
               </>
             )
           case "TESSERA_LISTINGS":
@@ -40,10 +51,15 @@ const TesseraRequirement = ({
               <>
                 {`List at least ${pluralize(
                   requirement.data.minAmount,
-                  "NFT"
-                )} on Tessera with `}
-                <DataBlock>{requirement.data.vaultState}</DataBlock>
-                {` vault state`}
+                  "Rae"
+                )} on Tessera `}
+                {requirement.data.vaultState && (
+                  <>
+                    {`that are in `}
+                    <DataBlock>{requirement.data.vaultState}</DataBlock>
+                    {` state`}
+                  </>
+                )}
               </>
             )
           case "TESSERA_USER_SINCE":
