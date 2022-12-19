@@ -52,7 +52,7 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   const syncMembersFromDiscord = async ({ validation, data }) =>
     fetcher(`/statusUpdate/guildify/${id}`, {
       validation,
-      body: {},
+      body: data,
     })
 
   const { response, isLoading, onSubmit } = useSubmitWithSign(
@@ -111,7 +111,11 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
                 <ArrowsCounterClockwise />
               )
             }
-            onClick={() => onSubmit()}
+            onClick={() =>
+              onSubmit({
+                notifyUsers: false,
+              })
+            }
             isDisabled={isLoading || response}
           >
             Sync members from Discord

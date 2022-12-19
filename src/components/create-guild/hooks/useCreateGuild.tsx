@@ -53,7 +53,9 @@ const useCreateGuild = () => {
 
       if (response_.guildPlatforms[0].platformId === PlatformType.DISCORD)
         fetcherWithSign(`/statusUpdate/guildify/${response_.id}?force=true`, {
-          body: {},
+          body: {
+            notifyUsers: false,
+          },
         })
 
       matchMutate(/^\/guild\/address\//)
