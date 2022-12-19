@@ -8,7 +8,7 @@ import fetcher from "utils/fetcher"
 import { useRolePlatform } from "../../RolePlatformProvider"
 
 type Data = {
-  removePlatformAccess: boolean
+  removePlatformAccess: string
 }
 
 const useRemovePlatform = () => {

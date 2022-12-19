@@ -32,7 +32,7 @@ const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
-  const { urlName, mutateGuild } = useGuild()
+  const { id, urlName, mutateGuild } = useGuild()
   const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   const fetchData = async ({
@@ -82,7 +82,8 @@ guild.xyz/${urlName} @guildxyz`)}`}
         status: "success",
       })
 
-      mutate(`/guild/access/${response_.guildId}/${account}`)
+      mutate(`/guild/access/${id}/${account}`)
+      mutate(`/statusUpdate/guild/${id}`)
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)

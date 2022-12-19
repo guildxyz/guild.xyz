@@ -48,7 +48,6 @@ const RolePlatforms = ({ roleId }: Props) => {
   return (
     <Section
       title="Rewards"
-      spacing="6"
       titleRightElement={
         <>
           <Text as="span" fontSize="sm" colorScheme={"gray"}>
