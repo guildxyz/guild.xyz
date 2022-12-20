@@ -70,7 +70,7 @@ const TelegramGroup = ({
                 w="full"
                 as="a"
                 h="var(--chakra-space-11)"
-                href="https://t.me/guildxyz_bot?startgroup=true"
+                href="https://t.me/guild_xyz_test_bot?startgroup=true"
                 target="_blank"
                 rightIcon={<Icon as={ArrowSquareOut} mt="-1px" />}
                 isLoading={isLoading}
