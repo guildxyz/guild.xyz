@@ -15,6 +15,7 @@ import {
   Spinner,
   Stack,
   Text,
+  Tooltip,
   useBreakpointValue,
   useClipboard,
   useColorModeValue,
@@ -54,6 +55,22 @@ const MembersExporter = (): JSX.Element => {
     if (!aRef.current) return
     aRef.current.click()
   }
+
+  // Temporarily disabled until the BE returns members again
+  return (
+    <Tooltip label="Temporarily disabled" hasArrow>
+      <Button
+        aria-label="Export members"
+        variant="ghost"
+        leftIcon={<Icon as={Export} />}
+        size="sm"
+        data-dd-action-name="Export members"
+        isDisabled
+      >
+        {label}
+      </Button>
+    </Tooltip>
+  )
 
   // Wrapping the Popover in a div, so we don't get popper.js warnings in the console
   return (
