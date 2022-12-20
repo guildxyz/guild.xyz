@@ -12,7 +12,8 @@ import TwitterUserLink from "./components/TwitterUserLink"
 const TwitterRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
   <Requirement
     image={
-      requirement.type === "TWITTER_FOLLOW" && requirement.data.id ? (
+      ["TWITTER_FOLLOW", "TWITTER_FOLLOWED_BY"].includes(requirement.type) &&
+      requirement.data.id ? (
         typeof window !== "undefined" ? (
           `${window.origin}/api/twitter-avatar?username=${requirement.data.id}`
         ) : (
