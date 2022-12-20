@@ -179,7 +179,7 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
               <VStack spacing={10} alignItems="start">
                 <RolePlatforms />
 
-                <Section title={"General"} spacing="6">
+                <Section title={"General"}>
                   <Box>
                     <FormLabel>Choose a logo and name for your role</FormLabel>
                     <HStack spacing={2} alignItems="start">

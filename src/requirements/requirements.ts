@@ -83,6 +83,7 @@ export const REQUIREMENTS_DATA = [
       "TWITTER_FOLLOW",
       "TWITTER_FOLLOWER_COUNT",
     ],
+    isPlatform: true,
   },
   {
     icon: "/platforms/github.png",
@@ -95,6 +96,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Github/GithubForm")
     ),
     types: ["GITHUB", "GITHUB_STARRING"],
+    isPlatform: true,
   },
   {
     icon: "/platforms/discord.png",
@@ -113,6 +115,7 @@ export const REQUIREMENTS_DATA = [
       "DISCORD_JOIN_FROM_NOW",
       "DISCORD_MEMBER_SINCE",
     ],
+    isPlatform: true,
   },
   {
     icon: "/requirementLogos/guild.png",
@@ -345,6 +348,73 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Sismo/SismoForm")
     ),
     types: ["SISMO"],
+  },
+  {
+    icon: "/requirementLogos/sound.png",
+    name: "Sound",
+    fileNameBase: "Sound",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Sound/SoundRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Sound/SoundForm")
+    ),
+    types: [
+      "SOUND",
+      "SOUND_ARTIST_BACKED",
+      "SOUND_COLLECTED",
+      "SOUND_ARTIST",
+      "SOUND_TOP_COLLECTOR",
+      "SOUND_NFTS",
+    ],
+  },
+  {
+    icon: "/networkLogos/optimism.svg",
+    name: "OP Attestation",
+    fileNameBase: "Optimism",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Optimism/OptimismRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Optimism/OptimismForm")
+    ),
+    types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
+  },
+  {
+    icon: "/requirementLogos/yup.svg",
+    name: "Yup",
+    fileNameBase: "Yup",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Yup/YupRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Yup/YupForm")
+    ),
+    types: ["YUP"],
+  },
+  {
+    icon: "/requirementLogos/rep3.png",
+    name: "Rep3",
+    fileNameBase: "Rep3",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Rep3/Rep3Requirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Rep3/Rep3Form")
+    ),
+    types: ["REP3"],
+  },
+  {
+    icon: "/requirementLogos/parallel.png",
+    name: "Parallel",
+    fileNameBase: "Parallel",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Parallel/ParallelRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Parallel/ParallelForm")
+    ),
+    types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
   },
 ] as const
 

@@ -18,12 +18,7 @@ const TwitterRequirement = ({ requirement, ...rest }: RequirementComponentProps)
         <Icon as={TwitterLogo} boxSize={6} />
       )
     }
-    footer={
-      <ConnectRequirementPlatformButton
-        platform="TWITTER"
-        roleId={requirement?.roleId}
-      />
-    }
+    footer={<ConnectRequirementPlatformButton requirement={requirement} />}
     {...rest}
   >
     {(() => {

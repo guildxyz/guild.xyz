@@ -167,12 +167,14 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
             <DrawerHeader title="Edit role">
-              {roles?.length > 1 && <DeleteRoleButton roleId={id} />}
+              {roles?.length > 1 && (
+                <DeleteRoleButton roleId={id} onDrawerClose={onClose} />
+              )}
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <RolePlatforms roleId={roleId} />
-                <Section title="General" spacing="6">
+                <Section title="General">
                   <Box>
                     <FormLabel>Logo and name</FormLabel>
                     <HStack spacing={2} alignItems="start">

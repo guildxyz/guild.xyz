@@ -22,7 +22,8 @@ jobs:
           key: node-modules-${{ hashFiles('package-lock.json') }}
       - name: Install Dependencies
         if: steps.node-cache.outputs.cache-hit != 'true'
-        run: npm ci
+        # temorary --force until chakra-ui-steps don't support framer motion v7
+        run: npm ci --force
       - run: echo "DATADOG_SITE=datadoghq.eu" >> $GITHUB_ENV
       - run: echo "DATADOG_API_KEY=${{ secrets.DATADOG_API_KEY }}" >> $GITHUB_ENV
       - run: npm run build
