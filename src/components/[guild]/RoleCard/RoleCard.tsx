@@ -54,19 +54,25 @@ const RoleCard = memo(({ role }: Props) => {
           borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
         >
           <HStack justifyContent="space-between" mb={6} spacing={3}>
-            <HStack spacing={4}>
+            <HStack spacing={4} minW={0}>
               <GuildLogo
                 imageUrl={role.imageUrl}
                 size={{ base: "48px", md: "52px" }}
               />
-              <Heading as="h3" fontSize="xl" fontFamily="display">
+              <Heading
+                as="h3"
+                fontSize="xl"
+                fontFamily="display"
+                minW={0}
+                overflowWrap={"break-word"}
+              >
                 {role.name}
               </Heading>
             </HStack>
             <MemberCount memberCount={role.memberCount} roleId={role.id} />
             {isAdmin && (
               <>
-                <Spacer />
+                <Spacer m="0 !important" />
                 <DynamicEditRole roleId={role.id} />
               </>
             )}
