@@ -173,7 +173,7 @@ const getRelatedPageLinks = (allPages, blockMap, params) => {
     title: page.properties.title.title[0].plain_text,
     tags: page.properties.tags.multi_select.map((tag) => tag.name),
     icon: page.icon?.file?.url ? page.icon.file.url : null,
-    backgroundImage: page.cover?.external?.url ? page.cover.external.url : null,
+    backgroundImage: page.cover?.file?.url ? page.cover?.file?.url : null,
   }))
   return cards
 }
