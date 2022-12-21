@@ -58,7 +58,6 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
                 alt={`${title} image`}
                 opacity="90%"
                 filter={`blur(8px)`}
-                transform="scale(1.25)"
                 objectFit="cover"
                 transition="filter 0.3s"
                 _groupHover={{ filter: "blur(2px)" }}
