@@ -65,7 +65,6 @@ const DisplayCard = ({
             letterSpacing="wide"
             maxW="full"
             noOfLines={1}
-            zIndex={1}
           >
             {title}
           </Text>

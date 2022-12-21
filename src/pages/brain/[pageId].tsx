@@ -1,6 +1,5 @@
 import {
   Button,
-  Image,
   Img,
   Link,
   Tag,
@@ -125,9 +124,7 @@ const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
     <Layout
       title={blockMap.block[params.pageId.toString()]?.value.properties.title[0][0]}
       image={
-        pageLogo && (
-          <Image src={pageLogo} width="56px" mt="8px" alt="page logo"></Image>
-        )
+        pageLogo && <Img src={pageLogo} width="56px" mt="8px" alt="page logo"></Img>
       }
     >
       <NotionRenderer
@@ -138,7 +135,7 @@ const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
         }}
       />
       {linkedPageContents && (
-        <CategorySection fallbackText={"no tags"} mt="24px">
+        <CategorySection fallbackText={"there are no linked pages"} mt="24px">
           {linkedPageContents?.map((page) => (
             <BrainCard pageData={page} key={page.id} />
           ))}
@@ -223,7 +220,7 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 export const getStaticProps = async ({ params }) => {
   const blockMap = await getPage(params)
   const allPages = await getAllPages()
-  const linkedPageContents = await getRelatedPageLinks(allPages, blockMap, params)
+  const linkedPageContents = getRelatedPageLinks(allPages, blockMap, params)
   const pageLogo = allPages.find((page) => page.id === params.pageId)?.icon?.file
     ?.url
     ? allPages.find((page) => page.id === params.pageId).icon?.file?.url

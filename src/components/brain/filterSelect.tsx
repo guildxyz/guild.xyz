@@ -3,7 +3,6 @@ import { GroupBase, Select } from "chakra-react-select"
 export type FilterOption = {
   value: string
   label: string
-  colorScheme?: string
 }
 
 type Props = {

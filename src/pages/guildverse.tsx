@@ -1,5 +1,5 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react"
-import PageDetailsCard from "components/brain/BrainCard"
+import BrainCard from "components/brain/BrainCard"
 import FilterSelect, { FilterOption } from "components/brain/filterSelect"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
@@ -52,7 +52,7 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
         </SimpleGrid>
         <CategorySection fallbackText={"There are no pages"}>
           {renderedCards.map((card) => (
-            <PageDetailsCard pageData={card} key={card.id} />
+            <BrainCard pageData={card} key={card.id} />
           ))}
         </CategorySection>
       </Layout>
