@@ -3,6 +3,7 @@ import {
   Container,
   Heading,
   HStack,
+  Img,
   Text,
   useColorMode,
   VStack,
@@ -25,6 +26,7 @@ type Props = {
   background?: string
   backgroundImage?: string
   backgroundOffset?: number
+  showhat?: boolean
 } & HeaderProps
 
 const Layout = ({
@@ -39,6 +41,7 @@ const Layout = ({
   backgroundOffset = 128,
   showBackButton,
   children,
+  showhat,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
@@ -121,6 +124,16 @@ const Layout = ({
                   color={textColor}
                   wordBreak={"break-word"}
                 >
+                  {showhat && (
+                    <Img
+                      src="/img/hat.png"
+                      w="55px"
+                      position="absolute"
+                      left="5"
+                      top="5"
+                      transform="rotate(-30deg)"
+                    />
+                  )}
                   {title}
                 </Heading>
               </HStack>
