@@ -26,6 +26,12 @@ const Page = () => (
           pb={{ base: 10, md: 20 }}
         >
           <LegoCard
+            href="/lego/ChristmasGuildRobotAssembly.pdf"
+            img="/lego/christmas-guild-robot.png"
+            name="Guild Robot"
+            pieces={104}
+          />
+          <LegoCard
             href="/lego/BrandenburgGuildAssembly.pdf"
             img="/lego/brandenburg-guild.png"
             name="Brandenburg Guild"
