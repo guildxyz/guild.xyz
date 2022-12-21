@@ -202,9 +202,9 @@ const SnapshotRequirement = ({
               </>
             )
           case "SNAPSHOT_MAJORITY_VOTES":
-            return `Vote with majority in the rate of ${(
+            return `Vote with the majority at least ${(
               requirement.data.minRatio * 100
-            ).toFixed(0)}%`
+            ).toFixed(0)}% of the time`
         }
       })()}
     </Requirement>

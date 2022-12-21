@@ -54,7 +54,7 @@ const snapshotRequirementTypes = [
     SnapshotRequirement: Proposals,
   },
   {
-    label: "Voted with majority in a defined rate",
+    label: "Voted with the majority [x]% of the time",
     value: "SNAPSHOT_MAJORITY_VOTES",
     SnapshotRequirement: MajorityVotes,
   },

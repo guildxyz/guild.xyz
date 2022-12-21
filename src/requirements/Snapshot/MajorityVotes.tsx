@@ -1,6 +1,5 @@
 import {
   FormControl,
-  FormHelperText,
   FormLabel,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -34,7 +33,7 @@ const MajorityVotes = ({ baseFieldPath }: RequirementFormProps): JSX.Element => 
       },
       max: {
         value: 1,
-        message: "Amount must be less than or equal to 1",
+        message: "Amount must be less than or equal to 100",
       },
     },
   })
@@ -44,21 +43,19 @@ const MajorityVotes = ({ baseFieldPath }: RequirementFormProps): JSX.Element => 
       isRequired
       isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minRatio}
     >
-      <FormLabel>Minimum ratio</FormLabel>
+      <FormLabel>Minimum percentage</FormLabel>
 
       <NumberInput
         ref={minRatioFieldRef}
         name={minRatioFieldName}
-        value={minRatioFieldValue ?? ""}
+        value={minRatioFieldValue ? minRatioFieldValue * 100 : ""}
         onChange={(newValue) => {
-          if (/^[0-9]*\.0*$/i.test(newValue)) return minRatioFieldOnChange(newValue)
           const parsedValue = parseFloat(newValue)
-          return minRatioFieldOnChange(isNaN(parsedValue) ? "" : parsedValue)
+          return minRatioFieldOnChange(isNaN(parsedValue) ? "" : parsedValue / 100)
         }}
         onBlur={minRatioFieldOnBlur}
         min={0}
-        max={1}
-        step={0.01}
+        max={100}
       >
         <NumberInputField />
         <NumberInputStepper>
@@ -70,8 +67,6 @@ const MajorityVotes = ({ baseFieldPath }: RequirementFormProps): JSX.Element => 
       <FormErrorMessage>
         {parseFromObject(errors, baseFieldPath)?.data?.minRatio?.message}
       </FormErrorMessage>
-
-      <FormHelperText>A number between 0 and 1</FormHelperText>
     </FormControl>
   )
 }
