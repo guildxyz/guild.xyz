@@ -205,7 +205,7 @@ const getLinkedPagesByTags = (blockMap, params, allPages) => {
 
 const getIds = async () => {
   const pages = await getAllPages()
-  const ids = pages.map((page) => JSON.parse(`{"params":{"pageId":"${page.id}"}}`))
+  const ids = pages.map((page) => ({ params: { pageId: page.id } }))
   return ids
 }
 

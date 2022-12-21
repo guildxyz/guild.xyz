@@ -1,7 +1,7 @@
-import { Box, Center, Flex, Image, Text } from "@chakra-ui/react"
-import Card from "components/common/Card"
+import { Box, Center, Divider, Flex, HStack, Image, Text } from "@chakra-ui/react"
+import ColorCard from "components/common/ColorCard"
+import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import Link from "components/common/Link"
-import { title } from "process"
 import { BrainCardData } from "types"
 
 type Props = {
@@ -19,43 +19,32 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
       _hover={{ textDecor: "none" }}
       borderRadius="2xl"
     >
-      <Card
-        position="relative"
-        w="full"
-        role="group"
-        borderWidth={4}
-        borderColor="gray.600"
-      >
+      <ColorCard color="gray.600" w="full" borderWidth={4} p={0}>
+        <ColorCardLabel
+          mt="-1px"
+          ml="-1px"
+          labelSize="md"
+          label={pageData.title}
+          color="white"
+          borderBottomRightRadius="xl"
+          borderTopLeftRadius="xl"
+          backgroundColor="gray.600"
+          zIndex={2}
+        ></ColorCardLabel>
         <Flex h="165px" flexDirection="column">
-          <Box
-            left="-4px"
-            top="-4px"
-            position="absolute"
-            backgroundColor="gray.600"
-            borderBottomRightRadius={15}
-            zIndex={1}
+          <Center
+            position="relative"
+            py={{ base: 12, md: 20 }}
+            overflow={"hidden"}
+            borderRadius="xl"
           >
-            <Text
-              fontFamily="display"
-              fontSize="lg"
-              fontWeight="bold"
-              letterSpacing="wide"
-              maxW="full"
-              noOfLines={1}
-              px="22px"
-              py="2px"
-            >
-              {pageData.title}
-            </Text>
-          </Box>
-          <Center py={{ base: 12, md: 20 }} position="relative" overflow={"hidden"}>
             {pageData.backgroundImage && (
               <Image
                 position="absolute"
                 w="full"
                 h="full"
                 src={pageData.backgroundImage}
-                alt={`${title} image`}
+                alt={`${pageData.title} image`}
                 opacity="90%"
                 filter={`blur(8px)`}
                 objectFit="cover"
@@ -63,62 +52,50 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
                 _groupHover={{ filter: "blur(2px)" }}
               />
             )}
-            <Box
-              rounded="50%"
-              w="75px"
-              h="75px"
-              zIndex={1}
-              justifyContent="center"
-              alignContent="center"
-              display="grid"
-            >
-              {pageData.icon && (
-                <Image
-                  objectFit="cover"
-                  src={pageData.icon}
-                  alt="icon"
-                  maxH="75px"
-                  minW="40px"
-                  maxW="75px"
-                />
-              )}
-            </Box>
-          </Center>
 
+            {pageData.icon && (
+              <Image
+                zIndex="1"
+                src={pageData.icon}
+                alt="icon"
+                maxH="75px"
+                minW="40px"
+                maxW="75px"
+              />
+            )}
+          </Center>
           {renderedTags.length > 0 && (
             <Box
-              right="-4px"
-              bottom="0px"
+              right="0"
+              bottom="0"
               h="29px"
               position="absolute"
-              backgroundColor="rgba(45, 55, 72,0.75)"
-              borderTopLeftRadius="15px"
+              backgroundColor="blackAlpha.600"
+              borderTopLeftRadius="xl"
+              borderBottomRightRadius="xl"
               zIndex="1"
               py="3px"
               px="18px"
             >
-              {renderedTags.map((tag, index) => (
-                <Box display="inline-flex" alignItems="center" key={index}>
-                  <Image
-                    src={`/${tag}.svg`}
-                    h="14px"
-                    mr="6px"
-                    alt="page logo"
-                  ></Image>
-                  <Text fontWeight="bold" fontSize="14px">
-                    {tag}
-                  </Text>
-                  {renderedTags.length > 1 && index < renderedTags.length - 1 && (
-                    <Text px="8px" fontWeight="extrabold" color="gray.450">
-                      |
+              <HStack
+                divider={
+                  <Divider orientation="vertical" height="1em" borderWidth="1px" />
+                }
+                spacing="3"
+              >
+                {renderedTags.map((tag, index) => (
+                  <Box display="inline-flex" alignItems="center" key={index}>
+                    <Image src={`/${tag}.svg`} h="14px" mr="6px" alt="page logo" />
+                    <Text fontWeight="bold" fontSize="14px">
+                      {tag}
                     </Text>
-                  )}
-                </Box>
-              ))}
+                  </Box>
+                ))}
+              </HStack>
             </Box>
           )}
         </Flex>
-      </Card>
+      </ColorCard>
     </Link>
   )
 }
