@@ -13,7 +13,7 @@ const Section = ({
   ...rest
 }: PropsWithChildren<Props & Omit<StackProps, "title">>): JSX.Element => (
   <Stack w="full" spacing={5} {...rest}>
-    <SectionTitle title={title} titleRightElement={titleRightElement} />
+    {title && <SectionTitle title={title} titleRightElement={titleRightElement} />}
     {children}
   </Stack>
 )
