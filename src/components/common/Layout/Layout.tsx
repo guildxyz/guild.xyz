@@ -127,10 +127,10 @@ const Layout = ({
                   {showhat && (
                     <Img
                       src="/img/hat.png"
-                      w="55px"
+                      w={{ base: "30px", md: "40px", lg: "55px" }}
                       position="absolute"
-                      left="5"
-                      top="5"
+                      left={{ base: "6px", sm: "14px", md: "18px", lg: "5" }}
+                      top={{ base: "18px", md: "6", lg: "5" }}
                       transform="rotate(-30deg)"
                     />
                   )}
