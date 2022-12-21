@@ -56,12 +56,12 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
                 h="full"
                 src={pageData.backgroundImage}
                 alt={`${title} image`}
-                opacity="85%"
+                opacity="90%"
                 filter={`blur(8px)`}
                 transform="scale(1.25)"
                 objectFit="cover"
                 transition="filter 0.3s"
-                _groupHover={{ filter: "blur(4px)" }}
+                _groupHover={{ filter: "blur(2px)" }}
               />
             )}
             <Box
@@ -79,7 +79,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
                   src={pageData.icon}
                   alt="icon"
                   maxH="75px"
-                  minW="45px"
+                  minW="40px"
                   maxW="75px"
                 />
               )}
