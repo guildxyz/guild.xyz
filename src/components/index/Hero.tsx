@@ -15,7 +15,11 @@ import { ArrowRight, CaretDown } from "phosphor-react"
 import { useRef, useState } from "react"
 import LandingButton from "./LandingButton"
 
-const Hero = (): JSX.Element => {
+type Props = {
+  scrollToInfos?: () => void
+}
+
+const Hero = ({ scrollToInfos }: Props): JSX.Element => {
   const lottiePlayer = useRef(null)
   const logoSize = useBreakpointValue({ base: 64, md: 80, lg: 112 })
   const [showScrollIcon, setShowScrollIcon] = useState(true)
@@ -150,6 +154,7 @@ const Hero = (): JSX.Element => {
         </Text>
         <Fade in={showScrollIcon}>
           <Icon
+            onClick={() => scrollToInfos()}
             as={CaretDown}
             boxSize={7}
             pos="absolute"

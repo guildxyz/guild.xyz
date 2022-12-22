@@ -15,7 +15,7 @@ import TokenBasedMembership from "components/index/TokenBasedMembership"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useRef } from "react"
 
 const Page = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -34,6 +34,12 @@ const Page = (): JSX.Element => {
   useEffect(() => {
     setColorMode("dark")
   }, [])
+
+  const ref = useRef(null)
+
+  const scrollToInfos = () => {
+    ref.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
   return (
     <>
@@ -61,8 +67,13 @@ const Page = (): JSX.Element => {
           scrollBehavior: "smooth",
         }}
       >
-        <Hero />
-        <Box bgColor="gray.800" sx={{ transformStyle: "preserve-3d" }}>
+        <Hero scrollToInfos={scrollToInfos} />
+        <Box
+          bgColor="gray.800"
+          pt="20px"
+          sx={{ transformStyle: "preserve-3d" }}
+          ref={ref}
+        >
           <PlatformAgnosticCommunities />
           <TokenBasedMembership />
           <GuardAgainstPhishingAttack />
