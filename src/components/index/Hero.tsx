@@ -54,6 +54,10 @@ const Hero = (): JSX.Element => {
         justifyContent="center"
         mx="auto"
         px={6}
+        top={{
+          base: "-65px",
+          sm: "0",
+        }}
         w="full"
         maxW={{
           base: "340px",
@@ -147,6 +151,7 @@ const Hero = (): JSX.Element => {
         <Fade in={showScrollIcon}>
           <Icon
             as={CaretDown}
+            boxSize={7}
             pos="absolute"
             bottom="8"
             color="gray.500"
