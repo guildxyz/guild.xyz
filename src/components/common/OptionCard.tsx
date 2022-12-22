@@ -31,7 +31,7 @@ const OptionCard = ({
 }: PropsWithChildren<Props>): JSX.Element => (
   <Card {...rest}>
     <Center
-      py={size === "lg" ? { base: 12, md: 20 } : 8}
+      py={size === "lg" ? { base: 8, md: 10 } : 8}
       position="relative"
       overflow={"hidden"}
     >

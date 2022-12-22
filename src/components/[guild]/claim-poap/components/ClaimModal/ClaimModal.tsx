@@ -223,6 +223,9 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                         isRequired
                         isDisabled={
                           (!isActive && "Connect wallet first") ||
+                          (!guildPoap?.activated && "Inactive POAP") ||
+                          (poapLinks?.claimed === poapLinks?.total &&
+                            "All POAPs are claimed already") ||
                           (poapEventDetails?.voiceChannelId &&
                             !voiceEligibility &&
                             !isWrongChain &&
@@ -268,7 +271,8 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                                 colorScheme="blue"
                                 borderLeftRadius={0}
                                 isDisabled={
-                                  !isActive ||
+                                  !guildPoap.activated ||
+                                  poapLinks?.claimed === poapLinks?.total ||
                                   (poapEventDetails?.voiceChannelId &&
                                     !voiceEligibility)
                                 }

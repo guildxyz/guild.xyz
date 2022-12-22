@@ -1,12 +1,14 @@
-import { Checkbox, Text, useBreakpointValue } from "@chakra-ui/react"
+import { Checkbox, Stack, Text, Wrap } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import Section from "components/common/Section"
-import FreeRequirementCard from "components/[guild]/Requirements/components/FreeRequirementCard"
+import { SectionTitle } from "components/common/Section"
+import { AnimatePresence } from "framer-motion"
 import { useEffect, useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
-import { Requirement, RequirementType } from "types"
+import { RequirementType } from "requirements"
+import FreeRequirement from "requirements/Free/FreeRequirement"
+import { Requirement } from "types"
 import AddRequirement from "./components/AddRequirement"
 import BalancyCounterWithPopover from "./components/BalancyCounter"
 import LogicPicker from "./components/LogicPicker"
@@ -61,68 +63,68 @@ const SetRequirements = (): JSX.Element => {
       ? replace([{ type: "FREE", data: {}, chain: null, address: null }])
       : replace([])
 
-  const isMobile = useBreakpointValue({ base: true, sm: false })
-
   return (
-    <Section
-      title="Requirements"
-      titleRightElement={
-        <>
-          <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
-            {`- or `}
-          </Text>
-          <Checkbox
-            id="free-entry-checkbox"
-            flexGrow={0}
-            fontWeight="normal"
-            size="sm"
-            spacing={1}
-            defaultChecked={freeEntry}
-            onChange={onFreeEntryChange}
-            isInvalid={false}
-          >
-            Free entry
-          </Checkbox>
-          {!freeEntry && !isMobile && (
-            <BalancyCounterWithPopover ml="auto !important" />
-          )}
-        </>
-      }
-      spacing={0}
-    >
-      {!freeEntry && isMobile && <BalancyCounterWithPopover mb="6" />}
-      {controlledFields.map((field: Requirement, i) => {
-        const type: RequirementType = getValues(`requirements.${i}.type`)
+    <Stack spacing="5" w="full">
+      <Wrap spacing="3">
+        <SectionTitle
+          title="Requirements"
+          titleRightElement={
+            <>
+              <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+                {`- or `}
+              </Text>
+              <Checkbox
+                id="free-entry-checkbox"
+                flexGrow={0}
+                fontWeight="normal"
+                size="sm"
+                spacing={1}
+                defaultChecked={freeEntry}
+                onChange={onFreeEntryChange}
+                isInvalid={false}
+              >
+                Free entry
+              </Checkbox>
+            </>
+          }
+        />
+        {!freeEntry && <BalancyCounterWithPopover ml="auto !important" pl="5" />}
+      </Wrap>
 
-        if (type === "FREE")
-          return (
-            <CardMotionWrapper>
-              <Card px="6" py="4">
-                <FreeRequirementCard />
-              </Card>
-            </CardMotionWrapper>
-          )
+      {freeEntry ? (
+        <CardMotionWrapper>
+          <Card px="6" py="4">
+            <FreeRequirement />
+          </Card>
+        </CardMotionWrapper>
+      ) : (
+        <Stack spacing={0}>
+          <AnimatePresence>
+            {controlledFields.map((field: Requirement, i) => {
+              const type: RequirementType = getValues(`requirements.${i}.type`)
 
-        return (
-          <CardMotionWrapper key={field.id}>
-            <RequirementEditableCard
-              type={type}
-              field={field}
-              index={i}
-              removeRequirement={remove}
-              updateRequirement={update}
-            />
-            <LogicPicker />
-          </CardMotionWrapper>
-        )
-      })}
-
-      {!freeEntry && <AddRequirement onAdd={addRequirement} />}
+              return (
+                <CardMotionWrapper key={field.id}>
+                  <RequirementEditableCard
+                    type={type}
+                    field={field}
+                    index={i}
+                    removeRequirement={remove}
+                    updateRequirement={update}
+                  />
+                  <LogicPicker />
+                </CardMotionWrapper>
+              )
+            })}
+            <AddRequirement onAdd={addRequirement} />
+          </AnimatePresence>
+        </Stack>
+      )}
 
       {/* <FormErrorMessage id="requirements-error-message">
         {errors.requirements?.message as string}
       </FormErrorMessage> */}
-    </Section>
+    </Stack>
   )
 }
 

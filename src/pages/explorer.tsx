@@ -1,22 +1,16 @@
 import {
   Center,
-  Flex,
   GridItem,
-  Heading,
-  HStack,
   SimpleGrid,
   Spinner,
   Stack,
   Tag,
-  Text,
   useColorMode,
   usePrevious,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
-import useUpvoty from "components/common/Layout/components/NavMenu/hooks/useUpvoty"
-import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
@@ -30,6 +24,7 @@ import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
+import Script from "next/script"
 import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
@@ -115,39 +110,21 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   useEffect(() => {
     setColorMode("dark")
+    // window.addEventListener("snow", () => console.log("snow"))
+    // const event = new Event("snow")
+    // window.dispatchEvent(event)
+    // console.log("dispatch")
   }, [])
-
-  const { isRedirecting, upvotyAuthError } = useUpvoty()
-
-  if (isRedirecting)
-    return (
-      <Flex alignItems="center" justifyContent="center" direction="column" h="100vh">
-        <Heading mb={4} fontFamily="display">
-          Guild - Upvoty authentication
-        </Heading>
-        {upvotyAuthError ? (
-          <Text as="span" fontSize="lg">
-            You are not a member of any guilds. Please <Link href="/">join one</Link>{" "}
-            and you can vote on the roadmap!
-          </Text>
-        ) : (
-          <HStack>
-            <Spinner size="sm" />
-            <Text as="span" fontSize="lg">
-              Redirecting, please wait...
-            </Text>
-          </HStack>
-        )}
-      </Flex>
-    )
 
   return (
     <>
       <LinkPreviewHead path="" />
+      <Script src="/snow.js" />
       <Layout
         title="Guildhall"
         description="Automated membership management for the platforms your community already uses."
         showBackButton={false}
+        showhat={true}
       >
         <SimpleGrid
           templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}

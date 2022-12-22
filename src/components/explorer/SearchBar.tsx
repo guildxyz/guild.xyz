@@ -57,6 +57,8 @@ const SearchBar = ({
         value={localValue}
         onChange={handleOnChange}
         onFocus={() => addDatadogAction("Focused search bar")}
+        // temporary
+        bg="#212122"
       />
       {localValue?.length > 0 && (
         <InputRightElement>

@@ -12,13 +12,13 @@ export const config = {
 }
 
 const interFont = fetch(
-  new URL("../../../../../public/fonts/Inter-Regular.ttf", import.meta.url)
+  new URL("../../../../../public/fonts/Inter-Regular.woff", import.meta.url)
 ).then((res) => res.arrayBuffer())
 const interBoldFont = fetch(
-  new URL("../../../../../public/fonts/Inter-Bold.ttf", import.meta.url)
+  new URL("../../../../../public/fonts/Inter-Bold.woff", import.meta.url)
 ).then((res) => res.arrayBuffer())
 const dystopianFont = fetch(
-  new URL("../../../../../public/fonts/Dystopian-Black.ttf", import.meta.url)
+  new URL("../../../../../public/fonts/Dystopian-Black.woff", import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 const handler = async (req, _) => {
@@ -45,15 +45,6 @@ const handler = async (req, _) => {
     ])
 
     const roles = guild.roles?.map((role) => role.name)
-
-    const members: string[] = [
-      ...new Set(
-        guild.roles
-          .map((role) => role.members)
-          ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-          ?.filter((member) => typeof member === "string") || []
-      ),
-    ]
 
     const safeGuildDescription = guild.description?.replaceAll("\n", "")
     const isLightMode = guild.theme?.mode === "LIGHT"
@@ -178,7 +169,9 @@ const handler = async (req, _) => {
                   borderRadius: "6px",
                   fontSize: "18px",
                 }}
-              >{`${members?.length || 0} members`}</div>
+              >{`${new Intl.NumberFormat("en", { notation: "compact" }).format(
+                guild?.memberCount ?? 0
+              )} members`}</div>
 
               <div
                 style={{

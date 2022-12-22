@@ -32,11 +32,11 @@ import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserP
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
-import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains, RPC } from "connectors"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { DownloadSimple } from "phosphor-react"
+import { usePoap } from "requirements/Poap/hooks/usePoaps"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
@@ -192,7 +192,9 @@ const Page = (): JSX.Element => {
                   </Text>
                 </HStack>
 
-                <Skeleton isLoaded={poapLinks && !isPoapLinksLoading}>
+                <Skeleton
+                  isLoaded={!!poapLinks || (poapLinks && !isPoapLinksLoading)}
+                >
                   <Tag
                     fontWeight="bold"
                     textTransform="uppercase"

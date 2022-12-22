@@ -1,4 +1,5 @@
 import type { Chain } from "connectors"
+import { RequirementType } from "requirements"
 
 type Token = {
   address: string
@@ -74,48 +75,6 @@ type NFT = {
   slug: string
 }
 
-type RequirementType =
-  | "COIN"
-  | "ERC20"
-  | "ERC721"
-  | "ERC1155"
-  | "CONTRACT"
-  | "POAP"
-  | "GITPOAP"
-  | "MIRROR"
-  | "MIRROR_COLLECT"
-  | "UNLOCK"
-  | "SNAPSHOT"
-  | "JUICEBOX"
-  | "GALAXY"
-  | "ALLOWLIST"
-  | "FREE"
-  | "TWITTER"
-  | "TWITTER_FOLLOW"
-  | "TWITTER_NAME"
-  | "TWITTER_BIO"
-  | "TWITTER_FOLLOWER_COUNT"
-  | "GITHUB"
-  | "GITHUB_STARRING"
-  | "NOUNS"
-  | "DISCORD"
-  | "DISCORD_ROLE"
-  | "NOOX"
-  | "DISCO"
-  | "LENS"
-  | "LENS_PROFILE"
-  | "LENS_FOLLOW"
-  | "LENS_COLLECT"
-  | "LENS_MIRROR"
-  | "OTTERSPACE"
-  | "ORANGE"
-  | "CASK"
-  | "101"
-  | "RABBITHOLE"
-  | "KYC_DAO"
-
-type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
-
 type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
 
 type PlatformAccount = {
@@ -133,6 +92,8 @@ type User = {
   id: number
   addresses: Array<string>
   platformUsers: PlatformAccountDetails[]
+  signingKey?: string
+  isSuperAdmin: boolean
 }
 
 type GuildBase = {
@@ -189,67 +150,28 @@ type PlatformRoleData = {
   }
 }
 
-type ContractParamType = string[]
-
-type DiscoParamType = {
-  credType: string
-  credIssuence: "before" | "after"
-  credIssuenceDate: string
-  credIssuer: string
+type Trait = {
+  trait_type?: string
+  value?: string
+  interval?: {
+    min: number
+    max: number
+  }
 }
-
-type RabbitholeParamType = {
-  trait_type: string
-  value: string
-}[]
 
 type Requirement = {
   id: number
-  data?: {
-    hideAllowlist?: boolean
-    minAmount?: number
-    maxAmount?: number
-    addresses?: Array<string> // (ALLOWLIST)
-    id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
-    name?: string
-    provider?: string
-    planId?: number
-    strategy?: {
-      name: string
-      params: Record<string, any>
-    } // SNAPSHOT
-    attribute?: {
-      trait_type?: string
-      value?: string
-      interval?: {
-        min: number
-        max: number
-      }
-    }
-    galaxyId?: string
-    serverId?: string
-    roleId?: string
-    serverName?: string
-    roleName?: string
-    // CONTRACT
-    expected?: string
-    resultIndex?: number
-    resultMatch?: string
-    params?: ContractParamType | DiscoParamType | RabbitholeParamType
-  }
-  name: string
   type: RequirementType
-  chain: Chain
-  roleId: number
-  symbol: string
   address: string
+  chain: Chain
+  data?: Record<string, any>
+  roleId: number
+  name: string
+  symbol: string
   decimals?: number
 
   // Props used inside the forms on the UI
-  active?: boolean
   nftRequirementType?: string
-
-  // These props are only used when we fetch requirements from the backend and display them on the UI
   balancyDecimals?: number
 }
 
@@ -309,6 +231,7 @@ type Guild = {
   description?: string
   imageUrl: string
   showMembers: boolean
+  memberCount: number
   hideFromExplorer: boolean
   createdAt: string
   admins: GuildAdmin[]
@@ -335,28 +258,9 @@ type GuildFormType = Partial<
   requirements?: Requirement[]
 }
 
-type SnapshotStrategy = {
-  name: string
-  params: Record<string, Record<string, string>>
-}
-
-type JuiceboxProject = {
-  id: string
-  uri: string
-  name: string
-  logoUri: string
-}
-
-type MirrorEdition = {
-  editionContractAddress: string
-  editionId: number
-  title: string
-  image: string
-}
-
-type SelectOption = {
+type SelectOption<T = string> = {
   label: string
-  value: string
+  value: T
   img?: string
 } & Rest
 
@@ -448,14 +352,6 @@ enum ValidationMethod {
   EIP1271 = 3,
 }
 
-type GalaxyCampaign = {
-  id: string
-  numberID: number
-  name: string
-  thumbnail: string
-  chain: Chain
-}
-
 type MonetizePoapForm = {
   chainId: number
   token: string
@@ -519,11 +415,6 @@ type VoiceRequirementParams = {
   voiceEventStartedAt?: number
 }
 
-type FormCardProps = {
-  baseFieldPath: string
-  field?: Requirement
-}
-
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -544,22 +435,18 @@ export type {
   GuildBase,
   BrainCardData,
   Guild,
+  Trait,
   Requirement,
   RequirementType,
-  SnapshotStrategy,
-  JuiceboxProject,
-  MirrorEdition,
   RolePlatform,
   ThemeMode,
   Logic,
   PlatformAccountDetails,
   SelectOption,
-  NftRequirementType,
   GuildFormType,
   CreatePoapForm,
   CreatedPoapData,
   PlatformName,
-  GalaxyCampaign,
   MonetizePoapForm,
   RequestMintLinksForm,
   GoogleFile,
@@ -567,9 +454,5 @@ export type {
   VoiceParticipationForm,
   VoiceRequirementParams,
   PoapEventDetails,
-  ContractParamType,
-  DiscoParamType,
-  FormCardProps,
-  RabbitholeParamType,
 }
 export { ValidationMethod }

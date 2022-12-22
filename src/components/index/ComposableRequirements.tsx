@@ -9,7 +9,7 @@ const ComposableRequirements = (): JSX.Element => (
       <Box position="relative" width="full">
         <Img
           width="full"
-          src="/landing/composable-membership-requirements.png"
+          src="/landing/composable-membership-requirements.webp"
           alt="Composable membership requirements"
         />
 
@@ -19,7 +19,7 @@ const ComposableRequirements = (): JSX.Element => (
           bottom={-16}
           width={{ base: "calc(100% + 6rem)", lg: "calc(100% + 10rem)" }}
           maxW="none"
-          src="/landing/composable-membership-requirements-icons.png"
+          src="/landing/composable-membership-requirements-icons.webp"
           alt="Composable membership requirements - icons"
         />
       </Box>

@@ -9,26 +9,24 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
 
   if (freeRequirement) return [freeRequirement]
 
-  // see the comment in Requirements.tsx at line 42
   return (
     requirements
       // Setting unused props to undefined, so we don't send them to the API
       .map((requirement) => {
         const processedRequirement = {
           ...requirement,
+          data: {
+            ...requirement.data,
+            validAddresses: undefined,
+          },
           nftRequirementType: undefined,
         }
 
         if (requirement.address === "0x0000000000000000000000000000000000000000")
           requirement.address = undefined
 
-        if (
-          requirement.data?.attribute &&
-          !requirement.data?.attribute?.trait_type &&
-          !requirement.data?.attribute?.value &&
-          !requirement.data?.attribute?.interval
-        )
-          requirement.data.attribute = undefined
+        if (requirement.data?.attributes && !requirement.data.attributes.length)
+          requirement.data.attributes = undefined
 
         if (
           requirement.type === "ALLOWLIST" &&
@@ -36,6 +34,9 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
           !requirement.data?.hideAllowlist
         )
           requirement.data.addresses = []
+
+        // Deleting ID here, we don't want to update it, and it might also cause bugs
+        delete processedRequirement.id
 
         return processedRequirement
       })

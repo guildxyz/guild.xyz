@@ -39,7 +39,7 @@ const RPC = {
       name: "Ether",
       symbol: "ETH",
       decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenForm component
       logoURI:
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
@@ -224,7 +224,7 @@ const RPC = {
       name: "Moonbeam",
       symbol: "GLMR",
       decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenForm component
       logoURI:
         "https://assets.coingecko.com/coins/images/22459/small/glmr.png?1641880985",
     },

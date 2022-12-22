@@ -10,6 +10,13 @@ type OAuthData<Data> = {
   scope?: string
 } & Data
 
+const fallbackData = {
+  [process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID]: randomBytes(16).toString("hex"),
+  [process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID]: randomBytes(16).toString("hex"),
+  [process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID]: randomBytes(16).toString("hex"),
+  [process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID]: randomBytes(16).toString("hex"),
+}
+
 const fetcherWithAuthorization = async (authorization: string, endpoint: string) => {
   const response = await fetch(endpoint, {
     headers: {
@@ -48,21 +55,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   const { addDatadogError, addDatadogAction } = useDatadog()
   const toast = useToast()
 
-  const {
-    data: csrfToken,
-    mutate: mutateCSRFToken,
-    isValidating,
-  } = useSWRImmutable(
+  const { data: csrfToken, mutate: mutateCSRFToken } = useSWRImmutable(
     ["CSRFToken", oauthOptions.client_id],
     () => randomBytes(16).toString("hex"),
-    { revalidateOnMount: false }
+    { revalidateOnMount: false, fallbackData: fallbackData[oauthOptions.client_id] }
   )
-
-  useEffect(() => {
-    if (!isValidating && !csrfToken) {
-      mutateCSRFToken()
-    }
-  }, [isValidating, csrfToken])
 
   const redirectUri =
     typeof window !== "undefined" &&
@@ -70,14 +67,19 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
   oauthOptions.response_type = oauthOptions.response_type ?? "code"
 
+  const state = `${oauthOptions.client_id};${csrfToken}`
+
   // prettier-ignore
   const { onOpen, windowInstance } = usePopupWindow(
-    `${url}?${Object.entries(oauthOptions).map(([key, value]) => `${key}=${value}`).join("&")}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(csrfToken)}`
+    `${url}?${Object.entries(oauthOptions).map(([key, value]) => `${key}=${value}`).join("&")}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}`
   )
 
   const [error, setError] = useState(null)
   const [authData, setAuthData] = useState<OAuthData<OAuthResponse>>(null)
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false)
+
+  const dataKey = `oauth_popup_data_${oauthOptions.client_id}`
+  const shouldCloseKey = `oauth_window_should_close_${oauthOptions.client_id}`
 
   /** On a window creation, we set a new listener */
   useEffect(() => {
@@ -85,7 +87,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
     const windowInstanceOpenInitially = !windowInstance.closed
 
-    window.localStorage.removeItem("oauth_popup_data")
     setIsAuthenticating(true)
 
     new Promise<OAuthData<OAuthResponse>>((resolve, reject) => {
@@ -95,7 +96,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
             data,
             type,
             csrfToken: recievedCsrfToken,
-          } = JSON.parse(window.localStorage.getItem("oauth_popup_data"))
+          } = JSON.parse(window.localStorage.getItem(dataKey))
 
           addDatadogAction(
             `CSRF - Main window recieved CSRF token: ${recievedCsrfToken}. Should equal: ${csrfToken}`
@@ -111,13 +112,16 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           if (type === "OAUTH_SUCCESS") {
             clearInterval(interval)
 
-            mutateCSRFToken(undefined, { revalidate: false })
             if (recievedCsrfToken !== csrfToken) {
-              const title = "CSRF Error"
+              const title = "Error"
               const errorDescription =
-                "CSRF token mismatch, this indicates possible CSRF attack."
+                "Authentication attempt can't be validated. Refresh and try connecting again"
 
-              addDatadogError(`OAuth error - ${title}`, { error: errorDescription })
+              addDatadogError(`OAuth error - ${title}`, {
+                error: errorDescription,
+                recievedCsrfToken,
+                csrfToken,
+              })
               reject({ error: title, errorDescription })
               toast({ status: "error", title, description: errorDescription })
             } else {
@@ -143,9 +147,10 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           }, 500)
         }
 
-        window.localStorage.removeItem("oauth_popup_data")
+        window.localStorage.removeItem(dataKey)
         setIsAuthenticating(false)
-        window.localStorage.setItem("oauth_window_should_close", "true")
+        window.localStorage.setItem(shouldCloseKey, "true")
+        mutateCSRFToken(randomBytes(16).toString("hex"))
       })
   }, [windowInstance])
 

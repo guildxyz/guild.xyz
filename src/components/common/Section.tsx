@@ -1,11 +1,10 @@
-import { Box, Heading, HStack, Stack } from "@chakra-ui/react"
+import { Heading, HStack, Stack, StackProps } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
-import { Rest } from "types"
 
 type Props = {
   title?: string | JSX.Element
   titleRightElement?: JSX.Element
-} & Rest
+} & Omit<StackProps, "title">
 
 const Section = ({
   title,
@@ -13,20 +12,27 @@ const Section = ({
   children,
   ...rest
 }: PropsWithChildren<Props>): JSX.Element => (
-  <Box w="full">
-    {title && (
-      <HStack spacing={2} alignItems="center" mb="5">
-        <Heading fontSize={{ base: "md", sm: "lg" }} as="h3">
-          {title}
-        </Heading>
-        {titleRightElement}
-      </HStack>
-    )}
-    <Stack w="full" spacing={5} {...rest}>
-      {children}
-    </Stack>
-  </Box>
+  <Stack w="full" spacing={5} {...rest}>
+    {title && <SectionTitle title={title} titleRightElement={titleRightElement} />}
+    {children}
+  </Stack>
+)
+
+const SectionTitle = ({ title, titleRightElement }: Props) => (
+  <HStack spacing={2} alignItems="center">
+    <Heading
+      fontSize={{
+        base: "md",
+        sm: "lg",
+      }}
+      as="h3"
+    >
+      {title}
+    </Heading>
+    {titleRightElement}
+  </HStack>
 )
 
 export default Section
+export { SectionTitle }
 export type { Props as SectionProps }
