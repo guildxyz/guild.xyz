@@ -1,13 +1,13 @@
-import { Box, Collapse, Icon, Link, useDisclosure } from "@chakra-ui/react"
+import { Box, Collapse, Icon, useDisclosure } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import { CaretDown } from "phosphor-react"
 import { RequirementComponentProps } from "requirements"
 import pluralize from "utils/pluralize"
 import Requirement from "../common/Requirement"
 import { RequirementButton } from "../common/RequirementButton"
+import SnapshotSpaceLink from "./components/SnapshotSpaceLink"
 import StrategyParamsTable from "./components/StrategyParamsTable"
 import useProposal from "./hooks/useProposal"
-import useSpace from "./hooks/useSpace"
 
 const SnapshotRequirement = ({
   requirement,
@@ -16,7 +16,6 @@ const SnapshotRequirement = ({
   const { isOpen, onToggle } = useDisclosure()
   const strategies = requirement.data.strategies
 
-  const { space } = useSpace(requirement.data.space)
   const { proposal } = useProposal(requirement.data.proposal)
 
   const formattedDate = requirement.data.since
@@ -62,38 +61,26 @@ const SnapshotRequirement = ({
                 {"Satisfy the "}
                 <DataBlock>{strategies[0].name}</DataBlock>
                 {` Snapshot Strategy`}
-                {requirement.data.space &&
-                  ` in the ${space?.name ?? requirement.data.space} space`}
+                {requirement.data.space && (
+                  <>
+                    ` in the `
+                    <SnapshotSpaceLink requirement={requirement} />
+                  </>
+                )}
               </>
             )
           case "SNAPSHOT_SPACE_ADMIN":
             return (
               <>
                 {`Be an admin of the `}
-                <Link
-                  href={`https://snapshot.org/#/${requirement.data.space}`}
-                  isExternal
-                  colorScheme="orange"
-                  fontWeight="medium"
-                >
-                  {space?.name ?? requirement.data.space}
-                </Link>
-                {` space`}
+                <SnapshotSpaceLink requirement={requirement} />
               </>
             )
           case "SNAPSHOT_SPACE_AUTHOR":
             return (
               <>
                 {`Be an author in the `}
-                <Link
-                  href={`https://snapshot.org/#/${requirement.data.space}`}
-                  isExternal
-                  colorScheme="orange"
-                  fontWeight="medium"
-                >
-                  {space?.name ?? requirement.data.space}
-                </Link>
-                {` space`}
+                <SnapshotSpaceLink requirement={requirement} />
               </>
             )
           case "SNAPSHOT_FOLLOW":
@@ -101,15 +88,7 @@ const SnapshotRequirement = ({
             return (
               <>
                 {`Follow the `}
-                <Link
-                  href={`https://snapshot.org/#/${requirement.data.space}`}
-                  isExternal
-                  colorScheme="orange"
-                  fontWeight="medium"
-                >
-                  {space?.name ?? requirement.data.space}
-                </Link>
-                {` space`}
+                <SnapshotSpaceLink requirement={requirement} />
                 {requirement.type === "SNAPSHOT_FOLLOW_SINCE" && (
                   <>
                     {` since at least `}
@@ -132,15 +111,7 @@ const SnapshotRequirement = ({
                 {requirement.data.space && (
                   <>
                     {` in the `}
-                    <Link
-                      href={`https://snapshot.org/#/${requirement.data.space}`}
-                      isExternal
-                      colorScheme="orange"
-                      fontWeight="medium"
-                    >
-                      {space?.name ?? requirement.data.space}
-                    </Link>
-                    {` space`}
+                    <SnapshotSpaceLink requirement={requirement} />
                   </>
                 )}
                 {requirement.data.proposal && (
@@ -162,15 +133,7 @@ const SnapshotRequirement = ({
                 {requirement.data.space && (
                   <>
                     {` in the `}
-                    <Link
-                      href={`https://snapshot.org/#/${requirement.data.space}`}
-                      isExternal
-                      colorScheme="orange"
-                      fontWeight="medium"
-                    >
-                      {space?.name ?? requirement.data.space}
-                    </Link>
-                    {` space`}
+                    <SnapshotSpaceLink requirement={requirement} />
                   </>
                 )}
                 {requirement.data.state && (
