@@ -18,17 +18,23 @@ const HoldCollection = ({ baseFieldPath }: RequirementFormProps): JSX.Element =>
   const { data, isLoading } = useTesseraVaults()
 
   const collections = data
-    ? [
-        ...new Set(
-          data?.flatMap((vault) =>
-            vault.collectables?.map((collectable) => collectable?.collection)
-          )
-        ),
-      ].map((collection) => ({
-        label: collection.name,
-        value: collection.slug,
-        img: collection.imageUrl,
-      }))
+    ? data
+        .reduce((acc, vault) => {
+          vault.collectables?.forEach((collectable) => {
+            if (
+              !acc.some(
+                (collection) => collection.slug === collectable.collection?.slug
+              )
+            )
+              acc.push(collectable.collection)
+          })
+          return acc
+        }, [])
+        .map((collection) => ({
+          label: collection.name,
+          value: collection.slug,
+          img: collection.imageUrl,
+        }))
     : []
 
   const {
