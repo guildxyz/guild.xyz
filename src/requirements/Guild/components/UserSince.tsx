@@ -16,13 +16,13 @@ const UserSince = ({ baseFieldPath }: Props): JSX.Element => {
   return (
     <FormControl
       isRequired
-      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.since}
+      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.creationDate}
     >
       <FormLabel>Registered before</FormLabel>
 
       <Controller
         control={control}
-        name={`${baseFieldPath}.data.since`}
+        name={`${baseFieldPath}.data.creationDate`}
         defaultValue={null}
         rules={{
           required: "This field is required.",
@@ -49,7 +49,7 @@ const UserSince = ({ baseFieldPath }: Props): JSX.Element => {
       />
 
       <FormErrorMessage>
-        {parseFromObject(errors, baseFieldPath).data?.since?.message}
+        {parseFromObject(errors, baseFieldPath).data?.creationDate?.message}
       </FormErrorMessage>
     </FormControl>
   )

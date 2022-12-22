@@ -5,12 +5,12 @@ import { useController, useFormContext, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import FollowSince from "./components/FollowSince"
+import MajorityVotes from "./components/MajorityVotes"
 import Proposals from "./components/Proposals"
 import SpaceInput from "./components/SpaceSelect"
 import Strategy from "./components/Strategy"
 import UserSince from "./components/UserSince"
 import Votes from "./components/Votes"
-import MajorityVotes from "./MajorityVotes"
 
 const snapshotRequirementTypes = [
   {
