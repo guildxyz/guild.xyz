@@ -32,6 +32,7 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
     control,
     register,
     formState: { errors },
+    setValue,
   } = useFormContext()
 
   const {
@@ -85,9 +86,10 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
               (strategy) => strategy.value === strategyFieldValue
             ) ?? ""
           }
-          onChange={(newValue: SelectOption) =>
+          onChange={(newValue: SelectOption) => {
+            setValue(`${baseFieldPath}.data.strategies.${index}.params`, "")
             strategyFieldOnChange(newValue?.value)
-          }
+          }}
           onBlur={strategyFieldOnBlur}
         />
 

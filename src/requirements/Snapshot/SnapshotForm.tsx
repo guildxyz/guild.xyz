@@ -76,19 +76,6 @@ const SnapshotForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     (reqType) => reqType.value === value
   )
 
-  const resetFields = () => {
-    resetField(`${baseFieldPath}.data.block`)
-    resetField(`${baseFieldPath}.data.strategies`)
-    resetField(`${baseFieldPath}.data.space`)
-    resetField(`${baseFieldPath}.data.since`)
-    resetField(`${baseFieldPath}.data.minTimes`)
-    resetField(`${baseFieldPath}.data.proposal`)
-    resetField(`${baseFieldPath}.data.minAmount`)
-    resetField(`${baseFieldPath}.data.state`)
-    resetField(`${baseFieldPath}.data.successfulOnly`)
-    resetField(`${baseFieldPath}.data.minRatio`)
-  }
-
   return (
     <Stack spacing={4} alignItems="start" w="full">
       <FormControl
@@ -100,7 +87,7 @@ const SnapshotForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
           name={name}
           onBlur={onBlur}
           onChange={(newValue: { label: string; value: string }) => {
-            resetFields()
+            resetField(`${baseFieldPath}.data`, { defaultValue: "" })
             onChange(newValue?.value)
           }}
           ref={ref}
