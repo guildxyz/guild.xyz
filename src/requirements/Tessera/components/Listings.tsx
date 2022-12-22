@@ -7,9 +7,9 @@ import parseFromObject from "utils/parseFromObject"
 import NumberField from "./NumberField"
 
 const options = [
-  { label: "reconstitution", value: "reconstitution" },
-  { label: "distribution", value: "distribution" },
-  { label: "marketplace", value: "marketplace" },
+  { label: "Reconstitution", value: "reconstitution" },
+  { label: "Distribution", value: "distribution" },
+  { label: "Marketplace", value: "marketplace" },
 ]
 const Listings = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const { errors } = useFormState()

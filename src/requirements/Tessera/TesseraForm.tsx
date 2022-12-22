@@ -12,12 +12,12 @@ import UserSince from "./components/UserSince"
 
 const tesseraRequirementTypes = [
   {
-    label: "Hold Raes of a vault",
+    label: "Own Raes of a Vault",
     value: "TESSERA_HOLD",
     TesseraRequirement: Hold,
   },
   {
-    label: "Hold Raes from a collection",
+    label: "Own Raes from a collection",
     value: "TESSERA_HOLD_COLLECTION",
     TesseraRequirement: HoldCollection,
   },

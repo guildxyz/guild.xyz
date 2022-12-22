@@ -26,7 +26,7 @@ const TesseraRequirement = ({
           case "TESSERA_HOLD":
             return (
               <>
-                {`Hold ${
+                {`Own ${
                   requirement.data.minAmount > 0
                     ? `at least ${pluralize(requirement.data.minAmount, "Rae")}`
                     : "a Rae"
@@ -38,7 +38,7 @@ const TesseraRequirement = ({
           case "TESSERA_HOLD_COLLECTION":
             return (
               <>
-                {`Hold ${
+                {`Own ${
                   requirement.data.minAmount > 0
                     ? `at least ${pluralize(requirement.data.minAmount, "Rae")}`
                     : "a Rae"
