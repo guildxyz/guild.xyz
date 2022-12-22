@@ -69,6 +69,7 @@ const Layout = ({
         )}
       </Head>
       <Box
+        id="background"
         position="relative"
         bgColor={colorMode === "light" ? "gray.100" : "gray.800"}
         bgGradient={
@@ -81,6 +82,8 @@ const Layout = ({
         minHeight="100vh"
         display="flex"
         flexDir={"column"}
+        // temporary
+        sx={{ "> *": { zIndex: 1 } }}
       >
         {(background || backgroundImage) && (
           <Box
