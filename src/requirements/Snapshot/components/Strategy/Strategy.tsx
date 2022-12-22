@@ -1,23 +1,19 @@
 import {
+  Checkbox,
+  Divider,
   FormControl,
   FormLabel,
-  Icon,
+  HStack,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Stack,
   Text,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import Link from "components/common/Link"
-import Switch from "components/common/Switch"
 import { Chain, supportedChains } from "connectors"
-import { ArrowSquareOut, Plus } from "phosphor-react"
-import { useEffect } from "react"
-import { Controller, useFieldArray, useFormContext } from "react-hook-form"
+import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
@@ -35,20 +31,6 @@ const Strategy = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
-  const { fields, append, remove } = useFieldArray({
-    name: `${baseFieldPath}.data.strategies`,
-  })
-
-  useEffect(() => {
-    if (fields?.length) return
-    append(
-      {},
-      {
-        shouldFocus: false,
-      }
-    )
-  }, [])
-
   return (
     <>
       <ChainPicker
@@ -56,13 +38,35 @@ const Strategy = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         supportedChains={supportedChains.filter(
           (c) => !unsupportedChains.includes(c)
         )}
+        showDivider={false}
       />
-
       <FormControl
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.block}
       >
-        <FormLabel>Block number</FormLabel>
+        <HStack mb="2">
+          <FormLabel m="0">Block number</FormLabel>
+          <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+            {`- or `}
+          </Text>
+          <Checkbox
+            flexGrow={0}
+            fontWeight="normal"
+            size="sm"
+            spacing={1}
+            isChecked={getValues(`${baseFieldPath}.data.block`) === "latest"}
+            onChange={(e) => {
+              clearErrors(`${baseFieldPath}.data.block`)
+              setValue(
+                `${baseFieldPath}.data.block`,
+                e.target.checked ? "latest" : ""
+              )
+            }}
+            isInvalid={false}
+          >
+            Use latest block
+          </Checkbox>
+        </HStack>
 
         <Controller
           name={`${baseFieldPath}.data.block` as const}
@@ -104,46 +108,15 @@ const Strategy = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.data?.block?.message}
         </FormErrorMessage>
-
-        <Switch
-          mt={4}
-          title="Use the latest block number"
-          isChecked={getValues(`${baseFieldPath}.data.block`) === "latest"}
-          onChange={(e) => {
-            clearErrors(`${baseFieldPath}.data.block`)
-            setValue(`${baseFieldPath}.data.block`, e.target.checked ? "latest" : "")
-          }}
-        />
       </FormControl>
+      <Divider />
+      <SingleStrategy index={0} baseFieldPath={baseFieldPath} />
 
-      <SpaceSelect optional baseFieldPath={baseFieldPath} />
-
-      <Text as="span" fontWeight="medium">
-        Strategies
-      </Text>
-
-      <Stack spacing={2} w="full">
-        {fields?.map((field, fieldIndex) => (
-          <SingleStrategy
-            key={field.id}
-            index={fieldIndex}
-            baseFieldPath={baseFieldPath}
-            onRemove={remove}
-          />
-        ))}
-
-        <Button leftIcon={<Icon as={Plus} />} onClick={() => append({})}>
-          Add strategy
-        </Button>
-      </Stack>
-
-      <Link
-        href="https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies"
-        isExternal
-      >
-        <Text fontSize="sm">Snapshot strategies</Text>
-        <Icon ml={1} as={ArrowSquareOut} />
-      </Link>
+      <SpaceSelect
+        optional
+        baseFieldPath={baseFieldPath}
+        helperText="Only needed for delegation strategies"
+      />
     </>
   )
 }

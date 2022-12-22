@@ -25,6 +25,7 @@ type Props = {
   supportedChains?: Array<Chain>
   onChange?: () => void
   isDisabled?: boolean
+  showDivider?: boolean
 }
 
 const mappedChains: Array<{ img: string; label: string; value: Chain }> =
@@ -39,6 +40,7 @@ const ChainPicker = ({
   supportedChains = defaultSupportedChains,
   onChange: onChangeHandler,
   isDisabled,
+  showDivider = true,
 }: Props): JSX.Element => {
   const router = useRouter()
   const isBalancyPlayground = router.asPath === "/balancy"
@@ -101,7 +103,7 @@ const ChainPicker = ({
           />
         </InputGroup>
       </FormControl>
-      <Divider />
+      {showDivider && <Divider />}
     </>
   )
 }

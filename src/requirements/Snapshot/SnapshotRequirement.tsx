@@ -1,7 +1,6 @@
-import { Collapse, Icon, Link, Stack, Text, useDisclosure } from "@chakra-ui/react"
+import { Box, Collapse, Icon, Link, useDisclosure } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import { CaretDown } from "phosphor-react"
-import { Fragment } from "react"
 import { RequirementComponentProps } from "requirements"
 import pluralize from "utils/pluralize"
 import Requirement from "../common/Requirement"
@@ -28,7 +27,8 @@ const SnapshotRequirement = ({
     <Requirement
       image="/requirementLogos/snapshot.png"
       footer={
-        requirement.type === "SNAPSHOT_STRATEGY" && (
+        requirement.type === "SNAPSHOT_STRATEGY" &&
+        Object.keys(requirement.data.strategies[0].params ?? {}).length && (
           <>
             <RequirementButton
               rightIcon={
@@ -43,26 +43,11 @@ const SnapshotRequirement = ({
               View parameters
             </RequirementButton>
             <Collapse style={{ marginTop: 0 }} in={isOpen}>
-              {requirement.data.strategies.map((strategy, i) => (
-                <Stack pt={2} pr={6} key={i}>
-                  <Text as="span" fontWeight="bold" fontSize="sm">
-                    {strategy.name}
-                  </Text>
-                  {!Object.keys(strategy.params ?? {}).length ? (
-                    <Text
-                      position="relative"
-                      top={-2}
-                      as="span"
-                      fontSize="sm"
-                      color="gray"
-                    >
-                      No parameters
-                    </Text>
-                  ) : (
-                    <StrategyParamsTable params={strategy.params} />
-                  )}
-                </Stack>
-              ))}
+              <Box pt={2} pr={6}>
+                <StrategyParamsTable
+                  params={requirement.data.strategies[0].params}
+                />
+              </Box>
             </Collapse>
           </>
         )
@@ -75,13 +60,8 @@ const SnapshotRequirement = ({
             return (
               <>
                 {"Satisfy the "}
-                {strategies.map((s, i) => (
-                  <Fragment key={i}>
-                    <DataBlock>{s.name}</DataBlock>
-                    {i < strategies.length - 1 && ", "}
-                  </Fragment>
-                ))}
-                {` Snapshot ${strategies.length > 1 ? "Strategies" : "Strategy"}`}
+                <DataBlock>{strategies[0].name}</DataBlock>
+                {` Snapshot Strategy`}
                 {requirement.data.space &&
                   ` in the ${space?.name ?? requirement.data.space} space`}
               </>
