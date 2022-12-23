@@ -8,13 +8,17 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
+import { useRouter } from "next/router"
+import { ArrowLeft } from "phosphor-react"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import parseDescription from "utils/parseDescription"
+import Button from "../Button"
 import Footer from "./components/Footer"
-import Header, { HeaderProps } from "./components/Header"
+import Header from "./components/Header"
 
 type Props = {
   image?: JSX.Element
@@ -26,8 +30,9 @@ type Props = {
   background?: string
   backgroundImage?: string
   backgroundOffset?: number
+  showBackButton?: boolean
   showhat?: boolean
-} & HeaderProps
+}
 
 const Layout = ({
   image,
@@ -45,6 +50,10 @@ const Layout = ({
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
+
+  const router: any = useRouter()
+  const hasNavigated = router.components && Object.keys(router.components).length > 2
+  const colorContext = useThemeContext()
 
   useIsomorphicLayoutEffect(() => {
     if ((!background && !backgroundImage) || !childrenWrapper?.current) return
@@ -107,7 +116,7 @@ const Layout = ({
             )}
           </Box>
         )}
-        <Header showBackButton={showBackButton} />
+        <Header />
         <Container
           // to be above the absolutely positioned background box
           position="relative"
@@ -116,6 +125,21 @@ const Layout = ({
           pb={24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
+          {showBackButton && hasNavigated && (
+            <Button
+              variant="link"
+              color={colorContext.textColor}
+              opacity={0.75}
+              _active={{}}
+              size="sm"
+              leftIcon={<ArrowLeft />}
+              onClick={() => router.back()}
+              alignSelf="flex-start"
+              mb="6"
+            >
+              Go back to explorer
+            </Button>
+          )}
           <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
             <HStack justify="space-between" w="full" spacing={3}>
               <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
