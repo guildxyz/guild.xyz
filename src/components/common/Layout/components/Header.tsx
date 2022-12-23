@@ -31,7 +31,7 @@ const Header = ({ showBackButton = true }: HeaderProps): JSX.Element => {
             : undefined,
         },
       }}
-      zIndex="2"
+      zIndex="docked"
     >
       {showBackButton && hasNavigated ? (
         <IconButton
