@@ -11,6 +11,7 @@ const NavButton = forwardRef(
     ref: Ref<HTMLButtonElement>
   ) => {
     const router = useRouter()
+
     return (
       <NextLink passHref href={href}>
         <Button
@@ -20,9 +21,9 @@ const NavButton = forwardRef(
           h={10}
           w="full"
           justifyContent="left"
-          fontWeight="sm"
           {...rest}
-          backgroundColor={router.route === href ? "gray.500" : ""}
+          fontWeight={router.route === href ? "semibold" : "normal"}
+          backgroundColor={router.route === href && "whiteAlpha.200"}
         >
           {children}
         </Button>
