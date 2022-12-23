@@ -13,7 +13,7 @@
 var snowStorm = (function (window, document) {
   // --- common properties ---
 
-  this.autoStart = true // Whether the snow should start automatically or not.
+  this.autoStart = window.location.pathname === "/explorer" // Whether the snow should start automatically or not.
   this.excludeMobile = true // Snow is likely to be bad news for mobile phones' CPUs (and batteries.) Enable at your own risk.
   this.flakesMax = 128 // Limit total amount of snow made (falling + sticking)
   this.flakesMaxActive = 64 // Limit amount of snow falling at once (less = lower CPU use)
@@ -26,7 +26,7 @@ var snowStorm = (function (window, document) {
   this.snowColor = "#fff" // Don't eat (or use?) yellow snow.
   this.snowCharacter = "&bull;" // &bull; = bullet, &middot; is square on some systems etc.
   this.snowStick = false // Whether or not snow should "stick" at the bottom. When off, will never collect.
-  this.targetElement = "background" // element which snow will be appended to (null = document.body) - can be an element ID eg. 'myDiv', or a DOM node reference
+  this.targetElement = null // element which snow will be appended to (null = document.body) - can be an element ID eg. 'myDiv', or a DOM node reference
   this.useMeltEffect = true // When recycling fallen snow (or rarely, when falling), have it "melt" and fade out if browser supports it
   this.useTwinkleEffect = false // Allow snow to randomly "flicker" in and out of view while falling
   this.usePositionFixed = false // true = snow does not shift vertically when scrolling. May increase CPU load, disabled by default - if enabled, used only where supported
@@ -688,17 +688,24 @@ var snowStorm = (function (window, document) {
     storm.events.remove(window, "load", doStart)
   }
 
-  // function doStop() {
-  //   storm.stop()
-  //   console.log("stopped")
-  // }
+  function doStop() {
+    storm.stop()
+    storm.freeze()
+  }
+
+  function doContinue() {
+    doStart()
+    storm.show()
+    storm.resume()
+  }
 
   // hooks for starting the snow
   if (storm.autoStart) {
     storm.events.add(window, "load", doStart, false)
-    // storm.events.add(window, "snow", doStart, false)
-    // storm.events.add(window, "beforeunload", doStop, false)
   }
+
+  storm.events.add(window, "snow", doContinue, false)
+  storm.events.add(window, "stopSnow", doStop, false)
 
   return this
 })(window, document)
