@@ -23,7 +23,7 @@ const Header = (): JSX.Element => {
             : undefined,
         },
       }}
-      zIndex="docked"
+      zIndex="banner"
     >
       <NavMenu />
       <Box>
