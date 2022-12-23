@@ -66,7 +66,6 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-notion-x": "^6.15.6",
-    "sass": "^1.56.1",
     "react-hook-form": "^7.40.0",
     "react-intersection-observer": "^9.4.1",
     "react-window": "^1.8.8",

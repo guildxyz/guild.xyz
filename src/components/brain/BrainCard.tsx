@@ -12,6 +12,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
   const renderedTags = pageData.tags
     .filter((tag) => tag === "reward" || tag === "requirement")
     .sort((a, b) => a.length - b.length)
+
   return (
     <Link
       href={`/brain/${pageData.id}`}
@@ -29,7 +30,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
           borderBottomRightRadius="xl"
           borderTopLeftRadius="xl"
           backgroundColor="gray.600"
-          zIndex={2}
+          zIndex={1}
         ></ColorCardLabel>
         <Flex h="165px" flexDirection="column">
           <Center

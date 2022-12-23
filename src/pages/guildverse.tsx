@@ -1,6 +1,6 @@
-import { GridItem, SimpleGrid } from "@chakra-ui/react"
+import { SimpleGrid } from "@chakra-ui/react"
 import BrainCard from "components/brain/BrainCard"
-import FilterSelect, { FilterOption } from "components/brain/filterSelect"
+import FilterSelect, { FilterOption } from "components/brain/FilterSelect"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
@@ -26,13 +26,11 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
   const [filterData, setFilterData] = useState<Array<FilterOption>>([])
   const renderedCards = useMemo(
     () =>
-      cards
-        .filter((card) =>
-          filterData
-            .map((filterElement) => filterElement.value)
-            .every((filterTag) => card?.tags.includes(filterTag))
-        )
-        .filter((card) => card.title.toLowerCase().includes(search.toLowerCase())),
+      cards.filter(
+        (card) =>
+          filterData.every((filterTag) => card?.tags.includes(filterTag.value)) &&
+          card.title.toLowerCase().includes(search.toLowerCase())
+      ),
     [cards, filterData, search]
   )
 
@@ -41,13 +39,11 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
       <LinkPreviewHead path="" />
       <Layout title="Guildverse" showBackButton={false}>
         <SimpleGrid
-          templateColumns={{ md: "2fr 0fr 3fr" }}
+          templateColumns={{ md: "2fr 3fr" }}
           gap={{ base: 2, md: "6" }}
           mb={8}
         >
-          <GridItem colSpan={{ base: 1, md: 2 }}>
-            <SearchBar placeholder="Search" {...{ search, setSearch }} />
-          </GridItem>
+          <SearchBar placeholder="Search" {...{ search, setSearch }} />
           <FilterSelect {...{ filterOptions, setFilterData }} />
         </SimpleGrid>
         <CategorySection fallbackText={"There are no pages"}>
@@ -94,8 +90,8 @@ export const getStaticProps: GetStaticProps = async () => {
     id: page.id,
     title: page.properties.title.title[0].plain_text,
     tags: page.properties.tags.multi_select.map((tag) => tag.name),
-    icon: page.icon?.file?.url ? page.icon.file.url : null,
-    backgroundImage: page.cover?.file?.url ? page.cover?.file?.url : null,
+    icon: page.icon?.file?.url ?? null,
+    backgroundImage: page.cover?.file?.url ?? null,
   }))
 
   return {
