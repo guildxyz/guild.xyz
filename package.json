@@ -45,7 +45,7 @@
     "@web3-react/core": "8.0.32-beta.0",
     "@web3-react/metamask": "8.0.25-beta.0",
     "@web3-react/walletconnect": "8.0.33-beta.0",
-    "chakra-react-select": "^4.4.2",
+    "chakra-react-select": "^4.4.3",
     "chakra-ui-steps": "^1.8.0",
     "color": "^4.2.3",
     "colorthief": "^2.3.2",
