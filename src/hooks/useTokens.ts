@@ -12,13 +12,9 @@ const TokenApiURLs = {
   POLYGON: [
     "https://unpkg.com/quickswap-default-token-list@1.0.91/build/quickswap-default.tokenlist.json",
   ],
-  AVALANCHE: [
-    "https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/joe.tokenlist.json",
-  ],
-  FANTOM: [
-    "https://raw.githubusercontent.com/Crocoswap/tokenlists/main/aeb.tokenlist.json",
-  ],
-  ARBITRUM: ["https://bridge.arbitrum.io/token-list-42161.json"],
+  AVALANCHE: ["https://tokens.coingecko.com/avalanche/all.json"],
+  FANTOM: ["https://tokens.coingecko.com/fantom/all.json"],
+  ARBITRUM: ["https://tokens.coingecko.com/arbitrum-one/all.json"],
   NOVA: ["https://tokens.coingecko.com/arbitrum-nova/all.json"],
   CELO: [
     "https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap.token-list.json",
