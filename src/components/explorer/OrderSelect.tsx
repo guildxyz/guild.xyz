@@ -39,8 +39,6 @@ const OrderSelect = ({ order, setOrder }: Props): JSX.Element => {
         value={order}
         icon={<>{icon}</>}
         w={{ base: "45px", md: "full" }}
-        // temporary
-        bg="#212122"
       >
         {OPTIONS.map((option) => (
           <option key={option} value={option}>

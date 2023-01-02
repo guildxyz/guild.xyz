@@ -109,15 +109,6 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   useEffect(() => {
     setColorMode("dark")
-
-    const startEvent = new Event("snow")
-    const stopEvent = new Event("stopSnow")
-
-    window.dispatchEvent(startEvent)
-
-    return () => {
-      window.dispatchEvent(stopEvent)
-    }
   }, [])
 
   return (
@@ -126,7 +117,6 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <Layout
         title="Guildhall"
         description="Automated membership management for the platforms your community already uses."
-        showhat={true}
       >
         <SimpleGrid
           templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}

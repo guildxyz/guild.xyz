@@ -6,7 +6,6 @@ import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
-import Script from "next/script"
 import { IconContext } from "phosphor-react"
 import { Fragment } from "react"
 import { SWRConfig } from "swr"
@@ -23,7 +22,6 @@ const App = ({
 
   return (
     <Chakra cookies={pageProps.cookies}>
-      <Script src="/snow.js" />
       <IconContext.Provider
         value={{
           color: "currentColor",
