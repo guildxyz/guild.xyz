@@ -63,7 +63,7 @@ const SnapshotRequirement = ({
                 {` Snapshot Strategy`}
                 {requirement.data.space && (
                   <>
-                    ` in the `
+                    {` in the `}
                     <SnapshotSpaceLink requirement={requirement} />
                   </>
                 )}
