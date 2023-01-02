@@ -6,7 +6,7 @@ type Props = {
 }
 
 const NavGroup = ({ title, children }: PropsWithChildren<Props>) => (
-  <VStack spacing={0}>
+  <VStack spacing={"2px"}>
     <Text
       as="h4"
       fontWeight={"bold"}
