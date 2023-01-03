@@ -27,9 +27,8 @@ const RoleRequirements = ({ role }: Props) => {
   const rowHeights = useRef<Record<number, number>>({})
 
   const setRowHeight = (rowIndex: number, rowHeight: number) => {
-    // Recalculating row heights
+    // Recalculating row heights, then setting new row heights
     listRef.current.resetAfterIndex(0)
-    // Setting new row heights
     rowHeights.current = { ...rowHeights.current, [rowIndex]: rowHeight }
   }
 
@@ -41,6 +40,7 @@ const RoleRequirements = ({ role }: Props) => {
       setRowHeight(index, rowRef.current.clientHeight)
     }, [rowRef])
 
+    // Scrolling down 3 items Using `scrollIntoView()` here, because the default listRef.current.scrollToItem() method doesn't support smooth scrolling
     useEffect(() => {
       if (!rowRef.current || index !== 3 || !isRequirementsExpanded) return
       rowRef.current.scrollIntoView({
