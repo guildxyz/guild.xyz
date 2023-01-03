@@ -73,7 +73,7 @@ const RoleRequirements = ({ role }: Props) => {
           ref={listRef}
           height={isRequirementsExpanded ? 312 : 276}
           itemCount={hiddenRequirements.length}
-          itemSize={(i) => rowHeights.current[i] ?? 106}
+          itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
           className="custom-scrollbar"
           style={{
             paddingRight: "0.5rem",
