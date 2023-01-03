@@ -170,7 +170,10 @@ const useKeyPair = () => {
           )
         }
       },
-      onSuccess: (generatedKeyPair) => mutateKeyPair(generatedKeyPair),
+      onSuccess: (generatedKeyPair) => {
+        mutateKeyPair(generatedKeyPair)
+        addDatadogAction("Successfully generated keypair")
+      },
     }
   )
 
