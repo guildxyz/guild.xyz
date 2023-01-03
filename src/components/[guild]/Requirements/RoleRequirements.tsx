@@ -1,5 +1,5 @@
 import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
-import React, { memo, useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { VariableSizeList } from "react-window"
 import { Role } from "types"
 import LogicDivider from "../LogicDivider"
@@ -31,7 +31,7 @@ const RoleRequirements = ({ role }: Props) => {
     rowHeights.current = { ...rowHeights.current, [rowIndex]: rowHeight }
   }
 
-  const Row = memo(({ index, style }: any) => {
+  const Row = ({ index, style }: any) => {
     const rowRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -39,9 +39,17 @@ const RoleRequirements = ({ role }: Props) => {
       setRowHeight(index, rowRef.current.clientHeight)
     }, [rowRef])
 
+    useEffect(() => {
+      if (!rowRef.current || index !== 3 || !isRequirementsExpanded) return
+      rowRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      })
+    }, [isRequirementsExpanded])
+
     return (
       <Box style={style}>
-        <Box ref={rowRef}>
+        <Box ref={rowRef} paddingRight={1}>
           <RequirementDisplayComponent requirement={hiddenRequirements[index]} />
           {index < hiddenRequirements.length - 1 && (
             <LogicDivider logic={role.logic} />
@@ -49,7 +57,7 @@ const RoleRequirements = ({ role }: Props) => {
         </Box>
       </Box>
     )
-  })
+  }
 
   if (!role.requirements?.length)
     return (
@@ -60,26 +68,28 @@ const RoleRequirements = ({ role }: Props) => {
 
   if (role.requirements.length > 10)
     return (
-      <>
-        <Box
-          sx={{
-            maskImage: `linear-gradient(to top, transparent 0%, black 5%, black 95%, transparent 100%)`,
-            WebkitMaskImage: `linear-gradient(to top, transparent 0%, black 5%, black 95%, transparent 100%)`,
+      <Box mr={isRequirementsExpanded ? "calc(-1 * (0.25rem + 8px))" : -1}>
+        <VariableSizeList
+          ref={listRef}
+          height={isRequirementsExpanded ? 312 : 276}
+          itemCount={hiddenRequirements.length}
+          itemSize={(i) => rowHeights.current[i] ?? 106}
+          className="custom-scrollbar"
+          style={{
+            paddingRight: "0.5rem",
+            overflowY: isRequirementsExpanded ? "scroll" : "hidden",
           }}
         >
-          <VariableSizeList
-            ref={listRef}
-            height={318}
-            itemCount={hiddenRequirements.length}
-            itemSize={(i) => rowHeights.current[i] ?? 106}
-            className="custom-scrollbar"
-            style={{
-              paddingRight: "0.5rem",
-            }}
-          >
-            {Row}
-          </VariableSizeList>
-        </Box>
+          {Row}
+        </VariableSizeList>
+
+        <ExpandRequirementsButton
+          logic={role.logic}
+          hiddenRequirements={hiddenRequirements.length}
+          isRequirementsExpanded={isRequirementsExpanded}
+          setIsRequirementsExpanded={setIsRequirementsExpanded}
+          isHidden={isRequirementsExpanded}
+        />
 
         <Box
           position="absolute"
@@ -91,7 +101,7 @@ const RoleRequirements = ({ role }: Props) => {
           pointerEvents="none"
           opacity={0.6}
         />
-      </>
+      </Box>
     )
 
   return (
