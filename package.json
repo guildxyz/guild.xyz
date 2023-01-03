@@ -77,7 +77,7 @@
     "@types/color": "^3.0.3",
     "@types/node": "^18.11.11",
     "@types/react": "^18.0.26",
-    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
     "cypress-file-upload": "^5.0.8",
     "dotenv-cli": "^5.1.0",
     "eslint": "^8.28.0",
