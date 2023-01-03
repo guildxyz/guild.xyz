@@ -11,6 +11,7 @@ type Props = {
 }
 
 const RoleRequirements = ({ role }: Props) => {
+  const isVirtualList = role.requirements.length > 10
   const sliceIndex = (role.requirements?.length ?? 0) - 3
   const shownRequirements = (role.requirements ?? []).slice(0, 3)
   const hiddenRequirements =
@@ -40,18 +41,9 @@ const RoleRequirements = ({ role }: Props) => {
       setRowHeight(index, rowRef.current.clientHeight)
     }, [rowRef])
 
-    // Scrolling down 3 items Using `scrollIntoView()` here, because the default listRef.current.scrollToItem() method doesn't support smooth scrolling
-    useEffect(() => {
-      if (!rowRef.current || index !== 3 || !isRequirementsExpanded) return
-      rowRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      })
-    }, [isRequirementsExpanded])
-
     return (
       <Box style={style}>
-        <Box ref={rowRef} paddingRight={1}>
+        <Box ref={rowRef} paddingRight={isRequirementsExpanded ? 1 : 0}>
           <RequirementDisplayComponent requirement={hiddenRequirements[index]} />
           {index < hiddenRequirements.length - 1 && (
             <LogicDivider logic={role.logic} />
@@ -68,68 +60,55 @@ const RoleRequirements = ({ role }: Props) => {
       </VStack>
     )
 
-  if (role.requirements.length > 10)
-    return (
-      <Box mr={isRequirementsExpanded ? "calc(-1 * (0.25rem + 8px))" : -1}>
-        <VariableSizeList
-          ref={listRef}
-          height={isRequirementsExpanded ? 312 : 276}
-          itemCount={hiddenRequirements.length}
-          itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
-          className="custom-scrollbar"
-          style={{
-            paddingRight: "0.5rem",
-            overflowY: isRequirementsExpanded ? "scroll" : "hidden",
-          }}
-        >
-          {Row}
-        </VariableSizeList>
-
-        <ExpandRequirementsButton
-          logic={role.logic}
-          hiddenRequirements={hiddenRequirements.length}
-          isRequirementsExpanded={isRequirementsExpanded}
-          setIsRequirementsExpanded={setIsRequirementsExpanded}
-          isHidden={isRequirementsExpanded}
-        />
-
-        <Box
-          position="absolute"
-          bottom={{ base: 8, md: 0 }}
-          left={0}
-          right={0}
-          height={6}
-          bgGradient={`linear-gradient(to top, ${shadowColor}, transparent)`}
-          pointerEvents="none"
-          opacity={0.6}
-        />
-      </Box>
-    )
-
   return (
     <VStack spacing="0">
-      {shownRequirements.map((requirement, i) => (
-        <React.Fragment key={i}>
-          <RequirementDisplayComponent requirement={requirement} />
-          {i < shownRequirements.length - 1 && <LogicDivider logic={role.logic} />}
-        </React.Fragment>
-      ))}
+      {isVirtualList ? (
+        <Box
+          w={isRequirementsExpanded ? "calc(100% + 0.25rem + 8px)" : "full"}
+          mr={isRequirementsExpanded ? "calc(-0.25rem - 8px)" : 0}
+        >
+          <VariableSizeList
+            ref={listRef}
+            height={isRequirementsExpanded ? 312 : 276}
+            itemCount={hiddenRequirements.length}
+            itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
+            className="custom-scrollbar"
+            style={{
+              paddingRight: "0.5rem",
+              overflowY: isRequirementsExpanded ? "scroll" : "hidden",
+            }}
+          >
+            {Row}
+          </VariableSizeList>
+        </Box>
+      ) : (
+        <>
+          {shownRequirements.map((requirement, i) => (
+            <React.Fragment key={i}>
+              <RequirementDisplayComponent requirement={requirement} />
+              {i < shownRequirements.length - 1 && (
+                <LogicDivider logic={role.logic} />
+              )}
+            </React.Fragment>
+          ))}
 
-      <Collapse
-        in={isRequirementsExpanded}
-        animateOpacity={false}
-        style={{ width: "100%" }}
-      >
-        {hiddenRequirements.map((requirement, i) => (
-          <React.Fragment key={i}>
-            {i === 0 && <LogicDivider logic={role.logic} />}
-            <RequirementDisplayComponent requirement={requirement} />
-            {i < hiddenRequirements.length - 1 && (
-              <LogicDivider logic={role.logic} />
-            )}
-          </React.Fragment>
-        ))}
-      </Collapse>
+          <Collapse
+            in={isRequirementsExpanded}
+            animateOpacity={false}
+            style={{ width: "100%" }}
+          >
+            {hiddenRequirements.map((requirement, i) => (
+              <React.Fragment key={i}>
+                {i === 0 && <LogicDivider logic={role.logic} />}
+                <RequirementDisplayComponent requirement={requirement} />
+                {i < hiddenRequirements.length - 1 && (
+                  <LogicDivider logic={role.logic} />
+                )}
+              </React.Fragment>
+            ))}
+          </Collapse>
+        </>
+      )}
 
       {hiddenRequirements.length > 0 && (
         <>
@@ -138,6 +117,7 @@ const RoleRequirements = ({ role }: Props) => {
             hiddenRequirements={hiddenRequirements.length}
             isRequirementsExpanded={isRequirementsExpanded}
             setIsRequirementsExpanded={setIsRequirementsExpanded}
+            isHidden={isVirtualList && isRequirementsExpanded}
           />
           <Box
             position="absolute"
@@ -147,7 +127,7 @@ const RoleRequirements = ({ role }: Props) => {
             height={6}
             bgGradient={`linear-gradient(to top, ${shadowColor}, transparent)`}
             pointerEvents="none"
-            opacity={isRequirementsExpanded ? 0 : 0.6}
+            opacity={!isVirtualList && isRequirementsExpanded ? 0 : 0.6}
             transition="opacity 0.2s ease"
           />
         </>
