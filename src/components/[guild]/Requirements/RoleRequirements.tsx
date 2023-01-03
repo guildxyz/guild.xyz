@@ -24,8 +24,20 @@ const RoleRequirements = ({ role }: Props) => {
   )
 
   // Row related refs, state, and functions
+  const listWrapperRef = useRef<HTMLDivElement>(null)
+
   const listRef = useRef(null)
   const rowHeights = useRef<Record<number, number>>({})
+
+  useEffect(() => {
+    if (!isRequirementsExpanded || !listWrapperRef.current) return
+    listWrapperRef.current.children?.[0]?.scrollTo({
+      behavior: "smooth",
+      top: Object.values(rowHeights.current ?? {})
+        .slice(0, 3)
+        .reduce((a, b) => a + b, 0),
+    })
+  }, [isRequirementsExpanded])
 
   const setRowHeight = (rowIndex: number, rowHeight: number) => {
     // Recalculating row heights, then setting new row heights
@@ -64,6 +76,7 @@ const RoleRequirements = ({ role }: Props) => {
     <VStack spacing="0">
       {isVirtualList ? (
         <Box
+          ref={listWrapperRef}
           w={isRequirementsExpanded ? "calc(100% + 0.25rem + 8px)" : "full"}
           mr={isRequirementsExpanded ? "calc(-0.25rem - 8px)" : 0}
         >
