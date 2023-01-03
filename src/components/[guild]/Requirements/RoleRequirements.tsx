@@ -27,7 +27,9 @@ const RoleRequirements = ({ role }: Props) => {
   const rowHeights = useRef<Record<number, number>>({})
 
   const setRowHeight = (rowIndex: number, rowHeight: number) => {
+    // Recalculating row heights
     listRef.current.resetAfterIndex(0)
+    // Setting new row heights
     rowHeights.current = { ...rowHeights.current, [rowIndex]: rowHeight }
   }
 
