@@ -156,7 +156,7 @@ const Hero = ({ scrollToInfos }: Props): JSX.Element => {
           <Icon
             onClick={() => scrollToInfos()}
             as={CaretDown}
-            boxSize={7}
+            boxSize={{ base: 7, md: 9, lg: 10 }}
             pos="absolute"
             bottom="8"
             color="gray.500"
