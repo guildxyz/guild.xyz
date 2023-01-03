@@ -1,5 +1,6 @@
 import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
+import { FixedSizeList } from "react-window"
 import { Role } from "types"
 import LogicDivider from "../LogicDivider"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
@@ -21,18 +22,47 @@ const RoleRequirements = ({ role }: Props) => {
     "var(--chakra-colors-gray-900)"
   )
 
+  const Row = ({ index, style }) => (
+    <Box key={index} style={style}>
+      <RequirementDisplayComponent requirement={hiddenRequirements[index]} />
+      {index < hiddenRequirements.length - 1 && <LogicDivider logic={role.logic} />}
+    </Box>
+  )
+
+  if (!role.requirements?.length)
+    return (
+      <VStack>
+        <Spinner />
+      </VStack>
+    )
+
+  if (role.requirements.length > 10)
+    return (
+      <Box
+        sx={{
+          maskImage: `linear-gradient(to top, transparent 0%, black 5%, black 95%, transparent 100%)`,
+          WebkitMaskImage: `linear-gradient(to top, transparent 0%, black 5%, black 95%, transparent 100%)`,
+        }}
+      >
+        <FixedSizeList
+          height={318}
+          itemCount={hiddenRequirements.length}
+          itemSize={106}
+          className="custom-scrollbar"
+        >
+          {Row}
+        </FixedSizeList>
+      </Box>
+    )
+
   return (
     <VStack spacing="0">
-      {!role.requirements?.length ? (
-        <Spinner />
-      ) : (
-        shownRequirements.map((requirement, i) => (
-          <React.Fragment key={i}>
-            <RequirementDisplayComponent requirement={requirement} />
-            {i < shownRequirements.length - 1 && <LogicDivider logic={role.logic} />}
-          </React.Fragment>
-        ))
-      )}
+      {shownRequirements.map((requirement, i) => (
+        <React.Fragment key={i}>
+          <RequirementDisplayComponent requirement={requirement} />
+          {i < shownRequirements.length - 1 && <LogicDivider logic={role.logic} />}
+        </React.Fragment>
+      ))}
 
       <Collapse
         in={isRequirementsExpanded}
