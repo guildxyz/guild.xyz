@@ -10,8 +10,10 @@ type Props = {
   role: Role
 }
 
+const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
+
 const RoleRequirements = ({ role }: Props) => {
-  const isVirtualList = role.requirements.length > 10
+  const isVirtualList = role.requirements.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
   const sliceIndex = (role.requirements?.length ?? 0) - 3
   const shownRequirements = (role.requirements ?? []).slice(0, 3)
   const hiddenRequirements =
@@ -39,18 +41,17 @@ const RoleRequirements = ({ role }: Props) => {
     })
   }, [isRequirementsExpanded])
 
-  const setRowHeight = (rowIndex: number, rowHeight: number) => {
-    // Recalculating row heights, then setting new row heights
-    listRef.current.resetAfterIndex(0)
-    rowHeights.current = { ...rowHeights.current, [rowIndex]: rowHeight }
-  }
-
   const Row = ({ index, style }: any) => {
     const rowRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
       if (!rowRef.current) return
-      setRowHeight(index, rowRef.current.clientHeight)
+      // Recalculating row heights, then setting new row heights
+      listRef.current.resetAfterIndex(0)
+      rowHeights.current = {
+        ...rowHeights.current,
+        [index]: rowRef.current.clientHeight,
+      }
     }, [rowRef])
 
     return (
@@ -65,16 +66,11 @@ const RoleRequirements = ({ role }: Props) => {
     )
   }
 
-  if (!role.requirements?.length)
-    return (
-      <VStack>
-        <Spinner />
-      </VStack>
-    )
-
   return (
     <VStack spacing="0">
-      {isVirtualList ? (
+      {!role.requirements?.length ? (
+        <Spinner />
+      ) : isVirtualList ? (
         <Box
           ref={listWrapperRef}
           w={isRequirementsExpanded ? "calc(100% + 0.25rem + 8px)" : "full"}
