@@ -11,6 +11,7 @@ type Props = {
 }
 
 const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
+const PARENT_PADDING = "var(--chakra-space-5)"
 
 const RoleRequirements = ({ role }: Props) => {
   const isVirtualList = role.requirements.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
@@ -35,9 +36,7 @@ const RoleRequirements = ({ role }: Props) => {
     if (!isRequirementsExpanded || !listWrapperRef.current) return
     listWrapperRef.current.children?.[0]?.scrollTo({
       behavior: "smooth",
-      top: Object.values(rowHeights.current ?? {})
-        .slice(0, 3)
-        .reduce((a, b) => a + b, 0),
+      top: 30,
     })
   }, [isRequirementsExpanded])
 
@@ -56,7 +55,7 @@ const RoleRequirements = ({ role }: Props) => {
 
     return (
       <Box style={style}>
-        <Box ref={rowRef} paddingRight={isRequirementsExpanded ? 1 : 0}>
+        <Box ref={rowRef} paddingRight={PARENT_PADDING}>
           <RequirementDisplayComponent requirement={hiddenRequirements[index]} />
           {index < hiddenRequirements.length - 1 && (
             <LogicDivider logic={role.logic} />
@@ -71,19 +70,16 @@ const RoleRequirements = ({ role }: Props) => {
       {!role.requirements?.length ? (
         <Spinner />
       ) : isVirtualList ? (
-        <Box
-          ref={listWrapperRef}
-          w={isRequirementsExpanded ? "calc(100% + 0.25rem + 8px)" : "full"}
-          mr={isRequirementsExpanded ? "calc(-0.25rem - 8px)" : 0}
-        >
+        <Box ref={listWrapperRef} w="full" alignSelf="flex-start">
           <VariableSizeList
             ref={listRef}
-            height={isRequirementsExpanded ? 312 : 276}
+            width={`calc(100% + ${PARENT_PADDING})`}
+            height={isRequirementsExpanded ? 340 : 280}
             itemCount={hiddenRequirements.length}
             itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
             className="custom-scrollbar"
             style={{
-              paddingRight: "0.5rem",
+              marginBottom: isRequirementsExpanded && `calc(${PARENT_PADDING} * -1)`,
               overflowY: isRequirementsExpanded ? "scroll" : "hidden",
               WebkitMaskImage: `linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)`,
             }}
