@@ -15,7 +15,7 @@ const OpenseaUrl = ({ requirement }: Props): JSX.Element => {
     isOpensea: boolean
   }>(
     openseaChains[requirement.chain]
-      ? `/api/opensea-asset-data/${requirement.chain}/${requirement?.address}/${
+      ? `/api/opensea-asset-data/${requirement.chain}/${requirement.address}/${
           requirement.data.id ?? ""
         }`
       : null
@@ -30,7 +30,7 @@ const OpenseaUrl = ({ requirement }: Props): JSX.Element => {
   return (
     <RequirementLinkButton
       href={
-        openseaChains[requirement.chain] && data.name && requirement.data.id
+        data.name && requirement.data.id
           ? `https://opensea.io/assets/${openseaChains[requirement.chain]}/${
               requirement.address
             }/${requirement.data.id}`
