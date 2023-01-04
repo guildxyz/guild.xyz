@@ -16,14 +16,14 @@ export default async function handler(req, res) {
   const { chain, address, tokenId } = req.query
   if (!address) return res.status(404).json(null)
 
-  const data = {
-    image: undefined,
-    name: undefined,
-    slug: undefined,
-    isOpensea: true,
-  }
+  let data: {
+    image?: undefined
+    name?: undefined
+    slug?: undefined
+    isOpensea: boolean
+  } | null = null
 
-  if (!openseaChains[chain]) return res.json(null)
+  if (!openseaChains[chain]) return res.json(data)
 
   if (chain === "ETHEREUM" && !tokenId) {
     await fetcher(
@@ -32,8 +32,11 @@ export default async function handler(req, res) {
     )
       .then((openseaData) => {
         if (!openseaData.collection) return
-        data.image = openseaData.image_url
-        data.slug = openseaData.collection?.slug
+        data = {
+          image: openseaData.image_url,
+          slug: openseaData.collection?.slug,
+          isOpensea: true,
+        }
       })
       .catch((_) => {})
   } else {
@@ -43,9 +46,11 @@ export default async function handler(req, res) {
     )
       .then((metadata) => {
         if (!metadata.name) return
-        data.image = metadata.image
-        data.name = metadata.name
-        data.isOpensea = !metadata.external_link
+        data = {
+          image: metadata.image,
+          name: metadata.name,
+          isOpensea: !metadata.external_link,
+        }
       })
       .catch((_) => {})
   }

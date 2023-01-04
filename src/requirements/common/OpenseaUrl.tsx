@@ -21,10 +21,9 @@ const OpenseaUrl = ({ requirement }: Props): JSX.Element => {
       : null
   )
 
-  if (!(data?.name || data?.slug) && isValidating)
-    return <RequirementButton isLoading />
+  if (!data && isValidating) return <RequirementButton isLoading />
 
-  if ((!(data?.name || data?.slug) && !isValidating) || !data?.isOpensea)
+  if ((!data && !isValidating) || !data?.isOpensea)
     return <BlockExplorerUrl requirement={requirement} />
 
   return (
