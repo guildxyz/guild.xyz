@@ -85,6 +85,7 @@ const RoleRequirements = ({ role }: Props) => {
             style={{
               paddingRight: "0.5rem",
               overflowY: isRequirementsExpanded ? "scroll" : "hidden",
+              WebkitMaskImage: `linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%)`,
             }}
           >
             {Row}
