@@ -169,7 +169,6 @@ const GuildPage = (): JSX.Element => {
         </Collapse>
 
         <Section
-          ref={rolesEl}
           title={(showAccessHub || showOnboarding) && "Roles"}
           titleRightElement={
             isAdmin &&
@@ -182,7 +181,7 @@ const GuildPage = (): JSX.Element => {
           mb="12"
         >
           {renderedRoles.length ? (
-            <Stack spacing={4}>
+            <Stack ref={rolesEl} spacing={4}>
               {renderedRoles.map((role) => (
                 <RoleCard key={role.id} role={role} />
               ))}
