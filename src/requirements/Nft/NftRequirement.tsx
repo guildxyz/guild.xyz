@@ -48,12 +48,18 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
       }
     : receivedRequirement
 
-  const { data, isValidating } = useSWRImmutable<{ image: string }>(
-    requirement.address ? `/api/opensea-asset-data/${requirement.address}` : null
+  const { data, isValidating } = useSWRImmutable<{ image: string; name?: string }>(
+    requirement.address &&
+      (requirement.chain === "ETHEREUM" || requirement.chain === "POLYGON")
+      ? `/api/opensea-asset-data/${requirement.chain}/${requirement.address}/${
+          requirement.data.id ?? ""
+        }`
+      : null
   )
 
   const shouldRenderImage =
-    requirement.chain === "ETHEREUM" && requirement.name && requirement.name !== "-"
+    (requirement.chain === "ETHEREUM" || requirement.chain === "POLYGON") &&
+    (data?.name || (requirement.name && requirement.name !== "-"))
 
   return (
     <Requirement
@@ -76,7 +82,9 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
     >
       {`Own ${
         requirement.data?.id
-          ? `the #${requirement.data.id}`
+          ? data?.name
+            ? `the ${data.name}`
+            : `the #${requirement.data.id}`
           : requirement.data?.maxAmount > 0
           ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount}`
           : requirement.data?.minAmount > 1
@@ -84,15 +92,16 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
           : "a(n)"
       } `}
 
-      {requirement.symbol === "-" &&
-      requirement.address?.toLowerCase() ===
-        "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
-        "ENS"
-      ) : !requirement.name || requirement.name === "-" ? (
-        <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
-      ) : (
-        requirement.name
-      )}
+      {!data?.name &&
+        (requirement.symbol === "-" &&
+        requirement.address?.toLowerCase() ===
+          "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
+          "ENS"
+        ) : !data?.name && (!requirement.name || requirement.name === "-") ? (
+          <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
+        ) : (
+          requirement.name
+        ))}
 
       {requirement.data?.attributes?.length ? (
         <>
