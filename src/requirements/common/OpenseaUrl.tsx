@@ -14,7 +14,7 @@ const OpenseaUrl = ({ requirement }: Props): JSX.Element => {
     slug?: string
     isOpensea: boolean
   }>(
-    requirement.chain === "ETHEREUM" || requirement.chain === "POLYGON"
+    openseaChains[requirement.chain]
       ? `/api/opensea-asset-data/${requirement.chain}/${requirement?.address}/${
           requirement.data.id ?? ""
         }`

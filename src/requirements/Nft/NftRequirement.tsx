@@ -1,6 +1,7 @@
 import { Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import DataBlock from "components/common/DataBlock"
+import { openseaChains } from "pages/api/opensea-asset-data/[chain]/[address]/[[...tokenId]]"
 import { Fragment } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Requirement as RequirementType, Trait } from "types"
@@ -49,8 +50,7 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
     : receivedRequirement
 
   const { data, isValidating } = useSWRImmutable<{ image: string; name?: string }>(
-    requirement.address &&
-      (requirement.chain === "ETHEREUM" || requirement.chain === "POLYGON")
+    requirement.address && openseaChains[requirement.chain]
       ? `/api/opensea-asset-data/${requirement.chain}/${requirement.address}/${
           requirement.data.id ?? ""
         }`
@@ -58,7 +58,7 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
   )
 
   const shouldRenderImage =
-    (requirement.chain === "ETHEREUM" || requirement.chain === "POLYGON") &&
+    openseaChains[requirement.chain] &&
     (data?.name || (requirement.name && requirement.name !== "-"))
 
   return (
