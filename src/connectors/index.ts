@@ -21,7 +21,6 @@ enum Chains {
   OPTIMISM = 10,
   MOONBEAM = 1284,
   MOONRIVER = 1285,
-  RINKEBY = 4,
   METIS = 1088,
   CRONOS = 25,
   BOBA = 288,
@@ -328,22 +327,6 @@ const RPC = {
     iconUrls: ["/networkLogos/palm.png"],
     rpcUrls: ["https://palm-mainnet.infura.io/v3/84722b0c96da4e09a6305118494aeeaa"],
   },
-  RINKEBY: {
-    chainId: 4,
-    chainName: "Rinkeby",
-    nativeCurrency: {
-      name: "Rinkeby Ether",
-      symbol: "rETH",
-      decimals: 18,
-      address: "0x0000000000000000000000000000000000000000",
-      logoURI:
-        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-    },
-    blockExplorerUrls: ["https://rinkeby.etherscan.io"],
-    apiUrl: "https://api-rinkeby.etherscan.io",
-    iconUrls: ["/networkLogos/ethereum.svg"],
-    rpcUrls: ["https://rinkeby-light.eth.linkpool.io"],
-  },
   GOERLI: {
     chainId: 5,
     chainName: "Goerli",
@@ -447,10 +430,6 @@ const blockExplorerIcons = {
   "https://explorer.palm.io": {
     light: "/networkLogos/palm.png",
     dark: "/networkLogos/palm.png",
-  },
-  "https://rinkeby.etherscan.io": {
-    light: "/explorerLogos/etherscan-light.svg",
-    dark: "/explorerLogos/etherscan-dark.svg",
   },
   "https://goerli.etherscan.io": {
     light: "/explorerLogos/etherscan-light.svg",

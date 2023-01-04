@@ -13,7 +13,7 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
     requirements
       // Setting unused props to undefined, so we don't send them to the API
       .map((requirement) => {
-        const processedRequirement = {
+        const processedRequirement: Requirement = {
           ...requirement,
           data: {
             ...requirement.data,
@@ -23,17 +23,19 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         }
 
         if (requirement.address === "0x0000000000000000000000000000000000000000")
-          requirement.address = undefined
+          processedRequirement.address = undefined
 
-        if (requirement.data?.attributes && !requirement.data.attributes.length)
-          requirement.data.attributes = undefined
+        if (requirement.data.attributes && !requirement.data.attributes.length) {
+          processedRequirement.data.attributes = undefined
+          if (!requirement.data.minAmount) processedRequirement.data.minAmount = 0
+        }
 
         if (
           requirement.type === "ALLOWLIST" &&
-          !requirement.data?.addresses &&
-          !requirement.data?.hideAllowlist
+          !requirement.data.addresses &&
+          !requirement.data.hideAllowlist
         )
-          requirement.data.addresses = []
+          processedRequirement.data.addresses = []
 
         // Deleting ID here, we don't want to update it, and it might also cause bugs
         delete processedRequirement.id

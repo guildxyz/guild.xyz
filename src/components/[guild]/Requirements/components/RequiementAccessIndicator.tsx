@@ -28,7 +28,6 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
   const reqAccessData = accessData?.requirements?.find(
     (obj) => obj.requirementId === requirement.id
   )
-  const reqObj = REQUIREMENTS[requirement.type]
 
   if (reqAccessData?.access)
     return (
@@ -46,11 +45,11 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
       </RequiementAccessIndicatorUI>
     )
 
-  const error =
-    accessData?.errors?.find((err) => err.requirementId === requirement.id) ??
-    accessData?.warnings?.find((err) => err.requirementId === requirement.id)
+  const reqErrorData = accessData?.errors?.find(
+    (obj) => obj.requirementId === requirement.id
+  )
 
-  if (error?.msg?.includes("account isn't connected"))
+  if (reqErrorData?.errorType === "PLATFORM_NOT_CONNECTED")
     return (
       <RequiementAccessIndicatorUI
         colorScheme={"blue"}
@@ -71,7 +70,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
       </RequiementAccessIndicatorUI>
     )
 
-  if (reqAccessData?.access === null || error) {
+  if (reqAccessData?.access === null || reqErrorData) {
     return (
       <RequiementAccessIndicatorUI
         colorScheme={"orange"}
@@ -80,11 +79,13 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
         isAlwaysOpen={!accessData?.access}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
-          {error.msg ? `Error: ${error.msg}` : `Couldn't check access`}
+          {reqErrorData.msg ? `Error: ${reqErrorData.msg}` : `Couldn't check access`}
         </PopoverHeader>
       </RequiementAccessIndicatorUI>
     )
   }
+
+  const reqObj = REQUIREMENTS[requirement.type]
 
   return (
     <RequiementAccessIndicatorUI

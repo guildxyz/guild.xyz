@@ -127,6 +127,7 @@ const GuildPage = (): JSX.Element => {
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
         action={isAdmin && <DynamicEditGuildButton />}
+        showBackButton
       >
         {showOnboarding ? (
           <DynamicOnboarding />
