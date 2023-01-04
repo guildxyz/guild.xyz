@@ -1,7 +1,8 @@
 import { Flex, Heading, Icon, Stack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import LinkButton from "components/common/LinkButton"
 import Head from "next/head"
-import { ArrowRight, DiscordLogo } from "phosphor-react"
+import { DiscordLogo, House } from "phosphor-react"
 import NotFoundIcon from "static/avatars/58.svg"
 
 const Page = ({ statusCode }): JSX.Element => (
@@ -52,25 +53,23 @@ const Page = ({ statusCode }): JSX.Element => (
       <Stack
         direction={{ base: "column", sm: "row" }}
         spacing={{ base: 2, md: 3 }}
-        w={{ base: "full", sm: "unset" }}
-        mb={3}
+        w="full"
+        justifyContent={"center"}
       >
-        <Button
-          as="a"
+        <LinkButton
           href="/"
-          rightIcon={<ArrowRight />}
-          w={{ base: "full", sm: "unset" }}
+          leftIcon={<House />}
           colorScheme="DISCORD"
           iconSpacing={3}
           size="lg"
         >
-          Return to Guild
-        </Button>
+          Go to home page
+        </LinkButton>
         <Button
           as="a"
           href="https://discord.gg/guildxyz"
           target="_blank"
-          rightIcon={<DiscordLogo />}
+          leftIcon={<DiscordLogo />}
           colorScheme="solid-gray"
           iconSpacing={3}
           size="lg"
