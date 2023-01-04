@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  Portal,
   Tag,
   useColorMode,
   useColorModeValue,
@@ -71,13 +72,7 @@ const RequiementAccessIndicatorUI = ({
         bg={`linear-gradient(to right, transparent 0px, ${cardBg} var(--chakra-space-4))`}
         height={"full"}
       >
-        <Popover
-          placement="left"
-          trigger="hover"
-          closeDelay={100}
-          strategy="fixed"
-          onOpen={onOpen}
-        >
+        <Popover placement="left" trigger="hover" closeDelay={100} onOpen={onOpen}>
           {({ isOpen, onClose }) => (
             <>
               <PopoverTrigger>
@@ -103,16 +98,18 @@ const RequiementAccessIndicatorUI = ({
                   </Tag>
                 </Center>
               </PopoverTrigger>
-              <PopoverContent width="unset" maxW={{ base: "2xs", md: "xs" }}>
-                {!isAlwaysOpen && [5, 10].includes(openCount) ? (
-                  <PopoverHeader border="0">
-                    {openCount === 5 ? "👀" : "🙈 You like that anim don't ya?"}
-                  </PopoverHeader>
-                ) : (
-                  children
-                )}
-                <PopoverArrow />
-              </PopoverContent>
+              <Portal>
+                <PopoverContent width="unset" maxW={{ base: "2xs", md: "xs" }}>
+                  {!isAlwaysOpen && [5, 10].includes(openCount) ? (
+                    <PopoverHeader border="0">
+                      {openCount === 5 ? "👀" : "🙈 You like that anim don't ya?"}
+                    </PopoverHeader>
+                  ) : (
+                    children
+                  )}
+                  <PopoverArrow />
+                </PopoverContent>
+              </Portal>
             </>
           )}
         </Popover>
