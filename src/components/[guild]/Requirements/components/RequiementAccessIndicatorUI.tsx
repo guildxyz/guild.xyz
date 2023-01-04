@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  Portal,
   Tag,
   useColorMode,
   useColorModeValue,
@@ -103,16 +104,18 @@ const RequiementAccessIndicatorUI = ({
                   </Tag>
                 </Center>
               </PopoverTrigger>
-              <PopoverContent width="unset" maxW={{ base: "2xs", md: "xs" }}>
-                {!isAlwaysOpen && [5, 10].includes(openCount) ? (
-                  <PopoverHeader border="0">
-                    {openCount === 5 ? "👀" : "🙈 You like that anim don't ya?"}
-                  </PopoverHeader>
-                ) : (
-                  children
-                )}
-                <PopoverArrow />
-              </PopoverContent>
+              <Portal>
+                <PopoverContent width="unset" maxW={{ base: "2xs", md: "xs" }}>
+                  {!isAlwaysOpen && [5, 10].includes(openCount) ? (
+                    <PopoverHeader border="0">
+                      {openCount === 5 ? "👀" : "🙈 You like that anim don't ya?"}
+                    </PopoverHeader>
+                  ) : (
+                    children
+                  )}
+                  <PopoverArrow />
+                </PopoverContent>
+              </Portal>
             </>
           )}
         </Popover>
