@@ -93,9 +93,9 @@ const GuildPage = (): JSX.Element => {
     return accessedRoles.concat(otherRoles)
   }, [roles, roleAccesses])
 
+  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
   const rolesEl = useRef(null)
-
   useScrollEffect(() => {
     if (
       !rolesEl.current ||
