@@ -160,23 +160,18 @@ const Hero = ({ scrollToInfos }: Props): JSX.Element => {
             pos="absolute"
             bottom="8"
             color="gray.500"
+            transform="translateX(-50%)"
             animation={"bounce 2s infinite 2s"}
             sx={{
               "@keyframes bounce": {
                 "0%,\n  100%,\n  20%,\n  50%,\n  80%": {
-                  WebkitTransform: "translateY(0)",
-                  msTransform: "translateY(0)",
-                  transform: "translateY(0)",
+                  transform: "translateY(0) translateX(-50%)",
                 },
                 "40%": {
-                  WebkitTransform: "translateY(-6px)",
-                  msTransform: "translateY(-6px)",
-                  transform: "translateY(-6px)",
+                  transform: "translateY(-6px) translateX(-50%)",
                 },
                 "60%": {
-                  WebkitTransform: "translateY(-5px)",
-                  msTransform: "translateY(-5px)",
-                  transform: "translateY(-5px)",
+                  transform: "translateY(-5px) translateX(-50%)",
                 },
               },
             }}
