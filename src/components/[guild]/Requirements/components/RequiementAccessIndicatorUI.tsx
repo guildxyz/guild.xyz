@@ -72,13 +72,7 @@ const RequiementAccessIndicatorUI = ({
         bg={`linear-gradient(to right, transparent 0px, ${cardBg} var(--chakra-space-4))`}
         height={"full"}
       >
-        <Popover
-          placement="left"
-          trigger="hover"
-          closeDelay={100}
-          strategy="fixed"
-          onOpen={onOpen}
-        >
+        <Popover placement="left" trigger="hover" closeDelay={100} onOpen={onOpen}>
           {({ isOpen, onClose }) => (
             <>
               <PopoverTrigger>
