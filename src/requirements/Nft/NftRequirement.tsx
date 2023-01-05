@@ -86,16 +86,11 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
           : "a(n)"
       } `}
 
-      {!data?.name &&
-        (requirement.symbol === "-" &&
-        requirement.address?.toLowerCase() ===
-          "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
-          "ENS"
-        ) : !data?.name && (!requirement.name || requirement.name === "-") ? (
-          <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
-        ) : (
-          requirement.name
-        ))}
+      {!data?.name && (!requirement.name || requirement.name === "-") ? (
+        <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
+      ) : (
+        requirement.name
+      )}
 
       {requirement.data?.attributes?.length ? (
         <>
