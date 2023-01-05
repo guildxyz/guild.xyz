@@ -13,8 +13,7 @@ const OpenseaUrl = ({ requirement }: Props): JSX.Element => {
 
   if (!data && isValidating) return <RequirementButton isLoading />
 
-  if ((!data && !isValidating) || !data?.isOpensea)
-    return <BlockExplorerUrl requirement={requirement} />
+  if (!data && !isValidating) return <BlockExplorerUrl requirement={requirement} />
 
   return (
     <RequirementLinkButton

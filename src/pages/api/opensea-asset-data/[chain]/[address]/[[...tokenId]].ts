@@ -16,7 +16,6 @@ export type OpenseaAssetData = {
   image?: string
   name?: string
   slug?: string
-  isOpensea?: boolean
 }
 
 export default async function handler(req, res) {
@@ -37,7 +36,6 @@ export default async function handler(req, res) {
         data = {
           image: openseaData.image_url,
           slug: openseaData.collection?.slug,
-          isOpensea: true,
         }
       })
       .catch((_) => {})
@@ -51,7 +49,6 @@ export default async function handler(req, res) {
         data = {
           image: metadata.image,
           name: metadata.name,
-          isOpensea: !metadata.external_link,
         }
       })
       .catch((_) => {})
