@@ -15,7 +15,6 @@ import {
   Spinner,
   Stack,
   Text,
-  Tooltip,
   useBreakpointValue,
   useClipboard,
   useColorModeValue,
@@ -23,7 +22,7 @@ import {
 import Button from "components/common/Button"
 import RoleOptionCard from "components/[guild]/RoleOptionCard"
 import { Check, Copy, DownloadSimple, Export } from "phosphor-react"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import useGuildRoles from "./hooks/useGuildRoles"
 
 const MembersExporter = (): JSX.Element => {
@@ -35,42 +34,27 @@ const MembersExporter = (): JSX.Element => {
 
   const { guildRoles, isGuildRolesLoading } = useGuildRoles()
 
-  // Returning only unique members
-  const membersList = [
-    ...new Set(
-      guildRoles
-        ?.filter((role) => selectedRoles.includes(role.id.toString()))
-        ?.map((role) => role.members)
-        ?.reduce((a, b) => a.concat(b), [])
-        ?.filter((member) => !!member) ?? []
-    ),
-  ]
+  const { hasCopied, value, setValue, onCopy } = useClipboard("")
+  const csvContent = encodeURI("data:text/csv;charset=utf-8," + value)
 
-  const { hasCopied, onCopy } = useClipboard(membersList.join("\n"))
-  const csvContent = encodeURI(
-    "data:text/csv;charset=utf-8," + membersList.join("\n")
-  )
+  useEffect(() => {
+    setValue(
+      [
+        ...new Set(
+          guildRoles
+            ?.filter((role) => selectedRoles.includes(role.id.toString()))
+            ?.map((role) => role.members)
+            ?.reduce((a, b) => a.concat(b), [])
+            ?.filter((member) => !!member) ?? []
+        ),
+      ].join("\n")
+    )
+  }, [selectedRoles, guildRoles])
 
   const exportMembersAsCsv = () => {
     if (!aRef.current) return
     aRef.current.click()
   }
-
-  // Temporarily disabled until the BE returns members again
-  return (
-    <Tooltip label="Temporarily disabled" hasArrow>
-      <Button
-        aria-label="Export members"
-        variant="ghost"
-        leftIcon={<Icon as={Export} />}
-        size="sm"
-        data-dd-action-name="Export members"
-        isDisabled
-      >
-        {label}
-      </Button>
-    </Tooltip>
-  )
 
   // Wrapping the Popover in a div, so we don't get popper.js warnings in the console
   return (
@@ -142,12 +126,12 @@ const MembersExporter = (): JSX.Element => {
                 noOfLines={1}
                 mr="2"
               >
-                {`${membersList.length} addresses`}
+                {`${value ? value.split("\n").length : 0} addresses`}
               </Text>
               <ButtonGroup
                 size="sm"
                 colorScheme="primary"
-                isDisabled={!membersList.length}
+                isDisabled={!value.length}
               >
                 <Button
                   rounded="md"
