@@ -1,6 +1,8 @@
 import { Box, Container, useColorModeValue, VStack } from "@chakra-ui/react"
 import Head from "next/head"
 import { PropsWithChildren } from "react"
+import Footer from "./components/Footer"
+import Header from "./components/Header"
 
 type Props = {
   title: string
@@ -18,6 +20,7 @@ const SimpleLayout = ({
         <title>{title}</title>
       </Head>
       <Box bgColor={bgColor} minHeight="100vh" display="flex" flexDir="column">
+        <Header />
         <Container
           maxW="container.lg"
           pt={{ base: 6, md: 9 }}
@@ -28,6 +31,7 @@ const SimpleLayout = ({
             {children}
           </VStack>
         </Container>
+        <Footer />
       </Box>
     </>
   )

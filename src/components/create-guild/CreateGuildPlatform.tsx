@@ -25,4 +25,16 @@ const CreateGuildPlatform = (): JSX.Element => {
   return <CreateGuildPlatformComponent />
 }
 
+const CreateGuildPlatformInfo = (): JSX.Element => {
+  const { platform } = useCreateGuildContext()
+
+  switch (platform) {
+    case "DISCORD":
+      return <>Discord</>
+    default:
+      return null
+  }
+}
+
 export default CreateGuildPlatform
+export { CreateGuildPlatformInfo }

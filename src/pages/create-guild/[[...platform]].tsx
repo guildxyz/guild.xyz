@@ -5,27 +5,15 @@ import {
   CreateGuildProvider,
   useCreateGuildContext,
 } from "components/create-guild/CreateGuildContext"
-import useIsConnected from "hooks/useIsConnected"
-import { useRouter } from "next/router"
-import { useEffect } from "react"
 
 const CreateGuildPage = (): JSX.Element => {
-  const { platform, steps, activeStep } = useCreateGuildContext()
-  const router = useRouter()
-
-  const isConnected = useIsConnected(platform)
-
-  useEffect(() => {
-    if (platform && !isConnected) {
-      router.push("/create-guild")
-    }
-  }, [platform, isConnected])
+  const { steps, activeStep } = useCreateGuildContext()
 
   return (
     <SimpleLayout title={steps[activeStep].label}>
       <Steps activeStep={activeStep} colorScheme="indigo" textAlign="left">
         {steps.map((step) => (
-          <Step key={step.label} label={step.label}>
+          <Step key={step.label} label={step.label} description={step.description}>
             <Stack w="full" spacing={10}>
               <Stack w="full" alignItems="start">
                 <Heading
@@ -34,7 +22,7 @@ const CreateGuildPage = (): JSX.Element => {
                   fontFamily="display"
                   wordBreak="break-word"
                 >
-                  {step.label}
+                  {step.title}
                 </Heading>
 
                 <Text
@@ -44,7 +32,7 @@ const CreateGuildPage = (): JSX.Element => {
                   mt="-8"
                   mb="10"
                 >
-                  {step.description}
+                  {step.subtitle}
                 </Text>
               </Stack>
 
