@@ -71,7 +71,7 @@
   },
   "devDependencies": {
     "@datadog/datadog-ci": "^1.17.0",
-    "@hookform/devtools": "^4.2.3",
+    "@hookform/devtools": "^4.3.0",
     "@svgr/webpack": "^6.5.1",
     "@synthetixio/synpress": "^1.2.0",
     "@types/color": "^3.0.3",
