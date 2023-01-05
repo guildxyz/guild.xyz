@@ -86,11 +86,9 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
           : "a(n)"
       } `}
 
-      {!data?.name && (!requirement.name || requirement.name === "-") ? (
-        <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
-      ) : (
-        requirement.name
-      )}
+      {!data?.name && (!requirement.name || requirement.name === "-")
+        ? data?.slug ?? <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
+        : requirement.name}
 
       {requirement.data?.attributes?.length ? (
         <>
