@@ -13,17 +13,17 @@ export const openseaChains: Partial<Record<Chain, string>> = {
 }
 
 export type OpenseaAssetData = {
-  image?: undefined
-  name?: undefined
-  slug?: undefined
-  isOpensea: boolean
-} | null
+  image?: string
+  name?: string
+  slug?: string
+  isOpensea?: boolean
+}
 
 export default async function handler(req, res) {
   const { chain, address, tokenId } = req.query
   if (!address) return res.status(404).json(null)
 
-  let data: OpenseaAssetData = null
+  let data: OpenseaAssetData
 
   if (!openseaChains[chain]) return res.json(data)
 
