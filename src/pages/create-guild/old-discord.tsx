@@ -1,6 +1,6 @@
 import { Text } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
-import DiscordGuildSetup from "components/common/DiscordGuildSetup"
+import DiscordGuildSetup from "components/common/DiscordGuildSetup/DiscordGuildSetup"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"

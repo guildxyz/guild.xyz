@@ -1,16 +1,16 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
-import DCServerCard from "components/guard/setup/DCServerCard"
-import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence } from "framer-motion"
 import useGateables from "hooks/useGateables"
 import useIsConnected from "hooks/useIsConnected"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
-import { OptionSkeletonCard } from "./OptionCard"
-import ReconnectAlert from "./ReconnectAlert"
+import { OptionSkeletonCard } from "../OptionCard"
+import ReconnectAlert from "../ReconnectAlert"
+import DCServerCard from "./components/DCServerCard"
+import ServerSetupCard from "./components/ServerSetupCard"
 
 const DiscordGuildSetup = ({
   defaultValues,

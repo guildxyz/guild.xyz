@@ -58,26 +58,6 @@ module.exports = {
           has: [
             {
               type: "host",
-              value: "guard.guild.xyz",
-            },
-          ],
-          destination: "/guard/",
-        },
-        {
-          source: "/setup",
-          has: [
-            {
-              type: "host",
-              value: "guard.guild.xyz",
-            },
-          ],
-          destination: "/guard/setup",
-        },
-        {
-          source: "/",
-          has: [
-            {
-              type: "host",
               value: "balancy.guild.xyz",
             },
           ],

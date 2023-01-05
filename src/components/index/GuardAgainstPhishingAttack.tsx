@@ -1,6 +1,4 @@
 import { Box, Flex, Img, VStack } from "@chakra-ui/react"
-import { ArrowSquareOut } from "phosphor-react"
-import LandingButton from "./LandingButton"
 import LandingSection from "./LandingSection"
 import LandingSectionText from "./LandingSectionText"
 
@@ -44,15 +42,6 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
           Web3 captcha to filter bad-actor bots and protect your community against
           Discord scams.
         </LandingSectionText>
-
-        <LandingButton
-          as="a"
-          href="https://guard.guild.xyz"
-          target="_blank"
-          rightIcon={<ArrowSquareOut />}
-        >
-          Learn more
-        </LandingButton>
       </VStack>
     }
   />

@@ -1,13 +1,13 @@
 import { usePrevious } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import OptionCard from "components/common/OptionCard"
+import useGuildByPlatformId from "hooks/useGuildByPlatformId"
 import usePopupWindow from "hooks/usePopupWindow"
 import useServerData from "hooks/useServerData"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { ArrowSquareIn } from "phosphor-react"
 import { useEffect } from "react"
-import useGuildByPlatformId from "./hooks/useDiscordGuildByPlatformId"
 
 type Props = {
   serverData: {
@@ -88,12 +88,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           Select
         </Button>
       ) : id ? (
-        <Link
-          href={`/${urlName}${
-            router.asPath?.includes("guard") ? "?focusGuard=true" : ""
-          }`}
-          passHref
-        >
+        <Link href={`/${urlName}`} passHref>
           <Button
             as="a"
             h={10}
