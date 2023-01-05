@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react"
+import { Skeleton, Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import DataBlock from "components/common/DataBlock"
 import useOpenseaAssetData from "hooks/useOpenseaAssetData"
@@ -74,17 +74,24 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
       footer={<OpenseaUrl requirement={requirement} />}
       {...rest}
     >
-      {`Own ${
-        requirement.data?.id
-          ? data?.name
-            ? `the ${data.name}`
-            : `the #${requirement.data.id}`
-          : requirement.data?.maxAmount > 0
-          ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount}`
-          : requirement.data?.minAmount > 1
-          ? `at least ${requirement.data?.minAmount}`
-          : "a(n)"
-      } `}
+      {"Own "}
+      {requirement.data?.id ? (
+        data?.name || isValidating ? (
+          <>
+            <Skeleton isLoaded={!isValidating} display="inline">{`the ${
+              data?.name || "loading..."
+            }`}</Skeleton>{" "}
+          </>
+        ) : (
+          `the #${requirement.data.id} `
+        )
+      ) : requirement.data?.maxAmount > 0 ? (
+        `${requirement.data?.minAmount}-${requirement.data?.maxAmount}`
+      ) : requirement.data?.minAmount > 1 ? (
+        `at least ${requirement.data?.minAmount} `
+      ) : (
+        "a(n) "
+      )}
 
       {!data?.name && (!requirement.name || requirement.name === "-")
         ? data?.slug ?? <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
