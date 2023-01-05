@@ -75,7 +75,7 @@
     "@svgr/webpack": "^6.5.1",
     "@synthetixio/synpress": "^1.2.0",
     "@types/color": "^3.0.3",
-    "@types/node": "^18.11.11",
+    "@types/node": "^18.11.15",
     "@types/react": "^18.0.26",
     "@typescript-eslint/eslint-plugin": "^5.46.1",
     "cypress-file-upload": "^5.0.8",
