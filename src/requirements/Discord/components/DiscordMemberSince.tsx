@@ -1,5 +1,7 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react"
+import { Divider, FormControl, FormLabel, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import ReconnectAlert from "components/common/ReconnectAlert"
+import useGateables from "hooks/useGateables"
 import { Controller, useFormContext, useFormState } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 import ServerPicker from "./ServerPicker"
@@ -11,6 +13,7 @@ type Props = {
 const DiscordMemberSince = ({ baseFieldPath }: Props): JSX.Element => {
   const { errors } = useFormState()
   const { control } = useFormContext()
+  const { error } = useGateables("DISCORD")
 
   return (
     <>
@@ -52,6 +55,13 @@ const DiscordMemberSince = ({ baseFieldPath }: Props): JSX.Element => {
           {parseFromObject(errors, baseFieldPath).data?.memberSince?.message}
         </FormErrorMessage>
       </FormControl>
+
+      {error && (
+        <>
+          <Divider />
+          <ReconnectAlert platformName="DISCORD" />
+        </>
+      )}
     </>
   )
 }
