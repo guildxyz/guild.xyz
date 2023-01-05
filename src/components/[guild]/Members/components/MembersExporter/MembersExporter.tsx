@@ -1,34 +1,33 @@
 import {
-  Box,
   ButtonGroup,
   CheckboxGroup,
   Flex,
   Icon,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverFooter,
-  PopoverHeader,
-  PopoverTrigger,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
   Stack,
   Text,
   useBreakpointValue,
   useClipboard,
-  useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import RoleOptionCard from "components/[guild]/RoleOptionCard"
 import { Check, Copy, DownloadSimple, Export } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import useGuildRoles from "./hooks/useGuildRoles"
 
 const MembersExporter = (): JSX.Element => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const aRef = useRef(null)
   const label = useBreakpointValue({ base: "Export", sm: "Export members" })
-  const bg = useColorModeValue("gray.50", "blackAlpha.100")
 
   const [selectedRoles, setSelectedRoles] = useState([])
 
@@ -56,65 +55,55 @@ const MembersExporter = (): JSX.Element => {
     aRef.current.click()
   }
 
-  // Wrapping the Popover in a div, so we don't get popper.js warnings in the console
+  const handleClose = () => {
+    onClose()
+    setValue("")
+  }
+
   return (
-    <Box>
-      <Popover openDelay={0}>
-        <PopoverTrigger>
-          <Button
-            aria-label="Export members"
-            variant="ghost"
-            leftIcon={<Icon as={Export} />}
-            size="sm"
-            data-dd-action-name="Export members"
-          >
-            {label}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent
-          pos="relative"
-          minW="350px"
-          _before={{
-            content: '""',
-            bg,
-            pos: "absolute",
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            borderRadius: "xl",
-            zIndex: -1,
-          }}
-        >
-          <PopoverArrow />
-          <PopoverCloseButton rounded="full" />
-          <PopoverHeader fontSize="sm" fontWeight="bold" border="none">
-            Select roles to export members of
-          </PopoverHeader>
-          <PopoverBody>
+    <>
+      <Button
+        aria-label="Export members"
+        variant="ghost"
+        leftIcon={<Icon as={Export} />}
+        size="sm"
+        data-dd-action-name="Export members"
+        onClick={onOpen}
+      >
+        {label}
+      </Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={handleClose}
+        colorScheme="dark"
+        scrollBehavior="inside"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader pb="7">Select roles to export members of</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
             {isGuildRolesLoading ? (
               <Flex justifyContent="center" py={2} w="full">
                 <Spinner />
               </Flex>
             ) : (
-              <>
-                <CheckboxGroup
-                  onChange={(newList) => setSelectedRoles(newList)}
-                  colorScheme="primary"
-                >
-                  <Stack>
-                    {guildRoles?.map((role) => (
-                      <RoleOptionCard key={role.id} role={role} />
-                    ))}
-                  </Stack>
-                </CheckboxGroup>
-              </>
+              <CheckboxGroup
+                onChange={(newList) => setSelectedRoles(newList)}
+                colorScheme="primary"
+              >
+                <Stack>
+                  {guildRoles?.map((role) => (
+                    <RoleOptionCard key={role.id} role={role} />
+                  ))}
+                </Stack>
+              </CheckboxGroup>
             )}
-          </PopoverBody>
+          </ModalBody>
           {guildRoles?.length && (
-            <PopoverFooter
-              borderColor="transparent"
-              mt="1"
+            <ModalFooter
+              pt="6"
+              pb={{ base: 8, sm: 9 }}
               display="flex"
               justifyContent={"space-between"}
               alignItems="center"
@@ -128,22 +117,16 @@ const MembersExporter = (): JSX.Element => {
               >
                 {`${value ? value.split("\n").length : 0} addresses`}
               </Text>
-              <ButtonGroup
-                size="sm"
-                colorScheme="primary"
-                isDisabled={!value.length}
-              >
+              <ButtonGroup colorScheme="primary" isDisabled={!value.length}>
                 <Button
-                  rounded="md"
-                  pt="1px"
+                  h="10"
                   onClick={onCopy}
                   leftIcon={hasCopied ? <Check /> : <Copy />}
                 >
                   {`${hasCopied ? "Copied" : "Copy"}`}
                 </Button>
                 <Button
-                  rounded="md"
-                  pt="1px"
+                  h="10"
                   onClick={exportMembersAsCsv}
                   leftIcon={<DownloadSimple />}
                 >
@@ -157,11 +140,11 @@ const MembersExporter = (): JSX.Element => {
                 download="members"
                 style={{ display: "none" }}
               />
-            </PopoverFooter>
+            </ModalFooter>
           )}
-        </PopoverContent>
-      </Popover>
-    </Box>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
 
