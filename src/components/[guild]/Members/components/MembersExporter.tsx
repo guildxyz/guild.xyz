@@ -1,4 +1,8 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   ButtonGroup,
   CheckboxGroup,
   Flex,
@@ -18,37 +22,42 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import useGuild from "components/[guild]/hooks/useGuild"
 import RoleOptionCard from "components/[guild]/RoleOptionCard"
 import { Check, Copy, DownloadSimple, Export } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
-import useGuildRoles from "./hooks/useGuildRoles"
+import useSWRImmutable from "swr/immutable"
 
 const MembersExporter = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { id, roles } = useGuild()
+  const { data, isValidating } = useSWRImmutable(
+    isOpen ? `/guild/${id}/members` : null
+  )
 
   const aRef = useRef(null)
   const label = useBreakpointValue({ base: "Export", sm: "Export members" })
 
   const [selectedRoles, setSelectedRoles] = useState([])
 
-  const { guildRoles, isGuildRolesLoading } = useGuildRoles()
-
   const { hasCopied, value, setValue, onCopy } = useClipboard("")
   const csvContent = encodeURI("data:text/csv;charset=utf-8," + value)
 
   useEffect(() => {
+    if (!selectedRoles || !data) return
+
     setValue(
       [
         ...new Set(
-          guildRoles
-            ?.filter((role) => selectedRoles.includes(role.id.toString()))
+          data
+            ?.filter((role) => selectedRoles.includes(role.roleId.toString()))
             ?.map((role) => role.members)
             ?.reduce((a, b) => a.concat(b), [])
             ?.filter((member) => !!member) ?? []
         ),
       ].join("\n")
     )
-  }, [selectedRoles, guildRoles])
+  }, [selectedRoles, data])
 
   const exportMembersAsCsv = () => {
     if (!aRef.current) return
@@ -83,24 +92,35 @@ const MembersExporter = (): JSX.Element => {
           <ModalHeader pb="7">Select roles to export members of</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {isGuildRolesLoading ? (
+            {isValidating ? (
               <Flex justifyContent="center" py={2} w="full">
                 <Spinner />
               </Flex>
+            ) : !data ? (
+              <Alert status="error">
+                <AlertIcon />
+                <Stack>
+                  <AlertTitle>Couldn't fetch members</AlertTitle>
+                  <AlertDescription>
+                    Please try again later and contact us on Discord if it still
+                    doesn't work
+                  </AlertDescription>
+                </Stack>
+              </Alert>
             ) : (
               <CheckboxGroup
                 onChange={(newList) => setSelectedRoles(newList)}
                 colorScheme="primary"
               >
                 <Stack>
-                  {guildRoles?.map((role) => (
+                  {roles?.map((role) => (
                     <RoleOptionCard key={role.id} role={role} />
                   ))}
                 </Stack>
               </CheckboxGroup>
             )}
           </ModalBody>
-          {guildRoles?.length && (
+          {data?.length && (
             <ModalFooter
               pt="6"
               pb={{ base: 8, sm: 9 }}
