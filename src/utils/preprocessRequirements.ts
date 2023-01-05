@@ -25,7 +25,13 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         if (requirement.address === "0x0000000000000000000000000000000000000000")
           processedRequirement.address = undefined
 
-        if (requirement.data.attributes && !requirement.data.attributes.length) {
+        if (
+          (requirement.type === "ERC721" ||
+            requirement.type === "ERC1155" ||
+            requirement.type === "NOUNS") &&
+          requirement.data.attributes &&
+          !requirement.data.attributes.length
+        ) {
           processedRequirement.data.attributes = undefined
           if (!requirement.data.minAmount) processedRequirement.data.minAmount = 0
         }

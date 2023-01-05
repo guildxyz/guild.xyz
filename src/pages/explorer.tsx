@@ -79,6 +79,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     }
   )
 
+  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   useScrollEffect(() => {
     if (
       !guildsListEl.current ||

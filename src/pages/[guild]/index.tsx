@@ -29,16 +29,19 @@ import OnboardingProvider from "components/[guild]/Onboarding/components/Onboard
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { CloudSlash } from "phosphor-react"
-import React, { useMemo, useState } from "react"
+import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
+
+const BATCH_SIZE = 10
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
 const DynamicAddRoleButton = dynamic(
@@ -89,6 +92,22 @@ const GuildPage = (): JSX.Element => {
     )
     return accessedRoles.concat(otherRoles)
   }, [roles, roleAccesses])
+
+  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
+  const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
+  const rolesEl = useRef(null)
+  useScrollEffect(() => {
+    if (
+      !rolesEl.current ||
+      rolesEl.current.getBoundingClientRect().bottom > window.innerHeight ||
+      roles?.length <= renderedRolesCount
+    )
+      return
+
+    setRenderedRolesCount((prevValue) => prevValue + BATCH_SIZE)
+  }, [roles, renderedRolesCount])
+
+  const renderedRoles = sortedRoles?.slice(0, renderedRolesCount) || []
 
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
@@ -161,14 +180,20 @@ const GuildPage = (): JSX.Element => {
           }
           mb="12"
         >
-          {sortedRoles?.length ? (
-            <Stack spacing={4}>
-              {sortedRoles.map((role) => (
+          {renderedRoles.length ? (
+            <Stack ref={rolesEl} spacing={4}>
+              {renderedRoles.map((role) => (
                 <RoleCard key={role.id} role={role} />
               ))}
             </Stack>
           ) : (
             <DynamicNoRolesAlert />
+          )}
+
+          {roles?.length > renderedRolesCount && (
+            <Center pt={6}>
+              <Spinner />
+            </Center>
           )}
         </Section>
 
