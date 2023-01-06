@@ -52,7 +52,7 @@ const basicDefaultValues: GuildFormType = {
   description: "",
   imageUrl: defaultIcon,
 }
-const defaultValues: Partial<Record<PlatformName, GuildFormType>> = {
+export const defaultValues: Partial<Record<PlatformName, GuildFormType>> = {
   DISCORD: {
     ...basicDefaultValues,
     guildPlatforms: [
@@ -120,6 +120,10 @@ const CreateGuildProvider = ({
       title: `Create guild${
         platform ? `on ${capitalize(platform?.toLowerCase() ?? "")}` : ""
       }`,
+      subtitle:
+        platform === "DISCORD"
+          ? "Adding the bot and creating the Guild won't change anything on your server"
+          : "",
       content: CreateGuildPlatform,
     },
     {

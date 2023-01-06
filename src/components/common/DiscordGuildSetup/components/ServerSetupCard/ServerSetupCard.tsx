@@ -4,17 +4,14 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"
-import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useSetImageAndNameFromPlatformData from "components/create-guild/hooks/useSetImageAndNameFromPlatformData"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence, motion } from "framer-motion"
 import usePinata from "hooks/usePinata"
 import useServerData from "hooks/useServerData"
-import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { useRouter } from "next/router"
 import { Check } from "phosphor-react"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -22,18 +19,12 @@ import getRandomInt from "utils/getRandomInt"
 const MotionStack = motion(Stack)
 
 const ServerSetupCard = ({ children, onSubmit: onSubmitProp }): JSX.Element => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
-
   const router = useRouter()
 
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
 
-  const {
-    control,
-    handleSubmit: formHandleSubmit,
-    setValue,
-  } = useFormContext<GuildFormType>()
+  const { control, setValue } = useFormContext<GuildFormType>()
 
   const selectedServer = useWatch({
     control,
@@ -50,19 +41,7 @@ const ServerSetupCard = ({ children, onSubmit: onSubmitProp }): JSX.Element => {
     router.pathname.includes("/create-guild")
   )
 
-  const { onSubmit, isLoading, response, isSigning, error, signLoadingText } =
-    useCreateGuild()
-
-  useEffect(() => {
-    if (error) {
-      addDatadogError("Guild creation error", { error })
-    }
-    if (response) {
-      addDatadogAction("Successful guild creation")
-    }
-  }, [response, error])
-
-  const { isUploading, onUpload } = usePinata({
+  const { onUpload } = usePinata({
     onSuccess: ({ IpfsHash }) => {
       setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`)
     },
@@ -71,14 +50,7 @@ const ServerSetupCard = ({ children, onSubmit: onSubmitProp }): JSX.Element => {
     },
   })
 
-  const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    formHandleSubmit(onSubmit),
-    isUploading
-  )
-
   useSetImageAndNameFromPlatformData(serverIcon, serverName, onUpload)
-
-  const loadingText = uploadLoadingText || signLoadingText || "Saving data"
 
   return (
     <CardMotionWrapper>
@@ -112,19 +84,10 @@ const ServerSetupCard = ({ children, onSubmit: onSubmitProp }): JSX.Element => {
 
                 <Button
                   colorScheme="green"
-                  disabled={
-                    !account ||
-                    response ||
-                    isLoading ||
-                    isSigning ||
-                    isUploadingShown
-                  }
-                  isLoading={isLoading || isSigning || isUploadingShown}
-                  loadingText={loadingText}
-                  onClick={handleSubmit}
-                  data-dd-action-name="Create guild [dc server setup]"
+                  disabled={!account}
+                  onClick={() => onSubmitProp?.()}
                 >
-                  Create guild
+                  Got it
                 </Button>
               </>
             ) : (

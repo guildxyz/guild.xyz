@@ -30,7 +30,7 @@ const Pagination = ({
         <Button
           flexShrink={0}
           size={buttonSize}
-          colorScheme="green"
+          colorScheme="indigo"
           isDisabled={nextButtonDisabled}
           onClick={nextStep}
         >
