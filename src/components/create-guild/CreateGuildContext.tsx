@@ -118,7 +118,7 @@ const CreateGuildProvider = ({
       label: "Create guild",
       description: guildName,
       title: `Create guild${
-        platform ? `on ${capitalize(platform?.toLowerCase() ?? "")}` : ""
+        platform ? ` on ${capitalize(platform?.toLowerCase() ?? "")}` : ""
       }`,
       subtitle:
         platform === "DISCORD"

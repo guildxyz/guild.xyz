@@ -20,7 +20,7 @@ const CreateGuildDiscord = (): JSX.Element => {
 
   const { nextStep } = useCreateGuildContext()
 
-  const { control, setValue } = useFormContext<GuildFormType>()
+  const { control } = useFormContext<GuildFormType>()
 
   const selectedServer = useWatch({
     control: control,

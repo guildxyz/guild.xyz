@@ -3,7 +3,6 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { useFormContext, useWatch } from "react-hook-form"
-import capitalize from "utils/capitalize"
 import PermissionSelection from "./PermissionSelection"
 
 type Props = {
@@ -37,16 +36,16 @@ const GoogleDocSetupCard = ({
           />
 
           <Flex justifyContent="end">
-            <Button
-              colorScheme="green"
-              onClick={handleSubmit(onSubmit)}
-              isLoading={isLoading}
-              loadingText={loadingText}
-            >
-              {capitalize(
-                `${fieldNameBase?.length ? "create Guild to " : ""}gate file`
-              )}
-            </Button>
+            {onSubmit && (
+              <Button
+                colorScheme="green"
+                onClick={handleSubmit(onSubmit)}
+                isLoading={isLoading}
+                loadingText={loadingText}
+              >
+                Gate file
+              </Button>
+            )}
           </Flex>
         </Stack>
       </Card>

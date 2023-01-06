@@ -15,7 +15,6 @@ import {
   usePrevious,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence } from "framer-motion"
@@ -74,9 +73,7 @@ const GoogleGuildSetup = ({
     setValue(fieldName, null)
   }
 
-  const { onSubmit, isLoading, isSigning, signLoadingText } = useCreateGuild()
-
-  const handleSelect = handleSubmit(onSelect ?? onSubmit)
+  const handleSelect = onSelect ? handleSubmit(onSelect) : undefined
 
   useEffect(() => {
     if (selectedFile)
@@ -149,12 +146,10 @@ const GoogleGuildSetup = ({
             )}
           </AnimatePresence>
           {showForm && (
-            <GridItem colSpan={2}>
+            <GridItem>
               <GoogleDocSetupCard
                 fieldNameBase={fieldNameBase}
                 onSubmit={handleSelect}
-                isLoading={isLoading || isSigning}
-                loadingText={signLoadingText ?? "Creating guild"}
                 permissionField={permissionField}
               />
             </GridItem>
