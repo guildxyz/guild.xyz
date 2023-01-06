@@ -247,6 +247,7 @@ type GuildFormType = Partial<
   >
   logic?: Logic
   requirements?: Requirement[]
+  socialLinks?: Record<string, string>
 }
 
 type SelectOption<T = string> = {

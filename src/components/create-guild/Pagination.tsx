@@ -1,17 +1,19 @@
 import { Flex, useBreakpointValue } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { useRouter } from "next/router"
-import { PropsWithChildren } from "react"
 import { useCreateGuildContext } from "./CreateGuildContext"
 
 type Props = {
   nextButtonDisabled?: boolean
+  nextStepHandler?: () => void
+  nextStepLabel?: string
 }
 
 const Pagination = ({
   nextButtonDisabled,
-  children,
-}: PropsWithChildren<Props>): JSX.Element => {
+  nextStepHandler,
+  nextStepLabel,
+}: Props): JSX.Element => {
   const buttonSize = useBreakpointValue({ base: "sm", md: "lg" })
   const { activeStep, prevStep, nextStep } = useCreateGuildContext()
   const router = useRouter()
@@ -26,17 +28,16 @@ const Pagination = ({
       >
         Previous
       </Button>
-      {children ?? (
-        <Button
-          flexShrink={0}
-          size={buttonSize}
-          colorScheme="indigo"
-          isDisabled={nextButtonDisabled}
-          onClick={nextStep}
-        >
-          Next
-        </Button>
-      )}
+
+      <Button
+        flexShrink={0}
+        size={buttonSize}
+        colorScheme="indigo"
+        isDisabled={nextButtonDisabled}
+        onClick={nextStepHandler ?? nextStep}
+      >
+        {nextStepLabel ?? "Next"}
+      </Button>
     </Flex>
   )
 }

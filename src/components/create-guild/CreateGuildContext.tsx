@@ -129,10 +129,12 @@ const CreateGuildProvider = ({
     {
       label: "Choose layout",
       description: capitalize(layout?.toLowerCase() ?? ""),
+      title: "Choose layout",
       content: ChooseLayout,
     },
     {
       label: "Basic information",
+      title: "Basic information",
       content: BasicInfo,
     },
   ]
