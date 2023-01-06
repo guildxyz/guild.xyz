@@ -147,6 +147,7 @@ const CreateGuildProvider = ({
 
     // Reset the form on platform change
     methods.reset(defaultValues[platform])
+    setLayout(null)
   }, [platform])
 
   return (
