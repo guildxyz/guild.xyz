@@ -30,6 +30,7 @@ const CreateGuildGithub = (): JSX.Element => {
       <GitHubGuildSetup
         onSelection={(newSelectedRepo) => {
           setValue("guildPlatforms.0.platformGuildId", newSelectedRepo)
+          setValue("name", newSelectedRepo)
           nextStep()
         }}
       />
