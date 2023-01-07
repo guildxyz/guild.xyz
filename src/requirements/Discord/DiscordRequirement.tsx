@@ -18,7 +18,7 @@ const DiscordRequirement = ({ requirement, ...rest }: RequirementComponentProps)
     (p) => p.platformGuildId === requirement.data.serverId
   )
     ? null
-    : serverIcon
+    : serverIcon || null
 
   return (
     <Requirement
