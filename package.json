@@ -63,7 +63,7 @@
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
-    "react-hook-form": "^7.40.0",
+    "react-hook-form": "^7.41.0",
     "react-intersection-observer": "^9.4.1",
     "react-window": "^1.8.8",
     "slugify": "^1.6.5",
