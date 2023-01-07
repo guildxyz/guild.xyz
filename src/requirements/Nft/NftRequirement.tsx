@@ -53,12 +53,13 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
 
   const shouldRenderImage =
     openseaChains[requirement.chain] &&
-    (data?.name || (requirement.name && requirement.name !== "-"))
+    (data?.name || (requirement.name && requirement.name !== "-")) &&
+    (isValidating || data?.image)
 
   return (
     <Requirement
       image={
-        shouldRenderImage && (isValidating || data?.image) ? (
+        shouldRenderImage ? (
           isValidating ? (
             ""
           ) : (
@@ -78,7 +79,7 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
       {requirement.data?.id ? (
         data?.name || isValidating ? (
           <>
-            <Skeleton isLoaded={!isValidating} display="inline">{`the ${
+            <Skeleton as="span" isLoaded={!isValidating} display="inline">{`the ${
               data?.name || "loading..."
             }`}</Skeleton>{" "}
           </>
