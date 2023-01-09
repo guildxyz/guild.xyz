@@ -1,4 +1,4 @@
-import { Channel as EntryChannel } from "components/create-guild/EntryChannel"
+import { Channel as EntryChannel } from "components/[guild]/Onboarding/components/SummonMembers/components/EntryChannel"
 import useSWR, { SWRConfiguration } from "swr"
 
 export type Channel = { id: string; name: string; roles: string[] }
