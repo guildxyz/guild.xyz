@@ -1,5 +1,5 @@
 import { Stack } from "@chakra-ui/react"
-import useIsConnected from "hooks/useIsConnected"
+import { useWeb3React } from "@web3-react/core"
 import usePinata from "hooks/usePinata"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
@@ -11,13 +11,13 @@ import TelegramGroup from "./TelegramGroup"
 
 const CreateGuildTelegram = (): JSX.Element => {
   const router = useRouter()
-  const isConnected = useIsConnected("TELEGRAM")
+  const { account } = useWeb3React()
 
   useEffect(() => {
-    if (!isConnected) {
+    if (!account) {
       router.push("/create-guild")
     }
-  }, [isConnected])
+  }, [account])
 
   const methods = useFormContext<GuildFormType>()
 
