@@ -5,12 +5,14 @@ import { useCreateGuildContext } from "./CreateGuildContext"
 
 type Props = {
   nextButtonDisabled?: boolean
+  nextButtonHidden?: boolean
   nextStepHandler?: () => void
   nextStepLabel?: string
 }
 
 const Pagination = ({
   nextButtonDisabled,
+  nextButtonHidden,
   nextStepHandler,
   nextStepLabel,
 }: Props): JSX.Element => {
@@ -29,15 +31,17 @@ const Pagination = ({
         Previous
       </Button>
 
-      <Button
-        flexShrink={0}
-        size={buttonSize}
-        colorScheme="indigo"
-        isDisabled={nextButtonDisabled}
-        onClick={nextStepHandler ?? nextStep}
-      >
-        {nextStepLabel ?? "Next"}
-      </Button>
+      {!nextButtonHidden && (
+        <Button
+          flexShrink={0}
+          size={buttonSize}
+          colorScheme="indigo"
+          isDisabled={nextButtonDisabled}
+          onClick={nextStepHandler ?? nextStep}
+        >
+          {nextStepLabel ?? "Next"}
+        </Button>
+      )}
     </Flex>
   )
 }

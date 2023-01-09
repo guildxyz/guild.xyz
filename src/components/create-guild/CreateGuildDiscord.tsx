@@ -38,7 +38,7 @@ const CreateGuildDiscord = (): JSX.Element => {
         <DiscordRoleVideo />
       </DiscordGuildSetup>
 
-      <Pagination nextButtonDisabled={!selectedServer} />
+      <Pagination nextButtonHidden />
     </>
   )
 }
