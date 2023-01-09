@@ -1,8 +1,9 @@
-import { Text } from "@chakra-ui/react"
+import { Skeleton, Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import DataBlock from "components/common/DataBlock"
+import useOpenseaAssetData from "hooks/useOpenseaAssetData"
+import { openseaChains } from "pages/api/opensea-asset-data/[chain]/[address]/[[...tokenId]]"
 import { Fragment } from "react"
-import useSWRImmutable from "swr/immutable"
 import { Requirement as RequirementType, Trait } from "types"
 import shortenHex from "utils/shortenHex"
 import OpenseaUrl from "../common/OpenseaUrl"
@@ -48,17 +49,17 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
       }
     : receivedRequirement
 
-  const { data, isValidating } = useSWRImmutable<{ image: string }>(
-    requirement.address ? `/api/opensea-asset-data/${requirement.address}` : null
-  )
+  const { data, isValidating } = useOpenseaAssetData(requirement)
 
   const shouldRenderImage =
-    requirement.chain === "ETHEREUM" && requirement.name && requirement.name !== "-"
+    openseaChains[requirement.chain] &&
+    (data?.name || (requirement.name && requirement.name !== "-")) &&
+    (isValidating || data?.image)
 
   return (
     <Requirement
       image={
-        shouldRenderImage && (isValidating || data?.image) ? (
+        shouldRenderImage ? (
           isValidating ? (
             ""
           ) : (
@@ -74,25 +75,28 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
       footer={<OpenseaUrl requirement={requirement} />}
       {...rest}
     >
-      {`Own ${
-        requirement.data?.id
-          ? `the #${requirement.data.id}`
-          : requirement.data?.maxAmount > 0
-          ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount}`
-          : requirement.data?.minAmount > 1
-          ? `at least ${requirement.data?.minAmount}`
-          : "a(n)"
-      } `}
-
-      {requirement.symbol === "-" &&
-      requirement.address?.toLowerCase() ===
-        "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
-        "ENS"
-      ) : !requirement.name || requirement.name === "-" ? (
-        <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
+      {"Own "}
+      {requirement.data?.id ? (
+        data?.name || isValidating ? (
+          <>
+            <Skeleton as="span" isLoaded={!isValidating} display="inline">{`the ${
+              data?.name || "loading..."
+            }`}</Skeleton>{" "}
+          </>
+        ) : (
+          `the #${requirement.data.id} `
+        )
+      ) : requirement.data?.maxAmount > 0 ? (
+        `${requirement.data?.minAmount}-${requirement.data?.maxAmount}`
+      ) : requirement.data?.minAmount > 1 ? (
+        `at least ${requirement.data?.minAmount} `
       ) : (
-        requirement.name
+        "a(n) "
       )}
+
+      {!data?.name && (!requirement.name || requirement.name === "-")
+        ? data?.slug ?? <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
+        : requirement.name !== "-" && requirement.name}
 
       {requirement.data?.attributes?.length ? (
         <>
