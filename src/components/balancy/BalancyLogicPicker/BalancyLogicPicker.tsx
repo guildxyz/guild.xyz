@@ -2,28 +2,20 @@ import { FormControl, FormLabel, SimpleGrid, useRadioGroup } from "@chakra-ui/re
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useController, useFormContext } from "react-hook-form"
 import And from "static/logicIcons/and.svg"
-import Nand from "static/logicIcons/nand.svg"
-import Nor from "static/logicIcons/nor.svg"
 import Or from "static/logicIcons/or.svg"
 import { GuildFormType } from "types"
-import LogicOption from "./components/LogicOption"
+import RadioButton from "../../common/RadioButton"
 
 const options = [
   {
+    label: "AND",
     value: "AND",
     icon: And,
   },
   {
+    label: "OR",
     value: "OR",
     icon: Or,
-  },
-  {
-    value: "NAND",
-    icon: Nand,
-  },
-  {
-    value: "NOR",
-    icon: Nor,
   },
 ]
 
@@ -55,7 +47,7 @@ const BalancyLogicPicker = () => {
       <SimpleGrid {...group} columns={{ base: 2, sm: 4 }} gap={{ base: 2, md: 5 }}>
         {options.map((option) => {
           const radio = getRadioProps({ value: option.value })
-          return <LogicOption key={option.value} {...radio} {...option} />
+          return <RadioButton key={option.value} {...radio} {...option} />
         })}
       </SimpleGrid>
       <FormErrorMessage>{errors?.logic?.message}</FormErrorMessage>

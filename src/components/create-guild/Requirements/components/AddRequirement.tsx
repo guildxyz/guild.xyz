@@ -28,6 +28,7 @@ import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
 import BalancyFooter from "./BalancyFooter"
+import IsNegatedPicker from "./IsNegatedPicker"
 
 const general = REQUIREMENTS_DATA.slice(1, 5)
 const integrations = REQUIREMENTS_DATA.slice(5)
@@ -162,6 +163,7 @@ const AddRequirementForm = forwardRef(
       >
         <FormProvider {...methods}>
           <ModalBody>
+            <IsNegatedPicker baseFieldPath="" />
             <FormComponent baseFieldPath="" />
           </ModalBody>
           <ModalFooter gap="3">

@@ -160,6 +160,7 @@ type Requirement = {
   name: string
   symbol: string
   decimals?: number
+  isNegated: boolean
 
   // Props used inside the forms on the UI
   nftRequirementType?: string
