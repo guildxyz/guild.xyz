@@ -8,9 +8,10 @@ import RequiementAccessIndicator from "./RequiementAccessIndicator"
 
 type Props = {
   requirement: RequirementType
+  simple?: boolean
 }
 
-const RequirementDisplayComponent = ({ requirement }: Props) => {
+const RequirementDisplayComponent = ({ requirement, simple }: Props) => {
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
 
   if (!RequirementComponent)
@@ -20,11 +21,12 @@ const RequirementDisplayComponent = ({ requirement }: Props) => {
         <DataBlock>{requirement.type}</DataBlock>
       </Requirement>
     )
-
   return (
     <RequirementComponent
       requirement={requirement}
-      rightElement={<RequiementAccessIndicator requirement={requirement} />}
+      rightElement={
+        simple ? undefined : <RequiementAccessIndicator requirement={requirement} />
+      }
     />
   )
 }

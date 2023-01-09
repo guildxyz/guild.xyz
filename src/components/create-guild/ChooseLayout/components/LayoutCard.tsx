@@ -98,8 +98,7 @@ const LayoutCard = ({
 
           {requirements.map((requirement, i) => (
             <Fragment key={i}>
-              {/* TODO: make a simplified requirement list component and use that here */}
-              <RequirementDisplayComponent requirement={requirement} />
+              <RequirementDisplayComponent simple requirement={requirement} />
               {i < requirements.length - 1 && <LogicDivider logic="AND" />}
             </Fragment>
           ))}
