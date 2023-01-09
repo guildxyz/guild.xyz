@@ -224,6 +224,8 @@ type Guild = {
   showMembers: boolean
   memberCount: number
   hideFromExplorer: boolean
+  socialLinks?: any // TODO
+  contact?: string
   createdAt: string
   admins: GuildAdmin[]
   theme: Theme
@@ -234,7 +236,10 @@ type Guild = {
   onboardingComplete: boolean
 }
 type GuildFormType = Partial<
-  Pick<Guild, "id" | "urlName" | "name" | "imageUrl" | "description" | "theme">
+  Pick<
+    Guild,
+    "id" | "urlName" | "name" | "imageUrl" | "description" | "theme" | "contact"
+  >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
   roles?: Array<
