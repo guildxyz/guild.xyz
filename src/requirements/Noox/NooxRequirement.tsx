@@ -12,6 +12,7 @@ const NooxRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={badgeData?.image}
       footer={
         <RequirementLinkButton

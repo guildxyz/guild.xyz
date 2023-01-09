@@ -9,6 +9,7 @@ const LensRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={"requirementLogos/lens.png"}
       footer={
         ["LENS_COLLECT", "LENS_MIRROR"].includes(requirement.type) && (

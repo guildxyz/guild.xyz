@@ -13,7 +13,11 @@ type DiscoParamType = {
 const DiscoRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
   const param = requirement.data.params as DiscoParamType
   return (
-    <Requirement image={<Img src="/requirementLogos/disco.png" />} {...rest}>
+    <Requirement
+      isNegated={requirement.isNegated}
+      image={<Img src="/requirementLogos/disco.png" />}
+      {...rest}
+    >
       {`Have a Disco.xyz `}
       {param.credType ? `${param.credType}` : `account`}
       {param.credIssuence

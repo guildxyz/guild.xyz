@@ -16,6 +16,7 @@ const MirrorRequirement = ({
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={
         isLoading
           ? ""

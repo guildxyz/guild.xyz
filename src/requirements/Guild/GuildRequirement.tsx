@@ -14,6 +14,7 @@ const HaveRole = ({
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={
         role?.imageUrl &&
         (role.imageUrl?.match("guildLogos") ? (
@@ -43,7 +44,11 @@ const UserSince = ({
   requirement,
   ...rest
 }: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/requirementLogos/guild.png" {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image="/requirementLogos/guild.png"
+    {...rest}
+  >
     {`Be a Guild.xyz user at least since ${
       requirement.data.creationDate?.split("T")[0]
     }`}
@@ -54,13 +59,21 @@ const MinGuilds = ({
   requirement,
   ...rest
 }: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/requirementLogos/guild.png" {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image="/requirementLogos/guild.png"
+    {...rest}
+  >
     {`Be a member of at least ${pluralize(requirement.data.minAmount, "guild")}`}
   </Requirement>
 )
 
 const Admin = ({ requirement, ...rest }: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/requirementLogos/guild.png" {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image="/requirementLogos/guild.png"
+    {...rest}
+  >
     {`Be an admin of a guild${
       requirement.data.minAmount > 0
         ? ` with at least ${pluralize(requirement.data.minAmount, "member")}`

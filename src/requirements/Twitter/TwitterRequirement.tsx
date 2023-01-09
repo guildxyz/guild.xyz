@@ -7,6 +7,7 @@ import Requirement from "../common/Requirement"
 
 const TwitterRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
   <Requirement
+    isNegated={requirement.isNegated}
     image={
       requirement.type === "TWITTER_FOLLOW" && requirement.data.id ? (
         typeof window !== "undefined" ? (

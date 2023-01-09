@@ -8,7 +8,11 @@ const RabbitholeRequirement = ({
   requirement,
   ...rest
 }: RequirementComponentProps) => (
-  <Requirement image={<Img src="/requirementLogos/rabbithole.png" />} {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image={<Img src="/requirementLogos/rabbithole.png" />}
+    {...rest}
+  >
     {`Have an NFT from the `}
     <DataBlock>
       {

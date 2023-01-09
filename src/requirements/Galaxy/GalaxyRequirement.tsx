@@ -12,6 +12,7 @@ const GalaxyRequirement = ({
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={isLoading ? "" : campaign?.thumbnail}
       isImageLoading={isLoading}
       footer={<ApiError />}

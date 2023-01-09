@@ -8,6 +8,7 @@ const PoapRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={isLoading ? "" : poap?.image_url}
       isImageLoading={isLoading}
       {...rest}

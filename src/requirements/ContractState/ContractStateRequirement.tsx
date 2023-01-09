@@ -25,6 +25,7 @@ const ContractStateRequirement = ({
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={<Icon as={Function} boxSize={6} />}
       footer={
         <>

@@ -7,6 +7,7 @@ import Requirement from "../common/Requirement"
 
 const GithubRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
   <Requirement
+    isNegated={requirement.isNegated}
     image={<Icon as={GithubLogo} boxSize={6} />}
     footer={<ConnectRequirementPlatformButton requirement={requirement} />}
     {...rest}

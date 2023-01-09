@@ -6,6 +6,7 @@ import { RequirementLinkButton } from "../common/RequirementButton"
 
 const OrangeRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
   <Requirement
+    isNegated={requirement.isNegated}
     image={<Img src="/requirementLogos/orange.png" />}
     footer={
       <RequirementLinkButton
