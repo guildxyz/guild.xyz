@@ -48,7 +48,7 @@ const ChooseLayout = (): JSX.Element => {
   const { layout: layoutInContext, setLayout } = useCreateGuildContext()
   const { control, setValue } = useFormContext<GuildFormType>()
 
-  const requirements = useWatch({ control, name: "requirements" })
+  const requirements = useWatch({ control, name: "roles.0.requirements" })
 
   return (
     <>
@@ -59,10 +59,10 @@ const ChooseLayout = (): JSX.Element => {
             {...layout}
             selected={layout.id === layoutInContext}
             onClick={(newLayoutId) => {
-              setValue(
-                "requirements",
-                LAYOUTS.find((l) => l.id === newLayoutId).requirements
-              )
+              setValue("roles.0", {
+                name: "First role",
+                requirements: LAYOUTS.find((l) => l.id === newLayoutId).requirements,
+              })
               setLayout(newLayoutId)
             }}
           />

@@ -14,6 +14,7 @@ import Section from "components/common/Section"
 import { ArrowSquareOut, TwitterLogo } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
+import CreateGuildButton from "./CreateGuildButton"
 import { useCreateGuildContext } from "./CreateGuildContext"
 import Pagination from "./Pagination"
 
@@ -21,7 +22,6 @@ const BasicInfo = (): JSX.Element => {
   const { layout } = useCreateGuildContext()
   const {
     register,
-    handleSubmit,
     formState: { errors },
   } = useFormContext<GuildFormType>()
 
@@ -68,10 +68,9 @@ const BasicInfo = (): JSX.Element => {
         </Section>
       </Stack>
 
-      <Pagination
-        nextStepLabel="Create Guild"
-        nextStepHandler={handleSubmit(console.log, console.log)}
-      />
+      <Pagination nextButtonHidden>
+        <CreateGuildButton />
+      </Pagination>
     </>
   )
 }
