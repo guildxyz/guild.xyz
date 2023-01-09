@@ -36,7 +36,8 @@ const CreateGuildIndex = (): JSX.Element => {
         <Button
           rightIcon={<CaretRight />}
           mx="auto"
-          maxW="max-content"
+          w="full"
+          maxW={{ base: "full", sm: "max-content" }}
           onClick={nextStep}
         >
           Create guild without platform
