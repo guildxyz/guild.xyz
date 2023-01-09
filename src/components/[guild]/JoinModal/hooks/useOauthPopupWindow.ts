@@ -95,11 +95,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           const {
             data,
             type,
-            csrfToken: recievedCsrfToken,
+            csrfToken: receivedCsrfToken,
           } = JSON.parse(window.localStorage.getItem(dataKey))
 
           addDatadogAction(
-            `CSRF - Main window recieved CSRF token: ${recievedCsrfToken}. Should equal: ${csrfToken}`
+            `CSRF - Main window received CSRF token: ${receivedCsrfToken}. Should equal: ${csrfToken}`
           )
 
           if (type === "OAUTH_ERROR") {
@@ -112,14 +112,14 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           if (type === "OAUTH_SUCCESS") {
             clearInterval(interval)
 
-            if (recievedCsrfToken !== csrfToken) {
+            if (receivedCsrfToken !== csrfToken) {
               const title = "Error"
               const errorDescription =
                 "Authentication attempt can't be validated. Refresh and try connecting again"
 
               addDatadogError(`OAuth error - ${title}`, {
                 error: errorDescription,
-                recievedCsrfToken,
+                receivedCsrfToken,
                 csrfToken,
               })
               reject({ error: title, errorDescription })
