@@ -35,7 +35,7 @@ const BasicInfo = (): JSX.Element => {
               placeholder="E-mail address or Telegram handle"
             />
             <FormHelperText>
-              or{" "}
+              Or{" "}
               <Link isExternal href="https://discord.gg/guildxyz">
                 <Text as="span">join our Discord</Text>
                 <Icon ml={1} as={ArrowSquareOut} />
