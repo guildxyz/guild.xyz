@@ -12,10 +12,13 @@ const CreateGuildPage = (): JSX.Element => {
   const { steps, activeStep } = useCreateGuildContext()
   const { control } = useFormContext()
 
-  const stepsOrientatiom = useBreakpointValue<"horizontal" | "vertical">({
-    base: "vertical",
-    md: "horizontal",
-  })
+  const stepsOrientatiom = useBreakpointValue<"horizontal" | "vertical">(
+    {
+      base: "vertical",
+      md: "horizontal",
+    },
+    "horizontal"
+  )
 
   return (
     <>
