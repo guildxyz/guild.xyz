@@ -1,6 +1,7 @@
 import { Box } from "@chakra-ui/react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
+import getRandomInt from "utils/getRandomInt"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import Pagination from "../Pagination"
 import LayoutCard, { Layout } from "./components/LayoutCard"
@@ -61,6 +62,7 @@ const ChooseLayout = (): JSX.Element => {
             onClick={(newLayoutId) => {
               setValue("roles.0", {
                 name: "First role",
+                imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
                 requirements: LAYOUTS.find((l) => l.id === newLayoutId).requirements,
               })
               setLayout(newLayoutId)
