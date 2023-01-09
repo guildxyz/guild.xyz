@@ -40,6 +40,7 @@ import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
+import SocialLinks from "./components/SocialLinks"
 import useEditGuild from "./hooks/useEditGuild"
 
 type Props = {
@@ -62,6 +63,7 @@ const EditGuildDrawer = ({
     urlName,
     guildPlatforms,
     hideFromExplorer,
+    socialLinks,
   } = useGuild()
   const { isOwner } = useGuildPermission()
 
@@ -74,6 +76,7 @@ const EditGuildDrawer = ({
     admins: admins?.flatMap((admin) => admin.address) ?? [],
     urlName,
     hideFromExplorer,
+    socialLinks,
     guildPlatforms,
   }
   const methods = useForm<GuildFormType>({
@@ -199,6 +202,10 @@ const EditGuildDrawer = ({
                     <UrlName />
                   </Stack>
                   <Description />
+                </Section>
+
+                <Section title="Social links">
+                  <SocialLinks />
                 </Section>
 
                 <Section title="Appearance">

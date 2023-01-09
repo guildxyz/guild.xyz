@@ -215,6 +215,20 @@ type GuildPoap = {
   poapContracts?: PoapContract[]
 }
 
+const supportedSocialLinks = [
+  "TWITTER",
+  "LENS",
+  "YOUTUBE",
+  "SPOTIFY",
+  "MIRROR",
+  "MEDIUM",
+  "SUBSTACK",
+  "SNAPSHOT",
+  "WEBSITE",
+] as const
+type SocialLinkKey = typeof supportedSocialLinks[number]
+type SocialLinks = Partial<Record<SocialLinkKey, string>>
+
 type Guild = {
   id: number
   name: string
@@ -224,7 +238,7 @@ type Guild = {
   showMembers: boolean
   memberCount: number
   hideFromExplorer: boolean
-  socialLinks?: any // TODO
+  socialLinks?: SocialLinks // TODO
   contact?: string
   createdAt: string
   admins: GuildAdmin[]
@@ -258,7 +272,7 @@ type GuildFormType = Partial<
 type SelectOption<T = string> = {
   label: string
   value: T
-  img?: string
+  img?: string | JSX.Element
 } & Rest
 
 // Requested with Discord OAuth token
@@ -431,6 +445,8 @@ export type {
   GuildPlatform,
   GuildBase,
   Guild,
+  SocialLinkKey,
+  SocialLinks,
   Trait,
   Requirement,
   RequirementType,
@@ -451,4 +467,4 @@ export type {
   VoiceRequirementParams,
   PoapEventDetails,
 }
-export { ValidationMethod }
+export { ValidationMethod, supportedSocialLinks }
