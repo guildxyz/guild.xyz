@@ -5,7 +5,7 @@ import { useController, useFormContext } from "react-hook-form"
 const options = [
   {
     label: "Should satisfy",
-    value: "false",
+    value: false,
   },
   {
     label: (
@@ -13,7 +13,7 @@ const options = [
         Should <b>not</b> satisfy
       </>
     ),
-    value: "true",
+    value: true,
   },
 ]
 
@@ -26,12 +26,14 @@ const IsNegatedPicker = ({ baseFieldPath }) => {
   const { field } = useController({
     control,
     name: `${baseFieldPath}.isNegated`,
-    defaultValue: "false",
+    defaultValue: false,
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: `${baseFieldPath}.isNegated`,
-    onChange: field.onChange,
+    onChange: (newValue) => {
+      field.onChange(newValue === "true")
+    },
     value: field.value,
   })
 
