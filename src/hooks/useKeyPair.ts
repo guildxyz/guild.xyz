@@ -1,7 +1,7 @@
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import { createStore, del, get, set } from "idb-keyval"
-import useSWR, { KeyedMutator, mutate } from "swr"
+import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
 import { bufferToHex } from "utils/bufferUtils"
@@ -85,8 +85,11 @@ const setKeyPair = async ({
   return payload
 }
 
-const checkKeyPair = (_: string, savedPubKey: string, pubKey: string): boolean =>
-  savedPubKey === pubKey
+const checkKeyPair = async (_: string, address: string): Promise<boolean> => {
+  const user = await mutate(`/user/${address}`)
+  const keyPair = await mutate(unstable_serialize(["keyPair", user?.id]))
+  return keyPair.pubKey === user.signingKey
+}
 
 const useKeyPair = () => {
   // Using the defauld Datadog implementation here, so the useDatadog, useUser, and useKeypair hooks don't call each other
@@ -119,32 +122,28 @@ const useKeyPair = () => {
 
   const toast = useToast()
 
-  const { data: isValid } = useSWRImmutable(
-    user?.signingKey && pubKey ? ["isKeyPairValid", user?.signingKey, pubKey] : null,
-    checkKeyPair,
-    {
-      onSuccess: (isKeyPairValid) => {
-        if (!isKeyPairValid) {
-          addDatadogAction("Invalid keypair", {
-            ...defaultCustomAttributes,
-            data: { userId: user?.id, pubKey: keyPair.publicKey },
-          })
+  const { data: isValid } = useSWR(["isKeyPairValid", account], checkKeyPair, {
+    onSuccess: (isKeyPairValid) => {
+      if (!isKeyPairValid) {
+        addDatadogAction("Invalid keypair", {
+          ...defaultCustomAttributes,
+          data: { userId: user?.id, pubKey: keyPair.publicKey },
+        })
 
-          toast({
-            status: "warning",
-            title: "Session expired",
-            description:
-              "You've connected your account from a new device, so you have to sign a new message to stay logged in",
-            duration: 5000,
-          })
+        toast({
+          status: "warning",
+          title: "Session expired",
+          description:
+            "You've connected your account from a new device, so you have to sign a new message to stay logged in",
+          duration: 5000,
+        })
 
-          deleteKeyPairFromIdb(user?.id).then(() => {
-            mutateKeyPair({ pubKey: undefined, keyPair: undefined })
-          })
-        }
-      },
-    }
-  )
+        deleteKeyPairFromIdb(user?.id).then(() => {
+          mutateKeyPair({ pubKey: undefined, keyPair: undefined })
+        })
+      }
+    },
+  })
 
   const setSubmitResponse = useSubmitWithSignWithParamKeyPair<
     StoredKeyPair,
