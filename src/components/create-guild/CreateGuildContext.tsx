@@ -52,7 +52,9 @@ const basicDefaultValues: GuildFormType = {
   description: "",
   imageUrl: defaultIcon,
 }
-export const defaultValues: Partial<Record<PlatformName, GuildFormType>> = {
+export const defaultValues: Partial<
+  Record<PlatformName | "DEFAULT", GuildFormType>
+> = {
   DISCORD: {
     ...basicDefaultValues,
     guildPlatforms: [
@@ -89,6 +91,7 @@ export const defaultValues: Partial<Record<PlatformName, GuildFormType>> = {
       },
     ],
   },
+  DEFAULT: basicDefaultValues,
 }
 
 const CreateGuildProvider = ({
@@ -109,7 +112,8 @@ const CreateGuildProvider = ({
   const steps: Step[] = [
     {
       label: "Choose platform",
-      description: capitalize(platform?.toLowerCase() ?? ""),
+      description:
+        activeStep > 0 && capitalize(platform?.toLowerCase() ?? "Without platform"),
       title: "Choose platform",
       subtitle: "You can connect more platforms later",
       content: CreateGuildIndex,

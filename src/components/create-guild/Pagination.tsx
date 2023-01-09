@@ -17,7 +17,7 @@ const Pagination = ({
   nextStepLabel,
 }: Props): JSX.Element => {
   const buttonSize = useBreakpointValue({ base: "sm", md: "lg" })
-  const { activeStep, prevStep, nextStep } = useCreateGuildContext()
+  const { activeStep, prevStep, nextStep, platform } = useCreateGuildContext()
   const router = useRouter()
 
   return (
@@ -26,7 +26,11 @@ const Pagination = ({
         flexShrink={0}
         size={buttonSize}
         mr={2}
-        onClick={activeStep === 1 ? () => router.push("/create-guild") : prevStep}
+        onClick={
+          platform && activeStep === 1
+            ? () => router.push("/create-guild")
+            : prevStep
+        }
       >
         Previous
       </Button>

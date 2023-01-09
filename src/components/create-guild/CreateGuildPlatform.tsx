@@ -4,6 +4,7 @@ import CreateGuildDiscord from "../create-guild/CreateGuildDiscord"
 import CreateGuildGithub from "./CreateGuildGithub"
 import CreateGuildGoogle from "./CreateGuildGoogle"
 import CreateGuildTelegram from "./CreateGuildTelegram"
+import CreateGuildWithoutPlatform from "./CreateGuildWithoutPlatform"
 
 const createGuildPlatformComponents: Partial<
   Record<PlatformName, () => JSX.Element>
@@ -20,7 +21,7 @@ const CreateGuildPlatform = (): JSX.Element => {
     ? createGuildPlatformComponents[platform]
     : null
 
-  if (!CreateGuildPlatformComponent) return null
+  if (!CreateGuildPlatformComponent) return <CreateGuildWithoutPlatform />
 
   return <CreateGuildPlatformComponent />
 }
