@@ -27,7 +27,6 @@ const CreateGuildTelegram = (): JSX.Element => {
   })
 
   const { onUpload } = usePinata({
-    // TODO: display an upload indicator somewhere
     onSuccess: ({ IpfsHash }) => {
       methods.setValue(
         "imageUrl",
@@ -39,7 +38,6 @@ const CreateGuildTelegram = (): JSX.Element => {
   return (
     <>
       <Stack spacing={10}>
-        {/* TODO: generalize the TelegramGroup component + rename it to TelegramGuildSetup? */}
         <TelegramGroup
           onUpload={onUpload}
           fieldName="guildPlatforms.0.platformGuildId"
