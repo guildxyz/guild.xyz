@@ -32,12 +32,13 @@ const CreateGuildIndex = (): JSX.Element => {
         <Divider />
       </HStack>
 
-      <Flex alignItems="center">
+      <Flex justifyContent="center">
         <Button
           rightIcon={<CaretRight />}
-          mx="auto"
-          w="full"
-          maxW={{ base: "full", sm: "max-content" }}
+          variant="link"
+          color="gray"
+          fontWeight="normal"
+          maxW="max-content"
           onClick={nextStep}
         >
           Create guild without platform
