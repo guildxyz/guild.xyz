@@ -1,5 +1,6 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
+import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
 import { PropsWithChildren, useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
@@ -60,11 +61,23 @@ const SoundArtistSelect = ({
               onChange(newSelectedOption?.value)
               onChangeFn?.(newSelectedOption?.value)
             }}
-            onInputChange={(text, _) => {
-              if (text) setSearch(splitInput(text))
-            }}
+            onInputChange={(text, _) => setSearch(text ? splitInput(text) : "")}
             isLoading={artistsLoading}
             onBlur={onBlur}
+            components={{
+              MenuList: (props) => (
+                <CustomMenuList
+                  {...props}
+                  noResultText={
+                    !search?.length
+                      ? "Start typing..."
+                      : artistsLoading
+                      ? "Loading..."
+                      : "No results"
+                  }
+                />
+              ),
+            }}
           />
         )}
       />

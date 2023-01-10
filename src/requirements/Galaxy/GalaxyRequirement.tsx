@@ -1,4 +1,4 @@
-import { Skeleton, Text } from "@chakra-ui/react"
+import { Link, Skeleton, Text } from "@chakra-ui/react"
 import { RequirementComponentProps } from "requirements"
 import Requirement from "../common/Requirement"
 import ApiError from "./components/ApiError"
@@ -19,7 +19,21 @@ const GalaxyRequirement = ({
     >
       <Text as="span">{`Participate in the `}</Text>
       <Skeleton as="span" isLoaded={!isLoading}>
-        {isLoading ? "Loading..." : campaign?.name}
+        {isLoading ? (
+          "Loading..."
+        ) : campaign?.name ? (
+          <Link
+            href={`https://galxe.com/${campaign.space.alias}/campaign/${campaign.id}`}
+            isExternal
+            display="inline"
+            colorScheme="indigo"
+            fontWeight="medium"
+          >
+            {campaign.name}
+          </Link>
+        ) : (
+          "Unknown"
+        )}
       </Skeleton>
       <Text as="span">{` Galxe campaign`}</Text>
     </Requirement>

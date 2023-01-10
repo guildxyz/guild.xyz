@@ -5,20 +5,16 @@ import fetcher from "utils/fetcher"
 
 const TokenApiURLs = {
   ETHEREUM: ["https://tokens.coingecko.com/uniswap/all.json"],
-  BSC: ["https://tokens.pancakeswap.finance/pancakeswap-extended.json"],
+  BSC: ["https://tokens.coingecko.com/binance-smart-chain/all.json"],
   GNOSIS: [
     "https://unpkg.com/@1hive/default-token-list@5.17.1/build/honeyswap-default.tokenlist.json",
   ],
   POLYGON: [
     "https://unpkg.com/quickswap-default-token-list@1.0.91/build/quickswap-default.tokenlist.json",
   ],
-  AVALANCHE: [
-    "https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/joe.tokenlist.json",
-  ],
-  FANTOM: [
-    "https://raw.githubusercontent.com/Crocoswap/tokenlists/main/aeb.tokenlist.json",
-  ],
-  ARBITRUM: ["https://bridge.arbitrum.io/token-list-42161.json"],
+  AVALANCHE: ["https://tokens.coingecko.com/avalanche/all.json"],
+  FANTOM: ["https://tokens.coingecko.com/fantom/all.json"],
+  ARBITRUM: ["https://tokens.coingecko.com/arbitrum-one/all.json"],
   NOVA: ["https://tokens.coingecko.com/arbitrum-nova/all.json"],
   CELO: [
     "https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap.token-list.json",
@@ -33,9 +29,6 @@ const TokenApiURLs = {
   OPTIMISM: ["https://static.optimism.io/optimism.tokenlist.json"],
   MOONRIVER: ["https://tokens.coingecko.com/moonriver/all.json"],
   MOONBEAM: ["https://tokens.coingecko.com/moonbeam/all.json"],
-  RINKEBY: [
-    "https://raw.githubusercontent.com/Uniswap/default-token-list/main/src/tokens/rinkeby.json",
-  ],
   METIS: ["https://tokens.coingecko.com/metis-andromeda/all.json"],
   CRONOS: ["https://tokens.coingecko.com/cronos/all.json"],
   BOBA: ["https://tokens.coingecko.com/boba/all.json"],

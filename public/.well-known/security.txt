@@ -1,8 +1,14 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA512
 
+# Canonical URI
+Canonical: https://guild.xyz/.well-known/security.txt
+
+# Our security address
 Contact: mailto:security@guild.xyz
-Expires: 2022-12-31T22:59:00.000Z
+Contact: https://keybase.io/guildxyz
+
+# Our OpenPGP key
 Encryption: https://bafkreigfpf5onqlrikt5bhqciq77zgmhzksfae7tujzill77tb3ln73zzq.ipfs.dweb.link/
 Encryption: https://ipfs.io/ipfs/bafkreigfpf5onqlrikt5bhqciq77zgmhzksfae7tujzill77tb3ln73zzq
 Encryption: https://bafkreigfpf5onqlrikt5bhqciq77zgmhzksfae7tujzill77tb3ln73zzq.ipfs.nftstorage.link/
@@ -10,13 +16,18 @@ Encryption: https://bafkreigfpf5onqlrikt5bhqciq77zgmhzksfae7tujzill77tb3ln73zzq.
 Encryption: https://bafkreigfpf5onqlrikt5bhqciq77zgmhzksfae7tujzill77tb3ln73zzq.ipfs.infura-ipfs.io/
 Encryption: https://web.archive.org/web/20220426195851/https://ipfs.io/ipfs/bafkreigfpf5onqlrikt5bhqciq77zgmhzksfae7tujzill77tb3ln73zzq
 Encryption: openpgp4fpr:D87B1A8BF18159A7182766D67B5B8FFC1A751732
+Encryption: https://keybase.io/guildxyz/pgp_keys.asc
+
+# Our security acknowledgments page
 Acknowledgments: https://guild.xyz/.well-known/hall-of-fame.md
+
 Preferred-Languages: en, hu
-Canonical: https://guild.xyz/.well-known/security.txt
+Expires: 2023-12-31T22:59:00.000Z
+
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQTYexqL8YFZpxgnZtZ7W4/8GnUXMgUCYmhZ1QAKCRB7W4/8GnUX
-MkrLAP0R4EbcF1QfNp/CKjLa/IiS6d1wPj2oLNjSihcJ1XGRAgEAjRgoDyIIwtFu
-jRs7FgdJpn8rDdx4kxcO0GWnDdc4bw4=
-=VW9i
+iIkEARYKADEWIQTYexqL8YFZpxgnZtZ7W4/8GnUXMgUCY5cgxxMcc2VjdXJpdHlA
+Z3VpbGQueHl6AAoJEHtbj/wadRcyz7EBAITCSJaDMOV+IGRnnbkfMV18PvxYjmwt
+vz6XDnT/JLhRAP0VKCPB29qKVCpgtN7Fe9JHquSyyHYY9gC2AYK1M5K2DA==
+=RfBR
 -----END PGP SIGNATURE-----

@@ -6,7 +6,7 @@ type Dict = Record<string, any>
 
 const getBg = (props: Dict) => {
   const { theme, colorScheme: c } = props
-  const lightBg = getColor(theme, `${c}.50`, c)
+  const lightBg = getColor(theme, `${c}.100`, c)
   const darkBg = transparentize(`${c}.200`, 0.16)(theme)
   return mode(lightBg, darkBg)(props)
 }
