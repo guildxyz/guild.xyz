@@ -12,6 +12,7 @@ import {
   NumberInputStepper,
   Stack,
   Text,
+  Textarea,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
@@ -63,6 +64,11 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
     ([id]) => id === strategyFieldValue
   )?.[1]?.schema?.definitions.Strategy
 
+  const example =
+    Object.values(strategies ?? {}).find(
+      (strategy) => strategy.key === strategyFieldValue
+    )?.examples[0].strategy.params ?? {}
+
   return (
     <Stack spacing={4} alignItems="start" w="full">
       <FormControl
@@ -110,83 +116,119 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
           }
         </FormErrorMessage>
       </FormControl>
-
-      {Object.entries(selectedStrategyData?.properties ?? {}).map(([key, prop]) => (
-        <FormControl
-          key={key}
-          isRequired={selectedStrategyData.required.includes(key)}
-          isInvalid={
-            !!parseFromObject(errors, baseFieldPath)?.data?.strategies?.[index]
-              ?.params?.[key]
-          }
-        >
-          <FormLabel>{prop.title}</FormLabel>
-
-          {(() => {
-            switch (prop.type) {
-              case "number":
-                return (
-                  <Controller
-                    name={`${baseFieldPath}.data.strategies.${index}.params.${key}`}
-                    control={control}
-                    rules={{
-                      required: selectedStrategyData.required.includes(key)
-                        ? "This field is required."
-                        : false,
-                    }}
-                    render={({ field: { onChange, onBlur, value, ref } }) => (
-                      <NumberInput
-                        ref={ref}
-                        value={value ?? undefined}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                      >
-                        <NumberInputField placeholder={prop.examples?.[0]} />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    )}
-                  />
-                )
-              case "string":
-                return (
-                  <Input
-                    {...register(
-                      `${baseFieldPath}.data.strategies.${index}.params.${key}`,
-                      {
+      {selectedStrategyData?.properties ? (
+        Object.entries(selectedStrategyData?.properties ?? {}).map(([key, prop]) => (
+          <FormControl
+            key={key}
+            isRequired={selectedStrategyData.required.includes(key)}
+            isInvalid={
+              !!parseFromObject(errors, baseFieldPath)?.data?.strategies?.[index]
+                ?.params?.[key]
+            }
+          >
+            <FormLabel>{prop.title}</FormLabel>
+            {(() => {
+              switch (prop.type) {
+                case "number":
+                  return (
+                    <Controller
+                      name={`${baseFieldPath}.data.strategies.${index}.params.${key}`}
+                      control={control}
+                      rules={{
                         required: selectedStrategyData.required.includes(key)
                           ? "This field is required."
                           : false,
-                        pattern: prop.pattern
-                          ? {
-                              value: prop.pattern,
-                              message: "Invalid value",
-                            }
-                          : undefined,
-                        minLength: prop.minLength,
-                        maxLength: prop.maxLength,
-                      }
-                    )}
-                    placeholder={prop.examples?.[0]}
-                  />
-                )
-              // case "object":
-              //   return null
-              // Unsupported field
-              // e.g.: https://github.com/snapshot-labs/snapshot-strategies/blob/master/src/strategies/ctsi-staking/schema.json
-            }
-          })()}
+                      }}
+                      render={({ field: { onChange, onBlur, value, ref } }) => (
+                        <NumberInput
+                          ref={ref}
+                          value={value ?? undefined}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                        >
+                          <NumberInputField placeholder={prop.examples?.[0]} />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      )}
+                    />
+                  )
+                case "string":
+                  return (
+                    <Input
+                      {...register(
+                        `${baseFieldPath}.data.strategies.${index}.params.${key}`,
+                        {
+                          required: selectedStrategyData.required.includes(key)
+                            ? "This field is required."
+                            : false,
+                          pattern: prop.pattern
+                            ? {
+                                value: prop.pattern,
+                                message: "Invalid value",
+                              }
+                            : undefined,
+                          minLength: prop.minLength,
+                          maxLength: prop.maxLength,
+                        }
+                      )}
+                      placeholder={prop.examples?.[0]}
+                    />
+                  )
+                // case "object":
+                //   return null
+                // Unsupported field
+                // e.g.: https://github.com/snapshot-labs/snapshot-strategies/blob/master/src/strategies/ctsi-staking/schema.json
+              }
+            })()}
 
+            <FormErrorMessage>
+              {
+                parseFromObject(errors, baseFieldPath)?.data?.strategies?.[index]
+                  ?.params?.[key]?.message
+              }
+            </FormErrorMessage>
+          </FormControl>
+        ))
+      ) : strategyFieldValue ? (
+        <FormControl
+          isInvalid={
+            parseFromObject(errors, baseFieldPath)?.data?.strategies?.[index]?.params
+              ?.message
+          }
+        >
+          <FormLabel>Parameters</FormLabel>
+          <Controller
+            name={`${baseFieldPath}.data.strategies.${index}.params`}
+            rules={{
+              validate: (value) => {
+                try {
+                  if (value.length > 0) JSON.parse(value)
+                } catch (_) {
+                  return "invalid format (JSON required)"
+                }
+              },
+            }}
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <Textarea
+                h={200}
+                ref={ref}
+                value={value ? value : JSON.stringify(example)}
+                onChange={onChange}
+                onBlur={onBlur}
+              />
+            )}
+          />
           <FormErrorMessage>
             {
               parseFromObject(errors, baseFieldPath)?.data?.strategies?.[index]
-                ?.params?.[key]?.message
+                ?.params?.message
             }
           </FormErrorMessage>
         </FormControl>
-      ))}
+      ) : null}
     </Stack>
   )
 }

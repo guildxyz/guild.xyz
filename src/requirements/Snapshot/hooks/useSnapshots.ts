@@ -1,7 +1,7 @@
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
-type SnapshotStrategy = {
+export type SnapshotStrategy = {
   key: string
   schema?: {
     definitions: {
@@ -12,6 +12,7 @@ type SnapshotStrategy = {
       }
     }
   }
+  examples: { strategy: { params: Record<string, any> } }[]
 }
 
 const fetchSnapshots = async () =>
