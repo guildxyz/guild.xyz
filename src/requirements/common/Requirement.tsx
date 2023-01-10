@@ -17,6 +17,7 @@ export type RequirementProps = PropsWithChildren<{
   withImgBg?: boolean
   footer?: JSX.Element
   rightElement?: JSX.Element
+  simple?: boolean
 }>
 
 const Requirement = ({
@@ -25,6 +26,7 @@ const Requirement = ({
   footer,
   withImgBg = true,
   rightElement,
+  simple,
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -67,9 +69,9 @@ const Requirement = ({
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center">
         <Text wordBreak="break-word">{children}</Text>
-        {footer}
+        {!simple && footer}
       </VStack>
-      {rightElement}
+      {!simple && rightElement}
     </SimpleGrid>
   )
 }

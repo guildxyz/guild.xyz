@@ -24,9 +24,8 @@ const RequirementDisplayComponent = ({ requirement, simple }: Props) => {
   return (
     <RequirementComponent
       requirement={requirement}
-      rightElement={
-        simple ? undefined : <RequiementAccessIndicator requirement={requirement} />
-      }
+      rightElement={<RequiementAccessIndicator requirement={requirement} />}
+      simple={simple}
     />
   )
 }
