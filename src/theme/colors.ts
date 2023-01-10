@@ -160,6 +160,16 @@ const colors = {
     800: "#AF5260",
     900: "#8E434E",
   },
+  BRAND: {
+    LENS: "#ABFE2C",
+    LENSDARK: "#00501E",
+    YOUTUBE: "#FF0000",
+    SPOTIFY: "#1DB954",
+    MIRROR: "#007AFF",
+    MEDIUM: "#000000",
+    SUBSTACK: "#FF6719",
+    SNAPSHOT: "#F3B04E",
+  },
 }
 
 export default colors

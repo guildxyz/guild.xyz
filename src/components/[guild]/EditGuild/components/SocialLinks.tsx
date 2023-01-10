@@ -1,4 +1,5 @@
 import {
+  Circle,
   CloseButton,
   FormControl,
   GridItem,
@@ -13,6 +14,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import {
   GlobeHemisphereEast,
+  Lightning,
   MediumLogo,
   Plus,
   SpotifyLogo,
@@ -20,6 +22,9 @@ import {
   YoutubeLogo,
 } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
+import LensLogo from "static/socialIcons/lens.svg"
+import MirrorLogo from "static/socialIcons/mirror.svg"
+import SubstackLogo from "static/socialIcons/substack.svg"
 import {
   GuildFormType,
   SelectOption,
@@ -29,15 +34,51 @@ import {
 import capitalize from "utils/capitalize"
 
 const socialLinkIcons: Record<SocialLinkKey, JSX.Element> = {
-  TWITTER: <Icon as={TwitterLogo} />,
-  LENS: <Icon as={GlobeHemisphereEast} />,
-  YOUTUBE: <Icon as={YoutubeLogo} />,
-  SPOTIFY: <Icon as={SpotifyLogo} />,
-  MIRROR: <Icon as={GlobeHemisphereEast} />,
-  MEDIUM: <Icon as={MediumLogo} />,
-  SUBSTACK: <Icon as={GlobeHemisphereEast} />,
-  SNAPSHOT: <Icon as={GlobeHemisphereEast} />,
-  WEBSITE: <Icon as={GlobeHemisphereEast} />,
+  TWITTER: (
+    <Circle bgColor="twitter.500" color="white" size={5}>
+      <Icon boxSize={3} as={TwitterLogo} />
+    </Circle>
+  ),
+  LENS: (
+    <Circle bgColor="BRAND.LENS" color="BRAND.LENSDARK" size={5}>
+      <Icon boxSize={3} as={LensLogo} />
+    </Circle>
+  ),
+  YOUTUBE: (
+    <Circle bgColor="BRAND.YOUTUBE" color="white" size={5}>
+      <Icon boxSize={3} as={YoutubeLogo} />
+    </Circle>
+  ),
+  SPOTIFY: (
+    <Circle bgColor="BRAND.SPOTIFY" color="white" size={5}>
+      <Icon boxSize={3} as={SpotifyLogo} />
+    </Circle>
+  ),
+  MIRROR: (
+    <Circle bgColor="BRAND.MIRROR" color="white" size={5}>
+      <Icon boxSize={3} as={MirrorLogo} />
+    </Circle>
+  ),
+  MEDIUM: (
+    <Circle bgColor="BRAND.MEDIUM" color="white" size={5}>
+      <Icon boxSize={3} as={MediumLogo} />
+    </Circle>
+  ),
+  SUBSTACK: (
+    <Circle bgColor="BRAND.SUBSTACK" color="white" size={5}>
+      <Icon boxSize={3} as={SubstackLogo} />
+    </Circle>
+  ),
+  SNAPSHOT: (
+    <Circle bgColor="white" color="BRAND.SNAPSHOT" size={5}>
+      <Icon boxSize={3} as={Lightning} />
+    </Circle>
+  ),
+  WEBSITE: (
+    <Circle bgColor="gray.900" color="white" size={5}>
+      <Icon boxSize={3} as={GlobeHemisphereEast} />
+    </Circle>
+  ),
 }
 
 const socialLinkOptions: SelectOption[] = supportedSocialLinks.map((socialLink) => ({
