@@ -4,11 +4,13 @@ import {
   Collapse,
   Heading,
   HStack,
+  Link,
   Spinner,
   Stack,
   Tag,
   Text,
   Tooltip,
+  Wrap,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
@@ -27,6 +29,7 @@ import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
+import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useScrollEffect from "hooks/useScrollEffect"
@@ -38,7 +41,7 @@ import ErrorPage from "pages/_error"
 import { CloudSlash } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
-import { Guild } from "types"
+import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
 
 const BATCH_SIZE = 10
@@ -70,6 +73,7 @@ const GuildPage = (): JSX.Element => {
     roles,
     isLoading,
     onboardingComplete,
+    socialLinks,
   } = useGuild()
 
   useAutoStatusUpdate()
@@ -135,6 +139,23 @@ const GuildPage = (): JSX.Element => {
         textColor={textColor}
         description={description}
         showLayoutDescription
+        infoSection={
+          Object.keys(socialLinks ?? {}).length && (
+            <Wrap w="full" spacing={3} mb={8}>
+              {Object.entries(socialLinks).map(([type, link]) => (
+                <HStack key={type} spacing={1.5}>
+                  <SocialIcon type={type as SocialLinkKey} size="sm" />
+                  <Link href={link} isExternal fontSize="sm" fontWeight="semibold">
+                    {link
+                      .replace("http://", "")
+                      .replace("https://", "")
+                      .replace("www.", "")}
+                  </Link>
+                </HStack>
+              ))}
+            </Wrap>
+          )
+        }
         image={
           <GuildLogo
             imageUrl={imageUrl}

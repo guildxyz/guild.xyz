@@ -18,7 +18,7 @@ type Size = "sm" | "md"
 
 type Props = {
   type: SocialLinkKey
-  size: Size
+  size?: Size
 }
 
 const icons: Record<
@@ -38,7 +38,7 @@ const icons: Record<
 
 const colors: Record<SocialLinkKey, { bg: string; icon: string }> = {
   TWITTER: { bg: "TWITTER.500", icon: "white" },
-  LENS: { bg: "BRAND.LENS", icon: "BRAND:LENSDARK" },
+  LENS: { bg: "BRAND.LENS", icon: "BRAND.LENSDARK" },
   YOUTUBE: { bg: "BRAND.YOUTUBE", icon: "white" },
   SPOTIFY: { bg: "BRAND.SPOTIFY", icon: "white" },
   MIRROR: { bg: "BRAND.MIRROR", icon: "white" },
@@ -58,7 +58,7 @@ const sizes: Record<Size, { bg: number; icon: number }> = {
   },
 }
 
-const SocialIcon = ({ type, size }: Props): JSX.Element => (
+const SocialIcon = ({ type, size = "md" }: Props): JSX.Element => (
   <Circle bgColor={colors[type].bg} color={colors[type].icon} size={sizes[size].bg}>
     <Icon boxSize={sizes[size].icon} as={icons[type]} />
   </Circle>

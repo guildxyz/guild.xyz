@@ -24,6 +24,7 @@ type Props = {
   title: string
   description?: string
   showLayoutDescription?: boolean
+  infoSection?: JSX.Element
   textColor?: string
   action?: ReactNode | undefined
   background?: string
@@ -37,6 +38,7 @@ const Layout = ({
   title,
   description,
   showLayoutDescription,
+  infoSection,
   textColor,
   action,
   background,
@@ -161,6 +163,7 @@ const Layout = ({
                 {parseDescription(description)}
               </Text>
             )}
+            {infoSection}
           </VStack>
           <Box ref={childrenWrapper}>{children}</Box>
         </Container>
