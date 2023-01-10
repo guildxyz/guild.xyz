@@ -8,6 +8,7 @@ import { GuildFormType } from "types"
 import DynamicDevTool from "./DynamicDevTool"
 import Pagination from "./Pagination"
 import TelegramGroup from "./TelegramGroup"
+import useIsTGBotIn from "./TelegramGroup/hooks/useIsTGBotIn"
 
 const CreateGuildTelegram = (): JSX.Element => {
   const router = useRouter()
@@ -35,6 +36,10 @@ const CreateGuildTelegram = (): JSX.Element => {
     },
   })
 
+  const {
+    data: { ok },
+  } = useIsTGBotIn(guildPlatformId, { refreshInterval: 5000 })
+
   return (
     <>
       <Stack spacing={10}>
@@ -43,7 +48,7 @@ const CreateGuildTelegram = (): JSX.Element => {
           fieldName="guildPlatforms.0.platformGuildId"
         />
 
-        <Pagination nextButtonDisabled={!guildPlatformId} />
+        <Pagination nextButtonDisabled={!guildPlatformId || !ok} />
       </Stack>
       <DynamicDevTool control={methods.control} />
     </>
