@@ -145,7 +145,13 @@ const GuildPage = (): JSX.Element => {
               {Object.entries(socialLinks).map(([type, link]) => (
                 <HStack key={type} spacing={1.5}>
                   <SocialIcon type={type as SocialLinkKey} size="sm" />
-                  <Link href={link} isExternal fontSize="sm" fontWeight="semibold">
+                  <Link
+                    href={link}
+                    isExternal
+                    fontSize="sm"
+                    fontWeight="semibold"
+                    color={textColor}
+                  >
                     {link
                       .replace("http://", "")
                       .replace("https://", "")
