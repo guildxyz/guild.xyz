@@ -8,7 +8,7 @@ import { useFormContext } from "react-hook-form"
 import fetcher from "utils/fetcher"
 
 type Data = {
-  removePlatformAccess?: string
+  removePlatformAccess?: boolean
 }
 
 const useDeleteGuild = () => {

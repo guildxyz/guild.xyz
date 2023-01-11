@@ -4,12 +4,13 @@ import {
   Collapse,
   Heading,
   HStack,
+  Icon,
   Link,
   Spinner,
   Stack,
   Tag,
+  TagLeftIcon,
   Text,
-  Tooltip,
   Wrap,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
@@ -38,7 +39,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { CloudSlash } from "phosphor-react"
+import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey } from "types"
@@ -229,18 +230,10 @@ const GuildPage = (): JSX.Element => {
             title="Members"
             titleRightElement={
               <HStack justifyContent="space-between" w="full" my="-2 !important">
-                {/* Temporary until the BE returns members again  */}
-                <Tooltip
-                  label="Members are temporarily hidden, only admins are shown"
-                  hasArrow
-                >
-                  <Tag size="sm" maxH={6}>
-                    <CloudSlash />
-                  </Tag>
-                </Tooltip>
-                {/* <Tag size="sm" maxH={6} pt={0.5}>
+                <Tag maxH={6} pt={0.5}>
+                  <TagLeftIcon as={Users} />
                   {isLoading ? <Spinner size="xs" /> : memberCount ?? 0}
-                </Tag> */}
+                </Tag>
                 {isAdmin && <DynamicMembersExporter />}
               </HStack>
             }
@@ -248,7 +241,14 @@ const GuildPage = (): JSX.Element => {
             <Box>
               {isAdmin && <DynamicActiveStatusUpdates />}
               {showMembers ? (
-                <Members members={members} />
+                <>
+                  <Members members={members} />
+                  {/* Temporary until the BE returns members again  */}
+                  <Text mt="6" colorScheme={"gray"}>
+                    <Icon as={Info} mr="2" mb="-2px" />
+                    Members are temporarily hidden, only admins are shown
+                  </Text>
+                </>
               ) : (
                 <Text>Members are hidden</Text>
               )}

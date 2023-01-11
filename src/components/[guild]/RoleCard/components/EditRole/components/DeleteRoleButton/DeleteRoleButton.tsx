@@ -20,7 +20,7 @@ type Props = {
 }
 
 const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
-  const [removeAccess, setRemoveAccess] = useState("0")
+  const [removeAccess, setRemoveAccess] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
 
@@ -50,8 +50,8 @@ const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
               <ShouldKeepPlatformAccesses
                 keepAccessDescription="Everything on the platforms will remain as is for existing members, but accesses by this role won’t be managed anymore"
                 revokeAccessDescription="Existing members will lose every access granted by this role"
-                onChange={(newValue) => setRemoveAccess(newValue)}
-                value={removeAccess}
+                onChange={(newValue) => setRemoveAccess(newValue === "true")}
+                value={removeAccess as any}
               />
             </AlertDialogBody>
             <AlertDialogFooter>
