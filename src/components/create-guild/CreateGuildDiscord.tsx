@@ -1,5 +1,4 @@
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
-import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import useIsConnected from "hooks/useIsConnected"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
@@ -34,9 +33,7 @@ const CreateGuildDiscord = (): JSX.Element => {
         selectedServer={selectedServer}
         fieldName="guildPlatforms.0.platformGuildId"
         onSubmit={nextStep}
-      >
-        <DiscordRoleVideo />
-      </DiscordGuildSetup>
+      />
 
       <Pagination nextButtonHidden />
     </>

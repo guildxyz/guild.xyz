@@ -16,7 +16,6 @@ const DiscordGuildSetup = ({
   defaultValues,
   selectedServer,
   fieldName,
-  children,
   rolePlatforms = undefined,
   onSubmit = undefined,
 }) => {
@@ -111,7 +110,7 @@ const DiscordGuildSetup = ({
       </AnimatePresence>
       {showForm && (
         <GridItem colSpan={2}>
-          <ServerSetupCard onSubmit={onSubmit}>{children}</ServerSetupCard>
+          <ServerSetupCard onSubmit={onSubmit} />
         </GridItem>
       )}
     </SimpleGrid>
