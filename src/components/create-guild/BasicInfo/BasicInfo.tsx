@@ -19,7 +19,7 @@ import PlatformlessGuildForm from "./components/PlatformlessGuildForm"
 import TwitterUrlInput from "./components/TwitterUrlInput"
 
 const BasicInfo = (): JSX.Element => {
-  const { platform, layout } = useCreateGuildContext()
+  const { platform, template } = useCreateGuildContext()
   const {
     control,
     register,
@@ -56,7 +56,7 @@ const BasicInfo = (): JSX.Element => {
             </FormControl>
           </Section>
 
-          {layout === "GROWTH" && (
+          {template === "GROWTH" && (
             <Section title="Links for community members">
               <TwitterUrlInput />
             </Section>
@@ -69,7 +69,7 @@ const BasicInfo = (): JSX.Element => {
           isDisabled={
             !guildName ||
             !!Object.values(errors).length ||
-            (layout === "GROWTH" && !touchedFields?.socialLinks?.TWITTER)
+            (template === "GROWTH" && !touchedFields?.socialLinks?.TWITTER)
           }
         />
       </Pagination>

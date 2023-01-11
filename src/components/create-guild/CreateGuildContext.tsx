@@ -14,7 +14,7 @@ import { GuildFormType, PlatformName, PlatformType } from "types"
 import capitalize from "utils/capitalize"
 import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
-import ChooseLayout from "./ChooseLayout"
+import ChooseTemplate from "./ChooseTemplate"
 import CreateGuildIndex from "./CreateGuildIndex"
 
 type Step = {
@@ -24,8 +24,8 @@ type Step = {
 }
 
 const CreateGuildContext = createContext<{
-  layout: string | undefined
-  setLayout: Dispatch<SetStateAction<string>>
+  template: string | undefined
+  setTemplate: Dispatch<SetStateAction<string>>
   steps: Step[]
   prevStep: () => void
   nextStep: () => void
@@ -107,7 +107,7 @@ const CreateGuildProvider = ({
   const guildName = useWatch({ control: methods.control, name: "name" })
 
   const [createDiscordRoles, setCreateDiscordRoles] = useState(false)
-  const [layout, setLayout] = useState<string>()
+  const [template, setTemplate] = useState<string>()
 
   const steps: Step[] = [
     {
@@ -118,9 +118,9 @@ const CreateGuildProvider = ({
       content: <CreateGuildIndex />,
     },
     {
-      label: "Choose layout",
-      description: capitalize(layout?.toLowerCase() ?? ""),
-      content: <ChooseLayout />,
+      label: "Choose template",
+      description: capitalize(template?.toLowerCase() ?? ""),
+      content: <ChooseTemplate />,
     },
     {
       label: "Basic information",
@@ -131,7 +131,7 @@ const CreateGuildProvider = ({
   useEffect(() => {
     if (activeStep > 0) return
     methods.reset(defaultValues[platform ?? "DEFAULT"])
-    setLayout(null)
+    setTemplate(null)
   }, [platform])
 
   return (
@@ -143,8 +143,8 @@ const CreateGuildProvider = ({
         setStep,
         activeStep,
         platform,
-        layout,
-        setLayout,
+        template,
+        setTemplate,
         createDiscordRoles,
         setCreateDiscordRoles,
       }}

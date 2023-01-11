@@ -5,17 +5,16 @@ import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import Pagination from "../Pagination"
-import LayoutCard, { Layout } from "./components/LayoutCard"
+import TemplateCard, { Template } from "./components/TemplateCard"
 
-const ChooseLayout = (): JSX.Element => {
+const ChooseTemplate = (): JSX.Element => {
   const {
-    platform,
-    layout: layoutInContext,
-    setLayout,
+    template: templateInContext,
+    setTemplate,
     createDiscordRoles,
   } = useCreateGuildContext()
 
-  const LAYOUTS: Layout[] = [
+  const TEMPLATES: Template[] = [
     {
       id: "BASIC",
       name: "Start from scratch",
@@ -110,17 +109,17 @@ const ChooseLayout = (): JSX.Element => {
       {/* {platform === "DISCORD" && <CreateDiscordRolesSwitch />} */}
 
       <Box sx={{ columnCount: [1, 1, 2], columnGap: [4, 4, 6] }}>
-        {LAYOUTS.map((layout, index) => (
-          <LayoutCard
+        {TEMPLATES.map((template, index) => (
+          <TemplateCard
             key={index}
-            {...layout}
-            selected={layout.id === layoutInContext}
-            onClick={(newLayoutId) => {
+            {...template}
+            selected={template.id === templateInContext}
+            onClick={(newTemplateId) => {
               setValue(
                 "roles",
-                LAYOUTS.find((l) => l.id === newLayoutId).roles.map((r, i) => ({
+                TEMPLATES.find((l) => l.id === newTemplateId).roles.map((r, i) => ({
                   ...r,
-                  // Merging the roleplatforms defined in `LAYOUTS` with the current rolePlatforms (inside the form), so we don't loose the data which we defined for rolePlatforms - e.g. in `GoogleGuildSetup`
+                  // Merging the roleplatforms defined in `TEMPLATES` with the current rolePlatforms (inside the form), so we don't loose the data which we defined for rolePlatforms - e.g. in `GoogleGuildSetup`
                   rolePlatforms: Object.values(
                     roles?.[i]?.rolePlatforms?.[0] ?? {}
                   ).filter(Boolean).length
@@ -134,7 +133,7 @@ const ChooseLayout = (): JSX.Element => {
                     : undefined,
                 }))
               )
-              setLayout(newLayoutId)
+              setTemplate(newTemplateId)
             }}
           />
         ))}
@@ -144,4 +143,4 @@ const ChooseLayout = (): JSX.Element => {
   )
 }
 
-export default ChooseLayout
+export default ChooseTemplate

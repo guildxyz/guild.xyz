@@ -15,16 +15,19 @@ import { Check } from "phosphor-react"
 import { Fragment, KeyboardEvent } from "react"
 import { GuildFormType, Requirement } from "types"
 
-type Layout = {
+type Template = {
   id: string
   name: string
   description?: string
   roles: GuildFormType["roles"]
 }
 
-type Props = Layout & { selected?: boolean; onClick: (newLayoutId: string) => void }
+type Props = Template & {
+  selected?: boolean
+  onClick: (newTemplateId: string) => void
+}
 
-const LayoutCard = ({
+const TemplateCard = ({
   id,
   name,
   description,
@@ -172,5 +175,5 @@ const LayoutCard = ({
   )
 }
 
-export default LayoutCard
-export type { Layout }
+export default TemplateCard
+export type { Template }
