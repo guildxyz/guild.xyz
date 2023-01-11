@@ -32,7 +32,9 @@ const TwitterUrlInput = (): JSX.Element => {
           {...register("socialLinks.TWITTER", {
             required: "This field is required.",
             validate: (v) =>
-              (v.includes("twitter.com") && !!v?.split("/").slice(-1)[0]?.length) ||
+              (v.includes("twitter.com") &&
+                v.includes("/") &&
+                !!v?.split("/").slice(-1)[0]?.length) ||
               "Invalid Twitter URL",
             shouldUnregister: true,
           })}
