@@ -6,12 +6,9 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { Guild, Requirement } from "types"
+import { Guild } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
-
-// TODO: better types
-type RoleOrGuild = Guild & { requirements?: Array<Requirement> }
 
 const useCreateGuild = () => {
   const { addDatadogAction, addDatadogError } = useDatadog()
@@ -25,13 +22,13 @@ const useCreateGuild = () => {
   const fetchData = async ({
     validation,
     data,
-  }: WithValidation<RoleOrGuild>): Promise<RoleOrGuild> =>
+  }: WithValidation<Guild>): Promise<Guild> =>
     fetcher("/guild", {
       validation,
       body: data,
     })
 
-  const useSubmitResponse = useSubmitWithSign<any, RoleOrGuild>(fetchData, {
+  const useSubmitResponse = useSubmitWithSign<any, Guild>(fetchData, {
     onError: (error_) => {
       addDatadogError(`Guild creation error`, { error: error_ })
 
