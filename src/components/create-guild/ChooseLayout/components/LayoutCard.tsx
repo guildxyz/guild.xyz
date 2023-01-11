@@ -12,7 +12,7 @@ import Card from "components/common/Card"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { Check } from "phosphor-react"
-import { Fragment } from "react"
+import { Fragment, KeyboardEvent } from "react"
 import { GuildFormType, Requirement } from "types"
 
 type Layout = {
@@ -38,7 +38,13 @@ const LayoutCard = ({
 
   return (
     <Box
+      tabIndex={0}
       onClick={() => onClick(id)}
+      onKeyDown={(e: KeyboardEvent) => {
+        if (e.key !== "Enter" && e.key !== " ") return
+        e.preventDefault()
+        onClick(id)
+      }}
       position="relative"
       mb={{ base: 4, md: 6 }}
       borderRadius="2xl"
@@ -55,6 +61,12 @@ const LayoutCard = ({
         transition: "opacity 0.2s",
       }}
       _hover={{
+        _before: {
+          opacity: 0.1,
+        },
+      }}
+      _focus={{
+        outline: "none",
         _before: {
           opacity: 0.1,
         },
