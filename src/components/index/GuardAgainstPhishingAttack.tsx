@@ -21,7 +21,7 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
             bottom={-4}
             maxW="30%"
             src="/landing/robot.svg"
-            alt="Guild Guard Robot"
+            alt="Guild Robot"
           />
 
           <Img
