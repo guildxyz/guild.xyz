@@ -11,15 +11,16 @@ import Section from "components/common/Section"
 import { ArrowSquareOut } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
-import CreateGuildButton from "./CreateGuildButton"
-import { useCreateGuildContext } from "./CreateGuildContext"
-import Pagination from "./Pagination"
+import CreateGuildButton from "../CreateGuildButton"
+import { useCreateGuildContext } from "../CreateGuildContext"
+import Pagination from "../Pagination"
+import TwitterUrlInput from "./components/TwitterUrlInput"
 
 const BasicInfo = (): JSX.Element => {
   const { layout } = useCreateGuildContext()
   const {
     register,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useFormContext<GuildFormType>()
 
   return (
@@ -41,10 +42,21 @@ const BasicInfo = (): JSX.Element => {
             </FormHelperText>
           </FormControl>
         </Section>
+
+        {layout === "GROWTH" && (
+          <Section title="Links for community members">
+            <TwitterUrlInput />
+          </Section>
+        )}
       </Stack>
 
       <Pagination nextButtonHidden>
-        <CreateGuildButton />
+        <CreateGuildButton
+          isDisabled={
+            !!Object.values(errors).length ||
+            (layout === "GROWTH" && !touchedFields?.socialLinks?.TWITTER)
+          }
+        />
       </Pagination>
     </>
   )
