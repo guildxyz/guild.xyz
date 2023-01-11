@@ -15,6 +15,7 @@ import capitalize from "utils/capitalize"
 import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
 import ChooseLayout from "./ChooseLayout"
+import CreateDiscordRolesSwitch from "./CreateDiscordRolesSwitch"
 import CreateGuildIndex from "./CreateGuildIndex"
 import CreateGuildPlatform from "./CreateGuildPlatform"
 
@@ -22,6 +23,7 @@ type Step = {
   label: string
   description?: string
   title?: string
+  titleRightElement?: () => JSX.Element
   subtitle?: string
   content: () => JSX.Element
 }
@@ -35,6 +37,8 @@ const CreateGuildContext = createContext<{
   setStep: (step: number) => void
   activeStep: number
   platform?: PlatformName
+  createDiscordRoles: boolean
+  setCreateDiscordRoles: Dispatch<SetStateAction<boolean>>
 } | null>(null)
 
 const getPlatformFromQueryParam = (queryParam: string): PlatformName | null => {
@@ -107,6 +111,7 @@ const CreateGuildProvider = ({
   const methods = useForm<GuildFormType>({ mode: "all" })
   const guildName = useWatch({ control: methods.control, name: "name" })
 
+  const [createDiscordRoles, setCreateDiscordRoles] = useState(false)
   const [layout, setLayout] = useState<string>()
 
   const steps: Step[] = [
@@ -124,6 +129,7 @@ const CreateGuildProvider = ({
       title: `Create guild${
         platform ? ` on ${capitalize(platform?.toLowerCase() ?? "")}` : ""
       }`,
+      titleRightElement: platform === "DISCORD" && CreateDiscordRolesSwitch,
       subtitle:
         platform === "DISCORD"
           ? "Adding the bot and creating the Guild won't change anything on your server"
@@ -134,6 +140,7 @@ const CreateGuildProvider = ({
       label: "Choose layout",
       description: capitalize(layout?.toLowerCase() ?? ""),
       title: "Choose layout",
+
       content: ChooseLayout,
     },
     {
@@ -165,6 +172,8 @@ const CreateGuildProvider = ({
         platform,
         layout,
         setLayout,
+        createDiscordRoles,
+        setCreateDiscordRoles,
       }}
     >
       <FormProvider {...methods}>{children}</FormProvider>

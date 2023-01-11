@@ -6,75 +6,90 @@ import { useCreateGuildContext } from "../CreateGuildContext"
 import Pagination from "../Pagination"
 import LayoutCard, { Layout } from "./components/LayoutCard"
 
-const LAYOUTS: Layout[] = [
-  {
-    id: "BASIC",
-    name: "Basic",
-    description: "Simple guild setup, choose this if you're just testing Guild.xyz",
-    roles: [
-      {
-        name: "Basic role",
-        logic: "AND",
-        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-        requirements: [
-          {
-            type: "FREE",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "GROWTH",
-    name: "Growth",
-    description: "Basic anti-bot member verification",
-    roles: [
-      {
-        name: "Growth role #1",
-        logic: "AND",
-        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-        requirements: [
-          {
-            type: "COIN",
-            chain: "ETHEREUM",
-            address: "0x0000000000000000000000000000000000000000",
-            data: {
-              minAmount: 0.001,
-            },
-          },
-          {
-            type: "DISCORD_JOIN_FROM_NOW",
-            data: {
-              memberSince: 31536000000,
-            },
-          },
-        ],
-      },
-      {
-        name: "Growth role #2",
-        logic: "AND",
-        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-        requirements: [
-          {
-            type: "TWITTER_FOLLOW",
-            data: {
-              id: "{your_twitter_handle}",
-            },
-          },
-          {
-            type: "TWITTER_FOLLOWER_COUNT",
-            data: {
-              minAmount: 50,
-            },
-          },
-        ],
-      },
-    ],
-  },
-]
-
 const ChooseLayout = (): JSX.Element => {
-  const { layout: layoutInContext, setLayout } = useCreateGuildContext()
+  const {
+    layout: layoutInContext,
+    setLayout,
+    createDiscordRoles,
+  } = useCreateGuildContext()
+
+  const LAYOUTS: Layout[] = [
+    {
+      id: "BASIC",
+      name: "Basic",
+      description:
+        "Simple guild setup, choose this if you're just testing Guild.xyz",
+      roles: [
+        {
+          name: "Basic role",
+          logic: "AND",
+          imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+          requirements: [
+            {
+              type: "FREE",
+            },
+          ],
+          rolePlatforms: createDiscordRoles
+            ? [{ guildPlatformIndex: 1 }]
+            : undefined,
+        },
+      ],
+    },
+    {
+      id: "GROWTH",
+      name: "Growth",
+      description: "Basic anti-bot member verification",
+      roles: [
+        {
+          name: "Growth role #1",
+          logic: "AND",
+          imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+          requirements: [
+            {
+              type: "COIN",
+              chain: "ETHEREUM",
+              address: "0x0000000000000000000000000000000000000000",
+              data: {
+                minAmount: 0.001,
+              },
+            },
+            {
+              type: "DISCORD_JOIN_FROM_NOW",
+              data: {
+                memberSince: 31536000000,
+              },
+            },
+          ],
+          rolePlatforms: createDiscordRoles
+            ? [{ guildPlatformIndex: 0 }]
+            : undefined,
+        },
+        {
+          name: "Growth role #2",
+          logic: "AND",
+          imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+          requirements: [
+            {
+              type: "TWITTER_FOLLOW",
+              data: {
+                id: "{your_twitter_handle}",
+              },
+            },
+            {
+              type: "TWITTER_FOLLOWER_COUNT",
+              data: {
+                minAmount: 50,
+              },
+            },
+          ],
+          rolePlatforms: createDiscordRoles
+            ? [{ guildPlatformIndex: 0 }]
+            : undefined,
+        },
+      ],
+    },
+  ]
+
   const { control, setValue } = useFormContext<GuildFormType>()
 
   const requirements = useWatch({ control, name: "roles.0.requirements" })
