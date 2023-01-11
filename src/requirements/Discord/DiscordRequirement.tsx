@@ -1,5 +1,6 @@
 import { Icon } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import { DiscordLogo } from "phosphor-react"
 import { RequirementComponentProps } from "requirements"
@@ -8,13 +9,20 @@ import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatfo
 import Requirement from "../common/Requirement"
 
 const DiscordRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
+  const { guildPlatforms } = useGuild()
   const {
-    data: { serverName, roles, isAdmin },
+    data: { serverName, serverIcon, roles, isAdmin },
   } = useServerData(requirement.data.serverId)
+
+  const renderedServerIcon = guildPlatforms?.find(
+    (p) => p.platformGuildId === requirement.data.serverId
+  )
+    ? null
+    : serverIcon || null
 
   return (
     <Requirement
-      image={<Icon as={DiscordLogo} boxSize={6} />}
+      image={renderedServerIcon ?? <Icon as={DiscordLogo} boxSize={6} />}
       footer={<ConnectRequirementPlatformButton requirement={requirement} />}
       {...rest}
     >

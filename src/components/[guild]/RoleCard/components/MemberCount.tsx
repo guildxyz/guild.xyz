@@ -17,7 +17,7 @@ type Props = {
 const MemberCount = ({ memberCount, roleId }: Props) => {
   const { status, progress } = useActiveStatusUpdates(roleId)
 
-  if (status === "STARTED")
+  if (status === "CREATED" || status === "STARTED")
     return (
       <Tooltip
         label={`Syncing ${progress.actionsDone}/${progress.total} members`}

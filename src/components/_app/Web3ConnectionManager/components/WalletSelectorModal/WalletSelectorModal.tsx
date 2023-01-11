@@ -153,7 +153,10 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   size="xl"
                   mb="4"
                   colorScheme={"green"}
-                  onClick={set.onSubmit}
+                  onClick={() => {
+                    set.onSubmit()
+                    addDatadogAction("click on Verify account")
+                  }}
                   isLoading={set.isLoading || !ready}
                   isDisabled={!ready}
                   loadingText={

@@ -21,7 +21,7 @@ const TabButton = ({
   const router = useRouter()
   const path = router.asPath.split("?")[0].split("/")
   const currentPath = path.pop()
-  const isActive = currentPath === href
+  const isActive = currentPath?.split("#")?.[0] === href
 
   return !disabled ? (
     <LinkButton

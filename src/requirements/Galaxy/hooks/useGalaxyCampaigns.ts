@@ -7,6 +7,9 @@ type GalaxyCampaign = {
   name: string
   thumbnail: string
   chain: Chain
+  space?: {
+    alias: string
+  }
 }
 
 export const useGalaxyCampaigns = () => {

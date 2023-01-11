@@ -16,7 +16,8 @@ const RoleOptionCard = forwardRef(
       <Checkbox
         value={role.id.toString()}
         size={size}
-        p={size === "lg" ? 6 : 3}
+        p={size === "lg" ? 6 : 4}
+        pr={size === "lg" ? 7 : 6}
         spacing="0"
         flexDirection={"row-reverse"}
         justifyContent="space-between"
