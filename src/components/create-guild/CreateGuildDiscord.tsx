@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
-import { defaultValues, useCreateGuildContext } from "./CreateGuildContext"
+import { defaultValues } from "./CreateGuildContext"
 import Pagination from "./Pagination"
 
 const CreateGuildDiscord = (): JSX.Element => {
@@ -16,8 +16,6 @@ const CreateGuildDiscord = (): JSX.Element => {
       router.push("/create-guild")
     }
   }, [isConnected])
-
-  const { nextStep } = useCreateGuildContext()
 
   const { control } = useFormContext<GuildFormType>()
 
@@ -32,10 +30,9 @@ const CreateGuildDiscord = (): JSX.Element => {
         defaultValues={defaultValues.DISCORD}
         selectedServer={selectedServer}
         fieldName="guildPlatforms.0.platformGuildId"
-        onSubmit={nextStep}
       />
 
-      <Pagination nextButtonHidden />
+      <Pagination nextButtonDisabled={!selectedServer} />
     </>
   )
 }

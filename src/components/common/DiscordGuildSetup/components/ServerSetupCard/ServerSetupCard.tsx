@@ -10,7 +10,7 @@ import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 
 type Props = {
-  onSubmit: () => void
+  onSubmit?: () => void
 }
 
 const ServerSetupCard = ({ onSubmit }: Props): JSX.Element => {
@@ -42,9 +42,11 @@ const ServerSetupCard = ({ onSubmit }: Props): JSX.Element => {
     <Card px={{ base: 5, sm: 6 }} py={7}>
       <Stack spacing={8}>
         <DiscordRoleVideo />
-        <Button colorScheme="green" onClick={onSubmit}>
-          Got it
-        </Button>
+        {onSubmit && (
+          <Button colorScheme="green" onClick={onSubmit}>
+            Got it
+          </Button>
+        )}
       </Stack>
     </Card>
   )

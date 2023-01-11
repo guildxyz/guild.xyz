@@ -27,6 +27,11 @@ const BasicInfo = (): JSX.Element => {
     <>
       <Stack spacing={10}>
         <Section title="How could we contact you?">
+          <Text fontSize="sm" colorScheme="gray">
+            This contact is only visible for the Guild Team to reach you with support
+            and partnership initiatives if needed.{" "}
+          </Text>
+
           <FormControl>
             <Input
               maxW={{ base: "full", sm: "sm" }}

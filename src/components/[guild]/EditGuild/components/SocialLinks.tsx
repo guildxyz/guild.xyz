@@ -44,6 +44,7 @@ const SocialLinks = (): JSX.Element => {
                 {socialLinkOptions.find((sl) => sl.value === key).img}
               </InputLeftElement>
               <Input
+                type="url"
                 {...register(`socialLinks.${key}`, {
                   required: "This field is required.",
                 })}

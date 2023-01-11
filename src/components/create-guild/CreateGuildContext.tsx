@@ -129,7 +129,6 @@ const CreateGuildProvider = ({
       title: `Create guild${
         platform ? ` on ${capitalize(platform?.toLowerCase() ?? "")}` : ""
       }`,
-      titleRightElement: platform === "DISCORD" && CreateDiscordRolesSwitch,
       subtitle:
         platform === "DISCORD"
           ? "Adding the bot and creating the Guild won't change anything on your server"
@@ -140,7 +139,7 @@ const CreateGuildProvider = ({
       label: "Choose layout",
       description: capitalize(layout?.toLowerCase() ?? ""),
       title: "Choose layout",
-
+      titleRightElement: platform === "DISCORD" && CreateDiscordRolesSwitch,
       content: ChooseLayout,
     },
     {
