@@ -5,21 +5,17 @@ import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import useSetImageAndNameFromPlatformData from "components/create-guild/hooks/useSetImageAndNameFromPlatformData"
 import usePinata from "hooks/usePinata"
 import useServerData from "hooks/useServerData"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 
 type Props = {
+  selectedServer?: string
   onSubmit?: () => void
 }
 
-const ServerSetupCard = ({ onSubmit }: Props): JSX.Element => {
-  const { control, setValue } = useFormContext<GuildFormType>()
-
-  const selectedServer = useWatch({
-    control,
-    name: "guildPlatforms.0.platformGuildId",
-  })
+const ServerSetupCard = ({ selectedServer, onSubmit }: Props): JSX.Element => {
+  const { setValue } = useFormContext<GuildFormType>()
 
   const {
     data: { serverIcon, serverName },

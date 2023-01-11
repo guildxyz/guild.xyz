@@ -1,11 +1,11 @@
 import GitHubGuildSetup from "components/common/GitHubGuildSetup"
+import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
+import Pagination from "components/create-guild/Pagination"
 import useIsConnected from "hooks/useIsConnected"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
-import { useCreateGuildContext } from "./CreateGuildContext"
-import Pagination from "./Pagination"
 
 const CreateGuildGithub = (): JSX.Element => {
   const router = useRouter()
@@ -13,7 +13,7 @@ const CreateGuildGithub = (): JSX.Element => {
 
   useEffect(() => {
     if (!isConnected) {
-      router.push("/create-guild")
+      router.replace("/create-guild")
     }
   }, [isConnected])
 

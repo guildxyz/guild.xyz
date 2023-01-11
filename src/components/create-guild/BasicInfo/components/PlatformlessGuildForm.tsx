@@ -1,21 +1,14 @@
 import { Box, FormLabel, HStack } from "@chakra-ui/react"
 import usePinata from "hooks/usePinata"
-import { useEffect } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
-import { defaultValues } from "./CreateGuildContext"
-import Description from "./Description"
-import IconSelector from "./IconSelector"
-import Name from "./Name"
-import Pagination from "./Pagination"
+import Description from "../../Description"
+import IconSelector from "../../IconSelector"
+import Name from "../../Name"
 
-const CreateGuildWithoutPlatform = (): JSX.Element => {
-  const { control, reset, setValue } = useFormContext<GuildFormType>()
-
-  useEffect(() => {
-    reset(defaultValues.DEFAULT)
-  }, [])
+const PlatformlessGuildForm = (): JSX.Element => {
+  const { setValue } = useFormContext<GuildFormType>()
 
   const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
@@ -30,8 +23,6 @@ const CreateGuildWithoutPlatform = (): JSX.Element => {
     },
   })
 
-  const guildName = useWatch({ control, name: "name" })
-
   return (
     <>
       <Box>
@@ -42,10 +33,8 @@ const CreateGuildWithoutPlatform = (): JSX.Element => {
         </HStack>
       </Box>
       <Description />
-
-      <Pagination nextButtonDisabled={!guildName} />
     </>
   )
 }
 
-export default CreateGuildWithoutPlatform
+export default PlatformlessGuildForm

@@ -1,4 +1,4 @@
-import { Box, Container, useColorModeValue, VStack } from "@chakra-ui/react"
+import { Box, Container, Heading, Stack, useColorModeValue } from "@chakra-ui/react"
 import Head from "next/head"
 import { PropsWithChildren } from "react"
 import Footer from "./components/Footer"
@@ -27,9 +27,18 @@ const SimpleLayout = ({
           pb={24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
-          <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
+          <Stack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
+            <Heading
+              as="h1"
+              fontSize={{ md: "4xl", lg: "5xl" }}
+              fontFamily="display"
+              wordBreak="break-word"
+              display={{ base: "none", md: "block" }}
+            >
+              {title}
+            </Heading>
             {children}
-          </VStack>
+          </Stack>
         </Container>
         <Footer />
       </Box>

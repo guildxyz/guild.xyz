@@ -15,17 +15,12 @@ import capitalize from "utils/capitalize"
 import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
 import ChooseLayout from "./ChooseLayout"
-import CreateDiscordRolesSwitch from "./CreateDiscordRolesSwitch"
 import CreateGuildIndex from "./CreateGuildIndex"
-import CreateGuildPlatform from "./CreateGuildPlatform"
 
 type Step = {
   label: string
   description?: string
-  title?: string
-  titleRightElement?: () => JSX.Element
-  subtitle?: string
-  content: () => JSX.Element
+  content: JSX.Element
 }
 
 const CreateGuildContext = createContext<{
@@ -117,48 +112,31 @@ const CreateGuildProvider = ({
   const steps: Step[] = [
     {
       label: "Choose platform",
-      description:
-        activeStep > 0 && capitalize(platform?.toLowerCase() ?? "Without platform"),
-      title: "Choose platform",
-      subtitle: "You can connect more platforms later",
-      content: CreateGuildIndex,
-    },
-    {
-      label: "Create guild",
-      description: guildName,
-      title: `Create guild${
-        platform ? ` on ${capitalize(platform?.toLowerCase() ?? "")}` : ""
+      description: `${capitalize(platform?.toLowerCase() ?? "Without platform")}${
+        guildName ? ` - ${guildName}` : ""
       }`,
-      subtitle:
-        platform === "DISCORD"
-          ? "Adding the bot and creating the Guild won't change anything on your server"
-          : "",
-      content: CreateGuildPlatform,
+      content: <CreateGuildIndex />,
     },
     {
       label: "Choose layout",
       description: capitalize(layout?.toLowerCase() ?? ""),
-      title: "Choose layout",
-      titleRightElement: platform === "DISCORD" && CreateDiscordRolesSwitch,
-      content: ChooseLayout,
+      content: <ChooseLayout />,
     },
     {
       label: "Basic information",
-      title: "Basic information",
-      content: BasicInfo,
+      content: <BasicInfo />,
     },
   ]
 
   useEffect(() => {
-    // Update the stepper
-    if (activeStep > 1) return
-    if (!platform) setStep(0)
-    else setStep(1)
-
-    // Reset the form on platform change
+    if (activeStep > 0) return
     methods.reset(defaultValues[platform])
     setLayout(null)
   }, [platform])
+
+  useEffect(() => {
+    if (activeStep === 0 && !platform) methods.reset(defaultValues.DEFAULT)
+  }, [activeStep])
 
   return (
     <CreateGuildContext.Provider

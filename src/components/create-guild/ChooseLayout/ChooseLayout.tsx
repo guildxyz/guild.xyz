@@ -3,12 +3,14 @@ import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
+import CreateDiscordRolesSwitch from "../CreateDiscordRolesSwitch"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import Pagination from "../Pagination"
 import LayoutCard, { Layout } from "./components/LayoutCard"
 
 const ChooseLayout = (): JSX.Element => {
   const {
+    platform,
     layout: layoutInContext,
     setLayout,
     createDiscordRoles,
@@ -17,12 +19,11 @@ const ChooseLayout = (): JSX.Element => {
   const LAYOUTS: Layout[] = [
     {
       id: "BASIC",
-      name: "Basic",
-      description:
-        "Simple guild setup, choose this if you're just testing Guild.xyz",
+      name: "Start from scratch",
+      description: "Default role without special requirements",
       roles: [
         {
-          name: "Basic role",
+          name: "Member",
           logic: "AND",
           imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
           requirements: [
@@ -42,7 +43,7 @@ const ChooseLayout = (): JSX.Element => {
       description: "Basic anti-bot member verification",
       roles: [
         {
-          name: "Growth role #1",
+          name: "Verified member",
           logic: "AND",
           imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
           requirements: [
@@ -63,7 +64,7 @@ const ChooseLayout = (): JSX.Element => {
           ],
         },
         {
-          name: "Growth role #2",
+          name: "Twitter fam",
           logic: "AND",
           imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
           requirements: [
@@ -101,6 +102,8 @@ const ChooseLayout = (): JSX.Element => {
 
   return (
     <>
+      {platform === "DISCORD" && <CreateDiscordRolesSwitch />}
+
       <Box sx={{ columnCount: [1, 1, 2], columnGap: [4, 4, 6] }}>
         {LAYOUTS.map((layout, index) => (
           <LayoutCard

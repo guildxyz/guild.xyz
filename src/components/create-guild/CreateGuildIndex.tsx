@@ -4,16 +4,27 @@ import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { useRouter } from "next/router"
 import { CaretRight } from "phosphor-react"
 import { useCreateGuildContext } from "./CreateGuildContext"
+import CreateGuildPlatform from "./CreateGuildPlatform"
 
 const CreateGuildIndex = (): JSX.Element => {
   const router = useRouter()
-  const { nextStep } = useCreateGuildContext()
+  const { platform, nextStep } = useCreateGuildContext()
+
+  if (platform) return <CreateGuildPlatform />
 
   return (
     <>
+      <Text
+        colorScheme="gray"
+        fontSize={{ base: "sm", md: "lg" }}
+        fontWeight="semibold"
+      >
+        You can connect more platforms later
+      </Text>
+
       <PlatformsGrid
         onSelection={(selectedPlatform) =>
-          router.push(`/create-guild/${selectedPlatform.toLowerCase()}`)
+          router.replace(`/create-guild/${selectedPlatform.toLowerCase()}`)
         }
       />
 

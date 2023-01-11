@@ -29,12 +29,12 @@ const Pagination = ({
         size={buttonSize}
         mr={2}
         onClick={
-          platform && activeStep === 1
-            ? () => router.push("/create-guild")
+          platform && activeStep === 0
+            ? () => router.replace("/create-guild")
             : prevStep
         }
       >
-        Previous
+        {activeStep === 0 ? "Cancel" : "Previous"}
       </Button>
 
       {!nextButtonHidden && (

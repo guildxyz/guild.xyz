@@ -1,14 +1,14 @@
 import { Stack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import Pagination from "components/create-guild/Pagination"
+import TelegramGroup from "components/create-guild/TelegramGroup"
+import useIsTGBotIn from "components/create-guild/TelegramGroup/hooks/useIsTGBotIn"
 import usePinata from "hooks/usePinata"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
-import DynamicDevTool from "./DynamicDevTool"
-import Pagination from "./Pagination"
-import TelegramGroup from "./TelegramGroup"
-import useIsTGBotIn from "./TelegramGroup/hooks/useIsTGBotIn"
 
 const CreateGuildTelegram = (): JSX.Element => {
   const router = useRouter()
@@ -16,7 +16,7 @@ const CreateGuildTelegram = (): JSX.Element => {
 
   useEffect(() => {
     if (!account) {
-      router.push("/create-guild")
+      router.replace("/create-guild")
     }
   }, [account])
 

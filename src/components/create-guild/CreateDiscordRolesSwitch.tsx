@@ -6,10 +6,10 @@ const CreateDiscordRolesSwitch = (): JSX.Element => {
   const { createDiscordRoles, setCreateDiscordRoles } = useCreateGuildContext()
 
   return (
-    <FormControl pt={{ base: 0, md: 4, lg: 6 }} maxW="max-content">
+    <FormControl>
       <Switch
         colorScheme="DISCORD"
-        title="Create roles on Discord"
+        title="Create equivalent roles on Discord"
         isChecked={createDiscordRoles}
         onChange={(e) => setCreateDiscordRoles(e.target.checked)}
       />

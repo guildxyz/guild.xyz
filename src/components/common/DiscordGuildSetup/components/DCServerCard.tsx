@@ -5,7 +5,6 @@ import useGuildByPlatformId from "hooks/useGuildByPlatformId"
 import usePopupWindow from "hooks/usePopupWindow"
 import useServerData from "hooks/useServerData"
 import Link from "next/link"
-import { useRouter } from "next/router"
 import { ArrowSquareIn } from "phosphor-react"
 import { useEffect } from "react"
 
@@ -25,8 +24,6 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     usePopupWindow(
       `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=268782673&scope=bot%20applications.commands`
     )
-
-  const router = useRouter()
 
   const {
     data: { isAdmin, channels },

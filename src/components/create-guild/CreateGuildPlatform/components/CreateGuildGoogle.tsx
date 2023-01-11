@@ -1,11 +1,11 @@
 import GoogleGuildSetup from "components/common/GoogleGuildSetup"
+import { defaultValues } from "components/create-guild/CreateGuildContext"
+import Pagination from "components/create-guild/Pagination"
 import useIsConnected from "hooks/useIsConnected"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
-import { defaultValues } from "./CreateGuildContext"
-import Pagination from "./Pagination"
 
 const CreateGuildGoogle = (): JSX.Element => {
   const router = useRouter()
@@ -13,7 +13,7 @@ const CreateGuildGoogle = (): JSX.Element => {
 
   useEffect(() => {
     if (!isConnected) {
-      router.push("/create-guild")
+      router.replace("/create-guild")
     }
   }, [isConnected])
 

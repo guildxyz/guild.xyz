@@ -1,4 +1,4 @@
-import { Heading, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
+import { Stack, useBreakpointValue } from "@chakra-ui/react"
 import { Step, Steps } from "chakra-ui-steps"
 import SimpleLayout from "components/common/Layout/SimpleLayout"
 import {
@@ -22,7 +22,7 @@ const CreateGuildPage = (): JSX.Element => {
 
   return (
     <>
-      <SimpleLayout title={steps[activeStep].label}>
+      <SimpleLayout title="Create Guild">
         <Steps
           activeStep={activeStep}
           colorScheme="indigo"
@@ -32,40 +32,7 @@ const CreateGuildPage = (): JSX.Element => {
           {steps.map((step) => (
             <Step key={step.label} label={step.label} description={step.description}>
               <Stack w="full" spacing={{ base: 4, md: 10 }}>
-                <Stack
-                  w="full"
-                  direction={{ base: "column", md: "row" }}
-                  justifyContent="space-between"
-                  spacing={4}
-                >
-                  <Stack w="full" alignItems="start">
-                    <Heading
-                      as="h1"
-                      fontSize={{ md: "4xl", lg: "5xl" }}
-                      fontFamily="display"
-                      wordBreak="break-word"
-                      display={{ base: "none", md: "block" }}
-                    >
-                      {step.title}
-                    </Heading>
-
-                    {step.subtitle && (
-                      <Text
-                        colorScheme="gray"
-                        fontSize={{ base: "sm", md: "lg" }}
-                        fontWeight="semibold"
-                        mt="-8"
-                        mb="10"
-                      >
-                        {step.subtitle}
-                      </Text>
-                    )}
-                  </Stack>
-
-                  {step.titleRightElement && <step.titleRightElement />}
-                </Stack>
-
-                {step.content && <step.content />}
+                {step.content}
               </Stack>
             </Step>
           ))}
