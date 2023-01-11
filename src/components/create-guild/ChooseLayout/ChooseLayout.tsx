@@ -91,6 +91,12 @@ const ChooseLayout = (): JSX.Element => {
   const requirements = useWatch({ control, name: "roles.0.requirements" })
 
   useEffect(() => {
+    if (
+      !roles?.some(
+        (r) => Object.values(r.rolePlatforms?.[0] ?? {}).filter(Boolean).length
+      )
+    )
+      return
     roles?.forEach((_, i) =>
       setValue(
         `roles.${i}.rolePlatforms.0.guildPlatformIndex`,
@@ -115,13 +121,17 @@ const ChooseLayout = (): JSX.Element => {
                 LAYOUTS.find((l) => l.id === newLayoutId).roles.map((r, i) => ({
                   ...r,
                   // Merging the roleplatforms defined in `LAYOUTS` with the current rolePlatforms (inside the form), so we don't loose the data which we defined for rolePlatforms - e.g. in `GoogleGuildSetup`
-                  rolePlatforms: [
-                    {
-                      ...roles?.[i]?.rolePlatforms?.[0],
-                      ...r.rolePlatforms?.[0],
-                      guildPlatformIndex: createDiscordRoles ? 0 : undefined,
-                    },
-                  ],
+                  rolePlatforms: Object.values(
+                    roles?.[i]?.rolePlatforms?.[0] ?? {}
+                  ).filter(Boolean).length
+                    ? [
+                        {
+                          ...roles?.[i]?.rolePlatforms?.[0],
+                          ...r.rolePlatforms?.[0],
+                          guildPlatformIndex: createDiscordRoles ? 0 : undefined,
+                        },
+                      ]
+                    : undefined,
                 }))
               )
               setLayout(newLayoutId)
