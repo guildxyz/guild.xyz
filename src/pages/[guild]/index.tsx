@@ -147,16 +147,13 @@ const GuildPage = (): JSX.Element => {
                 <HStack key={type} spacing={1.5}>
                   <SocialIcon type={type as SocialLinkKey} size="sm" />
                   <Link
-                    href={link}
+                    href={link?.startsWith("http") ? link : `https://${link}`}
                     isExternal
                     fontSize="sm"
                     fontWeight="semibold"
                     color={textColor}
                   >
-                    {link
-                      .replace("http://", "")
-                      .replace("https://", "")
-                      .replace("www.", "")}
+                    {link.replace(/(http(s)?:\/\/)*(www\.)*/i, "")}
                   </Link>
                 </HStack>
               ))}
