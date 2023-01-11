@@ -48,7 +48,7 @@ const useCreateGuild = () => {
       })
       router.push(`/${response_.urlName}`)
 
-      if (response_.guildPlatforms[0].platformId === PlatformType.DISCORD)
+      if (response_.guildPlatforms[0]?.platformId === PlatformType.DISCORD)
         fetcherWithSign(`/statusUpdate/guildify/${response_.id}?force=true`, {
           body: {
             notifyUsers: false,
