@@ -35,7 +35,7 @@ const Requirement = ({
     <SimpleGrid
       spacing={4}
       w="full"
-      py={2}
+      py={simple ? 1 : 2}
       templateColumns={`auto 1fr ${rightElement ? "auto" : ""}`}
       alignItems="center"
     >

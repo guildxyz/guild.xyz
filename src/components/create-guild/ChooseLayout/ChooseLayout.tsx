@@ -11,9 +11,16 @@ const LAYOUTS: Layout[] = [
     id: "BASIC",
     name: "Basic",
     description: "Simple guild setup, choose this if you're just testing Guild.xyz",
-    requirements: [
+    roles: [
       {
-        type: "FREE",
+        name: "Basic role",
+        logic: "AND",
+        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+        requirements: [
+          {
+            type: "FREE",
+          },
+        ],
       },
     ],
   },
@@ -21,25 +28,46 @@ const LAYOUTS: Layout[] = [
     id: "GROWTH",
     name: "Growth",
     description: "Basic anti-bot member verification",
-    requirements: [
+    roles: [
       {
-        type: "COIN",
-        chain: "ETHEREUM",
-        data: {
-          minAmount: 0.001,
-        },
+        name: "Growth role #1",
+        logic: "AND",
+        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+        requirements: [
+          {
+            type: "COIN",
+            chain: "ETHEREUM",
+            address: "0x0000000000000000000000000000000000000000",
+            data: {
+              minAmount: 0.001,
+            },
+          },
+          {
+            type: "DISCORD_JOIN_FROM_NOW",
+            data: {
+              memberSince: 31536000000,
+            },
+          },
+        ],
       },
       {
-        type: "TWITTER_FOLLOWER_COUNT",
-        data: {
-          minAmount: 50,
-        },
-      },
-      {
-        type: "DISCORD_JOIN_FROM_NOW",
-        data: {
-          memberSince: 31536000000,
-        },
+        name: "Growth role #2",
+        logic: "AND",
+        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+        requirements: [
+          {
+            type: "TWITTER_FOLLOW",
+            data: {
+              id: "{your_twitter_handle}",
+            },
+          },
+          {
+            type: "TWITTER_FOLLOWER_COUNT",
+            data: {
+              minAmount: 50,
+            },
+          },
+        ],
       },
     ],
   },
@@ -60,11 +88,7 @@ const ChooseLayout = (): JSX.Element => {
             {...layout}
             selected={layout.id === layoutInContext}
             onClick={(newLayoutId) => {
-              setValue("roles.0", {
-                name: "First role",
-                imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-                requirements: LAYOUTS.find((l) => l.id === newLayoutId).requirements,
-              })
+              setValue("roles", LAYOUTS.find((l) => l.id === newLayoutId).roles)
               setLayout(newLayoutId)
             }}
           />

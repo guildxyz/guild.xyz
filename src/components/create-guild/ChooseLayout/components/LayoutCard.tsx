@@ -1,4 +1,5 @@
 import {
+  Box,
   Circle,
   Flex,
   Heading,
@@ -12,12 +13,13 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { Check } from "phosphor-react"
 import { Fragment } from "react"
+import { GuildFormType, Requirement } from "types"
 
 type Layout = {
   id: string
   name: string
   description?: string
-  requirements: any[] // TODO
+  roles: GuildFormType["roles"]
 }
 
 type Props = Layout & { selected?: boolean; onClick: (newLayoutId: string) => void }
@@ -26,18 +28,21 @@ const LayoutCard = ({
   id,
   name,
   description,
-  requirements,
+  roles,
   selected,
   onClick,
 }: Props): JSX.Element => {
-  const bottomBgColor = useColorModeValue("gray.50", "blackAlpha.300")
-  const bottomBorderColor = useColorModeValue("gray.200", "gray.600")
+  const bottomBgColor = useColorModeValue("gray.100", "gray.800")
+  const roleBottomBgColor = useColorModeValue("gray.50", "blackAlpha.300")
+  const roleBottomBorderColor = useColorModeValue("gray.200", "gray.600")
 
   return (
-    <Card
+    <Box
       onClick={() => onClick(id)}
       position="relative"
       mb={{ base: 4, md: 6 }}
+      borderRadius="2xl"
+      overflow="hidden"
       _before={{
         content: `""`,
         position: "absolute",
@@ -62,7 +67,7 @@ const LayoutCard = ({
       cursor="pointer"
     >
       <Stack>
-        <Stack px={{ base: 5, sm: 6 }} pt={7} pb={3}>
+        <Stack px={{ base: 5, sm: 6 }} pt={{ base: 5, sm: 6 }}>
           <Heading
             as="h2"
             fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
@@ -76,31 +81,54 @@ const LayoutCard = ({
           </Text>
         </Stack>
 
-        <Stack
-          px={{ base: 5, sm: 6 }}
-          py={7}
-          bgColor={bottomBgColor}
-          borderTopWidth={1}
-          borderTopColor={bottomBorderColor}
-        >
-          <Text
-            as="span"
-            mt="1"
-            mr="2"
-            fontSize="xs"
-            fontWeight="bold"
-            color="gray"
-            textTransform="uppercase"
-            noOfLines={1}
-          >
-            Requirements to qualify
-          </Text>
+        <Stack p={{ base: 5, sm: 6 }} bgColor={bottomBgColor} spacing={4}>
+          {roles?.map((role, index) => (
+            <Card key={index}>
+              <Stack>
+                <Stack px={{ base: 5, sm: 6 }} pt={{ base: 5, sm: 6 }} pb={4}>
+                  <Heading
+                    as="h3"
+                    fontSize={{ base: "md", md: "lg" }}
+                    fontFamily="display"
+                  >
+                    {role.name}
+                  </Heading>
+                </Stack>
 
-          {requirements.map((requirement, i) => (
-            <Fragment key={i}>
-              <RequirementDisplayComponent simple requirement={requirement} />
-              {i < requirements.length - 1 && <LogicDivider logic="AND" />}
-            </Fragment>
+                <Stack
+                  p={{ base: 5, sm: 6 }}
+                  bgColor={roleBottomBgColor}
+                  borderTopWidth={1}
+                  borderTopColor={roleBottomBorderColor}
+                >
+                  <Text
+                    as="span"
+                    mt={1}
+                    mr={2}
+                    mb={2}
+                    fontSize="xs"
+                    fontWeight="bold"
+                    color="gray"
+                    textTransform="uppercase"
+                    noOfLines={1}
+                  >
+                    Requirements to qualify
+                  </Text>
+
+                  {role.requirements.map((requirement, i) => (
+                    <Fragment key={i}>
+                      <RequirementDisplayComponent
+                        simple
+                        requirement={requirement as Requirement}
+                      />
+                      {i < role.requirements.length - 1 && (
+                        <LogicDivider logic="AND" py={1} />
+                      )}
+                    </Fragment>
+                  ))}
+                </Stack>
+              </Stack>
+            </Card>
           ))}
         </Stack>
       </Stack>
@@ -112,17 +140,23 @@ const LayoutCard = ({
         px={{ base: 5, sm: 6 }}
         py={7}
         borderWidth={2}
-        borderColor="green.500"
+        borderStyle={selected ? "solid" : "dashed"}
+        borderColor={selected && "green.500"}
         borderRadius="2xl"
         pointerEvents="none"
-        transition="opacity 0.16s ease"
-        opacity={selected ? 1 : 0}
+        transition="border 0.16s ease"
       >
-        <Circle bgColor="green.500" color="white" size={6}>
+        <Circle
+          bgColor="green.500"
+          color="white"
+          size={6}
+          transition="opacity 0.16s ease"
+          opacity={selected ? 1 : 0}
+        >
           <Icon as={Check} />
         </Circle>
       </Flex>
-    </Card>
+    </Box>
   )
 }
 
