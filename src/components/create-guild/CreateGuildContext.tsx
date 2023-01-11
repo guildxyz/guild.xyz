@@ -130,13 +130,9 @@ const CreateGuildProvider = ({
 
   useEffect(() => {
     if (activeStep > 0) return
-    methods.reset(defaultValues[platform])
+    methods.reset(defaultValues[platform ?? "DEFAULT"])
     setLayout(null)
   }, [platform])
-
-  useEffect(() => {
-    if (activeStep === 0 && !platform) methods.reset(defaultValues.DEFAULT)
-  }, [activeStep])
 
   return (
     <CreateGuildContext.Provider
