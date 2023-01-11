@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -60,9 +61,6 @@ const ChooseLayout = (): JSX.Element => {
               },
             },
           ],
-          rolePlatforms: createDiscordRoles
-            ? [{ guildPlatformIndex: 0 }]
-            : undefined,
         },
         {
           name: "Growth role #2",
@@ -82,9 +80,6 @@ const ChooseLayout = (): JSX.Element => {
               },
             },
           ],
-          rolePlatforms: createDiscordRoles
-            ? [{ guildPlatformIndex: 0 }]
-            : undefined,
         },
       ],
     },
@@ -92,7 +87,17 @@ const ChooseLayout = (): JSX.Element => {
 
   const { control, setValue } = useFormContext<GuildFormType>()
 
+  const roles = useWatch({ control, name: "roles" })
   const requirements = useWatch({ control, name: "roles.0.requirements" })
+
+  useEffect(() => {
+    roles?.forEach((_, i) =>
+      setValue(
+        `roles.${i}.rolePlatforms.0.guildPlatformIndex`,
+        createDiscordRoles ? 0 : undefined
+      )
+    )
+  }, [createDiscordRoles])
 
   return (
     <>
@@ -103,7 +108,20 @@ const ChooseLayout = (): JSX.Element => {
             {...layout}
             selected={layout.id === layoutInContext}
             onClick={(newLayoutId) => {
-              setValue("roles", LAYOUTS.find((l) => l.id === newLayoutId).roles)
+              setValue(
+                "roles",
+                LAYOUTS.find((l) => l.id === newLayoutId).roles.map((r, i) => ({
+                  ...r,
+                  // Merging the roleplatforms defined in `LAYOUTS` with the current rolePlatforms (inside the form), so we don't loose the data which we defined for rolePlatforms - e.g. in `GoogleGuildSetup`
+                  rolePlatforms: [
+                    {
+                      ...roles?.[i]?.rolePlatforms?.[0],
+                      ...r.rolePlatforms?.[0],
+                      guildPlatformIndex: createDiscordRoles ? 0 : undefined,
+                    },
+                  ],
+                }))
+              )
               setLayout(newLayoutId)
             }}
           />
