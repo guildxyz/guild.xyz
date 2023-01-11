@@ -3,7 +3,6 @@ import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
-import CreateDiscordRolesSwitch from "../CreateDiscordRolesSwitch"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import Pagination from "../Pagination"
 import LayoutCard, { Layout } from "./components/LayoutCard"
@@ -102,7 +101,7 @@ const ChooseLayout = (): JSX.Element => {
 
   return (
     <>
-      {platform === "DISCORD" && <CreateDiscordRolesSwitch />}
+      {/* {platform === "DISCORD" && <CreateDiscordRolesSwitch />} */}
 
       <Box sx={{ columnCount: [1, 1, 2], columnGap: [4, 4, 6] }}>
         {LAYOUTS.map((layout, index) => (
