@@ -103,6 +103,7 @@ const RepoCard = ({
             loadingText={signLoadingText || "Saving data"}
             colorScheme="GITHUB"
             onClick={onSelection ? () => onSelection(platformGuildId) : handleClick}
+            data-dd-action-name="Gate repo (github setup)"
           >
             Gate repo
           </Button>

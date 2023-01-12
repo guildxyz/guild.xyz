@@ -95,6 +95,7 @@ const BaseOAuthSelectButton = ({
       }
       rightIcon={<DynamicCtaIcon />}
       {...buttonProps}
+      data-dd-action-name={buttonText}
     >
       {buttonText}
     </Button>

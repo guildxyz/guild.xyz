@@ -34,7 +34,6 @@ const GoogleDocSetupCard = ({
             fieldName={permissionField ?? `${fieldNameBase}platformRoleData.role`}
             mimeType={mimeType}
           />
-
           <Flex justifyContent="end">
             {onSubmit && (
               <Button
@@ -42,6 +41,7 @@ const GoogleDocSetupCard = ({
                 onClick={handleSubmit(onSubmit)}
                 isLoading={isLoading}
                 loadingText={loadingText}
+                data-dd-action-name="Gate file (google setup - permission selection)"
               >
                 Gate file
               </Button>

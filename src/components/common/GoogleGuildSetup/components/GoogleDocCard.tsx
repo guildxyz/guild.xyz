@@ -52,13 +52,18 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
             colorScheme="blue"
             h={10}
             onClick={() => onSelect(file.platformGuildId)}
+            data-dd-action-name="Gate file (google setup)"
           >
             Gate file
           </Button>
         )}
 
         {onCancel && (
-          <Button h={10} onClick={onCancel}>
+          <Button
+            h={10}
+            onClick={onCancel}
+            data-dd-action-name="Cancel (google setup)"
+          >
             Cancel
           </Button>
         )}

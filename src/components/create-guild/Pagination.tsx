@@ -23,6 +23,9 @@ const Pagination = ({
     useCreateGuildContext()
   const router = useRouter()
 
+  const prevStepText = activeStep === 0 ? "Cancel" : "Previous"
+  const nextStepText = nextStepLabel ?? "Next"
+
   return (
     <Flex justifyContent="right" w="full">
       <Button
@@ -39,8 +42,9 @@ const Pagination = ({
               }
             : prevStep
         }
+        data-dd-action-name={prevStepText}
       >
-        {activeStep === 0 ? "Cancel" : "Previous"}
+        {prevStepText}
       </Button>
 
       {!nextButtonHidden && (
@@ -50,8 +54,9 @@ const Pagination = ({
           colorScheme="indigo"
           isDisabled={nextButtonDisabled}
           onClick={nextStepHandler ?? nextStep}
+          data-dd-action-name={nextStepLabel ?? "Next"}
         >
-          {nextStepLabel ?? "Next"}
+          {nextStepText}
         </Button>
       )}
 
