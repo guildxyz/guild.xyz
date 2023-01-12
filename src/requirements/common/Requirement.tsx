@@ -13,6 +13,7 @@ import { PropsWithChildren } from "react"
 import ApiErrorFallback from "requirements/common/ApiErrorFallback"
 
 export type RequirementProps = PropsWithChildren<{
+  id?: number
   isImageLoading?: boolean
   image?: string | JSX.Element
   withImgBg?: boolean
@@ -22,6 +23,7 @@ export type RequirementProps = PropsWithChildren<{
 }>
 
 const Requirement = ({
+  id,
   isImageLoading,
   image,
   footer,
@@ -70,7 +72,9 @@ const Requirement = ({
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center">
         <Text wordBreak="break-word">{children}</Text>
-        <ApiErrorFallback errorApiName={errorApiName}>{footer}</ApiErrorFallback>
+        <ApiErrorFallback requirementId={id} errorApiName={errorApiName}>
+          {footer}
+        </ApiErrorFallback>
       </VStack>
       {rightElement}
     </SimpleGrid>
