@@ -169,7 +169,7 @@ const GoogleGuildSetup = ({
   return <AddDocumentModal isOpen={true} />
 }
 
-const GUILD_EMAIL_ADDRESS = "guild-xyz@guildxyz.iam.gserviceaccount.com"
+const GUILD_EMAIL_ADDRESS = process.env.NEXT_PUBLIC_GOOGLE_SERVICE_ACCOUNT_EMAIL
 const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
   const { platformUsers } = useUser()
   const googleAcc = platformUsers?.find(
