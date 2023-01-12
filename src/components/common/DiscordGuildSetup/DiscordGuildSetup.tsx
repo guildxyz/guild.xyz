@@ -4,7 +4,6 @@ import ErrorAlert from "components/common/ErrorAlert"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence } from "framer-motion"
 import useGateables from "hooks/useGateables"
-import useIsConnected from "hooks/useIsConnected"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { OptionSkeletonCard } from "../OptionCard"
@@ -20,8 +19,6 @@ const DiscordGuildSetup = ({
   onSubmit = undefined,
 }) => {
   const { reset, setValue } = useFormContext()
-
-  const isConnected = useIsConnected("DISCORD")
 
   const { gateables, isLoading, error: gateablesError } = useGateables("DISCORD")
 
@@ -60,7 +57,7 @@ const DiscordGuildSetup = ({
     return <ReconnectAlert platformName="DISCORD" />
   }
 
-  if (((!servers || servers.length <= 0) && isLoading) || !isConnected) {
+  if ((!servers || servers.length <= 0) && isLoading) {
     return (
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
         {[...Array(3)].map((i) => (
