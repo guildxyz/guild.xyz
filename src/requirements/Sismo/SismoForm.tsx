@@ -65,7 +65,7 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.type}
       >
-        <FormLabel>Environment</FormLabel>
+        <FormLabel>Network</FormLabel>
 
         <Controller
           name={`${baseFieldPath}.data.type` as const}
