@@ -13,15 +13,27 @@ import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import useSismoBadges from "./hooks/useSismoBadges"
+import useSismoBadges, { SismoBadgeType } from "./hooks/useSismoBadges"
 
-const typeOptions = [
+const typeOptions: { label: string; value: SismoBadgeType }[] = [
   {
-    label: "Main",
-    value: "MAIN",
+    label: "Gnosis",
+    value: "GNOSIS",
   },
   {
-    label: "Playground",
+    label: "Polygon",
+    value: "POLYGON",
+  },
+  {
+    label: "Goerli",
+    value: "GOERLI",
+  },
+  {
+    label: "Mumbai",
+    value: "MUMBAI",
+  },
+  {
+    label: "Playground (deprecated)",
     value: "PLAYGROUND",
   },
 ]
@@ -53,7 +65,7 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.type}
       >
-        <FormLabel>Environment</FormLabel>
+        <FormLabel>Network</FormLabel>
 
         <Controller
           name={`${baseFieldPath}.data.type` as const}
@@ -64,7 +76,7 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
               ref={ref}
               options={typeOptions}
               value={typeOptions?.find((option) => option.value === value) ?? ""}
-              placeholder="Select environment"
+              placeholder="Select network"
               onChange={(newSelectedOption: SelectOption) => {
                 setValue(`${baseFieldPath}.data.id`, null)
                 onChange(newSelectedOption?.value)

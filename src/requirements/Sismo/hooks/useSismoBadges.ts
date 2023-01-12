@@ -1,10 +1,13 @@
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
-type SismoBadgeType = "MAIN" | "PLAYGROUND"
+export type SismoBadgeType = keyof typeof apiUrl
 
-const apiUrl: Record<SismoBadgeType, string> = {
-  MAIN: "https://hub.sismo.io/badges/polygon",
+const apiUrl = {
+  GNOSIS: "https://hub.sismo.io/badges/gnosis",
+  POLYGON: "https://hub.sismo.io/badges/polygon",
+  GOERLI: "https://hub.testnets.sismo.io/badges/goerli",
+  MUMBAI: "https://hub.testnets.sismo.io/badges/mumbai",
   PLAYGROUND: "https://hub.playground.sismo.io/badges/polygon",
 }
 
