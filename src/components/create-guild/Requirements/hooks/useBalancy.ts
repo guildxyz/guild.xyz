@@ -79,6 +79,10 @@ const fetchHolders = async (
   }
 }
 
+/**
+ * TODO: This hook is really messy with tons of useEffect, abstracted logic for
+ * single and multiple requirements too and hacky solutions, should refactor
+ */
 const useBalancy = (
   baseFieldPath?: string
 ): {
