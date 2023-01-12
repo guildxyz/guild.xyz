@@ -38,7 +38,7 @@ const HundredNOneRequirement = ({
     >
       {`Have the badge of the `}
       <DataBlock isLoading={!badge && isValidating}>
-        {badge?.courses?.[0]?.title.trim() ?? requirement.data.id}
+        {badge?.courses?.[0]?.title.trim() ?? `#${requirement.data.id}`}
       </DataBlock>
       {` 101 course `}
     </Requirement>
