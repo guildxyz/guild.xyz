@@ -51,11 +51,7 @@ const BalancyBar = ({ ...rest }) => {
                       ? "At least "
                       : "At most "
                     : ""
-                }${
-                  ["NAND", "NOR"].includes(logic)
-                    ? pluralize(holders, "excluded address", "es")
-                    : pluralize(holders, "eligible address", "es")
-                }`
+                }${pluralize(holders, "eligible address", "es")}`
               : "Add requirements below to calculate eligible addresses"}
           </Text>
           {isLoading && <Spinner size="sm" color="gray" mx={2} />}

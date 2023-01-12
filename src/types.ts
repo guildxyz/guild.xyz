@@ -16,7 +16,7 @@ type Rest = {
   [x: string]: any
 }
 
-type Logic = "AND" | "OR" | "NOR" | "NAND"
+type Logic = "AND" | "OR"
 
 type ThemeMode = "LIGHT" | "DARK"
 
