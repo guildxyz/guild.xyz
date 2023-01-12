@@ -1,4 +1,4 @@
-import { Icon, useColorMode, useRadio } from "@chakra-ui/react"
+import { Icon, useRadio } from "@chakra-ui/react"
 import Button from "components/common/Button"
 
 const IsNegatedOption = (props) => {
@@ -7,25 +7,7 @@ const IsNegatedOption = (props) => {
   const input = getInputProps()
   const checkbox = getCheckboxProps()
 
-  const { label, icon, isChecked, ...rest } = props
-
-  const { colorMode } = useColorMode()
-
-  // if (disabled)
-  //   return (
-  //     <Tooltip label="Coming soon">
-  //       <Box>
-  //         <Button
-  //           leftIcon={<Icon as={icon} boxSize={5} />}
-  //           disabled
-  //           w="full"
-  //           data-dd-action-name={value}
-  //         >
-  //           {value}
-  //         </Button>
-  //       </Box>
-  //     </Tooltip>
-  //   )
+  const { label, icon, colorScheme, isChecked, ...rest } = props
 
   return (
     <Button
@@ -33,9 +15,10 @@ const IsNegatedOption = (props) => {
       as="label"
       {...checkbox}
       boxShadow="none !important"
-      colorScheme={isChecked ? "indigo" : "gray"}
-      _active={isChecked ? { bg: null } : undefined}
-      _hover={isChecked ? { bg: null } : undefined}
+      variant={isChecked ? "subtle" : undefined}
+      borderRadius="md"
+      w="full"
+      colorScheme={isChecked ? colorScheme : "gray"}
       cursor="pointer"
       {...rest}
     >

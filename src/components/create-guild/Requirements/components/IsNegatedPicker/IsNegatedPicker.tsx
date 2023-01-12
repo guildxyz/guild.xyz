@@ -6,6 +6,7 @@ const options = [
   {
     label: "Should satisfy",
     value: false,
+    colorScheme: "green",
   },
   {
     label: (
@@ -14,6 +15,7 @@ const options = [
       </>
     ),
     value: true,
+    colorScheme: "red",
   },
 ]
 
@@ -43,15 +45,7 @@ const IsNegatedPicker = ({ baseFieldPath }) => {
     <ButtonGroup size="sm" mb="6" w="full" {...group}>
       {options.map((option) => {
         const radio = getRadioProps({ value: option.value })
-        return (
-          <IsNegatedOption
-            key={option.value}
-            {...radio}
-            {...option}
-            borderRadius="md"
-            w="full"
-          />
-        )
+        return <IsNegatedOption key={option.value} {...radio} {...option} />
       })}
     </ButtonGroup>
   )
