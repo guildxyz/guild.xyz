@@ -16,13 +16,13 @@ import { Fragment, KeyboardEvent } from "react"
 import { GuildFormType, Requirement } from "types"
 
 type Template = {
-  id: string
   name: string
   description?: string
   roles: GuildFormType["roles"]
 }
 
 type Props = Template & {
+  id: string
   selected?: boolean
   onClick: (newTemplateId: string) => void
 }

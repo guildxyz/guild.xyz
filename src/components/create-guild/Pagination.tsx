@@ -19,7 +19,8 @@ const Pagination = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const buttonSize = useBreakpointValue({ base: "sm", md: "lg" })
-  const { activeStep, prevStep, nextStep, platform } = useCreateGuildContext()
+  const { activeStep, prevStep, nextStep, platform, setPlatform } =
+    useCreateGuildContext()
   const router = useRouter()
 
   return (
@@ -31,6 +32,11 @@ const Pagination = ({
         onClick={
           platform && activeStep === 0
             ? () => router.replace("/create-guild")
+            : activeStep === 1
+            ? () => {
+                setPlatform(null)
+                prevStep()
+              }
             : prevStep
         }
       >

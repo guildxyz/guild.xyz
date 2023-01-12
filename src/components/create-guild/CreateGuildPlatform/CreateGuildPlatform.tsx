@@ -1,5 +1,4 @@
 import { PlatformName } from "types"
-import CreateGuildWithoutPlatform from "../BasicInfo/components/PlatformlessGuildForm"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import CreateGuildDiscord from "./components/CreateGuildDiscord"
 import CreateGuildGithub from "./components/CreateGuildGithub"
@@ -20,8 +19,6 @@ const CreateGuildPlatform = (): JSX.Element => {
   const CreateGuildPlatformComponent = platform
     ? createGuildPlatformComponents[platform]
     : null
-
-  if (!CreateGuildPlatformComponent) return <CreateGuildWithoutPlatform />
 
   return <CreateGuildPlatformComponent />
 }

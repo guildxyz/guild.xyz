@@ -8,9 +8,9 @@ import CreateGuildPlatform from "./CreateGuildPlatform"
 
 const CreateGuildIndex = (): JSX.Element => {
   const router = useRouter()
-  const { platform, nextStep } = useCreateGuildContext()
+  const { platform, setPlatform, nextStep } = useCreateGuildContext()
 
-  if (platform) return <CreateGuildPlatform />
+  if (platform && platform !== "DEFAULT") return <CreateGuildPlatform />
 
   return (
     <>
@@ -50,7 +50,10 @@ const CreateGuildIndex = (): JSX.Element => {
           color="gray"
           fontWeight="normal"
           maxW="max-content"
-          onClick={nextStep}
+          onClick={() => {
+            setPlatform("DEFAULT")
+            nextStep()
+          }}
         >
           Create guild without platform
         </Button>
