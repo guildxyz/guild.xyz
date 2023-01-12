@@ -16,8 +16,9 @@ import {
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowSquareOut } from "phosphor-react"
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Controller, useController, useFormContext } from "react-hook-form"
 import useSnapshots from "requirements/Snapshot/hooks/useSnapshots"
 import { SelectOption } from "types"
@@ -34,6 +35,8 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
     register,
     formState: { errors },
     setValue,
+    setError,
+    clearErrors,
   } = useFormContext()
 
   const {
@@ -68,6 +71,24 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
     Object.values(strategies ?? {}).find(
       (strategy) => strategy.key === strategyFieldValue
     )?.examples[0].strategy.params ?? {}
+
+  const [parameterValue, setParameterValue] = useState(null)
+  const debouncedParameterValue = useDebouncedState(parameterValue, 250)
+
+  useEffect(() => {
+    try {
+      setValue(
+        `${baseFieldPath}.data.strategies.${index}.params`,
+        JSON.parse(debouncedParameterValue)
+      )
+
+      clearErrors(`${baseFieldPath}.data.strategies.${index}.params`)
+    } catch {
+      setError(`${baseFieldPath}.data.strategies.${index}.params`, {
+        message: "Invalid format (JSON required)",
+      })
+    }
+  }, [debouncedParameterValue])
 
   return (
     <Stack spacing={4} alignItems="start" w="full">
@@ -195,31 +216,21 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
       ) : strategyFieldValue ? (
         <FormControl
           isInvalid={
-            parseFromObject(errors, baseFieldPath)?.data?.strategies?.[index]?.params
-              ?.message
+            !!parseFromObject(errors, baseFieldPath)?.data?.strategies?.[index]
+              ?.params
           }
         >
           <FormLabel>Parameters</FormLabel>
-          <Controller
-            name={`${baseFieldPath}.data.strategies.${index}.params`}
-            rules={{
-              validate: (value) => {
-                try {
-                  if (value.length > 0) JSON.parse(value)
-                } catch (_) {
-                  return "invalid format (JSON required)"
-                }
-              },
-            }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <Textarea
-                h={200}
-                ref={ref}
-                value={value ? value : JSON.stringify(example)}
-                onChange={onChange}
-                onBlur={onBlur}
-              />
-            )}
+          <Textarea
+            h={200}
+            value={
+              parameterValue !== null ? parameterValue : JSON.stringify(example)
+            }
+            onChange={(e) =>
+              e.target.value
+                ? setParameterValue(e.target.value)
+                : setParameterValue("")
+            }
           />
           <FormErrorMessage>
             {
