@@ -1,18 +1,17 @@
+import { Chain } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
-export type SismoBadgeType = keyof typeof apiUrl
+export type SismoBadgeChain = Extract<Chain, "GNOSIS" | "POLYGON" | "GOERLI">
 
-const apiUrl = {
+const apiUrl: Record<SismoBadgeChain, string> = {
   GNOSIS: "https://hub.sismo.io/badges/gnosis",
   POLYGON: "https://hub.sismo.io/badges/polygon",
   GOERLI: "https://hub.testnets.sismo.io/badges/goerli",
-  MUMBAI: "https://hub.testnets.sismo.io/badges/mumbai",
-  PLAYGROUND: "https://hub.playground.sismo.io/badges/polygon",
 }
 
-const fetchSismoBadges = (_: string, type: SismoBadgeType) =>
-  fetcher(apiUrl[type])
+const fetchSismoBadges = (_: string, chain: SismoBadgeChain) =>
+  fetcher(apiUrl[chain])
     .then(
       (res) =>
         res.items?.map((badge) => ({
@@ -23,7 +22,7 @@ const fetchSismoBadges = (_: string, type: SismoBadgeType) =>
     )
     .catch(() => [])
 
-const useSismoBadges = (type: SismoBadgeType) =>
-  useSWRImmutable(type ? ["sismoBadges", type] : null, fetchSismoBadges)
+const useSismoBadges = (chain: Chain) =>
+  useSWRImmutable(chain ? ["sismoBadges", chain] : null, fetchSismoBadges)
 
 export default useSismoBadges

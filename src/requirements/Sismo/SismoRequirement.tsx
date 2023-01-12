@@ -4,7 +4,7 @@ import Requirement from "../common/Requirement"
 import useSismoBadges from "./hooks/useSismoBadges"
 
 const SismoRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
-  const { data, isValidating } = useSismoBadges(requirement.data.type)
+  const { data, isValidating } = useSismoBadges(requirement.chain)
   const badge = data?.find((b) => b.value === requirement.data.id)
 
   return (
