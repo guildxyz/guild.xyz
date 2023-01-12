@@ -17,7 +17,7 @@ export type RequirementProps = PropsWithChildren<{
   image?: string | JSX.Element
   withImgBg?: boolean
   footer?: JSX.Element
-  error?: string
+  errorApiName?: string
   rightElement?: JSX.Element
 }>
 
@@ -27,7 +27,7 @@ const Requirement = ({
   footer,
   withImgBg = true,
   rightElement,
-  error,
+  errorApiName,
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -70,7 +70,7 @@ const Requirement = ({
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center">
         <Text wordBreak="break-word">{children}</Text>
-        <ApiErrorFallback errorMsg={error}>{footer}</ApiErrorFallback>
+        <ApiErrorFallback errorApiName={errorApiName}>{footer}</ApiErrorFallback>
       </VStack>
       {rightElement}
     </SimpleGrid>

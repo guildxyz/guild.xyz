@@ -23,6 +23,7 @@ const KycDAORequirement = ({
         </Text>
       }
       footer={<BlockExplorerUrl requirement={requirement} />}
+      errorApiName={!kycDAOContracts && !isLoading && "KycDAO"}
       {...rest}
     >
       <Text as="span">{`Get verified as `}</Text>

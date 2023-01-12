@@ -26,6 +26,7 @@ const MirrorRequirement = ({
             )
       }
       footer={<BlockExplorerUrl requirement={requirement} />}
+      errorApiName={!name && !isLoading && "Mirror"}
       {...rest}
     >
       <Text as="span">{`Own the `}</Text>

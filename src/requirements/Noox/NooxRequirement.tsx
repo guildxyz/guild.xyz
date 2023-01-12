@@ -6,7 +6,7 @@ import { RequirementLinkButton } from "../common/RequirementButton"
 import { NooxBadge } from "./NooxForm"
 
 const NooxRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
-  const { data, isValidating } = useSWRImmutable<NooxBadge[]>("/api/noox")
+  const { data, isValidating, error } = useSWRImmutable<NooxBadge[]>("/api/noox")
 
   const badgeData = data?.find((badge) => badge.id === requirement.data.id)
 
@@ -22,6 +22,7 @@ const NooxRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
           View on Noox
         </RequirementLinkButton>
       }
+      errorApiName={error && "Noox"}
       {...rest}
     >
       {`Have the `}

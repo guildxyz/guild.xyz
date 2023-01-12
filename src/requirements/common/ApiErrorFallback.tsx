@@ -5,11 +5,14 @@ import { PropsWithChildren } from "react"
 import capitalize from "utils/capitalize"
 
 type Props = {
-  errorMsg?: string
+  errorApiName?: string
 }
 
+const createApiErrorMsg = (apiName: string) =>
+  `${apiName} API error, please contact ${apiName} to report`
+
 const ApiErrorFallback = ({
-  errorMsg,
+  errorApiName,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { data } = useAccess()
@@ -18,20 +21,21 @@ const ApiErrorFallback = ({
     ?.filter((error) => !!error)
     ?.flat()
 
-  const apiError = accessErrors?.find(
+  const providerError = accessErrors?.find(
     (error) => error.errorType === "DATA_PROVIDER_ERROR"
   )
 
-  if (!apiError && !errorMsg) return <>{children}</>
+  if (!providerError && !errorApiName) return <>{children}</>
 
   return (
     <HStack color="orange.200" fontSize="xs" spacing={1} alignItems="start">
       <Icon as={Warning} position="relative" top={0.5} />
       <Text as="span">
-        {errorMsg ??
-          `${capitalize(apiError.subType ?? "")}'${
-            apiError.subType?.endsWith("s") ? "" : "s"
-          } API currently unavailable`}
+        {errorApiName
+          ? createApiErrorMsg(errorApiName)
+          : `${capitalize(providerError.subType ?? "")}'${
+              providerError.subType?.endsWith("s") ? "" : "s"
+            } API currently unavailable`}
       </Text>
     </HStack>
   )

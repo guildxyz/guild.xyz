@@ -13,6 +13,7 @@ const GalaxyRequirement = ({
     <Requirement
       image={isLoading ? "" : campaign?.thumbnail}
       isImageLoading={isLoading}
+      errorApiName={!campaign && !isLoading && "Galxe"}
       {...rest}
     >
       <Text as="span">{`Participate in the `}</Text>
