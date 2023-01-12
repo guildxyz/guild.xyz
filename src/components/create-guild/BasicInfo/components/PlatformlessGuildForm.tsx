@@ -26,7 +26,7 @@ const PlatformlessGuildForm = (): JSX.Element => {
   return (
     <>
       <Box>
-        <FormLabel>Choose a logo and name for your role</FormLabel>
+        <FormLabel>Choose a logo and name for your guild</FormLabel>
         <HStack alignItems="start">
           <IconSelector uploader={iconUploader} />
           <Name />
