@@ -1,7 +1,7 @@
 import { Icon, useColorMode, useRadio } from "@chakra-ui/react"
 import Button from "components/common/Button"
 
-const RadioButton = (props) => {
+const IsNegatedOption = (props) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
 
   const input = getInputProps()
@@ -45,4 +45,4 @@ const RadioButton = (props) => {
   )
 }
 
-export default RadioButton
+export default IsNegatedOption

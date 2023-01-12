@@ -1,6 +1,6 @@
 import { ButtonGroup, useRadioGroup } from "@chakra-ui/react"
-import RadioButton from "components/common/RadioButton"
 import { useController, useFormContext } from "react-hook-form"
+import IsNegatedOption from "./components/IsNegatedOption"
 
 const options = [
   {
@@ -44,7 +44,7 @@ const IsNegatedPicker = ({ baseFieldPath }) => {
       {options.map((option) => {
         const radio = getRadioProps({ value: option.value })
         return (
-          <RadioButton
+          <IsNegatedOption
             key={option.value}
             {...radio}
             {...option}
