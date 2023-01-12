@@ -125,7 +125,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
 
   const nftCustomAttributeNames = useMemo(
     () =>
-      Object.keys(metadata || {})
+      Object.keys(metadata?.traits || {})
         ?.filter((attributeName) => attributeName !== "error")
         .map((attributeName) => ({
           label: capitalize(attributeName) || "Any attribute",
@@ -135,7 +135,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
   )
 
   const mappedNftRequirementTypeOptions =
-    Object.keys(metadata || {})?.length ||
+    Object.keys(metadata?.traits || {})?.length ||
     chain === "ETHEREUM" ||
     chain === "POLYGON"
       ? nftRequirementTypeOptions
@@ -337,8 +337,8 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
                   key={traitField.id}
                   baseFieldPath={baseFieldPath}
                   index={traitFieldIndex}
-                  isMetadataLoading={isMetadataLoading}
-                  metadata={metadata}
+                  isAttributesLoading={isMetadataLoading}
+                  attributes={metadata.traits}
                   nftCustomAttributeNames={nftCustomAttributeNames}
                   onRemove={removeTrait}
                 />
