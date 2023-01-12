@@ -1,7 +1,6 @@
 import { Link, Skeleton, Text } from "@chakra-ui/react"
 import { RequirementComponentProps } from "requirements"
 import Requirement from "../common/Requirement"
-import ApiError from "./components/ApiError"
 import { useGalaxyCampaign } from "./hooks/useGalaxyCampaigns"
 
 const GalaxyRequirement = ({
@@ -14,7 +13,6 @@ const GalaxyRequirement = ({
     <Requirement
       image={isLoading ? "" : campaign?.thumbnail}
       isImageLoading={isLoading}
-      footer={<ApiError />}
       {...rest}
     >
       <Text as="span">{`Participate in the `}</Text>

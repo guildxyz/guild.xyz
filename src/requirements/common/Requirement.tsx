@@ -10,12 +10,14 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
+import ApiErrorFallback from "requirements/common/ApiErrorFallback"
 
 export type RequirementProps = PropsWithChildren<{
   isImageLoading?: boolean
   image?: string | JSX.Element
   withImgBg?: boolean
   footer?: JSX.Element
+  error?: string
   rightElement?: JSX.Element
 }>
 
@@ -25,6 +27,7 @@ const Requirement = ({
   footer,
   withImgBg = true,
   rightElement,
+  error,
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -67,7 +70,7 @@ const Requirement = ({
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center">
         <Text wordBreak="break-word">{children}</Text>
-        {footer}
+        <ApiErrorFallback errorMsg={error}>{footer}</ApiErrorFallback>
       </VStack>
       {rightElement}
     </SimpleGrid>
