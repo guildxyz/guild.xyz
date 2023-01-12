@@ -13,15 +13,31 @@ import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import useSismoBadges from "./hooks/useSismoBadges"
+import useSismoBadges, { SismoBadgeType } from "./hooks/useSismoBadges"
 
-const typeOptions = [
+const typeOptions: { label: string; value: SismoBadgeType }[] = [
   {
-    label: "Main",
-    value: "MAIN",
+    label: "Gnosis",
+    value: "GNOSIS",
   },
   {
-    label: "Playground",
+    label: "Mainnet",
+    value: "MAINNET",
+  },
+  {
+    label: "Polygon",
+    value: "POLYGON",
+  },
+  {
+    label: "Goerli",
+    value: "GOERLI",
+  },
+  {
+    label: "Mumbai",
+    value: "MUMBAI",
+  },
+  {
+    label: "Playground (deprecated)",
     value: "PLAYGROUND",
   },
 ]
