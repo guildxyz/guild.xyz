@@ -4,16 +4,14 @@ import { useController, useFormContext } from "react-hook-form"
 import And from "static/logicIcons/and.svg"
 import Or from "static/logicIcons/or.svg"
 import { GuildFormType } from "types"
-import RadioButton from "../../common/RadioButton"
+import LogicOption from "./components/LogicOption"
 
 const options = [
   {
-    label: "AND",
     value: "AND",
     icon: And,
   },
   {
-    label: "OR",
     value: "OR",
     icon: Or,
   },
@@ -47,7 +45,7 @@ const BalancyLogicPicker = () => {
       <SimpleGrid {...group} columns={{ base: 2, sm: 4 }} gap={{ base: 2, md: 5 }}>
         {options.map((option) => {
           const radio = getRadioProps({ value: option.value })
-          return <RadioButton key={option.value} {...radio} {...option} />
+          return <LogicOption key={option.value} {...radio} {...option} />
         })}
       </SimpleGrid>
       <FormErrorMessage>{errors?.logic?.message}</FormErrorMessage>
