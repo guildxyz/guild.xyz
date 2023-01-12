@@ -76,7 +76,7 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
               ref={ref}
               options={typeOptions}
               value={typeOptions?.find((option) => option.value === value) ?? ""}
-              placeholder="Select environment"
+              placeholder="Select network"
               onChange={(newSelectedOption: SelectOption) => {
                 setValue(`${baseFieldPath}.data.id`, null)
                 onChange(newSelectedOption?.value)
