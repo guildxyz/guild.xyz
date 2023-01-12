@@ -32,9 +32,19 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 ### Running the interface locally:
 
 1. `npm i`
-1. `npm run dev`
+2. `npm run dev`
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
+
+#### For Windows users
+
+If you encounter the error `ERR_OSSL_EVP_UNSUPPORTED` you can do :
+
+```bash
+export NODE_OPTIONS=--openssl-legacy-provider
+npm i --force
+npm run dev
+```
 
 ### Getting secret environment variables (for core team members):
 
