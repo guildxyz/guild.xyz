@@ -1,22 +1,10 @@
 import GitHubGuildSetup from "components/common/GitHubGuildSetup"
 import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import Pagination from "components/create-guild/Pagination"
-import useIsConnected from "hooks/useIsConnected"
-import { useRouter } from "next/router"
-import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
 
 const CreateGuildGithub = (): JSX.Element => {
-  const router = useRouter()
-  const isConnected = useIsConnected("GITHUB")
-
-  useEffect(() => {
-    if (!isConnected) {
-      router.replace("/create-guild")
-    }
-  }, [isConnected])
-
   const { nextStep } = useCreateGuildContext()
 
   const { setValue } = useFormContext<GuildFormType>()

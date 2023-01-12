@@ -1,13 +1,11 @@
 import { Divider, Flex, HStack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
-import { useRouter } from "next/router"
 import { CaretRight } from "phosphor-react"
 import { useCreateGuildContext } from "./CreateGuildContext"
 import CreateGuildPlatform from "./CreateGuildPlatform"
 
 const CreateGuildIndex = (): JSX.Element => {
-  const router = useRouter()
   const { platform, setPlatform, nextStep } = useCreateGuildContext()
 
   if (platform && platform !== "DEFAULT") return <CreateGuildPlatform />
@@ -22,11 +20,7 @@ const CreateGuildIndex = (): JSX.Element => {
         You can connect more platforms later
       </Text>
 
-      <PlatformsGrid
-        onSelection={(selectedPlatform) =>
-          router.replace(`/create-guild/${selectedPlatform.toLowerCase()}`)
-        }
-      />
+      <PlatformsGrid onSelection={setPlatform} />
 
       <HStack>
         <Divider />

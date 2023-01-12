@@ -1,5 +1,4 @@
 import { useSteps } from "chakra-ui-steps"
-import { useRouter } from "next/router"
 import {
   createContext,
   Dispatch,
@@ -10,7 +9,7 @@ import {
   useState,
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { GuildFormType, PlatformName as BasePlatformName, PlatformType } from "types"
+import { GuildFormType, PlatformName as BasePlatformName } from "types"
 import capitalize from "utils/capitalize"
 import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
@@ -41,15 +40,6 @@ const CreateGuildContext = createContext<{
   setCreateDiscordRoles: Dispatch<SetStateAction<boolean>>
   TEMPLATES: Record<string, Template>
 } | null>(null)
-
-const getPlatformFromQueryParam = (queryParam: string): PlatformName | null => {
-  if (!queryParam) return null
-
-  const uppercasePlatform = queryParam.toUpperCase()
-  if (PlatformType[uppercasePlatform]) return uppercasePlatform as PlatformName
-
-  return null
-}
 
 const defaultIcon = `/guildLogos/${getRandomInt(286)}.svg`
 const basicDefaultValues: GuildFormType = {
@@ -100,19 +90,11 @@ export const defaultValues: Partial<Record<PlatformName, GuildFormType>> = {
 const CreateGuildProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
-  const router = useRouter()
-  const [platform, setPlatform] = useState<PlatformName>(
-    getPlatformFromQueryParam(router.query.platform?.toString())
-  )
+  const [platform, setPlatform] = useState<PlatformName>(null)
 
   const { prevStep, nextStep, setStep, activeStep } = useSteps({
     initialStep: 0,
   })
-
-  useEffect(() => {
-    if (!router.query.platform && activeStep > 0) return
-    else setPlatform(getPlatformFromQueryParam(router.query.platform?.toString()))
-  }, [router.query])
 
   const methods = useForm<GuildFormType>({ mode: "all" })
   const guildName = useWatch({ control: methods.control, name: "name" })

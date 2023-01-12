@@ -33,12 +33,11 @@ const Pagination = ({
         size={buttonSize}
         mr={2}
         onClick={
-          platform && activeStep === 0
-            ? () => router.replace("/create-guild")
-            : activeStep === 1
+          (platform && activeStep === 0) ||
+          (platform === "DEFAULT" && activeStep === 1)
             ? () => {
                 setPlatform(null)
-                prevStep()
+                if (activeStep > 0) prevStep()
               }
             : prevStep
         }
