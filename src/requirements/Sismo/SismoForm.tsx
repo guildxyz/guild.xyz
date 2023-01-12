@@ -21,10 +21,6 @@ const typeOptions: { label: string; value: SismoBadgeType }[] = [
     value: "GNOSIS",
   },
   {
-    label: "Mainnet",
-    value: "MAINNET",
-  },
-  {
     label: "Polygon",
     value: "POLYGON",
   },

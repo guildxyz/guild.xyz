@@ -5,7 +5,6 @@ export type SismoBadgeType = keyof typeof apiUrl
 
 const apiUrl = {
   GNOSIS: "https://hub.sismo.io/badges/gnosis",
-  MAINNET: "https://hub.sismo.io/badges/mainnet",
   POLYGON: "https://hub.sismo.io/badges/polygon",
   GOERLI: "https://hub.testnets.sismo.io/badges/goerli",
   MUMBAI: "https://hub.testnets.sismo.io/badges/mumbai",
