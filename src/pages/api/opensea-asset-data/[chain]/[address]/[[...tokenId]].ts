@@ -8,7 +8,6 @@ const OPENSEA_API_OPTIONS = {
 }
 
 export const openseaChains: Partial<Record<Chain, string>> = {
-  ETHEREUM: "ethereum",
   POLYGON: "matic",
 }
 
@@ -26,33 +25,18 @@ export default async function handler(req, res) {
 
   if (!openseaChains[chain]) return res.json(data)
 
-  if (chain === "ETHEREUM" && !tokenId) {
-    await fetcher(
-      `https://api.opensea.io/api/v1/asset_contract/${address}`,
-      OPENSEA_API_OPTIONS
-    )
-      .then((openseaData) => {
-        if (!openseaData.collection) return
-        data = {
-          image: openseaData.image_url,
-          slug: openseaData.collection?.slug,
-        }
-      })
-      .catch((_) => {})
-  } else {
-    await fetcher(
-      `https://api.opensea.io/api/v2/metadata/${openseaChains[chain]}/${address}/${tokenId}`,
-      OPENSEA_API_OPTIONS
-    )
-      .then((metadata) => {
-        if (!metadata.name) return
-        data = {
-          image: metadata.image,
-          name: metadata.name,
-        }
-      })
-      .catch((_) => {})
-  }
+  await fetcher(
+    `https://api.opensea.io/api/v2/metadata/${openseaChains[chain]}/${address}/${tokenId}`,
+    OPENSEA_API_OPTIONS
+  )
+    .then((metadata) => {
+      if (!metadata.name) return
+      data = {
+        image: metadata.image,
+        name: metadata.name,
+      }
+    })
+    .catch((_) => {})
 
   res.json(data)
 }
