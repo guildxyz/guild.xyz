@@ -34,7 +34,6 @@ const RadioButton = (props) => {
       {...checkbox}
       boxShadow="none !important"
       colorScheme={isChecked ? "indigo" : "gray"}
-      bgColor={colorMode === "light" && !isChecked ? "white" : undefined}
       _active={isChecked ? { bg: null } : undefined}
       _hover={isChecked ? { bg: null } : undefined}
       cursor="pointer"
