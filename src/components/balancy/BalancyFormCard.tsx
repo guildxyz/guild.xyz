@@ -2,7 +2,6 @@ import { Box, CloseButton, HStack, Spinner, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
-import IsNegatedPicker from "components/create-guild/Requirements/components/IsNegatedPicker"
 import { PropsWithChildren } from "react"
 import REQUIREMENTS, { RequirementType } from "requirements"
 import useBalancy from "../create-guild/Requirements/hooks/useBalancy"
@@ -45,7 +44,8 @@ const BalancyFormCard = ({
           onClick={onRemove}
         />
         <Box pt={4} h="full">
-          <IsNegatedPicker baseFieldPath={baseFieldPath} />
+          {/* can enable if we implement isNegated support in useBalancy  */}
+          {/* <IsNegatedPicker baseFieldPath={baseFieldPath} /> */}
           {children}
         </Box>
         <ColorCardLabel

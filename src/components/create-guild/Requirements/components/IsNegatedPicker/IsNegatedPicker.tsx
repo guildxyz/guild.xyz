@@ -20,10 +20,7 @@ const options = [
 ]
 
 const IsNegatedPicker = ({ baseFieldPath }) => {
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext()
+  const { control } = useFormContext()
 
   const { field } = useController({
     control,
