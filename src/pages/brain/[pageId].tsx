@@ -7,7 +7,7 @@ import {
   TagLeftIcon,
   Wrap,
 } from "@chakra-ui/react"
-import BrainCard from "components/brain/BrainCard"
+import PageBrainCard from "components/brain/PageBrainCard"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
@@ -130,7 +130,7 @@ const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
       {linkedPageContents && (
         <CategorySection fallbackText={"there are no linked pages"} mt="24px">
           {linkedPageContents?.map((page) => (
-            <BrainCard pageData={page} key={page.id} />
+            <PageBrainCard pageData={page} key={page.id} />
           ))}
         </CategorySection>
       )}
