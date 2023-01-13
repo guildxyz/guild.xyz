@@ -70,11 +70,7 @@ const Requirement = ({
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center">
         <Text wordBreak="break-word">
-          {isNegated && (
-            <Tag mr="2" colorScheme="red">
-              DON'T
-            </Tag>
-          )}
+          {isNegated && <Tag mr="2">DON'T</Tag>}
           {children}
         </Text>
         {footer}
