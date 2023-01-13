@@ -46,10 +46,6 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
             return <Img src="/requirementLogos/sound.png" />
         }
       })()}
-      errorApiName={
-        ((requirement.type === "SOUND_COLLECTED" && songsError) || artistsError) &&
-        "Sound.xyz"
-      }
       {...rest}
     >
       {(() => {

@@ -9,7 +9,7 @@ const HundredNOneRequirement = ({
   requirement,
   ...rest
 }: RequirementComponentProps) => {
-  const { data, isValidating, error } = use101Courses()
+  const { data, isValidating } = use101Courses()
 
   const badge = data?.find(
     (option) => option.onChainId.toString() === requirement.data.id
@@ -33,7 +33,6 @@ const HundredNOneRequirement = ({
           View course
         </RequirementLinkButton>
       }
-      errorApiName={error && "101.xyz"}
       {...rest}
     >
       {`Have the badge of the `}

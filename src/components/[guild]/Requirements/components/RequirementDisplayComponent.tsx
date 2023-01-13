@@ -23,7 +23,6 @@ const RequirementDisplayComponent = ({ requirement }: Props) => {
 
   return (
     <RequirementComponent
-      id={requirement.id}
       requirement={requirement}
       rightElement={<RequiementAccessIndicator requirement={requirement} />}
     />

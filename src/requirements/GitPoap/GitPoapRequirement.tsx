@@ -9,7 +9,6 @@ const GitPoapRequirement = ({ requirement, ...rest }: RequirementComponentProps)
     <Requirement
       image={isLoading ? "" : poap?.image_url}
       isImageLoading={isLoading}
-      errorApiName={!poap && !isLoading && "POAP"}
       {...rest}
     >
       {`Own the ${

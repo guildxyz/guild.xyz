@@ -22,7 +22,6 @@ const NooxRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
           View on Noox
         </RequirementLinkButton>
       }
-      errorApiName={error && "Noox"}
       {...rest}
     >
       {`Have the `}
