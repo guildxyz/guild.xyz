@@ -1,7 +1,8 @@
-import { Box, Center, Divider, Flex, HStack, Image, Text } from "@chakra-ui/react"
+import { Box, Center, Divider, Flex, HStack, Img, Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import Link from "components/common/Link"
+import Image from "next/image"
 import { BrainCardData } from "types"
 
 type Props = {
@@ -40,29 +41,35 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
             borderRadius="xl"
           >
             {pageData.backgroundImage && (
-              <Image
-                position="absolute"
-                w="full"
-                h="full"
-                src={pageData.backgroundImage}
-                alt={`${pageData.title} image`}
-                opacity="90%"
-                filter={`blur(8px)`}
-                objectFit="cover"
-                transition="filter 0.3s"
-                _groupHover={{ filter: "blur(2px)" }}
-              />
+              <Box _groupHover={{ opacity: "10%" }}>
+                <Image
+                  src={pageData?.backgroundImage}
+                  alt="icon"
+                  layout="fill"
+                  quality="65%"
+                  style={{
+                    position: "absolute",
+                    opacity: "90%",
+                    filter: "blur(8px)",
+                    objectFit: "cover",
+                  }}
+                />
+              </Box>
             )}
 
             {pageData.icon && (
-              <Image
-                zIndex="1"
-                src={pageData.icon}
-                alt="icon"
-                maxH="75px"
-                minW="40px"
-                maxW="75px"
-              />
+              <Center minW="60px" minH="60px" position="relative">
+                <Image
+                  src={pageData?.icon}
+                  alt="icon"
+                  layout="fill"
+                  quality="50%"
+                  // sizes="10px" // todo
+                  style={{
+                    zIndex: "1",
+                  }}
+                />
+              </Center>
             )}
           </Center>
           {renderedTags.length > 0 && (
@@ -86,7 +93,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
               >
                 {renderedTags.map((tag, index) => (
                   <Box display="inline-flex" alignItems="center" key={index}>
-                    <Image src={`/${tag}.svg`} h="14px" mr="6px" alt="page logo" />
+                    <Img src={`/${tag}.svg`} h="14px" mr="6px" alt="page logo" />
                     <Text fontWeight="bold" fontSize="14px">
                       {tag}
                     </Text>

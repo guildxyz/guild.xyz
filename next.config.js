@@ -45,6 +45,7 @@ module.exports = {
       "abs.twimg.com",
       "localhost",
       "guild.xyz",
+      "s3.us-west-2.amazonaws.com",
     ],
   },
   experimental: {
