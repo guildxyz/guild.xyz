@@ -9,11 +9,7 @@ const TwitterRequirement = ({ requirement, ...rest }: RequirementComponentProps)
   <Requirement
     image={
       requirement.type === "TWITTER_FOLLOW" && requirement.data.id ? (
-        typeof window !== "undefined" ? (
-          `${window.origin}/api/twitter-avatar?username=${requirement.data.id}`
-        ) : (
-          "/default_twitter_icon.png"
-        )
+        `/api/twitter-avatar?username=${requirement.data.id}`
       ) : (
         <Icon as={TwitterLogo} boxSize={6} />
       )

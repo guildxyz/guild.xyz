@@ -9,6 +9,7 @@ type Props = {
   hiddenRequirements: number
   isRequirementsExpanded: boolean
   setIsRequirementsExpanded: Dispatch<SetStateAction<boolean>>
+  isHidden?: boolean
 }
 
 const ExpandRequirementsButton = ({
@@ -16,8 +17,11 @@ const ExpandRequirementsButton = ({
   hiddenRequirements,
   isRequirementsExpanded,
   setIsRequirementsExpanded,
+  isHidden,
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
+
+  if (isHidden) return null
 
   return (
     <Flex pt={3} width="full" alignItems="center" justifyContent="center">

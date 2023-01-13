@@ -28,8 +28,8 @@ import parseFromObject from "utils/parseFromObject"
 import useNftType from "../hooks/useNftType"
 
 type Props = {
-  metadata: Record<string, any>
-  isMetadataLoading: boolean
+  attributes: Record<string, any>
+  isAttributesLoading: boolean
   nftCustomAttributeNames: { label: string; value: string }[]
   baseFieldPath: string
   index: number
@@ -37,8 +37,8 @@ type Props = {
 }
 
 const AttributePicker = ({
-  metadata,
-  isMetadataLoading,
+  attributes,
+  isAttributesLoading,
   nftCustomAttributeNames,
   baseFieldPath,
   index,
@@ -65,7 +65,7 @@ const AttributePicker = ({
 
   const nftCustomAttributeValues = useMemo(() => {
     const mappedAttributeValues =
-      metadata?.[traitType]?.map(
+      attributes?.[traitType]?.map(
         nftType === "NOUNS"
           ? (attributeValue, i) => ({
               label: capitalize(attributeValue.toString()),
@@ -90,7 +90,7 @@ const AttributePicker = ({
     return [{ label: "Any attribute values", value: "" }].concat(
       mappedAttributeValues
     )
-  }, [metadata, traitType, nftType])
+  }, [attributes, traitType, nftType])
 
   // Setting the "default values" this way, to avoid errors with the min-max inputs
   useEffect(() => {
@@ -118,8 +118,6 @@ const AttributePicker = ({
       {nftCustomAttributeNames?.length ? (
         <Stack>
           <FormControl isDisabled={!nftCustomAttributeNames?.length}>
-            {/* <FormLabel>Custom attribute:</FormLabel> */}
-
             <Controller
               name={`${baseFieldPath}.data.attributes.${index}.trait_type` as const}
               control={control}
@@ -128,7 +126,7 @@ const AttributePicker = ({
               }) => (
                 <StyledSelect
                   ref={ref}
-                  isLoading={isMetadataLoading}
+                  isLoading={isAttributesLoading}
                   options={
                     nftCustomAttributeNames?.length > 0
                       ? nftCustomAttributeNames
@@ -311,7 +309,6 @@ const AttributePicker = ({
               }
               isDisabled={!nftCustomAttributeNames?.length}
             >
-              {/* <FormLabel>Custom attribute value:</FormLabel> */}
               <Controller
                 name={`${baseFieldPath}.data.attributes.${index}.value` as const}
                 control={control}
@@ -354,8 +351,6 @@ const AttributePicker = ({
         </Stack>
       ) : (
         <FormControl>
-          {/* <FormLabel>Metadata:</FormLabel> */}
-
           <HStack w="full" spacing={2} alignItems="start">
             <FormControl
               isRequired

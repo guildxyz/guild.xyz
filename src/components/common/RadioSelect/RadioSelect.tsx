@@ -9,7 +9,7 @@ import React, { PropsWithChildren } from "react"
 import RadioOption from "./components/RadioOption"
 
 type Option = PropsWithChildren<{
-  value: string | number
+  value: any
   title: string
   description?: string
   icon?: React.FC

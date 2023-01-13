@@ -11,7 +11,7 @@ const BlockExplorerUrl = ({ requirement }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const blockExplorer = RPC[requirement.chain]?.blockExplorerUrls?.[0]
 
-  if (requirement.type === "COIN") return null
+  if (requirement.type === "COIN" || !blockExplorer) return null
 
   return (
     <RequirementLinkButton
