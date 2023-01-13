@@ -32,6 +32,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
           borderTopLeftRadius="xl"
           backgroundColor="gray.600"
           zIndex={1}
+          maxW="90%"
         ></ColorCardLabel>
         <Flex h="165px" flexDirection="column">
           <Center
@@ -46,27 +47,28 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
                   src={pageData?.backgroundImage}
                   alt="icon"
                   layout="fill"
-                  quality="65%"
+                  objectFit="cover"
+                  quality="10%"
                   style={{
                     position: "absolute",
                     opacity: "90%",
                     filter: "blur(8px)",
-                    objectFit: "cover",
                   }}
                 />
               </Box>
             )}
 
             {pageData.icon && (
-              <Center minW="60px" minH="60px" position="relative">
+              <Center boxSize={16} position="relative">
                 <Image
                   src={pageData?.icon}
-                  alt="icon"
+                  alt={pageData?.icon}
                   layout="fill"
-                  quality="50%"
-                  // sizes="10px" // todo
+                  objectFit="contain"
                   style={{
+                    width: "10px",
                     zIndex: "1",
+                    overflow: "visible",
                   }}
                 />
               </Center>
