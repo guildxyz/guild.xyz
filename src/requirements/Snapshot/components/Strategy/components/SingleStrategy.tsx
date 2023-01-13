@@ -77,16 +77,19 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
 
   useEffect(() => {
     try {
-      setValue(
-        `${baseFieldPath}.data.strategies.${index}.params`,
-        JSON.parse(debouncedParameterValue)
-      )
-
+      if (debouncedParameterValue.length !== 0) {
+        setValue(
+          `${baseFieldPath}.data.strategies.${index}.params`,
+          JSON.parse(debouncedParameterValue)
+        )
+      }
       clearErrors(`${baseFieldPath}.data.strategies.${index}.params`)
     } catch {
-      setError(`${baseFieldPath}.data.strategies.${index}.params`, {
-        message: "Invalid format (JSON required)",
-      })
+      if (debouncedParameterValue) {
+        setError(`${baseFieldPath}.data.strategies.${index}.params`, {
+          message: "Invalid format (JSON required)",
+        })
+      }
     }
   }, [debouncedParameterValue])
 
@@ -221,16 +224,24 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
           }
         >
           <FormLabel>Parameters</FormLabel>
-          <Textarea
-            h={200}
-            value={
-              parameterValue !== null ? parameterValue : JSON.stringify(example)
-            }
-            onChange={(e) =>
-              e.target.value
-                ? setParameterValue(e.target.value)
-                : setParameterValue("")
-            }
+          <Controller
+            name={`${baseFieldPath}.data.strategies.${index}.params`}
+            control={control}
+            render={({ field: { value } }) => (
+              <Textarea
+                h={200}
+                defaultValue={
+                  JSON.stringify(value) !== '""'
+                    ? JSON.stringify(value)
+                    : JSON.stringify(example)
+                }
+                onChange={(e) =>
+                  e.target.value
+                    ? setParameterValue(e.target.value)
+                    : setParameterValue("")
+                }
+              />
+            )}
           />
           <FormErrorMessage>
             {
