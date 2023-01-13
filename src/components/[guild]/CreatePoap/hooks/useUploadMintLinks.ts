@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { WithValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
@@ -49,7 +49,7 @@ const useUploadMintLinks = () => {
         showErrorToast(error?.error?.message ?? error?.error ?? error),
       onSuccess: () => {
         toast({
-          title: "Successfuly uploaded mint links!",
+          title: "Successfully uploaded mint links!",
           status: "success",
         })
 
