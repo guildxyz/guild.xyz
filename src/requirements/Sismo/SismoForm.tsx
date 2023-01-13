@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   FormControl,
   FormLabel,
   InputGroup,
@@ -23,6 +26,9 @@ const sismoContracts: Record<SismoBadgeChain, string> = {
   GOERLI: "0xa251eb9be4e7e2bb382268ecdd0a5fca0a962e6c",
 }
 
+export const DEPRECATED_PLAYGROUND_ADDRESS =
+  "0x71a7089c56dff528f330bc0116c0917cd05b51fc"
+
 const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
     control,
@@ -31,15 +37,32 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   } = useFormContext()
 
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const address = useWatch({ name: `${baseFieldPath}.address` })
+  const isPlayground = address === DEPRECATED_PLAYGROUND_ADDRESS
   const badgeId = useWatch({ name: `${baseFieldPath}.data.id` })
-  const { data, isValidating } = useSismoBadges(chain)
+  const { data, isValidating } = useSismoBadges(chain, isPlayground)
 
   const pickedBadge = data?.find((option) => option.value === badgeId)
 
-  useEffect(
-    () => setValue(`${baseFieldPath}.address`, sismoContracts[chain]),
-    [chain]
-  )
+  useEffect(() => {
+    if (isPlayground) return
+    setValue(`${baseFieldPath}.address`, sismoContracts[chain])
+  }, [chain])
+
+  if (isPlayground)
+    return (
+      <Alert status="info" mb="6" pb="5">
+        <AlertIcon />
+        <AlertDescription
+          fontWeight="semibold"
+          w="full"
+          fontSize={{ base: "sm", sm: "md" }}
+        >
+          Playground badges are deprecated. This requirement will keep working fine,
+          but you can't edit it.
+        </AlertDescription>
+      </Alert>
+    )
 
   return (
     <Stack spacing={4} alignItems="start">
