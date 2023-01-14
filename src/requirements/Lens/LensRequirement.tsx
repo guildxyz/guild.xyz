@@ -48,7 +48,7 @@ const LensRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
                 <Link
                   href={`https://lensfrens.xyz/${requirement.data.id}`}
                   isExternal
-                  color="blue"
+                  colorScheme="blue"
                   fontWeight="medium"
                 >
                   {requirement.data.id}
@@ -63,7 +63,7 @@ const LensRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
                 <Link
                   href={`https://lensfrens.xyz/${requirement.data.id}`}
                   isExternal
-                  color="blue"
+                  colorScheme="blue"
                   fontWeight="medium"
                 >
                   {requirement.data.id}
