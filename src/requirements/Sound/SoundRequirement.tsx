@@ -1,7 +1,6 @@
 import { Img } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
 import Requirement from "requirements/common/Requirement"
 import useSWRImmutable from "swr/immutable"
 import slugify from "utils/slugify"
@@ -94,8 +93,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
           case "SOUND_NFTS":
             return (
               <>
-                {`Own at least `}
-                <DataBlock>{requirement.data.minAmount}</DataBlock>
+                {`Own at least ${requirement.data.minAmount}`}
                 {` songs on `}
                 <Link
                   href={`https://www.sound.xyz/`}
