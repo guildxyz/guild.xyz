@@ -1,11 +1,4 @@
-import {
-  Box,
-  Icon,
-  Skeleton,
-  Text,
-  Tooltip,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Icon, Skeleton, Text, Tooltip, useColorModeValue } from "@chakra-ui/react"
 import { Warning } from "phosphor-react"
 import { PropsWithChildren } from "react"
 
@@ -25,8 +18,8 @@ const DataBlock = ({
 
   return (
     <Tooltip hasArrow placement="top" label={error} isDisabled={!error}>
-      <Box
-        display="inline"
+      <Text
+        as="span"
         px={1.5}
         py={0.5}
         bgColor={bg}
@@ -46,7 +39,7 @@ const DataBlock = ({
         <Text as="span" fontFamily="SFMono-Regular,Menlo,Monaco,Consolas,monospace">
           {children}
         </Text>
-      </Box>
+      </Text>
     </Tooltip>
   )
 }
