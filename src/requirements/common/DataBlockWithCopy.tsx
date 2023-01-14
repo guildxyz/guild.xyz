@@ -1,6 +1,6 @@
 import { HStack, Icon, Text, Tooltip, useClipboard } from "@chakra-ui/react"
 import { Check } from "phosphor-react"
-import DataBlock from "../../requirements/common/DataBlock"
+import DataBlock from "./DataBlock"
 
 type Props = {
   text: string
