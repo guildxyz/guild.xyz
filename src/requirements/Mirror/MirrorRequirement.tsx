@@ -1,6 +1,6 @@
 import { Skeleton, Text } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import BlockExplorerUrl from "../common/BlockExplorerUrl"
 import Requirement from "../common/Requirement"
 import useMirrorEdition from "./hooks/useMirrorEdition"
@@ -9,7 +9,7 @@ const MirrorRequirement = ({
   requirement,
   ...rest
 }: RequirementComponentProps): JSX.Element => {
-  const { isLoading, name, image } = useMirrorEdition(
+  const { isLoading, name, image, error } = useMirrorEdition(
     requirement.address,
     requirement.chain
   )
@@ -25,7 +25,7 @@ const MirrorRequirement = ({
               </Text>
             )
       }
-      footer={<BlockExplorerUrl requirement={requirement} />}
+      footer={!error && <BlockExplorerUrl requirement={requirement} />}
       {...rest}
     >
       <Text as="span">{`Own the `}</Text>

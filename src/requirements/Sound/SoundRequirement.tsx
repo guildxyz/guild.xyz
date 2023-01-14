@@ -1,27 +1,19 @@
 import { Img } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
 import Link from "components/common/Link"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import Requirement from "requirements/common/Requirement"
 import useSWRImmutable from "swr/immutable"
 import slugify from "utils/slugify"
 
 const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
-  const {
-    data: artistData,
-    isValidating: isArtistLoading,
-    error: artistsError,
-  } = useSWRImmutable(
+  const { data: artistData, isValidating: isArtistLoading } = useSWRImmutable(
     requirement.data?.id
       ? `/api/sound/sound-artist-by-handle?soundHandle=${requirement.data.id}`
       : null
   )
 
-  const {
-    data: songsData,
-    isValidating: isSongsLoading,
-    error: songsError,
-  } = useSWRImmutable(
+  const { data: songsData, isValidating: isSongsLoading } = useSWRImmutable(
     artistData && requirement.data.title
       ? `/api/sound/sound-songs?id=${artistData?.id}`
       : null
@@ -58,7 +50,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
                   href={`https://www.sound.xyz/`}
                   isExternal
                   fontWeight="medium"
-                  colorScheme={"blue"}
+                  colorScheme="blue"
                 >
                   Sound.xyz
                 </Link>
@@ -82,7 +74,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
                   )}`}
                   isExternal
                   fontWeight="medium"
-                  colorScheme={"blue"}
+                  colorScheme="blue"
                 >
                   {requirement.data.title}
                 </Link>
@@ -109,7 +101,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
                   href={`https://www.sound.xyz/`}
                   isExternal
                   fontWeight="medium"
-                  colorScheme={"blue"}
+                  colorScheme="blue"
                 >
                   Sound.xyz
                 </Link>
@@ -126,7 +118,7 @@ const ArtistLink = ({ artistData, requirement }) => (
     href={`https://www.sound.xyz/${requirement.data.id}`}
     isExternal
     fontWeight="medium"
-    colorScheme={"blue"}
+    colorScheme="blue"
   >
     {artistData?.name ?? requirement.data.id}
   </Link>

@@ -1,7 +1,7 @@
-import { Img, Link, Text } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
+import { Img, Link } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import pluralize from "utils/pluralize"
 import Requirement from "../common/Requirement"
 
@@ -24,9 +24,9 @@ const HaveRole = ({
       }
       {...rest}
     >
-      <Text as="span">{"Have the "}</Text>
+      {"Have the "}
       <DataBlock isLoading={isLoading}>{role?.name ?? "unknown"}</DataBlock>
-      <Text as="span">{" role in the "}</Text>
+      {" role in the "}
       <Link
         href={`https://guild.xyz/${urlName ?? requirement.data.guildId}`}
         isExternal={true}
@@ -34,7 +34,7 @@ const HaveRole = ({
       >
         {name ?? `#${requirement.data.guildId}`}
       </Link>
-      <Text as="span">{" guild"}</Text>
+      {" guild"}
     </Requirement>
   )
 }

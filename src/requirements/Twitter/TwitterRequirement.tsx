@@ -46,7 +46,7 @@ const TwitterRequirement = ({ requirement, ...rest }: RequirementComponentProps)
               <Link
                 href={`https://twitter.com/${requirement.data.id}`}
                 isExternal
-                colorScheme={"blue"}
+                colorScheme="blue"
                 fontWeight="medium"
               >
                 @{requirement.data.id}
