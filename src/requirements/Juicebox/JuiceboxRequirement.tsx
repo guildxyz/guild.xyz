@@ -7,7 +7,7 @@ const JuiceboxRequirement = ({
   requirement,
   ...rest
 }: RequirementComponentProps) => {
-  const { project, isLoading, error } = useJuiceboxProject(requirement?.data?.id)
+  const { project, isLoading, error } = useJuiceboxProject(requirement.data.id)
 
   return (
     <Requirement
@@ -17,7 +17,7 @@ const JuiceboxRequirement = ({
     >
       {`Hold ${
         requirement.data?.minAmount > 0
-          ? `at least ${requirement.data?.minAmount}`
+          ? `at least ${requirement.data.minAmount}`
           : "any amount of"
       } `}
 
@@ -25,7 +25,7 @@ const JuiceboxRequirement = ({
         isLoading={isLoading}
         error={error && "API error, please contact Juicebox to report."}
       >
-        {project.name}
+        {project?.name ?? `#${requirement.data.id}`}
       </DataBlock>
       {" ticket(s) in Juicebox"}
     </Requirement>
