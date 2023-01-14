@@ -42,13 +42,15 @@ const HaveRole = ({
 const UserSince = ({
   requirement,
   ...rest
-}: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/requirementLogos/guild.png" {...rest}>
-    {`Be a Guild.xyz user at least since ${
-      requirement.data.creationDate?.split("T")[0]
-    }`}
-  </Requirement>
-)
+}: RequirementComponentProps): JSX.Element => {
+  const formattedDate = new Date(requirement.data.creationDate).toLocaleDateString()
+  return (
+    <Requirement image="/requirementLogos/guild.png" {...rest}>
+      {"Be a Guild.xyz user at least since "}
+      <DataBlock>{formattedDate}</DataBlock>
+    </Requirement>
+  )
+}
 
 const MinGuilds = ({
   requirement,
