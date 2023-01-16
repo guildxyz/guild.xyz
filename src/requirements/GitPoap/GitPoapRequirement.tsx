@@ -8,11 +8,7 @@ const GitPoapRequirement = ({ requirement, ...rest }: RequirementComponentProps)
   const { poap, isLoading, error } = usePoap(requirement?.data?.id)
 
   return (
-    <Requirement
-      image={isLoading ? "" : poap?.image_url}
-      isImageLoading={isLoading}
-      {...rest}
-    >
+    <Requirement image={poap?.image_url} isImageLoading={isLoading} {...rest}>
       {"Own the "}
       {!poap || isLoading || error ? (
         <DataBlock

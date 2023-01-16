@@ -11,7 +11,7 @@ const NooxRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
   const badgeData = data?.find((badge) => badge.id === requirement.data.id)
 
   return (
-    <Requirement image={badgeData?.image} {...rest}>
+    <Requirement image={badgeData?.image} isImageLoading={isValidating} {...rest}>
       {`Have the `}
       {!badgeData || isValidating || error ? (
         <DataBlock

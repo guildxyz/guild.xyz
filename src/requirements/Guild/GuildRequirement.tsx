@@ -22,6 +22,7 @@ const HaveRole = ({
           role.imageUrl
         ))
       }
+      isImageLoading={isLoading}
       {...rest}
     >
       {"Have the "}

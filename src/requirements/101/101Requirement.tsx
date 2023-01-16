@@ -24,6 +24,7 @@ const HundredNOneRequirement = ({
           }
         />
       }
+      isImageLoading={isValidating}
       {...rest}
     >
       {`Have the badge of the `}

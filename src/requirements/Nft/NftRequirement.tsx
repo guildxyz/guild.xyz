@@ -66,11 +66,7 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
     <Requirement
       image={
         shouldRenderImage ? (
-          nftDataLoading ? (
-            ""
-          ) : (
-            nftImage
-          )
+          nftImage
         ) : (
           <Text as="span" fontWeight="bold" fontSize="xs">
             NFT

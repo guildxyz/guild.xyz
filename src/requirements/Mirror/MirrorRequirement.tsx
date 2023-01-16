@@ -18,14 +18,13 @@ const MirrorRequirement = ({
   return (
     <Requirement
       image={
-        isLoading
-          ? ""
-          : image ?? (
-              <Text as="span" fontWeight="bold" fontSize="xx-small">
-                MIRROR
-              </Text>
-            )
+        image ?? (
+          <Text as="span" fontWeight="bold" fontSize="xx-small">
+            MIRROR
+          </Text>
+        )
       }
+      isImageLoading={isLoading}
       footer={!error && <BlockExplorerUrl requirement={requirement} />}
       {...rest}
     >
