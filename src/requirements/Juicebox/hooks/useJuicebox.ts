@@ -15,9 +15,9 @@ export const useJuicebox = () => {
 }
 
 export const useJuiceboxProject = (id: string) => {
-  const { data, isValidating } = useSWRImmutable<JuiceboxProject>(
+  const { data, isValidating, error } = useSWRImmutable<JuiceboxProject>(
     id ? `/assets/juicebox/${id}` : null
   )
 
-  return { project: data, isLoading: isValidating }
+  return { project: data, isLoading: isValidating, error }
 }

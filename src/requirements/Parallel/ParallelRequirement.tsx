@@ -1,5 +1,5 @@
-import DataBlock from "components/common/DataBlock"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import Requirement from "../common/Requirement"
 
 const ParallelRequirement = ({

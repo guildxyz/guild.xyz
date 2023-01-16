@@ -1,6 +1,6 @@
-import { Skeleton, Text } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
+import { Text } from "@chakra-ui/react"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import BlockExplorerUrl from "../common/BlockExplorerUrl"
 import Requirement from "../common/Requirement"
 import useKycDAOContracts from "./hooks/useKycDAOContracts"
@@ -9,7 +9,7 @@ const KycDAORequirement = ({
   requirement,
   ...rest
 }: RequirementComponentProps): JSX.Element => {
-  const { isLoading, kycDAOContracts } = useKycDAOContracts()
+  const { isLoading, kycDAOContracts, error } = useKycDAOContracts()
 
   const contractData = kycDAOContracts?.find(
     (c) => c.value?.toLowerCase() === requirement.address.toLowerCase()
@@ -22,17 +22,16 @@ const KycDAORequirement = ({
           KYC
         </Text>
       }
-      footer={<BlockExplorerUrl requirement={requirement} />}
+      footer={!error && <BlockExplorerUrl requirement={requirement} />}
       {...rest}
     >
       <Text as="span">{`Get verified as `}</Text>
-      <Skeleton as="span" isLoaded={!isLoading}>
-        {isLoading ? (
-          "Loading..."
-        ) : (
-          <DataBlock>{contractData?.label || requirement.address}</DataBlock>
-        )}
-      </Skeleton>
+      <DataBlock
+        isLoading={isLoading}
+        error={error && "API error, pleaase contact KycDAO to report."}
+      >
+        {contractData?.label || requirement.address}
+      </DataBlock>
     </Requirement>
   )
 }

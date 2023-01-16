@@ -15,7 +15,7 @@ const GithubRequirement = ({ requirement, ...rest }: RequirementComponentProps) 
     <Link
       href={requirement.data.id ?? ""}
       isExternal
-      colorScheme={"blue"}
+      colorScheme="blue"
       fontWeight="medium"
     >
       {requirement.data.id.match(/https:\/\/github\.com\/(.+)$/i)[1]}

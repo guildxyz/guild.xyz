@@ -1,7 +1,7 @@
 import { Img } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
 import { RPC } from "connectors"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import shortenHex from "utils/shortenHex"
 import Requirement from "../common/Requirement"
 
