@@ -27,7 +27,7 @@ const TokenRequirement = ({ requirement, setValueForBalancy, ...rest }: Props) =
           </Text>
         )
       }
-      isImageLoading={!data && isValidating}
+      isImageLoading={isValidating}
       footer={
         requirement?.type === "ERC20" && (
           <BlockExplorerUrl requirement={requirement} {...rest} />

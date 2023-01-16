@@ -5,7 +5,6 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 - Website: [guild.xyz](https://guild.xyz)
 - Docs: [docs.guild.xyz](https://docs.guild.xyz/)
 - Twitter: [@Guildxyz](https://twitter.com/guildxyz)
-- Email: [contact@agora.space](mailto:contact@agora.space)
 - Discord: [Guild.xyz](https://discord.gg/guildxyz)
 
 ## Key dependencies overview
