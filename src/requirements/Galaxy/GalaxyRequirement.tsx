@@ -11,7 +11,12 @@ const GalaxyRequirement = ({
   const { campaign, isLoading } = useGalaxyCampaign(requirement?.data?.galaxyId)
 
   return (
-    <Requirement image={campaign?.thumbnail} isImageLoading={isLoading} {...rest}>
+    <Requirement
+      isNegated={requirement.isNegated}
+      image={campaign?.thumbnail}
+      isImageLoading={isLoading}
+      {...rest}
+    >
       <Text as="span">{`Participate in the `}</Text>
       {!campaign || isLoading ? (
         <DataBlock

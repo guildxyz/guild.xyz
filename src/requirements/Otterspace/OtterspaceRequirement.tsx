@@ -11,7 +11,12 @@ const OtterspaceRequirement = ({
   const badge = data?.find((b) => b.value === requirement.data.id)
 
   return (
-    <Requirement image={badge?.img} isImageLoading={isValidating} {...rest}>
+    <Requirement
+      isNegated={requirement.isNegated}
+      image={badge?.img}
+      isImageLoading={isValidating}
+      {...rest}
+    >
       {`Have the `}
       {!badge || isValidating || error ? (
         <DataBlock

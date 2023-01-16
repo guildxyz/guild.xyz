@@ -6,7 +6,11 @@ const ParallelRequirement = ({
   requirement,
   ...rest
 }: RequirementComponentProps) => (
-  <Requirement image={"requirementLogos/parallel.png"} {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image={"requirementLogos/parallel.png"}
+    {...rest}
+  >
     {(() => {
       switch (requirement.type) {
         case "PARALLEL_ID":

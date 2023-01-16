@@ -16,7 +16,7 @@ type Rest = {
   [x: string]: any
 }
 
-type Logic = "AND" | "OR" | "NOR" | "NAND"
+type Logic = "AND" | "OR"
 
 type ThemeMode = "LIGHT" | "DARK"
 
@@ -158,6 +158,7 @@ type Requirement = {
   name: string
   symbol: string
   decimals?: number
+  isNegated: boolean
 
   // Props used inside the forms on the UI
   nftRequirementType?: string

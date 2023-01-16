@@ -23,6 +23,7 @@ const SnapshotRequirement = ({
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image="/requirementLogos/snapshot.png"
       footer={
         <>

@@ -17,6 +17,7 @@ const MirrorRequirement = ({
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={
         image ?? (
           <Text as="span" fontWeight="bold" fontSize="xx-small">

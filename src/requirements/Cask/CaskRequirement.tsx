@@ -6,7 +6,11 @@ import shortenHex from "utils/shortenHex"
 import Requirement from "../common/Requirement"
 
 const CaskRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
-  <Requirement image={<Img src="/requirementLogos/cask.png" />} {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image={<Img src="/requirementLogos/cask.png" />}
+    {...rest}
+  >
     {`Subscribe to plan `}
     <DataBlock>{`#${requirement.data.planId}`}</DataBlock>
     {` by `}
