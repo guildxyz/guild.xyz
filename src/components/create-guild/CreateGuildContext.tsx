@@ -178,7 +178,7 @@ const CreateGuildProvider = ({
         platform === "DEFAULT"
           ? "Without platform"
           : capitalize(platform?.toLowerCase() ?? "")
-      }${guildName ? ` - ${guildName}` : ""}`,
+      }${platform !== "DEFAULT" && guildName ? ` - ${guildName}` : ""}`,
       content: <CreateGuildIndex />,
     },
     {
