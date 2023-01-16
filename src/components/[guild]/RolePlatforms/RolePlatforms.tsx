@@ -93,7 +93,7 @@ const RolePlatforms = ({ roleId }: Props) => {
 
             return (
               <RolePlatformProvider
-                key={rolePlatform.roleId}
+                key={index}
                 rolePlatform={{
                   ...rolePlatform,
                   roleId,

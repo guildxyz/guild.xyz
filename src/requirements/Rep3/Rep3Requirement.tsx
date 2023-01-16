@@ -1,6 +1,6 @@
-import DataBlock from "components/common/DataBlock"
 import { RequirementComponentProps } from "requirements"
 import BlockExplorerUrl from "requirements/common/BlockExplorerUrl"
+import DataBlock from "requirements/common/DataBlock"
 import Requirement from "requirements/common/Requirement"
 import shortenHex from "utils/shortenHex"
 
