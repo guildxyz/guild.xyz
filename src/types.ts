@@ -227,6 +227,11 @@ const supportedSocialLinks = [
 type SocialLinkKey = typeof supportedSocialLinks[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
 
+type GuildContact = {
+  type: "EMAIL" | "TELEGRAM"
+  contact: string
+}
+
 type Guild = {
   id: number
   name: string
@@ -237,7 +242,7 @@ type Guild = {
   memberCount: number
   hideFromExplorer: boolean
   socialLinks?: SocialLinks // TODO
-  contact?: string
+  contacts?: GuildContact[]
   createdAt: string
   admins: GuildAdmin[]
   theme: Theme
@@ -250,7 +255,7 @@ type Guild = {
 type GuildFormType = Partial<
   Pick<
     Guild,
-    "id" | "urlName" | "name" | "imageUrl" | "description" | "theme" | "contact"
+    "id" | "urlName" | "name" | "imageUrl" | "description" | "theme" | "contacts"
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]

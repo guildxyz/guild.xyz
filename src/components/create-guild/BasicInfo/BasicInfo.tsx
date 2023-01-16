@@ -22,12 +22,12 @@ const BasicInfo = (): JSX.Element => {
   } = useFormContext<GuildFormType>()
 
   const guildName = useWatch({ control, name: "name" })
-  const contact = useWatch({ control, name: "contact" })
+  const contacts = useWatch({ control, name: "contacts" })
 
   useEffect(() => {
-    if (!contact) return
-    addDatadogAction("Typed in contact (basic info)")
-  }, [contact])
+    if (!contacts?.length) return
+    addDatadogAction("Added contact (basic info)")
+  }, [contacts])
 
   return (
     <>

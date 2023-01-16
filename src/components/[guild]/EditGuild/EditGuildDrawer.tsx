@@ -66,7 +66,7 @@ const EditGuildDrawer = ({
     guildPlatforms,
     hideFromExplorer,
     socialLinks,
-    contact,
+    contacts,
     isDetailed,
   } = useGuild()
   const { isOwner } = useGuildPermission()
@@ -80,7 +80,7 @@ const EditGuildDrawer = ({
     admins: admins?.flatMap((admin) => admin.address) ?? [],
     urlName,
     hideFromExplorer,
-    contact,
+    contacts,
     socialLinks,
     guildPlatforms,
   }
@@ -91,8 +91,8 @@ const EditGuildDrawer = ({
 
   // We'll only receive this info on client-side, so we're setting the default value of this field in a useEffect
   useEffect(() => {
-    if (!isDetailed || methods.formState.dirtyFields.contact) return
-    methods.setValue("contact", contact)
+    if (!isDetailed || methods.formState.dirtyFields.contacts) return
+    methods.setValue("contacts", contacts)
   }, [isDetailed])
 
   const toast = useToast()
