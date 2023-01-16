@@ -42,7 +42,7 @@ const BasicInfo = (): JSX.Element => {
     <>
       <Card px={{ base: 5, sm: 6 }} py={8}>
         <Stack spacing={10}>
-          {!platform && <PlatformlessGuildForm />}
+          {platform === "DEFAULT" && <PlatformlessGuildForm />}
 
           <Section title="How could we contact you?">
             <Text fontSize="sm" colorScheme="gray">
