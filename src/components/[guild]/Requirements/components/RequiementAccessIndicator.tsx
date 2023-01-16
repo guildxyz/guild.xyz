@@ -100,7 +100,11 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
         }`}
       </PopoverHeader>
       {reqAccessData?.amount !== null && requirement.data?.minAmount && (
-        <PopoverBody pt="0">{`Expected amount is ${requirement.data.minAmount} but you only have ${reqAccessData?.amount}`}</PopoverBody>
+        <PopoverBody pt="0">
+          {requirement?.isNegated
+            ? `Expected max amount is ${requirement.data.minAmount} and you have ${reqAccessData?.amount}`
+            : `Expected amount is ${requirement.data.minAmount} but you only have ${reqAccessData?.amount}`}
+        </PopoverBody>
       )}
       <PopoverFooter {...POPOVER_FOOTER_STYLES}>
         <Button
