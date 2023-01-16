@@ -1,14 +1,13 @@
 import { Skeleton, Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
-import DataBlock from "components/common/DataBlock"
 import useOpenseaAssetData from "hooks/useOpenseaAssetData"
-import { openseaChains } from "pages/api/opensea-asset-data/[chain]/[address]/[[...tokenId]]"
 import { Fragment } from "react"
+import DataBlock from "requirements/common/DataBlock"
 import { Requirement as RequirementType, Trait } from "types"
 import shortenHex from "utils/shortenHex"
 import OpenseaUrl from "../common/OpenseaUrl"
 import Requirement from "../common/Requirement"
-import { NOUNS_BACKGROUNDS } from "./hooks/useNftMetadata"
+import useNftMetadata, { NOUNS_BACKGROUNDS } from "./hooks/useNftMetadata"
 
 type Props = {
   requirement: RequirementType
@@ -49,39 +48,42 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
       }
     : receivedRequirement
 
+  const { metadata, isLoading } = useNftMetadata(
+    requirement.chain === "ETHEREUM" ? requirement.address : null
+  )
   const { data, isValidating } = useOpenseaAssetData(requirement)
 
+  const nftDataLoading = isLoading || isValidating
+  const nftName = metadata?.name || data?.name
+  const nftImage = metadata?.image || data?.image
+
   const shouldRenderImage =
-    openseaChains[requirement.chain] &&
-    (data?.name || (requirement.name && requirement.name !== "-")) &&
-    (isValidating || data?.image)
+    ["ETHEREUM", "POLYGON"].includes(requirement.chain) &&
+    (nftName || (requirement.name && requirement.name !== "-")) &&
+    (nftDataLoading || nftImage)
 
   return (
     <Requirement
       isNegated={requirement.isNegated}
       image={
         shouldRenderImage ? (
-          isValidating ? (
-            ""
-          ) : (
-            data?.image
-          )
+          nftImage
         ) : (
           <Text as="span" fontWeight="bold" fontSize="xs">
             NFT
           </Text>
         )
       }
-      isImageLoading={isValidating}
+      isImageLoading={nftDataLoading}
       footer={<OpenseaUrl requirement={requirement} />}
       {...rest}
     >
       {"Own "}
       {requirement.data?.id ? (
-        data?.name || isValidating ? (
+        nftName || nftDataLoading ? (
           <>
-            <Skeleton as="span" isLoaded={!isValidating} display="inline">{`the ${
-              data?.name || "loading..."
+            <Skeleton as="span" isLoaded={!nftDataLoading} display="inline">{`the ${
+              nftName || "loading..."
             }`}</Skeleton>{" "}
           </>
         ) : (
@@ -92,12 +94,16 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
       ) : requirement.data?.minAmount > 1 ? (
         `at least ${requirement.data?.minAmount} `
       ) : (
-        "a(n) "
+        <>
+          {"a(n) "}
+          {nftName ||
+            (!requirement.name || requirement.name === "-"
+              ? data?.slug ?? (
+                  <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
+                )
+              : requirement.name !== "-" && requirement.name)}
+        </>
       )}
-
-      {!data?.name && (!requirement.name || requirement.name === "-")
-        ? data?.slug ?? <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
-        : requirement.name !== "-" && requirement.name}
 
       {requirement.data?.attributes?.length ? (
         <>

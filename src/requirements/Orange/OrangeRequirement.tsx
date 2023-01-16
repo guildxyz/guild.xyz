@@ -1,25 +1,23 @@
-import { Img } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
+import { Img, Link } from "@chakra-ui/react"
 import { RequirementComponentProps } from "requirements"
 import Requirement from "../common/Requirement"
-import { RequirementLinkButton } from "../common/RequirementButton"
 
 const OrangeRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
   <Requirement
     isNegated={requirement.isNegated}
     image={<Img src="/requirementLogos/orange.png" />}
-    footer={
-      <RequirementLinkButton
-        imageUrl="https://app.orangeprotocol.io/logo.svg"
-        href={`https://app.orangeprotocol.io/campaigns/details/${requirement.data.id}`}
-      >
-        View campaign
-      </RequirementLinkButton>
-    }
     {...rest}
   >
     {`Have the badge of Orange campaign `}
-    <DataBlock>{`#${requirement.data.id}`}</DataBlock>
+    <Link
+      href={`https://poap.gallery/event/${requirement.data.id}`}
+      isExternal
+      display="inline"
+      colorScheme="blue"
+      fontWeight="medium"
+    >
+      {requirement.data.id}
+    </Link>
   </Requirement>
 )
 

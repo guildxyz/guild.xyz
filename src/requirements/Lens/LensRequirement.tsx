@@ -1,8 +1,6 @@
-import DataBlock from "components/common/DataBlock"
 import Link from "components/common/Link"
 import { RequirementComponentProps } from "requirements"
 import Requirement from "../common/Requirement"
-import { RequirementLinkButton } from "../common/RequirementButton"
 
 const LensRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
   requirement.chain = "POLYGON"
@@ -11,16 +9,6 @@ const LensRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
     <Requirement
       isNegated={requirement.isNegated}
       image={"requirementLogos/lens.png"}
-      footer={
-        ["LENS_COLLECT", "LENS_MIRROR"].includes(requirement.type) && (
-          <RequirementLinkButton
-            imageUrl="https://lenster.xyz/logo.svg"
-            href={`https://lenster.xyz/posts/${requirement.data.id}`}
-          >
-            View on Lenster
-          </RequirementLinkButton>
-        )
-      }
       {...rest}
     >
       {(() => {
@@ -29,7 +17,15 @@ const LensRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
             return (
               <>
                 {`Collect the `}
-                <DataBlock>{requirement.data.id}</DataBlock>
+                <Link
+                  href={`https://lenster.xyz/posts/${requirement.data.id}`}
+                  isExternal
+                  display="inline"
+                  colorScheme="blue"
+                  fontWeight="medium"
+                >
+                  {requirement.data.id}
+                </Link>
                 {` post on Lens Protocol`}
               </>
             )
@@ -37,7 +33,15 @@ const LensRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
             return (
               <>
                 {`Mirror the `}
-                <DataBlock>{requirement.data.id}</DataBlock>
+                <Link
+                  href={`https://lenster.xyz/posts/${requirement.data.id}`}
+                  isExternal
+                  display="inline"
+                  colorScheme="blue"
+                  fontWeight="medium"
+                >
+                  {requirement.data.id}
+                </Link>
                 {` post on Lens Protocol`}
               </>
             )
@@ -48,7 +52,7 @@ const LensRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
                 <Link
                   href={`https://lensfrens.xyz/${requirement.data.id}`}
                   isExternal
-                  color="#BEFB5A"
+                  colorScheme="blue"
                   fontWeight="medium"
                 >
                   {requirement.data.id}
@@ -63,7 +67,7 @@ const LensRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
                 <Link
                   href={`https://lensfrens.xyz/${requirement.data.id}`}
                   isExternal
-                  color="#BEFB5A"
+                  colorScheme="blue"
                   fontWeight="medium"
                 >
                   {requirement.data.id}

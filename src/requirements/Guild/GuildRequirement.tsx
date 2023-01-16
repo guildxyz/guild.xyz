@@ -1,7 +1,7 @@
-import { Img, Link, Text } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
+import { Img, Link } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import pluralize from "utils/pluralize"
 import Requirement from "../common/Requirement"
 
@@ -23,11 +23,12 @@ const HaveRole = ({
           role.imageUrl
         ))
       }
+      isImageLoading={isLoading}
       {...rest}
     >
-      <Text as="span">{"Have the "}</Text>
+      {"Have the "}
       <DataBlock isLoading={isLoading}>{role?.name ?? "unknown"}</DataBlock>
-      <Text as="span">{" role in the "}</Text>
+      {" role in the "}
       <Link
         href={`https://guild.xyz/${urlName ?? requirement.data.guildId}`}
         isExternal={true}
@@ -35,7 +36,7 @@ const HaveRole = ({
       >
         {name ?? `#${requirement.data.guildId}`}
       </Link>
-      <Text as="span">{" guild"}</Text>
+      {" guild"}
     </Requirement>
   )
 }
@@ -43,17 +44,19 @@ const HaveRole = ({
 const UserSince = ({
   requirement,
   ...rest
-}: RequirementComponentProps): JSX.Element => (
-  <Requirement
-    isNegated={requirement.isNegated}
-    image="/requirementLogos/guild.png"
-    {...rest}
-  >
-    {`Be a Guild.xyz user at least since ${
-      requirement.data.creationDate?.split("T")[0]
-    }`}
-  </Requirement>
-)
+}: RequirementComponentProps): JSX.Element => {
+  const formattedDate = new Date(requirement.data.creationDate).toLocaleDateString()
+  return (
+    <Requirement
+      isNegated={requirement.isNegated}
+      image="/requirementLogos/guild.png"
+      {...rest}
+    >
+      {"Be a Guild.xyz user at least since "}
+      <DataBlock>{formattedDate}</DataBlock>
+    </Requirement>
+  )
+}
 
 const MinGuilds = ({
   requirement,

@@ -9,7 +9,7 @@ const UnlockRequirement = ({ requirement, ...rest }: RequirementComponentProps) 
     footer={<BlockExplorerUrl requirement={requirement} />}
     {...rest}
   >
-    {`Own a(n) ${requirement.name ?? "-"} NFT`}
+    {`Own a(n) ${requirement.name ?? "- (Unlock)"} NFT`}
   </Requirement>
 )
 
