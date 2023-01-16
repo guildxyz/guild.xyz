@@ -65,6 +65,10 @@ const IconSelector = ({ uploader }: Props) => {
     })
   }, [field.value])
 
+  const iconButtonBgColor = useColorModeValue("gray.700", "blackAlpha.300")
+  const iconButtonHoverBgColor = useColorModeValue("gray.600", "blackAlpha.200")
+  const iconButtonActiveBgColor = useColorModeValue("gray.500", "blackAlpha.100")
+
   const tabBgColor = useColorModeValue("gray.100", "gray.600")
   const guildLogoSxProp = useColorModeValue({ filter: "invert(0.75)" }, null)
 
@@ -80,8 +84,10 @@ const IconSelector = ({ uploader }: Props) => {
         icon={<GuildLogo imageUrl={field.value} bgColor="transparent" />}
         aria-label="Guild logo"
         variant="outline"
-        border="1px"
-        bg="blackAlpha.300"
+        borderWidth={1}
+        bg={iconButtonBgColor}
+        _hover={{ bg: iconButtonHoverBgColor }}
+        _active={{ bg: iconButtonActiveBgColor }}
       />
       <Modal {...{ isOpen, onClose }} size="3xl" scrollBehavior="inside">
         <ModalOverlay />
