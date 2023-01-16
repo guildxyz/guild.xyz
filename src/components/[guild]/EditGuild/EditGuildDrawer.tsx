@@ -17,6 +17,7 @@ import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
+import ContactInfo from "components/create-guild/BasicInfo/components/ContactInfo"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
@@ -29,6 +30,7 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -64,6 +66,8 @@ const EditGuildDrawer = ({
     guildPlatforms,
     hideFromExplorer,
     socialLinks,
+    contact,
+    isDetailed,
   } = useGuild()
   const { isOwner } = useGuildPermission()
 
@@ -76,6 +80,7 @@ const EditGuildDrawer = ({
     admins: admins?.flatMap((admin) => admin.address) ?? [],
     urlName,
     hideFromExplorer,
+    contact,
     socialLinks,
     guildPlatforms,
   }
@@ -83,6 +88,12 @@ const EditGuildDrawer = ({
     mode: "all",
     defaultValues,
   })
+
+  // We'll only receive this info on client-side, so we're setting the default value of this field in a useEffect
+  useEffect(() => {
+    if (!isDetailed || methods.formState.dirtyFields.contact) return
+    methods.setValue("contact", contact)
+  }, [isDetailed])
 
   const toast = useToast()
   const onSuccess = () => {
@@ -202,6 +213,10 @@ const EditGuildDrawer = ({
                     <UrlName />
                   </Stack>
                   <Description />
+                </Section>
+
+                <Section title="Contact info">
+                  <ContactInfo />
                 </Section>
 
                 <Section title="Social links">
