@@ -6,7 +6,7 @@ import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
 type Data = {
-  removePlatformAccess?: string
+  removePlatformAccess?: boolean
 }
 
 const useDeleteRole = (roleId: number, onSuccess?: () => void) => {

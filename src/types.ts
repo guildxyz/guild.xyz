@@ -132,11 +132,9 @@ type PlatformGuildData = {
 
 type PlatformRoleData = {
   DISCORD: {
-    isGuarded: boolean
     role?: never
   }
   GOOGLE: {
-    isGuarded?: never
     role: "reader" | "commenter" | "writer"
   }
 }

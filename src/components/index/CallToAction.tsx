@@ -37,7 +37,7 @@ const CallToAction = (): JSX.Element => {
       <Box
         position="absolute"
         inset={0}
-        bg="url('/guildGuard/bg.svg')"
+        bg="url('/landing/bg.svg')"
         bgSize={{ base: "cover", lg: "calc(100% - 2.25rem) auto" }}
         bgRepeat="no-repeat"
         bgPosition="top center"
