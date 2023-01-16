@@ -43,7 +43,7 @@ const AccountModal = ({ isOpen, onClose }) => {
 
   const handleLogout = () => {
     onClose()
-    connector.deactivate()
+    connector.deactivate?.()
 
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
       /^dc_auth_[a-z]*$/.test(key)

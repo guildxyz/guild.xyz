@@ -338,7 +338,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
                   baseFieldPath={baseFieldPath}
                   index={traitFieldIndex}
                   isAttributesLoading={isMetadataLoading}
-                  attributes={metadata.traits}
+                  attributes={metadata?.traits}
                   nftCustomAttributeNames={nftCustomAttributeNames}
                   onRemove={removeTrait}
                 />
