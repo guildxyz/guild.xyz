@@ -141,6 +141,7 @@ const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
         components={{
           Collection: Header,
           PageLink: CustomLink,
+          nextImage: Image,
         }}
       />
       {linkedPageContents && (
