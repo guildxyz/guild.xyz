@@ -35,6 +35,7 @@ module.exports = {
   },
   productionBrowserSourceMaps: true,
   images: {
+    dangerouslyAllowSVG: true,
     domains: [
       "storageapi.fleek.co",
       "ipfs.fleek.co",
