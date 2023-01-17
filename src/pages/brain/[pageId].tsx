@@ -43,6 +43,15 @@ const CustomLink = ({
   )
 }
 
+const CustomImage = ({
+  href,
+  children,
+}: PropsWithChildren<{ href: string; children: any }>) => {
+  console.log(2222)
+
+  return <Image src={children.src} alt="f" layout="fill" quality={1} width="20px" />
+}
+
 const Header = (props) => {
   const tags = props?.block?.properties?.["`SJU"]?.[0]?.[0]
     .split(",")
@@ -141,7 +150,8 @@ const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
         components={{
           Collection: Header,
           PageLink: CustomLink,
-          nextImage: Image,
+          nextImage: CustomImage,
+          Image: CustomImage,
         }}
       />
       {linkedPageContents && (
