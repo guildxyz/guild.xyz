@@ -157,7 +157,9 @@ const getAllPages = async () => {
 const getRelatedPageLinks = (allPages, blockMap, params) => {
   const linkedPageContents = getLinkedPagesByName(blockMap, params, allPages)
   const linkedPagesByTags = getLinkedPagesByTags(blockMap, params, allPages)
-  const Links = [...new Set([...linkedPageContents, ...linkedPagesByTags])]
+  const Links = [...new Set([...linkedPageContents, ...linkedPagesByTags])].filter(
+    (pageLink) => pageLink.properties.visibility.checkbox === true
+  )
   const cards: Array<BrainCardData> = Links.map((page) => ({
     id: page.id,
     title: page.properties.title.title[0].plain_text,
