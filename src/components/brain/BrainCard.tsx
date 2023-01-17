@@ -21,7 +21,17 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
       _hover={{ textDecor: "none" }}
       borderRadius="2xl"
     >
-      <ColorCard color="gray.600" w="full" borderWidth={4} p={0}>
+      <ColorCard
+        color="gray.600"
+        w="full"
+        borderWidth={4}
+        p={0}
+        sx={{
+          ":hover div:nth-child(2) div:first-child > span img": {
+            filter: "blur(10px)",
+          },
+        }}
+      >
         <ColorCardLabel
           mt="-1px"
           ml="-1px"
@@ -42,20 +52,13 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
             borderRadius="xl"
           >
             {pageData.backgroundImage && (
-              <Box _groupHover={{ opacity: "10%" }}>
-                <Image
-                  src={pageData?.backgroundImage}
-                  alt="icon"
-                  layout="fill"
-                  objectFit="cover"
-                  quality="10%"
-                  style={{
-                    position: "absolute",
-                    opacity: "90%",
-                    filter: "blur(8px)",
-                  }}
-                />
-              </Box>
+              <Image
+                src={pageData?.backgroundImage}
+                alt="icon"
+                layout="fill"
+                objectFit="cover"
+                quality="10%"
+              />
             )}
 
             {pageData.icon && (
