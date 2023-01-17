@@ -20,6 +20,7 @@ const TokenRequirement = ({ requirement, setValueForBalancy, ...rest }: Props) =
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={
         data?.logoURI ?? (
           <Text as="span" fontWeight="bold" fontSize="xx-small">

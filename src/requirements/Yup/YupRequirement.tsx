@@ -6,7 +6,11 @@ const YupRequirement = ({
   requirement,
   ...rest
 }: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/requirementLogos/yup.svg" {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image="/requirementLogos/yup.svg"
+    {...rest}
+  >
     {`Have a Yup Score of at least ${requirement.data.minAmount} `}
     {requirement.data.adapter && (
       <>

@@ -4,6 +4,7 @@ import Requirement from "../common/Requirement"
 
 const UnlockRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
   <Requirement
+    isNegated={requirement.isNegated}
     image={`https://locksmith.unlock-protocol.com/lock/${requirement.address}/icon`}
     footer={<BlockExplorerUrl requirement={requirement} />}
     {...rest}

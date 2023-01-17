@@ -13,6 +13,7 @@ const SismoRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={badge?.img}
       isImageLoading={isValidating}
       withImgBg={false}
