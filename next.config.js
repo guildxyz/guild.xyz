@@ -175,9 +175,9 @@ module.exports = {
   async redirects() {
     return [
       {
-        source: "/guild-community",
+        source: "/community",
         destination:
-          "https://abalone-professor-5d6.notion.site/Welcome-to-the-guilds-of-Guild-d9604333bee9478497b05455437f03c1",
+          "https://guildxyz.notion.site/Our-Guild-The-Community-eb1cdcb680af40e6b4cdf31d13150a17",
         permanent: false,
       },
       {
