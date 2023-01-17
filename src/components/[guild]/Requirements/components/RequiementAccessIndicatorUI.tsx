@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  Portal,
   Tag,
   useColorMode,
   useColorModeValue,
@@ -22,7 +23,7 @@ type Props = {
 }
 
 const CIRCLE_SIZE = 2
-const CIRCLE_HOVER_STYLES = {
+const CIRCLE_OPEN_STYLES = {
   bg: "unset",
   width: 7,
   height: 7,
@@ -61,7 +62,7 @@ const RequiementAccessIndicatorUI = ({
 
   return (
     <Flex
-      width={CIRCLE_SIZE}
+      width={isAlwaysOpen ? CIRCLE_OPEN_STYLES.width : CIRCLE_SIZE}
       height="full"
       justifyContent={"flex-end"}
       alignItems="center"
@@ -71,13 +72,7 @@ const RequiementAccessIndicatorUI = ({
         bg={`linear-gradient(to right, transparent 0px, ${cardBg} var(--chakra-space-4))`}
         height={"full"}
       >
-        <Popover
-          placement="left"
-          trigger="hover"
-          closeDelay={100}
-          strategy="fixed"
-          onOpen={onOpen}
-        >
+        <Popover placement="left" trigger="hover" closeDelay={100} onOpen={onOpen}>
           {({ isOpen, onClose }) => (
             <>
               <PopoverTrigger>
@@ -94,25 +89,27 @@ const RequiementAccessIndicatorUI = ({
                       opacity: 0,
                       transition: "opacity .2s",
                     },
-                    ...(isOpen || isAlwaysOpen ? CIRCLE_HOVER_STYLES : {}),
+                    ...(isOpen || isAlwaysOpen ? CIRCLE_OPEN_STYLES : {}),
                   }}
-                  _hover={CIRCLE_HOVER_STYLES}
+                  _hover={CIRCLE_OPEN_STYLES}
                 >
                   <Tag colorScheme={colorScheme} pos="absolute" px="2" py="2">
                     <Icon as={icon} boxSize={3} />
                   </Tag>
                 </Center>
               </PopoverTrigger>
-              <PopoverContent width="unset" maxW={{ base: "2xs", md: "xs" }}>
-                {!isAlwaysOpen && [5, 10].includes(openCount) ? (
-                  <PopoverHeader border="0">
-                    {openCount === 5 ? "👀" : "🙈 You like that anim don't ya?"}
-                  </PopoverHeader>
-                ) : (
-                  children
-                )}
-                <PopoverArrow />
-              </PopoverContent>
+              <Portal>
+                <PopoverContent width="unset" maxW={{ base: "2xs", md: "xs" }}>
+                  {!isAlwaysOpen && [5, 10].includes(openCount) ? (
+                    <PopoverHeader border="0">
+                      {openCount === 5 ? "👀" : "🙈 You like that anim don't ya?"}
+                    </PopoverHeader>
+                  ) : (
+                    children
+                  )}
+                  <PopoverArrow />
+                </PopoverContent>
+              </Portal>
             </>
           )}
         </Popover>

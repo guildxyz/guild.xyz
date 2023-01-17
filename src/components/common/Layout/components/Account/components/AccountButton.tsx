@@ -11,6 +11,7 @@ const AccountButton = ({
     borderRadius="2xl"
     colorScheme="alpha"
     color="whiteAlpha.900"
+    bg="blackAlpha.500"
     {...rest}
   >
     {children}

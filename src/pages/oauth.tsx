@@ -73,7 +73,7 @@ const OAuth = () => {
       return
     }
 
-    addDatadogAction(`CSRF - OAuth window recieved CSRF token: ${params.csrfToken}`)
+    addDatadogAction(`CSRF - OAuth window received CSRF token: ${params.csrfToken}`)
 
     delete params.error
     delete params.error_description

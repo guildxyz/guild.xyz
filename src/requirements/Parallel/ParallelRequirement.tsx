@@ -1,12 +1,16 @@
-import DataBlock from "components/common/DataBlock"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import Requirement from "../common/Requirement"
 
 const ParallelRequirement = ({
   requirement,
   ...rest
 }: RequirementComponentProps) => (
-  <Requirement image={"requirementLogos/parallel.png"} {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image={"requirementLogos/parallel.png"}
+    {...rest}
+  >
     {(() => {
       switch (requirement.type) {
         case "PARALLEL_ID":

@@ -3,7 +3,6 @@ import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import { reconnectionErrorMessages } from "components/[guild]/RoleCard/components/AccessIndicator/AccessIndicator"
 import useToast from "hooks/useToast"
 import platforms from "platforms"
 import REQUIREMENTS from "requirements"
@@ -31,7 +30,8 @@ const ConnectRequirementPlatformButton = ({ requirement, ...rest }: Props) => {
 
   const isReconnection = roleAccess?.errors?.some(
     (err) =>
-      err.requirementId === requirement.id && reconnectionErrorMessages.has(err.msg)
+      err.requirementId === requirement.id &&
+      err.errorType === "PLATFORM_CONNECT_INVALID"
   )
 
   const { onConnect, isLoading, loadingText, response } = useConnectPlatform(

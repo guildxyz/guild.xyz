@@ -1,5 +1,5 @@
-import DataBlock from "components/common/DataBlock"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import Requirement from "requirements/common/Requirement"
 import shortenHex from "utils/shortenHex"
 
@@ -7,7 +7,11 @@ const OptimismRequirement = ({
   requirement,
   ...rest
 }: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/networkLogos/optimism.svg" {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image="/networkLogos/optimism.svg"
+    {...rest}
+  >
     {requirement.type === "OPTIMISM_ATTESTATION" ? (
       <>
         {"Have an attestation from "}

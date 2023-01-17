@@ -29,9 +29,6 @@ const TokenApiURLs = {
   OPTIMISM: ["https://static.optimism.io/optimism.tokenlist.json"],
   MOONRIVER: ["https://tokens.coingecko.com/moonriver/all.json"],
   MOONBEAM: ["https://tokens.coingecko.com/moonbeam/all.json"],
-  RINKEBY: [
-    "https://raw.githubusercontent.com/Uniswap/default-token-list/main/src/tokens/rinkeby.json",
-  ],
   METIS: ["https://tokens.coingecko.com/metis-andromeda/all.json"],
   CRONOS: ["https://tokens.coingecko.com/cronos/all.json"],
   BOBA: ["https://tokens.coingecko.com/boba/all.json"],

@@ -1,6 +1,6 @@
 import { Img } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import Requirement from "../common/Requirement"
 import { rabbitholeCourses } from "./RabbitholeForm"
 
@@ -8,7 +8,11 @@ const RabbitholeRequirement = ({
   requirement,
   ...rest
 }: RequirementComponentProps) => (
-  <Requirement image={<Img src="/requirementLogos/rabbithole.png" />} {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image={<Img src="/requirementLogos/rabbithole.png" />}
+    {...rest}
+  >
     {`Have an NFT from the `}
     <DataBlock>
       {

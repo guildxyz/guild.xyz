@@ -10,8 +10,8 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 const useMirrorEdition = (
   address: string,
   chain: Chain = "OPTIMISM"
-): { name: string; image: string; isLoading: boolean } => {
-  const { data, isValidating } = useSWRImmutable(
+): { name: string; image: string; isLoading: boolean; error: any } => {
+  const { data, isValidating, error } = useSWRImmutable(
     address &&
       address.match(ADDRESS_REGEX) &&
       (chain === "OPTIMISM" || chain === "ETHEREUM")
@@ -24,6 +24,7 @@ const useMirrorEdition = (
     name: data?.name,
     image: data?.imageURI ? `https://ipfs.fleek.co/ipfs/${data.imageURI}` : null,
     isLoading: isValidating,
+    error,
   }
 }
 

@@ -17,6 +17,7 @@ import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import BalancyFooter from "./BalancyFooter"
+import IsNegatedPicker from "./IsNegatedPicker"
 
 const RequirementEditableCard = ({
   index,
@@ -103,6 +104,7 @@ const RequirementEditableCard = ({
             />
             <ModalHeader>{`Edit ${REQUIREMENTS[type].name} requirement`}</ModalHeader>
             <ModalBody>
+              <IsNegatedPicker baseFieldPath={``} />
               <FormComponent baseFieldPath={``} field={field} />
             </ModalBody>
             <ModalFooter gap="3">

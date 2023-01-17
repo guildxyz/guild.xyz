@@ -22,12 +22,14 @@ import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
+import SearchBar from "components/explorer/SearchBar"
 import { AnimatePresence, usePresence } from "framer-motion"
 import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
 import BalancyFooter from "./BalancyFooter"
+import IsNegatedPicker from "./IsNegatedPicker"
 
 const general = REQUIREMENTS_DATA.slice(1, 5)
 const integrations = REQUIREMENTS_DATA.slice(5)
@@ -162,6 +164,7 @@ const AddRequirementForm = forwardRef(
       >
         <FormProvider {...methods}>
           <ModalBody>
+            <IsNegatedPicker baseFieldPath="" />
             <FormComponent baseFieldPath="" />
           </ModalBody>
           <ModalFooter gap="3">
@@ -176,52 +179,69 @@ const AddRequirementForm = forwardRef(
   }
 )
 
-const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => (
-  <ModalBody ref={ref} maxHeight={HOME_MAXHEIGHT} h="full">
-    <Heading size="sm" mb="3">
-      General
-    </Heading>
-    <SimpleGrid columns={2} gap="2">
-      {general.map((requirementButton) => (
-        <Button
-          key={requirementButton.types[0]}
-          minH={24}
-          onClick={() => setSelectedType(requirementButton.types[0])}
-        >
-          <VStack w="full" whiteSpace={"break-spaces"}>
-            <Icon as={requirementButton.icon as FC} boxSize={6} />
-            <Text as="span">{requirementButton.name}</Text>
-          </VStack>
-        </Button>
-      ))}
-    </SimpleGrid>
-    <Heading size="sm" mb="3" mt="8">
-      Integrations
-    </Heading>
-    <Stack>
-      {integrations.map((requirementButton) => (
-        <Tooltip
-          key={requirementButton.types[0]}
-          isDisabled={!(requirementButton as any).disabled}
-          label="Temporarily unavailable"
-          hasArrow
-        >
+const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => {
+  const [search, setSearch] = useState("")
+  const filteredIntegrations = integrations?.filter((integration) =>
+    integration.name.toLowerCase().includes(search.toLowerCase())
+  )
+
+  return (
+    <ModalBody ref={ref} maxHeight={HOME_MAXHEIGHT} h="full">
+      <Heading size="sm" mb="3">
+        General
+      </Heading>
+      <SimpleGrid columns={2} gap="2">
+        {general.map((requirementButton) => (
           <Button
-            py="8"
-            px="6"
-            leftIcon={<Img src={requirementButton.icon as string} boxSize="6" />}
-            rightIcon={<Icon as={CaretRight} />}
-            iconSpacing={4}
+            key={requirementButton.types[0]}
+            minH={24}
             onClick={() => setSelectedType(requirementButton.types[0])}
-            isDisabled={(requirementButton as any).disabled}
-            sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
           >
-            {requirementButton.name}
+            <VStack w="full" whiteSpace={"break-spaces"}>
+              <Icon as={requirementButton.icon as FC} boxSize={6} />
+              <Text as="span">{requirementButton.name}</Text>
+            </VStack>
           </Button>
-        </Tooltip>
-      ))}
-    </Stack>
-  </ModalBody>
-))
+        ))}
+      </SimpleGrid>
+
+      <Heading size="sm" mb="3" mt="8">
+        Integrations
+      </Heading>
+      <Stack>
+        <SearchBar {...{ search, setSearch }} placeholder="Search integrations" />
+
+        {filteredIntegrations.length ? (
+          filteredIntegrations.map((requirementButton) => (
+            <Tooltip
+              key={requirementButton.types[0]}
+              isDisabled={!(requirementButton as any).disabled}
+              label="Temporarily unavailable"
+              hasArrow
+            >
+              <Button
+                w="full"
+                py="8"
+                px="6"
+                leftIcon={<Img src={requirementButton.icon as string} boxSize="6" />}
+                rightIcon={<Icon as={CaretRight} />}
+                iconSpacing={4}
+                onClick={() => setSelectedType(requirementButton.types[0])}
+                isDisabled={(requirementButton as any).disabled}
+                sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
+              >
+                {requirementButton.name}
+              </Button>
+            </Tooltip>
+          ))
+        ) : (
+          <Text colorScheme="gray" py={4} textAlign="center">
+            Couldn't find any integrations
+          </Text>
+        )}
+      </Stack>
+    </ModalBody>
+  )
+})
 
 export default AddRequirement
