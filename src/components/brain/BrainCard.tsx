@@ -27,8 +27,11 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
         borderWidth={4}
         p={0}
         sx={{
+          "div:nth-child(2) div:first-child > span img": {
+            filter: "blur(20px)",
+          },
           ":hover div:nth-child(2) div:first-child > span img": {
-            filter: "blur(10px)",
+            filter: "blur(2px)",
           },
         }}
       >
@@ -57,7 +60,8 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
                 alt="icon"
                 layout="fill"
                 objectFit="cover"
-                quality="10%"
+                quality="15"
+                style={{ transition: "filter 0.3s" }}
               />
             )}
 
@@ -68,6 +72,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
                   alt={pageData?.icon}
                   layout="fill"
                   objectFit="contain"
+                  quality="60"
                   style={{
                     width: "10px",
                     zIndex: "1",
