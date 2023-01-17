@@ -60,7 +60,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
                 alt="icon"
                 layout="fill"
                 objectFit="cover"
-                quality="15"
+                quality="5"
                 style={{ transition: "filter 0.3s" }}
               />
             )}
@@ -69,10 +69,10 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
               <Center boxSize={16} position="relative">
                 <Image
                   src={pageData?.icon}
-                  alt={pageData?.icon}
+                  alt="icon"
                   layout="fill"
                   objectFit="contain"
-                  quality="60"
+                  quality="30"
                   style={{
                     width: "10px",
                     zIndex: "1",

@@ -1,5 +1,6 @@
 import {
   Button,
+  Center,
   Img,
   Link,
   Tag,
@@ -12,6 +13,7 @@ import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
 import { GetStaticPaths } from "next"
+import Image from "next/image"
 import { NotionAPI } from "notion-client"
 import { DiscordLogo, Globe, TwitterLogo } from "phosphor-react"
 import { PropsWithChildren } from "react"
@@ -117,7 +119,21 @@ const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
     <Layout
       title={blockMap.block[params.pageId.toString()]?.value.properties.title[0][0]}
       image={
-        pageLogo && <Img src={pageLogo} width="56px" mt="8px" alt="page logo"></Img>
+        pageLogo && (
+          <Center boxSize={16} position="relative">
+            <Image
+              src={pageLogo}
+              layout="fill"
+              objectFit="contain"
+              quality="30"
+              style={{
+                width: "10px",
+                overflow: "visible",
+              }}
+              alt="logo"
+            ></Image>
+          </Center>
+        )
       }
     >
       <NotionRenderer
