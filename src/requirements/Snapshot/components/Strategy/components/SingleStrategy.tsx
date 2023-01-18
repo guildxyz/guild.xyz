@@ -135,7 +135,7 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
           }
           onChange={(newValue: SelectOption) => {
             setValue(`${baseFieldPath}.data.strategies.${index}.params`, "")
-            strategyFieldOnChange(newValue?.value)
+            strategyFieldOnChange(newValue?.value ?? null)
           }}
           onBlur={strategyFieldOnBlur}
         />
