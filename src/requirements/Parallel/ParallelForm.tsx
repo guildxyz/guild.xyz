@@ -56,9 +56,9 @@ const ParallelForm = ({ baseFieldPath, field }: RequirementFormProps) => {
               options={typeOptions}
               placeholder="Choose type"
               value={typeOptions?.find((option) => option.value === value)}
-              onChange={(newSelectedOption: SelectOption) => {
-                onChange(newSelectedOption.value)
-              }}
+              onChange={(newSelectedOption: SelectOption) =>
+                onChange(newSelectedOption.value ?? null)
+              }
               onBlur={onBlur}
             />
           )}

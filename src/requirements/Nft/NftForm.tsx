@@ -231,7 +231,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
                     : null)
                 }
                 onChange={(selectedOption: SelectOption) => {
-                  onChange(selectedOption?.value)
+                  onChange(selectedOption?.value ?? null)
                   setPickedNftSlug(selectedOption?.slug)
                   setValue(`${baseFieldPath}.type`, "ERC721")
                   setValue(`${baseFieldPath}.data.attributes`, undefined)
@@ -294,7 +294,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
                 resetDetails(
                   selectedOption?.value as NftRequirementTypeOption["value"]
                 )
-                onChange(selectedOption?.value)
+                onChange(selectedOption?.value ?? null)
               }}
               onBlur={onBlur}
             />

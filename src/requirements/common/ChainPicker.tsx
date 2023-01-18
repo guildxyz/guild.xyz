@@ -94,7 +94,7 @@ const ChainPicker = ({
                   (_chain) => _chain.value === value
                 )}
                 onChange={(selectedOption: SelectOption) => {
-                  onChange(selectedOption?.value)
+                  onChange(selectedOption?.value ?? null)
                   onChangeHandler?.()
                 }}
                 onBlur={onBlur}

@@ -66,7 +66,7 @@ const SoundForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           onBlur={onBlur}
           onChange={(newValue: { label: string; value: string }) => {
             resetField(`${baseFieldPath}.data.id`, { defaultValue: "" })
-            onChange(newValue?.value)
+            onChange(newValue?.value ?? null)
           }}
           ref={ref}
           value={selected}

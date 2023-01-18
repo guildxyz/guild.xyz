@@ -141,7 +141,7 @@ const AttributePicker = ({
                       : null
                   }
                   onChange={(newValue: SelectOption) => {
-                    onChange(newValue?.value)
+                    onChange(newValue?.value ?? null)
                     setValue(`${baseFieldPath}.data.attributes.${index}.value`, null)
                     setValue(
                       `${baseFieldPath}.data.attributes.${index}.interval`,
@@ -334,7 +334,9 @@ const AttributePicker = ({
                         (attributeValue) => attributeValue.value === valueSelectValue
                       ) || ""
                     }
-                    onChange={(newValue: SelectOption) => onChange(newValue.value)}
+                    onChange={(newValue: SelectOption) =>
+                      onChange(newValue.value ?? null)
+                    }
                     onBlur={onBlur}
                   />
                 )}

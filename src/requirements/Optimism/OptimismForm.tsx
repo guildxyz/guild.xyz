@@ -63,7 +63,7 @@ const OptimismForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
           onBlur={onBlur}
           onChange={(newValue: SelectOption) => {
             resetFields()
-            onChange(newValue?.value)
+            onChange(newValue?.value ?? null)
           }}
           ref={ref}
           value={selected}
