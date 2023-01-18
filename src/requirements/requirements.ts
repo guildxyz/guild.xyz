@@ -418,6 +418,7 @@ export const REQUIREMENTS_DATA = [
       "TESSERA",
       "TESSERA_HOLD",
       "TESSERA_HOLD_COLLECTION",
+      "TESSERA_HOLD_STATE",
       "TESSERA_LISTINGS",
       "TESSERA_USER_SINCE",
     ],

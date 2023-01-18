@@ -46,6 +46,22 @@ const TesseraRequirement = ({
                 <DataBlock>{requirement.data.collection}</DataBlock>
               </>
             )
+          case "TESSERA_HOLD_STATE":
+            return (
+              <>
+                {`Own at least ${pluralize(
+                  requirement.data.minAmount,
+                  "Rae"
+                )} on Tessera `}
+                {requirement.data.vaultState && (
+                  <>
+                    {`that ${requirement.data.minAmount > 1 ? "are" : "is"} in `}
+                    <DataBlock>{requirement.data.vaultState}</DataBlock>
+                    {` state`}
+                  </>
+                )}
+              </>
+            )
           case "TESSERA_LISTINGS":
             return (
               <>

@@ -12,7 +12,9 @@ const options = [
   { label: "Reconstitution", value: "reconstitution" },
   { label: "Closed", value: "closed" },
 ]
-const Listings = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+const ListingsOrHoldState = ({
+  baseFieldPath,
+}: RequirementFormProps): JSX.Element => {
   const { errors } = useFormState()
 
   const {
@@ -56,4 +58,4 @@ const Listings = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   )
 }
 
-export default Listings
+export default ListingsOrHoldState
