@@ -131,7 +131,7 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
           value={
             mappedStrategies?.find(
               (strategy) => strategy.value === strategyFieldValue
-            ) ?? ""
+            ) ?? null
           }
           onChange={(newValue: SelectOption) => {
             setValue(`${baseFieldPath}.data.strategies.${index}.params`, "")
