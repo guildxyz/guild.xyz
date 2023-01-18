@@ -63,9 +63,16 @@ const TesseraRequirement = ({
               </>
             )
           case "TESSERA_USER_SINCE":
-            return `Be a Tessera user since at least ${
-              requirement.data.minDate?.split("T")[0]
-            }`
+            const formattedDate = new Date(
+              requirement.data.minDate
+            ).toLocaleDateString()
+
+            return (
+              <>
+                {"Be a Tessera user since at least "}
+                <DataBlock>{formattedDate}</DataBlock>
+              </>
+            )
         }
       })()}
     </Requirement>
