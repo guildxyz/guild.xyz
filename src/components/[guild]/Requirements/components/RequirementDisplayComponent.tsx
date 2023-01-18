@@ -1,7 +1,7 @@
 import { Icon } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
 import { Warning } from "phosphor-react"
 import REQUIREMENTS from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import Requirement from "requirements/common/Requirement"
 import { Requirement as RequirementType } from "types"
 import RequiementAccessIndicator from "./RequiementAccessIndicator"

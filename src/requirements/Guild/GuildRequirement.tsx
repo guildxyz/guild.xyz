@@ -1,7 +1,7 @@
-import { Img, Link, Text } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
+import { Img, Link } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import pluralize from "utils/pluralize"
 import Requirement from "../common/Requirement"
 
@@ -14,6 +14,7 @@ const HaveRole = ({
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={
         role?.imageUrl &&
         (role.imageUrl?.match("guildLogos") ? (
@@ -22,11 +23,12 @@ const HaveRole = ({
           role.imageUrl
         ))
       }
+      isImageLoading={isLoading}
       {...rest}
     >
-      <Text as="span">{"Have the "}</Text>
+      {"Have the "}
       <DataBlock isLoading={isLoading}>{role?.name ?? "unknown"}</DataBlock>
-      <Text as="span">{" role in the "}</Text>
+      {" role in the "}
       <Link
         href={`https://guild.xyz/${urlName ?? requirement.data.guildId}`}
         isExternal={true}
@@ -34,7 +36,7 @@ const HaveRole = ({
       >
         {name ?? `#${requirement.data.guildId}`}
       </Link>
-      <Text as="span">{" guild"}</Text>
+      {" guild"}
     </Requirement>
   )
 }
@@ -42,25 +44,39 @@ const HaveRole = ({
 const UserSince = ({
   requirement,
   ...rest
-}: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/requirementLogos/guild.png" {...rest}>
-    {`Be a Guild.xyz user since at least ${
-      requirement.data.creationDate?.split("T")[0]
-    }`}
-  </Requirement>
-)
+}: RequirementComponentProps): JSX.Element => {
+  const formattedDate = new Date(requirement.data.creationDate).toLocaleDateString()
+  return (
+    <Requirement
+      isNegated={requirement.isNegated}
+      image="/requirementLogos/guild.png"
+      {...rest}
+    >
+      {"Be a Guild.xyz user since at least "}
+      <DataBlock>{formattedDate}</DataBlock>
+    </Requirement>
+  )
+}
 
 const MinGuilds = ({
   requirement,
   ...rest
 }: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/requirementLogos/guild.png" {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image="/requirementLogos/guild.png"
+    {...rest}
+  >
     {`Be a member of at least ${pluralize(requirement.data.minAmount, "guild")}`}
   </Requirement>
 )
 
 const Admin = ({ requirement, ...rest }: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/requirementLogos/guild.png" {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image="/requirementLogos/guild.png"
+    {...rest}
+  >
     {`Be an admin of a guild${
       requirement.data.minAmount > 0
         ? ` with at least ${pluralize(requirement.data.minAmount, "member")}`

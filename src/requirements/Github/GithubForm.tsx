@@ -42,9 +42,9 @@ const GithubForm = ({ baseFieldPath }: RequirementFormProps) => {
           options={githubRequirementTypes}
           name={name}
           onBlur={onBlur}
-          onChange={(newValue: { label: string; value: string }) => {
-            onChange(newValue?.value)
-          }}
+          onChange={(newValue: { label: string; value: string }) =>
+            onChange(newValue?.value ?? null)
+          }
           ref={ref}
           value={selected}
         />

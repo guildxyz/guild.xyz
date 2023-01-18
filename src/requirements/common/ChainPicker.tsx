@@ -57,9 +57,9 @@ const ChainPicker = ({
     : mappedChains
 
   /**
-   * Timeouted setValue on mount instead of defaultValue, because for some reason
+   * Timed out setValue on mount instead of defaultValue, because for some reason
    * useWatch({ name: `${baseFieldPath}.chain` }) in other components returns
-   * undefined before selecting an option otherways
+   * undefined before selecting an option otherwise
    */
   useEffect(() => {
     if (chain) return
@@ -92,7 +92,7 @@ const ChainPicker = ({
                   (_chain) => _chain.value === value
                 )}
                 onChange={(selectedOption: SelectOption) => {
-                  onChange(selectedOption?.value)
+                  onChange(selectedOption?.value ?? null)
                   onChangeHandler?.()
                 }}
                 onBlur={onBlur}

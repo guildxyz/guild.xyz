@@ -8,10 +8,10 @@ import fetcher from "utils/fetcher"
 import { useRolePlatform } from "../../RolePlatformProvider"
 
 type Data = {
-  removePlatformAccess: string
+  removePlatformAccess: boolean
 }
 
-const useRemovePlatform = () => {
+const useRemovePlatform = ({ onSuccess }: any) => {
   const { mutateGuild } = useGuild()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -38,6 +38,7 @@ const useRemovePlatform = () => {
         status: "success",
       })
       remove(index)
+      onSuccess?.()
       if (!Object.keys(dirtyFields).length) reset(undefined, { keepValues: true })
 
       mutateGuild()

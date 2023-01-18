@@ -123,7 +123,6 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
           "BOBA",
           "BOBA_AVAX",
           "PALM",
-          "RINKEBY",
           "GOERLI",
         ]}
         onChange={resetForm}
@@ -177,10 +176,9 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
               options={methodOptions}
               placeholder="Choose method"
               value={methodOptions?.find((option) => option.value === value) ?? ""}
-              onChange={(selectedOption: SelectOption) => {
-                onChange(selectedOption?.value)
-                // setValue(`${baseFieldPath}.data.expected`, "")
-              }}
+              onChange={(selectedOption: SelectOption) =>
+                onChange(selectedOption?.value ?? null)
+              }
               onBlur={onBlur}
             />
           )}
@@ -250,9 +248,9 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
                 isLoading={isAbiValidating}
                 options={outputOptions}
                 value={outputOptions[value] ?? ""}
-                onChange={(selectedOption: SelectOption) => {
-                  onChange(selectedOption.value)
-                }}
+                onChange={(selectedOption: SelectOption) =>
+                  onChange(selectedOption.value ?? null)
+                }
                 onBlur={onBlur}
                 chakraStyles={{ container: { mb: 2 } } as any}
                 placeholder="Choose output param"
@@ -272,7 +270,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
                 options={resultMatchOptions}
                 value={resultMatchOptions.find((option) => option.value === value)}
                 onChange={(selectedOption: SelectOption) =>
-                  onChange(selectedOption.value)
+                  onChange(selectedOption.value ?? null)
                 }
                 onBlur={onBlur}
                 chakraStyles={{ container: { w: "105px" } } as any}

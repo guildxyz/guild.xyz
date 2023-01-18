@@ -241,7 +241,7 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
                               (_chain) => _chain.value === value
                             )}
                             onChange={(newValue: SelectOption) =>
-                              onChange(newValue?.value)
+                              onChange(newValue?.value ?? null)
                             }
                             onBlur={onBlur}
                           />

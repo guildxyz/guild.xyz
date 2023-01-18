@@ -75,7 +75,7 @@ const NooxForm = ({ baseFieldPath }: RequirementFormProps) => {
                     placeholder="Choose Noox badge"
                     value={selectedOption ?? ""}
                     onChange={(newSelectedOption: SelectOption) => {
-                      onChange(newSelectedOption?.value)
+                      onChange(newSelectedOption?.value ?? null)
                     }}
                     onBlur={onBlur}
                   />
