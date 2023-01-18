@@ -96,9 +96,10 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
 
   const [addressInput, setAddressInput] = useState("")
   const { nfts, isLoading } = useNfts(chain)
+
   const mappedNfts = useMemo(
     () =>
-      nfts?.map((nft) => ({
+      nfts?.filter(Boolean)?.map((nft) => ({
         img: nft.logoUri,
         label: nft.name,
         value: nft.address,
