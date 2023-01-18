@@ -7,7 +7,8 @@ import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import Hold from "./components/Hold"
 import HoldCollection from "./components/HoldCollection"
-import ListingsOrHoldState from "./components/ListingsOrHoldState"
+import HoldState from "./components/HoldState"
+import Listings from "./components/Listings"
 import UserSince from "./components/UserSince"
 
 export const vaultStateOptions = [
@@ -31,12 +32,12 @@ const tesseraRequirementTypes = [
   {
     label: "Own Raes in a state",
     value: "TESSERA_HOLD_STATE",
-    TesseraRequirement: ListingsOrHoldState,
+    TesseraRequirement: HoldState,
   },
   {
     label: "List Raes for sale",
     value: "TESSERA_LISTINGS",
-    TesseraRequirement: ListingsOrHoldState,
+    TesseraRequirement: Listings,
   },
   {
     label: "Account age",

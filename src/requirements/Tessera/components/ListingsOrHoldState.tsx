@@ -14,13 +14,17 @@ const options = [
 ]
 const ListingsOrHoldState = ({
   baseFieldPath,
-}: RequirementFormProps): JSX.Element => {
+  isStateRequired,
+}: RequirementFormProps & { isStateRequired?: boolean }): JSX.Element => {
   const { errors } = useFormState()
 
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
     name: `${baseFieldPath}.data.vaultState`,
+    rules: {
+      required: isStateRequired ? "This field is required" : false,
+    },
   })
 
   return (
@@ -35,6 +39,7 @@ const ListingsOrHoldState = ({
 
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.vaultState}
+        isRequired={isStateRequired}
       >
         <FormLabel>Vault state</FormLabel>
 
