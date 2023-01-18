@@ -66,30 +66,25 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
     ([id]) => id === strategyFieldValue
   )?.[1]?.schema?.definitions.Strategy
 
-  const example =
-    Object.values(strategies ?? {}).find(
-      (strategy) => strategy.key === strategyFieldValue
-    )?.examples[0].strategy.params ?? {}
+  const example = Object.values(strategies ?? {}).find(
+    (strategy) => strategy.key === strategyFieldValue
+  )?.examples[0].strategy.params
 
-  const savedStrategyName = JSON.stringify(
-    parseFromObject(defaultValues, baseFieldPath)?.data?.strategies?.[index]?.name
-  )
-
-  const savedStrategyValue = JSON.stringify(
-    parseFromObject(defaultValues, baseFieldPath)?.data?.strategies?.[index]?.params
-  )
-
-  const selectedStrategy =
-    JSON.stringify(
-      mappedStrategies?.find((strategy) => strategy.value === strategyFieldValue)
-        ?.value
-    ) ?? ""
+  const selectedStrategy = mappedStrategies?.find(
+    (strategy) => strategy.value === strategyFieldValue
+  )?.value
 
   const [parameterValue, setParameterValue] = useState(JSON.stringify(example))
 
   useEffect(() => {
-    if (savedStrategyName === selectedStrategy) setParameterValue(savedStrategyValue)
-    else setParameterValue(JSON.stringify(example))
+    if (!selectedStrategy) return
+    const savedStrategy = defaultValues?.data?.strategies?.[index] ?? {}
+    const { name, params } = savedStrategy
+
+    if (name === selectedStrategy) setParameterValue(JSON.stringify(params))
+    else {
+      setParameterValue(JSON.stringify(example) ?? "")
+    }
   }, [selectedStrategy])
 
   useEffect(() => {
