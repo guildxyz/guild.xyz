@@ -103,7 +103,7 @@ const DiscoForm = ({ baseFieldPath }: RequirementFormProps) => {
                   placeholder={placeholder("credIssuence")}
                   value={options.find((option) => option.value === value) ?? ""}
                   onChange={(newSelectedOption: SelectOption) =>
-                    onChange(newSelectedOption?.value)
+                    onChange(newSelectedOption?.value ?? null)
                   }
                   onBlur={onBlur}
                 />

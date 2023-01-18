@@ -58,7 +58,7 @@ const SoundArtistSelect = ({
             placeholder="Search for an artist"
             value={artistOptions?.find((option) => option.value === value)}
             onChange={(newSelectedOption: SelectOption) => {
-              onChange(newSelectedOption?.value)
+              onChange(newSelectedOption?.value ?? null)
               onChangeFn?.(newSelectedOption?.value)
             }}
             onInputChange={(text, _) => setSearch(text ? splitInput(text) : "")}

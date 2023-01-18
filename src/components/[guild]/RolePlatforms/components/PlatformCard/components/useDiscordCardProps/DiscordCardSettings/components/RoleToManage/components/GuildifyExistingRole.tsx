@@ -73,7 +73,7 @@ const GuildifyExistingRole = () => {
               if (!dirtyFields.name) {
                 setValue("name", selectedOption?.label, { shouldDirty: false })
               }
-              onChange(selectedOption?.value)
+              onChange(selectedOption?.value ?? null)
             }}
             onBlur={onBlur}
             isLoading={!options}
