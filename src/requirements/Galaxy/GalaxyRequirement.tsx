@@ -1,7 +1,7 @@
-import { Skeleton, Text } from "@chakra-ui/react"
+import { Link, Text } from "@chakra-ui/react"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import Requirement from "../common/Requirement"
-import ApiError from "./components/ApiError"
 import { useGalaxyCampaign } from "./hooks/useGalaxyCampaigns"
 
 const GalaxyRequirement = ({
@@ -12,15 +12,32 @@ const GalaxyRequirement = ({
 
   return (
     <Requirement
-      image={isLoading ? "" : campaign?.thumbnail}
+      isNegated={requirement.isNegated}
+      image={campaign?.thumbnail}
       isImageLoading={isLoading}
-      footer={<ApiError />}
       {...rest}
     >
       <Text as="span">{`Participate in the `}</Text>
-      <Skeleton as="span" isLoaded={!isLoading}>
-        {isLoading ? "Loading..." : campaign?.name}
-      </Skeleton>
+      {!campaign || isLoading ? (
+        <DataBlock
+          isLoading={isLoading}
+          error={
+            !campaign && !isLoading && "API error, please contact Galxe to report."
+          }
+        >
+          {requirement.data.galaxyId}
+        </DataBlock>
+      ) : (
+        <Link
+          href={`https://galxe.com/${campaign.space.alias}/campaign/${campaign.id}`}
+          isExternal
+          display="inline"
+          colorScheme="blue"
+          fontWeight="medium"
+        >
+          {campaign.name}
+        </Link>
+      )}
       <Text as="span">{` Galxe campaign`}</Text>
     </Requirement>
   )

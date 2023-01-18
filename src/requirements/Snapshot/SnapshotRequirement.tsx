@@ -1,7 +1,7 @@
 import { Box, Collapse, Icon, useDisclosure } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
 import { CaretDown } from "phosphor-react"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import pluralize from "utils/pluralize"
 import Requirement from "../common/Requirement"
 import { RequirementButton } from "../common/RequirementButton"
@@ -24,6 +24,7 @@ const SnapshotRequirement = ({
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image="/requirementLogos/snapshot.png"
       footer={
         requirement.type === "SNAPSHOT_STRATEGY" &&

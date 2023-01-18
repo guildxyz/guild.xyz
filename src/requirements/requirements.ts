@@ -414,6 +414,18 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["REP3"],
   },
+  {
+    icon: "/requirementLogos/parallel.png",
+    name: "Parallel",
+    fileNameBase: "Parallel",
+    displayComponent: dynamic<RequirementComponentProps>(
+      () => import("requirements/Parallel/ParallelRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Parallel/ParallelForm")
+    ),
+    types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA

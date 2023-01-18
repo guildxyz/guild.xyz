@@ -24,13 +24,7 @@ const LinkButton = ({
     shallow={shallow}
     prefetch={prefetch}
   >
-    <Button
-      variant={variant}
-      as="a"
-      target="_blank"
-      colorScheme="primary"
-      {...chakraProps}
-    >
+    <Button variant={variant} as="a" colorScheme="primary" {...chakraProps}>
       {children}
     </Button>
   </NextLink>

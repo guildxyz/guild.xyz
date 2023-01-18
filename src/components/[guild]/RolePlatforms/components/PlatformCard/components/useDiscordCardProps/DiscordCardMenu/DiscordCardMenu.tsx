@@ -14,8 +14,6 @@ import {
 import CreatePoap from "components/[guild]/CreatePoap"
 import useGuild from "components/[guild]/hooks/useGuild"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
-import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign } from "hooks/useSubmit"
 import {
   ArrowsCounterClockwise,
   ChatDots,
@@ -23,9 +21,8 @@ import {
   DotsThree,
   Gear,
 } from "phosphor-react"
-import { mutate } from "swr"
-import fetcher from "utils/fetcher"
 import DiscordRewardSettings from "./components/DiscordRewardSettings.tsx"
+import useSyncMembersFromDiscord from "./hooks/useSyncMembersFromDiscord"
 
 type Props = {
   platformGuildId: string
@@ -48,22 +45,9 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     onClose: onSettingsClose,
   } = useDisclosure()
 
-  const { id, poaps } = useGuild()
-  const showErrorToast = useShowErrorToast()
+  const { poaps } = useGuild()
 
-  const syncMembersFromDiscord = async ({ validation, data }) =>
-    fetcher(`/statusUpdate/guildify/${id}`, {
-      validation,
-      body: data,
-    })
-
-  const { response, isLoading, onSubmit } = useSubmitWithSign(
-    syncMembersFromDiscord,
-    {
-      onSuccess: () => mutate(`/statusUpdate/guild/${id}`),
-      onError: (err) => showErrorToast(err),
-    }
-  )
+  const { response, isLoading, triggerSync } = useSyncMembersFromDiscord()
 
   return (
     <>
@@ -114,11 +98,7 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
                 <ArrowsCounterClockwise />
               )
             }
-            onClick={() =>
-              onSubmit({
-                notifyUsers: false,
-              })
-            }
+            onClick={triggerSync}
             isDisabled={isLoading || response}
           >
             Sync members from Discord

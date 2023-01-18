@@ -20,7 +20,7 @@ import parseFromObject from "utils/parseFromObject"
 import SpaceSelect from "../SpaceSelect"
 import SingleStrategy from "./components/SingleStrategy"
 
-const unsupportedChains: Chain[] = ["RINKEBY", "NOVA"]
+const unsupportedChains: Chain[] = ["NOVA"]
 
 const Strategy = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {

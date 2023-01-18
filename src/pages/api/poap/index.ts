@@ -19,7 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         for (const [key, value] of Object.entries(fields)) {
-          const valueAsString = value?.toString() ?? ""
+          const valueAsString = value?.toString()?.trim() ?? ""
           if (
             (key === "start_date" || key === "end_date" || key === "expiry_date") &&
             valueAsString?.length > 0

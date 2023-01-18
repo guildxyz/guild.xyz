@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   FormControl,
   FormLabel,
   InputGroup,
@@ -8,81 +11,71 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import { Chain } from "connectors"
 import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import ChainPicker from "requirements/common/ChainPicker"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import useSismoBadges from "./hooks/useSismoBadges"
+import useSismoBadges, { SismoBadgeChain } from "./hooks/useSismoBadges"
 
-const typeOptions = [
-  {
-    label: "Main",
-    value: "MAIN",
-  },
-  {
-    label: "Playground",
-    value: "PLAYGROUND",
-  },
-]
+const sismoContracts: Record<SismoBadgeChain, string> = {
+  POLYGON: "0xf12494e3545d49616d9dfb78e5907e9078618a34",
+  GNOSIS: "0xa67f1c6c96cb5dd6ef24b07a77893693c210d846",
+  GOERLI: "0xa251eb9be4e7e2bb382268ecdd0a5fca0a962e6c",
+}
+
+export const DEPRECATED_PLAYGROUND_ADDRESS =
+  "0x71a7089c56dff528f330bc0116c0917cd05b51fc"
 
 const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
     control,
-    register,
     setValue,
     formState: { errors },
   } = useFormContext()
 
-  useEffect(() => {
-    if (!register) return
-    register(`${baseFieldPath}.chain`, {
-      value: "POLYGON",
-    })
-  }, [register])
-
-  const type = useWatch({ name: `${baseFieldPath}.data.type` })
+  const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const address = useWatch({ name: `${baseFieldPath}.address` })
+  const isPlayground = address === DEPRECATED_PLAYGROUND_ADDRESS
   const badgeId = useWatch({ name: `${baseFieldPath}.data.id` })
-  const { data, isValidating } = useSismoBadges(type)
+  const { data, isValidating } = useSismoBadges(chain, isPlayground)
 
   const pickedBadge = data?.find((option) => option.value === badgeId)
 
+  useEffect(() => {
+    if (isPlayground) return
+    setValue(`${baseFieldPath}.address`, sismoContracts[chain])
+  }, [chain])
+
+  if (isPlayground)
+    return (
+      <Alert status="info" mb="6" pb="5">
+        <AlertIcon />
+        <AlertDescription
+          fontWeight="semibold"
+          w="full"
+          fontSize={{ base: "sm", sm: "md" }}
+        >
+          Playground badges are deprecated. This requirement will keep working fine,
+          but you can't edit it.
+        </AlertDescription>
+      </Alert>
+    )
+
   return (
     <Stack spacing={4} alignItems="start">
-      <FormControl
-        isRequired
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.type}
-      >
-        <FormLabel>Environment</FormLabel>
-
-        <Controller
-          name={`${baseFieldPath}.data.type` as const}
-          control={control}
-          rules={{ required: "This field is required." }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              options={typeOptions}
-              value={typeOptions?.find((option) => option.value === value) ?? ""}
-              placeholder="Select environment"
-              onChange={(newSelectedOption: SelectOption) => {
-                setValue(`${baseFieldPath}.data.id`, null)
-                onChange(newSelectedOption?.value)
-              }}
-              onBlur={onBlur}
-            />
-          )}
-        />
-
-        <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.type?.message}
-        </FormErrorMessage>
-      </FormControl>
+      <ChainPicker
+        controlName={`${baseFieldPath}.chain`}
+        supportedChains={Object.keys(sismoContracts) as Chain[]}
+        onChange={() => setValue(`${baseFieldPath}.data.id`, null)}
+      />
 
       <FormControl
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
-        isDisabled={!type || isValidating}
+        isDisabled={isValidating}
       >
         <FormLabel>Badge</FormLabel>
 

@@ -58,7 +58,6 @@ const Page = (): JSX.Element => {
       title="Balancy playground"
       // image={<Icon boxSize={12} as={Cpu} mb="-6px" />}
       description="See how many addresses satisfy requirements and make allowlists out of them"
-      showBackButton={false}
       background="gray.500"
       textColor="white"
       backgroundOffset={46}

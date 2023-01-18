@@ -7,6 +7,7 @@ import Requirement from "../common/Requirement"
 
 const GithubRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
   <Requirement
+    isNegated={requirement.isNegated}
     image={<Icon as={GithubLogo} boxSize={6} />}
     footer={<ConnectRequirementPlatformButton requirement={requirement} />}
     {...rest}
@@ -15,7 +16,7 @@ const GithubRequirement = ({ requirement, ...rest }: RequirementComponentProps) 
     <Link
       href={requirement.data.id ?? ""}
       isExternal
-      colorScheme={"blue"}
+      colorScheme="blue"
       fontWeight="medium"
     >
       {requirement.data.id.match(/https:\/\/github\.com\/(.+)$/i)[1]}

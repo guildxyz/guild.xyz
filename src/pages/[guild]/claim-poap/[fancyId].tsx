@@ -99,7 +99,7 @@ const Page = (): JSX.Element => {
         />
       </Head>
 
-      <Header showBackButton={true} />
+      <Header />
       <Container maxW="xl" pt={{ base: 16, md: 24 }} pb={12}>
         {correctPoap ? (
           <>

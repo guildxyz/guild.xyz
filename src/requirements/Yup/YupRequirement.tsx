@@ -1,12 +1,16 @@
-import DataBlock from "components/common/DataBlock"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import Requirement from "requirements/common/Requirement"
 
 const YupRequirement = ({
   requirement,
   ...rest
 }: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/requirementLogos/yup.svg" {...rest}>
+  <Requirement
+    isNegated={requirement.isNegated}
+    image="/requirementLogos/yup.svg"
+    {...rest}
+  >
     {`Have a Yup Score of at least ${requirement.data.minAmount} `}
     {requirement.data.adapter && (
       <>

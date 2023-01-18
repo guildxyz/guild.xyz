@@ -20,6 +20,7 @@ const parseDescription = (description?: string) => {
           href={linkMatches[i][0]}
           colorScheme={"primary"}
           isExternal
+          display={"unset"}
         >
           {linkMatches[i][0]}
         </Link>

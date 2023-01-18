@@ -49,7 +49,7 @@ const EntryChannel = ({
         <Text as="span" mr="2">
           {label}
         </Text>
-        {/* not focusable so it doesn't automatically open on Guard modal open */}
+        {/* not focusable so it doesn't automatically open on modal open */}
         {tooltip && (
           <Tooltip label={tooltip} /* shouldWrapChildren */>
             <Info
