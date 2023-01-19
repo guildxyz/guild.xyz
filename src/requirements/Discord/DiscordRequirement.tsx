@@ -41,7 +41,7 @@ const DiscordRequirement = ({ requirement, ...rest }: RequirementComponentProps)
                 <DataBlock>{role?.name || requirement.data.roleName}</DataBlock>
                 {` role in the `}
                 <DataBlock>{serverName || requirement.data.serverName}</DataBlock>
-                {`" server`}
+                {` server`}
               </>
             )
 
