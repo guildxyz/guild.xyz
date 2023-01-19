@@ -91,7 +91,7 @@ const DiscoForm = ({ baseFieldPath }: RequirementFormProps) => {
             }
           >
             <ControlledSelect
-              name={`${baseFieldName}.credIssuence` as const}
+              name={`${baseFieldName}.credIssuence`}
               rules={{ required: isRequired("credIssuence") }}
               isClearable
               options={options}

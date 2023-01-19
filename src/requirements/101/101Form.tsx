@@ -26,7 +26,7 @@ const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
         <FormLabel>Course:</FormLabel>
 
         <ControlledSelect
-          name={`${baseFieldPath}.data.id` as const}
+          name={`${baseFieldPath}.data.id`}
           rules={{ required: "This field is required." }}
           isClearable
           placeholder="Choose course"

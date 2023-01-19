@@ -60,7 +60,7 @@ const GuildifyExistingRole = () => {
 
         <Box maxW="sm">
           <ControlledSelect
-            name={`rolePlatforms.${index}.platformRoleId` as const}
+            name={`rolePlatforms.${index}.platformRoleId`}
             isLoading={!options}
             options={options}
             beforeOnChange={(newValue) => {

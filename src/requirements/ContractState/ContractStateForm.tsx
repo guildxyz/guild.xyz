@@ -165,7 +165,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
         <FormLabel>Method:</FormLabel>
 
         <ControlledSelect
-          name={`${baseFieldPath}.data.id` as const}
+          name={`${baseFieldPath}.data.id`}
           rules={{ required: "This field is required." }}
           isClearable
           isLoading={isAbiValidating}
@@ -227,7 +227,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
 
         {outputOptions?.length > 1 && (
           <ControlledSelect
-            name={`${baseFieldPath}.data.resultIndex` as const}
+            name={`${baseFieldPath}.data.resultIndex`}
             defaultValue={0}
             rules={{ required: "This field is required." }}
             isLoading={isAbiValidating}
@@ -239,7 +239,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
 
         <HStack>
           <ControlledSelect
-            name={`${baseFieldPath}.data.resultMatch` as const}
+            name={`${baseFieldPath}.data.resultMatch`}
             defaultValue={"="}
             options={resultMatchOptions}
             chakraStyles={{ container: { w: "105px" } } as any}
