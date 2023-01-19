@@ -40,10 +40,10 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
+import ControlledSelect from "components/common/ControlledSelect"
 import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
 import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import { Alert, Modal } from "components/common/Modal"
-import StyledSelect from "components/common/StyledSelect"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
 import { Chains, RPC } from "connectors"
@@ -52,7 +52,7 @@ import useToast from "hooks/useToast"
 import { Check, CoinVertical } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
-import { MonetizePoapForm, SelectOption } from "types"
+import { MonetizePoapForm } from "types"
 import shortenHex from "utils/shortenHex"
 import useFeeInUSD from "../hooks/useFeeInUSD"
 import useIsGnosisSafe from "../hooks/useIsGnosisSafe"
@@ -228,24 +228,10 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
                         />
                       </InputLeftElement>
 
-                      <Controller
+                      <ControlledSelect
                         name="chainId"
-                        defaultValue={mappedChains?.find(
-                          (_chain) => _chain.value === chainId
-                        )}
-                        render={({ field: { onChange, onBlur, value, ref } }) => (
-                          <StyledSelect
-                            ref={ref}
-                            options={mappedChains}
-                            value={mappedChains?.find(
-                              (_chain) => _chain.value === value
-                            )}
-                            onChange={(newValue: SelectOption) =>
-                              onChange(newValue?.value ?? null)
-                            }
-                            onBlur={onBlur}
-                          />
-                        )}
+                        options={mappedChains}
+                        defaultValue={chainId}
                       />
                     </InputGroup>
                   </FormControl>
