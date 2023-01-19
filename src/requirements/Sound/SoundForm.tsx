@@ -5,8 +5,8 @@ import {
   FormLabel,
   Stack,
 } from "@chakra-ui/react"
-import StyledSelect from "components/common/StyledSelect"
-import { useController, useFormContext, useFormState } from "react-hook-form"
+import ControlledSelect from "components/common/ControlledSelect"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import SoundArtistSelect from "./components/SoundArtistSelect"
@@ -41,18 +41,12 @@ const soundRequirementTypes = [
 ]
 
 const SoundForm = ({ baseFieldPath, field }: RequirementFormProps) => {
-  const {
-    field: { name, onBlur, onChange, ref, value },
-  } = useController({
-    name: `${baseFieldPath}.type`,
-    rules: { required: "It's required to select a type" },
-  })
-
   const { resetField } = useFormContext()
 
   const { errors } = useFormState()
 
-  const selected = soundRequirementTypes.find((reqType) => reqType.value === value)
+  const type = useWatch({ name: `${baseFieldPath}.type` })
+  const selected = soundRequirementTypes.find((reqType) => reqType.value === type)
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -60,17 +54,16 @@ const SoundForm = ({ baseFieldPath, field }: RequirementFormProps) => {
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
       >
         <FormLabel>Type</FormLabel>
-        <StyledSelect
+
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
+          rules={{ required: "It's required to select a type" }}
           options={soundRequirementTypes}
-          name={name}
-          onBlur={onBlur}
-          onChange={(newValue: { label: string; value: string }) => {
+          beforeOnChange={() =>
             resetField(`${baseFieldPath}.data.id`, { defaultValue: "" })
-            onChange(newValue?.value ?? null)
-          }}
-          ref={ref}
-          value={selected}
+          }
         />
+
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.type?.message}
         </FormErrorMessage>
