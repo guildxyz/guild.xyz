@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Center,
   Img,
@@ -43,13 +44,30 @@ const CustomLink = ({
   )
 }
 
-const CustomImage = ({
-  href,
-  children,
-}: PropsWithChildren<{ href: string; children: any }>) => {
-  console.log(2222)
+const CustomImage = (props) => {
+  let size
+  if (typeof window === "object" && props.className !== undefined) {
+    const element = document?.querySelector("." + props.className)
+    if (element) size = getComputedStyle(element).fontSize
+  }
 
-  return <Image src={children.src} alt="f" layout="fill" quality={1} width="20px" />
+  return (
+    <Box position="relative" width={size ?? size}>
+      <Image
+        className={props.className}
+        height="100px"
+        width="100px"
+        src={props.src}
+        alt="page image"
+        layout="responsive"
+        objectFit="contain"
+        quality={40}
+        style={{
+          zIndex: "1",
+        }}
+      />
+    </Box>
+  )
 }
 
 const Header = (props) => {
@@ -147,11 +165,11 @@ const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
     >
       <NotionRenderer
         recordMap={blockMap}
+        forceCustomImages={true}
         components={{
+          nextImage: CustomImage,
           Collection: Header,
           PageLink: CustomLink,
-          nextImage: CustomImage,
-          Image: CustomImage,
         }}
       />
       {linkedPageContents && (

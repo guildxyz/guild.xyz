@@ -47,6 +47,7 @@ module.exports = {
       "localhost",
       "guild.xyz",
       "s3.us-west-2.amazonaws.com",
+      "www.notion.so",
     ],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
