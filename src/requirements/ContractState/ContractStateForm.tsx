@@ -27,7 +27,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
     control,
     setValue,
     clearErrors,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useFormContext()
 
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
@@ -83,6 +83,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
   )
 
   useEffect(() => {
+    if (!touchedFields.data?.resultIndex) return
     setValue(`${baseFieldPath}.data.resultIndex`, 0)
   }, [outputOptions])
 
