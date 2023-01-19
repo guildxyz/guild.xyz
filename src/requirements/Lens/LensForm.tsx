@@ -177,6 +177,8 @@ const LensProfileSelect = ({
     formState: { errors },
   } = useFormContext()
 
+  const id = useWatch({ name: `${baseFieldPath}.data.id` })
+
   // provide default value so there's options data on role edit
   // split before "." because I couldn't get the graphql query to work with "." in it
   const [search, setSearch] = useState(field?.data?.id?.split(".")?.[0] ?? "")
@@ -211,6 +213,10 @@ const LensProfileSelect = ({
         components={{
           DropdownIndicator: () => null,
           IndicatorSeparator: () => null,
+        }}
+        fallbackValue={{
+          label: id,
+          value: id,
         }}
       />
 
