@@ -139,7 +139,7 @@ const SnapshotRequirement = ({
                 )}
                 {requirement.data.state && (
                   <>
-                    {` that are `}
+                    {` that ${requirement.data.minAmount > 1 ? "are" : "is"} `}
                     <DataBlock>{requirement.data.state}</DataBlock>
                   </>
                 )}
