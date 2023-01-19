@@ -1,17 +1,13 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
-import { Controller, useFormContext } from "react-hook-form"
+import { useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import use101Courses from "./hooks/use101Courses"
 
 const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext()
+  const { errors } = useFormState()
 
   const { data, isValidating } = use101Courses()
 
@@ -29,24 +25,13 @@ const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
       >
         <FormLabel>Course:</FormLabel>
 
-        <Controller
+        <ControlledSelect
           name={`${baseFieldPath}.data.id` as const}
-          control={control}
           rules={{ required: "This field is required." }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              isClearable
-              options={options}
-              value={options?.find((option) => option.value === value) ?? ""}
-              placeholder="Choose course"
-              onChange={(newSelectedOption: SelectOption) =>
-                onChange(newSelectedOption?.value ?? null)
-              }
-              onBlur={onBlur}
-              isLoading={!data && isValidating}
-            />
-          )}
+          isClearable
+          placeholder="Choose course"
+          isLoading={!data && isValidating}
+          options={options}
         />
 
         <FormErrorMessage>

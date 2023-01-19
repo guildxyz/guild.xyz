@@ -11,7 +11,7 @@ import CustomClearIndicator from "./components/CustomClearIndicator"
 import CustomMenuList from "./components/CustomMenuList"
 import CustomSelectOption from "./components/CustomSelectOption"
 
-type StyledSelectProps = (
+export type StyledSelectProps = (
   | ({ isCreatable: true } & CreatableProps<any, any, any>)
   | ({ isCreatable?: never } & Props)
 ) & { as?: any }
