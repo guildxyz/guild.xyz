@@ -3,7 +3,7 @@ import DataBlock from "components/common/DataBlock"
 import useServerData from "hooks/useServerData"
 import { DiscordLogo } from "phosphor-react"
 import { RequirementComponentProps } from "requirements"
-import pluralize from "utils/pluralize"
+import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatformButton"
 import Requirement from "../common/Requirement"
 
@@ -57,16 +57,9 @@ const DiscordRequirement = ({ requirement, ...rest }: RequirementComponentProps)
             )
 
           case "DISCORD_JOIN_FROM_NOW":
-            const dayInMs = 86400000
-            const memberSinceDays = requirement.data.memberSince / dayInMs
-            const memberSinceMonths = requirement.data.memberSince / dayInMs / 30
-            const memberSinceYears = requirement.data.memberSince / dayInMs / 365
-            const formattedMemberSince =
-              memberSinceYears >= 1
-                ? pluralize(Math.round(memberSinceYears), "year")
-                : memberSinceMonths >= 1
-                ? pluralize(Math.round(memberSinceMonths), "month")
-                : pluralize(Math.round(memberSinceDays), "day")
+            const formattedMemberSince = formatRelativeTimeFromNow(
+              requirement.data.memberSince
+            )
 
             return (
               <>

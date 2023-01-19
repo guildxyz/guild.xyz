@@ -3,6 +3,7 @@ import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { TwitterLogo } from "phosphor-react"
 import { RequirementComponentProps } from "requirements"
+import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatformButton"
 import Requirement from "../common/Requirement"
 import TwitterListLink from "./components/TwitterListLink"
@@ -89,14 +90,14 @@ const TwitterRequirement = ({ requirement, ...rest }: RequirementComponentProps)
             </>
           )
         case "TWITTER_ACCOUNT_AGE":
-          const formattedDate = new Date(
+          const formattedAccountAge = formatRelativeTimeFromNow(
             requirement.data.minAmount
-          ).toLocaleDateString()
+          )
 
           return (
             <>
-              {`Be a Twitter user since at least `}
-              <DataBlock>{formattedDate}</DataBlock>
+              {`Have a Twitter account older than `}
+              <DataBlock>{formattedAccountAge}</DataBlock>
             </>
           )
       }
