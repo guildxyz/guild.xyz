@@ -23,7 +23,7 @@ const DiscoRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
       {param.credType ? `${param.credType} ` : `account `}
       {param.credIssuence ? (
         <>
-          {"issued "}
+          {`issued ${param.credIssuence} `}
           <DataBlock>
             {new Date(param.credIssuenceDate).toLocaleDateString()}
           </DataBlock>

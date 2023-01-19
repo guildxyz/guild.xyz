@@ -1,9 +1,8 @@
 import { Box, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 const options = [
@@ -91,24 +90,14 @@ const DiscoForm = ({ baseFieldPath }: RequirementFormProps) => {
               parseFromObject(errors, baseFieldPath)?.data?.params?.credIssuence
             }
           >
-            <Controller
-              name={`${baseFieldName}.credIssuence`}
-              control={control}
+            <ControlledSelect
+              name={`${baseFieldName}.credIssuence` as const}
               rules={{ required: isRequired("credIssuence") }}
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <StyledSelect
-                  ref={ref}
-                  isClearable
-                  options={options}
-                  placeholder={placeholder("credIssuence")}
-                  value={options.find((option) => option.value === value) ?? ""}
-                  onChange={(newSelectedOption: SelectOption) =>
-                    onChange(newSelectedOption?.value ?? null)
-                  }
-                  onBlur={onBlur}
-                />
-              )}
+              isClearable
+              options={options}
+              placeholder={placeholder("credIssuence")}
             />
+
             <FormErrorMessage>
               {
                 parseFromObject(errors, baseFieldPath)?.data?.params?.credIssuence
