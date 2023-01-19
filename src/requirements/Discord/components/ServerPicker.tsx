@@ -61,11 +61,13 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
               setValue(`${baseFieldPath}.data.serverName`, undefined)
             }
           }}
-          fallbackValue={{
-            __isNew__: true,
-            value: serverId,
-            label: serverId,
-          }}
+          fallbackValue={
+            serverId && {
+              __isNew__: true,
+              value: serverId,
+              label: serverId,
+            }
+          }
         />
 
         <FormHelperText>Select a server or paste a server id</FormHelperText>

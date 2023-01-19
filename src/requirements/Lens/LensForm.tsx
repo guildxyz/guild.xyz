@@ -214,10 +214,12 @@ const LensProfileSelect = ({
           DropdownIndicator: () => null,
           IndicatorSeparator: () => null,
         }}
-        fallbackValue={{
-          label: id,
-          value: id,
-        }}
+        fallbackValue={
+          id && {
+            label: id,
+            value: id,
+          }
+        }
       />
 
       <FormErrorMessage>

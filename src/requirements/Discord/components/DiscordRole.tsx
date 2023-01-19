@@ -85,11 +85,13 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
               setValue(`${baseFieldPath}.data.roleName`, undefined)
             }
           }}
-          fallbackValue={{
-            __isNew__: true,
-            value: roleId,
-            label: roleId,
-          }}
+          fallbackValue={
+            roleId && {
+              __isNew__: true,
+              value: roleId,
+              label: roleId,
+            }
+          }
         />
 
         <FormErrorMessage>

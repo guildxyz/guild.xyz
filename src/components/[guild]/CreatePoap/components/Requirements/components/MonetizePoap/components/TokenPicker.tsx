@@ -15,7 +15,7 @@ import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo } from "react"
-import { useController, useFormContext, useWatch } from "react-hook-form"
+import { useController, useFormContext } from "react-hook-form"
 import { MonetizePoapForm } from "types"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -55,12 +55,11 @@ const TokenPicker = (): JSX.Element => {
     setValue("token", "0x0000000000000000000000000000000000000000")
   }, [chainId])
 
-  const token = useWatch({ control, name: "token" })
   const {
     data: { name: tokenName, symbol: tokenSymbol },
     isValidating: isTokenSymbolValidating,
     error,
-  } = useTokenData(Chains[chainId], token)
+  } = useTokenData(Chains[chainId], tokenFieldValue)
 
   const tokenDataFetched =
     typeof tokenName === "string" &&
@@ -69,7 +68,7 @@ const TokenPicker = (): JSX.Element => {
     tokenSymbol !== "-"
 
   const tokenImage = mappedTokens?.find(
-    (t) => t.value?.toLowerCase() === token?.toLowerCase()
+    (t) => t.value?.toLowerCase() === tokenFieldValue?.toLowerCase()
   )?.img
 
   return (
@@ -83,7 +82,7 @@ const TokenPicker = (): JSX.Element => {
     >
       <FormLabel>Currency</FormLabel>
       <InputGroup>
-        {token &&
+        {tokenFieldValue &&
           (tokenImage ? (
             <InputLeftElement>
               <OptionImage img={tokenImage} alt={tokenName} />
@@ -117,10 +116,12 @@ const TokenPicker = (): JSX.Element => {
           filterOption={customFilterOption}
           placeholder="Search or paste address"
           defaultValue={mappedTokens?.[0]?.value}
-          fallbackValue={{
-            value: tokenFieldValue,
-            label: tokenName && tokenName !== "-" ? tokenName : token,
-          }}
+          fallbackValue={
+            tokenFieldValue && {
+              value: tokenFieldValue,
+              label: tokenName && tokenName !== "-" ? tokenName : tokenFieldValue,
+            }
+          }
           onInputChange={(text, _) => {
             if (!ADDRESS_REGEX.test(text)) return
             tokenFieldOnChange(text)
