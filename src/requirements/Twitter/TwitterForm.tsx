@@ -13,7 +13,6 @@ import TwitterAccountAge from "./components/TwitterAccountAge"
 import TwitterFollowerCount from "./components/TwitterFollowerCount"
 import TwitterListInput from "./components/TwitterListInput"
 import TwitterTextToInclude from "./components/TwitterTextToInclude"
-import TwitterTweetInput from "./components/TwitterTweetInput"
 import TwitterUserInput from "./components/TwitterUserInput"
 
 const twitterRequirementTypes = [
@@ -27,16 +26,16 @@ const twitterRequirementTypes = [
     value: "TWITTER_FOLLOWED_BY",
     TwitterRequirement: TwitterUserInput,
   },
-  {
-    label: "Like tweet",
-    value: "TWITTER_LIKE",
-    TwitterRequirement: TwitterTweetInput,
-  },
-  {
-    label: "Retweet tweet",
-    value: "TWITTER_RETWEET",
-    TwitterRequirement: TwitterTweetInput,
-  },
+  // {
+  //   label: "Like tweet",
+  //   value: "TWITTER_LIKE",
+  //   TwitterRequirement: TwitterTweetInput,
+  // },
+  // {
+  //   label: "Retweet tweet",
+  //   value: "TWITTER_RETWEET",
+  //   TwitterRequirement: TwitterTweetInput,
+  // },
   {
     label: "Follow list",
     value: "TWITTER_LIST_FOLLOW",
