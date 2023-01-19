@@ -7,6 +7,7 @@ type Props = {
   rules?: Record<string, any>
   beforeOnChange?: (newValue: SelectOption) => void
   afterOnChange?: (newValue: SelectOption) => void
+  fallbackValue?: SelectOption
 } & StyledSelectProps &
   UseControllerProps
 
@@ -17,6 +18,8 @@ const ControlledSelect = ({
   beforeOnChange,
   afterOnChange,
   options,
+  defaultValue,
+  fallbackValue,
   ...rest
 }: Props): JSX.Element => {
   const {
@@ -32,7 +35,10 @@ const ControlledSelect = ({
       ref={ref}
       name={name}
       options={options}
-      value={options?.find((option) => option.value === value) ?? null}
+      defaultValue={options?.find((option) => option.value === defaultValue)}
+      value={
+        options?.find((option) => option.value === value) ?? fallbackValue ?? null
+      }
       onChange={(newValue: SelectOption) => {
         beforeOnChange?.(newValue)
         onChange(newValue?.value ?? null)
