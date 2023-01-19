@@ -14,6 +14,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import useUser from "components/[guild]/hooks/useUser"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
+import useNNSName from "hooks/useNNSName"
 import { LinkBreak, SignIn } from "phosphor-react"
 import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
@@ -24,6 +25,7 @@ const Account = (): JSX.Element => {
   const { openWalletSelectorModal, openNetworkModal, openAccountModal, triedEager } =
     useContext(Web3Connection)
   const { ENSName } = useWeb3React()
+  const NNSName = useNNSName()
   const { addresses } = useUser()
 
   if (!account) {
