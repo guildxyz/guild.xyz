@@ -75,6 +75,7 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
           }}
           noOptionsMessage={() => null}
           isCreatable
+          isClearable
           formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
           isLoading={isServerDataLoading}
           options={roleOptions}

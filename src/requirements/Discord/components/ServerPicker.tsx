@@ -51,6 +51,7 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
             },
           }}
           isCreatable
+          isClearable
           formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
           isLoading={isLoading}
           options={serverOptions}
