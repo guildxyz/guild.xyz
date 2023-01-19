@@ -28,6 +28,7 @@ const ControlledSelect = ({
     control,
     name: nameProp,
     rules,
+    defaultValue,
   })
 
   return (
