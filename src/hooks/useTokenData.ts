@@ -7,7 +7,6 @@ const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
 
 const useTokenData = (chain: string, address: string, onFinish?: () => void) => {
   const shouldFetch =
-    false &&
     /^0x[A-F0-9]{40}$/i.test(address) &&
     chain &&
     address !== "0x0000000000000000000000000000000000000000"

@@ -8,15 +8,15 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { MonetizePoapForm, SelectOption } from "types"
+import { useController, useFormContext, useWatch } from "react-hook-form"
+import { MonetizePoapForm } from "types"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
@@ -31,6 +31,12 @@ const TokenPicker = (): JSX.Element => {
     setValue,
     formState: { errors },
   } = useFormContext<MonetizePoapForm>()
+
+  const {
+    field: { onChange: tokenFieldOnChange, value: tokenFieldValue },
+  } = useController({
+    name: "token",
+  })
 
   const { tokens, isLoading: isTokensLoading } = useTokens(Chains[chainId])
 
@@ -53,7 +59,6 @@ const TokenPicker = (): JSX.Element => {
   const {
     data: { name: tokenName, symbol: tokenSymbol },
     isValidating: isTokenSymbolValidating,
-
     error,
   } = useTokenData(Chains[chainId], token)
 
@@ -94,10 +99,9 @@ const TokenPicker = (): JSX.Element => {
               )}
             </InputLeftAddon>
           ))}
-        <Controller
+
+        <ControlledSelect
           name="token"
-          control={control}
-          defaultValue="0x0000000000000000000000000000000000000000"
           rules={{
             required: "This field is required.",
             pattern: {
@@ -107,34 +111,20 @@ const TokenPicker = (): JSX.Element => {
             },
             validate: () => !error || "Failed to fetch token data",
           }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              isClearable
-              isLoading={isTokensLoading}
-              options={mappedTokens}
-              filterOption={customFilterOption}
-              placeholder="Search or paste address"
-              value={
-                mappedTokens?.find((t) => t.value === value) ||
-                (value
-                  ? {
-                      value,
-                      label: tokenName && tokenName !== "-" ? tokenName : token,
-                    }
-                  : null)
-              }
-              defaultValue={mappedTokens?.[0]?.value}
-              onChange={(selectedOption: SelectOption) =>
-                onChange(selectedOption?.value ?? null)
-              }
-              onInputChange={(text, _) => {
-                if (!ADDRESS_REGEX.test(text)) return
-                onChange(text)
-              }}
-              onBlur={onBlur}
-            />
-          )}
+          isClearable
+          isLoading={isTokensLoading}
+          options={mappedTokens}
+          filterOption={customFilterOption}
+          placeholder="Search or paste address"
+          defaultValue={mappedTokens?.[0]?.value}
+          fallbackValue={{
+            value: tokenFieldValue,
+            label: tokenName && tokenName !== "-" ? tokenName : token,
+          }}
+          onInputChange={(text, _) => {
+            if (!ADDRESS_REGEX.test(text)) return
+            tokenFieldOnChange(text)
+          }}
         />
       </InputGroup>
 
