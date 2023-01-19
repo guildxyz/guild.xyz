@@ -16,12 +16,11 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import { TrashSimple } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { SelectOption } from "types"
 import capitalize from "utils/capitalize"
 import isNumber from "utils/isNumber"
 import parseFromObject from "utils/parseFromObject"
@@ -118,43 +117,19 @@ const AttributePicker = ({
       {nftCustomAttributeNames?.length ? (
         <Stack>
           <FormControl isDisabled={!nftCustomAttributeNames?.length}>
-            <Controller
-              name={`${baseFieldPath}.data.attributes.${index}.trait_type` as const}
-              control={control}
-              render={({
-                field: { onChange, onBlur, value: keySelectValue, ref },
-              }) => (
-                <StyledSelect
-                  ref={ref}
-                  isLoading={isAttributesLoading}
-                  options={
-                    nftCustomAttributeNames?.length > 0
-                      ? nftCustomAttributeNames
-                      : []
-                  }
-                  placeholder="Attribute"
-                  value={
-                    keySelectValue
-                      ? nftCustomAttributeNames?.find(
-                          (attributeName) => attributeName.value === keySelectValue
-                        )
-                      : null
-                  }
-                  onChange={(newValue: SelectOption) => {
-                    onChange(newValue?.value ?? null)
-                    setValue(`${baseFieldPath}.data.attributes.${index}.value`, null)
-                    setValue(
-                      `${baseFieldPath}.data.attributes.${index}.interval`,
-                      null
-                    )
-                    clearErrors([
-                      `${baseFieldPath}.data.attributes.${index}.value`,
-                      `${baseFieldPath}.data.attributes.${index}.interval`,
-                    ])
-                  }}
-                  onBlur={onBlur}
-                />
-              )}
+            <ControlledSelect
+              name={`${baseFieldPath}.data.attributes.${index}.trait_type`}
+              isLoading={isAttributesLoading}
+              options={nftCustomAttributeNames}
+              placeholder="Attribute"
+              afterOnChange={() => {
+                setValue(`${baseFieldPath}.data.attributes.${index}.value`, null)
+                setValue(`${baseFieldPath}.data.attributes.${index}.interval`, null)
+                clearErrors([
+                  `${baseFieldPath}.data.attributes.${index}.value`,
+                  `${baseFieldPath}.data.attributes.${index}.interval`,
+                ])
+              }}
             />
           </FormControl>
 
@@ -309,37 +284,18 @@ const AttributePicker = ({
               }
               isDisabled={!nftCustomAttributeNames?.length}
             >
-              <Controller
-                name={`${baseFieldPath}.data.attributes.${index}.value` as const}
-                control={control}
+              <ControlledSelect
+                name={`${baseFieldPath}.data.attributes.${index}.value`}
                 rules={{
                   required:
+                    !nftCustomAttributeNames?.length &&
                     getValues(
                       `${baseFieldPath}.data.attributes.${index}.trait_type`
-                    ) && "This field is required.",
+                    ) &&
+                    "This field is required.",
                 }}
-                render={({
-                  field: { onChange, onBlur, value: valueSelectValue, ref },
-                }) => (
-                  <StyledSelect
-                    ref={ref}
-                    options={
-                      nftCustomAttributeValues?.length > 0
-                        ? nftCustomAttributeValues
-                        : []
-                    }
-                    placeholder="Any attribute values"
-                    value={
-                      nftCustomAttributeValues?.find(
-                        (attributeValue) => attributeValue.value === valueSelectValue
-                      ) || ""
-                    }
-                    onChange={(newValue: SelectOption) =>
-                      onChange(newValue.value ?? null)
-                    }
-                    onBlur={onBlur}
-                  />
-                )}
+                options={nftCustomAttributeValues}
+                placeholder="Any attribute values"
               />
 
               <FormErrorMessage>
