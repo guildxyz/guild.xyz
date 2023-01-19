@@ -5,13 +5,12 @@ import {
   InputLeftElement,
   Stack,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { Controller, useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 export type NooxBadge = {
@@ -26,9 +25,10 @@ export type NooxBadge = {
 
 const NooxForm = ({ baseFieldPath }: RequirementFormProps) => {
   const {
-    control,
     formState: { errors },
   } = useFormContext()
+
+  const id = useWatch({ name: `${baseFieldPath}.data.id` })
 
   const { data, error, isValidating } = useSWRImmutable<NooxBadge[]>("/api/noox")
 
@@ -39,6 +39,8 @@ const NooxForm = ({ baseFieldPath }: RequirementFormProps) => {
     // details: noox.descriptionEligibility.match(/[0-9]+. times/),
   }))
 
+  const selectedOption = options?.find((option) => option.value === id)
+
   return (
     <Stack spacing={4} alignItems="start">
       <FormControl
@@ -48,40 +50,19 @@ const NooxForm = ({ baseFieldPath }: RequirementFormProps) => {
         <FormLabel>Badge:</FormLabel>
 
         <InputGroup>
-          <Controller
-            name={`${baseFieldPath}.data.id` as const}
-            control={control}
-            rules={{ required: "This field is required." }}
-            render={({ field: { onChange, onBlur, value, ref } }) => {
-              const selectedOption = options?.find(
-                (option) => option.value === value
-              )
+          {selectedOption && (
+            <InputLeftElement>
+              <OptionImage img={selectedOption.img} alt={"Noox badge image"} />
+            </InputLeftElement>
+          )}
 
-              return (
-                <>
-                  {selectedOption && (
-                    <InputLeftElement>
-                      <OptionImage
-                        img={selectedOption.img}
-                        alt={"Noox badge image"}
-                      />
-                    </InputLeftElement>
-                  )}
-                  <StyledSelect
-                    ref={ref}
-                    isClearable
-                    isLoading={isValidating}
-                    options={options}
-                    placeholder="Choose Noox badge"
-                    value={selectedOption ?? ""}
-                    onChange={(newSelectedOption: SelectOption) => {
-                      onChange(newSelectedOption?.value ?? null)
-                    }}
-                    onBlur={onBlur}
-                  />
-                </>
-              )
-            }}
+          <ControlledSelect
+            name={`${baseFieldPath}.data.id`}
+            rules={{ required: "This field is required." }}
+            isClearable
+            isLoading={isValidating}
+            options={options}
+            placeholder="Choose Noox badge"
           />
         </InputGroup>
 
