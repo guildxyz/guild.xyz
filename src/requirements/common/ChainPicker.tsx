@@ -8,12 +8,14 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import { BALANCY_SUPPORTED_CHAINS } from "components/create-guild/Requirements/hooks/useBalancy"
 import {
   Chain,
   Chains,
   RPC,
   supportedChains as defaultSupportedChains,
 } from "connectors"
+import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { SelectOption } from "types"
@@ -38,19 +40,26 @@ const ChainPicker = ({
   onChange: onChangeHandler,
   isDisabled,
 }: Props): JSX.Element => {
+  const router = useRouter()
+  const isBalancyPlayground = router.asPath === "/balancy"
+
   const { setValue } = useFormContext()
 
   const { chainId } = useWeb3React()
   const chain = useWatch({ name: controlName })
 
-  const mappedSupportedChains = supportedChains
+  const mappedSupportedChains = isBalancyPlayground
+    ? mappedChains.filter((c) =>
+        Object.keys(BALANCY_SUPPORTED_CHAINS).includes(c.value)
+      )
+    : supportedChains
     ? mappedChains?.filter((_chain) => supportedChains.includes(_chain.value))
     : mappedChains
 
   /**
-   * Timeouted setValue on mount instead of defaultValue, because for some reason
+   * Timed out setValue on mount instead of defaultValue, because for some reason
    * useWatch({ name: `${baseFieldPath}.chain` }) in other components returns
-   * undefined before selecting an option otherways
+   * undefined before selecting an option otherwise
    */
   useEffect(() => {
     if (chain) return
@@ -83,7 +92,7 @@ const ChainPicker = ({
                   (_chain) => _chain.value === value
                 )}
                 onChange={(selectedOption: SelectOption) => {
-                  onChange(selectedOption?.value)
+                  onChange(selectedOption?.value ?? null)
                   onChangeHandler?.()
                 }}
                 onBlur={onBlur}

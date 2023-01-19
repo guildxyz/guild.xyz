@@ -9,9 +9,9 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
 import { CaretDown, Function } from "phosphor-react"
 import { RequirementComponentProps } from "requirements"
+import DataBlock from "requirements/common/DataBlock"
 import shortenHex from "utils/shortenHex"
 import BlockExplorerUrl from "../common/BlockExplorerUrl"
 import Requirement from "../common/Requirement"
@@ -25,6 +25,7 @@ const ContractStateRequirement = ({
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={<Icon as={Function} boxSize={6} />}
       footer={
         <>

@@ -46,7 +46,7 @@ const useUploadMintLinks = () => {
         showErrorToast(error?.error?.message ?? error?.error ?? error),
       onSuccess: () => {
         toast({
-          title: "Successfuly uploaded mint links!",
+          title: "Successfully uploaded mint links!",
           status: "success",
         })
 

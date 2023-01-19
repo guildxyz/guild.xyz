@@ -109,7 +109,7 @@ const checkKeyPair = (_: string, savedPubKey: string, pubKey: string): boolean =
   savedPubKey === pubKey
 
 const useKeyPair = () => {
-  // Using the defauld Datadog implementation here, so the useDatadog, useUser, and useKeypair hooks don't call each other
+  // Using the default Datadog implementation here, so the useDatadog, useUser, and useKeypair hooks don't call each other
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
@@ -204,7 +204,10 @@ const useKeyPair = () => {
           )
         }
       },
-      onSuccess: () => mutateKeyPair(generatedKeyPair),
+      onSuccess: (newKeyPair) => {
+        mutateKeyPair(newKeyPair)
+        addDatadogAction("Successfully generated keypair")
+      },
     }
   )
 

@@ -32,6 +32,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
       if (onSuccess) onSuccess()
       mutateGuild()
       mutate(`/guild/access/${id}/${account}`)
+      mutate(`/statusUpdate/guild/${id}`)
     },
     onError: (err) => showErrorToast(err),
   })

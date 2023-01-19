@@ -123,7 +123,7 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
             onBlur={guildIdField.onBlur}
             onChange={(newValue) => {
               resetField(`${baseFieldPath}.data.roleId`)
-              guildIdField.onChange(newValue?.value)
+              guildIdField.onChange(newValue?.value ?? null)
             }}
             ref={guildIdField.ref}
             value={selectedGuild ?? null}
@@ -156,7 +156,7 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
             options={roleOptions}
             name={roleIdField.name}
             onBlur={roleIdField.onBlur}
-            onChange={(newValue) => roleIdField.onChange(newValue?.value)}
+            onChange={(newValue) => roleIdField.onChange(newValue?.value ?? null)}
             ref={roleIdField.ref}
             value={selectedRole ?? null}
           />

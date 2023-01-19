@@ -16,7 +16,7 @@ type Rest = {
   [x: string]: any
 }
 
-type Logic = "AND" | "OR" | "NOR" | "NAND"
+type Logic = "AND" | "OR"
 
 type ThemeMode = "LIGHT" | "DARK"
 
@@ -132,12 +132,19 @@ type PlatformGuildData = {
 
 type PlatformRoleData = {
   DISCORD: {
-    isGuarded: boolean
     role?: never
   }
   GOOGLE: {
-    isGuarded?: never
     role: "reader" | "commenter" | "writer"
+  }
+}
+
+type Trait = {
+  trait_type?: string
+  value?: string
+  interval?: {
+    min: number
+    max: number
   }
 }
 
@@ -151,6 +158,7 @@ type Requirement = {
   name: string
   symbol: string
   decimals?: number
+  isNegated: boolean
 
   // Props used inside the forms on the UI
   nftRequirementType?: string
@@ -416,6 +424,7 @@ export type {
   GuildPlatform,
   GuildBase,
   Guild,
+  Trait,
   Requirement,
   RequirementType,
   RolePlatform,

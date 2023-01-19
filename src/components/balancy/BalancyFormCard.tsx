@@ -44,6 +44,8 @@ const BalancyFormCard = ({
           onClick={onRemove}
         />
         <Box pt={4} h="full">
+          {/* can enable if we implement isNegated support in useBalancy  */}
+          {/* <IsNegatedPicker baseFieldPath={baseFieldPath} /> */}
           {children}
         </Box>
         <ColorCardLabel

@@ -10,6 +10,13 @@ type OAuthData<Data> = {
   scope?: string
 } & Data
 
+const fallbackData = {
+  [process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID]: randomBytes(16).toString("hex"),
+  [process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID]: randomBytes(16).toString("hex"),
+  [process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID]: randomBytes(16).toString("hex"),
+  [process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID]: randomBytes(16).toString("hex"),
+}
+
 const fetcherWithAuthorization = async (authorization: string, endpoint: string) => {
   const response = await fetch(endpoint, {
     headers: {
@@ -48,21 +55,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   const { addDatadogError, addDatadogAction } = useDatadog()
   const toast = useToast()
 
-  const {
-    data: csrfToken,
-    mutate: mutateCSRFToken,
-    isValidating,
-  } = useSWRImmutable(
+  const { data: csrfToken, mutate: mutateCSRFToken } = useSWRImmutable(
     ["CSRFToken", oauthOptions.client_id],
     () => randomBytes(16).toString("hex"),
-    { revalidateOnMount: false }
+    { revalidateOnMount: false, fallbackData: fallbackData[oauthOptions.client_id] }
   )
-
-  useEffect(() => {
-    if (!isValidating && !csrfToken) {
-      mutateCSRFToken()
-    }
-  }, [isValidating, csrfToken])
 
   const redirectUri =
     typeof window !== "undefined" &&
@@ -98,11 +95,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           const {
             data,
             type,
-            csrfToken: recievedCsrfToken,
+            csrfToken: receivedCsrfToken,
           } = JSON.parse(window.localStorage.getItem(dataKey))
 
           addDatadogAction(
-            `CSRF - Main window recieved CSRF token: ${recievedCsrfToken}. Should equal: ${csrfToken}`
+            `CSRF - Main window received CSRF token: ${receivedCsrfToken}. Should equal: ${csrfToken}`
           )
 
           if (type === "OAUTH_ERROR") {
@@ -115,12 +112,16 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           if (type === "OAUTH_SUCCESS") {
             clearInterval(interval)
 
-            if (recievedCsrfToken !== csrfToken) {
-              const title = "CSRF Error"
+            if (receivedCsrfToken !== csrfToken) {
+              const title = "Error"
               const errorDescription =
-                "CSRF token mismatch, this indicates possible CSRF attack."
+                "Authentication attempt can't be validated. Refresh and try connecting again"
 
-              addDatadogError(`OAuth error - ${title}`, { error: errorDescription })
+              addDatadogError(`OAuth error - ${title}`, {
+                error: errorDescription,
+                receivedCsrfToken,
+                csrfToken,
+              })
               reject({ error: title, errorDescription })
               toast({ status: "error", title, description: errorDescription })
             } else {
@@ -149,7 +150,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
         window.localStorage.removeItem(dataKey)
         setIsAuthenticating(false)
         window.localStorage.setItem(shouldCloseKey, "true")
-        mutateCSRFToken(undefined, { revalidate: false })
+        mutateCSRFToken(randomBytes(16).toString("hex"))
       })
   }, [windowInstance])
 

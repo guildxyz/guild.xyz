@@ -1,7 +1,6 @@
 import {
   Button,
   CloseButton,
-  HStack,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -18,6 +17,7 @@ import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import BalancyFooter from "./BalancyFooter"
+import IsNegatedPicker from "./IsNegatedPicker"
 
 const RequirementEditableCard = ({
   index,
@@ -64,17 +64,17 @@ const RequirementEditableCard = ({
 
   return (
     <>
-      <Card px="6" py="4" pos="relative">
-        <HStack pr="3">
-          <RequirementComponent
-            requirement={field}
-            footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
-            setValueForBalancy={setValueForBalancy}
-          />
-          <Button ref={ref} size="sm" onClick={onOpen}>
-            Edit
-          </Button>
-        </HStack>
+      <Card px="6" py="4" pr="8" pos="relative">
+        <RequirementComponent
+          requirement={field}
+          footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
+          setValueForBalancy={setValueForBalancy}
+          rightElement={
+            <Button ref={ref} size="sm" onClick={onOpen}>
+              Edit
+            </Button>
+          }
+        />
         <CloseButton
           position="absolute"
           top={2}
@@ -104,6 +104,7 @@ const RequirementEditableCard = ({
             />
             <ModalHeader>{`Edit ${REQUIREMENTS[type].name} requirement`}</ModalHeader>
             <ModalBody>
+              <IsNegatedPicker baseFieldPath={``} />
               <FormComponent baseFieldPath={``} field={field} />
             </ModalBody>
             <ModalFooter gap="3">

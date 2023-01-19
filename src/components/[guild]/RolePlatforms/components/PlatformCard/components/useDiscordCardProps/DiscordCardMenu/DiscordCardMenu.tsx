@@ -5,6 +5,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Spinner,
   Stack,
   Tag,
   Text,
@@ -13,8 +14,15 @@ import {
 import CreatePoap from "components/[guild]/CreatePoap"
 import useGuild from "components/[guild]/hooks/useGuild"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
-import { ChatDots, DotsThree, Gear } from "phosphor-react"
+import {
+  ArrowsCounterClockwise,
+  ChatDots,
+  Check,
+  DotsThree,
+  Gear,
+} from "phosphor-react"
 import DiscordRewardSettings from "./components/DiscordRewardSettings.tsx"
+import useSyncMembersFromDiscord from "./hooks/useSyncMembersFromDiscord"
 
 type Props = {
   platformGuildId: string
@@ -39,9 +47,11 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
 
   const { poaps } = useGuild()
 
+  const { response, isLoading, triggerSync } = useSyncMembersFromDiscord()
+
   return (
     <>
-      <Menu placement="bottom-end">
+      <Menu placement="bottom-end" closeOnSelect={false}>
         <MenuButton
           as={IconButton}
           icon={<DotsThree />}
@@ -77,6 +87,21 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
           </MenuItem>
           <MenuItem icon={<ChatDots />} onClick={onSendJoinButtonOpen}>
             Send join button
+          </MenuItem>
+          <MenuItem
+            icon={
+              response ? (
+                <Check />
+              ) : isLoading ? (
+                <Spinner boxSize="1em" mb="-2px" />
+              ) : (
+                <ArrowsCounterClockwise />
+              )
+            }
+            onClick={triggerSync}
+            isDisabled={isLoading || response}
+          >
+            Sync members from Discord
           </MenuItem>
           <MenuItem icon={<Gear />} onClick={onSettingsOpen}>
             Settings

@@ -78,9 +78,8 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     onSuccess
   )
 
-  useWarnIfUnsavedChanges(
-    methods.formState?.isDirty && !methods.formState.isSubmitted
-  )
+  const isDirty = !!Object.keys(methods.formState.dirtyFields).length
+  useWarnIfUnsavedChanges(isDirty && !methods.formState.isSubmitted)
 
   const {
     isOpen: isAlertOpen,
@@ -160,19 +159,21 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         isOpen={isOpen}
         placement="left"
         size={{ base: "full", md: "lg" }}
-        onClose={methods.formState.isDirty ? onAlertOpen : onClose}
+        onClose={isDirty ? onAlertOpen : onClose}
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
             <DrawerHeader title="Edit role">
-              {roles?.length > 1 && <DeleteRoleButton roleId={id} />}
+              {roles?.length > 1 && (
+                <DeleteRoleButton roleId={id} onDrawerClose={onClose} />
+              )}
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <RolePlatforms roleId={roleId} />
-                <Section title="General" spacing="6">
+                <Section title="General">
                   <Box>
                     <FormLabel>Logo and name</FormLabel>
                     <HStack spacing={2} alignItems="start">

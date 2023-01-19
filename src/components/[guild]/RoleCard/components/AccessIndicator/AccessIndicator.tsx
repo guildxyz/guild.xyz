@@ -3,24 +3,17 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { ArrowCounterClockwise, Check, LockSimple, Warning, X } from "phosphor-react"
+import { Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
-import useTwitterRateLimitWarning from "./hooks/useTwitterRateLimitWarning"
 
 type Props = {
   roleId: number
 }
 
-const reconnectionErrorMessages = new Set<string>([
-  "Discord API error: You are being rate limited.",
-  "Please reauthenticate to Discord",
-])
-
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
-  const { hasAccess, error, isLoading, data } = useAccess(roleId)
-  const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
+  const { hasAccess, isLoading, data } = useAccess(roleId)
 
   const { isActive } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
@@ -48,52 +41,36 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   if (isLoading)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
-  const roleError = (data ?? error)?.find?.((err) => err.roleId === roleId)
-
-  if (roleError?.errors?.some((err) => reconnectionErrorMessages.has(err.msg))) {
+  if (data?.errors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID")) {
     return (
       <AccessIndicatorUI
         colorScheme="orange"
-        label={"Reconnect below to check access"}
-        icon={ArrowCounterClockwise}
+        label={"Reconnect needed to check access"}
+        icon={Warning}
       />
     )
   }
 
-  if (
-    roleError?.warnings?.some(
-      (err) =>
-        typeof err.msg === "string" && err.msg.includes("account isn't connected")
-    )
-  ) {
+  if (data?.errors?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED")) {
     return (
       <AccessIndicatorUI
         colorScheme="blue"
-        label={"Connect below to check access"}
+        label={"Auth needed to check access"}
         icon={LockSimple}
       />
     )
   }
 
-  if (Array.isArray(error) && roleError?.errors)
+  if (data?.errors)
     return (
-      <>
-        <AccessIndicatorUI
-          colorScheme="orange"
-          label="Couldn’t check access"
-          icon={Warning}
-        />
-        {twitterRateLimitWarning}
-      </>
+      <AccessIndicatorUI
+        colorScheme="orange"
+        label="Couldn’t check access"
+        icon={Warning}
+      />
     )
 
-  return (
-    <>
-      <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
-      {twitterRateLimitWarning}
-    </>
-  )
+  return <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
 }
 
-export { reconnectionErrorMessages }
 export default AccessIndicator

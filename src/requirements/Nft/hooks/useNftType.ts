@@ -3,7 +3,6 @@ import useSWR from "swr"
 
 const nounsAddresses = {
   ETHEREUM: "0x9C8fF314C9Bc7F6e59A9d9225Fb22946427eDC03".toLowerCase(),
-  RINKEBY: "0x65dA5EbD09f0C6CA1DFc5EaA5639626ccd5DaD06".toLowerCase(),
 }
 
 const useNftType = (

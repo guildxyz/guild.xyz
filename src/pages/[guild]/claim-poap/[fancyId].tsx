@@ -99,7 +99,7 @@ const Page = (): JSX.Element => {
         />
       </Head>
 
-      <Header showBackButton={true} />
+      <Header />
       <Container maxW="xl" pt={{ base: 16, md: 24 }} pb={12}>
         {correctPoap ? (
           <>
@@ -192,7 +192,9 @@ const Page = (): JSX.Element => {
                   </Text>
                 </HStack>
 
-                <Skeleton isLoaded={poapLinks && !isPoapLinksLoading}>
+                <Skeleton
+                  isLoaded={!!poapLinks || (poapLinks && !isPoapLinksLoading)}
+                >
                   <Tag
                     fontWeight="bold"
                     textTransform="uppercase"

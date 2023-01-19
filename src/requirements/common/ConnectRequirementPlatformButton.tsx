@@ -1,23 +1,23 @@
-import { Icon } from "@chakra-ui/react"
+import { ButtonProps, Icon } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import { reconnectionErrorMessages } from "components/[guild]/RoleCard/components/AccessIndicator/AccessIndicator"
 import useToast from "hooks/useToast"
 import platforms from "platforms"
-import { PlatformName } from "types"
+import REQUIREMENTS from "requirements"
+import { PlatformName, Requirement } from "types"
 
 type Props = {
-  platform: PlatformName
-  roleId?: number
-}
+  requirement: Requirement
+} & ButtonProps
 
-const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
+const ConnectRequirementPlatformButton = ({ requirement, ...rest }: Props) => {
+  const platform = REQUIREMENTS[requirement.type].types[0] as PlatformName
+
   const { platformUsers } = useUser()
 
-  const { mutate: mutateAccesses, data, error } = useAccess()
-  const accesses = data || error
+  const { mutate: mutateAccesses, data: roleAccess } = useAccess(requirement.roleId)
   const toast = useToast()
   const onSuccess = () => {
     mutateAccesses()
@@ -28,12 +28,10 @@ const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
     })
   }
 
-  const roleAccess = Array.isArray(accesses)
-    ? accesses?.find((access) => access.roleId === roleId)
-    : null
-
-  const isReconnection = roleAccess?.errors?.some((err) =>
-    reconnectionErrorMessages.has(err.msg)
+  const isReconnection = roleAccess?.errors?.some(
+    (err) =>
+      err.requirementId === requirement.id &&
+      err.errorType === "PLATFORM_CONNECT_INVALID"
   )
 
   const { onConnect, isLoading, loadingText, response } = useConnectPlatform(
@@ -57,6 +55,7 @@ const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
       colorScheme={platform}
       leftIcon={<Icon as={platforms[platform].icon} />}
       iconSpacing="1"
+      {...rest}
     >
       {`${isReconnection ? "Reconnect" : "Connect"} ${platforms[platform].name}`}
     </Button>

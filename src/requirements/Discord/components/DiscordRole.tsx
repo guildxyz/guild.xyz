@@ -1,12 +1,15 @@
 import {
   Collapse,
+  Divider,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   Input,
 } from "@chakra-ui/react"
+import ReconnectAlert from "components/common/ReconnectAlert"
 import StyledSelect from "components/common/StyledSelect"
+import useGateables from "hooks/useGateables"
 import useServerData from "hooks/useServerData"
 import {
   useController,
@@ -22,6 +25,8 @@ import ServerPicker from "./ServerPicker"
 const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
   const { errors } = useFormState()
   const { register, setValue } = useFormContext()
+
+  const { error } = useGateables("DISCORD")
 
   const { field: roleField } = useController({
     name: `${baseFieldPath}.data.roleId`,
@@ -92,7 +97,7 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
             } else {
               setValue(`${baseFieldPath}.data.roleName`, undefined)
             }
-            roleField.onChange(newValue?.value)
+            roleField.onChange(newValue?.value ?? null)
           }}
           ref={roleField.ref}
           value={
@@ -134,6 +139,13 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
           </FormHelperText>
         </FormControl>
       </Collapse>
+
+      {error && (
+        <>
+          <Divider />
+          <ReconnectAlert platformName="DISCORD" />
+        </>
+      )}
     </>
   )
 }

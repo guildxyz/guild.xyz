@@ -48,7 +48,6 @@ const RolePlatforms = ({ roleId }: Props) => {
   return (
     <Section
       title="Rewards"
-      spacing="6"
       titleRightElement={
         <>
           <Text as="span" fontSize="sm" colorScheme={"gray"}>
@@ -69,7 +68,7 @@ const RolePlatforms = ({ roleId }: Props) => {
     >
       <SimpleGrid spacing={{ base: 3 }}>
         {!fields || fields?.length <= 0 ? (
-          <AddCard text={"Add reward"} onClick={onOpen} />
+          <AddCard text="Add reward" onClick={onOpen} />
         ) : (
           fields.map((rolePlatform: any, index) => {
             let guildPlatform: GuildPlatform, type
@@ -82,6 +81,9 @@ const RolePlatforms = ({ roleId }: Props) => {
               guildPlatform = rolePlatform.guildPlatform
               type = guildPlatform.platformName
             }
+
+            if (!type) return null
+
             const { cardPropsHook: useCardProps, cardSettingsComponent } =
               platforms[type]
 
@@ -91,7 +93,7 @@ const RolePlatforms = ({ roleId }: Props) => {
 
             return (
               <RolePlatformProvider
-                key={rolePlatform.roleId}
+                key={index}
                 rolePlatform={{
                   ...rolePlatform,
                   roleId,

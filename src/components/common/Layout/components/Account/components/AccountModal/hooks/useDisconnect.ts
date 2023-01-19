@@ -1,7 +1,10 @@
+import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { mutate } from "swr"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 
@@ -15,7 +18,9 @@ type Data =
 
 const useDisconnect = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
-  const { mutate } = useUser()
+  const { mutate: mutateUser } = useUser()
+  const { account } = useWeb3React()
+  const { id } = useGuild()
   const toast = useToast()
 
   const submit = async (signedValidation: SignedValdation) =>
@@ -26,7 +31,8 @@ const useDisconnect = (onSuccess?: () => void) => {
 
   return useSubmitWithSign<any>(submit, {
     onSuccess: () => {
-      mutate()
+      mutateUser()
+      mutate(`/guild/access/${id}/${account}`)
 
       toast({
         title: `Account disconnected!`,

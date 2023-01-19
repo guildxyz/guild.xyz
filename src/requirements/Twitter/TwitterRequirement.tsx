@@ -1,24 +1,21 @@
 import { Icon, Link } from "@chakra-ui/react"
-import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { TwitterLogo } from "phosphor-react"
 import { RequirementComponentProps } from "requirements"
+import DataBlockWithCopy from "requirements/common/DataBlockWithCopy"
 import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatformButton"
 import Requirement from "../common/Requirement"
 
 const TwitterRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
   <Requirement
+    isNegated={requirement.isNegated}
     image={
       requirement.type === "TWITTER_FOLLOW" && requirement.data.id ? (
-        typeof window !== "undefined" ? (
-          `${window.origin}/api/twitter-avatar?username=${requirement.data.id}`
-        ) : (
-          "/default_twitter_icon.png"
-        )
+        `/api/twitter-avatar?username=${requirement.data.id}`
       ) : (
         <Icon as={TwitterLogo} boxSize={6} />
       )
     }
-    footer={<ConnectRequirementPlatformButton platform="TWITTER" />}
+    footer={<ConnectRequirementPlatformButton requirement={requirement} />}
     {...rest}
   >
     {(() => {
@@ -50,7 +47,7 @@ const TwitterRequirement = ({ requirement, ...rest }: RequirementComponentProps)
               <Link
                 href={`https://twitter.com/${requirement.data.id}`}
                 isExternal
-                colorScheme={"blue"}
+                colorScheme="blue"
                 fontWeight="medium"
               >
                 @{requirement.data.id}

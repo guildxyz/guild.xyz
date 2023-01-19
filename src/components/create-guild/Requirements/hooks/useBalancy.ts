@@ -1,5 +1,5 @@
 import { parseUnits } from "@ethersproject/units"
-import { Chains } from "connectors"
+import { Chain, Chains } from "connectors"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useWatch } from "react-hook-form"
@@ -23,13 +23,16 @@ type BalancyRequirement = {
 }
 
 /** These are objects, so we can just index them when filtering requirements */
-const BALANCY_SUPPORTED_TYPES = {
+const BALANCY_SUPPORTED_TYPES: Record<
+  "ERC20" | "ERC721" | "ERC1155" | "NOUNS",
+  boolean
+> = {
   ERC20: true,
   ERC721: true,
   ERC1155: true,
   NOUNS: true,
 }
-const BALANCY_SUPPORTED_CHAINS = {
+const BALANCY_SUPPORTED_CHAINS: Partial<Record<Chain, boolean>> = {
   ETHEREUM: true,
   POLYGON: true,
   GNOSIS: true,
@@ -76,6 +79,10 @@ const fetchHolders = async (
   }
 }
 
+/**
+ * TODO: This hook is really messy with tons of useEffect, abstracted logic for
+ * single and multiple requirements too and hacky solutions, should refactor
+ */
 const useBalancy = (
   baseFieldPath?: string
 ): {
@@ -93,12 +100,7 @@ const useBalancy = (
   const debouncedRequirement = useDebouncedState(requirement)
 
   // Fixed logic for single requirement to avoid unnecessary refetch when changing logic
-  const balancyLogic =
-    baseFieldPath !== undefined
-      ? "OR"
-      : logic === "NAND" || logic === "NOR"
-      ? logic.substring(1)
-      : logic
+  const balancyLogic = baseFieldPath !== undefined ? "OR" : logic
 
   const renderedRequirements = useMemo<Requirement[]>(
     () =>
@@ -112,7 +114,8 @@ const useBalancy = (
     const filteredRequirements =
       renderedRequirements
         ?.filter(
-          ({ type, address, chain, data, balancyDecimals }) =>
+          ({ type, address, chain, data, balancyDecimals, isNegated }) =>
+            !isNegated &&
             address?.length > 0 &&
             BALANCY_SUPPORTED_TYPES[type] &&
             BALANCY_SUPPORTED_CHAINS[chain] &&
@@ -192,7 +195,7 @@ const useBalancy = (
   const allowlists = useMemo(
     () =>
       renderedRequirements
-        ?.filter(({ type }) => type === "ALLOWLIST")
+        ?.filter(({ type, isNegated }) => type === "ALLOWLIST" && !isNegated)
         ?.map(({ data: { addresses } }) => addresses) ?? [],
     [renderedRequirements]
   )
@@ -247,4 +250,5 @@ const useBalancy = (
   }
 }
 
+export { BALANCY_SUPPORTED_CHAINS }
 export default useBalancy

@@ -1,11 +1,22 @@
 import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { Chain } from "connectors"
 import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
-import ChainInfo from "../common/ChainInfo"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+const SUPPORTED_CHAINS: Chain[] = [
+  "POLYGON",
+  "AVALANCHE",
+  "FANTOM",
+  "MOONBEAM",
+  "GNOSIS",
+  "CELO",
+  "ARBITRUM",
+  "OPTIMISM",
+]
 
 const CaskForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const {
@@ -15,7 +26,10 @@ const CaskForm = ({ baseFieldPath, field }: RequirementFormProps) => {
 
   return (
     <Stack spacing={4} alignItems="start">
-      <ChainInfo>Works on Polygon</ChainInfo>
+      <ChainPicker
+        supportedChains={SUPPORTED_CHAINS}
+        controlName={`${baseFieldPath}.chain`}
+      />
       <FormControl
         isRequired
         isInvalid={parseFromObject(errors, baseFieldPath)?.data?.provider}
