@@ -57,7 +57,12 @@ const styles = {
 
     ".notion-page": {
       width: "var(--chakra-sizes-full) !important",
-      padding: "0 !important",
+      "@media (min-width : 1080px)": {
+        borderRadius: "15px",
+        background: "rgba(63,63,70, 0.45)",
+        paddingX: "25px !important",
+        paddingY: "20px !important",
+      },
       display: "inline-block !important",
       ".notion-simple-table": {
         fontFamily: "var(--chakra-fonts-body)",
