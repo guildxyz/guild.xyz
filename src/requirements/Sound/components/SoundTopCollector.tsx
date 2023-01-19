@@ -42,7 +42,6 @@ const SoundTopCollector = ({ baseFieldPath }: RequirementFormProps): JSX.Element
               message: "Amount must be less than or equal to 51",
             },
           }}
-          defaultValue={10}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <NumberInput
               ref={ref}
@@ -54,7 +53,6 @@ const SoundTopCollector = ({ baseFieldPath }: RequirementFormProps): JSX.Element
               onBlur={onBlur}
               min={1}
               max={51}
-              defaultValue={10}
             >
               <NumberInputField />
               <NumberInputStepper>
