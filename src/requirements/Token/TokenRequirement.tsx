@@ -1,4 +1,5 @@
 import { Text } from "@chakra-ui/react"
+import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -6,7 +7,6 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
 import { UseFormSetValue } from "react-hook-form"
-import BlockExplorerUrl from "../../components/[guild]/Requirements/components/BlockExplorerUrl"
 
 type Props = RequirementProps & {
   setValueForBalancy: UseFormSetValue<any>

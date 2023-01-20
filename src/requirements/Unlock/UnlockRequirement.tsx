@@ -1,8 +1,8 @@
+import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import BlockExplorerUrl from "../../components/[guild]/Requirements/components/BlockExplorerUrl"
 
 const UnlockRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
