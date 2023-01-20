@@ -11,11 +11,16 @@ type Props = {
 const RequirementProvider = ({
   requirement,
   children,
-}: PropsWithChildren<Props>): JSX.Element => (
-  <RequirementContext.Provider value={requirement}>
-    {children}
-  </RequirementContext.Provider>
-)
+}: PropsWithChildren<Props>): JSX.Element => {
+  // Added this for safety, but we sholdn't run into this if statement
+  if (!requirement) return null
+
+  return (
+    <RequirementContext.Provider value={requirement}>
+      {children}
+    </RequirementContext.Provider>
+  )
+}
 
 const useRequirementContext = () => useContext(RequirementContext)
 
