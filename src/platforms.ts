@@ -90,7 +90,6 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "TELEGRAM",
     gatedEntity: "group",
     creationDescription: "Token gate your group",
-
     paramName: "telegramId",
     cardPropsHook: useTelegramCardProps,
     CreationGridSelectButton: TelegramSelectButton,
