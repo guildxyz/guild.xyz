@@ -68,7 +68,7 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
             } else {
               setValue(`${baseFieldPath}.data.serverName`, undefined)
             }
-            serverField.onChange(newValue?.value)
+            serverField.onChange(newValue?.value ?? null)
           }}
           ref={serverField.ref}
           value={

@@ -5,6 +5,7 @@ import {
   SimpleGrid,
   Skeleton,
   SkeletonCircle,
+  Tag,
   Text,
   useColorMode,
   VStack,
@@ -17,6 +18,7 @@ export type RequirementProps = PropsWithChildren<{
   withImgBg?: boolean
   footer?: JSX.Element
   rightElement?: JSX.Element
+  isNegated?: boolean
   simple?: boolean
 }>
 
@@ -26,6 +28,7 @@ const Requirement = ({
   footer,
   withImgBg = true,
   rightElement,
+  isNegated = false,
   simple,
   children,
 }: RequirementProps): JSX.Element => {
@@ -68,7 +71,10 @@ const Requirement = ({
         </SkeletonCircle>
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center">
-        <Text wordBreak="break-word">{children}</Text>
+        <Text wordBreak="break-word">
+          {isNegated && <Tag mr="2">DON'T</Tag>}
+          {children}
+        </Text>
         {!simple && footer}
       </VStack>
       {!simple && rightElement}

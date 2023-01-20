@@ -12,17 +12,14 @@ import {
   Icon,
   Input,
   InputGroup,
-  InputLeftAddon,
   InputLeftElement,
   Spinner,
   Stack,
-  Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import useTokenData from "hooks/useTokenData"
 import { Plus } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form"
@@ -33,7 +30,7 @@ import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../common/ChainPicker"
 import MinMaxAmount from "../common/MinMaxAmount"
 import AttributePicker from "./components/AttributePicker"
-import useNftMetadata from "./hooks/useNftMetadata"
+import { useNftMetadataWithTraits } from "./hooks/useNftMetadata"
 import useNfts from "./hooks/useNfts"
 import useNftType from "./hooks/useNftType"
 
@@ -99,9 +96,10 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
 
   const [addressInput, setAddressInput] = useState("")
   const { nfts, isLoading } = useNfts(chain)
+
   const mappedNfts = useMemo(
     () =>
-      nfts?.map((nft) => ({
+      nfts?.filter(Boolean)?.map((nft) => ({
         img: nft.logoUri,
         label: nft.name,
         value: nft.address,
@@ -110,15 +108,13 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
     [nfts]
   )
 
-  const {
-    isValidating: isNftNameSymbolLoading,
-    data: { name: nftName, symbol: nftSymbol },
-  } = useTokenData(chain, address)
-
-  const nftImage = mappedNfts?.find((nft) => nft.value === address)?.img
+  const pickedNft = mappedNfts?.find((nft) => nft.value === address)
+  const nftName = pickedNft?.label
+  const nftImage = pickedNft?.img
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
-  const { isLoading: isMetadataLoading, metadata } = useNftMetadata(
+  const { isLoading: isMetadataLoading, metadata } = useNftMetadataWithTraits(
+    chain,
     address,
     pickedNftSlug
   )
@@ -194,22 +190,11 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
       >
         <FormLabel>NFT:</FormLabel>
         <InputGroup>
-          {address &&
-            (nftImage ? (
-              <InputLeftElement>
-                <OptionImage img={nftImage} alt={nftName} />
-              </InputLeftElement>
-            ) : (
-              <InputLeftAddon px={2} maxW={14}>
-                {isNftNameSymbolLoading ? (
-                  <Spinner size="sm" />
-                ) : (
-                  <Text as="span" fontSize="xs" fontWeight="bold" noOfLines={1}>
-                    {nftSymbol}
-                  </Text>
-                )}
-              </InputLeftAddon>
-            ))}
+          {address && nftImage && (
+            <InputLeftElement>
+              <OptionImage img={nftImage} alt={nftName} />
+            </InputLeftElement>
+          )}
           <Controller
             name={`${baseFieldPath}.address` as const}
             control={control}
@@ -247,7 +232,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
                     : null)
                 }
                 onChange={(selectedOption: SelectOption) => {
-                  onChange(selectedOption?.value)
+                  onChange(selectedOption?.value ?? null)
                   setPickedNftSlug(selectedOption?.slug)
                   setValue(`${baseFieldPath}.type`, "ERC721")
                   setValue(`${baseFieldPath}.data.attributes`, undefined)
@@ -310,7 +295,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
                 resetDetails(
                   selectedOption?.value as NftRequirementTypeOption["value"]
                 )
-                onChange(selectedOption?.value)
+                onChange(selectedOption?.value ?? null)
               }}
               onBlur={onBlur}
             />

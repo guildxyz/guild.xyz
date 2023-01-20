@@ -20,6 +20,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       isImageLoading={isArtistLoading || isSongsLoading}
       image={(() => {
         switch (requirement.type) {
@@ -85,7 +86,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
           case "SOUND_TOP_COLLECTOR":
             return (
               <>
-                {`Be in the top 10 collectors of `}
+                {`Be in the top ${requirement.data.topAmount} collectors of `}
                 <ArtistLink {...{ artistData, requirement }} />
                 {` on Sound.xyz`}
               </>

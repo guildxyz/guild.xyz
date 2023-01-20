@@ -10,7 +10,12 @@ const JuiceboxRequirement = ({
   const { project, isLoading, error } = useJuiceboxProject(requirement.data.id)
 
   return (
-    <Requirement image={project?.logoUri} isImageLoading={isLoading} {...rest}>
+    <Requirement
+      isNegated={requirement.isNegated}
+      image={project?.logoUri}
+      isImageLoading={isLoading}
+      {...rest}
+    >
       {`Hold ${
         requirement.data?.minAmount > 0
           ? `at least ${requirement.data.minAmount}`
