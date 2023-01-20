@@ -15,28 +15,28 @@ import {
   ModalOverlay,
   Text,
   Tooltip,
-  VStack,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react"
 import { BigNumber } from "@ethersproject/bignumber"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
+import { Error } from "components/common/Error"
+import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
+import { Modal } from "components/common/Modal"
+import ModalButton from "components/common/ModalButton"
+import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import usePoapEventDetails from "components/[guild]/CreatePoap/components/Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import useUser from "components/[guild]/hooks/useUser"
 import ConnectPlatform from "components/[guild]/JoinModal/components/ConnectPlatform"
 import JoinStep from "components/[guild]/JoinModal/components/JoinStep"
 import WalletAuthButton from "components/[guild]/JoinModal/components/WalletAuthButton"
 import WalletAuthButtonWithBalance from "components/[guild]/JoinModal/components/WalletAuthButtonWithBalance"
 import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
 import processJoinPlatformError from "components/[guild]/JoinModal/utils/processJoinPlatformError"
-import useIsMember from "components/[guild]/hooks/useIsMember"
-import useUser from "components/[guild]/hooks/useUser"
-import { Error } from "components/common/Error"
-import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
-import { Modal } from "components/common/Modal"
-import ModalButton from "components/common/ModalButton"
-import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { Chains } from "connectors"
 import useClearUrlQuery from "hooks/useClearUrlQuery"
 import useCoinBalance from "hooks/useCoinBalance"
@@ -186,7 +186,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
         <ModalOverlay />
         <ModalContent overflow="visible">
           <FormProvider {...methods}>
-            <ModalHeader pr={16}>Claim {poap?.name} POAP</ModalHeader>
+            <ModalHeader pr={16}>Mint {poap?.name} POAP</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <Error
@@ -225,7 +225,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           (!isActive && "Connect wallet first") ||
                           (!guildPoap?.activated && "Inactive POAP") ||
                           (poapLinks?.claimed === poapLinks?.total &&
-                            "All POAPs are claimed already") ||
+                            "All POAPs are minted already") ||
                           (poapEventDetails?.voiceChannelId &&
                             !voiceEligibility &&
                             !isWrongChain &&

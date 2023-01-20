@@ -12,6 +12,7 @@ import parseFromObject from "utils/parseFromObject"
 import SoundArtistSelect from "./components/SoundArtistSelect"
 import SoundMinAmount from "./components/SoundMinAmount"
 import SoundOwnASong from "./components/SoundOwnASong"
+import SoundTopCollector from "./components/SoundTopCollector"
 
 const soundRequirementTypes = [
   {
@@ -29,9 +30,9 @@ const soundRequirementTypes = [
     SoundRequirement: SoundArtistSelect,
   },
   {
-    label: "Be a top 10 collector of artist",
+    label: "Be a top x collector of artist",
     value: "SOUND_TOP_COLLECTOR",
-    SoundRequirement: SoundArtistSelect,
+    SoundRequirement: SoundTopCollector,
   },
   {
     label: "Own at least x songs",

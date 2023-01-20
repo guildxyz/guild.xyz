@@ -1,10 +1,14 @@
-import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
-import Requirement from "../common/Requirement"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useSismoBadges from "./hooks/useSismoBadges"
 import { DEPRECATED_PLAYGROUND_ADDRESS } from "./SismoForm"
 
-const SismoRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
+const SismoRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
   const { data, isValidating, error } = useSismoBadges(
     requirement.chain,
     requirement.address === DEPRECATED_PLAYGROUND_ADDRESS
@@ -17,7 +21,7 @@ const SismoRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
       image={badge?.img}
       isImageLoading={isValidating}
       withImgBg={false}
-      {...rest}
+      {...props}
     >
       {`Have the `}
       <DataBlock

@@ -2,7 +2,10 @@ import FormData from "form-data"
 import { NextApiRequest, NextApiResponse } from "next"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "PUT") return res.status(501).json({ error: "Not implemented" })
+  if (req.method !== "PUT") {
+    res.setHeader("Allow", "PUT")
+    return res.status(405).json({ error: `Method ${req.method} is not allowed` })
+  }
 
   const fancyId = req.body.fancy_id
 
