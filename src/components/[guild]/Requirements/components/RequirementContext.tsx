@@ -1,7 +1,8 @@
 import { createContext, PropsWithChildren, useContext } from "react"
 import { Requirement } from "types"
 
-const RequirementContext = createContext<Requirement>({} as Requirement)
+// It's safe to use undefine here as the default value, since we'll always have a default value in RequirementProvider
+const RequirementContext = createContext<Requirement>(undefined)
 
 type Props = {
   requirement: Requirement
