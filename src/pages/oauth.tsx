@@ -20,17 +20,16 @@ const OAuth = () => {
       if (!window.location.hash) router.push("/")
       const fragment = new URLSearchParams(window.location.hash.slice(1))
 
-      const [clientId, csrfToken] = fragment.get("state")?.split(";") ?? [
-        undefined,
-        undefined,
-      ]
+      const [clientId, csrfToken] = fragment.has("state")
+        ? JSON.parse(fragment.get("state"))
+        : [undefined, undefined]
 
       return { ...Object.fromEntries(fragment.entries()), clientId, csrfToken }
     } else {
-      const [clientId, csrfToken] = router.query.state?.split(";") ?? [
-        undefined,
-        undefined,
-      ]
+      const [clientId, csrfToken] =
+        "state" in router.query
+          ? JSON.parse(router.query.state)
+          : [undefined, undefined]
 
       return { ...router.query, clientId, csrfToken }
     }
