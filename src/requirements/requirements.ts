@@ -421,7 +421,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/shield.png",
     name: "Shield",
     fileNameBase: "Shield",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Shield/ShieldRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
