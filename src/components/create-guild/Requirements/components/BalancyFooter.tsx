@@ -21,7 +21,7 @@ const BalancyFooter = ({ baseFieldPath }) => {
            * "excluded by" isn't displayed right now normally because negated
            * requirements get filtered in useBalancy, but will be in the future
            */
-          requirement.isNegated
+          requirement?.isNegated
             ? "excluded by"
             : holders > 1
             ? "satisfy"

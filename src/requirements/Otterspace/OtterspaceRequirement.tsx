@@ -1,12 +1,13 @@
-import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
-import Requirement from "../common/Requirement"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useOtterspaceBadges from "./hooks/useOtterspaceBadges"
 
-const OtterspaceRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps) => {
+const OtterspaceRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
   const { data, isValidating, error } = useOtterspaceBadges(requirement.chain)
   const badge = data?.find((b) => b.value === requirement.data.id)
 
@@ -15,7 +16,7 @@ const OtterspaceRequirement = ({
       isNegated={requirement.isNegated}
       image={badge?.img}
       isImageLoading={isValidating}
-      {...rest}
+      {...props}
     >
       {`Have the `}
       {!badge || isValidating || error ? (

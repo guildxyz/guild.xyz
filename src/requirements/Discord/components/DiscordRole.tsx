@@ -97,7 +97,7 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
             } else {
               setValue(`${baseFieldPath}.data.roleName`, undefined)
             }
-            roleField.onChange(newValue?.value)
+            roleField.onChange(newValue?.value ?? null)
           }}
           ref={roleField.ref}
           value={

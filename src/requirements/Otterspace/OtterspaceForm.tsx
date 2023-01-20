@@ -58,9 +58,9 @@ const OtterspaceForm = ({ baseFieldPath }: RequirementFormProps) => {
                 options={data}
                 value={data?.find((option) => option.value === value) ?? ""}
                 placeholder="Choose badge"
-                onChange={(newSelectedOption: SelectOption) => {
-                  onChange(newSelectedOption?.value)
-                }}
+                onChange={(newSelectedOption: SelectOption) =>
+                  onChange(newSelectedOption?.value ?? null)
+                }
                 onBlur={onBlur}
               />
             )}

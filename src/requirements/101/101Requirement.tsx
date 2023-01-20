@@ -1,13 +1,14 @@
 import { Img, Link } from "@chakra-ui/react"
-import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
-import Requirement from "../common/Requirement"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import use101Courses from "./hooks/use101Courses"
 
-const HundredNOneRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps) => {
+const HundredNOneRequirement = ({ ...rest }: RequirementProps) => {
+  const requirement = useRequirementContext()
+
   const { data, isValidating, error } = use101Courses()
 
   const badge = data?.find(

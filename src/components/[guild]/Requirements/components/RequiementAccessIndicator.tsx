@@ -11,22 +11,19 @@ import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import { useContext } from "react"
 import REQUIREMENTS from "requirements"
-import ConnectRequirementPlatformButton from "requirements/common/ConnectRequirementPlatformButton"
-import { Requirement } from "types"
+import ConnectRequirementPlatformButton from "./ConnectRequirementPlatformButton"
 import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
+import { useRequirementContext } from "./RequirementContext"
 
-type Props = {
-  requirement: Requirement
-}
-
-const RequiementAccessIndicator = ({ requirement }: Props) => {
+const RequiementAccessIndicator = () => {
   const { openAccountModal } = useContext(Web3Connection)
+  const { id, roleId, type, data, isNegated } = useRequirementContext()
 
-  const { data: accessData } = useAccess(requirement.roleId)
+  const { data: accessData } = useAccess(roleId)
   if (!accessData) return null
 
   const reqAccessData = accessData?.requirements?.find(
-    (obj) => obj.requirementId === requirement.id
+    (obj) => obj.requirementId === id
   )
 
   if (reqAccessData?.access)
@@ -45,9 +42,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
       </RequiementAccessIndicatorUI>
     )
 
-  const reqErrorData = accessData?.errors?.find(
-    (obj) => obj.requirementId === requirement.id
-  )
+  const reqErrorData = accessData?.errors?.find((obj) => obj.requirementId === id)
 
   if (reqErrorData?.errorType === "PLATFORM_NOT_CONNECTED")
     return (
@@ -61,11 +56,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
           Connect account to check access
         </PopoverHeader>
         <PopoverFooter {...POPOVER_FOOTER_STYLES}>
-          <ConnectRequirementPlatformButton
-            requirement={requirement}
-            size="sm"
-            iconSpacing={2}
-          />
+          <ConnectRequirementPlatformButton size="sm" iconSpacing={2} />
         </PopoverFooter>
       </RequiementAccessIndicatorUI>
     )
@@ -85,7 +76,7 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
     )
   }
 
-  const reqObj = REQUIREMENTS[requirement.type]
+  const reqObj = REQUIREMENTS[type]
 
   return (
     <RequiementAccessIndicatorUI
@@ -99,11 +90,11 @@ const RequiementAccessIndicator = ({ requirement }: Props) => {
           reqObj?.isPlatform ? "account" : "addresses"
         }`}
       </PopoverHeader>
-      {reqAccessData?.amount !== null && requirement.data?.minAmount && (
+      {reqAccessData?.amount !== null && data?.minAmount && (
         <PopoverBody pt="0">
-          {requirement?.isNegated
-            ? `Expected max amount is ${requirement.data.minAmount} and you have ${reqAccessData?.amount}`
-            : `Expected amount is ${requirement.data.minAmount} but you only have ${reqAccessData?.amount}`}
+          {isNegated
+            ? `Expected max amount is ${data.minAmount} and you have ${reqAccessData?.amount}`
+            : `Expected amount is ${data.minAmount} but you only have ${reqAccessData?.amount}`}
         </PopoverBody>
       )}
       <PopoverFooter {...POPOVER_FOOTER_STYLES}>

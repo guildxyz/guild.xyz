@@ -76,7 +76,7 @@ const LensForm = ({ baseFieldPath, field }: RequirementFormProps) => {
               placeholder="Choose type"
               value={typeOptions?.find((option) => option.value === value)}
               onChange={(newSelectedOption: SelectOption) => {
-                onChange(newSelectedOption.value)
+                onChange(newSelectedOption.value ?? null)
                 // Resetting fields separately to avoid validation bugs
                 setValue(`${baseFieldPath}.data.id`, "")
                 setValue(`${baseFieldPath}.data.min`, "")
@@ -219,7 +219,7 @@ const LensProfileSelect = ({
             placeholder={placeholder}
             value={value ? options?.find((option) => option.value === value) : null}
             onChange={(newSelectedOption: SelectOption) =>
-              onChange(newSelectedOption?.value)
+              onChange(newSelectedOption?.value ?? null)
             }
             onInputChange={(inputValue) => setSearch(inputValue.split(".")[0])}
             isLoading={isLoading}

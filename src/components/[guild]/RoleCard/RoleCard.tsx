@@ -78,9 +78,9 @@ const RoleCard = memo(({ role }: Props) => {
             )}
           </HStack>
           {role.description && (
-            <Text mb={6} wordBreak="break-word">
+            <Box mb={6} wordBreak="break-word">
               {parseDescription(role.description)}
-            </Text>
+            </Box>
           )}
           <Box mt="auto">
             {role.rolePlatforms?.map((platform) => (
