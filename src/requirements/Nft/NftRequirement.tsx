@@ -27,7 +27,7 @@ const getNounsRequirementType = (trait: Trait) =>
     : ImageData.images?.[imageDataTypeMap[trait.trait_type]]?.[+trait.value]
         ?.filename
 
-const NftRequirement = () => {
+const NftRequirement = (props) => {
   const receivedRequirement = useRequirementContext()
 
   // Converting the requirement to the new format if needed
@@ -79,6 +79,7 @@ const NftRequirement = () => {
       }
       isImageLoading={nftDataLoading}
       footer={<OpenseaUrl />}
+      {...props}
     >
       {"Own "}
       {requirement.data?.id

@@ -1,6 +1,7 @@
 import {
   Box,
   Circle,
+  HStack,
   Img,
   SimpleGrid,
   Skeleton,
@@ -10,6 +11,7 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import PurchaseRequirement from "components/[guild]/Requirements/components/PurchaseRequirement"
 import { PropsWithChildren } from "react"
 
 export type RequirementProps = PropsWithChildren<{
@@ -19,6 +21,9 @@ export type RequirementProps = PropsWithChildren<{
   footer?: JSX.Element
   rightElement?: JSX.Element
   isNegated?: boolean
+  showPurchaseBtn?: boolean
+  showFooter?: boolean
+  showRightElement?: boolean
 }>
 
 const Requirement = ({
@@ -28,6 +33,9 @@ const Requirement = ({
   withImgBg = true,
   rightElement,
   isNegated = false,
+  showPurchaseBtn = true,
+  showFooter = true, // TODO: think about a better solution for these
+  showRightElement = true, // TODO: think about a better solution for these
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -73,9 +81,13 @@ const Requirement = ({
           {isNegated && <Tag mr="2">DON'T</Tag>}
           {children}
         </Text>
-        {footer}
+
+        <HStack spacing={4}>
+          {showPurchaseBtn && <PurchaseRequirement />}
+          {showFooter && footer}
+        </HStack>
       </VStack>
-      {rightElement}
+      {showRightElement && rightElement}
     </SimpleGrid>
   )
 }
