@@ -56,9 +56,11 @@ const TesseraRequirement = (props: RequirementProps): JSX.Element => {
                 )} on Tessera `}
                 {requirement.data.vaultState && (
                   <>
-                    {`that ${requirement.data.minAmount > 1 ? "are" : "is"} in `}
+                    {`thats Vault ${
+                      requirement.data.minAmount > 1 ? "are" : "is"
+                    } in the `}
                     <DataBlock>{requirement.data.vaultState}</DataBlock>
-                    {` state`}
+                    {` phase`}
                   </>
                 )}
               </>
@@ -66,15 +68,15 @@ const TesseraRequirement = (props: RequirementProps): JSX.Element => {
           case "TESSERA_LISTINGS":
             return (
               <>
-                {`List at least ${pluralize(
+                {`Have at least ${pluralize(
                   requirement.data.minAmount,
                   "Rae"
-                )} on Tessera `}
+                )} listed on Tessera `}
                 {requirement.data.vaultState && (
                   <>
                     {`that ${requirement.data.minAmount > 1 ? "are" : "is"} in `}
                     <DataBlock>{requirement.data.vaultState}</DataBlock>
-                    {` state`}
+                    {` phase`}
                   </>
                 )}
               </>

@@ -30,12 +30,12 @@ const tesseraRequirementTypes = [
     TesseraRequirement: HoldCollection,
   },
   {
-    label: "Own Raes in a state",
+    label: "Own Raes with Specific Vault Phase",
     value: "TESSERA_HOLD_STATE",
     TesseraRequirement: HoldState,
   },
   {
-    label: "List Raes for sale",
+    label: "Has Raes listed",
     value: "TESSERA_LISTINGS",
     TesseraRequirement: Listings,
   },
