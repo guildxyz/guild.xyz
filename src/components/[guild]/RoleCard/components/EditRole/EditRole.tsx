@@ -78,9 +78,8 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     onSuccess
   )
 
-  useWarnIfUnsavedChanges(
-    methods.formState?.isDirty && !methods.formState.isSubmitted
-  )
+  const isDirty = !!Object.keys(methods.formState.dirtyFields).length
+  useWarnIfUnsavedChanges(isDirty && !methods.formState.isSubmitted)
 
   const {
     isOpen: isAlertOpen,
@@ -119,11 +118,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     (...props) => {
       methods.clearErrors("requirements")
-      if (
-        !formRequirements ||
-        formRequirements?.length === 0 ||
-        formRequirements?.every(({ type }) => !type)
-      ) {
+      if (!formRequirements || formRequirements?.length === 0) {
         methods.setError(
           "requirements",
           {
@@ -163,20 +158,22 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       <Drawer
         isOpen={isOpen}
         placement="left"
-        size={{ base: "full", md: "xl" }}
-        onClose={methods.formState.isDirty ? onAlertOpen : onClose}
+        size={{ base: "full", md: "lg" }}
+        onClose={isDirty ? onAlertOpen : onClose}
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
             <DrawerHeader title="Edit role">
-              {roles?.length > 1 && <DeleteRoleButton roleId={id} />}
+              {roles?.length > 1 && (
+                <DeleteRoleButton roleId={id} onDrawerClose={onClose} />
+              )}
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <RolePlatforms roleId={roleId} />
-                <Section title="General" spacing="6">
+                <Section title="General">
                   <Box>
                     <FormLabel>Logo and name</FormLabel>
                     <HStack spacing={2} alignItems="start">
@@ -185,8 +182,8 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                     </HStack>
                   </Box>
                   <Description />
-                  <SetRequirements maxCols={2} />
                 </Section>
+                <SetRequirements />
               </VStack>
             </FormProvider>
           </DrawerBody>
@@ -211,11 +208,9 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       </Drawer>
 
       <DiscardAlert
-        {...{
-          isOpen: isAlertOpen,
-          onClose: onAlertClose,
-          onDiscard: onCloseAndClear,
-        }}
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        onDiscard={onCloseAndClear}
       />
     </>
   )

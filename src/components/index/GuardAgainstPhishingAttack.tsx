@@ -1,6 +1,4 @@
 import { Box, Flex, Img, VStack } from "@chakra-ui/react"
-import { ArrowSquareOut } from "phosphor-react"
-import LandingButton from "./LandingButton"
 import LandingSection from "./LandingSection"
 import LandingSectionText from "./LandingSectionText"
 
@@ -12,7 +10,7 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
         <Box position="relative" width="full">
           <Img
             w="full"
-            src="/landing/guild-guard.png"
+            src="/landing/guild-guard.webp"
             alt="Guard against phishing attacks"
           />
 
@@ -23,7 +21,7 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
             bottom={-4}
             maxW="30%"
             src="/landing/robot.svg"
-            alt="Guild Guard Robot"
+            alt="Guild Robot"
           />
 
           <Img
@@ -32,7 +30,7 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
             top={{ base: "auto", md: 4 }}
             bottom={{ base: 2, md: "auto" }}
             maxW="30%"
-            src="/landing/reka-eth.png"
+            src="/landing/reka-eth.webp"
             alt="Brunya"
           />
         </Box>
@@ -44,15 +42,6 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
           Web3 captcha to filter bad-actor bots and protect your community against
           Discord scams.
         </LandingSectionText>
-
-        <LandingButton
-          as="a"
-          href="https://guard.guild.xyz"
-          target="_blank"
-          rightIcon={<ArrowSquareOut />}
-        >
-          Learn more
-        </LandingButton>
       </VStack>
     }
   />

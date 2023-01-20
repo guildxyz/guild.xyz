@@ -85,19 +85,11 @@ const setKeyPair = async ({
   return payload
 }
 
-const checkKeyPair = (
-  _: string,
-  address: string,
-  pubKey: string,
-  userId: number
-): Promise<[boolean, number]> =>
-  fetcher("/user/checkPubKey", {
-    method: "POST",
-    body: { address, pubKey },
-  }).then((result) => [result, userId])
+const checkKeyPair = (_: string, savedPubKey: string, pubKey: string): boolean =>
+  savedPubKey === pubKey
 
 const useKeyPair = () => {
-  // Using the defauld Datadog implementation here, so the useDatadog, useUser, and useKeypair hooks don't call each other
+  // Using the default Datadog implementation here, so the useDatadog, useUser, and useKeypair hooks don't call each other
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
@@ -127,17 +119,15 @@ const useKeyPair = () => {
 
   const toast = useToast()
 
-  const { data: isKeyPairValidData } = useSWRImmutable(
-    keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
+  const { data: isValid } = useSWRImmutable(
+    user?.signingKey && pubKey ? ["isKeyPairValid", user?.signingKey, pubKey] : null,
     checkKeyPair,
     {
-      fallbackData: [false, undefined],
-      revalidateOnMount: true,
-      onSuccess: ([isKeyPairValid, userId]) => {
+      onSuccess: (isKeyPairValid) => {
         if (!isKeyPairValid) {
           addDatadogAction("Invalid keypair", {
             ...defaultCustomAttributes,
-            data: { userId, pubKey: keyPair.publicKey },
+            data: { userId: user?.id, pubKey: keyPair.publicKey },
           })
 
           toast({
@@ -148,7 +138,7 @@ const useKeyPair = () => {
             duration: 5000,
           })
 
-          deleteKeyPairFromIdb(userId).then(() => {
+          deleteKeyPairFromIdb(user?.id).then(() => {
             mutateKeyPair({ pubKey: undefined, keyPair: undefined })
           })
         }
@@ -180,7 +170,10 @@ const useKeyPair = () => {
           )
         }
       },
-      onSuccess: (generatedKeyPair) => mutateKeyPair(generatedKeyPair),
+      onSuccess: (generatedKeyPair) => {
+        mutateKeyPair(generatedKeyPair)
+        addDatadogAction("Successfully generated keypair")
+      },
     }
   )
 
@@ -190,7 +183,7 @@ const useKeyPair = () => {
     ready,
     pubKey,
     keyPair,
-    isValid: isKeyPairValidData?.[0] ?? false,
+    isValid,
     set: {
       ...setSubmitResponse,
       onSubmit: async () => {

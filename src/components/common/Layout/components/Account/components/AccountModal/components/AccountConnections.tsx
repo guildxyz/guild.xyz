@@ -89,7 +89,7 @@ const AccountConnections = () => {
         ) : (
           <Stack spacing={4} pt="2" alignItems="start" w="full">
             {addresses
-              .filter((address) => address?.toLowerCase() !== account.toLowerCase())
+              ?.filter((address) => address?.toLowerCase() !== account.toLowerCase())
               .map((address) => (
                 <LinkedAddress key={address} address={address} />
               ))}

@@ -75,7 +75,7 @@ const JoinModal = ({ isOpen, onClose, query }: Props): JSX.Element => {
           <ModalCloseButton />
           <ModalBody>
             <Error error={joinError} processError={processJoinPlatformError} />
-            <VStack spacing="3" alignItems="strech" w="full" divider={<Divider />}>
+            <VStack spacing="3" alignItems="stretch" w="full" divider={<Divider />}>
               <WalletAuthButton />
               {allUniquePlatforms.map((platform: PlatformName) => (
                 <ConnectPlatform key={platform} {...{ platform, query }} />

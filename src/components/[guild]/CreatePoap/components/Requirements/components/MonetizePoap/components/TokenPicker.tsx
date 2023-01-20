@@ -28,18 +28,18 @@ const TokenPicker = (): JSX.Element => {
   const { chainId } = useWeb3React()
   const {
     control,
-    getValues,
     setValue,
     formState: { errors },
   } = useFormContext<MonetizePoapForm>()
 
   const { tokens, isLoading: isTokensLoading } = useTokens(Chains[chainId])
+
   const mappedTokens = useMemo(
     () =>
-      tokens?.map((t) => ({
-        img: t.logoURI,
-        label: t.name,
-        value: t.address,
+      tokens?.map((token) => ({
+        img: token.logoURI,
+        label: token.name,
+        value: token.address,
       })),
     [tokens]
   )
@@ -53,17 +53,15 @@ const TokenPicker = (): JSX.Element => {
   const {
     data: { name: tokenName, symbol: tokenSymbol },
     isValidating: isTokenSymbolValidating,
+
+    error,
   } = useTokenData(Chains[chainId], token)
 
-  // Saving this in a useMemo, because we're using it for form validation
-  const tokenDataFetched = useMemo(
-    () =>
-      typeof tokenName === "string" &&
-      tokenName !== "-" &&
-      typeof tokenSymbol === "string" &&
-      tokenSymbol !== "-",
-    [tokenName, tokenSymbol]
-  )
+  const tokenDataFetched =
+    typeof tokenName === "string" &&
+    tokenName !== "-" &&
+    typeof tokenSymbol === "string" &&
+    tokenSymbol !== "-"
 
   const tokenImage = mappedTokens?.find(
     (t) => t.value?.toLowerCase() === token?.toLowerCase()
@@ -107,12 +105,7 @@ const TokenPicker = (): JSX.Element => {
               message:
                 "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
             },
-            validate: () =>
-              // Using `getValues` instead of `useWatch` here, so the validation is triggered when the input value changes
-              !getValues("token") ||
-              isTokenSymbolValidating ||
-              tokenDataFetched ||
-              "Failed to fetch token data",
+            validate: () => !error || "Failed to fetch token data",
           }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <StyledSelect
@@ -132,9 +125,9 @@ const TokenPicker = (): JSX.Element => {
                   : null)
               }
               defaultValue={mappedTokens?.[0]?.value}
-              onChange={(selectedOption: SelectOption) => {
-                onChange(selectedOption?.value)
-              }}
+              onChange={(selectedOption: SelectOption) =>
+                onChange(selectedOption?.value ?? null)
+              }
               onInputChange={(text, _) => {
                 if (!ADDRESS_REGEX.test(text)) return
                 onChange(text)

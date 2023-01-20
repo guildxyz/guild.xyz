@@ -32,7 +32,9 @@ const AccountModal = ({ isOpen, onClose }) => {
 
   const connectorName = (c) =>
     c instanceof MetaMask
-      ? "MetaMask"
+      ? typeof window !== "undefined" && (window.ethereum as any)?.isBraveWallet
+        ? "Brave Wallet"
+        : "MetaMask"
       : c instanceof WalletConnect
       ? "WalletConnect"
       : c instanceof CoinbaseWallet
@@ -41,7 +43,8 @@ const AccountModal = ({ isOpen, onClose }) => {
 
   const handleLogout = () => {
     onClose()
-    connector.deactivate()
+    connector.resetState()
+    connector.deactivate?.()
 
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
       /^dc_auth_[a-z]*$/.test(key)

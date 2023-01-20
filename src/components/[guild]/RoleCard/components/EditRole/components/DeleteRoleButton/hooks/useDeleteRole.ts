@@ -6,10 +6,10 @@ import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
 type Data = {
-  removePlatformAccess?: number
+  removePlatformAccess?: boolean
 }
 
-const useDeleteRole = (roleId: number) => {
+const useDeleteRole = (roleId: number, onSuccess?: () => void) => {
   const { mutateGuild } = useGuild()
   const matchMutate = useMatchMutate()
   const toast = useToast()
@@ -28,6 +28,7 @@ const useDeleteRole = (roleId: number) => {
         title: `Role deleted!`,
         status: "success",
       })
+      onSuccess?.()
 
       mutateGuild()
       matchMutate(/^\/guild\?order/)

@@ -1,7 +1,8 @@
 import { Flex, Heading, Icon, Stack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import LinkButton from "components/common/LinkButton"
 import Head from "next/head"
-import { DiscordLogo } from "phosphor-react"
+import { DiscordLogo, House } from "phosphor-react"
 import NotFoundIcon from "static/avatars/58.svg"
 
 const Page = ({ statusCode }): JSX.Element => (
@@ -49,17 +50,33 @@ const Page = ({ statusCode }): JSX.Element => (
           ? "Please contact us on our Discord server if you think you shouldn't see this page!"
           : "Uh-oh! Something went wrong, please contact us on our Discord server if you think you shouldn't see this page!"}
       </Text>
-      <Button
-        as="a"
-        href="https://discord.gg/guildxyz"
-        target="_blank"
-        leftIcon={<DiscordLogo />}
-        colorScheme="DISCORD"
-        iconSpacing={3}
-        size="lg"
+      <Stack
+        direction={{ base: "column", sm: "row" }}
+        spacing={{ base: 2, md: 3 }}
+        w="full"
+        justifyContent={"center"}
       >
-        Guild.xyz Discord
-      </Button>
+        <LinkButton
+          href="/"
+          leftIcon={<House />}
+          colorScheme="DISCORD"
+          iconSpacing={3}
+          size="lg"
+        >
+          Go to home page
+        </LinkButton>
+        <Button
+          as="a"
+          href="https://discord.gg/guildxyz"
+          target="_blank"
+          leftIcon={<DiscordLogo />}
+          colorScheme="solid-gray"
+          iconSpacing={3}
+          size="lg"
+        >
+          Go to Discord
+        </Button>
+      </Stack>
     </Flex>
   </>
 )

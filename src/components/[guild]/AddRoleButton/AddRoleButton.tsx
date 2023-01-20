@@ -1,5 +1,6 @@
 import {
   Box,
+  Collapse,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -14,6 +15,7 @@ import {
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
+import ErrorAlert from "components/common/ErrorAlert"
 import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
@@ -23,21 +25,31 @@ import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useIsStuck from "hooks/useIsStuck"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
 
-const AddRoleButton = (): JSX.Element => {
-  const { id } = useGuild()
+const noRequirementsErrorMessage = "Set some requirements, or make the role free"
+
+const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
+  const { id, guildPlatforms } = useGuild()
+  const discordPlatform = guildPlatforms?.find(
+    (p) => p.platformId === PlatformType.DISCORD
+  )
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const finalFocusRef = useRef(null)
+  const { ref: finalFocusRef, isStuck } = useIsStuck()
+  useEffect(() => {
+    setIsStuck?.(isStuck)
+  }, [isStuck])
 
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
     useCreateRole()
@@ -50,7 +62,16 @@ const AddRoleButton = (): JSX.Element => {
     requirements: [],
     roleType: "NEW",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-    rolePlatforms: [],
+    rolePlatforms: discordPlatform
+      ? [
+          {
+            guildPlatformId: discordPlatform.id,
+            platformRoleData: {},
+            platformRoleId: null,
+            isNew: true,
+          },
+        ]
+      : [],
   }
 
   const methods = useForm({
@@ -106,15 +127,11 @@ const AddRoleButton = (): JSX.Element => {
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     (...props) => {
       methods.clearErrors("requirements")
-      if (
-        !formRequirements ||
-        formRequirements?.length === 0 ||
-        formRequirements?.every(({ type }) => !type)
-      ) {
+      if (!formRequirements || formRequirements?.length === 0) {
         methods.setError(
           "requirements",
           {
-            message: "Set some requirements, or make the role free",
+            message: noRequirementsErrorMessage,
           },
           { shouldFocus: true }
         )
@@ -149,7 +166,7 @@ const AddRoleButton = (): JSX.Element => {
       <Drawer
         isOpen={isOpen}
         placement="left"
-        size={{ base: "full", md: "xl" }}
+        size={{ base: "full", md: "lg" }}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         finalFocusRef={finalFocusRef}
       >
@@ -162,7 +179,7 @@ const AddRoleButton = (): JSX.Element => {
               <VStack spacing={10} alignItems="start">
                 <RolePlatforms />
 
-                <Section title={"General"} spacing="6">
+                <Section title={"General"}>
                   <Box>
                     <FormLabel>Choose a logo and name for your role</FormLabel>
                     <HStack spacing={2} alignItems="start">
@@ -171,8 +188,17 @@ const AddRoleButton = (): JSX.Element => {
                     </HStack>
                   </Box>
                   <Description />
-                  <SetRequirements maxCols={2} />
                 </Section>
+                <SetRequirements />
+
+                <Collapse
+                  in={!!methods.formState.errors?.requirements}
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  <ErrorAlert label={noRequirementsErrorMessage} />
+                </Collapse>
               </VStack>
             </FormProvider>
           </DrawerBody>
@@ -196,11 +222,9 @@ const AddRoleButton = (): JSX.Element => {
       </Drawer>
 
       <DiscardAlert
-        {...{
-          isOpen: isAlertOpen,
-          onClose: onAlertClose,
-          onDiscard: onCloseAndClear,
-        }}
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        onDiscard={onCloseAndClear}
       />
     </>
   )

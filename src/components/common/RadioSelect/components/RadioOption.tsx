@@ -31,7 +31,7 @@ const RadioOption = (props) => {
         h="auto"
         p="0"
         flexDir="column"
-        alignItems="strech"
+        alignItems="stretch"
         borderRadius="none"
         _first={{ borderTopRadius: "xl" }}
         _last={{ borderBottomRadius: "xl" }}
@@ -66,7 +66,7 @@ const RadioOption = (props) => {
       h="auto"
       p="0"
       flexDir="column"
-      alignItems="strech"
+      alignItems="stretch"
       borderRadius="none"
       _first={{ borderTopRadius: "xl" }}
       _last={{ borderBottomRadius: "xl" }}
@@ -77,6 +77,7 @@ const RadioOption = (props) => {
           ? (isChecked && "indigo.50") || "white"
           : (isChecked && "gray.700") || null
       }
+      whiteSpace="break-spaces"
       borderColor={isChecked ? `${colorScheme}.500` : "transparent"}
       _hover={{
         bg: isChecked
@@ -89,7 +90,7 @@ const RadioOption = (props) => {
     >
       <HStack as="label" py="4" px="5" cursor="pointer" spacing={4}>
         <input {...input} />
-        <Box whiteSpace="break-spaces" w="full" ml="0 !important">
+        <Box w="full" ml="0 !important">
           <Heading size="sm">{title}</Heading>
           {description && (
             <Text fontWeight="normal" colorScheme="gray" mt="1">

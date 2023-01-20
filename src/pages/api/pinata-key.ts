@@ -83,10 +83,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     if (req.method === "GET") await generateApiKey(res)
     else if (req.method === "POST") await revokeApiKey(req, res)
-    else
-      res.status(501).json({
-        message: `Method ${req.method} is not implemented for this endpoint`,
+    else {
+      res.setHeader("Allow", "GET, POST")
+      res.status(405).json({
+        message: `Method ${req.method} is not allowed.`,
       })
+    }
   } catch (error) {
     res.status(500).json({ message: "Failed to generate Pinata JWT" })
   }

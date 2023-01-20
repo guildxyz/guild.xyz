@@ -12,10 +12,7 @@ const BATCH_SIZE = 48
 const Members = ({ members }: Props): JSX.Element => {
   const { isLoading, admins } = useGuild()
 
-  const ownerAddress = useMemo(
-    () => admins?.find((admin) => admin?.isOwner)?.address,
-    [admins]
-  )
+  const ownerAddress = admins?.find((admin) => admin?.isOwner)?.address
 
   const adminsSet = useMemo(
     () => new Set(admins?.map((admin) => admin.address) ?? []),
@@ -37,6 +34,7 @@ const Members = ({ members }: Props): JSX.Element => {
     [members, ownerAddress, adminsSet]
   )
 
+  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   const [renderedMembersCount, setRenderedMembersCount] = useState(BATCH_SIZE)
   const membersEl = useRef(null)
   useScrollEffect(() => {
@@ -50,10 +48,7 @@ const Members = ({ members }: Props): JSX.Element => {
     setRenderedMembersCount((prevValue) => prevValue + BATCH_SIZE)
   }, [members, renderedMembersCount])
 
-  const renderedMembers = useMemo(
-    () => sortedMembers?.slice(0, renderedMembersCount) || [],
-    [sortedMembers, renderedMembersCount]
-  )
+  const renderedMembers = sortedMembers?.slice(0, renderedMembersCount) || []
 
   if (isLoading) return <Text>Loading members...</Text>
 
@@ -66,7 +61,7 @@ const Members = ({ members }: Props): JSX.Element => {
           ref={membersEl}
           columns={{ base: 3, sm: 4, md: 6, lg: 8 }}
           gap={{ base: 6, md: 8 }}
-          mt={3}
+          pt={3}
         >
           {renderedMembers?.map((address) => (
             <Member

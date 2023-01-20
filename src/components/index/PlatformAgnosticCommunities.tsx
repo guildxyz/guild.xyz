@@ -11,7 +11,7 @@ const PlatformAgnosticCommunities = (): JSX.Element => (
           <Img
             w="full"
             minW="full"
-            src="/landing/platform-agnostic-communities.png"
+            src="/landing/platform-agnostic-communities.webp"
             alt="Platform-agnostic communities"
           />
 

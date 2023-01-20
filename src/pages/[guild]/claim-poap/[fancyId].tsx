@@ -32,11 +32,11 @@ import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserP
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
-import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains, RPC } from "connectors"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { DownloadSimple } from "phosphor-react"
+import { usePoap } from "requirements/Poap/hooks/usePoaps"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
@@ -89,17 +89,17 @@ const Page = (): JSX.Element => {
     <>
       <Head>
         <title>
-          {correctPoap && name ? `${name} - claim your POAP` : "Claim your POAP"}
+          {correctPoap && name ? `${name} - mint your POAP` : "Mint your POAP"}
         </title>
         <meta
           name="og:title"
           content={
-            correctPoap && name ? `${name} - claim your POAP` : "Claim your POAP"
+            correctPoap && name ? `${name} - mint your POAP` : "Mint your POAP"
           }
         />
       </Head>
 
-      <Header showBackButton={true} />
+      <Header />
       <Container maxW="xl" pt={{ base: 16, md: 24 }} pb={12}>
         {correctPoap ? (
           <>
@@ -167,7 +167,7 @@ const Page = (): JSX.Element => {
                     fontFamily="display"
                     textAlign="center"
                   >
-                    Claim your
+                    Mint your
                     <br />
                     {` ${poap?.name} POAP`}
                   </Heading>
@@ -192,12 +192,14 @@ const Page = (): JSX.Element => {
                   </Text>
                 </HStack>
 
-                <Skeleton isLoaded={poapLinks && !isPoapLinksLoading}>
+                <Skeleton
+                  isLoaded={!!poapLinks || (poapLinks && !isPoapLinksLoading)}
+                >
                   <Tag
                     fontWeight="bold"
                     textTransform="uppercase"
                     size="sm"
-                  >{`${poapLinks?.claimed}/${poapLinks?.total} claimed`}</Tag>
+                  >{`${poapLinks?.claimed}/${poapLinks?.total} minted`}</Tag>
                 </Skeleton>
 
                 <SkeletonText isLoaded={poap && !isLoading}>
@@ -224,7 +226,7 @@ const Page = (): JSX.Element => {
                       <AlertTitle>Maybe next time...</AlertTitle>
                       <AlertDescription>
                         We're sorry, but it seems like all available POAPs have been
-                        claimed.
+                        minted.
                       </AlertDescription>
                     </Stack>
                   </Alert>
@@ -239,7 +241,7 @@ const Page = (): JSX.Element => {
                         leftIcon={!hasExpired && <Icon as={DownloadSimple} />}
                         onClick={onOpen}
                       >
-                        {hasExpired ? "This POAP has expired" : "Claim"}
+                        {hasExpired ? "This POAP has expired" : "Mint"}
                       </Button>
                     </Flex>
                   </>

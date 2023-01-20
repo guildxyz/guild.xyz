@@ -20,7 +20,6 @@ import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
-import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains, RPC } from "connectors"
 import {
   ArrowSquareOut,
@@ -30,6 +29,7 @@ import {
   Upload,
 } from "phosphor-react"
 import { useMemo } from "react"
+import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
 import { useCreatePoapContext } from "../CreatePoapContext"
@@ -66,9 +66,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     guildPoapChainId
   )
 
-  const { setStep } = useCreatePoapContext()
-
-  const { setPoapData } = useCreatePoapContext()
+  const { setStep, setPoapData } = useCreatePoapContext()
 
   const isExpired = useMemo(() => {
     if (!poap) return false
@@ -90,14 +88,14 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
         : poaps.find((p) => p.poapIdentifier === poap.id)?.activated,
     [poap, poaps]
   )
-  const isReady = useMemo(() => poapLinks && poapLinks?.total > 0, [poapLinks])
+  const isReady = poapLinks && poapLinks?.total > 0
 
   const tooltipLabel = isExpired
     ? "Your POAP has expired."
     : isActive
     ? "Your poap is being distributed."
     : isReady
-    ? "You can send the Discord claim button."
+    ? "You can send the Discord mint button."
     : "You haven't uploaded the mint links for your POAP yet."
 
   const statusText = isExpired
@@ -230,7 +228,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                   <Text as="span" fontSize="xs" colorScheme="gray">
                     {` • ${poapLinks?.claimed}/${poapLinks?.total} `}
                     <Text as="span" display={{ base: "none", md: "inline" }}>
-                      claimed
+                      minted
                     </Text>
                   </Text>
                 )}
@@ -239,7 +237,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                   <Text as="span" fontSize="xs" colorScheme="gray">
                     {` • `}
                     <Link href={`/${urlName}/claim-poap/${poapFancyId}`} isExternal>
-                      <Text as="span">Claim page</Text>
+                      <Text as="span">Mint page</Text>
                       <Icon ml={1} as={ArrowSquareOut} />
                     </Link>
                   </Text>

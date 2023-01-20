@@ -15,13 +15,13 @@ const ShouldKeepPlatformAccesses = ({
 }: Props) => {
   const options = [
     {
-      value: 0,
+      value: false,
       title: "Keep accesses",
       description: keepAccessDescription,
       icon: CircleWavyCheck,
     },
     {
-      value: 1,
+      value: true,
       title: "Revoke accesses",
       description: revokeAccessDescription,
       icon: UserCircleMinus,

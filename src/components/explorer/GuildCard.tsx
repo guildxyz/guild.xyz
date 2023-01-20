@@ -22,7 +22,11 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
       <Wrap zIndex="1">
         <Tag as="li">
           <TagLeftIcon as={Users} />
-          <TagLabel>{guildData.memberCount ?? 0}</TagLabel>
+          <TagLabel>
+            {new Intl.NumberFormat("en", { notation: "compact" }).format(
+              guildData.memberCount ?? 0
+            )}
+          </TagLabel>
         </Tag>
         <Tooltip label={guildData.roles.join(", ")}>
           <Tag as="li">

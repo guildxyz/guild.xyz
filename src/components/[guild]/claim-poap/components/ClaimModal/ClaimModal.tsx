@@ -186,7 +186,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
         <ModalOverlay />
         <ModalContent overflow="visible">
           <FormProvider {...methods}>
-            <ModalHeader pr={16}>Claim {poap?.name} POAP</ModalHeader>
+            <ModalHeader pr={16}>Mint {poap?.name} POAP</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <Error
@@ -200,7 +200,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                 <>
                   <VStack
                     spacing="3"
-                    alignItems="strech"
+                    alignItems="stretch"
                     w="full"
                     divider={<Divider />}
                   >
@@ -223,6 +223,9 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                         isRequired
                         isDisabled={
                           (!isActive && "Connect wallet first") ||
+                          (!guildPoap?.activated && "Inactive POAP") ||
+                          (poapLinks?.claimed === poapLinks?.total &&
+                            "All POAPs are minted already") ||
                           (poapEventDetails?.voiceChannelId &&
                             !voiceEligibility &&
                             !isWrongChain &&
@@ -268,7 +271,8 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                                 colorScheme="blue"
                                 borderLeftRadius={0}
                                 isDisabled={
-                                  !isActive ||
+                                  !guildPoap.activated ||
+                                  poapLinks?.claimed === poapLinks?.total ||
                                   (poapEventDetails?.voiceChannelId &&
                                     !voiceEligibility)
                                 }

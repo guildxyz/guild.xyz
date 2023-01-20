@@ -1,4 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGateables from "hooks/useGateables"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -10,16 +11,18 @@ type Data = {
   removePlatformAccess: boolean
 }
 
-const useRemovePlatform = () => {
+const useRemovePlatform = ({ onSuccess }: any) => {
   const { mutateGuild } = useGuild()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const { index, guildPlatformId, roleId } = useRolePlatform()
+  const { index, guildPlatformId, roleId, guildPlatform } = useRolePlatform()
   const { dirtyFields } = useFormState()
   const { reset } = useFormContext()
   const { remove } = useFieldArray({
     name: "rolePlatforms",
   })
+
+  const { mutate: mutateGateables } = useGateables(guildPlatform?.platformName)
 
   const submit = async ({ validation, data }: WithValidation<Data>) =>
     fetcher(`/role/${roleId}/platform/${guildPlatformId}`, {
@@ -35,9 +38,11 @@ const useRemovePlatform = () => {
         status: "success",
       })
       remove(index)
+      onSuccess?.()
       if (!Object.keys(dirtyFields).length) reset(undefined, { keepValues: true })
 
       mutateGuild()
+      mutateGateables()
     },
     onError: (error) => showErrorToast(error),
   })

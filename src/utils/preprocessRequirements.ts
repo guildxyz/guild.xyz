@@ -9,35 +9,42 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
 
   if (freeRequirement) return [freeRequirement]
 
-  // see the comment in Requirements.tsx at line 42
   return (
     requirements
-      // Filtering only the active requirements
-      .filter((requirement) => !!requirement.type)
       // Setting unused props to undefined, so we don't send them to the API
       .map((requirement) => {
-        const processedRequirement = {
+        const processedRequirement: Requirement = {
           ...requirement,
+          data: {
+            ...requirement.data,
+            validAddresses: undefined,
+          },
           nftRequirementType: undefined,
         }
 
         if (requirement.address === "0x0000000000000000000000000000000000000000")
-          requirement.address = undefined
+          processedRequirement.address = undefined
 
         if (
-          requirement.data?.attribute &&
-          !requirement.data?.attribute?.trait_type &&
-          !requirement.data?.attribute?.value &&
-          !requirement.data?.attribute?.interval
-        )
-          requirement.data.attribute = undefined
+          (requirement.type === "ERC721" ||
+            requirement.type === "ERC1155" ||
+            requirement.type === "NOUNS") &&
+          requirement.data.attributes &&
+          !requirement.data.attributes.length
+        ) {
+          processedRequirement.data.attributes = undefined
+          if (!requirement.data.minAmount) processedRequirement.data.minAmount = 0
+        }
 
         if (
           requirement.type === "ALLOWLIST" &&
-          !requirement.data?.addresses &&
-          !requirement.data?.hideAllowlist
+          !requirement.data.addresses &&
+          !requirement.data.hideAllowlist
         )
-          requirement.data.addresses = []
+          processedRequirement.data.addresses = []
+
+        // Deleting ID here, we don't want to update it, and it might also cause bugs
+        delete processedRequirement.id
 
         return processedRequirement
       })

@@ -1,9 +1,5 @@
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
   Box,
-  Collapse,
   Icon,
   IconButton,
   ModalBody,
@@ -36,25 +32,19 @@ import ConnectorButton from "./components/ConnectorButton"
 import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
-  isModalOpen: boolean
-  closeModal: () => void
-  openModal: () => void
+  isOpen: boolean
+  onClose: () => void
+  onOpen: () => void
 }
 
 // We don't open the modal on these routes
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
-const WalletSelectorModal = ({
-  isModalOpen,
-  closeModal,
-  openModal,
-}: Props): JSX.Element => {
+const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
 
   const { isActive, account, connector } = useWeb3React()
   const [error, setError] = useState<WalletError & Error>(null)
-  // temporary
-  const [isWalletConnectActivating, setIsWalletConnectActivating] = useState(false)
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -63,17 +53,18 @@ const WalletSelectorModal = ({
   }
 
   const closeModalAndSendAction = () => {
-    closeModal()
+    onClose()
     addDatadogAction("Wallet selector modal closed")
     setTimeout(() => {
-      connector.deactivate()
+      connector.resetState()
+      connector.deactivate?.()
     }, 200)
   }
 
   const { ready, set, keyPair } = useKeyPair()
 
   useEffect(() => {
-    if (keyPair) closeModal()
+    if (keyPair) onClose()
   }, [keyPair])
 
   const router = useRouter()
@@ -87,7 +78,7 @@ const WalletSelectorModal = ({
     ) {
       const activate = connector.activate()
       if (typeof activate !== "undefined") {
-        activate.finally(() => openModal())
+        activate.finally(() => onOpen())
       }
     }
   }, [keyPair, ready, router])
@@ -97,7 +88,7 @@ const WalletSelectorModal = ({
   return (
     <>
       <Modal
-        isOpen={isModalOpen}
+        isOpen={isOpen}
         onClose={closeModalAndSendAction}
         closeOnOverlayClick={!isActive || !!keyPair}
         closeOnEsc={!isActive || !!keyPair}
@@ -127,7 +118,8 @@ const WalletSelectorModal = ({
                 variant="ghost"
                 onClick={() => {
                   set.reset()
-                  connector.deactivate()
+                  connector.resetState()
+                  connector.deactivate?.()
                 }}
               />
             </Box>
@@ -136,18 +128,6 @@ const WalletSelectorModal = ({
           <ModalCloseButton />
           <ModalBody>
             <Error error={error} processError={processConnectionError} />
-            <Collapse in={isWalletConnectActivating}>
-              <Alert status="info" mb="6">
-                <AlertIcon />
-                <Stack>
-                  <AlertDescription>
-                    WalletConnect works unreliably recently in any dapp. If you can't
-                    connect, please try it from your wallet's embedded browser or
-                    from desktop!
-                  </AlertDescription>
-                </Stack>
-              </Alert>
-            </Collapse>
             {isConnected && !keyPair && (
               <Text mb="6" animation={"fadeIn .3s .1s both"}>
                 Sign message to verify that you're the owner of this account.
@@ -164,7 +144,6 @@ const WalletSelectorModal = ({
                       connectorHooks={connectorHooks}
                       error={error}
                       setError={setError}
-                      setIsWalletConnectActivating={setIsWalletConnectActivating}
                     />
                   </CardMotionWrapper>
                 )
@@ -176,12 +155,15 @@ const WalletSelectorModal = ({
                   size="xl"
                   mb="4"
                   colorScheme={"green"}
-                  onClick={set.onSubmit}
+                  onClick={() => {
+                    set.onSubmit()
+                    addDatadogAction("click on Verify account")
+                  }}
                   isLoading={set.isLoading || !ready}
                   isDisabled={!ready}
                   loadingText={
                     !ready
-                      ? "Looking for key pairs"
+                      ? "Looking for keypairs"
                       : set.signLoadingText || "Check your wallet"
                   }
                 >

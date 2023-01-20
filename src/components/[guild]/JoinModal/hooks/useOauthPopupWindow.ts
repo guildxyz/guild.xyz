@@ -1,10 +1,9 @@
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { randomBytes } from "crypto"
-import useLocalStorage from "hooks/useLocalStorage"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
 import platforms from "platforms"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { PlatformName } from "types"
 
 type OAuthData<Data> = {
@@ -16,39 +15,30 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   platform: PlatformName,
   scopeType: "membership" | "creation"
 ) => {
-  const { addDatadogError } = useDatadog()
+  const { addDatadogAction } = useDatadog()
   const toast = useToast()
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { baseUrl, scope, client_id, ...otherOAuthParams } =
     platforms?.[platform]?.oauthParams ?? {}
 
-  const [hasClickedOpen, setHasClickedOpen] = useState<boolean>(false)
-  const [csrfToken, setCsrfToken] = useLocalStorage(
-    `oauth_csrf_token_${client_id}`,
-    null
-  )
-
   const redirectUri =
     typeof window !== "undefined" &&
     `${window.location.href.split("/").slice(0, 3).join("/")}/oauth`
 
-  const state = `${client_id};${csrfToken}`
+  const csrfToken = useRef(randomBytes(16).toString("hex"))
 
   // prettier-ignore
   const { onOpen, windowInstance } = usePopupWindow(
-    `${baseUrl}?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope[scopeType])}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}&${Object.entries(otherOAuthParams).map(([key, value]) => `${key}=${value}`).join("&")}`
+    `${baseUrl}?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope[scopeType])}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(JSON.stringify([client_id, csrfToken.current]))}&${Object.entries(otherOAuthParams).map(([key, value]) => `${key}=${value}`).join("&")}`
   )
-
-  useEffect(() => {
-    if (csrfToken && hasClickedOpen) {
-      onOpen()
-    }
-  }, [csrfToken, hasClickedOpen])
 
   const [error, setError] = useState(null)
   const [authData, setAuthData] = useState<OAuthData<OAuthResponse>>(null)
   const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false)
+
+  const dataKey = `oauth_popup_data_${client_id}`
+  const shouldCloseKey = `oauth_window_should_close_${client_id}`
 
   /** On a window creation, we set a new listener */
   useEffect(() => {
@@ -56,20 +46,25 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
     const windowInstanceOpenInitially = !windowInstance.closed
 
-    window.localStorage.removeItem("oauth_popup_data")
     setIsAuthenticating(true)
 
     new Promise<OAuthData<OAuthResponse>>((resolve, reject) => {
       const interval = setInterval(() => {
         try {
-          const { data, type } = JSON.parse(
-            window.localStorage.getItem("oauth_popup_data")
+          const {
+            data,
+            type,
+            csrfToken: receivedCsrfToken,
+          } = JSON.parse(window.localStorage.getItem(dataKey))
+
+          addDatadogAction(
+            `CSRF - Main window received CSRF token: ${receivedCsrfToken}. Should equal: ${csrfToken}`
           )
+
           if (type === "OAUTH_ERROR") {
             clearInterval(interval)
             const title = data?.error ?? "Unknown error"
             const errorDescription = data?.errorDescription ?? ""
-            addDatadogError(`OAuth error - ${title}`, { error: errorDescription })
             reject({ error: title, errorDescription })
             toast({ status: "error", title, description: errorDescription })
           }
@@ -96,9 +91,9 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           }, 500)
         }
 
-        window.localStorage.removeItem("oauth_popup_data")
+        window.localStorage.removeItem(dataKey)
         setIsAuthenticating(false)
-        window.localStorage.setItem("oauth_window_should_close", "true")
+        window.localStorage.setItem(shouldCloseKey, "true")
       })
   }, [windowInstance])
 
@@ -107,11 +102,8 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     error,
     onOpen: () => {
       setError(null)
-      if (typeof csrfToken === "string" && csrfToken.length > 0) {
+      if (typeof csrfToken.current === "string" && csrfToken.current.length > 0) {
         onOpen()
-      } else {
-        setHasClickedOpen(true)
-        setCsrfToken(randomBytes(16).toString("hex"))
       }
     },
     isAuthenticating,

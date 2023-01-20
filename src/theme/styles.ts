@@ -2,6 +2,18 @@ import { mode } from "@chakra-ui/theme-tools"
 
 const styles = {
   global: (props) => ({
+    /**
+     * TODO: we want smooth scrolling for anchor tags, but don"t want it for page
+     * navigation (e.g. explorer to guild)
+     */
+    // html: {
+    //   scrollBehavior: "smooth",
+    // },
+    // "@media screen and (prefers-reduced-motion: reduce)": {
+    //   html: {
+    //     scrollBehavior: "auto",
+    //   },
+    // },
     "tbody > tr:last-child > td": {
       border: 0,
     },
@@ -34,6 +46,9 @@ const styles = {
       paddingInlineStart: 5,
     },
     "@keyframes fadeIn": { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
+    "#walletconnect-wrapper": {
+      color: "black",
+    },
   }),
 }
 

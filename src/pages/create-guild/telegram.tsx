@@ -61,11 +61,7 @@ const CreateTelegramGuildPage = (): JSX.Element => {
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     (...props) => {
       methods.clearErrors("requirements")
-      if (
-        !formRequirements ||
-        formRequirements?.length === 0 ||
-        formRequirements?.every(({ type }) => !type)
-      ) {
+      if (!formRequirements || formRequirements?.length === 0) {
         methods.setError(
           "requirements",
           {
@@ -107,23 +103,26 @@ const CreateTelegramGuildPage = (): JSX.Element => {
                 />
 
                 <SetRequirements />
+
+                <Flex justifyContent="right" w="full">
+                  <Button
+                    flexShrink={0}
+                    size="lg"
+                    w={{ base: "full", sm: "auto" }}
+                    colorScheme="green"
+                    disabled={
+                      isLoading || isUploadingShown || isSigning || !!response
+                    }
+                    isLoading={isLoading || isUploadingShown || isSigning}
+                    loadingText={loadingText}
+                    onClick={handleSubmit}
+                    data-dd-action-name="Summon"
+                  >
+                    {response ? "Success" : "Summon"}
+                  </Button>
+                </Flex>
               </VStack>
             </ErrorAnimation>
-            <Flex justifyContent="right" mt="-10">
-              <Button
-                flexShrink={0}
-                size="lg"
-                w={{ base: "full", sm: "auto" }}
-                colorScheme="green"
-                disabled={isLoading || isUploadingShown || isSigning || !!response}
-                isLoading={isLoading || isUploadingShown || isSigning}
-                loadingText={loadingText}
-                onClick={handleSubmit}
-                data-dd-action-name="Summon"
-              >
-                {response ? "Success" : "Summon"}
-              </Button>
-            </Flex>
             <DynamicDevTool control={methods.control} />
           </FormProvider>
         ) : (
