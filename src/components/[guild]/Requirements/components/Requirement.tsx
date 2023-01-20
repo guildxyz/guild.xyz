@@ -1,7 +1,6 @@
 import {
   Box,
   Circle,
-  HStack,
   Img,
   SimpleGrid,
   Skeleton,
@@ -12,7 +11,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
-import { useRequirementContext } from "./RequirementContext"
 
 export type RequirementProps = PropsWithChildren<{
   isImageLoading?: boolean
@@ -33,9 +31,6 @@ const Requirement = ({
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
-
-  const { type } = useRequirementContext()
-  const isBuyable = type === "ERC20" // TODO
 
   return (
     <SimpleGrid
@@ -78,11 +73,7 @@ const Requirement = ({
           {isNegated && <Tag mr="2">DON'T</Tag>}
           {children}
         </Text>
-
-        <HStack>
-          {/* {isBuyable && <PurchaseButton />} */}
-          {footer}
-        </HStack>
+        {footer}
       </VStack>
       {rightElement}
     </SimpleGrid>
