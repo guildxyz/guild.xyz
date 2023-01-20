@@ -20,9 +20,9 @@ import useUser from "components/[guild]/hooks/useUser"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence } from "framer-motion"
 import { Check, CopySimple, PencilSimple } from "phosphor-react"
+import platforms from "platforms"
 import { useContext, useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { PlatformType } from "types"
 import AddCard from "../AddCard"
 import CardMotionWrapper from "../CardMotionWrapper"
 import { Modal } from "../Modal"
@@ -173,7 +173,7 @@ const GUILD_EMAIL_ADDRESS = process.env.NEXT_PUBLIC_GOOGLE_SERVICE_ACCOUNT_EMAIL
 const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
   const { platformUsers } = useUser()
   const googleAcc = platformUsers?.find(
-    (acc) => acc.platformId === PlatformType.GOOGLE
+    (acc) => acc.platformId === platforms.GOOGLE.id
   )
 
   const { hasCopied, onCopy } = useClipboard(GUILD_EMAIL_ADDRESS)

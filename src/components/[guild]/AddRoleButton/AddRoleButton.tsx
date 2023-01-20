@@ -30,9 +30,9 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
+import platforms from "platforms"
 import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
@@ -42,7 +42,7 @@ const noRequirementsErrorMessage = "Set some requirements, or make the role free
 const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
   const { id, guildPlatforms } = useGuild()
   const discordPlatform = guildPlatforms?.find(
-    (p) => p.platformId === PlatformType.DISCORD
+    (p) => p.platformId === platforms.DISCORD.id
   )
 
   const { isOpen, onOpen, onClose } = useDisclosure()
