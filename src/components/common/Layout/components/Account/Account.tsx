@@ -72,7 +72,7 @@ const Account = (): JSX.Element => {
               fontSize={linkedAddressesCount ? "sm" : "md"}
               fontWeight={linkedAddressesCount ? "bold" : "semibold"}
             >
-              {ENSName || `${shortenHex(account, 3)}`}
+              {ENSName || NNSName || `${shortenHex(account, 3)}`}
             </Text>
             {linkedAddressesCount && (
               <Text

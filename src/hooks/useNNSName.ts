@@ -1,26 +1,23 @@
 import { useWeb3React } from "@web3-react/core"
-import { useState } from "react"
+import useSWRImmutable from "swr/immutable"
 
-const useNNSName = async () => {
-  const { provider } = useWeb3React()
+const NNS_REGISTRY = "0x3e1970dc478991b49c4327973ea8a4862ef5a4de"
 
-  const TEST_ADDRESS = "0xE5358CaB95014E2306815743793F16c93a8a5C70"
-  const NNS_REGISTRY = "0x3e1970dc478991b49c4327973ea8a4862ef5a4de"
-  const [NNSName, setName] = useState("")
-  if (provider && provider.network) {
-    provider.network.ensAddress = NNS_REGISTRY
-    await provider
-      .lookupAddress(TEST_ADDRESS)
-      .then((name) => {
-        if (!name) return
-        setName(name)
-      })
-      .catch((error) => {
-        console.log(`error resolving reverse ens lookup: `, error)
-      })
-  }
+const fetchNNSName = (_, provider, account) => {
+  provider.network.ensAddress = NNS_REGISTRY
+  return provider.lookupAddress(account)
+}
 
-  return NNSName
+const useNNSName = (): string => {
+  const { provider, account } = useWeb3React()
+  const shouldFetch = provider && account
+
+  const { data } = useSWRImmutable(
+    shouldFetch ? ["NNS", provider, account] : null,
+    fetchNNSName
+  )
+
+  return data
 }
 
 export default useNNSName
