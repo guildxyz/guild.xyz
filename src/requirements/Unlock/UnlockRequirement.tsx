@@ -1,16 +1,22 @@
-import { RequirementComponentProps } from "requirements"
-import BlockExplorerUrl from "../common/BlockExplorerUrl"
-import Requirement from "../common/Requirement"
+import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 
-const UnlockRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
-  <Requirement
-    isNegated={requirement.isNegated}
-    image={`https://locksmith.unlock-protocol.com/lock/${requirement.address}/icon`}
-    footer={<BlockExplorerUrl requirement={requirement} />}
-    {...rest}
-  >
-    {`Own a(n) ${requirement.name ?? "- (Unlock)"} NFT`}
-  </Requirement>
-)
+const UnlockRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
+  return (
+    <Requirement
+      isNegated={requirement.isNegated}
+      image={`https://locksmith.unlock-protocol.com/lock/${requirement.address}/icon`}
+      footer={<BlockExplorerUrl />}
+      {...props}
+    >
+      {`Own a(n) ${requirement.name ?? "- (Unlock)"} NFT`}
+    </Requirement>
+  )
+}
 
 export default UnlockRequirement
