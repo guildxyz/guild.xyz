@@ -46,6 +46,9 @@ const styles = {
       paddingInlineStart: 5,
     },
     "@keyframes fadeIn": { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
+    "#walletconnect-wrapper": {
+      color: "black",
+    },
   }),
 }
 

@@ -10,10 +10,10 @@ export const usePoaps = (): { poaps: Array<Poap>; isLoading: boolean } => {
 
 export const usePoap = (
   fancyId: string
-): { poap: Poap; isLoading: boolean; mutatePoap: KeyedMutator<any> } => {
-  const { isValidating, data, mutate } = useSWRImmutable<Poap>(
+): { poap: Poap; isLoading: boolean; mutatePoap: KeyedMutator<any>; error: any } => {
+  const { isValidating, data, mutate, error } = useSWRImmutable<Poap>(
     fancyId ? `/assets/poap/${fancyId}` : null
   )
 
-  return { isLoading: isValidating, poap: data, mutatePoap: mutate }
+  return { isLoading: isValidating, poap: data, mutatePoap: mutate, error }
 }

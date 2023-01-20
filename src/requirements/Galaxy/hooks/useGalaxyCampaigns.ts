@@ -7,6 +7,9 @@ type GalaxyCampaign = {
   name: string
   thumbnail: string
   chain: Chain
+  space?: {
+    alias: string
+  }
 }
 
 export const useGalaxyCampaigns = () => {
@@ -21,7 +24,7 @@ export const useGalaxyCampaign = (
   id: string
 ): { campaign: GalaxyCampaign; isLoading: boolean } => {
   const { data, isValidating } = useSWRImmutable(
-    id ? `/assets/galaxy-campaigns/${id}` : null
+    id?.length >= 10 ? `/assets/galaxy-campaigns/${id}` : null
   )
 
   return { campaign: data, isLoading: isValidating }

@@ -63,8 +63,8 @@ const Distribution = (): JSX.Element => {
                 Hooray!
               </Text>
               <Text textAlign={{ base: "left", md: "center" }} maxW="md">
-                You've successfully dropped a POAP and set up a claim button on your
-                Discord server for it - now your friends can claim this magnificent
+                You've successfully dropped a POAP and set up a mint button on your
+                Discord server for it - now your friends can mint this magnificent
                 POAP to their collection!
               </Text>
             </VStack>

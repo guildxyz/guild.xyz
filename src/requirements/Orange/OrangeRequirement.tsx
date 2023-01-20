@@ -1,25 +1,30 @@
-import { Img } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
-import { RequirementComponentProps } from "requirements"
-import Requirement from "../common/Requirement"
-import { RequirementLinkButton } from "../common/RequirementButton"
+import { Img, Link } from "@chakra-ui/react"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 
-const OrangeRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
-  <Requirement
-    image={<Img src="/requirementLogos/orange.png" />}
-    footer={
-      <RequirementLinkButton
-        imageUrl="https://app.orangeprotocol.io/logo.svg"
-        href={`https://app.orangeprotocol.io/campaigns/details/${requirement.data.id}`}
+const OrangeRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
+  return (
+    <Requirement
+      isNegated={requirement.isNegated}
+      image={<Img src="/requirementLogos/orange.png" />}
+      {...props}
+    >
+      {`Have the badge of Orange campaign `}
+      <Link
+        href={`https://poap.gallery/event/${requirement.data.id}`}
+        isExternal
+        display="inline"
+        colorScheme="blue"
+        fontWeight="medium"
       >
-        View campaign
-      </RequirementLinkButton>
-    }
-    {...rest}
-  >
-    {`Have the badge of Orange campaign `}
-    <DataBlock>{`#${requirement.data.id}`}</DataBlock>
-  </Requirement>
-)
+        {requirement.data.id}
+      </Link>
+    </Requirement>
+  )
+}
 
 export default OrangeRequirement

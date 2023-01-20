@@ -40,9 +40,9 @@ const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
               options={options}
               value={options?.find((option) => option.value === value) ?? ""}
               placeholder="Choose course"
-              onChange={(newSelectedOption: SelectOption) => {
-                onChange(newSelectedOption?.value)
-              }}
+              onChange={(newSelectedOption: SelectOption) =>
+                onChange(newSelectedOption?.value ?? null)
+              }
               onBlur={onBlur}
               isLoading={!data && isValidating}
             />

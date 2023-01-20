@@ -56,7 +56,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     onClose()
     addDatadogAction("Wallet selector modal closed")
     setTimeout(() => {
-      connector.deactivate()
+      connector.resetState()
+      connector.deactivate?.()
     }, 200)
   }
 
@@ -117,7 +118,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 variant="ghost"
                 onClick={() => {
                   set.reset()
-                  connector.deactivate()
+                  connector.resetState()
+                  connector.deactivate?.()
                 }}
               />
             </Box>

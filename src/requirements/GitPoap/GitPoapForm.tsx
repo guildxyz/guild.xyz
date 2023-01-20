@@ -74,7 +74,9 @@ const GitPoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
                 options={mappedGitPoaps}
                 placeholder="Search..."
                 value={mappedGitPoaps?.find((p) => p.value === selectValue)}
-                onChange={(newValue: SelectOption) => onChange(newValue?.value)}
+                onChange={(newValue: SelectOption) =>
+                  onChange(newValue?.value ?? null)
+                }
                 onBlur={onBlur}
                 filterOption={customFilterOption}
               />

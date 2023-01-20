@@ -19,10 +19,11 @@ const ReconnectAlert = ({ platformName }: { platformName: PlatformName }) => {
       <AlertIcon />
       <AlertDescription fontWeight="semibold" w="full">
         <HStack justifyContent={"space-between"} w="full">
-          <Text>
+          <Text fontSize={{ base: "sm", sm: "md" }}>
             {platforms[platformName].name} connection error, please reconnect
           </Text>
           <Button
+            flexShrink={0}
             size="sm"
             onClick={onConnect}
             isLoading={isConnecting}

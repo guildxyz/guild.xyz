@@ -70,7 +70,7 @@ const DiscordForm = ({ baseFieldPath }: RequirementFormProps) => {
           onBlur={onBlur}
           onChange={(newValue: { label: string; value: string }) => {
             resetFields()
-            onChange(newValue?.value)
+            onChange(newValue?.value ?? null)
           }}
           ref={ref}
           value={selected}

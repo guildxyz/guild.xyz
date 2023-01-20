@@ -92,7 +92,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           name={name}
           onBlur={onBlur}
           onChange={(newValue: { label: string; value: string }) => {
-            onChange(newValue?.value)
+            onChange(newValue?.value ?? null)
             setValue(`${baseFieldPath}.data.id`, "")
           }}
           ref={ref}

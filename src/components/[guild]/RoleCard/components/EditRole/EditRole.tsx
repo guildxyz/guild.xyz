@@ -78,9 +78,8 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     onSuccess
   )
 
-  useWarnIfUnsavedChanges(
-    methods.formState?.isDirty && !methods.formState.isSubmitted
-  )
+  const isDirty = !!Object.keys(methods.formState.dirtyFields).length
+  useWarnIfUnsavedChanges(isDirty && !methods.formState.isSubmitted)
 
   const {
     isOpen: isAlertOpen,
@@ -160,7 +159,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         isOpen={isOpen}
         placement="left"
         size={{ base: "full", md: "lg" }}
-        onClose={methods.formState.isDirty ? onAlertOpen : onClose}
+        onClose={isDirty ? onAlertOpen : onClose}
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />

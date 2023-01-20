@@ -115,7 +115,7 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
               placeholder="Search campaigns..."
               value={mappedCampaigns?.find((c) => c.value === value) || null}
               onChange={(selectedOption: SelectOption) => {
-                onChange(selectedOption?.value)
+                onChange(selectedOption?.value ?? null)
                 setValue(`${baseFieldPath}.data.galaxyId`, selectedOption?.galaxyId)
               }}
               onInputChange={(text, _) => {

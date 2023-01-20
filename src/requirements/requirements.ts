@@ -1,3 +1,4 @@
+import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
 import dynamic from "next/dynamic"
 import {
   CurrencyCircleDollar,
@@ -6,14 +7,14 @@ import {
   Wallet,
   Wrench,
 } from "phosphor-react"
-import { RequirementComponentProps, RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements"
 
 export const REQUIREMENTS_DATA = [
   {
     icon: Wallet,
     name: "Free",
     fileNameBase: "Free",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Free/FreeRequirement")
     ),
     types: ["FREE"],
@@ -22,7 +23,7 @@ export const REQUIREMENTS_DATA = [
     icon: CurrencyCircleDollar,
     name: "Token",
     fileNameBase: "Token",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Token/TokenRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -34,7 +35,7 @@ export const REQUIREMENTS_DATA = [
     icon: ImageSquare,
     name: "NFT",
     fileNameBase: "Nft",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Nft/NftRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -46,7 +47,7 @@ export const REQUIREMENTS_DATA = [
     icon: ListChecks,
     name: "Allowlist",
     fileNameBase: "Allowlist",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Allowlist/AllowlistRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -58,7 +59,7 @@ export const REQUIREMENTS_DATA = [
     icon: Wrench,
     name: "Custom contract query",
     fileNameBase: "ContractState",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/ContractState/ContractStateRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -70,7 +71,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/twitter.svg",
     name: "Twitter",
     fileNameBase: "Twitter",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Twitter/TwitterRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -95,7 +96,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/platforms/github.png",
     name: "GitHub",
     fileNameBase: "Github",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Github/GithubRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -108,7 +109,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/platforms/discord.png",
     name: "Discord",
     fileNameBase: "Discord",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Discord/DiscordRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -127,7 +128,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/guild.png",
     name: "Guild",
     fileNameBase: "Guild",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Guild/GuildRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -145,7 +146,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/unlock.png",
     name: "Unlock",
     fileNameBase: "Unlock",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Unlock/UnlockRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -157,7 +158,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/poap.svg",
     name: "Poap",
     fileNameBase: "Poap",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Poap/PoapRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -169,7 +170,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/gitpoap.svg",
     name: "GitPOAP",
     fileNameBase: "GitPoap",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/GitPoap/GitPoapRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -181,7 +182,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/mirror.svg",
     name: "Mirror",
     fileNameBase: "Mirror",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Mirror/MirrorRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -193,7 +194,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/snapshot.png",
     name: "Snapshot",
     fileNameBase: "Snapshot",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Snapshot/SnapshotRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -206,7 +207,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/juicebox.png",
     name: "Juicebox",
     fileNameBase: "Juicebox",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Juicebox/JuiceboxRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -218,7 +219,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/galaxy.svg",
     name: "Galxe",
     fileNameBase: "Galaxy",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Galaxy/GalaxyRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -230,7 +231,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/noox.svg",
     name: "Noox",
     fileNameBase: "Noox",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Noox/NooxRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -242,7 +243,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/disco.png",
     name: "Disco",
     fileNameBase: "Disco",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Disco/DiscoRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -254,7 +255,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/lens.png",
     name: "Lens",
     fileNameBase: "Lens",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Lens/LensRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -275,7 +276,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/otterspace.png",
     name: "Otterspace",
     fileNameBase: "Otterspace",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Otterspace/OtterspaceRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -287,7 +288,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/orange.png",
     name: "Orange",
     fileNameBase: "Orange",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Orange/OrangeRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -299,7 +300,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/cask.png",
     name: "Cask",
     fileNameBase: "Cask",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Cask/CaskRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -311,7 +312,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/101.png",
     name: "101",
     fileNameBase: "101",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/101/101Requirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -323,7 +324,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/rabbithole.png",
     name: "RabbitHole",
     fileNameBase: "Rabbithole",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Rabbithole/RabbitholeRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -335,7 +336,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/kycdao.svg",
     name: "kycDAO",
     fileNameBase: "KycDAO",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/KycDAO/KycDAORequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -347,7 +348,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/sismo.svg",
     name: "Sismo",
     fileNameBase: "Sismo",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Sismo/SismoRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -359,7 +360,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/sound.png",
     name: "Sound",
     fileNameBase: "Sound",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Sound/SoundRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -378,7 +379,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/networkLogos/optimism.svg",
     name: "OP Attestation",
     fileNameBase: "Optimism",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Optimism/OptimismRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -390,7 +391,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/yup.svg",
     name: "Yup",
     fileNameBase: "Yup",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Yup/YupRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -402,7 +403,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/rep3.png",
     name: "Rep3",
     fileNameBase: "Rep3",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Rep3/Rep3Requirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
@@ -414,7 +415,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/parallel.png",
     name: "Parallel",
     fileNameBase: "Parallel",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Parallel/ParallelRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(

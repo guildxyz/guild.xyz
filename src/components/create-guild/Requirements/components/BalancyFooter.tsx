@@ -1,8 +1,10 @@
 import { Spinner, Text } from "@chakra-ui/react"
+import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
 const BalancyFooter = ({ baseFieldPath }) => {
   const { holders, isLoading } = useBalancy(baseFieldPath)
+  const requirement = useWatch({ name: baseFieldPath })
 
   if (typeof holders === "number")
     return (
@@ -15,7 +17,15 @@ const BalancyFooter = ({ baseFieldPath }) => {
           </Text>
         )}{" "}
         {`${holders > 1 ? "addresses" : "address"} ${
-          holders > 1 ? "satisfy" : "satisfies"
+          /**
+           * "excluded by" isn't displayed right now normally because negated
+           * requirements get filtered in useBalancy, but will be in the future
+           */
+          requirement?.isNegated
+            ? "excluded by"
+            : holders > 1
+            ? "satisfy"
+            : "satisfies"
         } this requirement`}
       </Text>
     )

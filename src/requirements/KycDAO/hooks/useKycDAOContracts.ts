@@ -6,10 +6,13 @@ const useKycDAOContracts = (): {
     value: string
   }[]
   isLoading: boolean
+  error: any
 } => {
-  const { data, isValidating: isLoading } = useSWRImmutable(
-    "https://kycdao.xyz/api/public/status"
-  )
+  const {
+    data,
+    isValidating: isLoading,
+    error,
+  } = useSWRImmutable("https://kycdao.xyz/api/public/status")
 
   const polygonData: Record<
     string,
@@ -28,6 +31,7 @@ const useKycDAOContracts = (): {
   return {
     isLoading,
     kycDAOContracts,
+    error,
   }
 }
 

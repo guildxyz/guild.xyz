@@ -154,9 +154,9 @@ const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
                       }
                     : null)
                 }
-                onChange={(selectedOption: SelectOption & { decimals: number }) => {
-                  onChange(selectedOption?.value)
-                }}
+                onChange={(selectedOption: SelectOption & { decimals: number }) =>
+                  onChange(selectedOption?.value ?? null)
+                }
                 onBlur={onBlur}
                 onInputChange={(text, _) => {
                   if (!ADDRESS_REGEX.test(text)) return
