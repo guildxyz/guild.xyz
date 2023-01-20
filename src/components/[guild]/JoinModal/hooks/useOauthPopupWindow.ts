@@ -30,7 +30,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
   // prettier-ignore
   const { onOpen, windowInstance } = usePopupWindow(
-    `${baseUrl}?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope[scopeType])}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(JSON.stringify([client_id, csrfToken.current]))}&${Object.entries(otherOAuthParams).map(([key, value]) => `${key}=${value}`).join("&")}`
+    `${baseUrl}?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope[scopeType] ?? scope.membership)}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(JSON.stringify([client_id, csrfToken.current]))}&${Object.entries(otherOAuthParams).map(([key, value]) => `${key}=${value}`).join("&")}`
   )
 
   const [error, setError] = useState(null)
