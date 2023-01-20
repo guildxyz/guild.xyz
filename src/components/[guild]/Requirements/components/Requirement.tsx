@@ -19,6 +19,7 @@ export type RequirementProps = PropsWithChildren<{
   footer?: JSX.Element
   rightElement?: JSX.Element
   isNegated?: boolean
+  flipNegated?: boolean
 }>
 
 const Requirement = ({
@@ -28,6 +29,7 @@ const Requirement = ({
   withImgBg = true,
   rightElement,
   isNegated = false,
+  flipNegated = false,
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -70,7 +72,7 @@ const Requirement = ({
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center">
         <Text wordBreak="break-word">
-          {isNegated && <Tag mr="2">DON'T</Tag>}
+          {(flipNegated ? !isNegated : isNegated) && <Tag mr="2">DON'T</Tag>}
           {children}
         </Text>
         {footer}

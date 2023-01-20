@@ -10,20 +10,21 @@ const ShieldRequirement = (props: RequirementProps): JSX.Element => {
     <Requirement
       isNegated={requirement.isNegated}
       image="/requirementLogos/shield.png"
+      flipNegated
       {...props}
     >
       {(() => {
         switch (requirement.type) {
           case "SHIELD_ANOM_TX":
-            return "Don't have anomalous transaction patterns"
+            return "Have anomalous transaction patterns"
           case "SHIELD_UNVERIFIED_CONTRACT":
-            return "Don't have a history of creating an unverified contracts"
+            return "Have a history of creating an unverified contracts"
           case "SHIELD_EXPLOIT_INTERACTION":
-            return "Don't have interaction with known exploits"
+            return "Have interaction with known exploits"
           case "SHIELD_INDIRECT_DEPOSITS":
-            return "Don't have frequent indirect exchange deposits"
+            return "Have frequent indirect exchange deposits"
           case "SHIELD_TORNADO_CASH":
-            return `Don't have interactions with Tornado Cash${
+            return `Have interactions with Tornado Cash${
               requirement.data.hops ? "(with hops)" : ""
             }`
         }
