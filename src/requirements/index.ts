@@ -1,7 +1,7 @@
+import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
 import { Icon } from "phosphor-react"
 import { ComponentType } from "react"
 import { Requirement } from "types"
-import { RequirementProps } from "./common/Requirement"
 import REQUIREMENTS_DATA from "./requirements"
 
 // transform it to an object with types as keys so we don't have to use .find() every time
@@ -19,10 +19,6 @@ export type RequirementFormProps = {
   field?: Requirement
 }
 
-export type RequirementComponentProps = {
-  requirement: Requirement
-} & RequirementProps
-
 export type RequirementData = {
   icon: string | Icon
   name: string
@@ -30,7 +26,7 @@ export type RequirementData = {
   readonly types: string[]
   disabled?: boolean
   isPlatform?: boolean
-  displayComponent: ComponentType<RequirementComponentProps>
+  displayComponent: ComponentType<RequirementProps>
   formComponent: ComponentType<RequirementFormProps>
 }
 

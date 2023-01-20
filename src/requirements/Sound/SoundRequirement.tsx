@@ -1,11 +1,15 @@
 import { Img } from "@chakra-ui/react"
 import Link from "components/common/Link"
-import { RequirementComponentProps } from "requirements"
-import Requirement from "requirements/common/Requirement"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useSWRImmutable from "swr/immutable"
 import slugify from "utils/slugify"
 
-const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
+const SoundRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
   const { data: artistData, isValidating: isArtistLoading } = useSWRImmutable(
     requirement.data?.id
       ? `/api/sound/sound-artist-by-handle?soundHandle=${requirement.data.id}`
@@ -38,7 +42,7 @@ const SoundRequirement = ({ requirement, ...rest }: RequirementComponentProps) =
             return <Img src="/requirementLogos/sound.png" />
         }
       })()}
-      {...rest}
+      {...props}
     >
       {(() => {
         switch (requirement.type) {

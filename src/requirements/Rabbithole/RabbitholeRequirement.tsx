@@ -1,27 +1,30 @@
 import { Img } from "@chakra-ui/react"
-import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
-import Requirement from "../common/Requirement"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { rabbitholeCourses } from "./RabbitholeForm"
 
-const RabbitholeRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps) => (
-  <Requirement
-    isNegated={requirement.isNegated}
-    image={<Img src="/requirementLogos/rabbithole.png" />}
-    {...rest}
-  >
-    {`Have an NFT from the `}
-    <DataBlock>
-      {
-        rabbitholeCourses.find((course) => course.value === requirement.address)
-          .label
-      }
-    </DataBlock>
-    {` Rabbithole skill`}
-  </Requirement>
-)
+const RabbitholeRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
+  return (
+    <Requirement
+      isNegated={requirement.isNegated}
+      image={<Img src="/requirementLogos/rabbithole.png" />}
+      {...props}
+    >
+      {`Have an NFT from the `}
+      <DataBlock>
+        {
+          rabbitholeCourses.find((course) => course.value === requirement.address)
+            .label
+        }
+      </DataBlock>
+      {` Rabbithole skill`}
+    </Requirement>
+  )
+}
 
 export default RabbitholeRequirement
