@@ -409,7 +409,7 @@ export const REQUIREMENTS_DATA = [
     icon: "/explorerLogos/tessera.svg",
     name: "Tessera",
     fileNameBase: "Tessera",
-    displayComponent: dynamic<RequirementComponentProps>(
+    displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Tessera/TesseraRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(

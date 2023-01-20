@@ -1,14 +1,15 @@
-import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
-import Requirement from "requirements/common/Requirement"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import pluralize from "utils/pluralize"
 import TesseraUrl from "./components/TesseraUrl"
 import useTesseraVault from "./hooks/useTesseraVault"
 
-const TesseraRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps): JSX.Element => {
+const TesseraRequirement = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext()
+
   const { vault, isLoading } = useTesseraVault(requirement.data.vault)
 
   return (
@@ -19,7 +20,7 @@ const TesseraRequirement = ({
           : vault?.imageUrl ?? "/requirementLogos/tessera.png"
       }
       footer={<TesseraUrl collectionSlug={requirement.data.vault} />}
-      {...rest}
+      {...props}
     >
       {(() => {
         switch (requirement.type) {

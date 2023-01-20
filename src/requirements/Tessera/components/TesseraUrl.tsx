@@ -1,4 +1,4 @@
-import { RequirementLinkButton } from "requirements/common/RequirementButton"
+import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
 
 type Props = {
   collectionSlug: string
