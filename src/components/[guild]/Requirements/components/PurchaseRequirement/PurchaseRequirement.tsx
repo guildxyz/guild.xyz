@@ -9,21 +9,22 @@ import {
   Stack,
   Tooltip,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { ShoppingCartSimple } from "phosphor-react"
-import { useRequirementContext } from "../RequirementContext"
 import RequirementDisplayComponent from "../RequirementDisplayComponent"
 import FeeAndTotal from "./components/FeeAndTotal"
 import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
+import {
+  PurchaseRequirementProvider,
+  usePurchaseRequirementContext,
+} from "./components/PurchaseRequirementContex"
 
 const PurchaseRequirement = (): JSX.Element => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const modalFooterBg = useColorModeValue("gray.50", "gray.800")
+  const { requirement, isOpen, onOpen, onClose } = usePurchaseRequirementContext()
 
-  const requirement = useRequirementContext()
+  const modalFooterBg = useColorModeValue("gray.50", "gray.800")
 
   return (
     <>
@@ -80,8 +81,6 @@ const PurchaseRequirement = (): JSX.Element => {
 
               <FeeAndTotal />
 
-              {/* TODO: total/fee  */}
-
               <Stack spacing={3}>
                 <Button size="xl" colorScheme="blue" loadingText="Check your wallet">
                   Purchase
@@ -98,4 +97,10 @@ const PurchaseRequirement = (): JSX.Element => {
   )
 }
 
-export default PurchaseRequirement
+const PurchaseRequirementWrapper = (): JSX.Element => (
+  <PurchaseRequirementProvider>
+    <PurchaseRequirement />
+  </PurchaseRequirementProvider>
+)
+
+export default PurchaseRequirementWrapper
