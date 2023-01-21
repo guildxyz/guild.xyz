@@ -1,10 +1,24 @@
+import { RequirementType } from "requirements"
+
+const PURCHASABLE_REQUIREMENT_TYPES: RequirementType[] = [
+  "ERC20",
+  "ERC721",
+  "ERC1155",
+]
+
 const SUPPORTED_CURRENCIES: { chainId: number; address?: string }[] = [
+  // ETH
   {
     chainId: 1,
   },
+  // OWO
   {
     chainId: 5,
     address: "0x3C65D35A8190294d39013287B246117eBf6615Bd",
+  },
+  // MATIC
+  {
+    chainId: 137,
   },
 ]
 
@@ -21,4 +35,8 @@ const PROTOCOL_FEES_PERCENTAGE = {
   FOUNDATION: 0, // up to 15% a ToS alapján (de ahogy nézem opcionális, párat megnéztem és ott nem láttam)
 }
 
-export { SUPPORTED_CURRENCIES, PROTOCOL_FEES_PERCENTAGE }
+export {
+  PURCHASABLE_REQUIREMENT_TYPES,
+  SUPPORTED_CURRENCIES,
+  PROTOCOL_FEES_PERCENTAGE,
+}

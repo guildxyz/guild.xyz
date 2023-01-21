@@ -13,6 +13,7 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { ShoppingCartSimple } from "phosphor-react"
+import { PURCHASABLE_REQUIREMENT_TYPES } from "utils/guildCheckout"
 import RequirementDisplayComponent from "../RequirementDisplayComponent"
 import FeeAndTotal from "./components/FeeAndTotal"
 import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
@@ -25,6 +26,8 @@ const PurchaseRequirement = (): JSX.Element => {
   const { requirement, isOpen, onOpen, onClose } = usePurchaseRequirementContext()
 
   const modalFooterBg = useColorModeValue("gray.50", "gray.800")
+
+  if (!PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type)) return null
 
   return (
     <>

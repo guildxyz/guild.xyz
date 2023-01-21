@@ -12,13 +12,17 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { Chains } from "connectors"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import { useContext } from "react"
 import { SUPPORTED_CURRENCIES } from "utils/guildCheckout"
 import shortenHex from "utils/shortenHex"
+import { usePurchaseRequirementContext } from "../PurchaseRequirementContex"
 import CurrencyListItem from "./components/CurrencyListItem"
 
 const PaymentCurrencyPicker = (): JSX.Element => {
+  const { requirement } = usePurchaseRequirementContext()
+
   const { isOpen, onToggle } = useDisclosure()
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
   const lightShade = useColorModeValue("white", "gray.700")
@@ -59,7 +63,9 @@ const PaymentCurrencyPicker = (): JSX.Element => {
         </Button>
         <Collapse in={isOpen} animateOpacity style={{ marginTop: 0 }}>
           <Stack divider={<Divider />} py={2} bgColor={listBgColor}>
-            {SUPPORTED_CURRENCIES.map((c) => (
+            {SUPPORTED_CURRENCIES.filter(
+              (c) => c.chainId === Chains[requirement.chain]
+            ).map((c) => (
               <CurrencyListItem
                 key={`${c.chainId}-${c.address}`}
                 chainId={c.chainId}
