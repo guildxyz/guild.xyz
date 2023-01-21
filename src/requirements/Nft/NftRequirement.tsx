@@ -2,7 +2,9 @@ import { Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import OpenseaUrl from "components/[guild]/Requirements/components/OpenseaUrl"
-import Requirement from "components/[guild]/Requirements/components/Requirement"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { Fragment } from "react"
 import { Trait } from "types"
@@ -27,7 +29,7 @@ const getNounsRequirementType = (trait: Trait) =>
     : ImageData.images?.[imageDataTypeMap[trait.trait_type]]?.[+trait.value]
         ?.filename
 
-const NftRequirement = (props) => {
+const NftRequirement = (props: RequirementProps) => {
   const receivedRequirement = useRequirementContext()
 
   // Converting the requirement to the new format if needed

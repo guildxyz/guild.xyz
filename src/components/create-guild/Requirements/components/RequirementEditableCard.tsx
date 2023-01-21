@@ -13,6 +13,7 @@ import {
 import Card from "components/common/Card"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
+import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import REQUIREMENTS from "requirements"
@@ -65,16 +66,18 @@ const RequirementEditableCard = ({
   return (
     <>
       <Card px="6" py="4" pr="8" pos="relative">
-        <RequirementComponent
-          requirement={field}
-          footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
-          setValueForBalancy={setValueForBalancy}
-          rightElement={
-            <Button ref={ref} size="sm" onClick={onOpen}>
-              Edit
-            </Button>
-          }
-        />
+        <RequirementProvider requirement={field}>
+          <RequirementComponent
+            footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
+            setValueForBalancy={setValueForBalancy}
+            rightElement={
+              <Button ref={ref} size="sm" onClick={onOpen}>
+                Edit
+              </Button>
+            }
+          />
+        </RequirementProvider>
+
         <CloseButton
           position="absolute"
           top={2}
