@@ -10,11 +10,15 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { ShoppingCartSimple } from "phosphor-react"
 import { PURCHASABLE_REQUIREMENT_TYPES } from "utils/guildCheckout"
 import RequirementDisplayComponent from "../RequirementDisplayComponent"
+import ChooseCurrencyButton from "./components/buttons/ChooseCurrencyButton"
+import PurchaseButton from "./components/buttons/PurchaseButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import FeeAndTotal from "./components/FeeAndTotal"
 import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
 import {
@@ -23,11 +27,14 @@ import {
 } from "./components/PurchaseRequirementContex"
 
 const PurchaseRequirement = (): JSX.Element => {
-  const { requirement, isOpen, onOpen, onClose } = usePurchaseRequirementContext()
+  const { account } = useWeb3React()
+  const { requirement, isOpen, onOpen, onClose, pickedCurrency } =
+    usePurchaseRequirementContext()
 
   const modalFooterBg = useColorModeValue("gray.50", "gray.800")
 
-  if (!PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type)) return null
+  if (!account || !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type))
+    return null
 
   return (
     <>
@@ -85,12 +92,14 @@ const PurchaseRequirement = (): JSX.Element => {
               <FeeAndTotal />
 
               <Stack spacing={3}>
-                <Button size="xl" colorScheme="blue" loadingText="Check your wallet">
-                  Purchase
-                </Button>
-                <Button size="xl" isDisabled>
-                  Disabled action
-                </Button>
+                {!pickedCurrency ? (
+                  <ChooseCurrencyButton />
+                ) : (
+                  <>
+                    <SwitchNetworkButton />
+                    <PurchaseButton />
+                  </>
+                )}
               </Stack>
             </Stack>
           </ModalFooter>

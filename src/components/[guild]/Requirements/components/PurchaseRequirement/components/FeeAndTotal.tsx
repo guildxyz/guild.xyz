@@ -8,8 +8,11 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Info } from "phosphor-react"
+import { usePurchaseRequirementContext } from "./PurchaseRequirementContex"
 
 const FeeAndTotal = (): JSX.Element => {
+  const { pickedCurrency } = usePurchaseRequirementContext()
+
   const textColor = useColorModeValue("gray.800", "gray.200")
   const textAccentColor = useColorModeValue("black", "white")
 
@@ -26,16 +29,23 @@ const FeeAndTotal = (): JSX.Element => {
             <Icon as={Info} />
           </Tooltip>
         </HStack>
-        <Text as="span">0.025 ETH</Text>
+        <Text as="span">{pickedCurrency ? "0.025 ETH" : "Choose currency"}</Text>
       </HStack>
 
       <HStack justifyContent="space-between">
         <Text as="span">Total</Text>
+
         <Text as="span">
-          $16 ={" "}
-          <Text as="span" color={textAccentColor} fontWeight="semibold">
-            0.28 ETH
-          </Text>
+          {pickedCurrency ? (
+            <>
+              {`$16 = `}
+              <Text as="span" color={textAccentColor} fontWeight="semibold">
+                0.28 ETH
+              </Text>
+            </>
+          ) : (
+            "Choose currency"
+          )}
         </Text>
       </HStack>
     </Stack>

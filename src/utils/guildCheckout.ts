@@ -6,10 +6,11 @@ const PURCHASABLE_REQUIREMENT_TYPES: RequirementType[] = [
   "ERC1155",
 ]
 
-const SUPPORTED_CURRENCIES: { chainId: number; address?: string }[] = [
+const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
   // ETH
   {
     chainId: 1,
+    address: "COIN",
   },
   // OWO
   {
@@ -19,6 +20,7 @@ const SUPPORTED_CURRENCIES: { chainId: number; address?: string }[] = [
   // MATIC
   {
     chainId: 137,
+    address: "COIN",
   },
 ]
 

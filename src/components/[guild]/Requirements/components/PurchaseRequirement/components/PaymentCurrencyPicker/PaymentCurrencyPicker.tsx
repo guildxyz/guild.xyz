@@ -19,16 +19,17 @@ import { SUPPORTED_CURRENCIES } from "utils/guildCheckout"
 import shortenHex from "utils/shortenHex"
 import { usePurchaseRequirementContext } from "../PurchaseRequirementContex"
 import CurrencyListItem from "./components/CurrencyListItem"
+import TokenInfo from "./components/TokenInfo"
 
 const PaymentCurrencyPicker = (): JSX.Element => {
-  const { requirement } = usePurchaseRequirementContext()
+  const { requirement, pickedCurrency } = usePurchaseRequirementContext()
 
-  const { isOpen, onToggle } = useDisclosure()
+  const { isOpen, onToggle, onClose } = useDisclosure()
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
   const lightShade = useColorModeValue("white", "gray.700")
   const listBgColor = useColorModeValue("whiteAlpha.600", "transparent")
 
-  const { account } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const { openAccountModal } = useContext(Web3Connection)
 
   return (
@@ -46,13 +47,21 @@ const PaymentCurrencyPicker = (): JSX.Element => {
           bgColor={lightShade}
           fontWeight="normal"
           borderRadius="none"
+          textAlign="left"
           onClick={onToggle}
         >
-          <HStack justifyContent="space-between">
-            <HStack spacing={4}>
-              <Circle size={"var(--chakra-space-11)"} bgColor={circleBgColor} />
-              <Text as="span">Choose currency</Text>
-            </HStack>
+          <HStack w="full" justifyContent="space-between">
+            {pickedCurrency ? (
+              <TokenInfo
+                chainId={Chains[requirement.chain]}
+                address={pickedCurrency}
+              />
+            ) : (
+              <HStack spacing={4}>
+                <Circle size={"var(--chakra-space-11)"} bgColor={circleBgColor} />
+                <Text as="span">Choose currency</Text>
+              </HStack>
+            )}
             <Icon
               as={CaretDown}
               boxSize={4}
@@ -61,8 +70,9 @@ const PaymentCurrencyPicker = (): JSX.Element => {
             />
           </HStack>
         </Button>
+
         <Collapse in={isOpen} animateOpacity style={{ marginTop: 0 }}>
-          <Stack divider={<Divider />} py={2} bgColor={listBgColor}>
+          <Stack divider={<Divider />} bgColor={listBgColor}>
             {SUPPORTED_CURRENCIES.filter(
               (c) => c.chainId === Chains[requirement.chain]
             ).map((c) => (
@@ -70,6 +80,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                 key={`${c.chainId}-${c.address}`}
                 chainId={c.chainId}
                 address={c.address}
+                onPick={onClose}
               />
             ))}
           </Stack>

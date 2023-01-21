@@ -1,5 +1,5 @@
 import Button from "components/common/Button"
-import { usePurchaseRequirementContext } from "./PurchaseRequirementContex"
+import { usePurchaseRequirementContext } from "../PurchaseRequirementContex"
 
 const CloseModalButton = (): JSX.Element => {
   const { onClose } = usePurchaseRequirementContext()
