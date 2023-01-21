@@ -14,7 +14,9 @@ import Button from "components/common/Button"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import { useContext } from "react"
+import { SUPPORTED_CURRENCIES } from "utils/guildCheckout"
 import shortenHex from "utils/shortenHex"
+import CurrencyListItem from "./components/CurrencyListItem"
 
 const PaymentCurrencyPicker = (): JSX.Element => {
   const { isOpen, onToggle } = useDisclosure()
@@ -57,9 +59,13 @@ const PaymentCurrencyPicker = (): JSX.Element => {
         </Button>
         <Collapse in={isOpen} animateOpacity style={{ marginTop: 0 }}>
           <Stack divider={<Divider />} py={2} bgColor={listBgColor}>
-            <CurrencyListItem />
-            <CurrencyListItem />
-            <CurrencyListItem />
+            {SUPPORTED_CURRENCIES.map((c) => (
+              <CurrencyListItem
+                key={`${c.chainId}-${c.address}`}
+                chainId={c.chainId}
+                address={c.address}
+              />
+            ))}
           </Stack>
           <HStack
             justifyContent="space-between"
@@ -84,27 +90,6 @@ const PaymentCurrencyPicker = (): JSX.Element => {
         </Collapse>
       </Stack>
     </Stack>
-  )
-}
-
-const CurrencyListItem = (): JSX.Element => {
-  const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
-
-  return (
-    <HStack spacing={4} px={4} py={2}>
-      <Circle size={"var(--chakra-space-11)"} bgColor={circleBgColor} />
-      <Stack spacing={0}>
-        <Text as="span">
-          0.25 ETH{" "}
-          <Text as="span" colorScheme="gray">
-            (Ethereum)
-          </Text>
-        </Text>
-        <Text as="span" colorScheme="gray" fontSize="xs">
-          Balance: 2.54 ETH
-        </Text>
-      </Stack>
-    </HStack>
   )
 }
 
