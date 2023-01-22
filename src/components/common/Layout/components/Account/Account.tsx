@@ -14,6 +14,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import useUser from "components/[guild]/hooks/useUser"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
+import useNameCoinName from "hooks/useNameCoinName"
 import useNNSName from "hooks/useNNSName"
 import { LinkBreak, SignIn } from "phosphor-react"
 import { useContext } from "react"
@@ -26,6 +27,8 @@ const Account = (): JSX.Element => {
     useContext(Web3Connection)
   const { ENSName } = useWeb3React()
   const NNSName = useNNSName()
+  const nameCoinName = useNameCoinName()
+
   const { addresses } = useUser()
 
   if (!account) {
