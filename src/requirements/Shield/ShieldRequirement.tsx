@@ -10,7 +10,6 @@ const ShieldRequirement = (props: RequirementProps): JSX.Element => {
     <Requirement
       isNegated={requirement.isNegated}
       image="/requirementLogos/shield.png"
-      flipNegated
       {...props}
     >
       {(() => {
