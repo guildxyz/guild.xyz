@@ -81,17 +81,6 @@ const TesseraRequirement = (props: RequirementProps): JSX.Element => {
                 )}
               </>
             )
-          case "TESSERA_USER_SINCE":
-            const formattedDate = new Date(
-              requirement.data.minDate
-            ).toLocaleDateString()
-
-            return (
-              <>
-                {"Be a Tessera user since at least "}
-                <DataBlock>{formattedDate}</DataBlock>
-              </>
-            )
         }
       })()}
     </Requirement>

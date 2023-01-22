@@ -9,7 +9,6 @@ import Hold from "./components/Hold"
 import HoldCollection from "./components/HoldCollection"
 import HoldState from "./components/HoldState"
 import Listings from "./components/Listings"
-import UserSince from "./components/UserSince"
 
 export const vaultStateOptions = [
   { label: "Distribution", value: "distribution" },
@@ -38,11 +37,6 @@ const tesseraRequirementTypes = [
     label: "Has Raes listed",
     value: "TESSERA_LISTINGS",
     TesseraRequirement: Listings,
-  },
-  {
-    label: "Account age",
-    value: "TESSERA_USER_SINCE",
-    TesseraRequirement: UserSince,
   },
 ]
 
