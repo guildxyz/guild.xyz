@@ -1,7 +1,8 @@
 import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
-import { useController, useFormState } from "react-hook-form"
+import { useEffect } from "react"
+import { useController, useFormContext, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import TornadoCash from "./components/TornadoCash"
@@ -30,7 +31,16 @@ const shieldRequirementTypes = [
   },
 ]
 
-const ShieldForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+const ShieldForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
+  const { resetField } = useFormContext()
+
+  useEffect(() => {
+    if (typeof field === "undefined")
+      resetField(`${baseFieldPath}.isNegated`, {
+        defaultValue: true,
+      })
+  }, [])
+
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
