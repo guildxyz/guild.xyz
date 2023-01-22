@@ -1,8 +1,14 @@
 import { RequirementFormProps } from "requirements"
-import ListingsOrHoldState from "./ListingsOrHoldState"
+import NumberField from "./NumberField"
 
-const Listings = (props: RequirementFormProps): JSX.Element => (
-  <ListingsOrHoldState {...props} />
+const Listings = ({ baseFieldPath }: RequirementFormProps): JSX.Element => (
+  <NumberField
+    isRequired
+    baseFieldPath={baseFieldPath}
+    label="Minimum amount"
+    fieldName="minAmount"
+    min={1}
+  />
 )
 
 export default Listings
