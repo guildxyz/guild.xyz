@@ -370,7 +370,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
           <ModalHeader>Change network</ModalHeader>
           <ModalBody>
             <NetworkButtonsList
-              manualNetworkChangeCallback={onChangeNetworkModalClose}
+              networkChangeCallback={onChangeNetworkModalClose}
               listedChainIDs={guildPoap?.poapContracts?.map(
                 (poapContract) => poapContract.chainId
               )}

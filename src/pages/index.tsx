@@ -12,16 +12,16 @@ import Hero from "components/index/Hero"
 import PlatformAgnosticCommunities from "components/index/PlatformAgnosticCommunities"
 import RealTimeQueryEngine from "components/index/RealTimeQueryEngine"
 import TokenBasedMembership from "components/index/TokenBasedMembership"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 
 const Page = (): JSX.Element => {
   const { account } = useWeb3React()
   const router: any = useRouter()
   const hasNavigated = router.components && Object.keys(router.components).length > 2
-  const { triedEager } = useContext(Web3Connection)
+  const { triedEager } = useWeb3ConnectionManager()
 
   useEffect(() => {
     if (router.isReady && !hasNavigated && triedEager && account)

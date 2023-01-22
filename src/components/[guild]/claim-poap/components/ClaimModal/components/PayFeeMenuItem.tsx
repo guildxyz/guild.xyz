@@ -12,16 +12,13 @@ import {
 } from "@chakra-ui/react"
 import { BigNumber } from "@ethersproject/bignumber"
 import { formatUnits } from "@ethersproject/units"
-import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
-import { WalletConnect } from "@web3-react/walletconnect"
-import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import useAllowance from "components/[guild]/claim-poap/hooks/useAllowance"
 import usePayFee from "components/[guild]/claim-poap/hooks/usePayFee"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import useCoinBalance from "hooks/useCoinBalance"
-import useToast from "hooks/useToast"
 import useTokenBalance from "hooks/useTokenBalance"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
@@ -40,8 +37,8 @@ const PayFeeMenuItem = ({
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
-  const { connector, chainId } = useWeb3React()
-  const toast = useToast()
+  const { chainId } = useWeb3React()
+  const { requestNetworkChange } = useWeb3ConnectionManager()
 
   const { vaultData } = usePoapVault(
     poapContractData.vaultId,
@@ -74,25 +71,14 @@ const PayFeeMenuItem = ({
 
   useEffect(() => setLoadingText(loadingText), [loadingText])
 
-  const handleChainChange = () => {
-    if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet) {
-      toast({
-        title: "Your wallet doesn't support switching chains automatically",
-        description: `Please switch to ${
-          RPC[Chains[poapContractData.chainId]]?.chainName
-        } from your wallet manually!`,
-        status: "error",
-      })
-      return
-    }
-
-    requestNetworkChange(Chains[poapContractData.chainId])()
-  }
-
   return (
     <Tooltip label="Insufficient balance" isDisabled={sufficientBalance}>
       <MenuItem
-        onClick={chainId === poapContractData.chainId ? onSubmit : handleChainChange}
+        onClick={
+          chainId === poapContractData.chainId
+            ? onSubmit
+            : () => requestNetworkChange(poapContractData.chainId)
+        }
         tabIndex={0}
         isDisabled={!sufficientBalance}
       >

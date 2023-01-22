@@ -12,17 +12,16 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import GuildAvatar from "components/common/GuildAvatar"
 import useUser from "components/[guild]/hooks/useUser"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import { LinkBreak, SignIn } from "phosphor-react"
-import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
 
 const Account = (): JSX.Element => {
   const { account, chainId } = useWeb3React()
   const { openWalletSelectorModal, openNetworkModal, openAccountModal, triedEager } =
-    useContext(Web3Connection)
+    useWeb3ConnectionManager()
   const { ENSName } = useWeb3React()
   const { addresses } = useUser()
 
