@@ -279,8 +279,7 @@ const useKeyPair = () => {
         const body: SetKeypairPayload = { pubKey: undefined }
 
         try {
-          const generatedKeys = await generateKeyPair()
-          body.pubKey = generatedKeys.pubKey
+          body.pubKey = generatedKeyPair.pubKey
         } catch (error) {
           if (error?.code !== 4001) {
             addDatadogError(
