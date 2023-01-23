@@ -1,10 +1,11 @@
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
+import { randomBytes } from "crypto"
 import { createStore, del, get, set } from "idb-keyval"
-import useSWR, { KeyedMutator, mutate } from "swr"
+import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
-import { bufferToHex } from "utils/bufferUtils"
+import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import { Validation } from "./useSubmit"
 import { useSubmitWithSignWithParamKeyPair } from "./useSubmit/useSubmit"
@@ -14,6 +15,14 @@ type StoredKeyPair = {
   keyPair: CryptoKeyPair
   pubKey: string
 }
+
+type AddressLinkParams = {
+  userId: number
+  signature: string
+  nonce: string
+}
+
+type SetKeypairPayload = StoredKeyPair & Partial<AddressLinkParams>
 
 const getStore = () => createStore("guild.xyz", "signingKeyPairs")
 
@@ -60,29 +69,43 @@ const setKeyPair = async ({
   account: string
   validation: Validation
   mutateKeyPair: KeyedMutator<StoredKeyPair>
-  payload: StoredKeyPair
-}) => {
+  payload: SetKeypairPayload
+}): Promise<[StoredKeyPair, boolean]> => {
+  const { keyPair, ...body } = payload
+
+  const shouldSendLink =
+    typeof body.userId === "number" && typeof body.signature === "string"
+
+  if (!shouldSendLink) {
+    delete body.signature
+    delete body.userId
+  }
+
   const { userId } = await fetcher("/user/pubKey", {
     body: {
-      payload: {
-        pubKey: payload.pubKey,
-      },
+      payload: body,
       ...validation,
     },
     method: "POST",
   })
 
-  /**
-   * This rejects, when IndexedDB is not available, like in Firefox private window.
-   * Ignoring this error is fine, since we are falling back to just storing it in
-   * memory.
-   */
-  await setKeyPairToIdb(userId, payload).catch(() => {})
+  let storedKeyPair: StoredKeyPair
+
+  if (!shouldSendLink) {
+    storedKeyPair = { pubKey: body.pubKey, keyPair }
+
+    /**
+     * This rejects, when IndexedDB is not available, like in Firefox private window.
+     * Ignoring this error is fine, since we are falling back to just storing it in
+     * memory.
+     */
+    await setKeyPairToIdb(userId, storedKeyPair).catch(() => {})
+  }
 
   await mutate(`/user/${account}`)
   await mutateKeyPair()
 
-  return payload
+  return [storedKeyPair, shouldSendLink]
 }
 
 const checkKeyPair = (_: string, savedPubKey: string, pubKey: string): boolean =>
@@ -141,14 +164,21 @@ const useKeyPair = () => {
           deleteKeyPairFromIdb(user?.id).then(() => {
             mutateKeyPair({ pubKey: undefined, keyPair: undefined })
           })
+        } else if (
+          !!window.localStorage.getItem("userId") &&
+          +window.localStorage.getItem("userId") !== user?.id
+        ) {
+          deleteKeyPairFromIdb(user?.id).then(() => {
+            mutateKeyPair({ pubKey: undefined, keyPair: undefined })
+          })
         }
       },
     }
   )
 
   const setSubmitResponse = useSubmitWithSignWithParamKeyPair<
-    StoredKeyPair,
-    StoredKeyPair
+    SetKeypairPayload,
+    [StoredKeyPair, boolean]
   >(
     ({ data, validation }) =>
       setKeyPair({ account, mutateKeyPair, validation, payload: data }),
@@ -170,9 +200,34 @@ const useKeyPair = () => {
           )
         }
       },
-      onSuccess: (generatedKeyPair) => {
-        mutateKeyPair(generatedKeyPair)
-        addDatadogAction("Successfully generated keypair")
+      onSuccess: ([generatedKeyPair, shouldDeleteUserId]) => {
+        if (shouldDeleteUserId) {
+          try {
+            window.localStorage.removeItem("userId")
+          } catch (error) {
+            addDatadogError(
+              `Failed to remove userId from localStorage after account link`,
+              {
+                ...defaultCustomAttributes,
+                error: error?.message || error?.toString?.() || error,
+              },
+              "custom"
+            )
+          }
+
+          mutate(`/user/${account}`)
+          // Not importing useUser, because it imports useKeyPair
+          mutate(
+            unstable_serialize([
+              `/user/details/${account}`,
+              { method: "POST", body: {} },
+            ])
+          )
+          addDatadogAction("Successfully linked address")
+        } else {
+          mutateKeyPair(generatedKeyPair)
+          addDatadogAction("Successfully generated keypair")
+        }
       },
     }
   )
@@ -186,11 +241,12 @@ const useKeyPair = () => {
     isValid,
     set: {
       ...setSubmitResponse,
-      onSubmit: async () => {
-        const body: StoredKeyPair = {
+      onSubmit: async (shouldLinkToUser: boolean) => {
+        const body: SetKeypairPayload = {
           pubKey: undefined,
           keyPair: undefined,
         }
+
         try {
           const generatedKeys = await generateKeyPair()
 
@@ -219,38 +275,34 @@ const useKeyPair = () => {
           }
           throw error
         }
+
+        if (shouldLinkToUser) {
+          const userId = +window.localStorage.getItem("userId")
+
+          const { keyPair: mainUserKeyPair } = await getKeyPairFromIdb(userId)
+
+          const nonce = randomBytes(32).toString("base64")
+
+          const mainUserSig = await window.crypto.subtle
+            .sign(
+              { name: "ECDSA", hash: "SHA-512" },
+              mainUserKeyPair.privateKey,
+              strToBuffer(
+                `Address: ${account.toLowerCase()}\nNonce: ${nonce}\nUserID: ${userId}`
+              )
+            )
+            .then((signatureBuffer) => bufferToHex(signatureBuffer))
+
+          body.signature = mainUserSig
+          body.userId = userId
+          body.nonce = nonce
+        }
+
         return setSubmitResponse.onSubmit(body)
       },
     },
   }
 }
 
-const manageKeyPairAfterUserMerge = async (fetcherWithSign, prevUser, account) => {
-  try {
-    const [prevKeys, newUser] = await Promise.all([
-      getKeyPairFromIdb(prevUser?.id),
-      fetcherWithSign(`/user/details/${account}`, {
-        method: "POST",
-        body: {},
-      }) as Promise<User>,
-    ])
-
-    if (prevUser?.id !== newUser?.id && !!prevKeys) {
-      await Promise.all([
-        setKeyPairToIdb(newUser?.id, prevKeys),
-        mutate(["keyPair", newUser?.id], prevKeys),
-        mutate(["isKeyPairValid", account, prevKeys.pubKey, newUser?.id], true),
-        mutate([`/user/details/${account}`, { method: "POST", body: {} }]),
-        deleteKeyPairFromIdb(prevUser?.id),
-      ])
-    }
-  } catch {}
-}
-
-export {
-  getKeyPairFromIdb,
-  setKeyPairToIdb,
-  deleteKeyPairFromIdb,
-  manageKeyPairAfterUserMerge,
-}
+export { getKeyPairFromIdb, setKeyPairToIdb, deleteKeyPairFromIdb }
 export default useKeyPair
