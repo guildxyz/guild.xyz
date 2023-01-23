@@ -36,19 +36,16 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
-import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
 import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
-import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import { Alert, Modal } from "components/common/Modal"
 import StyledSelect from "components/common/StyledSelect"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
-import useToast from "hooks/useToast"
 import { Check, CoinVertical } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
@@ -84,26 +81,9 @@ const handlePriceChange = (newValue, onChange) => {
 
 const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const modalBg = useColorModeValue(undefined, "gray.800")
-  const { account, chainId, connector } = useWeb3React()
 
-  const toast = useToast()
-  // TODO: refactor the NetworkButtonsList component, and maybe provide this function in a context, so we can use it everywhere.
-  const requestManualNetworkChange = (chain) => () =>
-    toast({
-      title: "Your wallet doesn't support switching chains automatically",
-      description: `Please switch to ${chain} from your wallet manually!`,
-      status: "error",
-    })
-  const changeNetwork = async (newChainId: number) => {
-    try {
-      if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet)
-        requestManualNetworkChange(Chains[newChainId])()
-      else await requestNetworkChange(Chains[newChainId], () => {}, true)()
-    } catch (err) {
-      // User cancelled network change
-      if (err?.code === 4001) setValue("chainId", chainId)
-    }
-  }
+  const { account, chainId } = useWeb3React()
+  const { requestNetworkChange } = useWeb3ConnectionManager()
 
   const { poapDropSupportedChains } = useCreatePoapContext()
   const feeCollectorContract = useFeeCollectorContract()
@@ -139,7 +119,9 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   useEffect(() => {
     if (!formChainId || formChainId === chainId) return
-    changeNetwork(formChainId)
+    requestNetworkChange(formChainId, undefined, (err) => {
+      if (err?.code === 4001) setValue("chainId", chainId)
+    })
   }, [formChainId])
 
   useEffect(() => {
@@ -241,7 +223,7 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
                               (_chain) => _chain.value === value
                             )}
                             onChange={(newValue: SelectOption) =>
-                              onChange(newValue?.value)
+                              onChange(newValue?.value ?? null)
                             }
                             onBlur={onBlur}
                           />

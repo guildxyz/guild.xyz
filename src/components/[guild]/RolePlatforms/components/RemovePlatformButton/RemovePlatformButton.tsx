@@ -20,9 +20,9 @@ type Props = {
 }
 
 const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
-  const [removeAccess, setRemoveAccess] = useState("0")
-  const { onSubmit, isLoading /* signLoadingText */ } = useRemovePlatform()
+  const [removeAccess, setRemoveAccess] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { onSubmit, isLoading /* signLoadingText */ } = useRemovePlatform(onClose)
   const cancelRef = useRef()
 
   return (
@@ -54,8 +54,8 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
               <ShouldKeepPlatformAccesses
                 keepAccessDescription="Everything on the platform will remain as is for existing members, but accesses by this role won’t be managed anymore"
                 revokeAccessDescription="Existing members will lose their accesses on the platform granted by this role"
-                onChange={(newValue) => setRemoveAccess(newValue)}
-                value={removeAccess}
+                onChange={(newValue) => setRemoveAccess(newValue === "true")}
+                value={removeAccess as any}
               />
             </AlertDialogBody>
             <AlertDialogFooter>

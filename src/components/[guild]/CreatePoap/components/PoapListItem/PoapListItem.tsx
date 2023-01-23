@@ -95,7 +95,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     : isActive
     ? "Your poap is being distributed."
     : isReady
-    ? "You can send the Discord claim button."
+    ? "You can send the Discord mint button."
     : "You haven't uploaded the mint links for your POAP yet."
 
   const statusText = isExpired
@@ -228,7 +228,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                   <Text as="span" fontSize="xs" colorScheme="gray">
                     {` • ${poapLinks?.claimed}/${poapLinks?.total} `}
                     <Text as="span" display={{ base: "none", md: "inline" }}>
-                      claimed
+                      minted
                     </Text>
                   </Text>
                 )}
@@ -237,7 +237,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                   <Text as="span" fontSize="xs" colorScheme="gray">
                     {` • `}
                     <Link href={`/${urlName}/claim-poap/${poapFancyId}`} isExternal>
-                      <Text as="span">Claim page</Text>
+                      <Text as="span">Mint page</Text>
                       <Icon ml={1} as={ArrowSquareOut} />
                     </Link>
                   </Text>

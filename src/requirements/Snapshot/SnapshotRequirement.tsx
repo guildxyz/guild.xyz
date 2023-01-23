@@ -10,19 +10,21 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import CopyableAddress from "components/common/CopyableAddress"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { CaretDown } from "phosphor-react"
-import { RequirementComponentProps } from "requirements"
-import Requirement from "../common/Requirement"
-import { RequirementButton } from "../common/RequirementButton"
 
-const SnapshotRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps): JSX.Element => {
+const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext()
+
   const { isOpen, onToggle } = useDisclosure()
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image="/requirementLogos/snapshot.png"
       footer={
         <>
@@ -78,7 +80,7 @@ const SnapshotRequirement = ({
           </Collapse>
         </>
       }
-      {...rest}
+      {...props}
     >
       {`Satisfy the ${requirement.data?.strategy?.name} snapshot strategy`}
     </Requirement>

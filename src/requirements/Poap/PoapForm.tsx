@@ -138,7 +138,9 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
                 options={mappedPoaps}
                 placeholder="Search..."
                 value={mappedPoaps?.find((p) => p.value === selectValue)}
-                onChange={(newValue: SelectOption) => onChange(newValue?.value)}
+                onChange={(newValue: SelectOption) =>
+                  onChange(newValue?.value ?? null)
+                }
                 onInputChange={(text, _) => {
                   const id = text?.replace("#", "")
                   if (id?.length > 2 && FANCY_ID_REGEX.test(id)) setPastedId(id)

@@ -64,9 +64,9 @@ const GuildForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
           options={guildRequirementTypes}
           name={name}
           onBlur={onBlur}
-          onChange={(newValue: { label: string; value: string }) => {
-            onChange(newValue?.value)
-          }}
+          onChange={(newValue: { label: string; value: string }) =>
+            onChange(newValue?.value ?? null)
+          }
           ref={ref}
           value={selected}
         />

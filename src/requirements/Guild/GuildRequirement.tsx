@@ -1,19 +1,21 @@
-import { Img, Link, Text } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
+import { Img, Link } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { RequirementComponentProps } from "requirements"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import pluralize from "utils/pluralize"
-import Requirement from "../common/Requirement"
 
-const HaveRole = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps): JSX.Element => {
+const HaveRole = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext()
+
   const { name, roles, urlName, isLoading } = useGuild(requirement.data.guildId)
   const role = roles?.find((r) => r.id === requirement.data.roleId)
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={
         role?.imageUrl &&
         (role.imageUrl?.match("guildLogos") ? (
@@ -22,11 +24,12 @@ const HaveRole = ({
           role.imageUrl
         ))
       }
-      {...rest}
+      isImageLoading={isLoading}
+      {...props}
     >
-      <Text as="span">{"Have the "}</Text>
+      {"Have the "}
       <DataBlock isLoading={isLoading}>{role?.name ?? "unknown"}</DataBlock>
-      <Text as="span">{" role in the "}</Text>
+      {" role in the "}
       <Link
         href={`https://guild.xyz/${urlName ?? requirement.data.guildId}`}
         isExternal={true}
@@ -34,40 +37,59 @@ const HaveRole = ({
       >
         {name ?? `#${requirement.data.guildId}`}
       </Link>
-      <Text as="span">{" guild"}</Text>
+      {" guild"}
     </Requirement>
   )
 }
 
-const UserSince = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/requirementLogos/guild.png" {...rest}>
-    {`Be a Guild.xyz user at least since ${
-      requirement.data.creationDate?.split("T")[0]
-    }`}
-  </Requirement>
-)
+const UserSince = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext()
 
-const MinGuilds = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/requirementLogos/guild.png" {...rest}>
-    {`Be a member of at least ${pluralize(requirement.data.minAmount, "guild")}`}
-  </Requirement>
-)
+  const formattedDate = new Date(requirement.data.creationDate).toLocaleDateString()
 
-const Admin = ({ requirement, ...rest }: RequirementComponentProps): JSX.Element => (
-  <Requirement image="/requirementLogos/guild.png" {...rest}>
-    {`Be an admin of a guild${
-      requirement.data.minAmount > 0
-        ? ` with at least ${pluralize(requirement.data.minAmount, "member")}`
-        : ""
-    }`}
-  </Requirement>
-)
+  return (
+    <Requirement
+      isNegated={requirement.isNegated}
+      image="/requirementLogos/guild.png"
+      {...props}
+    >
+      {"Be a Guild.xyz user at least since "}
+      <DataBlock>{formattedDate}</DataBlock>
+    </Requirement>
+  )
+}
+
+const MinGuilds = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext()
+
+  return (
+    <Requirement
+      isNegated={requirement.isNegated}
+      image="/requirementLogos/guild.png"
+      {...props}
+    >
+      {`Be a member of at least ${pluralize(requirement.data.minAmount, "guild")}`}
+    </Requirement>
+  )
+}
+
+const Admin = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext()
+
+  return (
+    <Requirement
+      isNegated={requirement.isNegated}
+      image="/requirementLogos/guild.png"
+      {...props}
+    >
+      {`Be an admin of a guild${
+        requirement.data.minAmount > 0
+          ? ` with at least ${pluralize(requirement.data.minAmount, "member")}`
+          : ""
+      }`}
+    </Requirement>
+  )
+}
 
 const types = {
   GUILD_ROLE: HaveRole,
@@ -76,8 +98,9 @@ const types = {
   GUILD_USER_SINCE: UserSince,
 }
 
-const GuildRequirement = (props: RequirementComponentProps) => {
-  const Component = types[props.requirement.type]
+const GuildRequirement = (props: RequirementProps) => {
+  const { type } = useRequirementContext()
+  const Component = types[type]
   return <Component {...props} />
 }
 

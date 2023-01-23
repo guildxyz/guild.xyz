@@ -1,35 +1,35 @@
-import { Skeleton, Text } from "@chakra-ui/react"
-import { RequirementComponentProps } from "requirements"
-import Requirement from "../common/Requirement"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { useJuiceboxProject } from "./hooks/useJuicebox"
 
-const JuiceboxRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps) => {
-  const { project, isLoading } = useJuiceboxProject(requirement?.data?.id)
+const JuiceboxRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
+  const { project, isLoading, error } = useJuiceboxProject(requirement.data.id)
 
   return (
     <Requirement
-      image={isLoading ? "" : project?.logoUri}
+      isNegated={requirement.isNegated}
+      image={project?.logoUri}
       isImageLoading={isLoading}
-      {...rest}
+      {...props}
     >
-      {!isLoading && !project ? (
-        <Text as="span">Could not fetch requirement.</Text>
-      ) : (
-        <>
-          <Text as="span">{`Hold ${
-            requirement.data?.minAmount > 0
-              ? `at least ${requirement.data?.minAmount}`
-              : "any amount of"
-          } `}</Text>
-          <Skeleton as="span" isLoaded={!isLoading}>
-            {isLoading ? "Loading..." : project.name}
-          </Skeleton>
-          <Text as="span">{` ticket(s) in Juicebox`}</Text>
-        </>
-      )}
+      {`Hold ${
+        requirement.data?.minAmount > 0
+          ? `at least ${requirement.data.minAmount}`
+          : "any amount of"
+      } `}
+
+      <DataBlock
+        isLoading={isLoading}
+        error={error && "API error, please contact Juicebox to report."}
+      >
+        {project?.name ?? `#${requirement.data.id}`}
+      </DataBlock>
+      {" ticket(s) in Juicebox"}
     </Requirement>
   )
 }

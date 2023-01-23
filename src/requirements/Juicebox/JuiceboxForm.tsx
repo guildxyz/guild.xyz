@@ -79,7 +79,7 @@ const JuiceboxForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
                 placeholder="Search..."
                 value={mappedOptions?.find((option) => option.value === selectValue)}
                 onChange={(selectedOption: SelectOption) =>
-                  onChange(selectedOption?.value)
+                  onChange(selectedOption?.value ?? null)
                 }
                 onBlur={onBlur}
               />

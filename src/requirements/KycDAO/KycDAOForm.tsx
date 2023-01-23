@@ -49,7 +49,9 @@ const KycDAOForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
               options={kycDAOContracts}
               placeholder="Select one"
               value={kycDAOContracts?.find((p) => p.value === selectValue)}
-              onChange={(newValue: SelectOption) => onChange(newValue?.value)}
+              onChange={(newValue: SelectOption) =>
+                onChange(newValue?.value ?? null)
+              }
               onBlur={onBlur}
             />
           )}

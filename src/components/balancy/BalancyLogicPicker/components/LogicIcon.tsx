@@ -1,7 +1,7 @@
 import { Flex, Img } from "@chakra-ui/react"
 
 type Props = {
-  logic: "AND" | "OR" | "NOR" | "NAND"
+  logic: "AND" | "OR"
 }
 
 const LogicIcon = ({ logic }: Props): JSX.Element => (
