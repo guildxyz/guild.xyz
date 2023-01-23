@@ -4,13 +4,10 @@ import Card from "components/common/Card"
 import Link from "components/common/Link"
 import useGuildByPlatformId from "hooks/useGuildByPlatformId"
 import NextLink from "next/link"
-import getRandomInt from "utils/getRandomInt"
-import useCreateGuild from "../hooks/useCreateGuild"
 
 const RepoCard = ({
   onSelection,
   platformGuildId,
-  repositoryName,
   description,
 }: {
   onSelection: (platformGuildId: string) => void
@@ -18,45 +15,10 @@ const RepoCard = ({
   repositoryName: string
   description?: string
 }) => {
-  const {
-    onSubmit: onCreateGuild,
-    isLoading: isCreationLoading,
-    isSigning: isCreationSigning,
-    signLoadingText,
-  } = useCreateGuild()
-
   const { id, isLoading, urlName } = useGuildByPlatformId(
     "GITHUB",
     encodeURIComponent(platformGuildId)
   )
-
-  const handleClick = () => {
-    onCreateGuild({
-      name: repositoryName,
-      description,
-      imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-      theme: { color: "#4d4d4d" },
-      guildPlatforms: [
-        {
-          platformName: "GITHUB",
-          platformGuildId: encodeURIComponent(platformGuildId),
-        },
-      ],
-      roles: [
-        {
-          name: "Member",
-          logic: "AND",
-          imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-          requirements: [{ type: "FREE" }],
-          rolePlatforms: [
-            {
-              guildPlatformIndex: 0,
-            },
-          ],
-        },
-      ],
-    })
-  }
 
   const RepoName = () => (
     <Link href={`https://github.com/${platformGuildId}`} isExternal>
@@ -99,10 +61,8 @@ const RepoCard = ({
           </NextLink>
         ) : (
           <Button
-            isLoading={isCreationLoading || isCreationSigning}
-            loadingText={signLoadingText || "Saving data"}
             colorScheme="GITHUB"
-            onClick={onSelection ? () => onSelection(platformGuildId) : handleClick}
+            onClick={() => onSelection(platformGuildId)}
             data-dd-action-name="Gate repo (github setup)"
           >
             Gate repo
