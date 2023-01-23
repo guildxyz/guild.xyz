@@ -34,7 +34,7 @@ const tesseraRequirementTypes = [
     TesseraRequirement: HoldState,
   },
   {
-    label: "Has Raes listed",
+    label: "Have Raes listed",
     value: "TESSERA_LISTINGS",
     TesseraRequirement: Listings,
   },

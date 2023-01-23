@@ -38,7 +38,7 @@ const HoldState = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.vaultState}
         isRequired
       >
-        <FormLabel>Vault state</FormLabel>
+        <FormLabel>Vault phase</FormLabel>
 
         <StyledSelect
           ref={ref}
