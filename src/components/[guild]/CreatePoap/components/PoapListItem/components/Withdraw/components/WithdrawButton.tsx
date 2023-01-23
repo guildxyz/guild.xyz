@@ -1,10 +1,7 @@
 import { MenuItem } from "@chakra-ui/react"
-import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
-import { WalletConnect } from "@web3-react/walletconnect"
-import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
-import useToast from "hooks/useToast"
 import { Wallet } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import useWithDraw from "../../../hooks/useWithdraw"
@@ -29,7 +26,9 @@ const WithdrawButton = ({
   setIsLoading,
   onComplete,
 }: Props): JSX.Element => {
-  const { chainId: usersChainId, connector } = useWeb3React()
+  const { chainId: usersChainId } = useWeb3React()
+  const { requestNetworkChange } = useWeb3ConnectionManager()
+
   const { onSubmit, response, isLoading } = useWithDraw()
 
   useEffect(() => setIsLoading?.(isLoading), [isLoading])
@@ -39,23 +38,6 @@ const WithdrawButton = ({
     onComplete?.()
   }, [response])
 
-  const toast = useToast()
-
-  const networkChangeHandler = () => {
-    if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet) {
-      toast({
-        title: "Your wallet doesn't support switching chains automatically",
-        description: `Please switch to ${
-          RPC[Chains[chainId]]?.chainName
-        } from your wallet manually!`,
-        status: "error",
-      })
-      return
-    }
-
-    requestNetworkChange(Chains[chainId])()
-  }
-
   if (asMenuItem)
     return (
       <MenuItem
@@ -63,7 +45,7 @@ const WithdrawButton = ({
           isDisabled
             ? undefined
             : chainId !== usersChainId
-            ? networkChangeHandler
+            ? () => requestNetworkChange(chainId)
             : () => onSubmit(vaultId)
         }
         isDisabled={isDisabled}
@@ -81,7 +63,7 @@ const WithdrawButton = ({
         isDisabled
           ? undefined
           : chainId !== usersChainId
-          ? networkChangeHandler
+          ? () => requestNetworkChange(chainId)
           : () => onSubmit(vaultId)
       }
       isLoading={isLoading}
