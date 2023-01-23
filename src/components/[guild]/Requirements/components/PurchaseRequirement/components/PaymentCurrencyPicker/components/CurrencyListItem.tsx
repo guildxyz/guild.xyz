@@ -24,7 +24,7 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
       textAlign="left"
       transition="background-color 0.1s ease"
       _hover={{ bgColor: hoverBgColor }}
-      _focusVisible={{ outline: "none", bgColor: hoverBgColor }}
+      _focusVisible={{ bgColor: hoverBgColor }}
       onClick={() => setPickedCurrency(address)}
     >
       <TokenInfo chainId={chainId} address={address} />

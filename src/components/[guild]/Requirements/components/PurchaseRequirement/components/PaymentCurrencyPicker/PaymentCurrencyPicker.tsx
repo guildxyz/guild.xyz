@@ -25,6 +25,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
 
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
   const lightShade = useColorModeValue("white", "gray.700")
+  const lightShadeHover = useColorModeValue("gray.50", "gray.600")
 
   const { account } = useWeb3React()
   const { openAccountModal } = useWeb3ConnectionManager()
@@ -43,9 +44,13 @@ const PaymentCurrencyPicker = (): JSX.Element => {
               h="auto"
               p={4}
               bgColor={lightShade}
+              _hover={{
+                bgColor: lightShadeHover,
+              }}
               borderTopRadius="2xl"
               borderBottomRadius={isOpen ? 0 : "2xl"}
-              transition="border-radius 0.2s ease"
+              transition="border-radius 0.2s ease, background-color 0.2s ease"
+              _focusVisible={{ boxShadow: "outline" }}
             >
               <HStack w="full" justifyContent="space-between">
                 {pickedCurrency ? (
