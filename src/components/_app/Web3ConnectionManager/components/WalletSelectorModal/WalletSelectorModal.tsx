@@ -23,11 +23,16 @@ import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import { connectors } from "connectors"
-import useKeyPair from "hooks/useKeyPair"
+import useKeyPair, {
+  deleteKeyPairFromIdb,
+  getKeyPairFromIdb,
+} from "hooks/useKeyPair"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
-import { WalletError } from "types"
+import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
+import { User, WalletError } from "types"
 import ConnectorButton from "./components/ConnectorButton"
 import processConnectionError from "./utils/processConnectionError"
 
@@ -37,6 +42,26 @@ type Props = {
   onOpen: () => void
 }
 
+const fetchShouldLinkToUser = async (_: "shouldLinkToUser", userId: number) => {
+  try {
+    const userIdToConnectTo = window.localStorage.getItem("userId")
+
+    if (
+      userIdToConnectTo !== null &&
+      typeof userId === "number" &&
+      +userIdToConnectTo !== userId
+    ) {
+      await deleteKeyPairFromIdb(userId)
+    }
+
+    const keypair = await getKeyPairFromIdb(+userIdToConnectTo)
+
+    return !!keypair
+  } catch {
+    return false
+  }
+}
+
 // We don't open the modal on these routes
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
@@ -44,6 +69,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const addDatadogAction = useRumAction("trackingAppAction")
 
   const { isActive, account, connector } = useWeb3React()
+  const { data: user } = useSWRImmutable<User>(account ? `/user/${account}` : null)
   const [error, setError] = useState<WalletError & Error>(null)
 
   // initialize metamask onboarding
@@ -82,6 +108,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       }
     }
   }, [keyPair, ready, router])
+
+  const { data: shouldLinkToUser } = useSWR(
+    ["shouldLinkToUser", user?.id],
+    fetchShouldLinkToUser
+  )
 
   const isConnected = account && isActive && ready
 
@@ -123,7 +154,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 }}
               />
             </Box>
-            <Text>Connect wallet</Text>
+            <Text>{shouldLinkToUser ? "Link address" : "Connect wallet"}</Text>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -156,18 +187,18 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   mb="4"
                   colorScheme={"green"}
                   onClick={() => {
-                    set.onSubmit()
+                    set.onSubmit(shouldLinkToUser)
                     addDatadogAction("click on Verify account")
                   }}
                   isLoading={set.isLoading || !ready}
-                  isDisabled={!ready}
+                  isDisabled={!ready || shouldLinkToUser === undefined}
                   loadingText={
                     !ready
                       ? "Looking for keypairs"
                       : set.signLoadingText || "Check your wallet"
                   }
                 >
-                  Verify account
+                  {shouldLinkToUser ? "Link address" : "Verify account"}
                 </ModalButton>
               </Box>
             )}

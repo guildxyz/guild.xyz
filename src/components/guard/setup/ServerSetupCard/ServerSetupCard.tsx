@@ -7,14 +7,14 @@ import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useSetImageAndNameFromPlatformData from "components/create-guild/hooks/useSetImageAndNameFromPlatformData"
 import useDatadog from "components/_app/Datadog/useDatadog"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence, motion } from "framer-motion"
 import usePinata from "hooks/usePinata"
 import useServerData from "hooks/useServerData"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { useRouter } from "next/router"
 import { Check } from "phosphor-react"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -27,7 +27,7 @@ const ServerSetupCard = ({ children, onSubmit: onSubmitProp }): JSX.Element => {
   const router = useRouter()
 
   const { account } = useWeb3React()
-  const { openWalletSelectorModal } = useContext(Web3Connection)
+  const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
   const {
     control,

@@ -1,30 +1,18 @@
 import { SimpleGrid } from "@chakra-ui/react"
-import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
-import { useWeb3React } from "@web3-react/core"
-import { WalletConnect } from "@web3-react/walletconnect"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, supportedChains } from "connectors"
-import useToast from "hooks/useToast"
-import requestNetworkChange from "../utils/requestNetworkChange"
 import NetworkButton from "./NetworkButton"
 
 type Props = {
   listedChainIDs?: number[]
-  manualNetworkChangeCallback?: () => void
+  networkChangeCallback?: () => void
 }
 
 const NetworkButtonsList = ({
   listedChainIDs,
-  manualNetworkChangeCallback,
+  networkChangeCallback,
 }: Props): JSX.Element => {
-  const { connector } = useWeb3React()
-  const toast = useToast()
-
-  const requestManualNetworkChange = (chain) => () =>
-    toast({
-      title: "Your wallet doesn't support switching chains automatically",
-      description: `Please switch to ${chain} from your wallet manually!`,
-      status: "error",
-    })
+  const { requestNetworkChange } = useWeb3ConnectionManager()
 
   const listedChains =
     listedChainIDs?.length > 0
@@ -41,10 +29,8 @@ const NetworkButtonsList = ({
         <NetworkButton
           key={chain}
           chain={chain}
-          requestNetworkChange={
-            connector instanceof WalletConnect || connector instanceof CoinbaseWallet
-              ? requestManualNetworkChange(chain)
-              : requestNetworkChange(chain, manualNetworkChangeCallback)
+          requestNetworkChange={() =>
+            requestNetworkChange(Chains[chain], networkChangeCallback)
           }
         />
       ))}
