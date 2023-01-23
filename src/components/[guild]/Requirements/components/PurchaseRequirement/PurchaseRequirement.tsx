@@ -2,6 +2,7 @@ import {
   ButtonGroup,
   Icon,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -55,6 +56,8 @@ const PurchaseRequirement = (): JSX.Element => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Buy requirement</ModalHeader>
+          <ModalCloseButton />
+
           <ModalBody>
             <RequirementDisplayComponent
               requirement={requirement}
