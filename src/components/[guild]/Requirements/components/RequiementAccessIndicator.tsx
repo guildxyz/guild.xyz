@@ -7,16 +7,15 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
-import { useContext } from "react"
 import REQUIREMENTS from "requirements"
 import ConnectRequirementPlatformButton from "./ConnectRequirementPlatformButton"
 import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
 
 const RequiementAccessIndicator = () => {
-  const { openAccountModal } = useContext(Web3Connection)
+  const { openAccountModal } = useWeb3ConnectionManager()
   const { id, roleId, type, data, isNegated } = useRequirementContext()
 
   const { data: accessData } = useAccess(roleId)
