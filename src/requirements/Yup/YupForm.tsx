@@ -88,7 +88,9 @@ const YupForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
               isLoading={isAdatpersLoading}
               options={mappedAdapters}
               value={mappedAdapters.find((a) => a.value === value) ?? ""}
-              onChange={(newValue: SelectOption) => onChange(newValue?.value)}
+              onChange={(newValue: SelectOption) =>
+                onChange(newValue?.value ?? null)
+              }
               onBlur={onBlur}
             />
           )}

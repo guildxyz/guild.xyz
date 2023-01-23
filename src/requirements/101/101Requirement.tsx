@@ -1,15 +1,15 @@
-import { Img } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
-import { RequirementComponentProps } from "requirements"
-import Requirement from "../common/Requirement"
-import { RequirementLinkButton } from "../common/RequirementButton"
+import { Img, Link } from "@chakra-ui/react"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import use101Courses from "./hooks/use101Courses"
 
-const HundredNOneRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps) => {
-  const { data, isValidating } = use101Courses()
+const HundredNOneRequirement = ({ ...rest }: RequirementProps) => {
+  const requirement = useRequirementContext()
+
+  const { data, isValidating, error } = use101Courses()
 
   const badge = data?.find(
     (option) => option.onChainId.toString() === requirement.data.id
@@ -17,6 +17,7 @@ const HundredNOneRequirement = ({
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={
         <Img
           src={
@@ -25,20 +26,29 @@ const HundredNOneRequirement = ({
           }
         />
       }
-      footer={
-        <RequirementLinkButton
-          imageUrl={"/requirementLogos/101.png"}
-          href={`https://101.xyz/course/${badge?.courses?.[0]?.id}`}
-        >
-          View course
-        </RequirementLinkButton>
-      }
+      isImageLoading={isValidating}
       {...rest}
     >
       {`Have the badge of the `}
-      <DataBlock isLoading={!badge && isValidating}>
-        {badge?.courses?.[0]?.title.trim() ?? requirement.data.id}
-      </DataBlock>
+      {!badge || isValidating || error ? (
+        <DataBlock
+          isLoading={isValidating}
+          error={error && "API error, please contact 101.xyz to report."}
+        >
+          {`#${requirement.data.id}`}
+        </DataBlock>
+      ) : (
+        <Link
+          href={`https://101.xyz/course/${badge?.courses?.[0]?.id}`}
+          isExternal
+          display="inline"
+          colorScheme="blue"
+          fontWeight="medium"
+        >
+          {badge?.courses?.[0]?.title.trim()}
+        </Link>
+      )}
+
       {` 101 course `}
     </Requirement>
   )

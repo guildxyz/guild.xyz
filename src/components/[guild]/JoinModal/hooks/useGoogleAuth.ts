@@ -69,7 +69,7 @@ const useGoogleAuth = () => {
             setError({
               error: "Invalid message",
               errorDescription:
-                "Recieved invalid message from authentication window",
+                "Received invalid message from authentication window",
             })
         }
         windowInstance?.close()

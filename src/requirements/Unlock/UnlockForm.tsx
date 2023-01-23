@@ -91,7 +91,7 @@ const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
                   value ? mappedLocks?.find((lock) => lock.value === value) : ""
                 }
                 onChange={(selectedOption: SelectOption) =>
-                  onChange(selectedOption?.value)
+                  onChange(selectedOption?.value ?? null)
                 }
                 onBlur={onBlur}
                 filterOption={customFilterOption}

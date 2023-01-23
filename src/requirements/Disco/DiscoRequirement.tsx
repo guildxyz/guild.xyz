@@ -1,7 +1,10 @@
 import { Img } from "@chakra-ui/react"
-import { RequirementComponentProps } from "requirements"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import shortenHex from "utils/shortenHex"
-import Requirement from "../common/Requirement"
 
 type DiscoParamType = {
   credType: string
@@ -10,18 +13,37 @@ type DiscoParamType = {
   credIssuer: string
 }
 
-const DiscoRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
+const DiscoRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
   const param = requirement.data.params as DiscoParamType
+
   return (
-    <Requirement image={<Img src="/requirementLogos/disco.png" />} {...rest}>
+    <Requirement
+      isNegated={requirement.isNegated}
+      image={<Img src="/requirementLogos/disco.png" />}
+      {...props}
+    >
       {`Have a Disco.xyz `}
-      {param.credType ? `${param.credType}` : `account`}
-      {param.credIssuence
-        ? ` issued ${param.credIssuence} ${new Date(
-            param.credIssuenceDate
-          ).toLocaleDateString()}`
-        : ``}
-      {param.credIssuer ? ` from ${shortenHex(param.credIssuer)}` : ``}
+      {param.credType ? `${param.credType} ` : `account `}
+      {param.credIssuence ? (
+        <>
+          {"issued "}
+          <DataBlock>
+            {new Date(param.credIssuenceDate).toLocaleDateString()}
+          </DataBlock>
+        </>
+      ) : (
+        ""
+      )}
+      {param.credIssuer ? (
+        <>
+          {"from "}
+          <DataBlock>{shortenHex(param.credIssuer)}</DataBlock>
+        </>
+      ) : (
+        ""
+      )}
     </Requirement>
   )
 }

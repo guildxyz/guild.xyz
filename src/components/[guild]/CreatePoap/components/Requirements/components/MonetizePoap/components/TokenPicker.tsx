@@ -125,9 +125,9 @@ const TokenPicker = (): JSX.Element => {
                   : null)
               }
               defaultValue={mappedTokens?.[0]?.value}
-              onChange={(selectedOption: SelectOption) => {
-                onChange(selectedOption?.value)
-              }}
+              onChange={(selectedOption: SelectOption) =>
+                onChange(selectedOption?.value ?? null)
+              }
               onInputChange={(text, _) => {
                 if (!ADDRESS_REGEX.test(text)) return
                 onChange(text)

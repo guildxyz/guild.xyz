@@ -49,7 +49,7 @@ const ConnectorButton = ({
   const activate = () => {
     setError(null)
     setIsActivating(true)
-    activeConnector?.deactivate()
+    activeConnector?.deactivate?.()
     connector
       .activate()
       .then(() => {

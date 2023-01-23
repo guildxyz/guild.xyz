@@ -57,9 +57,9 @@ const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
               options={songOptions}
               placeholder="Pick a song"
               value={songOptions?.find((option) => option.value === value) ?? ""}
-              onChange={(newSelectedOption: SelectOption) => {
-                onChange(newSelectedOption?.value)
-              }}
+              onChange={(newSelectedOption: SelectOption) =>
+                onChange(newSelectedOption?.value ?? null)
+              }
               isLoading={songsLoading || artistLoading}
               onBlur={onBlur}
             />

@@ -6,18 +6,17 @@ import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPla
 import useToast from "hooks/useToast"
 import platforms from "platforms"
 import REQUIREMENTS from "requirements"
-import { PlatformName, Requirement } from "types"
+import { PlatformName } from "types"
+import { useRequirementContext } from "./RequirementContext"
 
-type Props = {
-  requirement: Requirement
-} & ButtonProps
+const ConnectRequirementPlatformButton = (props: ButtonProps) => {
+  const { id, roleId, type } = useRequirementContext()
 
-const ConnectRequirementPlatformButton = ({ requirement, ...rest }: Props) => {
-  const platform = REQUIREMENTS[requirement.type].types[0] as PlatformName
+  const platform = REQUIREMENTS[type].types[0] as PlatformName
 
   const { platformUsers } = useUser()
 
-  const { mutate: mutateAccesses, data: roleAccess } = useAccess(requirement.roleId)
+  const { mutate: mutateAccesses, data: roleAccess } = useAccess(roleId)
   const toast = useToast()
   const onSuccess = () => {
     mutateAccesses()
@@ -29,9 +28,7 @@ const ConnectRequirementPlatformButton = ({ requirement, ...rest }: Props) => {
   }
 
   const isReconnection = roleAccess?.errors?.some(
-    (err) =>
-      err.requirementId === requirement.id &&
-      err.errorType === "PLATFORM_CONNECT_INVALID"
+    (err) => err.requirementId === id && err.errorType === "PLATFORM_CONNECT_INVALID"
   )
 
   const { onConnect, isLoading, loadingText, response } = useConnectPlatform(
@@ -55,7 +52,7 @@ const ConnectRequirementPlatformButton = ({ requirement, ...rest }: Props) => {
       colorScheme={platform}
       leftIcon={<Icon as={platforms[platform].icon} />}
       iconSpacing="1"
-      {...rest}
+      {...props}
     >
       {`${isReconnection ? "Reconnect" : "Connect"} ${platforms[platform].name}`}
     </Button>

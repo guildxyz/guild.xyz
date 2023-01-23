@@ -118,7 +118,7 @@ const usePayFee = (vaultId: number, chainId: number) => {
     onSuccess: () => {
       toast({
         title: "Successful transaction!",
-        description: "You can claim your POAP now",
+        description: "You can mint your POAP now",
         status: "success",
       })
       mutateUserPoapEligibility({ ...userPoapEligibilityData, hasPaid: true })

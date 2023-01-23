@@ -1,5 +1,4 @@
 import {
-  Flex,
   Icon,
   ListItem,
   ModalBody,
@@ -12,25 +11,28 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import { UseFormSetValue } from "react-hook-form"
 import { FixedSizeList } from "react-window"
-import { RequirementComponentProps } from "requirements"
-import Requirement from "../common/Requirement"
-import { RequirementButton } from "../common/RequirementButton"
 
-type Props = RequirementComponentProps & {
+type Props = RequirementProps & {
   setValueForBalancy: UseFormSetValue<any>
 }
 
 const AllowlistRequirement = ({
-  requirement,
   setValueForBalancy,
   ...rest
 }: Props): JSX.Element => {
+  const requirement = useRequirementContext()
+
   const { addresses, hideAllowlist } = requirement.data
 
   useEffect(() => {
@@ -58,55 +60,55 @@ const AllowlistRequirement = ({
 
   return (
     <Requirement
+      isNegated={requirement.isNegated}
       image={<Icon as={ListPlus} boxSize={6} />}
       footer={
-        <Flex justifyContent="start">
-          {hideAllowlist ? (
-            <Text color="gray" fontSize="xs" fontWeight="normal">
-              Allowlisted addresses are hidden
-            </Text>
-          ) : (
-            <RequirementButton rightIcon={<ArrowSquareIn />} onClick={onOpen}>
-              {`View ${addresses?.length} address${
-                addresses?.length > 1 ? "es" : ""
-              }`}
-            </RequirementButton>
-          )}
-          <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
-            <ModalOverlay />
-            <ModalContent maxW="540px">
-              <ModalHeader>Allowlist</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <SearchBar {...{ search, setSearch }} placeholder="Search address" />
-                <UnorderedList
-                  mt="6"
-                  ml="2"
-                  sx={{ "> div": { overflow: "hidden scroll !important" } }}
-                >
-                  {filteredAllowlist?.length ? (
-                    <FixedSizeList
-                      height={350}
-                      itemCount={filteredAllowlist.length}
-                      itemSize={itemSize}
-                      className="custom-scrollbar"
-                    >
-                      {Row}
-                    </FixedSizeList>
-                  ) : (
-                    <Text colorScheme={"gray"} h="350">
-                      No results
-                    </Text>
-                  )}
-                </UnorderedList>
-              </ModalBody>
-            </ModalContent>
-          </Modal>
-        </Flex>
+        hideAllowlist && (
+          <Text color="gray" fontSize="xs" fontWeight="normal">
+            Allowlisted addresses are hidden
+          </Text>
+        )
       }
       {...rest}
     >
-      Be included in allowlist
+      {"Be included in "}
+      {hideAllowlist ? (
+        "allowlist"
+      ) : (
+        <Button variant="link" rightIcon={<ArrowSquareIn />} onClick={onOpen}>
+          allowlist
+        </Button>
+      )}
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+        <ModalOverlay />
+        <ModalContent maxW="540px">
+          <ModalHeader>Allowlist</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <SearchBar {...{ search, setSearch }} placeholder="Search address" />
+            <UnorderedList
+              mt="6"
+              ml="2"
+              sx={{ "> div": { overflow: "hidden scroll !important" } }}
+            >
+              {filteredAllowlist?.length ? (
+                <FixedSizeList
+                  height={350}
+                  itemCount={filteredAllowlist.length}
+                  itemSize={itemSize}
+                  className="custom-scrollbar"
+                >
+                  {Row}
+                </FixedSizeList>
+              ) : (
+                <Text colorScheme={"gray"} h="350">
+                  No results
+                </Text>
+              )}
+            </UnorderedList>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Requirement>
   )
 }

@@ -1,3 +1,4 @@
+import { defineStyle } from "@chakra-ui/react"
 import { mode, transparentize } from "@chakra-ui/theme-tools"
 
 type Dict = Record<string, any>
@@ -116,6 +117,16 @@ const variantOutline = (props: Dict) => {
   }
 }
 
+const variantSubtle = defineStyle((props) => {
+  const { colorScheme: c, theme } = props
+  const darkBg = transparentize(`${c}.200`, 0.16)(theme)
+
+  return {
+    bg: mode(`${c}.100`, darkBg)(props),
+    color: mode(`${c}.800`, `${c}.200`)(props),
+  }
+})
+
 /**
  * We override the default because that's gray.100 and gray.200 on hover in light
  * mode and we need it to be transparent
@@ -164,6 +175,7 @@ const styles = {
   },
   variants: {
     solid: variantSolid,
+    subtle: variantSubtle,
     ghost: variantGhost,
     solidStatic: variantSolidStatic,
     outline: variantOutline,
