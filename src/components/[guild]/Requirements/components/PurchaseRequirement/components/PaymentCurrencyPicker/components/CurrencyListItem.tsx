@@ -26,6 +26,7 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
       _hover={{ bgColor: hoverBgColor }}
       _focusVisible={{ bgColor: hoverBgColor }}
       onClick={() => setPickedCurrency(address)}
+      // isDisabled={} // TODO: we can check this when we'll have price information
     >
       <TokenInfo chainId={chainId} address={address} />
     </MenuItem>

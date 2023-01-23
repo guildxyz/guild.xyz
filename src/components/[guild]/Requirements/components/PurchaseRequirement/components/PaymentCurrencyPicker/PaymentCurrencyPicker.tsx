@@ -1,4 +1,5 @@
 import {
+  Box,
   Circle,
   HStack,
   Icon,
@@ -78,21 +79,25 @@ const PaymentCurrencyPicker = (): JSX.Element => {
 
             <MenuList
               p={0}
+              pb={8}
               border="none"
               borderTopRadius={0}
               borderBottomRadius="2xl"
               overflow="hidden"
               transformOrigin="center"
+              maxH={48}
             >
-              {SUPPORTED_CURRENCIES.filter(
-                (c) => c.chainId === Chains[requirement.chain]
-              ).map((c) => (
-                <CurrencyListItem
-                  key={`${c.chainId}-${c.address}`}
-                  chainId={c.chainId}
-                  address={c.address}
-                />
-              ))}
+              <Box maxH={40} overflowY="auto" className="custom-scrollbar">
+                {SUPPORTED_CURRENCIES.filter(
+                  (c) => c.chainId === Chains[requirement.chain]
+                ).map((c) => (
+                  <CurrencyListItem
+                    key={`${c.chainId}-${c.address}`}
+                    chainId={c.chainId}
+                    address={c.address}
+                  />
+                ))}
+              </Box>
 
               <HStack
                 justifyContent="space-between"
