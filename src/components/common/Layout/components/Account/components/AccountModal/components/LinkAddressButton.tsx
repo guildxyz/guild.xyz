@@ -1,4 +1,5 @@
-import { ExternalProvider } from "@ethersproject/providers"
+import { Web3Provider } from "@ethersproject/providers"
+import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useUser from "components/[guild]/hooks/useUser"
 import useToast from "hooks/useToast"
@@ -9,6 +10,7 @@ const LinkAddressButton = ({}) => {
   const [isLoading, setIsLoading] = useState(false)
   const { id } = useUser()
   const toast = useToast()
+  const { provider } = useWeb3React<Web3Provider>()
 
   if (!id) return null
 
@@ -17,7 +19,7 @@ const LinkAddressButton = ({}) => {
     window.localStorage.setItem("userId", id.toString())
 
     try {
-      await (window.ethereum as ExternalProvider).request({
+      await provider.provider.request({
         method: "wallet_requestPermissions",
         params: [{ eth_accounts: {} }],
       })
