@@ -4,7 +4,6 @@ import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
-import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -71,9 +70,7 @@ const useJoin = (onSuccess?: () => void) => {
         throw body
       }
 
-      return manageKeyPairAfterUserMerge(fetcherWithSign, user, account).then(
-        () => body
-      )
+      return body
     })
 
   const useSubmitResponse = useSubmitWithSign<any, Response>(submit, {
