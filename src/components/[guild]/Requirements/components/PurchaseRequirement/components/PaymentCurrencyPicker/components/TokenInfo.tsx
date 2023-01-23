@@ -67,7 +67,7 @@ const TokenInfo = ({ chainId, address }: Props): JSX.Element => {
       <Stack spacing={1}>
         <Skeleton isLoaded={!isTokenDataLoading} h={5}>
           <Text as="span">
-            {`{PRICE} ${symbol}`}
+            {`{price} ${symbol}`}
             <Text as="span" colorScheme="gray">
               {` (${RPC[Chains[chainId]].chainName})`}
             </Text>

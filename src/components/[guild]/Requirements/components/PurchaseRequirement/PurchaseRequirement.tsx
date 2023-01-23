@@ -59,7 +59,7 @@ const PurchaseRequirement = (): JSX.Element => {
             <RequirementDisplayComponent
               requirement={requirement}
               showPurchaseBtn={false}
-              rightElement={<Text as="span">$14</Text>}
+              rightElement={<Text as="span">{`{price}`}</Text>}
             />
           </ModalBody>
 

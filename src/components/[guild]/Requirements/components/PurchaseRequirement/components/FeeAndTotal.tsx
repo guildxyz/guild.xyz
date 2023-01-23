@@ -29,7 +29,7 @@ const FeeAndTotal = (): JSX.Element => {
             <Icon as={Info} />
           </Tooltip>
         </HStack>
-        <Text as="span">{pickedCurrency ? "0.025 ETH" : "Choose currency"}</Text>
+        <Text as="span">{pickedCurrency ? "{fee} ETH" : "Choose currency"}</Text>
       </HStack>
 
       <HStack justifyContent="space-between">
@@ -38,9 +38,9 @@ const FeeAndTotal = (): JSX.Element => {
         <Text as="span">
           {pickedCurrency ? (
             <>
-              {`$16 = `}
+              {`{final_price} = `}
               <Text as="span" color={textAccentColor} fontWeight="semibold">
-                0.28 ETH
+                {`{total} ETH`}
               </Text>
             </>
           ) : (
