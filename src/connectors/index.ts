@@ -72,7 +72,7 @@ const RPC = {
     chainId: 137,
     chainName: "Polygon",
     nativeCurrency: {
-      name: "Polygon",
+      name: "Matic",
       symbol: "MATIC",
       decimals: 18,
       address: "0x0000000000000000000000000000000000000000",

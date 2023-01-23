@@ -11,10 +11,9 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains } from "connectors"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
-import { useContext } from "react"
 import { SUPPORTED_CURRENCIES } from "utils/guildCheckout"
 import shortenHex from "utils/shortenHex"
 import { usePurchaseRequirementContext } from "../PurchaseRequirementContex"
@@ -29,8 +28,8 @@ const PaymentCurrencyPicker = (): JSX.Element => {
   const lightShade = useColorModeValue("white", "gray.700")
   const listBgColor = useColorModeValue("whiteAlpha.600", "transparent")
 
-  const { account, chainId } = useWeb3React()
-  const { openAccountModal } = useContext(Web3Connection)
+  const { account } = useWeb3React()
+  const { openAccountModal } = useWeb3ConnectionManager()
 
   return (
     <Stack spacing={3}>

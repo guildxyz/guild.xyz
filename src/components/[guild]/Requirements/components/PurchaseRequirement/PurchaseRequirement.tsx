@@ -16,6 +16,7 @@ import { Modal } from "components/common/Modal"
 import { ShoppingCartSimple } from "phosphor-react"
 import { PURCHASABLE_REQUIREMENT_TYPES } from "utils/guildCheckout"
 import RequirementDisplayComponent from "../RequirementDisplayComponent"
+import AllowanceButton from "./components/buttons/AllowanceButton"
 import ChooseCurrencyButton from "./components/buttons/ChooseCurrencyButton"
 import PurchaseButton from "./components/buttons/PurchaseButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
@@ -97,6 +98,7 @@ const PurchaseRequirement = (): JSX.Element => {
                 ) : (
                   <>
                     <SwitchNetworkButton />
+                    <AllowanceButton />
                     <PurchaseButton />
                   </>
                 )}

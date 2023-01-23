@@ -1,9 +1,12 @@
 import Button from "components/common/Button"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 
 const ChooseCurrencyButton = (): JSX.Element => (
-  <Button size="xl" isDisabled>
-    Choose currency
-  </Button>
+  <CardMotionWrapper>
+    <Button size="xl" isDisabled w="full">
+      Choose currency
+    </Button>
+  </CardMotionWrapper>
 )
 
 export default ChooseCurrencyButton
