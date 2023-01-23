@@ -1,7 +1,7 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
-import { useController, useFormState } from "react-hook-form"
+import { useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import NumberField from "./NumberField"
@@ -14,15 +14,6 @@ const options = [
 ]
 const HoldState = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const { errors } = useFormState()
-
-  const {
-    field: { name, onBlur, onChange, ref, value },
-  } = useController({
-    name: `${baseFieldPath}.data.vaultState`,
-    rules: {
-      required: "This field is required",
-    },
-  })
 
   return (
     <>
@@ -40,15 +31,12 @@ const HoldState = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       >
         <FormLabel>Vault phase</FormLabel>
 
-        <StyledSelect
-          ref={ref}
-          name={name}
-          options={options}
-          onChange={(newValue) => {
-            onChange(newValue?.value)
+        <ControlledSelect
+          name={`${baseFieldPath}.data.vaultState`}
+          rules={{
+            required: "This field is required",
           }}
-          value={options.find((option) => option.value === value) ?? ""}
-          onBlur={onBlur}
+          options={options}
           isClearable
         />
 
