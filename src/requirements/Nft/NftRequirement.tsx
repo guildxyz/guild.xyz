@@ -1,19 +1,18 @@
 import { Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import OpenseaUrl from "components/[guild]/Requirements/components/OpenseaUrl"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { Fragment } from "react"
-import DataBlock from "requirements/common/DataBlock"
-import { Requirement as RequirementType, Trait } from "types"
+import { Trait } from "types"
 import shortenHex from "utils/shortenHex"
-import OpenseaUrl from "../common/OpenseaUrl"
-import Requirement from "../common/Requirement"
 import useNftMetadata, {
   NOUNS_BACKGROUNDS,
   useNftMetadataWithTraits,
 } from "./hooks/useNftMetadata"
-
-type Props = {
-  requirement: RequirementType
-}
 
 const imageDataTypeMap = {
   body: "bodies",
@@ -30,7 +29,9 @@ const getNounsRequirementType = (trait: Trait) =>
     : ImageData.images?.[imageDataTypeMap[trait.trait_type]]?.[+trait.value]
         ?.filename
 
-const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) => {
+const NftRequirement = (props: RequirementProps) => {
+  const receivedRequirement = useRequirementContext()
+
   // Converting the requirement to the new format if needed
   const requirement = Object.entries(receivedRequirement.data?.attribute ?? {})
     .length
@@ -79,8 +80,8 @@ const NftRequirement = ({ requirement: receivedRequirement, ...rest }: Props) =>
         )
       }
       isImageLoading={nftDataLoading}
-      footer={<OpenseaUrl requirement={requirement} />}
-      {...rest}
+      footer={<OpenseaUrl />}
+      {...props}
     >
       {"Own "}
       {requirement.data?.id

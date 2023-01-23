@@ -10,11 +10,11 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import SetRequirements from "components/create-guild/Requirements"
 import TelegramGroup from "components/create-guild/TelegramGroup"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildFormType, PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -36,7 +36,7 @@ const CreateTelegramGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm<GuildFormType>({ mode: "all", defaultValues })
   const [formErrors, setFormErrors] = useState(null)
-  const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
+  const { openWalletSelectorModal, triedEager } = useWeb3ConnectionManager()
 
   const { isLoading, isSigning, onSubmit, response, signLoadingText } =
     useCreateGuild()

@@ -1,15 +1,18 @@
 import Link from "components/common/Link"
-import { RequirementComponentProps } from "requirements"
-import Requirement from "../common/Requirement"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 
-const LensRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
+const LensRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
   requirement.chain = "POLYGON"
 
   return (
     <Requirement
       isNegated={requirement.isNegated}
       image={"requirementLogos/lens.png"}
-      {...rest}
+      {...props}
     >
       {(() => {
         switch (requirement.type) {
