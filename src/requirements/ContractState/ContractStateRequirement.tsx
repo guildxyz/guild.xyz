@@ -9,18 +9,19 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react"
+import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { CaretDown, Function } from "phosphor-react"
-import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
 import shortenHex from "utils/shortenHex"
-import BlockExplorerUrl from "../common/BlockExplorerUrl"
-import Requirement from "../common/Requirement"
-import { RequirementButton } from "../common/RequirementButton"
 
-const ContractStateRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps) => {
+const ContractStateRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
   const { isOpen, onToggle } = useDisclosure()
 
   return (
@@ -30,7 +31,7 @@ const ContractStateRequirement = ({
       footer={
         <>
           <HStack divider={<Divider orientation="vertical" h="4" />} spacing="4">
-            <BlockExplorerUrl requirement={requirement} {...rest} />
+            <BlockExplorerUrl />
             <RequirementButton
               rightIcon={
                 <Icon
@@ -76,7 +77,7 @@ const ContractStateRequirement = ({
           </Collapse>
         </>
       }
-      {...rest}
+      {...props}
     >
       Satisfy custom query of{" "}
       <DataBlock>{requirement.data.id.split("(")[0]}</DataBlock> on the{" "}

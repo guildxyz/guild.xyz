@@ -2,7 +2,6 @@ import { usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
-import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
@@ -50,9 +49,7 @@ const useConnectPlatform = (
         throw body
       }
 
-      return manageKeyPairAfterUserMerge(fetcherWithSign, user, account).then(
-        () => body
-      )
+      return body
     })
 
   const { onSubmit, isLoading, response } = useSubmitWithSign<{

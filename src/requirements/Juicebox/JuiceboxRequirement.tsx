@@ -1,12 +1,13 @@
-import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
-import Requirement from "../common/Requirement"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { useJuiceboxProject } from "./hooks/useJuicebox"
 
-const JuiceboxRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps) => {
+const JuiceboxRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
   const { project, isLoading, error } = useJuiceboxProject(requirement.data.id)
 
   return (
@@ -14,7 +15,7 @@ const JuiceboxRequirement = ({
       isNegated={requirement.isNegated}
       image={project?.logoUri}
       isImageLoading={isLoading}
-      {...rest}
+      {...props}
     >
       {`Hold ${
         requirement.data?.minAmount > 0

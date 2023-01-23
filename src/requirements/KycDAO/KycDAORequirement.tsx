@@ -1,14 +1,14 @@
 import { Text } from "@chakra-ui/react"
-import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
-import BlockExplorerUrl from "../common/BlockExplorerUrl"
-import Requirement from "../common/Requirement"
+import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useKycDAOContracts from "./hooks/useKycDAOContracts"
 
-const KycDAORequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps): JSX.Element => {
+const KycDAORequirement = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext()
   const { isLoading, kycDAOContracts, error } = useKycDAOContracts()
 
   const contractData = kycDAOContracts?.find(
@@ -23,8 +23,8 @@ const KycDAORequirement = ({
           KYC
         </Text>
       }
-      footer={!error && <BlockExplorerUrl requirement={requirement} />}
-      {...rest}
+      footer={!error && <BlockExplorerUrl />}
+      {...props}
     >
       <Text as="span">{`Get verified as `}</Text>
       <DataBlock

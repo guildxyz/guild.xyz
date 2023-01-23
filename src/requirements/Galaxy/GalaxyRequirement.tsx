@@ -1,13 +1,14 @@
 import { Link, Text } from "@chakra-ui/react"
-import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
-import Requirement from "../common/Requirement"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { useGalaxyCampaign } from "./hooks/useGalaxyCampaigns"
 
-const GalaxyRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps): JSX.Element => {
+const GalaxyRequirement = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext()
+
   const { campaign, isLoading } = useGalaxyCampaign(requirement?.data?.galaxyId)
 
   return (
@@ -15,7 +16,7 @@ const GalaxyRequirement = ({
       isNegated={requirement.isNegated}
       image={campaign?.thumbnail}
       isImageLoading={isLoading}
-      {...rest}
+      {...props}
     >
       <Text as="span">{`Participate in the `}</Text>
       {!campaign || isLoading ? (

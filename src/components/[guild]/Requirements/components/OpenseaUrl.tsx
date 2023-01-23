@@ -1,44 +1,39 @@
+import {
+  RequirementButton,
+  RequirementLinkButton,
+} from "components/[guild]/Requirements/components/RequirementButton"
 import type { Chain } from "connectors"
 import useNftMetadata, {
   useNftMetadataWithTraits,
 } from "requirements/Nft/hooks/useNftMetadata"
-import { Requirement } from "types"
 import BlockExplorerUrl from "./BlockExplorerUrl"
-import { RequirementButton, RequirementLinkButton } from "./RequirementButton"
-
-type Props = {
-  requirement: Requirement
-}
+import { useRequirementContext } from "./RequirementContext"
 
 const openseaCompatibleChain: Partial<Record<Chain, string>> = {
   POLYGON: "matic",
 }
 
-const OpenseaUrl = ({ requirement }: Props): JSX.Element => {
+const OpenseaUrl = (): JSX.Element => {
+  const { chain, address, data } = useRequirementContext()
+
   const { metadata: metadataWithTraits, isLoading: isMetadataWithTraitsLoading } =
-    useNftMetadataWithTraits(requirement.chain, requirement.address)
-  const { metadata, isLoading } = useNftMetadata(
-    requirement.chain,
-    requirement.address,
-    requirement.data.id
-  )
+    useNftMetadataWithTraits(chain, address)
+  const { metadata, isLoading } = useNftMetadata(chain, address, data.id)
 
   const isValidating = isLoading || isMetadataWithTraitsLoading
 
   if (!metadataWithTraits && !metadata && isValidating)
     return <RequirementButton isLoading />
 
-  if (!metadataWithTraits && !metadata && !isValidating)
-    return <BlockExplorerUrl requirement={requirement} />
+  if (!metadataWithTraits && !metadata && !isValidating) return <BlockExplorerUrl />
 
   return (
     <RequirementLinkButton
       href={
         metadata
           ? `https://opensea.io/assets/${
-              openseaCompatibleChain[requirement.chain] ??
-              requirement.chain.toLowerCase()
-            }/${requirement.address}/${requirement.data.id}`
+              openseaCompatibleChain[chain] ?? chain.toLowerCase()
+            }/${address}/${data.id}`
           : `https://opensea.io/collection/${metadataWithTraits.slug}`
       }
       imageUrl="/requirementLogos/opensea.svg"
