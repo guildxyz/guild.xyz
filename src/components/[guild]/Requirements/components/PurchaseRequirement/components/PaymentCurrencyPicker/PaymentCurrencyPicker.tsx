@@ -36,7 +36,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
         Payment currency
       </Text>
 
-      <Menu gutter={0} matchWidth placement="bottom">
+      <Menu gutter={0} matchWidth placement="bottom" strategy="fixed">
         {({ isOpen }) => (
           <>
             <MenuButton
