@@ -55,7 +55,7 @@ const TokenInfo = ({ chainId, address }: Props): JSX.Element => {
       <SkeletonCircle isLoaded={!isTokenDataLoading} size="var(--chakra-space-11)">
         <Circle size="var(--chakra-space-11)" bgColor={circleBgColor}>
           {logoURI ? (
-            <Img src={logoURI} alt={symbol} boxSize={8} />
+            <Img src={logoURI} alt={symbol} boxSize={6} />
           ) : (
             <Text as="span" fontWeight="bold" fontSize="xx-small">
               {symbol}
