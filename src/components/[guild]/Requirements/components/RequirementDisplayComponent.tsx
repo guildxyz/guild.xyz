@@ -11,10 +11,14 @@ type Props = {
   requirement: RequirementType
   showPurchaseBtn?: boolean // TODO: think about a better solution for these
   showFooter?: boolean // TODO: think about a better solution for these
-  showRightElement?: boolean // TODO: think about a better solution for these
+  rightElement?: JSX.Element
 }
 
-const RequirementDisplayComponent = ({ requirement, ...rest }: Props) => {
+const RequirementDisplayComponent = ({
+  requirement,
+  rightElement,
+  ...rest
+}: Props) => {
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
 
   if (!RequirementComponent)
@@ -27,7 +31,10 @@ const RequirementDisplayComponent = ({ requirement, ...rest }: Props) => {
 
   return (
     <RequirementProvider requirement={requirement}>
-      <RequirementComponent rightElement={<RequiementAccessIndicator />} {...rest} />
+      <RequirementComponent
+        rightElement={rightElement ?? <RequiementAccessIndicator />}
+        {...rest}
+      />
     </RequirementProvider>
   )
 }

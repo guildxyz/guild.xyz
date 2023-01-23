@@ -7,6 +7,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
+  Text,
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
@@ -58,7 +59,7 @@ const PurchaseRequirement = (): JSX.Element => {
             <RequirementDisplayComponent
               requirement={requirement}
               showPurchaseBtn={false}
-              showRightElement={false}
+              rightElement={<Text as="span">$14</Text>}
             />
           </ModalBody>
 

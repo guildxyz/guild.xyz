@@ -23,7 +23,6 @@ export type RequirementProps = PropsWithChildren<{
   isNegated?: boolean
   showPurchaseBtn?: boolean
   showFooter?: boolean
-  showRightElement?: boolean
 }>
 
 const Requirement = ({
@@ -35,7 +34,6 @@ const Requirement = ({
   isNegated = false,
   showPurchaseBtn = true,
   showFooter = true, // TODO: think about a better solution for these
-  showRightElement = true, // TODO: think about a better solution for these
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -87,7 +85,7 @@ const Requirement = ({
           {showFooter && footer}
         </HStack>
       </VStack>
-      {showRightElement && rightElement}
+      {rightElement}
     </SimpleGrid>
   )
 }
