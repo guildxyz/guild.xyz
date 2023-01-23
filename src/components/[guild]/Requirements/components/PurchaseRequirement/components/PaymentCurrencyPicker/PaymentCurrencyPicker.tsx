@@ -1,13 +1,13 @@
 import {
   Circle,
-  Collapse,
-  Divider,
   HStack,
   Icon,
+  Menu,
+  MenuButton,
+  MenuList,
   Stack,
   Text,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
@@ -23,10 +23,8 @@ import TokenInfo from "./components/TokenInfo"
 const PaymentCurrencyPicker = (): JSX.Element => {
   const { requirement, pickedCurrency } = usePurchaseRequirementContext()
 
-  const { isOpen, onToggle, onClose } = useDisclosure()
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
   const lightShade = useColorModeValue("white", "gray.700")
-  const listBgColor = useColorModeValue("whiteAlpha.600", "transparent")
 
   const { account } = useWeb3React()
   const { openAccountModal } = useWeb3ConnectionManager()
@@ -37,74 +35,84 @@ const PaymentCurrencyPicker = (): JSX.Element => {
         Payment currency
       </Text>
 
-      <Stack borderRadius="2xl" overflow="hidden">
-        <Button
-          variant="unstyled"
-          w="full"
-          h="auto"
-          p={4}
-          bgColor={lightShade}
-          fontWeight="normal"
-          borderRadius="none"
-          textAlign="left"
-          onClick={onToggle}
-        >
-          <HStack w="full" justifyContent="space-between">
-            {pickedCurrency ? (
-              <TokenInfo
-                chainId={Chains[requirement.chain]}
-                address={pickedCurrency}
-              />
-            ) : (
-              <HStack spacing={4}>
-                <Circle size={"var(--chakra-space-11)"} bgColor={circleBgColor} />
-                <Text as="span">Choose currency</Text>
-              </HStack>
-            )}
-            <Icon
-              as={CaretDown}
-              boxSize={4}
-              transform={isOpen && "rotate(-180deg)"}
-              transition="transform .3s"
-            />
-          </HStack>
-        </Button>
-
-        <Collapse in={isOpen} animateOpacity style={{ marginTop: 0 }}>
-          <Stack divider={<Divider />} bgColor={listBgColor}>
-            {SUPPORTED_CURRENCIES.filter(
-              (c) => c.chainId === Chains[requirement.chain]
-            ).map((c) => (
-              <CurrencyListItem
-                key={`${c.chainId}-${c.address}`}
-                chainId={c.chainId}
-                address={c.address}
-                onPick={onClose}
-              />
-            ))}
-          </Stack>
-          <HStack
-            justifyContent="space-between"
-            bgColor={lightShade}
-            h={8}
-            px={4}
-            fontSize="sm"
-          >
-            <Text as="span" colorScheme="gray">
-              Connected address:
-            </Text>
-
-            <Button
-              size="sm"
-              variant="link"
-              rightIcon={<Icon as={ArrowSquareOut} />}
-              onClick={openAccountModal}
+      <Menu gutter={0} matchWidth placement="bottom">
+        {({ isOpen }) => (
+          <>
+            <MenuButton
+              w="full"
+              h="auto"
+              p={4}
+              bgColor={lightShade}
+              borderTopRadius="2xl"
+              borderBottomRadius={isOpen ? 0 : "2xl"}
+              transition="border-radius 0.2s ease"
             >
-              {shortenHex(account, 3)}
-            </Button>
-          </HStack>
-        </Collapse>
-      </Stack>
+              <HStack w="full" justifyContent="space-between">
+                {pickedCurrency ? (
+                  <TokenInfo
+                    chainId={Chains[requirement.chain]}
+                    address={pickedCurrency}
+                  />
+                ) : (
+                  <HStack spacing={4}>
+                    <Circle
+                      size={"var(--chakra-space-11)"}
+                      bgColor={circleBgColor}
+                    />
+                    <Text as="span">Choose currency</Text>
+                  </HStack>
+                )}
+                <Icon
+                  as={CaretDown}
+                  boxSize={4}
+                  transform={isOpen && "rotate(-180deg)"}
+                  transition="transform .3s"
+                />
+              </HStack>
+            </MenuButton>
+
+            <MenuList
+              p={0}
+              border="none"
+              borderTopRadius={0}
+              borderBottomRadius="2xl"
+              overflow="hidden"
+              transformOrigin="center"
+            >
+              {SUPPORTED_CURRENCIES.filter(
+                (c) => c.chainId === Chains[requirement.chain]
+              ).map((c) => (
+                <CurrencyListItem
+                  key={`${c.chainId}-${c.address}`}
+                  chainId={c.chainId}
+                  address={c.address}
+                />
+              ))}
+
+              <HStack
+                justifyContent="space-between"
+                bgColor={lightShade}
+                h={8}
+                px={4}
+                fontSize="sm"
+              >
+                <Text as="span" colorScheme="gray">
+                  Connected address:
+                </Text>
+
+                <Button
+                  size="sm"
+                  variant="link"
+                  rightIcon={<Icon as={ArrowSquareOut} />}
+                  onClick={openAccountModal}
+                >
+                  {shortenHex(account, 3)}
+                </Button>
+              </HStack>
+            </MenuList>
+          </>
+        )}
+      </Menu>
     </Stack>
   )
 }

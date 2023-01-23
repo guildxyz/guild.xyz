@@ -12,6 +12,11 @@ const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
     chainId: 1,
     address: "COIN",
   },
+  // GoerliETH
+  {
+    chainId: 5,
+    address: "COIN",
+  },
   // OWO
   {
     chainId: 5,
