@@ -48,12 +48,11 @@ const TokenInfo = ({ chainId, address }: Props): JSX.Element => {
   )
   const formattedBalance = Number(balance).toFixed(2)
 
-  const isLoading =
-    isTokenDataLoading || isCoinBalanceLoading || isTokenBalanceLoading
+  const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
 
   return (
     <HStack spacing={4}>
-      <SkeletonCircle isLoaded={!isLoading} size="var(--chakra-space-11)">
+      <SkeletonCircle isLoaded={!isTokenDataLoading} size="var(--chakra-space-11)">
         <Circle size="var(--chakra-space-11)" bgColor={circleBgColor}>
           {logoURI ? (
             <Img src={logoURI} alt={symbol} boxSize={8} />
@@ -65,8 +64,8 @@ const TokenInfo = ({ chainId, address }: Props): JSX.Element => {
         </Circle>
       </SkeletonCircle>
 
-      <Stack spacing={0.5}>
-        <Skeleton isLoaded={!isLoading} h={5}>
+      <Stack spacing={1}>
+        <Skeleton isLoaded={!isTokenDataLoading} h={5}>
           <Text as="span">
             {`{PRICE} ${symbol}`}
             <Text as="span" colorScheme="gray">
@@ -75,7 +74,12 @@ const TokenInfo = ({ chainId, address }: Props): JSX.Element => {
           </Text>
         </Skeleton>
 
-        <Skeleton isLoaded={!isLoading} h={4}>
+        <Skeleton
+          isLoaded={!isBalanceLoading}
+          h={4}
+          display="flex"
+          alignItems="center"
+        >
           <Text as="span" colorScheme="gray" fontSize="xs">
             {`Balance: ${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
           </Text>
