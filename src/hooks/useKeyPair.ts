@@ -103,6 +103,11 @@ const setKeyPair = async ({
   }
 
   await mutate(`/user/${account}`)
+  if (shouldSendLink) {
+    await mutate(
+      unstable_serialize([`/user/details/${account}`, { method: "POST", body: {} }])
+    )
+  }
   await mutateKeyPair()
 
   return [storedKeyPair, shouldSendLink]
@@ -215,14 +220,6 @@ const useKeyPair = () => {
             )
           }
 
-          mutate(`/user/${account}`)
-          // Not importing useUser, because it imports useKeyPair
-          mutate(
-            unstable_serialize([
-              `/user/details/${account}`,
-              { method: "POST", body: {} },
-            ])
-          )
           addDatadogAction("Successfully linked address")
         } else {
           mutateKeyPair(generatedKeyPair)
