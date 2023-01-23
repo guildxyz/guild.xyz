@@ -33,7 +33,7 @@ const PurchaseRequirement = (): JSX.Element => {
   const { requirement, isOpen, onOpen, onClose, pickedCurrency } =
     usePurchaseRequirementContext()
 
-  const modalFooterBg = useColorModeValue("gray.50", "gray.800")
+  const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
   if (!account || !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type))
     return null

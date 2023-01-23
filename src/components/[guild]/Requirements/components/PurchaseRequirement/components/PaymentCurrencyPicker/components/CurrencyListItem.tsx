@@ -1,3 +1,4 @@
+import { useColorModeValue } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { usePurchaseRequirementContext } from "../../PurchaseRequirementContex"
 import TokenInfo from "./TokenInfo"
@@ -11,6 +12,8 @@ type Props = {
 const CurrencyListItem = ({ chainId, address, onPick }: Props): JSX.Element => {
   const { setPickedCurrency } = usePurchaseRequirementContext()
 
+  const hoverBgColor = useColorModeValue("gray.100", "blackAlpha.300")
+
   return (
     <Button
       variant="unstyled"
@@ -20,8 +23,8 @@ const CurrencyListItem = ({ chainId, address, onPick }: Props): JSX.Element => {
       borderRadius={0}
       fontWeight="normal"
       textAlign="left"
-      _hover={{ bgColor: "blackAlpha.300" }}
-      _focusVisible={{ outline: "none", bgColor: "blackAlpha.300" }}
+      _hover={{ bgColor: hoverBgColor }}
+      _focusVisible={{ outline: "none", bgColor: hoverBgColor }}
       onClick={() => {
         setPickedCurrency(address)
         onPick()

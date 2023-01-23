@@ -37,7 +37,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
         Payment currency
       </Text>
 
-      <Stack borderRadius="xl" overflow="hidden">
+      <Stack borderRadius="2xl" overflow="hidden">
         <Button
           variant="unstyled"
           w="full"
