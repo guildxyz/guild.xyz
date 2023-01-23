@@ -44,31 +44,23 @@ const CustomLink = ({
   )
 }
 
-const CustomImage = (props) => {
-  let size
-  if (typeof window === "object" && props.className !== undefined) {
-    const element = document?.querySelector("." + props.className)
-    if (element) size = getComputedStyle(element).fontSize
-  }
-
-  return (
-    <Box position="relative" width={size ?? size}>
-      <Image
-        className={props.className}
-        height="100px"
-        width="100px"
-        src={props.src}
-        alt="page image"
-        layout="responsive"
-        objectFit="contain"
-        quality={40}
-        style={{
-          zIndex: "1",
-        }}
-      />
-    </Box>
-  )
-}
+const CustomImage = (props) => (
+  <Box position="relative" width="100%" height="50vh">
+    <Image
+      className={props.className}
+      src={props.src}
+      alt="page image"
+      height="100px"
+      width="100px"
+      layout={props.className === "notion-page-icon" ? "responsive" : "fill"}
+      objectFit="contain"
+      quality={40}
+      style={{
+        zIndex: "1",
+      }}
+    />
+  </Box>
+)
 
 const Header = (props) => {
   const tags = props?.block?.properties?.["`SJU"]?.[0]?.[0]
