@@ -51,7 +51,7 @@ const TokenInfo = ({ chainId, address }: Props): JSX.Element => {
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
 
   return (
-    <HStack spacing={4}>
+    <HStack spacing={4} maxW="calc(100% - 2rem)">
       <SkeletonCircle isLoaded={!isTokenDataLoading} size="var(--chakra-space-11)">
         <Circle size="var(--chakra-space-11)" bgColor={circleBgColor}>
           {logoURI ? (
@@ -64,9 +64,9 @@ const TokenInfo = ({ chainId, address }: Props): JSX.Element => {
         </Circle>
       </SkeletonCircle>
 
-      <Stack spacing={1}>
+      <Stack spacing={1} maxW="calc(100% - 3rem)">
         <Skeleton isLoaded={!isTokenDataLoading} h={5}>
-          <Text as="span">
+          <Text as="span" display="block" isTruncated>
             {`{price} ${symbol}`}
             <Text as="span" colorScheme="gray">
               {` (${RPC[Chains[chainId]].chainName})`}
