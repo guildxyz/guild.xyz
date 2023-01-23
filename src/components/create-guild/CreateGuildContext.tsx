@@ -36,8 +36,6 @@ const CreateGuildContext = createContext<{
   activeStep: number
   platform?: PlatformName
   setPlatform: Dispatch<SetStateAction<PlatformName>>
-  createDiscordRoles: boolean
-  setCreateDiscordRoles: Dispatch<SetStateAction<boolean>>
   TEMPLATES: Record<string, Template>
 } | null>(null)
 
@@ -99,8 +97,6 @@ const CreateGuildProvider = ({
   const methods = useForm<GuildFormType>({ mode: "all" })
   const guildName = useWatch({ control: methods.control, name: "name" })
 
-  const [createDiscordRoles, setCreateDiscordRoles] = useState(false)
-
   const TEMPLATES: Record<TemplateType, Template> = {
     BASIC: {
       name: "Start from scratch",
@@ -115,9 +111,7 @@ const CreateGuildProvider = ({
               type: "FREE",
             },
           ],
-          rolePlatforms: createDiscordRoles
-            ? [{ guildPlatformIndex: 1 }]
-            : undefined,
+          rolePlatforms: [{ guildPlatformIndex: 0 }],
         },
       ],
     },
@@ -145,6 +139,7 @@ const CreateGuildProvider = ({
               },
             },
           ],
+          rolePlatforms: [{ guildPlatformIndex: 0 }],
         },
         {
           name: "Twitter fam",
@@ -164,6 +159,7 @@ const CreateGuildProvider = ({
               },
             },
           ],
+          rolePlatforms: [{ guildPlatformIndex: 0 }],
         },
       ],
     },
@@ -210,8 +206,6 @@ const CreateGuildProvider = ({
         setPlatform,
         template,
         setTemplate,
-        createDiscordRoles,
-        setCreateDiscordRoles,
         TEMPLATES,
       }}
     >
