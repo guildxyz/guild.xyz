@@ -2,7 +2,7 @@ import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import { randomBytes } from "crypto"
 import { createStore, del, get, set } from "idb-keyval"
-import useSWR, { KeyedMutator, mutate } from "swr"
+import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
@@ -214,6 +214,15 @@ const useKeyPair = () => {
               "custom"
             )
           }
+
+          mutate(`/user/${account}`)
+          // Not importing useUser, because it imports useKeyPair
+          mutate(
+            unstable_serialize([
+              `/user/details/${account}`,
+              { method: "POST", body: {} },
+            ])
+          )
           addDatadogAction("Successfully linked address")
         } else {
           mutateKeyPair(generatedKeyPair)
