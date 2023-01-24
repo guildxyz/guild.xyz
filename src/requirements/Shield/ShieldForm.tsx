@@ -13,7 +13,7 @@ const shieldRequirementTypes = [
     value: "SHIELD_ANOM_TX",
   },
   {
-    label: "A history of creating an unverified contracts",
+    label: "Creation of unverified contracts",
     value: "SHIELD_UNVERIFIED_CONTRACT",
   },
   {
