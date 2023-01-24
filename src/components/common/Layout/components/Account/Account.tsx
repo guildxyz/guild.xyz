@@ -16,6 +16,7 @@ import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import useNameCoinName from "hooks/useNameCoinName"
 import useNNSName from "hooks/useNNSName"
+import useUnstoppableName from "hooks/useUnstoppableName"
 import { LinkBreak, SignIn } from "phosphor-react"
 import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
@@ -26,8 +27,9 @@ const Account = (): JSX.Element => {
   const { openWalletSelectorModal, openNetworkModal, openAccountModal, triedEager } =
     useContext(Web3Connection)
   const { ENSName } = useWeb3React()
-  const NNSName = useNNSName()
-  const nameCoinName = useNameCoinName()
+  const NNSName = useNNSName() // works
+  const nameCoinName = useNameCoinName() // works, but doesn't returns
+  const UnstoppableName = useUnstoppableName() // resolving missing
 
   const { addresses } = useUser()
 
