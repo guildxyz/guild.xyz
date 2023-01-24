@@ -8,7 +8,7 @@ const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
 
 const useTokenData = (chain: string, address: string, onFinish?: () => void) => {
   const isCoin =
-    address === RPC[chain].nativeCurrency.symbol ||
+    address === RPC[chain]?.nativeCurrency?.symbol ||
     address === "0x0000000000000000000000000000000000000000"
 
   const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && chain && !isCoin
