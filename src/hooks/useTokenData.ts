@@ -39,15 +39,18 @@ const useTokenData = (chain: string, address: string, onFinish?: () => void) => 
    * Doing this instead of using initialData to make sure it fetches when shouldFetch
    * becomes true
    */
-  const name = isCoin
-    ? RPC[chain].nativeCurrency.name
-    : tokenDataFromApi?.name ?? swrResponse.data?.name
-  const symbol = isCoin
-    ? RPC[chain].nativeCurrency.symbol
-    : swrResponse.data?.symbol ?? tokenDataFromApi?.symbol
-  const decimals = isCoin
-    ? RPC[chain].nativeCurrency.decimals
-    : tokenDataFromApi?.decimals ?? swrResponse.data?.decimals
+  const name =
+    isCoin && chain
+      ? RPC[chain].nativeCurrency.name
+      : tokenDataFromApi?.name ?? swrResponse.data?.name
+  const symbol =
+    isCoin && chain
+      ? RPC[chain].nativeCurrency.symbol
+      : swrResponse.data?.symbol ?? tokenDataFromApi?.symbol
+  const decimals =
+    isCoin && chain
+      ? RPC[chain].nativeCurrency.decimals
+      : tokenDataFromApi?.decimals ?? swrResponse.data?.decimals
 
   return {
     ...swrResponse,
