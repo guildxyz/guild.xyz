@@ -30,6 +30,7 @@ import {
   PurchaseRequirementProvider,
   usePurchaseRequirementContext,
 } from "./components/PurchaseRequirementContex"
+import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
@@ -115,6 +116,7 @@ const PurchaseRequirement = (): JSX.Element => {
                 ) : (
                   <>
                     <SwitchNetworkButton />
+                    <TOSCheckbox />
                     <AllowanceButton />
                     <PurchaseButton />
                   </>

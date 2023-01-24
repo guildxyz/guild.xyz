@@ -17,6 +17,8 @@ const PurchaseRequirementContext = createContext<{
   onClose: () => void
   pickedCurrency: string
   setPickedCurrency: Dispatch<SetStateAction<string>>
+  agreeWithTOS: boolean
+  setAgreeWithTOS: Dispatch<SetStateAction<boolean>>
 }>(undefined)
 
 const PurchaseRequirementProvider = ({
@@ -25,6 +27,7 @@ const PurchaseRequirementProvider = ({
   const requirement = useRequirementContext()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [pickedCurrency, setPickedCurrency] = useState<string>()
+  const [agreeWithTOS, setAgreeWithTOS] = useState(false)
 
   return (
     <PurchaseRequirementContext.Provider
@@ -35,6 +38,8 @@ const PurchaseRequirementProvider = ({
         onClose,
         pickedCurrency,
         setPickedCurrency,
+        agreeWithTOS,
+        setAgreeWithTOS,
       }}
     >
       {children}
