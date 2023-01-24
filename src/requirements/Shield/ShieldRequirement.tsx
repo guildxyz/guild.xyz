@@ -17,15 +17,15 @@ const ShieldRequirement = (props: RequirementProps): JSX.Element => {
           case "SHIELD_ANOM_TX":
             return "Have anomalous transaction patterns"
           case "SHIELD_UNVERIFIED_CONTRACT":
-            return "Have a history of creating an unverified contracts"
+            return "Have a history of creating unverified contracts"
           case "SHIELD_EXPLOIT_INTERACTION":
-            return "Have interaction with known exploits"
+            return "Have interactions with known exploits"
           case "SHIELD_INDIRECT_DEPOSITS":
             return "Have frequent indirect exchange deposits"
           case "SHIELD_TORNADO_CASH":
-            return `Have interactions with Tornado Cash${
-              requirement.data.hops ? "(with hops)" : ""
-            }`
+            return `Have direct${
+              requirement.data.hops ? " or indirect" : ""
+            } interactions with Tornado Cash`
         }
       })()}
     </Requirement>
