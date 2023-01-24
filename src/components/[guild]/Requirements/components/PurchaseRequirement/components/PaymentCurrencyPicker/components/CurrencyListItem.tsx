@@ -14,9 +14,11 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
   const hoverBgColor = useColorModeValue("gray.100", "blackAlpha.300")
 
   return (
-    <MenuItem
+    <TokenInfo
+      as={MenuItem}
       px={4}
       py={0}
+      maxW="none"
       h={16}
       bgColor={bgColor}
       borderRadius={0}
@@ -26,10 +28,9 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
       _hover={{ bgColor: hoverBgColor }}
       _focusVisible={{ bgColor: hoverBgColor }}
       onClick={() => setPickedCurrency(address)}
-      // isDisabled={} // TODO: we can check this when we'll have price information
-    >
-      <TokenInfo chainId={chainId} address={address} />
-    </MenuItem>
+      chainId={chainId}
+      address={address}
+    />
   )
 }
 

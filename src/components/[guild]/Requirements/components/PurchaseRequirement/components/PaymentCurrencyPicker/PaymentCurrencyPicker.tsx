@@ -89,7 +89,9 @@ const PaymentCurrencyPicker = (): JSX.Element => {
             >
               <Box maxH={40} overflowY="auto" className="custom-scrollbar">
                 {SUPPORTED_CURRENCIES.filter(
-                  (c) => c.chainId === Chains[requirement.chain]
+                  (c) =>
+                    c.chainId === Chains[requirement.chain] &&
+                    c.address !== requirement.address
                 ).map((c) => (
                   <CurrencyListItem
                     key={`${c.chainId}-${c.address}`}

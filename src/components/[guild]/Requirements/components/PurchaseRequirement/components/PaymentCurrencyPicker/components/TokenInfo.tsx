@@ -1,4 +1,5 @@
 import {
+  As,
   Circle,
   HStack,
   Img,
@@ -9,20 +10,29 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
+import usePrice from "components/[guild]/Requirements/components/PurchaseRequirement/hooks/usePrice"
 import { Chains, RPC } from "connectors"
 import useCoinBalance from "hooks/useCoinBalance"
 import useTokenBalance from "hooks/useTokenBalance"
 import useTokenData from "hooks/useTokenData"
+import { Rest } from "types"
 
 type Props = {
   chainId: number
   address: string
-}
+  as?: As<any>
+} & Rest
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const TokenInfo = ({ chainId, address }: Props): JSX.Element => {
+const TokenInfo = ({ chainId, address, as, ...rest }: Props): JSX.Element => {
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
+
+  const {
+    data: priceData,
+    isValidating: isPriceDataLoading,
+    error: priceError,
+  } = usePrice(address)
 
   // TODO: error handling
   const {
@@ -51,7 +61,13 @@ const TokenInfo = ({ chainId, address }: Props): JSX.Element => {
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
 
   return (
-    <HStack spacing={4} maxW="calc(100% - 2rem)">
+    <HStack
+      as={as}
+      spacing={4}
+      maxW="calc(100% - 2rem)"
+      {...rest}
+      isDisabled={!!priceError}
+    >
       <SkeletonCircle isLoaded={!isTokenDataLoading} size="var(--chakra-space-11)">
         <Circle size="var(--chakra-space-11)" bgColor={circleBgColor}>
           {logoURI ? (
@@ -65,9 +81,11 @@ const TokenInfo = ({ chainId, address }: Props): JSX.Element => {
       </SkeletonCircle>
 
       <Stack spacing={1} maxW="calc(100% - 3rem)">
-        <Skeleton isLoaded={!isTokenDataLoading} h={5}>
+        <Skeleton isLoaded={!isTokenDataLoading && !isPriceDataLoading} h={5}>
           <Text as="span" display="block" isTruncated>
-            {`{price} ${symbol}`}
+            {priceError
+              ? "Couldn't fetch price"
+              : `${priceData?.price.toFixed(5)} ${symbol}`}
             <Text as="span" colorScheme="gray">
               {` (${RPC[Chains[chainId]].chainName})`}
             </Text>

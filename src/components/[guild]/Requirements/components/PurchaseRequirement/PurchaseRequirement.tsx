@@ -7,6 +7,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Stack,
   Text,
   Tooltip,
@@ -15,6 +16,7 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
 import { PURCHASABLE_REQUIREMENT_TYPES } from "utils/guildCheckout"
 import RequirementDisplayComponent from "../RequirementDisplayComponent"
@@ -28,6 +30,7 @@ import {
   PurchaseRequirementProvider,
   usePurchaseRequirementContext,
 } from "./components/PurchaseRequirementContex"
+import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -35,6 +38,10 @@ const PurchaseRequirement = (): JSX.Element => {
     usePurchaseRequirementContext()
 
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
+
+  const { data: priceData, isValidating } = usePrice(
+    requirement?.chain && RPC[requirement.chain].nativeCurrency.symbol
+  )
 
   if (!account || !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type))
     return null
@@ -62,7 +69,13 @@ const PurchaseRequirement = (): JSX.Element => {
             <RequirementDisplayComponent
               requirement={requirement}
               showPurchaseBtn={false}
-              rightElement={<Text as="span">{`{price}`}</Text>}
+              rightElement={
+                isValidating ? (
+                  <Spinner size="sm" />
+                ) : (
+                  <Text as="span">{`$${priceData?.priceInUSD}`}</Text>
+                )
+              }
             />
           </ModalBody>
 

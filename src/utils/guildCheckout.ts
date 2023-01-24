@@ -10,7 +10,7 @@ const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
   // ETH
   {
     chainId: 1,
-    address: "COIN",
+    address: "ETH",
   },
   // USDC
   {
@@ -25,17 +25,17 @@ const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
   // GoerliETH
   {
     chainId: 5,
-    address: "COIN",
+    address: "ETH",
   },
-  // OWO
+  // DAI
   {
     chainId: 5,
-    address: "0x3C65D35A8190294d39013287B246117eBf6615Bd",
+    address: "0x73967c6a0904aa032c103b4104747e88c566b1a2",
   },
   // MATIC
   {
     chainId: 137,
-    address: "COIN",
+    address: "MATIC",
   },
 ]
 
