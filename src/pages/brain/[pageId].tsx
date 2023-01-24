@@ -50,8 +50,8 @@ const CustomImage = (props) => (
       className={props.className}
       src={props.src}
       alt="page image"
-      height="100px"
-      width="100px"
+      height={props.className === "notion-page-icon" ? "100px" : null}
+      width={props.className === "notion-page-icon" ? "100px" : null}
       layout={props.className === "notion-page-icon" ? "responsive" : "fill"}
       objectFit="contain"
       quality={40}
@@ -146,7 +146,6 @@ const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
               objectFit="contain"
               quality="30"
               style={{
-                width: "10px",
                 overflow: "visible",
               }}
               alt="logo"
