@@ -13,6 +13,7 @@ type Props = {
 const FilterSelect = ({ filterOptions, setFilterData }: Props): JSX.Element => (
   <Select<FilterOption, true, GroupBase<FilterOption>>
     isMulti
+    instanceId="filter-select"
     options={filterOptions}
     placeholder="Filter"
     chakraStyles={{
