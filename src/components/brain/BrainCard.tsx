@@ -27,10 +27,10 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
         borderWidth={4}
         p={0}
         sx={{
-          "div:nth-child(2) div:first-child > span img": {
+          "div:nth-child(2) div.background > span img": {
             filter: "blur(20px)",
           },
-          ":hover div:nth-child(2) div:first-child > span img": {
+          ":hover div:nth-child(2) div.background > span img": {
             filter: "blur(2px)",
           },
         }}
@@ -47,17 +47,19 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
           zIndex={1}
           maxW="90%"
         ></ColorCardLabel>
-        <Flex h="165px" flexDirection="column">
+        <Flex h="160px" flexDirection="column">
           <Center
             position="relative"
             py={{ base: 12, md: 20 }}
             overflow={"hidden"}
             borderRadius="xl"
+            minHeight="160px"
+            className="background"
           >
             {pageData.backgroundImage && (
               <Image
                 src={pageData?.backgroundImage}
-                alt="icon"
+                alt="background"
                 layout="fill"
                 objectFit="cover"
                 quality="2"
