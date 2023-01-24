@@ -10,6 +10,7 @@ import { useController, useFormContext, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import TwitterAccountAge from "./components/TwitterAccountAge"
+import TwitterAccountAgeRelative from "./components/TwitterAccountAgeRelative"
 import TwitterFollowerCount from "./components/TwitterFollowerCount"
 import TwitterListInput from "./components/TwitterListInput"
 import TwitterTextToInclude from "./components/TwitterTextToInclude"
@@ -62,9 +63,14 @@ const twitterRequirementTypes = [
     TwitterRequirement: TwitterTextToInclude,
   },
   {
-    label: "Account age",
+    label: "Account age (absolute)",
     value: "TWITTER_ACCOUNT_AGE",
     TwitterRequirement: TwitterAccountAge,
+  },
+  {
+    label: "Account age (relative)",
+    value: "TWITTER_ACCOUNT_AGE_RELATIVE",
+    TwitterRequirement: TwitterAccountAgeRelative,
   },
 ]
 
@@ -93,7 +99,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           onBlur={onBlur}
           onChange={(newValue: { label: string; value: string }) => {
             onChange(newValue?.value ?? null)
-            setValue(`${baseFieldPath}.data.id`, "")
+            setValue(`${baseFieldPath}.data`, "")
           }}
           ref={ref}
           value={selected}

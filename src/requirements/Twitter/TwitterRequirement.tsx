@@ -94,7 +94,7 @@ const TwitterRequirement = (props: RequirementProps) => {
                 <TwitterListLink requirement={requirement} />
               </>
             )
-          case "TWITTER_ACCOUNT_AGE":
+          case "TWITTER_ACCOUNT_AGE_RELATIVE":
             const formattedAccountAge = formatRelativeTimeFromNow(
               requirement.data.minAmount
             )
@@ -103,6 +103,17 @@ const TwitterRequirement = (props: RequirementProps) => {
               <>
                 {`Have a Twitter account older than `}
                 <DataBlock>{formattedAccountAge}</DataBlock>
+              </>
+            )
+          case "TWITTER_ACCOUNT_AGE":
+            const formattedDate = new Date(
+              requirement.data.minAmount
+            ).toLocaleDateString()
+
+            return (
+              <>
+                {`Have a Twitter account since at least `}
+                <DataBlock>{formattedDate}</DataBlock>
               </>
             )
         }

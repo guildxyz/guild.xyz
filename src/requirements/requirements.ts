@@ -89,6 +89,7 @@ export const REQUIREMENTS_DATA = [
       "TWITTER_LIST_MEMBER",
       "TWITTER_LIST_FOLLOW",
       "TWITTER_ACCOUNT_AGE",
+      "TWITTER_ACCOUNT_AGE_RELATIVE",
     ],
     isPlatform: true,
   },
