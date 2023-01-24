@@ -6,6 +6,7 @@ import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
+import Script from "next/script"
 import { IconContext } from "phosphor-react"
 import { Fragment } from "react"
 import { SWRConfig } from "swr"
@@ -21,28 +22,31 @@ const App = ({
   const DatadogComponent = router.asPath.includes("linkpreview") ? Fragment : Datadog
 
   return (
-    <Chakra cookies={pageProps.cookies}>
-      <IconContext.Provider
-        value={{
-          color: "currentColor",
-          size: "1em",
-          weight: "bold",
-          mirrored: false,
-        }}
-      >
-        <SWRConfig value={{ fetcher }}>
-          <Web3ReactProvider connectors={connectors}>
-            <Web3ConnectionManager>
-              <DatadogComponent>
-                <ExplorerProvider>
-                  <Component {...pageProps} />
-                </ExplorerProvider>
-              </DatadogComponent>
-            </Web3ConnectionManager>
-          </Web3ReactProvider>
-        </SWRConfig>
-      </IconContext.Provider>
-    </Chakra>
+    <>
+      <Script src="/intercom.js" />
+      <Chakra cookies={pageProps.cookies}>
+        <IconContext.Provider
+          value={{
+            color: "currentColor",
+            size: "1em",
+            weight: "bold",
+            mirrored: false,
+          }}
+        >
+          <SWRConfig value={{ fetcher }}>
+            <Web3ReactProvider connectors={connectors}>
+              <Web3ConnectionManager>
+                <DatadogComponent>
+                  <ExplorerProvider>
+                    <Component {...pageProps} />
+                  </ExplorerProvider>
+                </DatadogComponent>
+              </Web3ConnectionManager>
+            </Web3ReactProvider>
+          </SWRConfig>
+        </IconContext.Provider>
+      </Chakra>
+    </>
   )
 }
 

@@ -53,7 +53,7 @@ const UserSince = (props: RequirementProps): JSX.Element => {
       image="/requirementLogos/guild.png"
       {...props}
     >
-      {"Be a Guild.xyz user at least since "}
+      {"Be a Guild.xyz user since at least "}
       <DataBlock>{formattedDate}</DataBlock>
     </Requirement>
   )
