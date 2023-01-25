@@ -194,7 +194,13 @@ const EditGuildDrawer = ({
           <DrawerContent>
             <DrawerBody className="custom-scrollbar">
               <DrawerHeader title="Edit guild">
-                {isOwner ? <DeleteGuildButton /> : <LeaveButton />}
+                {isOwner ? (
+                  <DeleteGuildButton
+                    beforeDelete={() => methods.reset(defaultValues)}
+                  />
+                ) : (
+                  <LeaveButton />
+                )}
               </DrawerHeader>
               <VStack spacing={10} alignItems="start">
                 <Section title="General">
