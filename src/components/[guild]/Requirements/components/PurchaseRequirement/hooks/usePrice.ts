@@ -20,10 +20,12 @@ const fetchPrice = (
   })
 
 const usePrice = (sellAddress: string): SWRResponse<FetchPriceResponse> => {
-  const { requirement } = usePurchaseRequirementContext()
+  const { requirement, isOpen } = usePurchaseRequirementContext()
 
   const shouldFetch =
-    PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) && sellAddress
+    isOpen &&
+    PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) &&
+    sellAddress
 
   return useSWRImmutable<FetchPriceResponse>(
     shouldFetch ? ["fetchPrice", requirement, sellAddress] : null,
