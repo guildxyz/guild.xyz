@@ -88,6 +88,7 @@ const ContactInfo = (): JSX.Element => {
               contact: "",
             })
           }
+          data-dd-action-name="Add contact"
         >
           Add contact
         </Button>
