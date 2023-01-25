@@ -1,14 +1,42 @@
-import { RPC } from "connectors"
-import { allPurchaseSupportedChains } from "pages/api/fetchPrice"
+import { Chain, RPC } from "connectors"
 import { RequirementType } from "requirements"
 
-const PURCHASABLE_REQUIREMENT_TYPES: RequirementType[] = [
+export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
+  ETHEREUM: "https://api.0x.org",
+  GOERLI: "https://goerli.api.0x.org",
+  POLYGON: "https://polygon.api.0x.org",
+  BSC: "https://bsc.api.0x.org",
+  OPTIMISM: "https://optimism.api.0x.org",
+  FANTOM: "https://fantom.api.0x.org",
+  CELO: "https://celo.api.0x.org",
+  AVALANCHE: "https://avalanche.api.0x.org",
+  ARBITRUM: "https://arbitrum.api.0x.org",
+}
+
+export const RESERVOIR_API_URLS: Partial<Record<Chain, string>> = {
+  ETHEREUM: "https://api.reservoir.tools",
+  GOERLI: "https://api-goerli.reservoir.tools",
+  POLYGON: "https://api-polygon.reservoir.tools",
+  OPTIMISM: "https://api-optimism.reservoir.tools",
+}
+
+export const purchaseSupportedChains: Partial<Record<RequirementType, string[]>> = {
+  ERC20: Object.keys(ZEROX_API_URLS),
+  ERC721: Object.keys(RESERVOIR_API_URLS),
+  ERC1155: Object.keys(RESERVOIR_API_URLS),
+}
+
+export const allPurchaseSupportedChains: Chain[] = [
+  ...new Set(Object.values(purchaseSupportedChains).flat()),
+] as Chain[]
+
+export const PURCHASABLE_REQUIREMENT_TYPES: RequirementType[] = [
   "ERC20",
   "ERC721",
   "ERC1155",
 ]
 
-const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
+export const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
   // Add native currencies automatically
   ...allPurchaseSupportedChains.map((c) => ({
     chainId: RPC[c].chainId,
@@ -31,7 +59,7 @@ const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
   },
 ]
 
-const PROTOCOL_FEES_PERCENTAGE = {
+export const PROTOCOL_FEES_PERCENTAGE = {
   UNISWAP_V2: 0.3,
   UNISWAP_V3: 0.05, // 0.05%, 0.30%, and 1% (pooltól függően)
   SEAPORT: 0,
@@ -42,10 +70,4 @@ const PROTOCOL_FEES_PERCENTAGE = {
   SUDOSWAP: 0.5,
   NFT20: 5,
   FOUNDATION: 0, // up to 15% a ToS alapján (de ahogy nézem opcionális, párat megnéztem és ott nem láttam)
-}
-
-export {
-  PURCHASABLE_REQUIREMENT_TYPES,
-  SUPPORTED_CURRENCIES,
-  PROTOCOL_FEES_PERCENTAGE,
 }

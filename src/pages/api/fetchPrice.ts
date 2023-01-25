@@ -6,7 +6,11 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import capitalize from "utils/capitalize"
-import { PURCHASABLE_REQUIREMENT_TYPES } from "utils/guildCheckout"
+import {
+  PURCHASABLE_REQUIREMENT_TYPES,
+  RESERVOIR_API_URLS,
+  ZEROX_API_URLS,
+} from "utils/guildCheckout"
 
 export type FetchPriceResponse = {
   buyAmount: number
@@ -81,35 +85,6 @@ const fetchNativeCurrencyPrice = async (chain: Chain) =>
     .then((coinbaseRes) => coinbaseRes.json())
     .then((coinbaseData) => coinbaseData.data.rates.USD)
     .catch((_) => undefined)
-
-const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
-  ETHEREUM: "https://api.0x.org",
-  GOERLI: "https://goerli.api.0x.org",
-  POLYGON: "https://polygon.api.0x.org",
-  BSC: "https://bsc.api.0x.org",
-  OPTIMISM: "https://optimism.api.0x.org",
-  FANTOM: "https://fantom.api.0x.org",
-  CELO: "https://celo.api.0x.org",
-  AVALANCHE: "https://avalanche.api.0x.org",
-  ARBITRUM: "https://arbitrum.api.0x.org",
-}
-
-const RESERVOIR_API_URLS: Partial<Record<Chain, string>> = {
-  ETHEREUM: "https://api.reservoir.tools",
-  GOERLI: "https://api-goerli.reservoir.tools",
-  POLYGON: "https://api-polygon.reservoir.tools",
-  OPTIMISM: "https://api-optimism.reservoir.tools",
-}
-
-const purchaseSupportedChains: Partial<Record<RequirementType, string[]>> = {
-  ERC20: Object.keys(ZEROX_API_URLS),
-  ERC721: Object.keys(RESERVOIR_API_URLS),
-  ERC1155: Object.keys(RESERVOIR_API_URLS),
-}
-
-const allPurchaseSupportedChains: Chain[] = Object.values(
-  purchaseSupportedChains
-).flat() as Chain[]
 
 const GUILD_FEE = 0.01
 
@@ -231,16 +206,16 @@ const handler: NextApiHandler = async (
     if (
       !responseData.tokens?.length ||
       responseData.tokens.length < minAmount ||
-      responseData.tokens.every((t) => !!t.price)
+      !responseData.tokens.every((t) => !!t.market.floorAsk.price)
     )
       return res.status(500).json({ error: "Couldn't find purchasable NFTs." })
 
     const price = responseData.tokens
-      .map((token) => token.market.floorAsk.price.amount.native)
+      .map((t) => t.market.floorAsk.price.amount.native)
       .reduce((p1, p2) => p1 + p2, 0)
 
     const priceInUSD = responseData.tokens
-      .map((token) => token.market.floorAsk.price.amount.usd)
+      .map((t) => t.market.floorAsk.price.amount.usd)
       .reduce((p1, p2) => p1 + p2, 0)
 
     const nativeCurrencyPrice = await fetchNativeCurrencyPrice(chain)
@@ -265,4 +240,3 @@ const handler: NextApiHandler = async (
 }
 
 export default handler
-export { purchaseSupportedChains, allPurchaseSupportedChains }

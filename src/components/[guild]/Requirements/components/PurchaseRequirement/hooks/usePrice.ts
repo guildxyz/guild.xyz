@@ -1,9 +1,12 @@
-import { FetchPriceResponse, purchaseSupportedChains } from "pages/api/fetchPrice"
+import { FetchPriceResponse } from "pages/api/fetchPrice"
 import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Requirement } from "types"
 import fetcher from "utils/fetcher"
-import { PURCHASABLE_REQUIREMENT_TYPES } from "utils/guildCheckout"
+import {
+  PURCHASABLE_REQUIREMENT_TYPES,
+  purchaseSupportedChains,
+} from "utils/guildCheckout"
 import { usePurchaseRequirementContext } from "../components/PurchaseRequirementContex"
 
 const fetchPrice = (
