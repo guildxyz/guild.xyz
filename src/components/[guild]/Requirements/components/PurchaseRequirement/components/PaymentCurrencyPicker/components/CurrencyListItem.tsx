@@ -1,4 +1,4 @@
-import { MenuItem, useColorModeValue } from "@chakra-ui/react"
+import { useColorModeValue } from "@chakra-ui/react"
 import { usePurchaseRequirementContext } from "../../PurchaseRequirementContex"
 import TokenInfo from "./TokenInfo"
 
@@ -15,7 +15,7 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
 
   return (
     <TokenInfo
-      as={MenuItem}
+      asMenuItem
       px={4}
       py={0}
       maxW="none"

@@ -1,8 +1,8 @@
 import {
-  As,
   Circle,
   HStack,
   Img,
+  MenuItem,
   Skeleton,
   SkeletonCircle,
   Stack,
@@ -15,17 +15,23 @@ import { Chains, RPC } from "connectors"
 import useCoinBalance from "hooks/useCoinBalance"
 import useTokenBalance from "hooks/useTokenBalance"
 import useTokenData from "hooks/useTokenData"
+import { Fragment } from "react"
 import { Rest } from "types"
 
 type Props = {
   chainId: number
   address: string
-  as?: As<any>
+  asMenuItem?: boolean
 } & Rest
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const TokenInfo = ({ chainId, address, as, ...rest }: Props): JSX.Element => {
+const TokenInfo = ({
+  chainId,
+  address,
+  asMenuItem,
+  ...rest
+}: Props): JSX.Element => {
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   const {
@@ -59,51 +65,48 @@ const TokenInfo = ({ chainId, address, as, ...rest }: Props): JSX.Element => {
   const formattedBalance = Number(balance).toFixed(2)
 
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
+  const Wrapper = asMenuItem ? MenuItem : Fragment
 
   return (
-    <HStack
-      as={as}
-      spacing={4}
-      maxW="calc(100% - 2rem)"
-      {...rest}
-      isDisabled={!!priceError}
-    >
-      <SkeletonCircle isLoaded={!isTokenDataLoading} size="var(--chakra-space-11)">
-        <Circle size="var(--chakra-space-11)" bgColor={circleBgColor}>
-          {logoURI ? (
-            <Img src={logoURI} alt={symbol} boxSize={6} />
-          ) : (
-            <Text as="span" fontWeight="bold" fontSize="xx-small">
-              {symbol}
-            </Text>
-          )}
-        </Circle>
-      </SkeletonCircle>
+    <Wrapper {...(asMenuItem ? { ...rest, isDisabled: !!priceError } : {})}>
+      <HStack spacing={4} maxW="calc(100% - 2rem)" {...(asMenuItem ? {} : rest)}>
+        <SkeletonCircle isLoaded={!isTokenDataLoading} size="var(--chakra-space-11)">
+          <Circle size="var(--chakra-space-11)" bgColor={circleBgColor}>
+            {logoURI ? (
+              <Img src={logoURI} alt={symbol} boxSize={6} />
+            ) : (
+              <Text as="span" fontWeight="bold" fontSize="xx-small">
+                {symbol}
+              </Text>
+            )}
+          </Circle>
+        </SkeletonCircle>
 
-      <Stack spacing={1} maxW="calc(100% - 3rem)">
-        <Skeleton isLoaded={!isTokenDataLoading && !isPriceDataLoading} h={5}>
-          <Text as="span" display="block" isTruncated>
-            {priceError
-              ? "Couldn't fetch price"
-              : `${priceData?.price.toFixed(5)} ${symbol}`}
-            <Text as="span" colorScheme="gray">
-              {` (${RPC[Chains[chainId]].chainName})`}
+        <Stack spacing={1} maxW="calc(100% - 3rem)">
+          <Skeleton isLoaded={!isTokenDataLoading && !isPriceDataLoading} h={5}>
+            <Text as="span" display="block" isTruncated>
+              {priceError
+                ? "Couldn't fetch price"
+                : `${priceData?.price.toFixed(5)} ${symbol}`}
+              <Text as="span" colorScheme="gray">
+                {` (${RPC[Chains[chainId]].chainName})`}
+              </Text>
             </Text>
-          </Text>
-        </Skeleton>
+          </Skeleton>
 
-        <Skeleton
-          isLoaded={!isBalanceLoading}
-          h={4}
-          display="flex"
-          alignItems="center"
-        >
-          <Text as="span" colorScheme="gray" fontSize="xs">
-            {`Balance: ${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
-          </Text>
-        </Skeleton>
-      </Stack>
-    </HStack>
+          <Skeleton
+            isLoaded={!isBalanceLoading}
+            h={4}
+            display="flex"
+            alignItems="center"
+          >
+            <Text as="span" colorScheme="gray" fontSize="xs">
+              {`Balance: ${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
+            </Text>
+          </Skeleton>
+        </Stack>
+      </HStack>
+    </Wrapper>
   )
 }
 
