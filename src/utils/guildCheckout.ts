@@ -1,3 +1,5 @@
+import { RPC } from "connectors"
+import { allPurchaseSupportedChains } from "pages/api/fetchPrice"
 import { RequirementType } from "requirements"
 
 const PURCHASABLE_REQUIREMENT_TYPES: RequirementType[] = [
@@ -7,11 +9,11 @@ const PURCHASABLE_REQUIREMENT_TYPES: RequirementType[] = [
 ]
 
 const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
-  // ETH
-  {
-    chainId: 1,
-    address: "ETH",
-  },
+  // Add native currencies automatically
+  ...allPurchaseSupportedChains.map((c) => ({
+    chainId: RPC[c].chainId,
+    address: RPC[c].nativeCurrency.symbol,
+  })),
   // USDC
   {
     chainId: 1,
@@ -22,20 +24,10 @@ const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
     chainId: 1,
     address: "0x6b175474e89094c44da98b954eedeac495271d0f",
   },
-  // GoerliETH
-  {
-    chainId: 5,
-    address: "ETH",
-  },
   // DAI
   {
     chainId: 5,
     address: "0x73967c6a0904aa032c103b4104747e88c566b1a2",
-  },
-  // MATIC
-  {
-    chainId: 137,
-    address: "MATIC",
   },
 ]
 

@@ -142,7 +142,7 @@ const RPC = {
     chainName: "Arbitrum One",
     nativeCurrency: {
       name: "Ether",
-      symbol: "AETH",
+      symbol: "ETH",
       decimals: 18,
       address: "0x0000000000000000000000000000000000000000",
       logoURI:

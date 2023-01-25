@@ -107,6 +107,10 @@ const purchaseSupportedChains: Partial<Record<RequirementType, string[]>> = {
   ERC1155: Object.keys(RESERVOIR_API_URLS),
 }
 
+const allPurchaseSupportedChains: Chain[] = Object.values(
+  purchaseSupportedChains
+).flat() as Chain[]
+
 const GUILD_FEE = 0.01
 
 const handler: NextApiHandler = async (
@@ -148,6 +152,9 @@ const handler: NextApiHandler = async (
       `${ZEROX_API_URLS[chain]}/swap/v1/price?sellToken=${sellAddress}&buyToken=${address}&buyAmount=${formattedBuyAmount}`
     )
 
+    console.log(
+      `${ZEROX_API_URLS[chain]}/swap/v1/price?sellToken=${sellAddress}&buyToken=${address}&buyAmount=${formattedBuyAmount}`
+    )
     if (response.status !== 200)
       return res.status(response.status).json({ error: response.statusText })
 
@@ -258,4 +265,4 @@ const handler: NextApiHandler = async (
 }
 
 export default handler
-export { purchaseSupportedChains }
+export { purchaseSupportedChains, allPurchaseSupportedChains }
