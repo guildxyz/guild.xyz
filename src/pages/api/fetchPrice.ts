@@ -1,6 +1,6 @@
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider } from "@ethersproject/providers"
-import { formatUnits, parseUnits } from "@ethersproject/units"
+import { parseUnits } from "@ethersproject/units"
 import { Chain, Chains, RPC } from "connectors"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
@@ -87,6 +87,14 @@ const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   ARBITRUM: "https://arbitrum.api.0x.org",
 }
 
+const RESERVOIR_API_URLS: Partial<Record<Chain, string>> = {
+  ETHEREUM: "https://api.reservoir.tools",
+  GOERLI: "https://api-goerli.reservoir.tools",
+  POLYGON: "https://api-polygon.reservoir.tools",
+  OPTIMISM: "https://api-optimism.reservoir.tools",
+}
+// https://docs.reservoir.tools/reference/gettokensv5
+
 const GUILD_FEE = 0.01
 
 const handler: NextApiHandler = async (
@@ -169,13 +177,63 @@ const handler: NextApiHandler = async (
       totalFee,
       totalFeeInUSD: nativeCurrencyPrice * totalFee,
     })
+  } else if (type === "ERC721" || type === "ERC1155") {
+    if (!RESERVOIR_API_URLS[chain])
+      return res.status(400).json({ error: "Unsupported chain" })
 
-    const gasFee = parseFloat(
-      formatUnits(
-        responseData.estimatedGas * responseData.gasPrice,
-        RPC[chain].nativeCurrency.decimals
+    const queryParams: {
+      limit: string
+      collection?: string
+      attributes?: string
+      tokens?: string
+      [x: string]: string
+    } = {
+      collection: address,
+      limit: minAmount.toString(),
+    }
+
+    // TODO: maybe we should check the DB and migrate all old attribute structures to the new one.
+    if (data?.attributes?.length) {
+      data.attributes.forEach(
+        (attr) => (queryParams[`attributes[${attr.trait_type}]`] = attr.value)
       )
+    } else if (data?.id?.length) {
+      delete queryParams.collection
+      queryParams.tokens = `${address}:${data.id}`
+    }
+
+    const urlSearchParams = new URLSearchParams(queryParams).toString()
+
+    const response = await fetch(
+      `${RESERVOIR_API_URLS[chain]}/tokens/v5?${urlSearchParams}`,
+      {}
     )
+
+    if (response.status !== 200)
+      return res.status(response.status).json({ error: response.statusText })
+
+    const responseData = await response.json()
+
+    if (!responseData.tokens?.length || responseData.tokens.length < minAmount)
+      return res.status(500).json({ error: "Couldn't find purchasable NFTs." })
+
+    const price = responseData.tokens
+      .map((token) => token.market.floorAsk.price.amount.native)
+      .reduce((p1, p2) => p1 + p2, 0)
+
+    const priceInUSD = responseData.tokens
+      .map((token) => token.market.floorAsk.price.amount.usd)
+      .reduce((p1, p2) => p1 + p2, 0)
+
+    const nativeCurrencyPrice = await fetch(
+      `https://api.coinbase.com/v2/exchange-rates?currency=${RPC[chain].nativeCurrency.symbol}`
+    )
+      .then((coinbaseRes) => coinbaseRes.json())
+      .then((coinbaseData) => coinbaseData.data.rates.USD)
+      .catch((_) => undefined)
+
+    // TODO: calculate gas fee, maybe using a static call?
+    const gasFee = 0
 
     const totalFee = gasFee + price * GUILD_FEE
 
@@ -184,12 +242,10 @@ const handler: NextApiHandler = async (
       price,
       priceInUSD,
       gasFee,
-      gasFeeInUSD: ethPrice * gasFee,
+      gasFeeInUSD: nativeCurrencyPrice * gasFee,
       totalFee,
-      totalFeeInUSD: ethPrice * totalFee,
+      totalFeeInUSD: nativeCurrencyPrice * totalFee,
     })
-  } else if (type === "ERC721" || type === "ERC1155") {
-    // TODO - from https://reservoir.tools/
   }
 
   res.json(undefined)
