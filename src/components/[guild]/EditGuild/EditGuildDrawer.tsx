@@ -176,7 +176,7 @@ const EditGuildDrawer = ({
   const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
   const isDirty =
-    methods?.formState?.isDirty ||
+    !!Object.keys(methods.formState.dirtyFields).length ||
     backgroundUploader.isUploading ||
     iconUploader.isUploading
 
