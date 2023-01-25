@@ -5,6 +5,7 @@ import { Chain, Chains, RPC } from "connectors"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
 import ERC20_ABI from "static/abis/erc20Abi.json"
+import capitalize from "utils/capitalize"
 import { PURCHASABLE_REQUIREMENT_TYPES } from "utils/guildCheckout"
 
 export type FetchPriceResponse = {
@@ -195,7 +196,8 @@ const handler: NextApiHandler = async (
     // TODO: maybe we should check the DB and migrate all old attribute structures to the new one.
     if (data?.attributes?.length) {
       data.attributes.forEach(
-        (attr) => (queryParams[`attributes[${attr.trait_type}]`] = attr.value)
+        (attr) =>
+          (queryParams[`attributes[${attr.trait_type}]`] = capitalize(attr.value))
       )
     } else if (data?.id?.length) {
       delete queryParams.collection
@@ -205,8 +207,7 @@ const handler: NextApiHandler = async (
     const urlSearchParams = new URLSearchParams(queryParams).toString()
 
     const response = await fetch(
-      `${RESERVOIR_API_URLS[chain]}/tokens/v5?${urlSearchParams}`,
-      {}
+      `${RESERVOIR_API_URLS[chain]}/tokens/v5?${urlSearchParams}`
     )
 
     if (response.status !== 200)
