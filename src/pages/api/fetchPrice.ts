@@ -73,6 +73,8 @@ const validateBody = (
   return { isValid: true }
 }
 
+// TODO (important!): we shouldn't even call these endpoints if the requirement is on an unsupported chain
+
 const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   ETHEREUM: "https://api.0x.org",
   GOERLI: "https://goerli.api.0x.org",
@@ -125,25 +127,48 @@ const handler: NextApiHandler = async (
     const response = await fetch(
       `${ZEROX_API_URLS[chain]}/swap/v1/price?sellToken=${sellAddress}&buyToken=${address}&buyAmount=${formattedBuyAmount}`
     )
+
     if (response.status !== 200)
       return res.status(response.status).json({ error: response.statusText })
 
     const responseData = await response.json()
 
-    const ethPrice = await fetch(
-      "https://api.coinbase.com/v2/exchange-rates?currency=ETH"
+    const nativeCurrencyPrice = await fetch(
+      `https://api.coinbase.com/v2/exchange-rates?currency=${RPC[chain].nativeCurrency.symbol}`
     )
       .then((coinbaseRes) => coinbaseRes.json())
       .then((coinbaseData) => coinbaseData.data.rates.USD)
       .catch((_) => undefined)
 
-    if (typeof ethPrice === "undefined")
+    if (typeof nativeCurrencyPrice === "undefined")
       return res.status(500).json({ error: "Couldn't fetch ETH-USD rate." })
 
     const price = parseFloat(responseData.price) * minAmount
     const priceInUSD = parseFloat(
-      ((ethPrice / responseData.sellTokenToEthRate) * price).toFixed(0)
+      ((nativeCurrencyPrice / responseData.sellTokenToEthRate) * price).toFixed(0)
     )
+
+    // const gasFee = parseFloat(
+    //   formatUnits(
+    //     responseData.estimatedGas * responseData.gasPrice,
+    //     RPC[chain].nativeCurrency.decimals
+    //   )
+    // )
+
+    // TODO: calculate gas fee, maybe using a static call?
+    const gasFee = 0
+
+    const totalFee = gasFee + price * GUILD_FEE
+
+    return res.json({
+      buyAmount: minAmount,
+      price,
+      priceInUSD,
+      gasFee,
+      gasFeeInUSD: nativeCurrencyPrice * gasFee,
+      totalFee,
+      totalFeeInUSD: nativeCurrencyPrice * totalFee,
+    })
 
     const gasFee = parseFloat(
       formatUnits(
