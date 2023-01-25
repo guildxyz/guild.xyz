@@ -111,7 +111,8 @@ const CreateGuildProvider = ({
               type: "FREE",
             },
           ],
-          rolePlatforms: [{ guildPlatformIndex: 0 }],
+          rolePlatforms:
+            platform !== "DEFAULT" ? [{ guildPlatformIndex: 0 }] : undefined,
         },
       ],
     },
@@ -139,7 +140,8 @@ const CreateGuildProvider = ({
               },
             },
           ],
-          rolePlatforms: [{ guildPlatformIndex: 0 }],
+          rolePlatforms:
+            platform !== "DEFAULT" ? [{ guildPlatformIndex: 0 }] : undefined,
         },
         {
           name: "Twitter fam",
@@ -159,7 +161,8 @@ const CreateGuildProvider = ({
               },
             },
           ],
-          rolePlatforms: [{ guildPlatformIndex: 0 }],
+          rolePlatforms:
+            platform !== "DEFAULT" ? [{ guildPlatformIndex: 0 }] : undefined,
         },
       ],
     },
