@@ -22,6 +22,7 @@ export type Role = {
   managed: boolean
   mentionable: boolean
   createdTimestamp: number
+  memberCount: number
 }
 
 type ServerData = {
