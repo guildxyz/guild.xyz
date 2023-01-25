@@ -56,9 +56,7 @@ const TesseraRequirement = (props: RequirementProps): JSX.Element => {
                 )} on Tessera `}
                 {requirement.data.vaultState && (
                   <>
-                    {`thats Vault ${
-                      requirement.data.minAmount > 1 ? "are" : "is"
-                    } in the `}
+                    {`from a Vault that's in the `}
                     <DataBlock>{requirement.data.vaultState}</DataBlock>
                     {` phase`}
                   </>

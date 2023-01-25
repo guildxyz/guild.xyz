@@ -13,7 +13,6 @@ import useServerData from "hooks/useServerData"
 import { useMemo } from "react"
 import { useFormContext, useFormState } from "react-hook-form"
 import pluralize from "utils/pluralize"
-import useDiscordRoleMemberCounts from "../hooks/useDiscordRoleMemberCount"
 
 const GuildifyExistingRole = () => {
   const { errors, dirtyFields } = useFormState()
@@ -24,12 +23,8 @@ const GuildifyExistingRole = () => {
     data: { roles: discordRoles },
   } = useServerData(guildPlatform.platformGuildId)
 
-  const { memberCounts } = useDiscordRoleMemberCounts(
-    discordRoles?.map((role) => role.id)
-  )
-
   const options = useMemo(() => {
-    if (!memberCounts || !discordRoles || !guildRoles) return undefined
+    if (!discordRoles || !guildRoles) return undefined
 
     const guildifiedRoleIds = guildRoles.map(
       (role) =>
@@ -44,12 +39,9 @@ const GuildifyExistingRole = () => {
     return notGuildifiedRoles.map((role) => ({
       label: role.name,
       value: role.id,
-      details:
-        memberCounts[role.id] === null
-          ? "Failed to count members"
-          : pluralize(memberCounts[role.id], "member"),
+      details: pluralize(role.memberCount, "member"),
     }))
-  }, [discordRoles, memberCounts])
+  }, [discordRoles])
 
   return (
     <Box px="5" py="4">
