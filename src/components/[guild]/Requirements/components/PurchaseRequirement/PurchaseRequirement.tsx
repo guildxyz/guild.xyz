@@ -74,7 +74,11 @@ const PurchaseRequirement = (): JSX.Element => {
                 isValidating ? (
                   <Spinner size="sm" />
                 ) : (
-                  <Text as="span">{`$${priceData?.priceInUSD}`}</Text>
+                  <Text as="span">
+                    {priceData?.priceInUSD
+                      ? `$${priceData.priceInUSD.toFixed(0)}`
+                      : "-"}
+                  </Text>
                 )
               }
             />
