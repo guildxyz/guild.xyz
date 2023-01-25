@@ -54,7 +54,7 @@ const RepoCard = ({
             <Button
               as="a"
               colorScheme="gray"
-              data-dd-action-name="Go to guild [gh repo setup]"
+              data-dd-action-name="Go to guild (github repo setup)"
             >
               Go to guild
             </Button>
