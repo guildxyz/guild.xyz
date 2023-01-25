@@ -218,7 +218,11 @@ const handler: NextApiHandler = async (
 
     const responseData = await response.json()
 
-    if (!responseData.tokens?.length || responseData.tokens.length < minAmount)
+    if (
+      !responseData.tokens?.length ||
+      responseData.tokens.length < minAmount ||
+      !responseData.tokens.every((t) => !!t.price)
+    )
       return res.status(500).json({ error: "Couldn't find purchasable NFTs." })
 
     const price = responseData.tokens
