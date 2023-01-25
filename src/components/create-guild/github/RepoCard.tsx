@@ -61,6 +61,7 @@ const RepoCard = ({
           </NextLink>
         ) : (
           <Button
+            flexShrink={0}
             colorScheme="GITHUB"
             onClick={() => onSelection(platformGuildId)}
             data-dd-action-name="Gate repo (github setup)"
