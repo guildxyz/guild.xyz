@@ -36,7 +36,7 @@ const BasicInfo = (): JSX.Element => {
           {platform === "DEFAULT" && <PlatformlessGuildForm />}
 
           <Section title="How could we contact you?">
-            <ContactInfo />
+            <ContactInfo showAddButton={false} />
           </Section>
 
           {template === "GROWTH" && (

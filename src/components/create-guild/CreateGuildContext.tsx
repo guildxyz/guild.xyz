@@ -44,6 +44,7 @@ const basicDefaultValues: GuildFormType = {
   name: "",
   description: "",
   imageUrl: defaultIcon,
+  contacts: [{ type: "EMAIL", contact: "" }],
 }
 export const defaultValues: Partial<Record<PlatformName, GuildFormType>> = {
   DISCORD: {
@@ -94,7 +95,9 @@ const CreateGuildProvider = ({
     initialStep: 0,
   })
 
-  const methods = useForm<GuildFormType>({ mode: "all" })
+  const methods = useForm<GuildFormType>({
+    mode: "all",
+  })
   const guildName = useWatch({ control: methods.control, name: "name" })
 
   const TEMPLATES: Record<TemplateType, Template> = {

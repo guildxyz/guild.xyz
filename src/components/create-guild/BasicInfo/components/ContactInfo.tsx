@@ -22,8 +22,17 @@ const contactTypeOptions: SelectOption[] = [
   { value: "TELEGRAM", label: "Telegram" },
 ]
 
-const ContactInfo = (): JSX.Element => {
-  const { control, register, getValues } = useFormContext<GuildFormType>()
+type Props = {
+  showAddButton?: boolean
+}
+
+const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
+  const {
+    control,
+    register,
+    getValues,
+    formState: { errors },
+  } = useFormContext<GuildFormType>()
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -39,7 +48,10 @@ const ContactInfo = (): JSX.Element => {
       </Text>
       <Stack maxW={{ base: "full", sm: "md" }}>
         {fields.map((contactField, index) => (
-          <FormControl key={contactField.formId}>
+          <FormControl
+            key={contactField.formId}
+            isInvalid={!!errors?.contacts?.[index]}
+          >
             <HStack>
               <Box maxW="64">
                 <Controller
@@ -58,12 +70,19 @@ const ContactInfo = (): JSX.Element => {
               </Box>
               <InputGroup>
                 <Input
+                  isInvalid={!!errors?.contacts?.[index]}
                   placeholder={
                     getValues(`contacts.${index}.type`) === "EMAIL"
                       ? `E-mail address`
                       : "Phone / Telegram username"
                   }
-                  {...register(`contacts.${index}.contact`)}
+                  {...register(`contacts.${index}.contact`, {
+                    required:
+                      getValues("contacts")?.length > 1 &&
+                      index >= getValues("contacts")?.length - 1
+                        ? "This field is required"
+                        : false,
+                  })}
                 />
                 <InputRightElement>
                   <IconButton
@@ -80,26 +99,30 @@ const ContactInfo = (): JSX.Element => {
           </FormControl>
         ))}
 
-        <Button
-          leftIcon={<Icon as={Plus} />}
-          onClick={() =>
-            append({
-              type: "EMAIL",
-              contact: "",
-            })
-          }
-          data-dd-action-name="Add contact"
-        >
-          Add contact
-        </Button>
+        {showAddButton && (
+          <Button
+            leftIcon={<Icon as={Plus} />}
+            onClick={() =>
+              append({
+                type: "EMAIL",
+                contact: "",
+              })
+            }
+            data-dd-action-name="Add contact"
+          >
+            Add contact
+          </Button>
+        )}
 
-        <Text fontSize="sm" colorScheme="gray">
-          Or{" "}
-          <Link isExternal href="https://discord.gg/guildxyz">
-            <Text as="span">join our Discord</Text>
-            <Icon ml={1} as={ArrowSquareOut} />
-          </Link>
-        </Text>
+        {!showAddButton && (
+          <Text fontSize="sm" colorScheme="gray">
+            Or{" "}
+            <Link isExternal href="https://discord.gg/guildxyz">
+              <Text as="span">join our Discord</Text>
+              <Icon ml={1} as={ArrowSquareOut} />
+            </Link>
+          </Text>
+        )}
       </Stack>
     </>
   )
