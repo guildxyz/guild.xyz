@@ -74,6 +74,14 @@ const validateBody = (
   return { isValid: true }
 }
 
+const fetchNativeCurrencyPrice = async (chain: Chain) =>
+  fetch(
+    `https://api.coinbase.com/v2/exchange-rates?currency=${RPC[chain].nativeCurrency.symbol}`
+  )
+    .then((coinbaseRes) => coinbaseRes.json())
+    .then((coinbaseData) => coinbaseData.data.rates.USD)
+    .catch((_) => undefined)
+
 const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   ETHEREUM: "https://api.0x.org",
   GOERLI: "https://goerli.api.0x.org",
@@ -145,12 +153,7 @@ const handler: NextApiHandler = async (
 
     const responseData = await response.json()
 
-    const nativeCurrencyPrice = await fetch(
-      `https://api.coinbase.com/v2/exchange-rates?currency=${RPC[chain].nativeCurrency.symbol}`
-    )
-      .then((coinbaseRes) => coinbaseRes.json())
-      .then((coinbaseData) => coinbaseData.data.rates.USD)
-      .catch((_) => undefined)
+    const nativeCurrencyPrice = await fetchNativeCurrencyPrice(chain)
 
     if (typeof nativeCurrencyPrice === "undefined")
       return res.status(500).json({ error: "Couldn't fetch ETH-USD rate." })
@@ -221,7 +224,7 @@ const handler: NextApiHandler = async (
     if (
       !responseData.tokens?.length ||
       responseData.tokens.length < minAmount ||
-      !responseData.tokens.every((t) => !!t.price)
+      responseData.tokens.every((t) => !!t.price)
     )
       return res.status(500).json({ error: "Couldn't find purchasable NFTs." })
 
@@ -233,12 +236,7 @@ const handler: NextApiHandler = async (
       .map((token) => token.market.floorAsk.price.amount.usd)
       .reduce((p1, p2) => p1 + p2, 0)
 
-    const nativeCurrencyPrice = await fetch(
-      `https://api.coinbase.com/v2/exchange-rates?currency=${RPC[chain].nativeCurrency.symbol}`
-    )
-      .then((coinbaseRes) => coinbaseRes.json())
-      .then((coinbaseData) => coinbaseData.data.rates.USD)
-      .catch((_) => undefined)
+    const nativeCurrencyPrice = await fetchNativeCurrencyPrice(chain)
 
     // TODO: calculate gas fee, maybe using a static call?
     const gasFee = 0
