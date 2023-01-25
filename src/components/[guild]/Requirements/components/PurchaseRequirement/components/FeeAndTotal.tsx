@@ -50,7 +50,7 @@ const FeeAndTotal = (): JSX.Element => {
 
         <Text as="span">
           {pickedCurrency ? (
-            <Skeleton isLoaded={!isValidating && !!priceData?.priceInUSD}>
+            <Skeleton isLoaded={!isValidating && !isNaN(priceData?.priceInUSD)}>
               {`$${priceData?.priceInUSD?.toFixed(2)} = `}
               <Text as="span" color={textAccentColor} fontWeight="semibold">
                 {`${priceData?.price?.toFixed(2)} ${symbol}`}

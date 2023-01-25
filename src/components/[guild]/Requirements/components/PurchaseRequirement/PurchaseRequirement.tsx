@@ -75,9 +75,9 @@ const PurchaseRequirement = (): JSX.Element => {
                   <Spinner size="sm" />
                 ) : (
                   <Text as="span">
-                    {priceData?.priceInUSD
-                      ? `$${priceData.priceInUSD.toFixed(0)}`
-                      : "-"}
+                    {isNaN(priceData?.priceInUSD)
+                      ? "-"
+                      : `$${priceData.priceInUSD.toFixed(0)}`}
                   </Text>
                 )
               }

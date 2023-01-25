@@ -13,6 +13,8 @@ import {
 } from "@chakra-ui/react"
 import PurchaseRequirement from "components/[guild]/Requirements/components/PurchaseRequirement"
 import { PropsWithChildren } from "react"
+import { purchaseSupportedChains } from "utils/guildCheckout"
+import { useRequirementContext } from "./RequirementContext"
 
 export type RequirementProps = PropsWithChildren<{
   isImageLoading?: boolean
@@ -37,6 +39,8 @@ const Requirement = ({
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
+
+  const { type, chain } = useRequirementContext()
 
   return (
     <SimpleGrid
@@ -81,7 +85,9 @@ const Requirement = ({
         </Text>
 
         <HStack spacing={4}>
-          {showPurchaseBtn && <PurchaseRequirement />}
+          {showPurchaseBtn && purchaseSupportedChains[type]?.includes(chain) && (
+            <PurchaseRequirement />
+          )}
           {showFooter && footer}
         </HStack>
       </VStack>
