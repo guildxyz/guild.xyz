@@ -74,8 +74,6 @@ const validateBody = (
   return { isValid: true }
 }
 
-// TODO (important!): we shouldn't even call these endpoints if the requirement is on an unsupported chain
-
 const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   ETHEREUM: "https://api.0x.org",
   GOERLI: "https://goerli.api.0x.org",
@@ -94,7 +92,12 @@ const RESERVOIR_API_URLS: Partial<Record<Chain, string>> = {
   POLYGON: "https://api-polygon.reservoir.tools",
   OPTIMISM: "https://api-optimism.reservoir.tools",
 }
-// https://docs.reservoir.tools/reference/gettokensv5
+
+const purchaseSupportedChains: Partial<Record<RequirementType, string[]>> = {
+  ERC20: Object.keys(ZEROX_API_URLS),
+  ERC721: Object.keys(RESERVOIR_API_URLS),
+  ERC1155: Object.keys(RESERVOIR_API_URLS),
+}
 
 const GUILD_FEE = 0.01
 
@@ -253,3 +256,4 @@ const handler: NextApiHandler = async (
 }
 
 export default handler
+export { purchaseSupportedChains }

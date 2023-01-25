@@ -1,4 +1,4 @@
-import { FetchPriceResponse } from "pages/api/fetchPrice"
+import { FetchPriceResponse, purchaseSupportedChains } from "pages/api/fetchPrice"
 import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Requirement } from "types"
@@ -23,6 +23,7 @@ const usePrice = (sellAddress: string): SWRResponse<FetchPriceResponse> => {
   const { requirement, isOpen } = usePurchaseRequirementContext()
 
   const shouldFetch =
+    purchaseSupportedChains[requirement?.type]?.includes(requirement.chain) &&
     isOpen &&
     PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) &&
     sellAddress
