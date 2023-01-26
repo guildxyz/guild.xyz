@@ -1,15 +1,11 @@
 import { Text } from "@chakra-ui/react"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
-import { useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType } from "types"
+import { useWatch } from "react-hook-form"
 import { defaultValues } from "../../CreateGuildContext"
 import Pagination from "../../Pagination"
 
 const CreateGuildDiscord = (): JSX.Element => {
-  const { control } = useFormContext<GuildFormType>()
-
   const selectedServer = useWatch({
-    control: control,
     name: "guildPlatforms.0.platformGuildId",
   })
 

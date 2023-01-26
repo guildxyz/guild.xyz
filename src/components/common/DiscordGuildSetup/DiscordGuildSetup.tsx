@@ -3,8 +3,9 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence } from "framer-motion"
+import useDebouncedState from "hooks/useDebouncedState"
 import useGateables from "hooks/useGateables"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo } from "react"
 import { useFormContext } from "react-hook-form"
 import { OptionSkeletonCard } from "../OptionCard"
 import ReconnectAlert from "../ReconnectAlert"
@@ -32,15 +33,7 @@ const DiscordGuildSetup = ({
     [selectedServer] // servers excluded on purpose
   )
 
-  const [showForm, setShowForm] = useState(false)
-
-  useEffect(() => {
-    if (selectedServer)
-      setTimeout(() => {
-        setShowForm(true)
-      }, 300)
-    else setShowForm(false)
-  }, [selectedServer])
+  const debounceSelectedServer = useDebouncedState(selectedServer, 300)
 
   const resetForm = () => {
     reset(defaultValues)
@@ -105,7 +98,7 @@ const DiscordGuildSetup = ({
             </CardMotionWrapper>
           ))}
       </AnimatePresence>
-      {showForm && (
+      {debounceSelectedServer && (
         <GridItem colSpan={2}>
           <ServerSetupCard selectedServer={selectedServer} onSubmit={onSubmit} />
         </GridItem>
