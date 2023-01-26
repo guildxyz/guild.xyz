@@ -1,3 +1,4 @@
+import { datadogRum } from "@datadog/browser-rum"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import { randomBytes } from "crypto"
@@ -9,8 +10,10 @@ import { User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import useLocalStorage from "./useLocalStorage"
-import { Validation } from "./useSubmit"
-import { useSubmitWithSignWithParamKeyPair } from "./useSubmit/useSubmit"
+import {
+  SignedValdation,
+  useSubmitWithSignWithParamKeyPair,
+} from "./useSubmit/useSubmit"
 import useToast from "./useToast"
 
 type StoredKeyPair = {
@@ -24,7 +27,7 @@ type AddressLinkParams = {
   nonce: string
 }
 
-type SetKeypairPayload = StoredKeyPair & Partial<AddressLinkParams>
+type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> & Partial<AddressLinkParams>
 
 const getStore = () => createStore("guild.xyz", "signingKeyPairs")
 
@@ -33,9 +36,13 @@ const deleteKeyPairFromIdb = (userId: number) => del(userId, getStore())
 const setKeyPairToIdb = (userId: number, keys: StoredKeyPair) =>
   set(userId, keys, getStore())
 
-const generateKeyPair = () => {
+const generateKeyPair = async () => {
+  const keyPair: StoredKeyPair = {
+    pubKey: undefined,
+    keyPair: undefined,
+  }
   try {
-    return window.crypto.subtle.generateKey(
+    const generatedKeys = await window.crypto.subtle.generateKey(
       {
         name: "ECDSA",
         namedCurve: "P-256",
@@ -43,9 +50,27 @@ const generateKeyPair = () => {
       false,
       ["sign", "verify"]
     )
+
+    try {
+      const generatedPubKey = await window.crypto.subtle.exportKey(
+        "raw",
+        generatedKeys.publicKey
+      )
+
+      const generatedPubKeyHex = bufferToHex(generatedPubKey)
+      keyPair.pubKey = generatedPubKeyHex
+      keyPair.keyPair = generatedKeys
+      return keyPair
+    } catch {
+      throw new Error("Pubkey export error")
+    }
   } catch (error) {
-    console.error(error)
-    throw new Error("Generating a key pair is unsupported in this browser.")
+    if (error?.code !== 4001) {
+      datadogRum.addError(`Keypair generation error`, {
+        error: error?.message || error?.toString?.() || error,
+      })
+    }
+    throw error
   }
 }
 
@@ -65,36 +90,34 @@ const getKeyPair = async (_: string, id: number) => {
 const setKeyPair = async ({
   account,
   mutateKeyPair,
-  validation,
-  payload,
+  generatedKeyPair,
+  signedValidation,
 }: {
   account: string
-  validation: Validation
   mutateKeyPair: KeyedMutator<StoredKeyPair>
-  payload: SetKeypairPayload
+  generatedKeyPair: StoredKeyPair
+  signedValidation: SignedValdation
 }): Promise<[StoredKeyPair, boolean]> => {
-  const { keyPair, ...body } = payload
+  const {
+    userId: signedUserId,
+    signature,
+    nonce,
+  } = JSON.parse(signedValidation.signedPayload)
 
   const shouldSendLink =
-    typeof body.userId === "number" && typeof body.signature === "string"
-
-  if (!shouldSendLink) {
-    delete body.signature
-    delete body.userId
-  }
+    typeof signedUserId === "number" &&
+    typeof signature === "string" &&
+    typeof nonce === "string"
 
   const { userId } = await fetcher("/user/pubKey", {
-    body: {
-      payload: body,
-      ...validation,
-    },
     method: "POST",
+    ...signedValidation,
   })
 
   let storedKeyPair: StoredKeyPair
 
   if (!shouldSendLink) {
-    storedKeyPair = { pubKey: body.pubKey, keyPair }
+    storedKeyPair = generatedKeyPair
 
     /**
      * This rejects, when IndexedDB is not available, like in Firefox private window.
@@ -152,6 +175,15 @@ const useKeyPair = () => {
     fallbackData: { pubKey: undefined, keyPair: undefined },
   })
 
+  const { data: generatedKeyPair } = useSWRImmutable(
+    "generatedKeyPair",
+    generateKeyPair,
+    {
+      revalidateOnMount: true,
+      fallbackData: { pubKey: undefined, keyPair: undefined },
+    }
+  )
+
   const toast = useToast()
 
   const { data: isValid } = useSWRImmutable(
@@ -192,8 +224,13 @@ const useKeyPair = () => {
     SetKeypairPayload,
     [StoredKeyPair, boolean]
   >(
-    ({ data, validation }) =>
-      setKeyPair({ account, mutateKeyPair, validation, payload: data }),
+    (signedValidation: SignedValdation) =>
+      setKeyPair({
+        account,
+        mutateKeyPair,
+        generatedKeyPair,
+        signedValidation,
+      }),
     {
       keyPair,
       forcePrompt: true,
@@ -226,7 +263,7 @@ const useKeyPair = () => {
           )
         }
       },
-      onSuccess: ([generatedKeyPair, shouldDeleteUserId]) => {
+      onSuccess: ([newKeyPair, shouldDeleteUserId]) => {
         if (shouldDeleteUserId) {
           try {
             window.localStorage.removeItem("userId")
@@ -243,7 +280,7 @@ const useKeyPair = () => {
 
           addDatadogAction("Successfully linked address")
         } else {
-          mutateKeyPair(generatedKeyPair)
+          mutateKeyPair(newKeyPair)
           addDatadogAction("Successfully generated keypair")
         }
       },
@@ -289,28 +326,12 @@ const useKeyPair = () => {
     set: {
       ...setSubmitResponse,
       onSubmit: async (shouldLinkToUser: boolean) => {
-        const body: SetKeypairPayload = {
-          pubKey: undefined,
-          keyPair: undefined,
-        }
+        const body: SetKeypairPayload = { pubKey: undefined }
 
         try {
-          const generatedKeys = await generateKeyPair()
-
-          try {
-            const generatedPubKey = await window.crypto.subtle.exportKey(
-              "raw",
-              generatedKeys.publicKey
-            )
-
-            const generatedPubKeyHex = bufferToHex(generatedPubKey)
-            body.pubKey = generatedPubKeyHex
-            body.keyPair = generatedKeys
-          } catch {
-            throw new Error("Pubkey export error")
-          }
+          body.pubKey = generatedKeyPair.pubKey
         } catch (err) {
-          if (err?.code !== 4001) {
+          if (error?.code !== 4001) {
             addDatadogError(
               `Keypair generation error`,
               {
@@ -340,9 +361,15 @@ const useKeyPair = () => {
             )
             .then((signatureBuffer) => bufferToHex(signatureBuffer))
 
-          body.signature = mainUserSig
-          body.userId = userId
-          body.nonce = nonce
+          if (
+            typeof mainUserSig === "string" &&
+            mainUserSig.length > 0 &&
+            typeof userId === "number"
+          ) {
+            body.signature = mainUserSig
+            body.userId = userId
+            body.nonce = nonce
+          }
         }
 
         return setSubmitResponse.onSubmit(body)

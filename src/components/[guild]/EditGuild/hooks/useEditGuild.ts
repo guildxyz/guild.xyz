@@ -1,9 +1,8 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useRouter } from "next/router"
-import { Guild } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
@@ -22,14 +21,14 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
 
   const id = guildId ?? guild?.id
 
-  const submit = ({ validation, data }: WithValidation<Guild>) =>
+  const submit = (signedValidation: SignedValdation) =>
     fetcher(`/guild/${id}`, {
       method: "PATCH",
-      validation,
-      body: data,
+      ...signedValidation,
     })
 
-  const useSubmitResponse = useSubmitWithSign<Guild, any>(submit, {
+  const useSubmitResponse = useSubmitWithSign<any>(submit, {
+    forcePrompt: true,
     onSuccess: (newGuild) => {
       if (onSuccess) onSuccess()
       guild.mutateGuild()

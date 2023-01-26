@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
@@ -11,14 +11,8 @@ type MonetizePoapParams = {
   contract: string
 }
 
-const monetizePoap = ({
-  validation,
-  data: body,
-}: WithValidation<MonetizePoapParams>) =>
-  fetcher("/assets/poap/monetize", {
-    validation,
-    body,
-  })
+const monetizePoap = (signedValidation: SignedValdation) =>
+  fetcher("/assets/poap/monetize", signedValidation)
 
 const useMonetizePoap = (callback?: () => void) => {
   const { mutateGuild } = useGuild()
@@ -26,7 +20,7 @@ const useMonetizePoap = (callback?: () => void) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  return useSubmitWithSign<MonetizePoapParams, any>(monetizePoap, {
+  return useSubmitWithSign<any>(monetizePoap, {
     onError: (error) => showErrorToast(error?.message ?? error),
     onSuccess: () => {
       mutateGuild()
