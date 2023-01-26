@@ -85,16 +85,18 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
                         : false,
                   })}
                 />
-                <InputRightElement>
-                  <IconButton
-                    variant="ghost"
-                    icon={<Icon as={TrashSimple} />}
-                    size="xs"
-                    rounded="full"
-                    aria-label="Remove contact"
-                    onClick={() => remove(index)}
-                  />
-                </InputRightElement>
+                {fields?.length > 1 && (
+                  <InputRightElement>
+                    <IconButton
+                      variant="ghost"
+                      icon={<Icon as={TrashSimple} />}
+                      size="xs"
+                      rounded="full"
+                      aria-label="Remove contact"
+                      onClick={() => remove(index)}
+                    />
+                  </InputRightElement>
+                )}
               </InputGroup>
             </HStack>
           </FormControl>
