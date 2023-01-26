@@ -8,15 +8,14 @@ import {
   InputLeftElement,
   Stack,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Chain } from "connectors"
 import { useEffect } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import useSismoBadges, { SismoBadgeChain } from "./hooks/useSismoBadges"
 
@@ -31,7 +30,6 @@ export const DEPRECATED_PLAYGROUND_ADDRESS =
 
 const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
-    control,
     setValue,
     formState: { errors },
   } = useFormContext()
@@ -86,24 +84,13 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
             </InputLeftElement>
           )}
 
-          <Controller
-            name={`${baseFieldPath}.data.id` as const}
-            control={control}
+          <ControlledSelect
+            name={`${baseFieldPath}.data.id`}
             rules={{ required: "This field is required." }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                isClearable
-                options={data}
-                value={data?.find((option) => option.value === value) ?? ""}
-                placeholder="Choose badge"
-                onChange={(newSelectedOption: SelectOption) =>
-                  onChange(newSelectedOption?.value ?? null)
-                }
-                onBlur={onBlur}
-                isLoading={isValidating}
-              />
-            )}
+            isClearable
+            options={data}
+            placeholder="Choose badge"
+            isLoading={isValidating}
           />
         </InputGroup>
 

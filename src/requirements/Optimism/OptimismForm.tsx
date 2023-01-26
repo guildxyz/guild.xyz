@@ -1,10 +1,9 @@
 import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import { useEffect } from "react"
-import { useController, useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import Attestation from "./components/Attestation"
 
@@ -34,14 +33,9 @@ const OptimismForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     })
   }, [register])
 
-  const {
-    field: { name, onBlur, onChange, ref, value },
-  } = useController({
-    name: `${baseFieldPath}.type`,
-    rules: { required: "It's required to select a type" },
-  })
+  const type = useWatch({ name: `${baseFieldPath}.type` })
 
-  const selected = typeOptions.find((reqType) => reqType.value === value)
+  const selected = typeOptions.find((reqType) => reqType.value === type)
 
   const resetFields = () => {
     resetField(`${baseFieldPath}.data.creator`)
@@ -57,16 +51,11 @@ const OptimismForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       >
         <FormLabel>Type</FormLabel>
 
-        <StyledSelect
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
+          rules={{ required: "It's required to select a type" }}
           options={typeOptions}
-          name={name}
-          onBlur={onBlur}
-          onChange={(newValue: SelectOption) => {
-            resetFields()
-            onChange(newValue?.value ?? null)
-          }}
-          ref={ref}
-          value={selected}
+          beforeOnChange={resetFields}
         />
 
         <FormErrorMessage>
