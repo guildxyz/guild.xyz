@@ -75,7 +75,7 @@ const ChainPicker = ({
 
   return (
     <>
-      <FormControl isRequired isDisabled={isDisabled}>
+      <FormControl isRequired>
         <FormLabel>Chain</FormLabel>
         <InputGroup>
           <InputLeftElement>
@@ -86,6 +86,7 @@ const ChainPicker = ({
             name={controlName}
             options={mappedSupportedChains}
             afterOnChange={onChangeHandler}
+            isDisabled={isDisabled}
           />
         </InputGroup>
       </FormControl>

@@ -32,8 +32,8 @@ import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
-const general = REQUIREMENTS_DATA.slice(1, 5)
-const integrations = REQUIREMENTS_DATA.slice(5)
+const general = REQUIREMENTS_DATA.slice(1, 6)
+const integrations = REQUIREMENTS_DATA.slice(6)
 
 // call undocumented preload() from next/dynamic, so the components are already loaded when they mount, which is needed for the height animation
 Object.values(REQUIREMENTS).forEach((a: any) => a.formComponent?.render?.preload?.())
@@ -167,15 +167,17 @@ const AddRequirementForm = forwardRef(
       >
         <FormProvider {...methods}>
           <ModalBody>
-            <IsNegatedPicker baseFieldPath="" />
-            <FormComponent baseFieldPath="" />
+            {selectedType !== "PAYMENT" && <IsNegatedPicker baseFieldPath="" />}
+            <FormComponent baseFieldPath="" addRequirement={onSubmit} />
           </ModalBody>
-          <ModalFooter gap="3">
-            <BalancyFooter baseFieldPath={null} />
-            <Button colorScheme="green" onClick={onSubmit} ml="auto">
-              Add requirement
-            </Button>
-          </ModalFooter>
+          {selectedType !== "PAYMENT" && (
+            <ModalFooter gap="3">
+              <BalancyFooter baseFieldPath={null} />
+              <Button colorScheme="green" onClick={onSubmit} ml="auto">
+                Add requirement
+              </Button>
+            </ModalFooter>
+          )}
         </FormProvider>
       </Box>
     )

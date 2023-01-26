@@ -1,6 +1,7 @@
 import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
 import dynamic from "next/dynamic"
 import {
+  Coins,
   CurrencyCircleDollar,
   ImageSquare,
   ListChecks,
@@ -66,6 +67,18 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/ContractState/ContractStateForm")
     ),
     types: ["CONTRACT"],
+  },
+  {
+    icon: Coins,
+    name: "Payment",
+    fileNameBase: "Payment",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Payment/PaymentRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Payment/PaymentForm")
+    ),
+    types: ["PAYMENT"],
   },
   {
     icon: "/requirementLogos/twitter.svg",

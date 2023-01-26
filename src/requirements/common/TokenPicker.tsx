@@ -19,6 +19,7 @@ import { useController, UseControllerProps, useFormContext } from "react-hook-fo
 type Props = {
   chain: Chain
   fieldName: string
+  isDisabled?: boolean
 } & Omit<UseControllerProps, "name">
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -27,7 +28,12 @@ const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.value.toLowerCase() === input?.toLowerCase()
 
-const TokenPicker = ({ chain, fieldName, ...rest }: Props): JSX.Element => {
+const TokenPicker = ({
+  chain,
+  fieldName,
+  isDisabled,
+  ...rest
+}: Props): JSX.Element => {
   const { trigger } = useFormContext()
 
   const {
@@ -117,6 +123,7 @@ const TokenPicker = ({ chain, fieldName, ...rest }: Props): JSX.Element => {
               decimals: tokenDecimals,
             }
           }
+          isDisabled={isDisabled}
         />
       </InputGroup>
 
