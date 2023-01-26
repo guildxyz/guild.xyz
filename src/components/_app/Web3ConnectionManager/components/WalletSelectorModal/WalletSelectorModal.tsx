@@ -64,6 +64,8 @@ const fetchShouldLinkToUser = async (_: "shouldLinkToUser", userId: number) => {
 
     return !!keypair
   } catch {
+    // Remove in case it exists in an invalid form
+    window.localStorage.removeItem("userId")
     return false
   }
 }
