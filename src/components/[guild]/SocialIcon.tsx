@@ -38,13 +38,13 @@ const icons: Record<
 
 const colors: Record<SocialLinkKey, { bg: string; icon: string }> = {
   TWITTER: { bg: "TWITTER.500", icon: "white" },
-  LENS: { bg: "BRAND.LENS", icon: "BRAND.LENSDARK" },
-  YOUTUBE: { bg: "BRAND.YOUTUBE", icon: "white" },
-  SPOTIFY: { bg: "BRAND.SPOTIFY", icon: "white" },
-  MIRROR: { bg: "BRAND.MIRROR", icon: "white" },
-  MEDIUM: { bg: "BRAND.MEDIUM", icon: "white" },
-  SUBSTACK: { bg: "BRAND.SUBSTACK", icon: "white" },
-  SNAPSHOT: { bg: "white", icon: "BRAND.SNAPSHOT" },
+  LENS: { bg: "#ABFE2C", icon: "#00501E" },
+  YOUTUBE: { bg: "#FF0000", icon: "white" },
+  SPOTIFY: { bg: "#1DB954", icon: "white" },
+  MIRROR: { bg: "#007AFF", icon: "white" },
+  MEDIUM: { bg: "#000000", icon: "white" },
+  SUBSTACK: { bg: "#FF6719", icon: "white" },
+  SNAPSHOT: { bg: "white", icon: "#F3B04E" },
   WEBSITE: { bg: "gray.900", icon: "white" },
 }
 const sizes: Record<Size, { bg: number; icon: number }> = {
