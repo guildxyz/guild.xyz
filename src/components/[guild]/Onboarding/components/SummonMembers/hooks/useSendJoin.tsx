@@ -1,10 +1,9 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useDatadog from "components/_app/Datadog/useDatadog"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
-import { SummonMembersForm } from "../SummonMembers"
 
 const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
   const { addDatadogAction, addDatadogError } = useDatadog()
@@ -13,10 +12,9 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
 
   const toast = useToast()
 
-  const sendJoin = ({ data: body, validation }: WithValidation<SummonMembersForm>) =>
+  const sendJoin = (signedValidation: SignedValdation) =>
     fetcher("/discord/sendButton", {
-      body,
-      validation,
+      ...signedValidation,
       method: "POST",
     })
 

@@ -1,5 +1,5 @@
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
 
 type HandleVoiceEventParams = {
@@ -8,19 +8,13 @@ type HandleVoiceEventParams = {
   action: "START" | "STOP"
 }
 
-const handleVoiceEvent = ({
-  validation,
-  data: body,
-}: WithValidation<HandleVoiceEventParams>) =>
-  fetcher("/discord/handleVoiceEvent", {
-    validation,
-    body,
-  })
+const handleVoiceEvent = (signedValidation: SignedValdation) =>
+  fetcher("/discord/handleVoiceEvent", signedValidation)
 
 const useManageEvent = () => {
   const showErrorToast = useShowErrorToast()
 
-  return useSubmitWithSign<HandleVoiceEventParams, any>(handleVoiceEvent, {
+  return useSubmitWithSign<any>(handleVoiceEvent, {
     onError: (error) => showErrorToast(error),
   })
 }
