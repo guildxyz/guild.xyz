@@ -5,10 +5,10 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import useGateables from "hooks/useGateables"
-import { useController, useFormContext, useFormState } from "react-hook-form"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 
 type Props = {
@@ -19,16 +19,7 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
   const { errors } = useFormState()
   const { register, setValue } = useFormContext()
 
-  const { field: serverField } = useController({
-    name: `${baseFieldPath}.data.serverId`,
-    rules: {
-      required: "Please select a server",
-      pattern: {
-        value: /^[0-9]*$/i,
-        message: "Please input a valid Discord server id",
-      },
-    },
-  })
+  const serverId = useWatch({ name: `${baseFieldPath}.data.serverId` })
 
   const { gateables, isLoading } = useGateables("DISCORD")
 
@@ -38,11 +29,9 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
     label: name,
   }))
 
-  const selectedServer = serverOptions.find(
-    (reqType) => reqType.value === serverField.value
-  )
+  const selectedServer = serverOptions.find((reqType) => reqType.value === serverId)
 
-  const isUnknownServer = !!serverField.value && !selectedServer
+  const isUnknownServer = !!serverId && !selectedServer
 
   return (
     <>
@@ -51,31 +40,33 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.serverId?.message}
       >
         <FormLabel>Server</FormLabel>
-        <StyledSelect
+
+        <ControlledSelect
+          name={`${baseFieldPath}.data.serverId`}
+          rules={{
+            required: "Please select a server",
+            pattern: {
+              value: /^[0-9]*$/i,
+              message: "Please input a valid Discord server id",
+            },
+          }}
           isCreatable
+          isClearable
           formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
           isLoading={isLoading}
           options={serverOptions}
-          name={serverField.name}
-          onBlur={serverField.onBlur}
-          onChange={(newValue: {
-            label: string
-            value: string
-            __isNew__?: boolean
-          }) => {
+          beforeOnChange={(newValue) => {
             if (!newValue?.__isNew__) {
               setValue(`${baseFieldPath}.data.serverName`, newValue?.label)
             } else {
               setValue(`${baseFieldPath}.data.serverName`, undefined)
             }
-            serverField.onChange(newValue?.value ?? null)
           }}
-          ref={serverField.ref}
-          value={
-            selectedServer ?? {
+          fallbackValue={
+            serverId && {
               __isNew__: true,
-              value: serverField.value,
-              label: serverField.value,
+              value: serverId,
+              label: serverId,
             }
           }
         />

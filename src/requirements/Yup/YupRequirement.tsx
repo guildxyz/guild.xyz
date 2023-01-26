@@ -1,25 +1,28 @@
-import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
-import Requirement from "requirements/common/Requirement"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 
-const YupRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps): JSX.Element => (
-  <Requirement
-    isNegated={requirement.isNegated}
-    image="/requirementLogos/yup.svg"
-    {...rest}
-  >
-    {`Have a Yup Score of at least ${requirement.data.minAmount} `}
-    {requirement.data.adapter && (
-      <>
-        {" from the "}
-        <DataBlock>{requirement.data.adapter}</DataBlock>
-        {" adapter"}
-      </>
-    )}
-  </Requirement>
-)
+const YupRequirement = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext()
+
+  return (
+    <Requirement
+      isNegated={requirement.isNegated}
+      image="/requirementLogos/yup.svg"
+      {...props}
+    >
+      {`Have a Yup Score of at least ${requirement.data.minAmount} `}
+      {requirement.data.adapter && (
+        <>
+          {" from the "}
+          <DataBlock>{requirement.data.adapter}</DataBlock>
+          {" adapter"}
+        </>
+      )}
+    </Requirement>
+  )
+}
 
 export default YupRequirement

@@ -1,18 +1,20 @@
 import { Box, Collapse, Icon, useDisclosure } from "@chakra-ui/react"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { CaretDown } from "phosphor-react"
-import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
+
 import pluralize from "utils/pluralize"
-import Requirement from "../common/Requirement"
-import { RequirementButton } from "../common/RequirementButton"
 import SnapshotSpaceLink from "./components/SnapshotSpaceLink"
 import StrategyParamsTable from "./components/StrategyParamsTable"
 import useProposal from "./hooks/useProposal"
 
-const SnapshotRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps): JSX.Element => {
+const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext()
+
   const { isOpen, onToggle } = useDisclosure()
   const strategies = requirement.data.strategies
 
@@ -52,7 +54,7 @@ const SnapshotRequirement = ({
           </>
         )
       }
-      {...rest}
+      {...props}
     >
       {(() => {
         switch (requirement.type) {

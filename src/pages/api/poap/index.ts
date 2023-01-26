@@ -4,8 +4,10 @@ import fs from "fs"
 import { NextApiRequest, NextApiResponse } from "next"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "POST")
-    return res.status(501).json({ error: "Not implemented" })
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST")
+    return res.status(405).json({ error: `Method ${req.method} is not allowed` })
+  }
 
   const form = formidable({ multiples: false })
   const formData = new FormData()
@@ -38,7 +40,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const image = files?.image
-        if (image) {
+        if (image && !Array.isArray(image)) {
           const fileType = image.mimetype?.replace("image/", "") ?? "png"
           const fileInstance = fs.createReadStream(image.filepath)
           formData.append("image", fileInstance, `image.${fileType}`)

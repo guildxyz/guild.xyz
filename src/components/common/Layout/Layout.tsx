@@ -3,7 +3,6 @@ import {
   Container,
   Heading,
   HStack,
-  Text,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
@@ -152,14 +151,14 @@ const Layout = ({
               {action}
             </HStack>
             {showLayoutDescription && description?.length && (
-              <Text
+              <Box
                 w="full"
                 fontWeight="semibold"
                 color={textColor}
                 mb="-2 !important"
               >
                 {parseDescription(description)}
-              </Text>
+              </Box>
             )}
           </VStack>
           <Box ref={childrenWrapper}>{children}</Box>

@@ -1,10 +1,14 @@
 import { Link } from "@chakra-ui/react"
-import { RequirementComponentProps } from "requirements"
-import DataBlock from "requirements/common/DataBlock"
-import Requirement from "../common/Requirement"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { usePoap } from "./hooks/usePoaps"
 
-const PoapRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
+const PoapRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
   const { poap, isLoading, error } = usePoap(requirement?.data?.id)
 
   return (
@@ -12,7 +16,7 @@ const PoapRequirement = ({ requirement, ...rest }: RequirementComponentProps) =>
       isNegated={requirement.isNegated}
       image={poap?.image_url}
       isImageLoading={isLoading}
-      {...rest}
+      {...props}
     >
       {"Own the "}
       {!poap || isLoading || error ? (

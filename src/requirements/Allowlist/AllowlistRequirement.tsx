@@ -14,22 +14,25 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import { UseFormSetValue } from "react-hook-form"
 import { FixedSizeList } from "react-window"
-import { RequirementComponentProps } from "requirements"
-import Requirement from "../common/Requirement"
 
-type Props = RequirementComponentProps & {
+type Props = RequirementProps & {
   setValueForBalancy: UseFormSetValue<any>
 }
 
 const AllowlistRequirement = ({
-  requirement,
   setValueForBalancy,
   ...rest
 }: Props): JSX.Element => {
+  const requirement = useRequirementContext()
+
   const { addresses, hideAllowlist } = requirement.data
 
   useEffect(() => {

@@ -5,13 +5,12 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useEffect, useMemo, useState } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import { useGalaxyCampaign, useGalaxyCampaigns } from "./hooks/useGalaxyCampaigns"
 
@@ -100,33 +99,25 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
             <OptionImage img={campaignImage} alt="Campaign thumbnail" />
           </InputLeftElement>
         )}
-        <Controller
-          name={`${baseFieldPath}.data.id` as const}
-          control={control}
+
+        <ControlledSelect
+          name={`${baseFieldPath}.data.id`}
           rules={{
             required: "This field is required.",
           }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              isClearable
-              isLoading={isLoading || isCampaignLoading}
-              options={mappedCampaigns}
-              placeholder="Search campaigns..."
-              value={mappedCampaigns?.find((c) => c.value === value) || null}
-              onChange={(selectedOption: SelectOption) => {
-                onChange(selectedOption?.value ?? null)
-                setValue(`${baseFieldPath}.data.galaxyId`, selectedOption?.galaxyId)
-              }}
-              onInputChange={(text, _) => {
-                if (!text?.length) return
-                const regex = /^[a-zA-Z0-9]+$/i
-                if (regex.test(text)) setPastedId(text)
-              }}
-              onBlur={onBlur}
-              filterOption={customFilterOption}
-            />
-          )}
+          isClearable
+          isLoading={isLoading || isCampaignLoading}
+          options={mappedCampaigns}
+          placeholder="Search campaigns..."
+          afterOnChange={(newValue) =>
+            setValue(`${baseFieldPath}.data.galaxyId`, newValue?.galaxyId)
+          }
+          onInputChange={(text, _) => {
+            if (!text?.length) return
+            const regex = /^[a-zA-Z0-9]+$/i
+            if (regex.test(text)) setPastedId(text)
+          }}
+          filterOption={customFilterOption}
         />
       </InputGroup>
 
