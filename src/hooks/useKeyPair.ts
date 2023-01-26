@@ -3,11 +3,13 @@ import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import { randomBytes } from "crypto"
 import { createStore, del, get, set } from "idb-keyval"
+import { useEffect } from "react"
 import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
+import useLocalStorage from "./useLocalStorage"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
@@ -139,6 +141,13 @@ const setKeyPair = async ({
 const checkKeyPair = (_: string, savedPubKey: string, pubKey: string): boolean =>
   savedPubKey === pubKey
 
+const usePublicUserData = (address?: string) => {
+  const { account } = useWeb3React()
+  return useSWRImmutable<User>(
+    address || account ? `/user/${address ?? account}` : null
+  )
+}
+
 const useKeyPair = () => {
   // Using the default Datadog implementation here, so the useDatadog, useUser, and useKeypair hooks don't call each other
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -146,9 +155,7 @@ const useKeyPair = () => {
 
   const { account } = useWeb3React()
 
-  const { data: user, error: userError } = useSWRImmutable<User>(
-    account ? `/user/${account}` : null
-  )
+  const { data: user, error: userError } = usePublicUserData()
 
   const defaultCustomAttributes = {
     userId: user?.id,
@@ -203,7 +210,7 @@ const useKeyPair = () => {
           })
         } else if (
           !!window.localStorage.getItem("userId") &&
-          +window.localStorage.getItem("userId") !== user?.id
+          JSON.parse(window.localStorage.getItem("userId")).id !== user?.id
         ) {
           deleteKeyPairFromIdb(user?.id).then(() => {
             mutateKeyPair({ pubKey: undefined, keyPair: undefined })
@@ -241,6 +248,20 @@ const useKeyPair = () => {
             "custom"
           )
         }
+
+        try {
+          window.localStorage.removeItem("userId")
+          mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
+        } catch (err) {
+          addDatadogError(
+            `Failed to remove userId from localStorage after unsuccessful account link`,
+            {
+              ...defaultCustomAttributes,
+              error: err?.message || err?.toString?.() || err,
+            },
+            "custom"
+          )
+        }
       },
       onSuccess: ([newKeyPair, shouldDeleteUserId]) => {
         if (shouldDeleteUserId) {
@@ -268,6 +289,35 @@ const useKeyPair = () => {
 
   const ready = !(keyPair === undefined && keyPairError === undefined) || !!userError
 
+  const [localStorageUser, setLocalStorageUser] = useLocalStorage(
+    "userId",
+    undefined
+  )
+
+  const mainUser = usePublicUserData(localStorageUser?.address)
+
+  const { data: mainUserKeyPair, error } = useSWRImmutable(
+    mainUser?.data?.id ? ["mainUserKeyPair", mainUser?.data?.id] : null,
+    (_, id) => getKeyPairFromIdb(id)
+  )
+
+  const isMainUserKeyInvalid =
+    !!error ||
+    (!!mainUser?.data?.id &&
+      !!localStorageUser?.id &&
+      mainUser.data.id !== user?.id &&
+      mainUserKeyPair &&
+      mainUser.data.signingKey !== mainUserKeyPair.pubKey)
+
+  useEffect(() => {
+    if (isMainUserKeyInvalid) {
+      setLocalStorageUser(undefined)
+      deleteKeyPairFromIdb(mainUser?.data?.id).then(() =>
+        mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
+      )
+    }
+  }, [isMainUserKeyInvalid])
+
   return {
     ready,
     pubKey,
@@ -280,31 +330,31 @@ const useKeyPair = () => {
 
         try {
           body.pubKey = generatedKeyPair.pubKey
-        } catch (error) {
+        } catch (err) {
           if (error?.code !== 4001) {
             addDatadogError(
               `Keypair generation error`,
               {
                 ...defaultCustomAttributes,
-                error: error?.message || error?.toString?.() || error,
+                error: err?.message || err?.toString?.() || err,
               },
               "custom"
             )
           }
-          throw error
+          throw err
         }
 
         if (shouldLinkToUser) {
-          const userId = +window.localStorage.getItem("userId")
+          const userId = JSON.parse(window.localStorage.getItem("userId"))?.id
 
-          const { keyPair: mainUserKeyPair } = await getKeyPairFromIdb(userId)
+          const { keyPair: mainKeyPair } = await getKeyPairFromIdb(userId)
 
           const nonce = randomBytes(32).toString("base64")
 
           const mainUserSig = await window.crypto.subtle
             .sign(
               { name: "ECDSA", hash: "SHA-512" },
-              mainUserKeyPair.privateKey,
+              mainKeyPair?.privateKey,
               strToBuffer(
                 `Address: ${account.toLowerCase()}\nNonce: ${nonce}\nUserID: ${userId}`
               )
