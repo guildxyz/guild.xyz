@@ -1,9 +1,8 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
-import { Controller, useFormContext } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 const options = [
@@ -14,7 +13,6 @@ const options = [
 
 const RabbitholeForm = ({ baseFieldPath }: RequirementFormProps) => {
   const {
-    control,
     formState: { errors },
   } = useFormContext()
 
@@ -25,24 +23,15 @@ const RabbitholeForm = ({ baseFieldPath }: RequirementFormProps) => {
         isInvalid={parseFromObject(errors, baseFieldPath)?.address}
       >
         <FormLabel>Skill:</FormLabel>
-        <Controller
+
+        <ControlledSelect
           name={`${baseFieldPath}.address`}
-          control={control}
           rules={{ required: "This field is required." }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              isClearable
-              options={options}
-              value={options?.find((option) => option.value === value) ?? ""}
-              placeholder="Choose..."
-              onChange={(newSelectedOption: SelectOption) =>
-                onChange(newSelectedOption?.value ?? null)
-              }
-              onBlur={onBlur}
-            />
-          )}
+          isClearable
+          options={options}
+          placeholder="Choose..."
         />
+
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>

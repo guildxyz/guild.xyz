@@ -1,17 +1,15 @@
 import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import { useEffect } from "react"
-import { Controller, useFormContext } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../common/ChainInfo"
 import useKycDAOContracts from "./hooks/useKycDAOContracts"
 
 const KycDAOForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
-    control,
     register,
     formState: { errors },
   } = useFormContext()
@@ -35,26 +33,15 @@ const KycDAOForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       >
         <FormLabel>Contract:</FormLabel>
 
-        <Controller
-          name={`${baseFieldPath}.address` as const}
-          control={control}
+        <ControlledSelect
+          name={`${baseFieldPath}.address`}
           rules={{
             required: "This field is required.",
           }}
-          render={({ field: { onChange, onBlur, value: selectValue, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              isClearable
-              isLoading={isLoading}
-              options={kycDAOContracts}
-              placeholder="Select one"
-              value={kycDAOContracts?.find((p) => p.value === selectValue)}
-              onChange={(newValue: SelectOption) =>
-                onChange(newValue?.value ?? null)
-              }
-              onBlur={onBlur}
-            />
-          )}
+          isClearable
+          isLoading={isLoading}
+          options={kycDAOContracts}
+          placeholder="Select one"
         />
 
         <FormErrorMessage>

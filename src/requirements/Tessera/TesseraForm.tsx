@@ -1,8 +1,8 @@
 import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import { useEffect } from "react"
-import { useController, useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import Hold from "./components/Hold"
@@ -42,18 +42,12 @@ const tesseraRequirementTypes = [
 
 const TesseraForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
-    field: { name, onBlur, onChange, ref, value },
-  } = useController({
-    name: `${baseFieldPath}.type`,
-    rules: { required: "It's required to select a type" },
-  })
-
-  const {
     resetField,
     formState: { errors, touchedFields },
   } = useFormContext()
 
-  const selected = tesseraRequirementTypes.find((reqType) => reqType.value === value)
+  const type = useWatch({ name: `${baseFieldPath}.type` })
+  const selected = tesseraRequirementTypes.find((reqType) => reqType.value === type)
 
   useEffect(() => {
     if (!touchedFields?.data) return
@@ -61,7 +55,7 @@ const TesseraForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     resetField(`${baseFieldPath}.data.minAmount`)
     resetField(`${baseFieldPath}.data.vaultState`)
     resetField(`${baseFieldPath}.data.minDate`)
-  }, [value])
+  }, [type])
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -69,15 +63,11 @@ const TesseraForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
       >
         <FormLabel>Type</FormLabel>
-        <StyledSelect
+
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
+          rules={{ required: "It's required to select a type" }}
           options={tesseraRequirementTypes}
-          name={name}
-          onBlur={onBlur}
-          onChange={(newValue: { label: string; value: string }) => {
-            onChange(newValue?.value)
-          }}
-          ref={ref}
-          value={selected}
         />
 
         <FormErrorMessage>

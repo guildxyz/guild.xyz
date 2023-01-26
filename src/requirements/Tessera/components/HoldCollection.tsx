@@ -4,10 +4,10 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useController, useFormState } from "react-hook-form"
+import { useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import useTesseraVaults from "../hooks/useTesseraVaults"
@@ -37,14 +37,9 @@ const HoldCollection = ({ baseFieldPath }: RequirementFormProps): JSX.Element =>
         }))
     : []
 
-  const {
-    field: { name, onBlur, onChange, ref, value },
-  } = useController({
-    name: `${baseFieldPath}.data.collection`,
-    rules: { required: "This field is required." },
-  })
+  const collection = useWatch({ name: `${baseFieldPath}.data.collection` })
 
-  const selectedCollection = collections?.find((c) => c.value === value)
+  const selectedCollection = collections?.find((c) => c.value === collection)
 
   return (
     <>
@@ -63,16 +58,12 @@ const HoldCollection = ({ baseFieldPath }: RequirementFormProps): JSX.Element =>
               />
             </InputLeftElement>
           )}
-          <StyledSelect
-            ref={ref}
-            name={name}
+
+          <ControlledSelect
+            name={`${baseFieldPath}.data.collection`}
+            rules={{ required: "This field is required." }}
             options={collections}
             isLoading={isLoading}
-            onChange={(newValue: { label: string; value: string }) => {
-              onChange(newValue?.value)
-            }}
-            value={selectedCollection ?? ""}
-            onBlur={onBlur}
             isClearable
           />
         </InputGroup>

@@ -5,13 +5,13 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
-import { useController, useFormContext, useFormState } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { Guild } from "types"
 import parseFromObject from "utils/parseFromObject"
 import useGuilds from "../hooks/useGuilds"
@@ -27,19 +27,13 @@ const customFilterOption = (candidate, input) =>
 const GUILD_URL_REGEX = /^[a-z0-9\-]*$/i
 
 const Role = ({ baseFieldPath }: Props): JSX.Element => {
-  const { resetField } = useFormContext()
-  const { errors } = useFormState()
+  const {
+    resetField,
+    formState: { errors },
+  } = useFormContext()
 
-  const { field: guildIdField } = useController({
-    name: `${baseFieldPath}.data.guildId`,
-    rules: {
-      required: "Please select a guild",
-      pattern: {
-        value: GUILD_URL_REGEX,
-        message: "Please input a valid Guild URL",
-      },
-    },
-  })
+  const guildId = useWatch({ name: `${baseFieldPath}.data.guildId` })
+  const roleId = useWatch({ name: `${baseFieldPath}.data.roleId` })
 
   const { data: guildOptions, isValidating: isGuildsLoading } = useGuilds()
 
@@ -50,7 +44,7 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
     searchValue &&
       debouncedSearchValue?.replace("https://guild.xyz/", "").match(GUILD_URL_REGEX)
       ? debouncedSearchValue.replace("https://guild.xyz/", "")
-      : guildIdField.value
+      : guildId
   )
   const [foundGuild, setFoundGuild] = useState<Guild>()
 
@@ -75,23 +69,7 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
     return guildOptions
   }, [guildOptions, foundGuild])
 
-  const selectedGuild = mergedGuildOptions?.find(
-    (guild) => guild.value === guildIdField.value
-  )
-
-  const { field: roleIdField } = useController({
-    name: `${baseFieldPath}.data.roleId`,
-    rules: {
-      required: "Please select a role",
-      pattern: {
-        value: /^[0-9]*$/i,
-        message: "Please input a valid role ID",
-      },
-      validate: (value) =>
-        !!roleOptions?.find((role) => role.value === value) ||
-        "Please select a role",
-    },
-  })
+  const selectedGuild = mergedGuildOptions?.find((guild) => guild.value === guildId)
 
   const roleOptions =
     foundGuild?.roles?.map((role) => ({
@@ -100,7 +78,7 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
       value: role.id,
     })) ?? []
 
-  const selectedRole = roleOptions?.find((role) => role.value === roleIdField.value)
+  const selectedRole = roleOptions?.find((role) => role.value === roleId)
 
   return (
     <>
@@ -116,17 +94,18 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
               <OptionImage img={selectedGuild?.img} alt={selectedGuild?.label} />
             </InputLeftElement>
           )}
-          <StyledSelect
+          <ControlledSelect
+            name={`${baseFieldPath}.data.guildId`}
+            rules={{
+              required: "Please select a guild",
+              pattern: {
+                value: GUILD_URL_REGEX,
+                message: "Please input a valid Guild URL",
+              },
+            }}
             isLoading={isGuildsLoading || isLoading}
             options={mergedGuildOptions}
-            name={guildIdField.name}
-            onBlur={guildIdField.onBlur}
-            onChange={(newValue) => {
-              resetField(`${baseFieldPath}.data.roleId`)
-              guildIdField.onChange(newValue?.value ?? null)
-            }}
-            ref={guildIdField.ref}
-            value={selectedGuild ?? null}
+            beforeOnChange={() => resetField(`${baseFieldPath}.data.roleId`)}
             onInputChange={(newValue) => setSearchValue(newValue)}
             filterOption={customFilterOption}
           />
@@ -141,7 +120,7 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
 
       <FormControl
         isRequired
-        isDisabled={!guildIdField.value || isLoading}
+        isDisabled={!guildId || isLoading}
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.roleId?.message}
       >
         <FormLabel>Role</FormLabel>
@@ -152,13 +131,20 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
               <OptionImage img={selectedRole?.img} alt={selectedRole?.label} />
             </InputLeftElement>
           )}
-          <StyledSelect
+
+          <ControlledSelect
+            name={`${baseFieldPath}.data.roleId`}
+            rules={{
+              required: "Please select a role",
+              pattern: {
+                value: /^[0-9]*$/i,
+                message: "Please input a valid role ID",
+              },
+              validate: (value) =>
+                !!roleOptions?.find((role) => role.value === value) ||
+                "Please select a role",
+            }}
             options={roleOptions}
-            name={roleIdField.name}
-            onBlur={roleIdField.onBlur}
-            onChange={(newValue) => roleIdField.onChange(newValue?.value ?? null)}
-            ref={roleIdField.ref}
-            value={selectedRole ?? null}
           />
         </InputGroup>
 

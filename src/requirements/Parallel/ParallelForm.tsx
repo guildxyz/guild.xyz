@@ -7,12 +7,11 @@ import {
   Link,
   Stack,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import { ArrowSquareOut } from "phosphor-react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 const typeOptions = [
@@ -30,10 +29,9 @@ const typeOptions = [
   },
 ]
 
-const ParallelForm = ({ baseFieldPath, field }: RequirementFormProps) => {
+const ParallelForm = ({ baseFieldPath }: RequirementFormProps) => {
   const {
     control,
-    setValue,
     formState: { errors },
   } = useFormContext()
 
@@ -41,28 +39,24 @@ const ParallelForm = ({ baseFieldPath, field }: RequirementFormProps) => {
 
   return (
     <Stack spacing={4} alignItems="start">
-      <FormControl isRequired>
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type}
+      >
         <FormLabel>Type:</FormLabel>
 
-        <Controller
-          name={`${baseFieldPath}.type` as const}
-          control={control}
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
           rules={{
-            required: "This field is required.",
+            required: "It's required to select a type",
           }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              options={typeOptions}
-              placeholder="Choose type"
-              value={typeOptions?.find((option) => option.value === value)}
-              onChange={(newSelectedOption: SelectOption) =>
-                onChange(newSelectedOption.value ?? null)
-              }
-              onBlur={onBlur}
-            />
-          )}
+          options={typeOptions}
+          placeholder="Choose type"
         />
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
+        </FormErrorMessage>
       </FormControl>
 
       {type === "PARALLEL_SANCTIONS_SAFE" && (

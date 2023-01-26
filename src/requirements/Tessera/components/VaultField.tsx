@@ -4,10 +4,10 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useController, useFormState } from "react-hook-form"
+import { useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import useTesseraVaults from "../hooks/useTesseraVaults"
@@ -23,14 +23,9 @@ const VaultField = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       img: vault.imageUrl,
     })) ?? []
 
-  const {
-    field: { name, onBlur, onChange, ref, value },
-  } = useController({
-    name: `${baseFieldPath}.data.vault`,
-    rules: { required: "This field is required." },
-  })
+  const vault = useWatch({ name: `${baseFieldPath}.data.vault` })
 
-  const selectedVault = vaults?.find((v) => v.value === value)
+  const selectedVault = vaults?.find((v) => v.value === vault)
 
   return (
     <FormControl
@@ -45,16 +40,12 @@ const VaultField = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
             <OptionImage img={selectedVault.img} alt={selectedVault.label} />
           </InputLeftElement>
         )}
-        <StyledSelect
-          ref={ref}
-          name={name}
+
+        <ControlledSelect
+          name={`${baseFieldPath}.data.vault`}
+          rules={{ required: "This field is required." }}
           options={vaults}
           isLoading={isLoading}
-          onChange={(newValue: { label: string; value: string }) => {
-            onChange(newValue?.value)
-          }}
-          value={selectedVault ?? ""}
-          onBlur={onBlur}
           isClearable
         />
       </InputGroup>

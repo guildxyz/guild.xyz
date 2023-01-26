@@ -1,10 +1,9 @@
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
-import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessGatedChannels from "utils/preprocessGatedChannels"
@@ -17,14 +16,14 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = ({ validation, data }: WithValidation<Role>) =>
+  const submit = (signedValidation: SignedValdation) =>
     fetcher(`/role/${roleId}`, {
       method: "PATCH",
-      body: data,
-      validation,
+      ...signedValidation,
     })
 
-  const useSubmitResponse = useSubmitWithSign<Role, any>(submit, {
+  const useSubmitResponse = useSubmitWithSign<any>(submit, {
+    forcePrompt: true,
     onSuccess: () => {
       toast({
         title: `Role successfully updated!`,
