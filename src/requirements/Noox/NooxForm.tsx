@@ -52,7 +52,7 @@ const NooxForm = ({ baseFieldPath }: RequirementFormProps) => {
         <InputGroup>
           {selectedOption && (
             <InputLeftElement>
-              <OptionImage img={selectedOption.img} alt={"Noox badge image"} />
+              <OptionImage img={selectedOption.img} alt={selectedOption.label} />
             </InputLeftElement>
           )}
 
