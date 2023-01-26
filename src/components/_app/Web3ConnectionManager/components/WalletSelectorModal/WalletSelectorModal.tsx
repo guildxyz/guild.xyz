@@ -44,12 +44,14 @@ type Props = {
 
 const fetchShouldLinkToUser = async (_: "shouldLinkToUser", userId: number) => {
   try {
-    const userIdToConnectTo = window.localStorage.getItem("userId")
+    const { id: userIdToConnectTo } = JSON.parse(
+      window.localStorage.getItem("userId")
+    )
 
     if (
-      userIdToConnectTo !== null &&
       typeof userId === "number" &&
-      +userIdToConnectTo !== userId
+      typeof userIdToConnectTo === "number" &&
+      userIdToConnectTo !== userId
     ) {
       await deleteKeyPairFromIdb(userId)
     }
