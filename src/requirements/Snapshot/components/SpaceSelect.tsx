@@ -1,8 +1,8 @@
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import { useMemo } from "react"
-import { useController, useFormContext } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -28,15 +28,6 @@ const SpaceSelect = ({
     formState: { errors },
   } = useFormContext()
 
-  const {
-    field: { ref, name, value, onChange, onBlur },
-  } = useController({
-    name: `${baseFieldPath}.data.space`,
-    rules: {
-      required: !optional && "This field is required.",
-    },
-  })
-
   const { spaces, isSpacesLoading } = useSpaces()
   const mappedSpaces = useMemo<SelectOption[]>(
     () =>
@@ -56,19 +47,16 @@ const SpaceSelect = ({
     >
       <FormLabel>Space</FormLabel>
 
-      <StyledSelect
-        ref={ref}
-        name={name}
+      <ControlledSelect
+        name={`${baseFieldPath}.data.space`}
+        rules={{
+          required: !optional && "This field is required.",
+        }}
         placeholder="Search..."
         isClearable
         isLoading={isSpacesLoading}
         options={mappedSpaces}
-        value={mappedSpaces?.find((s) => s.value === value) ?? ""}
-        onChange={(newValue: SelectOption) => {
-          resetField(`${baseFieldPath}.data.proposal`)
-          onChange(newValue?.value)
-        }}
-        onBlur={onBlur}
+        beforeOnChange={() => resetField(`${baseFieldPath}.data.proposal`)}
         filterOption={customFilterOption}
       />
 

@@ -7,8 +7,8 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import Switch from "components/common/Switch"
 import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -51,18 +51,6 @@ const Proposals = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         message: "Amount must be positive",
       },
     },
-  })
-
-  const {
-    field: {
-      ref: stateFieldRef,
-      name: stateFieldName,
-      value: stateFieldValue,
-      onChange: stateFieldOnChange,
-      onBlur: stateFieldOnBlur,
-    },
-  } = useController({
-    name: `${baseFieldPath}.data.state`,
   })
 
   const {
@@ -113,15 +101,9 @@ const Proposals = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       <FormControl>
         <FormLabel>State</FormLabel>
 
-        <StyledSelect
-          ref={stateFieldRef}
-          name={stateFieldName}
+        <ControlledSelect
+          name={`${baseFieldPath}.data.state`}
           options={proposalStateOptions}
-          value={
-            proposalStateOptions.filter((o) => o.value === stateFieldValue) ?? ""
-          }
-          onChange={(newValue: SelectOption) => stateFieldOnChange(newValue?.value)}
-          onBlur={stateFieldOnBlur}
           placeholder="Any state"
           isClearable
         />

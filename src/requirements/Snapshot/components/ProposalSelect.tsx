@@ -1,13 +1,12 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
-import StyledSelect from "components/common/StyledSelect"
+import ControlledSelect from "components/common/ControlledSelect"
 import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useMemo, useState } from "react"
-import { useController, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import useProposal from "../hooks/useProposal"
 import useProposals from "../hooks/useProposals"
 
 type Props = RequirementFormProps & {
@@ -21,11 +20,7 @@ const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
-  const {
-    field: { ref, name, value, onChange: controllerOnChange, onBlur },
-  } = useController({
-    name: `${baseFieldPath}.data.proposal`,
-  })
+  const proposalFieldValue = useWatch({ name: `${baseFieldPath}.data.proposal` })
 
   const spaceId = useWatch({ control, name: `${baseFieldPath}.data.space` })
 
@@ -35,15 +30,13 @@ const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
   const { proposals, isProposalsLoading } = useProposals(debouncedSearch, spaceId)
   const mappedProposals = useMemo<SelectOption[]>(
     () =>
-      proposals?.map((proposal) => ({
-        label: proposal.title,
-        value: proposal.id,
-        details: proposal.state,
+      proposals?.map((p) => ({
+        label: p.title,
+        value: p.id,
+        details: p.state,
       })) ?? [],
     [proposals]
   )
-
-  const { proposal, isProposalLoading } = useProposal(value)
 
   return (
     <FormControl
@@ -51,24 +44,20 @@ const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
     >
       <FormLabel>Proposal</FormLabel>
 
-      <StyledSelect
-        ref={ref}
-        name={name}
+      <ControlledSelect
+        name={`${baseFieldPath}.data.proposal`}
         placeholder="Search..."
         isClearable
-        isLoading={isProposalsLoading || isProposalLoading}
+        isLoading={isProposalsLoading}
         options={mappedProposals}
-        value={proposal ? { label: proposal.title, value: proposal.id } : ""}
-        onChange={(newValue: SelectOption) => {
+        onInputChange={(text, _) => setSearch(text)}
+        beforeOnChange={(newValue) =>
           setValue(
             `${baseFieldPath}.data.space`,
             proposals?.find((p) => p.id === newValue.value)?.space?.id
           )
-          controllerOnChange(newValue?.value)
-          onChange?.(newValue)
-        }}
-        onInputChange={(text, _) => setSearch(text)}
-        onBlur={onBlur}
+        }
+        afterOnChange={(newValue) => onChange?.(newValue)}
         components={{
           MenuList: (props) => (
             <CustomMenuList

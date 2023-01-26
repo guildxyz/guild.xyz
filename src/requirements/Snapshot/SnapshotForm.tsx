@@ -1,7 +1,7 @@
 import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
-import { useController, useFormContext, useFormState } from "react-hook-form"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import FollowSince from "./components/FollowSince"
@@ -63,18 +63,11 @@ const snapshotRequirementTypes = [
 const SnapshotForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const { resetField } = useFormContext()
 
-  const {
-    field: { name, onBlur, onChange, ref, value },
-  } = useController({
-    name: `${baseFieldPath}.type`,
-    rules: { required: "It's required to select a type" },
-  })
+  const type = useWatch({ name: `${baseFieldPath}.type` })
 
   const { errors } = useFormState()
 
-  const selected = snapshotRequirementTypes.find(
-    (reqType) => reqType.value === value
-  )
+  const selected = snapshotRequirementTypes.find((reqType) => reqType.value === type)
 
   return (
     <Stack spacing={4} alignItems="start" w="full">
@@ -82,16 +75,14 @@ const SnapshotForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
       >
         <FormLabel>Type</FormLabel>
-        <StyledSelect
+
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
+          rules={{ required: "It's required to select a type" }}
           options={snapshotRequirementTypes}
-          name={name}
-          onBlur={onBlur}
-          onChange={(newValue: { label: string; value: string }) => {
+          beforeOnChange={() =>
             resetField(`${baseFieldPath}.data`, { defaultValue: "" })
-            onChange(newValue?.value)
-          }}
-          ref={ref}
-          value={selected}
+          }
         />
 
         <FormErrorMessage>

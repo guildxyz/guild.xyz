@@ -14,13 +14,12 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
-import { Controller, useController, useFormContext } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 import useSnapshots from "requirements/Snapshot/hooks/useSnapshots"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 type Props = {
@@ -38,17 +37,8 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
     clearErrors,
   } = useFormContext()
 
-  const {
-    field: {
-      name: strategyFieldName,
-      onBlur: strategyFieldOnBlur,
-      onChange: strategyFieldOnChange,
-      ref: strategyFieldRef,
-      value: strategyFieldValue,
-    },
-  } = useController({
+  const strategyFieldValue = useWatch({
     name: `${baseFieldPath}.data.strategies.${index}.name`,
-    rules: { required: "This field is required." },
   })
 
   const { strategies, isLoading } = useSnapshots()
@@ -116,23 +106,16 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
       >
         <FormLabel>Strategy</FormLabel>
 
-        <StyledSelect
-          ref={strategyFieldRef}
-          name={strategyFieldName}
+        <ControlledSelect
+          name={`${baseFieldPath}.data.strategies.${index}.name`}
+          rules={{ required: "This field is required." }}
           isClearable
           isLoading={isLoading}
           options={mappedStrategies}
           placeholder="Search..."
-          value={
-            mappedStrategies?.find(
-              (strategy) => strategy.value === strategyFieldValue
-            ) ?? null
-          }
-          onChange={(newValue: SelectOption) => {
+          beforeOnChange={() =>
             setValue(`${baseFieldPath}.data.strategies.${index}.params`, "")
-            strategyFieldOnChange(newValue?.value ?? null)
-          }}
-          onBlur={strategyFieldOnBlur}
+          }
         />
 
         <FormHelperText>
