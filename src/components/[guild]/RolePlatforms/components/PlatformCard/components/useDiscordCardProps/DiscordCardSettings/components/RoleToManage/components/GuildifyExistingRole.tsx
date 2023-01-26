@@ -6,13 +6,12 @@ import {
   HStack,
   Text,
 } from "@chakra-ui/react"
-import StyledSelect from "components/common/StyledSelect"
+import ControlledSelect from "components/common/ControlledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
 import { useMemo } from "react"
-import { useController, useFormContext, useFormState } from "react-hook-form"
-import { SelectOption } from "types"
+import { useFormContext, useFormState } from "react-hook-form"
 import pluralize from "utils/pluralize"
 
 const GuildifyExistingRole = () => {
@@ -23,10 +22,6 @@ const GuildifyExistingRole = () => {
   const {
     data: { roles: discordRoles },
   } = useServerData(guildPlatform.platformGuildId)
-
-  const {
-    field: { name, onBlur, onChange, ref, value },
-  } = useController({ name: `rolePlatforms.${index}.platformRoleId` })
 
   const options = useMemo(() => {
     if (!discordRoles || !guildRoles) return undefined
@@ -56,19 +51,14 @@ const GuildifyExistingRole = () => {
         </HStack>
 
         <Box maxW="sm">
-          <StyledSelect
-            name={name}
-            ref={ref}
-            options={options}
-            value={options?.find((option) => option.value === value)}
-            onChange={(selectedOption: SelectOption) => {
-              if (!dirtyFields.name) {
-                setValue("name", selectedOption?.label, { shouldDirty: false })
-              }
-              onChange(selectedOption?.value ?? null)
-            }}
-            onBlur={onBlur}
+          <ControlledSelect
+            name={`rolePlatforms.${index}.platformRoleId`}
             isLoading={!options}
+            options={options}
+            beforeOnChange={(newValue) => {
+              if (dirtyFields.name) return
+              setValue("name", newValue?.label, { shouldDirty: false })
+            }}
           />
         </Box>
         <FormErrorMessage>

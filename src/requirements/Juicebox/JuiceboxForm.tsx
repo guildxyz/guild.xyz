@@ -10,13 +10,12 @@ import {
   NumberInputStepper,
   Stack,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import { useJuicebox } from "./hooks/useJuicebox"
 
@@ -64,26 +63,15 @@ const JuiceboxForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
               <OptionImage img={pickedProject?.img} alt={pickedProject?.label} />
             </InputLeftElement>
           )}
-          <Controller
-            name={`${baseFieldPath}.data.id` as const}
-            control={control}
+          <ControlledSelect
+            name={`${baseFieldPath}.data.id`}
             rules={{
               required: "This field is required.",
             }}
-            render={({ field: { onChange, onBlur, value: selectValue, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                isClearable
-                isLoading={isLoading}
-                options={mappedOptions}
-                placeholder="Search..."
-                value={mappedOptions?.find((option) => option.value === selectValue)}
-                onChange={(selectedOption: SelectOption) =>
-                  onChange(selectedOption?.value ?? null)
-                }
-                onBlur={onBlur}
-              />
-            )}
+            isClearable
+            isLoading={isLoading}
+            options={mappedOptions}
+            placeholder="Search..."
           />
         </InputGroup>
 

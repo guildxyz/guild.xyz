@@ -7,13 +7,12 @@ import {
   Stack,
   Tooltip,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import { Info } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../common/ChainPicker"
 import useAbi from "./hooks/useAbi"
@@ -165,24 +164,13 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
       <FormControl isRequired isDisabled={!abi}>
         <FormLabel>Method:</FormLabel>
 
-        <Controller
-          name={`${baseFieldPath}.data.id` as const}
-          control={control}
+        <ControlledSelect
+          name={`${baseFieldPath}.data.id`}
           rules={{ required: "This field is required." }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              isClearable
-              isLoading={isAbiValidating}
-              options={methodOptions}
-              placeholder="Choose method"
-              value={methodOptions?.find((option) => option.value === value) ?? ""}
-              onChange={(selectedOption: SelectOption) =>
-                onChange(selectedOption?.value ?? null)
-              }
-              onBlur={onBlur}
-            />
-          )}
+          isClearable
+          isLoading={isAbiValidating}
+          options={methodOptions}
+          placeholder="Choose method"
         />
 
         <FormErrorMessage>
@@ -238,45 +226,23 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
         <FormLabel>Expected output:</FormLabel>
 
         {outputOptions?.length > 1 && (
-          <Controller
-            name={`${baseFieldPath}.data.resultIndex` as const}
+          <ControlledSelect
+            name={`${baseFieldPath}.data.resultIndex`}
             defaultValue={0}
-            control={control}
             rules={{ required: "This field is required." }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                isLoading={isAbiValidating}
-                options={outputOptions}
-                value={outputOptions[value] ?? ""}
-                onChange={(selectedOption: SelectOption) =>
-                  onChange(selectedOption.value ?? null)
-                }
-                onBlur={onBlur}
-                chakraStyles={{ container: { mb: 2 } } as any}
-                placeholder="Choose output param"
-              />
-            )}
+            isLoading={isAbiValidating}
+            options={outputOptions}
+            placeholder="Choose output param"
+            chakraStyles={{ container: { mb: 2 } } as any}
           />
         )}
 
         <HStack>
-          <Controller
-            name={`${baseFieldPath}.data.resultMatch` as const}
-            control={control}
+          <ControlledSelect
+            name={`${baseFieldPath}.data.resultMatch`}
             defaultValue={"="}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                options={resultMatchOptions}
-                value={resultMatchOptions.find((option) => option.value === value)}
-                onChange={(selectedOption: SelectOption) =>
-                  onChange(selectedOption.value ?? null)
-                }
-                onBlur={onBlur}
-                chakraStyles={{ container: { w: "105px" } } as any}
-              />
-            )}
+            options={resultMatchOptions}
+            chakraStyles={{ container: { w: "105px" } } as any}
           />
           <Controller
             name={`${baseFieldPath}.data.expected` as const}

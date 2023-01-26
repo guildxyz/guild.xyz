@@ -73,9 +73,7 @@ const AccountConnections = () => {
               <PopoverContent>
                 <PopoverArrow />
                 <PopoverBody>
-                  If you join a guild with another address, but with the same Discord
-                  account, your addresses will be linked together and each will be
-                  used for requirement checks.
+                  Each of your addresses will be used for requirement checks.
                 </PopoverBody>
               </PopoverContent>
             </Popover>
