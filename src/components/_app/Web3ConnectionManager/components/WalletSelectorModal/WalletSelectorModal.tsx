@@ -30,7 +30,7 @@ import useKeyPair, {
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
-import useSWR from "swr"
+import useSWR, { mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User, WalletError } from "types"
 import ConnectorButton from "./components/ConnectorButton"
@@ -44,14 +44,20 @@ type Props = {
 
 const fetchShouldLinkToUser = async (_: "shouldLinkToUser", userId: number) => {
   try {
-    const userIdToConnectTo = window.localStorage.getItem("userId")
+    const { id: userIdToConnectTo } = JSON.parse(
+      window.localStorage.getItem("userId")
+    )
 
     if (
-      userIdToConnectTo !== null &&
       typeof userId === "number" &&
-      +userIdToConnectTo !== userId
+      typeof userIdToConnectTo === "number" &&
+      userIdToConnectTo !== userId
     ) {
-      await deleteKeyPairFromIdb(userId)
+      try {
+        await deleteKeyPairFromIdb(userId).then(() =>
+          mutate(unstable_serialize(["keyPair", userId]))
+        )
+      } catch {}
     }
 
     const keypair = await getKeyPairFromIdb(+userIdToConnectTo)
