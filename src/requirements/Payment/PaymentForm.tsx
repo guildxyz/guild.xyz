@@ -42,6 +42,9 @@ const PaymentForm = ({
   } = registerVaultFormMethods
 
   const chain = useWatch({ control: registerVaultFormControl, name: "chain" })
+
+  useEffect(() => setValue(`${baseFieldPath}.chain`, chain), [chain])
+
   const isOnCorrectChain = chainId === Chains[chain]
 
   const token = useWatch({ control: registerVaultFormControl, name: "token" })
