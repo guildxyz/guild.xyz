@@ -442,6 +442,24 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
   },
+  {
+    icon: "/requirementLogos/shield.png",
+    name: "Shield",
+    fileNameBase: "Shield",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Shield/ShieldRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Shield/ShieldForm")
+    ),
+    types: [
+      "SHIELD_ANOM_TX",
+      "SHIELD_UNVERIFIED_CONTRACT",
+      "SHIELD_EXPLOIT_INTERACTION",
+      "SHIELD_INDIRECT_DEPOSITS",
+      "SHIELD_TORNADO_CASH",
+    ],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
