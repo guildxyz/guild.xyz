@@ -13,7 +13,6 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 import { ArrowLeft } from "phosphor-react"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
-import parseDescription from "utils/parseDescription"
 import Button from "../Button"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
@@ -21,9 +20,8 @@ import Header from "./components/Header"
 type Props = {
   image?: JSX.Element
   title: string
-  description?: string
-  showLayoutDescription?: boolean
-  infoSection?: JSX.Element
+  ogDescription?: string
+  description?: JSX.Element
   textColor?: string
   action?: ReactNode | undefined
   background?: string
@@ -35,9 +33,8 @@ type Props = {
 const Layout = ({
   image,
   title,
+  ogDescription,
   description,
-  showLayoutDescription,
-  infoSection,
   textColor,
   action,
   background,
@@ -70,8 +67,8 @@ const Layout = ({
         <meta property="og:title" content={`${title}`} />
         {description && (
           <>
-            <meta name="description" content={description} />
-            <meta property="og:description" content={description} />
+            <meta name="description" content={ogDescription} />
+            <meta property="og:description" content={ogDescription} />
           </>
         )}
       </Head>
@@ -152,17 +149,16 @@ const Layout = ({
 
               {action}
             </HStack>
-            {showLayoutDescription && description?.length && (
+            {description && (
               <Box
                 w="full"
                 fontWeight="semibold"
                 color={textColor}
                 mb="-2 !important"
               >
-                {parseDescription(description)}
+                {description}
               </Box>
             )}
-            {infoSection}
           </VStack>
           <Box ref={childrenWrapper}>{children}</Box>
         </Container>

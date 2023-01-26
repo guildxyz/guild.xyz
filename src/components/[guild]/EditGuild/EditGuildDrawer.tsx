@@ -219,14 +219,11 @@ const EditGuildDrawer = ({
                     <UrlName />
                   </Stack>
                   <Description />
-                </Section>
 
-                <Section title="Contact info">
-                  <ContactInfo />
-                </Section>
-
-                <Section title="Social links">
-                  <SocialLinks />
+                  <Box>
+                    <FormLabel>Social links</FormLabel>
+                    <SocialLinks />
+                  </Box>
                 </Section>
 
                 <Section title="Appearance">
@@ -253,6 +250,11 @@ const EditGuildDrawer = ({
                   <HideFromExplorerToggle />
 
                   <Admins />
+                </Section>
+
+                <Divider />
+                <Section title="Contact info" spacing="4">
+                  <ContactInfo />
                 </Section>
               </VStack>
             </DrawerBody>

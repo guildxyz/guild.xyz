@@ -35,12 +35,12 @@ const BasicInfo = (): JSX.Element => {
         <Stack spacing={10}>
           {platform === "DEFAULT" && <PlatformlessGuildForm />}
 
-          <Section title="How could we contact you?">
+          <Section title="How could we contact you?" spacing="4">
             <ContactInfo showAddButton={false} />
           </Section>
 
           {template === "GROWTH" && (
-            <Section title="Links for community members">
+            <Section title="Template required socials" spacing="4">
               <TwitterUrlInput />
             </Section>
           )}

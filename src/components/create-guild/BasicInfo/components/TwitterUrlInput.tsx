@@ -30,7 +30,7 @@ const TwitterUrlInput = (): JSX.Element => {
 
   return (
     <FormControl isInvalid={!!errors?.socialLinks?.TWITTER} isRequired>
-      <InputGroup>
+      <InputGroup size="lg">
         <InputLeftElement>
           <SocialIcon type="TWITTER" size="sm" />
         </InputLeftElement>

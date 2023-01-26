@@ -35,11 +35,11 @@ const SocialLinks = (): JSX.Element => {
   const definedSocialLinks = useWatch({ control, name: "socialLinks" })
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
+    <SimpleGrid columns={{ base: 1, md: 2 }} gap={2}>
       {Object.keys(definedSocialLinks ?? {}).map((key) => (
         <GridItem key={key}>
           <FormControl isInvalid={!!errors?.socialLinks?.[key]} isRequired>
-            <InputGroup>
+            <InputGroup size="lg">
               <InputLeftElement>
                 {socialLinkOptions.find((sl) => sl.value === key).img}
               </InputLeftElement>
@@ -80,6 +80,7 @@ const SocialLinks = (): JSX.Element => {
           components={{
             DropdownIndicator: () => <Icon as={Plus} pr={2} boxSize={6} />,
           }}
+          size="lg"
         />
       </GridItem>
     </SimpleGrid>

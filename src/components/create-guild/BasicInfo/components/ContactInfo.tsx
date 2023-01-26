@@ -42,9 +42,9 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
 
   return (
     <>
-      <Text fontSize="sm" colorScheme="gray">
-        This contact information is only visible for the Guild Team to reach you with
-        support and partnership initiatives if needed.{" "}
+      <Text colorScheme="gray">
+        Only visible to the Guild Team to reach you with support and partnership
+        initiatives if needed.{" "}
       </Text>
       <Stack maxW={{ base: "full", sm: "md" }}>
         {fields.map((contactField, index) => (
@@ -64,11 +64,12 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
                       value={contactTypeOptions.find((ct) => ct.value === value)}
                       onBlur={onBlur}
                       onChange={(newValue: SelectOption) => onChange(newValue.value)}
+                      size="lg"
                     />
                   )}
                 />
               </Box>
-              <InputGroup>
+              <InputGroup size="lg">
                 <Input
                   isInvalid={!!errors?.contacts?.[index]}
                   placeholder={
