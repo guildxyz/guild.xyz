@@ -1,11 +1,12 @@
 import {
-  Center,
+  Circle,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   HStack,
   Input,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react"
 import useDebouncedState from "hooks/useDebouncedState"
 import Image from "next/image"
@@ -14,15 +15,13 @@ import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 
-const TWITTER_LINK_CHECK_REGEX = /twitter\.com\/(.*)$/i
-
-const Following = ({ baseFieldPath }: RequirementFormProps) => {
+const TwitterUserInput = ({ baseFieldPath }: RequirementFormProps) => {
   const { errors } = useFormState()
 
   const { field } = useController({
     name: `${baseFieldPath}.data.id`,
     rules: {
-      required: "Please paste a link or enter a username",
+      required: "This field is required",
     },
   })
 
@@ -39,17 +38,19 @@ const Following = ({ baseFieldPath }: RequirementFormProps) => {
     <FormControl
       isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id?.message}
     >
-      <FormLabel>User to follow</FormLabel>
+      <FormLabel>Username</FormLabel>
 
       <HStack>
+        <InputGroup>
+          <InputLeftElement>@</InputLeftElement>
+          <Input {...field} pl="7" />
+        </InputGroup>
         {debouncedUsername?.length > 0 && (
-          <Center
+          <Circle
             position={"relative"}
-            width={"40px"}
-            height={"40px"}
+            size={"40px"}
             border={"1px solid var(--chakra-colors-whiteAlpha-300)"}
-            borderRadius={"full"}
-            overflow={"hidden"}
+            overflow="hidden"
           >
             <Image
               blurDataURL={
@@ -67,30 +68,9 @@ const Following = ({ baseFieldPath }: RequirementFormProps) => {
               alt="Twitter avatar"
               onError={() => setShouldFallbackToDefaultImage(true)}
             />
-          </Center>
+          </Circle>
         )}
-
-        <Input
-          {...field}
-          onChange={({ target: { value } }) => {
-            if (value.length <= 0) return field.onChange(value)
-
-            const linkMatch = value.match(TWITTER_LINK_CHECK_REGEX)?.[1]
-            if (linkMatch) {
-              if (linkMatch.startsWith("@"))
-                return field.onChange(linkMatch.slice(1))
-              return field.onChange(linkMatch)
-            }
-
-            if (value.startsWith("@")) return field.onChange(value.slice(1))
-            return field.onChange(value)
-          }}
-          value={field.value?.length > 0 ? `@${field.value}` : field.value}
-          w="auto"
-          flexGrow={1}
-        />
       </HStack>
-      <FormHelperText>Paste a link or enter a username</FormHelperText>
       <FormErrorMessage>
         {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
       </FormErrorMessage>
@@ -98,4 +78,4 @@ const Following = ({ baseFieldPath }: RequirementFormProps) => {
   )
 }
 
-export default Following
+export default TwitterUserInput
