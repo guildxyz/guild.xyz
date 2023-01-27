@@ -35,7 +35,6 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
               event.error.stack.includes("chrome-extension")))
         )
           return false
-        console.log(event)
       },
     })
 
