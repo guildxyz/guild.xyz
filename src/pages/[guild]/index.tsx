@@ -2,34 +2,37 @@ import {
   Box,
   Center,
   Collapse,
-  HStack,
   Heading,
+  HStack,
   Icon,
+  Link,
   Spinner,
   Stack,
   Tag,
   TagLeftIcon,
   Text,
+  Wrap,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useIsMember from "components/[guild]/hooks/useIsMember"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
+import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useIsMember from "components/[guild]/hooks/useIsMember"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -39,8 +42,9 @@ import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
-import { Guild } from "types"
+import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
+import parseDescription from "utils/parseDescription"
 
 const BATCH_SIZE = 10
 
@@ -71,6 +75,7 @@ const GuildPage = (): JSX.Element => {
     roles,
     isLoading,
     onboardingComplete,
+    socialLinks,
   } = useGuild()
 
   useAutoStatusUpdate()
@@ -134,8 +139,30 @@ const GuildPage = (): JSX.Element => {
       <Layout
         title={name}
         textColor={textColor}
-        description={description}
-        showLayoutDescription
+        ogDescription={description}
+        description={
+          <>
+            {description && <Text>{parseDescription(description)}</Text>}
+            {Object.keys(socialLinks ?? {}).length > 0 && (
+              <Wrap w="full" spacing={3} mt="3">
+                {Object.entries(socialLinks).map(([type, link]) => (
+                  <HStack key={type} spacing={1.5}>
+                    <SocialIcon type={type as SocialLinkKey} size="sm" />
+                    <Link
+                      href={link?.startsWith("http") ? link : `https://${link}`}
+                      isExternal
+                      fontSize="sm"
+                      fontWeight="semibold"
+                      color={textColor}
+                    >
+                      {link.replace(/(http(s)?:\/\/)*(www\.)*/i, "")}
+                    </Link>
+                  </HStack>
+                ))}
+              </Wrap>
+            )}
+          </>
+        }
         image={
           <GuildLogo
             imageUrl={imageUrl}

@@ -14,7 +14,8 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       service: "guild.xyz",
       env: "prod",
       silentMultipleInit: true,
-      sampleRate: 10,
+      sessionReplaySampleRate: 10,
+      sessionSampleRate: 50,
       trackInteractions: true,
       version: "1.0.0",
       proxyUrl: "/api/ddrum",
@@ -34,6 +35,7 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
               event.error.stack.includes("chrome-extension")))
         )
           return false
+        console.log(event)
       },
     })
 

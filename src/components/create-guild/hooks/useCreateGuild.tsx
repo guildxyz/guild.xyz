@@ -6,13 +6,9 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { Guild, PlatformType, Requirement } from "types"
-import fetcher from "utils/fetcher"
+import { Guild, PlatformType } from "types"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
-import preprocessRequirements from "utils/preprocessRequirements"
-
-// TODO: better types
-type RoleOrGuild = Guild & { requirements?: Array<Requirement> }
 
 const useCreateGuild = () => {
   const { addDatadogAction, addDatadogError } = useDatadog()
@@ -23,11 +19,12 @@ const useCreateGuild = () => {
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
 
-  const fetchData = async (
-    signedValidation: SignedValdation
-  ): Promise<RoleOrGuild> => fetcher("/guild", signedValidation)
+  const fetcherWithSign = useFetcherWithSign()
 
-  const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {
+  const fetchData = async (signedValidation: SignedValdation): Promise<Guild> =>
+    fetcher("/guild", signedValidation)
+
+  const useSubmitResponse = useSubmitWithSign<Guild>(fetchData, {
     forcePrompt: true,
     onError: (error_) => {
       addDatadogError(`Guild creation error`, { error: error_ })
@@ -46,6 +43,13 @@ const useCreateGuild = () => {
       })
       router.push(`/${response_.urlName}`)
 
+      if (response_.guildPlatforms[0]?.platformId === PlatformType.DISCORD)
+        fetcherWithSign(`/statusUpdate/guildify/${response_.id}?force=true`, {
+          body: {
+            notifyUsers: false,
+          },
+        })
+
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
     },
@@ -53,29 +57,8 @@ const useCreateGuild = () => {
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data_) => {
-      const data = {
-        ...data_,
-        // prettier-ignore
-        ...(data_.guildPlatforms?.[0]?.platformId === PlatformType.TELEGRAM && data_.requirements?.length && {
-            requirements: undefined,
-            roles: [
-              {
-                name: "Member",
-                imageUrl: data_.imageUrl,
-                requirements: preprocessRequirements(data_.requirements),
-                rolePlatforms: [
-                  {
-                    guildPlatformIndex: 0,
-                  },
-                ],
-              },
-            ],
-          }),
-      }
-
-      return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
-    },
+    onSubmit: (data) =>
+      useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
   }
 }
 

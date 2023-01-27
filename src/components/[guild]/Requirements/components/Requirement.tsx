@@ -19,6 +19,7 @@ export type RequirementProps = PropsWithChildren<{
   footer?: JSX.Element
   rightElement?: JSX.Element
   isNegated?: boolean
+  simple?: boolean
 }>
 
 const Requirement = ({
@@ -28,6 +29,7 @@ const Requirement = ({
   withImgBg = true,
   rightElement,
   isNegated = false,
+  simple,
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -36,7 +38,7 @@ const Requirement = ({
     <SimpleGrid
       spacing={4}
       w="full"
-      py={2}
+      py={simple ? 1 : 2}
       templateColumns={`auto 1fr ${rightElement ? "auto" : ""}`}
       alignItems="center"
     >
@@ -73,9 +75,9 @@ const Requirement = ({
           {isNegated && <Tag mr="2">DON'T</Tag>}
           {children}
         </Text>
-        {footer}
+        {!simple && footer}
       </VStack>
-      {rightElement}
+      {!simple && rightElement}
     </SimpleGrid>
   )
 }

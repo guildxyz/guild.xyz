@@ -1,13 +1,13 @@
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useGoogleAuthWithCallback from "components/[guild]/JoinModal/hooks/useGoogleAuthWithCallback"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useMemo } from "react"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
+import ConnectWalletButton from "./ConnectWalletButton"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
@@ -45,15 +45,8 @@ const GoogleSelectButton = ({ onSelection }: Props) => {
   )
 
   const { account } = useWeb3React()
-  const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
-  if (!account) {
-    return (
-      <Button colorScheme="blue" onClick={openWalletSelectorModal}>
-        Connect Wallet
-      </Button>
-    )
-  }
+  if (!account) return <ConnectWalletButton />
 
   return (
     <Button

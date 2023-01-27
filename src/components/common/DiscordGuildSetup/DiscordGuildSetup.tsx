@@ -1,28 +1,25 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
-import DCServerCard from "components/guard/setup/DCServerCard"
-import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence } from "framer-motion"
+import useDebouncedState from "hooks/useDebouncedState"
 import useGateables from "hooks/useGateables"
-import useIsConnected from "hooks/useIsConnected"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo } from "react"
 import { useFormContext } from "react-hook-form"
-import { OptionSkeletonCard } from "./OptionCard"
-import ReconnectAlert from "./ReconnectAlert"
+import { OptionSkeletonCard } from "../OptionCard"
+import ReconnectAlert from "../ReconnectAlert"
+import DCServerCard from "./components/DCServerCard"
+import ServerSetupCard from "./components/ServerSetupCard"
 
 const DiscordGuildSetup = ({
   defaultValues,
   selectedServer,
   fieldName,
-  children,
   rolePlatforms = undefined,
   onSubmit = undefined,
 }) => {
   const { reset, setValue } = useFormContext()
-
-  const isConnected = useIsConnected("DISCORD")
 
   const { gateables, isLoading, error: gateablesError } = useGateables("DISCORD")
 
@@ -36,15 +33,7 @@ const DiscordGuildSetup = ({
     [selectedServer] // servers excluded on purpose
   )
 
-  const [showForm, setShowForm] = useState(false)
-
-  useEffect(() => {
-    if (selectedServer)
-      setTimeout(() => {
-        setShowForm(true)
-      }, 300)
-    else setShowForm(false)
-  }, [selectedServer])
+  const debounceSelectedServer = useDebouncedState(selectedServer, 300)
 
   const resetForm = () => {
     reset(defaultValues)
@@ -61,7 +50,7 @@ const DiscordGuildSetup = ({
     return <ReconnectAlert platformName="DISCORD" />
   }
 
-  if (((!servers || servers.length <= 0) && isLoading) || !isConnected) {
+  if ((!servers || servers.length <= 0) && isLoading) {
     return (
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
         {[...Array(3)].map((i) => (
@@ -109,9 +98,9 @@ const DiscordGuildSetup = ({
             </CardMotionWrapper>
           ))}
       </AnimatePresence>
-      {showForm && (
+      {debounceSelectedServer && (
         <GridItem colSpan={2}>
-          <ServerSetupCard onSubmit={onSubmit}>{children}</ServerSetupCard>
+          <ServerSetupCard selectedServer={selectedServer} onSubmit={onSubmit} />
         </GridItem>
       )}
     </SimpleGrid>

@@ -2,14 +2,8 @@ import { Text, useDisclosure, Wrap } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useSyncMembersFromDiscord from "components/[guild]/RolePlatforms/components/PlatformCard/components/useDiscordCardProps/DiscordCardMenu/hooks/useSyncMembersFromDiscord"
 import useDatadog from "components/_app/Datadog/useDatadog"
-import {
-  ArrowsCounterClockwise,
-  Check,
-  DiscordLogo,
-  TwitterLogo,
-} from "phosphor-react"
+import { Check, DiscordLogo, TwitterLogo } from "phosphor-react"
 import { PlatformType } from "types"
 import PaginationButtons from "../PaginationButtons"
 import SendDiscordJoinButtonModal from "./components/SendDiscordJoinButtonModal"
@@ -44,12 +38,6 @@ const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
     onSubmit({ onboardingComplete: true })
   }
 
-  const {
-    triggerSync,
-    response: syncResponse,
-    isLoading: isSyncLoading,
-  } = useSyncMembersFromDiscord()
-
   return (
     <>
       <Text mb="2">
@@ -57,34 +45,21 @@ const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
         join!
       </Text>
       <Wrap>
-        {discordPlatform && (
-          <>
-            <Button
-              leftIcon={syncResponse ? <Check /> : <ArrowsCounterClockwise />}
-              onClick={triggerSync}
-              isLoading={isSyncLoading}
-              isDisabled={isSyncLoading || syncResponse}
-              colorScheme="DISCORD"
-              h="10"
-            >
-              Sync members from Discord
+        {discordPlatform &&
+          (hasJoinButton ? (
+            <Button h="10" isDisabled colorScheme="DISCORD" leftIcon={<Check />}>
+              Join button sent to Discord
             </Button>
-            {hasJoinButton ? (
-              <Button h="10" isDisabled colorScheme="DISCORD" leftIcon={<Check />}>
-                Join button sent to Discord
-              </Button>
-            ) : (
-              <Button
-                h="10"
-                onClick={onOpen}
-                colorScheme="DISCORD"
-                leftIcon={<DiscordLogo />}
-              >
-                Send Discord join button
-              </Button>
-            )}
-          </>
-        )}
+          ) : (
+            <Button
+              h="10"
+              onClick={onOpen}
+              colorScheme="DISCORD"
+              leftIcon={<DiscordLogo />}
+            >
+              Send Discord join button
+            </Button>
+          ))}
         <Button
           as="a"
           h="10"
