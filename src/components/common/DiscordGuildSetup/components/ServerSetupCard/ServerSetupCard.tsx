@@ -19,8 +19,10 @@ const ServerSetupCard = ({ selectedServer, onSubmit }: Props): JSX.Element => {
 
   const {
     data: { serverIcon, serverName },
-  } = useServerData(selectedServer, false, {
-    refreshInterval: 0,
+  } = useServerData(selectedServer, {
+    swrOptions: {
+      refreshInterval: 0,
+    },
   })
 
   const { onUpload } = usePinata({

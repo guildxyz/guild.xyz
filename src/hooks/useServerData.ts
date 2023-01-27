@@ -47,18 +47,23 @@ const fallbackData = {
 
 const useServerData = (
   serverId: string,
-  memberCountDetails: boolean = false,
-  swrOptions?: SWRConfiguration
+  option?: {
+    memberCountDetails?: boolean
+    swrOptions?: SWRConfiguration
+  }
 ) => {
   const shouldFetch = serverId?.length >= 0
   const { data, isValidating, error, mutate } = useSWR<ServerData>(
     shouldFetch
-      ? [`/discord/server/${serverId}/${memberCountDetails}`, { method: "POST" }]
+      ? [
+          `/discord/server/${serverId}/${option?.memberCountDetails}`,
+          { method: "POST" },
+        ]
       : null,
     {
       fallbackData,
       revalidateOnFocus: false,
-      ...swrOptions,
+      ...option?.swrOptions,
     }
   )
 

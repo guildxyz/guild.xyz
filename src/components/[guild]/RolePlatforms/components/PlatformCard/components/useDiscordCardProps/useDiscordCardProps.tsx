@@ -5,8 +5,10 @@ import { useRolePlatform } from "../../../RolePlatformProvider"
 
 const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
   const rolePlatform = useRolePlatform()
-  const { data } = useServerData(guildPlatform.platformGuildId, false, {
-    revalidateOnFocus: false,
+  const { data } = useServerData(guildPlatform.platformGuildId, {
+    swrOptions: {
+      revalidateOnFocus: false,
+    },
   })
 
   const roleName = useMemo(() => {
