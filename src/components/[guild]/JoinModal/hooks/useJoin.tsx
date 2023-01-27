@@ -11,7 +11,7 @@ import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
 import { mutate } from "swr"
 import { PlatformName } from "types"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import fetcher from "utils/fetcher"
 
 type PlatformResult = {
   platformId: number
@@ -30,13 +30,9 @@ type Response = {
   platformResults: PlatformResult[]
 }
 
-export type JoinData =
-  | {
-      oauthData: any
-    }
-  | {
-      hash: string
-    }
+export type JoinData = {
+  oauthData: any
+}
 
 const useJoin = (onSuccess?: () => void) => {
   const { addDatadogAction, addDatadogError } = useDatadog()
@@ -46,7 +42,6 @@ const useJoin = (onSuccess?: () => void) => {
 
   const guild = useGuild()
   const user = useUser()
-  const fetcherWithSign = useFetcherWithSign()
 
   const toast = useToast()
   const toastIdRef = useRef<ToastId>()
