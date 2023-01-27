@@ -3,7 +3,7 @@ import { useFormContext, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 
-const SearchValue = ({ baseFieldPath }: RequirementFormProps) => {
+const TwitterTextToInclude = ({ baseFieldPath }: RequirementFormProps) => {
   const { register } = useFormContext()
   const { errors } = useFormState()
 
@@ -12,7 +12,7 @@ const SearchValue = ({ baseFieldPath }: RequirementFormProps) => {
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id?.message}
       >
-        <FormLabel>Text</FormLabel>
+        <FormLabel>Text to include</FormLabel>
         <Input
           {...register(`${baseFieldPath}.data.id`, {
             required: "This field if required",
@@ -26,4 +26,4 @@ const SearchValue = ({ baseFieldPath }: RequirementFormProps) => {
   )
 }
 
-export default SearchValue
+export default TwitterTextToInclude

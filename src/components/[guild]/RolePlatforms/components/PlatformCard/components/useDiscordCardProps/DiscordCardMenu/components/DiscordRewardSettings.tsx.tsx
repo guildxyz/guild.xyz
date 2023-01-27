@@ -14,7 +14,7 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Controller, FormProvider, useForm } from "react-hook-form"
 import fetcher from "utils/fetcher"
@@ -28,11 +28,10 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
     (platform) => platform.platformGuildId === serverId
   )
 
-  const submit = ({ validation, data }) =>
+  const submit = (signedValidation: SignedValdation) =>
     fetcher(`/guild/${id}/platform/${guildPlatform.id}`, {
       method: "PATCH",
-      validation,
-      body: data,
+      ...signedValidation,
     })
 
   const { onSubmit, isLoading } = useSubmitWithSign(submit, {

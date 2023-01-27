@@ -3,7 +3,7 @@ import processConnectorError from "components/[guild]/JoinModal/utils/processCon
 import useDatadog from "components/_app/Datadog/useDatadog"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { Guild, PlatformType } from "types"
@@ -21,16 +21,11 @@ const useCreateGuild = () => {
 
   const fetcherWithSign = useFetcherWithSign()
 
-  const fetchData = async ({
-    validation,
-    data,
-  }: WithValidation<Guild>): Promise<Guild> =>
-    fetcher("/guild", {
-      validation,
-      body: data,
-    })
+  const fetchData = async (signedValidation: SignedValdation): Promise<Guild> =>
+    fetcher("/guild", signedValidation)
 
-  const useSubmitResponse = useSubmitWithSign<any, Guild>(fetchData, {
+  const useSubmitResponse = useSubmitWithSign<Guild>(fetchData, {
+    forcePrompt: true,
     onError: (error_) => {
       addDatadogError(`Guild creation error`, { error: error_ })
 

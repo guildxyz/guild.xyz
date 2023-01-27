@@ -21,7 +21,7 @@ import { useState } from "react"
 const LinkAddressButton = ({}) => {
   const [isLoading, setIsLoading] = useState(false)
   const { id } = useUser()
-  const { provider, connector } = useWeb3React<Web3Provider>()
+  const { provider, connector, account } = useWeb3React<Web3Provider>()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
@@ -30,7 +30,7 @@ const LinkAddressButton = ({}) => {
   const onClick = async () => {
     setIsLoading(true)
     onOpen()
-    window.localStorage.setItem("userId", id.toString())
+    window.localStorage.setItem("userId", JSON.stringify({ id, address: account }))
 
     try {
       await provider.provider.request({
