@@ -27,7 +27,6 @@ const SocialLinks = (): JSX.Element => {
   const {
     control,
     register,
-    unregister,
     setValue,
     formState: { errors },
   } = useFormContext<GuildFormType>()
@@ -36,36 +35,40 @@ const SocialLinks = (): JSX.Element => {
 
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} gap={2}>
-      {Object.keys(definedSocialLinks ?? {}).map((key) => (
-        <GridItem key={key}>
-          <FormControl isInvalid={!!errors?.socialLinks?.[key]} isRequired>
-            <InputGroup size="lg">
-              <InputLeftElement>
-                {socialLinkOptions.find((sl) => sl.value === key).img}
-              </InputLeftElement>
-              <Input
-                type="url"
-                {...register(`socialLinks.${key}`, {
-                  required: "This field is required.",
-                })}
-                placeholder={socialLinkOptions.find((sl) => sl.value === key).label}
-              />
-              <InputRightElement>
-                <CloseButton
-                  aria-label="Remove link"
-                  size="sm"
-                  rounded="full"
-                  onClick={() => unregister(`socialLinks.${key}`)}
+      {Object.entries(definedSocialLinks ?? {})
+        .filter(([, value]) => !!value)
+        .map(([key]) => (
+          <GridItem key={key}>
+            <FormControl isInvalid={!!errors?.socialLinks?.[key]} isRequired>
+              <InputGroup size="lg">
+                <InputLeftElement>
+                  {socialLinkOptions.find((sl) => sl.value === key).img}
+                </InputLeftElement>
+                <Input
+                  type="url"
+                  {...register(`socialLinks.${key}`, {
+                    required: "This field is required.",
+                  })}
+                  placeholder={
+                    socialLinkOptions.find((sl) => sl.value === key).label
+                  }
                 />
-              </InputRightElement>
-            </InputGroup>
+                <InputRightElement>
+                  <CloseButton
+                    aria-label="Remove link"
+                    size="sm"
+                    rounded="full"
+                    onClick={() => setValue(`socialLinks.${key}`, undefined)}
+                  />
+                </InputRightElement>
+              </InputGroup>
 
-            <FormErrorMessage>
-              {errors?.socialLinks?.[key]?.message}
-            </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-      ))}
+              <FormErrorMessage>
+                {errors?.socialLinks?.[key]?.message}
+              </FormErrorMessage>
+            </FormControl>
+          </GridItem>
+        ))}
 
       <GridItem>
         <StyledSelect

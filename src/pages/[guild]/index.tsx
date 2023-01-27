@@ -143,7 +143,7 @@ const GuildPage = (): JSX.Element => {
         description={
           <>
             {description && <Text>{parseDescription(description)}</Text>}
-            {Object.keys(socialLinks ?? {}).length && (
+            {Object.keys(socialLinks ?? {}).length > 0 && (
               <Wrap w="full" spacing={3} mt="3">
                 {Object.entries(socialLinks).map(([type, link]) => (
                   <HStack key={type} spacing={1.5}>
