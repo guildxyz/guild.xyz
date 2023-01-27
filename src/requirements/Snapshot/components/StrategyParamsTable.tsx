@@ -11,9 +11,10 @@ const StrategyParamsTable = ({ params }: Props): JSX.Element => (
     w="full"
     sx={{ tableLayout: "fixed", borderCollapse: "unset" }}
     size="sm"
-    bg="blackAlpha.100"
-    borderWidth="1px"
-    borderRadius="md"
+    bg="blackAlpha.300"
+    borderWidth={0}
+    borderRadius="xl"
+    py={2}
   >
     <Thead>
       <Tr>

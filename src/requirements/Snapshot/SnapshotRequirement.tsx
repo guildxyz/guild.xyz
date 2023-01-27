@@ -1,11 +1,19 @@
-import { Box, Collapse, Icon, useDisclosure } from "@chakra-ui/react"
+import {
+  Icon,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Portal,
+} from "@chakra-ui/react"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { CaretDown } from "phosphor-react"
+import { ArrowSquareOut } from "phosphor-react"
 
 import pluralize from "utils/pluralize"
 import SnapshotSpaceLink from "./components/SnapshotSpaceLink"
@@ -15,7 +23,6 @@ import useProposal from "./hooks/useProposal"
 const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
-  const { isOpen, onToggle } = useDisclosure()
   const strategies = requirement.data.strategies
 
   const { proposal } = useProposal(requirement.data.proposal)
@@ -31,27 +38,24 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
       footer={
         requirement.type === "SNAPSHOT_STRATEGY" &&
         Object.keys(requirement.data.strategies[0].params ?? {}).length && (
-          <>
-            <RequirementButton
-              rightIcon={
-                <Icon
-                  as={CaretDown}
-                  transform={isOpen && "rotate(-180deg)"}
-                  transition="transform .3s"
-                />
-              }
-              onClick={onToggle}
-            >
-              View parameters
-            </RequirementButton>
-            <Collapse style={{ marginTop: 0 }} in={isOpen}>
-              <Box pt={2} pr={6}>
-                <StrategyParamsTable
-                  params={requirement.data.strategies[0].params}
-                />
-              </Box>
-            </Collapse>
-          </>
+          <Popover placement="bottom">
+            <PopoverTrigger>
+              <RequirementButton rightIcon={<Icon as={ArrowSquareOut} />}>
+                View parameters
+              </RequirementButton>
+            </PopoverTrigger>
+
+            <Portal>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverBody p={0}>
+                  <StrategyParamsTable
+                    params={requirement.data.strategies[0].params}
+                  />
+                </PopoverBody>
+              </PopoverContent>
+            </Portal>
+          </Popover>
         )
       }
       {...props}
