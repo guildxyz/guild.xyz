@@ -19,7 +19,7 @@ const ServerSetupCard = ({ selectedServer, onSubmit }: Props): JSX.Element => {
 
   const {
     data: { serverIcon, serverName },
-  } = useServerData(selectedServer, {
+  } = useServerData(selectedServer, false, {
     refreshInterval: 0,
   })
 

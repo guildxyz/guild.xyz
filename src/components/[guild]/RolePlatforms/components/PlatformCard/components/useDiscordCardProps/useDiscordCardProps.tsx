@@ -5,7 +5,7 @@ import { useRolePlatform } from "../../../RolePlatformProvider"
 
 const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
   const rolePlatform = useRolePlatform()
-  const { data } = useServerData(guildPlatform.platformGuildId, {
+  const { data } = useServerData(guildPlatform.platformGuildId, false, {
     revalidateOnFocus: false,
   })
 
