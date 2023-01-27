@@ -38,7 +38,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
   const resetForm = () => {
     setValue(`${baseFieldPath}.address`, "")
     setValue(`${baseFieldPath}.data.id`, "")
-    setValue(`${baseFieldPath}.data.resultIndex`, "")
+    setValue(`${baseFieldPath}.data.resultIndex`, undefined)
     setValue(`${baseFieldPath}.data.expected`, "")
     clearErrors([`${baseFieldPath}.address`])
   }
@@ -201,6 +201,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
           <Controller
             name={`${baseFieldPath}.data.params.${i}` as const}
             control={control}
+            shouldUnregister
             // rules={{ required: "This field is required." }}
             defaultValue={input.type === "address" ? "USER_ADDRESS" : ""}
             render={({ field: { onChange, onBlur, value, ref } }) => (
