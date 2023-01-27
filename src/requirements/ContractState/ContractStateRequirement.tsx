@@ -13,6 +13,7 @@ import {
   Tbody,
   Td,
   Tr,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -28,6 +29,7 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const ContractStateRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
+  const tableBgColor = useColorModeValue("white", "blackAlpha.300")
 
   return (
     <Requirement
@@ -60,7 +62,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
                     w="full"
                     sx={{ tableLayout: "fixed", borderCollapse: "unset" }}
                     size="sm"
-                    bg="blackAlpha.300"
+                    bg={tableBgColor}
                     borderWidth={0}
                     borderBottomRadius="xl"
                   >
