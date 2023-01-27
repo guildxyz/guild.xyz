@@ -65,7 +65,7 @@ const Layout = ({
       <Head>
         <title>{`${title}`}</title>
         <meta property="og:title" content={`${title}`} />
-        {description && (
+        {ogDescription && (
           <>
             <meta name="description" content={ogDescription} />
             <meta property="og:description" content={ogDescription} />

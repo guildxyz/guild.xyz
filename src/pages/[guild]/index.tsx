@@ -142,7 +142,7 @@ const GuildPage = (): JSX.Element => {
         ogDescription={description}
         description={
           <>
-            {description && <Text>{parseDescription(description)}</Text>}
+            {description && parseDescription(description)}
             {Object.keys(socialLinks ?? {}).length > 0 && (
               <Wrap w="full" spacing={3} mt="3">
                 {Object.entries(socialLinks).map(([type, link]) => (

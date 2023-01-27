@@ -36,7 +36,7 @@ const SocialLinks = (): JSX.Element => {
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} gap={2}>
       {Object.entries(definedSocialLinks ?? {})
-        .filter(([, value]) => !!value)
+        .filter(([, value]) => typeof value !== "undefined")
         .map(([key]) => (
           <GridItem key={key}>
             <FormControl isInvalid={!!errors?.socialLinks?.[key]} isRequired>
