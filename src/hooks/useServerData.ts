@@ -27,7 +27,6 @@ export type Role = {
 
 type ServerData = {
   serverIcon: string
-  membersWithoutRole: number
   serverName: string
   serverId: string
   categories: Category[]
@@ -38,7 +37,6 @@ type ServerData = {
 
 const fallbackData = {
   serverIcon: null,
-  membersWithoutRole: 0,
   serverName: "",
   serverId: "",
   categories: [],
