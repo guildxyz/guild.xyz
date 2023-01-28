@@ -72,7 +72,7 @@
     "@snyk/protect": "latest"
   },
   "devDependencies": {
-    "@datadog/datadog-ci": "^2.2.0",
+    "@datadog/datadog-ci": "^2.4.0",
     "@hookform/devtools": "^4.3.0",
     "@svgr/webpack": "^6.5.1",
     "@synthetixio/synpress": "^2.0.0",
