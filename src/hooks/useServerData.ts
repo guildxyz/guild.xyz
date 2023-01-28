@@ -57,7 +57,7 @@ const useServerData = (
     shouldFetch
       ? [
           `/discord/server/${serverId}/${option?.memberCountDetails}`,
-          { method: "POST" },
+          { method: "GET" },
         ]
       : null,
     {
