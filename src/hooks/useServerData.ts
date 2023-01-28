@@ -27,7 +27,6 @@ export type Role = {
 
 type ServerData = {
   serverIcon: string
-  membersWithoutRole: number
   serverName: string
   serverId: string
   categories: Category[]
@@ -38,7 +37,6 @@ type ServerData = {
 
 const fallbackData = {
   serverIcon: null,
-  membersWithoutRole: 0,
   serverName: "",
   serverId: "",
   categories: [],
@@ -47,15 +45,25 @@ const fallbackData = {
   roles: [],
 }
 
-const useServerData = (serverId: string, swrOptions?: SWRConfiguration) => {
+const useServerData = (
+  serverId: string,
+  option?: {
+    memberCountDetails?: boolean
+    swrOptions?: SWRConfiguration
+  }
+) => {
   const shouldFetch = serverId?.length >= 0
-
   const { data, isValidating, error, mutate } = useSWR<ServerData>(
-    shouldFetch ? [`/discord/server/${serverId}`, { method: "POST" }] : null,
+    shouldFetch
+      ? [
+          `/discord/server/${serverId}/${option?.memberCountDetails}`,
+          { method: "GET" },
+        ]
+      : null,
     {
       fallbackData,
       revalidateOnFocus: false,
-      ...swrOptions,
+      ...option?.swrOptions,
     }
   )
 

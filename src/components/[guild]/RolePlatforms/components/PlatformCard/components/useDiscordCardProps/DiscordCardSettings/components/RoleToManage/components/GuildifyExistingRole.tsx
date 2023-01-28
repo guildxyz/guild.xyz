@@ -21,7 +21,7 @@ const GuildifyExistingRole = () => {
   const { guildPlatform, index } = useRolePlatform()
   const {
     data: { roles: discordRoles },
-  } = useServerData(guildPlatform.platformGuildId)
+  } = useServerData(guildPlatform.platformGuildId, { memberCountDetails: true })
 
   const options = useMemo(() => {
     if (!discordRoles || !guildRoles) return undefined
