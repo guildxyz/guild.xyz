@@ -54,12 +54,7 @@ const useServerData = (
 ) => {
   const shouldFetch = serverId?.length >= 0
   const { data, isValidating, error, mutate } = useSWR<ServerData>(
-    shouldFetch
-      ? [
-          `/discord/server/${serverId}/${option?.memberCountDetails}`,
-          { method: "GET" },
-        ]
-      : null,
+    shouldFetch ? `/discord/server/${serverId}/${option?.memberCountDetails}` : null,
     {
       fallbackData,
       revalidateOnFocus: false,
