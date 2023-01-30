@@ -11,9 +11,9 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
-import PurchaseRequirement from "components/[guild]/Requirements/components/PurchaseRequirement"
 import { PropsWithChildren } from "react"
 import { purchaseSupportedChains } from "utils/guildCheckout"
+import GuildCheckout from "./GuildCheckout"
 import { useRequirementContext } from "./RequirementContext"
 
 export type RequirementProps = PropsWithChildren<{
@@ -88,7 +88,7 @@ const Requirement = ({
           {showPurchaseBtn &&
             purchaseSupportedChains[requirement?.type]?.includes(
               requirement?.chain
-            ) && <PurchaseRequirement />}
+            ) && <GuildCheckout />}
           {showFooter && footer}
         </HStack>
       </VStack>

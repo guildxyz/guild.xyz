@@ -10,7 +10,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
-import usePrice from "components/[guild]/Requirements/components/PurchaseRequirement/hooks/usePrice"
+import usePrice from "components/[guild]/Requirements/components/GuildCheckout/hooks/usePrice"
 import { Chains, RPC } from "connectors"
 import useCoinBalance from "hooks/useCoinBalance"
 import useTokenBalance from "hooks/useTokenBalance"

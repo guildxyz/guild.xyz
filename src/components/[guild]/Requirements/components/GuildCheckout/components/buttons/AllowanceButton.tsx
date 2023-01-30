@@ -5,10 +5,10 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Question } from "phosphor-react"
-import { usePurchaseRequirementContext } from "../PurchaseRequirementContex"
+import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const AllowanceButton = (): JSX.Element => {
-  const { pickedCurrency, requirement } = usePurchaseRequirementContext()
+  const { pickedCurrency, requirement } = useGuildCheckoutContext()
   const requirementChainId = Chains[requirement.chain]
 
   const { chainId } = useWeb3React()

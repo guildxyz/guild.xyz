@@ -7,7 +7,7 @@ import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
 } from "utils/guildCheckout"
-import { usePurchaseRequirementContext } from "../components/PurchaseRequirementContex"
+import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 
 const fetchPrice = (
   _: string,
@@ -23,7 +23,7 @@ const fetchPrice = (
   })
 
 const usePrice = (sellAddress: string): SWRResponse<FetchPriceResponse> => {
-  const { requirement, isOpen } = usePurchaseRequirementContext()
+  const { requirement, isOpen } = useGuildCheckoutContext()
 
   const shouldFetch =
     purchaseSupportedChains[requirement?.type]?.includes(requirement.chain) &&

@@ -1,4 +1,5 @@
 import { useDisclosure } from "@chakra-ui/react"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import {
   createContext,
   Dispatch,
@@ -8,9 +9,8 @@ import {
   useState,
 } from "react"
 import { Requirement } from "types"
-import { useRequirementContext } from "../../RequirementContext"
 
-const PurchaseRequirementContext = createContext<{
+const GuildCheckoutContext = createContext<{
   requirement: Requirement
   isOpen: boolean
   onOpen: () => void
@@ -21,7 +21,7 @@ const PurchaseRequirementContext = createContext<{
   setAgreeWithTOS: Dispatch<SetStateAction<boolean>>
 }>(undefined)
 
-const PurchaseRequirementProvider = ({
+const GuildCheckoutProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
   const requirement = useRequirementContext()
@@ -30,7 +30,7 @@ const PurchaseRequirementProvider = ({
   const [agreeWithTOS, setAgreeWithTOS] = useState(false)
 
   return (
-    <PurchaseRequirementContext.Provider
+    <GuildCheckoutContext.Provider
       value={{
         requirement,
         isOpen,
@@ -43,10 +43,10 @@ const PurchaseRequirementProvider = ({
       }}
     >
       {children}
-    </PurchaseRequirementContext.Provider>
+    </GuildCheckoutContext.Provider>
   )
 }
 
-const usePurchaseRequirementContext = () => useContext(PurchaseRequirementContext)
+const useGuildCheckoutContext = () => useContext(GuildCheckoutContext)
 
-export { PurchaseRequirementProvider, usePurchaseRequirementContext }
+export { GuildCheckoutProvider, useGuildCheckoutContext }

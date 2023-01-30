@@ -25,18 +25,18 @@ import ChooseCurrencyButton from "./components/buttons/ChooseCurrencyButton"
 import PurchaseButton from "./components/buttons/PurchaseButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import FeeAndTotal from "./components/FeeAndTotal"
-import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
 import {
-  PurchaseRequirementProvider,
-  usePurchaseRequirementContext,
-} from "./components/PurchaseRequirementContex"
+  GuildCheckoutProvider,
+  useGuildCheckoutContext,
+} from "./components/GuildCheckoutContex"
+import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
 import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
-const PurchaseRequirement = (): JSX.Element => {
+const GuildCheckout = (): JSX.Element => {
   const { account } = useWeb3React()
   const { requirement, isOpen, onOpen, onClose, pickedCurrency } =
-    usePurchaseRequirementContext()
+    useGuildCheckoutContext()
 
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
@@ -134,10 +134,10 @@ const PurchaseRequirement = (): JSX.Element => {
   )
 }
 
-const PurchaseRequirementWrapper = (): JSX.Element => (
-  <PurchaseRequirementProvider>
-    <PurchaseRequirement />
-  </PurchaseRequirementProvider>
+const GuildCheckoutWrapper = (): JSX.Element => (
+  <GuildCheckoutProvider>
+    <GuildCheckout />
+  </GuildCheckoutProvider>
 )
 
-export default PurchaseRequirementWrapper
+export default GuildCheckoutWrapper

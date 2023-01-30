@@ -1,12 +1,12 @@
 import { Checkbox } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { Chains } from "connectors"
-import { useRequirementContext } from "../../RequirementContext"
-import { usePurchaseRequirementContext } from "./PurchaseRequirementContex"
+import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 
 const TOSCheckbox = (): JSX.Element => {
   const { chain } = useRequirementContext()
-  const { agreeWithTOS, setAgreeWithTOS } = usePurchaseRequirementContext()
+  const { agreeWithTOS, setAgreeWithTOS } = useGuildCheckoutContext()
 
   const requirementChainId = Chains[chain]
   const { chainId } = useWeb3React()

@@ -1,5 +1,5 @@
 import { useColorModeValue } from "@chakra-ui/react"
-import { usePurchaseRequirementContext } from "../../PurchaseRequirementContex"
+import { useGuildCheckoutContext } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import TokenInfo from "./TokenInfo"
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 }
 
 const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
-  const { setPickedCurrency } = usePurchaseRequirementContext()
+  const { setPickedCurrency } = useGuildCheckoutContext()
 
   const bgColor = useColorModeValue("gray.50", "blackAlpha.400")
   const hoverBgColor = useColorModeValue("gray.100", "blackAlpha.300")

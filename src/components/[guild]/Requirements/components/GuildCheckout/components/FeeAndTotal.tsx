@@ -11,10 +11,10 @@ import {
 import useTokenData from "hooks/useTokenData"
 import { Info } from "phosphor-react"
 import usePrice from "../hooks/usePrice"
-import { usePurchaseRequirementContext } from "./PurchaseRequirementContex"
+import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 
 const FeeAndTotal = (): JSX.Element => {
-  const { pickedCurrency, requirement } = usePurchaseRequirementContext()
+  const { pickedCurrency, requirement } = useGuildCheckoutContext()
 
   const textColor = useColorModeValue("gray.800", "gray.200")
   const textAccentColor = useColorModeValue("black", "white")

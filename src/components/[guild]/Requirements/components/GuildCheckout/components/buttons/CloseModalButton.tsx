@@ -1,8 +1,8 @@
 import Button from "components/common/Button"
-import { usePurchaseRequirementContext } from "../PurchaseRequirementContex"
+import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const CloseModalButton = (): JSX.Element => {
-  const { onClose } = usePurchaseRequirementContext()
+  const { onClose } = useGuildCheckoutContext()
 
   return (
     <Button size="xl" colorScheme="blue" onClick={onClose}>
