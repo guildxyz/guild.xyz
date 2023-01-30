@@ -8,11 +8,7 @@ const OrangeRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   return (
-    <Requirement
-      isNegated={requirement.isNegated}
-      image={<Img src="/requirementLogos/orange.png" />}
-      {...props}
-    >
+    <Requirement image={<Img src="/requirementLogos/orange.png" />} {...props}>
       {`Have the badge of Orange campaign `}
       <Link
         href={`https://poap.gallery/event/${requirement.data.id}`}

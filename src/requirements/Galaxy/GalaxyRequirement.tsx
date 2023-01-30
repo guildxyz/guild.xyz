@@ -12,12 +12,7 @@ const GalaxyRequirement = (props: RequirementProps): JSX.Element => {
   const { campaign, isLoading } = useGalaxyCampaign(requirement?.data?.galaxyId)
 
   return (
-    <Requirement
-      isNegated={requirement.isNegated}
-      image={campaign?.thumbnail}
-      isImageLoading={isLoading}
-      {...props}
-    >
+    <Requirement image={campaign?.thumbnail} isImageLoading={isLoading} {...props}>
       <Text as="span">{`Participate in the `}</Text>
       {!campaign || isLoading ? (
         <DataBlock

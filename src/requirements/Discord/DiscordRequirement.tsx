@@ -26,7 +26,6 @@ const DiscordRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={renderedServerIcon ?? <Icon as={DiscordLogo} boxSize={6} />}
       footer={<ConnectRequirementPlatformButton />}
       {...props}

@@ -11,6 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
+import { useRequirementContext } from "./RequirementContext"
 
 export type RequirementProps = PropsWithChildren<{
   isImageLoading?: boolean
@@ -18,7 +19,6 @@ export type RequirementProps = PropsWithChildren<{
   withImgBg?: boolean
   footer?: JSX.Element
   rightElement?: JSX.Element
-  isNegated?: boolean
   simple?: boolean
 }>
 
@@ -28,11 +28,11 @@ const Requirement = ({
   footer,
   withImgBg = true,
   rightElement,
-  isNegated = false,
   simple,
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
+  const requirement = useRequirementContext()
 
   return (
     <SimpleGrid
@@ -72,7 +72,7 @@ const Requirement = ({
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center">
         <Text wordBreak="break-word">
-          {isNegated && <Tag mr="2">DON'T</Tag>}
+          {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
           {children}
         </Text>
         {!simple && footer}

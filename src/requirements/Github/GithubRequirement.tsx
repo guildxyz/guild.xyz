@@ -12,7 +12,6 @@ const GithubRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={<Icon as={GithubLogo} boxSize={6} />}
       footer={<ConnectRequirementPlatformButton />}
       {...props}

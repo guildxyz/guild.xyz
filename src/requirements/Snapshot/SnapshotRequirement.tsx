@@ -33,7 +33,6 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image="/requirementLogos/snapshot.png"
       footer={
         requirement.type === "SNAPSHOT_STRATEGY" &&

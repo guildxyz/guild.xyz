@@ -69,7 +69,6 @@ const NftRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={
         shouldRenderImage ? (
           nftImage

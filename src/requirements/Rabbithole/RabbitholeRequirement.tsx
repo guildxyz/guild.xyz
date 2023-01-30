@@ -10,11 +10,7 @@ const RabbitholeRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   return (
-    <Requirement
-      isNegated={requirement.isNegated}
-      image={<Img src="/requirementLogos/rabbithole.png" />}
-      {...props}
-    >
+    <Requirement image={<Img src="/requirementLogos/rabbithole.png" />} {...props}>
       {`Have an NFT from the `}
       <DataBlock>
         {
