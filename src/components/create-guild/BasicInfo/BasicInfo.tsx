@@ -18,7 +18,8 @@ const BasicInfo = (): JSX.Element => {
   const { platform, template } = useCreateGuildContext()
   const {
     control,
-    formState: { errors, touchedFields },
+    getValues,
+    formState: { errors },
   } = useFormContext<GuildFormType>()
 
   const guildName = useWatch({ control, name: "name" })
@@ -52,7 +53,7 @@ const BasicInfo = (): JSX.Element => {
           isDisabled={
             !guildName ||
             !!Object.values(errors).length ||
-            (template === "GROWTH" && !touchedFields?.socialLinks?.TWITTER)
+            (template === "GROWTH" && !getValues("socialLinks.TWITTER"))
           }
         />
       </Pagination>
