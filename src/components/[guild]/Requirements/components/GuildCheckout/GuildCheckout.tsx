@@ -17,6 +17,7 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import useAccess from "components/[guild]/hooks/useAccess"
 import { RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
 import {
@@ -41,6 +42,12 @@ const GuildCheckout = (): JSX.Element => {
   const { account } = useWeb3React()
   const { requirement, isOpen, onOpen, onClose, pickedCurrency } =
     useGuildCheckoutContext()
+  const { data: accessData } = useAccess(requirement?.roleId)
+  const satisfiesRequirement =
+    requirement &&
+    accessData &&
+    accessData.requirements?.find((req) => req.requirementId === requirement.id)
+      .access
 
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
@@ -52,6 +59,7 @@ const GuildCheckout = (): JSX.Element => {
 
   if (
     !account ||
+    satisfiesRequirement ||
     !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
     !purchaseSupportedChains[requirement.type].includes(requirement.chain)
   )
@@ -77,6 +85,7 @@ const GuildCheckout = (): JSX.Element => {
           <ModalCloseButton />
 
           <ModalBody>
+            {}
             <RequirementDisplayComponent
               requirement={requirement}
               showPurchaseBtn={false}
