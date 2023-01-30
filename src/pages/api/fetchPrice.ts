@@ -136,15 +136,15 @@ const handler: NextApiHandler = async (
       `${ZEROX_API_URLS[chain]}/swap/v1/price?sellToken=${sellAddress}&buyToken=${address}&buyAmount=${formattedBuyAmount}`
     )
 
-    if (response.status !== 200)
-      return res.status(response.status).json({ error: response.statusText })
-
     const responseData = await response.json()
 
-    if (responseData.validationErrors?.length)
-      return res.status(500).json({
-        error: responseData.validationErrors[0].description,
+    if (response.status !== 200) {
+      return res.status(response.status).json({
+        error: responseData.validationErrors?.length
+          ? responseData.validationErrors[0].description
+          : response.statusText,
       })
+    }
 
     const price = parseFloat(responseData.price) * minAmount
     const priceInUSD = parseFloat(
@@ -162,16 +162,6 @@ const handler: NextApiHandler = async (
     const gasFee = 0
 
     const totalFee = gasFee + price * GUILD_FEE
-
-    console.log({
-      buyAmount: minAmount,
-      price,
-      priceInUSD,
-      gasFee,
-      gasFeeInUSD: nativeCurrencyPrice * gasFee,
-      totalFee,
-      totalFeeInUSD: nativeCurrencyPrice * totalFee,
-    })
 
     return res.json({
       buyAmount: minAmount,

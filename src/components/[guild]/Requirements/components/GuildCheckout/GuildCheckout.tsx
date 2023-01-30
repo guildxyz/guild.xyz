@@ -1,5 +1,6 @@
 import {
   ButtonGroup,
+  Flex,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -40,9 +41,11 @@ const GuildCheckout = (): JSX.Element => {
 
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
-  const { data: priceData, isValidating } = usePrice(
-    requirement?.chain && RPC[requirement.chain].nativeCurrency.symbol
-  )
+  const {
+    data: priceData,
+    isValidating,
+    error,
+  } = usePrice(requirement?.chain && RPC[requirement.chain].nativeCurrency.symbol)
 
   if (!account || !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type))
     return null
@@ -85,48 +88,56 @@ const GuildCheckout = (): JSX.Element => {
           </ModalBody>
 
           <ModalFooter pt={10} bgColor={modalFooterBg}>
-            <Stack spacing={8} w="full">
-              <ButtonGroup size="sm" w="full">
-                <Button
-                  autoFocus={false}
-                  colorScheme="blue"
-                  variant="subtle"
-                  w="full"
-                  borderRadius="md"
-                >
-                  Pay with crypto
-                </Button>
-
-                <Tooltip label="Coming soon" placement="top" hasArrow>
+            {isValidating ? (
+              <Flex w="full" justifyContent="center">
+                <Spinner />
+              </Flex>
+            ) : error ? (
+              <Text colorScheme="gray">{error.error}</Text>
+            ) : (
+              <Stack spacing={8} w="full">
+                <ButtonGroup size="sm" w="full">
                   <Button
                     autoFocus={false}
+                    colorScheme="blue"
                     variant="subtle"
                     w="full"
                     borderRadius="md"
-                    isDisabled
                   >
-                    Pay with card
+                    Pay with crypto
                   </Button>
-                </Tooltip>
-              </ButtonGroup>
 
-              <PaymentCurrencyPicker />
+                  <Tooltip label="Coming soon" placement="top" hasArrow>
+                    <Button
+                      autoFocus={false}
+                      variant="subtle"
+                      w="full"
+                      borderRadius="md"
+                      isDisabled
+                    >
+                      Pay with card
+                    </Button>
+                  </Tooltip>
+                </ButtonGroup>
 
-              <FeeAndTotal />
+                <PaymentCurrencyPicker />
 
-              <Stack spacing={3}>
-                {!pickedCurrency ? (
-                  <ChooseCurrencyButton />
-                ) : (
-                  <>
-                    <SwitchNetworkButton />
-                    <TOSCheckbox />
-                    <AllowanceButton />
-                    <PurchaseButton />
-                  </>
-                )}
+                <FeeAndTotal />
+
+                <Stack spacing={3}>
+                  {!pickedCurrency ? (
+                    <ChooseCurrencyButton />
+                  ) : (
+                    <>
+                      <SwitchNetworkButton />
+                      <TOSCheckbox />
+                      <AllowanceButton />
+                      <PurchaseButton />
+                    </>
+                  )}
+                </Stack>
               </Stack>
-            </Stack>
+            )}
           </ModalFooter>
         </ModalContent>
       </Modal>

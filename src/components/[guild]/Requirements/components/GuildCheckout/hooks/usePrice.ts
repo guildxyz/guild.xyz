@@ -33,7 +33,10 @@ const usePrice = (sellAddress: string): SWRResponse<FetchPriceResponse> => {
 
   return useSWRImmutable<FetchPriceResponse>(
     shouldFetch ? ["fetchPrice", requirement, sellAddress] : null,
-    fetchPrice
+    fetchPrice,
+    {
+      shouldRetryOnError: false,
+    }
   )
 }
 
