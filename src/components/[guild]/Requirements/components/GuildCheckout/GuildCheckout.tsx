@@ -19,7 +19,10 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
-import { PURCHASABLE_REQUIREMENT_TYPES } from "utils/guildCheckout"
+import {
+  PURCHASABLE_REQUIREMENT_TYPES,
+  purchaseSupportedChains,
+} from "utils/guildCheckout"
 import RequirementDisplayComponent from "../RequirementDisplayComponent"
 import AllowanceButton from "./components/buttons/AllowanceButton"
 import ChooseCurrencyButton from "./components/buttons/ChooseCurrencyButton"
@@ -47,7 +50,11 @@ const GuildCheckout = (): JSX.Element => {
     error,
   } = usePrice(requirement?.chain && RPC[requirement.chain].nativeCurrency.symbol)
 
-  if (!account || !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type))
+  if (
+    !account ||
+    !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
+    !purchaseSupportedChains[requirement.type].includes(requirement.chain)
+  )
     return null
 
   return (
