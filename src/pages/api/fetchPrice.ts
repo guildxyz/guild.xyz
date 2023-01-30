@@ -123,22 +123,28 @@ const handler: NextApiHandler = async (
 
     const formattedBuyAmount = parseUnits(minAmount.toString(), decimals).toString()
 
+    const nativeCurrencyPrice = await fetchNativeCurrencyPrice(chain)
+
+    if (typeof nativeCurrencyPrice === "undefined")
+      return res.status(500).json({
+        error: `Couldn't fetch ${
+          RPC[Chains[chain]].nativeCurrency.symbol
+        }-USD rate.`,
+      })
+
     const response = await fetch(
       `${ZEROX_API_URLS[chain]}/swap/v1/price?sellToken=${sellAddress}&buyToken=${address}&buyAmount=${formattedBuyAmount}`
     )
 
-    console.log(
-      `${ZEROX_API_URLS[chain]}/swap/v1/price?sellToken=${sellAddress}&buyToken=${address}&buyAmount=${formattedBuyAmount}`
-    )
     if (response.status !== 200)
       return res.status(response.status).json({ error: response.statusText })
 
     const responseData = await response.json()
 
-    const nativeCurrencyPrice = await fetchNativeCurrencyPrice(chain)
-
-    if (typeof nativeCurrencyPrice === "undefined")
-      return res.status(500).json({ error: "Couldn't fetch ETH-USD rate." })
+    if (responseData.validationErrors?.length)
+      return res.status(500).json({
+        error: responseData.validationErrors[0].description,
+      })
 
     const price = parseFloat(responseData.price) * minAmount
     const priceInUSD = parseFloat(
@@ -156,6 +162,16 @@ const handler: NextApiHandler = async (
     const gasFee = 0
 
     const totalFee = gasFee + price * GUILD_FEE
+
+    console.log({
+      buyAmount: minAmount,
+      price,
+      priceInUSD,
+      gasFee,
+      gasFeeInUSD: nativeCurrencyPrice * gasFee,
+      totalFee,
+      totalFeeInUSD: nativeCurrencyPrice * totalFee,
+    })
 
     return res.json({
       buyAmount: minAmount,
@@ -219,6 +235,13 @@ const handler: NextApiHandler = async (
       .reduce((p1, p2) => p1 + p2, 0)
 
     const nativeCurrencyPrice = await fetchNativeCurrencyPrice(chain)
+
+    if (typeof nativeCurrencyPrice === "undefined")
+      return res.status(500).json({
+        error: `Couldn't fetch ${
+          RPC[Chains[chain]].nativeCurrency.symbol
+        }-USD rate.`,
+      })
 
     // TODO: calculate gas fee, maybe using a static call?
     const gasFee = 0
