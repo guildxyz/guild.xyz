@@ -24,7 +24,6 @@ const SoundRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       isImageLoading={isArtistLoading || isSongsLoading}
       image={(() => {
         switch (requirement.type) {

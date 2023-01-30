@@ -11,11 +11,7 @@ const CaskRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   return (
-    <Requirement
-      isNegated={requirement.isNegated}
-      image={<Img src="/requirementLogos/cask.png" />}
-      {...props}
-    >
+    <Requirement image={<Img src="/requirementLogos/cask.png" />} {...props}>
       {`Subscribe to plan `}
       <DataBlock>{`#${requirement.data.planId}`}</DataBlock>
       {` by `}
