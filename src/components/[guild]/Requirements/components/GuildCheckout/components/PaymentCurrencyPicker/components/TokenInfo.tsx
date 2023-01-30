@@ -71,7 +71,9 @@ const TokenInfo = ({
   const Wrapper = asMenuItem ? MenuItem : Fragment
 
   return (
-    <Wrapper {...(asMenuItem ? { ...rest, isDisabled: !!priceError } : {})}>
+    <Wrapper
+      {...(asMenuItem ? { ...rest, isDisabled: !!priceError || !!error } : {})}
+    >
       <HStack spacing={4} maxW="calc(100% - 2rem)" {...(asMenuItem ? {} : rest)}>
         <SkeletonCircle isLoaded={!isTokenDataLoading} size="var(--chakra-space-11)">
           <Circle size="var(--chakra-space-11)" bgColor={circleBgColor}>
@@ -90,6 +92,8 @@ const TokenInfo = ({
             <Text as="span" display="block" isTruncated>
               {priceError
                 ? "Couldn't fetch price"
+                : error
+                ? "Couldn't fetch token data"
                 : `${
                     isTooSmallPrice ? "< 0.001" : priceData?.price.toFixed(3)
                   } ${symbol}`}
