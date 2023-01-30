@@ -25,6 +25,13 @@ const FeeAndTotal = (): JSX.Element => {
 
   const { data: priceData, isValidating } = usePrice(pickedCurrency)
 
+  const isTooSmallFee = priceData
+    ? parseFloat(priceData.totalFee.toFixed(3)) <= 0.0 ?? ""
+    : undefined
+  const isTooSmallPrice = priceData
+    ? parseFloat(priceData.price.toFixed(3)) <= 0.0 ?? ""
+    : undefined
+
   return (
     <Stack divider={<Divider />} color={textColor}>
       <HStack justifyContent="space-between">
@@ -40,7 +47,9 @@ const FeeAndTotal = (): JSX.Element => {
         </HStack>
         <Text as="span">
           {pickedCurrency
-            ? `${priceData?.totalFee?.toFixed(2)} ${symbol}`
+            ? `${
+                isTooSmallFee ? "< 0.001" : priceData?.totalFee?.toFixed(3)
+              } ${symbol}`
             : "Choose currency"}
         </Text>
       </HStack>
@@ -53,7 +62,9 @@ const FeeAndTotal = (): JSX.Element => {
             <Skeleton isLoaded={!isValidating && !isNaN(priceData?.priceInUSD)}>
               {`$${priceData?.priceInUSD?.toFixed(2)} = `}
               <Text as="span" color={textAccentColor} fontWeight="semibold">
-                {`${priceData?.price?.toFixed(2)} ${symbol}`}
+                {`${
+                  isTooSmallPrice ? "< 0.001" : priceData?.price?.toFixed(3)
+                } ${symbol}`}
               </Text>
             </Skeleton>
           ) : (

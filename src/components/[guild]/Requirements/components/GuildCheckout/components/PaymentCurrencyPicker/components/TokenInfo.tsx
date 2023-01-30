@@ -40,6 +40,10 @@ const TokenInfo = ({
     error: priceError,
   } = usePrice(address)
 
+  const isTooSmallPrice = priceData
+    ? parseFloat(priceData.price.toFixed(3)) <= 0.0 ?? ""
+    : undefined
+
   // TODO: error handling
   const {
     data: { symbol: tokenSymbol, decimals, logoURI: tokenLogoURI },
@@ -53,7 +57,6 @@ const TokenInfo = ({
     ? tokenSymbol
     : RPC[Chains[chainId]].nativeCurrency.symbol
 
-  // TODO: error handling
   const { balance: coinBalance, isLoading: isCoinBalanceLoading } =
     useCoinBalance(chainId)
   const { balance: tokenBalance, isLoading: isTokenBalanceLoading } =
@@ -87,7 +90,9 @@ const TokenInfo = ({
             <Text as="span" display="block" isTruncated>
               {priceError
                 ? "Couldn't fetch price"
-                : `${priceData?.price.toFixed(5)} ${symbol}`}
+                : `${
+                    isTooSmallPrice ? "< 0.001" : priceData?.price.toFixed(3)
+                  } ${symbol}`}
               <Text as="span" colorScheme="gray">
                 {` (${RPC[Chains[chainId]].chainName})`}
               </Text>
