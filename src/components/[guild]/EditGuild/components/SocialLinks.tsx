@@ -73,7 +73,7 @@ const SocialLinks = (): JSX.Element => {
       <GridItem>
         <StyledSelect
           options={socialLinkOptions.filter(
-            (sl) => !Object.keys(definedSocialLinks ?? {}).includes(sl.value)
+            (sl) => typeof definedSocialLinks?.[sl.value] === "undefined"
           )}
           onChange={(newValue: SelectOption) =>
             setValue(`socialLinks.${newValue.value}`, "")
