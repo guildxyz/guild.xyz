@@ -17,7 +17,6 @@ const HundredNOneRequirement = ({ ...rest }: RequirementProps) => {
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={
         <Img
           src={

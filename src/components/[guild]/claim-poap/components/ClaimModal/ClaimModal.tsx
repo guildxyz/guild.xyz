@@ -38,7 +38,6 @@ import WalletAuthButtonWithBalance from "components/[guild]/JoinModal/components
 import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
 import processJoinPlatformError from "components/[guild]/JoinModal/utils/processJoinPlatformError"
 import { Chains } from "connectors"
-import useClearUrlQuery from "hooks/useClearUrlQuery"
 import useCoinBalance from "hooks/useCoinBalance"
 import useTokenBalance from "hooks/useTokenBalance"
 import useTokenData from "hooks/useTokenData"
@@ -69,8 +68,6 @@ type Props = {
 const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element => {
-  const query = useClearUrlQuery()
-
   const { isActive, account, chainId } = useWeb3React()
   const { id: userId } = useUser()
 
@@ -216,7 +213,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                     ) : (
                       <WalletAuthButton />
                     )}
-                    <ConnectPlatform platform={"DISCORD"} query={query} />
+                    <ConnectPlatform platform={"DISCORD"} />
 
                     {isMonetized && (
                       <JoinStep
@@ -370,7 +367,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
           <ModalHeader>Change network</ModalHeader>
           <ModalBody>
             <NetworkButtonsList
-              manualNetworkChangeCallback={onChangeNetworkModalClose}
+              networkChangeCallback={onChangeNetworkModalClose}
               listedChainIDs={guildPoap?.poapContracts?.map(
                 (poapContract) => poapContract.chainId
               )}

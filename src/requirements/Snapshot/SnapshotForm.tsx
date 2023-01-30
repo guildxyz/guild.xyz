@@ -1,156 +1,101 @@
-import { FormControl, FormLabel, Icon, Input, Stack, Text } from "@chakra-ui/react"
+import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import Link from "components/common/Link"
-import StyledSelect from "components/common/StyledSelect"
-import { ArrowSquareOut } from "phosphor-react"
-import { useEffect, useMemo, useState } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
-import capitalize from "utils/capitalize"
 import parseFromObject from "utils/parseFromObject"
-import ChainInfo from "../common/ChainInfo"
-import useSnapshots from "./hooks/useSnapshots"
-import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
+import FollowSince from "./components/FollowSince"
+import MajorityVotes from "./components/MajorityVotes"
+import Proposals from "./components/Proposals"
+import SpaceInput from "./components/SpaceSelect"
+import Strategy from "./components/Strategy"
+import UserSince from "./components/UserSince"
+import Votes from "./components/Votes"
 
-const SnapshotForm = ({
-  baseFieldPath,
-  field,
-}: RequirementFormProps): JSX.Element => {
-  const [defaultValueObject, setDefaultValueObject] = useState(null)
+const snapshotRequirementTypes = [
+  {
+    label: "Satisfy a strategy",
+    value: "SNAPSHOT_STRATEGY",
+    SnapshotRequirement: Strategy,
+  },
+  {
+    label: "Be an admin of a space",
+    value: "SNAPSHOT_SPACE_ADMIN",
+    SnapshotRequirement: SpaceInput,
+  },
+  {
+    label: "Be an author of a space",
+    value: "SNAPSHOT_SPACE_AUTHOR",
+    SnapshotRequirement: SpaceInput,
+  },
+  {
+    label: "Follow a space",
+    value: "SNAPSHOT_FOLLOW",
+    SnapshotRequirement: SpaceInput,
+  },
+  {
+    label: "Follow a space since",
+    value: "SNAPSHOT_FOLLOW_SINCE",
+    SnapshotRequirement: FollowSince,
+  },
+  {
+    label: "Be a user since",
+    value: "SNAPSHOT_USER_SINCE",
+    SnapshotRequirement: UserSince,
+  },
+  {
+    label: "Has voted [x] times",
+    value: "SNAPSHOT_VOTES",
+    SnapshotRequirement: Votes,
+  },
+  {
+    label: "Made at least [x] proposals",
+    value: "SNAPSHOT_PROPOSALS",
+    SnapshotRequirement: Proposals,
+  },
+  {
+    label: "Voted with the majority [x]% of the time",
+    value: "SNAPSHOT_MAJORITY_VOTES",
+    SnapshotRequirement: MajorityVotes,
+  },
+]
 
-  useEffect(() => {
-    setDefaultValueObject({ ...field?.data?.strategy?.params })
-  }, [])
+const SnapshotForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+  const { resetField } = useFormContext()
 
-  const {
-    control,
-    register,
-    getValues,
-    setValue,
-    formState: { errors, dirtyFields },
-  } = useFormContext()
+  const type = useWatch({ name: `${baseFieldPath}.type` })
 
-  const dataStrategyName = useWatch({
-    name: `${baseFieldPath}.data.strategy.name`,
-    control,
-  })
+  const { errors } = useFormState()
 
-  const { strategies, isLoading } = useSnapshots()
-
-  const strategyParams = useStrategyParamsArray(dataStrategyName)
-
-  const mappedStrategies = useMemo(
-    () =>
-      strategies?.map((strategy) => ({
-        label: capitalize(strategy.name),
-        value: strategy.name,
-      })),
-    [strategies]
-  )
-
-  useEffect(() => {
-    if (!strategyParams) return
-    // Delete fields of the previous strategy
-    const prevValues = getValues(`${baseFieldPath}.data.strategy.params`)
-    Object.keys(prevValues || {}).forEach((prevParam) => {
-      const strategyParamsNames = ["min"].concat(
-        strategyParams.map((param) => param.name)
-      )
-      if (!strategyParamsNames?.includes(prevParam)) {
-        setValue(`${baseFieldPath}.data.strategy.params.${prevParam}`, undefined)
-      }
-    })
-
-    // Set up default values when picked strategy changes
-    strategyParams.forEach((param) => {
-      setValue(
-        `${baseFieldPath}.data.strategy.params.${param.name}`,
-        parseFromObject(dirtyFields, baseFieldPath)?.data?.strategy?.name
-          ? param.defaultValue
-          : defaultValueObject?.[param.name]
-      )
-    })
-  }, [strategyParams])
-
-  // We don't display this input rn, just sending a default 0 value to the API
-  useEffect(() => {
-    setValue(`${baseFieldPath}.data.strategy.params.min`, 0)
-  }, [])
+  const selected = snapshotRequirementTypes.find((reqType) => reqType.value === type)
 
   return (
-    <Stack spacing={4} alignItems="start">
-      <ChainInfo>Works on ETHEREUM</ChainInfo>
-
+    <Stack spacing={4} alignItems="start" w="full">
       <FormControl
-        position="relative"
-        isRequired
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.strategy?.name}
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
       >
-        <FormLabel>Strategy:</FormLabel>
-        <Controller
-          name={`${baseFieldPath}.data.strategy.name` as const}
-          control={control}
-          rules={{
-            required: "This field is required.",
-          }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              isClearable
-              isLoading={isLoading}
-              options={mappedStrategies}
-              placeholder="Search..."
-              value={mappedStrategies?.find((strategy) => strategy.value === value)}
-              onChange={(newValue: SelectOption) => onChange(newValue?.value)}
-              onBlur={onBlur}
-            />
-          )}
+        <FormLabel>Type</FormLabel>
+
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
+          rules={{ required: "It's required to select a type" }}
+          options={snapshotRequirementTypes}
+          beforeOnChange={() =>
+            resetField(`${baseFieldPath}.data`, { defaultValue: "" })
+          }
         />
+
         <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.strategy?.name?.message}
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
         </FormErrorMessage>
       </FormControl>
 
-      {strategyParams?.map((param) => (
-        <FormControl
-          key={`${dataStrategyName}-${param.name}`}
-          isRequired
-          isInvalid={
-            !!parseFromObject(errors, baseFieldPath)?.data?.strategy?.params?.[
-              param.name
-            ]
-          }
-          mb={2}
-        >
-          <FormLabel>{capitalize(param.name)}</FormLabel>
-          <Input
-            {...register(
-              `${baseFieldPath}.data.strategy.params.${param.name}` as const,
-              {
-                required: "This field is required.",
-                valueAsNumber: typeof param.defaultValue === "number",
-              }
-            )}
-            defaultValue={field?.data?.strategy?.params?.[param.name]}
-          />
-          <FormErrorMessage>
-            {
-              parseFromObject(errors, baseFieldPath)?.data?.strategy?.params?.[
-                param.name
-              ]?.message as string
-            }
-          </FormErrorMessage>
-        </FormControl>
-      ))}
-
-      <Link
-        href="https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies"
-        isExternal
-      >
-        <Text fontSize="sm">Snapshot strategies</Text>
-        <Icon ml={1} as={ArrowSquareOut} />
-      </Link>
+      {selected?.SnapshotRequirement && (
+        <>
+          <Divider />
+          <selected.SnapshotRequirement baseFieldPath={baseFieldPath} />
+        </>
+      )}
     </Stack>
   )
 }

@@ -1,5 +1,5 @@
 import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
-import React, { useEffect, useRef, useState } from "react"
+import React, { memo, useEffect, useRef, useState } from "react"
 import { VariableSizeList } from "react-window"
 import { Role } from "types"
 import LogicDivider from "../LogicDivider"
@@ -142,4 +142,4 @@ const RoleRequirements = ({ role }: Props) => {
   )
 }
 
-export default RoleRequirements
+export default memo(RoleRequirements)

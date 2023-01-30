@@ -1,13 +1,14 @@
 import { Img } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { ArrowSquareOut } from "phosphor-react"
-import { PropsWithChildren } from "react"
+import { forwardRef, PropsWithChildren } from "react"
 import { Rest } from "types"
 
 type Props = PropsWithChildren<Rest>
 
-const RequirementButton = ({ children, ...rest }: Props) => (
+const RequirementButton = forwardRef(({ children, ...rest }: Props, ref: any) => (
   <Button
+    ref={ref}
     variant={"link"}
     size="xs"
     fontWeight={"medium"}
@@ -18,7 +19,7 @@ const RequirementButton = ({ children, ...rest }: Props) => (
   >
     {children}
   </Button>
-)
+))
 
 type LinkProps = Props & { imageUrl: string }
 

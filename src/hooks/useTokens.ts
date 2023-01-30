@@ -3,7 +3,7 @@ import useSWRImmutable from "swr/immutable"
 import { CoingeckoToken } from "types"
 import fetcher from "utils/fetcher"
 
-const TokenApiURLs = {
+export const TokenApiURLs = {
   ETHEREUM: ["https://tokens.coingecko.com/uniswap/all.json"],
   BSC: ["https://tokens.coingecko.com/binance-smart-chain/all.json"],
   GNOSIS: [

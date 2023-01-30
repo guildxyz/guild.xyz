@@ -9,9 +9,10 @@ import { RequirementProvider } from "./RequirementContext"
 
 type Props = {
   requirement: RequirementType
+  simple?: boolean
 }
 
-const RequirementDisplayComponent = ({ requirement }: Props) => {
+const RequirementDisplayComponent = ({ requirement, simple }: Props) => {
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
 
   if (!RequirementComponent)
@@ -21,10 +22,12 @@ const RequirementDisplayComponent = ({ requirement }: Props) => {
         <DataBlock>{requirement.type}</DataBlock>
       </Requirement>
     )
-
   return (
     <RequirementProvider requirement={requirement}>
-      <RequirementComponent rightElement={<RequiementAccessIndicator />} />
+      <RequirementComponent
+        rightElement={<RequiementAccessIndicator />}
+        simple={simple}
+      />
     </RequirementProvider>
   )
 }

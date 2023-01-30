@@ -82,7 +82,14 @@ export const REQUIREMENTS_DATA = [
       "TWITTER_NAME",
       "TWITTER_BIO",
       "TWITTER_FOLLOW",
+      "TWITTER_FOLLOWED_BY",
       "TWITTER_FOLLOWER_COUNT",
+      "TWITTER_LIKE",
+      "TWITTER_RETWEET",
+      "TWITTER_LIST_MEMBER",
+      "TWITTER_LIST_FOLLOW",
+      "TWITTER_ACCOUNT_AGE",
+      "TWITTER_ACCOUNT_AGE_RELATIVE",
     ],
     isPlatform: true,
   },
@@ -194,8 +201,18 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Snapshot/SnapshotForm")
     ),
-    types: ["SNAPSHOT"],
-    disabled: true,
+    types: [
+      "SNAPSHOT",
+      "SNAPSHOT_STRATEGY",
+      "SNAPSHOT_SPACE_ADMIN",
+      "SNAPSHOT_SPACE_AUTHOR",
+      "SNAPSHOT_FOLLOW",
+      "SNAPSHOT_FOLLOW_SINCE",
+      "SNAPSHOT_USER_SINCE",
+      "SNAPSHOT_VOTES",
+      "SNAPSHOT_PROPOSALS",
+      "SNAPSHOT_MAJORITY_VOTES",
+    ],
   },
   {
     icon: "/requirementLogos/juicebox.png",
@@ -406,6 +423,24 @@ export const REQUIREMENTS_DATA = [
     types: ["REP3"],
   },
   {
+    icon: "/explorerLogos/tessera.svg",
+    name: "Tessera",
+    fileNameBase: "Tessera",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Tessera/TesseraRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Tessera/TesseraForm")
+    ),
+    types: [
+      "TESSERA",
+      "TESSERA_HOLD",
+      "TESSERA_HOLD_COLLECTION",
+      "TESSERA_HOLD_STATE",
+      "TESSERA_LISTINGS",
+    ],
+  },
+  {
     icon: "/requirementLogos/parallel.png",
     name: "Parallel",
     fileNameBase: "Parallel",
@@ -416,6 +451,24 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Parallel/ParallelForm")
     ),
     types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
+  },
+  {
+    icon: "/requirementLogos/shield.png",
+    name: "Shield",
+    fileNameBase: "Shield",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Shield/ShieldRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Shield/ShieldForm")
+    ),
+    types: [
+      "SHIELD_ANOM_TX",
+      "SHIELD_UNVERIFIED_CONTRACT",
+      "SHIELD_EXPLOIT_INTERACTION",
+      "SHIELD_INDIRECT_DEPOSITS",
+      "SHIELD_TORNADO_CASH",
+    ],
   },
 ] as const
 

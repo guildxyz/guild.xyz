@@ -15,7 +15,6 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={
         role?.imageUrl &&
         (role.imageUrl?.match("guildLogos") ? (
@@ -48,12 +47,8 @@ const UserSince = (props: RequirementProps): JSX.Element => {
   const formattedDate = new Date(requirement.data.creationDate).toLocaleDateString()
 
   return (
-    <Requirement
-      isNegated={requirement.isNegated}
-      image="/requirementLogos/guild.png"
-      {...props}
-    >
-      {"Be a Guild.xyz user at least since "}
+    <Requirement image="/requirementLogos/guild.png" {...props}>
+      {"Be a Guild.xyz user since at least "}
       <DataBlock>{formattedDate}</DataBlock>
     </Requirement>
   )
@@ -63,11 +58,7 @@ const MinGuilds = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
   return (
-    <Requirement
-      isNegated={requirement.isNegated}
-      image="/requirementLogos/guild.png"
-      {...props}
-    >
+    <Requirement image="/requirementLogos/guild.png" {...props}>
       {`Be a member of at least ${pluralize(requirement.data.minAmount, "guild")}`}
     </Requirement>
   )
@@ -77,11 +68,7 @@ const Admin = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
   return (
-    <Requirement
-      isNegated={requirement.isNegated}
-      image="/requirementLogos/guild.png"
-      {...props}
-    >
+    <Requirement image="/requirementLogos/guild.png" {...props}>
       {`Be an admin of a guild${
         requirement.data.minAmount > 0
           ? ` with at least ${pluralize(requirement.data.minAmount, "member")}`

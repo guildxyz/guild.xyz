@@ -1,20 +1,25 @@
-import { Icon, Link } from "@chakra-ui/react"
+import { Icon } from "@chakra-ui/react"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { TwitterLogo } from "phosphor-react"
+import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+import TwitterListLink from "./components/TwitterListLink"
+import TwitterTweetLink from "./components/TwitterTweetLink"
+import TwitterUserLink from "./components/TwitterUserLink"
 
 const TwitterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={
-        requirement.type === "TWITTER_FOLLOW" && requirement.data.id ? (
+        ["TWITTER_FOLLOW", "TWITTER_FOLLOWED_BY"].includes(requirement.type) &&
+        requirement.data.id ? (
           `/api/twitter-avatar?username=${requirement.data.id}`
         ) : (
           <Icon as={TwitterLogo} boxSize={6} />
@@ -49,15 +54,66 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <>
                 {`Follow `}
-                <Link
-                  href={`https://twitter.com/${requirement.data.id}`}
-                  isExternal
-                  colorScheme="blue"
-                  fontWeight="medium"
-                >
-                  @{requirement.data.id}
-                </Link>
+                <TwitterUserLink requirement={requirement} />
                 {` on Twitter`}
+              </>
+            )
+          case "TWITTER_FOLLOWED_BY":
+            return (
+              <>
+                {`Be followed by `}
+                <TwitterUserLink requirement={requirement} />
+                {` on Twitter`}
+              </>
+            )
+          case "TWITTER_LIKE":
+            return (
+              <>
+                {`Like `}
+                <TwitterTweetLink requirement={requirement} />
+              </>
+            )
+          case "TWITTER_RETWEET":
+            return (
+              <>
+                {`Retweet `}
+                <TwitterTweetLink requirement={requirement} />
+              </>
+            )
+          case "TWITTER_LIST_MEMBER":
+            return (
+              <>
+                {`Be a member of `}
+                <TwitterListLink requirement={requirement} />
+              </>
+            )
+          case "TWITTER_LIST_FOLLOW":
+            return (
+              <>
+                {`Follow `}
+                <TwitterListLink requirement={requirement} />
+              </>
+            )
+          case "TWITTER_ACCOUNT_AGE_RELATIVE":
+            const formattedAccountAge = formatRelativeTimeFromNow(
+              requirement.data.minAmount
+            )
+
+            return (
+              <>
+                {`Have a Twitter account older than `}
+                <DataBlock>{formattedAccountAge}</DataBlock>
+              </>
+            )
+          case "TWITTER_ACCOUNT_AGE":
+            const formattedDate = new Date(
+              requirement.data.minAmount
+            ).toLocaleDateString()
+
+            return (
+              <>
+                {`Have a Twitter account since at least `}
+                <DataBlock>{formattedDate}</DataBlock>
               </>
             )
         }

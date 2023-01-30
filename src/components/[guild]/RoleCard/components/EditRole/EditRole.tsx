@@ -1,5 +1,6 @@
 import {
   Box,
+  Collapse,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -15,6 +16,7 @@ import {
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
+import ErrorAlert from "components/common/ErrorAlert"
 import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
@@ -35,6 +37,8 @@ import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import useEditRole from "./hooks/useEditRole"
+
+const noRequirementsErrorMessage = "Set some requirements, or make the role free"
 
 type Props = {
   roleId: number
@@ -114,7 +118,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     name: "requirements",
     control: methods.control,
   })
-
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     (...props) => {
       methods.clearErrors("requirements")
@@ -122,7 +125,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         methods.setError(
           "requirements",
           {
-            message: "Set some requirements, or make the role free",
+            message: noRequirementsErrorMessage,
           },
           { shouldFocus: true }
         )
@@ -184,6 +187,15 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                   <Description />
                 </Section>
                 <SetRequirements />
+
+                <Collapse
+                  in={!!methods.formState.errors?.requirements}
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  <ErrorAlert label={noRequirementsErrorMessage} />
+                </Collapse>
               </VStack>
             </FormProvider>
           </DrawerBody>

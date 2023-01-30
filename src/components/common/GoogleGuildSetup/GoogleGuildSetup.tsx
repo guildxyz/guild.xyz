@@ -15,12 +15,11 @@ import {
   usePrevious,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence } from "framer-motion"
 import { Check, CopySimple, PencilSimple } from "phosphor-react"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 import AddCard from "../AddCard"
@@ -74,9 +73,7 @@ const GoogleGuildSetup = ({
     setValue(fieldName, null)
   }
 
-  const { onSubmit, isLoading, isSigning, signLoadingText } = useCreateGuild()
-
-  const handleSelect = handleSubmit(onSelect ?? onSubmit)
+  const handleSelect = onSelect ? handleSubmit(onSelect) : undefined
 
   useEffect(() => {
     if (selectedFile)
@@ -149,12 +146,10 @@ const GoogleGuildSetup = ({
             )}
           </AnimatePresence>
           {showForm && (
-            <GridItem colSpan={2}>
+            <GridItem>
               <GoogleDocSetupCard
                 fieldNameBase={fieldNameBase}
                 onSubmit={handleSelect}
-                isLoading={isLoading || isSigning}
-                loadingText={signLoadingText ?? "Creating guild"}
                 permissionField={permissionField}
               />
             </GridItem>
@@ -177,7 +172,7 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
   )
 
   const { hasCopied, onCopy } = useClipboard(GUILD_EMAIL_ADDRESS)
-  const { openAccountModal } = useContext(Web3Connection)
+  const { openAccountModal } = useWeb3ConnectionManager()
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">

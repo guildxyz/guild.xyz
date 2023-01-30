@@ -1,23 +1,10 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react"
-import useOAuthWithCallback from "components/[guild]/JoinModal/hooks/useOAuthWithCallback"
-import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
-import { ArrowSquareIn, CaretRight } from "phosphor-react"
-import { useMemo } from "react"
+import { CaretRight } from "phosphor-react"
 import LandingButton from "./LandingButton"
 
 const CallToAction = (): JSX.Element => {
   const router = useRouter()
-  const { callbackWithDCAuth, isAuthenticating, authData } = useOAuthWithCallback(
-    "DISCORD",
-    "guilds",
-    () => router.push("/create-guild/discord")
-  )
-
-  const DynamicCtaIcon = useMemo(
-    () => dynamic(async () => (!authData ? ArrowSquareIn : CaretRight)),
-    [authData]
-  )
 
   return (
     <Flex
@@ -65,14 +52,13 @@ const CallToAction = (): JSX.Element => {
       </Heading>
       <LandingButton
         position="relative"
-        onClick={callbackWithDCAuth}
-        isLoading={isAuthenticating}
+        onClick={() => router.push("/create-guild")}
         colorScheme="DISCORD"
         loadingText={"Check the popup window"}
         mb={3}
-        rightIcon={<DynamicCtaIcon />}
+        rightIcon={<CaretRight />}
       >
-        Add to Discord
+        Create guild
       </LandingButton>
       <Text
         position="relative"

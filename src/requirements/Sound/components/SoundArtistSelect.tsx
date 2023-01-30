@@ -1,10 +1,10 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
-import StyledSelect from "components/common/StyledSelect"
+import ControlledSelect from "components/common/ControlledSelect"
 import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
 import { PropsWithChildren, useState } from "react"
-import { Controller, useFormContext } from "react-hook-form"
+import { useFormState, useWatch } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
-import { Requirement, SelectOption } from "types"
+import { Requirement } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 type Props = {
@@ -18,10 +18,9 @@ const SoundArtistSelect = ({
   field,
   onChange: onChangeFn,
 }: PropsWithChildren<Props>) => {
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext()
+  const { errors } = useFormState()
+
+  const id = useWatch({ name: `${baseFieldPath}.data.id` })
 
   const [search, setSearch] = useState(field?.data?.id)
 
@@ -46,41 +45,38 @@ const SoundArtistSelect = ({
       isInvalid={parseFromObject(errors, baseFieldPath)?.data?.id}
     >
       <FormLabel>Artist:</FormLabel>
-      <Controller
-        name={`${baseFieldPath}.data.id` as const}
-        control={control}
+
+      <ControlledSelect
+        name={`${baseFieldPath}.data.id`}
         rules={{ required: "This field is required." }}
-        render={({ field: { onChange, onBlur, value, ref } }) => (
-          <StyledSelect
-            ref={ref}
-            isClearable
-            options={artistOptions}
-            placeholder="Search for an artist"
-            value={artistOptions?.find((option) => option.value === value)}
-            onChange={(newSelectedOption: SelectOption) => {
-              onChange(newSelectedOption?.value ?? null)
-              onChangeFn?.(newSelectedOption?.value)
-            }}
-            onInputChange={(text, _) => setSearch(text ? splitInput(text) : "")}
-            isLoading={artistsLoading}
-            onBlur={onBlur}
-            components={{
-              MenuList: (props) => (
-                <CustomMenuList
-                  {...props}
-                  noResultText={
-                    !search?.length
-                      ? "Start typing..."
-                      : artistsLoading
-                      ? "Loading..."
-                      : "No results"
-                  }
-                />
-              ),
-            }}
-          />
-        )}
+        isClearable
+        options={artistOptions}
+        placeholder="Search for an artist"
+        afterOnChange={(newValue) => onChangeFn?.(newValue?.value)}
+        onInputChange={(text, _) => setSearch(text ? splitInput(text) : "")}
+        isLoading={artistsLoading}
+        fallbackValue={
+          id && {
+            label: id,
+            value: id,
+          }
+        }
+        components={{
+          MenuList: (props) => (
+            <CustomMenuList
+              {...props}
+              noResultText={
+                !search?.length
+                  ? "Start typing..."
+                  : artistsLoading
+                  ? "Loading..."
+                  : "No results"
+              }
+            />
+          ),
+        }}
       />
+
       <FormErrorMessage>
         {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
       </FormErrorMessage>
