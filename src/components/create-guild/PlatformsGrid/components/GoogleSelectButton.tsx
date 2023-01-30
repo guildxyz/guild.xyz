@@ -1,15 +1,13 @@
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import useUser from "components/[guild]/hooks/useUser"
 import useGoogleAuthWithCallback from "components/[guild]/JoinModal/hooks/useGoogleAuthWithCallback"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useMemo } from "react"
 import { PlatformName } from "types"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import fetcher from "utils/fetcher"
+import ConnectWalletButton from "./ConnectWalletButton"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
@@ -37,28 +35,18 @@ const GoogleSelectButton = ({ onSelection }: Props) => {
     [code, isGoogleConnected]
   )
 
-  const user = useUser()
-  const fetcherWithSign = useFetcherWithSign()
-
   const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
-    ({ data, validation }) =>
+    (signedValidation) =>
       fetcher("/user/connect", {
         method: "POST",
-        body: { payload: data, ...validation },
-      }).then(() => manageKeyPairAfterUserMerge(fetcherWithSign, user, account)),
+        ...signedValidation,
+      }),
     { onSuccess: () => onSelection("GOOGLE") }
   )
 
   const { account } = useWeb3React()
-  const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
-  if (!account) {
-    return (
-      <Button colorScheme="blue" onClick={openWalletSelectorModal}>
-        Connect Wallet
-      </Button>
-    )
-  }
+  if (!account) return <ConnectWalletButton />
 
   return (
     <Button

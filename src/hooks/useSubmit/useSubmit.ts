@@ -6,7 +6,6 @@ import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
 import { Chains, RPC } from "connectors"
 import { randomBytes } from "crypto"
-import stringify from "fast-json-stable-stringify"
 import useKeyPair from "hooks/useKeyPair"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
@@ -21,11 +20,11 @@ type Options<ResponseType> = {
   onError?: (error: any) => void
 }
 
-type FetcherFunction<DataType, ResponseType> = ({
-  data,
+type FetcherFunction<ResponseType> = ({
+  signedPayload,
   validation,
 }: {
-  data: DataType
+  signedPayload: string
   validation: Validation
 }) => Promise<ResponseType>
 
@@ -63,7 +62,7 @@ const useSubmit = <DataType, ResponseType>(
   }
 }
 
-export type WithValidation<D> = { data: D; validation: Validation }
+export type SignedValdation = { signedPayload: string; validation: Validation }
 
 export type Validation = {
   params: MessageParams
@@ -106,7 +105,7 @@ const getMessage = ({
 const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
 
 const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
-  fetch: FetcherFunction<DataType, ResponseType>,
+  fetch: FetcherFunction<ResponseType>,
   {
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
@@ -140,12 +139,13 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
+      const payload = JSON.stringify(data ?? {})
       setSignLoadingText(defaultLoadingText)
       setIsSigning(true)
-      const validation = await sign({
+      const [signedPayload, validation] = await sign({
         provider,
         address: account,
-        payload: data ?? {},
+        payload,
         chainId: chainId.toString(),
         forcePrompt,
         keyPair,
@@ -160,7 +160,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
           }
           throw error
         })
-        .then(async (val) => {
+        .then(async ([signed, val]) => {
           const callbackData = signCallbacks.find(({ nameRegex }) =>
             nameRegex.test(peerMeta?.name)
           )
@@ -171,11 +171,11 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
               .signCallback(msg, account, chainId)
               .finally(() => setSignLoadingText(defaultLoadingText))
           }
-          return val
+          return [signed, val] as [string, Validation]
         })
         .finally(() => setIsSigning(false))
 
-      return fetch({ data: data as DataType, validation }).catch((e) => {
+      return fetch({ signedPayload, validation }).catch((e) => {
         if (e?.message === "Invalid or expired timestamp!") {
           setShouldFetchTimestamp(true)
           location?.reload()
@@ -194,8 +194,8 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   }
 }
 
-const useSubmitWithSign = <DataType, ResponseType>(
-  fetch: FetcherFunction<DataType, ResponseType>,
+const useSubmitWithSign = <ResponseType>(
+  fetch: FetcherFunction<ResponseType>,
   {
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
@@ -220,7 +220,7 @@ const useSubmitWithSign = <DataType, ResponseType>(
 export type SignProps = {
   provider: Web3Provider
   address: string
-  payload: any
+  payload: string
   chainId: string
   forcePrompt: boolean
   keyPair?: CryptoKeyPair
@@ -237,18 +237,12 @@ const sign = async ({
   forcePrompt,
   msg = DEFAULT_MESSAGE,
   ts,
-}: SignProps): Promise<Validation> => {
-  const payloadToSign = { ...payload }
-  delete payloadToSign?.keyPair
-
+}: SignProps): Promise<[string, Validation]> => {
   const params: MessageParams = {
     addr: address.toLowerCase(),
     nonce: randomBytes(32).toString("base64"),
     ts: ts.toString(),
-    hash:
-      Object.keys(payloadToSign).length > 0
-        ? keccak256(toUtf8Bytes(stringify(payloadToSign)))
-        : undefined,
+    hash: payload !== "{}" ? keccak256(toUtf8Bytes(payload)) : undefined,
     method: null,
     msg,
     chainId: undefined,
@@ -291,7 +285,7 @@ const sign = async ({
       .signMessage(getMessage(params))
   }
 
-  return { params, sig }
+  return [payload, { params, sig }]
 }
 
 export default useSubmit

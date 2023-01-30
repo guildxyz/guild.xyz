@@ -1,13 +1,19 @@
 import {
-  Collapse,
   Divider,
   HStack,
   Icon,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Portal,
   Table,
   Tbody,
   Td,
   Tr,
-  useDisclosure,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -16,66 +22,78 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { CaretDown, Function } from "phosphor-react"
+import { ArrowSquareOut, Function } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
+
+const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const ContractStateRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
-
-  const { isOpen, onToggle } = useDisclosure()
+  const tableBgColor = useColorModeValue("white", "blackAlpha.300")
 
   return (
     <Requirement
       isNegated={requirement.isNegated}
       image={<Icon as={Function} boxSize={6} />}
       footer={
-        <>
-          <HStack divider={<Divider orientation="vertical" h="4" />} spacing="4">
-            <BlockExplorerUrl />
-            <RequirementButton
-              rightIcon={
-                <Icon
-                  as={CaretDown}
-                  transform={isOpen && "rotate(-180deg)"}
-                  transition="transform .3s"
-                />
-              }
-              onClick={onToggle}
-            >
-              View query
-            </RequirementButton>
-          </HStack>
-          <Collapse in={isOpen}>
-            <Table
-              variant="simple"
-              w="full"
-              sx={{ tableLayout: "fixed", borderCollapse: "unset" }}
-              size="sm"
-              bg="blackAlpha.100"
-              borderWidth="1px"
-              borderRadius="md"
-            >
-              <Tbody fontWeight="normal" fontSize="xs">
-                {(requirement.data.params as string[])?.map((param, i) => (
-                  <Tr key={i}>
-                    <Td>{`${i + 1}. input param`}</Td>
-                    <Td>{param}</Td>
-                  </Tr>
-                ))}
-                <Tr fontWeight={"semibold"}>
-                  <Td>{`Expected ${
-                    requirement.data.resultIndex !== undefined
-                      ? `${requirement.data.resultIndex + 1}. `
-                      : ""
-                  }output`}</Td>
-                  <Td>
-                    {`${requirement.data.resultMatch} ${requirement.data.expected}`}
-                  </Td>
-                </Tr>
-              </Tbody>
-            </Table>
-          </Collapse>
-        </>
+        <HStack divider={<Divider orientation="vertical" h="4" />} spacing={3}>
+          <BlockExplorerUrl />
+
+          <Popover placement="bottom">
+            <PopoverTrigger>
+              <RequirementButton rightIcon={<Icon as={ArrowSquareOut} />}>
+                View query
+              </RequirementButton>
+            </PopoverTrigger>
+
+            <Portal>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverHeader
+                  fontSize="xs"
+                  fontWeight="bold"
+                  textTransform="uppercase"
+                >
+                  Query
+                </PopoverHeader>
+                <PopoverBody p={0}>
+                  <Table
+                    variant="simple"
+                    w="full"
+                    sx={{ tableLayout: "fixed", borderCollapse: "unset" }}
+                    size="sm"
+                    bg={tableBgColor}
+                    borderWidth={0}
+                    borderBottomRadius="xl"
+                  >
+                    <Tbody fontWeight="normal" fontSize="xs">
+                      {(requirement.data.params as string[])?.map((param, i) => (
+                        <Tr key={i}>
+                          <Td>{`${i + 1}. input param`}</Td>
+                          <Td>{param}</Td>
+                        </Tr>
+                      ))}
+                      <Tr fontWeight={"semibold"}>
+                        <Td>{`Expected ${
+                          requirement.data.resultIndex !== undefined
+                            ? `${requirement.data.resultIndex + 1}. `
+                            : ""
+                        }output`}</Td>
+                        <Td>
+                          {`${requirement.data.resultMatch} ${
+                            ADDRESS_REGEX.test(requirement.data.expected)
+                              ? shortenHex(requirement.data.expected, 3)
+                              : requirement.data.expected
+                          }`}
+                        </Td>
+                      </Tr>
+                    </Tbody>
+                  </Table>
+                </PopoverBody>
+              </PopoverContent>
+            </Portal>
+          </Popover>
+        </HStack>
       }
       {...props}
     >

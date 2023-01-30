@@ -8,12 +8,11 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { ParsedUrlQuery } from "querystring"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, PlatformType } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
@@ -24,10 +23,9 @@ import processJoinPlatformError from "./utils/processJoinPlatformError"
 type Props = {
   isOpen: boolean
   onClose: () => void
-  query: ParsedUrlQuery
 }
 
-const JoinModal = ({ isOpen, onClose, query }: Props): JSX.Element => {
+const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isActive } = useWeb3React()
   const { name, guildPlatforms, roles } = useGuild()
 
@@ -77,7 +75,7 @@ const JoinModal = ({ isOpen, onClose, query }: Props): JSX.Element => {
             <VStack spacing="3" alignItems="stretch" w="full" divider={<Divider />}>
               <WalletAuthButton />
               {allUniquePlatforms.map((platform: PlatformName) => (
-                <ConnectPlatform key={platform} {...{ platform, query }} />
+                <ConnectPlatform key={platform} {...{ platform }} />
               ))}
             </VStack>
             <ModalButton

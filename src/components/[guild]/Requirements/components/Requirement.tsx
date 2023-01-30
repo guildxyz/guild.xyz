@@ -40,7 +40,7 @@ const Requirement = ({
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
 
-  const { type, chain } = useRequirementContext()
+  const requirement = useRequirementContext()
 
   return (
     <SimpleGrid
@@ -85,9 +85,10 @@ const Requirement = ({
         </Text>
 
         <HStack spacing={4}>
-          {showPurchaseBtn && purchaseSupportedChains[type]?.includes(chain) && (
-            <PurchaseRequirement />
-          )}
+          {showPurchaseBtn &&
+            purchaseSupportedChains[requirement?.type]?.includes(
+              requirement?.chain
+            ) && <PurchaseRequirement />}
           {showFooter && footer}
         </HStack>
       </VStack>

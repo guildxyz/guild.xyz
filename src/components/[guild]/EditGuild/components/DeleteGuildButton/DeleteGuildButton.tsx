@@ -14,7 +14,11 @@ import ShouldKeepPlatformAccesses from "components/[guild]/ShouldKeepPlatformAcc
 import { useRef, useState } from "react"
 import useDeleteGuild from "./hooks/useDeleteGuild"
 
-const DeleteGuildButton = (): JSX.Element => {
+type Props = {
+  beforeDelete?: () => void
+}
+
+const DeleteGuildButton = ({ beforeDelete }: Props): JSX.Element => {
   const [removeAccess, setRemoveAccess] = useState(false)
   const { onSubmit, isLoading, signLoadingText } = useDeleteGuild()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -52,7 +56,10 @@ const DeleteGuildButton = (): JSX.Element => {
                 ml={3}
                 isLoading={isLoading}
                 loadingText={signLoadingText || "Deleting"}
-                onClick={() => onSubmit({ removePlatformAccess: removeAccess })}
+                onClick={() => {
+                  beforeDelete?.()
+                  onSubmit({ removePlatformAccess: removeAccess })
+                }}
               >
                 Delete
               </Button>

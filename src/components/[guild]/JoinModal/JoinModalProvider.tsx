@@ -12,8 +12,8 @@ const JoinModalProvider = ({ children }: PropsWithChildren<any>): JSX.Element =>
   const isMember = useIsMember()
 
   useEffect(() => {
-    if (query.hash) onOpen()
-  }, [query.hash])
+    if (typeof query.join === "string") onOpen()
+  }, [query.join])
 
   useEffect(() => {
     if (isMember) onClose()
@@ -22,7 +22,7 @@ const JoinModalProvider = ({ children }: PropsWithChildren<any>): JSX.Element =>
   return (
     <JoinModalContext.Provider value={onOpen}>
       {children}
-      <JoinModal {...{ isOpen, onClose, query }} />
+      <JoinModal {...{ isOpen, onClose }} />
     </JoinModalContext.Provider>
   )
 }

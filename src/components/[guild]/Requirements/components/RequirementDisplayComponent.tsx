@@ -28,7 +28,6 @@ const RequirementDisplayComponent = ({
         <DataBlock>{requirement.type}</DataBlock>
       </Requirement>
     )
-
   return (
     <RequirementProvider requirement={requirement}>
       <RequirementComponent

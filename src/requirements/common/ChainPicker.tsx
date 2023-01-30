@@ -6,7 +6,7 @@ import {
   InputLeftElement,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import StyledSelect from "components/common/StyledSelect"
+import ControlledSelect from "components/common/ControlledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { BALANCY_SUPPORTED_CHAINS } from "components/create-guild/Requirements/hooks/useBalancy"
 import {
@@ -17,14 +17,14 @@ import {
 } from "connectors"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { SelectOption } from "types"
+import { useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
   controlName: string
   supportedChains?: Array<Chain>
   onChange?: () => void
   isDisabled?: boolean
+  showDivider?: boolean
 }
 
 const mappedChains: Array<{ img: string; label: string; value: Chain }> =
@@ -39,6 +39,7 @@ const ChainPicker = ({
   supportedChains = defaultSupportedChains,
   onChange: onChangeHandler,
   isDisabled,
+  showDivider = true,
 }: Props): JSX.Element => {
   const router = useRouter()
   const isBalancyPlayground = router.asPath === "/balancy"
@@ -82,26 +83,15 @@ const ChainPicker = ({
           <InputLeftElement>
             <OptionImage img={RPC[chain]?.iconUrls?.[0]} alt={chain} />
           </InputLeftElement>
-          <Controller
+
+          <ControlledSelect
             name={controlName}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                options={mappedSupportedChains}
-                value={mappedSupportedChains?.find(
-                  (_chain) => _chain.value === value
-                )}
-                onChange={(selectedOption: SelectOption) => {
-                  onChange(selectedOption?.value ?? null)
-                  onChangeHandler?.()
-                }}
-                onBlur={onBlur}
-              />
-            )}
+            options={mappedSupportedChains}
+            afterOnChange={onChangeHandler}
           />
         </InputGroup>
       </FormControl>
-      <Divider />
+      {showDivider && <Divider />}
     </>
   )
 }

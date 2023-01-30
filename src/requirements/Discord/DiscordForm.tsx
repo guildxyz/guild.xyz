@@ -5,8 +5,8 @@ import {
   FormLabel,
   Stack,
 } from "@chakra-ui/react"
-import StyledSelect from "components/common/StyledSelect"
-import { useController, useFormContext, useFormState } from "react-hook-form"
+import ControlledSelect from "components/common/ControlledSelect"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import DiscordJoin from "./components/DiscordJoin"
@@ -41,14 +41,9 @@ const DiscordForm = ({ baseFieldPath }: RequirementFormProps) => {
   const { resetField } = useFormContext()
   const { errors } = useFormState()
 
-  const {
-    field: { name, onBlur, onChange, ref, value },
-  } = useController({
-    name: `${baseFieldPath}.type`,
-    rules: { required: "It's required to select a type" },
-  })
+  const type = useWatch({ name: `${baseFieldPath}.type` })
 
-  const selected = discordRequirementTypes.find((reqType) => reqType.value === value)
+  const selected = discordRequirementTypes.find((reqType) => reqType.value === type)
 
   const resetFields = () => {
     resetField(`${baseFieldPath}.data.memberSince`)
@@ -64,16 +59,12 @@ const DiscordForm = ({ baseFieldPath }: RequirementFormProps) => {
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
       >
         <FormLabel>Type</FormLabel>
-        <StyledSelect
+
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
+          rules={{ required: "It's required to select a type" }}
           options={discordRequirementTypes}
-          name={name}
-          onBlur={onBlur}
-          onChange={(newValue: { label: string; value: string }) => {
-            resetFields()
-            onChange(newValue?.value ?? null)
-          }}
-          ref={ref}
-          value={selected}
+          beforeOnChange={resetFields}
         />
 
         <FormErrorMessage>

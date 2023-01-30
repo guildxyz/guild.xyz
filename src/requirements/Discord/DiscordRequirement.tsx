@@ -8,7 +8,7 @@ import Requirement, {
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useServerData from "hooks/useServerData"
 import { DiscordLogo } from "phosphor-react"
-import pluralize from "utils/pluralize"
+import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
 const DiscordRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
@@ -45,7 +45,7 @@ const DiscordRequirement = (props: RequirementProps) => {
                 <DataBlock>{role?.name || requirement.data.roleName}</DataBlock>
                 {` role in the `}
                 <DataBlock>{serverName || requirement.data.serverName}</DataBlock>
-                {`" server`}
+                {` server`}
               </>
             )
 
@@ -70,16 +70,9 @@ const DiscordRequirement = (props: RequirementProps) => {
             )
 
           case "DISCORD_JOIN_FROM_NOW":
-            const dayInMs = 86400000
-            const memberSinceDays = requirement.data.memberSince / dayInMs
-            const memberSinceMonths = requirement.data.memberSince / dayInMs / 30
-            const memberSinceYears = requirement.data.memberSince / dayInMs / 365
-            const formattedMemberSince =
-              memberSinceYears >= 1
-                ? pluralize(Math.round(memberSinceYears), "year")
-                : memberSinceMonths >= 1
-                ? pluralize(Math.round(memberSinceMonths), "month")
-                : pluralize(Math.round(memberSinceDays), "day")
+            const formattedMemberSince = formatRelativeTimeFromNow(
+              requirement.data.memberSince
+            )
 
             return (
               <>

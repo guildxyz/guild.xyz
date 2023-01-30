@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
@@ -9,14 +9,13 @@ const useDeleteMonetization = (poapContractId: number) => {
   const showErrorToast = useShowErrorToast()
   const { mutateGuild } = useGuild()
 
-  const deleteMonetization = async ({ validation, data }) =>
+  const deleteMonetization = async (signedValidation: SignedValdation) =>
     fetcher(`/assets/poap/monetize/${poapContractId}`, {
       method: "DELETE",
-      validation,
-      body: data,
+      ...signedValidation,
     })
 
-  return useSubmitWithSign<Record<string, unknown>, any>(deleteMonetization, {
+  return useSubmitWithSign<any>(deleteMonetization, {
     onError: (e) => showErrorToast(e),
     onSuccess: () => {
       mutateGuild()

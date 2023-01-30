@@ -5,19 +5,17 @@ import {
   InputLeftElement,
   Stack,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../common/ChainPicker"
 import useOtterspaceBadges from "./hooks/useOtterspaceBadges"
 
 const OtterspaceForm = ({ baseFieldPath }: RequirementFormProps) => {
   const {
-    control,
     resetField,
     formState: { errors },
   } = useFormContext()
@@ -43,27 +41,19 @@ const OtterspaceForm = ({ baseFieldPath }: RequirementFormProps) => {
         <InputGroup>
           {pickedBadge && (
             <InputLeftElement>
-              <OptionImage img={pickedBadge?.img} alt={pickedBadge?.label} />
+              <OptionImage
+                img={pickedBadge?.img as string}
+                alt={pickedBadge?.label}
+              />
             </InputLeftElement>
           )}
 
-          <Controller
-            name={`${baseFieldPath}.data.id` as const}
-            control={control}
+          <ControlledSelect
+            name={`${baseFieldPath}.data.id`}
             rules={{ required: "This field is required." }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                isClearable
-                options={data}
-                value={data?.find((option) => option.value === value) ?? ""}
-                placeholder="Choose badge"
-                onChange={(newSelectedOption: SelectOption) =>
-                  onChange(newSelectedOption?.value ?? null)
-                }
-                onBlur={onBlur}
-              />
-            )}
+            isClearable
+            options={data}
+            placeholder="Choose badge"
           />
         </InputGroup>
 
