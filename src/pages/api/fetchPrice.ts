@@ -10,6 +10,7 @@ import {
   PURCHASABLE_REQUIREMENT_TYPES,
   RESERVOIR_API_URLS,
   ZEROX_API_URLS,
+  ZEROX_EXCLUDED_SOURCES,
 } from "utils/guildCheckout"
 
 export type FetchPriceResponse = {
@@ -132,8 +133,15 @@ const handler: NextApiHandler = async (
         }-USD rate.`,
       })
 
+    const queryParams = new URLSearchParams({
+      sellToken: sellAddress,
+      buyToken: address,
+      buyAmount: formattedBuyAmount,
+      excludedSources: ZEROX_EXCLUDED_SOURCES.toString(),
+    }).toString()
+
     const response = await fetch(
-      `${ZEROX_API_URLS[chain]}/swap/v1/price?sellToken=${sellAddress}&buyToken=${address}&buyAmount=${formattedBuyAmount}`
+      `${ZEROX_API_URLS[chain]}/swap/v1/price?${queryParams}`
     )
 
     const responseData = await response.json()
@@ -145,6 +153,16 @@ const handler: NextApiHandler = async (
           : response.statusText,
       })
     }
+
+    // We only support Uniswap V2 and V3 for now
+    if (
+      !responseData.sources.find(
+        (source) =>
+          (source.name === "Uniswap_V2" || source.name === "Uniswap_V3") &&
+          source.proportion === "1"
+      )
+    )
+      return res.status(500).json({ error: "Couldn't find tokens on Uniswap." })
 
     const price = parseFloat(responseData.price) * minAmount
     const priceInUSD = parseFloat(
