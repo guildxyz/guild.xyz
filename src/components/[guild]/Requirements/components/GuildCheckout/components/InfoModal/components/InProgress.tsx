@@ -5,11 +5,12 @@ import {
   Icon,
   Link,
   ModalBody,
+  Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { ArrowSquareOut, CheckCircle } from "phosphor-react"
+import { ArrowSquareOut } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import InfoModalFooter from "./InfoModalFooter"
 import PurchasedRequirementInfo from "./PurchasedRequirementInfo"
@@ -23,16 +24,7 @@ const InProgress = ({ tx }: Props): JSX.Element => (
     <ModalBody>
       <Flex direction="column">
         <Center mb={10}>
-          <Icon
-            as={CheckCircle}
-            boxSize={36}
-            color="green.500"
-            sx={{
-              "> *": {
-                strokeWidth: "8px",
-              },
-            }}
-          />
+          <Spinner thickness="10px" speed="0.8s" color="blue.500" size="2xl" />
         </Center>
       </Flex>
 
