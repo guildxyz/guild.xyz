@@ -17,12 +17,13 @@ const AllowanceButton = (): JSX.Element => {
     data: { symbol, name },
   } = useTokenData(requirement.chain, pickedCurrency)
   const nativeCurrency = RPC[Chains[chainId]]?.nativeCurrency
-  const tokenSymbol =
-    pickedCurrency === nativeCurrency?.symbol ? nativeCurrency.symbol : symbol
-  const tokenName =
-    pickedCurrency === nativeCurrency?.symbol ? nativeCurrency.name : name
+  const isNativeCurrencyPicked = pickedCurrency === nativeCurrency?.symbol
 
-  if (!pickedCurrency || chainId !== requirementChainId) return null
+  const tokenSymbol = isNativeCurrencyPicked ? nativeCurrency.symbol : symbol
+  const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
+
+  if (!pickedCurrency || chainId !== requirementChainId || isNativeCurrencyPicked)
+    return null
 
   return (
     <CardMotionWrapper>
