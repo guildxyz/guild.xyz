@@ -1,6 +1,5 @@
 import {
   ButtonGroup,
-  Flex,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -104,11 +103,7 @@ const GuildCheckout = (): JSX.Element => {
           </ModalBody>
 
           <ModalFooter pt={10} bgColor={modalFooterBg}>
-            {isValidating ? (
-              <Flex w="full" justifyContent="center">
-                <Spinner />
-              </Flex>
-            ) : error ? (
+            {error ? (
               <Text colorScheme="gray">{error.error}</Text>
             ) : (
               <Stack spacing={8} w="full">
