@@ -1,4 +1,5 @@
 import { useDisclosure } from "@chakra-ui/react"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import {
   createContext,
@@ -44,6 +45,8 @@ const GuildCheckoutProvider = ({
   const [pickedCurrency, setPickedCurrency] = useState<string>()
   const [agreeWithTOS, setAgreeWithTOS] = useState(false)
 
+  const triggerConfetti = useJsConfetti()
+
   // TEMP...
   const [processing, setProcessing] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -54,6 +57,11 @@ const GuildCheckoutProvider = ({
     onClose()
     onInfoModalOpen()
   }, [processing, success, txError])
+
+  useEffect(() => {
+    if (!success) return
+    triggerConfetti()
+  }, [success])
 
   return (
     <GuildCheckoutContext.Provider
