@@ -59,11 +59,22 @@ const Requirement = ({
             overflow={withImgBg ? "hidden" : undefined}
           >
             {typeof image === "string" ? (
-              <Img
-                src={image}
-                maxWidth={"var(--chakra-space-11)"}
-                maxHeight={"var(--chakra-space-11)"}
-              />
+              image.endsWith(".mp4") ? (
+                <video
+                  src={image}
+                  width={"var(--chakra-space-11)"}
+                  height={"var(--chakra-space-11)"}
+                  muted
+                  autoPlay
+                  loop
+                />
+              ) : (
+                <Img
+                  src={image}
+                  maxWidth={"var(--chakra-space-11)"}
+                  maxHeight={"var(--chakra-space-11)"}
+                />
+              )
             ) : (
               image
             )}
