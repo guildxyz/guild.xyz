@@ -86,7 +86,7 @@ const fetchNativeCurrencyPrice = async (chain: Chain) =>
     .then((coinbaseData) => coinbaseData.data.rates.USD)
     .catch((_) => undefined)
 
-const GUILD_FEE = 0.01
+const GUILD_FEE_PERCENTAGE = 0.01
 
 const handler: NextApiHandler = async (
   req: NextApiRequest,
@@ -151,6 +151,8 @@ const handler: NextApiHandler = async (
       ((nativeCurrencyPrice / responseData.sellTokenToEthRate) * price).toFixed(0)
     )
 
+    const halfUSDInNativeCurrency = 0.5 / nativeCurrencyPrice
+
     // const gasFee = parseFloat(
     //   formatUnits(
     //     responseData.estimatedGas * responseData.gasPrice,
@@ -161,7 +163,7 @@ const handler: NextApiHandler = async (
     // TODO: calculate gas fee, maybe using a static call?
     const gasFee = 0
 
-    const totalFee = gasFee + price * GUILD_FEE
+    const totalFee = gasFee + price * GUILD_FEE_PERCENTAGE + halfUSDInNativeCurrency
 
     return res.json({
       buyAmount: minAmount,
@@ -216,14 +218,6 @@ const handler: NextApiHandler = async (
     )
       return res.status(500).json({ error: "Couldn't find purchasable NFTs." })
 
-    const price = responseData.tokens
-      .map((t) => t.market.floorAsk.price.amount.native)
-      .reduce((p1, p2) => p1 + p2, 0)
-
-    const priceInUSD = responseData.tokens
-      .map((t) => t.market.floorAsk.price.amount.usd)
-      .reduce((p1, p2) => p1 + p2, 0)
-
     const nativeCurrencyPrice = await fetchNativeCurrencyPrice(chain)
 
     if (typeof nativeCurrencyPrice === "undefined")
@@ -233,10 +227,20 @@ const handler: NextApiHandler = async (
         }-USD rate.`,
       })
 
+    const price = responseData.tokens
+      .map((t) => t.market.floorAsk.price.amount.native)
+      .reduce((p1, p2) => p1 + p2, 0)
+
+    const priceInUSD = responseData.tokens
+      .map((t) => t.market.floorAsk.price.amount.usd)
+      .reduce((p1, p2) => p1 + p2, 0)
+
+    const halfUSDInNativeCurrency = 0.5 / nativeCurrencyPrice
+
     // TODO: calculate gas fee, maybe using a static call?
     const gasFee = 0
 
-    const totalFee = gasFee + price * GUILD_FEE
+    const totalFee = gasFee + price * GUILD_FEE_PERCENTAGE + halfUSDInNativeCurrency
 
     return res.json({
       buyAmount: minAmount,

@@ -38,7 +38,7 @@ const FeeAndTotal = (): JSX.Element => {
         <HStack>
           <Text as="span">Fee</Text>
           <Tooltip
-            label="1% Guild fee + estimated network fee"
+            label="1% + $0.5 Guild fee + estimated network fee"
             placement="top"
             hasArrow
           >
@@ -60,11 +60,19 @@ const FeeAndTotal = (): JSX.Element => {
         <Text as="span">
           {pickedCurrency ? (
             <Skeleton isLoaded={!isValidating && !isNaN(priceData?.priceInUSD)}>
-              {`$${priceData?.priceInUSD?.toFixed(2)} = `}
+              {priceData
+                ? `$${(priceData.priceInUSD + priceData.totalFeeInUSD)?.toFixed(
+                    2
+                  )} = `
+                : "0.00"}
               <Text as="span" color={textAccentColor} fontWeight="semibold">
-                {`${
-                  isTooSmallPrice ? "< 0.001" : priceData?.price?.toFixed(3)
-                } ${symbol}`}
+                {priceData
+                  ? `${
+                      isTooSmallPrice
+                        ? "< 0.001"
+                        : (priceData.price + priceData.totalFee)?.toFixed(3)
+                    } ${symbol}`
+                  : "0.00"}
               </Text>
             </Skeleton>
           ) : (
