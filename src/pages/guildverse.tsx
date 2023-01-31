@@ -5,7 +5,7 @@ import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
 import SearchBar from "components/explorer/SearchBar"
-import { GetStaticProps } from "next"
+import { GetServerSideProps } from "next"
 import { useMemo, useState } from "react"
 import { BrainCardData } from "types"
 
@@ -56,7 +56,7 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const { Client } = require("@notionhq/client")
   const notion = new Client({ auth: process.env.NOTION_API_KEY })
   const databaseId = process.env.NOTION_DATABASE_ID
@@ -96,7 +96,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: { cards },
-    revalidate: 10,
   }
 }
 
