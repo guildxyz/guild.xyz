@@ -15,6 +15,7 @@ import Button from "components/common/Button"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains } from "connectors"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
+import { useEffect } from "react"
 import { SUPPORTED_CURRENCIES } from "utils/guildCheckout"
 import shortenHex from "utils/shortenHex"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
@@ -22,7 +23,8 @@ import CurrencyListItem from "./components/CurrencyListItem"
 import TokenInfo from "./components/TokenInfo"
 
 const PaymentCurrencyPicker = (): JSX.Element => {
-  const { requirement, pickedCurrency } = useGuildCheckoutContext()
+  const { requirement, pickedCurrency, setPickedCurrency } =
+    useGuildCheckoutContext()
 
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
   const lightShade = useColorModeValue("white", "gray.700")
@@ -30,6 +32,13 @@ const PaymentCurrencyPicker = (): JSX.Element => {
 
   const { account } = useWeb3React()
   const { openAccountModal } = useWeb3ConnectionManager()
+
+  const currencyOptions = SUPPORTED_CURRENCIES.filter(
+    (c) =>
+      c.chainId === Chains[requirement.chain] && c.address !== requirement.address
+  )
+
+  useEffect(() => setPickedCurrency(currencyOptions[0].address), [])
 
   return (
     <Stack spacing={3}>
@@ -88,11 +97,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
               maxH={48}
             >
               <Box maxH={40} overflowY="auto" className="custom-scrollbar">
-                {SUPPORTED_CURRENCIES.filter(
-                  (c) =>
-                    c.chainId === Chains[requirement.chain] &&
-                    c.address !== requirement.address
-                ).map((c) => (
+                {currencyOptions.map((c) => (
                   <CurrencyListItem
                     key={`${c.chainId}-${c.address}`}
                     chainId={c.chainId}
