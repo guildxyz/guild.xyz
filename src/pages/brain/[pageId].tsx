@@ -13,7 +13,7 @@ import PageBrainCard from "components/brain/PageBrainCard"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
-import { GetStaticPaths } from "next"
+import { GetServerSideProps } from "next"
 import Image from "next/image"
 import { NotionAPI } from "notion-client"
 import { DiscordLogo, Globe, TwitterLogo } from "phosphor-react"
@@ -54,7 +54,7 @@ const CustomImage = (props) => (
       width={props.className === "notion-page-icon" ? "100px" : null}
       layout={props.className === "notion-page-icon" ? "responsive" : "fill"}
       objectFit="contain"
-      quality={40}
+      quality={20}
       style={{
         zIndex: "1",
       }}
@@ -234,21 +234,7 @@ const getLinkedPagesByTags = (blockMap, params, allPages) => {
   return linkedPagesByTags
 }
 
-const getIds = async () => {
-  const pages = await getAllPages()
-  const ids = pages.map((page) => ({ params: { pageId: page.id } }))
-  return ids
-}
-
-export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
-  const paths = await getIds()
-  return {
-    paths,
-    fallback: "blocking",
-  }
-}
-
-export const getStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const blockMap = await getPage(params)
   const allPages = await getAllPages()
   const linkedPageContents = getRelatedPageLinks(allPages, blockMap, params)
@@ -264,7 +250,6 @@ export const getStaticProps = async ({ params }) => {
       params,
       pageLogo,
     },
-    revalidate: 10,
   }
 }
 
