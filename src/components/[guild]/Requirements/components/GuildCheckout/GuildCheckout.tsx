@@ -34,6 +34,7 @@ import {
   GuildCheckoutProvider,
   useGuildCheckoutContext,
 } from "./components/GuildCheckoutContex"
+import InfoModal from "./components/InfoModal"
 import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
 import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
@@ -85,7 +86,6 @@ const GuildCheckout = (): JSX.Element => {
           <ModalCloseButton />
 
           <ModalBody>
-            {}
             <RequirementDisplayComponent
               requirement={requirement}
               showPurchaseBtn={false}
@@ -157,6 +157,8 @@ const GuildCheckout = (): JSX.Element => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <InfoModal />
     </>
   )
 }
