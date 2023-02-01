@@ -7,6 +7,8 @@ import useAllowance from "components/[guild]/Requirements/components/GuildChecko
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
+import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout"
+import useAllowSpendingTokens from "../../hooks/useAllowSpendingToken"
 import usePrice from "../../hooks/usePrice"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
@@ -26,16 +28,30 @@ const AllowanceButton = (): JSX.Element => {
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
 
   const { data: priceData, isValidating: isPriceLoading } = usePrice()
-  const { allowance, isAllowanceLoading, allowanceError } = useAllowance()
+  const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
+    pickedCurrency,
+    TOKEN_BUYER_CONTRACT
+  )
+
   const {
     data: { decimals },
     error,
   } = useTokenData(requirement?.chain, pickedCurrency)
 
+  const priceInBigNumber =
+    priceData && decimals
+      ? parseUnits(priceData.price.toFixed(6), decimals)
+      : undefined
   const isEnoughAllowance =
-    priceData && decimals && allowance
+    priceInBigNumber && allowance
       ? parseUnits(priceData.price.toFixed(6), decimals).lte(allowance)
       : false
+
+  const { onSubmit, isLoading } = useAllowSpendingTokens(
+    pickedCurrency,
+    TOKEN_BUYER_CONTRACT,
+    priceInBigNumber
+  )
 
   if (!pickedCurrency || chainId !== requirementChainId || isNativeCurrencyPicked)
     return null
@@ -52,13 +68,13 @@ const AllowanceButton = (): JSX.Element => {
           error ||
           isEnoughAllowance
         }
-        isLoading={isPriceLoading || isAllowanceLoading} // TODO: loading state on allowance loading
+        isLoading={isPriceLoading || isAllowanceLoading || isLoading}
         loadingText={
           isPriceLoading || isAllowanceLoading
             ? "Checking allowance"
             : "Check your wallet"
         }
-        onClick={() => {}} // TODO
+        onClick={onSubmit}
         w="full"
         leftIcon={
           isPriceLoading || isAllowanceLoading ? (
