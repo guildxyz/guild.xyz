@@ -1,7 +1,7 @@
 import { RequirementFormProps } from "requirements"
 import MinAmountInput from "requirements/Guild/components/MinAmountInput"
 
-const SoundMinAmount = ({ baseFieldPath, field }: RequirementFormProps) => (
+const SoundMinAmount = ({ baseFieldPath }: RequirementFormProps) => (
   <MinAmountInput baseFieldPath={baseFieldPath} label="Minimum amount" />
 )
 

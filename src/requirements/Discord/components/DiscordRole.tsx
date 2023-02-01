@@ -1,19 +1,17 @@
 import {
   Collapse,
+  Divider,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   Input,
 } from "@chakra-ui/react"
-import StyledSelect from "components/common/StyledSelect"
+import ControlledSelect from "components/common/ControlledSelect"
+import ReconnectAlert from "components/common/ReconnectAlert"
+import useGateables from "hooks/useGateables"
 import useServerData from "hooks/useServerData"
-import {
-  useController,
-  useFormContext,
-  useFormState,
-  useWatch,
-} from "react-hook-form"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import shortenHex from "utils/shortenHex"
@@ -23,16 +21,9 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
   const { errors } = useFormState()
   const { register, setValue } = useFormContext()
 
-  const { field: roleField } = useController({
-    name: `${baseFieldPath}.data.roleId`,
-    rules: {
-      required: "Please select a role",
-      pattern: {
-        value: /^[0-9]*$/i,
-        message: "Please input a valid Discord role id",
-      },
-    },
-  })
+  const { error } = useGateables("DISCORD")
+
+  const roleId = useWatch({ name: `${baseFieldPath}.data.roleId` })
 
   const serverId = useWatch({
     name: `${baseFieldPath}.data.serverId`,
@@ -52,11 +43,9 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
     details: shortenHex(id),
   }))
 
-  const selectedRole = roleOptions.find(
-    (reqType) => reqType.value === roleField.value
-  )
+  const selectedRole = roleOptions.find((reqType) => reqType.value === roleId)
 
-  const isUnknownRole = !!roleField.value && !selectedRole
+  const isUnknownRole = !!roleId && !selectedRole
 
   return (
     <>
@@ -74,32 +63,34 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.roleId?.message}
       >
         <FormLabel>Role</FormLabel>
-        <StyledSelect
+
+        <ControlledSelect
+          name={`${baseFieldPath}.data.roleId`}
+          rules={{
+            required: "Please select a role",
+            pattern: {
+              value: /^[0-9]*$/i,
+              message: "Please input a valid Discord role id",
+            },
+          }}
           noOptionsMessage={() => null}
           isCreatable
+          isClearable
           formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
           isLoading={isServerDataLoading}
           options={roleOptions}
-          name={roleField.name}
-          onBlur={roleField.onBlur}
-          onChange={(newValue: {
-            label: string
-            value: string
-            __isNew__?: boolean
-          }) => {
+          beforeOnChange={(newValue) => {
             if (!newValue?.__isNew__) {
               setValue(`${baseFieldPath}.data.roleName`, newValue?.label)
             } else {
               setValue(`${baseFieldPath}.data.roleName`, undefined)
             }
-            roleField.onChange(newValue?.value)
           }}
-          ref={roleField.ref}
-          value={
-            selectedRole ?? {
+          fallbackValue={
+            roleId && {
               __isNew__: true,
-              value: roleField.value,
-              label: roleField.value,
+              value: roleId,
+              label: roleId,
             }
           }
         />
@@ -134,6 +125,13 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
           </FormHelperText>
         </FormControl>
       </Collapse>
+
+      {error && (
+        <>
+          <Divider />
+          <ReconnectAlert platformName="DISCORD" />
+        </>
+      )}
     </>
   )
 }

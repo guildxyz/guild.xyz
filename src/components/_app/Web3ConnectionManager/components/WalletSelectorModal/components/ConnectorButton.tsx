@@ -49,9 +49,15 @@ const ConnectorButton = ({
   const activate = () => {
     setError(null)
     setIsActivating(true)
-    activeConnector?.deactivate()
+    activeConnector?.deactivate?.()
     connector
       .activate()
+      .then(() => {
+        addDatadogAction("Successfully connected wallet", {
+          userAddress: account?.toLowerCase(),
+          wallet: connectorName,
+        })
+      })
       .catch((err) => {
         setError(err)
         if (err?.code === 4001) {

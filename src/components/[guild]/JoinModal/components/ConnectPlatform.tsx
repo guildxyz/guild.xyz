@@ -3,7 +3,6 @@ import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import Script from "next/script"
 import platforms from "platforms"
-import { ParsedUrlQuery } from "querystring"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
@@ -12,10 +11,9 @@ import ConnectAccount from "./ConnectAccount"
 
 type Props = {
   platform: PlatformName
-  query: ParsedUrlQuery
 }
 
-const ConnectPlatform = ({ platform, query }: Props) => {
+const ConnectPlatform = ({ platform }: Props) => {
   const { isActive } = useWeb3React()
   const { platformUsers, isLoading: isLoadingUser } = useUser()
   const { onConnect, isLoading, loadingText, authData, response } =
@@ -24,15 +22,8 @@ const ConnectPlatform = ({ platform, query }: Props) => {
   const platformFromDb = platformUsers?.find(
     (platformAccount) => platformAccount.platformName === platform
   )?.username
-  const platformFromQueryParam =
-    query.platform === platform && typeof query.hash === "string"
 
   const { setValue } = useFormContext()
-
-  useEffect(() => {
-    if (platformFromQueryParam)
-      setValue(`platforms.${platform}`, { hash: query.hash as string })
-  }, [platformFromQueryParam])
 
   useEffect(() => {
     if (!isActive && authData) setValue(`platforms.${platform}`, { authData })
@@ -48,10 +39,7 @@ const ConnectPlatform = ({ platform, query }: Props) => {
       icon={<Icon as={platforms[platform].icon} />}
       colorScheme={platforms[platform].colorScheme as string}
       isConnected={
-        platformFromDb ||
-        response?.platformUserId ||
-        (platformFromQueryParam && "hidden") ||
-        (authData && "hidden")
+        platformFromDb || response?.platformUserId || (authData && "hidden")
       }
       isLoading={isLoading || (!platformUsers && isLoadingUser)}
       onClick={onConnect}

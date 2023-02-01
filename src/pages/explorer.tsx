@@ -24,7 +24,6 @@ import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
-import Script from "next/script"
 import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
@@ -80,6 +79,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     }
   )
 
+  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   useScrollEffect(() => {
     if (
       !guildsListEl.current ||
@@ -110,21 +110,14 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   useEffect(() => {
     setColorMode("dark")
-    // window.addEventListener("snow", () => console.log("snow"))
-    // const event = new Event("snow")
-    // window.dispatchEvent(event)
-    // console.log("dispatch")
   }, [])
 
   return (
     <>
       <LinkPreviewHead path="" />
-      <Script src="/snow.js" />
       <Layout
         title="Guildhall"
-        description="Automated membership management for the platforms your community already uses."
-        showBackButton={false}
-        showhat={true}
+        ogDescription="Automated membership management for the platforms your community already uses."
       >
         <SimpleGrid
           templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}

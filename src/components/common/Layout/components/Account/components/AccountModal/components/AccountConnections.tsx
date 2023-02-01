@@ -15,6 +15,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import { Question } from "phosphor-react"
 import { PlatformAccountDetails, PlatformName, PlatformType } from "types"
 import capitalize from "utils/capitalize"
+import LinkAddressButton from "./LinkAddressButton"
 import LinkedAddress from "./LinkedAddress"
 import LinkedSocialAccount from "./LinkedSocialAccount"
 
@@ -31,7 +32,10 @@ const AccountConnections = () => {
           <Text colorScheme="gray">
             {`${platformUsers
               ?.map((platformUser) =>
-                /** TODO: the BE will return the displayable names for the platforms too */
+                /**
+                 * TODO: the BE will return the displayable names for the platforms
+                 * too
+                 */
                 capitalize(platformUser.platformName.toLowerCase())
               )
               .join(
@@ -55,7 +59,7 @@ const AccountConnections = () => {
             )
           )
         ) : (
-          <Text colorScheme={"gray"}>No social accounts</Text>
+          <Text colorScheme={"gray"}>No linked social accounts yet</Text>
         )}
       </Section>
       <Section
@@ -69,9 +73,7 @@ const AccountConnections = () => {
               <PopoverContent>
                 <PopoverArrow />
                 <PopoverBody>
-                  If you join a guild with another address, but with the same Discord
-                  account, your addresses will be linked together and each will be
-                  used for requirement checks.
+                  Each of your addresses will be used for requirement checks.
                 </PopoverBody>
               </PopoverContent>
             </Popover>
@@ -81,7 +83,10 @@ const AccountConnections = () => {
         {isLoading ? (
           <Spinner />
         ) : addresses?.length === 1 && addresses?.[0] === account.toLowerCase() ? (
-          <Text colorScheme={"gray"}>No linked addresses</Text>
+          <>
+            <Text colorScheme={"gray"}>No linked addresses yet</Text>
+            <LinkAddressButton />
+          </>
         ) : (
           <Stack spacing={4} pt="2" alignItems="start" w="full">
             {addresses
@@ -89,6 +94,7 @@ const AccountConnections = () => {
               .map((address) => (
                 <LinkedAddress key={address} address={address} />
               ))}
+            <LinkAddressButton />
           </Stack>
         )}
       </Section>

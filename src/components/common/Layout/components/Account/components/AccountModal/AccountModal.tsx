@@ -43,7 +43,8 @@ const AccountModal = ({ isOpen, onClose }) => {
 
   const handleLogout = () => {
     onClose()
-    connector.deactivate()
+    connector.resetState()
+    connector.deactivate?.()
 
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
       /^dc_auth_[a-z]*$/.test(key)
@@ -62,37 +63,46 @@ const AccountModal = ({ isOpen, onClose }) => {
       <ModalContent>
         <ModalHeader>Account</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          <Stack mb={9} direction="row" spacing="4" alignItems="center">
-            <GuildAvatar address={account} />
-            <CopyableAddress address={account} decimals={5} fontSize="2xl" />
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mb="-1"
-          >
-            <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
-              {`Connected with ${connectorName(connector)}`}
+        {account ? (
+          <>
+            <ModalBody>
+              <Stack mb={9} direction="row" spacing="4" alignItems="center">
+                <GuildAvatar address={account} />
+                <CopyableAddress address={account} decimals={5} fontSize="2xl" />
+              </Stack>
+
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                mb="-1"
+              >
+                <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
+                  {`Connected with ${connectorName(connector)}`}
+                </Text>
+                <HStack>
+                  <Tooltip label="Disconnect">
+                    <IconButton
+                      size="sm"
+                      variant="outline"
+                      onClick={handleLogout}
+                      icon={<Icon as={SignOut} p="1px" />}
+                      aria-label="Disconnect"
+                    />
+                  </Tooltip>
+                </HStack>
+              </Stack>
+            </ModalBody>
+            <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
+              <AccountConnections />
+            </ModalFooter>
+          </>
+        ) : (
+          <ModalBody>
+            <Text mb="6" fontSize={"2xl"} fontWeight="semibold">
+              Not connected
             </Text>
-            <HStack>
-              <Tooltip label="Disconnect">
-                <IconButton
-                  size="sm"
-                  variant="outline"
-                  onClick={handleLogout}
-                  icon={<Icon as={SignOut} p="1px" />}
-                  aria-label="Disconnect"
-                />
-              </Tooltip>
-            </HStack>
-          </Stack>
-        </ModalBody>
-        {(isLoading || platformUsers || addresses) && (
-          <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
-            <AccountConnections />
-          </ModalFooter>
+          </ModalBody>
         )}
       </ModalContent>
     </Modal>

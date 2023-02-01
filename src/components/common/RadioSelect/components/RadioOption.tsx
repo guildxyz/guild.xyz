@@ -31,7 +31,7 @@ const RadioOption = (props) => {
         h="auto"
         p="0"
         flexDir="column"
-        alignItems="strech"
+        alignItems="stretch"
         borderRadius="none"
         _first={{ borderTopRadius: "xl" }}
         _last={{ borderBottomRadius: "xl" }}
@@ -66,7 +66,7 @@ const RadioOption = (props) => {
       h="auto"
       p="0"
       flexDir="column"
-      alignItems="strech"
+      alignItems="stretch"
       borderRadius="none"
       _first={{ borderTopRadius: "xl" }}
       _last={{ borderBottomRadius: "xl" }}

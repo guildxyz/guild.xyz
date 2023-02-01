@@ -3,37 +3,38 @@ import {
   Container,
   Heading,
   HStack,
-  Img,
-  Text,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
+import { useRouter } from "next/router"
+import { ArrowLeft } from "phosphor-react"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
-import parseDescription from "utils/parseDescription"
+import LinkButton from "../LinkButton"
 import Footer from "./components/Footer"
-import Header, { HeaderProps } from "./components/Header"
+import Header from "./components/Header"
 
 type Props = {
   image?: JSX.Element
   title: string
-  description?: string
-  showLayoutDescription?: boolean
+  ogDescription?: string
+  description?: JSX.Element
   textColor?: string
   action?: ReactNode | undefined
   background?: string
   backgroundImage?: string
   backgroundOffset?: number
-  showhat?: boolean
-} & HeaderProps
+  showBackButton?: boolean
+}
 
 const Layout = ({
   image,
   title,
+  ogDescription,
   description,
-  showLayoutDescription,
   textColor,
   action,
   background,
@@ -41,10 +42,13 @@ const Layout = ({
   backgroundOffset = 128,
   showBackButton,
   children,
-  showhat,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
+
+  const router: any = useRouter()
+  const hasNavigated = router.components && Object.keys(router.components).length > 2
+  const colorContext = useThemeContext()
 
   useIsomorphicLayoutEffect(() => {
     if ((!background && !backgroundImage) || !childrenWrapper?.current) return
@@ -61,15 +65,14 @@ const Layout = ({
       <Head>
         <title>{`${title}`}</title>
         <meta property="og:title" content={`${title}`} />
-        {description && (
+        {ogDescription && (
           <>
-            <meta name="description" content={description} />
-            <meta property="og:description" content={description} />
+            <meta name="description" content={ogDescription} />
+            <meta property="og:description" content={ogDescription} />
           </>
         )}
       </Head>
       <Box
-        id="background"
         position="relative"
         bgColor={colorMode === "light" ? "gray.100" : "gray.800"}
         bgGradient={
@@ -82,8 +85,6 @@ const Layout = ({
         minHeight="100vh"
         display="flex"
         flexDir={"column"}
-        // temporary
-        sx={{ "> *": { zIndex: 1 } }}
       >
         {(background || backgroundImage) && (
           <Box
@@ -107,7 +108,7 @@ const Layout = ({
             )}
           </Box>
         )}
-        <Header showBackButton={showBackButton} />
+        <Header />
         <Container
           // to be above the absolutely positioned background box
           position="relative"
@@ -116,6 +117,20 @@ const Layout = ({
           pb={24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
+          {showBackButton && hasNavigated && (
+            <LinkButton
+              href="/explorer"
+              variant="link"
+              color={colorContext.textColor}
+              opacity={0.75}
+              size="sm"
+              leftIcon={<ArrowLeft />}
+              alignSelf="flex-start"
+              mb="6"
+            >
+              Go back to explorer
+            </LinkButton>
+          )}
           <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
             <HStack justify="space-between" w="full" spacing={3}>
               <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
@@ -127,31 +142,21 @@ const Layout = ({
                   color={textColor}
                   wordBreak={"break-word"}
                 >
-                  {showhat && (
-                    <Img
-                      src="/img/hat.png"
-                      w={{ base: "30px", md: "40px", lg: "55px" }}
-                      position="absolute"
-                      left={{ base: "6px", sm: "14px", md: "18px", lg: "5" }}
-                      top={{ base: "18px", md: "6", lg: "5" }}
-                      transform="rotate(-30deg)"
-                    />
-                  )}
                   {title}
                 </Heading>
               </HStack>
 
               {action}
             </HStack>
-            {showLayoutDescription && description?.length && (
-              <Text
+            {description && (
+              <Box
                 w="full"
                 fontWeight="semibold"
                 color={textColor}
                 mb="-2 !important"
               >
-                {parseDescription(description)}
-              </Text>
+                {description}
+              </Box>
             )}
           </VStack>
           <Box ref={childrenWrapper}>{children}</Box>

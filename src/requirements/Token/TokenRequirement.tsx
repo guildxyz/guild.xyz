@@ -1,16 +1,20 @@
 import { Text } from "@chakra-ui/react"
+import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
 import { UseFormSetValue } from "react-hook-form"
-import { RequirementComponentProps } from "requirements"
-import BlockExplorerUrl from "../common/BlockExplorerUrl"
-import Requirement from "../common/Requirement"
 
-type Props = RequirementComponentProps & {
+type Props = RequirementProps & {
   setValueForBalancy: UseFormSetValue<any>
 }
 
-const TokenRequirement = ({ requirement, setValueForBalancy, ...rest }: Props) => {
+const TokenRequirement = ({ setValueForBalancy, ...rest }: Props) => {
+  const requirement = useRequirementContext()
+
   const { data, isValidating } = useTokenData(requirement.chain, requirement.address)
 
   useEffect(() => {
@@ -27,12 +31,8 @@ const TokenRequirement = ({ requirement, setValueForBalancy, ...rest }: Props) =
           </Text>
         )
       }
-      isImageLoading={!data && isValidating}
-      footer={
-        requirement?.type === "ERC20" && (
-          <BlockExplorerUrl requirement={requirement} {...rest} />
-        )
-      }
+      isImageLoading={isValidating}
+      footer={requirement?.type === "ERC20" && <BlockExplorerUrl />}
       {...rest}
     >
       {`Hold ${

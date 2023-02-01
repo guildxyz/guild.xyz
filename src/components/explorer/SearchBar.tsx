@@ -6,10 +6,9 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 type Props = {
   placeholder?: string
@@ -22,15 +21,12 @@ const SearchBar = ({
   search,
   setSearch,
 }: Props): JSX.Element => {
-  const { addDatadogAction } = useDatadog()
+  const inputRef = useRef<HTMLInputElement>()
 
   const [localValue, setLocalValue] = useState(search)
   const debouncedValue = useDebouncedState(localValue)
 
-  const handleOnChange = async ({ target: { value } }) => {
-    addDatadogAction("Typed in search bar")
-    setLocalValue(value)
-  }
+  const handleOnChange = async ({ target: { value } }) => setLocalValue(value)
 
   // handle when search changes on router.isReady
   useEffect(() => {
@@ -42,12 +38,18 @@ const SearchBar = ({
     setSearch(debouncedValue)
   }, [debouncedValue])
 
+  const reset = () => {
+    setLocalValue("")
+    inputRef.current.focus()
+  }
+
   return (
     <InputGroup size="lg" w="full">
       <InputLeftElement>
         <Icon color="#858585" size={20} as={MagnifyingGlass} />
       </InputLeftElement>
       <Input
+        ref={inputRef}
         placeholder={placeholder}
         overflow="hidden"
         whiteSpace="nowrap"
@@ -56,13 +58,10 @@ const SearchBar = ({
         id="searchBar"
         value={localValue}
         onChange={handleOnChange}
-        onFocus={() => addDatadogAction("Focused search bar")}
-        // temporary
-        bg="#212122"
       />
       {localValue?.length > 0 && (
         <InputRightElement>
-          <CloseButton size="sm" rounded="full" onClick={() => setLocalValue("")} />
+          <CloseButton size="sm" rounded="full" onClick={reset} />
         </InputRightElement>
       )}
     </InputGroup>

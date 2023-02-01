@@ -11,7 +11,6 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import dynamic from "next/dynamic"
-import NextLink from "next/link"
 import {
   Brain,
   Code,
@@ -58,46 +57,41 @@ const NavMenu = (): JSX.Element => (
           gap={{ base: 2, sm: 12 }}
         >
           <NavGroup title="Navigation">
-            <NextLink passHref href="/">
-              <NavButton
-                leftIcon={<House />}
-                data-dd-action-name="Navigation menu - Landing"
-              >
-                About Guild.xyz
-              </NavButton>
-            </NextLink>
-            <NextLink passHref href="/explorer">
-              <NavButton
-                leftIcon={<MagnifyingGlass />}
-                data-dd-action-name="Navigation menu - Explorer"
-              >
-                Explore all guilds
-              </NavButton>
-            </NextLink>
-            <NextLink passHref href="/create-guild">
-              <NavButton
-                leftIcon={<Plus />}
-                data-dd-action-name="Navigation menu - Balancy playground"
-              >
-                Create guild
-              </NavButton>
-            </NextLink>
-            <NextLink passHref href="/balancy">
-              <NavButton
-                leftIcon={<Cpu />}
-                data-dd-action-name="Navigation menu - Balancy playground"
-              >
-                Balancy playground
-              </NavButton>
-            </NextLink>
-            <NextLink passHref href="/guildverse">
-              <NavButton
-                leftIcon={<Brain />}
-                data-dd-action-name="Navigation menu - Guildverse"
-              >
-                Guildverse
-              </NavButton>
-            </NextLink>
+            <NavButton
+              leftIcon={<House />}
+              data-dd-action-name="Navigation menu - Landing"
+              href="/"
+            >
+              About Guild.xyz
+            </NavButton>
+            <NavButton
+              leftIcon={<MagnifyingGlass />}
+              data-dd-action-name="Navigation menu - Explorer"
+              href="/explorer"
+            >
+              Explore all guilds
+            </NavButton>
+            <NavButton
+              leftIcon={<Plus />}
+              data-dd-action-name="Navigation menu - Balancy playground"
+              href="/create-guild"
+            >
+              Create guild
+            </NavButton>
+            <NavButton
+              leftIcon={<Cpu />}
+              data-dd-action-name="Navigation menu - Balancy playground"
+              href="/balancy"
+            >
+              Balancy playground
+            </NavButton>
+            <NavButton
+              leftIcon={<Brain />}
+              data-dd-action-name="Navigation menu - Guildverse"
+              href="/guildverse"
+            >
+              Guildverse
+            </NavButton>
           </NavGroup>
           <NavGroup title="Other">
             <NavButton

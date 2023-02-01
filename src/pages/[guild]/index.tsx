@@ -4,11 +4,14 @@ import {
   Collapse,
   Heading,
   HStack,
+  Icon,
+  Link,
   Spinner,
   Stack,
   Tag,
+  TagLeftIcon,
   Text,
-  Tooltip,
+  Wrap,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
@@ -27,18 +30,23 @@ import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
+import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { CloudSlash } from "phosphor-react"
-import React, { useMemo, useState } from "react"
+import { Info, Users } from "phosphor-react"
+import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
-import { Guild } from "types"
+import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
+import parseDescription from "utils/parseDescription"
+
+const BATCH_SIZE = 10
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
 const DynamicAddRoleButton = dynamic(
@@ -67,6 +75,7 @@ const GuildPage = (): JSX.Element => {
     roles,
     isLoading,
     onboardingComplete,
+    socialLinks,
   } = useGuild()
 
   useAutoStatusUpdate()
@@ -90,6 +99,22 @@ const GuildPage = (): JSX.Element => {
     return accessedRoles.concat(otherRoles)
   }, [roles, roleAccesses])
 
+  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
+  const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
+  const rolesEl = useRef(null)
+  useScrollEffect(() => {
+    if (
+      !rolesEl.current ||
+      rolesEl.current.getBoundingClientRect().bottom > window.innerHeight ||
+      roles?.length <= renderedRolesCount
+    )
+      return
+
+    setRenderedRolesCount((prevValue) => prevValue + BATCH_SIZE)
+  }, [roles, renderedRolesCount])
+
+  const renderedRoles = sortedRoles?.slice(0, renderedRolesCount) || []
+
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
 
@@ -102,7 +127,7 @@ const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
-  // not importing it dinamically because that way the whole page flashes once when it loads
+  // not importing it dynamically because that way the whole page flashes once when it loads
   const DynamicOnboardingProvider =
     isAdmin && !onboardingComplete ? OnboardingProvider : React.Fragment
 
@@ -114,8 +139,30 @@ const GuildPage = (): JSX.Element => {
       <Layout
         title={name}
         textColor={textColor}
-        description={description}
-        showLayoutDescription
+        ogDescription={description}
+        description={
+          <>
+            {description && parseDescription(description)}
+            {Object.keys(socialLinks ?? {}).length > 0 && (
+              <Wrap w="full" spacing={3} mt="3">
+                {Object.entries(socialLinks).map(([type, link]) => (
+                  <HStack key={type} spacing={1.5}>
+                    <SocialIcon type={type as SocialLinkKey} size="sm" />
+                    <Link
+                      href={link?.startsWith("http") ? link : `https://${link}`}
+                      isExternal
+                      fontSize="sm"
+                      fontWeight="semibold"
+                      color={textColor}
+                    >
+                      {link.replace(/(http(s)?:\/\/)*(www\.)*/i, "")}
+                    </Link>
+                  </HStack>
+                ))}
+              </Wrap>
+            )}
+          </>
+        }
         image={
           <GuildLogo
             imageUrl={imageUrl}
@@ -127,6 +174,7 @@ const GuildPage = (): JSX.Element => {
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
         action={isAdmin && <DynamicEditGuildButton />}
+        showBackButton
       >
         {showOnboarding ? (
           <DynamicOnboarding />
@@ -160,14 +208,20 @@ const GuildPage = (): JSX.Element => {
           }
           mb="12"
         >
-          {sortedRoles?.length ? (
-            <Stack spacing={4}>
-              {sortedRoles.map((role) => (
+          {renderedRoles.length ? (
+            <Stack ref={rolesEl} spacing={4}>
+              {renderedRoles.map((role) => (
                 <RoleCard key={role.id} role={role} />
               ))}
             </Stack>
           ) : (
             <DynamicNoRolesAlert />
+          )}
+
+          {roles?.length > renderedRolesCount && (
+            <Center pt={6}>
+              <Spinner />
+            </Center>
           )}
         </Section>
 
@@ -176,18 +230,10 @@ const GuildPage = (): JSX.Element => {
             title="Members"
             titleRightElement={
               <HStack justifyContent="space-between" w="full" my="-2 !important">
-                {/* Temporary until the BE returns members again  */}
-                <Tooltip
-                  label="Members are temporarily hidden, only admins are shown"
-                  hasArrow
-                >
-                  <Tag size="sm" maxH={6}>
-                    <CloudSlash />
-                  </Tag>
-                </Tooltip>
-                {/* <Tag size="sm" maxH={6} pt={0.5}>
+                <Tag maxH={6} pt={0.5}>
+                  <TagLeftIcon as={Users} />
                   {isLoading ? <Spinner size="xs" /> : memberCount ?? 0}
-                </Tag> */}
+                </Tag>
                 {isAdmin && <DynamicMembersExporter />}
               </HStack>
             }
@@ -195,7 +241,14 @@ const GuildPage = (): JSX.Element => {
             <Box>
               {isAdmin && <DynamicActiveStatusUpdates />}
               {showMembers ? (
-                <Members members={members} />
+                <>
+                  <Members members={members} />
+                  {/* Temporary until the BE returns members again  */}
+                  <Text mt="6" colorScheme={"gray"}>
+                    <Icon as={Info} mr="2" mb="-2px" />
+                    Members are temporarily hidden, only admins are shown
+                  </Text>
+                </>
               ) : (
                 <Text>Members are hidden</Text>
               )}

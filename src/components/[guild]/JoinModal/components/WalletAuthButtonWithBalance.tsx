@@ -2,10 +2,9 @@ import { Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import useUsersTokenBalance from "components/[guild]/claim-poap/hooks/useUsersTokenBalance"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useCoinBalance from "hooks/useCoinBalance"
 import { Wallet } from "phosphor-react"
-import { useContext } from "react"
 import { Token } from "types"
 import shortenHex from "utils/shortenHex"
 import JoinStep from "./JoinStep"
@@ -15,7 +14,7 @@ type Props = {
 }
 
 const WalletAuthButtonWithBalance = ({ token }: Props): JSX.Element => {
-  const { openWalletSelectorModal } = useContext(Web3Connection)
+  const { openWalletSelectorModal } = useWeb3ConnectionManager()
   const { account } = useWeb3React()
 
   const { balance: coinBalance } = useCoinBalance()

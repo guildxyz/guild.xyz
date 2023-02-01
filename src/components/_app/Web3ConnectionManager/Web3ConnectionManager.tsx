@@ -1,13 +1,14 @@
 import { useDisclosure } from "@chakra-ui/react"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
-import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
+import requestNetworkChangeHandler from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
+import { Chains, RPC } from "connectors"
+import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { createContext, PropsWithChildren, useEffect } from "react"
-import useDatadog from "../Datadog/useDatadog"
+import { createContext, PropsWithChildren, useContext, useEffect } from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 
@@ -22,13 +23,17 @@ const Web3Connection = createContext({
   isAccountModalOpen: false,
   openAccountModal: () => {},
   closeAccountModal: () => {},
+  requestNetworkChange: (
+    chainId: number,
+    callback?: () => void,
+    errorHandler?: (err) => void
+  ) => {},
 })
 
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
-  const { addDatadogAction } = useDatadog()
-  const { connector, isActive, account } = useWeb3React()
+  const { isActive, connector } = useWeb3React()
   const router = useRouter()
 
   const {
@@ -55,24 +60,24 @@ const Web3ConnectionManager = ({
       openWalletSelectorModal()
   }, [triedEager, isActive, router.query])
 
-  useEffect(() => {
-    if (!isActive || !triedEager) return
-    addDatadogAction("Successfully connected wallet", {
-      userAddress: account?.toLowerCase(),
+  const toast = useToast()
+  const requestManualNetworkChange = (chain) => () =>
+    toast({
+      title: "Your wallet doesn't support switching chains automatically",
+      description: `Please switch to ${RPC[chain].chainName} from your wallet manually!`,
+      status: "info",
     })
-  }, [isActive, triedEager])
 
-  // Sending actions to datadog
-  useEffect(() => {
-    if (!connector) return
-    if (connector instanceof MetaMask) {
-      addDatadogAction(`Successfully connected wallet [Metamask]`)
-    }
-    if (connector instanceof WalletConnect)
-      addDatadogAction(`Successfully connected wallet [WalletConnect]`)
-    if (connector instanceof CoinbaseWallet)
-      addDatadogAction(`Successfully connected wallet [CoinbaseWallet]`)
-  }, [connector])
+  const requestNetworkChange = async (
+    newChainId: number,
+    callback?: () => void,
+    errorHandler?: (err: unknown) => void
+  ) => {
+    if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet)
+      requestManualNetworkChange(Chains[newChainId])()
+    else
+      await requestNetworkChangeHandler(Chains[newChainId], callback, errorHandler)()
+  }
 
   return (
     <Web3Connection.Provider
@@ -87,6 +92,7 @@ const Web3ConnectionManager = ({
         isAccountModalOpen,
         openAccountModal,
         closeAccountModal,
+        requestNetworkChange,
       }}
     >
       {children}
@@ -100,4 +106,7 @@ const Web3ConnectionManager = ({
     </Web3Connection.Provider>
   )
 }
-export { Web3Connection, Web3ConnectionManager }
+
+const useWeb3ConnectionManager = () => useContext(Web3Connection)
+
+export { Web3ConnectionManager, useWeb3ConnectionManager }

@@ -25,7 +25,7 @@ const handler: NextApiHandler = async (req, res) => {
       throw new Error("User not found")
     }
   } catch (error) {
-    res.status(500).json({ message: error?.message || "Unknown error" })
+    res.redirect("/default_twitter_icon.png")
   }
 }
 

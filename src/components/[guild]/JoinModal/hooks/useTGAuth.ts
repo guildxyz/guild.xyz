@@ -3,7 +3,6 @@ import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
 import processDiscordError from "../utils/processDiscordError"
 
-const POPUP_URL = "https://guild-xyz.vercel.app/tgauth"
 const TG_WIDGET_WIDTH = 345
 const TG_WIDGET_HEIGHT = 100
 const TG_WIDGET_PADDING = 10
@@ -16,7 +15,7 @@ const useTGAuth = () => {
   const toast = useToast()
 
   const { onOpen, windowInstance } = usePopupWindow(
-    `${POPUP_URL}?openerOrigin=${encodeURIComponent(
+    `${process.env.NEXT_PUBLIC_TELEGRAM_POPUP_URL}?openerOrigin=${encodeURIComponent(
       typeof window !== "undefined" ? window?.location.origin : "https://guild.xyz"
     )}`,
     {
@@ -58,7 +57,7 @@ const useTGAuth = () => {
             setError({
               error: "Invalid message",
               errorDescription:
-                "Recieved invalid message from authentication window",
+                "Received invalid message from authentication window",
             })
         }
         windowInstance?.close()
