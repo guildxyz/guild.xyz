@@ -80,9 +80,10 @@ export const RESERVOIR_API_URLS: Partial<Record<Chain, string>> = {
 }
 
 export const purchaseSupportedChains: Partial<Record<RequirementType, string[]>> = {
-  ERC20: Object.keys(ZEROX_API_URLS),
-  ERC721: Object.keys(RESERVOIR_API_URLS),
-  ERC1155: Object.keys(RESERVOIR_API_URLS),
+  // ERC20: Object.keys(ZEROX_API_URLS),
+  // ERC721: Object.keys(RESERVOIR_API_URLS),
+  // ERC1155: Object.keys(RESERVOIR_API_URLS),
+  ERC20: ["GOERLI"],
 }
 
 export const allPurchaseSupportedChains: Chain[] = [
