@@ -234,7 +234,7 @@ const supportedSocialLinks = [
   "SNAPSHOT",
   "WEBSITE",
 ] as const
-type SocialLinkKey = (typeof supportedSocialLinks)[number]
+type SocialLinkKey = typeof supportedSocialLinks[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
 
 type GuildContact = {
