@@ -22,17 +22,17 @@ const fetchPrice = (
     },
   })
 
-const usePrice = (sellAddress: string): SWRResponse<FetchPriceResponse> => {
-  const { requirement, isOpen } = useGuildCheckoutContext()
+const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
+  const { requirement, isOpen, pickedCurrency } = useGuildCheckoutContext()
 
   const shouldFetch =
     purchaseSupportedChains[requirement?.type]?.includes(requirement.chain) &&
     isOpen &&
     PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) &&
-    sellAddress
+    (sellAddress ?? pickedCurrency)
 
   return useSWRImmutable<FetchPriceResponse>(
-    shouldFetch ? ["fetchPrice", requirement, sellAddress] : null,
+    shouldFetch ? ["fetchPrice", requirement, sellAddress ?? pickedCurrency] : null,
     fetchPrice,
     {
       shouldRetryOnError: false,

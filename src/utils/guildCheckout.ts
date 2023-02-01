@@ -1,6 +1,8 @@
 import { Chain, RPC } from "connectors"
 import { RequirementType } from "requirements"
 
+export const TOKEN_BUYER_CONTRACT = "0x8c82a71b629db618847682cd3155e6742304b710"
+
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   ETHEREUM: "https://api.0x.org",
   GOERLI: "https://goerli.api.0x.org",
@@ -109,10 +111,20 @@ export const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
     chainId: 1,
     address: "0x6b175474e89094c44da98b954eedeac495271d0f",
   },
-  // DAI
+  // DAI (Görli)
   {
     chainId: 5,
     address: "0x73967c6a0904aa032c103b4104747e88c566b1a2",
+  },
+  // USDC (Polygon)
+  {
+    chainId: 137,
+    address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+  },
+  // DAI (Polygon)
+  {
+    chainId: 137,
+    address: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
   },
 ]
 

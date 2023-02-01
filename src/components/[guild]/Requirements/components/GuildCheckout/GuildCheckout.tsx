@@ -104,7 +104,9 @@ const GuildCheckout = (): JSX.Element => {
 
           <ModalFooter pt={10} bgColor={modalFooterBg}>
             {error ? (
-              <Text colorScheme="gray">{error.error}</Text>
+              <Text w="full" colorScheme="gray">
+                {error.error}
+              </Text>
             ) : (
               <Stack spacing={8} w="full">
                 <ButtonGroup size="sm" w="full">
