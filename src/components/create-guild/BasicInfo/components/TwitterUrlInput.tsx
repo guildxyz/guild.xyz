@@ -29,7 +29,7 @@ const TwitterUrlInput = (): JSX.Element => {
   }, [value])
 
   return (
-    <FormControl isInvalid={!!errors?.socialLinks?.TWITTER} isRequired>
+    <FormControl isInvalid={!!(errors?.socialLinks as any)?.TWITTER} isRequired>
       <InputGroup size="lg">
         <InputLeftElement>
           <SocialIcon type="TWITTER" size="sm" />
@@ -48,7 +48,9 @@ const TwitterUrlInput = (): JSX.Element => {
           })}
         />
       </InputGroup>
-      <FormErrorMessage>{errors?.socialLinks?.TWITTER?.message}</FormErrorMessage>
+      <FormErrorMessage>
+        {(errors?.socialLinks as any)?.TWITTER?.message}
+      </FormErrorMessage>
     </FormControl>
   )
 }

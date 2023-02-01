@@ -136,7 +136,7 @@ const VoiceParticipation = (): JSX.Element => {
 
         <FormControl
           isRequired
-          isInvalid={!!errors?.voiceRequirement?.percentOrMinute}
+          isInvalid={!!(errors?.voiceRequirement as any)?.percentOrMinute}
         >
           <FormLabel>Minimum participation:</FormLabel>
 
@@ -211,7 +211,7 @@ const VoiceParticipation = (): JSX.Element => {
           </HStack>
 
           <FormErrorMessage>
-            {errors?.voiceRequirement?.percentOrMinute?.message}
+            {(errors?.voiceRequirement as any)?.percentOrMinute?.message}
           </FormErrorMessage>
         </FormControl>
       </SimpleGrid>
