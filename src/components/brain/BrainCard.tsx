@@ -28,7 +28,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
           p={0}
           sx={{
             "div:nth-child(2) div.background > span img": {
-              filter: "blur(20px)",
+              filter: "blur(7px)",
             },
             ":hover div:nth-child(2) div.background > span img": {
               filter: "blur(2px)",
