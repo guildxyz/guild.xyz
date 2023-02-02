@@ -113,6 +113,11 @@ export const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
     chainId: 5,
     address: "0xCc7bb2D219A0FC08033E130629C2B854b7bA9195",
   },
+  // USDC (Görli)
+  {
+    chainId: 5,
+    address: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+  },
   // USDC
   // {
   //   chainId: 1,
