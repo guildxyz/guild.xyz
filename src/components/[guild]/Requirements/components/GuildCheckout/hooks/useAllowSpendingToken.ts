@@ -1,15 +1,11 @@
-import { BigNumber } from "@ethersproject/bignumber"
+import { MaxUint256 } from "@ethersproject/constants"
 import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import useAllowance from "./useAllowance"
 
-const useAllowSpendingTokens = (
-  tokenAddress: string,
-  contract: string,
-  amount: BigNumber
-) => {
+const useAllowSpendingTokens = (tokenAddress: string, contract: string) => {
   const showErrorToast = useShowErrorToast()
 
   const { mutateAllowance } = useAllowance(tokenAddress, contract)
@@ -17,7 +13,7 @@ const useAllowSpendingTokens = (
   const erc20Contract = useContract(tokenAddress, ERC20_ABI, true)
 
   const contractCall = async () => {
-    const approveRes = await erc20Contract?.approve(contract, amount)
+    const approveRes = await erc20Contract?.approve(contract, MaxUint256)
     const approved = await approveRes?.wait()
     return approved
   }

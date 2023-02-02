@@ -49,8 +49,7 @@ const AllowanceButton = (): JSX.Element => {
 
   const { onSubmit, isLoading } = useAllowSpendingTokens(
     pickedCurrency,
-    TOKEN_BUYER_CONTRACT,
-    priceInBigNumber
+    TOKEN_BUYER_CONTRACT
   )
 
   if (!pickedCurrency || chainId !== requirementChainId || isNativeCurrencyPicked)
