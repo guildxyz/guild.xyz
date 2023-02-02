@@ -1,23 +1,16 @@
 import { Link } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
+import slugify from "slugify"
 
 const CustomLink = ({
-  href,
   children,
 }: PropsWithChildren<{ href: string; children: any }>) => {
-  const linkId =
-    href.slice(1, 9) +
-    "-" +
-    href.slice(9, 13) +
-    "-" +
-    href.slice(13, 17) +
-    "-" +
-    href.slice(17, 21) +
-    "-" +
-    href.slice(21)
+  const slugifiedTitle = slugify(children.props.block?.properties.title[0][0], {
+    lower: true,
+  })
 
   return (
-    <Link href={`/brain/${linkId}`} colorScheme={"blue"} fontWeight="medium">
+    <Link href={`/brain/${slugifiedTitle}`} colorScheme={"blue"} fontWeight="medium">
       {children.props.block?.properties.title[0][0]}
     </Link>
   )

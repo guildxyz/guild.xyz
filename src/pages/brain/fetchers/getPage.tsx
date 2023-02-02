@@ -1,8 +1,8 @@
 import { NotionAPI } from "notion-client"
 
-const getPage = async (params) => {
+const getPage = async (pageId) => {
   const notion = new NotionAPI()
-  const blockMap = await notion.getPage(params.pageId.toString())
+  const blockMap = await notion.getPage(pageId)
   return blockMap
 }
 export default getPage

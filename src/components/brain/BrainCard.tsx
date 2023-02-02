@@ -3,6 +3,7 @@ import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import Link from "components/common/Link"
 import Image from "next/image"
+import slugify from "slugify"
 import { BrainCardData } from "types"
 type Props = {
   pageData: BrainCardData
@@ -12,10 +13,11 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
   const renderedTags = pageData.tags
     .filter((tag) => tag === "reward" || tag === "requirement")
     .sort((a, b) => a.length - b.length)
+  const slugifiedTitle = slugify(pageData.title, { lower: true })
 
   return (
     <Link
-      href={`/brain/${pageData.id}`}
+      href={`/brain/${slugifiedTitle}`}
       prefetch={false}
       _hover={{ textDecor: "none" }}
       borderRadius="2xl"
@@ -27,10 +29,10 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
         p={0}
         sx={{
           "div:nth-child(2) div.background > span img": {
-            filter: "blur(7px)",
+            filter: "blur(8px)",
           },
           ":hover div:nth-child(2) div.background > span img": {
-            filter: "blur(2px)",
+            filter: "blur(4px)",
           },
         }}
       >

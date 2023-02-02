@@ -7,6 +7,7 @@ import { GetServerSideProps } from "next"
 import Image from "next/image"
 import { NotionRenderer } from "react-notion-x"
 import "react-notion-x/src/styles.css"
+import slugify from "slugify"
 import CustomImage from "./components/customImage"
 import CustomLink from "./components/customLink"
 import Header from "./components/header"
@@ -14,12 +15,12 @@ import getAllPages from "./fetchers/getAllPages"
 import getPage from "./fetchers/getPage"
 import getRelatedPageLinks from "./fetchers/getRelatedPageLinks"
 
-const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
+const PageDetails = ({ blockMap, linkedPageContents, pageId, pageLogo }) => (
   <>
     <LinkPreviewHead path="" />
     <Layout
       backButton={{ href: "/guildverse", text: "Go back to Guildverse" }}
-      title={blockMap.block[params.pageId.toString()]?.value.properties.title[0][0]}
+      title={blockMap.block[pageId]?.value.properties.title[0][0]}
       image={
         pageLogo && (
           <Center boxSize={16} position="relative">
@@ -58,19 +59,27 @@ const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
 )
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const blockMap = await getPage(params)
   const allPages = await getAllPages()
-  const linkedPageContents = getRelatedPageLinks(allPages, blockMap, params)
-  const pageLogo = allPages.find((page) => page.id === params.pageId)?.icon?.file
-    ?.url
-    ? allPages.find((page) => page.id === params.pageId).icon?.file?.url
+  const pageId = allPages
+    .map((page) => ({
+      id: page.id,
+      slugifiedTitle: slugify(page.properties.title.title[0].plain_text, {
+        lower: true,
+      }),
+    }))
+    .find((plate) => plate.slugifiedTitle === params.pageSlug).id
+  const blockMap = await getPage(pageId)
+
+  const linkedPageContents = getRelatedPageLinks(allPages, blockMap, pageId)
+  const pageLogo = allPages.find((page) => page.id === pageId)?.icon?.file?.url
+    ? allPages.find((page) => page.id === pageId).icon?.file?.url
     : null
 
   return {
     props: {
       blockMap,
       linkedPageContents,
-      params,
+      pageId,
       pageLogo,
     },
   }

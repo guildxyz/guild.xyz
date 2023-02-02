@@ -2,9 +2,9 @@ import { BrainCardData } from "types"
 import getLinkedPagesByName from "./getLinkedPagesByName"
 import getLinkedPagesByTags from "./getLinkedPagesByTags"
 
-const getRelatedPageLinks = (allPages, blockMap, params) => {
-  const linkedPageContents = getLinkedPagesByName(blockMap, params, allPages)
-  const linkedPagesByTags = getLinkedPagesByTags(blockMap, params, allPages)
+const getRelatedPageLinks = (allPages, blockMap, pageId) => {
+  const linkedPageContents = getLinkedPagesByName(blockMap, pageId, allPages)
+  const linkedPagesByTags = getLinkedPagesByTags(blockMap, pageId, allPages)
   const Links = [...new Set([...linkedPageContents, ...linkedPagesByTags])].filter(
     (pageLink) => pageLink.properties.visibility.checkbox === true
   )
