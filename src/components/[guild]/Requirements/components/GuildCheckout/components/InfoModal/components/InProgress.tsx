@@ -36,7 +36,7 @@ const InProgress = ({ tx }: Props): JSX.Element => (
 
       <Stack spacing={4}>
         <Text as="span" fontWeight="bold">
-          Your new asset:
+          You'll get:
         </Text>
 
         <PurchasedRequirementInfo />

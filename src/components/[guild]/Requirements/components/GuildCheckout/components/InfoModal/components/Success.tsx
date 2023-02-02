@@ -48,7 +48,7 @@ const Success = ({ tx }: Props): JSX.Element => {
 
         <Stack spacing={4}>
           <Text as="span" fontWeight="bold">
-            You'll get:
+            Your new asset:
           </Text>
 
           <PurchasedRequirementInfo />
