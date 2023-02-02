@@ -33,8 +33,8 @@ const FeeAndTotal = (): JSX.Element => {
     ? parseFloat((priceData.gasFee + priceData.guildFee).toFixed(3)) <= 0.0 ?? ""
     : undefined
   const isTooSmallPrice = priceData
-    ? parseFloat(priceData.price.toFixed(3)) <= 0.0 ?? ""
-    : undefined
+    ? parseFloat(priceData.price.toFixed(3)) < 0.001
+    : false
 
   return (
     <Stack divider={<Divider />} color={textColor}>

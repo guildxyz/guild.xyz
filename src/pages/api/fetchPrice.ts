@@ -152,10 +152,14 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const responseData = await response.json()
 
     if (response.status !== 200) {
+      const errorMessage = responseData.validationErrors?.length
+        ? responseData.validationErrors[0].reason === "INSUFFICIENT_ASSET_LIQUIDITY"
+          ? "We are not able to find this token on the market. Contact guild admins for further help."
+          : responseData.validationErrors[0].description
+        : response.statusText
+
       return res.status(response.status).json({
-        error: responseData.validationErrors?.length
-          ? responseData.validationErrors[0].description
-          : response.statusText,
+        error: errorMessage,
       })
     }
 

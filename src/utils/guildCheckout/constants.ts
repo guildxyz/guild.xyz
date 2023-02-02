@@ -11,15 +11,15 @@ export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 export const TOKEN_BUYER_CONTRACT = "0xf8a9eef89f384601e4a19e092d2826051c50f864"
 
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
-  ETHEREUM: "https://api.0x.org",
+  // ETHEREUM: "https://api.0x.org",
   GOERLI: "https://goerli.api.0x.org",
-  POLYGON: "https://polygon.api.0x.org",
-  BSC: "https://bsc.api.0x.org",
-  OPTIMISM: "https://optimism.api.0x.org",
-  FANTOM: "https://fantom.api.0x.org",
-  CELO: "https://celo.api.0x.org",
-  AVALANCHE: "https://avalanche.api.0x.org",
-  ARBITRUM: "https://arbitrum.api.0x.org",
+  // POLYGON: "https://polygon.api.0x.org",
+  // BSC: "https://bsc.api.0x.org",
+  // OPTIMISM: "https://optimism.api.0x.org",
+  // FANTOM: "https://fantom.api.0x.org",
+  // CELO: "https://celo.api.0x.org",
+  // AVALANCHE: "https://avalanche.api.0x.org",
+  // ARBITRUM: "https://arbitrum.api.0x.org",
 }
 
 export const ZEROX_EXCLUDED_SOURCES = [
@@ -80,17 +80,16 @@ export const ZEROX_EXCLUDED_SOURCES = [
 ]
 
 export const RESERVOIR_API_URLS: Partial<Record<Chain, string>> = {
-  ETHEREUM: "https://api.reservoir.tools",
-  GOERLI: "https://api-goerli.reservoir.tools",
-  POLYGON: "https://api-polygon.reservoir.tools",
-  OPTIMISM: "https://api-optimism.reservoir.tools",
+  // ETHEREUM: "https://api.reservoir.tools",
+  // GOERLI: "https://api-goerli.reservoir.tools",
+  // POLYGON: "https://api-polygon.reservoir.tools",
+  // OPTIMISM: "https://api-optimism.reservoir.tools",
 }
 
 export const purchaseSupportedChains: Partial<Record<RequirementType, string[]>> = {
-  // ERC20: Object.keys(ZEROX_API_URLS),
-  // ERC721: Object.keys(RESERVOIR_API_URLS),
-  // ERC1155: Object.keys(RESERVOIR_API_URLS),
-  ERC20: ["GOERLI"],
+  ERC20: Object.keys(ZEROX_API_URLS),
+  ERC721: Object.keys(RESERVOIR_API_URLS),
+  ERC1155: Object.keys(RESERVOIR_API_URLS),
 }
 
 export const allPurchaseSupportedChains: Chain[] = [

@@ -12,7 +12,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
-import { purchaseSupportedChains } from "utils/guildCheckout/constants"
 import GuildCheckout from "./GuildCheckout"
 import { useRequirementContext } from "./RequirementContext"
 
@@ -93,10 +92,7 @@ const Requirement = ({
         </Text>
 
         <HStack spacing={4}>
-          {showPurchaseBtn &&
-            purchaseSupportedChains[requirement?.type]?.includes(
-              requirement?.chain
-            ) && <GuildCheckout />}
+          {showPurchaseBtn && <GuildCheckout />}
           {showFooter && footer}
         </HStack>
       </VStack>

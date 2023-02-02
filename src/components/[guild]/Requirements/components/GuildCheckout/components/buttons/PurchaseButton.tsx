@@ -12,7 +12,7 @@ import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseButton = (): JSX.Element => {
   const { chainId } = useWeb3React()
-  const { requirement, pickedCurrency } = useGuildCheckoutContext()
+  const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const { data: priceData, isValidating: isPriceLoading } = usePrice()
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
@@ -35,6 +35,7 @@ const PurchaseButton = (): JSX.Element => {
       : false
 
   const isDisabled =
+    !agreeWithTOS ||
     Chains[chainId] !== requirement.chain ||
     (pickedCurrency !== RPC[Chains[chainId]].nativeCurrency.symbol &&
       (isPriceLoading ||
@@ -51,7 +52,7 @@ const PurchaseButton = (): JSX.Element => {
         size="xl"
         isDisabled={isDisabled || isLoading}
         loadingText="Check your wallet"
-        colorScheme={!isDisabled && "blue"}
+        colorScheme={!isDisabled ? "blue" : "gray"}
         w="full"
         onClick={onSubmit}
       >

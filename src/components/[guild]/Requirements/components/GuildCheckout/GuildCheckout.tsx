@@ -42,7 +42,9 @@ const GuildCheckout = (): JSX.Element => {
   const { account } = useWeb3React()
   const { requirement, isOpen, onOpen, onClose, pickedCurrency } =
     useGuildCheckoutContext()
-  const { data: accessData } = useAccess(requirement?.roleId)
+  const { data: accessData, isLoading: isAccessLoading } = useAccess(
+    requirement?.roleId
+  )
   const satisfiesRequirement =
     requirement &&
     accessData &&
@@ -57,10 +59,14 @@ const GuildCheckout = (): JSX.Element => {
     error,
   } = usePrice(requirement?.chain && RPC[requirement.chain].nativeCurrency.symbol)
 
+  const isTooSmallPrice = priceData ? priceData.priceInUSD < 0.01 : undefined
+
   if (
     !account ||
     satisfiesRequirement ||
+    (!accessData && isAccessLoading) ||
     !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
+    !purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain) ||
     !purchaseSupportedChains[requirement.type].includes(requirement.chain)
   )
     return null
@@ -94,8 +100,14 @@ const GuildCheckout = (): JSX.Element => {
                 ) : (
                   <Text as="span">
                     {isNaN(priceData?.priceInUSD)
-                      ? "-"
-                      : `$${priceData.priceInUSD.toFixed(0)}`}
+                      ? ""
+                      : `${
+                          isTooSmallPrice
+                            ? "< $0.01"
+                            : `$${priceData.priceInUSD.toFixed(
+                                priceData.priceInUSD < 1 ? 2 : 0
+                              )}`
+                        }`}
                   </Text>
                 )
               }
