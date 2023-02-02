@@ -3,7 +3,7 @@ import { RequirementType } from "requirements"
 
 // export const GUILD_FEE_PERCENTAGE = 0.01
 // export const GUILD_FEE_FIXED_USD = 0.49
-export const GUILD_FEE_PERCENTAGE = 0.1
+export const GUILD_FEE_PERCENTAGE = 0.02
 export const GUILD_FEE_FIXED_USD = 0
 
 export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
@@ -108,6 +108,11 @@ export const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
     chainId: RPC[c].chainId,
     address: RPC[c].nativeCurrency.symbol,
   })),
+  // ZETA (Görli)
+  {
+    chainId: 5,
+    address: "0xCc7bb2D219A0FC08033E130629C2B854b7bA9195",
+  },
   // USDC
   // {
   //   chainId: 1,
