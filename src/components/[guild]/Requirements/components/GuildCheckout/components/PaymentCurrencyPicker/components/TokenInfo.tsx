@@ -61,8 +61,12 @@ const TokenInfo = ({
   const { balance: tokenBalance, isLoading: isTokenBalanceLoading } =
     useTokenBalance(address, chainId)
   const balance = formatUnits(
-    (address ? tokenBalance : coinBalance) ?? "0",
-    address ? decimals : 18
+    (address === RPC[Chains[chainId]]?.nativeCurrency?.symbol
+      ? coinBalance
+      : tokenBalance) ?? "0",
+    address === RPC[Chains[chainId]]?.nativeCurrency?.symbol
+      ? RPC[Chains[chainId]]?.nativeCurrency?.decimals
+      : decimals ?? 18
   )
   const formattedBalance = Number(balance).toFixed(2)
 
