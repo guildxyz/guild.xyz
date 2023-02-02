@@ -1,3 +1,4 @@
+import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider } from "@ethersproject/providers"
 import { parseUnits } from "@ethersproject/units"
@@ -7,30 +8,30 @@ import { RequirementType } from "requirements"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import capitalize from "utils/capitalize"
 import {
+  ADDRESS_REGEX,
   GUILD_FEE_FIXED_USD,
   GUILD_FEE_PERCENTAGE,
   PURCHASABLE_REQUIREMENT_TYPES,
   RESERVOIR_API_URLS,
+  ZeroXSupportedSources,
   ZEROX_API_URLS,
   ZEROX_EXCLUDED_SOURCES,
+  ZEROX_SUPPORTED_SOURCES,
 } from "utils/guildCheckout/constants"
-
-export type SupportedSources = "Uniswap_V2" | "Uniswap_V3"
 
 export type FetchPriceResponse = {
   buyAmount: number
-  price: number
+  buyAmountInWei: BigNumber
+  priceInSellToken: number
+  priceInWei: BigNumber
   priceInUSD: number
-  gasFee: number
-  gasFeeInUSD: number
-  guildFee: number
+  guildFeeInSellToken: number
+  guildFeeInWei: BigNumber
   guildFeeInUSD: number
-  source: SupportedSources
+  source: ZeroXSupportedSources
   tokenAddressPath: string[]
   path: string
 }
-
-const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const validateBody = (
   obj: Record<string, any>
@@ -57,10 +58,10 @@ const validateBody = (
     }
 
   if (
-    typeof obj.sellAddress !== "string" ||
+    typeof obj.sellToken !== "string" ||
     !(
-      ADDRESS_REGEX.test(obj.sellAddress) ||
-      obj.sellAddress === RPC[obj.chain].nativeCurrency.symbol
+      ADDRESS_REGEX.test(obj.sellToken) ||
+      obj.sellToken === RPC[obj.chain].nativeCurrency.symbol
     )
   )
     return {
@@ -86,7 +87,7 @@ const validateBody = (
   return { isValid: true }
 }
 
-const fetchNativeCurrencyPrice = async (chain: Chain) =>
+const fetchNativeCurrencyPriceInUSD = async (chain: Chain) =>
   fetch(
     `https://api.coinbase.com/v2/exchange-rates?currency=${RPC[chain].nativeCurrency.symbol}`
   )
@@ -96,7 +97,7 @@ const fetchNativeCurrencyPrice = async (chain: Chain) =>
 
 const handler: NextApiHandler<FetchPriceResponse> = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<FetchPriceResponse | { error: string }>
 ) => {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST")
@@ -107,7 +108,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
   if (!isValid) return res.status(400).json({ error })
 
-  const { type: rawType, chain: rawChain, sellAddress, address, data } = req.body
+  const { type: rawType, chain: rawChain, sellToken, address, data } = req.body
   const type = rawType as RequirementType
   const chain = rawChain as Chain
   const minAmount = parseFloat(data.minAmount ?? 1)
@@ -117,21 +118,20 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       return res.status(400).json({ error: "Unsupported chain" })
 
     const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0], Chains[chain])
-    const tokenContract = new Contract(address, ERC20_ABI, provider)
-    let decimals
+    let decimals: number
 
     try {
+      const tokenContract = new Contract(address, ERC20_ABI, provider)
       decimals = await tokenContract.decimals()
-    } catch (_) {}
-
-    if (!decimals)
+    } catch (_) {
       return res.status(500).json({ error: "Couldn't fetch buyToken decimals." })
+    }
 
-    const formattedBuyAmount = parseUnits(minAmount.toString(), decimals).toString()
+    const buyAmountInWei = parseUnits(minAmount.toFixed(decimals), decimals)
 
-    const nativeCurrencyPrice = await fetchNativeCurrencyPrice(chain)
+    const nativeCurrencyPriceInUSD = await fetchNativeCurrencyPriceInUSD(chain)
 
-    if (typeof nativeCurrencyPrice === "undefined")
+    if (typeof nativeCurrencyPriceInUSD === "undefined")
       return res.status(500).json({
         error: `Couldn't fetch ${
           RPC[Chains[chain]].nativeCurrency.symbol
@@ -139,9 +139,9 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       })
 
     const queryParams = new URLSearchParams({
-      sellToken: sellAddress,
+      sellToken,
       buyToken: address,
-      buyAmount: formattedBuyAmount,
+      buyAmount: buyAmountInWei.toString(),
       excludedSources: ZEROX_EXCLUDED_SOURCES.toString(),
     }).toString()
 
@@ -163,11 +163,9 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       })
     }
 
-    // We support Uniswap V2 and V3 for now
     const foundSource = responseData.sources.find(
       (source) =>
-        (source.name === "Uniswap_V2" || source.name === "Uniswap_V3") &&
-        source.proportion === "1"
+        ZEROX_SUPPORTED_SOURCES.includes(source.name) && source.proportion === "1"
     )
 
     const relevantOrder =
@@ -180,37 +178,58 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const path = relevantOrder.fillData.uniswapPath
     const tokenAddressPath = relevantOrder.fillData.tokenAddressPath
 
-    // TODO: error if we can't fetch path/tokenAddressPath?
-
-    const price = parseFloat(responseData.guaranteedPrice) * minAmount
+    const priceInSellToken = parseFloat(responseData.guaranteedPrice) * minAmount
     const priceInUSD = parseFloat(
-      ((nativeCurrencyPrice / responseData.sellTokenToEthRate) * price).toFixed(2)
+      (
+        (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) *
+        priceInSellToken
+      ).toFixed(2)
     )
 
-    const fixedGuildFeeInNativeCurrency = GUILD_FEE_FIXED_USD / nativeCurrencyPrice
+    let sellTokenDecimals: number
 
-    // const gasFee = parseFloat(
-    //   formatUnits(
-    //     responseData.estimatedGas * responseData.gasPrice,
-    //     RPC[chain].nativeCurrency.decimals
-    //   )
-    // )
+    try {
+      if (sellToken === RPC[chain].nativeCurrency.symbol) {
+        sellTokenDecimals = RPC[chain].nativeCurrency.decimals
+      } else {
+        const sellTokenContract = new Contract(sellToken, ERC20_ABI, provider)
+        sellTokenDecimals = await sellTokenContract.decimals()
+      }
+    } catch (_) {
+      res.status(500).json({ error: "Couldn't fetch sellToken decimals" })
+    }
 
-    // TODO: calculate gas fee, maybe using a static call?
-    const gasFee = 0
+    const priceInWei = parseUnits(
+      priceInSellToken.toFixed(sellTokenDecimals),
+      sellTokenDecimals
+    )
 
-    const guildFee =
-      gasFee + price * GUILD_FEE_PERCENTAGE + fixedGuildFeeInNativeCurrency
+    const fixedGuildFeeInNativeCurrency =
+      GUILD_FEE_FIXED_USD / nativeCurrencyPriceInUSD
+    const fixedGuildFeeInSellToken =
+      fixedGuildFeeInNativeCurrency * responseData.sellTokenToEthRate
+
+    const guildFeeInSellToken =
+      priceInSellToken * GUILD_FEE_PERCENTAGE + fixedGuildFeeInSellToken
+    const guildFeeInWei = parseUnits(
+      guildFeeInSellToken.toFixed(sellTokenDecimals),
+      sellTokenDecimals
+    )
+
+    const guildFeeInUSD = priceInUSD * GUILD_FEE_PERCENTAGE + GUILD_FEE_FIXED_USD
+
+    const source = foundSource.name as ZeroXSupportedSources
 
     return res.json({
       buyAmount: minAmount,
-      price,
+      buyAmountInWei,
+      priceInSellToken,
       priceInUSD,
-      gasFee,
-      gasFeeInUSD: nativeCurrencyPrice * gasFee,
-      guildFee,
-      guildFeeInUSD: nativeCurrencyPrice * guildFee,
-      source: foundSource.name as SupportedSources,
+      priceInWei,
+      guildFeeInSellToken,
+      guildFeeInUSD,
+      guildFeeInWei,
+      source,
       tokenAddressPath,
       path,
     })
@@ -257,9 +276,9 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     )
       return res.status(500).json({ error: "Couldn't find purchasable NFTs." })
 
-    const nativeCurrencyPrice = await fetchNativeCurrencyPrice(chain)
+    const nativeCurrencyPriceInUSD = await fetchNativeCurrencyPriceInUSD(chain)
 
-    if (typeof nativeCurrencyPrice === "undefined")
+    if (typeof nativeCurrencyPriceInUSD === "undefined")
       return res.status(500).json({
         error: `Couldn't fetch ${
           RPC[Chains[chain]].nativeCurrency.symbol
@@ -274,22 +293,24 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       .map((t) => t.market.floorAsk.price.amount.usd)
       .reduce((p1, p2) => p1 + p2, 0)
 
-    const fixedGuildFeeInNativeCurrency = GUILD_FEE_FIXED_USD / nativeCurrencyPrice
+    // const fixedGuildFeeInNativeCurrency = GUILD_FEE_FIXED_USD / nativeCurrencyPrice
 
-    // TODO: calculate gas fee, maybe using a static call?
-    const gasFee = 0
-
-    const guildFee = price * GUILD_FEE_PERCENTAGE + fixedGuildFeeInNativeCurrency
+    // const guildFee = price * GUILD_FEE_PERCENTAGE + fixedGuildFeeInNativeCurrency
 
     // TODO: source, tokenAddressPath, path
     return res.json({
       buyAmount: minAmount,
-      price,
+      buyAmountInWei: BigNumber.from(0),
+      priceInSellToken: 0,
+      priceInWei: BigNumber.from(0),
       priceInUSD,
-      gasFee,
-      gasFeeInUSD: nativeCurrencyPrice * gasFee,
-      guildFee,
-      guildFeeInUSD: nativeCurrencyPrice * guildFee,
+      guildFeeInSellToken: 0,
+      guildFeeInWei: BigNumber.from(0),
+      // guildFeeInUSD: nativeCurrencyPrice * guildFee,
+      guildFeeInUSD: 0,
+      path: "",
+      tokenAddressPath: [],
+      source: "Uniswap_V2",
     })
   }
 

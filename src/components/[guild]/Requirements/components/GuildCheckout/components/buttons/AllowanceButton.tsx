@@ -1,5 +1,5 @@
 import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
-import { parseUnits } from "@ethersproject/units"
+import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -33,19 +33,9 @@ const AllowanceButton = (): JSX.Element => {
     TOKEN_BUYER_CONTRACT
   )
 
-  const {
-    data: { decimals },
-    isValidating: isTokenDataLoading,
-    error,
-  } = useTokenData(requirement?.chain, pickedCurrency)
-
-  const priceInBigNumber =
-    priceData && !isPriceLoading && decimals && !isTokenDataLoading
-      ? parseUnits(priceData.price.toFixed(decimals), decimals)
-      : undefined
   const isEnoughAllowance =
-    priceInBigNumber && allowance
-      ? parseUnits(priceData.price.toFixed(decimals), decimals).lte(allowance)
+    priceData?.priceInWei && allowance
+      ? BigNumber.from(priceData.priceInWei).lte(allowance)
       : false
 
   const { onSubmit, isLoading } = useAllowSpendingTokens(
@@ -60,13 +50,9 @@ const AllowanceButton = (): JSX.Element => {
     <CardMotionWrapper>
       <Button
         size="xl"
-        colorScheme={allowanceError || error ? "red" : "blue"}
+        colorScheme={allowanceError ? "red" : "blue"}
         isDisabled={
-          isPriceLoading ||
-          isAllowanceLoading ||
-          allowanceError ||
-          error ||
-          isEnoughAllowance
+          isPriceLoading || isAllowanceLoading || allowanceError || isEnoughAllowance
         }
         isLoading={isPriceLoading || isAllowanceLoading || isLoading}
         loadingText={
@@ -79,7 +65,7 @@ const AllowanceButton = (): JSX.Element => {
         leftIcon={
           isPriceLoading || isAllowanceLoading ? (
             <Spinner />
-          ) : allowanceError || error ? (
+          ) : allowanceError ? (
             <Icon as={Warning} />
           ) : isEnoughAllowance ? (
             <Icon as={Check} />
@@ -95,7 +81,7 @@ const AllowanceButton = (): JSX.Element => {
           )
         }
       >
-        {allowanceError || error
+        {allowanceError
           ? "Couldn't fetch allowance"
           : `Allow Guild to use your ${tokenSymbol}`}
       </Button>

@@ -41,7 +41,7 @@ const TokenInfo = ({
   } = usePrice(address)
 
   const isTooSmallPrice = priceData
-    ? parseFloat(priceData.price.toFixed(3)) <= 0.0 ?? ""
+    ? parseFloat(priceData.priceInSellToken.toFixed(3)) <= 0.0
     : undefined
 
   const {
@@ -98,7 +98,9 @@ const TokenInfo = ({
                 : error
                 ? "Couldn't fetch token data"
                 : `${
-                    isTooSmallPrice ? "< 0.001" : priceData?.price.toFixed(3)
+                    isTooSmallPrice
+                      ? "< 0.001"
+                      : priceData?.priceInSellToken.toFixed(3)
                   } ${symbol}`}
               <Text as="span" colorScheme="gray">
                 {` (${RPC[Chains[chainId]].chainName})`}
