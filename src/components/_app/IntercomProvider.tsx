@@ -1,14 +1,14 @@
 import { createContext, PropsWithChildren, useContext } from "react"
 
 const IntercomContext = createContext<{
-  intercomSettings: Record<string, string>
-  defineIntercomSettingsValue: (key: string, value: string) => void
-}>(undefined)
+  intercomSettings: Record<string, string | number>
+  defineIntercomSettingsValue: (key: string, value: string | number) => void
+}>({ intercomSettings: undefined, defineIntercomSettingsValue: () => {} })
 
 const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const intercomSettings = {}
 
-  const defineIntercomSettingsValue = (key: string, value: string) => {
+  const defineIntercomSettingsValue = (key: string, value: string | number) => {
     if (typeof window === "undefined") return
 
     const windowAsObject = window as Record<string, any>
