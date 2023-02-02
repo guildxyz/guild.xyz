@@ -22,8 +22,7 @@ import CurrencyListItem from "./components/CurrencyListItem"
 import TokenInfo from "./components/TokenInfo"
 
 const PaymentCurrencyPicker = (): JSX.Element => {
-  const { requirement, pickedCurrency, setPickedCurrency } =
-    useGuildCheckoutContext()
+  const { requirement, pickedCurrency } = useGuildCheckoutContext()
 
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
   const lightShade = useColorModeValue("white", "gray.700")

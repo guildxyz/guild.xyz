@@ -188,6 +188,7 @@ const usePurchaseAsset = () => {
     onSuccess: (receipt) => {
       if (receipt.status !== 1) {
         showErrorToast("Transaction failed")
+        setTxError(true)
         console.log("[DEBUG]: TX RECEIPT", receipt)
         return
       }
