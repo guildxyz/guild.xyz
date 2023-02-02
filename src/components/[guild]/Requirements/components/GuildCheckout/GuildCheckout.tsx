@@ -104,9 +104,7 @@ const GuildCheckout = (): JSX.Element => {
                       : `${
                           isTooSmallPrice
                             ? "< $0.01"
-                            : `$${priceData.priceInUSD.toFixed(
-                                priceData.priceInUSD < 1 ? 2 : 0
-                              )}`
+                            : `$${priceData.priceInUSD.toFixed(2)}`
                         }`}
                   </Text>
                 )
