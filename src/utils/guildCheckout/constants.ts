@@ -1,7 +1,14 @@
 import { Chain, RPC } from "connectors"
 import { RequirementType } from "requirements"
 
-export const TOKEN_BUYER_CONTRACT = "0x8c82a71b629db618847682cd3155e6742304b710"
+// export const GUILD_FEE_PERCENTAGE = 0.01
+// export const GUILD_FEE_FIXED_USD = 0.49
+export const GUILD_FEE_PERCENTAGE = 0.1
+export const GUILD_FEE_FIXED_USD = 0
+
+export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
+
+export const TOKEN_BUYER_CONTRACT = "0xf8a9eef89f384601e4a19e092d2826051c50f864"
 
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   ETHEREUM: "https://api.0x.org",
@@ -103,41 +110,28 @@ export const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
     address: RPC[c].nativeCurrency.symbol,
   })),
   // USDC
-  {
-    chainId: 1,
-    address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-  },
-  // DAI
-  {
-    chainId: 1,
-    address: "0x6b175474e89094c44da98b954eedeac495271d0f",
-  },
-  // DAI (Görli)
-  {
-    chainId: 5,
-    address: "0x73967c6a0904aa032c103b4104747e88c566b1a2",
-  },
-  // USDC (Polygon)
-  {
-    chainId: 137,
-    address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
-  },
-  // DAI (Polygon)
-  {
-    chainId: 137,
-    address: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
-  },
+  // {
+  //   chainId: 1,
+  //   address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+  // },
+  // // DAI
+  // {
+  //   chainId: 1,
+  //   address: "0x6b175474e89094c44da98b954eedeac495271d0f",
+  // },
+  // // DAI (Görli)
+  // {
+  //   chainId: 5,
+  //   address: "0x73967c6a0904aa032c103b4104747e88c566b1a2",
+  // },
+  // // USDC (Polygon)
+  // {
+  //   chainId: 137,
+  //   address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+  // },
+  // // DAI (Polygon)
+  // {
+  //   chainId: 137,
+  //   address: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+  // },
 ]
-
-export const PROTOCOL_FEES_PERCENTAGE = {
-  UNISWAP_V2: 0.3,
-  UNISWAP_V3: 0.05, // 0.05%, 0.30%, and 1% (pooltól függően)
-  SEAPORT: 0,
-  LOOKS_RARE: 2,
-  NFTX: 5, // 5% Minting Fee , 0% Random Redemption Fee, 5% Targeted Redemption Fee
-  CRYPTOPUNKS: 0,
-  X2Y2: 0.5,
-  SUDOSWAP: 0.5,
-  NFT20: 5,
-  FOUNDATION: 0, // up to 15% a ToS alapján (de ahogy nézem opcionális, párat megnéztem és ott nem láttam)
-}

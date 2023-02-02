@@ -6,7 +6,7 @@ import fetcher from "utils/fetcher"
 import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
-} from "utils/guildCheckout"
+} from "utils/guildCheckout/constants"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 
 const fetchPrice = (

@@ -22,7 +22,7 @@ import { ShoppingCartSimple } from "phosphor-react"
 import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
-} from "utils/guildCheckout"
+} from "utils/guildCheckout/constants"
 import RequirementDisplayComponent from "../RequirementDisplayComponent"
 import AllowanceButton from "./components/buttons/AllowanceButton"
 import ChooseCurrencyButton from "./components/buttons/ChooseCurrencyButton"
@@ -47,7 +47,7 @@ const GuildCheckout = (): JSX.Element => {
     requirement &&
     accessData &&
     accessData.requirements?.find((req) => req.requirementId === requirement.id)
-      .access
+      ?.access
 
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 

@@ -12,7 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
-import { purchaseSupportedChains } from "utils/guildCheckout"
+import { purchaseSupportedChains } from "utils/guildCheckout/constants"
 import GuildCheckout from "./GuildCheckout"
 import { useRequirementContext } from "./RequirementContext"
 

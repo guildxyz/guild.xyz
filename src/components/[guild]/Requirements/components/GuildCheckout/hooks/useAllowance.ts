@@ -30,6 +30,7 @@ const useAllowance = (
 
   const shouldFetch =
     tokenAddress &&
+    erc20Contract &&
     requirement?.chain === Chains[chainId] &&
     tokenAddress !== RPC[requirement?.chain]?.nativeCurrency?.symbol
 

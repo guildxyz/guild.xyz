@@ -44,7 +44,6 @@ const TokenInfo = ({
     ? parseFloat(priceData.price.toFixed(3)) <= 0.0 ?? ""
     : undefined
 
-  // TODO: error handling
   const {
     data: { symbol: tokenSymbol, decimals, logoURI: tokenLogoURI },
     error,

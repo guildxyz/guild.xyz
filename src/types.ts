@@ -242,7 +242,7 @@ type Guild = {
   showMembers: boolean
   memberCount: number
   hideFromExplorer: boolean
-  socialLinks?: SocialLinks // TODO
+  socialLinks?: SocialLinks
   contacts?: GuildContact[]
   createdAt: string
   admins: GuildAdmin[]

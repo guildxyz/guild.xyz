@@ -7,15 +7,15 @@ import Success from "./components/Success"
 import TxError from "./components/TxError"
 
 const InfoModal = (): JSX.Element => {
-  const { isInfoModalOpen, onInfoModalClose, processing, success, txError } =
+  const { isInfoModalOpen, onInfoModalClose, txHash, txSuccess, txError } =
     useGuildCheckoutContext()
 
-  const modalTitle = processing
-    ? "Transaction is processing..."
-    : success
-    ? "Purchase successful"
-    : txError
+  const modalTitle = txError
     ? "Transaction failed"
+    : txSuccess
+    ? "Purchase successful"
+    : txHash
+    ? "Transaction is processing..."
     : "Buy requirement"
 
   return (
@@ -25,12 +25,12 @@ const InfoModal = (): JSX.Element => {
         <ModalHeader>{modalTitle}</ModalHeader>
 
         <AnimatePresence>
-          {processing ? (
-            <InProgress tx="0x00000000" />
-          ) : success ? (
-            <Success tx="0x00000000" />
-          ) : (
+          {txError ? (
             <TxError />
+          ) : txSuccess ? (
+            <Success tx={txHash} />
+          ) : (
+            <InProgress tx={txHash} />
           )}
         </AnimatePresence>
       </ModalContent>

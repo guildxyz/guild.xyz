@@ -7,11 +7,15 @@ import { RequirementType } from "requirements"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import capitalize from "utils/capitalize"
 import {
+  GUILD_FEE_FIXED_USD,
+  GUILD_FEE_PERCENTAGE,
   PURCHASABLE_REQUIREMENT_TYPES,
   RESERVOIR_API_URLS,
   ZEROX_API_URLS,
   ZEROX_EXCLUDED_SOURCES,
-} from "utils/guildCheckout"
+} from "utils/guildCheckout/constants"
+
+export type SupportedSources = "Uniswap_V2" | "Uniswap_V3"
 
 export type FetchPriceResponse = {
   buyAmount: number
@@ -19,8 +23,11 @@ export type FetchPriceResponse = {
   priceInUSD: number
   gasFee: number
   gasFeeInUSD: number
-  totalFee: number
-  totalFeeInUSD: number
+  guildFee: number
+  guildFeeInUSD: number
+  source: SupportedSources
+  tokenAddressPath: string[]
+  path: string
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -87,9 +94,7 @@ const fetchNativeCurrencyPrice = async (chain: Chain) =>
     .then((coinbaseData) => coinbaseData.data.rates.USD)
     .catch((_) => undefined)
 
-const GUILD_FEE_PERCENTAGE = 0.01
-
-const handler: NextApiHandler = async (
+const handler: NextApiHandler<FetchPriceResponse> = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -141,7 +146,7 @@ const handler: NextApiHandler = async (
     }).toString()
 
     const response = await fetch(
-      `${ZEROX_API_URLS[chain]}/swap/v1/price?${queryParams}`
+      `${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`
     )
 
     const responseData = await response.json()
@@ -154,22 +159,31 @@ const handler: NextApiHandler = async (
       })
     }
 
-    // We only support Uniswap V2 and V3 for now
-    if (
-      !responseData.sources.find(
-        (source) =>
-          (source.name === "Uniswap_V2" || source.name === "Uniswap_V3") &&
-          source.proportion === "1"
-      )
+    // We support Uniswap V2 and V3 for now
+    const foundSource = responseData.sources.find(
+      (source) =>
+        (source.name === "Uniswap_V2" || source.name === "Uniswap_V3") &&
+        source.proportion === "1"
     )
+
+    const relevantOrder =
+      foundSource &&
+      responseData.orders.find((order) => order.source === foundSource.name)
+
+    if (!foundSource || !relevantOrder)
       return res.status(500).json({ error: "Couldn't find tokens on Uniswap." })
 
-    const price = parseFloat(responseData.price) * minAmount
+    const path = relevantOrder.fillData.uniswapPath
+    const tokenAddressPath = relevantOrder.fillData.tokenAddressPath
+
+    // TODO: error if we can't fetch path/tokenAddressPath?
+
+    const price = parseFloat(responseData.guaranteedPrice) * minAmount
     const priceInUSD = parseFloat(
-      ((nativeCurrencyPrice / responseData.sellTokenToEthRate) * price).toFixed(0)
+      ((nativeCurrencyPrice / responseData.sellTokenToEthRate) * price).toFixed(2)
     )
 
-    const halfUSDInNativeCurrency = 0.5 / nativeCurrencyPrice
+    const fixedGuildFeeInNativeCurrency = GUILD_FEE_FIXED_USD / nativeCurrencyPrice
 
     // const gasFee = parseFloat(
     //   formatUnits(
@@ -181,7 +195,8 @@ const handler: NextApiHandler = async (
     // TODO: calculate gas fee, maybe using a static call?
     const gasFee = 0
 
-    const totalFee = gasFee + price * GUILD_FEE_PERCENTAGE + halfUSDInNativeCurrency
+    const guildFee =
+      gasFee + price * GUILD_FEE_PERCENTAGE + fixedGuildFeeInNativeCurrency
 
     return res.json({
       buyAmount: minAmount,
@@ -189,8 +204,11 @@ const handler: NextApiHandler = async (
       priceInUSD,
       gasFee,
       gasFeeInUSD: nativeCurrencyPrice * gasFee,
-      totalFee,
-      totalFeeInUSD: nativeCurrencyPrice * totalFee,
+      guildFee,
+      guildFeeInUSD: nativeCurrencyPrice * guildFee,
+      source: foundSource.name as SupportedSources,
+      tokenAddressPath,
+      path,
     })
   } else if (type === "ERC721" || type === "ERC1155") {
     if (!RESERVOIR_API_URLS[chain])
@@ -207,7 +225,6 @@ const handler: NextApiHandler = async (
       limit: minAmount.toString(),
     }
 
-    // TODO: maybe we should check the DB and migrate all old attribute structures to the new one.
     if (data?.attributes?.length) {
       data.attributes.forEach(
         (attr) =>
@@ -253,21 +270,22 @@ const handler: NextApiHandler = async (
       .map((t) => t.market.floorAsk.price.amount.usd)
       .reduce((p1, p2) => p1 + p2, 0)
 
-    const halfUSDInNativeCurrency = 0.5 / nativeCurrencyPrice
+    const fixedGuildFeeInNativeCurrency = GUILD_FEE_FIXED_USD / nativeCurrencyPrice
 
     // TODO: calculate gas fee, maybe using a static call?
     const gasFee = 0
 
-    const totalFee = gasFee + price * GUILD_FEE_PERCENTAGE + halfUSDInNativeCurrency
+    const guildFee = price * GUILD_FEE_PERCENTAGE + fixedGuildFeeInNativeCurrency
 
+    // TODO: source, tokenAddressPath, path
     return res.json({
       buyAmount: minAmount,
       price,
       priceInUSD,
       gasFee,
       gasFeeInUSD: nativeCurrencyPrice * gasFee,
-      totalFee,
-      totalFeeInUSD: nativeCurrencyPrice * totalFee,
+      guildFee,
+      guildFeeInUSD: nativeCurrencyPrice * guildFee,
     })
   }
 

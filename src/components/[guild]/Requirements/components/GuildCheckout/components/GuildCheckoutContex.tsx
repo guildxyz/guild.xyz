@@ -24,10 +24,10 @@ const GuildCheckoutContext = createContext<{
   setPickedCurrency: Dispatch<SetStateAction<string>>
   agreeWithTOS: boolean
   setAgreeWithTOS: Dispatch<SetStateAction<boolean>>
-  processing: boolean
-  setProcessing: Dispatch<SetStateAction<boolean>>
-  success: boolean
-  setSuccess: Dispatch<SetStateAction<boolean>>
+  txHash: string
+  setTxHash: Dispatch<SetStateAction<string>>
+  txSuccess: boolean
+  setTxSuccess: Dispatch<SetStateAction<boolean>>
   txError: boolean
   setTxError: Dispatch<SetStateAction<boolean>>
 }>(undefined)
@@ -47,21 +47,20 @@ const GuildCheckoutProvider = ({
 
   const triggerConfetti = useJsConfetti()
 
-  // TEMP...
-  const [processing, setProcessing] = useState(false)
-  const [success, setSuccess] = useState(false)
+  const [txHash, setTxHash] = useState("")
   const [txError, setTxError] = useState(false)
+  const [txSuccess, setTxSuccess] = useState(false)
 
   useEffect(() => {
-    if (!processing && !success && !txError) return
+    if (!txHash || !isOpen || isInfoModalOpen) return
     onClose()
     onInfoModalOpen()
-  }, [processing, success, txError])
+  }, [txHash])
 
   useEffect(() => {
-    if (!success) return
+    if (!txSuccess) return
     triggerConfetti()
-  }, [success])
+  }, [txSuccess])
 
   return (
     <GuildCheckoutContext.Provider
@@ -77,10 +76,10 @@ const GuildCheckoutProvider = ({
         setPickedCurrency,
         agreeWithTOS,
         setAgreeWithTOS,
-        processing,
-        setProcessing,
-        success,
-        setSuccess,
+        txHash,
+        setTxHash,
+        txSuccess,
+        setTxSuccess,
         txError,
         setTxError,
       }}

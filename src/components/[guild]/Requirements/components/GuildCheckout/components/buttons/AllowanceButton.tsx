@@ -7,7 +7,7 @@ import useAllowance from "components/[guild]/Requirements/components/GuildChecko
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
-import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout"
+import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
 import useAllowSpendingTokens from "../../hooks/useAllowSpendingToken"
 import usePrice from "../../hooks/usePrice"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
@@ -40,11 +40,11 @@ const AllowanceButton = (): JSX.Element => {
 
   const priceInBigNumber =
     priceData && decimals
-      ? parseUnits(priceData.price.toFixed(6), decimals)
+      ? parseUnits(priceData.price.toFixed(18), decimals)
       : undefined
   const isEnoughAllowance =
     priceInBigNumber && allowance
-      ? parseUnits(priceData.price.toFixed(6), decimals).lte(allowance)
+      ? parseUnits(priceData.price.toFixed(18), decimals).lte(allowance)
       : false
 
   const { onSubmit, isLoading } = useAllowSpendingTokens(

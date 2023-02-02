@@ -10,6 +10,10 @@ import {
 } from "@chakra-ui/react"
 import useTokenData from "hooks/useTokenData"
 import { Info } from "phosphor-react"
+import {
+  GUILD_FEE_FIXED_USD,
+  GUILD_FEE_PERCENTAGE,
+} from "utils/guildCheckout/constants"
 import usePrice from "../hooks/usePrice"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 
@@ -26,7 +30,7 @@ const FeeAndTotal = (): JSX.Element => {
   const { data: priceData, isValidating } = usePrice(pickedCurrency)
 
   const isTooSmallFee = priceData
-    ? parseFloat(priceData.totalFee.toFixed(3)) <= 0.0 ?? ""
+    ? parseFloat((priceData.gasFee + priceData.guildFee).toFixed(3)) <= 0.0 ?? ""
     : undefined
   const isTooSmallPrice = priceData
     ? parseFloat(priceData.price.toFixed(3)) <= 0.0 ?? ""
@@ -38,7 +42,9 @@ const FeeAndTotal = (): JSX.Element => {
         <HStack>
           <Text as="span">Fee</Text>
           <Tooltip
-            label="1% + $0.5 Guild fee + estimated network fee"
+            label={`${
+              GUILD_FEE_PERCENTAGE * 100
+            }% + $${GUILD_FEE_FIXED_USD} Guild fee + protocol fee + estimated network fee`}
             placement="top"
             hasArrow
           >
@@ -48,7 +54,11 @@ const FeeAndTotal = (): JSX.Element => {
         <Text as="span">
           {pickedCurrency
             ? `${
-                isTooSmallFee ? "< 0.001" : priceData?.totalFee?.toFixed(3)
+                isTooSmallFee
+                  ? "< 0.001"
+                  : ((priceData?.gasFee ?? 0) + (priceData?.guildFee ?? 0))?.toFixed(
+                      3
+                    )
               } ${symbol}`
             : "Choose currency"}
         </Text>
@@ -61,16 +71,22 @@ const FeeAndTotal = (): JSX.Element => {
           {pickedCurrency ? (
             <Skeleton isLoaded={!isValidating && !isNaN(priceData?.priceInUSD)}>
               {priceData
-                ? `$${(priceData.priceInUSD + priceData.totalFeeInUSD)?.toFixed(
-                    2
-                  )} = `
+                ? `$${(
+                    priceData.priceInUSD +
+                    priceData.gasFeeInUSD +
+                    priceData.guildFeeInUSD
+                  )?.toFixed(2)} = `
                 : "0.00"}
               <Text as="span" color={textAccentColor} fontWeight="semibold">
                 {priceData
                   ? `${
                       isTooSmallPrice
                         ? "< 0.001"
-                        : (priceData.price + priceData.totalFee)?.toFixed(3)
+                        : (
+                            priceData.price +
+                            priceData.gasFee +
+                            priceData.guildFee
+                          )?.toFixed(3)
                     } ${symbol}`
                   : "0.00"}
               </Text>

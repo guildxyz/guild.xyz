@@ -3,35 +3,11 @@ import Button from "components/common/Button"
 import { useGuildCheckoutContext } from "../../GuildCheckoutContex"
 
 const InfoModalFooter = (): JSX.Element => {
-  const {
-    processing,
-    success,
-    setProcessing,
-    setSuccess,
-    setTxError,
-    onInfoModalClose,
-  } = useGuildCheckoutContext()
+  const { onInfoModalClose } = useGuildCheckoutContext()
 
   return (
     <ModalFooter>
-      <Button
-        size="xl"
-        colorScheme="blue"
-        w="full"
-        onClick={
-          processing
-            ? () => {
-                setSuccess(true)
-                setProcessing(false)
-              }
-            : success
-            ? () => {
-                setTxError(true)
-                setSuccess(false)
-              }
-            : onInfoModalClose
-        }
-      >
+      <Button size="xl" colorScheme="blue" w="full" onClick={onInfoModalClose}>
         Close
       </Button>
     </ModalFooter>

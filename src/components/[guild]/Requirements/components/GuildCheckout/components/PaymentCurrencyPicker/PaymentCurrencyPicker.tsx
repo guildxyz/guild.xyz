@@ -15,8 +15,7 @@ import Button from "components/common/Button"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains } from "connectors"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
-import { useEffect } from "react"
-import { SUPPORTED_CURRENCIES } from "utils/guildCheckout"
+import { SUPPORTED_CURRENCIES } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 import CurrencyListItem from "./components/CurrencyListItem"
@@ -37,8 +36,6 @@ const PaymentCurrencyPicker = (): JSX.Element => {
     (c) =>
       c.chainId === Chains[requirement.chain] && c.address !== requirement.address
   )
-
-  useEffect(() => setPickedCurrency(currencyOptions[0].address), [])
 
   return (
     <Stack spacing={3}>

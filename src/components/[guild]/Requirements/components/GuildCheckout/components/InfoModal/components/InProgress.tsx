@@ -2,18 +2,15 @@ import {
   Center,
   Divider,
   Flex,
-  Icon,
-  Link,
   ModalBody,
   Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { ArrowSquareOut } from "phosphor-react"
-import shortenHex from "utils/shortenHex"
 import InfoModalFooter from "./InfoModalFooter"
 import PurchasedRequirementInfo from "./PurchasedRequirementInfo"
+import TransactionLink from "./TransactionLink"
 
 type Props = {
   tx: string
@@ -29,16 +26,11 @@ const InProgress = ({ tx }: Props): JSX.Element => (
       </Flex>
 
       <Text mb={4}>
-        Requirement successfully purchased! Your access is being rechecked
+        The blockchain is working its magic... Your transaction should be confirmed
+        shortly
       </Text>
 
-      <Text mb={6} colorScheme="gray">
-        {"Transaction id: "}
-        <Link isExternal href="" fontWeight="semibold">
-          {`${shortenHex(tx, 3)} `}
-          <Icon ml={1} as={ArrowSquareOut} />
-        </Link>
-      </Text>
+      <TransactionLink tx={tx} />
 
       <Divider mb={6} />
 
