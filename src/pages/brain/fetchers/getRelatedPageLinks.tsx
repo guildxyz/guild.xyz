@@ -14,7 +14,8 @@ const getRelatedPageLinks = (allPages, blockMap, pageId) => {
     tags: page.properties.tags.multi_select.map((tag) => tag.name),
     icon: page.icon?.file?.url ?? null,
     backgroundImage: page.cover?.file?.url ?? null,
-  }))
+  })).sort((a, b) => a.title.localeCompare(b.title))
+
   return cards
 }
 export default getRelatedPageLinks
