@@ -24,6 +24,7 @@ import {
   encodeWrapEth,
   UNIVERSAL_ROUTER_COMMANDS,
 } from "utils/guildCheckout/encoders"
+import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import usePrice from "./usePrice"
 
@@ -120,13 +121,7 @@ const purchaseAsset = async (
   const isNativeCurrency =
     tokenAddress === RPC[Chains[chainId]].nativeCurrency.symbol
 
-  const gasPrice = await tokenBuyerContract.provider.getGasPrice()
-
-  console.log(
-    `getAssetsCallParams->${isNativeCurrency ? "COIN" : "ERC20"}->${source}`
-  )
-
-  const getAssetsMainParams = [
+  const getAssetsParams = [
     {
       tokenAddress: isNativeCurrency ? NULL_ADDRESS : tokenAddress,
       amount: isNativeCurrency ? 0 : amountInWithFee,
@@ -135,23 +130,19 @@ const purchaseAsset = async (
     getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][
       source
     ].getEncodedParams(data),
-    ,
+    { value: isNativeCurrency ? amountInWithFee : undefined },
   ]
 
-  const getAssetsExtraParams = {
-    value: isNativeCurrency ? amountInWithFee : undefined,
-    gasPrice: gasPrice,
-    gasLimit: undefined,
+  try {
+    await tokenBuyerContract.callStatic.getAssets(...getAssetsParams)
+  } catch (callStaticError) {
+    if (callStaticError.error) {
+      const walletError = processWalletError(callStaticError.error)
+      return Promise.reject(walletError.title)
+    }
+
+    return Promise.reject(callStaticError.errorName)
   }
-
-  const getAssetsGasEstimation = await tokenBuyerContract.estimateGas.getAssets(
-    ...getAssetsMainParams,
-    getAssetsExtraParams
-  )
-
-  getAssetsExtraParams.gasLimit = getAssetsGasEstimation
-
-  const getAssetsParams = [...getAssetsMainParams, getAssetsExtraParams]
 
   const getAssetsCall = await tokenBuyerContract.getAssets(...getAssetsParams)
 
