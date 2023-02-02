@@ -13,16 +13,17 @@ type Props = {
   cards: BrainCardData[]
 }
 
+const FILTER_OPTIONS: Array<FilterOption> = [
+  { value: "requirement", label: "requirement" },
+  { value: "reward", label: "reward" },
+  { value: "core", label: "core" },
+  { value: "build with Guild", label: "build with Guild" },
+  { value: "web2", label: "web2" },
+  { value: "web3", label: "web3" },
+]
+
 const Guildverse = ({ cards: cards }: Props): JSX.Element => {
   const [search, setSearch] = useState<string>("")
-  const filterOptions: Array<FilterOption> = [
-    { value: "requirement", label: "requirement" },
-    { value: "reward", label: "reward" },
-    { value: "core", label: "core" },
-    { value: "build with Guild", label: "build with Guild" },
-    { value: "web2", label: "web2" },
-    { value: "web3", label: "web3" },
-  ]
   const [filterData, setFilterData] = useState<Array<FilterOption>>([])
   const renderedCards = useMemo(
     () =>
@@ -44,7 +45,7 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
           mb={8}
         >
           <SearchBar placeholder="Search" {...{ search, setSearch }} />
-          <FilterSelect {...{ filterOptions, setFilterData }} />
+          <FilterSelect {...{ FILTER_OPTIONS, setFilterData }} />
         </SimpleGrid>
         <CategorySection fallbackText={"There are no pages"}>
           {renderedCards.map((card) => (

@@ -6,15 +6,15 @@ export type FilterOption = {
 }
 
 type Props = {
-  filterOptions: Array<FilterOption>
+  FILTER_OPTIONS: Array<FilterOption>
   setFilterData
 }
 
-const FilterSelect = ({ filterOptions, setFilterData }: Props): JSX.Element => (
+const FilterSelect = ({ FILTER_OPTIONS, setFilterData }: Props): JSX.Element => (
   <Select<FilterOption, true, GroupBase<FilterOption>>
     isMulti
     instanceId="filter-select"
-    options={filterOptions}
+    options={FILTER_OPTIONS}
     placeholder="Filter"
     chakraStyles={{
       control: (provided) => ({

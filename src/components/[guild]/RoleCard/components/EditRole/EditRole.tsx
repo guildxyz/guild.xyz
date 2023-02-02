@@ -168,7 +168,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
-            <DrawerHeader title={roleId.toString()}>
+            <DrawerHeader title="Edit role">
               {roles?.length > 1 && (
                 <DeleteRoleButton roleId={id} onDrawerClose={onClose} />
               )}

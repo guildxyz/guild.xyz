@@ -1,4 +1,4 @@
-import { Card, Text } from "@chakra-ui/react"
+import { Card, Heading } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import { BrainCardData } from "types"
 
@@ -36,11 +36,10 @@ const PageBrainCard = ({ pageData }: Props): JSX.Element => (
       _hover={{
         _before: {
           opacity: 0.1,
-          borderRadius: "2xl",
         },
       }}
     >
-      <Text
+      <Heading
         as="span"
         fontFamily="display"
         fontSize="lg"
@@ -49,7 +48,7 @@ const PageBrainCard = ({ pageData }: Props): JSX.Element => (
         maxW="full"
       >
         {pageData.title}
-      </Text>
+      </Heading>
     </Card>
   </Link>
 )
