@@ -7,8 +7,7 @@ import Success from "./components/Success"
 import TxError from "./components/TxError"
 
 const InfoModal = (): JSX.Element => {
-  const { isInfoModalOpen, onInfoModalClose, txHash, txSuccess, txError } =
-    useGuildCheckoutContext()
+  const { isInfoModalOpen, txHash, txSuccess, txError } = useGuildCheckoutContext()
 
   const modalTitle = txError
     ? "Transaction failed"
@@ -19,7 +18,7 @@ const InfoModal = (): JSX.Element => {
     : "Buy requirement"
 
   return (
-    <Modal isOpen={isInfoModalOpen} onClose={onInfoModalClose}>
+    <Modal isOpen={isInfoModalOpen} onClose={() => {}}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{modalTitle}</ModalHeader>

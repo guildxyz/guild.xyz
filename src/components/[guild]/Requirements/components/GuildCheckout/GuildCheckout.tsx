@@ -63,7 +63,7 @@ const GuildCheckout = (): JSX.Element => {
 
   if (
     !account ||
-    satisfiesRequirement ||
+    (!isOpen && satisfiesRequirement) ||
     (!accessData && isAccessLoading) ||
     !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
     !purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain) ||
