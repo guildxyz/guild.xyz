@@ -17,6 +17,11 @@ import LinkButton from "../LinkButton"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
 
+type BackButtonProps = {
+  href: string
+  text: string
+}
+
 type Props = {
   image?: JSX.Element
   title: string
@@ -27,7 +32,7 @@ type Props = {
   background?: string
   backgroundImage?: string
   backgroundOffset?: number
-  showBackButton?: boolean
+  backButton?: BackButtonProps
 }
 
 const Layout = ({
@@ -40,7 +45,7 @@ const Layout = ({
   background,
   backgroundImage,
   backgroundOffset = 128,
-  showBackButton,
+  backButton,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
@@ -117,18 +122,18 @@ const Layout = ({
           pb={24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
-          {showBackButton && hasNavigated && (
+          {backButton && hasNavigated && (
             <LinkButton
-              href="/explorer"
+              href={backButton.href}
               variant="link"
-              color={colorContext.textColor}
+              color={colorContext?.textColor}
               opacity={0.75}
               size="sm"
               leftIcon={<ArrowLeft />}
               alignSelf="flex-start"
               mb="6"
             >
-              Go back to explorer
+              {backButton.text}
             </LinkButton>
           )}
           <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">

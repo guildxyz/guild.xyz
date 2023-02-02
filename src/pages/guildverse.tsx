@@ -38,7 +38,7 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
   return (
     <>
       <LinkPreviewHead path="" />
-      <Layout title="Guildverse" showBackButton={false}>
+      <Layout title="Guildverse">
         <SimpleGrid
           templateColumns={{ md: "2fr 3fr" }}
           gap={{ base: 2, md: "6" }}

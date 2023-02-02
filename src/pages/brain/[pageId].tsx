@@ -18,6 +18,7 @@ const PageDetails = ({ blockMap, linkedPageContents, params, pageLogo }) => (
   <>
     <LinkPreviewHead path="" />
     <Layout
+      backButton={{ href: "/guildverse", text: "Go back to Guildverse" }}
       title={blockMap.block[params.pageId.toString()]?.value.properties.title[0][0]}
       image={
         pageLogo && (
