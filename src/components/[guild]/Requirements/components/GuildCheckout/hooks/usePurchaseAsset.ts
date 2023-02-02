@@ -122,7 +122,11 @@ const purchaseAsset = async (
 
   const gasPrice = await tokenBuyerContract.provider.getGasPrice()
 
-  const getAssetsParams = [
+  console.log(
+    `getAssetsCallParams->${isNativeCurrency ? "COIN" : "ERC20"}->${source}`
+  )
+
+  const getAssetsMainParams = [
     {
       tokenAddress: isNativeCurrency ? NULL_ADDRESS : tokenAddress,
       amount: isNativeCurrency ? 0 : amountInWithFee,
@@ -131,12 +135,23 @@ const purchaseAsset = async (
     getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][
       source
     ].getEncodedParams(data),
-    {
-      value: isNativeCurrency ? amountInWithFee : undefined,
-      gasPrice: gasPrice,
-      gasLimit: 1000000,
-    },
+    ,
   ]
+
+  const getAssetsExtraParams = {
+    value: isNativeCurrency ? amountInWithFee : undefined,
+    gasPrice: gasPrice,
+    gasLimit: undefined,
+  }
+
+  const getAssetsGasEstimation = await tokenBuyerContract.estimateGas.getAssets(
+    ...getAssetsMainParams,
+    getAssetsExtraParams
+  )
+
+  getAssetsExtraParams.gasLimit = getAssetsGasEstimation
+
+  const getAssetsParams = [...getAssetsMainParams, getAssetsExtraParams]
 
   const getAssetsCall = await tokenBuyerContract.getAssets(...getAssetsParams)
 
@@ -151,8 +166,14 @@ const usePurchaseAsset = () => {
 
   const { account, chainId } = useWeb3React()
 
-  const { pickedCurrency, txHash, setTxHash, setTxSuccess, setTxError } =
-    useGuildCheckoutContext()
+  const {
+    requirement,
+    pickedCurrency,
+    txHash,
+    setTxHash,
+    setTxSuccess,
+    setTxError,
+  } = useGuildCheckoutContext()
   const { data: priceData } = usePrice(pickedCurrency)
 
   const tokenBuyerContract = useContract(TOKEN_BUYER_CONTRACT, TOKEN_BUYER_ABI, true)
@@ -160,19 +181,26 @@ const usePurchaseAsset = () => {
   const {
     data: { decimals },
   } = useTokenData(Chains[chainId], pickedCurrency)
+  const {
+    data: { decimals: buyTokenDecimals },
+  } = useTokenData(Chains[chainId], requirement?.address)
 
   const amountIn =
-    priceData && decimals ? parseUnits(priceData.price.toFixed(18)) : undefined
+    priceData && decimals
+      ? parseUnits(priceData.price.toFixed(decimals), decimals)
+      : undefined
 
   const guildFeeInWei =
-    priceData && decimals ? parseUnits(priceData.guildFee.toFixed(18)) : undefined
+    priceData && decimals
+      ? parseUnits(priceData.guildFee.toFixed(decimals), decimals)
+      : undefined
 
   const amountInWithFee =
     amountIn && guildFeeInWei ? amountIn.add(guildFeeInWei) : undefined
 
   const amountOut =
-    priceData && decimals
-      ? parseUnits(priceData.buyAmount.toFixed(18), decimals)
+    priceData && buyTokenDecimals
+      ? parseUnits(priceData.buyAmount.toFixed(buyTokenDecimals), buyTokenDecimals)
       : undefined
 
   const purchaseAssetWithSetTx = (data?: PurchaseAssetData) =>

@@ -35,16 +35,17 @@ const AllowanceButton = (): JSX.Element => {
 
   const {
     data: { decimals },
+    isValidating: isTokenDataLoading,
     error,
   } = useTokenData(requirement?.chain, pickedCurrency)
 
   const priceInBigNumber =
-    priceData && decimals
-      ? parseUnits(priceData.price.toFixed(18), decimals)
+    priceData && !isPriceLoading && decimals && !isTokenDataLoading
+      ? parseUnits(priceData.price.toFixed(decimals), decimals)
       : undefined
   const isEnoughAllowance =
     priceInBigNumber && allowance
-      ? parseUnits(priceData.price.toFixed(18), decimals).lte(allowance)
+      ? parseUnits(priceData.price.toFixed(decimals), decimals).lte(allowance)
       : false
 
   const { onSubmit, isLoading } = useAllowSpendingTokens(
