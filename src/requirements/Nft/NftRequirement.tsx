@@ -30,26 +30,7 @@ const getNounsRequirementType = (trait: Trait) =>
         ?.filename
 
 const NftRequirement = (props: RequirementProps) => {
-  const receivedRequirement = useRequirementContext()
-
-  // Converting the requirement to the new format if needed
-  const requirement = Object.entries(receivedRequirement.data?.attribute ?? {})
-    .length
-    ? {
-        ...receivedRequirement,
-        data: {
-          ...receivedRequirement.data,
-          attributes: [
-            {
-              trait_type: receivedRequirement.data?.attribute?.trait_type,
-              interval: receivedRequirement.data.attribute.interval,
-              value: receivedRequirement.data.attribute.value,
-            },
-          ],
-          attribute: undefined,
-        },
-      }
-    : receivedRequirement
+  const requirement = useRequirementContext()
 
   const { metadata: metadataWithTraits, isLoading: isMetadataWithTraitsLoading } =
     useNftMetadata(requirement.chain, requirement.address, requirement.data.id)
