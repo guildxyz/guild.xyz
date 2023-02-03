@@ -38,7 +38,15 @@ const purchaseAsset = async (
       return Promise.reject(walletError.title)
     }
 
-    return Promise.reject(callStaticError.errorName)
+    if (!callStaticError.errorName) return Promise.reject(callStaticError)
+
+    // TODO: we could handle Uniswap universal router errors too
+    switch (callStaticError.errorName) {
+      case "AccessDenied":
+        return Promise.reject("TokenBuyer contract error: access denied")
+      case "TransferFailed":
+        return Promise.reject("TokenBuyer contract error: ERC20 transfer failed")
+    }
   }
 
   const getAssetsCall = await tokenBuyerContract.getAssets(...getAssetsParams)
