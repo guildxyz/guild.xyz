@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react"
 import Image from "next/image"
 
 const CustomImage = (props) => (
-  <Box position="relative" width="100%" height="50vh">
+  <Box position="relative" width="100%" height="65vh">
     <Image
       className={props.className}
       src={props.src}
