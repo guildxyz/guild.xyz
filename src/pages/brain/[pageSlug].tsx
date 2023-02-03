@@ -8,9 +8,9 @@ import Image from "next/image"
 import { NotionRenderer } from "react-notion-x"
 import "react-notion-x/src/styles.css"
 import slugify from "slugify"
-import CustomImage from "./components/customImage"
-import CustomLink from "./components/customLink"
-import Header from "./components/header"
+import CustomImage from "./components/CustomImage"
+import CustomLink from "./components/CustomLink"
+import Header from "./components/Header"
 import getAllPages from "./fetchers/getAllPages"
 import getPage from "./fetchers/getPage"
 import getRelatedPageLinks from "./fetchers/getRelatedPageLinks"
@@ -29,6 +29,7 @@ const PageDetails = ({ blockMap, linkedPageContents, pageId, pageLogo }) => (
               layout="fill"
               objectFit="contain"
               quality="30"
+              priority={true}
               style={{
                 overflow: "visible",
               }}

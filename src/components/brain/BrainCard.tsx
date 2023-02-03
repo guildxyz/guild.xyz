@@ -64,6 +64,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
                 layout="fill"
                 objectFit="cover"
                 quality="2"
+                priority={true}
                 style={{ transition: "filter 0.3s" }}
               />
             )}
@@ -76,6 +77,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
                   layout="fill"
                   objectFit="contain"
                   quality="25"
+                  priority={true}
                   style={{
                     zIndex: "1",
                     overflow: "visible",
