@@ -99,8 +99,7 @@ const usePurchaseAsset = () => {
       !rawGuildFeeInWei ||
       !buyAmountInWei ||
       !source ||
-      !path ||
-      !tokenAddressPath
+      (!path && !tokenAddressPath)
     )
       return undefined
 
