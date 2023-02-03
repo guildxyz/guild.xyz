@@ -1,5 +1,6 @@
 import {
   ButtonGroup,
+  Collapse,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -15,6 +16,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { RPC } from "connectors"
@@ -108,55 +110,58 @@ const GuildCheckout = (): JSX.Element => {
             />
           </ModalBody>
 
-          <ModalFooter pt={10} bgColor={modalFooterBg}>
-            {error ? (
-              <Text w="full" colorScheme="gray">
-                {error.error}
-              </Text>
-            ) : (
-              <Stack spacing={8} w="full">
-                <ButtonGroup size="sm" w="full">
+          <ModalFooter pt={10} bgColor={modalFooterBg} flexDir="column">
+            <Collapse
+              in={!!error}
+              style={{
+                width: "100%",
+              }}
+            >
+              <ErrorAlert label={error?.error} />
+            </Collapse>
+
+            <Stack spacing={8} w="full">
+              <ButtonGroup size="sm" w="full">
+                <Button
+                  autoFocus={false}
+                  colorScheme="blue"
+                  variant="subtle"
+                  w="full"
+                  borderRadius="md"
+                >
+                  Pay with crypto
+                </Button>
+
+                <Tooltip label="Coming soon" placement="top" hasArrow>
                   <Button
                     autoFocus={false}
-                    colorScheme="blue"
                     variant="subtle"
                     w="full"
                     borderRadius="md"
+                    isDisabled
                   >
-                    Pay with crypto
+                    Pay with card
                   </Button>
+                </Tooltip>
+              </ButtonGroup>
 
-                  <Tooltip label="Coming soon" placement="top" hasArrow>
-                    <Button
-                      autoFocus={false}
-                      variant="subtle"
-                      w="full"
-                      borderRadius="md"
-                      isDisabled
-                    >
-                      Pay with card
-                    </Button>
-                  </Tooltip>
-                </ButtonGroup>
+              <PaymentCurrencyPicker />
 
-                <PaymentCurrencyPicker />
+              <FeeAndTotal />
 
-                <FeeAndTotal />
-
-                <Stack spacing={3}>
-                  {!pickedCurrency ? (
-                    <ChooseCurrencyButton />
-                  ) : (
-                    <>
-                      <SwitchNetworkButton />
-                      <TOSCheckbox />
-                      <AllowanceButton />
-                      <PurchaseButton />
-                    </>
-                  )}
-                </Stack>
+              <Stack spacing={3}>
+                {!pickedCurrency ? (
+                  <ChooseCurrencyButton />
+                ) : (
+                  <>
+                    <SwitchNetworkButton />
+                    <TOSCheckbox />
+                    <AllowanceButton />
+                    <PurchaseButton />
+                  </>
+                )}
               </Stack>
-            )}
+            </Stack>
           </ModalFooter>
         </ModalContent>
       </Modal>
