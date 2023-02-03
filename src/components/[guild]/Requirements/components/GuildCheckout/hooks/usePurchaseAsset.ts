@@ -6,6 +6,7 @@ import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import useTokenData from "hooks/useTokenData"
 import { Dispatch, SetStateAction, useMemo } from "react"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import {
@@ -53,8 +54,17 @@ const usePurchaseAsset = () => {
 
   const { account, chainId } = useWeb3React()
 
-  const { pickedCurrency, txHash, setTxHash, setTxSuccess, setTxError } =
-    useGuildCheckoutContext()
+  const {
+    requirement,
+    pickedCurrency,
+    txHash,
+    setTxHash,
+    setTxSuccess,
+    setTxError,
+  } = useGuildCheckoutContext()
+  const {
+    data: { symbol },
+  } = useTokenData(requirement.chain, requirement.address)
   const {
     data: {
       priceInWei,
@@ -145,8 +155,8 @@ const usePurchaseAsset = () => {
       setTxSuccess(true)
       toast({
         status: "success",
-        title: "Success",
-        description: "Todo...",
+        title: "Your new asset:",
+        description: `${requirement.data.minAmount} ${symbol}`,
       })
     },
   })
