@@ -35,7 +35,7 @@ const FeeAndTotal = (): JSX.Element => {
     isValidating,
   } = usePrice(pickedCurrency)
 
-  const { estimatedGas } = usePurchaseAsset()
+  const { estimatedGas, estimateGasError } = usePurchaseAsset()
 
   // TODO: add gas fee
   const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) <= 0.0
@@ -107,14 +107,17 @@ const FeeAndTotal = (): JSX.Element => {
         </HStack>
       </Stack>
 
-      {estimatedGas && (
-        <Text
-          as="span"
-          colorScheme="gray"
-          fontSize="sm"
-        >{`Estimated gas fee: ${parseFloat(
-          formatUnits(estimatedGas, RPC[requirement.chain].nativeCurrency.decimals)
-        ).toFixed(8)} ${RPC[requirement.chain].nativeCurrency.symbol}`}</Text>
+      {(estimatedGas || estimateGasError) && (
+        <Text as="span" colorScheme="gray" fontSize="sm">
+          {estimateGasError
+            ? "Couldn't estimate gas"
+            : `Estimated gas fee: ${parseFloat(
+                formatUnits(
+                  estimatedGas,
+                  RPC[requirement.chain].nativeCurrency.decimals
+                )
+              ).toFixed(8)} ${RPC[requirement.chain].nativeCurrency.symbol}`}
+        </Text>
       )}
     </Stack>
   )

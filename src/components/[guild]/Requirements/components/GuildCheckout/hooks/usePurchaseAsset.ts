@@ -136,7 +136,7 @@ const usePurchaseAsset = () => {
     [purchaseAssetData]
   )
 
-  const { data: estimatedGas } = useEstimateGasFee(
+  const { data: estimatedGas, error: estimateGasError } = useEstimateGasFee(
     tokenBuyerContract,
     "getAssets",
     generatedGetAssetsParams
@@ -173,6 +173,7 @@ const usePurchaseAsset = () => {
     ...useSubmitData,
     onSubmit: () => useSubmitData.onSubmit(purchaseAssetData),
     estimatedGas,
+    estimateGasError,
   }
 }
 
