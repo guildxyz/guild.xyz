@@ -1,4 +1,4 @@
-import { Chains, RPC } from "connectors"
+import { RPC } from "connectors"
 import { getAssetsCallParams, NULL_ADDRESS, PurchaseAssetData } from "./constants"
 
 const generateGetAssetsParams = (
@@ -6,10 +6,11 @@ const generateGetAssetsParams = (
 ) => {
   if (!data) return undefined
 
-  const { chainId, tokenAddress, amountInWithFee, source } = data
+  const { tokenAddress, amountInWithFee, source } = data
 
-  const isNativeCurrency =
-    tokenAddress === RPC[Chains[chainId]].nativeCurrency.symbol
+  const isNativeCurrency = Object.values(RPC)
+    .map((rpcData) => rpcData.nativeCurrency.symbol)
+    .includes(tokenAddress)
 
   return [
     {

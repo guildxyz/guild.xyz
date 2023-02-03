@@ -135,7 +135,8 @@ const usePurchaseAsset = () => {
   ])
 
   const generatedGetAssetsParams = useMemo(
-    () => (purchaseAsset ? generateGetAssetsParams(purchaseAssetData) : undefined),
+    () =>
+      purchaseAssetData ? generateGetAssetsParams(purchaseAssetData) : undefined,
     [purchaseAssetData]
   )
 
