@@ -27,14 +27,14 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
         w="full"
         borderWidth={4}
         p={0}
-        sx={{
-          "div:nth-child(2) div.background > span img": {
-            filter: "blur(8px)",
-          },
-          ":hover div:nth-child(2) div.background > span img": {
-            filter: "blur(4px)",
-          },
-        }}
+        // sx={{
+        //   "div:nth-child(2) div.background > span img": {
+        //     filter: "blur(8px)",
+        //   },
+        //   ":hover div:nth-child(2) div.background > span img": {
+        //     filter: "blur(4px)",
+        //   },
+        // }}
       >
         <ColorCardLabel
           mt="-1px"
@@ -58,15 +58,25 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
             className="background"
           >
             {pageData.backgroundImage && (
-              <Image
-                src={pageData?.backgroundImage}
-                alt="background"
-                layout="fill"
-                objectFit="cover"
-                quality="2"
-                priority={true}
-                style={{ transition: "filter 0.3s" }}
-              />
+              <Box
+                sx={{
+                  img: {
+                    filter: "blur(8px)",
+                  },
+                  ":hover > span img": {
+                    filter: "blur(4px)",
+                  },
+                }}
+              >
+                <Image
+                  src={pageData?.backgroundImage}
+                  alt="background"
+                  layout="fill"
+                  objectFit="cover"
+                  quality="2"
+                  style={{ transition: "filter 0.3s" }}
+                />
+              </Box>
             )}
 
             {pageData.icon && (
@@ -77,7 +87,6 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
                   layout="fill"
                   objectFit="contain"
                   quality="25"
-                  priority={true}
                   style={{
                     zIndex: "1",
                     overflow: "visible",

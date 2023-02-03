@@ -13,7 +13,7 @@ type Props = {
   cards: BrainCardData[]
 }
 
-const FILTER_OPTIONS: Array<FilterOption> = [
+export const FILTER_OPTIONS: Array<FilterOption> = [
   { value: "requirement", label: "requirement" },
   { value: "reward", label: "reward" },
   { value: "core", label: "core" },

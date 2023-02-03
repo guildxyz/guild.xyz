@@ -12,7 +12,6 @@ const CustomImage = (props) => (
       layout={props.className === "notion-page-icon" ? "responsive" : "fill"}
       objectFit="contain"
       quality={20}
-      priority={true}
       style={{
         zIndex: "1",
       }}

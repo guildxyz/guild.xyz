@@ -51,7 +51,6 @@ const PageBrainCard = ({ pageData }: Props): JSX.Element => {
                 layout="fill"
                 objectFit="contain"
                 quality="10"
-                priority={true}
                 style={{
                   overflow: "visible",
                 }}

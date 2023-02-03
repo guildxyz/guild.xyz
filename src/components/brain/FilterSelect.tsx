@@ -1,4 +1,5 @@
 import { GroupBase, Select } from "chakra-react-select"
+import { FILTER_OPTIONS } from "pages/guildverse"
 
 export type FilterOption = {
   value: string
@@ -6,11 +7,10 @@ export type FilterOption = {
 }
 
 type Props = {
-  FILTER_OPTIONS: Array<FilterOption>
   setFilterData
 }
 
-const FilterSelect = ({ FILTER_OPTIONS, setFilterData }: Props): JSX.Element => (
+const FilterSelect = ({ setFilterData }: Props): JSX.Element => (
   <Select<FilterOption, true, GroupBase<FilterOption>>
     isMulti
     instanceId="filter-select"

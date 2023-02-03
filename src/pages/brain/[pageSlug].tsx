@@ -28,7 +28,6 @@ const PageDetails = ({ blockMap, linkedPageContents, pageId, pageLogo }) => (
               layout="fill"
               objectFit="contain"
               quality="30"
-              priority={true}
               style={{
                 overflow: "visible",
               }}
