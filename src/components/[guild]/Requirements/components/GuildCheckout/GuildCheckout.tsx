@@ -54,12 +54,10 @@ const GuildCheckout = (): JSX.Element => {
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
   const {
-    data: priceData,
+    data: { priceInUSD },
     isValidating,
     error,
   } = usePrice(requirement?.chain && RPC[requirement.chain].nativeCurrency.symbol)
-
-  const isTooSmallPrice = priceData ? priceData.priceInUSD < 0.01 : undefined
 
   if (
     !account ||
@@ -99,12 +97,10 @@ const GuildCheckout = (): JSX.Element => {
                   <Spinner size="sm" />
                 ) : (
                   <Text as="span">
-                    {isNaN(priceData?.priceInUSD)
+                    {isNaN(priceInUSD)
                       ? ""
                       : `${
-                          isTooSmallPrice
-                            ? "< $0.01"
-                            : `$${priceData.priceInUSD.toFixed(2)}`
+                          priceInUSD < 0.01 ? "< $0.01" : `$${priceInUSD.toFixed(2)}`
                         }`}
                   </Text>
                 )

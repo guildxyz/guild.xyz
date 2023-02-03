@@ -36,7 +36,7 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
     PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) &&
     (sellAddress ?? pickedCurrency)
 
-  return useSWRImmutable<FetchPriceResponse>(
+  const { data, ...swrResponse } = useSWRImmutable<FetchPriceResponse>(
     shouldFetch
       ? ["fetchPrice", account, requirement, sellAddress ?? pickedCurrency]
       : null,
@@ -45,6 +45,11 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
       shouldRetryOnError: false,
     }
   )
+
+  return {
+    data: data ?? ({} as FetchPriceResponse),
+    ...swrResponse,
+  }
 }
 
 export default usePrice

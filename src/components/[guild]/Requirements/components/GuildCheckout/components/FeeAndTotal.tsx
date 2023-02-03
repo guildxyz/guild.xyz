@@ -30,17 +30,16 @@ const FeeAndTotal = (): JSX.Element => {
     data: { symbol },
   } = useTokenData(requirement.chain, pickedCurrency)
 
-  const { data: priceData, isValidating } = usePrice(pickedCurrency)
+  const {
+    data: { guildFeeInSellToken, priceInSellToken, priceInUSD, guildFeeInUSD },
+    isValidating,
+  } = usePrice(pickedCurrency)
 
   const { estimatedGas } = usePurchaseAsset()
 
-  const isTooSmallFee = priceData
-    ? // TODO: add gas fee
-      parseFloat(priceData.guildFeeInSellToken.toFixed(3)) <= 0.0 ?? ""
-    : undefined
-  const isTooSmallPrice = priceData
-    ? parseFloat(priceData.priceInSellToken.toFixed(3)) < 0.001
-    : false
+  // TODO: add gas fee
+  const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) <= 0.0
+  const isTooSmallPrice = parseFloat(priceInSellToken?.toFixed(3)) < 0.001
 
   return (
     <Stack spacing={3}>
@@ -65,7 +64,7 @@ const FeeAndTotal = (): JSX.Element => {
                     ? "< 0.001"
                     : // TODO: gas fee
                       /* (priceData?.gasFee ?? 0) + */ (
-                        priceData?.guildFeeInSellToken ?? 0
+                        guildFeeInSellToken ?? 0
                       )?.toFixed(3)
                 } ${symbol}`
               : "Choose currency"}
@@ -77,25 +76,25 @@ const FeeAndTotal = (): JSX.Element => {
 
           <Text as="span">
             {pickedCurrency ? (
-              <Skeleton isLoaded={!isValidating && !isNaN(priceData?.priceInUSD)}>
-                {priceData
+              <Skeleton isLoaded={!isValidating && !isNaN(priceInUSD)}>
+                {priceInUSD
                   ? `$${(
-                      priceData.priceInUSD +
+                      priceInUSD +
                       // TODO: gas fee
                       /* priceData.gasFeeInUSD + */
-                      priceData.guildFeeInUSD
+                      guildFeeInUSD
                     )?.toFixed(2)} = `
                   : "0.00"}
                 <Text as="span" color={textAccentColor} fontWeight="semibold">
-                  {priceData
+                  {priceInSellToken && guildFeeInSellToken
                     ? `${
                         isTooSmallPrice
                           ? "< 0.001"
                           : (
-                              priceData.priceInSellToken +
+                              priceInSellToken +
                               // TODO: gas fee
                               /*priceData.gasFee + */
-                              priceData.guildFeeInSellToken
+                              guildFeeInSellToken
                             )?.toFixed(3)
                       } ${symbol}`
                     : "0.00"}

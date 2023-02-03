@@ -55,19 +55,38 @@ const usePurchaseAsset = () => {
 
   const { pickedCurrency, txHash, setTxHash, setTxSuccess, setTxError } =
     useGuildCheckoutContext()
-  const { data: priceData } = usePrice(pickedCurrency)
+  const {
+    data: {
+      priceInWei,
+      guildFeeInWei: rawGuildFeeInWei,
+      buyAmountInWei,
+      source,
+      path,
+      tokenAddressPath,
+    },
+  } = usePrice(pickedCurrency)
 
   const tokenBuyerContract = useContract(TOKEN_BUYER_CONTRACT, TOKEN_BUYER_ABI, true)
 
   const purchaseAssetData = useMemo(() => {
-    if (!chainId || !account || !tokenBuyerContract || !pickedCurrency || !priceData)
+    if (
+      !chainId ||
+      !account ||
+      !tokenBuyerContract ||
+      !pickedCurrency ||
+      !priceInWei ||
+      !rawGuildFeeInWei ||
+      !buyAmountInWei ||
+      !source ||
+      !path ||
+      !tokenAddressPath
+    )
       return undefined
 
-    const { source, path, tokenAddressPath } = priceData
-    const amountIn = BigNumber.from(priceData.priceInWei)
-    const guildFeeInWei = BigNumber.from(priceData.guildFeeInWei)
+    const amountIn = BigNumber.from(priceInWei)
+    const guildFeeInWei = BigNumber.from(rawGuildFeeInWei)
     const amountInWithFee = amountIn.add(guildFeeInWei)
-    const amountOut = BigNumber.from(priceData.buyAmountInWei)
+    const amountOut = BigNumber.from(buyAmountInWei)
 
     return {
       chainId,
@@ -81,7 +100,18 @@ const usePurchaseAsset = () => {
       path,
       tokenAddressPath,
     }
-  }, [chainId, account, tokenBuyerContract, pickedCurrency, priceData])
+  }, [
+    chainId,
+    account,
+    tokenBuyerContract,
+    pickedCurrency,
+    priceInWei,
+    rawGuildFeeInWei,
+    buyAmountInWei,
+    source,
+    path,
+    tokenAddressPath,
+  ])
 
   const generatedGetAssetsParams = useMemo(
     () => (purchaseAsset ? generateGetAssetsParams(purchaseAssetData) : undefined),
