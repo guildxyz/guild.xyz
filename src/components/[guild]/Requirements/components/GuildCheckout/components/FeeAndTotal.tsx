@@ -77,14 +77,17 @@ const FeeAndTotal = (): JSX.Element => {
           <Text as="span">
             {pickedCurrency ? (
               <Skeleton isLoaded={!isValidating}>
-                {priceInUSD
-                  ? `$${(
-                      priceInUSD +
-                      // TODO: gas fee
-                      /* priceData.gasFeeInUSD + */
-                      guildFeeInUSD
-                    )?.toFixed(2)} = `
-                  : "0.00"}
+                <Text as="span">
+                  {priceInUSD
+                    ? `$${(
+                        priceInUSD +
+                        // TODO: gas fee
+                        /* priceData.gasFeeInUSD + */
+                        guildFeeInUSD
+                      )?.toFixed(2)}`
+                    : "$0.00"}
+                  {" = "}
+                </Text>
                 <Text as="span" color={textAccentColor} fontWeight="semibold">
                   {priceInSellToken && guildFeeInSellToken
                     ? `${
@@ -96,8 +99,9 @@ const FeeAndTotal = (): JSX.Element => {
                               /*priceData.gasFee + */
                               guildFeeInSellToken
                             )?.toFixed(3)
-                      } ${symbol}`
+                      }`
                     : "0.00"}
+                  {` ${symbol}`}
                 </Text>
               </Skeleton>
             ) : (
