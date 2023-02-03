@@ -42,6 +42,7 @@ const PurchaseButton = (): JSX.Element => {
         colorScheme={!isDisabled ? "blue" : "gray"}
         w="full"
         onClick={onSubmit}
+        data-dd-action-name="PurchaseButton (GuildCheckout)"
       >
         Purchase
       </Button>

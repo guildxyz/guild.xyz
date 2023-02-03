@@ -81,6 +81,7 @@ const AllowanceButton = (): JSX.Element => {
             </Tooltip>
           )
         }
+        data-dd-action-name="AllowanceButton (GuildCheckout)"
       >
         {allowanceError
           ? "Couldn't fetch allowance"

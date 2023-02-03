@@ -1,5 +1,6 @@
 import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useEstimateGasFee from "hooks/useEstimateGasFee"
@@ -57,6 +58,8 @@ const purchaseAsset = async (
 }
 
 const usePurchaseAsset = () => {
+  const { addDatadogAction, addDatadogError } = useDatadog()
+
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
@@ -151,15 +154,22 @@ const usePurchaseAsset = () => {
         error?.code === "ACTION_REJECTED" ? "User rejected the transaction" : error
       showErrorToast(prettyError)
       if (txHash) setTxError(true)
+      addDatadogError("purchase requirement error (GuildCheckout)", {
+        error: prettyError,
+      })
     },
     onSuccess: (receipt) => {
       if (receipt.status !== 1) {
         showErrorToast("Transaction failed")
         setTxError(true)
         console.log("[DEBUG]: TX RECEIPT", receipt)
+        addDatadogError("purchase requirement error (GuildCheckout)", {
+          receipt,
+        })
         return
       }
 
+      addDatadogAction("purchased requirement (GuildCheckout)")
       setTxSuccess(true)
       toast({
         status: "success",

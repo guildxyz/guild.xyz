@@ -80,6 +80,7 @@ const GuildCheckout = (): JSX.Element => {
         borderRadius="md"
         fontWeight="medium"
         onClick={onOpen}
+        data-dd-action-name="Purchase (Requierment)"
       >
         Purchase
       </Button>
@@ -128,6 +129,7 @@ const GuildCheckout = (): JSX.Element => {
                   variant="subtle"
                   w="full"
                   borderRadius="md"
+                  data-dd-action-name="Pay with crypto (GuildCheckout)"
                 >
                   Pay with crypto
                 </Button>
@@ -139,6 +141,7 @@ const GuildCheckout = (): JSX.Element => {
                     w="full"
                     borderRadius="md"
                     isDisabled
+                    data-dd-action-name="Pay with card (GuildCheckout)"
                   >
                     Pay with card
                   </Button>

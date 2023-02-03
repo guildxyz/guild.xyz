@@ -6,7 +6,8 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const url = typeof window !== "undefined" ? window.location.host : ""
 
   useEffect(() => {
-    if (process.env.NODE_ENV !== "production" || url !== "guild.xyz") return
+    // TODO: uncomment before merge!
+    // if (process.env.NODE_ENV !== "production" || url !== "guild.xyz") return
     datadogRum.init({
       applicationId: "996b7a2a-d610-4235-a5b4-65391973ea76",
       clientToken: "pub7cf22f3b79a010363cf58c859cfa8ad8",
@@ -35,6 +36,11 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
               event.error.stack.includes("chrome-extension")))
         )
           return false
+
+        // TODO: remove before merge!
+        console.log(event)
+
+        return false
       },
     })
 
