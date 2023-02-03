@@ -42,6 +42,9 @@ const FeeAndTotal = (): JSX.Element => {
     ? parseFloat(formatUnits(estimatedGas, nativeCurrency.decimals))
     : undefined
 
+  const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
+  const calculatedGasFee = isNativeCurrency ? estimatedGasInFloat ?? 0 : 0
+
   const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) <= 0.0
   const isTooSmallPrice = parseFloat(priceInSellToken?.toFixed(3)) < 0.001
 
@@ -67,11 +70,7 @@ const FeeAndTotal = (): JSX.Element => {
                 {isTooSmallFee
                   ? "< 0.001"
                   : // TODO: display the gas fee separately when the user pays with ERC20 tokens
-                    (
-                      (pickedCurrency === nativeCurrency.symbol
-                        ? estimatedGasInFloat ?? 0
-                        : 0) + guildFeeInSellToken ?? 0
-                    )?.toFixed(3)}{" "}
+                    (calculatedGasFee + guildFeeInSellToken ?? 0)?.toFixed(3)}{" "}
                 {symbol}
               </>
             ) : (
@@ -105,9 +104,7 @@ const FeeAndTotal = (): JSX.Element => {
                           : (
                               priceInSellToken +
                               guildFeeInSellToken +
-                              (pickedCurrency === nativeCurrency.symbol
-                                ? estimatedGasInFloat ?? 0
-                                : 0)
+                              calculatedGasFee
                             )?.toFixed(3)
                       } `
                     : "0.00 "}
@@ -120,6 +117,15 @@ const FeeAndTotal = (): JSX.Element => {
           </Text>
         </HStack>
       </Stack>
+
+      {estimatedGas && isNativeCurrency && (
+        // We're displaying gas fee here when the user picked an ERC20 as sellToken
+        <Text as="span" colorScheme="gray" fontSize="sm">
+          {`Estimated gas fee: ${parseFloat(
+            formatUnits(estimatedGas, RPC[requirement.chain].nativeCurrency.decimals)
+          ).toFixed(8)} ${RPC[requirement.chain].nativeCurrency.symbol}`}
+        </Text>
+      )}
 
       {estimateGasError && (
         <Text as="span" colorScheme="gray" fontSize="sm">
