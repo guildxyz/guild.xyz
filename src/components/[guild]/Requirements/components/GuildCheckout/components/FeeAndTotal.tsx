@@ -37,7 +37,11 @@ const FeeAndTotal = (): JSX.Element => {
 
   const { estimatedGas, estimateGasError } = usePurchaseAsset()
 
-  // TODO: add gas fee
+  const nativeCurrency = RPC[requirement.chain].nativeCurrency
+  const estimatedGasInFloat = estimatedGas
+    ? parseFloat(formatUnits(estimatedGas, nativeCurrency.decimals))
+    : undefined
+
   const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) <= 0.0
   const isTooSmallPrice = parseFloat(priceInSellToken?.toFixed(3)) < 0.001
 
@@ -58,16 +62,21 @@ const FeeAndTotal = (): JSX.Element => {
             </Tooltip>
           </HStack>
           <Text as="span">
-            {pickedCurrency
-              ? `${
-                  isTooSmallFee
-                    ? "< 0.001"
-                    : // TODO: gas fee
-                      /* (priceData?.gasFee ?? 0) + */ (
-                        guildFeeInSellToken ?? 0
-                      )?.toFixed(3)
-                } ${symbol}`
-              : "Choose currency"}
+            {pickedCurrency ? (
+              <>
+                {isTooSmallFee
+                  ? "< 0.001"
+                  : // TODO: display the gas fee separately when the user pays with ERC20 tokens
+                    (
+                      (pickedCurrency === nativeCurrency.symbol
+                        ? estimatedGasInFloat ?? 0
+                        : 0) + guildFeeInSellToken ?? 0
+                    )?.toFixed(3)}{" "}
+                {symbol}
+              </>
+            ) : (
+              "Choose currency"
+            )}
           </Text>
         </HStack>
 
@@ -95,13 +104,14 @@ const FeeAndTotal = (): JSX.Element => {
                           ? "< 0.001"
                           : (
                               priceInSellToken +
-                              // TODO: gas fee
-                              /*priceData.gasFee + */
-                              guildFeeInSellToken
+                              guildFeeInSellToken +
+                              (pickedCurrency === nativeCurrency.symbol
+                                ? estimatedGasInFloat ?? 0
+                                : 0)
                             )?.toFixed(3)
-                      }`
-                    : "0.00"}
-                  {` ${symbol}`}
+                      } `
+                    : "0.00 "}
+                  {symbol}
                 </Text>
               </Skeleton>
             ) : (
@@ -111,16 +121,9 @@ const FeeAndTotal = (): JSX.Element => {
         </HStack>
       </Stack>
 
-      {(estimatedGas || estimateGasError) && (
+      {estimateGasError && (
         <Text as="span" colorScheme="gray" fontSize="sm">
-          {estimateGasError
-            ? "Couldn't estimate gas"
-            : `Estimated gas fee: ${parseFloat(
-                formatUnits(
-                  estimatedGas,
-                  RPC[requirement.chain].nativeCurrency.decimals
-                )
-              ).toFixed(8)} ${RPC[requirement.chain].nativeCurrency.symbol}`}
+          Couldn't estimate gas
         </Text>
       )}
     </Stack>
