@@ -9,8 +9,8 @@ import { RequirementProvider } from "./RequirementContext"
 
 type Props = {
   requirement: RequirementType
-  showPurchaseBtn?: boolean // TODO: think about a better solution for these
-  showFooter?: boolean // TODO: think about a better solution for these
+  showPurchaseBtn?: boolean
+  showFooter?: boolean
   rightElement?: JSX.Element
 }
 

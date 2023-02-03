@@ -32,7 +32,7 @@ const Requirement = ({
   withImgBg = true,
   rightElement,
   showPurchaseBtn = true,
-  showFooter = true, // TODO: think about a better solution for these
+  showFooter = true,
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()

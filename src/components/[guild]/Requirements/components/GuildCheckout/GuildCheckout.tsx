@@ -47,11 +47,9 @@ const GuildCheckout = (): JSX.Element => {
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
   )
-  const satisfiesRequirement =
-    requirement &&
-    accessData &&
-    accessData.requirements?.find((req) => req.requirementId === requirement.id)
-      ?.access
+  const satisfiesRequirement = accessData?.requirements?.find(
+    (req) => req.requirementId === requirement.id
+  )?.access
 
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
@@ -59,15 +57,14 @@ const GuildCheckout = (): JSX.Element => {
     data: { priceInUSD },
     isValidating,
     error,
-  } = usePrice(requirement?.chain && RPC[requirement.chain].nativeCurrency.symbol)
+  } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
 
   if (
     !account ||
     (!isOpen && satisfiesRequirement) ||
     (!accessData && isAccessLoading) ||
     !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
-    !purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain) ||
-    !purchaseSupportedChains[requirement.type].includes(requirement.chain)
+    !purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain)
   )
     return null
 
@@ -100,11 +97,11 @@ const GuildCheckout = (): JSX.Element => {
                   <Spinner size="sm" />
                 ) : (
                   <Text as="span">
-                    {isNaN(priceInUSD)
-                      ? ""
-                      : `${
+                    {!isNaN(priceInUSD)
+                      ? `${
                           priceInUSD < 0.01 ? "< $0.01" : `$${priceInUSD.toFixed(2)}`
-                        }`}
+                        }`
+                      : ""}
                   </Text>
                 )
               }
