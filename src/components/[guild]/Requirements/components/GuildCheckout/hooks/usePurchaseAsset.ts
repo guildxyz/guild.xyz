@@ -154,7 +154,8 @@ const usePurchaseAsset = () => {
         error?.code === "ACTION_REJECTED" ? "User rejected the transaction" : error
       showErrorToast(prettyError)
       if (txHash) setTxError(true)
-      addDatadogError("purchase requirement error (GuildCheckout)", {
+      addDatadogError("general purchase requirement error (GuildCheckout)")
+      addDatadogError("purchase requirement pre-call error (GuildCheckout)", {
         error: prettyError,
       })
     },
@@ -163,6 +164,7 @@ const usePurchaseAsset = () => {
         showErrorToast("Transaction failed")
         setTxError(true)
         console.log("[DEBUG]: TX RECEIPT", receipt)
+        addDatadogError("general purchase requirement error (GuildCheckout)")
         addDatadogError("purchase requirement error (GuildCheckout)", {
           receipt,
         })
