@@ -27,7 +27,7 @@ const PageDetails = ({ blockMap, linkedPageContents, pageId, pageLogo }) => (
               src={pageLogo}
               layout="fill"
               objectFit="contain"
-              quality="30"
+              quality="10"
               style={{
                 overflow: "visible",
               }}
