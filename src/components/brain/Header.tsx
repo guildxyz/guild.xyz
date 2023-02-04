@@ -14,21 +14,21 @@ const getProperties = (props) => {
   const tags = props?.block?.properties?.["`SJU"]?.[0]?.[0]
     .split(",")
     .filter((tag) => tag !== "")
-  const guildId = props?.block?.properties?.JqtI?.[0]?.[0]
+  const guildSlug = props?.block?.properties?.JqtI?.[0]?.[0]
   const websiteURL = props?.block?.properties?.uRBq?.[0]?.[0]
   const twitterURL = props?.block?.properties?.["ByX="]?.[0]?.[0]
   const discordURL = props?.block?.properties?.["Uw?a"]?.[0]?.[0]
   const isContentTypePage = props?.block?.properties?.KYWu?.[0]?.[0] === "content"
-  return { tags, guildId, websiteURL, twitterURL, discordURL, isContentTypePage }
+  return { tags, guildSlug, websiteURL, twitterURL, discordURL, isContentTypePage }
 }
 
 const Header = (props) => {
-  const { tags, guildId, websiteURL, twitterURL, discordURL, isContentTypePage } =
+  const { tags, guildSlug, websiteURL, twitterURL, discordURL, isContentTypePage } =
     getProperties(props)
 
   if (
     (tags === undefined || tags.length === 0) &&
-    guildId === undefined &&
+    guildSlug === undefined &&
     websiteURL === undefined &&
     twitterURL === undefined &&
     discordURL === undefined
@@ -47,7 +47,7 @@ const Header = (props) => {
       icon?: any
     }>
   > = [
-    { name: "Guild", url: guildId, icon: GuildIcon },
+    { name: "Guild", url: guildSlug, icon: GuildIcon },
     { name: "website", url: websiteURL, icon: Globe },
     { name: "Twitter", url: twitterURL, icon: TwitterLogo },
     { name: "Discord", url: discordURL, icon: DiscordLogo },
