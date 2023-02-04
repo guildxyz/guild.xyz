@@ -5,16 +5,21 @@ import { PropsWithChildren } from "react"
 
 type Props = SectionProps & {
   fallbackText: string
+  cols?: number
 }
 
 const CategorySection = ({
   fallbackText,
+  cols = 3,
   children,
   ...rest
 }: PropsWithChildren<Props>) => (
   <Section {...rest}>
     {children ? (
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
+      <SimpleGrid
+        columns={{ base: 1, md: 2, lg: cols }}
+        spacing={{ base: 5, md: 6 }}
+      >
         <AnimatePresence>{children}</AnimatePresence>
       </SimpleGrid>
     ) : (

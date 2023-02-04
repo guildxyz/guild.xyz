@@ -47,7 +47,7 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
           <SearchBar placeholder="Search" {...{ search, setSearch }} />
           <FilterSelect {...{ FILTER_OPTIONS, setFilterData }} />
         </SimpleGrid>
-        <CategorySection fallbackText={"There are no pages"}>
+        <CategorySection fallbackText={"There are no pages"} cols={2}>
           {renderedCards.map((card) => (
             <BrainCard pageData={card} key={card.id} />
           ))}
@@ -92,7 +92,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
     title: page.properties.title.title[0].plain_text,
     tags: page.properties.tags.multi_select.map((tag) => tag.name),
     icon: page.icon?.file?.url ?? null,
-    backgroundImage: page.cover?.file?.url ?? null,
   }))
 
   return {
