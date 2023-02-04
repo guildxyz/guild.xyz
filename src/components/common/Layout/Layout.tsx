@@ -70,6 +70,7 @@ const Layout = ({
       <Head>
         <title>{`${title}`}</title>
         <meta property="og:title" content={`${title}`} />
+        <meta httpEquiv="Cache-Control" content="max-age=31536000, public" />
         {ogDescription && (
           <>
             <meta name="description" content={ogDescription} />
