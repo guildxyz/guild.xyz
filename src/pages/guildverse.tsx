@@ -22,7 +22,7 @@ export const FILTER_OPTIONS: Array<FilterOption> = [
   { value: "web3", label: "web3" },
 ]
 
-const Guildverse = ({ cards: cards }: Props): JSX.Element => {
+const Guildverse = ({ cards: cards }): JSX.Element => {
   const [search, setSearch] = useState<string>("")
   const [filterData, setFilterData] = useState<Array<FilterOption>>([])
   const renderedCards = useMemo(
