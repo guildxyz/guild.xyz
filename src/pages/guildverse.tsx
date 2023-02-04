@@ -57,7 +57,9 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+  res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59")
+
   const { Client } = require("@notionhq/client")
   const notion = new Client({ auth: process.env.NOTION_API_KEY })
   const databaseId = process.env.NOTION_DATABASE_ID
