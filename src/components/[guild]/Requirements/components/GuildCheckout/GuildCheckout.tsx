@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -28,7 +29,6 @@ import {
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import RequirementDisplayComponent from "../RequirementDisplayComponent"
 import AllowanceButton from "./components/buttons/AllowanceButton"
-import ChooseCurrencyButton from "./components/buttons/ChooseCurrencyButton"
 import PurchaseButton from "./components/buttons/PurchaseButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import FeeAndTotal from "./components/FeeAndTotal"
@@ -152,7 +152,11 @@ const GuildCheckout = (): JSX.Element => {
 
               <Stack spacing={3}>
                 {!pickedCurrency ? (
-                  <ChooseCurrencyButton />
+                  <CardMotionWrapper>
+                    <Button size="xl" isDisabled w="full">
+                      Choose currency
+                    </Button>
+                  </CardMotionWrapper>
                 ) : (
                   <>
                     <SwitchNetworkButton />
