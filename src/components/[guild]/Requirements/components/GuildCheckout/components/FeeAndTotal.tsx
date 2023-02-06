@@ -6,7 +6,6 @@ import {
   Stack,
   Text,
   Tooltip,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { RPC } from "connectors"
@@ -22,9 +21,6 @@ import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 
 const FeeAndTotal = (): JSX.Element => {
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
-
-  const textColor = useColorModeValue("gray.800", "gray.200")
-  const textAccentColor = useColorModeValue("black", "white")
 
   const {
     data: { symbol },
@@ -50,10 +46,12 @@ const FeeAndTotal = (): JSX.Element => {
 
   return (
     <Stack spacing={3}>
-      <Stack divider={<Divider />} color={textColor}>
+      <Stack divider={<Divider />}>
         <HStack justifyContent="space-between">
           <HStack>
-            <Text as="span">Fee</Text>
+            <Text as="span" colorScheme="gray">
+              Fee
+            </Text>
             <Tooltip
               label={`${
                 GUILD_FEE_PERCENTAGE * 100
@@ -61,10 +59,10 @@ const FeeAndTotal = (): JSX.Element => {
               placement="top"
               hasArrow
             >
-              <Icon as={Info} />
+              <Icon as={Info} color="gray" />
             </Tooltip>
           </HStack>
-          <Text as="span">
+          <Text as="span" colorScheme="gray">
             {pickedCurrency ? (
               <>
                 {isTooSmallFee
@@ -80,12 +78,14 @@ const FeeAndTotal = (): JSX.Element => {
         </HStack>
 
         <HStack justifyContent="space-between">
-          <Text as="span">Total</Text>
+          <Text as="span" colorScheme="gray">
+            Total
+          </Text>
 
           <Text as="span">
             {pickedCurrency ? (
               <Skeleton isLoaded={!isValidating}>
-                <Text as="span">
+                <Text as="span" colorScheme="gray">
                   {priceInUSD
                     ? `$${(
                         priceInUSD +
@@ -96,7 +96,7 @@ const FeeAndTotal = (): JSX.Element => {
                     : "$0.00"}
                   {" = "}
                 </Text>
-                <Text as="span" color={textAccentColor} fontWeight="semibold">
+                <Text as="span" fontWeight="semibold">
                   {priceInSellToken && guildFeeInSellToken
                     ? `${
                         isTooSmallPrice
