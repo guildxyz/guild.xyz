@@ -280,12 +280,12 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     if (typeof nativeCurrencyPriceInUSD === "undefined")
       return res.status(500).json({
-        error: `Couldn't fetch ${
-          RPC[Chains[chain]].nativeCurrency.symbol
-        }-USD rate.`,
+        error: `Couldn't fetch ${RPC[chain].nativeCurrency.symbol}-USD rate.`,
       })
 
-    const price = responseData.tokens
+    // sellToken is always nativeCurrency here (at least for now)
+    // TODO: maybe we don't need map here? And the user will be able to buy only one token at a time?
+    const priceInSellToken = responseData.tokens
       .map((t) => t.market.floorAsk.price.amount.native)
       .reduce((p1, p2) => p1 + p2, 0)
 
@@ -293,24 +293,39 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       .map((t) => t.market.floorAsk.price.amount.usd)
       .reduce((p1, p2) => p1 + p2, 0)
 
-    // const fixedGuildFeeInNativeCurrency = GUILD_FEE_FIXED_USD / nativeCurrencyPrice
+    const priceInWei = parseUnits(
+      priceInSellToken.toString(),
+      RPC[chain].nativeCurrency.decimals
+    )
 
-    // const guildFee = price * GUILD_FEE_PERCENTAGE + fixedGuildFeeInNativeCurrency
+    const fixedGuildFeeInNativeCurrency =
+      GUILD_FEE_FIXED_USD / nativeCurrencyPriceInUSD
+
+    const guildFeeInSellToken =
+      priceInSellToken * GUILD_FEE_PERCENTAGE + fixedGuildFeeInNativeCurrency
+
+    const guildFeeInWei = parseUnits(
+      guildFeeInSellToken.toString(),
+      RPC[chain].nativeCurrency.decimals
+    )
+
+    const guildFeeInUSD = priceInUSD * GUILD_FEE_PERCENTAGE + GUILD_FEE_FIXED_USD
+
+    const source = responseData.tokens[0].market.floorAsk.source.name
 
     // TODO: source, tokenAddressPath, path
     return res.json({
       buyAmount: minAmount,
       buyAmountInWei: BigNumber.from(0),
-      priceInSellToken: 0,
-      priceInWei: BigNumber.from(0),
+      priceInSellToken,
       priceInUSD,
-      guildFeeInSellToken: 0,
-      guildFeeInWei: BigNumber.from(0),
-      // guildFeeInUSD: nativeCurrencyPrice * guildFee,
-      guildFeeInUSD: 0,
-      path: "",
+      priceInWei,
+      guildFeeInSellToken,
+      guildFeeInUSD,
+      guildFeeInWei,
+      source,
       tokenAddressPath: [],
-      source: "Uniswap_V2",
+      path: "",
     })
   }
 
