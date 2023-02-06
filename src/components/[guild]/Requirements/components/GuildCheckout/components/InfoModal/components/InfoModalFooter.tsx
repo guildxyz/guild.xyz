@@ -7,7 +7,13 @@ const InfoModalFooter = (): JSX.Element => {
 
   return (
     <ModalFooter>
-      <Button size="xl" colorScheme="blue" w="full" onClick={onInfoModalClose}>
+      <Button
+        size="xl"
+        colorScheme="blue"
+        w="full"
+        onClick={onInfoModalClose}
+        data-dd-action-name="CloseModalButton (GuildCheckout)"
+      >
         Close
       </Button>
     </ModalFooter>
