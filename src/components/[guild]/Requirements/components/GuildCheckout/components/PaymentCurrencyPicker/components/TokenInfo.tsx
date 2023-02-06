@@ -12,8 +12,7 @@ import {
 import { formatUnits } from "@ethersproject/units"
 import usePrice from "components/[guild]/Requirements/components/GuildCheckout/hooks/usePrice"
 import { Chains, RPC } from "connectors"
-import useCoinBalance from "hooks/useCoinBalance"
-import useTokenBalance from "hooks/useTokenBalance"
+import useBalance from "hooks/useBalance"
 import useTokenData from "hooks/useTokenData"
 import { Fragment } from "react"
 import { Rest } from "types"
@@ -23,8 +22,6 @@ type Props = {
   address: string
   asMenuItem?: boolean
 } & Rest
-
-const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const TokenInfo = ({
   chainId,
@@ -50,10 +47,8 @@ const TokenInfo = ({
     isValidating: isTokenDataLoading,
   } = useTokenData(Chains[chainId], address)
 
-  const { balance: coinBalance, isLoading: isCoinBalanceLoading } =
-    useCoinBalance(chainId)
-  const { balance: tokenBalance, isLoading: isTokenBalanceLoading } =
-    useTokenBalance(address, chainId)
+  const { coinBalance, tokenBalance, isLoading } = useBalance(address, chainId)
+
   const balance = formatUnits(
     (address === RPC[Chains[chainId]]?.nativeCurrency?.symbol
       ? coinBalance
@@ -64,7 +59,6 @@ const TokenInfo = ({
   )
   const formattedBalance = Number(balance).toFixed(2)
 
-  const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
   const Wrapper = asMenuItem ? MenuItem : Fragment
 
   return (
@@ -100,12 +94,7 @@ const TokenInfo = ({
             </Text>
           </Skeleton>
 
-          <Skeleton
-            isLoaded={!isBalanceLoading}
-            h={4}
-            display="flex"
-            alignItems="center"
-          >
+          <Skeleton isLoaded={!isLoading} h={4} display="flex" alignItems="center">
             <Text as="span" colorScheme="gray" fontSize="xs">
               {`Balance: ${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
             </Text>
