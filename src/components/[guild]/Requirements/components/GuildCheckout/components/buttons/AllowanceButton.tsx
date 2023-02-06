@@ -8,7 +8,6 @@ import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
 import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
-import useAllowSpendingTokens from "../../hooks/useAllowSpendingToken"
 import usePrice from "../../hooks/usePrice"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
@@ -39,10 +38,7 @@ const AllowanceButton = (): JSX.Element => {
   const isEnoughAllowance =
     priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
 
-  const { onSubmit, isLoading } = useAllowSpendingTokens(
-    pickedCurrency,
-    TOKEN_BUYER_CONTRACT
-  )
+  const { onSubmit, isLoading } = useAllowance(pickedCurrency, TOKEN_BUYER_CONTRACT)
 
   if (!pickedCurrency || chainId !== requirementChainId || isNativeCurrencyPicked)
     return null
