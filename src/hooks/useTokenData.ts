@@ -51,6 +51,8 @@ const useTokenData = (chain: string, address: string, onFinish?: () => void) => 
     isCoin && chain
       ? RPC[chain].nativeCurrency.decimals
       : tokenDataFromApi?.decimals ?? swrResponse.data?.decimals
+  const logoURI =
+    isCoin && chain ? RPC[chain].nativeCurrency.logoURI : tokenDataFromApi?.logoURI
 
   return {
     ...swrResponse,
@@ -59,7 +61,7 @@ const useTokenData = (chain: string, address: string, onFinish?: () => void) => 
       name,
       symbol: symbol && symbol !== "-" ? symbol : name,
       decimals,
-      logoURI: tokenDataFromApi?.logoURI,
+      logoURI,
     },
   }
 }

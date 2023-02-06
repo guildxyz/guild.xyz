@@ -45,16 +45,10 @@ const TokenInfo = ({
     : undefined
 
   const {
-    data: { symbol: tokenSymbol, decimals, logoURI: tokenLogoURI },
+    data: { symbol, decimals, logoURI },
     error,
     isValidating: isTokenDataLoading,
   } = useTokenData(Chains[chainId], address)
-  const logoURI = ADDRESS_REGEX.test(address)
-    ? tokenLogoURI
-    : RPC[Chains[chainId]].nativeCurrency.logoURI
-  const symbol = ADDRESS_REGEX.test(address)
-    ? tokenSymbol
-    : RPC[Chains[chainId]].nativeCurrency.symbol
 
   const { balance: coinBalance, isLoading: isCoinBalanceLoading } =
     useCoinBalance(chainId)
