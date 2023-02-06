@@ -33,7 +33,7 @@ export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   // FANTOM: "https://fantom.api.0x.org",
   // CELO: "https://celo.api.0x.org",
   // AVALANCHE: "https://avalanche.api.0x.org",
-  // ARBITRUM: "https://arbitrum.api.0x.org",
+  ARBITRUM: "https://arbitrum.api.0x.org",
 }
 
 export const ZEROX_EXCLUDED_SOURCES = [
@@ -94,7 +94,7 @@ export const ZEROX_EXCLUDED_SOURCES = [
 ]
 
 export const RESERVOIR_API_URLS: Partial<Record<Chain, string>> = {
-  // ETHEREUM: "https://api.reservoir.tools",
+  ETHEREUM: "https://api.reservoir.tools",
   // GOERLI: "https://api-goerli.reservoir.tools",
   // POLYGON: "https://api-polygon.reservoir.tools",
   // OPTIMISM: "https://api-optimism.reservoir.tools",
@@ -122,41 +122,11 @@ export const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
     chainId: RPC[c].chainId,
     address: RPC[c].nativeCurrency.symbol,
   })),
-  // ZETA (Görli)
-  // {
-  //   chainId: 5,
-  //   address: "0xCc7bb2D219A0FC08033E130629C2B854b7bA9195",
-  // },
-  // USDC (Görli)
-  {
-    chainId: 5,
-    address: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
-  },
-  // USDC
-  // {
-  //   chainId: 1,
-  //   address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-  // },
-  // // DAI
-  // {
-  //   chainId: 1,
-  //   address: "0x6b175474e89094c44da98b954eedeac495271d0f",
-  // },
-  // // DAI (Görli)
-  // {
-  //   chainId: 5,
-  //   address: "0x73967c6a0904aa032c103b4104747e88c566b1a2",
-  // },
-  // // USDC (Polygon)
-  // {
-  //   chainId: 137,
-  //   address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
-  // },
-  // // DAI (Polygon)
-  // {
-  //   chainId: 137,
-  //   address: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
-  // },
+  /**
+   * We'll be able to add ERC20 tokens here in the following format:
+   *
+   * { chainId: number, address: string (token address) }
+   */
 ]
 
 export type PurchaseAssetData = {
