@@ -1,5 +1,4 @@
 import { BigNumberish } from "@ethersproject/bignumber"
-import { Contract } from "@ethersproject/contracts"
 import { Chain, RPC } from "connectors"
 import { RequirementType } from "requirements"
 import {
@@ -94,7 +93,7 @@ export const ZEROX_EXCLUDED_SOURCES = [
 ]
 
 export const RESERVOIR_API_URLS: Partial<Record<Chain, string>> = {
-  ETHEREUM: "https://api.reservoir.tools",
+  // ETHEREUM: "https://api.reservoir.tools",
   // GOERLI: "https://api-goerli.reservoir.tools",
   // POLYGON: "https://api-polygon.reservoir.tools",
   // OPTIMISM: "https://api-optimism.reservoir.tools",
@@ -132,7 +131,6 @@ export const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
 export type PurchaseAssetData = {
   chainId: number
   account: string
-  tokenBuyerContract: Contract
   tokenAddress: string
   amountIn: BigNumberish // amount which we got back from the 0x API (in WEI)
   amountInWithFee: BigNumberish // amount which we got back from the 0x API + Guild fee (in WEI)
@@ -174,9 +172,7 @@ export const getAssetsCallParams: Record<
     ZeroXSupportedSources,
     {
       commands: string
-      getEncodedParams: (
-        data: Omit<PurchaseAssetData, "tokenBuyerContract">
-      ) => string[]
+      getEncodedParams: (data: PurchaseAssetData) => string[]
     }
   >
 > = {

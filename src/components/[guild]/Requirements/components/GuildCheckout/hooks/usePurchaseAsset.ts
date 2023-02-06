@@ -1,7 +1,6 @@
-import { BigNumber } from "@ethersproject/bignumber"
+import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import useDatadog from "components/_app/Datadog/useDatadog"
-import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -10,29 +9,26 @@ import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { Dispatch, SetStateAction, useMemo } from "react"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
+import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
 import {
-  PurchaseAssetData,
-  purchaseSupportedChains,
-  TOKEN_BUYER_CONTRACT,
-} from "utils/guildCheckout/constants"
-import { generateGetAssetsParams } from "utils/guildCheckout/utils"
+  GeneratedGetAssetsParams,
+  generateGetAssetsParams,
+} from "utils/guildCheckout/utils"
 import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import usePrice from "./usePrice"
 
 const purchaseAsset = async (
-  data: PurchaseAssetData,
+  tokenBuyerContract: Contract,
+  generatedGetAssetsParams: GeneratedGetAssetsParams,
   setTxHash: Dispatch<SetStateAction<string>>
 ) => {
-  const { chainId, tokenBuyerContract } = data
-
-  if (!purchaseSupportedChains.ERC20?.includes(Chains[chainId]))
-    return Promise.reject("Unsupported chain")
-
-  const getAssetsParams = generateGetAssetsParams(data)
-
+  // We shouldn't run into these issues, but rejecting here in case something wrong happens.
+  if (!tokenBuyerContract) return Promise.reject("Can't find TokenBuyer contract.")
+  if (!generatedGetAssetsParams)
+    return Promise.reject("Couldn't generate getAssets params.")
   try {
-    await tokenBuyerContract.callStatic.getAssets(...getAssetsParams)
+    await tokenBuyerContract.callStatic.getAssets(...generatedGetAssetsParams)
   } catch (callStaticError) {
     if (callStaticError.error) {
       const walletError = processWalletError(callStaticError.error)
@@ -42,6 +38,7 @@ const purchaseAsset = async (
     if (!callStaticError.errorName) return Promise.reject(callStaticError)
 
     // TODO: we could handle Uniswap universal router errors too
+    // https://github.com/Uniswap/universal-router/blob/main/contracts/interfaces/IUniversalRouter.sol
     switch (callStaticError.errorName) {
       case "AccessDenied":
         return Promise.reject("TokenBuyer contract error: access denied")
@@ -50,7 +47,9 @@ const purchaseAsset = async (
     }
   }
 
-  const getAssetsCall = await tokenBuyerContract.getAssets(...getAssetsParams)
+  const getAssetsCall = await tokenBuyerContract.getAssets(
+    ...generatedGetAssetsParams
+  )
 
   setTxHash(getAssetsCall.hash)
 
@@ -76,67 +75,13 @@ const usePurchaseAsset = () => {
   const {
     data: { symbol },
   } = useTokenData(requirement.chain, requirement.address)
-  const {
-    data: {
-      priceInWei,
-      guildFeeInWei: rawGuildFeeInWei,
-      buyAmountInWei,
-      source,
-      path,
-      tokenAddressPath,
-    },
-  } = usePrice(pickedCurrency)
+  const { data: priceData } = usePrice(pickedCurrency)
 
   const tokenBuyerContract = useContract(TOKEN_BUYER_CONTRACT, TOKEN_BUYER_ABI, true)
 
-  const purchaseAssetData = useMemo(() => {
-    if (
-      !chainId ||
-      !account ||
-      !tokenBuyerContract ||
-      !pickedCurrency ||
-      !priceInWei ||
-      !rawGuildFeeInWei ||
-      !buyAmountInWei ||
-      !source ||
-      (!path && !tokenAddressPath)
-    )
-      return undefined
-
-    const amountIn = BigNumber.from(priceInWei)
-    const guildFeeInWei = BigNumber.from(rawGuildFeeInWei)
-    const amountInWithFee = amountIn.add(guildFeeInWei)
-    const amountOut = BigNumber.from(buyAmountInWei)
-
-    return {
-      chainId,
-      account,
-      tokenBuyerContract,
-      tokenAddress: pickedCurrency,
-      amountIn,
-      amountInWithFee,
-      amountOut,
-      source,
-      path,
-      tokenAddressPath,
-    }
-  }, [
-    chainId,
-    account,
-    tokenBuyerContract,
-    pickedCurrency,
-    priceInWei,
-    rawGuildFeeInWei,
-    buyAmountInWei,
-    source,
-    path,
-    tokenAddressPath,
-  ])
-
   const generatedGetAssetsParams = useMemo(
-    () =>
-      purchaseAssetData ? generateGetAssetsParams(purchaseAssetData) : undefined,
-    [purchaseAssetData]
+    () => generateGetAssetsParams(account, chainId, pickedCurrency, priceData),
+    [account, chainId, pickedCurrency, priceData]
   )
 
   const { data: estimatedGas, error: estimateGasError } = useEstimateGasFee(
@@ -145,45 +90,48 @@ const usePurchaseAsset = () => {
     generatedGetAssetsParams
   )
 
-  const purchaseAssetWithSetTx = (data?: PurchaseAssetData) =>
-    purchaseAsset(data, setTxHash)
+  const purchaseAssetWithSetTx = (data?: GeneratedGetAssetsParams) =>
+    purchaseAsset(tokenBuyerContract, data, setTxHash)
 
-  const useSubmitData = useSubmit<PurchaseAssetData, any>(purchaseAssetWithSetTx, {
-    onError: (error) => {
-      const prettyError =
-        error?.code === "ACTION_REJECTED" ? "User rejected the transaction" : error
-      showErrorToast(prettyError)
-      if (txHash) setTxError(true)
-      addDatadogError("general purchase requirement error (GuildCheckout)")
-      addDatadogError("purchase requirement pre-call error (GuildCheckout)", {
-        error: prettyError,
-      })
-    },
-    onSuccess: (receipt) => {
-      if (receipt.status !== 1) {
-        showErrorToast("Transaction failed")
-        setTxError(true)
-        console.log("[DEBUG]: TX RECEIPT", receipt)
+  const useSubmitData = useSubmit<GeneratedGetAssetsParams, any>(
+    purchaseAssetWithSetTx,
+    {
+      onError: (error) => {
+        const prettyError =
+          error?.code === "ACTION_REJECTED" ? "User rejected the transaction" : error
+        showErrorToast(prettyError)
+        if (txHash) setTxError(true)
         addDatadogError("general purchase requirement error (GuildCheckout)")
-        addDatadogError("purchase requirement error (GuildCheckout)", {
-          receipt,
+        addDatadogError("purchase requirement pre-call error (GuildCheckout)", {
+          error: prettyError,
         })
-        return
-      }
+      },
+      onSuccess: (receipt) => {
+        if (receipt.status !== 1) {
+          showErrorToast("Transaction failed")
+          setTxError(true)
+          console.log("[DEBUG]: TX RECEIPT", receipt)
+          addDatadogError("general purchase requirement error (GuildCheckout)")
+          addDatadogError("purchase requirement error (GuildCheckout)", {
+            receipt,
+          })
+          return
+        }
 
-      addDatadogAction("purchased requirement (GuildCheckout)")
-      setTxSuccess(true)
-      toast({
-        status: "success",
-        title: "Your new asset:",
-        description: `${requirement.data.minAmount} ${symbol}`,
-      })
-    },
-  })
+        addDatadogAction("purchased requirement (GuildCheckout)")
+        setTxSuccess(true)
+        toast({
+          status: "success",
+          title: "Your new asset:",
+          description: `${requirement.data.minAmount} ${symbol}`,
+        })
+      },
+    }
+  )
 
   return {
     ...useSubmitData,
-    onSubmit: () => useSubmitData.onSubmit(purchaseAssetData),
+    onSubmit: () => useSubmitData.onSubmit(generatedGetAssetsParams),
     estimatedGas,
     estimateGasError,
   }
