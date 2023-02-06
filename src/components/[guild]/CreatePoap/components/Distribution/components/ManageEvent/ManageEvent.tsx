@@ -43,8 +43,7 @@ const ManageEvent = (): JSX.Element => {
       status: "success",
       title: `Event ${response.started ? "started" : "ended"}!`,
     })
-    mutatePoapEventDetails()
-    if (response.stopped) mutateVoiceParticipants()
+    mutateVoiceParticipants()
   }, [response])
 
   const startTimeInMs = (poapEventDetails?.voiceEventStartedAt ?? 0) * 1000
