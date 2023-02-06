@@ -111,6 +111,7 @@ type BrainCardData = {
   title: string
   tags?: Array<string>
   icon?: string
+  backgroundImage?: string
 }
 
 type GuildAdmin = {
