@@ -148,7 +148,9 @@ const RPC = {
       logoURI:
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
-    rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+    rpcUrls: [
+      "https://arb-mainnet.g.alchemy.com/v2/FmkOXUHKolu3zhBNecrZ7tmJPzhsV7J_",
+    ],
     blockExplorerUrls: ["https://arbiscan.io"],
     apiUrl: "https://api.arbiscan.io",
     iconUrls: ["/networkLogos/arbitrum.svg"],
