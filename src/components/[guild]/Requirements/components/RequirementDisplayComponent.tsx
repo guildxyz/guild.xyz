@@ -1,7 +1,7 @@
 import { Icon } from "@chakra-ui/react"
 import { Warning } from "phosphor-react"
 import REQUIREMENTS from "requirements"
-import { Requirement as RequirementType } from "types"
+import { Requirement as RequirementType, Rest } from "types"
 import DataBlock from "./DataBlock"
 import RequiementAccessIndicator from "./RequiementAccessIndicator"
 import Requirement from "./Requirement"
@@ -9,10 +9,8 @@ import { RequirementProvider } from "./RequirementContext"
 
 type Props = {
   requirement: RequirementType
-  showPurchaseBtn?: boolean
-  showFooter?: boolean
   rightElement?: JSX.Element
-}
+} & Rest
 
 const RequirementDisplayComponent = ({
   requirement,

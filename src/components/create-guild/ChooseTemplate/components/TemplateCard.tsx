@@ -135,7 +135,6 @@ const TemplateCard = ({
                     <Fragment key={i}>
                       <RequirementDisplayComponent
                         requirement={requirement as Requirement}
-                        showFooter={false}
                       />
                       {i < role.requirements.length - 1 && (
                         <LogicDivider logic="AND" py={1} />

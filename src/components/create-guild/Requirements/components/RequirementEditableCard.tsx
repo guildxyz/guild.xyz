@@ -93,7 +93,6 @@ const RequirementEditableCard = ({
           <RequirementComponent
             footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
             setValueForBalancy={setValueForBalancy}
-            showPurchaseBtn={false}
             rightElement={
               <Button ref={ref} size="sm" onClick={onOpen}>
                 Edit

@@ -12,7 +12,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
-import GuildCheckout from "./GuildCheckout"
 import { useRequirementContext } from "./RequirementContext"
 
 export type RequirementProps = PropsWithChildren<{
@@ -21,8 +20,6 @@ export type RequirementProps = PropsWithChildren<{
   withImgBg?: boolean
   footer?: JSX.Element
   rightElement?: JSX.Element
-  showPurchaseBtn?: boolean
-  showFooter?: boolean
 }>
 
 const Requirement = ({
@@ -31,8 +28,6 @@ const Requirement = ({
   footer,
   withImgBg = true,
   rightElement,
-  showPurchaseBtn = true,
-  showFooter = true,
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -91,10 +86,7 @@ const Requirement = ({
           {children}
         </Text>
 
-        <HStack spacing={4}>
-          {showPurchaseBtn && <GuildCheckout />}
-          {showFooter && footer}
-        </HStack>
+        <HStack spacing={4}>{footer}</HStack>
       </VStack>
       {rightElement}
     </SimpleGrid>

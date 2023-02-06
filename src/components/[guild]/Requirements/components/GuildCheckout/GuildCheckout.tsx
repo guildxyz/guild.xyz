@@ -25,6 +25,7 @@ import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
+import BlockExplorerUrl from "../BlockExplorerUrl"
 import RequirementDisplayComponent from "../RequirementDisplayComponent"
 import AllowanceButton from "./components/buttons/AllowanceButton"
 import ChooseCurrencyButton from "./components/buttons/ChooseCurrencyButton"
@@ -91,7 +92,7 @@ const GuildCheckout = (): JSX.Element => {
           <ModalBody>
             <RequirementDisplayComponent
               requirement={requirement}
-              showPurchaseBtn={false}
+              footer={<BlockExplorerUrl />}
               rightElement={
                 isValidating ? (
                   <Spinner size="sm" />
