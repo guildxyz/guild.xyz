@@ -11,6 +11,7 @@ import capitalize from "utils/capitalize"
 import {
   ADDRESS_REGEX,
   GUILD_FEE_PERCENTAGE,
+  NULL_ADDRESS,
   PURCHASABLE_REQUIREMENT_TYPES,
   RESERVOIR_API_URLS,
   TOKEN_BUYER_CONTRACT,
@@ -75,7 +76,11 @@ const getGuildFee = async (
 
   const sellTokenDecimals = await getDecimals(Chains[chainId] as Chain, sellToken)
 
-  const guildBaseFeeInWei = await tokenBuyerContract.baseFee(sellToken)
+  const guildBaseFeeInWei = await tokenBuyerContract.baseFee(
+    sellToken === RPC[Chains[chainId]].nativeCurrency.symbol
+      ? NULL_ADDRESS
+      : sellToken
+  )
   const guildBaseFeeInSellToken = parseFloat(
     formatUnits(guildBaseFeeInWei, sellTokenDecimals)
   )
