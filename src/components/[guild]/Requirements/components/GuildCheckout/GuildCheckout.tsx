@@ -169,6 +169,7 @@ const GuildCheckout = (): JSX.Element => {
                   borderRadius="md"
                   isDisabled
                   data-dd-action-name="Pay with card (GuildCheckout)"
+                  _hover={""}
                 >
                   Pay with card
                 </Button>
