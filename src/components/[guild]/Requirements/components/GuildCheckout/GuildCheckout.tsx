@@ -27,10 +27,12 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useIntercom } from "components/_app/IntercomProvider"
 import { RPC } from "connectors"
 import { ArrowSquareOut, ShoppingCartSimple } from "phosphor-react"
 import {
+  ALLOWED_GUILDS,
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
@@ -55,6 +57,7 @@ const GuildCheckout = (): JSX.Element => {
   const { account } = useWeb3React()
   const { requirement, isOpen, onOpen, onClose, pickedCurrency } =
     useGuildCheckoutContext()
+  const { id } = useGuild()
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
   )
@@ -71,6 +74,7 @@ const GuildCheckout = (): JSX.Element => {
   } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
 
   if (
+    !ALLOWED_GUILDS.includes(id) ||
     !account ||
     (!isOpen && satisfiesRequirement) ||
     (!accessData && isAccessLoading) ||
