@@ -41,7 +41,7 @@ const PurchaseButton = (): JSX.Element => {
   return (
     <CardMotionWrapper>
       <Button
-        size="xl"
+        size="lg"
         isDisabled={isDisabled || isLoading}
         loadingText="Check your wallet"
         colorScheme={!isDisabled ? "blue" : "gray"}

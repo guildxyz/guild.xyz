@@ -49,7 +49,7 @@ const AllowanceButton = (): JSX.Element => {
   return (
     <CardMotionWrapper>
       <Button
-        size="xl"
+        size="lg"
         colorScheme={allowanceError ? "red" : "blue"}
         isDisabled={
           isPriceLoading || isAllowanceLoading || allowanceError || isEnoughAllowance

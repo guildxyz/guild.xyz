@@ -22,7 +22,7 @@ const SwitchNetworkButton = (): JSX.Element => {
   return (
     <CardMotionWrapper>
       <Button
-        size="xl"
+        size="lg"
         colorScheme="blue"
         isLoading={newtowrkChangeInProgress}
         loadingText="Check your wallet"
