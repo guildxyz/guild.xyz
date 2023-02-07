@@ -37,7 +37,6 @@ import {
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
 import BlockExplorerUrl from "../BlockExplorerUrl"
-import RequirementDisplayComponent from "../RequirementDisplayComponent"
 import AllowanceButton from "./components/buttons/AllowanceButton"
 import PurchaseButton from "./components/buttons/PurchaseButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
@@ -47,6 +46,7 @@ import {
   useGuildCheckoutContext,
 } from "./components/GuildCheckoutContex"
 import InfoModal from "./components/InfoModal"
+import PurchasedRequirementInfo from "./components/InfoModal/components/PurchasedRequirementInfo"
 import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
 import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
@@ -130,9 +130,7 @@ const GuildCheckout = (): JSX.Element => {
           <ModalCloseButton />
 
           <ModalBody>
-            <RequirementDisplayComponent
-              requirement={requirement}
-              footer={<BlockExplorerUrl />}
+            <PurchasedRequirementInfo
               rightElement={
                 isValidating ? (
                   <Spinner size="sm" />
@@ -146,6 +144,7 @@ const GuildCheckout = (): JSX.Element => {
                   </Text>
                 )
               }
+              footer={<BlockExplorerUrl />}
             />
           </ModalBody>
 
