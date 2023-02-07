@@ -23,7 +23,7 @@ const PurchaseButton = (): JSX.Element => {
     TOKEN_BUYER_CONTRACT[chainId]
   )
 
-  const { estimateGasError } = usePurchaseAsset()
+  const { onSubmit, isLoading, estimateGasError } = usePurchaseAsset()
 
   const isEnoughAllowance =
     priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
@@ -36,7 +36,12 @@ const PurchaseButton = (): JSX.Element => {
     (pickedCurrency !== RPC[Chains[chainId]].nativeCurrency.symbol &&
       (isPriceLoading || isAllowanceLoading || allowanceError || !isEnoughAllowance))
 
-  const { onSubmit, isLoading } = usePurchaseAsset()
+  const errorMsg =
+    (error && "Couldn't calculate price") ??
+    (estimateGasError &&
+      (estimateGasError?.data?.message?.includes("insufficient")
+        ? "Insufficient funds for gas"
+        : "Couldn't estimate gas"))
 
   return (
     <CardMotionWrapper>
@@ -49,7 +54,7 @@ const PurchaseButton = (): JSX.Element => {
         onClick={onSubmit}
         data-dd-action-name="PurchaseButton (GuildCheckout)"
       >
-        Purchase
+        {errorMsg ?? "Purchase"}
       </Button>
     </CardMotionWrapper>
   )

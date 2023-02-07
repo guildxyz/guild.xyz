@@ -35,13 +35,7 @@ const FeeAndTotal = (): JSX.Element => {
     error,
   } = usePrice(pickedCurrency)
 
-  const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
-    usePurchaseAsset()
-  const prettyErrorMessage = estimateGasError?.data?.message?.includes(
-    "insufficient"
-  )
-    ? "Insufficient funds for gas"
-    : null
+  const { estimatedGasFee, estimatedGasFeeInUSD } = usePurchaseAsset()
 
   const nativeCurrency = RPC[requirement.chain].nativeCurrency
   const estimatedGasInFloat = estimatedGasFee
@@ -141,12 +135,6 @@ const FeeAndTotal = (): JSX.Element => {
               RPC[requirement.chain].nativeCurrency.decimals
             )
           ).toFixed(8)} ${RPC[requirement.chain].nativeCurrency.symbol}`}
-        </Text>
-      )}
-
-      {estimateGasError && (
-        <Text as="span" colorScheme="gray" fontSize="sm">
-          {prettyErrorMessage ?? "Couldn't estimate gas"}
         </Text>
       )}
     </Stack>
