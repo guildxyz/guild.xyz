@@ -25,7 +25,8 @@ const FeeAndTotal = (): JSX.Element => {
 
   const {
     data: {
-      guildBaseFeeInSellToken,
+      guildBaseFeeInNativeCurrency,
+      guildPercentageFeeInNativeCurrency,
       guildFeeInSellToken,
       priceInSellToken,
       priceInUSD,
@@ -43,9 +44,13 @@ const FeeAndTotal = (): JSX.Element => {
     : undefined
 
   const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
+
   const calculatedGasFee = isNativeCurrency ? estimatedGasInFloat ?? 0 : 0
 
-  const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) <= 0.0
+  const isTooSmallFee =
+    parseFloat(
+      (guildBaseFeeInNativeCurrency + guildPercentageFeeInNativeCurrency)?.toFixed(3)
+    ) <= 0.0
   const isTooSmallPrice = parseFloat(priceInSellToken?.toFixed(3)) < 0.001
 
   return (
@@ -58,8 +63,8 @@ const FeeAndTotal = (): JSX.Element => {
             </Text>
             <Tooltip
               label={`${GUILD_FEE_PERCENTAGE * 100}%${
-                guildBaseFeeInSellToken
-                  ? ` + ${guildBaseFeeInSellToken} ${symbol}`
+                guildBaseFeeInNativeCurrency
+                  ? ` + ${guildBaseFeeInNativeCurrency} ${nativeCurrency.symbol}`
                   : ""
               } Guild fee + protocol fee + estimated network fee`}
               placement="top"
@@ -75,9 +80,12 @@ const FeeAndTotal = (): JSX.Element => {
               <>
                 {isTooSmallFee
                   ? "< 0.001"
-                  : // TODO: display the gas fee separately when the user pays with ERC20 tokens
-                    (calculatedGasFee + guildFeeInSellToken ?? 0)?.toFixed(3)}{" "}
-                {symbol}
+                  : (
+                      calculatedGasFee +
+                      guildBaseFeeInNativeCurrency +
+                      guildPercentageFeeInNativeCurrency
+                    )?.toFixed(3)}{" "}
+                {nativeCurrency.symbol}
               </>
             ) : (
               "Choose currency"
