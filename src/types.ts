@@ -88,9 +88,12 @@ type PlatformAccountDetails = PlatformAccount & {
   platformUserData?: Record<string, any> // TODO: better types once we decide which properties will we store in this object on the backend
 }
 
+type AddressConnectionProvider = "DELEGATE"
+
 type User = {
   id: number
   addresses: Array<string>
+  addressProviders: Record<string, AddressConnectionProvider>
   platformUsers: PlatformAccountDetails[]
   signingKey?: string
   isSuperAdmin: boolean
@@ -225,7 +228,7 @@ const supportedSocialLinks = [
   "SNAPSHOT",
   "WEBSITE",
 ] as const
-type SocialLinkKey = typeof supportedSocialLinks[number]
+type SocialLinkKey = (typeof supportedSocialLinks)[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
 
 type GuildContact = {
@@ -470,5 +473,6 @@ export type {
   VoiceParticipationForm,
   VoiceRequirementParams,
   PoapEventDetails,
+  AddressConnectionProvider,
 }
 export { ValidationMethod, supportedSocialLinks }

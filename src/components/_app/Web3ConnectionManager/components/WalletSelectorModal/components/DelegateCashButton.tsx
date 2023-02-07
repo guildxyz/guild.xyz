@@ -14,6 +14,7 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useDatadog from "components/_app/Datadog/useDatadog"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager/Web3ConnectionManager"
 import useKeyPair from "hooks/useKeyPair"
 import { ArrowSquareOut } from "phosphor-react"
 
@@ -25,6 +26,8 @@ const DelegateCashButton = (): JSX.Element => {
 
   const iconUrl = "delegatecash.png"
   const connectorName = "Delegate"
+
+  const { setIsDelegateConnection } = useWeb3ConnectionManager()
 
   if (account && ready && isAnyConnectorActive) return null
 
@@ -46,10 +49,12 @@ const DelegateCashButton = (): JSX.Element => {
                 />
               </Center>
             }
-            disabled
             w="full"
             size="xl"
             justifyContent="space-between"
+            onClick={() => {
+              setIsDelegateConnection(true)
+            }}
           >
             {connectorName}
             <Tag ml="2">Coming soon</Tag>

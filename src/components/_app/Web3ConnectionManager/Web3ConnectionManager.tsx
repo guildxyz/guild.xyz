@@ -8,7 +8,13 @@ import requestNetworkChangeHandler from "components/common/Layout/components/Acc
 import { Chains, RPC } from "connectors"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { createContext, PropsWithChildren, useContext, useEffect } from "react"
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 
@@ -28,6 +34,8 @@ const Web3Connection = createContext({
     callback?: () => void,
     errorHandler?: (err) => void
   ) => {},
+  isDelegateConnection: false,
+  setIsDelegateConnection: (_: boolean) => {},
 })
 
 const Web3ConnectionManager = ({
@@ -51,6 +59,8 @@ const Web3ConnectionManager = ({
     onOpen: openAccountModal,
     onClose: closeAccountModal,
   } = useDisclosure()
+
+  const [isDelegateConnection, setIsDelegateConnection] = useState<boolean>(false)
 
   // try to eagerly connect to an injected provider, if it exists and has granted access already
   const triedEager = useEagerConnect()
@@ -93,6 +103,8 @@ const Web3ConnectionManager = ({
         openAccountModal,
         closeAccountModal,
         requestNetworkChange,
+        isDelegateConnection,
+        setIsDelegateConnection,
       }}
     >
       {children}

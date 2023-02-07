@@ -1,6 +1,7 @@
 import { datadogRum } from "@datadog/browser-rum"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { randomBytes } from "crypto"
 import { createStore, del, get, set } from "idb-keyval"
 import { useEffect } from "react"
@@ -21,11 +22,19 @@ type StoredKeyPair = {
   pubKey: string
 }
 
-type AddressLinkParams = {
-  userId: number
-  signature: string
-  nonce: string
-}
+type AddressLinkParams =
+  | ({
+      userId: number
+      signature: string
+      nonce: string
+    } & { isDelegate: never })
+  | ({
+      isDelegate: boolean
+    } & {
+      userId: never
+      signature: never
+      nonce: never
+    })
 
 type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> & Partial<AddressLinkParams>
 
@@ -155,6 +164,9 @@ const useKeyPair = () => {
 
   const { account } = useWeb3React()
 
+  const { isDelegateConnection, setIsDelegateConnection } =
+    useWeb3ConnectionManager()
+
   const { data: user, error: userError } = usePublicUserData()
 
   const defaultCustomAttributes = {
@@ -264,6 +276,16 @@ const useKeyPair = () => {
         }
       },
       onSuccess: ([newKeyPair, shouldDeleteUserId]) => {
+        setTimeout(() => {
+          mutate(
+            unstable_serialize([
+              `/user/details/${account}`,
+              { method: "POST", body: {} },
+            ])
+          )
+        }, 500)
+
+        setIsDelegateConnection(false)
         if (shouldDeleteUserId) {
           try {
             window.localStorage.removeItem("userId")
@@ -370,6 +392,10 @@ const useKeyPair = () => {
             body.userId = userId
             body.nonce = nonce
           }
+        }
+
+        if (isDelegateConnection) {
+          body.isDelegate = true
         }
 
         return setSubmitResponse.onSubmit(body)
