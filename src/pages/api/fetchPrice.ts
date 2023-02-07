@@ -201,7 +201,6 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       excludedSources: ZEROX_EXCLUDED_SOURCES.toString(),
     }).toString()
 
-    console.log(`${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`)
     const response = await fetch(
       `${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`
     )
