@@ -1,10 +1,13 @@
 import { Checkbox } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { Chains } from "connectors"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 
 const TOSCheckbox = (): JSX.Element => {
+  const { name } = useGuild()
+
   const { chain } = useRequirementContext()
   const { agreeWithTOS, setAgreeWithTOS } = useGuildCheckoutContext()
 
@@ -33,7 +36,8 @@ const TOSCheckbox = (): JSX.Element => {
       isChecked={agreeWithTOS}
       onChange={(e) => setAgreeWithTOS(e.target.checked)}
     >
-      I understand that if the owner changes requirements & I could lose access.
+      {`I understand that I purchase this asset from exchanges, not from 
+      ${name} or guild.xyz itself`}
     </Checkbox>
   )
 }
