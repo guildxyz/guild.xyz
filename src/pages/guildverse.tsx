@@ -58,7 +58,7 @@ const Guildverse = ({ cards: cards }): JSX.Element => {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  res.setHeader("Cache-Control", "public, s-maxage=100, stale-while-revalidate=59")
+  res.setHeader("Cache-Control", "public, s-maxage=10000")
 
   const { Client } = require("@notionhq/client")
   const notion = new Client({ auth: process.env.NOTION_API_KEY })
