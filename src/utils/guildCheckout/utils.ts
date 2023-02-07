@@ -47,7 +47,11 @@ const generateGetAssetsParams = (
   )
     return undefined
 
-  const amountIn = BigNumber.from(priceInWei)
+  // Must pass it this way to the contract call, so rounding it here
+  const roundedPriceInWei =
+    Math.ceil(BigNumber.from(priceInWei).toNumber() / 10000) * 10000
+
+  const amountIn = BigNumber.from(roundedPriceInWei)
   const guildFeeInWei = BigNumber.from(rawGuildFeeInWei)
   const amountInWithFee = amountIn.add(guildFeeInWei)
   const amountOut = BigNumber.from(buyAmountInWei)
