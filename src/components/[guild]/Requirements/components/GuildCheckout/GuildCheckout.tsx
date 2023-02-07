@@ -71,7 +71,7 @@ const GuildCheckout = (): JSX.Element => {
     data: { priceInUSD },
     isValidating,
     error,
-  } = usePrice("ETH" ?? RPC[requirement?.chain]?.nativeCurrency?.symbol)
+  } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
 
   if (
     !ALLOWED_GUILDS.includes(id) ||
