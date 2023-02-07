@@ -1,6 +1,7 @@
 import {
   ButtonGroup,
   Collapse,
+  Flex,
   HStack,
   Icon,
   ModalBody,
@@ -29,7 +30,7 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useIntercom } from "components/_app/IntercomProvider"
 import { RPC } from "connectors"
-import { ArrowSquareOut, ShoppingCartSimple } from "phosphor-react"
+import { Chat, ShoppingCartSimple } from "phosphor-react"
 import {
   ALLOWED_GUILDS,
   PURCHASABLE_REQUIREMENT_TYPES,
@@ -109,16 +110,20 @@ const GuildCheckout = (): JSX.Element => {
                 </PopoverTrigger>
                 <PopoverContent>
                   <PopoverArrow />
-                  <PopoverBody fontFamily="body" fontSize="sm" fontWeight="normal">
-                    {
-                      "This product is still in alpha. If you run into any issue please let us know in our "
-                    }
-                    <Button variant="link" size="sm" onClick={triggerChat}>
-                      <HStack spacing={1}>
-                        <Text as="span">help center</Text>
-                        <Icon as={ArrowSquareOut} />
-                      </HStack>
-                    </Button>
+                  <PopoverBody fontFamily="body">
+                    <Text fontSize="md" fontWeight="normal">
+                      This feature is still in alpha. If you run into any issues
+                      please let us know!
+                    </Text>
+                    <Flex mt="2" w="full" justifyContent={"right"}>
+                      <Button
+                        size="sm"
+                        onClick={triggerChat}
+                        leftIcon={<Icon as={Chat} />}
+                      >
+                        Open help center
+                      </Button>
+                    </Flex>
                   </PopoverBody>
                 </PopoverContent>
               </Popover>
