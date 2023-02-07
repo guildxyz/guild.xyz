@@ -71,7 +71,7 @@ const GuildCheckout = (): JSX.Element => {
     data: { priceInUSD },
     isValidating,
     error,
-  } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
+  } = usePrice("ETH" ?? RPC[requirement?.chain]?.nativeCurrency?.symbol)
 
   if (
     !ALLOWED_GUILDS.includes(id) ||
@@ -149,6 +149,32 @@ const GuildCheckout = (): JSX.Element => {
           </ModalBody>
 
           <ModalFooter pt={10} bgColor={modalFooterBg} flexDir="column">
+            <ButtonGroup size="sm" w="full" mb="8">
+              <Button
+                autoFocus={false}
+                colorScheme="blue"
+                variant="subtle"
+                w="full"
+                borderRadius="md"
+                data-dd-action-name="Pay with crypto (GuildCheckout)"
+              >
+                Pay with crypto
+              </Button>
+
+              <Tooltip label="Coming soon" placement="top" hasArrow>
+                <Button
+                  autoFocus={false}
+                  variant="subtle"
+                  w="full"
+                  borderRadius="md"
+                  isDisabled
+                  data-dd-action-name="Pay with card (GuildCheckout)"
+                >
+                  Pay with card
+                </Button>
+              </Tooltip>
+            </ButtonGroup>
+
             <Collapse
               in={!!error}
               style={{
@@ -159,32 +185,6 @@ const GuildCheckout = (): JSX.Element => {
             </Collapse>
 
             <Stack spacing={8} w="full">
-              <ButtonGroup size="sm" w="full">
-                <Button
-                  autoFocus={false}
-                  colorScheme="blue"
-                  variant="subtle"
-                  w="full"
-                  borderRadius="md"
-                  data-dd-action-name="Pay with crypto (GuildCheckout)"
-                >
-                  Pay with crypto
-                </Button>
-
-                <Tooltip label="Coming soon" placement="top" hasArrow>
-                  <Button
-                    autoFocus={false}
-                    variant="subtle"
-                    w="full"
-                    borderRadius="md"
-                    isDisabled
-                    data-dd-action-name="Pay with card (GuildCheckout)"
-                  >
-                    Pay with card
-                  </Button>
-                </Tooltip>
-              </ButtonGroup>
-
               <PaymentCurrencyPicker />
 
               <FeeAndTotal />
