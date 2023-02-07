@@ -177,7 +177,7 @@ const GuildCheckout = (): JSX.Element => {
             </ButtonGroup>
 
             <Collapse
-              in={!!error}
+              in={!!error?.error}
               style={{
                 width: "100%",
               }}
