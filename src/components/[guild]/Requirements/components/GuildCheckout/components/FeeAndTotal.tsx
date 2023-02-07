@@ -35,11 +35,12 @@ const FeeAndTotal = (): JSX.Element => {
     error,
   } = usePrice(pickedCurrency)
 
-  const { estimatedGas, estimateGasError } = usePurchaseAsset()
+  const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
+    usePurchaseAsset()
 
   const nativeCurrency = RPC[requirement.chain].nativeCurrency
-  const estimatedGasInFloat = estimatedGas
-    ? parseFloat(formatUnits(estimatedGas, nativeCurrency.decimals))
+  const estimatedGasInFloat = estimatedGasFee
+    ? parseFloat(formatUnits(estimatedGasFee, nativeCurrency.decimals))
     : undefined
 
   const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
@@ -75,8 +76,7 @@ const FeeAndTotal = (): JSX.Element => {
               <>
                 {isTooSmallFee
                   ? "< 0.001"
-                  : // TODO: display the gas fee separately when the user pays with ERC20 tokens
-                    (calculatedGasFee + guildFeeInSellToken ?? 0)?.toFixed(3)}{" "}
+                  : (calculatedGasFee + guildFeeInSellToken ?? 0)?.toFixed(3)}{" "}
                 {symbol}
               </>
             ) : (
@@ -97,9 +97,8 @@ const FeeAndTotal = (): JSX.Element => {
                   {priceInUSD
                     ? `$${(
                         priceInUSD +
-                        // TODO: gas fee
-                        /* priceData.gasFeeInUSD + */
-                        guildFeeInUSD
+                        guildFeeInUSD +
+                        estimatedGasFeeInUSD
                       )?.toFixed(2)}`
                     : "$0.00"}
                   {" = "}
@@ -126,11 +125,14 @@ const FeeAndTotal = (): JSX.Element => {
         </HStack>
       </Stack>
 
-      {estimatedGas && isNativeCurrency && (
+      {estimatedGasFee && isNativeCurrency && (
         // We're displaying gas fee here when the user picked an ERC20 as sellToken
         <Text as="span" colorScheme="gray" fontSize="sm">
           {`Estimated gas fee: ${parseFloat(
-            formatUnits(estimatedGas, RPC[requirement.chain].nativeCurrency.decimals)
+            formatUnits(
+              estimatedGasFee,
+              RPC[requirement.chain].nativeCurrency.decimals
+            )
           ).toFixed(8)} ${RPC[requirement.chain].nativeCurrency.symbol}`}
         </Text>
       )}

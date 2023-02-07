@@ -151,7 +151,7 @@ const validateBody = (
   return { isValid: true }
 }
 
-const fetchNativeCurrencyPriceInUSD = async (chain: Chain) =>
+export const fetchNativeCurrencyPriceInUSD = async (chain: Chain) =>
   fetch(
     `https://api.coinbase.com/v2/exchange-rates?currency=${RPC[chain].nativeCurrency.symbol}`
   )

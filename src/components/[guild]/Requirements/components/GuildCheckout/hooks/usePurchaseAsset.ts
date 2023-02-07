@@ -88,11 +88,8 @@ const usePurchaseAsset = () => {
     [account, chainId, pickedCurrency, priceData]
   )
 
-  const { data: estimatedGas, error: estimateGasError } = useEstimateGasFee(
-    tokenBuyerContract,
-    "getAssets",
-    generatedGetAssetsParams
-  )
+  const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
+    useEstimateGasFee(tokenBuyerContract, "getAssets", generatedGetAssetsParams)
 
   const purchaseAssetWithSetTx = (data?: GeneratedGetAssetsParams) =>
     purchaseAsset(tokenBuyerContract, data, setTxHash)
@@ -136,7 +133,8 @@ const usePurchaseAsset = () => {
   return {
     ...useSubmitData,
     onSubmit: () => useSubmitData.onSubmit(generatedGetAssetsParams),
-    estimatedGas,
+    estimatedGasFee,
+    estimatedGasFeeInUSD,
     estimateGasError,
   }
 }
