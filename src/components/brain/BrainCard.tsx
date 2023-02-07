@@ -30,9 +30,11 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
         sx={{
           "div:nth-child(2) div.background > span img": {
             filter: "blur(8px)",
+            opacity: 0.4,
           },
           ":hover div:nth-child(2) div.background > span img": {
-            filter: "blur(4px)",
+            filter: "blur(7px)",
+            opacity: 0.6,
           },
         }}
       >
@@ -64,7 +66,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
                 layout="fill"
                 objectFit="cover"
                 quality="2"
-                style={{ transition: "filter 0.3s" }}
+                style={{ transition: "filter 0.3s, opacity 0.3s" }}
               />
             )}
 
