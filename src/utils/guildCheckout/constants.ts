@@ -19,7 +19,10 @@ export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 export const TOKEN_BUYER_CONTRACT: Partial<Record<number, string>> = {
-  5: "0x7605143a3122E0329d1f9a8dceC44F326e8fd46F",
+  // Görli
+  5: "0x7605143a3122e0329d1f9a8dcec44f326e8fd46f",
+  // Arbitrum
+  42161: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
 }
 
 // 9839 - Arbitrum
