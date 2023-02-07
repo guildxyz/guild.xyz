@@ -68,6 +68,8 @@ const getGuildFee = async (
   guildFeeInSellToken: number
   guildFeeInWei: BigNumber
 }> => {
+  if (!TOKEN_BUYER_CONTRACT[chainId]) return Promise.reject("Unsupported chain")
+
   const provider = new JsonRpcProvider(RPC[Chains[chainId]].rpcUrls[0], chainId)
   const tokenBuyerContract = new Contract(
     TOKEN_BUYER_CONTRACT[chainId],
@@ -266,18 +268,25 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       sellTokenDecimals
     )
 
+    let guildFeeData
+    try {
+      guildFeeData = await getGuildFee(
+        sellToken,
+        Chains[chain],
+        nativeCurrencyPriceInUSD,
+        priceInUSD
+      )
+    } catch (getGuildFeeError) {
+      return res.status(500).json({ error: getGuildFeeError })
+    }
+
     const {
       guildBaseFeeInNativeCurrency,
       guildPercentageFeeInNativeCurrency,
       guildFeeInUSD,
       guildFeeInSellToken,
       guildFeeInWei,
-    } = await getGuildFee(
-      sellToken,
-      Chains[chain],
-      nativeCurrencyPriceInUSD,
-      priceInUSD
-    )
+    } = guildFeeData
 
     const source = foundSource.name as ZeroXSupportedSources
 
@@ -361,18 +370,25 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       RPC[chain].nativeCurrency.decimals
     )
 
+    let guildFeeData
+    try {
+      guildFeeData = await getGuildFee(
+        sellToken,
+        Chains[chain],
+        nativeCurrencyPriceInUSD,
+        priceInUSD
+      )
+    } catch (getGuildFeeError) {
+      return res.status(500).json({ error: getGuildFeeError })
+    }
+
     const {
       guildBaseFeeInNativeCurrency,
       guildPercentageFeeInNativeCurrency,
       guildFeeInUSD,
       guildFeeInSellToken,
       guildFeeInWei,
-    } = await getGuildFee(
-      sellToken,
-      Chains[chain],
-      nativeCurrencyPriceInUSD,
-      priceInUSD
-    )
+    } = guildFeeData
 
     const source = responseData.tokens[0].market.floorAsk.source.name
 
