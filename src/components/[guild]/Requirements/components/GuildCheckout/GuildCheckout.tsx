@@ -19,7 +19,6 @@ import {
   Tag,
   Text,
   Tooltip,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
@@ -65,8 +64,6 @@ const GuildCheckout = (): JSX.Element => {
     (req) => req.requirementId === requirement.id
   )?.access
 
-  const modalFooterBg = useColorModeValue("gray.100", "gray.800")
-
   const {
     data: { priceInUSD },
     isValidating,
@@ -97,7 +94,7 @@ const GuildCheckout = (): JSX.Element => {
         Purchase
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} colorScheme="duotone">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -148,7 +145,7 @@ const GuildCheckout = (): JSX.Element => {
             />
           </ModalBody>
 
-          <ModalFooter pt={10} bgColor={modalFooterBg} flexDir="column">
+          <ModalFooter pt={10} flexDir="column">
             <ButtonGroup size="sm" w="full" mb="8">
               <Button
                 autoFocus={false}
