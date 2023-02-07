@@ -44,6 +44,10 @@ const purchaseAsset = async (
         return Promise.reject("TokenBuyer contract error: access denied")
       case "TransferFailed":
         return Promise.reject("TokenBuyer contract error: ERC20 transfer failed")
+      case "V3TooMuchRequested":
+        return Promise.reject("V3TooMuchRequested")
+      default:
+        return Promise.reject("Unknown error")
     }
   }
 

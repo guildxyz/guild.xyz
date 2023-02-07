@@ -41,6 +41,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "V3TooMuchRequested",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
