@@ -46,7 +46,7 @@ const FeeAndTotal = (): JSX.Element => {
   const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
   const calculatedGasFee = isNativeCurrency ? estimatedGasInFloat ?? 0 : 0
 
-  const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) <= 0.0
+  const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) <= 0.001
   const isTooSmallPrice = parseFloat(priceInSellToken?.toFixed(3)) < 0.001
 
   return (
@@ -76,7 +76,9 @@ const FeeAndTotal = (): JSX.Element => {
               <>
                 {isTooSmallFee
                   ? "< 0.001"
-                  : (calculatedGasFee + guildFeeInSellToken ?? 0)?.toFixed(3)}{" "}
+                  : (calculatedGasFee ?? 0 + guildFeeInSellToken ?? 0)?.toFixed(
+                      3
+                    )}{" "}
                 {symbol}
               </>
             ) : (
@@ -125,7 +127,7 @@ const FeeAndTotal = (): JSX.Element => {
         </HStack>
       </Stack>
 
-      {estimatedGasFee && isNativeCurrency && (
+      {estimatedGasFee && !isNativeCurrency && (
         // We're displaying gas fee here when the user picked an ERC20 as sellToken
         <Text as="span" colorScheme="gray" fontSize="sm">
           {`Estimated gas fee: ${parseFloat(
