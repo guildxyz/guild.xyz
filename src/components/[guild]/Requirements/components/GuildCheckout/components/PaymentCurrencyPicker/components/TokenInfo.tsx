@@ -81,10 +81,10 @@ const TokenInfo = ({
         <Stack spacing={1} maxW="calc(100% - 3rem)">
           <Skeleton isLoaded={!isTokenDataLoading && !isPriceDataLoading} h={5}>
             <Text as="span" display="block" isTruncated>
-              {priceError
-                ? "Couldn't fetch price"
-                : error
+              {error
                 ? "Couldn't fetch token data"
+                : priceError
+                ? `[?] ${symbol}`
                 : `${
                     isTooSmallPrice ? "< 0.001" : priceInSellToken?.toFixed(3)
                   } ${symbol}`}
