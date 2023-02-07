@@ -29,6 +29,7 @@ const FeeAndTotal = (): JSX.Element => {
   const {
     data: { guildFeeInSellToken, priceInSellToken, priceInUSD, guildFeeInUSD },
     isValidating,
+    error,
   } = usePrice(pickedCurrency)
 
   const { estimatedGas, estimateGasError } = usePurchaseAsset()
@@ -63,7 +64,9 @@ const FeeAndTotal = (): JSX.Element => {
             </Tooltip>
           </HStack>
           <Text as="span" colorScheme="gray">
-            {pickedCurrency ? (
+            {error ? (
+              "Couldn't calculate"
+            ) : pickedCurrency ? (
               <>
                 {isTooSmallFee
                   ? "< 0.001"

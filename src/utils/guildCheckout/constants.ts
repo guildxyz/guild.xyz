@@ -21,7 +21,9 @@ export const GUILD_FEE_FIXED_USD = 0
 export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
-export const TOKEN_BUYER_CONTRACT = "0xf8a9eef89f384601e4a19e092d2826051c50f864"
+export const TOKEN_BUYER_CONTRACT: Partial<Record<number, string>> = {
+  5: "0x7605143a3122E0329d1f9a8dceC44F326e8fd46F",
+}
 
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   // ETHEREUM: "https://api.0x.org",
@@ -126,7 +128,6 @@ export const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
    *
    * { chainId: number, address: string (token address) }
    */
-  { chainId: 5, address: "0x07865c6e87b9f70255377e024ace6630c1eaa37f" },
 ]
 
 export type PurchaseAssetData = {

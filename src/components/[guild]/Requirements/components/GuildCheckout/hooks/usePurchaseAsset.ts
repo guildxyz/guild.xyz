@@ -77,7 +77,11 @@ const usePurchaseAsset = () => {
   } = useTokenData(requirement.chain, requirement.address)
   const { data: priceData } = usePrice(pickedCurrency)
 
-  const tokenBuyerContract = useContract(TOKEN_BUYER_CONTRACT, TOKEN_BUYER_ABI, true)
+  const tokenBuyerContract = useContract(
+    TOKEN_BUYER_CONTRACT[chainId],
+    TOKEN_BUYER_ABI,
+    true
+  )
 
   const generatedGetAssetsParams = useMemo(
     () => generateGetAssetsParams(account, chainId, pickedCurrency, priceData),

@@ -16,16 +16,18 @@ const PurchaseButton = (): JSX.Element => {
   const {
     data: { priceInWei },
     isValidating: isPriceLoading,
+    error,
   } = usePrice()
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
-    TOKEN_BUYER_CONTRACT
+    TOKEN_BUYER_CONTRACT[chainId]
   )
 
   const isEnoughAllowance =
     priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
 
   const isDisabled =
+    error ||
     !agreeWithTOS ||
     Chains[chainId] !== requirement.chain ||
     (pickedCurrency !== RPC[Chains[chainId]].nativeCurrency.symbol &&

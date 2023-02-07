@@ -32,13 +32,16 @@ const AllowanceButton = (): JSX.Element => {
   } = usePrice()
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
-    TOKEN_BUYER_CONTRACT
+    TOKEN_BUYER_CONTRACT[chainId]
   )
 
   const isEnoughAllowance =
     priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
 
-  const { onSubmit, isLoading } = useAllowance(pickedCurrency, TOKEN_BUYER_CONTRACT)
+  const { onSubmit, isLoading } = useAllowance(
+    pickedCurrency,
+    TOKEN_BUYER_CONTRACT[chainId]
+  )
 
   if (!pickedCurrency || chainId !== requirementChainId || isNativeCurrencyPicked)
     return null
