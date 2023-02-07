@@ -470,6 +470,18 @@ export const REQUIREMENTS_DATA = [
       "SHIELD_TORNADO_CASH",
     ],
   },
+  {
+    icon: "/requirementLogos/polygonId.svg",
+    name: "PolygonID",
+    fileNameBase: "PolygonID",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/PolygonId/PolygonIdRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/PolygonId/PolygonIdForm")
+    ),
+    types: ["POLYGON_ID_QUERY"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
