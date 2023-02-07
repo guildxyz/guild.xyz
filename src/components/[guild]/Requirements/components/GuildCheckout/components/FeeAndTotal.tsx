@@ -11,10 +11,7 @@ import { formatUnits } from "@ethersproject/units"
 import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Info } from "phosphor-react"
-import {
-  GUILD_FEE_FIXED_USD,
-  GUILD_FEE_PERCENTAGE,
-} from "utils/guildCheckout/constants"
+import { GUILD_FEE_PERCENTAGE } from "utils/guildCheckout/constants"
 import usePrice from "../hooks/usePrice"
 import usePurchaseAsset from "../hooks/usePurchaseAsset"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
@@ -27,7 +24,13 @@ const FeeAndTotal = (): JSX.Element => {
   } = useTokenData(requirement.chain, pickedCurrency)
 
   const {
-    data: { guildFeeInSellToken, priceInSellToken, priceInUSD, guildFeeInUSD },
+    data: {
+      guildBaseFeeInSellToken,
+      guildFeeInSellToken,
+      priceInSellToken,
+      priceInUSD,
+      guildFeeInUSD,
+    },
     isValidating,
     error,
   } = usePrice(pickedCurrency)
@@ -54,9 +57,11 @@ const FeeAndTotal = (): JSX.Element => {
               Fee
             </Text>
             <Tooltip
-              label={`${
-                GUILD_FEE_PERCENTAGE * 100
-              }% + $${GUILD_FEE_FIXED_USD} Guild fee + protocol fee + estimated network fee`}
+              label={`${GUILD_FEE_PERCENTAGE * 100}%${
+                guildBaseFeeInSellToken
+                  ? ` + ${guildBaseFeeInSellToken} ${symbol}`
+                  : ""
+              } Guild fee + protocol fee + estimated network fee`}
               placement="top"
               hasArrow
             >

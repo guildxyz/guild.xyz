@@ -1,18 +1,19 @@
 import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider } from "@ethersproject/providers"
-import { parseUnits } from "@ethersproject/units"
+import { formatUnits, parseUnits } from "@ethersproject/units"
 import { Chain, Chains, RPC } from "connectors"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
 import ERC20_ABI from "static/abis/erc20Abi.json"
+import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import capitalize from "utils/capitalize"
 import {
   ADDRESS_REGEX,
-  GUILD_FEE_FIXED_USD,
   GUILD_FEE_PERCENTAGE,
   PURCHASABLE_REQUIREMENT_TYPES,
   RESERVOIR_API_URLS,
+  TOKEN_BUYER_CONTRACT,
   ZeroXSupportedSources,
   ZEROX_API_URLS,
   ZEROX_EXCLUDED_SOURCES,
@@ -25,6 +26,7 @@ export type FetchPriceResponse = {
   priceInSellToken: number
   priceInWei: BigNumber
   priceInUSD: number
+  guildBaseFeeInSellToken: number
   guildFeeInSellToken: number
   guildFeeInWei: BigNumber
   guildFeeInUSD: number
@@ -52,21 +54,40 @@ const getDecimals = async (chain: Chain, tokenAddress: string) => {
   return decimals
 }
 
-const getGuildFee = (
+const getGuildFee = async (
+  sellToken: string,
+  chainId: number,
   nativeCurrencyPriceInUSD: number,
   priceInSellToken: number,
   sellTokenToEthRate: number,
   priceInUSD: number
-) => {
-  const fixedGuildFeeInNativeCurrency =
-    GUILD_FEE_FIXED_USD / nativeCurrencyPriceInUSD
-  const fixedGuildFeeInSellToken = fixedGuildFeeInNativeCurrency * sellTokenToEthRate
+): Promise<{
+  guildBaseFeeInSellToken: number
+  guildFeeInSellToken: number
+  guildFeeInUSD: number
+}> => {
+  const provider = new JsonRpcProvider(RPC[Chains[chainId]].rpcUrls[0], chainId)
+  const tokenBuyerContract = new Contract(
+    TOKEN_BUYER_CONTRACT[chainId],
+    TOKEN_BUYER_ABI,
+    provider
+  )
+
+  const sellTokenDecimals = await getDecimals(Chains[chainId] as Chain, sellToken)
+
+  const guildBaseFeeInWei = await tokenBuyerContract.baseFee(sellToken)
+  const guildBaseFeeInSellToken = parseFloat(
+    formatUnits(guildBaseFeeInWei, sellTokenDecimals)
+  )
+  const guildBaseFeeInUSD =
+    (nativeCurrencyPriceInUSD / sellTokenToEthRate) * guildBaseFeeInSellToken
+
   const guildFeeInSellToken =
-    priceInSellToken * GUILD_FEE_PERCENTAGE + fixedGuildFeeInSellToken
+    priceInSellToken * GUILD_FEE_PERCENTAGE + guildBaseFeeInSellToken
 
-  const guildFeeInUSD = priceInUSD * GUILD_FEE_PERCENTAGE + GUILD_FEE_FIXED_USD
+  const guildFeeInUSD = priceInUSD * GUILD_FEE_PERCENTAGE + guildBaseFeeInUSD
 
-  return { guildFeeInSellToken, guildFeeInUSD }
+  return { guildBaseFeeInSellToken, guildFeeInSellToken, guildFeeInUSD }
 }
 
 const validateBody = (
@@ -173,6 +194,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       excludedSources: ZEROX_EXCLUDED_SOURCES.toString(),
     }).toString()
 
+    console.log(`${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`)
     const response = await fetch(
       `${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`
     )
@@ -222,12 +244,15 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       sellTokenDecimals
     )
 
-    const { guildFeeInSellToken, guildFeeInUSD } = getGuildFee(
-      nativeCurrencyPriceInUSD,
-      priceInSellToken,
-      responseData.sellTokenToEthRate,
-      priceInUSD
-    )
+    const { guildBaseFeeInSellToken, guildFeeInSellToken, guildFeeInUSD } =
+      await getGuildFee(
+        sellToken,
+        Chains[chain],
+        nativeCurrencyPriceInUSD,
+        priceInSellToken,
+        responseData.sellTokenToEthRate,
+        priceInUSD
+      )
 
     const guildFeeInWei = parseUnits(
       guildFeeInSellToken.toFixed(sellTokenDecimals),
@@ -242,6 +267,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       priceInSellToken,
       priceInUSD,
       priceInWei,
+      guildBaseFeeInSellToken,
       guildFeeInSellToken,
       guildFeeInUSD,
       guildFeeInWei,
@@ -314,12 +340,15 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       RPC[chain].nativeCurrency.decimals
     )
 
-    const { guildFeeInSellToken, guildFeeInUSD } = getGuildFee(
-      nativeCurrencyPriceInUSD,
-      priceInSellToken,
-      1,
-      priceInUSD
-    )
+    const { guildBaseFeeInSellToken, guildFeeInSellToken, guildFeeInUSD } =
+      await getGuildFee(
+        sellToken,
+        Chains[chain],
+        nativeCurrencyPriceInUSD,
+        priceInSellToken,
+        1,
+        priceInUSD
+      )
 
     const guildFeeInWei = parseUnits(
       guildFeeInSellToken.toString(),
@@ -335,6 +364,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       priceInSellToken,
       priceInUSD,
       priceInWei,
+      guildBaseFeeInSellToken,
       guildFeeInSellToken,
       guildFeeInUSD,
       guildFeeInWei,
