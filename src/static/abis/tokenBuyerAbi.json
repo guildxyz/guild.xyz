@@ -50,11 +50,6 @@
   },
   {
     "inputs": [],
-    "name": "V3TooMuchRequested",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "InsufficientToken",
     "type": "error"
   },
