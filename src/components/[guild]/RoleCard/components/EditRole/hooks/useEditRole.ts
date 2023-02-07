@@ -23,7 +23,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     })
 
   const useSubmitResponse = useSubmitWithSign<any>(submit, {
-    forcePrompt: true,
     onSuccess: () => {
       toast({
         title: `Role successfully updated!`,
