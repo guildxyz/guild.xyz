@@ -13,10 +13,7 @@ import {
 export const ZEROX_SUPPORTED_SOURCES = ["Uniswap_V2", "Uniswap_V3"] as const
 export type ZeroXSupportedSources = (typeof ZEROX_SUPPORTED_SOURCES)[number]
 
-// export const GUILD_FEE_PERCENTAGE = 0.01
-// export const GUILD_FEE_FIXED_USD = 0.49
-export const GUILD_FEE_PERCENTAGE = 0.02
-export const GUILD_FEE_FIXED_USD = 0
+export const GUILD_FEE_PERCENTAGE = 0.01
 
 export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
