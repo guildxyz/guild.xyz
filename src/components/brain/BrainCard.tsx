@@ -20,27 +20,25 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
       href={`/brain/${slugifiedTitle}`}
       prefetch={false}
       _hover={{ textDecor: "none" }}
-      borderRadius="2xl"
     >
       <ColorCard
         color="gray.600"
         w="full"
-        borderWidth={4}
+        borderRadius="xl"
+        borderWidth={0}
         p={0}
         sx={{
           "div:nth-child(2) div.background > span img": {
             filter: "blur(8px)",
-            opacity: 0.4,
+            opacity: 0.5,
           },
           ":hover div:nth-child(2) div.background > span img": {
             filter: "blur(7px)",
-            opacity: 0.6,
+            opacity: 0.7,
           },
         }}
       >
         <ColorCardLabel
-          mt="-1px"
-          ml="-1px"
           labelSize="md"
           label={pageData.title}
           color="white"
