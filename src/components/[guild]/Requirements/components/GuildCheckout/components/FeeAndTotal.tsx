@@ -101,11 +101,11 @@ const FeeAndTotal = (): JSX.Element => {
             {pickedCurrency ? (
               <Skeleton isLoaded={!isValidating}>
                 <Text as="span" colorScheme="gray">
-                  {priceInUSD && estimatedGasFeeInUSD
+                  {priceInUSD
                     ? `$${(
                         priceInUSD +
                         guildFeeInUSD +
-                        estimatedGasFeeInUSD
+                        (estimatedGasFeeInUSD ?? 0)
                       )?.toFixed(2)}`
                     : "$0.00"}
                   {" = "}
