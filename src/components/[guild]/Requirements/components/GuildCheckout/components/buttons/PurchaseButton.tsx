@@ -23,11 +23,14 @@ const PurchaseButton = (): JSX.Element => {
     TOKEN_BUYER_CONTRACT[chainId]
   )
 
+  const { estimateGasError } = usePurchaseAsset()
+
   const isEnoughAllowance =
     priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
 
   const isDisabled =
     error ||
+    estimateGasError ||
     !agreeWithTOS ||
     Chains[chainId] !== requirement.chain ||
     (pickedCurrency !== RPC[Chains[chainId]].nativeCurrency.symbol &&
