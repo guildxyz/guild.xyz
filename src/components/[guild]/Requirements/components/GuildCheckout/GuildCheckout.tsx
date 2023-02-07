@@ -1,6 +1,7 @@
 import {
   ButtonGroup,
   Collapse,
+  HStack,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -8,8 +9,14 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   Spinner,
   Stack,
+  Tag,
   Text,
   Tooltip,
   useColorModeValue,
@@ -20,8 +27,9 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
+import { useIntercom } from "components/_app/IntercomProvider"
 import { RPC } from "connectors"
-import { ShoppingCartSimple } from "phosphor-react"
+import { ArrowSquareOut, ShoppingCartSimple } from "phosphor-react"
 import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
@@ -42,6 +50,8 @@ import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
 const GuildCheckout = (): JSX.Element => {
+  const { triggerChat } = useIntercom()
+
   const { account } = useWeb3React()
   const { requirement, isOpen, onOpen, onClose, pickedCurrency } =
     useGuildCheckoutContext()
@@ -86,7 +96,33 @@ const GuildCheckout = (): JSX.Element => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Buy requirement</ModalHeader>
+          <ModalHeader>
+            <HStack>
+              <Text as="span">Buy requirement</Text>
+
+              <Popover trigger="hover">
+                <PopoverTrigger>
+                  <Tag size="sm" position="relative" top={0.5} fontFamily="body">
+                    Alpha
+                  </Tag>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverArrow />
+                  <PopoverBody fontFamily="body" fontSize="sm" fontWeight="normal">
+                    {
+                      "This product is still in alpha. If you run into any issue please let us know in our "
+                    }
+                    <Button variant="link" size="sm" onClick={triggerChat}>
+                      <HStack spacing={1}>
+                        <Text as="span">help center</Text>
+                        <Icon as={ArrowSquareOut} />
+                      </HStack>
+                    </Button>
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </HStack>
+          </ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
