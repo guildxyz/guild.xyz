@@ -13,8 +13,7 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
 
   const { setPickedCurrency } = useGuildCheckoutContext()
 
-  const bgColor = useColorModeValue("gray.50", "blackAlpha.400")
-  const hoverBgColor = useColorModeValue("gray.100", "blackAlpha.300")
+  const hoverBgColor = useColorModeValue("gray.100", "whiteAlpha.50")
 
   const onClick = () => {
     setPickedCurrency(address)
@@ -24,11 +23,9 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
   return (
     <TokenInfo
       asMenuItem
-      px={4}
-      py={0}
+      p={4}
       maxW="none"
-      h={16}
-      bgColor={bgColor}
+      bgColor="transparent"
       borderRadius={0}
       fontWeight="normal"
       textAlign="left"

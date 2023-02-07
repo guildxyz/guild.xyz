@@ -78,7 +78,7 @@ const TokenInfo = ({
           </Circle>
         </SkeletonCircle>
 
-        <Stack spacing={1} maxW="calc(100% - 3rem)">
+        <Stack spacing={1.5} maxW="calc(100% - 3rem)" alignItems={"flex-start"}>
           <Skeleton isLoaded={!isTokenDataLoading && !isPriceDataLoading} h={5}>
             <Text as="span" display="block" isTruncated>
               {error
@@ -94,11 +94,17 @@ const TokenInfo = ({
             </Text>
           </Skeleton>
 
-          <Skeleton isLoaded={!isLoading} h={4} display="flex" alignItems="center">
-            <Text as="span" colorScheme="gray" fontSize="xs">
-              {`Balance: ${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
-            </Text>
-          </Skeleton>
+          <Text as="span" colorScheme="gray" fontSize="xs">
+            {`Balance: `}
+            <Skeleton
+              isLoaded={!isLoading}
+              h={4}
+              display="inline-flex"
+              alignItems="center"
+            >
+              {`${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
+            </Skeleton>
+          </Text>
         </Stack>
       </HStack>
     </Wrapper>

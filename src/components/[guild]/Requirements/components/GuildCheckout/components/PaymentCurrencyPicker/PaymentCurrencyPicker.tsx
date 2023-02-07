@@ -1,10 +1,10 @@
 import {
-  Box,
   Circle,
   HStack,
   Icon,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuList,
   Stack,
   Text,
@@ -28,7 +28,9 @@ const PaymentCurrencyPicker = (): JSX.Element => {
 
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
   const lightShade = useColorModeValue("white", "gray.700")
-  const lightShadeHover = useColorModeValue("gray.50", "gray.600")
+  const lightShadeHover = useColorModeValue("gray.100", "gray.600")
+  const borderWidth = useColorModeValue(1, 0)
+  const dropdownBgColor = useColorModeValue("gray.50", "blackAlpha.400")
 
   const { account } = useWeb3React()
   const { openAccountModal } = useWeb3ConnectionManager()
@@ -54,6 +56,8 @@ const PaymentCurrencyPicker = (): JSX.Element => {
               h="auto"
               p={4}
               bgColor={lightShade}
+              borderWidth={borderWidth}
+              borderColor="gray.100"
               _hover={{
                 bgColor: lightShadeHover,
               }}
@@ -96,7 +100,14 @@ const PaymentCurrencyPicker = (): JSX.Element => {
               transformOrigin="center"
               maxH={48}
             >
-              <Box maxH={40} overflowY="auto" className="custom-scrollbar">
+              <Stack
+                maxH={40}
+                overflowY="auto"
+                className="custom-scrollbar"
+                spacing={0}
+                divider={<MenuDivider m="0" />}
+                bgColor={dropdownBgColor}
+              >
                 {currencyOptions.map((c) => (
                   <CurrencyListItem
                     key={`${c.chainId}-${c.address}`}
@@ -104,7 +115,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                     address={c.address}
                   />
                 ))}
-              </Box>
+              </Stack>
 
               <HStack
                 justifyContent="space-between"
