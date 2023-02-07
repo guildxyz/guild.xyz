@@ -19,6 +19,8 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
       ...windowAsObject.intercomSettings,
       [key]: value,
     }
+
+    windowAsObject.Intercom?.("update", windowAsObject.intercomSettings)
   }
 
   return (
