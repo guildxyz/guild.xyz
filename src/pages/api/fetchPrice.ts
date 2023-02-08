@@ -17,7 +17,6 @@ import {
   TOKEN_BUYER_CONTRACT,
   ZeroXSupportedSources,
   ZEROX_API_URLS,
-  ZEROX_EXCLUDED_SOURCES,
   ZEROX_SUPPORTED_SOURCES,
 } from "utils/guildCheckout/constants"
 
@@ -198,7 +197,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       sellToken,
       buyToken: address,
       buyAmount: buyAmountInWei.toString(),
-      excludedSources: ZEROX_EXCLUDED_SOURCES.toString(),
+      includedSources: ZEROX_SUPPORTED_SOURCES.toString(),
     }).toString()
 
     const response = await fetch(
@@ -233,7 +232,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     const { uniswapPath: path, tokenAddressPath } = relevantOrder.fillData
 
-    const priceInSellToken = parseFloat(responseData.guaranteedPrice) * minAmount
+    const priceInSellToken = parseFloat(responseData.guaranteedPrice)
     const priceInUSD = parseFloat(
       (
         (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) *
@@ -241,14 +240,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       ).toFixed(2)
     )
 
-    const sellTokenDecimals = await getDecimals(chain, sellToken).catch(() =>
-      res.status(500).json({ error: "Couldn't fetch sellToken decimals" })
-    )
-
-    const priceInWei = parseUnits(
-      priceInSellToken.toFixed(sellTokenDecimals),
-      sellTokenDecimals
-    )
+    const priceInWei = BigNumber.from(relevantOrder.takerAmount)
 
     let guildFeeData
     try {
@@ -265,6 +257,10 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     }
     const { guildBaseFeeInSellToken, guildFeeInSellToken, guildFeeInUSD } =
       guildFeeData
+
+    const sellTokenDecimals = await getDecimals(chain, sellToken).catch(() =>
+      res.status(500).json({ error: "Couldn't fetch sellToken decimals" })
+    )
 
     const guildFeeInWei = parseUnits(
       guildFeeInSellToken.toFixed(sellTokenDecimals),
