@@ -6,7 +6,6 @@ import { fetchNativeCurrencyPriceInUSD } from "pages/api/fetchPrice"
 import useSWRImmutable from "swr/immutable"
 
 const estimateGasFee = async (
-  _: string,
   contract: Contract,
   methodName: string,
   ...params: any
@@ -47,9 +46,8 @@ const useEstimateGasFee = (
     data: estimatedGasFee,
     isValidating: isGasEstimationLoading,
     error: estimateGasError,
-  } = useSWRImmutable(
-    shouldFetch ? ["estimateGas", contract, methodName, ...params] : null,
-    estimateGasFee
+  } = useSWRImmutable(shouldFetch ? ["estimateGas", methodName] : null, () =>
+    estimateGasFee(contract, methodName, ...params)
   )
 
   const shouldConvert = !!contract && !!estimatedGasFee
