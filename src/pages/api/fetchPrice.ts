@@ -19,6 +19,7 @@ import {
   ZEROX_API_URLS,
   ZEROX_SUPPORTED_SOURCES,
 } from "utils/guildCheckout/constants"
+import { flipPath } from "utils/guildCheckout/utils"
 
 export type FetchPriceResponse = {
   buyAmount: number
@@ -231,7 +232,8 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     if (!foundSource || !relevantOrder)
       return res.status(500).json({ error: "Couldn't find tokens on Uniswap." })
 
-    const { uniswapPath: path, tokenAddressPath } = relevantOrder.fillData
+    const { uniswapPath, tokenAddressPath } = relevantOrder.fillData
+    const path = flipPath(uniswapPath)
 
     const priceInSellToken = parseFloat(responseData.guaranteedPrice) * minAmount
 
