@@ -21,13 +21,13 @@ import {
 } from "utils/guildCheckout/constants"
 
 export type FetchPriceResponse = {
-  buyAmount: number
-  buyAmountInWei: BigNumber
-  priceInSellToken: number
+  sellAmount: number
+  sellAmountInWei: BigNumber
+  priceInBuyToken: number
   priceInWei: BigNumber
   priceInUSD: number
-  guildBaseFeeInSellToken: number
-  guildFeeInSellToken: number
+  guildBaseFeeInBuyToken: number
+  guildFeeInBuyToken: number
   guildFeeInWei: BigNumber
   guildFeeInUSD: number
   source: ZeroXSupportedSources
@@ -38,7 +38,7 @@ export type FetchPriceResponse = {
 type FetchPriceBodyParams = {
   type: RequirementType
   chain: Chain
-  sellToken: string
+  buyToken: string
   address: string
   data: Record<string, any>
 }
@@ -55,15 +55,15 @@ const getDecimals = async (chain: Chain, tokenAddress: string) => {
 }
 
 const getGuildFee = async (
-  sellToken: string,
+  buyToken: string,
   chainId: number,
   nativeCurrencyPriceInUSD: number,
-  priceInSellToken: number,
-  sellTokenToEthRate: number,
+  priceInBuyToken: number,
+  buyTokenToEthRate: number,
   priceInUSD: number
 ): Promise<{
-  guildBaseFeeInSellToken: number
-  guildFeeInSellToken: number
+  guildBaseFeeInBuyToken: number
+  guildFeeInBuyToken: number
   guildFeeInUSD: number
 }> => {
   if (!TOKEN_BUYER_CONTRACT[chainId]) return Promise.reject("Unsupported chain")
@@ -75,25 +75,23 @@ const getGuildFee = async (
     provider
   )
 
-  const sellTokenDecimals = await getDecimals(Chains[chainId] as Chain, sellToken)
+  const buyTokenDecimals = await getDecimals(Chains[chainId] as Chain, buyToken)
 
   const guildBaseFeeInWei = await tokenBuyerContract.baseFee(
-    sellToken === RPC[Chains[chainId]].nativeCurrency.symbol
-      ? NULL_ADDRESS
-      : sellToken
+    buyToken === RPC[Chains[chainId]].nativeCurrency.symbol ? NULL_ADDRESS : buyToken
   )
-  const guildBaseFeeInSellToken = parseFloat(
-    formatUnits(guildBaseFeeInWei, sellTokenDecimals)
+  const guildBaseFeeInBuyToken = parseFloat(
+    formatUnits(guildBaseFeeInWei, buyTokenDecimals)
   )
   const guildBaseFeeInUSD =
-    (nativeCurrencyPriceInUSD / sellTokenToEthRate) * guildBaseFeeInSellToken
+    (nativeCurrencyPriceInUSD / buyTokenToEthRate) * guildBaseFeeInBuyToken
 
-  const guildFeeInSellToken =
-    priceInSellToken * GUILD_FEE_PERCENTAGE + guildBaseFeeInSellToken
+  const guildFeeInBuyToken =
+    priceInBuyToken * GUILD_FEE_PERCENTAGE + guildBaseFeeInBuyToken
 
   const guildFeeInUSD = priceInUSD * GUILD_FEE_PERCENTAGE + guildBaseFeeInUSD
 
-  return { guildBaseFeeInSellToken, guildFeeInSellToken, guildFeeInUSD }
+  return { guildBaseFeeInBuyToken, guildFeeInBuyToken, guildFeeInUSD }
 }
 
 const validateBody = (
@@ -121,15 +119,15 @@ const validateBody = (
     }
 
   if (
-    typeof obj.sellToken !== "string" ||
+    typeof obj.buyToken !== "string" ||
     !(
-      ADDRESS_REGEX.test(obj.sellToken) ||
-      obj.sellToken === RPC[obj.chain].nativeCurrency.symbol
+      ADDRESS_REGEX.test(obj.buyToken) ||
+      obj.buyToken === RPC[obj.chain].nativeCurrency.symbol
     )
   )
     return {
       isValid: false,
-      error: "Invalid sell token address.",
+      error: "Invalid buyToken address.",
     }
 
   if (typeof obj.address !== "string" || !ADDRESS_REGEX.test(obj.address))
@@ -171,7 +169,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
   if (!isValid) return res.status(400).json({ error })
 
-  const { type, chain, sellToken, address, data }: FetchPriceBodyParams = req.body
+  const { type, chain, buyToken, address, data }: FetchPriceBodyParams = req.body
   const minAmount = parseFloat(data.minAmount ?? 1)
 
   if (type === "ERC20") {
@@ -179,10 +177,10 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       return res.status(400).json({ error: "Unsupported chain" })
 
     const decimals = await getDecimals(chain, address).catch(() =>
-      res.status(500).json({ error: "Couldn't fetch buyToken decimals" })
+      res.status(500).json({ error: "Couldn't fetch sellToken decimals" })
     )
 
-    const buyAmountInWei = parseUnits(minAmount.toFixed(decimals), decimals)
+    const sellAmountInWei = parseUnits(minAmount.toFixed(decimals), decimals)
 
     const nativeCurrencyPriceInUSD = await fetchNativeCurrencyPriceInUSD(chain)
 
@@ -194,9 +192,9 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       })
 
     const queryParams = new URLSearchParams({
-      sellToken,
-      buyToken: address,
-      buyAmount: buyAmountInWei.toString(),
+      sellToken: address,
+      buyToken,
+      sellAmount: sellAmountInWei.toString(),
       includedSources: ZEROX_SUPPORTED_SOURCES.toString(),
     }).toString()
 
@@ -232,48 +230,48 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     const { uniswapPath: path, tokenAddressPath } = relevantOrder.fillData
 
-    const priceInSellToken = parseFloat(responseData.guaranteedPrice) * minAmount
+    const priceInBuyToken = parseFloat(responseData.guaranteedPrice) * minAmount
 
     const priceInUSD =
-      (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) * priceInSellToken
+      (nativeCurrencyPriceInUSD / responseData.buyTokenToEthRate) * priceInBuyToken
 
     const priceInWei = BigNumber.from(relevantOrder.takerAmount)
 
     let guildFeeData
     try {
       guildFeeData = await getGuildFee(
-        sellToken,
+        buyToken,
         Chains[chain],
         nativeCurrencyPriceInUSD,
-        priceInSellToken,
-        responseData.sellTokenToEthRate,
+        priceInBuyToken,
+        responseData.buyTokenToEthRate,
         priceInUSD
       )
     } catch (getGuildFeeError) {
       return res.status(500).json({ error: getGuildFeeError })
     }
-    const { guildBaseFeeInSellToken, guildFeeInSellToken, guildFeeInUSD } =
+    const { guildBaseFeeInBuyToken, guildFeeInBuyToken, guildFeeInUSD } =
       guildFeeData
 
-    const sellTokenDecimals = await getDecimals(chain, sellToken).catch(() =>
-      res.status(500).json({ error: "Couldn't fetch sellToken decimals" })
+    const buyTokenDecimals = await getDecimals(chain, buyToken).catch(() =>
+      res.status(500).json({ error: "Couldn't fetch buyToken decimals" })
     )
 
     const guildFeeInWei = parseUnits(
-      guildFeeInSellToken.toFixed(sellTokenDecimals),
-      sellTokenDecimals
+      guildFeeInBuyToken.toFixed(buyTokenDecimals),
+      buyTokenDecimals
     )
 
     const source = foundSource.name as ZeroXSupportedSources
 
     return res.json({
-      buyAmount: minAmount,
-      buyAmountInWei,
-      priceInSellToken,
+      sellAmount: minAmount,
+      sellAmountInWei,
+      priceInBuyToken,
       priceInUSD,
       priceInWei,
-      guildBaseFeeInSellToken,
-      guildFeeInSellToken,
+      guildBaseFeeInBuyToken,
+      guildFeeInBuyToken,
       guildFeeInUSD,
       guildFeeInWei,
       source,
@@ -330,9 +328,9 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
         error: `Couldn't fetch ${RPC[chain].nativeCurrency.symbol}-USD rate.`,
       })
 
-    // sellToken is always nativeCurrency here (at least for now)
+    // buyToken is always nativeCurrency here (at least for now)
     // TODO: maybe we don't need map here? And the user will be able to buy only one token at a time?
-    const priceInSellToken = responseData.tokens
+    const priceInBuyToken = responseData.tokens
       .map((t) => t.market.floorAsk.price.amount.native)
       .reduce((p1, p2) => p1 + p2, 0)
 
@@ -341,17 +339,17 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       .reduce((p1, p2) => p1 + p2, 0)
 
     const priceInWei = parseUnits(
-      priceInSellToken.toString(),
+      priceInBuyToken.toString(),
       RPC[chain].nativeCurrency.decimals
     )
 
     let guildFeeData
     try {
       guildFeeData = await getGuildFee(
-        sellToken,
+        buyToken,
         Chains[chain],
         nativeCurrencyPriceInUSD,
-        priceInSellToken,
+        priceInBuyToken,
         1,
         priceInUSD
       )
@@ -359,11 +357,11 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       return res.status(500).json({ error: getGuildFeeError })
     }
 
-    const { guildBaseFeeInSellToken, guildFeeInSellToken, guildFeeInUSD } =
+    const { guildBaseFeeInBuyToken, guildFeeInBuyToken, guildFeeInUSD } =
       guildFeeData
 
     const guildFeeInWei = parseUnits(
-      guildFeeInSellToken.toString(),
+      guildFeeInBuyToken.toString(),
       RPC[chain].nativeCurrency.decimals
     )
 
@@ -371,13 +369,13 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     // TODO: source, tokenAddressPath, path
     return res.json({
-      buyAmount: minAmount,
-      buyAmountInWei: BigNumber.from(0),
-      priceInSellToken,
+      sellAmount: minAmount,
+      sellAmountInWei: BigNumber.from(0),
+      priceInBuyToken,
       priceInUSD,
       priceInWei,
-      guildBaseFeeInSellToken,
-      guildFeeInSellToken,
+      guildBaseFeeInBuyToken,
+      guildFeeInBuyToken,
       guildFeeInUSD,
       guildFeeInWei,
       source,

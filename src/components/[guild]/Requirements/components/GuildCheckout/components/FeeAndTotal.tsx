@@ -25,9 +25,9 @@ const FeeAndTotal = (): JSX.Element => {
 
   const {
     data: {
-      guildBaseFeeInSellToken,
-      guildFeeInSellToken,
-      priceInSellToken,
+      guildBaseFeeInBuyToken,
+      guildFeeInBuyToken,
+      priceInBuyToken,
       priceInUSD,
       guildFeeInUSD,
     },
@@ -45,8 +45,8 @@ const FeeAndTotal = (): JSX.Element => {
   const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
   const calculatedGasFee = isNativeCurrency ? estimatedGasInFloat ?? 0 : 0
 
-  const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) <= 0.001
-  const isTooSmallPrice = parseFloat(priceInSellToken?.toFixed(3)) < 0.001
+  const isTooSmallFee = parseFloat(guildFeeInBuyToken?.toFixed(3)) <= 0.001
+  const isTooSmallPrice = parseFloat(priceInBuyToken?.toFixed(3)) < 0.001
 
   return (
     <Stack spacing={3}>
@@ -58,8 +58,8 @@ const FeeAndTotal = (): JSX.Element => {
             </Text>
             <Tooltip
               label={`${GUILD_FEE_PERCENTAGE * 100}%${
-                guildBaseFeeInSellToken
-                  ? ` + ${guildBaseFeeInSellToken} ${symbol}`
+                guildBaseFeeInBuyToken
+                  ? ` + ${guildBaseFeeInBuyToken} ${symbol}`
                   : ""
               } Guild fee + protocol fee + estimated network fee`}
               placement="top"
@@ -75,7 +75,7 @@ const FeeAndTotal = (): JSX.Element => {
               <>
                 {isTooSmallFee
                   ? "< 0.001"
-                  : (calculatedGasFee ?? 0 + guildFeeInSellToken ?? 0)?.toFixed(
+                  : (calculatedGasFee ?? 0 + guildFeeInBuyToken ?? 0)?.toFixed(
                       3
                     )}{" "}
                 {symbol}
@@ -105,13 +105,13 @@ const FeeAndTotal = (): JSX.Element => {
                   {" = "}
                 </Text>
                 <Text as="span" fontWeight="semibold">
-                  {priceInSellToken && guildFeeInSellToken
+                  {priceInBuyToken && guildFeeInBuyToken
                     ? `${
                         isTooSmallPrice
                           ? "< 0.001"
                           : (
-                              priceInSellToken +
-                              guildFeeInSellToken +
+                              priceInBuyToken +
+                              guildFeeInBuyToken +
                               calculatedGasFee
                             )?.toFixed(3)
                       } `
