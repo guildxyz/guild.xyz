@@ -38,7 +38,7 @@ const TokenInfo = ({
   } = usePrice(address)
 
   const isTooSmallPrice = priceInBuyToken
-    ? parseFloat(priceInBuyToken.toFixed(3)) <= 0.0
+    ? parseFloat(priceInBuyToken.toFixed(3)) < 0.001
     : undefined
 
   const {
@@ -57,7 +57,7 @@ const TokenInfo = ({
       ? RPC[Chains[chainId]]?.nativeCurrency?.decimals
       : decimals ?? 18
   )
-  const formattedBalance = Number(balance).toFixed(2)
+  const formattedBalance = Number(balance).toFixed(3)
 
   const Wrapper = asMenuItem ? MenuItem : Fragment
 
