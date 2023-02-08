@@ -192,7 +192,7 @@ const GuildCheckout = (): JSX.Element => {
 
               <FeeAndTotal />
 
-              <Stack spacing={3}>
+              <Stack spacing={2}>
                 {!pickedCurrency ? (
                   <CardMotionWrapper>
                     <Button size="xl" isDisabled w="full">
