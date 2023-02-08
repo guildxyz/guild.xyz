@@ -41,7 +41,7 @@ const useEstimateGasFee = (
   methodName: string,
   params: any[]
 ) => {
-  const shouldFetch = !!contract && !!methodName && !!params?.length
+  const shouldFetch = Boolean(contract && methodName && params?.length)
 
   const {
     data: estimatedGasFee,

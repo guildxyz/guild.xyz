@@ -1,6 +1,7 @@
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import useDatadog from "components/_app/Datadog/useDatadog"
+import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -91,7 +92,11 @@ const usePurchaseAsset = () => {
   )
 
   const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
-    useEstimateGasFee(tokenBuyerContract, "getAssets", generatedGetAssetsParams)
+    useEstimateGasFee(
+      requirement?.chain === Chains[chainId] ? tokenBuyerContract : null,
+      "getAssets",
+      generatedGetAssetsParams
+    )
 
   const purchaseAssetWithSetTx = (data?: GeneratedGetAssetsParams) =>
     purchaseAsset(tokenBuyerContract, data, setTxHash)
