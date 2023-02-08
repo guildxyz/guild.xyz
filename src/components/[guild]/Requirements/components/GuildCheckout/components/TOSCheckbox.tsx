@@ -36,8 +36,8 @@ const TOSCheckbox = (): JSX.Element => {
       isChecked={agreeWithTOS}
       onChange={(e) => setAgreeWithTOS(e.target.checked)}
     >
-      {`I understand that I purchase this asset from exchanges, not from 
-      ${name} or guild.xyz itself`}
+      {`I understand that I purchase this asset from decentralized exchanges, not from 
+      ${name} or Guild.xyz itself`}
     </Checkbox>
   )
 }
