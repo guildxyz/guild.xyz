@@ -196,6 +196,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       buyToken,
       sellAmount: sellAmountInWei.toString(),
       includedSources: ZEROX_SUPPORTED_SOURCES.toString(),
+      slippagePercentage: "0.03",
     }).toString()
 
     const response = await fetch(
@@ -235,7 +236,9 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const priceInUSD =
       (nativeCurrencyPriceInUSD / responseData.buyTokenToEthRate) * priceInBuyToken
 
-    const priceInWei = BigNumber.from(relevantOrder.takerAmount)
+    const priceInWei = BigNumber.from(
+      (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()
+    )
 
     let guildFeeData
     try {
