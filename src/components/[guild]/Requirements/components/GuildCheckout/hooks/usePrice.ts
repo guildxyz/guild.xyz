@@ -1,5 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
+import { useEffect, useState } from "react"
 import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Requirement } from "types"
@@ -29,6 +30,8 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
   const { account } = useWeb3React()
   const { requirement, isOpen, pickedCurrency } = useGuildCheckoutContext()
 
+  const [fallbackData, setFallbackData] = useState<FetchPriceResponse>()
+
   const shouldFetch =
     account &&
     purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain) &&
@@ -46,8 +49,13 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
     }
   )
 
+  useEffect(() => {
+    if (!data) return
+    setFallbackData(data)
+  }, [data])
+
   return {
-    data: data ?? ({} as FetchPriceResponse),
+    data: data ?? fallbackData ?? ({} as FetchPriceResponse),
     ...swrResponse,
   }
 }
