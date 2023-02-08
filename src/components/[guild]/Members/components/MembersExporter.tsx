@@ -25,7 +25,7 @@ import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RoleOptionCard from "components/[guild]/RoleOptionCard"
 import { Check, Copy, DownloadSimple, Export } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 import useSWRImmutable from "swr/immutable"
 
 const MembersExporter = (): JSX.Element => {
@@ -35,15 +35,13 @@ const MembersExporter = (): JSX.Element => {
     isOpen ? `/guild/${id}/members` : null
   )
 
-  const aRef = useRef(null)
+  const downloadAnchorRef = useRef(null)
   const label = useBreakpointValue({ base: "Export", sm: "Export members" })
-
-  const [selectedRoles, setSelectedRoles] = useState([])
 
   const { hasCopied, value, setValue, onCopy } = useClipboard("")
   const csvContent = encodeURI("data:text/csv;charset=utf-8," + value)
 
-  useEffect(() => {
+  const onChange = (selectedRoles) => {
     if (!selectedRoles || !data) return
 
     setValue(
@@ -51,17 +49,16 @@ const MembersExporter = (): JSX.Element => {
         ...new Set(
           data
             ?.filter((role) => selectedRoles.includes(role.roleId.toString()))
-            ?.map((role) => role.members)
-            ?.reduce((a, b) => a.concat(b), [])
+            ?.flatMap((role) => role.members)
             ?.filter((member) => !!member) ?? []
         ),
       ].join("\n")
     )
-  }, [selectedRoles, data])
+  }
 
   const exportMembersAsCsv = () => {
-    if (!aRef.current) return
-    aRef.current.click()
+    if (!downloadAnchorRef.current) return
+    downloadAnchorRef.current.click()
   }
 
   const handleClose = () => {
@@ -108,13 +105,16 @@ const MembersExporter = (): JSX.Element => {
                 </Stack>
               </Alert>
             ) : (
-              <CheckboxGroup
-                onChange={(newList) => setSelectedRoles(newList)}
-                colorScheme="primary"
-              >
+              <CheckboxGroup onChange={onChange} colorScheme="primary">
                 <Stack>
                   {roles?.map((role) => (
-                    <RoleOptionCard key={role.id} role={role} />
+                    <RoleOptionCard
+                      key={role.id}
+                      role={{
+                        ...role,
+                        members: data.find((r) => r.roleId === role.id)?.members,
+                      }}
+                    />
                   ))}
                 </Stack>
               </CheckboxGroup>
@@ -155,7 +155,7 @@ const MembersExporter = (): JSX.Element => {
               </ButtonGroup>
 
               <a
-                ref={aRef}
+                ref={downloadAnchorRef}
                 href={csvContent}
                 download="members"
                 style={{ display: "none" }}

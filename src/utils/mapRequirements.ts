@@ -15,24 +15,11 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
       newRequirement.type === "ERC1155" ||
       newRequirement.type === "NOUNS"
     )
-      newRequirement.nftRequirementType =
-        newRequirement.data?.attributes?.length ||
-        newRequirement.data?.attribute?.trait_type
-          ? "ATTRIBUTE"
-          : typeof newRequirement?.data?.id === "string"
-          ? "CUSTOM_ID"
-          : "AMOUNT"
-
-    if (newRequirement.data?.attribute?.trait_type) {
-      const convertedTrait = {
-        trait_type: newRequirement.data?.attribute?.trait_type,
-        interval: newRequirement.data.attribute.interval,
-        value: newRequirement.data.attribute.value,
-      }
-
-      newRequirement.data.attributes = [convertedTrait]
-      delete newRequirement.data.attribute
-    }
+      newRequirement.nftRequirementType = newRequirement.data?.attributes?.length
+        ? "ATTRIBUTE"
+        : typeof newRequirement?.data?.id === "string"
+        ? "CUSTOM_ID"
+        : "AMOUNT"
 
     // Removind id, roleId, symbol, name, since we don't need those in the form
     // delete newRequirement.id

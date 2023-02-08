@@ -34,6 +34,7 @@ import useSWR, { mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User, WalletError } from "types"
 import ConnectorButton from "./components/ConnectorButton"
+import DelegateCashButton from "./components/DelegateCashButton"
 import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
@@ -187,6 +188,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   </CardMotionWrapper>
                 )
               })}
+              <CardMotionWrapper>
+                <DelegateCashButton />
+              </CardMotionWrapper>
             </Stack>
             {isConnected && !keyPair && (
               <Box animation={"fadeIn .3s .1s both"}>
