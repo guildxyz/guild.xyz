@@ -32,13 +32,13 @@ const TokenInfo = ({
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   const {
-    data: { priceInBuyToken },
+    data: { priceInSellToken },
     isValidating: isPriceDataLoading,
     error: priceError,
   } = usePrice(address)
 
-  const isTooSmallPrice = priceInBuyToken
-    ? parseFloat(priceInBuyToken.toFixed(3)) < 0.001
+  const isTooSmallPrice = priceInSellToken
+    ? parseFloat(priceInSellToken.toFixed(3)) <= 0.0
     : undefined
 
   const {
@@ -86,7 +86,7 @@ const TokenInfo = ({
                 : priceError
                 ? `[?] ${symbol}`
                 : `${
-                    isTooSmallPrice ? "< 0.001" : priceInBuyToken?.toFixed(3)
+                    isTooSmallPrice ? "< 0.001" : priceInSellToken?.toFixed(3)
                   } ${symbol}`}
               <Text as="span" colorScheme="gray">
                 {` (${RPC[Chains[chainId]].chainName})`}

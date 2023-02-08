@@ -89,7 +89,7 @@ export type PurchaseAssetData = {
   tokenAddressPath: string[]
 }
 
-type SellTokenType = "COIN" | "ERC20"
+export type BuyTokenType = "COIN" | "ERC20"
 
 export const permit2PermitFakeParams: [
   string,
@@ -116,7 +116,7 @@ const {
 } = UNIVERSAL_ROUTER_COMMANDS
 
 export const getAssetsCallParams: Record<
-  SellTokenType,
+  BuyTokenType,
   Record<
     ZeroXSupportedSources,
     {

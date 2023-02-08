@@ -32,7 +32,7 @@ const generateGetAssetsParams = (
   const {
     priceInWei,
     guildFeeInWei: rawGuildFeeInWei,
-    sellAmountInWei,
+    buyAmountInWei,
     source,
     path,
     tokenAddressPath,
@@ -41,7 +41,7 @@ const generateGetAssetsParams = (
   if (
     !priceInWei ||
     !rawGuildFeeInWei ||
-    !sellAmountInWei ||
+    !buyAmountInWei ||
     !source ||
     (!path && !tokenAddressPath)
   )
@@ -50,7 +50,7 @@ const generateGetAssetsParams = (
   const amountIn = BigNumber.from(priceInWei)
   const guildFeeInWei = BigNumber.from(rawGuildFeeInWei)
   const amountInWithFee = amountIn.add(guildFeeInWei)
-  const amountOut = BigNumber.from(sellAmountInWei)
+  const amountOut = BigNumber.from(buyAmountInWei)
 
   const formattedData: PurchaseAssetData = {
     chainId,

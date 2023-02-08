@@ -25,9 +25,9 @@ const FeeAndTotal = (): JSX.Element => {
 
   const {
     data: {
-      guildBaseFeeInBuyToken,
-      guildFeeInBuyToken,
-      priceInBuyToken,
+      guildBaseFeeInSellToken,
+      guildFeeInSellToken,
+      priceInSellToken,
       priceInUSD,
       guildFeeInUSD,
     },
@@ -45,8 +45,8 @@ const FeeAndTotal = (): JSX.Element => {
   const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
   const calculatedGasFee = isNativeCurrency ? estimatedGasInFloat ?? 0 : 0
 
-  const isTooSmallFee = parseFloat(guildFeeInBuyToken?.toFixed(3)) <= 0.001
-  const isTooSmallPrice = parseFloat(priceInBuyToken?.toFixed(3)) < 0.001
+  const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) <= 0.001
+  const isTooSmallPrice = parseFloat(priceInSellToken?.toFixed(3)) < 0.001
 
   return (
     <Stack spacing={3}>
@@ -58,8 +58,8 @@ const FeeAndTotal = (): JSX.Element => {
             </Text>
             <Tooltip
               label={`${GUILD_FEE_PERCENTAGE * 100}%${
-                guildBaseFeeInBuyToken
-                  ? ` + ${guildBaseFeeInBuyToken} ${symbol}`
+                guildBaseFeeInSellToken
+                  ? ` + ${guildBaseFeeInSellToken} ${symbol}`
                   : ""
               } Guild fee + protocol fee + estimated network fee`}
               placement="top"
@@ -68,14 +68,22 @@ const FeeAndTotal = (): JSX.Element => {
               <Icon as={Info} color="gray" />
             </Tooltip>
           </HStack>
-          <PriceFallback {...{ error, pickedCurrency }}>
-            <Text as="span" colorScheme="gray">
-              {isTooSmallFee
-                ? "< 0.001"
-                : (calculatedGasFee ?? 0 + guildFeeInBuyToken ?? 0)?.toFixed(3)}{" "}
-              {symbol}
-            </Text>
-          </PriceFallback>
+          <Text as="span" colorScheme="gray">
+            {error ? (
+              "Couldn't calculate"
+            ) : pickedCurrency ? (
+              <>
+                {isTooSmallFee
+                  ? "< 0.001"
+                  : (calculatedGasFee ?? 0 + guildFeeInSellToken ?? 0)?.toFixed(
+                      3
+                    )}{" "}
+                {symbol}
+              </>
+            ) : (
+              "Choose currency"
+            )}
+          </Text>
         </HStack>
 
         <HStack justifyContent="space-between">
@@ -97,13 +105,13 @@ const FeeAndTotal = (): JSX.Element => {
                   {" = "}
                 </Text>
                 <Text as="span" fontWeight="semibold">
-                  {priceInBuyToken && guildFeeInBuyToken
+                  {priceInSellToken && guildFeeInSellToken
                     ? `${
                         isTooSmallPrice
                           ? "< 0.001"
                           : (
-                              priceInBuyToken +
-                              guildFeeInBuyToken +
+                              priceInSellToken +
+                              guildFeeInSellToken +
                               calculatedGasFee
                             )?.toFixed(3)
                       } `
