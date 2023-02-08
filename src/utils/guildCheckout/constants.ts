@@ -30,7 +30,7 @@ export const TOKEN_BUYER_CONTRACT: Partial<Record<number, string>> = {
 export const ALLOWED_GUILDS = [9839, 4486]
 
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
-  ETHEREUM: "https://api.0x.org",
+  // ETHEREUM: "https://api.0x.org",
   GOERLI: "https://goerli.api.0x.org",
   // POLYGON: "https://polygon.api.0x.org",
   // BSC: "https://bsc.api.0x.org",
