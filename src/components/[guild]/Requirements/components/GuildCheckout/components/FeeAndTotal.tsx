@@ -68,22 +68,14 @@ const FeeAndTotal = (): JSX.Element => {
               <Icon as={Info} color="gray" />
             </Tooltip>
           </HStack>
-          <Text as="span" colorScheme="gray">
-            {error ? (
-              "Couldn't calculate"
-            ) : pickedCurrency ? (
-              <>
-                {isTooSmallFee
-                  ? "< 0.001"
-                  : (calculatedGasFee ?? 0 + guildFeeInBuyToken ?? 0)?.toFixed(
-                      3
-                    )}{" "}
-                {symbol}
-              </>
-            ) : (
-              "Choose currency"
-            )}
-          </Text>
+          <PriceFallback {...{ error, pickedCurrency }}>
+            <Text as="span" colorScheme="gray">
+              {isTooSmallFee
+                ? "< 0.001"
+                : (calculatedGasFee ?? 0 + guildFeeInBuyToken ?? 0)?.toFixed(3)}{" "}
+              {symbol}
+            </Text>
+          </PriceFallback>
         </HStack>
 
         <HStack justifyContent="space-between">
@@ -91,8 +83,8 @@ const FeeAndTotal = (): JSX.Element => {
             Total
           </Text>
 
-          <Text as="span">
-            {pickedCurrency ? (
+          <PriceFallback {...{ error, pickedCurrency }}>
+            <Text as="span">
               <Skeleton isLoaded={!isValidating}>
                 <Text as="span" colorScheme="gray">
                   {priceInUSD
@@ -119,10 +111,8 @@ const FeeAndTotal = (): JSX.Element => {
                   {symbol}
                 </Text>
               </Skeleton>
-            ) : (
-              "Choose currency"
-            )}
-          </Text>
+            </Text>
+          </PriceFallback>
         </HStack>
       </Stack>
 
@@ -139,6 +129,24 @@ const FeeAndTotal = (): JSX.Element => {
       )}
     </Stack>
   )
+}
+
+const PriceFallback = ({ error, pickedCurrency, children }) => {
+  if (error)
+    return (
+      <Text as="span" colorScheme={"gray"}>
+        Couldn't calculate
+      </Text>
+    )
+
+  if (!pickedCurrency)
+    return (
+      <Text as="span" colorScheme={"gray"}>
+        Choose currency
+      </Text>
+    )
+
+  return children
 }
 
 export default FeeAndTotal
