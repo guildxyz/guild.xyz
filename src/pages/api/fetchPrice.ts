@@ -232,13 +232,10 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     const { uniswapPath: path, tokenAddressPath } = relevantOrder.fillData
 
-    const priceInSellToken = parseFloat(responseData.guaranteedPrice)
-    const priceInUSD = parseFloat(
-      (
-        (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) *
-        priceInSellToken
-      ).toFixed(2)
-    )
+    const priceInSellToken = parseFloat(responseData.price) * minAmount
+
+    const priceInUSD =
+      (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) * priceInSellToken
 
     const priceInWei = BigNumber.from(relevantOrder.takerAmount)
 
