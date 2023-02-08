@@ -1,8 +1,7 @@
-import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
+import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
 import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
@@ -30,42 +29,42 @@ const AllowanceButton = (): JSX.Element => {
     data: { priceInWei },
     isValidating: isPriceLoading,
   } = usePrice()
-  const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
-    pickedCurrency,
-    TOKEN_BUYER_CONTRACT[chainId]
-  )
+  const {
+    allowance,
+    isAllowanceLoading,
+    isAllowing,
+    allowanceError,
+    onSubmit,
+    isLoading,
+  } = useAllowance(pickedCurrency, TOKEN_BUYER_CONTRACT[chainId])
 
   const isEnoughAllowance =
     priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
-
-  const { onSubmit, isLoading } = useAllowance(
-    pickedCurrency,
-    TOKEN_BUYER_CONTRACT[chainId]
-  )
-
-  if (!pickedCurrency || chainId !== requirementChainId || isNativeCurrencyPicked)
-    return null
-
   return (
-    <CardMotionWrapper>
+    <Collapse
+      in={
+        pickedCurrency &&
+        chainId === requirementChainId &&
+        !isNativeCurrencyPicked &&
+        !isEnoughAllowance
+      }
+    >
       <Button
         size="lg"
         colorScheme={allowanceError ? "red" : "blue"}
-        isDisabled={
-          isPriceLoading || isAllowanceLoading || allowanceError || isEnoughAllowance
-        }
+        isDisabled={isEnoughAllowance}
         isLoading={isPriceLoading || isAllowanceLoading || isLoading}
         loadingText={
           isPriceLoading || isAllowanceLoading
             ? "Checking allowance"
+            : isAllowing
+            ? "Allowing"
             : "Check your wallet"
         }
         onClick={onSubmit}
         w="full"
         leftIcon={
-          isPriceLoading || isAllowanceLoading ? (
-            <Spinner />
-          ) : allowanceError ? (
+          allowanceError ? (
             <Icon as={Warning} />
           ) : isEnoughAllowance ? (
             <Icon as={Check} />
@@ -86,7 +85,7 @@ const AllowanceButton = (): JSX.Element => {
           ? "Couldn't fetch allowance"
           : `Allow Guild to use your ${tokenSymbol}`}
       </Button>
-    </CardMotionWrapper>
+    </Collapse>
   )
 }
 

@@ -1,4 +1,3 @@
-import { BigNumber } from "@ethersproject/bignumber"
 import { MaxUint256 } from "@ethersproject/constants"
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
@@ -6,8 +5,9 @@ import { Chains, RPC } from "connectors"
 import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
+import { useState } from "react"
 import ERC20_ABI from "static/abis/erc20Abi.json"
-import useSWR, { KeyedMutator } from "swr"
+import useSWR from "swr"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 
 const fetchAllowance = (
@@ -17,21 +17,9 @@ const fetchAllowance = (
   contractAddress: string
 ) => contract?.allowance(account, contractAddress)
 
-const useAllowance = (
-  tokenAddress: string,
-  contract: string
-): {
-  isAllowanceLoading: boolean
-  allowance: BigNumber
-  allowanceError: any
-  mutateAllowance: KeyedMutator<any>
-  onSubmit: () => void
-  response: any
-  isLoading: boolean
-  error: any
-  reset: () => void
-} => {
+const useAllowance = (tokenAddress: string, contract: string) => {
   const showErrorToast = useShowErrorToast()
+  const [isAllowing, setIsAllowing] = useState(false)
 
   const { account, chainId } = useWeb3React()
   const erc20Contract = useContract(tokenAddress, ERC20_ABI, true)
@@ -56,7 +44,9 @@ const useAllowance = (
 
   const allowSpendingTokensCall = async () => {
     const approveRes = await erc20Contract?.approve(contract, MaxUint256)
+    setIsAllowing(true)
     const approved = await approveRes?.wait()
+    setIsAllowing(false)
     return approved
   }
 
@@ -67,6 +57,7 @@ const useAllowance = (
 
   return {
     isAllowanceLoading,
+    isAllowing,
     allowance,
     allowanceError,
     mutateAllowance,

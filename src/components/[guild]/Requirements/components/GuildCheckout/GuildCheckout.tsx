@@ -23,13 +23,12 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useIntercom } from "components/_app/IntercomProvider"
-import { RPC } from "connectors"
+import { Chains, RPC } from "connectors"
 import { Chat, ShoppingCartSimple } from "phosphor-react"
 import {
   ALLOWED_GUILDS,
@@ -54,8 +53,8 @@ import usePrice from "./hooks/usePrice"
 const GuildCheckout = (): JSX.Element => {
   const { triggerChat } = useIntercom()
 
-  const { account } = useWeb3React()
-  const { requirement, isOpen, onOpen, onClose, isInfoModalOpen, pickedCurrency } =
+  const { account, chainId } = useWeb3React()
+  const { requirement, isOpen, onOpen, onClose, isInfoModalOpen } =
     useGuildCheckoutContext()
   const { id } = useGuild()
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
@@ -194,20 +193,18 @@ const GuildCheckout = (): JSX.Element => {
               <FeeAndTotal />
 
               <Stack spacing={2}>
-                {!pickedCurrency ? (
-                  <CardMotionWrapper>
-                    <Button size="xl" isDisabled w="full">
-                      Choose currency
-                    </Button>
-                  </CardMotionWrapper>
-                ) : (
+                {!error && (
                   <>
-                    <SwitchNetworkButton />
-                    <TOSCheckbox />
-                    <AllowanceButton />
-                    <PurchaseButton />
+                    <Collapse in={chainId !== Chains[requirement.chain]}>
+                      <SwitchNetworkButton />
+                    </Collapse>
+                    <Collapse in={chainId === Chains[requirement.chain]}>
+                      <TOSCheckbox />
+                      <AllowanceButton />
+                    </Collapse>
                   </>
                 )}
+                <PurchaseButton />
               </Stack>
             </Stack>
           </ModalFooter>
