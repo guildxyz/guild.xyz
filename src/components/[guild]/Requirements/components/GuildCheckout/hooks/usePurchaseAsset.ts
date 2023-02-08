@@ -122,12 +122,12 @@ const usePurchaseAsset = () => {
         }
 
         addDatadogAction("purchased requirement (GuildCheckout)")
-        setTxSuccess(true)
         toast({
           status: "success",
           title: "Your new asset:",
           description: `${requirement.data.minAmount} ${symbol}`,
         })
+        setTxSuccess(true)
       },
     }
   )

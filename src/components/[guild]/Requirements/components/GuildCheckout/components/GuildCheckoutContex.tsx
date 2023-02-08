@@ -1,5 +1,6 @@
 import { useDisclosure } from "@chakra-ui/react"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useAccess from "components/[guild]/hooks/useAccess"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import {
   createContext,
@@ -36,6 +37,8 @@ const GuildCheckoutProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
   const requirement = useRequirementContext()
+  const { mutate: mutateAccess } = useAccess(requirement?.roleId)
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
     isOpen: isInfoModalOpen,
@@ -60,6 +63,7 @@ const GuildCheckoutProvider = ({
   useEffect(() => {
     if (!txSuccess) return
     triggerConfetti()
+    mutateAccess()
   }, [txSuccess])
 
   return (

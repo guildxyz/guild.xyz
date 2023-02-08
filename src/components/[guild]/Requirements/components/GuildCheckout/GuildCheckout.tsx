@@ -55,7 +55,7 @@ const GuildCheckout = (): JSX.Element => {
   const { triggerChat } = useIntercom()
 
   const { account } = useWeb3React()
-  const { requirement, isOpen, onOpen, onClose, pickedCurrency } =
+  const { requirement, isOpen, onOpen, onClose, isInfoModalOpen, pickedCurrency } =
     useGuildCheckoutContext()
   const { id } = useGuild()
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
@@ -72,12 +72,13 @@ const GuildCheckout = (): JSX.Element => {
   } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
 
   if (
-    !ALLOWED_GUILDS.includes(id) ||
-    !account ||
-    (!isOpen && satisfiesRequirement) ||
-    (!accessData && isAccessLoading) ||
-    !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
-    !purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain)
+    !isInfoModalOpen &&
+    (!ALLOWED_GUILDS.includes(id) ||
+      !account ||
+      (!accessData && isAccessLoading) ||
+      satisfiesRequirement ||
+      !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
+      !purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain))
   )
     return null
 
