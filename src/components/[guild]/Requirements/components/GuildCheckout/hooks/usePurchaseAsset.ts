@@ -93,6 +93,7 @@ const usePurchaseAsset = () => {
 
   const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
     useEstimateGasFee(
+      requirement?.id?.toString(),
       requirement?.chain === Chains[chainId] ? tokenBuyerContract : null,
       "getAssets",
       generatedGetAssetsParams

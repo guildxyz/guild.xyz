@@ -36,6 +36,7 @@ const convertGasFeeToUSD = async (
 }
 
 const useEstimateGasFee = (
+  key: string,
   contract: Contract,
   methodName: string,
   params: any[]
@@ -46,7 +47,7 @@ const useEstimateGasFee = (
     data: estimatedGasFee,
     isValidating: isGasEstimationLoading,
     error: estimateGasError,
-  } = useSWRImmutable(shouldFetch ? ["estimateGas", methodName] : null, () =>
+  } = useSWRImmutable(shouldFetch ? ["estimateGas", key] : null, () =>
     estimateGasFee(contract, methodName, ...params)
   )
 
