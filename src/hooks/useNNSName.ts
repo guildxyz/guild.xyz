@@ -23,4 +23,3 @@ const useNNSName = (): string => {
 export default useNNSName
 
 // test account address: "0xE5358CaB95014E2306815743793F16c93a8a5C70"
-// --> shouldFetch will fail

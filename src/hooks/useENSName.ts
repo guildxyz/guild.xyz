@@ -5,8 +5,8 @@ import useSWR from "swr"
 const fetchENSName = (_, provider, address) => provider.lookupAddress(address)
 
 const useENSName = (address: string): string => {
-  const { provider, chainId } = useWeb3React<Web3Provider>()
-
+  const { provider, chainId, account } = useWeb3React<Web3Provider>()
+  console.log(account, 11)
   const shouldFetch = provider && address
 
   const { data } = useSWR(
