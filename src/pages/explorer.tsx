@@ -79,6 +79,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     }
   )
 
+  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   useScrollEffect(() => {
     if (
       !guildsListEl.current ||
@@ -116,8 +117,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <LinkPreviewHead path="" />
       <Layout
         title="Guildhall"
-        description="Automated membership management for the platforms your community already uses."
-        showBackButton={false}
+        ogDescription="Automated membership management for the platforms your community already uses."
       >
         <SimpleGrid
           templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}

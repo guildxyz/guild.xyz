@@ -17,6 +17,7 @@ import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
+import ContactInfo from "components/create-guild/BasicInfo/components/ContactInfo"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
@@ -29,15 +30,19 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
+import useGuildPermission from "../hooks/useGuildPermission"
+import LeaveButton from "../LeaveButton"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
+import SocialLinks from "./components/SocialLinks"
 import useEditGuild from "./hooks/useEditGuild"
 
 type Props = {
@@ -60,7 +65,11 @@ const EditGuildDrawer = ({
     urlName,
     guildPlatforms,
     hideFromExplorer,
+    socialLinks,
+    contacts,
+    isDetailed,
   } = useGuild()
+  const { isOwner } = useGuildPermission()
 
   const defaultValues = {
     name,
@@ -71,12 +80,20 @@ const EditGuildDrawer = ({
     admins: admins?.flatMap((admin) => admin.address) ?? [],
     urlName,
     hideFromExplorer,
+    contacts,
+    socialLinks,
     guildPlatforms,
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
     defaultValues,
   })
+
+  // We'll only receive this info on client-side, so we're setting the default value of this field in a useEffect
+  useEffect(() => {
+    if (!isDetailed || methods.formState.dirtyFields.contacts) return
+    methods.setValue("contacts", contacts)
+  }, [isDetailed])
 
   const toast = useToast()
   const onSuccess = () => {
@@ -159,7 +176,7 @@ const EditGuildDrawer = ({
   const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
   const isDirty =
-    methods?.formState?.isDirty ||
+    !!Object.keys(methods.formState.dirtyFields).length ||
     backgroundUploader.isUploading ||
     iconUploader.isUploading
 
@@ -177,13 +194,19 @@ const EditGuildDrawer = ({
           <DrawerContent>
             <DrawerBody className="custom-scrollbar">
               <DrawerHeader title="Edit guild">
-                <DeleteGuildButton />
+                {isOwner ? (
+                  <DeleteGuildButton
+                    beforeDelete={() => methods.reset(defaultValues)}
+                  />
+                ) : (
+                  <LeaveButton />
+                )}
               </DrawerHeader>
               <VStack spacing={10} alignItems="start">
-                <Section title="General" spacing="6">
+                <Section title="General">
                   <Stack
                     w="full"
-                    spacing="6"
+                    spacing="5"
                     direction={{ base: "column", md: "row" }}
                   >
                     <Box>
@@ -196,13 +219,18 @@ const EditGuildDrawer = ({
                     <UrlName />
                   </Stack>
                   <Description />
+
+                  <Box>
+                    <FormLabel>Social links</FormLabel>
+                    <SocialLinks />
+                  </Box>
                 </Section>
 
-                <Section title="Appearance" spacing="6">
+                <Section title="Appearance">
                   <Stack
                     direction={{ base: "column", md: "row" }}
                     justifyContent={"space-between"}
-                    spacing="6"
+                    spacing="5"
                     sx={{
                       "> *": {
                         flex: "1 0",
@@ -222,6 +250,11 @@ const EditGuildDrawer = ({
                   <HideFromExplorerToggle />
 
                   <Admins />
+                </Section>
+
+                <Divider />
+                <Section title="Contact info" spacing="4">
+                  <ContactInfo />
                 </Section>
               </VStack>
             </DrawerBody>

@@ -9,15 +9,14 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { BigNumber } from "@ethersproject/bignumber"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useController, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../common/ChainPicker"
 import MinMaxAmount from "../common/MinMaxAmount"
@@ -30,15 +29,17 @@ const customFilterOption = (candidate, input) =>
 
 const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const {
-    control,
     setValue,
     clearErrors,
     trigger,
     formState: { errors, touchedFields },
   } = useFormContext()
 
+  const {
+    field: { value: addressFieldValue, onChange: addressFieldOnChange },
+  } = useController({ name: `${baseFieldPath}.address` })
+
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
-  const address = useWatch({ name: `${baseFieldPath}.address` })
 
   const { isLoading, tokens } = useTokens(chain)
   const mappedTokens = useMemo(
@@ -69,16 +70,20 @@ const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
   useEffect(() => {
     setValue(
       `${baseFieldPath}.type`,
-      address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"
+      addressFieldValue === "0x0000000000000000000000000000000000000000"
+        ? "COIN"
+        : "ERC20"
     )
-  }, [address])
+  }, [addressFieldValue])
 
   // Fetching token name and symbol
   const {
     data: { name: tokenName, symbol: tokenSymbol, decimals: tokenDecimals },
     isValidating: isTokenSymbolValidating,
     error,
-  } = useTokenData(chain, address, () => trigger(`${baseFieldPath}.address`))
+  } = useTokenData(chain, addressFieldValue, () =>
+    trigger(`${baseFieldPath}.address`)
+  )
 
   useEffect(() => {
     try {
@@ -92,7 +97,7 @@ const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
   }, [tokenDecimals])
 
   const tokenImage = mappedTokens?.find(
-    (token) => token.value?.toLowerCase() === address?.toLowerCase()
+    (token) => token.value?.toLowerCase() === addressFieldValue?.toLowerCase()
   )?.img
 
   return (
@@ -109,7 +114,7 @@ const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
         <FormLabel>Token:</FormLabel>
 
         <InputGroup>
-          {address &&
+          {addressFieldValue &&
             (tokenImage ? (
               <InputLeftElement>
                 <OptionImage img={tokenImage} alt={tokenName} />
@@ -125,9 +130,8 @@ const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
                 )}
               </InputLeftAddon>
             ))}
-          <Controller
-            name={`${baseFieldPath}.address` as const}
-            control={control}
+          <ControlledSelect
+            name={`${baseFieldPath}.address`}
             rules={{
               required: "This field is required.",
               pattern: {
@@ -137,33 +141,22 @@ const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
               },
               validate: () => !error || "Failed to fetch token data",
             }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                isClearable
-                isLoading={isLoading}
-                options={mappedTokens}
-                filterOption={customFilterOption}
-                placeholder="Search or paste address"
-                value={
-                  mappedTokens?.find((token) => token.value === value) ||
-                  (value
-                    ? {
-                        value,
-                        label: tokenName && tokenName !== "-" ? tokenName : address,
-                      }
-                    : null)
-                }
-                onChange={(selectedOption: SelectOption & { decimals: number }) => {
-                  onChange(selectedOption?.value)
-                }}
-                onBlur={onBlur}
-                onInputChange={(text, _) => {
-                  if (!ADDRESS_REGEX.test(text)) return
-                  onChange(text)
-                }}
-              />
-            )}
+            isClearable
+            isLoading={isLoading}
+            options={mappedTokens}
+            filterOption={customFilterOption}
+            placeholder="Search or paste address"
+            onInputChange={(text, _) => {
+              if (!ADDRESS_REGEX.test(text)) return
+              addressFieldOnChange(text)
+            }}
+            fallbackValue={
+              addressFieldValue && {
+                value: addressFieldValue,
+                label:
+                  tokenName && tokenName !== "-" ? tokenName : addressFieldValue,
+              }
+            }
           />
         </InputGroup>
 

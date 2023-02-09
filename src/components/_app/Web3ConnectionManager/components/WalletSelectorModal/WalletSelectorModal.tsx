@@ -1,9 +1,5 @@
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
   Box,
-  Collapse,
   Icon,
   IconButton,
   ModalBody,
@@ -27,34 +23,63 @@ import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import { connectors } from "connectors"
-import useKeyPair from "hooks/useKeyPair"
+import useKeyPair, {
+  deleteKeyPairFromIdb,
+  getKeyPairFromIdb,
+} from "hooks/useKeyPair"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
-import { WalletError } from "types"
+import useSWR, { mutate, unstable_serialize } from "swr"
+import useSWRImmutable from "swr/immutable"
+import { User, WalletError } from "types"
 import ConnectorButton from "./components/ConnectorButton"
+import DelegateCashButton from "./components/DelegateCashButton"
 import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
-  isModalOpen: boolean
-  closeModal: () => void
-  openModal: () => void
+  isOpen: boolean
+  onClose: () => void
+  onOpen: () => void
+}
+
+const fetchShouldLinkToUser = async (_: "shouldLinkToUser", userId: number) => {
+  try {
+    const { id: userIdToConnectTo } = JSON.parse(
+      window.localStorage.getItem("userId")
+    )
+
+    if (
+      typeof userId === "number" &&
+      typeof userIdToConnectTo === "number" &&
+      userIdToConnectTo !== userId
+    ) {
+      try {
+        await deleteKeyPairFromIdb(userId).then(() =>
+          mutate(unstable_serialize(["keyPair", userId]))
+        )
+      } catch {}
+    }
+
+    const keypair = await getKeyPairFromIdb(+userIdToConnectTo)
+
+    return !!keypair
+  } catch {
+    // Remove in case it exists in an invalid form
+    window.localStorage.removeItem("userId")
+    return false
+  }
 }
 
 // We don't open the modal on these routes
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
-const WalletSelectorModal = ({
-  isModalOpen,
-  closeModal,
-  openModal,
-}: Props): JSX.Element => {
+const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
 
   const { isActive, account, connector } = useWeb3React()
+  const { data: user } = useSWRImmutable<User>(account ? `/user/${account}` : null)
   const [error, setError] = useState<WalletError & Error>(null)
-  // temporary
-  const [isWalletConnectActivating, setIsWalletConnectActivating] = useState(false)
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -63,17 +88,18 @@ const WalletSelectorModal = ({
   }
 
   const closeModalAndSendAction = () => {
-    closeModal()
+    onClose()
     addDatadogAction("Wallet selector modal closed")
     setTimeout(() => {
-      connector.deactivate()
+      connector.resetState()
+      connector.deactivate?.()
     }, 200)
   }
 
   const { ready, set, keyPair } = useKeyPair()
 
   useEffect(() => {
-    if (keyPair) closeModal()
+    if (keyPair) onClose()
   }, [keyPair])
 
   const router = useRouter()
@@ -87,17 +113,22 @@ const WalletSelectorModal = ({
     ) {
       const activate = connector.activate()
       if (typeof activate !== "undefined") {
-        activate.finally(() => openModal())
+        activate.finally(() => onOpen())
       }
     }
   }, [keyPair, ready, router])
+
+  const { data: shouldLinkToUser } = useSWR(
+    ["shouldLinkToUser", user?.id],
+    fetchShouldLinkToUser
+  )
 
   const isConnected = account && isActive && ready
 
   return (
     <>
       <Modal
-        isOpen={isModalOpen}
+        isOpen={isOpen}
         onClose={closeModalAndSendAction}
         closeOnOverlayClick={!isActive || !!keyPair}
         closeOnEsc={!isActive || !!keyPair}
@@ -127,27 +158,16 @@ const WalletSelectorModal = ({
                 variant="ghost"
                 onClick={() => {
                   set.reset()
-                  connector.deactivate()
+                  connector.resetState()
+                  connector.deactivate?.()
                 }}
               />
             </Box>
-            <Text>Connect wallet</Text>
+            <Text>{shouldLinkToUser ? "Link address" : "Connect wallet"}</Text>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Error error={error} processError={processConnectionError} />
-            <Collapse in={isWalletConnectActivating}>
-              <Alert status="info" mb="6">
-                <AlertIcon />
-                <Stack>
-                  <AlertDescription>
-                    WalletConnect works unreliably recently in any dapp. If you can't
-                    connect, please try it from your wallet's embedded browser or
-                    from desktop!
-                  </AlertDescription>
-                </Stack>
-              </Alert>
-            </Collapse>
             {isConnected && !keyPair && (
               <Text mb="6" animation={"fadeIn .3s .1s both"}>
                 Sign message to verify that you're the owner of this account.
@@ -164,11 +184,13 @@ const WalletSelectorModal = ({
                       connectorHooks={connectorHooks}
                       error={error}
                       setError={setError}
-                      setIsWalletConnectActivating={setIsWalletConnectActivating}
                     />
                   </CardMotionWrapper>
                 )
               })}
+              <CardMotionWrapper>
+                <DelegateCashButton />
+              </CardMotionWrapper>
             </Stack>
             {isConnected && !keyPair && (
               <Box animation={"fadeIn .3s .1s both"}>
@@ -176,16 +198,19 @@ const WalletSelectorModal = ({
                   size="xl"
                   mb="4"
                   colorScheme={"green"}
-                  onClick={set.onSubmit}
+                  onClick={() => {
+                    set.onSubmit(shouldLinkToUser)
+                    addDatadogAction("click on Verify account")
+                  }}
                   isLoading={set.isLoading || !ready}
-                  isDisabled={!ready}
+                  isDisabled={!ready || shouldLinkToUser === undefined}
                   loadingText={
                     !ready
-                      ? "Looking for key pairs"
+                      ? "Looking for keypairs"
                       : set.signLoadingText || "Check your wallet"
                   }
                 >
-                  Verify account
+                  {shouldLinkToUser ? "Link address" : "Verify account"}
                 </ModalButton>
               </Box>
             )}

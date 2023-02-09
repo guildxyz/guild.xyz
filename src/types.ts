@@ -16,7 +16,7 @@ type Rest = {
   [x: string]: any
 }
 
-type Logic = "AND" | "OR" | "NOR" | "NAND"
+type Logic = "AND" | "OR"
 
 type ThemeMode = "LIGHT" | "DARK"
 
@@ -132,12 +132,19 @@ type PlatformGuildData = {
 
 type PlatformRoleData = {
   DISCORD: {
-    isGuarded: boolean
     role?: never
   }
   GOOGLE: {
-    isGuarded?: never
     role: "reader" | "commenter" | "writer"
+  }
+}
+
+type Trait = {
+  trait_type?: string
+  value?: string
+  interval?: {
+    min: number
+    max: number
   }
 }
 
@@ -151,6 +158,7 @@ type Requirement = {
   name: string
   symbol: string
   decimals?: number
+  isNegated: boolean
 
   // Props used inside the forms on the UI
   nftRequirementType?: string
@@ -206,6 +214,25 @@ type GuildPoap = {
   poapContracts?: PoapContract[]
 }
 
+const supportedSocialLinks = [
+  "TWITTER",
+  "LENS",
+  "YOUTUBE",
+  "SPOTIFY",
+  "MIRROR",
+  "MEDIUM",
+  "SUBSTACK",
+  "SNAPSHOT",
+  "WEBSITE",
+] as const
+type SocialLinkKey = (typeof supportedSocialLinks)[number]
+type SocialLinks = Partial<Record<SocialLinkKey, string>>
+
+type GuildContact = {
+  type: "EMAIL" | "TELEGRAM"
+  contact: string
+}
+
 type Guild = {
   id: number
   name: string
@@ -215,6 +242,8 @@ type Guild = {
   showMembers: boolean
   memberCount: number
   hideFromExplorer: boolean
+  socialLinks?: SocialLinks
+  contacts?: GuildContact[]
   createdAt: string
   admins: GuildAdmin[]
   theme: Theme
@@ -225,7 +254,10 @@ type Guild = {
   onboardingComplete: boolean
 }
 type GuildFormType = Partial<
-  Pick<Guild, "id" | "urlName" | "name" | "imageUrl" | "description" | "theme">
+  Pick<
+    Guild,
+    "id" | "urlName" | "name" | "imageUrl" | "description" | "theme" | "contacts"
+  >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
   roles?: Array<
@@ -238,12 +270,13 @@ type GuildFormType = Partial<
   >
   logic?: Logic
   requirements?: Requirement[]
+  socialLinks?: Record<string, string>
 }
 
 type SelectOption<T = string> = {
   label: string
   value: T
-  img?: string
+  img?: string | JSX.Element
 } & Rest
 
 // Requested with Discord OAuth token
@@ -416,6 +449,9 @@ export type {
   GuildPlatform,
   GuildBase,
   Guild,
+  SocialLinkKey,
+  SocialLinks,
+  Trait,
   Requirement,
   RequirementType,
   RolePlatform,
@@ -435,4 +471,4 @@ export type {
   VoiceRequirementParams,
   PoapEventDetails,
 }
-export { ValidationMethod }
+export { ValidationMethod, supportedSocialLinks }

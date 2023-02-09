@@ -1,3 +1,4 @@
+import { Stack, Text } from "@chakra-ui/react"
 import Link from "components/common/Link"
 
 const LINK_REGEX =
@@ -7,27 +8,42 @@ const parseDescription = (description?: string) => {
   if (typeof description !== "string" || typeof description?.matchAll !== "function")
     return
 
-  const linkMatches = [...description.matchAll(LINK_REGEX)]
+  const paragraphs = description.split("\n").filter(Boolean)
 
-  if (!linkMatches) return description
+  const paragraphsWithLinks = paragraphs.map((p) => {
+    const linkMatches = [...p.matchAll(LINK_REGEX)]
 
-  return description.split(LINK_REGEX).reduce((acc, curr, i) => {
-    acc.push(curr)
-    if (linkMatches[i]) {
-      acc.push(
-        <Link
-          key={linkMatches[i][0]}
-          href={linkMatches[i][0]}
-          colorScheme={"primary"}
-          isExternal
-        >
-          {linkMatches[i][0]}
-        </Link>
-      )
-    }
+    if (!linkMatches) return p
 
-    return acc
-  }, [])
+    return p.split(LINK_REGEX).reduce((acc, curr, i) => {
+      acc.push(curr)
+      if (linkMatches[i]) {
+        acc.push(
+          <Link
+            key={linkMatches[i][0]}
+            href={linkMatches[i][0]}
+            colorScheme={"primary"}
+            isExternal
+            display={"unset"}
+          >
+            {linkMatches[i][0]}
+          </Link>
+        )
+      }
+
+      return acc
+    }, [])
+  })
+
+  const paragraphComponents = (
+    <Stack spacing={4}>
+      {paragraphsWithLinks.map((p, index) => (
+        <Text key={index}>{p}</Text>
+      ))}
+    </Stack>
+  )
+
+  return paragraphComponents
 }
 
 export default parseDescription

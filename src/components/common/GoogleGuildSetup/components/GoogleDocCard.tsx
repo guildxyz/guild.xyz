@@ -23,7 +23,7 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
   const imageBgColor = useColorModeValue("gray.100", "gray.800")
 
   return (
-    <Card px={{ base: 5, sm: 6 }} py="7">
+    <Card px={{ base: 5, sm: 6 }} py="7" h="full">
       <Stack w="full" spacing={4} justifyContent="space-between" h="full">
         <HStack>
           <Circle size={10} bgColor={imageBgColor}>
@@ -52,13 +52,18 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
             colorScheme="blue"
             h={10}
             onClick={() => onSelect(file.platformGuildId)}
+            data-dd-action-name="Gate file (google setup)"
           >
             Gate file
           </Button>
         )}
 
         {onCancel && (
-          <Button h={10} onClick={onCancel}>
+          <Button
+            h={10}
+            onClick={onCancel}
+            data-dd-action-name="Cancel (google setup)"
+          >
             Cancel
           </Button>
         )}

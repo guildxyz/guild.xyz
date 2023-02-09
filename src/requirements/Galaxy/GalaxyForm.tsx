@@ -4,24 +4,15 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
-  Stack,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { Chain } from "connectors"
 import { useEffect, useMemo, useState } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import ChainPicker from "../common/ChainPicker"
 import { useGalaxyCampaign, useGalaxyCampaigns } from "./hooks/useGalaxyCampaigns"
-
-const convertToSupportedChain = (chain: string): Chain => {
-  if (chain === "MATIC") return "POLYGON"
-  return chain as Chain
-}
 
 const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
@@ -32,13 +23,11 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
     control,
     register,
     setValue,
-    clearErrors,
-    formState: { errors, touchedFields },
+    formState: { errors },
   } = useFormContext()
 
   useEffect(() => {
     if (!register) return
-    register(`${baseFieldPath}.chain`)
     register(`${baseFieldPath}.data.galaxyId`)
   }, [register])
 
@@ -61,7 +50,6 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
         img: campaign.thumbnail,
         label: campaign.name,
         value: campaign.numberID?.toString(),
-        chain: campaign.chain,
         galaxyId: campaign.id,
       })
 
@@ -69,7 +57,6 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
       img: c.thumbnail,
       label: c.name,
       value: c.numberID?.toString(),
-      chain: c.chain,
       galaxyId: c.id,
     }))
 
@@ -93,94 +80,53 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
 
     const isPrivateCampaign = selectedId === campaign?.numberID?.toString()
 
-    setValue(
-      `${baseFieldPath}.chain`,
-      convertToSupportedChain(
-        isPrivateCampaign ? campaign.chain : selectedCampaign?.chain
-      )
-    )
-
     const thumbnail = isPrivateCampaign
       ? campaign.thumbnail
       : selectedCampaign?.thumbnail
     setCampaignImage(thumbnail)
   }, [campaigns, selectedId])
 
-  // Reset form on chain change
-  const resetForm = () => {
-    if (!parseFromObject(touchedFields, baseFieldPath)?.data?.id) return
-    setValue(`${baseFieldPath}.data.id`, null)
-    clearErrors(`${baseFieldPath}.data.id`)
-  }
-
   return (
-    <Stack spacing={4} alignItems="start">
-      <ChainPicker
-        controlName={`${baseFieldPath}.chain` as const}
-        supportedChains={[
-          "ETHEREUM",
-          "BSC",
-          "POLYGON",
-          "FANTOM",
-          "ARBITRUM",
-          "AVALANCHE",
-        ]}
-        onChange={resetForm}
-        isDisabled
-      />
+    <FormControl
+      isRequired
+      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+    >
+      <FormLabel>Campaign:</FormLabel>
 
-      <FormControl
-        isRequired
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
-      >
-        <FormLabel>Campaign:</FormLabel>
+      <InputGroup>
+        {campaignImage && (
+          <InputLeftElement>
+            <OptionImage img={campaignImage} alt="Campaign thumbnail" />
+          </InputLeftElement>
+        )}
 
-        <InputGroup>
-          {campaignImage && (
-            <InputLeftElement>
-              <OptionImage img={campaignImage} alt="Campaign thumbnail" />
-            </InputLeftElement>
-          )}
-          <Controller
-            name={`${baseFieldPath}.data.id` as const}
-            control={control}
-            rules={{
-              required: "This field is required.",
-            }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                isClearable
-                isLoading={isLoading || isCampaignLoading}
-                options={mappedCampaigns}
-                placeholder="Search campaigns..."
-                value={mappedCampaigns?.find((c) => c.value === value) || null}
-                onChange={(selectedOption: SelectOption) => {
-                  onChange(selectedOption?.value)
-                  setValue(
-                    `${baseFieldPath}.data.galaxyId`,
-                    selectedOption?.galaxyId
-                  )
-                }}
-                onInputChange={(text, _) => {
-                  if (!text?.length) return
-                  const regex = /^[a-zA-Z0-9]+$/i
-                  if (regex.test(text)) setPastedId(text)
-                }}
-                onBlur={onBlur}
-                filterOption={customFilterOption}
-              />
-            )}
-          />
-        </InputGroup>
+        <ControlledSelect
+          name={`${baseFieldPath}.data.id`}
+          rules={{
+            required: "This field is required.",
+          }}
+          isClearable
+          isLoading={isLoading || isCampaignLoading}
+          options={mappedCampaigns}
+          placeholder="Search campaigns..."
+          afterOnChange={(newValue) =>
+            setValue(`${baseFieldPath}.data.galaxyId`, newValue?.galaxyId)
+          }
+          onInputChange={(text, _) => {
+            if (!text?.length) return
+            const regex = /^[a-zA-Z0-9]+$/i
+            if (regex.test(text)) setPastedId(text)
+          }}
+          filterOption={customFilterOption}
+        />
+      </InputGroup>
 
-        <FormHelperText>Search by name or ID</FormHelperText>
+      <FormHelperText>Search by name or ID</FormHelperText>
 
-        <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
-        </FormErrorMessage>
-      </FormControl>
-    </Stack>
+      <FormErrorMessage>
+        {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+      </FormErrorMessage>
+    </FormControl>
   )
 }
 

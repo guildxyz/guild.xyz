@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { mutate } from "swr"
 import fetcher from "utils/fetcher"
@@ -17,13 +17,10 @@ const useLeaveGuild = () => {
   const showErrorToast = useShowErrorToast()
   const matchMutate = useMatchMutate()
 
-  const submit = ({ validation, data }: WithValidation<Data>): Promise<Response> =>
-    fetcher(`/user/leaveGuild`, {
-      body: data,
-      validation,
-    })
+  const submit = (signedValidation: SignedValdation): Promise<Response> =>
+    fetcher(`/user/leaveGuild`, signedValidation)
 
-  return useSubmitWithSign<Data, Response>(submit, {
+  return useSubmitWithSign<Response>(submit, {
     onSuccess: () => {
       toast({
         title: "You've successfully left this guild",

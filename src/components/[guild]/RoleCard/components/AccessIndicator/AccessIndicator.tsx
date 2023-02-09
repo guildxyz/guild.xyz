@@ -3,28 +3,17 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { ArrowCounterClockwise, Check, LockSimple, Warning, X } from "phosphor-react"
+import { Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
-import useDiscordRateLimitWarning from "./hooks/useDiscordRateLimitWarning"
-import useTwitterRateLimitWarning from "./hooks/useTwitterRateLimitWarning"
 
 type Props = {
   roleId: number
 }
 
-const reconnectionErrorMessages = new Set<string>([
-  "Discord API error: You are being rate limited.",
-  "Please reauthenticate to Discord",
-  "Please reauthenticate to Twitter",
-])
-
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const { hasAccess, isLoading, data } = useAccess(roleId)
-
-  const discordRateLimitWarning = useDiscordRateLimitWarning(data, roleId)
-  const twitterRateLimitWarning = useTwitterRateLimitWarning(data, roleId)
 
   const { isActive } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
@@ -52,26 +41,21 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   if (isLoading)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
-  if (data?.errors?.some((err) => reconnectionErrorMessages.has(err.msg))) {
+  if (data?.errors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID")) {
     return (
       <AccessIndicatorUI
         colorScheme="orange"
-        label={"Reconnect below to check access"}
-        icon={ArrowCounterClockwise}
+        label={"Reconnect needed to check access"}
+        icon={Warning}
       />
     )
   }
 
-  if (
-    data?.warnings?.some(
-      (err) =>
-        typeof err.msg === "string" && err.msg.includes("account isn't connected")
-    )
-  ) {
+  if (data?.errors?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED")) {
     return (
       <AccessIndicatorUI
         colorScheme="blue"
-        label={"Connect below to check access"}
+        label={"Auth needed to check access"}
         icon={LockSimple}
       />
     )
@@ -79,25 +63,14 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
 
   if (data?.errors)
     return (
-      <>
-        <AccessIndicatorUI
-          colorScheme="orange"
-          label="Couldn’t check access"
-          icon={Warning}
-        />
-        {discordRateLimitWarning}
-        {twitterRateLimitWarning}
-      </>
+      <AccessIndicatorUI
+        colorScheme="orange"
+        label="Couldn’t check access"
+        icon={Warning}
+      />
     )
 
-  return (
-    <>
-      <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
-      {discordRateLimitWarning}
-      {twitterRateLimitWarning}
-    </>
-  )
+  return <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
 }
 
-export { reconnectionErrorMessages }
 export default AccessIndicator

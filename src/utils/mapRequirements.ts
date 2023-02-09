@@ -15,7 +15,7 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
       newRequirement.type === "ERC1155" ||
       newRequirement.type === "NOUNS"
     )
-      newRequirement.nftRequirementType = newRequirement.data?.attribute?.trait_type
+      newRequirement.nftRequirementType = newRequirement.data?.attributes?.length
         ? "ATTRIBUTE"
         : typeof newRequirement?.data?.id === "string"
         ? "CUSTOM_ID"

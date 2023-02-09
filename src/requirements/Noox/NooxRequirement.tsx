@@ -1,33 +1,41 @@
-import { Skeleton } from "@chakra-ui/react"
-import { RequirementComponentProps } from "requirements"
+import { Link } from "@chakra-ui/react"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useSWRImmutable from "swr/immutable"
-import Requirement from "../common/Requirement"
-import { RequirementLinkButton } from "../common/RequirementButton"
 import { NooxBadge } from "./NooxForm"
 
-const NooxRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
-  const { data, isValidating } = useSWRImmutable<NooxBadge[]>("/api/noox")
+const NooxRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
+  const { data, isValidating, error } = useSWRImmutable<NooxBadge[]>("/api/noox")
 
   const badgeData = data?.find((badge) => badge.id === requirement.data.id)
 
   return (
-    <Requirement
-      image={badgeData?.image}
-      footer={
-        <RequirementLinkButton
-          href={`https://noox.world/badge/${badgeData?.id}`}
-          imageUrl={"/requirementLogos/noox.svg"}
-          isLoading={isValidating}
-        >
-          View on Noox
-        </RequirementLinkButton>
-      }
-      {...rest}
-    >
+    <Requirement image={badgeData?.image} isImageLoading={isValidating} {...props}>
       {`Have the `}
-      <Skeleton as="span" isLoaded={!!badgeData}>
-        {badgeData?.name ?? "Loading..."}
-      </Skeleton>
+      {!badgeData || isValidating || error ? (
+        <DataBlock
+          isLoading={isValidating}
+          error={error && "API error, please contact Noox to report."}
+        >
+          {`#${requirement.data.id}`}
+        </DataBlock>
+      ) : (
+        <Link
+          href={`https://noox.world/badge/${badgeData?.id}`}
+          isExternal
+          display="inline"
+          colorScheme="blue"
+          fontWeight="medium"
+        >
+          {badgeData.name}
+        </Link>
+      )}
+
       {` Noox badge`}
     </Requirement>
   )

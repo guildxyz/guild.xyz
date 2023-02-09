@@ -1,27 +1,33 @@
 import { Icon } from "@chakra-ui/react"
 import Link from "components/common/Link"
+import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { GithubLogo } from "phosphor-react"
-import { RequirementComponentProps } from "requirements"
-import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatformButton"
-import Requirement from "../common/Requirement"
 
-const GithubRequirement = ({ requirement, ...rest }: RequirementComponentProps) => (
-  <Requirement
-    image={<Icon as={GithubLogo} boxSize={6} />}
-    footer={<ConnectRequirementPlatformButton platform="GITHUB" />}
-    {...rest}
-  >
-    Give a star to the{" "}
-    <Link
-      href={requirement.data.id ?? ""}
-      isExternal
-      colorScheme={"blue"}
-      fontWeight="medium"
+const GithubRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
+  return (
+    <Requirement
+      image={<Icon as={GithubLogo} boxSize={6} />}
+      footer={<ConnectRequirementPlatformButton />}
+      {...props}
     >
-      {requirement.data.id.match(/https:\/\/github\.com\/(.+)$/i)[1]}
-    </Link>{" "}
-    repository
-  </Requirement>
-)
+      Give a star to the{" "}
+      <Link
+        href={requirement.data.id ?? ""}
+        isExternal
+        colorScheme="blue"
+        fontWeight="medium"
+      >
+        {requirement.data.id.match(/https:\/\/github\.com\/(.+)$/i)[1]}
+      </Link>{" "}
+      repository
+    </Requirement>
+  )
+}
 
 export default GithubRequirement

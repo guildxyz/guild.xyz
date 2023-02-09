@@ -5,6 +5,7 @@ import { Chains } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
+import { TokenApiURLs } from "hooks/useTokens"
 import fetcher from "utils/fetcher"
 
 type RegisterVaultParams = {
@@ -24,8 +25,15 @@ const useRegisterVault = (onSuccess: (vaultId: number) => void) => {
   const registerVault = async (data: RegisterVaultParams) => {
     const { owner, token, fee } = data
 
+    const tokensFromJSON = await fetcher(TokenApiURLs[Chains[chainId]][0])
+    const tokenDataFromJSON = tokensFromJSON?.tokens?.find(
+      (t) => t.address.toLowerCase() === token.toLowerCase()
+    )
     const tokenData = await fetcher(`/util/symbol/${token}/${Chains[chainId]}`)
-    const feeInWei = parseUnits(fee?.toString(), tokenData?.decimals ?? 18)
+    const feeInWei = parseUnits(
+      fee?.toString(),
+      tokenDataFromJSON?.decimals ?? tokenData?.decimals ?? 18
+    )
 
     const registerVaultCall = await feeCollectorContract.registerVault(
       poapData?.id,

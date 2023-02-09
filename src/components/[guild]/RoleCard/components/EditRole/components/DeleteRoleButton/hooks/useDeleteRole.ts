@@ -1,33 +1,33 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
 type Data = {
-  removePlatformAccess?: number
+  removePlatformAccess?: boolean
 }
 
-const useDeleteRole = (roleId: number) => {
+const useDeleteRole = (roleId: number, onSuccess?: () => void) => {
   const { mutateGuild } = useGuild()
   const matchMutate = useMatchMutate()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = async ({ validation, data }: WithValidation<Data>) =>
+  const submit = async (signedValidation: SignedValdation) =>
     fetcher(`/role/${roleId}`, {
       method: "DELETE",
-      body: data,
-      validation,
+      ...signedValidation,
     })
 
-  return useSubmitWithSign<Data, any>(submit, {
+  return useSubmitWithSign<any>(submit, {
     onSuccess: () => {
       toast({
         title: `Role deleted!`,
         status: "success",
       })
+      onSuccess?.()
 
       mutateGuild()
       matchMutate(/^\/guild\?order/)

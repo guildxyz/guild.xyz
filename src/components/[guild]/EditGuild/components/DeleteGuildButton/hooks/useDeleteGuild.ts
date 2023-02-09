@@ -1,14 +1,14 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useFormContext } from "react-hook-form"
 import fetcher from "utils/fetcher"
 
 type Data = {
-  removePlatformAccess?: number
+  removePlatformAccess?: boolean
 }
 
 const useDeleteGuild = () => {
@@ -20,14 +20,13 @@ const useDeleteGuild = () => {
 
   const guild = useGuild()
 
-  const submit = async ({ validation, data }: WithValidation<Data>) =>
+  const submit = async (signedValidation: SignedValdation) =>
     fetcher(`/guild/${guild.id}`, {
       method: "DELETE",
-      body: data,
-      validation,
+      ...signedValidation,
     })
 
-  return useSubmitWithSign<Data, any>(submit, {
+  return useSubmitWithSign<any>(submit, {
     onSuccess: () => {
       toast({
         title: `Guild deleted!`,

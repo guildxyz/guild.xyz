@@ -7,7 +7,7 @@ import processConnectorError from "components/[guild]/JoinModal/utils/processCon
 import useDatadog from "components/_app/Datadog/useDatadog"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
@@ -32,19 +32,14 @@ const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
-  const { urlName, mutateGuild } = useGuild()
+  const { id, urlName, mutateGuild } = useGuild()
   const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
-  const fetchData = async ({
-    validation,
-    data,
-  }: WithValidation<RoleOrGuild>): Promise<RoleOrGuild> =>
-    fetcher("/role", {
-      validation,
-      body: data,
-    })
+  const fetchData = async (
+    signedValidation: SignedValdation
+  ): Promise<RoleOrGuild> => fetcher("/role", signedValidation)
 
-  const useSubmitResponse = useSubmitWithSign<any, RoleOrGuild>(fetchData, {
+  const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {
     onError: (error_) => {
       addDatadogError(`Role creation error`, { error: error_ })
 
@@ -82,7 +77,8 @@ guild.xyz/${urlName} @guildxyz`)}`}
         status: "success",
       })
 
-      mutate(`/guild/access/${response_.guildId}/${account}`)
+      mutate(`/guild/access/${id}/${account}`)
+      mutate(`/statusUpdate/guild/${id}`)
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)

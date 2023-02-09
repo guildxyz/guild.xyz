@@ -1,24 +1,39 @@
-import { Skeleton, Text } from "@chakra-ui/react"
-import { RequirementComponentProps } from "requirements"
-import Requirement from "../common/Requirement"
+import { Link, Text } from "@chakra-ui/react"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { useGalaxyCampaign } from "./hooks/useGalaxyCampaigns"
 
-const GalaxyRequirement = ({
-  requirement,
-  ...rest
-}: RequirementComponentProps): JSX.Element => {
+const GalaxyRequirement = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext()
+
   const { campaign, isLoading } = useGalaxyCampaign(requirement?.data?.galaxyId)
 
   return (
-    <Requirement
-      image={isLoading ? "" : campaign?.thumbnail}
-      loading={isLoading}
-      {...rest}
-    >
+    <Requirement image={campaign?.thumbnail} isImageLoading={isLoading} {...props}>
       <Text as="span">{`Participate in the `}</Text>
-      <Skeleton as="span" isLoaded={!isLoading}>
-        {isLoading ? "Loading..." : campaign?.name}
-      </Skeleton>
+      {!campaign || isLoading ? (
+        <DataBlock
+          isLoading={isLoading}
+          error={
+            !campaign && !isLoading && "API error, please contact Galxe to report."
+          }
+        >
+          {requirement.data.galaxyId}
+        </DataBlock>
+      ) : (
+        <Link
+          href={`https://galxe.com/${campaign.space.alias}/campaign/${campaign.id}`}
+          isExternal
+          display="inline"
+          colorScheme="blue"
+          fontWeight="medium"
+        >
+          {campaign.name}
+        </Link>
+      )}
       <Text as="span">{` Galxe campaign`}</Text>
     </Requirement>
   )
