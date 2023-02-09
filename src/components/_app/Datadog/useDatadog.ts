@@ -27,11 +27,13 @@ const useDatadog = () => {
 
   const addDatadogError = (
     error: unknown,
-    customAttributes: Record<string, unknown>
+    customAttributes?: Record<string, unknown>
   ) =>
     defaultAddDatadogError(
       error,
-      { ...defaultCustomAttributes, ...customAttributes },
+      customAttributes
+        ? { ...defaultCustomAttributes, ...customAttributes }
+        : defaultCustomAttributes,
       "custom"
     )
 

@@ -36,6 +36,7 @@ const Web3Connection = createContext({
   ) => {},
   isDelegateConnection: false,
   setIsDelegateConnection: (_: boolean) => {},
+  newtowrkChangeInProgress: false,
 })
 
 const Web3ConnectionManager = ({
@@ -70,6 +71,7 @@ const Web3ConnectionManager = ({
       openWalletSelectorModal()
   }, [triedEager, isActive, router.query])
 
+  const [newtowrkChangeInProgress, setNetworkChangeInProgress] = useState(false)
   const toast = useToast()
   const requestManualNetworkChange = (chain) => () =>
     toast({
@@ -85,8 +87,14 @@ const Web3ConnectionManager = ({
   ) => {
     if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet)
       requestManualNetworkChange(Chains[newChainId])()
-    else
-      await requestNetworkChangeHandler(Chains[newChainId], callback, errorHandler)()
+    else {
+      setNetworkChangeInProgress(true)
+      await requestNetworkChangeHandler(
+        Chains[newChainId],
+        callback,
+        errorHandler
+      )().finally(() => setNetworkChangeInProgress(false))
+    }
   }
 
   return (
@@ -105,6 +113,7 @@ const Web3ConnectionManager = ({
         requestNetworkChange,
         isDelegateConnection,
         setIsDelegateConnection,
+        newtowrkChangeInProgress,
       }}
     >
       {children}

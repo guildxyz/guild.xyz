@@ -11,7 +11,6 @@ import {
   Stack,
   Text,
   Tooltip,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
@@ -28,9 +27,8 @@ import AccountConnections from "./components/AccountConnections"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
-  const { isLoading, platformUsers, addresses, id } = useUser()
-  const modalFooterBg = useColorModeValue("gray.100", "gray.800")
   const { setIsDelegateConnection } = useWeb3ConnectionManager()
+  const { id } = useUser()
 
   const connectorName = (c) =>
     c instanceof MetaMask
@@ -61,7 +59,7 @@ const AccountModal = ({ isOpen, onClose }) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} colorScheme="duotone">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Account</ModalHeader>
@@ -96,7 +94,7 @@ const AccountModal = ({ isOpen, onClose }) => {
                 </HStack>
               </Stack>
             </ModalBody>
-            <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
+            <ModalFooter flexDir="column" pt="10">
               <AccountConnections />
             </ModalFooter>
           </>

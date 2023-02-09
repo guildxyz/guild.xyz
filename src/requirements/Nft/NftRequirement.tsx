@@ -1,7 +1,8 @@
 import { Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
+import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
-import OpenseaUrl from "components/[guild]/Requirements/components/OpenseaUrl"
+import GuildCheckout from "components/[guild]/Requirements/components/GuildCheckout"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -60,7 +61,12 @@ const NftRequirement = (props: RequirementProps) => {
         )
       }
       isImageLoading={nftDataLoading}
-      footer={<OpenseaUrl />}
+      footer={
+        <>
+          <GuildCheckout />
+          <BlockExplorerUrl />
+        </>
+      }
       {...props}
     >
       {"Own "}
