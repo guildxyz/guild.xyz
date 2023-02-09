@@ -13,7 +13,7 @@ const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
     formState: { errors },
   } = useFormContext()
 
-  const contractAddress = useWatch({ name: `${baseFieldPath}.address` })
+  const badgeChain = useWatch({ name: `${baseFieldPath}.chain` })
   const badgeId = useWatch({ name: `${baseFieldPath}.data.id` })
 
   const { data, isValidating } = use101Courses()
@@ -45,13 +45,12 @@ const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
           value={
             options?.find(
               (option) =>
-                option.value === badgeId &&
-                option.contractAddress === contractAddress
+                option.value === badgeId && option.chainId === Chains[badgeChain]
             ) ?? null
           }
           afterOnChange={(newValue) => {
-            setValue(`${baseFieldPath}.chain`, Chains[newValue.chainId])
-            setValue(`${baseFieldPath}.address`, newValue.contractAddress)
+            setValue(`${baseFieldPath}.chain`, Chains[newValue?.chainId] ?? null)
+            setValue(`${baseFieldPath}.address`, newValue?.contractAddress ?? null)
           }}
         />
 
