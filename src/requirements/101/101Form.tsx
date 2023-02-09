@@ -1,13 +1,20 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useFormState } from "react-hook-form"
+import { Chains, RPC } from "connectors"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import use101Courses from "./hooks/use101Courses"
 
 const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
-  const { errors } = useFormState()
+  const {
+    setValue,
+    formState: { errors },
+  } = useFormContext()
+
+  const badgeChain = useWatch({ name: `${baseFieldPath}.chain` })
+  const badgeId = useWatch({ name: `${baseFieldPath}.data.id` })
 
   const { data, isValidating } = use101Courses()
 
@@ -15,6 +22,9 @@ const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
     value: badge.onChainId.toString(),
     label: badge.courses[0]?.title,
     img: badge.courses[0]?.creator.image,
+    details: RPC[Chains[badge.contract.chainId]].chainName,
+    chainId: badge.contract.chainId,
+    contractAddress: badge.contract.address.toLowerCase(),
   }))
 
   return (
@@ -32,6 +42,16 @@ const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
           placeholder="Choose course"
           isLoading={!data && isValidating}
           options={options}
+          value={
+            options?.find(
+              (option) =>
+                option.value === badgeId && option.chainId === Chains[badgeChain]
+            ) ?? null
+          }
+          afterOnChange={(newValue) => {
+            setValue(`${baseFieldPath}.chain`, Chains[newValue?.chainId] ?? null)
+            setValue(`${baseFieldPath}.address`, newValue?.contractAddress ?? null)
+          }}
         />
 
         <FormErrorMessage>
