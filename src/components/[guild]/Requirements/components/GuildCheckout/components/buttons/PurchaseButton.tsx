@@ -49,7 +49,7 @@ const PurchaseButton = (): JSX.Element => {
     estimateGasError ||
     !agreeWithTOS ||
     Chains[chainId] !== requirement.chain ||
-    (pickedCurrencyIsNative &&
+    (!pickedCurrencyIsNative &&
       (isPriceLoading ||
         isAllowanceLoading ||
         allowanceError ||
