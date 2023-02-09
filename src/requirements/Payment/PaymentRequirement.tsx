@@ -26,11 +26,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     data?.fee && decimals ? formatUnits(data.fee, decimals) : undefined
 
   return (
-    <Requirement
-      isNegated={requirement.isNegated}
-      image={<Icon as={Coins} boxSize={6} />}
-      {...props}
-    >
+    <Requirement image={<Icon as={Coins} boxSize={6} />} {...props}>
       <>
         {"Pay "}
         <DataBlock
