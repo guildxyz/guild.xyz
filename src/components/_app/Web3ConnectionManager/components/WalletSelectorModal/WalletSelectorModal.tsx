@@ -78,7 +78,7 @@ const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
 
-  const { isActive, account, connector, chainId } = useWeb3React()
+  const { isActive, account, connector } = useWeb3React()
   const { data: user } = useSWRImmutable<User>(account ? `/user/${account}` : null)
   const [error, setError] = useState<WalletError & Error>(null)
 
