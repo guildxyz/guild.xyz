@@ -35,15 +35,14 @@ const PurchaseButton = (): JSX.Element => {
   } = useBalance(pickedCurrency, Chains[requirement?.chain])
 
   const pickedCurrencyIsNative =
-    pickedCurrency !== RPC[Chains[chainId]].nativeCurrency.symbol
+    pickedCurrency === RPC[Chains[chainId]].nativeCurrency.symbol
 
   const isSufficientBalance =
     priceInWei &&
-    coinBalance &&
-    tokenBalance &&
+    (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance.lt(priceInWei)
-      : tokenBalance.lt(priceInWei))
+      ? coinBalance?.gt(BigNumber.from(priceInWei))
+      : tokenBalance?.gt(BigNumber.from(priceInWei)))
 
   const isDisabled =
     error ||
