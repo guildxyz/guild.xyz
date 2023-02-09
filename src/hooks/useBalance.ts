@@ -5,6 +5,7 @@ import { useWeb3React } from "@web3-react/core"
 import { Chains, RPC } from "connectors"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import useSWR, { KeyedMutator } from "swr"
+import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 
 const FALLBACK = BigNumber.from(0)
 
@@ -59,7 +60,8 @@ const useBalance = (
     fetchBalance
   )
 
-  const shouldFetchTokenBalance = shouldFetchCoinBalance && tokenAddress
+  const shouldFetchTokenBalance =
+    shouldFetchCoinBalance && ADDRESS_REGEX.test(tokenAddress)
 
   const {
     data: tokenBalance,

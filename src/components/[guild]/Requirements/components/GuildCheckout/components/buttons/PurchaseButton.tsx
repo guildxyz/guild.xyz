@@ -2,6 +2,7 @@ import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
+import useBalance from "hooks/useBalance"
 import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
@@ -24,23 +25,46 @@ const PurchaseButton = (): JSX.Element => {
 
   const { onSubmit, isLoading, estimateGasError } = usePurchaseAsset()
 
-  const isEnoughAllowance =
+  const isSufficientAllowance =
     priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
+
+  const {
+    coinBalance,
+    tokenBalance,
+    isLoading: isBalanceLoading,
+  } = useBalance(pickedCurrency, Chains[requirement?.chain])
+
+  const pickedCurrencyIsNative =
+    pickedCurrency !== RPC[Chains[chainId]].nativeCurrency.symbol
+
+  const isSufficientBalance =
+    priceInWei &&
+    coinBalance &&
+    tokenBalance &&
+    (pickedCurrencyIsNative
+      ? coinBalance.lt(priceInWei)
+      : tokenBalance.lt(priceInWei))
 
   const isDisabled =
     error ||
     estimateGasError ||
     !agreeWithTOS ||
     Chains[chainId] !== requirement.chain ||
-    (pickedCurrency !== RPC[Chains[chainId]].nativeCurrency.symbol &&
-      (isPriceLoading || isAllowanceLoading || allowanceError || !isEnoughAllowance))
+    (pickedCurrencyIsNative &&
+      (isPriceLoading ||
+        isAllowanceLoading ||
+        allowanceError ||
+        !isSufficientAllowance)) ||
+    isBalanceLoading ||
+    !isSufficientBalance
 
   const errorMsg =
     (error && "Couldn't calculate price") ??
     (estimateGasError &&
       (estimateGasError?.data?.message?.includes("insufficient")
         ? "Insufficient funds for gas"
-        : "Couldn't estimate gas"))
+        : "Couldn't estimate gas")) ??
+    (!isSufficientBalance && "Insufficient balance")
 
   return (
     <Button
@@ -53,7 +77,7 @@ const PurchaseButton = (): JSX.Element => {
       onClick={onSubmit}
       data-dd-action-name="PurchaseButton (GuildCheckout)"
     >
-      {errorMsg ?? "Purchase"}
+      {errorMsg || "Purchase"}
     </Button>
   )
 }
