@@ -6,7 +6,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { FEE_COLLECTOR_CONTRACT } from "requirements/Payment/PaymentForm"
 import ERC20_ABI from "static/abis/erc20Abi.json"
-import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
+import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
 
 type RegisterVaultParams = {
   owner: string
@@ -52,8 +52,8 @@ const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
       provider.getSigner(account).connectUnchecked()
     )
 
-    // TODO: not sure if we should pass something else here instead of "0" as the event ID...
-    const registerVaultParams = [0, owner, token, feeInWei]
+    // TODO: checkbox for multiple payments (3rd param)
+    const registerVaultParams = [owner, token, false, feeInWei]
 
     try {
       await feeCollectorContract.callStatic.registerVault(...registerVaultParams)

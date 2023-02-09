@@ -1,10 +1,10 @@
-import { Flex, Icon, Stack, Text } from "@chakra-ui/react"
+import { Flex, Icon, Stack, Text, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chain, Chains } from "connectors"
-import { Check } from "phosphor-react"
+import { Check, Question } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -14,7 +14,7 @@ import RegisterVaultForm, {
 import useRegisterVault from "./components/RegisterVaultForm/hooks/useRegisterVault"
 
 export const PAYMENT_SUPPORTED_CHAINS: Chain[] = ["ETHEREUM", "POLYGON", "GOERLI"]
-export const FEE_COLLECTOR_CONTRACT = "0x8c82a71b629db618847682cd3155e6742304b710"
+export const FEE_COLLECTOR_CONTRACT = "0x8726913dc757025028a754071578e0c98b9d942c"
 
 const PaymentForm = ({
   baseFieldPath,
@@ -72,6 +72,11 @@ const PaymentForm = ({
               mr={2}
               colorScheme="blue"
               onClick={() => requestNetworkChange(Chains[chain])}
+              rightIcon={
+                <Tooltip label="This feature is available on Görli">
+                  <Icon as={Question} />
+                </Tooltip>
+              }
             >
               Switch network
             </Button>
