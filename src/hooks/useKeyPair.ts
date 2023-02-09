@@ -111,6 +111,7 @@ const setKeyPair = async ({
     userId: signedUserId,
     signature,
     nonce,
+    isDelegate,
   } = JSON.parse(signedValidation.signedPayload)
 
   const shouldSendLink =
@@ -125,7 +126,9 @@ const setKeyPair = async ({
 
   let storedKeyPair: StoredKeyPair
 
-  if (!shouldSendLink) {
+  const prevKeyPair = await getKeyPairFromIdb(userId).catch(() => null)
+
+  if (!shouldSendLink && (!isDelegate || !prevKeyPair)) {
     storedKeyPair = generatedKeyPair
 
     /**
@@ -282,6 +285,14 @@ const useKeyPair = () => {
               `/user/details/${account}`,
               { method: "POST", body: {} },
             ])
+          ).then(() =>
+            setTimeout(() => {
+              mutate(unstable_serialize(["delegateCashVaults", user?.id])).then(
+                () => {
+                  window.localStorage.removeItem(`isDelegateDismissed_${user?.id}`)
+                }
+              )
+            }, 500)
           )
         }, 500)
 
@@ -347,7 +358,7 @@ const useKeyPair = () => {
     isValid,
     set: {
       ...setSubmitResponse,
-      onSubmit: async (shouldLinkToUser: boolean) => {
+      onSubmit: async (shouldLinkToUser: boolean, isDelegate?: boolean) => {
         const body: SetKeypairPayload = { pubKey: undefined }
 
         try {
@@ -394,8 +405,10 @@ const useKeyPair = () => {
           }
         }
 
-        if (isDelegateConnection) {
+        if (isDelegateConnection || isDelegate) {
+          const prevKeyPair = await getKeyPairFromIdb(user?.id)
           body.isDelegate = true
+          body.pubKey = prevKeyPair?.pubKey ?? body.pubKey
         }
 
         return setSubmitResponse.onSubmit(body)

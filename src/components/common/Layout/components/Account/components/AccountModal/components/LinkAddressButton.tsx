@@ -1,5 +1,6 @@
 import {
   Box,
+  Collapse,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -15,6 +16,9 @@ import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useKeyPair from "hooks/useKeyPair"
+import useVaults from "hooks/useVaults"
+import Image from "next/image"
 import { Plus, SignOut } from "phosphor-react"
 import { useState } from "react"
 
@@ -24,6 +28,9 @@ const LinkAddressButton = ({}) => {
   const { provider, connector, account } = useWeb3React<Web3Provider>()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
+
+  const vaults = useVaults()
+  const { set } = useKeyPair()
 
   if (!id) return null
 
@@ -56,6 +63,27 @@ const LinkAddressButton = ({}) => {
 
   return (
     <>
+      <Collapse in={vaults.length > 0} unmountOnExit style={{ width: "100%" }}>
+        <Button
+          leftIcon={
+            <Image
+              width={15}
+              height={15}
+              alt={"Delegate.caash logo"}
+              src={`/walletLogos/delegatecash.png`}
+            />
+          }
+          w="full"
+          onClick={() => {
+            set.onSubmit(false, true)
+          }}
+          isLoading={set.isLoading || set.isSigning}
+          loadingText="Check your wallet"
+        >
+          Link {vaults.length > 1 ? vaults.length : ""} unlinked vault
+          {vaults.length > 1 ? "s" : ""}
+        </Button>
+      </Collapse>
       <Button
         leftIcon={<Plus />}
         w="full"

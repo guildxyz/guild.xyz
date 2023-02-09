@@ -9,7 +9,6 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
-  Tag,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
@@ -57,7 +56,6 @@ const DelegateCashButton = (): JSX.Element => {
             }}
           >
             {connectorName}
-            <Tag ml="2">Coming soon</Tag>
           </Button>
         </Box>
       </PopoverTrigger>
