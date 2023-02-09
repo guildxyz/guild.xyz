@@ -43,6 +43,12 @@ const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     },
   })
 
+  const handleChange = (newValue) => {
+    if (/^[0-9]*\.0*$/i.test(newValue)) return scoreFieldOnChange(newValue)
+    const parsedValue = parseFloat(newValue)
+    return scoreFieldOnChange(isNaN(parsedValue) ? "" : parsedValue)
+  }
+
   return (
     <Stack spacing={4} alignItems="start" w="full">
       <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
@@ -66,7 +72,7 @@ const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
           ref={scoreFieldRef}
           name={scoreFieldName}
           value={scoreFieldValue ?? undefined}
-          onChange={scoreFieldOnChange}
+          onChange={handleChange}
           onBlur={scoreFieldOnBlur}
           min={-1000000000}
           max={1000000000}
