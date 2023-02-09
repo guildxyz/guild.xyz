@@ -15,7 +15,7 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
             return (
               <>
                 {"Have a Gitcoin Passport with the "}
-                <DataBlock>{requirement.data?.stamp ?? "unknown"}</DataBlock>
+                <DataBlock>{requirement.data.stamp}</DataBlock>
                 {" stamp"}
               </>
             )
@@ -23,8 +23,10 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
             return (
               <>
                 {"Have a Gitcoin Passport with "}
-                <DataBlock>{requirement.data?.score ?? "unknown"}</DataBlock>
-                {" score"}
+                <DataBlock>{requirement.data.score}</DataBlock>
+                {" score in the "}
+                <DataBlock>{`#${requirement.data.id}`}</DataBlock>
+                {" community"}
               </>
             )
           default:

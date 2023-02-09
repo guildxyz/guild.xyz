@@ -368,18 +368,6 @@ export const REQUIREMENTS_DATA = [
     types: ["SISMO"],
   },
   {
-    icon: "/requirementLogos/gitcoin-passport.svg",
-    name: "Gitcoin Passport",
-    fileNameBase: "GitcoinPassport",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/GitcoinPassport/GitcoinPassportForm")
-    ),
-    types: ["GITCOIN", "GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
-  },
-  {
     icon: "/requirementLogos/sound.png",
     name: "Sound",
     fileNameBase: "Sound",
@@ -481,6 +469,18 @@ export const REQUIREMENTS_DATA = [
       "SHIELD_INDIRECT_DEPOSITS",
       "SHIELD_TORNADO_CASH",
     ],
+  },
+  {
+    icon: "/requirementLogos/gitcoin-passport.svg",
+    name: "Gitcoin Passport",
+    fileNameBase: "GitcoinPassport",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/GitcoinPassport/GitcoinPassportForm")
+    ),
+    types: ["GITCOIN", "GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
   },
 ] as const
 

@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormLabel,
+  Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -9,32 +10,15 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
-import { useController, useFormState } from "react-hook-form"
+import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import useGitcoinPassportScorers from "../hooks/useGitcoinPassportScorers"
 
 const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
-  const { errors } = useFormState()
-
   const {
-    field: {
-      name: scorerFieldName,
-      onBlur: scorerFieldOnBlur,
-      onChange: scorerFieldOnChange,
-      ref: scorerFieldRef,
-      value: scorerFieldValue,
-    },
-  } = useController({
-    name: `${baseFieldPath}.data.scorer`,
-    rules: { required: "This field is required" },
-  })
-
-  const { scorers, isStampsLoading } = useGitcoinPassportScorers()
-
-  const selected = scorers.find((stamp) => stamp.value === scorerFieldValue)
+    register,
+    formState: { errors },
+  } = useFormContext()
 
   const {
     field: {
@@ -61,25 +45,17 @@ const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
 
   return (
     <Stack spacing={4} alignItems="start" w="full">
-      <FormControl
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.scorer}
-      >
-        <FormLabel>Scorer ID</FormLabel>
+      <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
+        <FormLabel>Community ID</FormLabel>
 
-        <StyledSelect
-          isClearable
-          ref={scorerFieldRef}
-          name={scorerFieldName}
-          isLoading={isStampsLoading}
-          isDisabled={isStampsLoading}
-          options={scorers}
-          onChange={(newValue: SelectOption) => scorerFieldOnChange(newValue?.value)}
-          value={selected ?? ""}
-          onBlur={scorerFieldOnBlur}
+        <Input
+          {...register(`${baseFieldPath}.data.id`, {
+            required: "This field is required",
+          })}
         />
 
         <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.scorer?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
 
