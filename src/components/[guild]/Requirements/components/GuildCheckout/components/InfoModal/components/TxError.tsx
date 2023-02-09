@@ -23,8 +23,12 @@ const TxError = (): JSX.Element => (
 
       <Text mb={4}>
         {"Couldn't purchase the assets. Learn about possible reasons here: "}
-        <Link href="" colorScheme="blue">
-          todo
+        <Link
+          href="https://support.opensea.io/hc/en-us/articles/7597082600211"
+          colorScheme="blue"
+          isExternal
+        >
+          https://support.opensea.io/hc/en-us/articles/7597082600211
         </Link>{" "}
       </Text>
     </ModalBody>
