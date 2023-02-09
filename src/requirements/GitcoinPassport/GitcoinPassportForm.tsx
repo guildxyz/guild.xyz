@@ -49,9 +49,7 @@ const GitcoinPassportForm = ({ baseFieldPath }: RequirementFormProps) => {
 
   return (
     <Stack spacing={4} alignItems="start">
-      <FormControl
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
-      >
+      <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.type}>
         <FormLabel>Type</FormLabel>
 
         <ControlledSelect
