@@ -1,7 +1,6 @@
 import {
   ButtonGroup,
   Collapse,
-  Flex,
   HStack,
   Icon,
   ModalBody,
@@ -10,14 +9,8 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
   Spinner,
   Stack,
-  Tag,
   Text,
   Tooltip,
 } from "@chakra-ui/react"
@@ -27,15 +20,15 @@ import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useIntercom } from "components/_app/IntercomProvider"
 import { Chains, RPC } from "connectors"
-import { Chat, ShoppingCartSimple } from "phosphor-react"
+import { ShoppingCartSimple } from "phosphor-react"
 import {
   ALLOWED_GUILDS,
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
 import BlockExplorerUrl from "../BlockExplorerUrl"
+import AlphaTag from "./components/AlphaTag"
 import AllowanceButton from "./components/buttons/AllowanceButton"
 import PurchaseButton from "./components/buttons/PurchaseButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
@@ -51,8 +44,6 @@ import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
 const GuildCheckout = (): JSX.Element => {
-  const { triggerChat } = useIntercom()
-
   const { account, chainId } = useWeb3React()
   const { requirement, isOpen, onOpen, onClose, isInfoModalOpen } =
     useGuildCheckoutContext()
@@ -102,31 +93,7 @@ const GuildCheckout = (): JSX.Element => {
             <HStack>
               <Text as="span">Buy requirement</Text>
 
-              <Popover trigger="hover">
-                <PopoverTrigger>
-                  <Tag size="sm" position="relative" top={0.5} fontFamily="body">
-                    Alpha
-                  </Tag>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverArrow />
-                  <PopoverBody fontFamily="body">
-                    <Text fontSize="md" fontWeight="normal">
-                      This feature is still in alpha. If you run into any issues
-                      please let us know!
-                    </Text>
-                    <Flex mt="2" w="full" justifyContent={"right"}>
-                      <Button
-                        size="sm"
-                        onClick={triggerChat}
-                        leftIcon={<Icon as={Chat} />}
-                      >
-                        Open help center
-                      </Button>
-                    </Flex>
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
+              <AlphaTag />
             </HStack>
           </ModalHeader>
           <ModalCloseButton />
