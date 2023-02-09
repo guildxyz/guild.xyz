@@ -91,7 +91,10 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
         <InputGroup>
           {selectedGuild?.img && (
             <InputLeftElement>
-              <OptionImage img={selectedGuild?.img} alt={selectedGuild?.label} />
+              <OptionImage
+                img={selectedGuild?.img as string}
+                alt={selectedGuild?.label}
+              />
             </InputLeftElement>
           )}
           <ControlledSelect

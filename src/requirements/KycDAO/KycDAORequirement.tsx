@@ -17,7 +17,6 @@ const KycDAORequirement = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={
         <Text as="span" fontWeight="bold" fontSize="xx-small">
           KYC

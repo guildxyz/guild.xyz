@@ -1,7 +1,8 @@
 import { Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
+import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
-import OpenseaUrl from "components/[guild]/Requirements/components/OpenseaUrl"
+import GuildCheckout from "components/[guild]/Requirements/components/GuildCheckout"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -30,26 +31,7 @@ const getNounsRequirementType = (trait: Trait) =>
         ?.filename
 
 const NftRequirement = (props: RequirementProps) => {
-  const receivedRequirement = useRequirementContext()
-
-  // Converting the requirement to the new format if needed
-  const requirement = Object.entries(receivedRequirement.data?.attribute ?? {})
-    .length
-    ? {
-        ...receivedRequirement,
-        data: {
-          ...receivedRequirement.data,
-          attributes: [
-            {
-              trait_type: receivedRequirement.data?.attribute?.trait_type,
-              interval: receivedRequirement.data.attribute.interval,
-              value: receivedRequirement.data.attribute.value,
-            },
-          ],
-          attribute: undefined,
-        },
-      }
-    : receivedRequirement
+  const requirement = useRequirementContext()
 
   const { metadata: metadataWithTraits, isLoading: isMetadataWithTraitsLoading } =
     useNftMetadata(requirement.chain, requirement.address, requirement.data.id)
@@ -69,7 +51,6 @@ const NftRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={
         shouldRenderImage ? (
           nftImage
@@ -80,7 +61,12 @@ const NftRequirement = (props: RequirementProps) => {
         )
       }
       isImageLoading={nftDataLoading}
-      footer={<OpenseaUrl />}
+      footer={
+        <>
+          <GuildCheckout />
+          <BlockExplorerUrl />
+        </>
+      }
       {...props}
     >
       {"Own "}

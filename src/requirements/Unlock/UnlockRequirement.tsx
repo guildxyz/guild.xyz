@@ -9,7 +9,6 @@ const UnlockRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={`https://locksmith.unlock-protocol.com/lock/${requirement.address}/icon`}
       footer={<BlockExplorerUrl />}
       {...props}

@@ -41,7 +41,10 @@ const OtterspaceForm = ({ baseFieldPath }: RequirementFormProps) => {
         <InputGroup>
           {pickedBadge && (
             <InputLeftElement>
-              <OptionImage img={pickedBadge?.img} alt={pickedBadge?.label} />
+              <OptionImage
+                img={pickedBadge?.img as string}
+                alt={pickedBadge?.label}
+              />
             </InputLeftElement>
           )}
 

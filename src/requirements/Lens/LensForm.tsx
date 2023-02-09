@@ -185,7 +185,10 @@ const LensProfileSelect = ({
 
   const { handles, restCount, isLoading } = useLensProfiles(search)
 
-  const options = handles?.map((handle) => ({ label: handle, value: handle }))
+  const options = handles?.map((handle) => ({
+    label: handle,
+    value: handle,
+  }))
 
   if (restCount > 0)
     options.push({ label: `${restCount} more`, value: 0, isDisabled: true })

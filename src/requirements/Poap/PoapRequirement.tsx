@@ -12,12 +12,7 @@ const PoapRequirement = (props: RequirementProps) => {
   const { poap, isLoading, error } = usePoap(requirement?.data?.id)
 
   return (
-    <Requirement
-      isNegated={requirement.isNegated}
-      image={poap?.image_url}
-      isImageLoading={isLoading}
-      {...props}
-    >
+    <Requirement image={poap?.image_url} isImageLoading={isLoading} {...props}>
       {"Own the "}
       {!poap || isLoading || error ? (
         <DataBlock
