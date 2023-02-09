@@ -8,7 +8,7 @@ const InfoModalFooter = (): JSX.Element => {
   return (
     <ModalFooter>
       <Button
-        size="xl"
+        size="lg"
         colorScheme="blue"
         w="full"
         onClick={onInfoModalClose}
