@@ -18,8 +18,7 @@ import usePayFee from "components/[guild]/claim-poap/hooks/usePayFee"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
-import useCoinBalance from "hooks/useCoinBalance"
-import useTokenBalance from "hooks/useTokenBalance"
+import useBalance from "hooks/useBalance"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
 import { PoapContract } from "types"
@@ -50,16 +49,14 @@ const PayFeeMenuItem = ({
   } = useTokenData(Chains[poapContractData.chainId], vaultData?.token)
   const formattedPrice = formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
 
-  const { balance: usersCoinBalance, isLoading: isUsersCoinBalanceLoading } =
-    useCoinBalance(poapContractData?.chainId)
-  const { balance: usersTokenBalance, isLoading: isUsersTokenBalanceLoading } =
-    useTokenBalance(
-      vaultData?.token === NULL_ADDRESS ? null : vaultData?.token,
-      poapContractData?.chainId
-    )
+  const {
+    coinBalance,
+    tokenBalance,
+    isLoading: isBalanceLoading,
+  } = useBalance(vaultData?.token, poapContractData?.chainId)
 
   const sufficientBalance = (
-    vaultData?.token === NULL_ADDRESS ? usersCoinBalance : usersTokenBalance
+    vaultData?.token === NULL_ADDRESS ? coinBalance : tokenBalance
   )?.gte(vaultData?.fee ?? BigNumber.from(0))
 
   const allowance = useAllowance(vaultData?.token, poapContractData?.chainId)
@@ -86,11 +83,7 @@ const PayFeeMenuItem = ({
           <HStack>
             <SkeletonCircle
               boxSize={5}
-              isLoaded={
-                !isValidating &&
-                !isUsersCoinBalanceLoading &&
-                !isUsersTokenBalanceLoading
-              }
+              isLoaded={!isValidating && !isBalanceLoading}
             >
               <Circle
                 size={5}
@@ -103,13 +96,7 @@ const PayFeeMenuItem = ({
                 />
               </Circle>
             </SkeletonCircle>
-            <Skeleton
-              isLoaded={
-                !isValidating &&
-                !isUsersCoinBalanceLoading &&
-                !isUsersTokenBalanceLoading
-              }
-            >
+            <Skeleton isLoaded={!isValidating && !isBalanceLoading}>
               <Text as="span" pr={4}>
                 {isValidating
                   ? "Pay fee"

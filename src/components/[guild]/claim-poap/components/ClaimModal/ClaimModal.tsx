@@ -38,8 +38,7 @@ import WalletAuthButtonWithBalance from "components/[guild]/JoinModal/components
 import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
 import processJoinPlatformError from "components/[guild]/JoinModal/utils/processJoinPlatformError"
 import { Chains } from "connectors"
-import useCoinBalance from "hooks/useCoinBalance"
-import useTokenBalance from "hooks/useTokenBalance"
+import useBalance from "hooks/useBalance"
 import useTokenData from "hooks/useTokenData"
 import {
   ArrowSquareOut,
@@ -147,15 +146,14 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
 
   const multiChainMonetized = guildPoap?.poapContracts?.length > 1
 
-  const { balance: usersCoinBalance, isLoading: isUsersCoinBalanceLoading } =
-    useCoinBalance(vaultChainId)
-  const { balance: usersTokenBalance, isLoading: isUsersTokenBalanceLoading } =
-    useTokenBalance(
-      vaultData?.token === NULL_ADDRESS ? null : vaultData?.token,
-      vaultChainId
-    )
+  const {
+    coinBalance,
+    tokenBalance,
+    isLoading: isBalanceLoading,
+  } = useBalance(vaultData?.token, vaultChainId)
+
   const sufficientBalance = (
-    vaultData?.token === NULL_ADDRESS ? usersCoinBalance : usersTokenBalance
+    vaultData?.token === NULL_ADDRESS ? coinBalance : tokenBalance
   )?.gte(vaultData?.fee ?? BigNumber.from(0))
 
   const allowance = useAllowance(vaultData?.token, vaultChainId)
@@ -236,8 +234,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           hasPaidLoading ||
                           !!loadingText ||
                           (isTokenDataLoading && !symbol && !decimals) ||
-                          isUsersCoinBalanceLoading ||
-                          isUsersTokenBalanceLoading
+                          isBalanceLoading
                         }
                         loadingText={loadingText ?? "Loading"}
                         title={hasPaid ? "Fee paid" : "Pay fee"}

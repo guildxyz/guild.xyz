@@ -225,7 +225,7 @@ const supportedSocialLinks = [
   "SNAPSHOT",
   "WEBSITE",
 ] as const
-type SocialLinkKey = typeof supportedSocialLinks[number]
+type SocialLinkKey = (typeof supportedSocialLinks)[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
 
 type GuildContact = {
@@ -242,7 +242,7 @@ type Guild = {
   showMembers: boolean
   memberCount: number
   hideFromExplorer: boolean
-  socialLinks?: SocialLinks // TODO
+  socialLinks?: SocialLinks
   contacts?: GuildContact[]
   createdAt: string
   admins: GuildAdmin[]

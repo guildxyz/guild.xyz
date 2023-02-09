@@ -1,6 +1,7 @@
 import {
   Box,
   Circle,
+  HStack,
   Img,
   SimpleGrid,
   Skeleton,
@@ -19,7 +20,6 @@ export type RequirementProps = PropsWithChildren<{
   withImgBg?: boolean
   footer?: JSX.Element
   rightElement?: JSX.Element
-  simple?: boolean
 }>
 
 const Requirement = ({
@@ -28,7 +28,6 @@ const Requirement = ({
   footer,
   withImgBg = true,
   rightElement,
-  simple,
   children,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -38,7 +37,7 @@ const Requirement = ({
     <SimpleGrid
       spacing={4}
       w="full"
-      py={simple ? 1 : 2}
+      py={2}
       templateColumns={`auto 1fr ${rightElement ? "auto" : ""}`}
       alignItems="center"
     >
@@ -86,9 +85,10 @@ const Requirement = ({
           {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
           {children}
         </Text>
-        {!simple && footer}
+
+        <HStack spacing={4}>{footer}</HStack>
       </VStack>
-      {!simple && rightElement}
+      {rightElement}
     </SimpleGrid>
   )
 }
