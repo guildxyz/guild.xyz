@@ -50,11 +50,11 @@ const ConnectRequirementPlatformButton = (props: ButtonProps) => {
       isLoading={isLoading}
       loadingText={loadingText}
       colorScheme={platform}
-      leftIcon={<Icon as={platforms[platform].icon} />}
+      leftIcon={<Icon as={platforms[platform]?.icon} />}
       iconSpacing="1"
       {...props}
     >
-      {`${isReconnection ? "Reconnect" : "Connect"} ${platforms[platform].name}`}
+      {`${isReconnection ? "Reconnect" : "Connect"} ${platforms[platform]?.name}`}
     </Button>
   )
 }

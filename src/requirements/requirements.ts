@@ -480,7 +480,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/PolygonId/PolygonIdForm")
     ),
-    types: ["POLYGON_ID_QUERY"],
+    types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
   },
 ] as const
 

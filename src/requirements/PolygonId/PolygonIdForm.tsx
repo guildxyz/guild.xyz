@@ -1,12 +1,21 @@
-import { FormControl, FormLabel, Stack, Textarea } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Icon,
+  Link,
+  Stack,
+  Text,
+  Textarea,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ArrowSquareOut } from "phosphor-react"
 import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 
-const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+const PolygonIdForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
-    setValue,
     control,
     formState: { errors, touchedFields },
   } = useFormContext()
@@ -15,13 +24,18 @@ const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     <Stack spacing={4} alignItems="start">
       <FormControl
         isRequired
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.query}
       >
         <FormLabel>Query:</FormLabel>
 
         <Controller
           control={control}
           name={`${baseFieldPath}.data.query` as const}
+          rules={{
+            validate: (value) =>
+              typeof value === "object" ||
+              "Invalid JSON. Please paste it to a validator to find out more!",
+          }}
           render={({ field: { onChange, onBlur, value: textareaValue, ref } }) => (
             <Textarea
               ref={ref}
@@ -35,19 +49,56 @@ const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              value={textareaValue ?? ""}
-              onChange={(e) => onChange(e.target.value)}
+              value={tryStringifyJSON(textareaValue)}
+              onChange={(e) => {
+                const value = e.target.value
+                const json = tryParseJSON(value)
+                onChange(json || value)
+              }}
               onBlur={onBlur}
             />
           )}
         />
+        <FormHelperText>
+          <Link
+            href="https://0xpolygonid.github.io/tutorials/verifier/verification-library/zk-query-language/"
+            isExternal
+          >
+            <Text fontSize="sm">Docs</Text>
+            <Icon ml={1} as={ArrowSquareOut} />
+          </Link>
+        </FormHelperText>
 
         <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.address?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.query?.message}
         </FormErrorMessage>
       </FormControl>
     </Stack>
   )
 }
 
-export default UnlockForm
+function tryParseJSON(jsonString) {
+  try {
+    const o = JSON.parse(jsonString)
+
+    if (o && typeof o === "object") {
+      return o
+    }
+  } catch (e) {}
+
+  return false
+}
+
+function tryStringifyJSON(jsonObject) {
+  try {
+    if (!jsonObject) return ""
+
+    if (typeof jsonObject !== "object") return jsonObject
+
+    return JSON.stringify(jsonObject, null, 2)
+  } catch (e) {}
+
+  return ""
+}
+
+export default PolygonIdForm

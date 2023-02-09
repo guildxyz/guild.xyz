@@ -32,7 +32,7 @@ const useConnectPlatform = (
   const user = useUser()
   const { mutate: mutateUser, platformUsers } = useUser()
   const { onOpen, authData, isAuthenticating, ...rest } =
-    platformAuthHooks[platform]()
+    platformAuthHooks[platform]?.() ?? {}
   const prevAuthData = usePrevious(authData)
   const { account } = useWeb3React()
   const fetcherWithSign = useFetcherWithSign()
