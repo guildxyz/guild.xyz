@@ -15,7 +15,9 @@ import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import { QRCodeSVG } from "qrcode.react"
 import useSWRImmutable from "swr/immutable"
+import { useFetcherWithSign } from "utils/fetcher"
 
 const ConnectPolygonID = (props: ButtonProps) => {
   const { id, roleId, type } = useRequirementContext()
@@ -56,6 +58,7 @@ const ConnectPolygonID = (props: ButtonProps) => {
 const ConnectPolygonIDModal = ({ isOpen, onClose }) => {
   const { type, data } = useRequirementContext()
 
+  const fetcherWithSign = useFetcherWithSign()
   const {
     data: response,
     isValidating,
@@ -63,8 +66,12 @@ const ConnectPolygonIDModal = ({ isOpen, onClose }) => {
   } = useSWRImmutable(
     isOpen
       ? [`/util/getGateCallback/${type}`, { body: { query: data.query } }]
-      : null
+      : null,
+    fetcherWithSign
   )
+
+  const qrCode = JSON.stringify(response?.data)
+  console.log(qrCode)
 
   return (
     <Modal
@@ -89,7 +96,12 @@ const ConnectPolygonIDModal = ({ isOpen, onClose }) => {
                 </Text>
               </>
             ) : (
-              <pre>{JSON.stringify(response)}</pre>
+              <>
+                <QRCodeSVG value={qrCode} size={300} />
+                <Text mt="4" mb="8">
+                  Scan with your Polygon ID app
+                </Text>
+              </>
             )}
           </Center>
         </ModalBody>
