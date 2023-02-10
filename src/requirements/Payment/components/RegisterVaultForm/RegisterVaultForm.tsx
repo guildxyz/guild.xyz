@@ -1,5 +1,6 @@
 import {
   FormControl,
+  FormHelperText,
   FormLabel,
   Input,
   InputGroup,
@@ -115,11 +116,13 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
                           )} */}
         </InputGroup>
 
+        <FormHelperText>Creators keep 90% of their revenue</FormHelperText>
+
         <FormErrorMessage>{feeFieldError?.message}</FormErrorMessage>
       </FormControl>
 
       <FormControl isRequired isInvalid={!!errors?.owner}>
-        <FormLabel>Address to pay to</FormLabel>
+        <FormLabel>Address to receive payments to</FormLabel>
         <InputGroup>
           {/* {isGnosisSafe && (
                 <InputLeftElement>
