@@ -18,10 +18,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Reward from "components/[guild]/RoleCard/components/Reward"
 import { Chains } from "connectors"
 import { Coin } from "phosphor-react"
-import {
-  paymentSupportedChains,
-  PAYMENT_ALLOWED_GUILDS,
-} from "utils/guildCheckout/constants"
+import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
 import BuyButton from "./components/buttons/BuyButton"
 import BuyPassAllowanceButton from "./components/buttons/BuyPassAllowanceButton"
@@ -61,8 +58,8 @@ const BuyPass = () => {
   if (
     !isInfoModalOpen &&
     // TODO: we'll be able to control this properly once we'll have feature flags
-    (!PAYMENT_ALLOWED_GUILDS.includes(id) ||
-      !account ||
+    // !PAYMENT_ALLOWED_GUILDS.includes(id) ||
+    (!account ||
       (!accessData && isAccessLoading) ||
       satisfiesRequirement ||
       requirement?.type !== "PAYMENT" ||
