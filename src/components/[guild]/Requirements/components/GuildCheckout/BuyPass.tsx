@@ -108,13 +108,13 @@ const BuyPass = () => {
                     I understand that if the owner changes requirements, I could lose
                     access.
                   </TOSCheckbox>
+
+                  <BuyPassAllowanceButton />
                 </Collapse>
 
-                <BuyPassAllowanceButton />
+                <BuyButton />
               </Stack>
             </Stack>
-
-            <BuyButton />
           </ModalFooter>
         </ModalContent>
       </Modal>

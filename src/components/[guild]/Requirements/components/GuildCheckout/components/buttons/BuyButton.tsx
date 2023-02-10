@@ -23,7 +23,7 @@ const BuyButton = (): JSX.Element => {
     FEE_COLLECTOR_CONTRACT[Chains[chainId]]
   )
 
-  const { estimateGasError } = usePayFee()
+  const { estimateGasError, onSubmit, isLoading } = usePayFee()
 
   const isSufficientAllowance = fee && allowance ? fee.lte(allowance) : false
 
@@ -66,11 +66,11 @@ const BuyButton = (): JSX.Element => {
     <Button
       size="lg"
       isDisabled={isDisabled}
-      // isLoading={isLoading}
+      isLoading={isLoading}
       loadingText="Check your wallet"
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
-      // onClick={onSubmit}
+      onClick={onSubmit}
       data-dd-action-name="BuyButton (GuildCheckout)"
     >
       {errorMsg || "Buy pass"}
