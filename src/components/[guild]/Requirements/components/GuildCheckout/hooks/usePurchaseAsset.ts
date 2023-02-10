@@ -85,11 +85,11 @@ const usePurchaseAsset = () => {
       generatedGetAssetsParams
     )
 
-  const purchaseAssetWithSetTx = (data?: GeneratedGetAssetsParams) =>
+  const purchaseAssetTransaction = (data?: GeneratedGetAssetsParams) =>
     purchaseAsset(tokenBuyerContract, data)
 
   const useSubmitData = useSubmitTransaction<GeneratedGetAssetsParams>(
-    purchaseAssetWithSetTx,
+    purchaseAssetTransaction,
     {
       onError: (error) => {
         showErrorToast(error)

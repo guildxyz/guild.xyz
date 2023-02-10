@@ -23,6 +23,8 @@ import {
   PAYMENT_ALLOWED_GUILDS,
 } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
+import BuyButton from "./components/buttons/BuyButton"
+import BuyPassAllowanceButton from "./components/buttons/BuyPassAllowanceButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import {
   GuildCheckoutProvider,
@@ -111,6 +113,8 @@ const BuyPass = () => {
                 <BuyPassAllowanceButton />
               </Stack>
             </Stack>
+
+            <BuyButton />
           </ModalFooter>
         </ModalContent>
       </Modal>

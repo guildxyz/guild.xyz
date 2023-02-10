@@ -12,6 +12,7 @@ import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Info } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
+import usePayFee from "../hooks/usePayFee"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 import PriceFallback from "./PriceFallback"
 
@@ -35,16 +36,18 @@ const PaymentFeeAndTotal = (): JSX.Element => {
       ? priceInSellToken * (guildSharePercentage / 100)
       : 0
 
-  // TODO
-  const estimatedGasFee = 10000
+  const nativeCurrency = RPC[requirement.chain].nativeCurrency
+  const { estimatedGasFee } = usePayFee()
+
+  const estimatedGasInFloat = estimatedGasFee
+    ? parseFloat(formatUnits(estimatedGasFee, nativeCurrency.decimals))
+    : undefined
+
+  const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
+  const calculatedGasFee = isNativeCurrency ? estimatedGasInFloat : 0
 
   const isTooSmallPrice = priceInSellToken < 0.001
   const isTooSmallFee = guildFeeInSellToken < 0.001
-
-  const nativeCurrency = RPC[requirement.chain].nativeCurrency
-  const calculatedGasFee = estimatedGasFee
-    ? parseFloat(formatUnits(estimatedGasFee, nativeCurrency.decimals))
-    : 0
 
   return (
     <Stack divider={<Divider />}>
@@ -103,6 +106,18 @@ const PaymentFeeAndTotal = (): JSX.Element => {
           </Text>
         </PriceFallback>
       </HStack>
+
+      {estimatedGasFee && !isNativeCurrency && (
+        // We're displaying gas fee here when the fee should be paid in an ERC20 token
+        <Text as="span" colorScheme="gray" fontSize="sm">
+          {`Estimated gas fee: ${parseFloat(
+            formatUnits(
+              estimatedGasFee,
+              RPC[requirement.chain].nativeCurrency.decimals
+            )
+          ).toFixed(8)} ${RPC[requirement.chain].nativeCurrency.symbol}`}
+        </Text>
+      )}
     </Stack>
   )
 }
