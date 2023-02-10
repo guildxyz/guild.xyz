@@ -1,16 +1,15 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
-import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
-import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
-import usePrice from "../../hooks/usePrice"
+import useVault from "requirements/Payment/hooks/useVault"
+import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
+import useAllowance from "../../hooks/useAllowance"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
-const PurchaseAllowanceButton = (): JSX.Element => {
+const BuyPassAllowanceButton = (): JSX.Element => {
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
   const requirementChainId = Chains[requirement.chain]
 
@@ -26,9 +25,9 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
 
   const {
-    data: { priceInWei },
-    isValidating: isPriceLoading,
-  } = usePrice()
+    data: { fee },
+    isValidating: isVaultLoading,
+  } = useVault(requirement.data.id, requirement.chain)
 
   const {
     allowance,
@@ -37,10 +36,9 @@ const PurchaseAllowanceButton = (): JSX.Element => {
     allowanceError,
     onSubmit,
     isLoading,
-  } = useAllowance(pickedCurrency, TOKEN_BUYER_CONTRACT[Chains[chainId]])
+  } = useAllowance(pickedCurrency, FEE_COLLECTOR_CONTRACT[Chains[chainId]])
 
-  const isEnoughAllowance =
-    priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
+  const isEnoughAllowance = fee && allowance ? fee.lte(allowance) : false
 
   return (
     <Collapse
@@ -55,9 +53,9 @@ const PurchaseAllowanceButton = (): JSX.Element => {
         size="lg"
         colorScheme={allowanceError ? "red" : "blue"}
         isDisabled={isEnoughAllowance}
-        isLoading={isPriceLoading || isAllowanceLoading || isLoading}
+        isLoading={isVaultLoading || isAllowanceLoading || isLoading}
         loadingText={
-          isPriceLoading || isAllowanceLoading
+          isVaultLoading || isAllowanceLoading
             ? "Checking allowance"
             : isAllowing
             ? "Allowing"
@@ -81,7 +79,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
             </Tooltip>
           )
         }
-        data-dd-action-name="PurchaseAllowanceButton (GuildCheckout)"
+        data-dd-action-name="BuyPassAllowanceButton (GuildCheckout)"
       >
         {allowanceError
           ? "Couldn't fetch allowance"
@@ -91,4 +89,4 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   )
 }
 
-export default PurchaseAllowanceButton
+export default BuyPassAllowanceButton

@@ -100,12 +100,15 @@ const BuyPass = () => {
 
               <Stack spacing={2}>
                 <SwitchNetworkButton />
+
                 <Collapse in={chainId === Chains[requirement.chain]}>
                   <TOSCheckbox>
                     I understand that if the owner changes requirements, I could lose
                     access.
                   </TOSCheckbox>
                 </Collapse>
+
+                <BuyPassAllowanceButton />
               </Stack>
             </Stack>
           </ModalFooter>
