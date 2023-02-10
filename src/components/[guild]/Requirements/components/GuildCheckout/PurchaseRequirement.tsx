@@ -22,9 +22,9 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
 import {
-  ALLOWED_GUILDS,
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
+  PURCHASE_ALLOWED_GUILDS,
 } from "utils/guildCheckout/constants"
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import AlphaTag from "./components/AlphaTag"
@@ -66,7 +66,7 @@ const PurchaseRequirement = (): JSX.Element => {
   if (
     !isInfoModalOpen &&
     // TODO: we'll be able to control this properly once we'll have feature flags
-    (!ALLOWED_GUILDS.includes(id) ||
+    (!PURCHASE_ALLOWED_GUILDS.includes(id) ||
       !account ||
       (!accessData && isAccessLoading) ||
       satisfiesRequirement ||

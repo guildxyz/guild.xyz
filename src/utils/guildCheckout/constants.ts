@@ -25,7 +25,8 @@ export const TOKEN_BUYER_CONTRACT: Partial<Record<Chain, string>> = {
 
 // 9839 - Arbitrum
 // 4486 - Johnny's guild
-export const ALLOWED_GUILDS = [9839, 4486]
+export const PURCHASE_ALLOWED_GUILDS = [9839, 4486]
+export const PAYMENT_ALLOWED_GUILDS = [4486]
 
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   // ETHEREUM: "https://api.0x.org",

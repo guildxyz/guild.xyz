@@ -1,6 +1,7 @@
 import { Icon } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -26,7 +27,11 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     data?.fee && decimals ? formatUnits(data.fee, decimals) : undefined
 
   return (
-    <Requirement image={<Icon as={Coins} boxSize={6} />} {...props}>
+    <Requirement
+      image={<Icon as={Coins} boxSize={6} />}
+      footer={<BuyPass />}
+      {...props}
+    >
       <>
         {"Pay "}
         <DataBlock

@@ -21,7 +21,7 @@ const fetchVault = async (
 ): Promise<GetVaultResponse> => {
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0], Chains[chain])
   const feeCollectorContract = new Contract(
-    FEE_COLLECTOR_CONTRACT[Chains[chain]],
+    FEE_COLLECTOR_CONTRACT[chain],
     FEE_COLLECTOR_ABI,
     provider
   )
