@@ -46,14 +46,11 @@ const BuyPass = () => {
     txSuccess,
     txHash,
   } = useGuildCheckoutContext()
-  const { id, name, roles } = useGuild()
+  const { name, roles } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
   )
-  const satisfiesRequirement = accessData?.requirements?.find(
-    (req) => req.requirementId === requirement.id
-  )?.access
 
   if (
     !isInfoModalOpen &&
@@ -61,7 +58,6 @@ const BuyPass = () => {
     // !PAYMENT_ALLOWED_GUILDS.includes(id) ||
     (!account ||
       (!accessData && isAccessLoading) ||
-      satisfiesRequirement ||
       requirement?.type !== "PAYMENT" ||
       !paymentSupportedChains.includes(requirement?.chain))
   )
