@@ -1,5 +1,4 @@
 import {
-  ButtonGroup,
   Collapse,
   HStack,
   Icon,
@@ -12,7 +11,6 @@ import {
   Spinner,
   Stack,
   Text,
-  Tooltip,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
@@ -40,6 +38,7 @@ import {
 import InfoModal from "./components/InfoModal"
 import PurchasedRequirementInfo from "./components/InfoModal/components/PurchasedRequirementInfo"
 import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
+import PaymentModeButtons from "./components/PaymentModeButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
@@ -92,7 +91,6 @@ const GuildCheckout = (): JSX.Element => {
           <ModalHeader>
             <HStack>
               <Text as="span">Buy requirement</Text>
-
               <AlphaTag />
             </HStack>
           </ModalHeader>
@@ -118,32 +116,7 @@ const GuildCheckout = (): JSX.Element => {
           </ModalBody>
 
           <ModalFooter pt={10} flexDir="column">
-            <ButtonGroup size="sm" w="full" mb="8">
-              <Button
-                autoFocus={false}
-                colorScheme="blue"
-                variant="subtle"
-                w="full"
-                borderRadius="md"
-                data-dd-action-name="Pay with crypto (GuildCheckout)"
-              >
-                Pay with crypto
-              </Button>
-
-              <Tooltip label="Coming soon" placement="top" hasArrow>
-                <Button
-                  autoFocus={false}
-                  variant="subtle"
-                  w="full"
-                  borderRadius="md"
-                  isDisabled
-                  data-dd-action-name="Pay with card (GuildCheckout)"
-                  _hover={""}
-                >
-                  Pay with card
-                </Button>
-              </Tooltip>
-            </ButtonGroup>
+            <PaymentModeButtons />
 
             <Collapse
               in={!!error?.error}
