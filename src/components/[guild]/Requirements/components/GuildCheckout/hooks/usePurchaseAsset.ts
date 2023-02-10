@@ -67,7 +67,7 @@ const usePurchaseAsset = () => {
   const { data: priceData } = usePrice(pickedCurrency)
 
   const tokenBuyerContract = useContract(
-    TOKEN_BUYER_CONTRACT[chainId],
+    TOKEN_BUYER_CONTRACT[Chains[chainId]],
     TOKEN_BUYER_ABI,
     true
   )

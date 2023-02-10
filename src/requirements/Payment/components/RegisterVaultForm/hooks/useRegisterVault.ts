@@ -4,9 +4,9 @@ import { useWeb3React } from "@web3-react/core"
 import { Chains, RPC } from "connectors"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import { FEE_COLLECTOR_CONTRACT } from "requirements/Payment/PaymentForm"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
+import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
 
 type RegisterVaultParams = {
   owner: string
@@ -47,7 +47,7 @@ const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
     }
 
     const feeCollectorContract = new Contract(
-      FEE_COLLECTOR_CONTRACT,
+      FEE_COLLECTOR_CONTRACT[Chains[chainId]],
       FEE_COLLECTOR_ABI,
       provider.getSigner(account).connectUnchecked()
     )

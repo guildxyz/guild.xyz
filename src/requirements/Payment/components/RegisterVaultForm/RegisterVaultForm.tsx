@@ -15,7 +15,7 @@ import { Chain } from "connectors"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"
 import TokenPicker from "requirements/common/TokenPicker"
-import { PAYMENT_SUPPORTED_CHAINS } from "requirements/Payment/PaymentForm"
+import { paymentSupportedChains } from "utils/guildCheckout/constants"
 
 export type RegisterVaultFormType = {
   chain: Chain
@@ -67,7 +67,7 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
     <Stack spacing={4}>
       <ChainPicker
         controlName="chain"
-        supportedChains={PAYMENT_SUPPORTED_CHAINS}
+        supportedChains={paymentSupportedChains}
         onChange={() => setValue("token", null)}
         isDisabled={isDisabled}
       />

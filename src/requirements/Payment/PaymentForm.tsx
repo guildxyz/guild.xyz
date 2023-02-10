@@ -3,18 +3,16 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { Chain, Chains } from "connectors"
+import { Chains } from "connectors"
 import { Check, Question } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
 import RegisterVaultForm, {
   RegisterVaultFormType,
 } from "./components/RegisterVaultForm"
 import useRegisterVault from "./components/RegisterVaultForm/hooks/useRegisterVault"
-
-export const PAYMENT_SUPPORTED_CHAINS: Chain[] = ["ETHEREUM", "POLYGON", "GOERLI"]
-export const FEE_COLLECTOR_CONTRACT = "0x8726913dc757025028a754071578e0c98b9d942c"
 
 const PaymentForm = ({
   baseFieldPath,
@@ -26,8 +24,9 @@ const PaymentForm = ({
   const { setValue } = useFormContext()
 
   useEffect(() => {
-    setValue(`${baseFieldPath}.address`, FEE_COLLECTOR_CONTRACT)
-  }, [])
+    if (!chainId) return
+    setValue(`${baseFieldPath}.address`, FEE_COLLECTOR_CONTRACT[Chains[chainId]])
+  }, [chainId])
 
   const vaultId = useWatch({ name: `${baseFieldPath}.data.id` })
 

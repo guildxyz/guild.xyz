@@ -36,7 +36,7 @@ const AllowanceButton = (): JSX.Element => {
     allowanceError,
     onSubmit,
     isLoading,
-  } = useAllowance(pickedCurrency, TOKEN_BUYER_CONTRACT[chainId])
+  } = useAllowance(pickedCurrency, TOKEN_BUYER_CONTRACT[Chains[chainId]])
 
   const isEnoughAllowance =
     priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
