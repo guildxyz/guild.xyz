@@ -1,16 +1,7 @@
-import {
-  Divider,
-  HStack,
-  Icon,
-  Skeleton,
-  Stack,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react"
+import { HStack, Skeleton, Stack, Text } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
-import { Info } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
 import usePayFee from "../hooks/usePayFee"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
@@ -23,63 +14,22 @@ const PaymentFeeAndTotal = (): JSX.Element => {
     requirement.chain
   )
 
-  const guildSharePercentage = (data?.guildShareBps ?? 0) / 100
-
   const {
     data: { decimals, symbol },
   } = useTokenData(requirement.chain, data?.token)
 
   const priceInSellToken =
     data && decimals ? Number(formatUnits(data.fee, decimals)) : 0
-  const guildFeeInSellToken =
-    priceInSellToken && guildSharePercentage
-      ? priceInSellToken * (guildSharePercentage / 100)
-      : 0
 
   const nativeCurrency = RPC[requirement.chain].nativeCurrency
   const { estimatedGasFee } = usePayFee()
 
-  const estimatedGasInFloat = estimatedGasFee
-    ? parseFloat(formatUnits(estimatedGasFee, nativeCurrency.decimals))
-    : undefined
-
   const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
-  const calculatedGasFee = isNativeCurrency ? estimatedGasInFloat : 0
 
   const isTooSmallPrice = priceInSellToken < 0.001
-  const isTooSmallFee = guildFeeInSellToken < 0.001
 
   return (
-    <Stack divider={<Divider />}>
-      <HStack justifyContent="space-between">
-        <HStack>
-          <Text as="span" colorScheme="gray">
-            Fee
-          </Text>
-          <Tooltip
-            label={`${guildSharePercentage}% Guild fee + estimated network fee`}
-            placement="top"
-            hasArrow
-          >
-            <Icon as={Info} color="gray" />
-          </Tooltip>
-        </HStack>
-        <Text as="span" colorScheme="gray">
-          {error ? (
-            "Couldn't calculate"
-          ) : pickedCurrency ? (
-            <>
-              {isTooSmallFee
-                ? "< 0.001"
-                : (calculatedGasFee + guildFeeInSellToken)?.toFixed(3)}{" "}
-              {symbol}
-            </>
-          ) : (
-            "Choose currency"
-          )}
-        </Text>
-      </HStack>
-
+    <Stack>
       <HStack justifyContent="space-between">
         <Text as="span" colorScheme="gray">
           Total
@@ -89,15 +39,11 @@ const PaymentFeeAndTotal = (): JSX.Element => {
           <Text as="span">
             <Skeleton isLoaded={!isValidating}>
               <Text as="span" fontWeight="semibold">
-                {priceInSellToken && guildFeeInSellToken
+                {priceInSellToken
                   ? `${
                       isTooSmallPrice
                         ? "< 0.001"
-                        : (
-                            priceInSellToken +
-                            guildFeeInSellToken +
-                            calculatedGasFee
-                          )?.toFixed(3)
+                        : Number(priceInSellToken.toFixed(3))
                     } `
                   : "0.00 "}
                 {symbol}
