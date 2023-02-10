@@ -30,6 +30,8 @@ import {
   GuildCheckoutProvider,
   useGuildCheckoutContext,
 } from "./components/GuildCheckoutContex"
+import InfoModal from "./components/InfoModal"
+import TransactionLink from "./components/InfoModal/components/TransactionLink"
 import PaymentFeeAndTotal from "./components/PaymentFeeAndTotal"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
 import PaymentModeButtons from "./components/PaymentModeButtons"
@@ -118,6 +120,33 @@ const BuyPass = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <InfoModal
+        progressComponent={
+          <>
+            <Text mb={4}>
+              The blockchain is working its magic... Your transaction should be
+              confirmed shortly
+            </Text>
+
+            <TransactionLink />
+          </>
+        }
+        successComponent={
+          <>
+            <Text mb={4}>
+              Successful transaction! Your access is being rechecked.
+            </Text>
+
+            <TransactionLink />
+          </>
+        }
+        errorComponent={
+          <>
+            <Text mb={4}>{`Couldn't buy ${name} pass`}</Text>
+          </>
+        }
+      />
     </>
   )
 }
