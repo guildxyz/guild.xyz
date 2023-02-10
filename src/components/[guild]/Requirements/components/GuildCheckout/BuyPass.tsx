@@ -39,8 +39,16 @@ import TOSCheckbox from "./components/TOSCheckbox"
 
 const BuyPass = () => {
   const { account, chainId } = useWeb3React()
-  const { requirement, isOpen, onOpen, onClose, isInfoModalOpen } =
-    useGuildCheckoutContext()
+  const {
+    requirement,
+    isOpen,
+    onOpen,
+    onClose,
+    isInfoModalOpen,
+    txError,
+    txSuccess,
+    txHash,
+  } = useGuildCheckoutContext()
   const { id, name, roles } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
@@ -122,6 +130,15 @@ const BuyPass = () => {
       </Modal>
 
       <InfoModal
+        title={
+          txError
+            ? "Transaction failed"
+            : txSuccess
+            ? "Success"
+            : txHash
+            ? "Transaction is processing..."
+            : `Buy ${name} pass`
+        }
         progressComponent={
           <>
             <Text mb={4}>

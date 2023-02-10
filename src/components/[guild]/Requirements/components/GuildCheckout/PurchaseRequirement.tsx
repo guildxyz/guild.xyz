@@ -46,8 +46,16 @@ import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
   const { account, chainId } = useWeb3React()
-  const { requirement, isOpen, onOpen, onClose, isInfoModalOpen } =
-    useGuildCheckoutContext()
+  const {
+    requirement,
+    isOpen,
+    onOpen,
+    onClose,
+    isInfoModalOpen,
+    txError,
+    txSuccess,
+    txHash,
+  } = useGuildCheckoutContext()
   const { id, name } = useGuild()
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
@@ -146,6 +154,15 @@ const PurchaseRequirement = (): JSX.Element => {
       </Modal>
 
       <InfoModal
+        title={
+          txError
+            ? "Transaction failed"
+            : txSuccess
+            ? "Purchase successful"
+            : txHash
+            ? "Transaction is processing..."
+            : "Buy requirement"
+        }
         progressComponent={
           <>
             <Text mb={4}>
