@@ -1,4 +1,5 @@
 import {
+  Box,
   ButtonProps,
   Center,
   ModalBody,
@@ -71,7 +72,6 @@ const ConnectPolygonIDModal = ({ isOpen, onClose }) => {
   )
 
   const qrCode = JSON.stringify(response?.data)
-  console.log(qrCode)
 
   return (
     <Modal
@@ -97,9 +97,12 @@ const ConnectPolygonIDModal = ({ isOpen, onClose }) => {
               </>
             ) : (
               <>
-                <QRCodeSVG value={qrCode} size={300} />
-                <Text mt="4" mb="8">
-                  Scan with your Polygon ID app
+                <Box borderRadius={"md"} borderWidth={3} overflow={"hidden"}>
+                  <QRCodeSVG value={qrCode} size={300} />
+                </Box>
+                <Text mt="10" textAlign={"center"}>
+                  Scan with your Polygon ID app! The modal will automatically close
+                  on successful connect
                 </Text>
               </>
             )}
