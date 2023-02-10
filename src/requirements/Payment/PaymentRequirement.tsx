@@ -1,6 +1,7 @@
 import { Icon } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import useAccess from "components/[guild]/hooks/useAccess"
+import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
 import Requirement, {
@@ -12,24 +13,24 @@ import { Coins } from "phosphor-react"
 import useVault from "./hooks/useVault"
 
 const PaymentRequirement = (props: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext()
+  const { id, roleId, chain, data: requirementData } = useRequirementContext()
   const {
     data,
     isValidating: isVaultLoading,
     error: vaultError,
-  } = useVault(requirement.data.id, requirement.chain)
+  } = useVault(requirementData.id, chain)
 
   const {
     data: { symbol, decimals },
     error: tokenError,
     isValidating: isTokenDataLoading,
-  } = useTokenData(requirement.chain, data?.token)
+  } = useTokenData(chain, data?.token)
   const convertedFee =
     data?.fee && decimals ? formatUnits(data.fee, decimals) : undefined
 
-  const { data: accessData } = useAccess(requirement.roleId)
+  const { data: accessData } = useAccess(roleId)
   const satisfiesRequirement = accessData?.requirements?.find(
-    (req) => req.requirementId === requirement.id
+    (req) => req.requirementId === id
   )?.access
 
   return (
@@ -37,6 +38,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
       image={<Icon as={Coins} boxSize={6} />}
       {...props}
       rightElement={satisfiesRequirement ? props?.rightElement : <BuyPass />}
+      footer={data && <BlockExplorerUrl chain={chain} address={data.token} />}
     >
       <>
         {"Pay "}
