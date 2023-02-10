@@ -1,7 +1,9 @@
 import {
   Collapse,
+  Divider,
   HStack,
   Icon,
+  Link,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -14,7 +16,6 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -30,6 +31,7 @@ import AlphaTag from "./components/AlphaTag"
 import AllowanceButton from "./components/buttons/AllowanceButton"
 import PurchaseButton from "./components/buttons/PurchaseButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
+import ErrorCollapse from "./components/ErrorCollapse"
 import FeeAndTotal from "./components/FeeAndTotal"
 import {
   GuildCheckoutProvider,
@@ -37,16 +39,17 @@ import {
 } from "./components/GuildCheckoutContex"
 import InfoModal from "./components/InfoModal"
 import PurchasedRequirementInfo from "./components/InfoModal/components/PurchasedRequirementInfo"
+import TransactionLink from "./components/InfoModal/components/TransactionLink"
 import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
 import PaymentModeButtons from "./components/PaymentModeButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
-const GuildCheckout = (): JSX.Element => {
+const PurchaseRequirement = (): JSX.Element => {
   const { account, chainId } = useWeb3React()
   const { requirement, isOpen, onOpen, onClose, isInfoModalOpen } =
     useGuildCheckoutContext()
-  const { id } = useGuild()
+  const { id, name } = useGuild()
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
   )
@@ -62,6 +65,7 @@ const GuildCheckout = (): JSX.Element => {
 
   if (
     !isInfoModalOpen &&
+    // TODO: we'll be able to control this properly once we'll have feature flags
     (!ALLOWED_GUILDS.includes(id) ||
       !account ||
       (!accessData && isAccessLoading) ||
@@ -117,15 +121,7 @@ const GuildCheckout = (): JSX.Element => {
 
           <ModalFooter pt={10} flexDir="column">
             <PaymentModeButtons />
-
-            <Collapse
-              in={!!error?.error}
-              style={{
-                width: "100%",
-              }}
-            >
-              <ErrorAlert label={error?.error} />
-            </Collapse>
+            <ErrorCollapse error={error?.error} />
 
             <Stack spacing={8} w="full">
               <PaymentCurrencyPicker />
@@ -135,11 +131,13 @@ const GuildCheckout = (): JSX.Element => {
               <Stack spacing={2}>
                 {!error && (
                   <>
-                    <Collapse in={chainId !== Chains[requirement.chain]}>
-                      <SwitchNetworkButton />
-                    </Collapse>
+                    <SwitchNetworkButton />
+
                     <Collapse in={chainId === Chains[requirement.chain]}>
-                      <TOSCheckbox />
+                      <TOSCheckbox>
+                        {`I understand that I purchase from decentralized exchanges, not from ${name} or Guild.xyz itself`}
+                      </TOSCheckbox>
+
                       <AllowanceButton />
                     </Collapse>
                   </>
@@ -151,15 +149,69 @@ const GuildCheckout = (): JSX.Element => {
         </ModalContent>
       </Modal>
 
-      <InfoModal />
+      <InfoModal
+        progressComponent={
+          <>
+            <Text mb={4}>
+              The blockchain is working its magic... Your transaction should be
+              confirmed shortly
+            </Text>
+
+            <TransactionLink />
+
+            <Divider mb={6} />
+
+            <Stack spacing={4}>
+              <Text as="span" fontWeight="bold">
+                You'll get:
+              </Text>
+
+              <PurchasedRequirementInfo />
+            </Stack>
+          </>
+        }
+        successComponent={
+          <>
+            <Text mb={4}>
+              Requirement successfully purchased! Your access is being rechecked
+            </Text>
+
+            <TransactionLink />
+
+            <Divider mb={6} />
+
+            <Stack spacing={4}>
+              <Text as="span" fontWeight="bold">
+                Your new asset:
+              </Text>
+
+              <PurchasedRequirementInfo />
+            </Stack>
+          </>
+        }
+        errorComponent={
+          <>
+            <Text mb={4}>
+              {"Couldn't purchase the assets. Learn about possible reasons here: "}
+              <Link
+                href="https://support.opensea.io/hc/en-us/articles/7597082600211"
+                colorScheme="blue"
+                isExternal
+              >
+                https://support.opensea.io/hc/en-us/articles/7597082600211
+              </Link>
+            </Text>
+          </>
+        }
+      />
     </>
   )
 }
 
-const GuildCheckoutWrapper = (): JSX.Element => (
+const PurchaseRequirementWrapper = () => (
   <GuildCheckoutProvider>
-    <GuildCheckout />
+    <PurchaseRequirement />
   </GuildCheckoutProvider>
 )
 
-export default GuildCheckoutWrapper
+export default PurchaseRequirementWrapper

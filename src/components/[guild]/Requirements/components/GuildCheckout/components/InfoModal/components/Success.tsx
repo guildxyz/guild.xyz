@@ -1,23 +1,10 @@
-import {
-  Center,
-  Divider,
-  Flex,
-  Icon,
-  ModalBody,
-  Stack,
-  Text,
-} from "@chakra-ui/react"
+import { Center, Flex, Icon, ModalBody } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { CheckCircle } from "phosphor-react"
+import { PropsWithChildren } from "react"
 import InfoModalFooter from "./InfoModalFooter"
-import PurchasedRequirementInfo from "./PurchasedRequirementInfo"
-import TransactionLink from "./TransactionLink"
 
-type Props = {
-  tx: string
-}
-
-const Success = ({ tx }: Props): JSX.Element => (
+const Success = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
   <CardMotionWrapper>
     <ModalBody>
       <Flex direction="column">
@@ -35,21 +22,7 @@ const Success = ({ tx }: Props): JSX.Element => (
         </Center>
       </Flex>
 
-      <Text mb={4}>
-        Requirement successfully purchased! Your access is being rechecked
-      </Text>
-
-      <TransactionLink tx={tx} />
-
-      <Divider mb={6} />
-
-      <Stack spacing={4}>
-        <Text as="span" fontWeight="bold">
-          Your new asset:
-        </Text>
-
-        <PurchasedRequirementInfo />
-      </Stack>
+      {children}
     </ModalBody>
 
     <InfoModalFooter />

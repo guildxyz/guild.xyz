@@ -6,7 +6,17 @@ import InProgress from "./components/InProgress"
 import Success from "./components/Success"
 import TxError from "./components/TxError"
 
-const InfoModal = (): JSX.Element => {
+type Props = {
+  progressComponent?: JSX.Element
+  successComponent?: JSX.Element
+  errorComponent?: JSX.Element
+}
+
+const InfoModal = ({
+  progressComponent,
+  successComponent,
+  errorComponent,
+}: Props): JSX.Element => {
   const { isInfoModalOpen, txHash, txSuccess, txError } = useGuildCheckoutContext()
 
   const modalTitle = txError
@@ -25,11 +35,11 @@ const InfoModal = (): JSX.Element => {
 
         <AnimatePresence>
           {txError ? (
-            <TxError />
+            <TxError>{errorComponent}</TxError>
           ) : txSuccess ? (
-            <Success tx={txHash} />
+            <Success>{successComponent}</Success>
           ) : (
-            <InProgress tx={txHash} />
+            <InProgress>{progressComponent}</InProgress>
           )}
         </AnimatePresence>
       </ModalContent>
