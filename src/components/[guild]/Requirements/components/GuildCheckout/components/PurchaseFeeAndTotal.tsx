@@ -46,7 +46,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
   const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
   const calculatedGasFee = isNativeCurrency ? estimatedGasInFloat ?? 0 : 0
 
-  const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) <= 0.001
+  const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) < 0.001
   const isTooSmallPrice = parseFloat(priceInSellToken?.toFixed(3)) < 0.001
 
   return (
@@ -76,9 +76,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
               <>
                 {isTooSmallFee
                   ? "< 0.001"
-                  : (calculatedGasFee ?? 0 + guildFeeInSellToken ?? 0)?.toFixed(
-                      3
-                    )}{" "}
+                  : (calculatedGasFee + guildFeeInSellToken)?.toFixed(3)}{" "}
                 {symbol}
               </>
             ) : (

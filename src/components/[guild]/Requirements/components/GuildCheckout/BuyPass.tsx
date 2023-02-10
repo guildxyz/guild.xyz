@@ -1,5 +1,5 @@
 import {
-  HStack,
+  Collapse,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -16,21 +16,25 @@ import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Reward from "components/[guild]/RoleCard/components/Reward"
+import { Chains } from "connectors"
 import { Coin } from "phosphor-react"
 import {
   paymentSupportedChains,
   PAYMENT_ALLOWED_GUILDS,
 } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import {
   GuildCheckoutProvider,
   useGuildCheckoutContext,
 } from "./components/GuildCheckoutContex"
+import PaymentFeeAndTotal from "./components/PaymentFeeAndTotal"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
 import PaymentModeButtons from "./components/PaymentModeButtons"
+import TOSCheckbox from "./components/TOSCheckbox"
 
 const BuyPass = () => {
-  const { account } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const { requirement, isOpen, onOpen, onClose, isInfoModalOpen } =
     useGuildCheckoutContext()
   const { id, name, roles } = useGuild()
@@ -92,6 +96,17 @@ const BuyPass = () => {
 
             <Stack spacing={8} w="full">
               <PaymentFeeCurrency />
+              <PaymentFeeAndTotal />
+
+              <Stack spacing={2}>
+                <SwitchNetworkButton />
+                <Collapse in={chainId === Chains[requirement.chain]}>
+                  <TOSCheckbox>
+                    I understand that if the owner changes requirements, I could lose
+                    access.
+                  </TOSCheckbox>
+                </Collapse>
+              </Stack>
             </Stack>
           </ModalFooter>
         </ModalContent>

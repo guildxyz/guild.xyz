@@ -12,6 +12,7 @@ type GetVaultResponse = {
   token: string
   fee: BigNumber
   collected: BigNumber
+  guildShareBps: number
 }
 
 const fetchVault = async (
@@ -27,15 +28,19 @@ const fetchVault = async (
   )
 
   try {
-    const contractRes = await feeCollectorContract.getVault(vaultId)
+    const [getVaultRes, guildShareBps] = await Promise.all([
+      feeCollectorContract.getVault(vaultId),
+      feeCollectorContract.guildShareBps(),
+    ])
 
-    if (!contractRes) return undefined
+    if (!getVaultRes || !guildShareBps) return undefined
 
     return {
-      owner: contractRes.owner,
-      token: contractRes.token,
-      fee: contractRes.fee,
-      collected: contractRes.collected,
+      owner: getVaultRes.owner,
+      token: getVaultRes.token,
+      fee: getVaultRes.fee,
+      collected: getVaultRes.collected,
+      guildShareBps: guildShareBps.toNumber(),
     }
   } catch (error) {
     throw error
