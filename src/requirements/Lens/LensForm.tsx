@@ -136,6 +136,10 @@ const LensForm = ({ baseFieldPath, field }: RequirementFormProps) => {
                 value: 1,
                 message: "Amount must be positive",
               },
+              max: {
+                value: 20,
+                message: "Max amount is 20",
+              },
             }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <NumberInput
@@ -147,6 +151,7 @@ const LensForm = ({ baseFieldPath, field }: RequirementFormProps) => {
                 }}
                 onBlur={onBlur}
                 min={1}
+                max={20}
               >
                 <NumberInputField />
                 <NumberInputStepper>
