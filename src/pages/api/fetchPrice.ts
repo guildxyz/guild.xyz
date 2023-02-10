@@ -199,7 +199,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       buyToken: address,
       buyAmount: buyAmountInWei.toString(),
       includedSources: ZEROX_SUPPORTED_SOURCES.toString(),
-      slippagePercentage: "0.03",
+      slippagePercentage: "0.1",
     }).toString()
 
     const response = await fetch(
