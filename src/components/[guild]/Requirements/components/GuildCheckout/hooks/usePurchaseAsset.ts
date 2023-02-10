@@ -5,10 +5,9 @@ import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
-import { Dispatch, SetStateAction, useMemo } from "react"
+import { useMemo } from "react"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
 import {
@@ -18,11 +17,11 @@ import {
 import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import usePrice from "./usePrice"
+import useSubmitTransaction from "./useSubmitTransaction"
 
 const purchaseAsset = async (
   tokenBuyerContract: Contract,
-  generatedGetAssetsParams: GeneratedGetAssetsParams,
-  setTxHash: Dispatch<SetStateAction<string>>
+  generatedGetAssetsParams: GeneratedGetAssetsParams
 ) => {
   // We shouldn't run into these issues, but rejecting here in case something wrong happens.
   if (!tokenBuyerContract) return Promise.reject("Can't find TokenBuyer contract.")
@@ -50,13 +49,7 @@ const purchaseAsset = async (
     }
   }
 
-  const getAssetsCall = await tokenBuyerContract.getAssets(
-    ...generatedGetAssetsParams
-  )
-
-  setTxHash(getAssetsCall.hash)
-
-  return getAssetsCall.wait()
+  return tokenBuyerContract.getAssets(...generatedGetAssetsParams)
 }
 
 const usePurchaseAsset = () => {
@@ -67,14 +60,7 @@ const usePurchaseAsset = () => {
 
   const { account, chainId } = useWeb3React()
 
-  const {
-    requirement,
-    pickedCurrency,
-    txHash,
-    setTxHash,
-    setTxSuccess,
-    setTxError,
-  } = useGuildCheckoutContext()
+  const { requirement, pickedCurrency } = useGuildCheckoutContext()
   const {
     data: { symbol },
   } = useTokenData(requirement.chain, requirement.address)
@@ -100,26 +86,21 @@ const usePurchaseAsset = () => {
     )
 
   const purchaseAssetWithSetTx = (data?: GeneratedGetAssetsParams) =>
-    purchaseAsset(tokenBuyerContract, data, setTxHash)
+    purchaseAsset(tokenBuyerContract, data)
 
-  const useSubmitData = useSubmit<GeneratedGetAssetsParams, any>(
+  const useSubmitData = useSubmitTransaction<GeneratedGetAssetsParams>(
     purchaseAssetWithSetTx,
     {
       onError: (error) => {
-        const prettyError =
-          error?.code === "ACTION_REJECTED" ? "User rejected the transaction" : error
-        showErrorToast(prettyError)
-        if (txHash) setTxError(true)
+        showErrorToast(error)
         addDatadogError("general purchase requirement error (GuildCheckout)")
         addDatadogError("purchase requirement pre-call error (GuildCheckout)", {
-          error: prettyError,
+          error,
         })
       },
       onSuccess: (receipt) => {
         if (receipt.status !== 1) {
           showErrorToast("Transaction failed")
-          setTxError(true)
-          console.log("[DEBUG]: TX RECEIPT", receipt)
           addDatadogError("general purchase requirement error (GuildCheckout)")
           addDatadogError("purchase requirement error (GuildCheckout)", {
             receipt,
@@ -133,7 +114,6 @@ const usePurchaseAsset = () => {
           title: "Your new asset:",
           description: `${requirement.data.minAmount} ${symbol}`,
         })
-        setTxSuccess(true)
       },
     }
   )
