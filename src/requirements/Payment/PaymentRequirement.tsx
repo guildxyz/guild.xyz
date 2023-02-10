@@ -1,5 +1,6 @@
 import { Icon } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
+import useAccess from "components/[guild]/hooks/useAccess"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
 import Requirement, {
@@ -26,11 +27,16 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   const convertedFee =
     data?.fee && decimals ? formatUnits(data.fee, decimals) : undefined
 
+  const { data: accessData } = useAccess(requirement.roleId)
+  const satisfiesRequirement = accessData?.requirements?.find(
+    (req) => req.requirementId === requirement.id
+  )?.access
+
   return (
     <Requirement
       image={<Icon as={Coins} boxSize={6} />}
-      footer={<BuyPass />}
       {...props}
+      rightElement={satisfiesRequirement ? props?.rightElement : <BuyPass />}
     >
       <>
         {"Pay "}
