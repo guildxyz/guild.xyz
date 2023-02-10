@@ -71,9 +71,9 @@ const BuyPass = () => {
     <>
       <Button
         colorScheme="blue"
-        size="xs"
+        size="sm"
         leftIcon={<Icon as={Coin} />}
-        borderRadius="md"
+        borderRadius="lg"
         fontWeight="medium"
         onClick={onOpen}
         data-dd-action-name="Pay (Requierment)"
