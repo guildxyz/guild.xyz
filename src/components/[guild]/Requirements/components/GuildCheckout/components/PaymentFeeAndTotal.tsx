@@ -21,10 +21,7 @@ const PaymentFeeAndTotal = (): JSX.Element => {
   const priceInSellToken =
     data && decimals ? Number(formatUnits(data.fee, decimals)) : 0
 
-  const nativeCurrency = RPC[requirement.chain].nativeCurrency
   const { estimatedGasFee } = usePayFee()
-
-  const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
 
   const isTooSmallPrice = priceInSellToken < 0.001
 
@@ -53,8 +50,7 @@ const PaymentFeeAndTotal = (): JSX.Element => {
         </PriceFallback>
       </HStack>
 
-      {estimatedGasFee && !isNativeCurrency && (
-        // We're displaying gas fee here when the fee should be paid in an ERC20 token
+      {estimatedGasFee && (
         <Text as="span" colorScheme="gray" fontSize="sm">
           {`Estimated gas fee: ${parseFloat(
             formatUnits(
