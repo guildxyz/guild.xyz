@@ -30,9 +30,7 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
     >
       {"Have the "}
       <Link
-        href={`http://localhost:3000/${urlName ?? requirement.data.guildId}#role-${
-          role?.id
-        }`}
+        href={`/${urlName ?? requirement.data.guildId}#role-${role?.id}`}
         colorScheme="blue"
       >
         {`${role?.name ?? "unknown"} role`}
