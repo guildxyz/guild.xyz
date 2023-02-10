@@ -1,104 +1,68 @@
-import {
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  Icon,
-  Link,
-  Stack,
-  Text,
-  Textarea,
-} from "@chakra-ui/react"
+import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { ArrowSquareOut } from "phosphor-react"
-import { Controller, useFormContext } from "react-hook-form"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
+import PolygonIdBasic from "./components/PolygonIdBasic"
+import PolygonIdQuery from "./components/PolygonIdQuery"
 
-const PolygonIdForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
-  const {
-    control,
-    formState: { errors, touchedFields },
-  } = useFormContext()
+const polygonIdRequirementTypes = [
+  {
+    label: "Authenticate with PolygonID",
+    value: "POLYGON_ID_BASIC",
+    PolygonIdRequirement: PolygonIdBasic,
+  },
+  {
+    label: "Satisfy query",
+    value: "POLYGON_ID_QUERY",
+    PolygonIdRequirement: PolygonIdQuery,
+  },
+]
+
+const PolygonIdForm = ({
+  baseFieldPath,
+  field,
+}: RequirementFormProps): JSX.Element => {
+  const { errors } = useFormState()
+  const { setValue } = useFormContext()
+
+  const type = useWatch({ name: `${baseFieldPath}.type` })
+
+  const selected = polygonIdRequirementTypes.find(
+    (reqType) => reqType.value === type
+  )
 
   return (
     <Stack spacing={4} alignItems="start">
       <FormControl
-        isRequired
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.query}
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
       >
-        <FormLabel>Query:</FormLabel>
+        <FormLabel>Type</FormLabel>
 
-        <Controller
-          control={control}
-          name={`${baseFieldPath}.data.query` as const}
-          rules={{
-            validate: (value) =>
-              typeof value === "object" ||
-              "Invalid JSON. Please paste it to a validator to find out more!",
-          }}
-          render={({ field: { onChange, onBlur, value: textareaValue, ref } }) => (
-            <Textarea
-              ref={ref}
-              resize="vertical"
-              p={2}
-              minH={64}
-              className="custom-scrollbar"
-              cols={42}
-              wrap="off"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck="false"
-              value={tryStringifyJSON(textareaValue)}
-              onChange={(e) => {
-                const value = e.target.value
-                const json = tryParseJSON(value)
-                onChange(json || value)
-              }}
-              onBlur={onBlur}
-            />
-          )}
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
+          rules={{ required: "It's required to select a type" }}
+          options={polygonIdRequirementTypes}
+          afterOnChange={() => setValue(`${baseFieldPath}.data`, "")}
         />
-        <FormHelperText>
-          <Link
-            href="https://0xpolygonid.github.io/tutorials/verifier/verification-library/zk-query-language/"
-            isExternal
-          >
-            <Text fontSize="sm">Docs</Text>
-            <Icon ml={1} as={ArrowSquareOut} />
-          </Link>
-        </FormHelperText>
 
         <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.query?.message}
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
         </FormErrorMessage>
       </FormControl>
+
+      {selected?.PolygonIdRequirement && (
+        <>
+          <Divider />
+          <selected.PolygonIdRequirement
+            baseFieldPath={baseFieldPath}
+            field={field}
+          />
+        </>
+      )}
     </Stack>
   )
-}
-
-function tryParseJSON(jsonString) {
-  try {
-    const o = JSON.parse(jsonString)
-
-    if (o && typeof o === "object") {
-      return o
-    }
-  } catch (e) {}
-
-  return false
-}
-
-function tryStringifyJSON(jsonObject) {
-  try {
-    if (!jsonObject) return ""
-
-    if (typeof jsonObject !== "object") return jsonObject
-
-    return JSON.stringify(jsonObject, null, 2)
-  } catch (e) {}
-
-  return ""
 }
 
 export default PolygonIdForm

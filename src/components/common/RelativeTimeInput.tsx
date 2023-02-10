@@ -24,9 +24,10 @@ const multipliers = {
 type Props = {
   fieldName: string
   checkForTouched?: string
+  isRequired?: boolean
 }
 
-const RelativeTimeInput = ({ fieldName, checkForTouched }: Props) => {
+const RelativeTimeInput = ({ fieldName, checkForTouched, isRequired }: Props) => {
   const { touchedFields } = useFormState()
 
   const [format, setFormat] = useState<"DAY" | "MONTH" | "YEAR">("DAY")
@@ -34,7 +35,7 @@ const RelativeTimeInput = ({ fieldName, checkForTouched }: Props) => {
   const { field } = useController({
     name: fieldName,
     shouldUnregister: true,
-    rules: {
+    rules: isRequired && {
       validate: (value) => !isNaN(value) || "Invalid value.",
     },
   })
@@ -70,7 +71,7 @@ const RelativeTimeInput = ({ fieldName, checkForTouched }: Props) => {
           )
         }
       >
-        <NumberInputField />
+        <NumberInputField placeholder={!isRequired && "Optional"} />
         <NumberInputStepper>
           <NumberIncrementStepper />
           <NumberDecrementStepper />

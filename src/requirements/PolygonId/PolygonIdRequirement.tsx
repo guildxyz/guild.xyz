@@ -10,16 +10,22 @@ import {
   Portal,
   useColorModeValue,
 } from "@chakra-ui/react"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { CaretDown } from "phosphor-react"
+import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import ConnectPolygonID from "./components/ConnectPolygonID"
 
 const PolygonIDRequirement = (props: RequirementProps) => {
   const bg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
   const requirement = useRequirementContext()
+
+  const proofAge =
+    requirement.data.maxAmount > 0 &&
+    formatRelativeTimeFromNow(requirement.data.maxAmount)
 
   if (requirement?.data?.query)
     return (
@@ -58,6 +64,13 @@ const PolygonIDRequirement = (props: RequirementProps) => {
             </PopoverContent>
           </Portal>
         </Popover>
+        {proofAge && (
+          <>
+            {` (valid until `}
+            <DataBlock>{proofAge}</DataBlock>
+            {`)`}
+          </>
+        )}
       </Requirement>
     )
 
@@ -67,7 +80,14 @@ const PolygonIDRequirement = (props: RequirementProps) => {
       footer={<ConnectPolygonID />}
       {...props}
     >
-      Have a PolygonID
+      {`Authenticate with PolygonID`}
+      {proofAge && (
+        <>
+          {` (valid until `}
+          <DataBlock>{proofAge}</DataBlock>
+          {`)`}
+        </>
+      )}
     </Requirement>
   )
 }
