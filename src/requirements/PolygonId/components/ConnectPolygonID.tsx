@@ -2,6 +2,7 @@ import {
   Box,
   ButtonProps,
   Center,
+  Img,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -39,7 +40,7 @@ const ConnectPolygonID = (props: ButtonProps) => {
         size="xs"
         onClick={onOpen}
         colorScheme={"purple"}
-        // leftIcon={<Icon as={platforms[platform]?.icon} />}
+        leftIcon={<Img src="requirementLogos/polygonId_white.svg" width="1.5em" />}
         iconSpacing="1"
         {...props}
       >
