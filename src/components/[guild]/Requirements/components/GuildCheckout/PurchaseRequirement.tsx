@@ -1,7 +1,6 @@
 import {
   Collapse,
   Divider,
-  HStack,
   Icon,
   Link,
   ModalBody,
@@ -28,11 +27,10 @@ import {
 } from "utils/guildCheckout/constants"
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import AlphaTag from "./components/AlphaTag"
-import AllowanceButton from "./components/buttons/AllowanceButton"
+import PurchaseAllowanceButton from "./components/buttons/PurchaseAllowanceButton"
 import PurchaseButton from "./components/buttons/PurchaseButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import ErrorCollapse from "./components/ErrorCollapse"
-import FeeAndTotal from "./components/FeeAndTotal"
 import {
   GuildCheckoutProvider,
   useGuildCheckoutContext,
@@ -42,6 +40,7 @@ import PurchasedRequirementInfo from "./components/InfoModal/components/Purchase
 import TransactionLink from "./components/InfoModal/components/TransactionLink"
 import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
 import PaymentModeButtons from "./components/PaymentModeButtons"
+import PurchaseFeeAndTotal from "./components/PurchaseFeeAndTotal"
 import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
@@ -93,10 +92,8 @@ const PurchaseRequirement = (): JSX.Element => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            <HStack>
-              <Text as="span">Buy requirement</Text>
-              <AlphaTag />
-            </HStack>
+            <Text as="span">Buy requirement</Text>
+            <AlphaTag />
           </ModalHeader>
           <ModalCloseButton />
 
@@ -125,8 +122,7 @@ const PurchaseRequirement = (): JSX.Element => {
 
             <Stack spacing={8} w="full">
               <PaymentCurrencyPicker />
-
-              <FeeAndTotal />
+              <PurchaseFeeAndTotal />
 
               <Stack spacing={2}>
                 {!error && (
@@ -138,7 +134,7 @@ const PurchaseRequirement = (): JSX.Element => {
                         {`I understand that I purchase from decentralized exchanges, not from ${name} or Guild.xyz itself`}
                       </TOSCheckbox>
 
-                      <AllowanceButton />
+                      <PurchaseAllowanceButton />
                     </Collapse>
                   </>
                 )}

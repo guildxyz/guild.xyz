@@ -10,7 +10,7 @@ import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
 import usePrice from "../../hooks/usePrice"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
-const AllowanceButton = (): JSX.Element => {
+const PurchaseAllowanceButton = (): JSX.Element => {
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
   const requirementChainId = Chains[requirement.chain]
 
@@ -29,6 +29,7 @@ const AllowanceButton = (): JSX.Element => {
     data: { priceInWei },
     isValidating: isPriceLoading,
   } = usePrice()
+
   const {
     allowance,
     isAllowanceLoading,
@@ -89,4 +90,4 @@ const AllowanceButton = (): JSX.Element => {
   )
 }
 
-export default AllowanceButton
+export default PurchaseAllowanceButton

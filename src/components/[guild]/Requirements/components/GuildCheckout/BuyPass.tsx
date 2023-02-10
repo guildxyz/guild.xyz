@@ -72,10 +72,8 @@ const BuyPass = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader pb={4}>
-            <HStack>
-              <Text as="span">{`Buy ${name} pass`}</Text>
-              <AlphaTag />
-            </HStack>
+            <Text as="span">{`Buy ${name} pass`}</Text>
+            <AlphaTag />
           </ModalHeader>
           <ModalCloseButton />
 
