@@ -43,7 +43,7 @@
     "@lottiefiles/react-lottie-player": "^3.5.0",
     "@metamask/onboarding": "^1.0.1",
     "@nouns/assets": "^0.4.2",
-    "@snyk/protect": "latest",
+    "@snyk/protect": "1.1088.0",
     "@vercel/og": "^0.0.22",
     "@web3-react/coinbase-wallet": "8.0.34-beta.0",
     "@web3-react/core": "8.0.35-beta.0",
