@@ -8,6 +8,7 @@ import useSubmit from "hooks/useSubmit"
 import { useState } from "react"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import useSWR from "swr"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 
 const fetchAllowance = (
@@ -30,7 +31,8 @@ const useAllowance = (tokenAddress: string, contract: string) => {
     tokenAddress &&
     erc20Contract &&
     requirement?.chain === Chains[chainId] &&
-    tokenAddress !== RPC[requirement?.chain]?.nativeCurrency?.symbol
+    tokenAddress !== RPC[requirement?.chain]?.nativeCurrency?.symbol &&
+    tokenAddress !== NULL_ADDRESS
 
   const {
     data: allowance,
