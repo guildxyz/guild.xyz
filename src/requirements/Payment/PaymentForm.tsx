@@ -56,8 +56,8 @@ const PaymentForm = ({
   return (
     <Stack spacing={4}>
       <Text colorScheme="gray" fontSize="sm">
-        You need to register a vault in Guild's <i>FeeCollector</i> contract in order
-        to receive payments. You'll be able to withdraw from it at any time.
+        You need to register a vault in Guild's Payment contract in order to receive
+        payments. You'll be able to withdraw from it at any time.
       </Text>
 
       <FormProvider {...registerVaultFormMethods}>
