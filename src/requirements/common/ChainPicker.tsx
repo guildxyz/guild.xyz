@@ -20,6 +20,7 @@ import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
+  goerliFake?: boolean
   controlName: string
   supportedChains?: Array<Chain>
   onChange?: () => void
@@ -35,6 +36,7 @@ const mappedChains: Array<{ img: string; label: string; value: Chain }> =
   }))
 
 const ChainPicker = ({
+  goerliFake,
   controlName,
   supportedChains = defaultSupportedChains,
   onChange: onChangeHandler,
@@ -49,7 +51,15 @@ const ChainPicker = ({
   const { chainId } = useWeb3React()
   const chain = useWatch({ name: controlName })
 
-  const mappedSupportedChains = isBalancyPlayground
+  const mappedSupportedChains = goerliFake
+    ? [
+        {
+          img: RPC.POLYGON.iconUrls[0],
+          value: "GOERLI",
+          label: "Polygon",
+        },
+      ]
+    : isBalancyPlayground
     ? mappedChains.filter((c) =>
         Object.keys(BALANCY_SUPPORTED_CHAINS).includes(c.value)
       )
@@ -81,7 +91,10 @@ const ChainPicker = ({
         <FormLabel>Chain</FormLabel>
         <InputGroup>
           <InputLeftElement>
-            <OptionImage img={RPC[chain]?.iconUrls?.[0]} alt={chain} />
+            <OptionImage
+              img={goerliFake ? RPC.POLYGON.iconUrls[0] : RPC[chain]?.iconUrls?.[0]}
+              alt={chain}
+            />
           </InputLeftElement>
 
           <ControlledSelect
