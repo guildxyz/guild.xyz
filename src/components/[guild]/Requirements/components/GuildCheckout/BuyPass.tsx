@@ -87,7 +87,7 @@ const BuyPass = () => {
           <ModalCloseButton />
 
           <ModalBody>
-            {role.rolePlatforms?.map((platform) => (
+            {role?.rolePlatforms?.map((platform) => (
               <Reward
                 key={platform.guildPlatformId}
                 platform={platform}

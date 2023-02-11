@@ -18,7 +18,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     data,
     isValidating: isVaultLoading,
     error: vaultError,
-  } = useVault(requirementData.id, chain)
+  } = useVault(requirementData?.id, chain)
 
   const {
     data: { symbol, decimals },
