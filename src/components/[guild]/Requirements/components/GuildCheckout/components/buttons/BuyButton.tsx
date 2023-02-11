@@ -1,9 +1,9 @@
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import { Chains, RPC } from "connectors"
+import { Chains } from "connectors"
 import useBalance from "hooks/useBalance"
 import useVault from "requirements/Payment/hooks/useVault"
-import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
+import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import useAllowance from "../../hooks/useAllowance"
 import usePayFee from "../../hooks/usePayFee"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
@@ -33,8 +33,7 @@ const BuyButton = (): JSX.Element => {
     isLoading: isBalanceLoading,
   } = useBalance(pickedCurrency, Chains[requirement?.chain])
 
-  const pickedCurrencyIsNative =
-    pickedCurrency === RPC[Chains[chainId]].nativeCurrency.symbol
+  const pickedCurrencyIsNative = pickedCurrency === NULL_ADDRESS
 
   const isSufficientBalance =
     fee &&
