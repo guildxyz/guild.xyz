@@ -27,12 +27,14 @@ const Account = (): JSX.Element => {
   const { account, chainId } = useWeb3React()
   const { openWalletSelectorModal, openNetworkModal, openAccountModal, triedEager } =
     useContext(Web3Connection)
+
   const { ENSName } = useWeb3React()
   const NNSName = useNNSName()
   const dotbitName = useDotbitName()
   const unstoppableDomainName = useUnstoppableDomainName()
-  const { addresses } = useUser()
   const lensName = useLensProtocolName()
+
+  const { addresses } = useUser()
   if (!account) {
     return (
       <AccountButton
@@ -78,6 +80,7 @@ const Account = (): JSX.Element => {
               fontWeight={linkedAddressesCount ? "bold" : "semibold"}
             >
               {ENSName ||
+                lensName ||
                 NNSName ||
                 unstoppableDomainName ||
                 dotbitName ||

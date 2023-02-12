@@ -1,20 +1,37 @@
-import { gql } from "@apollo/client"
-import apolloClient from "pages/api/apolloClient"
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client"
+import { useWeb3React } from "@web3-react/core"
+import useSWRImmutable from "swr/immutable"
 
-const query = `
+const apolloClient = new ApolloClient({
+  uri: "https://api.lens.dev/",
+  cache: new InMemoryCache(),
+})
+
+const fetchLensProtocolName = (_, query) =>
+  apolloClient
+    .query({
+      query: gql(query),
+    })
+    .then((res) => res.data.profiles.items[0].handle)
+    .catch()
+
+const useLensProtocolName = () => {
+  const { account } = useWeb3React()
+  const query = `
     query Profiles {
-        profiles(request: { ownedBy: ["0xe055721b972d58f0bcf6370c357879fb3a37d2f3"], limit: 10 }) {
+        profiles(request: { ownedBy: ["${account}"] }) {
             items {
             handle
         }}
     }`
-
-const useLensProtocolName = async () => {
-  const response = await apolloClient.query({
-    query: gql(query),
-  })
-  console.log(response.data.profiles.items[0].handle)
-  return response.data.profiles.items[0].handle
+  const shouldFetch = apolloClient ?? account
+  const { data } = useSWRImmutable(
+    shouldFetch ? ["lensProtocol", query] : null,
+    fetchLensProtocolName
+  )
+  return data
 }
 
 export default useLensProtocolName
+
+// test ownedBy: ["0xe055721b972d58f0bcf6370c357879fb3a37d2f3"]
