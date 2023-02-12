@@ -15,6 +15,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import useDotbitName from "hooks/useDotbitName"
+import useLensProtocolName from "hooks/useLensProtocolName"
 import useNNSName from "hooks/useNNSName"
 import useUnstoppableDomainName from "hooks/useUnstoppableName"
 import { LinkBreak, SignIn } from "phosphor-react"
@@ -31,6 +32,7 @@ const Account = (): JSX.Element => {
   const dotbitName = useDotbitName()
   const unstoppableDomainName = useUnstoppableDomainName()
   const { addresses } = useUser()
+  const lensName = useLensProtocolName()
   if (!account) {
     return (
       <AccountButton
