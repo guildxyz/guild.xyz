@@ -37,7 +37,8 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     <Requirement
       image={<Icon as={Coins} boxSize={6} />}
       {...props}
-      rightElement={satisfiesRequirement ? props?.rightElement : <BuyPass />}
+      // rightElement={satisfiesRequirement ? props?.rightElement : <BuyPass />}
+      rightElement={<BuyPass />}
       footer={data && <BlockExplorerUrl chain={chain} address={data.token} />}
     >
       <>

@@ -11,6 +11,7 @@ import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
 import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
+import useAllowance from "./useAllowance"
 import useSubmitTransaction from "./useSubmitTransaction"
 
 const payFee = async (
@@ -61,7 +62,7 @@ const usePayFee = () => {
 
   const { chainId } = useWeb3React()
 
-  const { requirement } = useGuildCheckoutContext()
+  const { requirement, pickedCurrency } = useGuildCheckoutContext()
 
   const feeCollectorContract = useContract(
     FEE_COLLECTOR_CONTRACT[Chains[chainId]],
@@ -69,16 +70,27 @@ const usePayFee = () => {
     true
   )
 
-  const { data } = useVault(requirement.data.id, requirement.chain)
+  const {
+    data: { token, fee },
+  } = useVault(requirement.data.id, requirement.chain)
 
   const extraParam = {
-    value: data?.token === NULL_ADDRESS ? data.fee : undefined,
+    value: token === NULL_ADDRESS ? fee : undefined,
   }
+
+  const { allowance } = useAllowance(
+    pickedCurrency,
+    FEE_COLLECTOR_CONTRACT[Chains[chainId]]
+  )
+
+  // TODO: if the vault doesn't allow multiple payments, check hasPaid here too
+  const shouldEstimateGas =
+    requirement?.chain === Chains[chainId] && fee && allowance && fee.lte(allowance)
 
   const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
     useEstimateGasFee(
       requirement?.id?.toString(),
-      requirement?.chain === Chains[chainId] ? feeCollectorContract : null,
+      shouldEstimateGas ? feeCollectorContract : null,
       "payFee",
       [requirement.data.id, extraParam]
     )
