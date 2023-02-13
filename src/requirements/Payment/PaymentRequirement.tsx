@@ -8,6 +8,7 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
 import useVault from "./hooks/useVault"
@@ -54,6 +55,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
         >
           {convertedFee && symbol ? `${convertedFee} ${symbol}` : "-"}
         </DataBlock>
+        {` (${RPC[chain].chainName})`}
       </>
     </Requirement>
   )
