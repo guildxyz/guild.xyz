@@ -13,7 +13,6 @@ const fetchLensProtocolName = (_, query) =>
       query: gql(query),
     })
     .then((res) => res.data.profiles.items[0].handle)
-    .catch()
 
 const useLensProtocolName = () => {
   const { account } = useWeb3React()
@@ -24,7 +23,7 @@ const useLensProtocolName = () => {
             handle
         }}
     }`
-  const shouldFetch = apolloClient ?? account
+  const shouldFetch = Boolean(apolloClient && account)
   const { data } = useSWRImmutable(
     shouldFetch ? ["lensProtocol", query] : null,
     fetchLensProtocolName

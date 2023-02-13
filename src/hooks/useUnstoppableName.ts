@@ -12,7 +12,7 @@ const resolution = new Resolution()
 
 const useUnstoppableDomainName = () => {
   const { account } = useWeb3React()
-  const shouldFetch = resolution ?? account
+  const shouldFetch = Boolean(resolution && account)
 
   const { data } = useSWRImmutable(
     shouldFetch ? ["unstoppableDomain", account, resolution] : null,

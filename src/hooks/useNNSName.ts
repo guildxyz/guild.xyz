@@ -10,7 +10,7 @@ const fetchNNSName = (_, provider, account) => {
 
 const useNNSName = (): string => {
   const { provider, account } = useWeb3React()
-  const shouldFetch = provider && account
+  const shouldFetch = Boolean(provider && account)
 
   const { data } = useSWRImmutable(
     shouldFetch ? ["NNS", provider, account] : null,

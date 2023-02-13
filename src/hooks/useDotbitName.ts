@@ -10,7 +10,7 @@ const dotbit = createInstance()
 const useDotbitName = () => {
   const { account } = useWeb3React()
 
-  const shouldFetch = dotbit && account
+  const shouldFetch = Boolean(dotbit && account)
 
   const { data } = useSWRImmutable(
     shouldFetch ? ["dotbit", dotbit, account] : null,
