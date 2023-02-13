@@ -9,17 +9,17 @@ import PriceFallback from "./PriceFallback"
 
 const PaymentFeeAndTotal = (): JSX.Element => {
   const { requirement, pickedCurrency } = useGuildCheckoutContext()
-  const { data, isValidating, error } = useVault(
-    requirement.data.id,
-    requirement.chain
-  )
+  const {
+    data: { token, fee },
+    isValidating,
+    error,
+  } = useVault(requirement.data.id, requirement.chain)
 
   const {
     data: { decimals, symbol },
-  } = useTokenData(requirement.chain, data?.token)
+  } = useTokenData(requirement.chain, token)
 
-  const priceInSellToken =
-    data && decimals ? Number(formatUnits(data.fee, decimals)) : 0
+  const priceInSellToken = fee && decimals ? Number(formatUnits(fee, decimals)) : 0
 
   const { estimatedGasFee } = usePayFee()
 

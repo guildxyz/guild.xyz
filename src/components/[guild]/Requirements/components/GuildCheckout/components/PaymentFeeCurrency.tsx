@@ -15,26 +15,24 @@ const PaymentFeeCurrency = (): JSX.Element => {
   const { requirement, pickedCurrency, setPickedCurrency } =
     useGuildCheckoutContext()
 
-  const { data, error, isValidating } = useVault(
-    requirement?.data?.id,
-    requirement?.chain
-  )
+  const {
+    data: { token, fee },
+    error,
+    isValidating,
+  } = useVault(requirement?.data?.id, requirement?.chain)
 
   const {
     data: { decimals },
-  } = useTokenData(requirement.chain, data?.token)
+  } = useTokenData(requirement.chain, token)
 
-  const convertedFee =
-    data?.fee && decimals ? formatUnits(data.fee, decimals) : undefined
+  const convertedFee = fee && decimals ? formatUnits(fee, decimals) : undefined
 
   useEffect(() => {
-    if (!data) return
+    if (!token) return
     setPickedCurrency(
-      data.token === NULL_ADDRESS
-        ? RPC[requirement.chain].nativeCurrency.symbol
-        : data.token
+      token === NULL_ADDRESS ? RPC[requirement.chain].nativeCurrency.symbol : token
     )
-  }, [data])
+  }, [token])
 
   return (
     <Stack spacing={3}>

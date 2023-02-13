@@ -15,7 +15,7 @@ import useVault from "./hooks/useVault"
 const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   const { id, roleId, chain, data: requirementData } = useRequirementContext()
   const {
-    data,
+    data: { token, fee },
     isValidating: isVaultLoading,
     error: vaultError,
   } = useVault(requirementData?.id, chain)
@@ -24,9 +24,8 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     data: { symbol, decimals },
     error: tokenError,
     isValidating: isTokenDataLoading,
-  } = useTokenData(chain, data?.token)
-  const convertedFee =
-    data?.fee && decimals ? formatUnits(data.fee, decimals) : undefined
+  } = useTokenData(chain, token)
+  const convertedFee = fee && decimals ? formatUnits(fee, decimals) : undefined
 
   const { data: accessData } = useAccess(roleId)
   const satisfiesRequirement = accessData?.requirements?.find(
@@ -37,9 +36,9 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     <Requirement
       image={<Icon as={Coins} boxSize={6} />}
       {...props}
-      // rightElement={satisfiesRequirement ? props?.rightElement : <BuyPass />}
-      rightElement={<BuyPass />}
-      footer={data && <BlockExplorerUrl chain={chain} address={data.token} />}
+      // TODO: display button if multiple payments are allowed in the vault
+      rightElement={satisfiesRequirement ? props?.rightElement : <BuyPass />}
+      footer={token && <BlockExplorerUrl chain={chain} address={token} />}
     >
       <>
         {"Pay "}
