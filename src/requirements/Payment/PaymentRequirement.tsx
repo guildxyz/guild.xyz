@@ -16,7 +16,7 @@ import useVault from "./hooks/useVault"
 const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   const { id, roleId, chain, data: requirementData } = useRequirementContext()
   const {
-    data: { token, fee },
+    data: { token, fee, multiplePayments },
     isValidating: isVaultLoading,
     error: vaultError,
   } = useVault(requirementData?.id, chain)
@@ -37,8 +37,9 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     <Requirement
       image={<Icon as={Coins} boxSize={6} />}
       {...props}
-      // TODO: display button if multiple payments are allowed in the vault
-      rightElement={satisfiesRequirement ? props?.rightElement : <BuyPass />}
+      rightElement={
+        satisfiesRequirement && !multiplePayments ? props?.rightElement : <BuyPass />
+      }
       footer={token && <BlockExplorerUrl chain={chain} address={token} />}
     >
       <>

@@ -6,6 +6,7 @@ import useContract from "hooks/useContract"
 import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
+import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
 import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
@@ -26,7 +27,6 @@ const payFee = async (
   } catch (callStaticError) {
     let processedCallStaticError: string
 
-    // Wallet error - e.g. insufficient funds
     if (callStaticError.error) {
       const walletError = processWalletError(callStaticError.error)
       processedCallStaticError = walletError.title
@@ -71,8 +71,14 @@ const usePayFee = () => {
   )
 
   const {
-    data: { token, fee },
+    data: { token, fee, multiplePayments },
+    isValidating: isVaultLoading,
   } = useVault(requirement.data.id, requirement.chain)
+
+  const { data: hasPaid, isValidating: isHasPaidLoading } = useHasPaid(
+    requirement.data.id,
+    requirement.chain
+  )
 
   const extraParam = {
     value: token === NULL_ADDRESS ? fee : undefined,
@@ -83,9 +89,14 @@ const usePayFee = () => {
     FEE_COLLECTOR_CONTRACT[Chains[chainId]]
   )
 
-  // TODO: if the vault doesn't allow multiple payments, check hasPaid here too
   const shouldEstimateGas =
-    requirement?.chain === Chains[chainId] && fee && allowance && fee.lte(allowance)
+    requirement?.chain === Chains[chainId] &&
+    !isVaultLoading &&
+    !isHasPaidLoading &&
+    (multiplePayments || !hasPaid) &&
+    fee &&
+    allowance &&
+    fee.lte(allowance)
 
   const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
     useEstimateGasFee(

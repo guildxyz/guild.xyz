@@ -2,6 +2,7 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
+import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
 import useAllowance from "../../hooks/useAllowance"
@@ -13,10 +14,15 @@ const BuyButton = (): JSX.Element => {
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const {
-    data: { fee },
+    data: { fee, multiplePayments },
     isValidating: isVaultLoading,
     error,
   } = useVault(requirement.data.id, requirement.chain)
+
+  const { data: hasPaid, isValidating: isHasPaidLoading } = useHasPaid(
+    requirement.data.id,
+    requirement.chain
+  )
 
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
@@ -46,21 +52,20 @@ const BuyButton = (): JSX.Element => {
     estimateGasError ||
     !agreeWithTOS ||
     Chains[chainId] !== requirement.chain ||
+    (!isVaultLoading && !isHasPaidLoading && !multiplePayments && hasPaid) ||
     (!pickedCurrencyIsNative &&
-      (isVaultLoading ||
-        isAllowanceLoading ||
-        allowanceError ||
-        !isSufficientAllowance)) ||
+      (isAllowanceLoading || allowanceError || !isSufficientAllowance)) ||
     isBalanceLoading ||
     !isSufficientBalance
 
   const errorMsg =
-    (error && "Couldn't calculate price") ??
+    (error && "Couldn't calculate price") ||
     (estimateGasError &&
       (estimateGasError?.data?.message?.includes("insufficient")
         ? "Insufficient funds for gas"
-        : "Couldn't estimate gas")) ??
-    (!isSufficientBalance && "Insufficient balance")
+        : "Couldn't estimate gas")) ||
+    (!isSufficientBalance && "Insufficient balance") ||
+    (!multiplePayments && hasPaid && "Already paid")
 
   return (
     <Button
