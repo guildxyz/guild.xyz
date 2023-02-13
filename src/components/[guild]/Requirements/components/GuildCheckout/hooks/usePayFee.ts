@@ -9,7 +9,11 @@ import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
-import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import {
+  ADDRESS_REGEX,
+  FEE_COLLECTOR_CONTRACT,
+  NULL_ADDRESS,
+} from "utils/guildCheckout/constants"
 import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useAllowance from "./useAllowance"
@@ -95,8 +99,7 @@ const usePayFee = () => {
     !isHasPaidLoading &&
     (multiplePayments || !hasPaid) &&
     fee &&
-    allowance &&
-    fee.lte(allowance)
+    (ADDRESS_REGEX.test(pickedCurrency) ? allowance && fee.lte(allowance) : true)
 
   const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
     useEstimateGasFee(
