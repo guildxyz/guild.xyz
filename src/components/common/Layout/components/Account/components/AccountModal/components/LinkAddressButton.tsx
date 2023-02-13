@@ -75,7 +75,7 @@ const LinkAddressButton = ({}) => {
           }
           w="full"
           onClick={() => {
-            set.onSubmit(false, true)
+            set.onSubmit(false, "DELEGATE")
           }}
           isLoading={set.isLoading || set.isSigning}
           loadingText="Check your wallet"

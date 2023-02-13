@@ -7,7 +7,7 @@ import { createStore, del, get, set } from "idb-keyval"
 import { useEffect } from "react"
 import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
-import { User } from "types"
+import { AddressConnectionProvider, User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import useLocalStorage from "./useLocalStorage"
@@ -27,9 +27,9 @@ type AddressLinkParams =
       userId: number
       signature: string
       nonce: string
-    } & { isDelegate: never })
+    } & { addressConnectionProvider: never })
   | ({
-      isDelegate: boolean
+      addressConnectionProvider: AddressConnectionProvider
     } & {
       userId: never
       signature: never
@@ -111,7 +111,7 @@ const setKeyPair = async ({
     userId: signedUserId,
     signature,
     nonce,
-    isDelegate,
+    addressConnectionProvider,
   } = JSON.parse(signedValidation.signedPayload)
 
   const shouldSendLink =
@@ -128,7 +128,7 @@ const setKeyPair = async ({
 
   const prevKeyPair = await getKeyPairFromIdb(userId).catch(() => null)
 
-  if (!shouldSendLink && (!isDelegate || !prevKeyPair)) {
+  if (!shouldSendLink && (!addressConnectionProvider || !prevKeyPair)) {
     storedKeyPair = generatedKeyPair
 
     /**
@@ -358,7 +358,10 @@ const useKeyPair = () => {
     isValid,
     set: {
       ...setSubmitResponse,
-      onSubmit: async (shouldLinkToUser: boolean, isDelegate?: boolean) => {
+      onSubmit: async (
+        shouldLinkToUser: boolean,
+        provider?: AddressConnectionProvider
+      ) => {
         const body: SetKeypairPayload = { pubKey: undefined }
 
         try {
@@ -405,9 +408,9 @@ const useKeyPair = () => {
           }
         }
 
-        if (isDelegateConnection || isDelegate) {
+        if (isDelegateConnection || provider === "DELEGATE") {
           const prevKeyPair = await getKeyPairFromIdb(user?.id)
-          body.isDelegate = true
+          body.addressConnectionProvider = "DELEGATE"
           body.pubKey = prevKeyPair?.pubKey ?? body.pubKey
         }
 
