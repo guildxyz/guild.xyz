@@ -50,7 +50,7 @@ const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
       provider.getSigner(account).connectUnchecked()
     )
 
-    // TODO: checkbox for multiple payments (3rd param)
+    // TODO: checkbox for multiple payments (3rd param) - will add it in a later PR
     const registerVaultParams = [owner, token, false, feeInWei]
 
     try {

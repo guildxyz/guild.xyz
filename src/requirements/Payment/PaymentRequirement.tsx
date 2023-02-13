@@ -1,6 +1,7 @@
 import { Icon } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import useAccess from "components/[guild]/hooks/useAccess"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
@@ -11,10 +12,12 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
+import WithdrawButton from "./components/WithdrawButton"
 import useVault from "./hooks/useVault"
 
 const PaymentRequirement = (props: RequirementProps): JSX.Element => {
-  const { id, roleId, chain, data: requirementData, type } = useRequirementContext()
+  const { isAdmin } = useGuildPermission()
+  const { id, roleId, chain, data: requirementData } = useRequirementContext()
   const {
     data: { token, fee, multiplePayments },
     isValidating: isVaultLoading,
@@ -46,7 +49,15 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
           )
         ) : null
       }
-      footer={token && <BlockExplorerUrl chain={chain} address={token} />}
+      footer={
+        <>
+          {isAdmin ? (
+            <WithdrawButton />
+          ) : token ? (
+            <BlockExplorerUrl chain={chain} address={token} />
+          ) : null}
+        </>
+      }
     >
       <>
         {"Pay "}

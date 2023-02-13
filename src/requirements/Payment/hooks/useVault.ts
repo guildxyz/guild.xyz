@@ -42,7 +42,10 @@ const fetchVault = async (
   }
 }
 
-const useVault = (vaultId: string, chain: Chain): SWRResponse<GetVaultResponse> => {
+const useVault = (
+  vaultId: number | string,
+  chain: Chain
+): SWRResponse<GetVaultResponse> => {
   const swrResponse = useSWRImmutable(
     vaultId && chain ? ["vault", vaultId, chain] : null,
     fetchVault
