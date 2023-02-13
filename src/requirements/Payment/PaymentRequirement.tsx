@@ -73,7 +73,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
         >
           {convertedFee && symbol ? `${convertedFee} ${symbol}` : "-"}
         </DataBlock>
-        {` (${RPC[chain].chainName})`}
+        {` on ${RPC[chain].chainName}`}
       </>
     </Requirement>
   )
