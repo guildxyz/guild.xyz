@@ -36,48 +36,8 @@ export const TokenApiURLs = {
   PALM: [],
 }
 
-const fetchTokens = async (_: string, chain: string) => {
-  if (chain === "GOERLI")
-    return [
-      {
-        chainId: 5,
-        address: "0x0000000000000000000000000000000000000000",
-        name: "Matic",
-        symbol: "MATIC",
-        decimals: 18,
-        logoURI:
-          "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912",
-      },
-      {
-        chainId: 5,
-        address: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
-        name: "USD Coin",
-        symbol: "USDC",
-        decimals: 6,
-        logoURI:
-          "https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png?1547042389",
-      },
-      {
-        chainId: 5,
-        address: "0x73967c6a0904aa032c103b4104747e88c566b1a2",
-        name: "Dai",
-        symbol: "DAI",
-        decimals: 18,
-        logoURI:
-          "https://assets.coingecko.com/coins/images/9956/thumb/4943.png?1636636734",
-      },
-      {
-        chainId: 5,
-        address: "0x509ee0d083ddf8ac028f2a56731412edd63223b9",
-        name: "Tether",
-        symbol: "USDT",
-        decimals: 6,
-        logoURI:
-          "https://assets.coingecko.com/coins/images/325/thumb/Tether.png?1668148663",
-      },
-    ]
-
-  return Promise.all(TokenApiURLs[chain].map((url) => fetcher(url))).then(
+const fetchTokens = async (_: string, chain: string) =>
+  Promise.all(TokenApiURLs[chain].map((url) => fetcher(url))).then(
     (tokenArrays: any) => {
       const finalTokenArray = tokenArrays.reduce(
         (acc, curr) =>
@@ -93,7 +53,6 @@ const fetchTokens = async (_: string, chain: string) => {
         : finalTokenArray
     }
   )
-}
 
 const useTokens = (chain: string) => {
   const { isValidating, data } = useSWRImmutable<Array<CoingeckoToken>>(

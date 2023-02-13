@@ -67,7 +67,6 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
   return (
     <Stack spacing={4}>
       <ChainPicker
-        goerliFake
         controlName="chain"
         supportedChains={paymentSupportedChains}
         onChange={() => setValue("token", null)}
