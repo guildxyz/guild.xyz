@@ -47,7 +47,21 @@ const fetchVault = async (
   }
 }
 
-const useVault = (vaultId: string, chain: string): SWRResponse<GetVaultResponse> =>
-  useSWRImmutable(vaultId && chain ? ["vault", vaultId, chain] : null, fetchVault)
+const useVault = (vaultId: string, chain: string): SWRResponse<GetVaultResponse> => {
+  const swrResponse = useSWRImmutable(
+    vaultId && chain ? ["vault", vaultId, chain] : null,
+    fetchVault
+  )
+  return {
+    ...swrResponse,
+    data: swrResponse?.data ?? {
+      guildShareBps: undefined,
+      owner: undefined,
+      fee: undefined,
+      token: undefined,
+      collected: undefined,
+    },
+  }
+}
 
 export default useVault
