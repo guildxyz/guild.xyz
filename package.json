@@ -5,7 +5,6 @@
   "scripts": {
     "prepare": "npm run snyk-protect && husky install",
     "dev": "next dev",
-    "prebuild": "node ./scripts/pre-build.js",
     "build": "next build",
     "start": "next start",
     "type-check": "tsc --pretty --noEmit --incremental false",

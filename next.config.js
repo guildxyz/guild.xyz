@@ -28,6 +28,7 @@ module.exports = {
         "@web3-react/metamask": false,
         "@web3-react/walletconnect": false,
         "@ethersproject/keccak256": false,
+        "lodash.mergewith": false,
       }
     }
 
