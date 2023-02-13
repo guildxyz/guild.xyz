@@ -15,7 +15,6 @@ import useBalance from "hooks/useBalance"
 import useTokenData from "hooks/useTokenData"
 import { Fragment } from "react"
 import { Rest } from "types"
-import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 
 type Props = {
   chainId: number
@@ -54,12 +53,10 @@ const TokenInfo = ({
   } = useBalance(address, chainId)
 
   const balance = formatUnits(
-    (address === RPC[Chains[chainId]]?.nativeCurrency?.symbol ||
-    address === NULL_ADDRESS
+    (address === RPC[Chains[chainId]]?.nativeCurrency?.symbol
       ? coinBalance
       : tokenBalance) ?? "0",
-    address === RPC[Chains[chainId]]?.nativeCurrency?.symbol ||
-      address === NULL_ADDRESS
+    address === RPC[Chains[chainId]]?.nativeCurrency?.symbol
       ? RPC[Chains[chainId]]?.nativeCurrency?.decimals
       : decimals ?? 18
   )

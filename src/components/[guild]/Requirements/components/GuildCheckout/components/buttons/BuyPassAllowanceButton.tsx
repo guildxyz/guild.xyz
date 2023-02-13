@@ -5,7 +5,7 @@ import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
-import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
 import useAllowance from "../../hooks/useAllowance"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
@@ -18,8 +18,8 @@ const BuyPassAllowanceButton = (): JSX.Element => {
   const {
     data: { symbol, name },
   } = useTokenData(requirement.chain, pickedCurrency)
-  const nativeCurrency = RPC[Chains[chainId]]?.nativeCurrency
-  const isNativeCurrencyPicked = pickedCurrency === NULL_ADDRESS
+  const nativeCurrency = RPC[requirement?.chain]?.nativeCurrency
+  const isNativeCurrencyPicked = pickedCurrency === nativeCurrency?.symbol
 
   const tokenSymbol = isNativeCurrencyPicked ? nativeCurrency.symbol : symbol
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name

@@ -6,15 +6,13 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
-import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
+import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
 
 type RegisterVaultParams = {
   owner: string
   token: string
   fee: number
 }
-
-const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
   const { chainId, account, provider } = useWeb3React()

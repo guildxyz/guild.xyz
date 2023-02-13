@@ -6,18 +6,22 @@ import useContract from "hooks/useContract"
 import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
+import useVault from "requirements/Payment/hooks/useVault"
 import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
-import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
+import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useSubmitTransaction from "./useSubmitTransaction"
 
-const payFee = async (feeCollectorContract: Contract, vaultId: number) => {
+const payFee = async (
+  feeCollectorContract: Contract,
+  params: [number, Record<string, any>]
+) => {
   if (!feeCollectorContract)
     return Promise.reject("Can't find FeeCollector contract.")
 
   try {
-    await feeCollectorContract.callStatic.payFee(vaultId)
+    await feeCollectorContract.callStatic.payFee(...params)
   } catch (callStaticError) {
     let processedCallStaticError: string
 
@@ -46,7 +50,7 @@ const payFee = async (feeCollectorContract: Contract, vaultId: number) => {
     return Promise.reject(processedCallStaticError)
   }
 
-  return feeCollectorContract.payFee(vaultId)
+  return feeCollectorContract.payFee(...params)
 }
 
 const usePayFee = () => {
@@ -65,16 +69,22 @@ const usePayFee = () => {
     true
   )
 
+  const { data } = useVault(requirement.data.id, requirement.chain)
+
+  const extraParam = {
+    value: data?.token === NULL_ADDRESS ? data.fee : undefined,
+  }
+
   const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
     useEstimateGasFee(
       requirement?.id?.toString(),
       requirement?.chain === Chains[chainId] ? feeCollectorContract : null,
       "payFee",
-      [requirement.data.id]
+      [requirement.data.id, extraParam]
     )
 
   const payFeeTransaction = (vaultId: number) =>
-    payFee(feeCollectorContract, vaultId)
+    payFee(feeCollectorContract, [vaultId, extraParam])
 
   const useSubmitData = useSubmitTransaction<number>(payFeeTransaction, {
     onError: (error) => {

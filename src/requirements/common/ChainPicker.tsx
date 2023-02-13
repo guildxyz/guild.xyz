@@ -81,7 +81,7 @@ const ChainPicker = ({
         <FormLabel>Chain</FormLabel>
         <InputGroup>
           <InputLeftElement>
-            <OptionImage img={RPC[chain].iconUrls[0]} alt={chain} />
+            <OptionImage img={RPC[chain]?.iconUrls?.[0]} alt={chain} />
           </InputLeftElement>
 
           <ControlledSelect

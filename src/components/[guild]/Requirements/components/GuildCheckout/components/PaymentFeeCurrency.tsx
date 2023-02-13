@@ -1,9 +1,10 @@
 import { Box, Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
-import { Chains } from "connectors"
+import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
 import useVault from "requirements/Payment/hooks/useVault"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 import TokenInfo from "./PaymentCurrencyPicker/components/TokenInfo"
 
@@ -28,7 +29,11 @@ const PaymentFeeCurrency = (): JSX.Element => {
 
   useEffect(() => {
     if (!data) return
-    setPickedCurrency(data.token)
+    setPickedCurrency(
+      data.token === NULL_ADDRESS
+        ? RPC[requirement.chain].nativeCurrency.symbol
+        : data.token
+    )
   }, [data])
 
   return (
