@@ -77,6 +77,7 @@ const usePayFee = () => {
   const {
     data: { token, fee, multiplePayments },
     isValidating: isVaultLoading,
+    mutate,
   } = useVault(requirement.data.id, requirement.chain)
 
   const { data: hasPaid, isValidating: isHasPaidLoading } = useHasPaid(
@@ -135,6 +136,8 @@ const usePayFee = () => {
         status: "success",
         title: "Successful payment",
       })
+
+      mutate()
     },
   })
 
