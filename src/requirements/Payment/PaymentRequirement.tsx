@@ -14,7 +14,7 @@ import { Coins } from "phosphor-react"
 import useVault from "./hooks/useVault"
 
 const PaymentRequirement = (props: RequirementProps): JSX.Element => {
-  const { id, roleId, chain, data: requirementData } = useRequirementContext()
+  const { id, roleId, chain, data: requirementData, type } = useRequirementContext()
   const {
     data: { token, fee, multiplePayments },
     isValidating: isVaultLoading,
@@ -38,7 +38,13 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
       image={<Icon as={Coins} boxSize={6} />}
       {...props}
       rightElement={
-        satisfiesRequirement && !multiplePayments ? props?.rightElement : <BuyPass />
+        props?.rightElement ? (
+          satisfiesRequirement && !multiplePayments ? (
+            props?.rightElement
+          ) : (
+            <BuyPass />
+          )
+        ) : null
       }
       footer={token && <BlockExplorerUrl chain={chain} address={token} />}
     >
