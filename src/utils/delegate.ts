@@ -1,7 +1,8 @@
 import { BigNumber } from "@ethersproject/bignumber"
-import { aggregateDecodedFromABI } from "@makerdao/multicall"
+import { JsonRpcProvider } from "@ethersproject/providers"
 import { Chain, Chains, RPC } from "connectors"
-import DELEGATE_REGISTRY_ABI from "static/abis/delegateRegistry.json"
+import DELEGATE_ABI from "static/abis/delegateRegistry.json"
+import { Contract, Provider } from "utils/multicall"
 
 // https://docs.delegate.cash/delegatecash/technical-documentation/delegation-registry/contract-addresses
 const delegateAddresses = {
@@ -26,22 +27,18 @@ const multicallGetDelegationsByDelegate = async (
   contractAddress: string,
   delegates: string[]
 ) => {
-  const {
-    multicallAddress,
-    rpcUrls: [rpcUrl],
-  } = RPC[chainName]
+  const provider = new JsonRpcProvider(RPC[chainName].rpcUrls[0])
 
-  const results: RawDelegationResult[][][] = await aggregateDecodedFromABI(
-    delegates.map((delegate) => ({
-      target: contractAddress,
-      call: ["getDelegationsByDelegate", delegate],
-      abi: DELEGATE_REGISTRY_ABI,
-    })),
-    { multicallAddress, rpcUrl }
+  const multicallProvider = new Provider(provider, RPC[chainName].chainId)
+
+  const delegateContract = new Contract(contractAddress, DELEGATE_ABI)
+
+  const results: RawDelegationResult[][] = await multicallProvider.all(
+    delegates.map((delegate) => delegateContract.getDelegationsByDelegate(delegate))
   )
 
   return results
-    .flatMap(([contractResults]) => contractResults.map((res) => res[1]))
+    .flatMap((contractResults) => contractResults.map(([, vault]) => vault))
     .filter(Boolean)
 }
 
