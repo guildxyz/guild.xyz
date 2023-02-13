@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react"
+import { HStack, Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -62,10 +62,10 @@ const NftRequirement = (props: RequirementProps) => {
       }
       isImageLoading={nftDataLoading}
       footer={
-        <>
+        <HStack spacing={4}>
           <GuildCheckout />
           <BlockExplorerUrl />
-        </>
+        </HStack>
       }
       {...props}
     >
