@@ -1,17 +1,12 @@
 import {
   IconButton,
-  Img,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Spinner,
-  Stack,
-  Tag,
-  Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import CreatePoap from "components/[guild]/CreatePoap"
 import useGuild from "components/[guild]/hooks/useGuild"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
 import {
@@ -64,27 +59,6 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         />
 
         <MenuList>
-          <MenuItem
-            icon={
-              <Img
-                boxSize={3}
-                src="/requirementLogos/poap.svg"
-                alt="Drop POAP icon"
-              />
-            }
-            onClick={onCreatePoapOpen}
-          >
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Text as="span">{poaps?.length ? "Manage POAPs" : "Drop POAP"}</Text>
-              <Tag fontSize="x-small" fontWeight="semibold" h={5} minH={0}>
-                Alpha
-              </Tag>
-            </Stack>
-          </MenuItem>
           <MenuItem icon={<ChatDots />} onClick={onSendJoinButtonOpen}>
             Send join button
           </MenuItem>
@@ -109,12 +83,6 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         </MenuList>
       </Menu>
 
-      <CreatePoap
-        isOpen={isCreatePoapOpen}
-        onOpen={onCreatePoapOpen}
-        onClose={onCreatePoapClose}
-        discordServerId={platformGuildId}
-      />
       <SendDiscordJoinButtonModal
         isOpen={isSendJoinButtonOpen}
         onClose={onSendJoinButtonClose}

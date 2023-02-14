@@ -20,7 +20,7 @@ import AddTelegramPanel from "./components/AddTelegramPanel"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
 const addPlatformComponents: Record<
-  Exclude<PlatformName, "" | "TWITTER">,
+  Exclude<PlatformName, "" | "TWITTER" | "POAP">,
   (props) => JSX.Element
 > = {
   DISCORD: AddDiscordPanel,

@@ -1,8 +1,6 @@
 import {
-  Divider,
   FormControl,
   FormLabel,
-  Heading,
   HStack,
   Img,
   Input,
@@ -20,6 +18,7 @@ import usePoapById from "requirements/Poap/hooks/usePoapById"
 import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
 import useSavePoap from "../hooks/useSavePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
+import UploadMintLinks from "./UploadMintLinks"
 
 const ImportPoap = (): JSX.Element => {
   const { id } = useGuild()
@@ -49,30 +48,8 @@ const ImportPoap = (): JSX.Element => {
 
   return (
     <FormProvider {...methods}>
-      <Stack textAlign="left">
-        <HStack py={8}>
-          <Divider />
-          <Text
-            as="span"
-            fontWeight="bold"
-            fontSize="sm"
-            color="gray"
-            textTransform="uppercase"
-            minW="max-content"
-          >
-            or import an existing POAP
-          </Text>
-          <Divider />
-        </HStack>
-
-        <Heading as="h4" fontSize="lg" fontFamily="display">
-          Already created a POAP?
-        </Heading>
-        <Text>
-          You can import your POAP to Guild.xyz by pasting its ID in the field below.
-        </Text>
-
-        <FormControl pt={2}>
+      <Stack textAlign="left" spacing={6}>
+        <FormControl>
           <FormLabel>Event ID:</FormLabel>
           <HStack>
             <InputGroup maxW={{ base: 40, sm: 52 }}>
@@ -104,6 +81,7 @@ const ImportPoap = (): JSX.Element => {
             </HStack>
           )}
         </FormControl>
+        <UploadMintLinks />
       </Stack>
     </FormProvider>
   )

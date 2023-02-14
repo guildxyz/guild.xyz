@@ -19,12 +19,13 @@ import platforms from "platforms"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName } from "types"
+import CreatePoap from "../CreatePoap"
 import useGuild from "../hooks/useGuild"
 import RoleOptionCard from "../RoleOptionCard"
-import AddDiscordPanel from "../RolePlatforms/components/AddRewardModal/components/AddDiscordPanel"
-import AddGithubPanel from "../RolePlatforms/components/AddRewardModal/components/AddGithubPanel"
-import AddGooglePanel from "../RolePlatforms/components/AddRewardModal/components/AddGooglePanel"
-import AddTelegramPanel from "../RolePlatforms/components/AddRewardModal/components/AddTelegramPanel"
+import AddDiscordPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
+import AddGithubPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
+import AddGooglePanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
+import AddTelegramPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
 import useAddReward from "./hooks/useAddReward"
 
 const addPlatformComponents: Record<
@@ -35,6 +36,7 @@ const addPlatformComponents: Record<
   TELEGRAM: AddTelegramPanel,
   GITHUB: AddGithubPanel,
   GOOGLE: AddGooglePanel,
+  POAP: CreatePoap,
 }
 
 const AddRewardButton = () => {
@@ -100,6 +102,7 @@ const AddRewardButton = () => {
                 <PlatformsGrid
                   onSelection={setSelection}
                   columns={{ base: 1, lg: 2 }}
+                  showPoap
                 />
               ) : showRoleSelect ? (
                 <>
