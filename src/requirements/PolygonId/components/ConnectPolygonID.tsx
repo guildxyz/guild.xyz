@@ -72,7 +72,7 @@ const ConnectPolygonIDModal = ({ isOpen, onClose }) => {
     fetcherWithSign
   )
 
-  const qrCode = JSON.stringify(response?.data)
+  const qrCode = JSON.stringify(response)
 
   return (
     <Modal
