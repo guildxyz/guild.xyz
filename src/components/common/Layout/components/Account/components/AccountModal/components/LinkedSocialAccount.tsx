@@ -51,7 +51,9 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
             <Icon as={platforms[type]?.icon} boxSize={3} color="white" />
           </AvatarBadge>
         </Avatar>
-        <Text fontWeight="semibold">{name}</Text>
+        <Text fontWeight="semibold">
+          {name !== "" && name !== undefined ? name : "couldn't get username"}
+        </Text>
         <Tooltip label="Disconnect account" placement="top" hasArrow>
           <IconButton
             rounded="full"
