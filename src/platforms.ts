@@ -3,13 +3,15 @@ import useDiscordCardProps, {
   DiscordCardMenu,
   DiscordCardSettings,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/useDiscordCardProps"
-import useGithubCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGithubCardProps"
-import useGoogleCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps"
-import GoogleCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardMenu"
-import GoogleCardSettings from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardSettings"
-import GoogleCardWarning from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardWarning"
-import { TelegramCardMenu } from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps"
-import useTelegramCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps/useTelegramCardProps"
+import useGithubCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGithubCardProps/useGithubCardProps"
+import useGoogleCardProps, {
+  GoogleCardMenu,
+  GoogleCardSettings,
+  GoogleCardWarning,
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps"
+import useTelegramCardProps, {
+  TelegramCardMenu,
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps/useTelegramCardProps"
 import {
   DiscordLogo,
   GithubLogo,
@@ -65,6 +67,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "repo",
     paramName: "githubId",
     cardPropsHook: useGithubCardProps,
+    cardMenuComponent: GithubCardMenu,
   },
   TWITTER: {
     icon: TwitterLogo,

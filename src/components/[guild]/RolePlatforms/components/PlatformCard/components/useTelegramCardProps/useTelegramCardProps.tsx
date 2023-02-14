@@ -1,5 +1,6 @@
 import useIsTGBotIn from "components/create-guild/TelegramGroup/hooks/useIsTGBotIn"
 import { GuildPlatform, PlatformName } from "types"
+import TelegramCardMenu from "./TelegramCardMenu"
 
 const useTelegramCardProps = (guildPlatform: GuildPlatform) => {
   const {
@@ -14,3 +15,4 @@ const useTelegramCardProps = (guildPlatform: GuildPlatform) => {
 }
 
 export default useTelegramCardProps
+export { TelegramCardMenu }
