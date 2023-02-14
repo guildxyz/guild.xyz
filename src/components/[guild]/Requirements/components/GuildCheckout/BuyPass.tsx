@@ -142,8 +142,8 @@ const BuyPass = () => {
 
                 <Collapse in={chainId === Chains[requirement.chain]}>
                   <TOSCheckbox>
-                    I understand that if the owner changes requirements, I could lose
-                    access.
+                    I understand that if the owner changes the requirements, I could
+                    lose access.
                   </TOSCheckbox>
 
                   <BuyAllowanceButton />
