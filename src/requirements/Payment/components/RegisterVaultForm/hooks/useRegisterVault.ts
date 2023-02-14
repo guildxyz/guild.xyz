@@ -75,7 +75,13 @@ const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
   }
 
   return useSubmit<RegisterVaultParams, string>(registerVault, {
-    onError: (error) => showErrorToast(error?.message ?? error),
+    onError: (error) => {
+      const prettyError =
+        error?.code === "ACTION_REJECTED"
+          ? "User rejected the transaction"
+          : error?.message ?? error
+      showErrorToast(prettyError)
+    },
     onSuccess,
   })
 }

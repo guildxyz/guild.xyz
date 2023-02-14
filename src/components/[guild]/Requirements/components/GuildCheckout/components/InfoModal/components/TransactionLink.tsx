@@ -8,7 +8,6 @@ const TransactionLink = (): JSX.Element => {
 
   return (
     <Text mb={6} colorScheme="gray">
-      {"Transaction id: "}
       <Link
         isExternal
         href={`${RPC[requirement.chain].blockExplorerUrls[0]}/tx/${txHash}`}

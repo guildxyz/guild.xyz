@@ -97,8 +97,8 @@ const BuyPass = () => {
             {!userSatisfiesOtherRequirements && role?.logic === "AND" && (
               <Alert
                 status="warning"
-                variant="solid"
                 bgColor="orange.100"
+                color="black"
                 mb="6"
                 pb="5"
               >
