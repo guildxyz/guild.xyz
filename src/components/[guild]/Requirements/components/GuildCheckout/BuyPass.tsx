@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Collapse,
   Icon,
   ModalBody,
@@ -52,6 +55,10 @@ const BuyPass = () => {
     requirement?.roleId
   )
 
+  const userSatisfiesOtherRequirements = accessData?.requirements
+    ?.filter((r) => r.requirementId !== requirement?.id)
+    ?.every((r) => r.access)
+
   if (
     !isInfoModalOpen &&
     // TODO: we'll be able to control this properly once we'll have feature flags
@@ -87,6 +94,24 @@ const BuyPass = () => {
           <ModalCloseButton />
 
           <ModalBody>
+            {!userSatisfiesOtherRequirements && role?.logic === "AND" && (
+              <Alert
+                status="warning"
+                variant="solid"
+                bgColor="orange.100"
+                mb="6"
+                pb="5"
+              >
+                <AlertIcon color="orange.500" />
+                <Stack>
+                  <AlertDescription position="relative" top={1}>
+                    There're other requirements you don't satisfy, so the pass alone
+                    won't grant you access
+                  </AlertDescription>
+                </Stack>
+              </Alert>
+            )}
+
             {role?.rolePlatforms?.map((platform) => (
               <Reward
                 key={platform.guildPlatformId}
