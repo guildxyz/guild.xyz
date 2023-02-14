@@ -41,12 +41,12 @@ const PoapReward = ({ poap }: Props) => {
               onClick={openJoinModal}
               maxW="full"
             >
-              {poap.name}
+              {poap?.name}
             </Button>
           </Tooltip>
         ) : (
           <Text as="span" fontWeight={"semibold"}>
-            {poap.name}
+            {poap?.name}
           </Text>
         )}
       </Text>
