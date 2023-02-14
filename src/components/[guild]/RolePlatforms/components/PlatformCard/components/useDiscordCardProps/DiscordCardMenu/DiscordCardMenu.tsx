@@ -12,20 +12,18 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import CreatePoap from "components/[guild]/CreatePoap"
 import useGuild from "components/[guild]/hooks/useGuild"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
-import { RemovePlatformAlert } from "components/[guild]/RolePlatforms/components/RemovePlatformButton/RemovePlatformButton"
 import {
   ArrowsCounterClockwise,
   ChatDots,
   Check,
   DotsThree,
   Gear,
-  TrashSimple,
 } from "phosphor-react"
 import DiscordRewardSettings from "./components/DiscordRewardSettings.tsx"
-import useRemoveGuildPlatform from "./hooks/useRemoveGuildPlatform"
 import useSyncMembersFromDiscord from "./hooks/useSyncMembersFromDiscord"
 
 type Props = {
@@ -48,21 +46,10 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     onOpen: onSettingsOpen,
     onClose: onSettingsClose,
   } = useDisclosure()
-  const {
-    isOpen: isRemovePlatformOpen,
-    onOpen: onRemovePlatformOpen,
-    onClose: onRemovePlatformClose,
-  } = useDisclosure()
 
   const { poaps } = useGuild()
 
   const { response, isLoading, triggerSync } = useSyncMembersFromDiscord()
-
-  const { guildPlatforms } = useGuild()
-  const { onSubmit, isLoading: isRemoveGuildPlatformLoading } =
-    useRemoveGuildPlatform(
-      guildPlatforms.find((gp) => gp.platformGuildId === platformGuildId)?.id
-    )
 
   return (
     <>
@@ -122,9 +109,7 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
             <MenuItem icon={<Gear />} onClick={onSettingsOpen}>
               Settings
             </MenuItem>
-            <MenuItem icon={<TrashSimple />} onClick={onRemovePlatformOpen}>
-              Remove platform
-            </MenuItem>
+            <RemovePlatformMenuItem platformGuildId={platformGuildId} />
           </MenuList>
         </Portal>
       </Menu>
@@ -144,12 +129,6 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         isOpen={isSettingsOpen}
         onClose={onSettingsClose}
         serverId={platformGuildId}
-      />
-      <RemovePlatformAlert
-        isOpen={isRemovePlatformOpen}
-        onClose={onRemovePlatformClose}
-        onSubmit={onSubmit}
-        isLoading={isRemoveGuildPlatformLoading}
       />
     </>
   )
