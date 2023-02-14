@@ -3,7 +3,9 @@ import useDiscordCardProps, {
   DiscordCardMenu,
   DiscordCardSettings,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/useDiscordCardProps"
-import useGithubCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGithubCardProps/useGithubCardProps"
+import useGithubCardProps, {
+  GithubCardMenu,
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGithubCardProps"
 import useGoogleCardProps, {
   GoogleCardMenu,
   GoogleCardSettings,
@@ -11,7 +13,7 @@ import useGoogleCardProps, {
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps"
 import useTelegramCardProps, {
   TelegramCardMenu,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps/useTelegramCardProps"
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps"
 import {
   DiscordLogo,
   GithubLogo,
