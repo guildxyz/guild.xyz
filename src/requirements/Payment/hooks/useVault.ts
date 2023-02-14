@@ -5,7 +5,6 @@ import { Chain, Chains, RPC } from "connectors"
 import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
 import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
-import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
 
 type GetVaultResponse = {
   owner: string
@@ -18,12 +17,13 @@ type GetVaultResponse = {
 
 const fetchVault = async (
   _: string,
+  contractAddress: string,
   vaultId: string,
   chain: Chain
 ): Promise<GetVaultResponse & { guildShareBps: number }> => {
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0], Chains[chain])
   const feeCollectorContract = new Contract(
-    FEE_COLLECTOR_CONTRACT[chain],
+    contractAddress,
     FEE_COLLECTOR_ABI,
     provider
   )
@@ -43,11 +43,14 @@ const fetchVault = async (
 }
 
 const useVault = (
+  contractAddress: string,
   vaultId: number | string,
   chain: Chain
 ): SWRResponse<GetVaultResponse> => {
+  const shouldFetch = contractAddress && vaultId && chain
+
   const swrResponse = useSWRImmutable(
-    vaultId && chain ? ["vault", vaultId, chain] : null,
+    shouldFetch ? ["vault", contractAddress, vaultId, chain] : null,
     fetchVault
   )
   return {

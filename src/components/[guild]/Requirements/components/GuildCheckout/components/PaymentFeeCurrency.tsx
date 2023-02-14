@@ -19,7 +19,7 @@ const PaymentFeeCurrency = (): JSX.Element => {
     data: { token, fee },
     error,
     isValidating,
-  } = useVault(requirement?.data?.id, requirement?.chain)
+  } = useVault(requirement?.address, requirement?.data?.id, requirement?.chain)
 
   const {
     data: { decimals },

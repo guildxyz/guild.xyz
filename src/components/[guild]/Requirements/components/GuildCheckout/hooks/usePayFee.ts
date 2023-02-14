@@ -9,11 +9,7 @@ import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
-import {
-  ADDRESS_REGEX,
-  FEE_COLLECTOR_CONTRACT,
-  NULL_ADDRESS,
-} from "utils/guildCheckout/constants"
+import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useAllowance from "./useAllowance"
@@ -69,7 +65,7 @@ const usePayFee = () => {
   const { requirement, pickedCurrency } = useGuildCheckoutContext()
 
   const feeCollectorContract = useContract(
-    FEE_COLLECTOR_CONTRACT[Chains[chainId]],
+    requirement.address,
     FEE_COLLECTOR_ABI,
     true
   )
@@ -78,9 +74,10 @@ const usePayFee = () => {
     data: { token, fee, multiplePayments },
     isValidating: isVaultLoading,
     mutate,
-  } = useVault(requirement.data.id, requirement.chain)
+  } = useVault(requirement.address, requirement.data.id, requirement.chain)
 
   const { data: hasPaid, isValidating: isHasPaidLoading } = useHasPaid(
+    requirement.address,
     requirement.data.id,
     requirement.chain
   )
@@ -89,10 +86,7 @@ const usePayFee = () => {
     value: token === NULL_ADDRESS ? fee : undefined,
   }
 
-  const { allowance } = useAllowance(
-    pickedCurrency,
-    FEE_COLLECTOR_CONTRACT[Chains[chainId]]
-  )
+  const { allowance } = useAllowance(pickedCurrency, requirement.address)
 
   const shouldEstimateGas =
     requirement?.chain === Chains[chainId] &&

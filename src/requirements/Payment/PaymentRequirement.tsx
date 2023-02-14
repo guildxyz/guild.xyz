@@ -17,12 +17,18 @@ import useVault from "./hooks/useVault"
 
 const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   const { isAdmin } = useGuildPermission()
-  const { id, roleId, chain, data: requirementData } = useRequirementContext()
+  const {
+    id,
+    roleId,
+    chain,
+    address,
+    data: requirementData,
+  } = useRequirementContext()
   const {
     data: { token, fee, multiplePayments },
     isValidating: isVaultLoading,
     error: vaultError,
-  } = useVault(requirementData?.id, chain)
+  } = useVault(address, requirementData?.id, chain)
 
   const {
     data: { symbol, decimals },

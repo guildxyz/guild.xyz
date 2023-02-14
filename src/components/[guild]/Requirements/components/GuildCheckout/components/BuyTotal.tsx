@@ -13,7 +13,7 @@ const BuyTotal = (): JSX.Element => {
     data: { token, fee },
     isValidating,
     error,
-  } = useVault(requirement.data.id, requirement.chain)
+  } = useVault(requirement.address, requirement.data.id, requirement.chain)
 
   const {
     data: { decimals, symbol },

@@ -5,19 +5,17 @@ import { Chain, RPC } from "connectors"
 import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
 import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
-import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
 
 const fetchHasPaid = async (
   _: string,
+  contractAddress: string,
   account: string,
   vaultId: number,
   chain: Chain
 ) => {
-  if (!FEE_COLLECTOR_CONTRACT[chain]) return undefined
-
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0])
   const feeCollectorContract = new Contract(
-    FEE_COLLECTOR_CONTRACT[chain],
+    contractAddress,
     FEE_COLLECTOR_ABI,
     provider
   )
@@ -25,12 +23,16 @@ const fetchHasPaid = async (
   return feeCollectorContract.hasPaid(vaultId, account)
 }
 
-const useHasPaid = (vaultId: number, chain?: Chain): SWRResponse<boolean> => {
+const useHasPaid = (
+  contractAddress: string,
+  vaultId: number,
+  chain?: Chain
+): SWRResponse<boolean> => {
   const { account } = useWeb3React()
-  const shouldFetch = account && vaultId
+  const shouldFetch = contractAddress && account && vaultId
 
   return useSWRImmutable(
-    shouldFetch ? ["hasPaid", account, vaultId, chain] : null,
+    shouldFetch ? ["hasPaid", contractAddress, account, vaultId, chain] : null,
     fetchHasPaid
   )
 }

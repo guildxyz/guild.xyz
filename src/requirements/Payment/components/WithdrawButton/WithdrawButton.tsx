@@ -12,10 +12,10 @@ import useVault from "requirements/Payment/hooks/useVault"
 import useWithdraw from "./hooks/useWithdraw"
 
 const WithdrawButton = (): JSX.Element => {
-  const { chain, data } = useRequirementContext()
+  const { address, chain, data } = useRequirementContext()
   const {
     data: { token, collected },
-  } = useVault(data?.id, chain)
+  } = useVault(address, data?.id, chain)
   const {
     data: { symbol, decimals },
   } = useTokenData(chain, token)
@@ -29,7 +29,7 @@ const WithdrawButton = (): JSX.Element => {
   const formattedWithdrawableAmount =
     collected && decimals && Number(formatUnits(collected, decimals))
 
-  const { onSubmit, isLoading } = useWithdraw(data?.id, chain)
+  const { onSubmit, isLoading } = useWithdraw(address, data?.id, chain)
 
   return (
     <Tooltip
@@ -55,7 +55,7 @@ const WithdrawButton = (): JSX.Element => {
       >
         {isLoading
           ? "Withdrawing"
-          : isButtonDisabled
+          : isButtonDisabled || !formattedWithdrawableAmount
           ? "Withdraw"
           : isOnVaultsChain
           ? `Withdraw ${Number(

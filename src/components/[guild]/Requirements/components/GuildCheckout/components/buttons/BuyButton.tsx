@@ -4,7 +4,6 @@ import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
-import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
 import useAllowance from "../../hooks/useAllowance"
 import usePayFee from "../../hooks/usePayFee"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
@@ -17,16 +16,17 @@ const BuyButton = (): JSX.Element => {
     data: { fee, multiplePayments },
     isValidating: isVaultLoading,
     error,
-  } = useVault(requirement.data.id, requirement.chain)
+  } = useVault(requirement.address, requirement.data.id, requirement.chain)
 
   const { data: hasPaid, isValidating: isHasPaidLoading } = useHasPaid(
+    requirement.address,
     requirement.data.id,
     requirement.chain
   )
 
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
-    FEE_COLLECTOR_CONTRACT[Chains[chainId]]
+    requirement.address
   )
 
   const { estimateGasError, onSubmit, isLoading } = usePayFee()

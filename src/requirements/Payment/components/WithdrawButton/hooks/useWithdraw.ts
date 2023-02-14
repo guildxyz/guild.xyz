@@ -6,21 +6,20 @@ import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import useVault from "requirements/Payment/hooks/useVault"
 import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
-import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
 
-const useWithdraw = (vaultId: number, chain: Chain) => {
+const useWithdraw = (contractAddress: string, vaultId: number, chain: Chain) => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
   const { chainId } = useWeb3React()
 
   const feeCollectorContract = useContract(
-    Chains[chain] === chainId ? FEE_COLLECTOR_CONTRACT[chain] : null,
+    Chains[chain] === chainId ? contractAddress : null,
     FEE_COLLECTOR_ABI,
     true
   )
 
-  const { mutate } = useVault(vaultId, chain)
+  const { mutate } = useVault(contractAddress, vaultId, chain)
 
   const withdraw = async () => {
     if (!feeCollectorContract)

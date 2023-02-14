@@ -5,7 +5,6 @@ import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
-import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
 import useAllowance from "../../hooks/useAllowance"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
@@ -27,7 +26,7 @@ const BuyAllowanceButton = (): JSX.Element => {
   const {
     data: { fee },
     isValidating: isVaultLoading,
-  } = useVault(requirement.data.id, requirement.chain)
+  } = useVault(requirement.address, requirement.data.id, requirement.chain)
 
   const {
     allowance,
@@ -36,7 +35,7 @@ const BuyAllowanceButton = (): JSX.Element => {
     allowanceError,
     onSubmit,
     isLoading,
-  } = useAllowance(pickedCurrency, FEE_COLLECTOR_CONTRACT[Chains[chainId]])
+  } = useAllowance(pickedCurrency, requirement.address)
 
   const isEnoughAllowance = fee && allowance ? fee.lte(allowance) : false
 
