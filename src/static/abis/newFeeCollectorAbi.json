@@ -115,6 +115,19 @@
         "internalType": "uint256",
         "name": "vaultId",
         "type": "uint256"
+      }
+    ],
+    "name": "VaultDetailsChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "vaultId",
+        "type": "uint256"
       },
       {
         "indexed": true,
@@ -244,6 +257,18 @@
   {
     "inputs": [{ "internalType": "uint96", "name": "newShare", "type": "uint96" }],
     "name": "setGuildShareBps",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "vaultId", "type": "uint256" },
+      { "internalType": "address", "name": "newOwner", "type": "address" },
+      { "internalType": "bool", "name": "newMultiplePayments", "type": "bool" },
+      { "internalType": "uint120", "name": "newFee", "type": "uint120" }
+    ],
+    "name": "setVaultDetails",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
