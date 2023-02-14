@@ -69,7 +69,7 @@ const LinkAddressButton = ({}) => {
             <Image
               width={15}
               height={15}
-              alt={"Delegate.caash logo"}
+              alt={"Delegate.cash logo"}
               src={`/walletLogos/delegatecash.png`}
             />
           }
