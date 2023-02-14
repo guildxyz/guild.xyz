@@ -5,6 +5,7 @@ import useDiscordCardProps, {
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/useDiscordCardProps"
 import useGithubCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGithubCardProps"
 import useGoogleCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps"
+import GoogleCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardMenu"
 import GoogleCardSettings from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardSettings"
 import GoogleCardWarning from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardWarning"
 import { TelegramCardMenu } from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps"
@@ -80,6 +81,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     paramName: "googleId",
     cardPropsHook: useGoogleCardProps,
     cardSettingsComponent: GoogleCardSettings,
+    cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
   },
 }
