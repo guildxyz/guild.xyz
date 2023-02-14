@@ -128,7 +128,16 @@ const BuyPass = () => {
               <PaymentFeeCurrency />
               <BuyTotal />
 
-              <Stack spacing={2}>
+              <Stack
+                spacing={2}
+                sx={{
+                  ".chakra-collapse": {
+                    overflow: "unset!important",
+                    overflowX: "visible",
+                    overflowY: "hidden",
+                  },
+                }}
+              >
                 <SwitchNetworkButton />
 
                 <Collapse in={chainId === Chains[requirement.chain]}>

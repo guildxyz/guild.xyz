@@ -132,7 +132,16 @@ const PurchaseRequirement = (): JSX.Element => {
               <PaymentCurrencyPicker />
               <PurchaseFeeAndTotal />
 
-              <Stack spacing={2}>
+              <Stack
+                spacing={2}
+                sx={{
+                  ".chakra-collapse": {
+                    overflow: "unset!important",
+                    overflowX: "visible",
+                    overflowY: "hidden",
+                  },
+                }}
+              >
                 {!error && (
                   <>
                     <SwitchNetworkButton />
