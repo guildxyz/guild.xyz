@@ -167,7 +167,7 @@ export const getAssetsCallParams: Record<
 }
 
 export const FEE_COLLECTOR_CONTRACT: Partial<Record<Chain, string>> = {
-  GOERLI: "0x8726913dc757025028a754071578e0c98b9d942c",
+  GOERLI: "0x32547e6cc18651647e58f57164a0117da82f77f0",
 }
 export const paymentSupportedChains: Chain[] = Object.keys(
   FEE_COLLECTOR_CONTRACT
