@@ -17,7 +17,7 @@ import { Chains, RPC } from "connectors"
 import { LinkBreak, SignIn } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
-import DelegatePopoverWrapper from "./components/DelegatePopoverWrapper"
+import DelegatePopoverWrapper from "./components/delegate/DelegatePopoverWrapper"
 
 const Account = (): JSX.Element => {
   const { account, chainId } = useWeb3React()

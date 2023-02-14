@@ -42,7 +42,7 @@ const multicallGetDelegationsByDelegate = async (
     .filter(Boolean)
 }
 
-const getVaults = async (delegates: string[]) => {
+const getDelegateVaults = async (delegates: string[]) => {
   const allVaultsByChain = await Promise.all(
     Object.entries(delegateAddresses).map(([chainId, contractAddress]) =>
       multicallGetDelegationsByDelegate(
@@ -56,4 +56,4 @@ const getVaults = async (delegates: string[]) => {
   return [...new Set(allVaultsByChain.flat().map((vault) => vault.toLowerCase()))]
 }
 
-export { delegateAddresses, getVaults }
+export { delegateAddresses, getDelegateVaults }

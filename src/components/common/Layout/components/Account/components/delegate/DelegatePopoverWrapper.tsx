@@ -10,9 +10,9 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import useDelegateVaults from "components/common/Layout/components/Account/components/delegate/useDelegateVaults"
 import useUser from "components/[guild]/hooks/useUser"
 import useKeyPair from "hooks/useKeyPair"
-import useVaults from "hooks/useVaults"
 import Image from "next/image"
 import { PropsWithChildren, useEffect, useState } from "react"
 
@@ -26,7 +26,7 @@ const DelegatePopoverWrapper = ({ children }: PropsWithChildren<unknown>) => {
     setIsDismissed(!!window.localStorage.getItem(`isDelegateDismissed_${id}`))
   }, [id])
 
-  const vaults = useVaults()
+  const vaults = useDelegateVaults()
   const { set } = useKeyPair()
 
   return (

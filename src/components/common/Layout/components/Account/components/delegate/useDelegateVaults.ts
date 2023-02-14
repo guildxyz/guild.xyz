@@ -1,8 +1,8 @@
+import { getDelegateVaults } from "components/common/Layout/components/Account/components/delegate/getDelegateVaults"
 import useUser from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
-import { getVaults } from "utils/delegate"
 
-const useVaults = () => {
+const useDelegateVaults = () => {
   const { id, addresses, addressProviders } = useUser()
 
   const shouldFetch = typeof id === "number" && Array.isArray(addresses)
@@ -10,7 +10,7 @@ const useVaults = () => {
   const { data } = useSWRImmutable(
     shouldFetch ? ["delegateCashVaults", id] : null,
     () =>
-      getVaults(addresses).then((vaults) => {
+      getDelegateVaults(addresses).then((vaults) => {
         const alreadyLinkedDelegateAddresses = new Set(
           Object.entries(addressProviders)
             .filter(([, prov]) => prov === "DELEGATE")
@@ -28,4 +28,4 @@ const useVaults = () => {
   return data ?? []
 }
 
-export default useVaults
+export default useDelegateVaults

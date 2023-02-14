@@ -13,12 +13,12 @@ import {
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import useDelegateVaults from "components/common/Layout/components/Account/components/delegate/useDelegateVaults"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useKeyPair from "hooks/useKeyPair"
-import useVaults from "hooks/useVaults"
 import Image from "next/image"
 import { Plus, SignOut } from "phosphor-react"
 import { useState } from "react"
@@ -30,7 +30,7 @@ const LinkAddressButton = ({}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
-  const vaults = useVaults()
+  const vaults = useDelegateVaults()
   const { set } = useKeyPair()
 
   if (!id) return null
