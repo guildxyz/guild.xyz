@@ -9,11 +9,7 @@ const OptimismRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
   return (
-    <Requirement
-      isNegated={requirement.isNegated}
-      image="/networkLogos/optimism.svg"
-      {...props}
-    >
+    <Requirement image="/networkLogos/optimism.svg" {...props}>
       {requirement.type === "OPTIMISM_ATTESTATION" ? (
         <>
           {"Have an attestation from "}

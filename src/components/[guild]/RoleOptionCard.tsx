@@ -36,7 +36,7 @@ const RoleOptionCard = forwardRef(
           >
             {role.name}
           </Heading>
-          <MemberCount memberCount={role.memberCount ?? role.members.length} />
+          <MemberCount memberCount={role.members?.length ?? role.memberCount} />
         </HStack>
       </Checkbox>
     </Card>

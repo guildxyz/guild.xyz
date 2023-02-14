@@ -8,7 +8,13 @@ import requestNetworkChangeHandler from "components/common/Layout/components/Acc
 import { Chains, RPC } from "connectors"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { createContext, PropsWithChildren, useContext, useEffect } from "react"
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 
@@ -28,6 +34,7 @@ const Web3Connection = createContext({
     callback?: () => void,
     errorHandler?: (err) => void
   ) => {},
+  newtowrkChangeInProgress: false,
 })
 
 const Web3ConnectionManager = ({
@@ -60,6 +67,7 @@ const Web3ConnectionManager = ({
       openWalletSelectorModal()
   }, [triedEager, isActive, router.query])
 
+  const [newtowrkChangeInProgress, setNetworkChangeInProgress] = useState(false)
   const toast = useToast()
   const requestManualNetworkChange = (chain) => () =>
     toast({
@@ -75,8 +83,14 @@ const Web3ConnectionManager = ({
   ) => {
     if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet)
       requestManualNetworkChange(Chains[newChainId])()
-    else
-      await requestNetworkChangeHandler(Chains[newChainId], callback, errorHandler)()
+    else {
+      setNetworkChangeInProgress(true)
+      await requestNetworkChangeHandler(
+        Chains[newChainId],
+        callback,
+        errorHandler
+      )().finally(() => setNetworkChangeInProgress(false))
+    }
   }
 
   return (
@@ -93,6 +107,7 @@ const Web3ConnectionManager = ({
         openAccountModal,
         closeAccountModal,
         requestNetworkChange,
+        newtowrkChangeInProgress,
       }}
     >
       {children}

@@ -33,7 +33,6 @@ const ContractStateRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={<Icon as={Function} boxSize={6} />}
       footer={
         <HStack divider={<Divider orientation="vertical" h="4" />} spacing={3}>

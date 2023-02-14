@@ -8,6 +8,7 @@ import Modal from "./modal"
 import NumberInput from "./number-input"
 import Popover from "./popover"
 import Select from "./select"
+import Spinner from "./spinner"
 import Steps from "./steps"
 import Switch from "./switch"
 import Tag from "./tag"
@@ -32,6 +33,7 @@ const components = {
   Popover,
   Drawer,
   Steps,
+  Spinner,
 }
 
 export default components

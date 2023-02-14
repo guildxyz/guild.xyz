@@ -60,7 +60,6 @@ const AllowlistRequirement = ({
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={<Icon as={ListPlus} boxSize={6} />}
       footer={
         hideAllowlist && (

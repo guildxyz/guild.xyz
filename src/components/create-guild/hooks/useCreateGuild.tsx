@@ -25,7 +25,6 @@ const useCreateGuild = () => {
     fetcher("/guild", signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<Guild>(fetchData, {
-    forcePrompt: true,
     onError: (error_) => {
       addDatadogError(`Guild creation error`, { error: error_ })
 

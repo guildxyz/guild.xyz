@@ -11,6 +11,7 @@ import {
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
 import { Coin, SpeakerHigh } from "phosphor-react"
 import { useState } from "react"
 import { useCreatePoapContext } from "../CreatePoapContext"
@@ -20,6 +21,7 @@ import VoiceParticipation from "./components/VoiceParticipation"
 import usePoapEventDetails from "./components/VoiceParticipation/hooks/usePoapEventDetails"
 
 const PoapRequirements = (): JSX.Element => {
+  const { isSuperAdmin } = useUser()
   const { poaps, isLoading } = useGuild()
   const { poapData, nextStep } = useCreatePoapContext()
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
@@ -35,7 +37,7 @@ const PoapRequirements = (): JSX.Element => {
           <SetRequirementSkeleton />
           <SetRequirementSkeleton />
         </Stack>
-      ) : guildPoap?.activated ? (
+      ) : !isSuperAdmin && guildPoap?.activated ? (
         <Text>
           You can't set requirements, because you've already started distributing
           your POAP.
@@ -56,7 +58,6 @@ const PoapRequirements = (): JSX.Element => {
             </CheckboxColorCard>
 
             <CheckboxColorCard
-              disabledText="Temporarily disabled"
               icon={SpeakerHigh}
               title="Voice participation"
               description="Users will have to be in a voice channel at the time of the event"

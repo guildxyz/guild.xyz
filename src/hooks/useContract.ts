@@ -18,6 +18,8 @@ const createContract = async (
     withSigner ? provider.getSigner(account).connectUnchecked() : provider
   )
 
+const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
 const useContract = (
   address: string,
   ABI: ContractInterface,
@@ -25,7 +27,7 @@ const useContract = (
 ): Contract => {
   const { account, chainId, provider } = useWeb3React<Web3Provider>()
 
-  const shouldFetch = address && account && !!provider
+  const shouldFetch = ADDRESS_REGEX.test(address) && account && !!provider
 
   /**
    * Passing provider in the dependency array is fine, its basically a constant

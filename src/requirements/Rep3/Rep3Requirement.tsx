@@ -11,7 +11,6 @@ const Rep3Requirement = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={"/requirementLogos/rep3.png"}
       footer={<BlockExplorerUrl />}
       {...props}

@@ -2,5 +2,5 @@
 
 window.Intercom("boot", {
   api_base: "https://api-iam.intercom.io/",
-  app_id: "vo3n8mii"
+  app_id: "vo3n8mii",
 });

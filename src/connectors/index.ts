@@ -72,7 +72,7 @@ const RPC = {
     chainId: 137,
     chainName: "Polygon",
     nativeCurrency: {
-      name: "Polygon",
+      name: "Matic",
       symbol: "MATIC",
       decimals: 18,
       address: "0x0000000000000000000000000000000000000000",
@@ -142,13 +142,15 @@ const RPC = {
     chainName: "Arbitrum One",
     nativeCurrency: {
       name: "Ether",
-      symbol: "AETH",
+      symbol: "ETH",
       decimals: 18,
       address: "0x0000000000000000000000000000000000000000",
       logoURI:
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
-    rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+    rpcUrls: [
+      "https://arb-mainnet.g.alchemy.com/v2/FmkOXUHKolu3zhBNecrZ7tmJPzhsV7J_",
+    ],
     blockExplorerUrls: ["https://arbiscan.io"],
     apiUrl: "https://api.arbiscan.io",
     iconUrls: ["/networkLogos/arbitrum.svg"],

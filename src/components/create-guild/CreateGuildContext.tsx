@@ -195,6 +195,11 @@ const CreateGuildProvider = ({
   ]
 
   useEffect(() => {
+    if (typeof window !== "undefined")
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      })
     if (activeStep > 0) return
     methods.reset(defaultValues[platform ?? "DEFAULT"])
     setTemplate(null)

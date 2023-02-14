@@ -8,11 +8,7 @@ const ParallelRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   return (
-    <Requirement
-      isNegated={requirement.isNegated}
-      image={"requirementLogos/parallel.png"}
-      {...props}
-    >
+    <Requirement image={"requirementLogos/parallel.png"} {...props}>
       {(() => {
         switch (requirement.type) {
           case "PARALLEL_ID":

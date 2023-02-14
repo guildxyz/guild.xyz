@@ -9,7 +9,7 @@ const fetchProfiles = (endpoint: string, searchQuery: string) =>
     body: {
       query: `{
         search(request: {
-          query: ${searchQuery},
+          query: "${searchQuery}",
           type: PROFILE,
           limit: 50
         }) {

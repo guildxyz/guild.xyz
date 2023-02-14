@@ -470,6 +470,18 @@ export const REQUIREMENTS_DATA = [
       "SHIELD_TORNADO_CASH",
     ],
   },
+  {
+    icon: "/requirementLogos/gitcoin-passport.svg",
+    name: "Gitcoin Passport",
+    fileNameBase: "GitcoinPassport",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/GitcoinPassport/GitcoinPassportForm")
+    ),
+    types: ["GITCOIN", "GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA

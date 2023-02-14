@@ -4,6 +4,7 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import { Chains, RPC } from "connectors"
 import use101Courses from "./hooks/use101Courses"
 
 const HundredNOneRequirement = ({ ...rest }: RequirementProps) => {
@@ -12,12 +13,13 @@ const HundredNOneRequirement = ({ ...rest }: RequirementProps) => {
   const { data, isValidating, error } = use101Courses()
 
   const badge = data?.find(
-    (option) => option.onChainId.toString() === requirement.data.id
+    (option) =>
+      Chains[option.contract.chainId] === requirement.chain &&
+      option.onChainId.toString() === requirement.data.id
   )
 
   return (
     <Requirement
-      isNegated={requirement.isNegated}
       image={
         <Img
           src={
@@ -49,7 +51,7 @@ const HundredNOneRequirement = ({ ...rest }: RequirementProps) => {
         </Link>
       )}
 
-      {` 101 course `}
+      {` 101 course (${RPC[requirement?.chain]?.chainName})`}
     </Requirement>
   )
 }

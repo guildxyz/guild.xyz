@@ -43,24 +43,15 @@ const RoleRequirements = ({ role }: Props) => {
   const Row = ({ index, style }: any) => {
     const rowRef = useRef<HTMLDivElement>(null)
 
-    useEffect(
-      () => {
-        if (!rowRef.current) return
-        // Recalculating row heights, then setting new row heights
-        listRef.current.resetAfterIndex(0)
-        rowHeights.current = {
-          ...rowHeights.current,
-          [index]: rowRef.current.clientHeight,
-        }
-      },
-      // If a requirement contains a collapse, we don't pass a dependency array here, so the row height gets recalculated on every re-render. TODO: think about a better solution for this.
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      role.requirements.some(
-        (r) => r.type === "SNAPSHOT_STRATEGY" || r.type === "CONTRACT"
-      )
-        ? undefined
-        : [rowRef]
-    )
+    useEffect(() => {
+      if (!rowRef.current) return
+      // Recalculating row heights, then setting new row heights
+      listRef.current.resetAfterIndex(0)
+      rowHeights.current = {
+        ...rowHeights.current,
+        [index]: rowRef.current.clientHeight,
+      }
+    }, [rowRef])
 
     return (
       <Box style={style}>

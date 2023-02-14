@@ -134,7 +134,6 @@ const TemplateCard = ({
                   {role.requirements.map((requirement, i) => (
                     <Fragment key={i}>
                       <RequirementDisplayComponent
-                        simple
                         requirement={requirement as Requirement}
                       />
                       {i < role.requirements.length - 1 && (

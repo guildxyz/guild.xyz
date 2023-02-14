@@ -7,11 +7,7 @@ const ShieldRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
   return (
-    <Requirement
-      isNegated={requirement.isNegated}
-      image="/requirementLogos/shield.png"
-      {...props}
-    >
+    <Requirement image="/requirementLogos/shield.png" {...props}>
       {(() => {
         switch (requirement.type) {
           case "SHIELD_ANOM_TX":
