@@ -35,7 +35,6 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { motion } from "framer-motion"
 import useDropzone from "hooks/useDropzone"
 import {
   ArrowRight,
@@ -56,8 +55,6 @@ import useUpdateGuildPoap from "../hooks/useUpdateGuildPoap"
 import useUpdatePoap from "../hooks/useUpdatePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
 import RequestsMintLinks from "./RequestMintLinks"
-
-const MotionBox = motion(Box)
 
 const convertPoapDate = (date: string): string => {
   if (!date) return ""

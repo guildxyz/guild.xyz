@@ -19,7 +19,7 @@ import platforms from "platforms"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName } from "types"
-import CreatePoap from "../CreatePoap"
+import AddPoapPanel from "../CreatePoap"
 import useGuild from "../hooks/useGuild"
 import RoleOptionCard from "../RoleOptionCard"
 import AddDiscordPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
@@ -36,7 +36,7 @@ const addPlatformComponents: Record<
   TELEGRAM: AddTelegramPanel,
   GITHUB: AddGithubPanel,
   GOOGLE: AddGooglePanel,
-  POAP: CreatePoap,
+  POAP: AddPoapPanel,
 }
 
 const AddRewardButton = () => {

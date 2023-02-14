@@ -1,3 +1,3 @@
-import CreatePoap from "./CreatePoap"
+import AddPoapPanel from "./AddPoapPanel"
 
-export default CreatePoap
+export default AddPoapPanel

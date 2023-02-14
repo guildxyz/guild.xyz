@@ -54,7 +54,7 @@ const AddPoapPanel = ({ isOpen }: Props): JSX.Element => {
   )
 }
 
-const CreatePoapWrapper = ({
+const AddPoapPanelWrapper = ({
   isOpen,
   onClose,
   onOpen,
@@ -65,4 +65,4 @@ const CreatePoapWrapper = ({
   </CreatePoapProvider>
 )
 
-export default CreatePoapWrapper
+export default AddPoapPanelWrapper
