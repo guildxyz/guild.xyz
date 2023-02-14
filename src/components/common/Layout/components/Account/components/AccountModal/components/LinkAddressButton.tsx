@@ -6,6 +6,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -62,7 +63,7 @@ const LinkAddressButton = ({}) => {
   }
 
   return (
-    <>
+    <Stack w="full">
       <Collapse in={vaults.length > 0} unmountOnExit style={{ width: "100%" }}>
         <Button
           leftIcon={
@@ -115,7 +116,7 @@ const LinkAddressButton = ({}) => {
           </ModalBody>
         </ModalContent>
       </Modal>
-    </>
+    </Stack>
   )
 }
 
