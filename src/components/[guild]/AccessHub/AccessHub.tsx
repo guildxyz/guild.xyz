@@ -62,14 +62,11 @@ const AccessHub = (): JSX.Element => {
               guildPlatform={platform}
               key={platform.id}
               cornerButton={
-                PlatformCardWarning ? (
+                isAdmin && PlatformCardMenu ? (
+                  <PlatformCardMenu platformGuildId={platform.platformGuildId} />
+                ) : PlatformCardWarning ? (
                   <PlatformCardWarning guildPlatform={platform} />
-                ) : (
-                  isAdmin &&
-                  PlatformCardMenu && (
-                    <PlatformCardMenu platformGuildId={platform.platformGuildId} />
-                  )
-                )
+                ) : null
               }
             >
               <PlatformCardButton platform={platform} />
