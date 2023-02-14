@@ -39,7 +39,7 @@ import InfoModal from "./components/InfoModal"
 import PurchasedRequirementInfo from "./components/InfoModal/components/PurchasedRequirementInfo"
 import TransactionLink from "./components/InfoModal/components/TransactionLink"
 import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
-import PaymentModeButtons from "./components/PaymentModeButtons"
+import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import PurchaseFeeAndTotal from "./components/PurchaseFeeAndTotal"
 import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
@@ -125,7 +125,7 @@ const PurchaseRequirement = (): JSX.Element => {
           </ModalBody>
 
           <ModalFooter pt={10} flexDir="column">
-            <PaymentModeButtons />
+            <PaymentMethodButtons />
             <ErrorCollapse error={error?.error} />
 
             <Stack spacing={8} w="full">

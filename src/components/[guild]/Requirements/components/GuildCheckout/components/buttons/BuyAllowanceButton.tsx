@@ -9,7 +9,7 @@ import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
 import useAllowance from "../../hooks/useAllowance"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
-const BuyPassAllowanceButton = (): JSX.Element => {
+const BuyAllowanceButton = (): JSX.Element => {
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
   const requirementChainId = Chains[requirement.chain]
 
@@ -79,7 +79,7 @@ const BuyPassAllowanceButton = (): JSX.Element => {
             </Tooltip>
           )
         }
-        data-dd-action-name="BuyPassAllowanceButton (GuildCheckout)"
+        data-dd-action-name="BuyAllowanceButton (GuildCheckout)"
       >
         {allowanceError
           ? "Couldn't fetch allowance"
@@ -89,4 +89,4 @@ const BuyPassAllowanceButton = (): JSX.Element => {
   )
 }
 
-export default BuyPassAllowanceButton
+export default BuyAllowanceButton

@@ -1,7 +1,7 @@
 import { ButtonGroup, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
 
-const PaymentModeButtons = () => (
+const PaymentMethodButtons = () => (
   <ButtonGroup size="sm" w="full" mb="8">
     <Button
       autoFocus={false}
@@ -30,4 +30,4 @@ const PaymentModeButtons = () => (
   </ButtonGroup>
 )
 
-export default PaymentModeButtons
+export default PaymentMethodButtons

@@ -20,18 +20,18 @@ import { Chains } from "connectors"
 import { Coin } from "phosphor-react"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
+import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
 import BuyButton from "./components/buttons/BuyButton"
-import BuyPassAllowanceButton from "./components/buttons/BuyPassAllowanceButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
+import BuyTotal from "./components/BuyTotal"
 import {
   GuildCheckoutProvider,
   useGuildCheckoutContext,
 } from "./components/GuildCheckoutContex"
 import InfoModal from "./components/InfoModal"
 import TransactionLink from "./components/InfoModal/components/TransactionLink"
-import PaymentFeeAndTotal from "./components/PaymentFeeAndTotal"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
-import PaymentModeButtons from "./components/PaymentModeButtons"
+import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
 
 const BuyPass = () => {
@@ -97,11 +97,11 @@ const BuyPass = () => {
           </ModalBody>
 
           <ModalFooter pt={10} flexDir="column">
-            <PaymentModeButtons />
+            <PaymentMethodButtons />
 
             <Stack spacing={8} w="full">
               <PaymentFeeCurrency />
-              <PaymentFeeAndTotal />
+              <BuyTotal />
 
               <Stack spacing={2}>
                 <SwitchNetworkButton />
@@ -112,7 +112,7 @@ const BuyPass = () => {
                     access.
                   </TOSCheckbox>
 
-                  <BuyPassAllowanceButton />
+                  <BuyAllowanceButton />
                 </Collapse>
 
                 <BuyButton />

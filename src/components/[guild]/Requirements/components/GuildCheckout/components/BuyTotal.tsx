@@ -7,7 +7,7 @@ import usePayFee from "../hooks/usePayFee"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 import PriceFallback from "./PriceFallback"
 
-const PaymentFeeAndTotal = (): JSX.Element => {
+const BuyTotal = (): JSX.Element => {
   const { requirement, pickedCurrency } = useGuildCheckoutContext()
   const {
     data: { token, fee },
@@ -64,4 +64,4 @@ const PaymentFeeAndTotal = (): JSX.Element => {
   )
 }
 
-export default PaymentFeeAndTotal
+export default BuyTotal
