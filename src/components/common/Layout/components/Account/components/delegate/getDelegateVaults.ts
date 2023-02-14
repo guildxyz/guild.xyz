@@ -38,7 +38,9 @@ const multicallGetDelegationsByDelegate = async (
   )
 
   return results
-    .flatMap((contractResults) => contractResults.map(([, vault]) => vault))
+    .flatMap((contractResults) =>
+      contractResults.map(([, vault]) => vault.toLowerCase())
+    )
     .filter(Boolean)
 }
 

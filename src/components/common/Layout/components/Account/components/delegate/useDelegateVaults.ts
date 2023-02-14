@@ -3,7 +3,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
 
 const useDelegateVaults = () => {
-  const { id, addresses, addressProviders } = useUser()
+  const { id, addresses } = useUser()
 
   const shouldFetch = typeof id === "number" && Array.isArray(addresses)
 
@@ -11,15 +11,9 @@ const useDelegateVaults = () => {
     shouldFetch ? ["delegateCashVaults", id] : null,
     () =>
       getDelegateVaults(addresses).then((vaults) => {
-        const alreadyLinkedDelegateAddresses = new Set(
-          Object.entries(addressProviders)
-            .filter(([, prov]) => prov === "DELEGATE")
-            .map(([addr]) => addr.toLowerCase())
-        )
+        const alreadyLinkedAddresses = new Set(addresses)
 
-        const unlinked = vaults.filter(
-          (vault) => !alreadyLinkedDelegateAddresses.has(vault)
-        )
+        const unlinked = vaults.filter((vault) => !alreadyLinkedAddresses.has(vault))
 
         return unlinked
       })
