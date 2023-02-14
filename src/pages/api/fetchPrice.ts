@@ -232,8 +232,8 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     if (!foundSource || !relevantOrder)
       return res.status(500).json({ error: "Couldn't find tokens on Uniswap." })
 
-    const { uniswapPath, tokenAddressPath } = relevantOrder.fillData
-    const path = flipPath(uniswapPath)
+    const { path: rawPath, uniswapPath, tokenAddressPath } = relevantOrder.fillData
+    const path = flipPath(rawPath ?? uniswapPath)
 
     const priceInSellToken = parseFloat(responseData.guaranteedPrice) * minAmount
 
