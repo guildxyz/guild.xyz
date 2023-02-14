@@ -49,8 +49,8 @@ const PoapReward = ({ poap }: Props) => {
             {poap?.name}
           </Text>
         )}
+        <Tag ml="2">{`${poapLinks?.total - poapLinks?.claimed} available`}</Tag>
       </Text>
-      <Tag>{`${poapLinks?.total - poapLinks?.claimed} available`}</Tag>
     </HStack>
   )
 }
