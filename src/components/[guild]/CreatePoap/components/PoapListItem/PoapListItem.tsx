@@ -25,6 +25,7 @@ import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
+import PoapReward from "components/[guild]/RoleCard/components/PoapReward"
 import { Chains, RPC } from "connectors"
 import { ArrowSquareOut, PencilSimple } from "phosphor-react"
 import { useMemo } from "react"
@@ -192,20 +193,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
           )}
 
           <Box mt="auto">
-            {/* <Reward
-                key={platform.guildPlatformId}
-                platform={platform}
-                role={role}
-              /> */}
-            access to POAP
-            {isActive && (
-              <Text as="span" fontSize="xs" colorScheme="gray">
-                {` • ${poapLinks?.claimed}/${poapLinks?.total} `}
-                <Text as="span" display={{ base: "none", md: "inline" }}>
-                  minted
-                </Text>
-              </Text>
-            )}
+            <PoapReward poap={poap} />
           </Box>
         </Flex>
         <Flex
