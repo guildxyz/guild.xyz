@@ -7,7 +7,8 @@ import useGithubCardProps from "components/[guild]/RolePlatforms/components/Plat
 import useGoogleCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps"
 import GoogleCardSettings from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardSettings"
 import GoogleCardWarning from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardWarning"
-import useTelegramCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps"
+import { TelegramCardMenu } from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps"
+import useTelegramCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps/useTelegramCardProps"
 import {
   DiscordLogo,
   GithubLogo,
@@ -44,6 +45,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "group",
     paramName: "telegramId",
     cardPropsHook: useTelegramCardProps,
+    cardMenuComponent: TelegramCardMenu,
   },
   DISCORD: {
     icon: DiscordLogo,
