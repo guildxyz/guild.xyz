@@ -61,7 +61,8 @@ const ImportPoap = (): JSX.Element => {
               )}
             </InputGroup>
             <Button
-              isDisabled={!poap}
+              colorScheme="green"
+              isDisabled={!poap || !!response}
               h={10}
               borderRadius="lg"
               onClick={importPoap}

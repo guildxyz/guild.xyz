@@ -134,7 +134,7 @@ const UploadMintLinks = (): JSX.Element => {
 
       <Flex w="full" justifyContent="end">
         <Button
-          colorScheme="indigo"
+          colorScheme="green"
           onClick={() => onSubmit({ poapId: poapData?.id, links: mintLinks })}
           isLoading={isLoading}
           loadingText={loadingText}

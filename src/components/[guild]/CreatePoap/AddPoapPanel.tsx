@@ -1,5 +1,4 @@
-import { Box, Button, ButtonGroup } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
+import { Box, Button, ButtonGroup, Flex } from "@chakra-ui/react"
 import { useState } from "react"
 import {
   CreatePoapProvider,
@@ -7,24 +6,33 @@ import {
 } from "./components/CreatePoapContext"
 import CreatePoapForm from "./components/CreatePoapForm"
 import ImportPoap from "./components/ImportPoap"
+import usePoapLinks from "./hooks/usePoapLinks"
 
 type Props = {
-  isOpen: boolean
-  onOpen: () => void
-  onClose: () => void
+  onSuccess: () => void
 }
 
-type WrapperProps = {
-  isOpen: boolean
-  onOpen: () => void
-  onClose: () => void
-  discordServerId: string
-}
-
-const AddPoapPanel = ({ isOpen }: Props): JSX.Element => {
-  const { poaps } = useGuild()
-  const { activeStep, setStep, poapData, shouldCreatePoap } = useCreatePoapContext()
+const AddPoapPanel = ({ onSuccess }: Props): JSX.Element => {
+  const { poapData } = useCreatePoapContext()
+  const [showSetReqs, setShowSetReqs] = useState(false)
+  const { poapLinks } = usePoapLinks(poapData?.id)
   const [tab, setTab] = useState("new")
+
+  if (showSetReqs)
+    return (
+      <Box>
+        Set requirements
+        <Flex justifyContent={"right"} mt="2">
+          <Button
+            colorScheme="green"
+            isDisabled={!poapData || (tab === "existing" && !poapLinks)}
+            onClick={onSuccess}
+          >
+            Done
+          </Button>
+        </Flex>
+      </Box>
+    )
 
   return (
     <Box>
@@ -50,18 +58,23 @@ const AddPoapPanel = ({ isOpen }: Props): JSX.Element => {
       </ButtonGroup>
 
       {tab === "new" ? <CreatePoapForm /> : <ImportPoap />}
+
+      <Flex justifyContent={"right"} mt="2">
+        <Button
+          colorScheme="indigo"
+          isDisabled={!poapData || (tab === "existing" && !poapLinks)}
+          onClick={() => setShowSetReqs(true)}
+        >
+          Next
+        </Button>
+      </Flex>
     </Box>
   )
 }
 
-const AddPoapPanelWrapper = ({
-  isOpen,
-  onClose,
-  onOpen,
-  discordServerId,
-}: WrapperProps): JSX.Element => (
-  <CreatePoapProvider onClose={onClose} discordServerId={discordServerId}>
-    <AddPoapPanel {...{ isOpen, onClose, onOpen }} />
+const AddPoapPanelWrapper = ({ onSuccess }: Props): JSX.Element => (
+  <CreatePoapProvider>
+    <AddPoapPanel {...{ onSuccess }} />
   </CreatePoapProvider>
 )
 

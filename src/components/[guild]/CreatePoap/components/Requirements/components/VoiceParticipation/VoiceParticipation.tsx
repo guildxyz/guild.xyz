@@ -37,8 +37,11 @@ const voiceRequirementTypeOptions = [
   },
 ]
 
+// todo
+const discordServerId = ""
+
 const VoiceParticipation = (): JSX.Element => {
-  const { poapData, discordServerId } = useCreatePoapContext()
+  const { poapData } = useCreatePoapContext()
   const { poapEventDetails } = usePoapEventDetails()
 
   const methods = useForm<VoiceParticipationForm>({

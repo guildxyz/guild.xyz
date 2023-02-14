@@ -36,14 +36,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDropzone from "hooks/useDropzone"
-import {
-  ArrowRight,
-  Calendar,
-  File,
-  Plus,
-  Question,
-  WarningCircle,
-} from "phosphor-react"
+import { Calendar, File, Question, WarningCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import { CreatePoapForm as CreatePoapFormType, PlatformType } from "types"
@@ -287,32 +280,6 @@ const CreatePoapForm = (): JSX.Element => {
             </Skeleton>
           </VStack>
         </Card>
-
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          justifyContent="end"
-          w="full"
-          pt="6"
-        >
-          <Button
-            isDisabled={!poapData || createRoleResponse}
-            leftIcon={<Icon as={Plus} />}
-            onClick={createRoleWithPoap}
-            isLoading={isCreateRoleLoading}
-            loadingText="Creating role"
-          >
-            Create role for POAP owners
-          </Button>
-
-          <Button
-            colorScheme="indigo"
-            isDisabled={!poapData}
-            onClick={nextStep}
-            rightIcon={<Icon as={ArrowRight} />}
-          >
-            Upload mint links
-          </Button>
-        </Stack>
       </VStack>
     )
 
@@ -582,17 +549,6 @@ const CreatePoapForm = (): JSX.Element => {
         justifyContent="end"
         spacing={2}
       >
-        {poapData?.id && (
-          <Button
-            isDisabled={createRoleResponse}
-            leftIcon={<Icon as={Plus} />}
-            onClick={createRoleWithPoap}
-            isLoading={isCreateRoleLoading}
-            loadingText="Creating role"
-          >
-            Create role for POAP owners
-          </Button>
-        )}
         <Button
           colorScheme="green"
           onClick={handleSubmit(poapData?.id ? onUpdatePoapSubmit : onSubmit)}
@@ -611,9 +567,6 @@ const CreatePoapForm = (): JSX.Element => {
           loadingText={`${poapData?.id ? "Updating" : "Creating"} POAP`}
         >
           {poapData?.id ? "Update POAP" : "Create POAP"}
-        </Button>
-        <Button colorScheme="indigo" isDisabled>
-          Next
         </Button>
       </Stack>
 

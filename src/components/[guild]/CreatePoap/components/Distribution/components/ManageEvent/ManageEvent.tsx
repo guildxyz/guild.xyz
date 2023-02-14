@@ -15,16 +15,17 @@ import useServerData from "hooks/useServerData"
 import useToast from "hooks/useToast"
 import { ArrowElbowDownRight, Info, Play, Stop, Timer } from "phosphor-react"
 import { useEffect, useState } from "react"
-import { useCreatePoapContext } from "../../../CreatePoapContext"
 import usePoapEventDetails from "../../../Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import useVoiceChannels from "../../../Requirements/components/VoiceParticipation/hooks/useVoiceChannels"
 import EligibleMembers from "./components/EligibleMembers"
 import useVoiceParticipants from "./components/EligibleMembers/hooks/useVoiceParticipants"
 import useManageEvent from "./hooks/useManageEvent"
 
+// todo
+const discordServerId = ""
+
 const ManageEvent = (): JSX.Element => {
   const { id: guildId } = useGuild()
-  const { discordServerId } = useCreatePoapContext()
   const { voiceChannels } = useVoiceChannels(discordServerId)
   const { poapEventDetails, mutatePoapEventDetails } = usePoapEventDetails()
   const { mutateVoiceParticipants } = useVoiceParticipants()

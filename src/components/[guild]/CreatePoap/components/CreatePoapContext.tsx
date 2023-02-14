@@ -30,7 +30,6 @@ const CreatePoapContext = createContext<{
   >
   onCloseHandler: () => void
   poapDropSupportedChains: number[]
-  discordServerId: string
   isFormDirty: boolean
   setIsFormDirty: Dispatch<boolean>
 }>({
@@ -43,21 +42,11 @@ const CreatePoapContext = createContext<{
   setPoapData: () => {},
   onCloseHandler: () => {},
   poapDropSupportedChains: [],
-  discordServerId: null,
   isFormDirty: false,
   setIsFormDirty: () => {},
 })
 
-type Props = {
-  onClose: () => void
-  discordServerId: string
-}
-
-const CreatePoapProvider = ({
-  onClose,
-  discordServerId,
-  children,
-}: PropsWithChildren<Props>): JSX.Element => {
+const CreatePoapProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
   const poapDropSupportedChains = [1, 137, 56, 100, 5]
   const { nextStep, activeStep, setStep } = useSteps({ initialStep: 0 })
   const [shouldCreatePoap, setShouldCreatePoap] = useState(false)
@@ -71,7 +60,6 @@ const CreatePoapProvider = ({
   } = useDisclosure()
 
   const closeWithTimeout = () => {
-    onClose()
     setTimeout(() => {
       setShouldCreatePoap(false)
       setStep(0)
@@ -105,7 +93,6 @@ const CreatePoapProvider = ({
         setPoapData,
         onCloseHandler,
         poapDropSupportedChains,
-        discordServerId,
         isFormDirty,
         setIsFormDirty,
       }}

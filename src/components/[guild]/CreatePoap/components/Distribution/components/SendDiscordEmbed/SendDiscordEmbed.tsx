@@ -52,8 +52,11 @@ type Props = {
 
 const EMBED_IMAGE_SIZE = "70px"
 
+// todo
+const discordServerId = ""
+
 const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
-  const { poapData, discordServerId } = useCreatePoapContext()
+  const { poapData } = useCreatePoapContext()
   const { poapEventDetails } = usePoapEventDetails()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
