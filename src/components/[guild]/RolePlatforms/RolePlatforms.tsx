@@ -16,7 +16,7 @@ import platforms from "platforms"
 import { useFieldArray, useWatch } from "react-hook-form"
 import { GuildPlatform, PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
-import AddRewardModal from "./components/AddRewardModal"
+import AddRoleRewardModal from "./components/AddRoleRewardModal"
 import PlatformCard from "./components/PlatformCard"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
@@ -125,7 +125,7 @@ const RolePlatforms = ({ roleId }: Props) => {
           })
         )}
       </SimpleGrid>
-      <AddRewardModal {...{ isOpen, onClose }} />
+      <AddRoleRewardModal {...{ isOpen, onClose }} />
     </Section>
   )
 }

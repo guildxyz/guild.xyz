@@ -29,7 +29,7 @@ const addPlatformComponents: Record<
   GOOGLE: AddGooglePanel,
 }
 
-const AddRewardModal = ({ isOpen, onClose }) => {
+const AddRoleRewardModal = ({ isOpen, onClose }) => {
   const [selection, setSelection] = useState<PlatformName>(null)
 
   const AddPlatformPanel = addPlatformComponents[selection]
@@ -86,4 +86,4 @@ const AddRewardModal = ({ isOpen, onClose }) => {
   )
 }
 
-export default AddRewardModal
+export default AddRoleRewardModal
