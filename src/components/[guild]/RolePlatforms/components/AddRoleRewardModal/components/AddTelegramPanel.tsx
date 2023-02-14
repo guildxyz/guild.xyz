@@ -3,10 +3,10 @@ import TelegramGroup from "components/create-guild/TelegramGroup"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
 type Props = {
-  onSuccess: () => void
+  showRoleSelect: () => void
 }
 
-const AddTelegramPanel = ({ onSuccess }: Props) => {
+const AddTelegramPanel = ({ showRoleSelect }: Props) => {
   const methods = useForm({
     mode: "all",
     defaultValues: {
@@ -36,7 +36,7 @@ const AddTelegramPanel = ({ onSuccess }: Props) => {
               },
               isNew: true,
             })
-            onSuccess()
+            showRoleSelect()
           }}
         >
           Add Telegram

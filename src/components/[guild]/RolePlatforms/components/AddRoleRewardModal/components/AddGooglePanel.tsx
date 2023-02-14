@@ -2,7 +2,7 @@ import GoogleGuildSetup from "components/common/GoogleGuildSetup"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 
 type Props = {
-  onSuccess: () => void
+  showRoleSelect: () => void
   skipSettings?: boolean
 }
 
@@ -10,7 +10,7 @@ const defaultValues = {
   platformGuildId: null,
 }
 
-const AddGooglePanel = ({ onSuccess, skipSettings }: Props): JSX.Element => {
+const AddGooglePanel = ({ showRoleSelect, skipSettings }: Props): JSX.Element => {
   const methods = useForm({
     mode: "all",
     defaultValues,
@@ -31,7 +31,7 @@ const AddGooglePanel = ({ onSuccess, skipSettings }: Props): JSX.Element => {
             platformRoleData,
             isNew: true,
           })
-          onSuccess?.()
+          showRoleSelect?.()
         }}
         skipSettings={skipSettings}
       />
