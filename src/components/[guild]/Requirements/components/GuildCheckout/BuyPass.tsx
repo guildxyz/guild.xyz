@@ -3,6 +3,7 @@ import {
   AlertDescription,
   AlertIcon,
   Collapse,
+  HStack,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -20,7 +21,7 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Reward from "components/[guild]/RoleCard/components/Reward"
 import { Chains } from "connectors"
-import { Coin } from "phosphor-react"
+import { Coin, StarHalf } from "phosphor-react"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
 import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
@@ -118,7 +119,15 @@ const BuyPass = () => {
                 platform={platform}
                 role={role}
               />
-            ))}
+            )) || (
+              <HStack pt="3" spacing={0} alignItems={"flex-start"} opacity=".7">
+                <Icon as={StarHalf} boxSize={5} overflow="hidden" />
+                <Text px="2">
+                  No auto-managed rewards. The owner might add some in the future or
+                  reward you another way!
+                </Text>
+              </HStack>
+            )}
           </ModalBody>
 
           <ModalFooter pt={10} flexDir="column">
