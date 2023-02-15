@@ -26,11 +26,7 @@ import {
 } from "utils/guildCheckout/constants"
 
 const coingeckoCoinIds: Partial<Record<Chain, string>> = {
-  // TODO: add these for the supported chains
-  // 1: "ethereum",
-  // 137: "matic-network",
-  // 100: "xdai",
-  // 56: "binancecoin",
+  POLYGON: "matic-network",
   GOERLI: "ethereum",
 }
 
