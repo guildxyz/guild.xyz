@@ -52,6 +52,11 @@ const PaymentForm = ({
     setValue(`${baseFieldPath}.data.id`, registeredVaultId)
   )
 
+  useEffect(() => {
+    if (!vaultId) return
+    addRequirement()
+  }, [vaultId])
+
   return (
     <Stack spacing={4}>
       <FormProvider {...registerVaultFormMethods}>
@@ -62,7 +67,7 @@ const PaymentForm = ({
         {isOnCorrectChain ? (
           <Button
             mr={2}
-            colorScheme={isOnCorrectChain ? "blue" : "gray"}
+            colorScheme={isOnCorrectChain ? "green" : "gray"}
             onClick={registerVaultFormHandleSubmit(onSubmit)}
             isDisabled={
               vaultId ||
@@ -75,7 +80,7 @@ const PaymentForm = ({
             loadingText="Registering vault"
             leftIcon={vaultId && <Icon as={Check} />}
           >
-            Register vault
+            Register vault & add requirement
           </Button>
         ) : (
           <Button
@@ -91,10 +96,6 @@ const PaymentForm = ({
             Switch network
           </Button>
         )}
-
-        <Button colorScheme="green" onClick={addRequirement} isDisabled={!vaultId}>
-          Add requirement
-        </Button>
       </Flex>
     </Stack>
   )
