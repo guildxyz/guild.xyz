@@ -1,31 +1,26 @@
-import { ApolloClient, gql, InMemoryCache } from "@apollo/client"
 import { useWeb3React } from "@web3-react/core"
 import useSWRImmutable from "swr/immutable"
+import fetcher from "utils/fetcher"
 
-const apolloClient = new ApolloClient({
-  uri: "https://api.lens.dev/",
-  cache: new InMemoryCache(),
-})
-
-const fetchLensProtocolName = (_, query) =>
-  apolloClient
-    .query({
-      query: gql(query),
-    })
-    .then((res) => res.data.profiles.items[0].handle)
-
-const useLensProtocolName = () => {
-  const { account } = useWeb3React()
-  const query = `
+const fetchLensProtocolName = (_, account) =>
+  fetcher("https://api.lens.dev/", {
+    method: "POST",
+    body: {
+      query: `
     query Profiles {
         profiles(request: { ownedBy: ["${account}"] }) {
             items {
             handle
         }}
-    }`
-  const shouldFetch = Boolean(apolloClient && account)
+    }`,
+    },
+  }).then((res) => res.data.profiles.items[0].handle)
+
+const useLensProtocolName = () => {
+  const { account } = useWeb3React()
+
   const { data } = useSWRImmutable(
-    shouldFetch ? ["lensProtocol", query] : null,
+    account ? ["lensProtocol", account] : null,
     fetchLensProtocolName
   )
   return data
