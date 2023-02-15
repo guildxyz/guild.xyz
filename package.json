@@ -23,7 +23,7 @@
     "snyk-protect": "snyk-protect"
   },
   "dependencies": {
-    "@chakra-ui/anatomy": "^2.1.0",
+    "@chakra-ui/anatomy": "^2.1.2",
     "@chakra-ui/react": "2.4.4",
     "@chakra-ui/theme-tools": "^2.0.14",
     "@datadog/browser-rum": "^4.30.1",
