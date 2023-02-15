@@ -100,7 +100,9 @@ const PurchaseRequirement = (): JSX.Element => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            <Text as="span">Buy requirement</Text>
+            <Text as="span" mr={2}>
+              Buy requirement
+            </Text>
             <AlphaTag />
           </ModalHeader>
           <ModalCloseButton />

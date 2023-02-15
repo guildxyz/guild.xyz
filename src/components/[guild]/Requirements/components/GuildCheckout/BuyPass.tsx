@@ -88,8 +88,8 @@ const BuyPass = () => {
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="duotone">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader pb={4}>
-            <Text as="span">{`Buy ${name} pass`}</Text>
+          <ModalHeader pb={4} pr={16}>
+            <Text as="span" mr={2}>{`Buy ${name} pass`}</Text>
             <AlphaTag />
           </ModalHeader>
           <ModalCloseButton />
