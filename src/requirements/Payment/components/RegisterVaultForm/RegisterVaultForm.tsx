@@ -166,7 +166,7 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
       </FormControl>
       <Text colorScheme="gray" fontSize="sm">
         You need to register a vault in Guild's Payment contract in order to receive
-        payments. You'll be able to withdraw from it any time.
+        payments. You'll be able to collect funds from it anytime.
       </Text>
     </Stack>
   )
