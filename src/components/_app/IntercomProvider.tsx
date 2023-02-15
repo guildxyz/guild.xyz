@@ -3,6 +3,7 @@ import useMemberships from "components/explorer/hooks/useMemberships"
 import useUser from "components/[guild]/hooks/useUser"
 import { createContext, PropsWithChildren, useContext, useEffect } from "react"
 import { useSWRConfig } from "swr"
+import { GuildBase } from "types"
 
 const IntercomContext = createContext<{
   addIntercomSettings: (newData: Record<string, string | number>) => void
@@ -63,11 +64,11 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
   useEffect(() => {
     if (!cache || !account || !user || !memberships) return
 
-    const guilds = cache.get("/guild?order=members")?.[0] ?? []
+    const guilds: GuildBase[] = cache.get("/guild?order=members")?.[0] ?? []
 
     const connectedPlatforms = user.platformUsers
       ?.map((pu) => pu.platformName)
-      .join()
+      .join(", ")
 
     const managedGuildIds = memberships
       .filter((ms) => ms.isAdmin)
@@ -75,9 +76,9 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
     const managedGuilds = guilds?.length
       ? guilds
           .filter((g) => managedGuildIds.includes(g.id))
-          .map((g) => g.urlName)
-          .toString()
-      : managedGuildIds.toString()
+          .map((g) => `${g.urlName} (${g.memberCount} members)`)
+          .join(", ")
+      : managedGuildIds.join(", ")
 
     addIntercomSettings({
       userId: user.id,
