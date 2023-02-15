@@ -1,97 +1,97 @@
-import {
-  Flex,
-  HStack,
-  Skeleton,
-  SkeletonCircle,
-  SkeletonText,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react"
-import Button from "components/common/Button"
-import Card from "components/common/Card"
+import { Button, Flex, Heading, Stack, Text } from "@chakra-ui/react"
+import AddCard from "components/common/AddCard"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
+import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
+import RequirementEditableCard from "components/create-guild/Requirements/components/RequirementEditableCard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { Coin, SpeakerHigh } from "phosphor-react"
-import { useState } from "react"
+import LogicDivider from "components/[guild]/LogicDivider"
+import { AnimatePresence } from "framer-motion"
+import { FormProvider, useFieldArray, useForm } from "react-hook-form"
+import { RequirementType } from "requirements"
 import { useCreatePoapContext } from "../CreatePoapContext"
-import CheckboxColorCard from "./components/CheckboxColorCard"
-import MonetizePoap from "./components/MonetizePoap"
-import VoiceParticipation from "./components/VoiceParticipation"
-import usePoapEventDetails from "./components/VoiceParticipation/hooks/usePoapEventDetails"
 
 const PoapRequirements = (): JSX.Element => {
   const { isSuperAdmin } = useUser()
-  const { poaps, isLoading } = useGuild()
-  const { poapData, nextStep } = useCreatePoapContext()
+  const { poaps } = useGuild()
+  const { poapData } = useCreatePoapContext()
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
-  const { poapEventDetails, isPoapEventDetailsLoading } = usePoapEventDetails()
 
-  const [shouldOpenMonetizationModal, setShouldOpenMonetizationModal] =
-    useState(false)
+  const methods = useForm()
+  const { control, getValues, watch } = methods
+  const { fields, append, replace, remove, update } = useFieldArray({
+    name: "requirements",
+    control,
+  })
 
-  return (
-    <>
-      {isLoading || isPoapEventDetailsLoading ? (
-        <Stack spacing={4}>
-          <SetRequirementSkeleton />
-          <SetRequirementSkeleton />
-        </Stack>
-      ) : !isSuperAdmin && guildPoap?.activated ? (
-        <Text>
-          You can't set requirements, because you've already started distributing
-          your POAP.
-        </Text>
-      ) : (
-        <>
-          <Stack spacing={4} mb={16}>
-            <CheckboxColorCard
-              icon={Coin}
-              title="Payment"
-              description="Monetize POAP (you can set multiple payment methods that users will be able to choose from)"
-              colorScheme="blue"
-              isDisabled={guildPoap?.poapContracts?.length > 0}
-              defaultChecked={guildPoap?.poapContracts?.length > 0}
-              onChange={(e) => setShouldOpenMonetizationModal(e.target.checked)}
-            >
-              <MonetizePoap shouldOpenModal={shouldOpenMonetizationModal} />
-            </CheckboxColorCard>
+  // Watching the nested fields too, so we can properly update the list
+  const watchFieldArray = watch("requirements")
+  const controlledFields = fields.map((field, index) => ({
+    ...field,
+    ...watchFieldArray[index],
+  }))
 
-            <CheckboxColorCard
-              icon={SpeakerHigh}
-              title="Voice participation"
-              description="Users will have to be in a voice channel at the time of the event"
-              colorScheme="yellow"
-              isDisabled={!!poapEventDetails?.voiceChannelId}
-              defaultChecked={!!poapEventDetails?.voiceChannelId}
-            >
-              <VoiceParticipation />
-            </CheckboxColorCard>
-          </Stack>
-
-          <Flex justifyContent="end">
-            <Button onClick={nextStep}>Continue to distribution</Button>
-          </Flex>
-        </>
-      )}
-    </>
-  )
-}
-
-const SetRequirementSkeleton = (): JSX.Element => {
-  const cardBgColor = useColorModeValue("gray.50", "whiteAlpha.50")
+  if (!isSuperAdmin && guildPoap?.activated)
+    return (
+      <Text>
+        You can't set requirements, because you've already started distributing your
+        POAP.
+      </Text>
+    )
 
   return (
-    <Card px={{ base: 5, sm: 6 }} py={8} w="full" bgColor={cardBgColor}>
-      <HStack spacing={4} pr={4}>
-        <SkeletonCircle boxSize={12} minW={12} />
+    <FormProvider {...methods}>
+      <Heading size="sm" mb="3">
+        Set requirements
+      </Heading>
+      <Stack spacing={0}>
+        <AnimatePresence>
+          {controlledFields.map((field, i) => {
+            const type: RequirementType = getValues(`requirements.${i}.type`)
 
-        <Stack spacing={4} w={{ base: "full", sm: "80%" }}>
-          <Skeleton w={{ base: "80%", sm: "30%" }} h={4} />
-          <SkeletonText noOfLines={2} spacing={3} />
-        </Stack>
-      </HStack>
-    </Card>
+            return (
+              <CardMotionWrapper key={field.id}>
+                <RequirementEditableCard
+                  type={type}
+                  field={field}
+                  index={i}
+                  removeRequirement={remove}
+                  updateRequirement={update}
+                />
+                <LogicDivider logic="AND" />
+              </CardMotionWrapper>
+            )
+          })}
+        </AnimatePresence>
+
+        <AddCard
+          title="Original guild role"
+          description="Same as if you’d add it to an existing role, but you can set other requirements too"
+          py="5"
+          mb="2 !important"
+        />
+        <AddCard
+          title="Payment"
+          description="Monetize POAP with different payment methods that the users will be able to choose from"
+          // rightIcon={Coin}
+          py="5"
+          mb="2 !important"
+        />
+        <AddCard
+          title="Voice participation"
+          description="Users will have to be in a Discord voice channel at the time of the event"
+          // rightIcon={SpeakerHigh}
+          py="5"
+          mb="2 !important"
+        />
+        <AddRequirement onAdd={(d) => append(d)} />
+      </Stack>
+      <Flex justifyContent={"right"} mt="8">
+        <Button colorScheme="green" onClick={() => {}}>
+          Done
+        </Button>
+      </Flex>
+    </FormProvider>
   )
 }
 

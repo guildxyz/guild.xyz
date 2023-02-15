@@ -81,7 +81,7 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
   return (
     <>
       <CardMotionWrapper>
-        <AddCard ref={addCardRef} text="Add requirement" onClick={onOpen} />
+        <AddCard ref={addCardRef} title="Add requirement" onClick={onOpen} />
       </CardMotionWrapper>
       <Modal
         isOpen={isOpen}

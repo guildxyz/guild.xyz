@@ -6,6 +6,7 @@ import {
 } from "./components/CreatePoapContext"
 import CreatePoapForm from "./components/CreatePoapForm"
 import ImportPoap from "./components/ImportPoap"
+import PoapRequirements from "./components/Requirements"
 import usePoapLinks from "./hooks/usePoapLinks"
 
 type Props = {
@@ -18,21 +19,7 @@ const AddPoapPanel = ({ onSuccess }: Props): JSX.Element => {
   const { poapLinks } = usePoapLinks(poapData?.id)
   const [tab, setTab] = useState("new")
 
-  if (showSetReqs)
-    return (
-      <Box>
-        Set requirements
-        <Flex justifyContent={"right"} mt="2">
-          <Button
-            colorScheme="green"
-            isDisabled={!poapData || (tab === "existing" && !poapLinks)}
-            onClick={onSuccess}
-          >
-            Done
-          </Button>
-        </Flex>
-      </Box>
-    )
+  if (showSetReqs) return <PoapRequirements />
 
   return (
     <Box>

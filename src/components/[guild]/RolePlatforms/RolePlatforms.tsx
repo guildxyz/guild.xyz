@@ -68,7 +68,7 @@ const RolePlatforms = ({ roleId }: Props) => {
     >
       <SimpleGrid spacing={{ base: 3 }}>
         {!fields || fields?.length <= 0 ? (
-          <AddCard text="Add reward" onClick={onOpen} />
+          <AddCard title="Add reward" onClick={onOpen} />
         ) : (
           fields.map((rolePlatform: any, index) => {
             let guildPlatform: GuildPlatform, type

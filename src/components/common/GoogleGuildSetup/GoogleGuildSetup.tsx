@@ -143,7 +143,7 @@ const GoogleGuildSetup = ({
 
           {!selectedFile && (
             <CardMotionWrapper key={"add-file"}>
-              <AddCard text="Add document" minH={"28"} onClick={onOpen} />
+              <AddCard title="Add document" minH={"28"} onClick={onOpen} />
             </CardMotionWrapper>
           )}
         </AnimatePresence>
