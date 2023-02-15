@@ -2,8 +2,7 @@ import { useWeb3React } from "@web3-react/core"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import useUser from "components/[guild]/hooks/useUser"
 import { createContext, PropsWithChildren, useContext, useEffect } from "react"
-import useSWRImmutable from "swr/immutable"
-import { GuildBase } from "types"
+import { useSWRConfig } from "swr"
 
 const IntercomContext = createContext<{
   addIntercomSettings: (newData: Record<string, string | number>) => void
@@ -33,6 +32,19 @@ export const addIntercomSettings = (newData: Record<string, string | number>) =>
   windowAsObject.Intercom?.("update", windowAsObject.intercomSettings)
 }
 
+export const pushToIntercomSetting = (settingName: string, value: string) => {
+  if (typeof window === "undefined") return
+  const windowAsObject = window as Record<string, any>
+
+  if (!windowAsObject.intercomSettings) windowAsObject.intercomSettings = {}
+
+  if (windowAsObject.intercomSettings[settingName]?.length)
+    windowAsObject.intercomSettings[settingName] += `,${value}`
+  else windowAsObject.intercomSettings[settingName] = value
+
+  // windowAsObject.Intercom?.("update", windowAsObject.intercomSettings)
+}
+
 const triggerChat = () => {
   if (typeof window === "undefined") return
   const windowAsObject = window as Record<string, any>
@@ -44,12 +56,14 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
   const { account } = useWeb3React()
   const user = useUser()
 
-  // Using `?order=members`, so if the user already visitet the explorer page, we won't refetch the guilds, just use the ones from the SWR cache
-  const { data: guilds } = useSWRImmutable<GuildBase[]>("/guild?order=members")
+  const { cache } = useSWRConfig()
+
   const memberships = useMemberships()
 
   useEffect(() => {
-    if (!account || !user || !guilds || !memberships) return
+    if (!cache || !account || !user || !memberships) return
+
+    const guilds = cache.get("/guild?order=members")?.[0] ?? []
 
     const connectedPlatforms = user.platformUsers
       ?.map((pu) => pu.platformName)
@@ -69,7 +83,7 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
       connectedPlatforms,
       managedGuilds,
     })
-  }, [account, user, guilds, memberships])
+  }, [cache, account, user, memberships])
 
   return (
     <IntercomContext.Provider
