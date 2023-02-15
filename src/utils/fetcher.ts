@@ -57,10 +57,6 @@ const fetcher = async (
     .then(async (response: Response) => {
       const res = await response.json?.()
 
-      const correlationId = response.headers.get("x-correlation-id")
-      console.log(correlationId)
-      if (correlationId) pushToIntercomSetting("correlationId", correlationId)
-
       if (!response.ok) {
         if (isGuildApiCall) {
           const error = res.errors?.[0]
@@ -77,6 +73,9 @@ const fetcher = async (
               response: errorMsg,
             }
           )
+
+          const correlationId = response.headers.get("custom-correlation")
+          if (correlationId) pushToIntercomSetting("correlationId", correlationId)
 
           return Promise.reject(errorMsg)
         }
