@@ -42,7 +42,7 @@ export const pushToIntercomSetting = (settingName: string, value: string) => {
     windowAsObject.intercomSettings[settingName] += `,${value}`
   else windowAsObject.intercomSettings[settingName] = value
 
-  // windowAsObject.Intercom?.("update", windowAsObject.intercomSettings)
+  windowAsObject.Intercom?.("update", windowAsObject.intercomSettings)
 }
 
 const triggerChat = () => {
