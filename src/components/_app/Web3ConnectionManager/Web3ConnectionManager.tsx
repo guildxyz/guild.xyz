@@ -34,7 +34,7 @@ const Web3Connection = createContext({
     callback?: () => void,
     errorHandler?: (err) => void
   ) => {},
-  newtowrkChangeInProgress: false,
+  isNetworkChangeInProgress: false,
 })
 
 const Web3ConnectionManager = ({
@@ -67,7 +67,7 @@ const Web3ConnectionManager = ({
       openWalletSelectorModal()
   }, [triedEager, isActive, router.query])
 
-  const [newtowrkChangeInProgress, setNetworkChangeInProgress] = useState(false)
+  const [isNetworkChangeInProgress, setNetworkChangeInProgress] = useState(false)
   const toast = useToast()
   const requestManualNetworkChange = (chain) => () =>
     toast({
@@ -107,7 +107,7 @@ const Web3ConnectionManager = ({
         openAccountModal,
         closeAccountModal,
         requestNetworkChange,
-        newtowrkChangeInProgress,
+        isNetworkChangeInProgress,
       }}
     >
       {children}
