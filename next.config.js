@@ -28,6 +28,7 @@ module.exports = {
         "@web3-react/metamask": false,
         "@web3-react/walletconnect": false,
         "@ethersproject/keccak256": false,
+        "lodash.mergewith": false,
       }
     }
 
@@ -177,7 +178,7 @@ module.exports = {
       {
         source: "/community",
         destination:
-          "https://guildxyz.notion.site/Our-Guild-The-Community-eb1cdcb680af40e6b4cdf31d13150a17",
+          "https://help.guild.xyz/en/collections/3826818-our-guild-the-community",
         permanent: false,
       },
       {
