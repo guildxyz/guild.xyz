@@ -32,7 +32,6 @@ import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
-import { PAYMENT_ALLOWED_GUILDS } from "utils/guildCheckout/constants"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
@@ -229,19 +228,19 @@ const AddRequirementHome = forwardRef(
             </GridItem>
           ))}
 
-          {PAYMENT_ALLOWED_GUILDS.includes(id) && (
-            <GridItem colSpan={2}>
-              <Button
-                position="relative"
-                w="full"
-                minH={20}
-                leftIcon={<Icon as={payment.icon as FC} boxSize={6} />}
-                onClick={() => setSelectedType(payment.types[0])}
-              >
-                {payment.name}
-              </Button>
-            </GridItem>
-          )}
+          {/* {PAYMENT_ALLOWED_GUILDS.includes(id) && ( */}
+          <GridItem colSpan={2}>
+            <Button
+              position="relative"
+              w="full"
+              minH={20}
+              leftIcon={<Icon as={payment.icon as FC} boxSize={6} />}
+              onClick={() => setSelectedType(payment.types[0])}
+            >
+              {payment.name}
+            </Button>
+          </GridItem>
+          {/* )} */}
         </Grid>
 
         <Heading size="sm" mb="3" mt="8">
