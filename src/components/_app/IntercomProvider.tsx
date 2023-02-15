@@ -72,10 +72,12 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
     const managedGuildIds = memberships
       .filter((ms) => ms.isAdmin)
       .map((ms) => ms.guildId)
-    const managedGuilds = guilds
-      .filter((g) => managedGuildIds.includes(g.id))
-      .map((g) => g.urlName)
-      .toString()
+    const managedGuilds = guilds?.length
+      ? guilds
+          .filter((g) => managedGuildIds.includes(g.id))
+          .map((g) => g.urlName)
+          .toString()
+      : managedGuildIds.toString()
 
     addIntercomSettings({
       userId: user.id,
