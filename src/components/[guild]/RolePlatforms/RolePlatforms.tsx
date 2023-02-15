@@ -41,7 +41,6 @@ const RolePlatforms = ({ roleId }: Props) => {
 
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
   const rewardsLabel = useBreakpointValue({
-    base: "/ accesses",
     sm: "/ platform accesses",
   })
 
