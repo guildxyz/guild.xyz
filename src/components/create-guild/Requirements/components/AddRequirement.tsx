@@ -25,7 +25,6 @@ import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowLeft, CaretRight } from "phosphor-react"
@@ -190,14 +189,12 @@ const AddRequirementForm = forwardRef(
 
 const AddRequirementHome = forwardRef(
   ({ selectedType, setSelectedType }: any, ref: any) => {
-    const { id } = useGuild()
-
     const [search, setSearch] = useState("")
     const filteredIntegrations = integrations?.filter((integration) =>
       integration.name.toLowerCase().includes(search.toLowerCase())
     )
 
-    const debouncedSeéectedValue = useDebouncedState(
+    const debouncedSelectedValue = useDebouncedState(
       selectedType,
       TRANSITION_DURATION_MS
     )
@@ -205,7 +202,7 @@ const AddRequirementHome = forwardRef(
     return (
       <ModalBody
         ref={ref}
-        minHeight={!debouncedSeéectedValue ? HOME_MAXHEIGHT : undefined}
+        minHeight={!debouncedSelectedValue ? HOME_MAXHEIGHT : undefined}
         maxHeight={HOME_MAXHEIGHT}
         className="custom-scrollbar"
       >
