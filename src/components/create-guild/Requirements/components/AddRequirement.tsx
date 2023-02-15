@@ -217,7 +217,7 @@ const AddRequirementHome = forwardRef(
             <GridItem key={requirementButton.types[0]}>
               <Button
                 w="full"
-                minH={24}
+                minH={20}
                 onClick={() => setSelectedType(requirementButton.types[0])}
               >
                 <VStack w="full" whiteSpace="break-spaces">
@@ -233,7 +233,7 @@ const AddRequirementHome = forwardRef(
             <Button
               position="relative"
               w="full"
-              minH={20}
+              py="8"
               leftIcon={<Icon as={payment.icon as FC} boxSize={6} />}
               onClick={() => setSelectedType(payment.types[0])}
             >
