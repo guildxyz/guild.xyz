@@ -4,39 +4,27 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  HStack,
-  Icon,
-  IconButton,
-  Img,
-  Skeleton,
-  SkeletonCircle,
-  Text,
+  CloseButton,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { Alert } from "components/common/Modal"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
-import { TrashSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
-import useDeleteMonetization from "../hooks/useDeleteMonetization"
+import { GuildPoap, PoapContract } from "types"
+import useDeleteMonetization from "./hooks/useDeleteMonetization"
+import PoapPaymentRequirement from "./PoapPaymentRequirement"
 
-type Props = {
-  poapContractId: number
-  vaultId: number
-  chainId: number
-  deleteDisabled?: boolean
-}
+type Props = { poap: GuildPoap; poapContract: PoapContract }
 
-const MonetizedPoapCard = ({
-  poapContractId,
-  vaultId,
-  chainId,
-  deleteDisabled,
-}: Props): JSX.Element => {
+const PoapPaymentRequirementEditable = ({ poap, poapContract, ...props }: Props) => {
+  const { id: poapContractId, vaultId, chainId } = poapContract
+  const deleteDisabled = poap?.activated
+
   const { isVaultLoading, vaultData } = usePoapVault(vaultId, chainId)
 
   const {
@@ -54,42 +42,23 @@ const MonetizedPoapCard = ({
     onClose()
   }, [response])
 
-  return (
-    <>
-      <Card borderRadius="lg" h={10} w="max-content">
-        <HStack pl={4} pr={deleteDisabled ? 4 : 2} h={10}>
-          <SkeletonCircle
-            boxSize={4}
-            isLoaded={!isVaultLoading && !isTokenDataLoading}
-          >
-            <Img
-              src={RPC[Chains[chainId]]?.iconUrls?.[0]}
-              alt={RPC[Chains[chainId]]?.chainName}
-              boxSize={4}
-            />
-          </SkeletonCircle>
-          <Skeleton as="span" isLoaded={!isVaultLoading && !isTokenDataLoading}>
-            <Text as="span" fontWeight="semibold">{`Pay ${formatUnits(
-              vaultData?.fee ?? "0",
-              decimals ?? 18
-            )} ${symbol ?? RPC[Chains[chainId]]?.nativeCurrency?.symbol} on ${
-              RPC[Chains[chainId]]?.chainName
-            }`}</Text>
-          </Skeleton>
+  const removeButtonColor = useColorModeValue("gray.700", "gray.400")
 
-          {!deleteDisabled && !isVaultLoading && !isTokenDataLoading && (
-            <IconButton
-              aria-label="Delete monetization"
-              icon={<Icon as={TrashSimple} />}
-              size="sm"
-              rounded="full"
-              colorScheme="red"
-              variant="ghost"
-              onClick={onOpen}
-            />
-          )}
-        </HStack>
-      </Card>
+  return (
+    <Card px="6" py="4" pr="8" pos="relative">
+      <PoapPaymentRequirement {...{ poap, poapContract }} />
+
+      <CloseButton
+        position="absolute"
+        top={2}
+        right={2}
+        color={removeButtonColor}
+        borderRadius={"full"}
+        size="sm"
+        onClick={onOpen}
+        aria-label="Remove requirement"
+        isDisabled={!deleteDisabled && !isVaultLoading && !isTokenDataLoading}
+      />
 
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>
@@ -117,8 +86,8 @@ const MonetizedPoapCard = ({
           </AlertDialogContent>
         </AlertDialogOverlay>
       </Alert>
-    </>
+    </Card>
   )
 }
 
-export default MonetizedPoapCard
+export default PoapPaymentRequirementEditable

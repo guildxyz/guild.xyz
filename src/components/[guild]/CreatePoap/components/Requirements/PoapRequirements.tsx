@@ -1,5 +1,4 @@
 import { Button, Flex, Heading, Stack, Text } from "@chakra-ui/react"
-import AddCard from "components/common/AddCard"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
 import RequirementEditableCard from "components/create-guild/Requirements/components/RequirementEditableCard"
@@ -9,7 +8,12 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { RequirementType } from "requirements"
+import Role from "requirements/Guild/components/Role"
+import PoapPaymentForm from "requirements/PoapPayment"
+import PoapPaymentRequirementEditable from "requirements/PoapPayment/PoapPaymentRequirementEditable"
 import { useCreatePoapContext } from "../CreatePoapContext"
+import AddPoapRequirement from "./components/AddPoapRequirement"
+import VoiceParticipation from "./components/VoiceParticipation"
 
 const PoapRequirements = (): JSX.Element => {
   const { isSuperAdmin } = useUser()
@@ -62,27 +66,34 @@ const PoapRequirements = (): JSX.Element => {
               </CardMotionWrapper>
             )
           })}
+          {guildPoap?.poapContracts?.map((poapContract) => (
+            <CardMotionWrapper key={poapContract.id}>
+              <PoapPaymentRequirementEditable
+                poapContract={poapContract}
+                poap={guildPoap}
+              />
+
+              <LogicDivider logic="AND" />
+            </CardMotionWrapper>
+          ))}
         </AnimatePresence>
 
-        <AddCard
+        <AddPoapRequirement
           title="Original guild role"
           description="Same as if you’d add it to an existing role, but you can set other requirements too"
-          py="5"
-          mb="2 !important"
+          FormComponent={Role}
         />
-        <AddCard
+        <AddPoapRequirement
           title="Payment"
           description="Monetize POAP with different payment methods that the users will be able to choose from"
           // rightIcon={Coin}
-          py="5"
-          mb="2 !important"
+          FormComponent={PoapPaymentForm}
         />
-        <AddCard
+        <AddPoapRequirement
           title="Voice participation"
           description="Users will have to be in a Discord voice channel at the time of the event"
           // rightIcon={SpeakerHigh}
-          py="5"
-          mb="2 !important"
+          FormComponent={VoiceParticipation}
         />
         <AddRequirement onAdd={(d) => append(d)} />
       </Stack>

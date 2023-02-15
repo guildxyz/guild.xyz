@@ -368,7 +368,7 @@ enum ValidationMethod {
 }
 
 type MonetizePoapForm = {
-  chainId: number
+  chain: Chain
   token: string
   fee: number
   owner: string

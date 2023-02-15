@@ -262,7 +262,7 @@ const GuildPage = (): JSX.Element => {
               <Collapse in={isExpiredOpen}>
                 <Stack spacing={4} pt="3">
                   {expiredPoaps.map((poap) => (
-                    <PoapListItem key={poap?.id} poapFancyId={poap?.fancyId} />
+                    <PoapListItem key={poap?.id} poap={poap} />
                   ))}
                 </Stack>
               </Collapse>

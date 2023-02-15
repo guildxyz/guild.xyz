@@ -1,6 +1,5 @@
 import {
   Box,
-  Circle,
   Flex,
   Heading,
   HStack,
@@ -10,14 +9,11 @@ import {
   SimpleGrid,
   SkeletonCircle,
   Spacer,
-  Spinner,
   Stack,
   Tag,
-  TagLabel,
   Text,
   Tooltip,
   useColorMode,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
@@ -26,28 +22,27 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
 import PoapReward from "components/[guild]/RoleCard/components/PoapReward"
-import { Chains, RPC } from "connectors"
 import { ArrowSquareOut, PencilSimple } from "phosphor-react"
 import { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
+import PoapPaymentRequirement from "requirements/PoapPayment/PoapPaymentRequirement"
+import { GuildPoap } from "types"
 import parseDescription from "utils/parseDescription"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
 import { useCreatePoapContext } from "../CreatePoapContext"
-import Withdraw from "./components/Withdraw"
 
 type Props = {
-  poapFancyId: string
+  poap: GuildPoap
 }
 
-const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
-  const borderColor = useColorModeValue("blackAlpha.300", "blackAlpha.600")
+const PoapListItem = ({ poap: guildPoap }: Props): JSX.Element => {
+  const poapFancyId = guildPoap?.fancyId
   const { isAdmin } = useGuildPermission()
 
   const { chainId } = useWeb3React()
-  const { urlName, poaps } = useGuild()
-  const guildPoap = poaps?.find((p) => p.fancyId === poapFancyId)
+  const { urlName } = useGuild()
   const guildPoapChainId = guildPoap?.poapContracts
     ?.map((poapContract) => poapContract.chainId)
     ?.includes(chainId)
@@ -84,11 +79,8 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   }, [poap])
 
   const isActive = useMemo(
-    () =>
-      !poap || !poaps
-        ? false
-        : poaps.find((p) => p.poapIdentifier === poap.id)?.activated,
-    [poap, poaps]
+    () => (!poap ? false : guildPoap?.activated),
+    [poap, guildPoap]
   )
   const isReady = poapLinks && poapLinks?.total > 0
 
@@ -220,38 +212,27 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
           </HStack>
 
           <Stack>
-            {vaultData?.fee ? (
+            {guildPoap?.poapContracts?.map((poapContract) => (
+              <PoapPaymentRequirement
+                key={poapContract.id}
+                poapContract={poapContract}
+                poap={guildPoap}
+              />
+            )) ?? <FreeRequirement />}
+            {/* {poap?.poapContracts?.map() ? (
               <Tag>
                 {isVaultLoading ? (
                   <Spinner size="xs" />
                 ) : (
-                  <TagLabel noOfLines={1}>
-                    {guildPoapChainId && (
-                      <Tooltip label={RPC[Chains[guildPoapChainId]]?.chainName}>
-                        <Circle
-                          size={5}
-                          bgColor={"gray.100"}
-                          borderWidth={1}
-                          borderColor={borderColor}
-                        >
-                          <Img
-                            src={RPC[Chains[guildPoapChainId]]?.iconUrls?.[0]}
-                            alt={RPC[Chains[guildPoapChainId]]?.chainName}
-                            boxSize={3}
-                          />
-                        </Circle>
-                      </Tooltip>
-                    )}
-                  </TagLabel>
+                  <PoapPaymentRequirement poap={guildPoap} />
                 )}
               </Tag>
             ) : (
               <FreeRequirement />
-            )}
+            )} */}
             {false && <LogicDivider logic={"AND"} />}
           </Stack>
 
-          {isActive && isAdmin && <Withdraw poapId={guildPoap?.id} />}
           {/* <RoleRequirements role={role} /> */}
         </Flex>
       </SimpleGrid>

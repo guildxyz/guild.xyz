@@ -1,6 +1,7 @@
 import { useDisclosure } from "@chakra-ui/react"
 import { useSteps } from "chakra-ui-steps"
 import DiscardAlert from "components/common/DiscardAlert"
+import { Chain } from "connectors"
 import {
   createContext,
   Dispatch,
@@ -29,7 +30,7 @@ const CreatePoapContext = createContext<{
     >
   >
   onCloseHandler: () => void
-  poapDropSupportedChains: number[]
+  poapDropSupportedChains: Chain[]
   isFormDirty: boolean
   setIsFormDirty: Dispatch<boolean>
 }>({
@@ -47,7 +48,13 @@ const CreatePoapContext = createContext<{
 })
 
 const CreatePoapProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
-  const poapDropSupportedChains = [1, 137, 56, 100, 5]
+  const poapDropSupportedChains: Chain[] = [
+    "ETHEREUM",
+    "POLYGON",
+    "BSC",
+    "GNOSIS",
+    "GOERLI",
+  ]
   const { nextStep, activeStep, setStep } = useSteps({ initialStep: 0 })
   const [shouldCreatePoap, setShouldCreatePoap] = useState(false)
   const [poapData, setPoapData] = useState(null)

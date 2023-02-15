@@ -34,6 +34,7 @@ const useRegisterVault = (onSuccess: (vaultId: number) => void) => {
       fee?.toString(),
       tokenDataFromJSON?.decimals ?? tokenData?.decimals ?? 18
     )
+    console.log(poapData, feeInWei)
 
     const registerVaultCall = await feeCollectorContract.registerVault(
       poapData?.id,
