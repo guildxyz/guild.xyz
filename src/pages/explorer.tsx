@@ -1,12 +1,14 @@
 import {
   Center,
   GridItem,
+  Progress,
   SimpleGrid,
   Spinner,
   Stack,
   Tag,
   useColorMode,
   usePrevious,
+  useToast,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
@@ -24,6 +26,7 @@ import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
+import { useRouter } from "next/router"
 import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
@@ -110,6 +113,28 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   useEffect(() => {
     setColorMode("dark")
+  }, [])
+
+  const router = useRouter()
+  const toast = useToast()
+
+  useEffect(() => {
+    const handleRouteChangeStart = () => {
+      toast({
+        position: "top",
+        containerStyle: {
+          w: "full",
+          backgroundColor: "transparent",
+        },
+        render: () => <Progress size="xs" isIndeterminate />,
+      })
+    }
+
+    router.events.on("routeChangeStart", handleRouteChangeStart)
+
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChangeStart)
+    }
   }, [])
 
   return (
