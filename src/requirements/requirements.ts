@@ -58,7 +58,7 @@ export const REQUIREMENTS_DATA = [
   },
   {
     icon: Wrench,
-    name: "Custom contract query",
+    name: "Contract query",
     fileNameBase: "ContractState",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/ContractState/ContractStateRequirement")
