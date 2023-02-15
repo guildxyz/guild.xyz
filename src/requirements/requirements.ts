@@ -9,6 +9,7 @@ import {
   Wrench,
 } from "phosphor-react"
 import { RequirementFormProps } from "requirements"
+import GuildLogo from "static/logo.svg"
 
 export const REQUIREMENTS_DATA = [
   {
@@ -57,6 +58,18 @@ export const REQUIREMENTS_DATA = [
     types: ["ALLOWLIST"],
   },
   {
+    icon: Coins,
+    name: "Payment",
+    fileNameBase: "Payment",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Payment/PaymentRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Payment/PaymentForm")
+    ),
+    types: ["PAYMENT"],
+  },
+  {
     icon: Wrench,
     name: "Contract query",
     fileNameBase: "ContractState",
@@ -69,16 +82,22 @@ export const REQUIREMENTS_DATA = [
     types: ["CONTRACT"],
   },
   {
-    icon: Coins,
-    name: "Payment",
-    fileNameBase: "Payment",
+    icon: GuildLogo,
+    name: "Guild",
+    fileNameBase: "Guild",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Payment/PaymentRequirement")
+      () => import("requirements/Guild/GuildRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Payment/PaymentForm")
+      () => import("requirements/Guild/GuildForm")
     ),
-    types: ["PAYMENT"],
+    types: [
+      "GUILD",
+      "GUILD_ROLE",
+      "GUILD_MINGUILDS",
+      "GUILD_ADMIN",
+      "GUILD_USER_SINCE",
+    ],
   },
   {
     icon: "/requirementLogos/twitter.svg",
@@ -137,24 +156,6 @@ export const REQUIREMENTS_DATA = [
       "DISCORD_MEMBER_SINCE",
     ],
     isPlatform: true,
-  },
-  {
-    icon: "/requirementLogos/guild.png",
-    name: "Guild",
-    fileNameBase: "Guild",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Guild/GuildRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Guild/GuildForm")
-    ),
-    types: [
-      "GUILD",
-      "GUILD_ROLE",
-      "GUILD_MINGUILDS",
-      "GUILD_ADMIN",
-      "GUILD_USER_SINCE",
-    ],
   },
   {
     icon: "/requirementLogos/unlock.png",
