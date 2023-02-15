@@ -6,47 +6,41 @@ import useSWRImmutable from "swr/immutable"
 import { GuildBase } from "types"
 
 const IntercomContext = createContext<{
-  intercomSettings: Record<string, string | number>
   addIntercomSettings: (newData: Record<string, string | number>) => void
   triggerChat: () => void
 }>({
-  intercomSettings: undefined,
   addIntercomSettings: () => {},
   triggerChat: () => {},
 })
 
+export const addIntercomSettings = (newData: Record<string, string | number>) => {
+  if (typeof window === "undefined" || !newData) return
+  const windowAsObject = window as Record<string, any>
+
+  if (!windowAsObject.intercomSettings) windowAsObject.intercomSettings = {}
+
+  const shouldUpdate = Object.entries(newData).some(
+    ([key, value]) => windowAsObject.intercomSettings[key] !== value
+  )
+
+  if (!shouldUpdate) return
+
+  windowAsObject.intercomSettings = {
+    ...windowAsObject.intercomSettings,
+    ...newData,
+  }
+
+  windowAsObject.Intercom?.("update", windowAsObject.intercomSettings)
+}
+
+const triggerChat = () => {
+  if (typeof window === "undefined") return
+  const windowAsObject = window as Record<string, any>
+
+  windowAsObject.Intercom?.("show")
+}
+
 const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
-  let intercomSettings: Record<string, any> = {}
-
-  const addIntercomSettings = (newData: Record<string, string | number>) => {
-    if (typeof window === "undefined" || !newData) return
-    const windowAsObject = window as Record<string, any>
-
-    if (!windowAsObject.intercomSettings) windowAsObject.intercomSettings = {}
-
-    const shouldUpdate = Object.entries(newData).some(
-      ([key, value]) => windowAsObject.intercomSettings[key] !== value
-    )
-
-    if (!shouldUpdate) return
-
-    windowAsObject.intercomSettings = {
-      ...windowAsObject.intercomSettings,
-      ...newData,
-    }
-
-    intercomSettings = { ...windowAsObject.intercomSettings }
-
-    windowAsObject.Intercom?.("update", windowAsObject.intercomSettings)
-  }
-
-  const triggerChat = () => {
-    if (typeof window === "undefined") return
-    const windowAsObject = window as Record<string, any>
-
-    windowAsObject.Intercom?.("show")
-  }
-
   const { account } = useWeb3React()
   const user = useUser()
 
@@ -79,7 +73,10 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
 
   return (
     <IntercomContext.Provider
-      value={{ intercomSettings, addIntercomSettings, triggerChat }}
+      value={{
+        addIntercomSettings,
+        triggerChat,
+      }}
     >
       {children}
     </IntercomContext.Provider>
