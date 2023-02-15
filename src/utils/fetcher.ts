@@ -1,6 +1,7 @@
 import { datadogRum } from "@datadog/browser-rum"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
+import { pushToIntercomSetting } from "components/_app/IntercomProvider"
 import useKeyPair from "hooks/useKeyPair"
 import { sign } from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
@@ -55,6 +56,10 @@ const fetcher = async (
     })
     .then(async (response: Response) => {
       const res = await response.json?.()
+
+      const correlationId = response.headers.get("x-correlation-id")
+      console.log(correlationId)
+      if (correlationId) pushToIntercomSetting("correlationId", correlationId)
 
       if (!response.ok) {
         if (isGuildApiCall) {
