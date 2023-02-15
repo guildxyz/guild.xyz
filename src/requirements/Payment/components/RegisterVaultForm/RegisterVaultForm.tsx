@@ -11,6 +11,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   Stack,
+  Text,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useFeeInUSD from "components/[guild]/CreatePoap/components/Requirements/components/MonetizePoap/hooks/useFeeInUSD"
@@ -167,6 +168,10 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
         </InputGroup>
         <FormErrorMessage>{errors?.owner?.message}</FormErrorMessage>
       </FormControl>
+      <Text colorScheme="gray" fontSize="sm">
+        You need to register a vault in Guild's Payment contract in order to receive
+        payments. You'll be able to withdraw from it any time.
+      </Text>
     </Stack>
   )
 }

@@ -1,7 +1,6 @@
-import { Flex, Icon, Stack, Text, Tooltip } from "@chakra-ui/react"
+import { Flex, Icon, Stack, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains } from "connectors"
 import { Check, Question } from "phosphor-react"
@@ -55,59 +54,47 @@ const PaymentForm = ({
 
   return (
     <Stack spacing={4}>
-      <Text colorScheme="gray" fontSize="sm">
-        You need to register a vault in Guild's Payment contract in order to receive
-        payments. You'll be able to withdraw from it at any time.
-      </Text>
-
       <FormProvider {...registerVaultFormMethods}>
         <RegisterVaultForm isDisabled={!!vaultId} />
       </FormProvider>
 
       <Flex pt={4} w="full" justifyContent="end">
-        {!isOnCorrectChain && (
-          <CardMotionWrapper>
-            <Button
-              mr={2}
-              colorScheme="blue"
-              onClick={() => requestNetworkChange(Chains[chain])}
-              rightIcon={
-                <Tooltip label="This feature is available on Görli">
-                  <Icon as={Question} />
-                </Tooltip>
-              }
-            >
-              Switch network
-            </Button>
-          </CardMotionWrapper>
-        )}
-        {isOnCorrectChain && (
-          <CardMotionWrapper>
-            <Button
-              mr={2}
-              colorScheme={isOnCorrectChain ? "blue" : "gray"}
-              onClick={registerVaultFormHandleSubmit(onSubmit)}
-              isDisabled={
-                vaultId ||
-                !!Object.keys(registerVaultFormErrors).length ||
-                !isOnCorrectChain ||
-                !token ||
-                !fee
-              }
-              isLoading={isLoading}
-              loadingText="Registering vault"
-              leftIcon={vaultId && <Icon as={Check} />}
-            >
-              Register vault
-            </Button>
-          </CardMotionWrapper>
+        {isOnCorrectChain ? (
+          <Button
+            mr={2}
+            colorScheme={isOnCorrectChain ? "blue" : "gray"}
+            onClick={registerVaultFormHandleSubmit(onSubmit)}
+            isDisabled={
+              vaultId ||
+              !!Object.keys(registerVaultFormErrors).length ||
+              !isOnCorrectChain ||
+              !token ||
+              !fee
+            }
+            isLoading={isLoading}
+            loadingText="Registering vault"
+            leftIcon={vaultId && <Icon as={Check} />}
+          >
+            Register vault
+          </Button>
+        ) : (
+          <Button
+            mr={2}
+            colorScheme="blue"
+            onClick={() => requestNetworkChange(Chains[chain])}
+            rightIcon={
+              <Tooltip label="This feature is available on Görli">
+                <Icon as={Question} />
+              </Tooltip>
+            }
+          >
+            Switch network
+          </Button>
         )}
 
-        <CardMotionWrapper>
-          <Button colorScheme="green" onClick={addRequirement} isDisabled={!vaultId}>
-            Add requirement
-          </Button>
-        </CardMotionWrapper>
+        <Button colorScheme="green" onClick={addRequirement} isDisabled={!vaultId}>
+          Add requirement
+        </Button>
       </Flex>
     </Stack>
   )
