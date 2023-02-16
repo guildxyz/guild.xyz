@@ -1,7 +1,8 @@
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import useDatadog from "components/_app/Datadog/useDatadog"
-import { Chains } from "connectors"
+import { Chains, RPC } from "connectors"
+import useBalance from "hooks/useBalance"
 import useContract from "hooks/useContract"
 import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -86,6 +87,19 @@ const usePayFee = () => {
     value: token === NULL_ADDRESS ? fee : undefined,
   }
 
+  const { coinBalance, tokenBalance } = useBalance(
+    pickedCurrency,
+    Chains[requirement.chain]
+  )
+
+  const pickedCurrencyIsNative =
+    pickedCurrency === RPC[requirement?.chain]?.nativeCurrency?.symbol
+
+  const isSufficientBalance =
+    fee &&
+    (coinBalance || tokenBalance) &&
+    (pickedCurrencyIsNative ? coinBalance?.gt(fee) : tokenBalance?.gt(fee))
+
   const { allowance } = useAllowance(pickedCurrency, requirement.address)
 
   const shouldEstimateGas =
@@ -94,6 +108,7 @@ const usePayFee = () => {
     !isHasPaidLoading &&
     (multiplePayments || !hasPaid) &&
     fee &&
+    isSufficientBalance &&
     (ADDRESS_REGEX.test(pickedCurrency) ? allowance && fee.lte(allowance) : true)
 
   const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
