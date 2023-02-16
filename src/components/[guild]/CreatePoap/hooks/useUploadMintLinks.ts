@@ -1,10 +1,10 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
-import { useCreatePoapContext } from "../components/CreatePoapContext"
 import usePoapLinks from "./usePoapLinks"
 
 type UploadMintLinksData = {
@@ -12,14 +12,11 @@ type UploadMintLinksData = {
   links: string[]
 }
 
-const useUploadMintLinks = () => {
+const useUploadMintLinks = (poapId: number, { onSuccess }: UseSubmitOptions) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-
   const { mutateGuild } = useGuild()
-
-  const { poapData } = useCreatePoapContext()
-  const { mutate: mutatePoapLinks } = usePoapLinks(poapData?.id)
+  const { mutate: mutatePoapLinks } = usePoapLinks(poapId)
 
   const [loadingText, setLoadingText] = useState<string>(null)
 
@@ -40,8 +37,9 @@ const useUploadMintLinks = () => {
     return fetcher("/assets/poap/links", signedValidation)
   }
 
-  return {
-    ...useSubmitWithSign<any>(uploadMintLinks, {
+  const { onSubmit, ...rest } = useSubmitWithSign<UploadMintLinksData>(
+    uploadMintLinks,
+    {
       onError: (error) =>
         showErrorToast(error?.error?.message ?? error?.error ?? error),
       onSuccess: () => {
@@ -49,12 +47,18 @@ const useUploadMintLinks = () => {
           title: "Successfully uploaded mint links!",
           status: "success",
         })
+        onSuccess?.()
 
         // Mutating the guild data & mint links, so we get back the correct "activated" status for the POAPs
         mutateGuild()
         mutatePoapLinks()
       },
-    }),
+    }
+  )
+
+  return {
+    onSubmit: (links) => onSubmit({ links, poapId }),
+    ...rest,
     loadingText,
   }
 }

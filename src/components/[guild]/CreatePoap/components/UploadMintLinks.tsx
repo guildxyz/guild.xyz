@@ -10,37 +10,26 @@ import {
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone from "hooks/useDropzone"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { File, Upload } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useForm, useWatch } from "react-hook-form"
-import { useCreatePoapContext } from "../components/CreatePoapContext"
-import usePoapLinks from "../hooks/usePoapLinks"
 import useUploadMintLinks from "../hooks/useUploadMintLinks"
 
-const UploadMintLinks = (): JSX.Element => {
-  const { poapData, nextStep, onCloseHandler } = useCreatePoapContext()
+type Props = {
+  poapId: number
+} & UseSubmitOptions
 
+const UploadMintLinks = ({ poapId, onSuccess = null }: Props): JSX.Element => {
   const methods = useForm<{ mintLinks: string }>({ mode: "all" })
   const mintLinksInputValue = useWatch({
     control: methods.control,
     name: "mintLinks",
   })
 
-  const { poapLinks } = usePoapLinks(poapData?.id)
-  const [initialTotalLinks, setInitialTotalLinks] = useState<number>(undefined)
-
-  useEffect(() => {
-    if (!poapLinks || typeof initialTotalLinks !== "undefined") return
-    setInitialTotalLinks(poapLinks.total)
-  }, [poapLinks])
-
-  const { onSubmit, isLoading, loadingText, response } = useUploadMintLinks()
-
-  useEffect(() => {
-    if (!response) return
-    if (initialTotalLinks === 0) nextStep()
-    else onCloseHandler()
-  }, [response])
+  const { onSubmit, isLoading, loadingText, response } = useUploadMintLinks(poapId, {
+    onSuccess,
+  })
 
   const [mintLinks, setMintLinks] = useState<string[]>(null)
 
@@ -124,7 +113,7 @@ const UploadMintLinks = (): JSX.Element => {
               },
             })}
             minH={64}
-            placeholder="Paste mint links here"
+            placeholder="... or paste links here, each one in a new line"
           />
           <FormErrorMessage>
             {methods?.formState?.errors?.mintLinks?.message}
@@ -135,7 +124,7 @@ const UploadMintLinks = (): JSX.Element => {
       <Flex w="full" justifyContent="end">
         <Button
           colorScheme="green"
-          onClick={() => onSubmit({ poapId: poapData?.id, links: mintLinks })}
+          onClick={() => onSubmit(mintLinks)}
           isLoading={isLoading}
           loadingText={loadingText}
           isDisabled={!mintLinks?.length || isLoading || response}

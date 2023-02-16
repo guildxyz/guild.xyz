@@ -82,7 +82,7 @@ const ImportPoap = (): JSX.Element => {
             </HStack>
           )}
         </FormControl>
-        <UploadMintLinks />
+        <UploadMintLinks poapId={poapId} />
       </Stack>
     </FormProvider>
   )
