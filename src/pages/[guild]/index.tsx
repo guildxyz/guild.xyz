@@ -232,7 +232,13 @@ const GuildPage = (): JSX.Element => {
               <HStack justifyContent="space-between" w="full" my="-2 !important">
                 <Tag maxH={6} pt={0.5}>
                   <TagLeftIcon as={Users} />
-                  {isLoading ? <Spinner size="xs" /> : memberCount ?? 0}
+                  {isLoading ? (
+                    <Spinner size="xs" />
+                  ) : (
+                    new Intl.NumberFormat("en", { notation: "compact" }).format(
+                      memberCount ?? 0
+                    ) ?? 0
+                  )}
                 </Tag>
                 {isAdmin && <DynamicMembersExporter />}
               </HStack>
