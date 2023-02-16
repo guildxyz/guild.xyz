@@ -147,7 +147,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     opacity: 0,
                   })}
               transition="width .2s, opacity .2s"
-              overflow="hidden"
               mt="-1px"
             >
               <IconButton
