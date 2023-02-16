@@ -2,6 +2,7 @@ import {
   IconButton,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuItem,
   MenuList,
   Spinner,
@@ -80,6 +81,8 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
           <MenuItem icon={<Gear />} onClick={onSettingsOpen}>
             Settings
           </MenuItem>
+          <MenuDivider />
+          <MenuItem isDisabled>POAPs have moved into Add reward</MenuItem>
         </MenuList>
       </Menu>
 
