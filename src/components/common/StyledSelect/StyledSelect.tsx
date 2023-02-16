@@ -42,6 +42,7 @@ const StyledSelect = forwardRef(
           inputContainer: () => ({
             // ...provided,
             display: "flex",
+            w: "full",
             ...props.chakraStyles?.inputContainer,
           }),
           menu: (provided) => ({
