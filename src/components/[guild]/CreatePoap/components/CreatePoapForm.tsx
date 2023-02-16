@@ -33,19 +33,15 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDropzone from "hooks/useDropzone"
 import { Calendar, File, Question, WarningCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
-import { CreatePoapForm as CreatePoapFormType, PlatformType } from "types"
+import { CreatePoapForm as CreatePoapFormType } from "types"
 import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
-import getRandomInt from "utils/getRandomInt"
 import useCreatePoap from "../hooks/useCreatePoap"
 import useSavePoap from "../hooks/useSavePoap"
-import useUpdateGuildPoap from "../hooks/useUpdateGuildPoap"
-import useUpdatePoap from "../hooks/useUpdatePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
 import RequestsMintLinks from "./RequestMintLinks"
 
@@ -189,49 +185,49 @@ const CreatePoapForm = (): JSX.Element => {
     },
   })
 
-  const {
-    onSubmit: onCreateRoleSubmit,
-    isLoading: isCreateRoleLoading,
-    response: createRoleResponse,
-  } = useCreateRole("SIMPLE")
+  // const {
+  //   onSubmit: onCreateRoleSubmit,
+  //   isLoading: isCreateRoleLoading,
+  //   response: createRoleResponse,
+  // } = useCreateRole("SIMPLE")
 
-  const createRoleWithPoap = () =>
-    onCreateRoleSubmit({
-      guildId: id,
-      rolePlatforms: [
-        {
-          guildPlatformId: guildPlatforms?.find(
-            (p) => p.platformId === PlatformType.DISCORD
-          )?.id,
-          platformRoleData: {},
-          platformRoleId: null,
-        },
-      ],
-      logic: "AND",
-      name: "POAP owner",
-      description: `A role for ${poapData?.name ?? "POAP"} owners`,
-      imageUrl: poapData?.image_url ?? `/guildLogos/${getRandomInt(286)}.svg`,
-      requirements: [
-        {
-          type: "POAP",
-          data: {
-            id: poapData?.fancy_id,
-          },
-        },
-      ],
-    })
+  // const createRoleWithPoap = () =>
+  //   onCreateRoleSubmit({
+  //     guildId: id,
+  //     rolePlatforms: [
+  //       {
+  //         guildPlatformId: guildPlatforms?.find(
+  //           (p) => p.platformId === PlatformType.DISCORD
+  //         )?.id,
+  //         platformRoleData: {},
+  //         platformRoleId: null,
+  //       },
+  //     ],
+  //     logic: "AND",
+  //     name: "POAP owner",
+  //     description: `A role for ${poapData?.name ?? "POAP"} owners`,
+  //     imageUrl: poapData?.image_url ?? `/guildLogos/${getRandomInt(286)}.svg`,
+  //     requirements: [
+  //       {
+  //         type: "POAP",
+  //         data: {
+  //           id: poapData?.fancy_id,
+  //         },
+  //       },
+  //     ],
+  //   })
 
-  const { onSubmit: onUpdateGuildPoapSubmit, isLoading: isUpdateGuildPoapLoading } =
-    useUpdateGuildPoap()
-  const { onSubmit: onUpdatePoapSubmit, isLoading: isUpdatePoapLoading } =
-    useUpdatePoap(() =>
-      onUpdateGuildPoapSubmit({
-        id: guildPoap?.id,
-        expiryDate: expiryDate?.length
-          ? new Date(expiryDate).getTime() / 1000
-          : undefined,
-      })
-    )
+  // const { onSubmit: onUpdateGuildPoapSubmit, isLoading: isUpdateGuildPoapLoading } =
+  //   useUpdateGuildPoap()
+  // const { onSubmit: onUpdatePoapSubmit, isLoading: isUpdatePoapLoading } =
+  //   useUpdatePoap(() =>
+  //     onUpdateGuildPoapSubmit({
+  //       id: guildPoap?.id,
+  //       expiryDate: expiryDate?.length
+  //         ? new Date(expiryDate).getTime() / 1000
+  //         : undefined,
+  //     })
+  //   )
 
   if (savePoapResponse)
     return (
@@ -551,18 +547,16 @@ const CreatePoapForm = (): JSX.Element => {
       >
         <Button
           colorScheme="green"
-          onClick={handleSubmit(poapData?.id ? onUpdatePoapSubmit : onSubmit)}
+          onClick={handleSubmit(/* poapData?.id ? onUpdatePoapSubmit :  */ onSubmit)}
           isDisabled={
-            isCreatePoapLoading ||
-            isSavePoapLoading ||
+            isCreatePoapLoading || isSavePoapLoading /*  ||
             isUpdatePoapLoading ||
-            isUpdateGuildPoapLoading
+            isUpdateGuildPoapLoading */
           }
           isLoading={
-            isCreatePoapLoading ||
-            isSavePoapLoading ||
+            isCreatePoapLoading || isSavePoapLoading /*  ||
             isUpdatePoapLoading ||
-            isUpdateGuildPoapLoading
+            isUpdateGuildPoapLoading */
           }
           loadingText={`${poapData?.id ? "Updating" : "Creating"} POAP`}
         >

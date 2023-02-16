@@ -15,7 +15,6 @@ import {
   Tooltip,
   useColorMode,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -28,9 +27,9 @@ import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import PoapPaymentRequirement from "requirements/PoapPayment/PoapPaymentRequirement"
 import { GuildPoap } from "types"
+import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import parseDescription from "utils/parseDescription"
 import usePoapLinks from "../../hooks/usePoapLinks"
-import usePoapVault from "../../hooks/usePoapVault"
 import { useCreatePoapContext } from "../CreatePoapContext"
 
 type Props = {
@@ -41,41 +40,21 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
   const poapFancyId = guildPoap?.fancyId
   const { isAdmin } = useGuildPermission()
 
-  const { chainId } = useWeb3React()
   const { urlName } = useGuild()
-  const guildPoapChainId = guildPoap?.poapContracts
-    ?.map((poapContract) => poapContract.chainId)
-    ?.includes(chainId)
-    ? chainId
-    : guildPoap?.poapContracts?.[0]?.chainId
+
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
 
-  const vaultId = guildPoap?.poapContracts
-    ?.map((poapContract) => poapContract.chainId)
-    ?.includes(chainId)
-    ? guildPoap?.poapContracts?.find(
-        (poapContract) => poapContract?.chainId === chainId
-      )?.vaultId
-    : guildPoap?.poapContracts?.[0]?.vaultId
-  const { vaultData, isVaultLoading, vaultError } = usePoapVault(
-    vaultId,
-    guildPoapChainId
-  )
-
   const { setStep, setPoapData } = useCreatePoapContext()
 
-  const isExpired = useMemo(() => {
-    if (!poap) return false
-    const currentTime = Date.now()
+  const expiryTime = useMemo(() => {
+    if (!poap) return
 
     // Hotfix so it works well in Firefox too
     const [day, month, year] = poap.expiry_date?.split("-")
     const convertedPoapExpiryDate = `${day}-${month}${year}`
 
-    const expiryTime = new Date(convertedPoapExpiryDate)?.getTime()
-
-    return currentTime >= expiryTime
+    return new Date(convertedPoapExpiryDate)?.getTime()
   }, [poap])
 
   const isActive = useMemo(
@@ -84,21 +63,26 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
   )
   const isReady = poapLinks && poapLinks?.total > 0
 
-  const status = isExpired
-    ? { label: "Expired", tooltip: "Your POAP has expired.", color: "gray" }
-    : isActive
-    ? { label: "Active", tooltip: "Your poap is being distributed.", color: "green" }
-    : isReady
-    ? {
-        label: "Pending",
-        tooltip: "You can send the Discord mint button.",
-        color: "yellow",
-      }
-    : {
-        label: "Setup required",
-        tooltip: "You haven't uploaded the mint links for your POAP yet.",
-        color: "gray",
-      }
+  const status =
+    Date.now() >= expiryTime
+      ? { label: "Expired", tooltip: "Your POAP has expired.", color: "gray" }
+      : isActive
+      ? {
+          label: `Claim ends in ${formatRelativeTimeFromNow(expiryTime / 1000)}`,
+          tooltip: "Your poap is being distributed.",
+          color: "purple",
+        }
+      : isReady
+      ? {
+          label: "Inactive",
+          tooltip: "POAP is not visible to members yet",
+          color: "gray",
+        }
+      : {
+          label: "Setup required",
+          tooltip: "You haven't uploaded the mint links for your POAP yet.",
+          color: "gray",
+        }
 
   const { colorMode } = useColorMode()
 
@@ -110,7 +94,7 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
         },
       }}
       borderWidth={2}
-      borderColor={status.color}
+      borderColor={`${status.color}.500`}
     >
       <SimpleGrid columns={{ base: 1, md: 2 }}>
         <Flex
