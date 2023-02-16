@@ -37,7 +37,7 @@ type Props = {
   poap: GuildPoap
 }
 
-const PoapListItem = ({ poap: guildPoap }: Props): JSX.Element => {
+const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
   const poapFancyId = guildPoap?.fancyId
   const { isAdmin } = useGuildPermission()
 
@@ -161,7 +161,7 @@ const PoapListItem = ({ poap: guildPoap }: Props): JSX.Element => {
                 </HStack>
               </Stack>
             </HStack>
-            {isAdmin && (
+            {false && isAdmin && (
               <>
                 <Spacer m="0 !important" />
                 <IconButton
@@ -240,4 +240,4 @@ const PoapListItem = ({ poap: guildPoap }: Props): JSX.Element => {
   )
 }
 
-export default PoapListItem
+export default PoapRoleCard

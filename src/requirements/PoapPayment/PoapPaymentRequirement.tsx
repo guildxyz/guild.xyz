@@ -1,6 +1,6 @@
 import { Icon, Skeleton, Text } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
-import Withdraw from "components/[guild]/CreatePoap/components/PoapListItem/components/Withdraw"
+import Withdraw from "components/[guild]/CreatePoap/components/PoapRoleCard/components/Withdraw"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
