@@ -1,3 +1,4 @@
+import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import type { Chain } from "connectors"
 import { RequirementType } from "requirements"
 
@@ -255,6 +256,7 @@ type Guild = {
   members: Array<string>
   poaps: Array<GuildPoap>
   onboardingComplete: boolean
+  featureFlags: FeatureFlag[]
 }
 type GuildFormType = Partial<
   Pick<
