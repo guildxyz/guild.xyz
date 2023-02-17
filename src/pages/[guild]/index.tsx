@@ -141,7 +141,7 @@ const GuildPage = (): JSX.Element => {
       <Head>
         <meta
           name="theme-color"
-          content={colorMode === "light" ? "gray.100" : "gray.800"}
+          content={colorMode === "light" ? "#FFFFFF" : "#272729"}
           media="(prefers-color-scheme: light)"
         />
       </Head>
