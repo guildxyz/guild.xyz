@@ -133,10 +133,12 @@ const GuildPage = (): JSX.Element => {
 
   const showOnboarding = isAdmin && !onboardingComplete
   const showAccessHub = (isMember || isAdmin) && !showOnboarding
+
   const hexToRGB = (hex: string) => {
-    hex = hex.startsWith("#") ? hex.slice(1) : hex
+    //where to move this?
+    hex = hex?.startsWith("#") ? hex.slice(1) : hex
     if (hex.length === 3) {
-      hex = Array.from(hex).reduce((str, x) => str + x + x, "") // 123 -> 112233
+      hex = Array.from(hex).reduce((str, x) => str + x + x, "")
     }
     const values = hex
       .split(/([a-z0-9]{2,2})/)
