@@ -12,7 +12,6 @@ import {
   Stack,
   Tag,
   Text,
-  Tooltip,
   useColorMode,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
@@ -47,40 +46,27 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
 
   const { setStep, setPoapData } = useCreatePoapContext()
 
-  const expiryTime = useMemo(() => {
-    if (!poap) return
-
-    // Hotfix so it works well in Firefox too
-    const [day, month, year] = poap.expiry_date?.split("-")
-    const convertedPoapExpiryDate = `${day}-${month}${year}`
-
-    return new Date(convertedPoapExpiryDate)?.getTime()
-  }, [poap])
-
   const isActive = useMemo(
     () => (!poap ? false : guildPoap?.activated),
     [poap, guildPoap]
   )
   const isReady = poapLinks && poapLinks?.total > 0
 
+  const timeDiff = guildPoap?.expiryDate * 1000 - Date.now()
+
   const status =
-    Date.now() >= expiryTime
-      ? { label: "Expired", tooltip: "Your POAP has expired.", color: "gray" }
-      : isActive
+    timeDiff < 0
       ? {
-          label: `Claim ends in ${formatRelativeTimeFromNow(expiryTime / 1000)}`,
-          tooltip: "Your poap is being distributed.",
-          color: "purple",
-        }
-      : isReady
-      ? {
-          label: "Inactive",
-          tooltip: "POAP is not visible to members yet",
+          label: `Claim ended ${formatRelativeTimeFromNow(timeDiff * -1)} ago`,
           color: "gray",
         }
+      : isActive
+      ? {
+          label: `Claim ends in ${formatRelativeTimeFromNow(timeDiff)}`,
+          color: "purple",
+        }
       : {
-          label: "Setup required",
-          tooltip: "You haven't uploaded the mint links for your POAP yet.",
+          label: "Inactive",
           color: "gray",
         }
 
@@ -128,9 +114,7 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
                   {poap?.name}
                 </Heading>
                 <HStack spacing={0}>
-                  <Tooltip label={status.tooltip}>
-                    <Tag colorScheme={status.color}>{status.label}</Tag>
-                  </Tooltip>
+                  <Tag colorScheme={status.color}>{status.label}</Tag>
                   {isReady && (
                     <Text as="span" fontSize="xs" colorScheme="gray" pl="4">
                       <Link
