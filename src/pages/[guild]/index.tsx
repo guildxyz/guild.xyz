@@ -11,7 +11,6 @@ import {
   Tag,
   TagLeftIcon,
   Text,
-  useColorMode,
   Wrap,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
@@ -134,15 +133,11 @@ const GuildPage = (): JSX.Element => {
 
   const showOnboarding = isAdmin && !onboardingComplete
   const showAccessHub = (isMember || isAdmin) && !showOnboarding
-  const { colorMode } = useColorMode()
-  console.log(colorMode)
+
   return (
     <DynamicOnboardingProvider>
       <Head>
-        <meta
-          name="theme-color"
-          content={colorMode === "light" ? "#FFFFFF" : "#272729"}
-        />
+        <meta name="theme-color" content={localThemeColor} />
       </Head>
       <Layout
         title={name}
