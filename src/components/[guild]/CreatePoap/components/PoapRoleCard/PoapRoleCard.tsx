@@ -12,6 +12,7 @@ import {
   Stack,
   Tag,
   Text,
+  Tooltip,
   useColorMode,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
@@ -19,6 +20,7 @@ import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
+import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import PoapReward from "components/[guild]/RoleCard/components/PoapReward"
 import { ArrowSquareOut, PencilSimple } from "phosphor-react"
 import { useMemo } from "react"
@@ -71,6 +73,23 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
         }
 
   const { colorMode } = useColorMode()
+
+  const requirementComponents = guildPoap && [
+    ...(guildPoap.poapContracts ?? []).map((poapContract) => (
+      <PoapPaymentRequirement
+        key={poapContract.id}
+        poapContract={poapContract}
+        poap={guildPoap}
+      />
+    )),
+    ...(guildPoap.poapRequirements ?? []).map((requirement, i) => (
+      <RequirementDisplayComponent
+        key={requirement.id}
+        requirement={requirement}
+        rightElement={<></>}
+      />
+    )),
+  ]
 
   return (
     <Card
@@ -129,19 +148,22 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
                 </HStack>
               </Stack>
             </HStack>
-            {false && isAdmin && (
+            {isAdmin && (
               <>
                 <Spacer m="0 !important" />
-                <IconButton
-                  icon={<Icon as={PencilSimple} />}
-                  size="sm"
-                  rounded="full"
-                  aria-label="Edit role"
-                  onClick={() => {
-                    setPoapData(poap)
-                    setStep(0)
-                  }}
-                />
+                <Tooltip label="Soon">
+                  <IconButton
+                    icon={<Icon as={PencilSimple} />}
+                    size="sm"
+                    rounded="full"
+                    aria-label="Edit role"
+                    isDisabled
+                    onClick={() => {
+                      setPoapData(poap)
+                      setStep(0)
+                    }}
+                  />
+                </Tooltip>
               </>
             )}
           </HStack>
@@ -179,26 +201,21 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
             <Spacer />
           </HStack>
 
-          <Stack>
-            {guildPoap?.poapContracts?.map((poapContract) => (
-              <PoapPaymentRequirement
-                key={poapContract.id}
-                poapContract={poapContract}
-                poap={guildPoap}
-              />
-            )) ?? <FreeRequirement />}
-            {/* {poap?.poapContracts?.map() ? (
-              <Tag>
-                {isVaultLoading ? (
-                  <Spinner size="xs" />
-                ) : (
-                  <PoapPaymentRequirement poap={guildPoap} />
-                )}
-              </Tag>
+          <Stack
+            spacing="0"
+            divider={
+              <Box border="0">
+                <LogicDivider logic={"AND"} />
+              </Box>
+            }
+          >
+            {requirementComponents.length ? (
+              requirementComponents?.map(
+                (RequirementComponent, i) => RequirementComponent
+              )
             ) : (
               <FreeRequirement />
-            )} */}
-            {false && <LogicDivider logic={"AND"} />}
+            )}
           </Stack>
 
           {/* <RoleRequirements role={role} /> */}

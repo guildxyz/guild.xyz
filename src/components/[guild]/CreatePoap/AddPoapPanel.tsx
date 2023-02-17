@@ -19,7 +19,7 @@ const AddPoapPanel = ({ onSuccess }: Props): JSX.Element => {
   const { poapLinks } = usePoapLinks(poapData?.id)
   const [tab, setTab] = useState("new")
 
-  if (showSetReqs) return <PoapRequirements />
+  if (showSetReqs) return <PoapRequirements onSuccess={onSuccess} />
 
   return (
     <Box>

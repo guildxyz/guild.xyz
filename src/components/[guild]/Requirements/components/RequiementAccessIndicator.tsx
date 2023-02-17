@@ -69,7 +69,9 @@ const RequiementAccessIndicator = () => {
         isAlwaysOpen={!accessData?.access}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
-          {reqErrorData.msg ? `Error: ${reqErrorData.msg}` : `Couldn't check access`}
+          {reqErrorData?.msg
+            ? `Error: ${reqErrorData.msg}`
+            : `Couldn't check access`}
         </PopoverHeader>
       </RequiementAccessIndicatorUI>
     )

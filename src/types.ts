@@ -212,6 +212,7 @@ type GuildPoap = {
   activated: boolean
   expiryDate: number
   poapContracts?: PoapContract[]
+  poapRequirements?: Requirement[]
 }
 
 const supportedSocialLinks = [

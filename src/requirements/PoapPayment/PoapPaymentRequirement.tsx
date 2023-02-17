@@ -1,12 +1,13 @@
-import { Icon, Skeleton, Text } from "@chakra-ui/react"
+import { Icon, Skeleton, Text, Tooltip } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
+import Button from "components/common/Button"
 import Withdraw from "components/[guild]/CreatePoap/components/PoapRoleCard/components/Withdraw"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
-import { Coins } from "phosphor-react"
+import { Coin, Coins } from "phosphor-react"
 import { GuildPoap, PoapContract } from "types"
 
 type Props = { poap: GuildPoap; poapContract: PoapContract }
@@ -27,6 +28,19 @@ const PoapPaymentRequirement = ({ poap, poapContract, ...props }: Props) => {
     <Requirement
       image={<Icon as={Coins} boxSize={6} />}
       footer={isAdmin && <Withdraw poapId={poap?.id} />}
+      rightElement={
+        <Tooltip label="Soon" shouldWrapChildren>
+          <Button
+            colorScheme="blue"
+            size="sm"
+            leftIcon={<Coin />}
+            borderRadius="lg"
+            isDisabled
+          >
+            Pay
+          </Button>
+        </Tooltip>
+      }
       {...props}
     >
       <Skeleton as="span" isLoaded={!isVaultLoading && !isTokenDataLoading}>

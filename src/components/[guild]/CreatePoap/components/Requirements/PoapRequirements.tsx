@@ -6,16 +6,18 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { RequirementType } from "requirements"
 import Role from "requirements/Guild/components/Role"
 import PoapPaymentForm from "requirements/PoapPayment"
 import PoapPaymentRequirementEditable from "requirements/PoapPayment/PoapPaymentRequirementEditable"
+import useUpdatePoapRequirements from "../../hooks/useUpdatePoapRequirements"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import AddPoapRequirement from "./components/AddPoapRequirement"
 import VoiceParticipation from "./components/VoiceParticipation"
 
-const PoapRequirements = (): JSX.Element => {
+const PoapRequirements = ({ onSuccess }: UseSubmitOptions): JSX.Element => {
   const { isSuperAdmin } = useUser()
   const { poaps } = useGuild()
   const { poapData } = useCreatePoapContext()
@@ -34,6 +36,8 @@ const PoapRequirements = (): JSX.Element => {
     ...field,
     ...watchFieldArray[index],
   }))
+
+  const { onSubmit, isLoading } = useUpdatePoapRequirements(guildPoap, { onSuccess })
 
   if (!isSuperAdmin && guildPoap?.activated)
     return (
@@ -83,12 +87,14 @@ const PoapRequirements = (): JSX.Element => {
           description="Same as if you’d add it to an existing role, but you can set other requirements too"
           FormComponent={Role}
         />
-        <AddPoapRequirement
-          title="Payment"
-          description="Monetize POAP with different payment methods that the users will be able to choose from"
-          // rightIcon={Coin}
-          FormComponent={PoapPaymentForm}
-        />
+        {!guildPoap?.poapContracts?.length && (
+          <AddPoapRequirement
+            title="Payment"
+            description="Monetize POAP with different payment methods that the users will be able to choose from"
+            // rightIcon={Coin}
+            FormComponent={PoapPaymentForm}
+          />
+        )}
         <AddPoapRequirement
           title="Voice participation"
           description="Users will have to be in a Discord voice channel at the time of the event"
@@ -98,7 +104,11 @@ const PoapRequirements = (): JSX.Element => {
         <AddRequirement onAdd={(d) => append(d)} />
       </Stack>
       <Flex justifyContent={"right"} mt="8">
-        <Button colorScheme="green" onClick={() => {}}>
+        <Button
+          colorScheme="green"
+          onClick={methods.handleSubmit(onSubmit)}
+          isLoading={isLoading}
+        >
           Done
         </Button>
       </Flex>
