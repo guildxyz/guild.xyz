@@ -44,7 +44,6 @@ import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
-import hexToRGB from "utils/hexToRgb"
 import parseDescription from "utils/parseDescription"
 
 const BATCH_SIZE = 10
@@ -138,10 +137,7 @@ const GuildPage = (): JSX.Element => {
   return (
     <DynamicOnboardingProvider>
       <Head>
-        <meta
-          name="theme-color"
-          content={localThemeColor ?? `rgba(${hexToRGB(localThemeColor)}, 0.5)`}
-        />
+        <meta name="theme-color" content={localThemeColor} />
       </Head>
       <Layout
         title={name}
