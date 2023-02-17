@@ -44,6 +44,7 @@ import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
+import hexToRGB from "utils/hexToRgb"
 import parseDescription from "utils/parseDescription"
 
 const BATCH_SIZE = 10
@@ -133,19 +134,6 @@ const GuildPage = (): JSX.Element => {
 
   const showOnboarding = isAdmin && !onboardingComplete
   const showAccessHub = (isMember || isAdmin) && !showOnboarding
-
-  const hexToRGB = (hex: string) => {
-    //where to move this?
-    hex = hex.startsWith("#") ? hex.slice(1) : hex
-    if (hex.length === 3) {
-      hex = Array.from(hex).reduce((str, x) => str + x + x, "")
-    }
-    const values = hex
-      .split(/([a-z0-9]{2,2})/)
-      .filter(Boolean)
-      .map((x) => parseInt(x, 16))
-    return `${values.length == 4 ? "a" : ""}${values.join(", ")}`
-  }
 
   return (
     <DynamicOnboardingProvider>
