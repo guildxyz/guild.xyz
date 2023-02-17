@@ -7,16 +7,20 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { Chains } from "connectors"
+import { Chain } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
-import { useEffect, useMemo } from "react"
-import { useController, useFormContext } from "react-hook-form"
-import { MonetizePoapForm } from "types"
+import { useMemo } from "react"
+import { useController, UseControllerProps, useFormContext } from "react-hook-form"
+
+type Props = {
+  chain: Chain
+  fieldName: string
+  isDisabled?: boolean
+} & Omit<UseControllerProps, "name">
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
@@ -24,65 +28,59 @@ const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.value.toLowerCase() === input?.toLowerCase()
 
-const TokenPicker = (): JSX.Element => {
-  const { chainId } = useWeb3React()
-  const {
-    control,
-    setValue,
-    formState: { errors },
-  } = useFormContext<MonetizePoapForm>()
+const TokenPicker = ({
+  chain,
+  fieldName,
+  isDisabled,
+  ...rest
+}: Props): JSX.Element => {
+  const { trigger } = useFormContext()
 
   const {
-    field: { onChange: tokenFieldOnChange, value: tokenFieldValue },
+    field: { value: address, onChange: addressOnChange },
+    fieldState: { error },
   } = useController({
-    name: "token",
+    name: fieldName,
+    ...rest,
+    rules: {
+      pattern: {
+        value: ADDRESS_REGEX,
+        message:
+          "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+      },
+      validate: () => !error || "Failed to fetch token data",
+      ...rest.rules,
+    },
   })
 
-  const { tokens, isLoading: isTokensLoading } = useTokens(Chains[chainId])
-
+  const { isLoading, tokens } = useTokens(chain)
   const mappedTokens = useMemo(
     () =>
       tokens?.map((token) => ({
         img: token.logoURI,
         label: token.name,
         value: token.address,
+        decimals: token.decimals,
       })),
     [tokens]
   )
 
-  useEffect(() => {
-    if (!chainId) return
-    setValue("token", "0x0000000000000000000000000000000000000000")
-  }, [chainId])
-
   const {
-    data: { name: tokenName, symbol: tokenSymbol },
+    data: { name: tokenName, symbol: tokenSymbol, decimals: tokenDecimals },
     isValidating: isTokenSymbolValidating,
-    error,
-  } = useTokenData(Chains[chainId], tokenFieldValue)
-
-  const tokenDataFetched =
-    typeof tokenName === "string" &&
-    tokenName !== "-" &&
-    typeof tokenSymbol === "string" &&
-    tokenSymbol !== "-"
+    error: tokenDataError,
+  } = useTokenData(chain, address, () => trigger(fieldName))
 
   const tokenImage = mappedTokens?.find(
-    (t) => t.value?.toLowerCase() === tokenFieldValue?.toLowerCase()
+    (token) => token.value?.toLowerCase() === address?.toLowerCase()
   )?.img
 
   return (
-    <FormControl
-      isRequired
-      isInvalid={
-        isTokenSymbolValidating
-          ? errors?.token?.type !== "validate" && !!errors?.token
-          : !tokenDataFetched && !!errors?.token
-      }
-    >
-      <FormLabel>Currency</FormLabel>
+    <FormControl isRequired isInvalid={!!error}>
+      <FormLabel>Token:</FormLabel>
+
       <InputGroup>
-        {tokenFieldValue &&
+        {address &&
           (tokenImage ? (
             <InputLeftElement>
               <OptionImage img={tokenImage} alt={tokenName} />
@@ -98,9 +96,8 @@ const TokenPicker = (): JSX.Element => {
               )}
             </InputLeftAddon>
           ))}
-
         <ControlledSelect
-          name="token"
+          name={fieldName}
           rules={{
             required: "This field is required.",
             pattern: {
@@ -108,32 +105,29 @@ const TokenPicker = (): JSX.Element => {
               message:
                 "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
             },
-            validate: () => !error || "Failed to fetch token data",
+            validate: () => !tokenDataError || "Failed to fetch token data",
           }}
           isClearable
-          isLoading={isTokensLoading}
+          isLoading={isLoading}
           options={mappedTokens}
           filterOption={customFilterOption}
           placeholder="Search or paste address"
-          defaultValue={mappedTokens?.[0]?.value}
-          fallbackValue={
-            tokenFieldValue && {
-              value: tokenFieldValue,
-              label: tokenName && tokenName !== "-" ? tokenName : tokenFieldValue,
-            }
-          }
           onInputChange={(text, _) => {
             if (!ADDRESS_REGEX.test(text)) return
-            tokenFieldOnChange(text)
+            addressOnChange(text)
           }}
+          fallbackValue={
+            address && {
+              value: address,
+              label: tokenName && tokenName !== "-" ? tokenName : address,
+              decimals: tokenDecimals,
+            }
+          }
+          isDisabled={isDisabled}
         />
       </InputGroup>
 
-      <FormErrorMessage>
-        {isTokenSymbolValidating
-          ? errors?.token?.type !== "validate" && errors?.token?.message
-          : !tokenDataFetched && errors?.token?.message}
-      </FormErrorMessage>
+      <FormErrorMessage>{error?.message}</FormErrorMessage>
     </FormControl>
   )
 }

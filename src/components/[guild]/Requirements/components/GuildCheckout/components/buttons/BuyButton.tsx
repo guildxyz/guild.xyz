@@ -1,32 +1,37 @@
-import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
-import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
+import useHasPaid from "requirements/Payment/hooks/useHasPaid"
+import useVault from "requirements/Payment/hooks/useVault"
 import useAllowance from "../../hooks/useAllowance"
-import usePrice from "../../hooks/usePrice"
-import usePurchaseAsset from "../../hooks/usePurchaseAsset"
+import usePayFee from "../../hooks/usePayFee"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
-const PurchaseButton = (): JSX.Element => {
+const BuyButton = (): JSX.Element => {
   const { chainId } = useWeb3React()
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const {
-    data: { priceInWei },
-    isValidating: isPriceLoading,
+    data: { fee, multiplePayments },
+    isValidating: isVaultLoading,
     error,
-  } = usePrice()
-  const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
-    pickedCurrency,
-    TOKEN_BUYER_CONTRACT[Chains[chainId]]
+  } = useVault(requirement.address, requirement.data.id, requirement.chain)
+
+  const { data: hasPaid, isValidating: isHasPaidLoading } = useHasPaid(
+    requirement.address,
+    requirement.data.id,
+    requirement.chain
   )
 
-  const { onSubmit, isLoading, estimateGasError } = usePurchaseAsset()
+  const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
+    pickedCurrency,
+    requirement.address
+  )
 
-  const isSufficientAllowance =
-    priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
+  const { estimateGasError, onSubmit, isLoading } = usePayFee()
+
+  const isSufficientAllowance = fee && allowance ? fee.lte(allowance) : false
 
   const {
     coinBalance,
@@ -35,35 +40,32 @@ const PurchaseButton = (): JSX.Element => {
   } = useBalance(pickedCurrency, Chains[requirement?.chain])
 
   const pickedCurrencyIsNative =
-    pickedCurrency === RPC[Chains[chainId]].nativeCurrency.symbol
+    pickedCurrency === RPC[requirement?.chain]?.nativeCurrency?.symbol
 
   const isSufficientBalance =
-    priceInWei &&
+    fee &&
     (coinBalance || tokenBalance) &&
-    (pickedCurrencyIsNative
-      ? coinBalance?.gt(BigNumber.from(priceInWei))
-      : tokenBalance?.gt(BigNumber.from(priceInWei)))
+    (pickedCurrencyIsNative ? coinBalance?.gt(fee) : tokenBalance?.gt(fee))
 
   const isDisabled =
     error ||
     estimateGasError ||
     !agreeWithTOS ||
     Chains[chainId] !== requirement.chain ||
+    (!isVaultLoading && !isHasPaidLoading && !multiplePayments && hasPaid) ||
     (!pickedCurrencyIsNative &&
-      (isPriceLoading ||
-        isAllowanceLoading ||
-        allowanceError ||
-        !isSufficientAllowance)) ||
+      (isAllowanceLoading || allowanceError || !isSufficientAllowance)) ||
     isBalanceLoading ||
     !isSufficientBalance
 
   const errorMsg =
-    (error && "Couldn't calculate price") ??
+    (error && "Couldn't calculate price") ||
     (estimateGasError &&
       (estimateGasError?.data?.message?.includes("insufficient")
         ? "Insufficient funds for gas"
-        : "Couldn't estimate gas")) ??
-    (!isSufficientBalance && "Insufficient balance")
+        : "Couldn't estimate gas")) ||
+    (!isSufficientBalance && "Insufficient balance") ||
+    (!multiplePayments && hasPaid && "Already paid")
 
   return (
     <Button
@@ -74,11 +76,11 @@ const PurchaseButton = (): JSX.Element => {
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
       onClick={onSubmit}
-      data-dd-action-name="PurchaseButton (GuildCheckout)"
+      data-dd-action-name="BuyButton (GuildCheckout)"
     >
-      {errorMsg || "Purchase"}
+      {errorMsg || "Buy pass"}
     </Button>
   )
 }
 
-export default PurchaseButton
+export default BuyButton

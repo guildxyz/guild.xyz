@@ -67,11 +67,12 @@ const getGuildFee = async (
   guildFeeInSellToken: number
   guildFeeInUSD: number
 }> => {
-  if (!TOKEN_BUYER_CONTRACT[chainId]) return Promise.reject("Unsupported chain")
+  if (!TOKEN_BUYER_CONTRACT[Chains[chainId]])
+    return Promise.reject("Unsupported chain")
 
   const provider = new JsonRpcProvider(RPC[Chains[chainId]].rpcUrls[0], chainId)
   const tokenBuyerContract = new Contract(
-    TOKEN_BUYER_CONTRACT[chainId],
+    TOKEN_BUYER_CONTRACT[Chains[chainId]],
     TOKEN_BUYER_ABI,
     provider
   )

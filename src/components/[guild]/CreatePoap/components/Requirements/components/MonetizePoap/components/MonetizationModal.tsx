@@ -44,11 +44,12 @@ import { Alert, Modal } from "components/common/Modal"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { Chains, RPC } from "connectors"
+import { Chain, Chains, RPC } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import { Check, CoinVertical } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
+import TokenPicker from "requirements/common/TokenPicker"
 import { MonetizePoapForm } from "types"
 import shortenHex from "utils/shortenHex"
 import useFeeInUSD from "../hooks/useFeeInUSD"
@@ -56,7 +57,6 @@ import useIsGnosisSafe from "../hooks/useIsGnosisSafe"
 import useMonetizePoap from "../hooks/useMonetizePoap"
 import useRegisterVault from "../hooks/useRegisterVault"
 import useUsersGnosisSafes from "../hooks/useUsersGnosisSafes"
-import TokenPicker from "./TokenPicker"
 
 type Props = {
   isOpen: boolean
@@ -127,6 +127,7 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
   useEffect(() => {
     if (!chainId) return
     if (chainId !== formChainId) setValue("chainId", chainId)
+    setValue("token", "0x0000000000000000000000000000000000000000")
   }, [chainId])
 
   const token = useWatch({ control, name: "token" })
@@ -220,7 +221,7 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 </GridItem>
 
                 <GridItem colSpan={{ base: 2, md: 1 }}>
-                  <TokenPicker />
+                  <TokenPicker fieldName="token" chain={Chains[chainId] as Chain} />
                 </GridItem>
 
                 <GridItem colSpan={{ base: 2, md: 1 }}>

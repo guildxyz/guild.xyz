@@ -17,6 +17,7 @@ export type RequirementType = (typeof requirementTypes)[number]
 export type RequirementFormProps = {
   baseFieldPath: string
   field?: Requirement
+  addRequirement?: () => void
 }
 
 export type RequirementData = {
