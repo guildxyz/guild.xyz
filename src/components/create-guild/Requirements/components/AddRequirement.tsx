@@ -31,6 +31,7 @@ import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
+import { PAYMENT_ALLOWED_GUILDS } from "utils/guildCheckout/constants"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
@@ -213,8 +214,7 @@ const AddRequirementHome = forwardRef(
         <SimpleGrid columns={2} gap={2}>
           {general.map((requirementButton) => {
             const isPayment = requirementButton.types[0] === "PAYMENT"
-            // const isPaymentAllowed = PAYMENT_ALLOWED_GUILDS.includes(id)
-            const isPaymentAllowed = true
+            const isPaymentAllowed = PAYMENT_ALLOWED_GUILDS.includes(id)
 
             return (
               <Button
@@ -222,6 +222,7 @@ const AddRequirementHome = forwardRef(
                 w="full"
                 py={11}
                 onClick={() => setSelectedType(requirementButton.types[0])}
+                isDisabled={isPayment && !isPaymentAllowed}
               >
                 <VStack w="full" whiteSpace="break-spaces">
                   <Icon as={requirementButton.icon as FC} boxSize={6} />

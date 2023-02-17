@@ -22,7 +22,10 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Reward from "components/[guild]/RoleCard/components/Reward"
 import { Chains } from "connectors"
 import { Coin, StarHalf } from "phosphor-react"
-import { paymentSupportedChains } from "utils/guildCheckout/constants"
+import {
+  paymentSupportedChains,
+  PAYMENT_ALLOWED_GUILDS,
+} from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
 import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
 import BuyButton from "./components/buttons/BuyButton"
@@ -50,7 +53,7 @@ const BuyPass = () => {
     txSuccess,
     txHash,
   } = useGuildCheckoutContext()
-  const { name, roles } = useGuild()
+  const { id, name, roles } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
@@ -61,13 +64,13 @@ const BuyPass = () => {
     ?.every((r) => r.access)
 
   if (
-    !isInfoModalOpen &&
-    // TODO: we'll be able to control this properly once we'll have feature flags
-    // !PAYMENT_ALLOWED_GUILDS.includes(id) ||
-    (!account ||
-      (!accessData && isAccessLoading) ||
-      requirement?.type !== "PAYMENT" ||
-      !paymentSupportedChains.includes(requirement?.chain))
+    (!isInfoModalOpen &&
+      // TODO: we'll be able to control this properly once we'll have feature flags
+      !PAYMENT_ALLOWED_GUILDS.includes(id)) ||
+    !account ||
+    (!accessData && isAccessLoading) ||
+    requirement?.type !== "PAYMENT" ||
+    !paymentSupportedChains.includes(requirement?.chain)
   )
     return null
 
