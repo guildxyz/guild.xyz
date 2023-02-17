@@ -238,14 +238,9 @@ const CreatePoapForm = (): JSX.Element => {
             <AlertTitle>Drop successfully submitted</AlertTitle>
             <AlertDescription>
               <Text>
-                You've requested{" "}
-                <Skeleton isLoaded={!!poapData} display="inline">
-                  {poapData?.requested_codes || "unknown"}
-                </Skeleton>{" "}
-                mint links for your drop. The POAP Curation Body will review your
-                petition according to the POAP drop policies and you'll receive a
-                confirmation email after it is reviewed. Feel free to close the
-                modal, you'll be able to upload the mint links later!
+                The POAP Curation Body will review your petition according to the
+                POAP drop policies and you'll receive a confirmation email with the
+                minting links that you’ll have to upload
               </Text>
             </AlertDescription>
           </Box>
