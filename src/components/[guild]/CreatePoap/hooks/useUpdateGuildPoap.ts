@@ -1,6 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { GuildPoap } from "types"
@@ -15,32 +16,34 @@ const updateGuildPoap = async (signedValidation: SignedValdation) =>
     ...signedValidation,
   })
 
-const useUpdateGuildPoap = (guildPoap) => {
+const useUpdateGuildPoap = (
+  guildPoap: GuildPoap,
+  { onSuccess }: UseSubmitOptions = {}
+) => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
   const { mutateGuild } = useGuild()
 
-  const { mutatePoap } = usePoap(guildPoap?.fancy_id)
+  const { mutatePoap } = usePoap(guildPoap?.fancyId)
   const { mutatePoapEventDetails } = usePoapEventDetails()
 
   return useSubmitWithSign<GuildPoap>(updateGuildPoap, {
     onError: (error) => showErrorToast(error?.error?.message ?? error?.error),
     onSuccess: async (response) => {
       // Mutating guild and POAP data, so the user can see the fresh data in the POAPs list
-      const mutatePoapEventDetailsWithResponse = mutatePoapEventDetails({
+      mutatePoapEventDetails({
         ...response,
         contracts: guildPoap?.poapContracts,
       })
-      await Promise.all([
-        mutateGuild,
-        mutatePoap,
-        mutatePoapEventDetailsWithResponse,
-      ])
+      mutateGuild()
+      mutatePoap()
+
       toast({
         status: "success",
         title: "Successfully updated POAP",
       })
+      onSuccess?.()
     },
   })
 }

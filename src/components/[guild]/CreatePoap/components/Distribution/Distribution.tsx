@@ -24,7 +24,7 @@ const Distribution = ({ guildPoap, poap, onSuccess }: Props): JSX.Element => {
   )
 
   const { onSubmit: onActivateSubmit, isLoading: isActivateLoading } =
-    useUpdateGuildPoap(guildPoap)
+    useUpdateGuildPoap(guildPoap, { onSuccess })
 
   const [success, setSuccess] = useState(false)
 
@@ -77,6 +77,7 @@ const Distribution = ({ guildPoap, poap, onSuccess }: Props): JSX.Element => {
                 onClick={() =>
                   onActivateSubmit({ id: guildPoap.id, activate: true })
                 }
+                isLoading={isActivateLoading}
                 colorScheme="green"
                 loadingText="Activating"
               >
