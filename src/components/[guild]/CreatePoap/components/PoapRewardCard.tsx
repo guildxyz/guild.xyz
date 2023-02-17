@@ -14,6 +14,7 @@ import { PropsWithChildren } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { GuildPoap, Rest } from "types"
 import usePoapLinks from "../hooks/usePoapLinks"
+import Distribution from "./Distribution"
 import UploadMintLinks from "./UploadMintLinks"
 
 type Props = {
@@ -31,9 +32,18 @@ const PoapRewardCard = ({
 }: PropsWithChildren<Props>) => {
   const { poap } = usePoap(guildPoap?.fancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
-  const { image_url: image, name } = poap
+  const { image_url: image, name } = poap ?? {}
   const colorScheme = guildPoap.activated ? `purple` : `gray`
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: isLinkModalOpen,
+    onOpen: onLinkModalOpen,
+    onClose: onLinkModalClose,
+  } = useDisclosure()
+  const {
+    isOpen: isActivateModalOpen,
+    onOpen: onActivateModalOpen,
+    onClose: onActivateModalClose,
+  } = useDisclosure()
 
   return (
     <>
@@ -47,20 +57,34 @@ const PoapRewardCard = ({
         {...rest}
       >
         {!poapLinks?.total ? (
-          <Button onClick={onOpen}>Upload minting links</Button>
+          <Button onClick={onLinkModalOpen}>Upload minting links</Button>
         ) : !guildPoap.activated ? (
-          <Button>Activate</Button>
+          <Button onClick={onActivateModalOpen}>Activate</Button>
         ) : (
           <Button colorScheme={colorScheme}>Mint POAP</Button>
         )}
       </RewardCard>
-      <Modal {...{ isOpen, onClose }}>
+      <Modal isOpen={isLinkModalOpen} onClose={onLinkModalClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
           <ModalHeader>Upload POAP minting links</ModalHeader>
           <ModalBody>
-            <UploadMintLinks poapId={poap.id} onSuccess={onClose} />
+            <UploadMintLinks poapId={poap?.id} onSuccess={onLinkModalClose} />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isActivateModalOpen} onClose={onActivateModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalHeader>Activate POAP</ModalHeader>
+          <ModalBody>
+            <Distribution
+              guildPoap={guildPoap}
+              poap={poap}
+              onSuccess={onActivateModalClose}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -21,6 +21,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -28,10 +29,9 @@ import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useSendJoin from "components/[guild]/Onboarding/components/SummonMembers/hooks/useSendJoin"
 import useServerData from "hooks/useServerData"
-import { ArrowRight, DiscordLogo } from "phosphor-react"
-import { useEffect } from "react"
+import { DiscordLogo } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
-import { useCreatePoapContext } from "../../../CreatePoapContext"
+import { PlatformType, Poap } from "types"
 import usePoapEventDetails from "../../../Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import EmbedButton from "./components/EmbedButton"
 import EmbedDescription from "./components/EmbedDescription"
@@ -47,23 +47,40 @@ type PoapDiscordEmbedForm = {
 }
 
 type Props = {
+  poap: Poap
   onSuccess: () => void
 }
 
 const EMBED_IMAGE_SIZE = "70px"
 
-// todo
-const discordServerId = ""
-
-const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
-  const { poapData } = useCreatePoapContext()
+const SendDiscordEmbed = ({ poap, onSuccess }: Props): JSX.Element => {
   const { poapEventDetails } = usePoapEventDetails()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
-  const { name, imageUrl, mutateGuild } = useGuild()
+  const { name, imageUrl, guildPlatforms, mutateGuild } = useGuild()
+  const discordGuildPlatforms = guildPlatforms
+    ?.filter((platform) => platform.platformId === PlatformType.DISCORD)
+    ?.map(({ platformGuildId, platformGuildName }) => ({
+      value: platformGuildId,
+      label: platformGuildName,
+    }))
+
+  const shouldShowGuildImage = imageUrl.includes("http")
+
+  const methods = useForm<PoapDiscordEmbedForm>({
+    mode: "onSubmit",
+    defaultValues: {
+      poapId: poap?.id,
+      title: poap?.name,
+      description: "Mint this magnificent POAP to your collection!",
+      button: "Mint POAP",
+      serverId: discordGuildPlatforms[0]?.value,
+    },
+  })
+  const discordServerId = methods.watch("serverId")
 
   const {
     data: { categories },
@@ -72,31 +89,14 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
   const mappedChannels =
     categories?.map((category) => category.channels)?.flat() ?? []
 
-  const shouldShowGuildImage = imageUrl.includes("http")
-
-  const methods = useForm<PoapDiscordEmbedForm>({
-    mode: "onSubmit",
-    defaultValues: {
-      poapId: poapData?.id,
-      title: poapData?.name,
-      description: "Mint this magnificent POAP to your collection!",
-      button: "Mint POAP",
-      serverId: discordServerId,
-    },
-  })
-
-  useEffect(() => {
-    if (!methods.register) return
-    methods.register("channelId", { required: "This field is required " })
-  }, [])
-
   const triggerConfetti = useJsConfetti()
 
   const { isLoading, isSigning, onSubmit, response, signLoadingText } = useSendJoin(
     "POAP",
     () => {
-      onSuccess()
       triggerConfetti()
+      onClose()
+      onSuccess()
       // Mutating the guild data, so we get back the correct "activated" status for the POAPs
       mutateGuild()
     }
@@ -111,7 +111,7 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
         leftIcon={<Icon as={DiscordLogo} />}
         onClick={onOpen}
       >
-        Send mint embed
+        Activate with claim embed
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -121,51 +121,59 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
           <ModalCloseButton />
           <ModalBody>
             <FormProvider {...methods}>
-              <VStack spacing={8} alignItems={"start"}>
+              <VStack spacing={6} alignItems={"start"}>
                 <Text>
                   The bot will send an embed to your Discord server members can mint
                   the POAP from - feel free to customize it below!
                 </Text>
 
-                <Box mx="auto" w="full" maxW="md">
-                  <FormControl
-                    isRequired
-                    isInvalid={!!methods.formState.errors?.channelId}
-                  >
-                    <FormLabel>Channel to send to</FormLabel>
+                {discordGuildPlatforms.length > 1 && (
+                  <FormControl isRequired>
+                    <FormLabel>Server</FormLabel>
 
-                    {mappedChannels?.length <= 0 ? (
-                      <Button
-                        isDisabled
-                        isLoading
-                        loadingText="Loading channels"
-                        w="full"
-                      />
-                    ) : (
-                      <Select
-                        {...methods.register("channelId", {
-                          required: "This field is required ",
-                        })}
-                        maxW="sm"
-                      >
-                        {mappedChannels.map((channel, index) => (
-                          <option
-                            key={channel.id}
-                            value={channel.id}
-                            defaultChecked={index === 0}
-                          >
-                            {channel.name}
-                          </option>
-                        ))}
-                      </Select>
-                    )}
-
-                    <FormErrorMessage>
-                      {methods.formState.errors?.channelId?.message}
-                    </FormErrorMessage>
+                    <ControlledSelect
+                      name={`serverId`}
+                      isClearable
+                      options={discordGuildPlatforms}
+                    />
                   </FormControl>
-                </Box>
+                )}
 
+                <FormControl
+                  isRequired
+                  isInvalid={!!methods.formState.errors?.channelId}
+                >
+                  <FormLabel>Channel to send to</FormLabel>
+
+                  {mappedChannels?.length <= 0 ? (
+                    <Button
+                      isDisabled
+                      isLoading
+                      loadingText="Loading channels"
+                      w="full"
+                    />
+                  ) : (
+                    <Select
+                      {...methods.register("channelId", {
+                        required: "This field is required ",
+                      })}
+                    >
+                      {mappedChannels.map((channel, index) => (
+                        <option
+                          key={channel.id}
+                          value={channel.id}
+                          defaultChecked={index === 0}
+                        >
+                          {channel.name}
+                        </option>
+                      ))}
+                    </Select>
+                  )}
+
+                  <FormErrorMessage>
+                    {methods.formState.errors?.channelId?.message}
+                  </FormErrorMessage>
+                </FormControl>
                 <FormControl
                   maxW="md"
                   mb={12}
@@ -240,8 +248,7 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
               shouldWrapChildren
             >
               <Button
-                colorScheme="indigo"
-                rightIcon={<Icon as={ArrowRight} />}
+                colorScheme="green"
                 onClick={methods.handleSubmit(onSubmit)}
                 isLoading={isLoading || isSigning}
                 loadingText={loadingText}
@@ -253,7 +260,7 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
                     !poapEventDetails?.voiceEventEndedAt)
                 }
               >
-                Send embed
+                Activate & send embed
               </Button>
             </Tooltip>
           </ModalFooter>

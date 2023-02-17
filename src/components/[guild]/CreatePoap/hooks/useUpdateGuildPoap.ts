@@ -5,7 +5,6 @@ import useToast from "hooks/useToast"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { GuildPoap } from "types"
 import fetcher from "utils/fetcher"
-import { useCreatePoapContext } from "../components/CreatePoapContext"
 import usePoapEventDetails from "../components/Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 
 type UpdatePoapData = { id: number; expiryDate?: number; activate?: boolean }
@@ -16,14 +15,13 @@ const updateGuildPoap = async (signedValidation: SignedValdation) =>
     ...signedValidation,
   })
 
-const useUpdateGuildPoap = (type: "UPDATE" | "ACTIVATE" = "UPDATE") => {
+const useUpdateGuildPoap = (guildPoap) => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { poaps, mutateGuild } = useGuild()
-  const { poapData, setPoapData } = useCreatePoapContext()
-  const { poap, mutatePoap } = usePoap(poapData?.fancy_id)
-  const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
+  const { mutateGuild } = useGuild()
+
+  const { mutatePoap } = usePoap(guildPoap?.fancy_id)
   const { mutatePoapEventDetails } = usePoapEventDetails()
 
   return useSubmitWithSign<GuildPoap>(updateGuildPoap, {
@@ -39,13 +37,9 @@ const useUpdateGuildPoap = (type: "UPDATE" | "ACTIVATE" = "UPDATE") => {
         mutatePoap,
         mutatePoapEventDetailsWithResponse,
       ])
-      setPoapData(poap)
       toast({
         status: "success",
-        title:
-          type === "ACTIVATE"
-            ? "Successfully activated POAP"
-            : "Successfully updated POAP",
+        title: "Successfully updated POAP",
       })
     },
   })
