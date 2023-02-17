@@ -6,6 +6,7 @@ import IntercomProvider from "components/_app/IntercomProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
 import type { AppProps } from "next/app"
+import Head from "next/head"
 import { useRouter } from "next/router"
 import Script from "next/script"
 import { IconContext } from "phosphor-react"
@@ -24,6 +25,9 @@ const App = ({
 
   return (
     <>
+      <Head>
+        <meta name="theme-color" content="#4285f4" />
+      </Head>
       <Script src="/intercom.js" />
       <Chakra cookies={pageProps.cookies}>
         <IconContext.Provider
