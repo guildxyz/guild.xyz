@@ -136,7 +136,7 @@ const GuildPage = (): JSX.Element => {
 
   const hexToRGB = (hex: string) => {
     //where to move this?
-    hex = hex?.startsWith("#") ? hex.slice(1) : hex
+    hex = hex.startsWith("#") ? hex.slice(1) : hex
     if (hex.length === 3) {
       hex = Array.from(hex).reduce((str, x) => str + x + x, "")
     }
@@ -152,7 +152,7 @@ const GuildPage = (): JSX.Element => {
       <Head>
         <meta
           name="theme-color"
-          content={`rgba(${hexToRGB(localThemeColor)}, 0.5)`}
+          content={localThemeColor ?? `rgba(${hexToRGB(localThemeColor)}, 0.5)`}
         />
       </Head>
       <Layout
