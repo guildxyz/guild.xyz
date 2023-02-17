@@ -163,20 +163,26 @@ const GuildPage = (): JSX.Element => {
             {description && parseDescription(description)}
             {Object.keys(socialLinks ?? {}).length > 0 && (
               <Wrap w="full" spacing={3} mt="3">
-                {Object.entries(socialLinks).map(([type, link]) => (
-                  <HStack key={type} spacing={1.5}>
-                    <SocialIcon type={type as SocialLinkKey} size="sm" />
-                    <Link
-                      href={link?.startsWith("http") ? link : `https://${link}`}
-                      isExternal
-                      fontSize="sm"
-                      fontWeight="semibold"
-                      color={textColor}
-                    >
-                      {link.replace(/(http(s)?:\/\/)*(www\.)*/i, "")}
-                    </Link>
-                  </HStack>
-                ))}
+                {Object.entries(socialLinks).map(([type, link]) => {
+                  const prettyLink = link
+                    .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
+                    .replace(/\/+$/, "")
+
+                  return (
+                    <HStack key={type} spacing={1.5}>
+                      <SocialIcon type={type as SocialLinkKey} size="sm" />
+                      <Link
+                        href={link?.startsWith("http") ? link : `https://${link}`}
+                        isExternal
+                        fontSize="sm"
+                        fontWeight="semibold"
+                        color={textColor}
+                      >
+                        {prettyLink}
+                      </Link>
+                    </HStack>
+                  )
+                })}
               </Wrap>
             )}
           </>

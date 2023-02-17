@@ -33,6 +33,7 @@ import { useEffect, useRef, useState } from "react"
 import useSWR, { mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User, WalletError } from "types"
+import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
 import processConnectionError from "./utils/processConnectionError"
@@ -123,6 +124,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     fetchShouldLinkToUser
   )
 
+  const { isDelegateConnection, setIsDelegateConnection } =
+    useWeb3ConnectionManager()
+
   const isConnected = account && isActive && ready
 
   return (
@@ -137,7 +141,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         <ModalContent>
           <ModalHeader display={"flex"}>
             <Box
-              {...(isConnected && !keyPair
+              {...((isConnected && !keyPair) || isDelegateConnection
                 ? {
                     w: "10",
                     opacity: 1,
@@ -157,13 +161,23 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 icon={<ArrowLeft size={20} />}
                 variant="ghost"
                 onClick={() => {
+                  if (isDelegateConnection && !(isConnected && !keyPair)) {
+                    setIsDelegateConnection(false)
+                    return
+                  }
                   set.reset()
                   connector.resetState()
                   connector.deactivate?.()
                 }}
               />
             </Box>
-            <Text>{shouldLinkToUser ? "Link address" : "Connect wallet"}</Text>
+            <Text>
+              {shouldLinkToUser
+                ? "Link address"
+                : isDelegateConnection
+                ? "Connect hot wallet"
+                : "Connect wallet"}
+            </Text>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -188,9 +202,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   </CardMotionWrapper>
                 )
               })}
-              <CardMotionWrapper>
-                <DelegateCashButton />
-              </CardMotionWrapper>
+              {!isDelegateConnection && (
+                <CardMotionWrapper>
+                  <DelegateCashButton />
+                </CardMotionWrapper>
+              )}
             </Stack>
             {isConnected && !keyPair && (
               <Box animation={"fadeIn .3s .1s both"}>

@@ -1,7 +1,6 @@
 import {
   Box,
   Circle,
-  HStack,
   Img,
   SimpleGrid,
   Skeleton,
@@ -86,7 +85,7 @@ const Requirement = ({
           {children}
         </Text>
 
-        <HStack spacing={4}>{footer}</HStack>
+        {footer}
       </VStack>
       {rightElement}
     </SimpleGrid>

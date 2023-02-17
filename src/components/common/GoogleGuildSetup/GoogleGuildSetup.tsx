@@ -93,7 +93,7 @@ const GoogleGuildSetup = ({
         spacing={{ base: 4, md: 6 }}
         alignItems="stretch"
       >
-        {[...Array(5)].map((i) => (
+        {[...Array(5)].map((_, i) => (
           <GridItem key={i}>
             <GoogleSkeletonCard />
           </GridItem>
@@ -109,7 +109,7 @@ const GoogleGuildSetup = ({
         alignItems="stretch"
       >
         <AnimatePresence>
-          {(selectedFile ? [selectedFile] : googleGateables).map((file) => (
+          {(selectedFile ? [selectedFile] : googleGateables)?.map((file) => (
             <CardMotionWrapper key={file.platformGuildId}>
               <GridItem>
                 <GoogleDocCard

@@ -34,6 +34,8 @@ const Web3Connection = createContext({
     callback?: () => void,
     errorHandler?: (err) => void
   ) => {},
+  isDelegateConnection: false,
+  setIsDelegateConnection: (_: boolean) => {},
   isNetworkChangeInProgress: false,
 })
 
@@ -58,6 +60,8 @@ const Web3ConnectionManager = ({
     onOpen: openAccountModal,
     onClose: closeAccountModal,
   } = useDisclosure()
+
+  const [isDelegateConnection, setIsDelegateConnection] = useState<boolean>(false)
 
   // try to eagerly connect to an injected provider, if it exists and has granted access already
   const triedEager = useEagerConnect()
@@ -107,6 +111,8 @@ const Web3ConnectionManager = ({
         openAccountModal,
         closeAccountModal,
         requestNetworkChange,
+        isDelegateConnection,
+        setIsDelegateConnection,
         isNetworkChangeInProgress,
       }}
     >
