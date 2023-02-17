@@ -3,6 +3,7 @@ import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import useUser from "components/[guild]/hooks/useUser"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { Poap } from "types"
 import fetcher from "utils/fetcher"
 
@@ -16,7 +17,7 @@ const fetchClaim = async (body: ClaimPoapBody) =>
     body,
   })
 
-const useClaimPoap = (poap: Poap) => {
+const useClaimPoap = (poap: Poap, { onSuccess }: UseSubmitOptions = {}) => {
   const { id } = useUser()
   const showErrorToast = useShowErrorToast()
 
@@ -28,8 +29,9 @@ const useClaimPoap = (poap: Poap) => {
     {
       onError: (error) => showErrorToast(error),
       onSuccess: () => {
-        mutatePoapLinks()
         triggerConfetti()
+        mutatePoapLinks()
+        onSuccess?.()
       },
     }
   )
