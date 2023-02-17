@@ -133,11 +133,25 @@ const GuildPage = (): JSX.Element => {
 
   const showOnboarding = isAdmin && !onboardingComplete
   const showAccessHub = (isMember || isAdmin) && !showOnboarding
+  const hexToRGB = (hex: string) => {
+    hex = hex.startsWith("#") ? hex.slice(1) : hex
+    if (hex.length === 3) {
+      hex = Array.from(hex).reduce((str, x) => str + x + x, "") // 123 -> 112233
+    }
+    const values = hex
+      .split(/([a-z0-9]{2,2})/)
+      .filter(Boolean)
+      .map((x) => parseInt(x, 16))
+    return `${values.length == 4 ? "a" : ""}${values.join(", ")}`
+  }
 
   return (
     <DynamicOnboardingProvider>
       <Head>
-        <meta name="theme-color" content={localThemeColor} />
+        <meta
+          name="theme-color"
+          content={`rgba(${hexToRGB(localThemeColor)}, 0.5)`}
+        />
       </Head>
       <Layout
         title={name}
