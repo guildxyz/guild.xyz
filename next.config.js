@@ -32,7 +32,6 @@ module.exports = {
         "@ethersproject/keccak256": false,
         "chakra-react-select": false,
         "chakra-ui-steps": false,
-        // "lodash.mergewith": false,
       }
     }
 
