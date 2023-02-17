@@ -38,7 +38,7 @@ const platformsData: Record<
 }
 
 const PlatformsGrid = ({ onSelection, columns = { base: 1, md: 2 } }: Props) => (
-  <SimpleGrid columns={columns} gap={{ base: 4, md: 6 }}>
+  <SimpleGrid data-test="platforms-grid" columns={columns} gap={{ base: 4, md: 6 }}>
     {Object.entries(platformsData).map(([platformName, { description, Btn }]) => (
       <OptionCard
         key={platformName}

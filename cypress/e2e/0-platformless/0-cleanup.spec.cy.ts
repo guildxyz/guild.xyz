@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 before(() => {
   cy.disconnectMetamaskWalletFromAllDapps()
 })
@@ -19,22 +17,24 @@ describe("pre-test cleanup", () => {
           ) {
             cy.connectWallet()
 
-            cy.get(".chakra-button[aria-label='Edit & customize guild']").click()
+            cy.get(".chakra-button[aria-label='Edit Guild']").click()
             cy.get(".chakra-slide h2").should("contain.text", "Edit guild")
 
-            cy.get(".chakra-slide .chakra-button").first().click()
+            cy.get(".chakra-button[aria-label='Delete guild']").click()
             cy.findByText("Delete").click()
             cy.wait(2000)
             cy.confirmMetamaskSignatureRequest()
           } else {
-            cy.visit("/")
+            cy.visit("/explorer")
           }
         })
       } else {
-        cy.visit("/")
+        cy.visit("/explorer")
       }
     })
 
-    cy.get("h1").should("contain.text", "Guild")
+    cy.get("h1").should("contain.text", "Guildhall")
   })
 })
+
+export {}
