@@ -135,14 +135,13 @@ const GuildPage = (): JSX.Element => {
   const showOnboarding = isAdmin && !onboardingComplete
   const showAccessHub = (isMember || isAdmin) && !showOnboarding
   const { colorMode } = useColorMode()
-
+  console.log(colorMode)
   return (
     <DynamicOnboardingProvider>
       <Head>
         <meta
           name="theme-color"
           content={colorMode === "light" ? "#FFFFFF" : "#272729"}
-          media="(prefers-color-scheme: light)"
         />
       </Head>
       <Layout
