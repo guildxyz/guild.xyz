@@ -11,8 +11,6 @@ export default defineConfig({
   fixturesFolder: "./cypress/fixtures",
   screenshotsFolder: "./cypress/screenshots",
   videosFolder: "./cypress/videos",
-  // supportFile: "./cypress/support",
-  // pluginsFile: "./cypress/plugins",
   chromeWebSecurity: true,
   viewportWidth: 1920,
   viewportHeight: 1080,
@@ -24,12 +22,13 @@ export default defineConfig({
     guildName: "Cypress Gang",
     guildUrlName: "cypress-gang",
     dcInvite: "https://discord.gg/P46EfccWcP",
+    dcClientId: "868172385000509460",
     tgId: "-1001653099938",
   },
   e2e: {
     baseUrl: "http://localhost:3000",
     setupNodeEvents,
     supportFile: "./cypress/support/e2e.ts",
-    specPattern: "./cypress/e2e/**/*.cy.ts",
+    specPattern: "./cypress/e2e/**/*.spec.ts",
   },
 })

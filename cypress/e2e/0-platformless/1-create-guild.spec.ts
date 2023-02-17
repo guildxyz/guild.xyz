@@ -2,18 +2,16 @@ before(() => {
   cy.disconnectMetamaskWalletFromAllDapps()
 })
 
-beforeEach(() => {
-  cy.visit("/create-guild")
-})
-
 describe("without wallet", () => {
+  before(() => {
+    cy.visit("/create-guild")
+  })
+
   it("shows connect wallet buttons", () => {
-    cy.getByDataTest("platforms-grid").then(($grid) => {
-      cy.wrap($grid)
-        .get("button")
-        .each(($btn) => {
-          cy.wrap($btn).should("contain.text", "Connect Wallet")
-        })
+    cy.getByDataTest("platforms-grid").within(() => {
+      cy.get("button").each(($btn) => {
+        cy.wrap($btn).should("contain.text", "Connect Wallet")
+      })
     })
   })
 
@@ -22,6 +20,7 @@ describe("without wallet", () => {
 
 describe("with wallet", () => {
   before(() => {
+    cy.visit("/create-guild")
     cy.connectWallet()
   })
 
@@ -30,7 +29,6 @@ describe("with wallet", () => {
     cy.get("div[aria-current='step']").should("contain.text", "2")
 
     cy.findByText("Start from scratch").click({ force: true })
-    cy.wait(1000)
     cy.get("div[aria-current='step']").last().should("contain.text", "Basic")
     cy.findByText("Growth").click({ force: true })
     cy.get("div[aria-current='step']").last().should("contain.text", "Growth")
@@ -67,7 +65,6 @@ describe("with wallet", () => {
   })
 
   it(`/${Cypress.env("guildUrlName")} exists`, () => {
-    cy.wait(10_000)
     cy.visit(`/${Cypress.env("guildUrlName")}`)
     cy.get("h1").should("contain.text", Cypress.env("guildName"))
   })
