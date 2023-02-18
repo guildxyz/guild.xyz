@@ -85,6 +85,7 @@ const RoleCard = memo(({ role }: Props) => {
           <Box mt="auto">
             {role.rolePlatforms?.map((platform) => (
               <Reward
+                withLink
                 key={platform.guildPlatformId}
                 platform={platform}
                 role={role}

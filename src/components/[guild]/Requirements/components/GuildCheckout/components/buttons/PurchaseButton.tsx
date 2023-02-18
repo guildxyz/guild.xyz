@@ -20,7 +20,7 @@ const PurchaseButton = (): JSX.Element => {
   } = usePrice()
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
-    TOKEN_BUYER_CONTRACT[chainId]
+    TOKEN_BUYER_CONTRACT[Chains[chainId]]
   )
 
   const { onSubmit, isLoading, estimateGasError } = usePurchaseAsset()

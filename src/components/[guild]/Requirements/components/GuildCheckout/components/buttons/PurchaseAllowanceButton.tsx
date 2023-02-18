@@ -10,7 +10,7 @@ import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
 import usePrice from "../../hooks/usePrice"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
-const AllowanceButton = (): JSX.Element => {
+const PurchaseAllowanceButton = (): JSX.Element => {
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
   const requirementChainId = Chains[requirement.chain]
 
@@ -29,6 +29,7 @@ const AllowanceButton = (): JSX.Element => {
     data: { priceInWei },
     isValidating: isPriceLoading,
   } = usePrice()
+
   const {
     allowance,
     isAllowanceLoading,
@@ -36,10 +37,11 @@ const AllowanceButton = (): JSX.Element => {
     allowanceError,
     onSubmit,
     isLoading,
-  } = useAllowance(pickedCurrency, TOKEN_BUYER_CONTRACT[chainId])
+  } = useAllowance(pickedCurrency, TOKEN_BUYER_CONTRACT[Chains[chainId]])
 
   const isEnoughAllowance =
     priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
+
   return (
     <Collapse
       in={
@@ -79,7 +81,7 @@ const AllowanceButton = (): JSX.Element => {
             </Tooltip>
           )
         }
-        data-dd-action-name="AllowanceButton (GuildCheckout)"
+        data-dd-action-name="PurchaseAllowanceButton (GuildCheckout)"
       >
         {allowanceError
           ? "Couldn't fetch allowance"
@@ -89,4 +91,4 @@ const AllowanceButton = (): JSX.Element => {
   )
 }
 
-export default AllowanceButton
+export default PurchaseAllowanceButton
