@@ -32,8 +32,8 @@ import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import { useRef } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"
+import TokenPicker from "requirements/common/TokenPicker"
 import { MonetizePoapForm } from "types"
-import TokenPicker from "./components/TokenPicker"
 import useFeeInUSD from "./hooks/useFeeInUSD"
 import useIsGnosisSafe from "./hooks/useIsGnosisSafe"
 import useMonetizePoap from "./hooks/useMonetizePoap"
@@ -142,7 +142,7 @@ const PoapPaymentForm = ({ onClose }): JSX.Element => {
           supportedChains={poapDropSupportedChains}
           onChange={() => setValue("token", null)}
         />
-        <TokenPicker />
+        <TokenPicker fieldName="token" chain={Chains[chainId] as Chain} />
         <FormControl isRequired isInvalid={!!errors?.fee}>
           <FormLabel>Price</FormLabel>
           <Controller

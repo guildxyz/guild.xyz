@@ -18,6 +18,7 @@ import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import { useEffect } from "react"
 import { SUPPORTED_CURRENCIES } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
+import usePrice from "../../hooks/usePrice"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 import CurrencyListItem from "./components/CurrencyListItem"
 import TokenInfo from "./components/TokenInfo"
@@ -41,6 +42,12 @@ const PaymentCurrencyPicker = (): JSX.Element => {
   )
 
   useEffect(() => setPickedCurrency(currencyOptions[0].address), [])
+
+  const {
+    data: { priceInSellToken },
+    isValidating,
+    error,
+  } = usePrice(pickedCurrency)
 
   return (
     <Stack spacing={3}>
@@ -71,6 +78,9 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                   <TokenInfo
                     chainId={Chains[requirement.chain]}
                     address={pickedCurrency}
+                    requiredAmount={priceInSellToken}
+                    isLoading={isValidating}
+                    error={error}
                   />
                 ) : (
                   <HStack spacing={4}>

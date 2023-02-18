@@ -1,9 +1,10 @@
-import { Center, Flex, Icon, Link, ModalBody, Text } from "@chakra-ui/react"
+import { Center, Flex, Icon, ModalBody } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { XCircle } from "phosphor-react"
+import { PropsWithChildren } from "react"
 import InfoModalFooter from "./InfoModalFooter"
 
-const TxError = (): JSX.Element => (
+const TxError = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
   <CardMotionWrapper>
     <ModalBody pb={0}>
       <Flex direction="column">
@@ -21,16 +22,7 @@ const TxError = (): JSX.Element => (
         </Center>
       </Flex>
 
-      <Text mb={4}>
-        {"Couldn't purchase the assets. Learn about possible reasons here: "}
-        <Link
-          href="https://support.opensea.io/hc/en-us/articles/7597082600211"
-          colorScheme="blue"
-          isExternal
-        >
-          https://support.opensea.io/hc/en-us/articles/7597082600211
-        </Link>{" "}
-      </Text>
+      {children}
     </ModalBody>
 
     <InfoModalFooter />

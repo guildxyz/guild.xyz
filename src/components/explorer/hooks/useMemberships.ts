@@ -4,6 +4,7 @@ import useSWRImmutable from "swr/immutable"
 export type Memberships = Array<{
   guildId: number
   roleIds: number[]
+  isAdmin: boolean
 }>
 
 const useMemberships = () => {

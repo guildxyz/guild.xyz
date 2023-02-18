@@ -69,7 +69,7 @@ const usePayFee = (vaultId: number, chainId: number) => {
 
     if (shouldApprove && !approved)
       return Promise.reject(
-        "You must approve spending tokens with the Guild.xyz FeeCollector contract."
+        "You must approve spending tokens with Guild's Payment contract."
       )
 
     // Calling payFee statically first & handling custom Solidity errors
