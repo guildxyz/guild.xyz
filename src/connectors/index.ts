@@ -361,7 +361,7 @@ const RPC = {
     rpcUrls: [
       process.env.GOERLI_ALCHEMY_KEY
         ? `https://eth-goerli.g.alchemy.com/v2/${process.env.GOERLI_ALCHEMY_KEY}`
-        : "https://goerli.infura.io/v3/ef1eab2208174fe79af8c956f5c34443",
+        : "",
       "https://ethereum-goerli-rpc.allthatnode.com/",
     ].filter((url) => !!url),
     blockExplorerUrls: ["https://goerli.etherscan.io"],
