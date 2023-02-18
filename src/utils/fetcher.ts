@@ -74,7 +74,7 @@ const fetcher = async (
             }
           )
 
-          const correlationId = response.headers.get("custom-correlation")
+          const correlationId = response.headers.get("X-Correlation-ID")
           if (correlationId) pushToIntercomSetting("correlationId", correlationId)
 
           return Promise.reject(errorMsg)
