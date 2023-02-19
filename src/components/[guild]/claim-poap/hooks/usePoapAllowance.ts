@@ -9,7 +9,7 @@ import ERC20_ABI from "static/abis/erc20Abi.json"
 
 const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
-const useAllowance = (tokenAddress: string, chainId: number): BigNumber => {
+const usePoapAllowance = (tokenAddress: string, chainId: number): BigNumber => {
   const { account } = useWeb3React()
 
   const [allowance, setAllowance] = useState<BigNumber>()
@@ -32,4 +32,4 @@ const useAllowance = (tokenAddress: string, chainId: number): BigNumber => {
   return allowance
 }
 
-export default useAllowance
+export default usePoapAllowance

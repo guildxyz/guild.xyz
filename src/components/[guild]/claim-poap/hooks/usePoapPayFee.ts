@@ -10,23 +10,27 @@ import useFeeCollectorContract, {
 } from "hooks/useFeeCollectorContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
-import { useRouter } from "next/router"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import fetcher from "utils/fetcher"
 import processWalletError from "utils/processWalletError"
 import useUserPoapEligibility from "./useUserPoapEligibility"
 
-const usePayFee = (vaultId: number, chainId: number) => {
+const usePoapPayFee = (
+  vaultId: number,
+  chainId: number,
+  fancyId: string,
+  { onSuccess }: UseSubmitOptions = {}
+) => {
   const { account } = useWeb3React()
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const router = useRouter()
-  const { poap } = usePoap(router.query.fancyId?.toString())
+  const { poap } = usePoap(fancyId)
 
   const { vaultData } = usePoapVault(vaultId, chainId)
 
@@ -121,6 +125,7 @@ const usePayFee = (vaultId: number, chainId: number) => {
         description: "You can mint your POAP now",
         status: "success",
       })
+      onSuccess()
       mutateUserPoapEligibility({ ...userPoapEligibilityData, hasPaid: true })
     },
   })
@@ -141,4 +146,4 @@ const usePayFee = (vaultId: number, chainId: number) => {
   }
 }
 
-export default usePayFee
+export default usePoapPayFee

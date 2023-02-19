@@ -51,9 +51,9 @@ import {
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPoap, Poap } from "types"
-import useAllowance from "../../hooks/useAllowance"
 import useClaimPoap from "../../hooks/useClaimPoap"
-import usePayFee from "../../hooks/usePayFee"
+import usePoapAllowance from "../../hooks/usePoapAllowance"
+import usePoapPayFee from "../../hooks/usePoapPayFee"
 import useUserPoapEligibility from "../../hooks/useUserPoapEligibility"
 import PayFeeMenuItem from "./components/PayFeeMenuItem"
 
@@ -122,9 +122,10 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     signLoadingText,
   } = useJoin(onClaimPoapSubmit)
 
-  const { onSubmit: onPayFeeSubmit, loadingText: payFeeLoadingText } = usePayFee(
+  const { onSubmit: onPayFeeSubmit, loadingText: payFeeLoadingText } = usePoapPayFee(
     vaultId,
-    vaultChainId
+    vaultChainId,
+    poap.fancy_id
   )
   const [childLoadingText, setChildLoadingText] = useState<string>(null)
   const loadingText = payFeeLoadingText || childLoadingText
@@ -156,7 +157,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     vaultData?.token === NULL_ADDRESS ? coinBalance : tokenBalance
   )?.gte(vaultData?.fee ?? BigNumber.from(0))
 
-  const allowance = useAllowance(vaultData?.token, vaultChainId)
+  const allowance = usePoapAllowance(vaultData?.token, vaultChainId)
 
   const formattedPrice = formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
 
@@ -277,6 +278,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                                     key={poapContract.id}
                                     poapContractData={poapContract}
                                     setLoadingText={setChildLoadingText}
+                                    fancy_id={poap.fancy_id}
                                   />
                                 ))}
                               </MenuList>
