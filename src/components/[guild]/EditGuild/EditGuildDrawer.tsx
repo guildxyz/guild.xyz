@@ -89,6 +89,7 @@ const EditGuildDrawer = ({
     contacts,
     socialLinks,
     guildPlatforms,
+    featureFlags,
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
@@ -97,11 +98,8 @@ const EditGuildDrawer = ({
 
   // We'll only receive this info on client-side, so we're setting the default value of this field in a useEffect
   useEffect(() => {
-    if (!isDetailed) return
-    if (!methods.formState.dirtyFields.contacts)
-      methods.setValue("contacts", contacts)
-    if (!methods.formState.dirtyFields.featureFlags)
-      methods.setValue("featureFlags", featureFlags)
+    if (!isDetailed || methods.formState.dirtyFields.contacts) return
+    methods.setValue("contacts", contacts)
   }, [isDetailed])
 
   const toast = useToast()
