@@ -145,7 +145,8 @@ const GuildPage = (): JSX.Element => {
   // TODO: separate these with one reduce
   const activePoaps = poaps?.filter((poap) => {
     const currentTime = Date.now() / 1000
-    return poap.expiryDate > currentTime
+    const isFuture = poap.expiryDate > currentTime
+    return isAdmin ? isFuture : isFuture && poap.activated
   })
   const expiredPoaps = poaps?.filter((poap) => {
     const currentTime = Date.now() / 1000
