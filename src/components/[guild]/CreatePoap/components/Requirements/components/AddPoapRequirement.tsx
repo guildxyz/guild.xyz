@@ -11,7 +11,12 @@ import {
 import AddCard from "components/common/AddCard"
 import { Modal } from "components/common/Modal"
 
-const AddPoapRequirement = ({ title, description, FormComponent }) => {
+const AddPoapRequirement = ({
+  title,
+  description,
+  isDisabled = false,
+  FormComponent,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
@@ -21,6 +26,7 @@ const AddPoapRequirement = ({ title, description, FormComponent }) => {
         py="5"
         mb="2 !important"
         onClick={onOpen}
+        isDisabled={isDisabled}
       />
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
         <ModalOverlay />

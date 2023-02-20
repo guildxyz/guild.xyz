@@ -1,4 +1,4 @@
-import { Box, HStack, Icon, Stack, Text, useColorMode } from "@chakra-ui/react"
+import { Box, HStack, Icon, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import { Plus } from "phosphor-react"
 import { FC, forwardRef } from "react"
@@ -10,11 +10,12 @@ type Props = {
   rightIcon?: FC
   link?: string
   onClick?: () => void
+  isDisabled?: boolean
 } & Rest
 
 const AddCard = forwardRef(
   (
-    { title, description, rightIcon, link, onClick, ...rest }: Props,
+    { title, description, rightIcon, link, onClick, isDisabled, ...rest }: Props,
     ref: any
   ): JSX.Element => {
     const { colorMode } = useColorMode()
@@ -41,6 +42,12 @@ const AddCard = forwardRef(
         cursor="pointer"
         onClick={onClick}
         data-dd-action-name={title}
+        {...(isDisabled && {
+          onClick: null,
+          opacity: 0.5,
+          _hover: null,
+          cursor: "not-allowed",
+        })}
         {...rest}
       >
         <HStack spacing={{ base: 5, sm: 7 }} alignItems="center" w="full">
@@ -58,6 +65,8 @@ const AddCard = forwardRef(
               textAlign="left"
             >
               {title}
+
+              {isDisabled && <Tag ml="2">Soon</Tag>}
             </Text>
             {description && (
               <Text

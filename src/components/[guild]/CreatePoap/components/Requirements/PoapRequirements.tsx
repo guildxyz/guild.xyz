@@ -9,7 +9,6 @@ import { AnimatePresence } from "framer-motion"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { RequirementType } from "requirements"
-import Role from "requirements/Guild/components/Role"
 import PoapPaymentForm from "requirements/PoapPayment"
 import PoapPaymentRequirementEditable from "requirements/PoapPayment/PoapPaymentRequirementEditable"
 import useUpdatePoapRequirements from "../../hooks/useUpdatePoapRequirements"
@@ -82,11 +81,12 @@ const PoapRequirements = ({ onSuccess }: UseSubmitOptions): JSX.Element => {
           ))}
         </AnimatePresence>
 
-        <AddPoapRequirement
+        {/* <AddPoapRequirement
           title="Original guild role"
+          isDisabled
           description="Same as if you’d add it to an existing role, but you can set other requirements too"
           FormComponent={Role}
-        />
+        /> */}
         {!guildPoap?.poapContracts?.length && (
           <AddPoapRequirement
             title="Payment"
@@ -97,6 +97,7 @@ const PoapRequirements = ({ onSuccess }: UseSubmitOptions): JSX.Element => {
         )}
         <AddPoapRequirement
           title="Voice participation"
+          isDisabled
           description="Users will have to be in a Discord voice channel at the time of the event"
           // rightIcon={SpeakerHigh}
           FormComponent={VoiceParticipation}
