@@ -21,7 +21,7 @@ const FeatureFlags = (): JSX.Element => {
   }))
 
   const {
-    field: { ref, name, onChange, onBlur },
+    field: { ref, name, value, onChange, onBlur },
   } = useController({ name: "featureFlags" })
 
   return (
@@ -29,6 +29,7 @@ const FeatureFlags = (): JSX.Element => {
       <StyledSelect
         ref={ref}
         name={name}
+        value={options.filter((option) => value?.includes(option.value))}
         isMulti
         options={options}
         onChange={(selectedOption: (SelectOption | string)[]) => {

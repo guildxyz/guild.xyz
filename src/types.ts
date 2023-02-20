@@ -261,7 +261,14 @@ type Guild = {
 type GuildFormType = Partial<
   Pick<
     Guild,
-    "id" | "urlName" | "name" | "imageUrl" | "description" | "theme" | "contacts"
+    | "id"
+    | "urlName"
+    | "name"
+    | "imageUrl"
+    | "description"
+    | "theme"
+    | "contacts"
+    | "featureFlags"
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]

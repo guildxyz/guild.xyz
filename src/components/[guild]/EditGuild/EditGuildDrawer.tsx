@@ -72,6 +72,7 @@ const EditGuildDrawer = ({
     socialLinks,
     contacts,
     isDetailed,
+    featureFlags,
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
@@ -96,8 +97,11 @@ const EditGuildDrawer = ({
 
   // We'll only receive this info on client-side, so we're setting the default value of this field in a useEffect
   useEffect(() => {
-    if (!isDetailed || methods.formState.dirtyFields.contacts) return
-    methods.setValue("contacts", contacts)
+    if (!isDetailed) return
+    if (!methods.formState.dirtyFields.contacts)
+      methods.setValue("contacts", contacts)
+    if (!methods.formState.dirtyFields.featureFlags)
+      methods.setValue("featureFlags", featureFlags)
   }, [isDetailed])
 
   const toast = useToast()
@@ -263,7 +267,7 @@ const EditGuildDrawer = ({
                   <ContactInfo />
                 </Section>
 
-                {isSuperAdmin && (
+                {(isSuperAdmin || true) && (
                   <>
                     <Divider />
 
