@@ -19,11 +19,15 @@ import { GuildPoap, PoapContract } from "types"
 import useDeleteMonetization from "./hooks/useDeleteMonetization"
 import PoapPaymentRequirement from "./PoapPaymentRequirement"
 
-type Props = { poap: GuildPoap; poapContract: PoapContract }
+type Props = { guildPoap: GuildPoap; poapContract: PoapContract }
 
-const PoapPaymentRequirementEditable = ({ poap, poapContract, ...props }: Props) => {
+const PoapPaymentRequirementEditable = ({
+  guildPoap,
+  poapContract,
+  ...props
+}: Props) => {
   const { id: poapContractId, vaultId, chainId } = poapContract
-  const deleteDisabled = poap?.activated
+  const deleteDisabled = guildPoap?.activated
 
   const { isVaultLoading, vaultData } = usePoapVault(vaultId, chainId)
 
@@ -46,7 +50,7 @@ const PoapPaymentRequirementEditable = ({ poap, poapContract, ...props }: Props)
 
   return (
     <Card px="6" py="4" pr="8" pos="relative">
-      <PoapPaymentRequirement {...{ poap, poapContract }} />
+      <PoapPaymentRequirement {...{ guildPoap, poapContract }} />
 
       <CloseButton
         position="absolute"

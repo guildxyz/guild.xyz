@@ -85,7 +85,7 @@ const AccessHub = (): JSX.Element => {
             )
           })}
           {activePoaps.map((poap) => (
-            <PoapRewardCard key={poap?.id} poap={poap} />
+            <PoapRewardCard key={poap?.id} guildPoap={poap} />
           ))}
         </>
       ) : (

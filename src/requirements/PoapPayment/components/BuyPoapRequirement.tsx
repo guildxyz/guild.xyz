@@ -41,7 +41,7 @@ type Props = { guildPoap: GuildPoap; poapContract: PoapContract }
 
 /**
  * This is copy-pasted from BuyPass and adjusted to work with legacy POAP logic. We
- * will switch to general payment requirement once POAP is a reward
+ * will switch to general payment requirement once POAP is a real reward
  */
 const BuyPoapRequirement = ({ guildPoap, poapContract }: Props) => {
   const { id, vaultId, chainId: vaultChainId, contract } = poapContract
@@ -74,7 +74,7 @@ const BuyPoapRequirement = ({ guildPoap, poapContract }: Props) => {
   const { onSubmit: onPayFeeSubmit, loadingText: payFeeLoadingText } = usePoapPayFee(
     vaultId,
     vaultChainId,
-    poap.fancy_id,
+    poap?.fancy_id,
     { onSuccess: onClose }
   )
 

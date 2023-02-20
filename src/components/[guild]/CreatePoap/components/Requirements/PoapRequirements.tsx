@@ -74,7 +74,7 @@ const PoapRequirements = ({ onSuccess }: UseSubmitOptions): JSX.Element => {
             <CardMotionWrapper key={poapContract.id}>
               <PoapPaymentRequirementEditable
                 poapContract={poapContract}
-                poap={guildPoap}
+                guildPoap={guildPoap}
               />
 
               <LogicDivider logic="AND" />

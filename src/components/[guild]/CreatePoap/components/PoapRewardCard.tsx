@@ -17,7 +17,9 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import RewardCard from "components/common/RewardCard"
 import useClaimPoap from "components/[guild]/claim-poap/hooks/useClaimPoap"
+import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
@@ -28,17 +30,18 @@ import UploadMintLinks from "./UploadMintLinks"
 type Props = {
   actionRow?: JSX.Element
   cornerButton?: JSX.Element
-  poap: GuildPoap
+  guildPoap: GuildPoap
 } & Rest
 
 const PoapRewardCard = ({
-  poap: guildPoap,
+  guildPoap,
   actionRow,
   cornerButton,
   children,
   ...rest
 }: PropsWithChildren<Props>) => {
   const { account } = useWeb3React()
+  const { isAdmin } = useGuildPermission()
   const { poap } = usePoap(guildPoap?.fancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
   const { image_url: image, name } = poap ?? {}
@@ -59,11 +62,15 @@ const PoapRewardCard = ({
     onClose: onMintModalClose,
   } = useDisclosure()
 
+  const { data } = useUserPoapEligibility(guildPoap?.poapIdentifier)
+
   const {
     onSubmit: onClaimPoapSubmit,
     isLoading: isClaimPoapLoading,
     response: claimPoapResponse,
   } = useClaimPoap(poap, { onSuccess: onMintModalOpen })
+
+  if (!data.access && !isAdmin) return null
 
   return (
     <>

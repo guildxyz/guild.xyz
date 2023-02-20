@@ -134,7 +134,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
 
   const {
     data: { hasPaid, voiceEligibility },
-    hasPaidLoading,
+    isLoading: hasPaidLoading,
   } = useUserPoapEligibility(poap?.id)
 
   const isMember = useIsMember()

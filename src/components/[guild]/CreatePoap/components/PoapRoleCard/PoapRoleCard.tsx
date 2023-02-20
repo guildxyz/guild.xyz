@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
+import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -26,6 +27,8 @@ import { ArrowSquareOut, PencilSimple } from "phosphor-react"
 import { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
+import PoapAccessIndicator from "requirements/PoapPayment/components/PoapAccessIndicator"
+import PoapRequiementAccessIndicator from "requirements/PoapPayment/components/PoapRequirementAccessIndicator"
 import PoapPaymentRequirement from "requirements/PoapPayment/PoapPaymentRequirement"
 import { GuildPoap } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
@@ -74,19 +77,23 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
 
   const { colorMode } = useColorMode()
 
+  const { data } = useUserPoapEligibility(poap?.id)
+  // console.log(poap?.name, data, poap?.id)
+
   const requirementComponents = guildPoap && [
     ...(guildPoap.poapContracts ?? []).map((poapContract) => (
       <PoapPaymentRequirement
         key={poapContract.id}
         poapContract={poapContract}
-        poap={guildPoap}
+        guildPoap={guildPoap}
+        rightElement={<PoapRequiementAccessIndicator poapIdentifier={poap?.id} />}
       />
     )),
-    ...(guildPoap.poapRequirements ?? []).map((requirement, i) => (
+    ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (
       <RequirementDisplayComponent
         key={requirement.id}
-        requirement={requirement}
-        rightElement={<></>}
+        requirement={{ ...requirement, id: requirement.requirementId }}
+        rightElement={<PoapRequiementAccessIndicator poapIdentifier={poap?.id} />}
       />
     )),
   ]
@@ -199,6 +206,7 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
               Requirements to qualify
             </Text>
             <Spacer />
+            <PoapAccessIndicator poapIdentifier={poap?.id} />
           </HStack>
 
           <Stack
