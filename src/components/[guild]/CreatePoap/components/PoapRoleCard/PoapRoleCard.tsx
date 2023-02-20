@@ -141,7 +141,7 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
                 </Heading>
                 <HStack spacing={0}>
                   <Tag colorScheme={status.color}>{status.label}</Tag>
-                  {isReady && (
+                  {isReady && !guildPoap.poapRequirements.length && (
                     <Text as="span" fontSize="xs" colorScheme="gray" pl="4">
                       <Link
                         href={`/${urlName}/claim-poap/${poapFancyId}`}

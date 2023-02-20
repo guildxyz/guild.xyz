@@ -125,7 +125,7 @@ const usePoapPayFee = (
         description: "You can mint your POAP now",
         status: "success",
       })
-      onSuccess()
+      onSuccess?.()
       mutateUserPoapEligibility({ ...userPoapEligibilityData, hasPaid: true })
     },
   })

@@ -125,7 +125,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
   const { onSubmit: onPayFeeSubmit, loadingText: payFeeLoadingText } = usePoapPayFee(
     vaultId,
     vaultChainId,
-    poap.fancy_id
+    poap?.fancy_id
   )
   const [childLoadingText, setChildLoadingText] = useState<string>(null)
   const loadingText = payFeeLoadingText || childLoadingText
