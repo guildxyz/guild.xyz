@@ -1,5 +1,6 @@
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { Chains } from "connectors"
 import useContract from "hooks/useContract"
@@ -8,6 +9,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { useMemo } from "react"
+import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
 import {
@@ -60,6 +62,7 @@ const usePurchaseAsset = () => {
 
   const { account, chainId } = useWeb3React()
 
+  const { id: guildId } = useGuild()
   const { requirement, pickedCurrency } = useGuildCheckoutContext()
   const {
     data: { symbol },
@@ -68,13 +71,16 @@ const usePurchaseAsset = () => {
 
   const tokenBuyerContract = useContract(
     TOKEN_BUYER_CONTRACT[Chains[chainId]],
-    TOKEN_BUYER_ABI,
+    ["ARBITRUM", "GOERLI"].includes(Chains[chainId])
+      ? OLD_TOKEN_BUYER_ABI
+      : TOKEN_BUYER_ABI,
     true
   )
 
   const generatedGetAssetsParams = useMemo(
-    () => generateGetAssetsParams(account, chainId, pickedCurrency, priceData),
-    [account, chainId, pickedCurrency, priceData]
+    () =>
+      generateGetAssetsParams(guildId, account, chainId, pickedCurrency, priceData),
+    [guildId, account, chainId, pickedCurrency, priceData]
   )
 
   const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =

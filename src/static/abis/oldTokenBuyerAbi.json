@@ -41,6 +41,94 @@
     "type": "error"
   },
   {
+    "inputs": [
+      { "internalType": "uint256", "name": "commandIndex", "type": "uint256" },
+      { "internalType": "bytes", "name": "message", "type": "bytes" }
+    ],
+    "name": "ExecutionFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InsufficientToken",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InsufficientETH",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidBips",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FromAddressIsNotOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidReserves",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidPath",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "V2TooLittleReceived",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "V2TooMuchRequested",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "V2InvalidPath",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SliceOutOfBounds",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "V3InvalidSwap",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "V3TooLittleReceived",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "V3TooMuchRequested",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "V3InvalidAmountOut",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "V3InvalidCaller",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotAllowedReenter",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -85,19 +173,7 @@
     "name": "FeePercentBpsChanged",
     "type": "event"
   },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "guildId",
-        "type": "uint256"
-      }
-    ],
-    "name": "TokensBought",
-    "type": "event"
-  },
+  { "anonymous": false, "inputs": [], "name": "TokensBought", "type": "event" },
   {
     "anonymous": false,
     "inputs": [
@@ -148,7 +224,6 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "guildId", "type": "uint256" },
       {
         "components": [
           { "internalType": "address", "name": "tokenAddress", "type": "address" },
