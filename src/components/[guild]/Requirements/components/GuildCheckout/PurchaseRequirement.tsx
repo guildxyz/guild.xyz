@@ -70,6 +70,9 @@ const PurchaseRequirement = (): JSX.Element => {
     error,
   } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
 
+  // TEMP
+  return null
+
   if (
     !isInfoModalOpen &&
     // TODO: we'll be able to control this properly once we'll have feature flags
