@@ -206,7 +206,7 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
               Requirements to qualify
             </Text>
             <Spacer />
-            <PoapAccessIndicator poapIdentifier={poap?.id} />
+            {isActive && <PoapAccessIndicator poapIdentifier={poap?.id} />}
           </HStack>
 
           <Stack
