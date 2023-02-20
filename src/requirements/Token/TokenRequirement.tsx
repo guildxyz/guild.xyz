@@ -1,6 +1,6 @@
 import { HStack, Text } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import GuildCheckout from "components/[guild]/Requirements/components/GuildCheckout"
+import PurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/PurchaseRequirement"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -36,7 +36,7 @@ const TokenRequirement = ({ setValueForBalancy, ...rest }: Props) => {
       footer={
         requirement?.type === "ERC20" && (
           <HStack spacing="4">
-            <GuildCheckout />
+            <PurchaseRequirement />
             <BlockExplorerUrl />
           </HStack>
         )

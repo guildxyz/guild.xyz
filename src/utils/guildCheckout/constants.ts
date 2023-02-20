@@ -18,16 +18,18 @@ export const GUILD_FEE_PERCENTAGE = 0.01
 export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
-export const TOKEN_BUYER_CONTRACT: Partial<Record<number, string>> = {
-  // Görli
-  5: "0x7605143a3122e0329d1f9a8dcec44f326e8fd46f",
-  // Arbitrum
-  42161: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
+export const TOKEN_BUYER_CONTRACT: Partial<Record<Chain, string>> = {
+  GOERLI: "0x7605143a3122e0329d1f9a8dcec44f326e8fd46f",
+  ARBITRUM: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
 }
 
 // 9839 - Arbitrum
 // 4486 - Johnny's guild
-export const ALLOWED_GUILDS = [9839, 4486]
+// 1985 - Our Guild
+// 17068 - RAZ
+// 13846 - CHAOS
+export const PURCHASE_ALLOWED_GUILDS = [9839, 4486]
+export const PAYMENT_ALLOWED_GUILDS = [1985, 17068, 13846, 4486]
 
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   // ETHEREUM: "https://api.0x.org",
@@ -166,3 +168,12 @@ export const getAssetsCallParams: Record<
     },
   },
 }
+
+export const FEE_COLLECTOR_CONTRACT: Partial<Record<Chain, string>> = {
+  ETHEREUM: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
+  POLYGON: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
+  GOERLI: "0x32547e6cc18651647e58f57164a0117da82f77f0",
+}
+export const paymentSupportedChains: Chain[] = Object.keys(
+  FEE_COLLECTOR_CONTRACT
+) as Chain[]

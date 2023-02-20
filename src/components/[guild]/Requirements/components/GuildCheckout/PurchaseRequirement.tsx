@@ -1,8 +1,8 @@
 import {
-  ButtonGroup,
   Collapse,
-  HStack,
+  Divider,
   Icon,
+  Link,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -12,42 +12,51 @@ import {
   Spinner,
   Stack,
   Text,
-  Tooltip,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
 import {
-  ALLOWED_GUILDS,
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
+  PURCHASE_ALLOWED_GUILDS,
 } from "utils/guildCheckout/constants"
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import AlphaTag from "./components/AlphaTag"
-import AllowanceButton from "./components/buttons/AllowanceButton"
+import PurchaseAllowanceButton from "./components/buttons/PurchaseAllowanceButton"
 import PurchaseButton from "./components/buttons/PurchaseButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
-import FeeAndTotal from "./components/FeeAndTotal"
+import ErrorCollapse from "./components/ErrorCollapse"
 import {
   GuildCheckoutProvider,
   useGuildCheckoutContext,
 } from "./components/GuildCheckoutContex"
 import InfoModal from "./components/InfoModal"
 import PurchasedRequirementInfo from "./components/InfoModal/components/PurchasedRequirementInfo"
+import TransactionLink from "./components/InfoModal/components/TransactionLink"
 import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
+import PaymentMethodButtons from "./components/PaymentMethodButtons"
+import PurchaseFeeAndTotal from "./components/PurchaseFeeAndTotal"
 import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
-const GuildCheckout = (): JSX.Element => {
+const PurchaseRequirement = (): JSX.Element => {
   const { account, chainId } = useWeb3React()
-  const { requirement, isOpen, onOpen, onClose, isInfoModalOpen } =
-    useGuildCheckoutContext()
-  const { id } = useGuild()
+  const {
+    requirement,
+    isOpen,
+    onOpen,
+    onClose,
+    isInfoModalOpen,
+    txError,
+    txSuccess,
+    txHash,
+  } = useGuildCheckoutContext()
+  const { id, name } = useGuild()
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
   )
@@ -63,7 +72,8 @@ const GuildCheckout = (): JSX.Element => {
 
   if (
     !isInfoModalOpen &&
-    (!ALLOWED_GUILDS.includes(id) ||
+    // TODO: we'll be able to control this properly once we'll have feature flags
+    (!PURCHASE_ALLOWED_GUILDS.includes(id) ||
       !account ||
       (!accessData && isAccessLoading) ||
       satisfiesRequirement ||
@@ -90,11 +100,10 @@ const GuildCheckout = (): JSX.Element => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            <HStack>
-              <Text as="span">Buy requirement</Text>
-
-              <AlphaTag />
-            </HStack>
+            <Text as="span" mr={2}>
+              Buy requirement
+            </Text>
+            <AlphaTag />
           </ModalHeader>
           <ModalCloseButton />
 
@@ -118,56 +127,33 @@ const GuildCheckout = (): JSX.Element => {
           </ModalBody>
 
           <ModalFooter pt={10} flexDir="column">
-            <ButtonGroup size="sm" w="full" mb="8">
-              <Button
-                autoFocus={false}
-                colorScheme="blue"
-                variant="subtle"
-                w="full"
-                borderRadius="md"
-                data-dd-action-name="Pay with crypto (GuildCheckout)"
-              >
-                Pay with crypto
-              </Button>
-
-              <Tooltip label="Coming soon" placement="top" hasArrow>
-                <Button
-                  autoFocus={false}
-                  variant="subtle"
-                  w="full"
-                  borderRadius="md"
-                  isDisabled
-                  data-dd-action-name="Pay with card (GuildCheckout)"
-                  _hover={""}
-                >
-                  Pay with card
-                </Button>
-              </Tooltip>
-            </ButtonGroup>
-
-            <Collapse
-              in={!!error?.error}
-              style={{
-                width: "100%",
-              }}
-            >
-              <ErrorAlert label={error?.error} />
-            </Collapse>
+            <PaymentMethodButtons />
+            <ErrorCollapse error={error?.error} />
 
             <Stack spacing={8} w="full">
               <PaymentCurrencyPicker />
+              <PurchaseFeeAndTotal />
 
-              <FeeAndTotal />
-
-              <Stack spacing={2}>
+              <Stack
+                spacing={2}
+                sx={{
+                  ".chakra-collapse": {
+                    overflow: "unset!important",
+                    overflowX: "visible",
+                    overflowY: "hidden",
+                  },
+                }}
+              >
                 {!error && (
                   <>
-                    <Collapse in={chainId !== Chains[requirement.chain]}>
-                      <SwitchNetworkButton />
-                    </Collapse>
+                    <SwitchNetworkButton />
+
                     <Collapse in={chainId === Chains[requirement.chain]}>
-                      <TOSCheckbox />
-                      <AllowanceButton />
+                      <TOSCheckbox>
+                        {`I understand that I purchase from decentralized exchanges, not from ${name} or Guild.xyz itself`}
+                      </TOSCheckbox>
+
+                      <PurchaseAllowanceButton />
                     </Collapse>
                   </>
                 )}
@@ -178,15 +164,78 @@ const GuildCheckout = (): JSX.Element => {
         </ModalContent>
       </Modal>
 
-      <InfoModal />
+      <InfoModal
+        title={
+          txError
+            ? "Transaction failed"
+            : txSuccess
+            ? "Purchase successful"
+            : txHash
+            ? "Transaction is processing..."
+            : "Buy requirement"
+        }
+        progressComponent={
+          <>
+            <Text mb={4}>
+              The blockchain is working its magic... Your transaction should be
+              confirmed shortly
+            </Text>
+
+            <TransactionLink />
+
+            <Divider mb={6} />
+
+            <Stack spacing={4}>
+              <Text as="span" fontWeight="bold">
+                You'll get:
+              </Text>
+
+              <PurchasedRequirementInfo />
+            </Stack>
+          </>
+        }
+        successComponent={
+          <>
+            <Text mb={4}>
+              Requirement successfully purchased! Your access is being rechecked
+            </Text>
+
+            <TransactionLink />
+
+            <Divider mb={6} />
+
+            <Stack spacing={4}>
+              <Text as="span" fontWeight="bold">
+                Your new asset:
+              </Text>
+
+              <PurchasedRequirementInfo />
+            </Stack>
+          </>
+        }
+        errorComponent={
+          <>
+            <Text mb={4}>
+              {"Couldn't purchase the assets. Learn about possible reasons here: "}
+              <Link
+                href="https://support.opensea.io/hc/en-us/articles/7597082600211"
+                colorScheme="blue"
+                isExternal
+              >
+                https://support.opensea.io/hc/en-us/articles/7597082600211
+              </Link>
+            </Text>
+          </>
+        }
+      />
     </>
   )
 }
 
-const GuildCheckoutWrapper = (): JSX.Element => (
+const PurchaseRequirementWrapper = () => (
   <GuildCheckoutProvider>
-    <GuildCheckout />
+    <PurchaseRequirement />
   </GuildCheckoutProvider>
 )
 
-export default GuildCheckoutWrapper
+export default PurchaseRequirementWrapper

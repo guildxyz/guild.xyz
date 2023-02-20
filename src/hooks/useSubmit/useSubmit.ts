@@ -15,7 +15,7 @@ import { ValidationMethod } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
-type Options<ResponseType> = {
+export type Options<ResponseType> = {
   onSuccess?: (response: ResponseType) => void
   onError?: (error: any) => void
 }

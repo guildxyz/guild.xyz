@@ -1,4 +1,7 @@
 import { Box } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 import { useCreateGuildContext } from "../CreateGuildContext"
@@ -6,6 +9,15 @@ import Pagination from "../Pagination"
 import TemplateCard from "./components/TemplateCard"
 
 const ChooseTemplate = (): JSX.Element => {
+  const { triedEager, openWalletSelectorModal, isWalletSelectorModalOpen } =
+    useWeb3ConnectionManager()
+  const { account } = useWeb3React()
+
+  useEffect(() => {
+    if (!triedEager || account || isWalletSelectorModalOpen) return
+    openWalletSelectorModal()
+  }, [triedEager, account, isWalletSelectorModalOpen])
+
   const {
     TEMPLATES,
     template: templateInContext,
