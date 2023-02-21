@@ -7,7 +7,6 @@ import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
-import Script from "next/script"
 import { IconContext } from "phosphor-react"
 import { Fragment } from "react"
 import { SWRConfig } from "swr"
@@ -24,7 +23,7 @@ const App = ({
 
   return (
     <>
-      <Script src="/intercom.js" />
+      {/* <Script src="/intercom.js" /> */}
       <Chakra cookies={pageProps.cookies}>
         <IconContext.Provider
           value={{
