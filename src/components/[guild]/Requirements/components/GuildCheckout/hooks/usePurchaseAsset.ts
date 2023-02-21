@@ -1,8 +1,10 @@
+import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDatadog from "components/_app/Datadog/useDatadog"
-import { Chains } from "connectors"
+import { Chains, RPC } from "connectors"
+import useBalance from "hooks/useBalance"
 import useContract from "hooks/useContract"
 import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -11,13 +13,14 @@ import useTokenData from "hooks/useTokenData"
 import { useMemo } from "react"
 import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
-import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
+import { ADDRESS_REGEX, TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
 import {
   GeneratedGetAssetsParams,
   generateGetAssetsParams,
 } from "utils/guildCheckout/utils"
 import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
+import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
 import useSubmitTransaction from "./useSubmitTransaction"
 
@@ -83,10 +86,38 @@ const usePurchaseAsset = () => {
     [guildId, account, chainId, pickedCurrency, priceData]
   )
 
+  const { allowance } = useAllowance(
+    pickedCurrency,
+    TOKEN_BUYER_CONTRACT[Chains[chainId]]
+  )
+
+  const { coinBalance, tokenBalance } = useBalance(
+    pickedCurrency,
+    Chains[requirement?.chain]
+  )
+
+  const pickedCurrencyIsNative =
+    pickedCurrency === RPC[Chains[chainId]].nativeCurrency.symbol
+
+  const isSufficientBalance =
+    priceData?.priceInWei &&
+    (coinBalance || tokenBalance) &&
+    (pickedCurrencyIsNative
+      ? coinBalance?.gt(BigNumber.from(priceData.priceInWei))
+      : tokenBalance?.gt(BigNumber.from(priceData.priceInWei)))
+
+  const shouldEstimateGas =
+    requirement?.chain === Chains[chainId] &&
+    priceData &&
+    isSufficientBalance &&
+    (ADDRESS_REGEX.test(pickedCurrency)
+      ? allowance && BigNumber.from(priceData.priceInWei).lte(allowance)
+      : true)
+
   const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
     useEstimateGasFee(
       requirement?.id?.toString(),
-      requirement?.chain === Chains[chainId] ? tokenBuyerContract : null,
+      shouldEstimateGas ? tokenBuyerContract : null,
       "getAssets",
       generatedGetAssetsParams
     )
