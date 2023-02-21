@@ -12,7 +12,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone from "hooks/useDropzone"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { File, Upload } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { PropsWithChildren, useEffect, useState } from "react"
 import { useForm, useWatch } from "react-hook-form"
 import useUploadMintLinks from "../hooks/useUploadMintLinks"
 
@@ -20,7 +20,11 @@ type Props = {
   poapId: number
 } & UseSubmitOptions
 
-const UploadMintLinks = ({ poapId, onSuccess = null }: Props): JSX.Element => {
+const UploadMintLinks = ({
+  poapId,
+  onSuccess = null,
+  children,
+}: PropsWithChildren<Props>): JSX.Element => {
   const methods = useForm<{ mintLinks: string }>({ mode: "all" })
   const mintLinksInputValue = useWatch({
     control: methods.control,
@@ -119,6 +123,7 @@ const UploadMintLinks = ({ poapId, onSuccess = null }: Props): JSX.Element => {
             {methods?.formState?.errors?.mintLinks?.message}
           </FormErrorMessage>
         </FormControl>
+        {children}
       </Stack>
 
       <Flex w="full" justifyContent="end">

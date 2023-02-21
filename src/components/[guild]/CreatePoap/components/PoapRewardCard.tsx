@@ -81,6 +81,7 @@ const PoapRewardCard = ({
           <Tag mt="1">{`${poapLinks?.total - poapLinks?.claimed} available`}</Tag>
         }
         {...{ image, colorScheme, actionRow, cornerButton }}
+        borderStyle={!guildPoap?.activated && "dashed"}
         {...rest}
       >
         {!poapLinks?.total ? (
@@ -114,7 +115,12 @@ const PoapRewardCard = ({
           <ModalCloseButton />
           <ModalHeader>Upload POAP minting links</ModalHeader>
           <ModalBody>
-            <UploadMintLinks poapId={poap?.id} onSuccess={onLinkModalClose} />
+            <UploadMintLinks poapId={poap?.id} onSuccess={onLinkModalClose}>
+              <Text>
+                Uploading the links won't activate your POAP yet, you'll be able to
+                do it when you want
+              </Text>
+            </UploadMintLinks>
           </ModalBody>
         </ModalContent>
       </Modal>

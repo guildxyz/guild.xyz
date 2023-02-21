@@ -97,10 +97,10 @@ const RewardCard = ({
       fallbackColor="white"
       backgroundColor={`${colorScheme}.500`}
       label={label}
-      top="-px"
-      left="-px"
+      top="-2px"
+      left="-2px"
       borderBottomRightRadius="xl"
-      borderTopLeftRadius="xl"
+      borderTopLeftRadius="2xl"
     />
   </ColorCard>
 )

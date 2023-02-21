@@ -17,13 +17,13 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
-import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import AccessIndicatorUI from "components/[guild]/RoleCard/components/AccessIndicator/components/AccessIndicatorUI"
 import PoapReward from "components/[guild]/RoleCard/components/PoapReward"
-import { ArrowSquareOut, PencilSimple } from "phosphor-react"
+import { ArrowSquareOut, Clock, EyeSlash, PencilSimple } from "phosphor-react"
 import { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
@@ -35,7 +35,6 @@ import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
 import { GuildPoap } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import parseDescription from "utils/parseDescription"
-import usePoapLinks from "../../hooks/usePoapLinks"
 import { useCreatePoapContext } from "../CreatePoapContext"
 
 type Props = {
@@ -49,12 +48,9 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
   const { urlName } = useGuild()
 
   const { poap, isLoading } = usePoap(poapFancyId)
-  const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
 
   const { setStep, setPoapData } = useCreatePoapContext()
-
-  const isReady = poapLinks && poapLinks?.total > 0
 
   const timeDiff = guildPoap?.expiryDate * 1000 - Date.now()
 
@@ -66,7 +62,7 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
   const status =
     timeDiff < 0
       ? {
-          label: `Claim ended ${formatRelativeTimeFromNow(timeDiff * -1)} ago`,
+          label: `Expired ${formatRelativeTimeFromNow(timeDiff * -1)} ago`,
           color: "gray",
         }
       : isActive
@@ -75,14 +71,17 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
           color: "purple",
         }
       : {
-          label: "Inactive",
+          label: `Temporary until ${new Date(
+            guildPoap?.expiryDate * 1000
+          ).toLocaleDateString()}`,
           color: "gray",
         }
 
   const { colorMode } = useColorMode()
 
-  const { data } = useUserPoapEligibility(poap?.id)
-  console.log(poap?.name, data, poap?.id, isActive)
+  const requirementRightElement = isActive ? (
+    <PoapRequiementAccessIndicator poapIdentifier={poap?.id} />
+  ) : null
 
   const requirementComponents = guildPoap && [
     ...(guildPoap.poapContracts ?? []).map((poapContract) => (
@@ -90,14 +89,14 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
         key={poapContract.id}
         poapContract={poapContract}
         guildPoap={guildPoap}
-        rightElement={<PoapRequiementAccessIndicator poapIdentifier={poap?.id} />}
+        rightElement={requirementRightElement}
       />
     )),
     ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (
       <RequirementDisplayComponent
         key={requirement.id}
         requirement={{ ...requirement, id: requirement.requirementId }}
-        rightElement={<PoapRequiementAccessIndicator poapIdentifier={poap?.id} />}
+        rightElement={requirementRightElement}
       />
     )),
     ...(poapEventDetails?.voiceChannelId
@@ -105,9 +104,7 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
           <PoapVoiceRequirement
             key="voice"
             guildPoap={guildPoap}
-            rightElement={
-              <PoapRequiementAccessIndicator poapIdentifier={poap?.id} />
-            }
+            rightElement={requirementRightElement}
           />,
         ]
       : []),
@@ -120,8 +117,12 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
           boxShadow: "var(--chakra-shadows-outline)",
         },
       }}
-      borderWidth={2}
+      borderWidth={timeDiff > 0 && 2}
+      borderStyle={!isActive && "dashed"}
       borderColor={`${status.color}.500`}
+      opacity={timeDiff < 0 && 0.6}
+      _hover={{ opacity: 1 }}
+      transition={"opacity 0.2s"}
     >
       <SimpleGrid columns={{ base: 1, md: 2 }}>
         <Flex
@@ -156,7 +157,7 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
                 </Heading>
                 <HStack spacing={0}>
                   <Tag colorScheme={status.color}>{status.label}</Tag>
-                  {isReady && !guildPoap.poapRequirements?.length && (
+                  {isActive && !guildPoap.poapRequirements?.length && (
                     <Text as="span" fontSize="xs" colorScheme="gray" pl="4">
                       <Link
                         href={`/${urlName}/claim-poap/${poapFancyId}`}
@@ -221,7 +222,17 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
               Requirements to qualify
             </Text>
             <Spacer />
-            {isActive && <PoapAccessIndicator poapIdentifier={poap?.id} />}
+            {isActive ? (
+              <PoapAccessIndicator poapIdentifier={poap?.id} />
+            ) : timeDiff > 0 ? (
+              <AccessIndicatorUI
+                colorScheme="gray"
+                label="Not active yet"
+                icon={EyeSlash}
+              />
+            ) : (
+              <AccessIndicatorUI colorScheme="gray" label="Expired" icon={Clock} />
+            )}
           </HStack>
 
           <Stack
