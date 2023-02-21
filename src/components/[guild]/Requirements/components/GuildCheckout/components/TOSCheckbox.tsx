@@ -1,8 +1,9 @@
-import { Checkbox } from "@chakra-ui/react"
+import { Checkbox, useColorModeValue } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 
 const TOSCheckbox = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
+  const borderColor = useColorModeValue("gray.300", "inherit")
   const { agreeWithTOS, setAgreeWithTOS } = useGuildCheckoutContext()
 
   return (
@@ -12,6 +13,7 @@ const TOSCheckbox = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
         "> .chakra-checkbox__control": {
           marginTop: 1,
           borderWidth: 1,
+          borderColor,
         },
       }}
       _checked={{
