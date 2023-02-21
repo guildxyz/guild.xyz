@@ -54,6 +54,7 @@ const generateGetAssetsParams = (
 
   if (
     !guildId ||
+    !account ||
     !priceInWei ||
     !rawGuildFeeInWei ||
     !buyAmountInWei ||

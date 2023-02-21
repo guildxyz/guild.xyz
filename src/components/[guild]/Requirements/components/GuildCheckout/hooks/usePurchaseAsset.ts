@@ -97,7 +97,7 @@ const usePurchaseAsset = () => {
   )
 
   const pickedCurrencyIsNative =
-    pickedCurrency === RPC[Chains[chainId]].nativeCurrency.symbol
+    pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
 
   const isSufficientBalance =
     priceData?.priceInWei &&

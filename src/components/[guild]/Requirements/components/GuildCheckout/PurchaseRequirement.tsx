@@ -27,6 +27,7 @@ import {
 } from "utils/guildCheckout/constants"
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import AlphaTag from "./components/AlphaTag"
+import ConnectWalletButton from "./components/buttons/ConnectWalletButton"
 import PurchaseAllowanceButton from "./components/buttons/PurchaseAllowanceButton"
 import PurchaseButton from "./components/buttons/PurchaseButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
@@ -74,7 +75,6 @@ const PurchaseRequirement = (): JSX.Element => {
     !isInfoModalOpen &&
     // TODO: we'll be able to control this properly once we'll have feature flags
     (!PURCHASE_ALLOWED_GUILDS.includes(id) ||
-      !account ||
       (!accessData && isAccessLoading) ||
       satisfiesRequirement ||
       !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
@@ -144,18 +144,22 @@ const PurchaseRequirement = (): JSX.Element => {
                   },
                 }}
               >
-                {!error && (
-                  <>
-                    <SwitchNetworkButton />
+                {!account ? (
+                  <ConnectWalletButton />
+                ) : (
+                  !error && (
+                    <>
+                      <SwitchNetworkButton />
 
-                    <Collapse in={chainId === Chains[requirement.chain]}>
-                      <TOSCheckbox>
-                        {`I understand that I purchase from decentralized exchanges, not from ${name} or Guild.xyz itself`}
-                      </TOSCheckbox>
+                      <Collapse in={chainId === Chains[requirement.chain]}>
+                        <TOSCheckbox>
+                          {`I understand that I purchase from decentralized exchanges, not from ${name} or Guild.xyz itself`}
+                        </TOSCheckbox>
 
-                      <PurchaseAllowanceButton />
-                    </Collapse>
-                  </>
+                        <PurchaseAllowanceButton />
+                      </Collapse>
+                    </>
+                  )
                 )}
                 <PurchaseButton />
               </Stack>

@@ -33,7 +33,6 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
   const [fallbackData, setFallbackData] = useState<FetchPriceResponse>()
 
   const shouldFetch =
-    account &&
     purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain) &&
     isOpen &&
     PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) &&

@@ -10,7 +10,7 @@ import usePurchaseAsset from "../../hooks/usePurchaseAsset"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseButton = (): JSX.Element => {
-  const { chainId } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const {
@@ -35,7 +35,7 @@ const PurchaseButton = (): JSX.Element => {
   } = useBalance(pickedCurrency, Chains[requirement?.chain])
 
   const pickedCurrencyIsNative =
-    pickedCurrency === RPC[Chains[chainId]].nativeCurrency.symbol
+    pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
 
   const isSufficientBalance =
     priceInWei &&
@@ -45,6 +45,7 @@ const PurchaseButton = (): JSX.Element => {
       : tokenBalance?.gt(BigNumber.from(priceInWei)))
 
   const isDisabled =
+    !account ||
     error ||
     estimateGasError ||
     !agreeWithTOS ||
@@ -63,7 +64,7 @@ const PurchaseButton = (): JSX.Element => {
       (estimateGasError?.data?.message?.includes("insufficient")
         ? "Insufficient funds for gas"
         : "Couldn't estimate gas")) ??
-    (!isSufficientBalance && "Insufficient balance")
+    (account && !isSufficientBalance && "Insufficient balance")
 
   return (
     <Button
