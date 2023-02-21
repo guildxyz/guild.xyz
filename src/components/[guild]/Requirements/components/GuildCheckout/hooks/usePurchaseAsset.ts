@@ -108,7 +108,7 @@ const usePurchaseAsset = () => {
 
   const shouldEstimateGas =
     requirement?.chain === Chains[chainId] &&
-    priceData &&
+    priceData?.priceInWei &&
     isSufficientBalance &&
     (ADDRESS_REGEX.test(pickedCurrency)
       ? allowance && BigNumber.from(priceData.priceInWei).lte(allowance)
