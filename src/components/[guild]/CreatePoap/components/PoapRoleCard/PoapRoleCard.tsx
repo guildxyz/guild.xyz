@@ -54,13 +54,14 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
 
   const { setStep, setPoapData } = useCreatePoapContext()
 
-  const isActive = useMemo(
-    () => (!poap ? false : guildPoap?.activated),
-    [poap, guildPoap]
-  )
   const isReady = poapLinks && poapLinks?.total > 0
 
   const timeDiff = guildPoap?.expiryDate * 1000 - Date.now()
+
+  const isActive = useMemo(
+    () => (!poap ? false : guildPoap?.activated && timeDiff > 0),
+    [poap, guildPoap, timeDiff]
+  )
 
   const status =
     timeDiff < 0
@@ -81,7 +82,7 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
   const { data } = useUserPoapEligibility(poap?.id)
-  // console.log(poap?.name, data, poap?.id)
+  console.log(poap?.name, data, poap?.id, isActive)
 
   const requirementComponents = guildPoap && [
     ...(guildPoap.poapContracts ?? []).map((poapContract) => (

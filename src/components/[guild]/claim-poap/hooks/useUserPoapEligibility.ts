@@ -5,7 +5,7 @@ import useSWR from "swr"
 
 const useUserPoapEligibility = (poapIdentifier: number) => {
   const { account } = useWeb3React()
-  const { poapEventDetails } = usePoapEventDetails()
+  const { poapEventDetails } = usePoapEventDetails(poapIdentifier)
   const { poaps } = useGuild()
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapIdentifier)
 
@@ -18,21 +18,20 @@ const useUserPoapEligibility = (poapIdentifier: number) => {
       shouldRetryOnError: false,
     }
   )
+  const generalReqData = data?.userAccesses?.[0]?.users?.[0]
 
+  const generalReqAccess = generalReqData ? generalReqData.access : true
   const voiceEligibility = poapEventDetails?.voiceChannelId
     ? data?.voiceEligibility
     : true
   const hasPaid = guildPoap?.poapContracts?.length ? data?.hasPaid : true
 
-  const reqData = data?.userAccesses?.[0]?.users?.[0] ?? {
-    access: voiceEligibility && hasPaid,
-  }
-
   return {
     data: {
+      access: voiceEligibility && hasPaid && generalReqAccess,
       voiceEligibility,
       hasPaid,
-      ...reqData,
+      ...generalReqData,
     },
     isLoading: isValidating && !data,
     mutate,
