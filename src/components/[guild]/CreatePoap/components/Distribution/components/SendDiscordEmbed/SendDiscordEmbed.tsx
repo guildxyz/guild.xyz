@@ -21,7 +21,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -31,8 +30,9 @@ import useSendJoin from "components/[guild]/Onboarding/components/SummonMembers/
 import useServerData from "hooks/useServerData"
 import { DiscordLogo } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
-import { PlatformType, Poap } from "types"
-import usePoapEventDetails from "../../../Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
+import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
+import { Poap } from "types"
+import DiscordServerRewardPicker from "../../../DiscordServerRewardPicker"
 import EmbedButton from "./components/EmbedButton"
 import EmbedDescription from "./components/EmbedDescription"
 import EmbedTitle from "./components/EmbedTitle"
@@ -60,13 +60,7 @@ const SendDiscordEmbed = ({ poap, onSuccess }: Props): JSX.Element => {
 
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
-  const { name, imageUrl, guildPlatforms, mutateGuild } = useGuild()
-  const discordGuildPlatforms = guildPlatforms
-    ?.filter((platform) => platform.platformId === PlatformType.DISCORD)
-    ?.map(({ platformGuildId, platformGuildName }) => ({
-      value: platformGuildId,
-      label: platformGuildName,
-    }))
+  const { name, imageUrl, mutateGuild } = useGuild()
 
   const shouldShowGuildImage = imageUrl.includes("http")
 
@@ -77,7 +71,7 @@ const SendDiscordEmbed = ({ poap, onSuccess }: Props): JSX.Element => {
       title: poap?.name,
       description: "Mint this magnificent POAP to your collection!",
       button: "Mint POAP",
-      serverId: discordGuildPlatforms[0]?.value,
+      serverId: null,
     },
   })
   const discordServerId = methods.watch("serverId")
@@ -127,17 +121,7 @@ const SendDiscordEmbed = ({ poap, onSuccess }: Props): JSX.Element => {
                   the POAP from - feel free to customize it below!
                 </Text>
 
-                {discordGuildPlatforms.length > 1 && (
-                  <FormControl isRequired>
-                    <FormLabel>Server</FormLabel>
-
-                    <ControlledSelect
-                      name={`serverId`}
-                      isClearable
-                      options={discordGuildPlatforms}
-                    />
-                  </FormControl>
-                )}
+                <DiscordServerRewardPicker />
 
                 <FormControl
                   isRequired

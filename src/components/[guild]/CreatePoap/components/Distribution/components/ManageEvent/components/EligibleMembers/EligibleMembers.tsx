@@ -16,10 +16,10 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import usePoapEventDetails from "components/[guild]/CreatePoap/components/Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import { ArrowsClockwise, Users } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { FixedSizeList } from "react-window"
+import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import useVoiceParticipants from "./hooks/useVoiceParticipants"
 
 const EligibleMembers = (): JSX.Element => {

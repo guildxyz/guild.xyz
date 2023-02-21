@@ -5,9 +5,9 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { Check, CopySimple } from "phosphor-react"
 import { useState } from "react"
+import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import { GuildPoap, PlatformType, Poap } from "types"
 import useUpdateGuildPoap from "../../hooks/useUpdateGuildPoap"
-import usePoapEventDetails from "../Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import SendDiscordEmbed from "./components/SendDiscordEmbed"
 
 type Props = {

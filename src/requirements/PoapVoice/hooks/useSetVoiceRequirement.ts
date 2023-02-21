@@ -1,5 +1,6 @@
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 import usePoapEventDetails from "./usePoapEventDetails"
@@ -7,7 +8,7 @@ import usePoapEventDetails from "./usePoapEventDetails"
 const setVoiceRequirement = (signedValidation: SignedValdation) =>
   fetcher("/assets/poap/setVoiceRequirement", signedValidation)
 
-const useSetVoiceRequirement = () => {
+const useSetVoiceRequirement = ({ onSuccess }: UseSubmitOptions = {}) => {
   const { mutatePoapEventDetails } = usePoapEventDetails()
 
   const toast = useToast()
@@ -21,6 +22,7 @@ const useSetVoiceRequirement = () => {
         status: "success",
         title: "Successful event setup!",
       })
+      onSuccess?.()
     },
   })
 }

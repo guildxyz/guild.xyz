@@ -11,15 +11,18 @@ import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { RequirementType } from "requirements"
 import PoapPaymentForm from "requirements/PoapPayment"
 import PoapPaymentRequirementEditable from "requirements/PoapPayment/PoapPaymentRequirementEditable"
+import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
+import PoapVoiceForm from "requirements/PoapVoice/PoapVoiceForm"
+import PoapVoiceRequirementEditable from "requirements/PoapVoice/PoapVoiceRequirementEditable"
 import useUpdatePoapRequirements from "../../hooks/useUpdatePoapRequirements"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import AddPoapRequirement from "./components/AddPoapRequirement"
-import VoiceParticipation from "./components/VoiceParticipation"
 
 const PoapRequirements = ({ onSuccess }: UseSubmitOptions): JSX.Element => {
   const { isSuperAdmin } = useUser()
   const { poaps } = useGuild()
   const { poapData } = useCreatePoapContext()
+  const { poapEventDetails } = usePoapEventDetails()
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
 
   const methods = useForm()
@@ -79,6 +82,13 @@ const PoapRequirements = ({ onSuccess }: UseSubmitOptions): JSX.Element => {
               <LogicDivider logic="AND" />
             </CardMotionWrapper>
           ))}
+          {poapEventDetails?.voiceChannelId && (
+            <CardMotionWrapper>
+              <PoapVoiceRequirementEditable guildPoap={guildPoap} />
+
+              <LogicDivider logic="AND" />
+            </CardMotionWrapper>
+          )}
         </AnimatePresence>
 
         {/* <AddPoapRequirement
@@ -95,19 +105,22 @@ const PoapRequirements = ({ onSuccess }: UseSubmitOptions): JSX.Element => {
             FormComponent={PoapPaymentForm}
           />
         )}
-        <AddPoapRequirement
-          title="Voice participation"
-          isDisabled
-          description="Users will have to be in a Discord voice channel at the time of the event"
-          // rightIcon={SpeakerHigh}
-          FormComponent={VoiceParticipation}
-        />
+        {!poapEventDetails?.voiceChannelId && (
+          <AddPoapRequirement
+            title="Voice participation"
+            description="Users will have to be in a Discord voice channel at the time of the event"
+            // rightIcon={SpeakerHigh}
+            FormComponent={PoapVoiceForm}
+          />
+        )}
         <AddRequirement onAdd={(d) => append(d)} />
       </Stack>
       <Flex justifyContent={"right"} mt="8">
         <Button
           colorScheme="green"
-          onClick={methods.handleSubmit(onSubmit)}
+          onClick={
+            fields.length ? methods.handleSubmit(onSubmit) : (onSuccess as any)
+          }
           isLoading={isLoading}
         >
           Done

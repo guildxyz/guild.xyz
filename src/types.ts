@@ -395,6 +395,7 @@ type GoogleFile = {
 
 type VoiceParticipationForm = {
   poapId: number
+  serverId: string
   voiceChannelId: string
   voiceRequirement: {
     type: "PERCENT" | "MINUTE"

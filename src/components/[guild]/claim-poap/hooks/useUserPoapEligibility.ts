@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
-import usePoapEventDetails from "components/[guild]/CreatePoap/components/Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
+import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import useSWR from "swr"
 
 const useUserPoapEligibility = (poapIdentifier: number) => {

@@ -3,24 +3,22 @@ import {
   FormControl,
   FormLabel,
   HStack,
-  Icon,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
   Select,
-  SimpleGrid,
+  Stack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
-import { TrashSimple } from "phosphor-react"
+import DiscordServerRewardPicker from "components/[guild]/CreatePoap/components/DiscordServerRewardPicker"
 import { useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import { VoiceParticipationForm } from "types"
-import useDeleteVoiceRequirement from "./hooks/useDeleteVoiceRequirement"
 import useEditVoiceRequirement from "./hooks/useEditVoiceRequirement"
 import usePoapEventDetails from "./hooks/usePoapEventDetails"
 import useSetVoiceRequirement from "./hooks/useSetVoiceRequirement"
@@ -37,10 +35,7 @@ const voiceRequirementTypeOptions = [
   },
 ]
 
-// todo
-const discordServerId = ""
-
-const VoiceParticipation = (): JSX.Element => {
+const PoapVoiceForm = ({ onClose }): JSX.Element => {
   const { poapData } = useCreatePoapContext()
   const { poapEventDetails } = usePoapEventDetails()
 
@@ -70,8 +65,10 @@ const VoiceParticipation = (): JSX.Element => {
     formState: { errors, touchedFields, isDirty },
     trigger,
     handleSubmit,
+    watch,
   } = methods
 
+  const discordServerId = watch("serverId")
   const { voiceChannels } = useVoiceChannels(discordServerId)
 
   const voiceRequirementType = useWatch({ control, name: "voiceRequirement.type" })
@@ -91,9 +88,9 @@ const VoiceParticipation = (): JSX.Element => {
       setValue("voiceChannelId", poapEventDetails.voiceChannelId)
   }, [voiceChannels, poapEventDetails])
 
-  const { onSubmit, isLoading } = useSetVoiceRequirement()
+  const { onSubmit, isLoading } = useSetVoiceRequirement({ onSuccess: onClose })
   const { onSubmit: onEditSubmit, isLoading: isEditLoading } =
-    useEditVoiceRequirement()
+    useEditVoiceRequirement({ onSuccess: onClose })
 
   const onSetVoiceRequirementSubmit = (
     data: VoiceParticipationForm,
@@ -108,15 +105,12 @@ const VoiceParticipation = (): JSX.Element => {
           : { percent: data?.voiceRequirement?.percentOrMinute },
     })
 
-  const { onSubmit: onDeleteSubmit, isLoading: isDeleteLoading } =
-    useDeleteVoiceRequirement()
-
   return (
     <FormProvider {...methods}>
-      <SimpleGrid gap={4} columns={{ base: 1, md: 2 }}>
+      <Stack spacing="4">
+        <DiscordServerRewardPicker />
         <FormControl isRequired isInvalid={!!errors?.voiceChannelId}>
           <FormLabel>Voice channel:</FormLabel>
-
           {voiceChannels?.length <= 0 ? (
             <Button isDisabled isLoading loadingText="Loading channels" w="full" />
           ) : (
@@ -133,16 +127,13 @@ const VoiceParticipation = (): JSX.Element => {
               ))}
             </Select>
           )}
-
           <FormErrorMessage>{errors?.voiceChannelId?.message}</FormErrorMessage>
         </FormControl>
-
         <FormControl
           isRequired
           isInvalid={!!errors?.voiceRequirement?.percentOrMinute}
         >
           <FormLabel>Minimum participation:</FormLabel>
-
           <HStack spacing={0}>
             <Controller
               name="voiceRequirement.percentOrMinute"
@@ -192,7 +183,6 @@ const VoiceParticipation = (): JSX.Element => {
                 </NumberInput>
               )}
             />
-
             <Select
               {...register("voiceRequirement.type")}
               borderLeftRadius={0}
@@ -212,27 +202,14 @@ const VoiceParticipation = (): JSX.Element => {
               ))}
             </Select>
           </HStack>
-
           <FormErrorMessage>
             {errors?.voiceRequirement?.percentOrMinute?.message}
           </FormErrorMessage>
         </FormControl>
-      </SimpleGrid>
-
+      </Stack>
       <ButtonGroup mt={8} justifyContent="right" w="full">
-        {poapEventDetails?.voiceChannelId && (
-          <Button
-            variant="ghost"
-            color="gray.400"
-            leftIcon={<Icon as={TrashSimple} />}
-            onClick={() => onDeleteSubmit({ poapId: poapData?.id })}
-            isLoading={isDeleteLoading}
-          >
-            Remove
-          </Button>
-        )}
         <Button
-          colorScheme="yellow"
+          colorScheme="green"
           onClick={handleSubmit((data) =>
             onSetVoiceRequirementSubmit(
               data,
@@ -240,15 +217,14 @@ const VoiceParticipation = (): JSX.Element => {
             )
           )}
           isLoading={isLoading || isEditLoading}
-          disabled={!isDirty}
+          isDisabled={!isDirty}
         >
           Save
         </Button>
       </ButtonGroup>
-
       <DynamicDevTool control={control} />
     </FormProvider>
   )
 }
 
-export default VoiceParticipation
+export default PoapVoiceForm

@@ -30,6 +30,8 @@ import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import PoapAccessIndicator from "requirements/PoapPayment/components/PoapAccessIndicator"
 import PoapRequiementAccessIndicator from "requirements/PoapPayment/components/PoapRequirementAccessIndicator"
 import PoapPaymentRequirement from "requirements/PoapPayment/PoapPaymentRequirement"
+import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
+import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
 import { GuildPoap } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import parseDescription from "utils/parseDescription"
@@ -48,6 +50,7 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
 
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
+  const { poapEventDetails } = usePoapEventDetails(poap?.id)
 
   const { setStep, setPoapData } = useCreatePoapContext()
 
@@ -96,6 +99,17 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
         rightElement={<PoapRequiementAccessIndicator poapIdentifier={poap?.id} />}
       />
     )),
+    ...(poapEventDetails?.voiceChannelId
+      ? [
+          <PoapVoiceRequirement
+            key="voice"
+            guildPoap={guildPoap}
+            rightElement={
+              <PoapRequiementAccessIndicator poapIdentifier={poap?.id} />
+            }
+          />,
+        ]
+      : []),
   ]
 
   return (

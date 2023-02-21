@@ -4,9 +4,9 @@ import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
+import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import { GuildPoap } from "types"
 import fetcher from "utils/fetcher"
-import usePoapEventDetails from "../components/Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 
 type UpdatePoapData = { id: number; expiryDate?: number; activate?: boolean }
 

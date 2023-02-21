@@ -1,5 +1,6 @@
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { VoiceRequirementParams } from "types"
 import fetcher from "utils/fetcher"
@@ -11,7 +12,7 @@ const editVoiceRequirement = (signedValdation: SignedValdation) =>
     ...signedValdation,
   })
 
-const useEditVoiceRequirement = () => {
+const useEditVoiceRequirement = ({ onSuccess }: UseSubmitOptions = {}) => {
   const { mutatePoapEventDetails } = usePoapEventDetails()
 
   const toast = useToast()
@@ -26,6 +27,7 @@ const useEditVoiceRequirement = () => {
         title: "Success",
         description: "Successfully modified voice requirement",
       })
+      onSuccess?.()
     },
   })
 }
