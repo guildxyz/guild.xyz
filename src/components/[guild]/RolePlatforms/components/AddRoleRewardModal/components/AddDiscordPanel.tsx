@@ -2,14 +2,14 @@ import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
 type Props = {
-  showRoleSelect: () => void
+  onSuccess: () => void
 }
 
 const defaultValues = {
   platformGuildId: null,
 }
 
-const AddDiscordPanel = ({ showRoleSelect }: Props) => {
+const AddDiscordPanel = ({ onSuccess }: Props) => {
   const methods = useForm({ mode: "all", defaultValues })
 
   const { append } = useFieldArray({
@@ -36,7 +36,7 @@ const AddDiscordPanel = ({ showRoleSelect }: Props) => {
             isNew: true,
             platformRoleId: null,
           })
-          showRoleSelect()
+          onSuccess()
         }}
       />
     </FormProvider>

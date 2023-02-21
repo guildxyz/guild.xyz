@@ -2,14 +2,14 @@ import GitHubGuildSetup from "components/common/GitHubGuildSetup"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 
 type Props = {
-  showRoleSelect: () => void
+  onSuccess: () => void
 }
 
 const defaultValues = {
   platformGuildId: null,
 }
 
-const AddGithubPanel = ({ showRoleSelect }: Props) => {
+const AddGithubPanel = ({ onSuccess }: Props) => {
   const methods = useForm({ mode: "all", defaultValues })
 
   const { append } = useFieldArray({
@@ -27,7 +27,7 @@ const AddGithubPanel = ({ showRoleSelect }: Props) => {
             },
             isNew: true,
           })
-          showRoleSelect()
+          onSuccess()
         }}
       />
     </FormProvider>

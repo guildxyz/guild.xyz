@@ -120,8 +120,9 @@ const AddRewardButton = () => {
                 </>
               ) : (
                 <AddPlatformPanel
-                  showRoleSelect={() => setShowRoleSelect(true)}
-                  onSuccess={onSuccess}
+                  onSuccess={
+                    selection === "POAP" ? onSuccess : () => setShowRoleSelect(true)
+                  }
                   skipSettings
                 />
               )}
