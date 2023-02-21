@@ -22,10 +22,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Reward from "components/[guild]/RoleCard/components/Reward"
 import { Chains } from "connectors"
 import { Coin, StarHalf } from "phosphor-react"
-import {
-  paymentSupportedChains,
-  PAYMENT_ALLOWED_GUILDS,
-} from "utils/guildCheckout/constants"
+import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
 import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
 import BuyButton from "./components/buttons/BuyButton"
@@ -42,6 +39,8 @@ import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
 
 const BuyPass = () => {
+  const { featureFlags } = useGuild()
+
   const { account, chainId } = useWeb3React()
   const {
     requirement,
@@ -64,9 +63,7 @@ const BuyPass = () => {
     ?.every((r) => r.access)
 
   if (
-    (!isInfoModalOpen &&
-      // TODO: we'll be able to control this properly once we'll have feature flags
-      !PAYMENT_ALLOWED_GUILDS.includes(id)) ||
+    (!isInfoModalOpen && !featureFlags?.includes("PAYMENT_REQUIREMENT")) ||
     !account ||
     (!accessData && isAccessLoading) ||
     requirement?.type !== "PAYMENT" ||

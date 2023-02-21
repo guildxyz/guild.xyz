@@ -31,7 +31,6 @@ import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
-import { PAYMENT_ALLOWED_GUILDS } from "utils/guildCheckout/constants"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
@@ -189,7 +188,7 @@ const AddRequirementForm = forwardRef(
 
 const AddRequirementHome = forwardRef(
   ({ selectedType, setSelectedType }: any, ref: any) => {
-    const { id } = useGuild()
+    const { featureFlags } = useGuild()
 
     const [search, setSearch] = useState("")
     const filteredIntegrations = integrations?.filter((integration) =>
@@ -214,7 +213,7 @@ const AddRequirementHome = forwardRef(
         <SimpleGrid columns={2} gap={2}>
           {general.map((requirementButton) => {
             const isPayment = requirementButton.types[0] === "PAYMENT"
-            const isPaymentAllowed = PAYMENT_ALLOWED_GUILDS.includes(id)
+            const isPaymentAllowed = featureFlags?.includes("PAYMENT_REQUIREMENT")
 
             return (
               <Button

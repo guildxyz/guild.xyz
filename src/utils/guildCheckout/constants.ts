@@ -28,8 +28,10 @@ export const TOKEN_BUYER_CONTRACT: Partial<Record<Chain, string>> = {
 // 1985 - Our Guild
 // 17068 - RAZ
 // 13846 - CHAOS
-export const PURCHASE_ALLOWED_GUILDS = [9839, 4486]
-export const PAYMENT_ALLOWED_GUILDS = [1985, 17068, 13846, 4486]
+
+// TODO: add the flags to these guilds in the DB!
+// export const PURCHASE_ALLOWED_GUILDS = [9839, 4486]
+// export const PAYMENT_ALLOWED_GUILDS = [1985, 17068, 13846, 4486]
 
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   // ETHEREUM: "https://api.0x.org",
