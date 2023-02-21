@@ -72,6 +72,7 @@ const PurchaseRequirement = (): JSX.Element => {
   } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
 
   if (
+    !isOpen &&
     !isInfoModalOpen &&
     // TODO: we'll be able to control this properly once we'll have feature flags
     (!PURCHASE_ALLOWED_GUILDS.includes(id) ||
