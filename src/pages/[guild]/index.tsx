@@ -142,16 +142,20 @@ const GuildPage = (): JSX.Element => {
 
   const { isOpen: isExpiredOpen, onToggle } = useDisclosure()
 
-  // TODO: separate these with one reduce
-  const activePoaps = poaps?.filter((poap) => {
-    const currentTime = Date.now() / 1000
-    const isFuture = poap.expiryDate > currentTime
-    return isAdmin ? isFuture : isFuture && poap.activated
-  })
-  const expiredPoaps = poaps?.filter((poap) => {
-    const currentTime = Date.now() / 1000
-    return poap.expiryDate <= currentTime
-  })
+  const currentTime = Date.now() / 1000
+  const { activePoaps, expiredPoaps } = poaps
+    ?.sort((poapA, poapB) => poapB.expiryDate - poapA.expiryDate)
+    .reduce(
+      (acc, currPoap) => {
+        if (!currPoap.activated && !isAdmin) return acc
+
+        if (currPoap.expiryDate > currentTime) acc.activePoaps.push(currPoap)
+        else acc.expiredPoaps.push(currPoap)
+
+        return acc
+      },
+      { activePoaps: [], expiredPoaps: [] }
+    )
 
   return (
     <DynamicOnboardingProvider>
