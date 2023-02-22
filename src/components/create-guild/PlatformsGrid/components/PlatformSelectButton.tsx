@@ -53,7 +53,7 @@ const PlatformSelectButton = ({
             {(isLoading && `${loadingText}...`) || description}
           </Text>
         </VStack>
-        <Icon as={isLoading ? Spinner : rightIcon ?? CaretRight} />
+        <Icon as={isLoading ? Spinner : (account && rightIcon) ?? CaretRight} />
       </HStack>
     </DisplayCard>
   )
