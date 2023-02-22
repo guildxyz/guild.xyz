@@ -217,7 +217,7 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
               onClick={openAccountModal}
               rightIcon={<PencilSimple />}
             >
-              {googleAcc?.username}
+              {googleAcc?.platformUserData?.username}
             </Button>
           </Text>
         </ModalFooter>

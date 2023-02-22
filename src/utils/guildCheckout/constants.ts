@@ -19,14 +19,16 @@ export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 export const TOKEN_BUYER_CONTRACT: Partial<Record<Chain, string>> = {
+  ETHEREUM: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
   GOERLI: "0x7605143a3122e0329d1f9a8dcec44f326e8fd46f",
+  POLYGON: "0x151c518390d38487a4ddcb02e3f156a77c184cb9",
   ARBITRUM: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
 }
 
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
-  // ETHEREUM: "https://api.0x.org",
+  ETHEREUM: "https://api.0x.org",
   GOERLI: "https://goerli.api.0x.org",
-  // POLYGON: "https://polygon.api.0x.org",
+  POLYGON: "https://polygon.api.0x.org",
   // BSC: "https://bsc.api.0x.org",
   // OPTIMISM: "https://optimism.api.0x.org",
   // FANTOM: "https://fantom.api.0x.org",

@@ -76,7 +76,9 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
               <>
                 {isTooSmallFee
                   ? "< 0.001"
-                  : (calculatedGasFee + guildFeeInSellToken)?.toFixed(3)}{" "}
+                  : (calculatedGasFee ?? 0 + guildFeeInSellToken ?? 0)?.toFixed(
+                      3
+                    )}{" "}
                 {symbol}
               </>
             ) : (

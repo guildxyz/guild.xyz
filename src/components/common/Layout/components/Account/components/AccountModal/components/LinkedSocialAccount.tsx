@@ -4,7 +4,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Circle,
+  Avatar,
+  AvatarBadge,
   HStack,
   Icon,
   IconButton,
@@ -39,8 +40,8 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
 
   return (
     <>
-      <HStack spacing={2} alignItems="center" w="full">
-        {/* <Avatar src={image} size="sm">
+      <HStack spacing={3} alignItems="center" w="full">
+        <Avatar src={image} size="sm">
           <AvatarBadge
             boxSize={5}
             bgColor={`${platforms[type]?.colorScheme}.500`}
@@ -49,12 +50,8 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
           >
             <Icon as={platforms[type]?.icon} boxSize={3} color="white" />
           </AvatarBadge>
-        </Avatar> */}
-        <Circle size={8} bgColor={`${platforms[type]?.colorScheme}.500`}>
-          <Icon as={platforms[type]?.icon} boxSize={4} color="white" />
-        </Circle>
-        {/* <Text fontWeight="semibold">{name}</Text> */}
-        <Text fontWeight="semibold">{platforms[type].name}</Text>
+        </Avatar>
+        <Text fontWeight="semibold">{name}</Text>
         <Tooltip label="Disconnect account" placement="top" hasArrow>
           <IconButton
             rounded="full"
