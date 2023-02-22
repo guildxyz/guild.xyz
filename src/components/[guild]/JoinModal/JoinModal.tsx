@@ -13,8 +13,10 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, PlatformType } from "types"
+import useUser from "../hooks/useUser"
 import ConnectPlatform from "./components/ConnectPlatform"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
@@ -26,7 +28,7 @@ type Props = {
 }
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
-  const { isActive } = useWeb3React()
+  const { isActive, account } = useWeb3React()
   const { name, guildPlatforms, roles } = useGuild()
 
   const methods = useForm({
@@ -51,6 +53,18 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   if (hasTwitterRequirement) allPlatforms.push("TWITTER")
   if (hasGithubRequirement) allPlatforms.push("GITHUB")
   const allUniquePlatforms = [...new Set(allPlatforms)]
+  const user = useUser()
+
+  const isEverythingConnected = allUniquePlatforms.every((guildPlatform) =>
+    user.platformUsers
+      ?.map((platform) => platform.platformName.toString())
+      .includes(guildPlatform)
+  )
+
+  useEffect(() => {
+    if (!isEverythingConnected || !isOpen || !account) return
+    handleSubmit(onSubmit)()
+  }, [isEverythingConnected, isOpen])
 
   const {
     isLoading,
@@ -83,7 +97,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               onClick={handleSubmit(onSubmit)}
               colorScheme="green"
               isLoading={isSigning || isLoading}
-              loadingText={signLoadingText}
+              loadingText={"Joining Guild"}
               isDisabled={!isActive}
             >
               Join guild
