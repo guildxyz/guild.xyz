@@ -69,24 +69,28 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
               <Icon as={Info} color="gray" />
             </Tooltip>
           </HStack>
-          <Text as="span" colorScheme="gray">
-            {error ? (
-              "Couldn't calculate"
-            ) : pickedCurrency ? (
-              calculatedGasFee && calculatedGasFee ? (
+          <Skeleton
+            isLoaded={Boolean(
+              pickedCurrency && calculatedGasFee && guildFeeInSellToken
+            )}
+          >
+            <Text as="span" colorScheme="gray">
+              {error ? (
+                "Couldn't calculate"
+              ) : pickedCurrency ? (
                 <>
                   {isTooSmallFee
                     ? "< 0.001"
-                    : (calculatedGasFee + guildFeeInSellToken)?.toFixed(3)}{" "}
+                    : (calculatedGasFee ?? 0 + guildFeeInSellToken ?? 0)?.toFixed(
+                        3
+                      )}{" "}
                   {symbol}
                 </>
               ) : (
-                "Couldn't calculate"
-              )
-            ) : (
-              "Choose currency"
-            )}
-          </Text>
+                "Choose currency"
+              )}
+            </Text>
+          </Skeleton>
         </HStack>
 
         <HStack justifyContent="space-between">

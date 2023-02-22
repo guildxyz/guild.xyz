@@ -19,6 +19,7 @@ export type GeneratedGetAssetsParams =
       string[],
       {
         value?: BigNumberish
+        gasLimit?: BigNumberish
       }
     ]
   | [
@@ -30,6 +31,7 @@ export type GeneratedGetAssetsParams =
       string[],
       {
         value?: BigNumberish
+        gasLimit?: BigNumberish
       }
     ]
 

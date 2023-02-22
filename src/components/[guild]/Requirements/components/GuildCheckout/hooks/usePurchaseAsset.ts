@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber"
+import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -25,14 +25,31 @@ import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
 import useSubmitTransaction from "./useSubmitTransaction"
 
+const isConfigParam = (
+  param: any
+): param is {
+  value?: BigNumberish
+  gasLimit?: BigNumberish
+} => "value" in (param ?? {})
+
 const purchaseAsset = async (
   tokenBuyerContract: Contract,
-  generatedGetAssetsParams: GeneratedGetAssetsParams
+  generatedGetAssetsParams: GeneratedGetAssetsParams,
+  estimatedGasLimit: BigNumber
 ) => {
   // We shouldn't run into these issues, but rejecting here in case something wrong happens.
   if (!tokenBuyerContract) return Promise.reject("Can't find TokenBuyer contract.")
   if (!generatedGetAssetsParams)
     return Promise.reject("Couldn't generate getAssets params.")
+
+  // Adjusting the gas limit to avoid failing transactions)
+  const generatedGetAssetsParamsWithGasLimit = [...generatedGetAssetsParams]
+  const customGasLimit = estimatedGasLimit?.mul(15)?.div(10)
+  if (isConfigParam(generatedGetAssetsParamsWithGasLimit[4]))
+    generatedGetAssetsParamsWithGasLimit[4].gasLimit = customGasLimit
+  else if (isConfigParam(generatedGetAssetsParamsWithGasLimit[3]))
+    generatedGetAssetsParamsWithGasLimit[3].gasLimit = customGasLimit
+
   try {
     await tokenBuyerContract.callStatic.getAssets(...generatedGetAssetsParams)
   } catch (callStaticError) {
@@ -43,8 +60,6 @@ const purchaseAsset = async (
 
     if (!callStaticError.errorName) return Promise.reject(callStaticError)
 
-    // TODO: we could handle Uniswap universal router errors too
-    // https://github.com/Uniswap/universal-router/blob/main/contracts/interfaces/IUniversalRouter.sol
     switch (callStaticError.errorName) {
       case "AccessDenied":
         return Promise.reject("TokenBuyer contract error: access denied")
@@ -114,16 +129,20 @@ const usePurchaseAsset = () => {
       ? allowance && BigNumber.from(priceData.priceInWei).lte(allowance)
       : true)
 
-  const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
-    useEstimateGasFee(
-      requirement?.id?.toString(),
-      shouldEstimateGas ? tokenBuyerContract : null,
-      "getAssets",
-      generatedGetAssetsParams
-    )
+  const {
+    estimatedGasLimit,
+    estimatedGasFee,
+    estimatedGasFeeInUSD,
+    estimateGasError,
+  } = useEstimateGasFee(
+    requirement?.id?.toString(),
+    shouldEstimateGas ? tokenBuyerContract : null,
+    "getAssets",
+    generatedGetAssetsParams
+  )
 
   const purchaseAssetTransaction = (data?: GeneratedGetAssetsParams) =>
-    purchaseAsset(tokenBuyerContract, data)
+    purchaseAsset(tokenBuyerContract, data, estimatedGasLimit)
 
   const useSubmitData = useSubmitTransaction<GeneratedGetAssetsParams>(
     purchaseAssetTransaction,
