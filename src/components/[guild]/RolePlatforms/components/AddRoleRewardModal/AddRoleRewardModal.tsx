@@ -11,7 +11,7 @@ import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft } from "phosphor-react"
 import platforms from "platforms"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { PlatformName } from "types"
 import AddDiscordPanel from "./components/AddDiscordPanel"
 import AddGithubPanel from "./components/AddGithubPanel"
@@ -30,9 +30,15 @@ const addPlatformComponents: Record<
 }
 
 const AddRoleRewardModal = ({ isOpen, onClose }) => {
-  const [selection, setSelection] = useState<PlatformName>(null)
+  const [selection, setSelectionOg] = useState<PlatformName>(null)
+  const modalRef = useRef(null)
 
   const AddPlatformPanel = addPlatformComponents[selection]
+
+  const setSelection = (platform: PlatformName) => {
+    setSelectionOg(platform)
+    modalRef.current?.scrollTo({ top: 0 })
+  }
 
   const closeModal = () => {
     setSelection(null)
@@ -67,7 +73,7 @@ const AddRoleRewardModal = ({ isOpen, onClose }) => {
             </Text>
           </HStack>
         </ModalHeader>
-        <ModalBody>
+        <ModalBody ref={modalRef}>
           {(selection === null && (
             <>
               <SelectExistingPlatform onClose={onClose} />
