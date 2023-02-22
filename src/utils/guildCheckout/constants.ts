@@ -1,6 +1,8 @@
 import { BigNumberish } from "@ethersproject/bignumber"
 import { Chain, RPC } from "connectors"
 import { RequirementType } from "requirements"
+import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
+import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import {
   encodePermit2Permit,
   encodeUnwrapEth,
@@ -18,12 +20,60 @@ export const GUILD_FEE_PERCENTAGE = 0.01
 export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
-export const TOKEN_BUYER_CONTRACT: Partial<Record<Chain, string>> = {
-  ETHEREUM: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
-  GOERLI: "0x7605143a3122e0329d1f9a8dcec44f326e8fd46f",
-  POLYGON: "0x151c518390d38487a4ddcb02e3f156a77c184cb9",
-  ARBITRUM: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
+const TOKEN_BUYER_CONTRACT: Record<
+  "DEFAULT" | number,
+  Partial<
+    Record<
+      Chain,
+      {
+        address: string
+        abi: object
+      }
+    >
+  >
+> = {
+  DEFAULT: {
+    ETHEREUM: {
+      address: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
+      abi: TOKEN_BUYER_ABI,
+    },
+    POLYGON: {
+      address: "0x151c518390d38487a4ddcb02e3f156a77c184cb9",
+      abi: TOKEN_BUYER_ABI,
+    },
+    ARBITRUM: {
+      address: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
+      abi: OLD_TOKEN_BUYER_ABI,
+    },
+    GOERLI: {
+      address: "0x7605143a3122e0329d1f9a8dcec44f326e8fd46f",
+      abi: OLD_TOKEN_BUYER_ABI,
+    },
+  },
+  // Alongside
+  7635: {
+    ETHEREUM: {
+      address: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
+      abi: TOKEN_BUYER_ABI,
+    },
+    POLYGON: {
+      address: "0x151c518390d38487a4ddcb02e3f156a77c184cb9",
+      abi: TOKEN_BUYER_ABI,
+    },
+  },
 }
+
+export const getTokenBuyerContractData = (
+  guildId?: number
+): Partial<
+  Record<
+    Chain,
+    {
+      address: string
+      abi: object
+    }
+  >
+> => TOKEN_BUYER_CONTRACT[guildId] ?? TOKEN_BUYER_CONTRACT.DEFAULT
 
 // 9839 - Arbitrum
 // 7635 - Alongside

@@ -6,15 +6,14 @@ import { Chain, Chains, RPC } from "connectors"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
 import ERC20_ABI from "static/abis/erc20Abi.json"
-import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import capitalize from "utils/capitalize"
 import {
   ADDRESS_REGEX,
+  getTokenBuyerContractData,
   GUILD_FEE_PERCENTAGE,
   NULL_ADDRESS,
   PURCHASABLE_REQUIREMENT_TYPES,
   RESERVOIR_API_URLS,
-  TOKEN_BUYER_CONTRACT,
   ZeroXSupportedSources,
   ZEROX_API_URLS,
   ZEROX_SUPPORTED_SOURCES,
@@ -37,6 +36,7 @@ export type FetchPriceResponse = {
 }
 
 type FetchPriceBodyParams = {
+  guildId: number
   type: RequirementType
   chain: Chain
   sellToken: string
@@ -56,6 +56,7 @@ const getDecimals = async (chain: Chain, tokenAddress: string) => {
 }
 
 const getGuildFee = async (
+  guildId: number,
   sellToken: string,
   chainId: number,
   nativeCurrencyPriceInUSD: number,
@@ -67,13 +68,15 @@ const getGuildFee = async (
   guildFeeInSellToken: number
   guildFeeInUSD: number
 }> => {
-  if (!TOKEN_BUYER_CONTRACT[Chains[chainId]])
+  const tokenBuyerContractData = getTokenBuyerContractData(guildId)
+
+  if (!tokenBuyerContractData[Chains[chainId]])
     return Promise.reject("Unsupported chain")
 
   const provider = new JsonRpcProvider(RPC[Chains[chainId]].rpcUrls[0], chainId)
   const tokenBuyerContract = new Contract(
-    TOKEN_BUYER_CONTRACT[Chains[chainId]],
-    TOKEN_BUYER_ABI,
+    tokenBuyerContractData[Chains[chainId]].address,
+    tokenBuyerContractData[Chains[chainId]].abi,
     provider
   )
 
@@ -105,6 +108,12 @@ const validateBody = (
     return {
       isValid: false,
       error: "You must provide a request body.",
+    }
+
+  if (typeof obj.guildId !== "number")
+    return {
+      isValid: false,
+      error: "Missing or invalid param: guildId",
     }
 
   if (
@@ -173,7 +182,8 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
   if (!isValid) return res.status(400).json({ error })
 
-  const { type, chain, sellToken, address, data }: FetchPriceBodyParams = req.body
+  const { guildId, type, chain, sellToken, address, data }: FetchPriceBodyParams =
+    req.body
   const minAmount = parseFloat(data.minAmount ?? 1)
 
   if (type === "ERC20") {
@@ -247,6 +257,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     let guildFeeData
     try {
       guildFeeData = await getGuildFee(
+        guildId,
         sellToken,
         Chains[chain],
         nativeCurrencyPriceInUSD,
@@ -353,6 +364,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     let guildFeeData
     try {
       guildFeeData = await getGuildFee(
+        guildId,
         sellToken,
         Chains[chain],
         nativeCurrencyPriceInUSD,

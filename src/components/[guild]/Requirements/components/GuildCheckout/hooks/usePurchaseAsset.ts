@@ -11,9 +11,10 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { useMemo } from "react"
-import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
-import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
-import { ADDRESS_REGEX, TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
+import {
+  ADDRESS_REGEX,
+  getTokenBuyerContractData,
+} from "utils/guildCheckout/constants"
 import {
   GeneratedGetAssetsParams,
   generateGetAssetsParams,
@@ -72,11 +73,10 @@ const usePurchaseAsset = () => {
   } = useTokenData(requirement.chain, requirement.address)
   const { data: priceData } = usePrice(pickedCurrency)
 
+  const tokenBuyerContractData = getTokenBuyerContractData(guildId)
   const tokenBuyerContract = useContract(
-    TOKEN_BUYER_CONTRACT[Chains[chainId]],
-    ["ARBITRUM", "GOERLI"].includes(Chains[chainId])
-      ? OLD_TOKEN_BUYER_ABI
-      : TOKEN_BUYER_ABI,
+    tokenBuyerContractData[Chains[chainId]]?.address,
+    tokenBuyerContractData[Chains[chainId]]?.abi,
     true
   )
 
@@ -88,7 +88,7 @@ const usePurchaseAsset = () => {
 
   const { allowance } = useAllowance(
     pickedCurrency,
-    TOKEN_BUYER_CONTRACT[Chains[chainId]]
+    tokenBuyerContractData[Chains[chainId]]?.address
   )
 
   const { coinBalance, tokenBalance } = useBalance(

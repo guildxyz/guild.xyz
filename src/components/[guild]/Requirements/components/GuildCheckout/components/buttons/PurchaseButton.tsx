@@ -1,9 +1,10 @@
 import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
-import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
+import { getTokenBuyerContractData } from "utils/guildCheckout/constants"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
 import usePurchaseAsset from "../../hooks/usePurchaseAsset"
@@ -18,9 +19,12 @@ const PurchaseButton = (): JSX.Element => {
     isValidating: isPriceLoading,
     error,
   } = usePrice()
+
+  const { id } = useGuild()
+  const tokenBuyerContractData = getTokenBuyerContractData(id)
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
-    TOKEN_BUYER_CONTRACT[Chains[chainId]]
+    tokenBuyerContractData[Chains[chainId]]?.address
   )
 
   const { onSubmit, isLoading, estimateGasError } = usePurchaseAsset()
