@@ -41,7 +41,7 @@ const AccessHub = (): JSX.Element => {
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
   const { isAdmin } = useGuildPermission()
 
-  const activePoaps = poaps?.filter((poap) => {
+  const futurePoaps = poaps?.filter((poap) => {
     const currentTime = Date.now() / 1000
     return poap.expiryDate > currentTime
   })
@@ -55,7 +55,7 @@ const AccessHub = (): JSX.Element => {
       gap={4}
       mb="10"
     >
-      {accessedGuildPlatforms?.length || activePoaps?.length ? (
+      {accessedGuildPlatforms?.length || futurePoaps?.length ? (
         <>
           {accessedGuildPlatforms.map((platform) => {
             const {
@@ -84,7 +84,7 @@ const AccessHub = (): JSX.Element => {
               </PlatformCard>
             )
           })}
-          {activePoaps.map((poap) => (
+          {futurePoaps.map((poap) => (
             <PoapRewardCard key={poap?.id} guildPoap={poap} />
           ))}
         </>

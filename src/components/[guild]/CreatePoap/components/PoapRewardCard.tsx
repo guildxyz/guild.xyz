@@ -70,7 +70,7 @@ const PoapRewardCard = ({
     response: claimPoapResponse,
   } = useClaimPoap(poap, { onSuccess: onMintModalOpen })
 
-  if (!data.access && !isAdmin) return null
+  if ((!data.access || !guildPoap.activated) && !isAdmin) return null
 
   return (
     <>
