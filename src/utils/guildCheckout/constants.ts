@@ -20,8 +20,35 @@ export const GUILD_FEE_PERCENTAGE = 0.01
 export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
-const TOKEN_BUYER_CONTRACT: Record<
-  "DEFAULT" | number,
+const DEFAULT_TOKEN_BUYER_CONTRACTS: Partial<
+  Record<
+    Chain,
+    {
+      address: string
+      abi: object
+    }
+  >
+> = {
+  ETHEREUM: {
+    address: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
+    abi: TOKEN_BUYER_ABI,
+  },
+  POLYGON: {
+    address: "0x151c518390d38487a4ddcb02e3f156a77c184cb9",
+    abi: TOKEN_BUYER_ABI,
+  },
+  ARBITRUM: {
+    address: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
+    abi: OLD_TOKEN_BUYER_ABI,
+  },
+  GOERLI: {
+    address: "0x7605143a3122e0329d1f9a8dcec44f326e8fd46f",
+    abi: OLD_TOKEN_BUYER_ABI,
+  },
+}
+
+const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<
+  number,
   Partial<
     Record<
       Chain,
@@ -32,26 +59,9 @@ const TOKEN_BUYER_CONTRACT: Record<
     >
   >
 > = {
-  DEFAULT: {
-    ETHEREUM: {
-      address: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
-      abi: TOKEN_BUYER_ABI,
-    },
-    POLYGON: {
-      address: "0x151c518390d38487a4ddcb02e3f156a77c184cb9",
-      abi: TOKEN_BUYER_ABI,
-    },
-    ARBITRUM: {
-      address: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
-      abi: OLD_TOKEN_BUYER_ABI,
-    },
-    GOERLI: {
-      address: "0x7605143a3122e0329d1f9a8dcec44f326e8fd46f",
-      abi: OLD_TOKEN_BUYER_ABI,
-    },
-  },
   // Alongside
   7635: {
+    ...DEFAULT_TOKEN_BUYER_CONTRACTS,
     ETHEREUM: {
       address: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
       abi: TOKEN_BUYER_ABI,
@@ -73,7 +83,7 @@ export const getTokenBuyerContractData = (
       abi: object
     }
   >
-> => TOKEN_BUYER_CONTRACT[guildId] ?? TOKEN_BUYER_CONTRACT.DEFAULT
+> => SPECIAL_TOKEN_BUYER_CONTRACTS[guildId] ?? DEFAULT_TOKEN_BUYER_CONTRACTS
 
 // 9839 - Arbitrum
 // 7635 - Alongside
