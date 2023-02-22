@@ -51,7 +51,12 @@ const AccountConnections = () => {
             }: PlatformAccountDetails) => (
               <LinkedSocialAccount
                 key={platformUserId}
-                name={platformUserData?.username ?? "Couldn't fetch details"}
+                name={
+                  platformUserData?.username ??
+                  `${capitalize(
+                    PlatformType[platformId]?.toLowerCase() ?? "Platform"
+                  )} connected`
+                }
                 image={platformUserData?.avatar}
                 type={PlatformType[platformId] as PlatformName}
               />
