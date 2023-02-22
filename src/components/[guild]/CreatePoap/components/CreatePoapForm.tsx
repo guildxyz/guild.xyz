@@ -10,7 +10,6 @@ import {
   FormHelperText,
   FormLabel,
   Grid,
-  GridItem,
   HStack,
   Icon,
   Img,
@@ -20,7 +19,6 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  SimpleGrid,
   Skeleton,
   SkeletonCircle,
   Stack,
@@ -276,190 +274,158 @@ const CreatePoapForm = (): JSX.Element => {
 
   return (
     <FormProvider {...methods}>
-      <Grid mb={12} templateColumns="repeat(2, 1fr)" rowGap={6} columnGap={4}>
-        <GridItem colSpan={2}>
-          <FormControl isRequired isInvalid={!!errors?.name}>
+      <Stack mb={12} spacing="6">
+        <Grid gap="4" templateColumns={{ md: "auto 1fr" }}>
+          <FormControl
+            textAlign="left"
+            isInvalid={!!errors?.image || !!fileRejections?.[0]}
+            isRequired
+            isDisabled={!!poapData?.id}
+          >
+            <HStack alignItems="start" spacing={0}>
+              <FormLabel>POAP artwork</FormLabel>
+              {!poapData?.id && (
+                <Tooltip
+                  label="You can't edit image after POAP creation!"
+                  shouldWrapChildren
+                >
+                  <Icon as={WarningCircle} position="relative" top={0.5} left={-2} />
+                </Tooltip>
+              )}
+            </HStack>
+
+            <HStack>
+              {(poapData?.image_url || base64Image) && (
+                <Circle size={10} overflow="hidden" borderWidth={1}>
+                  <Img
+                    src={poapData?.image_url || base64Image}
+                    alt="POAP artwork"
+                    boxSize={10}
+                  />
+                </Circle>
+              )}
+              <Tooltip
+                isDisabled={!poapData?.id}
+                label="You can't edit image after POAP creation!"
+                shouldWrapChildren
+              >
+                <Button
+                  {...(poapData?.id ? {} : getRootProps())}
+                  as={poapData?.id ? undefined : "label"}
+                  leftIcon={<File />}
+                  h={10}
+                  w="full"
+                  isDisabled={!!poapData?.id}
+                >
+                  <input {...(poapData?.id ? {} : getInputProps())} hidden />
+                  <Text
+                    as="span"
+                    maxW={{ base: 44, md: 28 }}
+                    noOfLines={1}
+                    sx={{
+                      display: "block",
+                    }}
+                  >
+                    {isDragActive
+                      ? "Drop the file here"
+                      : acceptedFiles?.[0]?.name || "Choose image"}
+                  </Text>
+                </Button>
+              </Tooltip>
+            </HStack>
+            {!poapData?.image_url && (
+              <FormHelperText>In PNG or GIF format</FormHelperText>
+            )}
+            <FormErrorMessage>
+              {errors?.image?.message || fileRejections?.[0]?.errors?.[0]?.message}
+            </FormErrorMessage>
+          </FormControl>
+          <FormControl isRequired isInvalid={!!errors?.name} width="full">
             <FormLabel tabIndex={0}>What are you commemorating?</FormLabel>
             <Input {...register("name", { required: "This field is required." })} />
             <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
           </FormControl>
-        </GridItem>
+        </Grid>
 
-        <GridItem colSpan={2}>
-          <FormControl isRequired isInvalid={!!errors?.description}>
-            <FormLabel>
-              What do you want people to remember about this drop?
-            </FormLabel>
-            <Textarea
-              {...register("description", {
-                required: "This field is required.",
-                maxLength: {
-                  value: 1500,
-                  message: "Description length should be maximum 1500 characters",
-                },
-              })}
-              className="custom-scrollbar"
-              minH={32}
-              placeholder="Explain what this POAP is about, including how the POAP will be distributed. This text is stored on the NFT metadata and displayed in the POAP mobile app and all across the POAP ecosystem. Drops in languages other than English still have to provide an English description."
-            />
-            <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
-          </FormControl>
-        </GridItem>
+        <FormControl isRequired isInvalid={!!errors?.description}>
+          <FormLabel>What do you want people to remember about this drop?</FormLabel>
+          <Textarea
+            {...register("description", {
+              required: "This field is required.",
+              maxLength: {
+                value: 1500,
+                message: "Description length should be maximum 1500 characters",
+              },
+            })}
+            className="custom-scrollbar"
+            minH={32}
+            placeholder="Explain what this POAP is about, including how the POAP will be distributed. This text is stored on the NFT metadata and displayed in the POAP mobile app and all across the POAP ecosystem. Drops in languages other than English still have to provide an English description."
+          />
+          <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
+        </FormControl>
 
-        <GridItem colSpan={2}>
-          <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
-            <FormControl
-              textAlign="left"
-              isInvalid={!!errors?.image || !!fileRejections?.[0]}
-              isRequired
-              isDisabled={!!poapData?.id}
-            >
-              <HStack alignItems="start" spacing={0}>
-                <FormLabel>POAP artwork</FormLabel>
-                {!poapData?.id && (
-                  <Tooltip
-                    label="You can't edit image after POAP creation!"
-                    shouldWrapChildren
-                  >
-                    <Icon
-                      as={WarningCircle}
-                      position="relative"
-                      top={0.5}
-                      left={-2}
-                    />
-                  </Tooltip>
-                )}
-              </HStack>
-
-              <HStack>
-                {(poapData?.image_url || base64Image) && (
-                  <Circle size={10} overflow="hidden" borderWidth={1}>
-                    <Img
-                      src={poapData?.image_url || base64Image}
-                      alt="POAP artwork"
-                      boxSize={10}
-                    />
-                  </Circle>
-                )}
-                <Tooltip
-                  isDisabled={!poapData?.id}
-                  label="You can't edit image after POAP creation!"
-                  shouldWrapChildren
-                >
-                  <Button
-                    {...(poapData?.id ? {} : getRootProps())}
-                    as={poapData?.id ? undefined : "label"}
-                    leftIcon={<File />}
-                    h={10}
-                    w="full"
-                    isDisabled={!!poapData?.id}
-                  >
-                    <input {...(poapData?.id ? {} : getInputProps())} hidden />
-                    <Text
-                      as="span"
-                      maxW={{ base: 44, md: 28 }}
-                      noOfLines={1}
-                      sx={{
-                        display: "block",
-                      }}
-                    >
-                      {isDragActive
-                        ? "Drop the file here"
-                        : acceptedFiles?.[0]?.name || "Choose image"}
-                    </Text>
-                  </Button>
-                </Tooltip>
-              </HStack>
-              {!poapData?.image_url && (
-                <FormHelperText>In PNG or GIF format</FormHelperText>
-              )}
-              <FormErrorMessage>
-                {errors?.image?.message || fileRejections?.[0]?.errors?.[0]?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl
-              isInvalid={!!errors?.start_date}
-              isRequired
-              isDisabled={!!poapData?.id}
-            >
-              <FormLabel>Event date:</FormLabel>
-              <Input
-                type="date"
-                max={endDate}
-                {...register("start_date", {
-                  required: "This field is required",
-                })}
-              />
-              <FormErrorMessage>{errors?.start_date?.message}</FormErrorMessage>
-            </FormControl>
-
-            <FormControl
-              isDisabled={!startDate}
-              isInvalid={!!errors?.expiry_date}
-              isRequired
-            >
-              <FormLabel>POAP expiry date:</FormLabel>
-              <Input
-                type="date"
-                min={startDate}
-                {...register("expiry_date", {
-                  required: "This field is required",
-                  validate: (value) =>
-                    value !== startDate || "Shouldn't be the same as start date.",
-                })}
-              />
-              <FormErrorMessage>{errors?.expiry_date?.message}</FormErrorMessage>
-            </FormControl>
-          </SimpleGrid>
-        </GridItem>
-
-        <GridItem colSpan={{ base: 2, md: 1 }}>
-          <FormControl>
-            <FormLabel>Website</FormLabel>
-            <Input {...register("event_url")} />
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={{ base: 2, md: 1 }}>
-          <FormControl isInvalid={!!errors?.secret_code} isRequired>
-            <HStack alignItems="start" spacing={0}>
-              <FormLabel>Edit code</FormLabel>
-              {!poapData?.id && (
-                <Tooltip
-                  label="Be sure to save the 6 digit Edit Code to make any further updates"
-                  shouldWrapChildren
-                >
-                  <Icon as={Question} position="relative" top={0.5} left={-2} />
-                </Tooltip>
-              )}
-            </HStack>
-            <Input
-              {...register("secret_code", {
-                required: "This field is required.",
-              })}
-            />
-            <FormErrorMessage>{errors?.secret_code?.message}</FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={{ base: 2, md: 1 }}>
+        <Stack direction={{ base: "column", md: "row" }} spacing={4}>
           <FormControl
-            isInvalid={!!errors?.email}
-            isRequired={!poapData?.id}
+            isInvalid={!!errors?.start_date}
+            isRequired
             isDisabled={!!poapData?.id}
           >
-            <FormLabel>Your e-mail address:</FormLabel>
+            <FormLabel>Event date:</FormLabel>
             <Input
-              {...register("email", {
-                required: !poapData?.id ? "This field is required." : false,
+              type="date"
+              max={endDate}
+              {...register("start_date", {
+                required: "This field is required",
               })}
             />
-            <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
+            <FormErrorMessage>{errors?.start_date?.message}</FormErrorMessage>
           </FormControl>
-        </GridItem>
 
-        <GridItem colSpan={{ base: 2, md: 1 }}>
+          <FormControl
+            isDisabled={!startDate}
+            isInvalid={!!errors?.expiry_date}
+            isRequired
+          >
+            <FormLabel>POAP expiry date:</FormLabel>
+            <Input
+              type="date"
+              min={startDate}
+              {...register("expiry_date", {
+                required: "This field is required",
+                validate: (value) =>
+                  value !== startDate || "Shouldn't be the same as start date.",
+              })}
+            />
+            <FormErrorMessage>{errors?.expiry_date?.message}</FormErrorMessage>
+          </FormControl>
+        </Stack>
+
+        {/* <FormControl>
+          <FormLabel>Website</FormLabel>
+          <Input {...register("event_url")} />
+        </FormControl> */}
+
+        {/* <FormControl isInvalid={!!errors?.secret_code} isRequired>
+          <HStack alignItems="start" spacing={0}>
+            <FormLabel>Edit code</FormLabel>
+            {!poapData?.id && (
+              <Tooltip
+                label="Be sure to save the 6 digit Edit Code to make any further updates"
+                shouldWrapChildren
+              >
+                <Icon as={Question} position="relative" top={0.5} left={-2} />
+              </Tooltip>
+            )}
+          </HStack>
+          <Input
+            {...register("secret_code", {
+              required: "This field is required.",
+            })}
+          />
+          <FormErrorMessage>{errors?.secret_code?.message}</FormErrorMessage>
+        </FormControl> */}
+
+        <Stack direction={{ base: "column", md: "row" }} spacing="4">
           <FormControl
             isInvalid={!!errors?.requested_codes}
             isRequired={!poapData?.id}
@@ -474,7 +440,6 @@ const CreatePoapForm = (): JSX.Element => {
                 <Icon as={Question} position="relative" top={0.5} left={-2} />
               </Tooltip>
             </HStack>
-
             {!poapData?.id ? (
               <Controller
                 name="requested_codes"
@@ -507,34 +472,43 @@ const CreatePoapForm = (): JSX.Element => {
             ) : (
               <RequestsMintLinks />
             )}
-
             <FormErrorMessage>{errors?.requested_codes?.message}</FormErrorMessage>
           </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={2}>
-          <FormControl textAlign="left" isDisabled={!!poapData?.id}>
-            <FormLabel>Drop type</FormLabel>
-            <Controller
-              name="private_event"
-              control={control}
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <Checkbox
-                  ref={ref}
-                  onChange={(e) => onChange(e?.target?.checked)}
-                  onBlur={onBlur}
-                  checked={value}
-                >
-                  Private drop
-                </Checkbox>
-              )}
+          <FormControl
+            isInvalid={!!errors?.email}
+            isRequired={!poapData?.id}
+            isDisabled={!!poapData?.id}
+          >
+            <FormLabel>Your e-mail address to recieve links to:</FormLabel>
+            <Input
+              {...register("email", {
+                required: !poapData?.id ? "This field is required." : false,
+              })}
             />
-            <FormHelperText>
-              If this is a test drop, please make your drop private.
-            </FormHelperText>
+            <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
           </FormControl>
-        </GridItem>
-      </Grid>
+        </Stack>
+
+        <FormControl textAlign="left" isDisabled={!!poapData?.id}>
+          <Controller
+            name="private_event"
+            control={control}
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <Checkbox
+                ref={ref}
+                onChange={(e) => onChange(e?.target?.checked)}
+                onBlur={onBlur}
+                checked={value}
+              >
+                Private drop
+              </Checkbox>
+            )}
+          />
+          <FormHelperText>
+            If this is a test drop, please make your drop private.
+          </FormHelperText>
+        </FormControl>
+      </Stack>
       <Stack
         direction={{ base: "column", sm: "row" }}
         justifyContent="end"
