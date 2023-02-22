@@ -1,12 +1,9 @@
 import { SimpleGrid, SimpleGridProps } from "@chakra-ui/react"
-import OptionCard from "components/common/OptionCard"
 import platforms from "platforms"
 import { PlatformName } from "types"
-import DiscordSelectButton from "./components/DiscordSelectButton"
-import GitHubSelectButton from "./components/GitHubSelectButton"
-import GoogleSelectButton from "./components/GoogleSelectButton"
-import PoapSelectButton from "./components/PoapSelectButton"
-import TelegramSelectButton from "./components/TelegramSelectButton"
+import PlatformSelectButton from "./components/PlatformSelectButton"
+import useGoogleButtonProps from "./hooks/useGoogleButtonProps"
+import useOAuthButtonProps from "./hooks/useOAuthButtonProps"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
@@ -24,48 +21,46 @@ const PlatformsGrid = ({
     Exclude<PlatformName, "" | "TWITTER" | "POAP">,
     {
       description: string
-      Btn?: (props: { onSelection: Props["onSelection"] }) => JSX.Element
+      hook?: any
     }
   > = {
     DISCORD: {
-      description: "Token gate roles",
-      Btn: DiscordSelectButton,
+      description: "Manage roles",
+      hook: useOAuthButtonProps,
     },
     TELEGRAM: {
-      description: "Token gate your group",
-      Btn: TelegramSelectButton,
+      description: "Manage groups",
     },
     GOOGLE: {
-      description: "Token gate documents",
-      Btn: GoogleSelectButton,
+      description: "Manage documents",
+      hook: useGoogleButtonProps,
     },
     GITHUB: {
-      description: "Token gate your repositories",
-      Btn: GitHubSelectButton,
+      description: "Manage repositories",
+      hook: useOAuthButtonProps,
     },
     ...(showPoap
       ? {
           POAP: {
-            description: "Drop POAPs",
-            Btn: PoapSelectButton,
+            description: "Mint POAP",
           },
         }
       : {}),
   }
 
   return (
-    <SimpleGrid columns={columns} gap={{ base: 4, md: 6 }}>
-      {Object.entries(platformsData).map(([platformName, { description, Btn }]) => (
-        <OptionCard
-          key={platformName}
-          size="lg"
-          title={platforms[platformName].name}
-          image={`/platforms/${platformName.toLowerCase()}.png`}
-          bgImage={`/platforms/${platformName.toLowerCase()}_bg.png`}
+    <SimpleGrid columns={columns} gap={{ base: 4, md: 5 }}>
+      {Object.entries(platformsData).map(([platform, { description, hook }]) => (
+        <PlatformSelectButton
+          key={platform}
+          platform={platform}
+          hook={hook}
+          title={platforms[platform].name}
           description={description}
-        >
-          {Btn && <Btn onSelection={onSelection} />}
-        </OptionCard>
+          imageUrl={`/platforms/${platform.toLowerCase()}.png`}
+          onSelection={onSelection}
+          size="md"
+        />
       ))}
     </SimpleGrid>
   )

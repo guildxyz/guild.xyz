@@ -43,12 +43,12 @@ const AddRoleRewardModal = ({ isOpen, onClose }) => {
     <Modal
       isOpen={isOpen}
       onClose={closeModal}
-      size="5xl"
+      size="4xl"
       scrollBehavior="inside"
       colorScheme={"dark"}
     >
       <ModalOverlay />
-      <ModalContent minH="70vh">
+      <ModalContent minH="550px">
         <ModalHeader>
           <HStack>
             {selection !== null && (
@@ -74,10 +74,7 @@ const AddRoleRewardModal = ({ isOpen, onClose }) => {
               <Text fontWeight={"bold"} mb="3">
                 Add new platform
               </Text>
-              <PlatformsGrid
-                onSelection={setSelection}
-                columns={{ base: 1, lg: 2 }}
-              />
+              <PlatformsGrid onSelection={setSelection} />
             </>
           )) || <AddPlatformPanel onSuccess={closeModal} />}
         </ModalBody>

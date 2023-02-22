@@ -1,6 +1,4 @@
 import { ButtonProps } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import useUser from "components/[guild]/hooks/useUser"
 import useOAuthWithCallback from "components/[guild]/JoinModal/hooks/useOAuthWithCallback"
 import useGateables from "hooks/useGateables"
@@ -11,7 +9,6 @@ import { ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useMemo } from "react"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
-import ConnectWalletButton from "./ConnectWalletButton"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
@@ -25,14 +22,10 @@ type Props = {
  * specific stuff in it (scope, readonly). Don't know if we want to generalize it in
  * the future or not so keeping it like this for now
  */
-const BaseOAuthSelectButton = ({
-  onSelection,
-  platform,
-  buttonText,
-  scope,
-  ...buttonProps
-}: Props) => {
+const useOAuthButtonProps = ({ onSelection, platform }: Props) => {
   const showErrorToast = useShowErrorToast()
+
+  const scope = platform === "GITHUB" ? "repo,read:user" : null
 
   const user = useUser()
   const isPlatformConnected = user.platformUsers?.some(
@@ -41,7 +34,6 @@ const BaseOAuthSelectButton = ({
   )
 
   const { mutate: mutateGateables } = useGateables(platform)
-  const { account } = useWeb3React()
 
   const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
     (signedValidation) =>
@@ -78,25 +70,16 @@ const BaseOAuthSelectButton = ({
     [isPlatformConnected]
   )
 
-  if (!account) return <ConnectWalletButton />
-
-  return (
-    <Button
-      onClick={isPlatformConnected ? () => onSelection(platform) : callbackWithOAuth}
-      isLoading={user?.isLoading || isAuthenticating || isLoading || isSigning}
-      loadingText={
-        signLoadingText ??
-        ((isAuthenticating && "Check the popup window") ||
-          (user?.isLoading && "Checking account") ||
-          "Connecting")
-      }
-      rightIcon={<DynamicCtaIcon />}
-      {...buttonProps}
-      data-dd-action-name={buttonText}
-    >
-      {buttonText}
-    </Button>
-  )
+  return {
+    onClick: isPlatformConnected ? () => onSelection(platform) : callbackWithOAuth,
+    isLoading: user?.isLoading || isAuthenticating || isLoading || isSigning,
+    loadingText:
+      signLoadingText ??
+      ((isAuthenticating && "Check the popup window") ||
+        (user?.isLoading && "Checking account") ||
+        "Connecting"),
+    rightIcon: DynamicCtaIcon,
+  }
 }
 
-export default BaseOAuthSelectButton
+export default useOAuthButtonProps

@@ -52,7 +52,7 @@ const AddRewardButton = () => {
 
   const setSelection = (platform: PlatformName) => {
     setSelectionOg(platform)
-    modalRef.current.scrollTo({ top: 0 })
+    modalRef.current?.scrollTo({ top: 0 })
   }
 
   const goBack = () => {
@@ -78,12 +78,12 @@ const AddRewardButton = () => {
         <Modal
           isOpen={isOpen}
           onClose={onClose}
-          size="5xl"
+          size="4xl"
           scrollBehavior="inside"
           colorScheme={"dark"}
         >
           <ModalOverlay />
-          <ModalContent minH="70vh">
+          <ModalContent minH="550px">
             <ModalHeader>
               <HStack>
                 {selection !== null && (
@@ -104,11 +104,7 @@ const AddRewardButton = () => {
             </ModalHeader>
             <ModalBody ref={modalRef}>
               {selection === null ? (
-                <PlatformsGrid
-                  onSelection={setSelection}
-                  columns={{ base: 1, lg: 2 }}
-                  showPoap
-                />
+                <PlatformsGrid onSelection={setSelection} showPoap />
               ) : showRoleSelect ? (
                 <>
                   <FormLabel mb="4">Select role(s) to add reward to</FormLabel>

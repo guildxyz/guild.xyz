@@ -1,5 +1,3 @@
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import useGoogleAuthWithCallback from "components/[guild]/JoinModal/hooks/useGoogleAuthWithCallback"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
@@ -7,13 +5,12 @@ import { ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useMemo } from "react"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
-import ConnectWalletButton from "./ConnectWalletButton"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
 }
 
-const GoogleSelectButton = ({ onSelection }: Props) => {
+const useGoogleButtonProps = ({ onSelection }: Props) => {
   const {
     callbackWithGoogleAuth,
     isAuthenticating,
@@ -44,27 +41,17 @@ const GoogleSelectButton = ({ onSelection }: Props) => {
     { onSuccess: () => onSelection("GOOGLE") }
   )
 
-  const { account } = useWeb3React()
-
-  if (!account) return <ConnectWalletButton />
-
-  return (
-    <Button
-      onClick={
-        isGoogleConnected ? () => onSelection("GOOGLE") : callbackWithGoogleAuth
-      }
-      isLoading={isAuthenticating || isSigning || isLoading}
-      colorScheme="blue"
-      loadingText={
-        signLoadingText ||
-        (isAuthenticating && "Check the popup window") ||
-        "Connecting"
-      }
-      rightIcon={<DynamicCtaIcon />}
-    >
-      Select document
-    </Button>
-  )
+  return {
+    onClick: isGoogleConnected
+      ? () => onSelection("GOOGLE")
+      : callbackWithGoogleAuth,
+    isLoading: isAuthenticating || isSigning || isLoading,
+    loadingText:
+      signLoadingText ||
+      (isAuthenticating && "Check the popup window") ||
+      "Connecting",
+    rightIcon: DynamicCtaIcon,
+  }
 }
 
-export default GoogleSelectButton
+export default useGoogleButtonProps
