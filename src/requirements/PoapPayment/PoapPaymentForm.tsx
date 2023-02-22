@@ -142,7 +142,7 @@ const PoapPaymentForm = ({ onClose }): JSX.Element => {
           supportedChains={poapDropSupportedChains}
           onChange={() => setValue("token", null)}
         />
-        <TokenPicker fieldName="token" chain={Chains[chainId] as Chain} />
+        <TokenPicker fieldName="token" chain={chain} />
         <FormControl isRequired isInvalid={!!errors?.fee}>
           <FormLabel>Price</FormLabel>
           <Controller
