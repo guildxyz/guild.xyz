@@ -265,7 +265,7 @@ const EditGuildDrawer = ({
                   <ContactInfo />
                 </Section>
 
-                {(isSuperAdmin || true) && (
+                {isSuperAdmin && (
                   <>
                     <Divider />
 
