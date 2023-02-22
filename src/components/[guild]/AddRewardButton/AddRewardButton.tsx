@@ -16,7 +16,7 @@ import Button from "components/common/Button"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft, Plus } from "phosphor-react"
 import platforms from "platforms"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName } from "types"
 import AddPoapPanel from "../CreatePoap"
@@ -43,11 +43,17 @@ const AddRewardButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const methods = useForm()
   const { roles } = useGuild()
+  const modalRef = useRef(null)
 
-  const [selection, setSelection] = useState<PlatformName>(null)
+  const [selection, setSelectionOg] = useState<PlatformName>(null)
   const [showRoleSelect, setShowRoleSelect] = useState(false)
 
   const AddPlatformPanel = addPlatformComponents[selection]
+
+  const setSelection = (platform: PlatformName) => {
+    setSelectionOg(platform)
+    modalRef.current.scrollTo({ top: 0 })
+  }
 
   const goBack = () => {
     methods.reset()
@@ -61,7 +67,6 @@ const AddRewardButton = () => {
     setSelection(null)
     methods.reset()
   }
-
   const { onSubmit, isLoading } = useAddReward(onSuccess)
 
   return (
@@ -97,7 +102,7 @@ const AddRewardButton = () => {
                 </Text>
               </HStack>
             </ModalHeader>
-            <ModalBody>
+            <ModalBody ref={modalRef}>
               {selection === null ? (
                 <PlatformsGrid
                   onSelection={setSelection}

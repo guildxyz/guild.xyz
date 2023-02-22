@@ -24,7 +24,7 @@ const AddPoapPanel = ({ onSuccess }: Props): JSX.Element => {
   return (
     <Box>
       {/* TODO: use Tabs */}
-      <ButtonGroup size="sm" w="full" mb="8" /* variant="subtle" */>
+      <ButtonGroup size="sm" w="full" mb="8">
         <Button
           w="full"
           borderRadius="md"
