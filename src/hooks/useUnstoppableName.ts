@@ -3,10 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import useSWRImmutable from "swr/immutable"
 
 const fetchUnstoppableName = (_, account, resolution) =>
-  resolution
-    .reverse(account)
-    .then((res) => res)
-    .catch()
+  resolution.reverse(account).then((res) => res)
 
 const resolution = new Resolution()
 

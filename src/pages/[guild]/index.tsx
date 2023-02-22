@@ -5,11 +5,13 @@ import {
   Heading,
   HStack,
   Icon,
+  Link,
   Spinner,
   Stack,
   Tag,
   TagLeftIcon,
   Text,
+  Wrap,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
@@ -28,6 +30,7 @@ import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
+import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useScrollEffect from "hooks/useScrollEffect"
@@ -39,8 +42,9 @@ import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
-import { Guild } from "types"
+import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
+import parseDescription from "utils/parseDescription"
 
 const BATCH_SIZE = 10
 
@@ -71,6 +75,7 @@ const GuildPage = (): JSX.Element => {
     roles,
     isLoading,
     onboardingComplete,
+    socialLinks,
   } = useGuild()
 
   useAutoStatusUpdate()
@@ -122,7 +127,7 @@ const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
-  // not importing it dinamically because that way the whole page flashes once when it loads
+  // not importing it dynamically because that way the whole page flashes once when it loads
   const DynamicOnboardingProvider =
     isAdmin && !onboardingComplete ? OnboardingProvider : React.Fragment
 
@@ -134,8 +139,36 @@ const GuildPage = (): JSX.Element => {
       <Layout
         title={name}
         textColor={textColor}
-        description={description}
-        showLayoutDescription
+        ogDescription={description}
+        description={
+          <>
+            {description && parseDescription(description)}
+            {Object.keys(socialLinks ?? {}).length > 0 && (
+              <Wrap w="full" spacing={3} mt="3">
+                {Object.entries(socialLinks).map(([type, link]) => {
+                  const prettyLink = link
+                    .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
+                    .replace(/\/+$/, "")
+
+                  return (
+                    <HStack key={type} spacing={1.5}>
+                      <SocialIcon type={type as SocialLinkKey} size="sm" />
+                      <Link
+                        href={link?.startsWith("http") ? link : `https://${link}`}
+                        isExternal
+                        fontSize="sm"
+                        fontWeight="semibold"
+                        color={textColor}
+                      >
+                        {prettyLink}
+                      </Link>
+                    </HStack>
+                  )
+                })}
+              </Wrap>
+            )}
+          </>
+        }
         image={
           <GuildLogo
             imageUrl={imageUrl}

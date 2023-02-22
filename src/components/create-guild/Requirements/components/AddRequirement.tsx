@@ -13,6 +13,7 @@ import {
   ModalOverlay,
   SimpleGrid,
   Stack,
+  Tag,
   Text,
   Tooltip,
   useDisclosure,
@@ -22,15 +23,20 @@ import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
-import { AnimatePresence, usePresence } from "framer-motion"
+import SearchBar from "components/explorer/SearchBar"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion"
+import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
+import { PAYMENT_ALLOWED_GUILDS } from "utils/guildCheckout/constants"
 import BalancyFooter from "./BalancyFooter"
+import IsNegatedPicker from "./IsNegatedPicker"
 
-const general = REQUIREMENTS_DATA.slice(1, 5)
-const integrations = REQUIREMENTS_DATA.slice(5)
+const general = REQUIREMENTS_DATA.slice(1, 7)
+const integrations = REQUIREMENTS_DATA.slice(7)
 
 // call undocumented preload() from next/dynamic, so the components are already loaded when they mount, which is needed for the height animation
 Object.values(REQUIREMENTS).forEach((a: any) => a.formComponent?.render?.preload?.())
@@ -85,7 +91,6 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
         onClose={handleClose}
         scrollBehavior="inside"
         finalFocusRef={addCardRef}
-        // colorScheme={"dark"}
       >
         <ModalOverlay />
         <ModalContent>
@@ -94,7 +99,7 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
             <HStack>
               {selectedType && (
                 <IconButton
-                  rounded={"full"}
+                  rounded="full"
                   aria-label="Back"
                   size="sm"
                   mb="-3px"
@@ -110,16 +115,19 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
           </ModalHeader>
 
           <SimpleGrid
-            overflow={"hidden"}
+            overflow="hidden"
             w="200%"
             columns={2}
             // fixes Safari height glitch (ModalBody being taller than this wrapper element on small screens so it's not fully scrollable)
             templateRows="1fr auto"
             transform={selectedType ? "translateX(-50%)" : "translateX(0px)"}
             maxHeight={height}
-            transition={`transform ${TRANSITION_DURATION_MS}ms, max-height ${TRANSITION_DURATION_MS}ms`}
+            transition={`transform ${TRANSITION_DURATION_MS}ms, min-height ${TRANSITION_DURATION_MS}ms, max-height ${TRANSITION_DURATION_MS}ms`}
           >
-            <AddRequirementHome ref={homeRef} {...{ setSelectedType }} />
+            <AddRequirementHome
+              ref={homeRef}
+              {...{ selectedType, setSelectedType }}
+            />
             <AnimatePresence>
               {selectedType && (
                 <AddRequirementForm
@@ -155,73 +163,136 @@ const AddRequirementForm = forwardRef(
       <Box
         ref={ref}
         alignSelf="start"
-        maxHeight={"full"}
-        overflow={"hidden"}
-        display={"flex"}
-        flexDirection={"column"}
+        maxHeight="full"
+        overflow="hidden"
+        display="flex"
+        flexDirection="column"
       >
         <FormProvider {...methods}>
           <ModalBody>
-            <FormComponent baseFieldPath="" />
+            {selectedType !== "PAYMENT" && <IsNegatedPicker baseFieldPath="" />}
+            <FormComponent baseFieldPath="" addRequirement={onSubmit} />
           </ModalBody>
-          <ModalFooter gap="3">
-            <BalancyFooter baseFieldPath={null} />
-            <Button colorScheme="green" onClick={onSubmit} ml="auto">
-              Add requirement
-            </Button>
-          </ModalFooter>
+          {selectedType !== "PAYMENT" && (
+            <ModalFooter gap="3">
+              <BalancyFooter baseFieldPath={null} />
+              <Button colorScheme="green" onClick={onSubmit} ml="auto">
+                Add requirement
+              </Button>
+            </ModalFooter>
+          )}
         </FormProvider>
       </Box>
     )
   }
 )
 
-const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => (
-  <ModalBody ref={ref} maxHeight={HOME_MAXHEIGHT} h="full">
-    <Heading size="sm" mb="3">
-      General
-    </Heading>
-    <SimpleGrid columns={2} gap="2">
-      {general.map((requirementButton) => (
-        <Button
-          key={requirementButton.types[0]}
-          minH={24}
-          onClick={() => setSelectedType(requirementButton.types[0])}
-        >
-          <VStack w="full" whiteSpace={"break-spaces"}>
-            <Icon as={requirementButton.icon as FC} boxSize={6} />
-            <Text as="span">{requirementButton.name}</Text>
-          </VStack>
-        </Button>
-      ))}
-    </SimpleGrid>
-    <Heading size="sm" mb="3" mt="8">
-      Integrations
-    </Heading>
-    <Stack>
-      {integrations.map((requirementButton) => (
-        <Tooltip
-          key={requirementButton.types[0]}
-          isDisabled={!(requirementButton as any).disabled}
-          label="Temporarily unavailable"
-          hasArrow
-        >
-          <Button
-            py="8"
-            px="6"
-            leftIcon={<Img src={requirementButton.icon as string} boxSize="6" />}
-            rightIcon={<Icon as={CaretRight} />}
-            iconSpacing={4}
-            onClick={() => setSelectedType(requirementButton.types[0])}
-            isDisabled={(requirementButton as any).disabled}
-            sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
-          >
-            {requirementButton.name}
-          </Button>
-        </Tooltip>
-      ))}
-    </Stack>
-  </ModalBody>
-))
+const AddRequirementHome = forwardRef(
+  ({ selectedType, setSelectedType }: any, ref: any) => {
+    const { id } = useGuild()
+
+    const [search, setSearch] = useState("")
+    const filteredIntegrations = integrations?.filter((integration) =>
+      integration.name.toLowerCase().includes(search.toLowerCase())
+    )
+
+    const debouncedSelectedValue = useDebouncedState(
+      selectedType,
+      TRANSITION_DURATION_MS
+    )
+
+    return (
+      <ModalBody
+        ref={ref}
+        minHeight={!debouncedSelectedValue ? HOME_MAXHEIGHT : undefined}
+        maxHeight={HOME_MAXHEIGHT}
+        className="custom-scrollbar"
+      >
+        <Heading size="sm" mb="3">
+          General
+        </Heading>
+        <SimpleGrid columns={2} gap={2}>
+          {general.map((requirementButton) => {
+            const isPayment = requirementButton.types[0] === "PAYMENT"
+            const isPaymentAllowed = PAYMENT_ALLOWED_GUILDS.includes(id)
+
+            return (
+              <Button
+                key={requirementButton.types[0]}
+                w="full"
+                py={11}
+                onClick={() => setSelectedType(requirementButton.types[0])}
+                isDisabled={isPayment && !isPaymentAllowed}
+              >
+                <VStack w="full" whiteSpace="break-spaces">
+                  <Icon as={requirementButton.icon as FC} boxSize={6} />
+                  <Text as="span">{requirementButton.name}</Text>
+                </VStack>
+
+                {isPayment && (
+                  <Tag
+                    position="absolute"
+                    top={2}
+                    right={2}
+                    size="sm"
+                    bgColor={isPaymentAllowed && "blue.500"}
+                    color={isPaymentAllowed && "white"}
+                  >
+                    {isPaymentAllowed ? "Alpha" : "Soon"}
+                  </Tag>
+                )}
+              </Button>
+            )
+          })}
+        </SimpleGrid>
+
+        <Heading size="sm" mb="3" mt="8">
+          Integrations
+        </Heading>
+        <Stack>
+          <SearchBar {...{ search, setSearch }} placeholder="Search integrations" />
+
+          <AnimateSharedLayout>
+            <AnimatePresence>
+              {filteredIntegrations.length ? (
+                filteredIntegrations.map((requirementButton) => (
+                  <CardMotionWrapper key={requirementButton.types[0]}>
+                    <Tooltip
+                      isDisabled={!(requirementButton as any).disabled}
+                      label="Temporarily unavailable"
+                      hasArrow
+                    >
+                      <Button
+                        w="full"
+                        py="8"
+                        px="6"
+                        leftIcon={
+                          <Img src={requirementButton.icon as string} boxSize="6" />
+                        }
+                        rightIcon={<Icon as={CaretRight} />}
+                        iconSpacing={4}
+                        onClick={() => setSelectedType(requirementButton.types[0])}
+                        isDisabled={(requirementButton as any).disabled}
+                        sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
+                      >
+                        {requirementButton.name}
+                      </Button>
+                    </Tooltip>
+                  </CardMotionWrapper>
+                ))
+              ) : (
+                <CardMotionWrapper delay={0.4}>
+                  <Text colorScheme="gray" py={4} textAlign="center">
+                    Couldn't find any integrations
+                  </Text>
+                </CardMotionWrapper>
+              )}
+            </AnimatePresence>
+          </AnimateSharedLayout>
+        </Stack>
+      </ModalBody>
+    )
+  }
+)
 
 export default AddRequirement

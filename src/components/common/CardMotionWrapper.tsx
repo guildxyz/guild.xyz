@@ -6,10 +6,12 @@ const MotionBox = m(Box)
 
 type Props = {
   animateOnMount?: boolean
+  delay?: number
 }
 
 const CardMotionWrapper = ({
   animateOnMount = true,
+  delay = 0,
   children,
 }: PropsWithChildren<Props>): JSX.Element => (
   <LazyMotion features={domMax}>
@@ -21,7 +23,7 @@ const CardMotionWrapper = ({
       animate={{
         opacity: 1,
         scale: 1,
-        transition: { duration: 0.2, ease: EASINGS.easeOut },
+        transition: { delay, duration: 0.2, ease: EASINGS.easeOut },
       }}
       exit={{
         opacity: 0,

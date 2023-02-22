@@ -15,7 +15,7 @@ const useRequestMintLinks = () => {
     onError: (error) => showErrorToast(error?.error ?? "An error occurred"),
     onSuccess: () => {
       toast({
-        title: "Successfuly requested mint links!",
+        title: "Successfully requested mint links!",
         status: "success",
       })
     },

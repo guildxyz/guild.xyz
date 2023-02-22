@@ -3,7 +3,6 @@ import {
   Container,
   Heading,
   HStack,
-  Text,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
@@ -14,16 +13,15 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 import { ArrowLeft } from "phosphor-react"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
-import parseDescription from "utils/parseDescription"
-import Button from "../Button"
+import LinkButton from "../LinkButton"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
 
 type Props = {
   image?: JSX.Element
   title: string
-  description?: string
-  showLayoutDescription?: boolean
+  ogDescription?: string
+  description?: JSX.Element
   textColor?: string
   action?: ReactNode | undefined
   background?: string
@@ -35,8 +33,8 @@ type Props = {
 const Layout = ({
   image,
   title,
+  ogDescription,
   description,
-  showLayoutDescription,
   textColor,
   action,
   background,
@@ -67,10 +65,10 @@ const Layout = ({
       <Head>
         <title>{`${title}`}</title>
         <meta property="og:title" content={`${title}`} />
-        {description && (
+        {ogDescription && (
           <>
-            <meta name="description" content={description} />
-            <meta property="og:description" content={description} />
+            <meta name="description" content={ogDescription} />
+            <meta property="og:description" content={ogDescription} />
           </>
         )}
       </Head>
@@ -120,19 +118,18 @@ const Layout = ({
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
           {showBackButton && hasNavigated && (
-            <Button
+            <LinkButton
+              href="/explorer"
               variant="link"
               color={colorContext.textColor}
               opacity={0.75}
-              _active={{}}
               size="sm"
               leftIcon={<ArrowLeft />}
-              onClick={() => router.back()}
               alignSelf="flex-start"
               mb="6"
             >
               Go back to explorer
-            </Button>
+            </LinkButton>
           )}
           <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
             <HStack justify="space-between" w="full" spacing={3}>
@@ -151,15 +148,15 @@ const Layout = ({
 
               {action}
             </HStack>
-            {showLayoutDescription && description?.length && (
-              <Text
+            {description && (
+              <Box
                 w="full"
                 fontWeight="semibold"
                 color={textColor}
                 mb="-2 !important"
               >
-                {parseDescription(description)}
-              </Text>
+                {description}
+              </Box>
             )}
           </VStack>
           <Box ref={childrenWrapper}>{children}</Box>

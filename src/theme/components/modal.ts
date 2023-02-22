@@ -6,7 +6,7 @@ const styles = {
   parts: ["dialog", "closeButton", "header", "footer", "body"],
   baseStyle: (props: Dict) => {
     const { colorScheme: c, scrollBehavior } = props
-    const backgroundColor = c === "dark" && mode("gray.50", "gray.800")(props)
+    const darkBgColor = mode("gray.50", "gray.800")(props)
 
     return {
       dialogContainer: {
@@ -41,19 +41,20 @@ const styles = {
         py: 8,
         fontFamily: "display",
         fontWeight: "bold",
-        backgroundColor,
+        backgroundColor: c === "dark" && darkBgColor,
       },
       body: {
         px: { base: 6, sm: 10 },
         pt: { base: 1, sm: 2 },
         pb: { base: 9, sm: 10 },
-        backgroundColor,
+        backgroundColor: c === "dark" && darkBgColor,
       },
       footer: {
         px: { base: 6, sm: 10 },
         pt: 2,
         pb: 10,
-        backgroundColor,
+        backgroundColor: (c === "dark" || c === "duotone") && darkBgColor,
+        borderTopWidth: c === "duotone" && mode(1, 0)(props),
       },
       overlay: {
         backdropFilter: "blur(4px)",

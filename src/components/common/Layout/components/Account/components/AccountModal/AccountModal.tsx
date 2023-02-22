@@ -11,7 +11,6 @@ import {
   Stack,
   Text,
   Tooltip,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
@@ -21,14 +20,15 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
-  const { isLoading, platformUsers, addresses, id } = useUser()
-  const modalFooterBg = useColorModeValue("gray.100", "gray.800")
+  const { setIsDelegateConnection } = useWeb3ConnectionManager()
+  const { id } = useUser()
 
   const connectorName = (c) =>
     c instanceof MetaMask
@@ -42,8 +42,10 @@ const AccountModal = ({ isOpen, onClose }) => {
       : ""
 
   const handleLogout = () => {
+    setIsDelegateConnection(false)
     onClose()
-    connector.deactivate()
+    connector.resetState()
+    connector.deactivate?.()
 
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
       /^dc_auth_[a-z]*$/.test(key)
@@ -57,42 +59,51 @@ const AccountModal = ({ isOpen, onClose }) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} colorScheme="duotone">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Account</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          <Stack mb={9} direction="row" spacing="4" alignItems="center">
-            <GuildAvatar address={account} />
-            <CopyableAddress address={account} decimals={5} fontSize="2xl" />
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mb="-1"
-          >
-            <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
-              {`Connected with ${connectorName(connector)}`}
+        {account ? (
+          <>
+            <ModalBody>
+              <Stack mb={9} direction="row" spacing="4" alignItems="center">
+                <GuildAvatar address={account} />
+                <CopyableAddress address={account} decimals={5} fontSize="2xl" />
+              </Stack>
+
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                mb="-1"
+              >
+                <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
+                  {`Connected with ${connectorName(connector)}`}
+                </Text>
+                <HStack>
+                  <Tooltip label="Disconnect">
+                    <IconButton
+                      size="sm"
+                      variant="outline"
+                      onClick={handleLogout}
+                      icon={<Icon as={SignOut} p="1px" />}
+                      aria-label="Disconnect"
+                    />
+                  </Tooltip>
+                </HStack>
+              </Stack>
+            </ModalBody>
+            <ModalFooter flexDir="column" pt="10">
+              <AccountConnections />
+            </ModalFooter>
+          </>
+        ) : (
+          <ModalBody>
+            <Text mb="6" fontSize={"2xl"} fontWeight="semibold">
+              Not connected
             </Text>
-            <HStack>
-              <Tooltip label="Disconnect">
-                <IconButton
-                  size="sm"
-                  variant="outline"
-                  onClick={handleLogout}
-                  icon={<Icon as={SignOut} p="1px" />}
-                  aria-label="Disconnect"
-                />
-              </Tooltip>
-            </HStack>
-          </Stack>
-        </ModalBody>
-        {(isLoading || platformUsers || addresses) && (
-          <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
-            <AccountConnections />
-          </ModalFooter>
+          </ModalBody>
         )}
       </ModalContent>
     </Modal>

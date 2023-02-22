@@ -1,14 +1,18 @@
 import { Icon } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
 import useGuild from "components/[guild]/hooks/useGuild"
+import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement, {
+  RequirementProps,
+} from "components/[guild]/Requirements/components/Requirement"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useServerData from "hooks/useServerData"
 import { DiscordLogo } from "phosphor-react"
-import { RequirementComponentProps } from "requirements"
-import pluralize from "utils/pluralize"
-import ConnectRequirementPlatformButton from "../common/ConnectRequirementPlatformButton"
-import Requirement from "../common/Requirement"
+import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
-const DiscordRequirement = ({ requirement, ...rest }: RequirementComponentProps) => {
+const DiscordRequirement = (props: RequirementProps) => {
+  const requirement = useRequirementContext()
+
   const { guildPlatforms } = useGuild()
   const {
     data: { serverName, serverIcon, roles, isAdmin },
@@ -23,8 +27,8 @@ const DiscordRequirement = ({ requirement, ...rest }: RequirementComponentProps)
   return (
     <Requirement
       image={renderedServerIcon ?? <Icon as={DiscordLogo} boxSize={6} />}
-      footer={<ConnectRequirementPlatformButton requirement={requirement} />}
-      {...rest}
+      footer={<ConnectRequirementPlatformButton />}
+      {...props}
     >
       {(() => {
         switch (requirement.type) {
@@ -40,7 +44,7 @@ const DiscordRequirement = ({ requirement, ...rest }: RequirementComponentProps)
                 <DataBlock>{role?.name || requirement.data.roleName}</DataBlock>
                 {` role in the `}
                 <DataBlock>{serverName || requirement.data.serverName}</DataBlock>
-                {`" server`}
+                {` server`}
               </>
             )
 
@@ -65,16 +69,9 @@ const DiscordRequirement = ({ requirement, ...rest }: RequirementComponentProps)
             )
 
           case "DISCORD_JOIN_FROM_NOW":
-            const dayInMs = 86400000
-            const memberSinceDays = requirement.data.memberSince / dayInMs
-            const memberSinceMonths = requirement.data.memberSince / dayInMs / 30
-            const memberSinceYears = requirement.data.memberSince / dayInMs / 365
-            const formattedMemberSince =
-              memberSinceYears >= 1
-                ? pluralize(Math.round(memberSinceYears), "year")
-                : memberSinceMonths >= 1
-                ? pluralize(Math.round(memberSinceMonths), "month")
-                : pluralize(Math.round(memberSinceDays), "day")
+            const formattedMemberSince = formatRelativeTimeFromNow(
+              requirement.data.memberSince
+            )
 
             return (
               <>

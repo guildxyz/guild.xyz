@@ -12,17 +12,13 @@ import {
 } from "@chakra-ui/react"
 import { BigNumber } from "@ethersproject/bignumber"
 import { formatUnits } from "@ethersproject/units"
-import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
-import { WalletConnect } from "@web3-react/walletconnect"
-import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import useAllowance from "components/[guild]/claim-poap/hooks/useAllowance"
 import usePayFee from "components/[guild]/claim-poap/hooks/usePayFee"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
-import useCoinBalance from "hooks/useCoinBalance"
-import useToast from "hooks/useToast"
-import useTokenBalance from "hooks/useTokenBalance"
+import useBalance from "hooks/useBalance"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
 import { PoapContract } from "types"
@@ -40,8 +36,8 @@ const PayFeeMenuItem = ({
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
-  const { connector, chainId } = useWeb3React()
-  const toast = useToast()
+  const { chainId } = useWeb3React()
+  const { requestNetworkChange } = useWeb3ConnectionManager()
 
   const { vaultData } = usePoapVault(
     poapContractData.vaultId,
@@ -53,16 +49,14 @@ const PayFeeMenuItem = ({
   } = useTokenData(Chains[poapContractData.chainId], vaultData?.token)
   const formattedPrice = formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
 
-  const { balance: usersCoinBalance, isLoading: isUsersCoinBalanceLoading } =
-    useCoinBalance(poapContractData?.chainId)
-  const { balance: usersTokenBalance, isLoading: isUsersTokenBalanceLoading } =
-    useTokenBalance(
-      vaultData?.token === NULL_ADDRESS ? null : vaultData?.token,
-      poapContractData?.chainId
-    )
+  const {
+    coinBalance,
+    tokenBalance,
+    isLoading: isBalanceLoading,
+  } = useBalance(vaultData?.token, poapContractData?.chainId)
 
   const sufficientBalance = (
-    vaultData?.token === NULL_ADDRESS ? usersCoinBalance : usersTokenBalance
+    vaultData?.token === NULL_ADDRESS ? coinBalance : tokenBalance
   )?.gte(vaultData?.fee ?? BigNumber.from(0))
 
   const allowance = useAllowance(vaultData?.token, poapContractData?.chainId)
@@ -74,25 +68,14 @@ const PayFeeMenuItem = ({
 
   useEffect(() => setLoadingText(loadingText), [loadingText])
 
-  const handleChainChange = () => {
-    if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet) {
-      toast({
-        title: "Your wallet doesn't support switching chains automatically",
-        description: `Please switch to ${
-          RPC[Chains[poapContractData.chainId]]?.chainName
-        } from your wallet manually!`,
-        status: "error",
-      })
-      return
-    }
-
-    requestNetworkChange(Chains[poapContractData.chainId])()
-  }
-
   return (
     <Tooltip label="Insufficient balance" isDisabled={sufficientBalance}>
       <MenuItem
-        onClick={chainId === poapContractData.chainId ? onSubmit : handleChainChange}
+        onClick={
+          chainId === poapContractData.chainId
+            ? onSubmit
+            : () => requestNetworkChange(poapContractData.chainId)
+        }
         tabIndex={0}
         isDisabled={!sufficientBalance}
       >
@@ -100,11 +83,7 @@ const PayFeeMenuItem = ({
           <HStack>
             <SkeletonCircle
               boxSize={5}
-              isLoaded={
-                !isValidating &&
-                !isUsersCoinBalanceLoading &&
-                !isUsersTokenBalanceLoading
-              }
+              isLoaded={!isValidating && !isBalanceLoading}
             >
               <Circle
                 size={5}
@@ -117,13 +96,7 @@ const PayFeeMenuItem = ({
                 />
               </Circle>
             </SkeletonCircle>
-            <Skeleton
-              isLoaded={
-                !isValidating &&
-                !isUsersCoinBalanceLoading &&
-                !isUsersTokenBalanceLoading
-              }
-            >
+            <Skeleton isLoaded={!isValidating && !isBalanceLoading}>
               <Text as="span" pr={4}>
                 {isValidating
                   ? "Pay fee"

@@ -5,14 +5,13 @@ import {
   InputLeftElement,
   Stack,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Chains } from "connectors"
 import { useMemo } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../common/ChainPicker"
 import useLocks, { CHAINS_ENDPOINTS } from "./hooks/useLocks"
@@ -27,7 +26,6 @@ const customFilterOption = (candidate, input) =>
 
 const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
-    control,
     setValue,
     formState: { errors, touchedFields },
   } = useFormContext()
@@ -74,29 +72,16 @@ const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
               <OptionImage img={pickedLock?.img} alt={pickedLock?.label} />
             </InputLeftElement>
           )}
-          <Controller
-            name={`${baseFieldPath}.address` as const}
-            control={control}
+          <ControlledSelect
+            name={`${baseFieldPath}.address`}
             rules={{
               required: "This field is required.",
             }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                isClearable
-                isLoading={isLoading}
-                options={mappedLocks}
-                placeholder="Search..."
-                value={
-                  value ? mappedLocks?.find((lock) => lock.value === value) : ""
-                }
-                onChange={(selectedOption: SelectOption) =>
-                  onChange(selectedOption?.value)
-                }
-                onBlur={onBlur}
-                filterOption={customFilterOption}
-              />
-            )}
+            isClearable
+            isLoading={isLoading}
+            options={mappedLocks}
+            placeholder="Search..."
+            filterOption={customFilterOption}
           />
         </InputGroup>
 

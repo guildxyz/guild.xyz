@@ -1,5 +1,4 @@
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
-import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
 type Props = {
@@ -39,9 +38,7 @@ const AddDiscordPanel = ({ onSuccess }: Props) => {
           })
           onSuccess()
         }}
-      >
-        <DiscordRoleVideo />
-      </DiscordGuildSetup>
+      />
     </FormProvider>
   )
 }

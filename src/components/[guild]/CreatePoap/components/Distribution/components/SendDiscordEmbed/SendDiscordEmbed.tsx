@@ -76,8 +76,8 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
     defaultValues: {
       poapId: poapData?.id,
       title: poapData?.name,
-      description: "Claim this magnificent POAP to your collection!",
-      button: "Claim POAP",
+      description: "Mint this magnificent POAP to your collection!",
+      button: "Mint POAP",
       serverId: discordServerId,
     },
   })
@@ -108,19 +108,19 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
         leftIcon={<Icon as={DiscordLogo} />}
         onClick={onOpen}
       >
-        Send claim embed
+        Send mint embed
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent maxW="lg">
-          <ModalHeader>Set up claim embed</ModalHeader>
+          <ModalHeader>Set up mint embed</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormProvider {...methods}>
               <VStack spacing={8} alignItems={"start"}>
                 <Text>
-                  The bot will send an embed to your Discord server members can claim
+                  The bot will send an embed to your Discord server members can mint
                   the POAP from - feel free to customize it below!
                 </Text>
 
@@ -229,7 +229,7 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
           </ModalBody>
           <ModalFooter>
             <Tooltip
-              label="You can't send the claim embed until your event isn't finished."
+              label="You can't send the mint embed until your event isn't finished."
               isDisabled={
                 !poapEventDetails?.voiceChannelId ||
                 !!poapEventDetails?.voiceEventEndedAt

@@ -36,30 +36,27 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
-import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
+import ControlledSelect from "components/common/ControlledSelect"
 import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
-import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import { Alert, Modal } from "components/common/Modal"
-import StyledSelect from "components/common/StyledSelect"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
-import { Chains, RPC } from "connectors"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import { Chain, Chains, RPC } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
-import useToast from "hooks/useToast"
 import { Check, CoinVertical } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
-import { MonetizePoapForm, SelectOption } from "types"
+import TokenPicker from "requirements/common/TokenPicker"
+import { MonetizePoapForm } from "types"
 import shortenHex from "utils/shortenHex"
 import useFeeInUSD from "../hooks/useFeeInUSD"
 import useIsGnosisSafe from "../hooks/useIsGnosisSafe"
 import useMonetizePoap from "../hooks/useMonetizePoap"
 import useRegisterVault from "../hooks/useRegisterVault"
 import useUsersGnosisSafes from "../hooks/useUsersGnosisSafes"
-import TokenPicker from "./TokenPicker"
 
 type Props = {
   isOpen: boolean
@@ -84,26 +81,9 @@ const handlePriceChange = (newValue, onChange) => {
 
 const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const modalBg = useColorModeValue(undefined, "gray.800")
-  const { account, chainId, connector } = useWeb3React()
 
-  const toast = useToast()
-  // TODO: refactor the NetworkButtonsList component, and maybe provide this function in a context, so we can use it everywhere.
-  const requestManualNetworkChange = (chain) => () =>
-    toast({
-      title: "Your wallet doesn't support switching chains automatically",
-      description: `Please switch to ${chain} from your wallet manually!`,
-      status: "error",
-    })
-  const changeNetwork = async (newChainId: number) => {
-    try {
-      if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet)
-        requestManualNetworkChange(Chains[newChainId])()
-      else await requestNetworkChange(Chains[newChainId], () => {}, true)()
-    } catch (err) {
-      // User cancelled network change
-      if (err?.code === 4001) setValue("chainId", chainId)
-    }
-  }
+  const { account, chainId } = useWeb3React()
+  const { requestNetworkChange } = useWeb3ConnectionManager()
 
   const { poapDropSupportedChains } = useCreatePoapContext()
   const feeCollectorContract = useFeeCollectorContract()
@@ -139,12 +119,15 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   useEffect(() => {
     if (!formChainId || formChainId === chainId) return
-    changeNetwork(formChainId)
+    requestNetworkChange(formChainId, undefined, (err) => {
+      if (err?.code === 4001) setValue("chainId", chainId)
+    })
   }, [formChainId])
 
   useEffect(() => {
     if (!chainId) return
     if (chainId !== formChainId) setValue("chainId", chainId)
+    setValue("token", "0x0000000000000000000000000000000000000000")
   }, [chainId])
 
   const token = useWatch({ control, name: "token" })
@@ -228,31 +211,17 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
                         />
                       </InputLeftElement>
 
-                      <Controller
+                      <ControlledSelect
                         name="chainId"
-                        defaultValue={mappedChains?.find(
-                          (_chain) => _chain.value === chainId
-                        )}
-                        render={({ field: { onChange, onBlur, value, ref } }) => (
-                          <StyledSelect
-                            ref={ref}
-                            options={mappedChains}
-                            value={mappedChains?.find(
-                              (_chain) => _chain.value === value
-                            )}
-                            onChange={(newValue: SelectOption) =>
-                              onChange(newValue?.value)
-                            }
-                            onBlur={onBlur}
-                          />
-                        )}
+                        options={mappedChains}
+                        defaultValue={chainId}
                       />
                     </InputGroup>
                   </FormControl>
                 </GridItem>
 
                 <GridItem colSpan={{ base: 2, md: 1 }}>
-                  <TokenPicker />
+                  <TokenPicker fieldName="token" chain={Chains[chainId] as Chain} />
                 </GridItem>
 
                 <GridItem colSpan={{ base: 2, md: 1 }}>

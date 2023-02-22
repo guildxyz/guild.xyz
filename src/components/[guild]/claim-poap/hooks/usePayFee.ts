@@ -69,7 +69,7 @@ const usePayFee = (vaultId: number, chainId: number) => {
 
     if (shouldApprove && !approved)
       return Promise.reject(
-        "You must approve spending tokens with the Guild.xyz FeeCollector contract."
+        "You must approve spending tokens with Guild's Payment contract."
       )
 
     // Calling payFee statically first & handling custom Solidity errors
@@ -118,7 +118,7 @@ const usePayFee = (vaultId: number, chainId: number) => {
     onSuccess: () => {
       toast({
         title: "Successful transaction!",
-        description: "You can claim your POAP now",
+        description: "You can mint your POAP now",
         status: "success",
       })
       mutateUserPoapEligibility({ ...userPoapEligibilityData, hasPaid: true })

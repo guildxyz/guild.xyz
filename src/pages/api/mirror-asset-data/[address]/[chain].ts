@@ -5,7 +5,10 @@ import { NextApiRequest, NextApiResponse } from "next"
 import MIRROR_CONTRACT_ABI from "static/abis/mirrorAbi.json"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "GET") return res.status(501).json({ error: "Not implemented" })
+  if (req.method !== "GET") {
+    res.setHeader("Allow", "GET")
+    return res.status(405).json({ error: `Method ${req.method} is not allowed` })
+  }
 
   const { address, chain } = req.query
   if (!address) return res.status(404).json(null)

@@ -13,7 +13,10 @@ type PartialVault = {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "GET") return res.status(501).json({ error: "Not implemented" })
+  if (req.method !== "GET") {
+    res.setHeader("Allow", "POST")
+    return res.status(405).json({ error: `Method ${req.method} is not allowed` })
+  }
 
   const { poapId } = req.query
   const parsedPoapId = Number(poapId)

@@ -1,4 +1,4 @@
-import { Flex, Text, useColorModeValue } from "@chakra-ui/react"
+import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react"
 import OptionImage from "./components/OptionImage"
 
 const CustomSelectOption = ({
@@ -31,12 +31,15 @@ const CustomSelectOption = ({
       opacity={isDisabled && ".3"}
       {...filteredInnerProps}
     >
-      {data.img &&
-        (typeof data.img === "string" ? (
-          <OptionImage img={data.img} alt={data.label} mr="2" />
-        ) : (
-          data.img
-        ))}
+      {data.img && (
+        <Box mr={2}>
+          {typeof data.img === "string" ? (
+            <OptionImage img={data.img} alt={data.label} />
+          ) : (
+            data.img
+          )}
+        </Box>
+      )}
       <Text fontWeight="semibold" as="span" noOfLines={1}>
         {data.label}
       </Text>

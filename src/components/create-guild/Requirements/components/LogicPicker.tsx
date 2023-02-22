@@ -12,14 +12,6 @@ const options = [
     value: "OR",
     size: "60px",
   },
-  {
-    value: "NAND",
-    size: "80px",
-  },
-  {
-    value: "NOR",
-    size: "68px",
-  },
 ]
 
 const LogicPicker = () => {

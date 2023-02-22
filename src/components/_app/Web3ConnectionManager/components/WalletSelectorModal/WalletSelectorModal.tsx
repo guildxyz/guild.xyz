@@ -11,10 +11,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import {
-  useRumAction,
-  WithRumComponentContext,
-} from "@datadog/rum-react-integration"
+import { useRumAction } from "@datadog/rum-react-integration"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useWeb3React } from "@web3-react/core"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -23,18 +20,53 @@ import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import { connectors } from "connectors"
-import useKeyPair from "hooks/useKeyPair"
+import useKeyPair, {
+  deleteKeyPairFromIdb,
+  getKeyPairFromIdb,
+} from "hooks/useKeyPair"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
-import { WalletError } from "types"
+import useSWR, { mutate, unstable_serialize } from "swr"
+import useSWRImmutable from "swr/immutable"
+import { User, WalletError } from "types"
+import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
+import DelegateCashButton from "./components/DelegateCashButton"
 import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
   isOpen: boolean
   onClose: () => void
   onOpen: () => void
+}
+
+const fetchShouldLinkToUser = async (_: "shouldLinkToUser", userId: number) => {
+  try {
+    const { id: userIdToConnectTo } = JSON.parse(
+      window.localStorage.getItem("userId")
+    )
+
+    if (
+      typeof userId === "number" &&
+      typeof userIdToConnectTo === "number" &&
+      userIdToConnectTo !== userId
+    ) {
+      try {
+        await deleteKeyPairFromIdb(userId).then(() =>
+          mutate(unstable_serialize(["keyPair", userId]))
+        )
+      } catch {}
+    }
+
+    const keypair = await getKeyPairFromIdb(+userIdToConnectTo)
+
+    return !!keypair
+  } catch {
+    // Remove in case it exists in an invalid form
+    window.localStorage.removeItem("userId")
+    return false
+  }
 }
 
 // We don't open the modal on these routes
@@ -44,6 +76,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const addDatadogAction = useRumAction("trackingAppAction")
 
   const { isActive, account, connector } = useWeb3React()
+  const { data: user } = useSWRImmutable<User>(account ? `/user/${account}` : null)
   const [error, setError] = useState<WalletError & Error>(null)
 
   // initialize metamask onboarding
@@ -56,7 +89,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     onClose()
     addDatadogAction("Wallet selector modal closed")
     setTimeout(() => {
-      connector.deactivate()
+      connector.resetState()
+      connector.deactivate?.()
     }, 200)
   }
 
@@ -82,6 +116,14 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }
   }, [keyPair, ready, router])
 
+  const { data: shouldLinkToUser } = useSWR(
+    ["shouldLinkToUser", user?.id],
+    fetchShouldLinkToUser
+  )
+
+  const { isDelegateConnection, setIsDelegateConnection } =
+    useWeb3ConnectionManager()
+
   const isConnected = account && isActive && ready
 
   return (
@@ -96,7 +138,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         <ModalContent>
           <ModalHeader display={"flex"}>
             <Box
-              {...(isConnected && !keyPair
+              {...((isConnected && !keyPair) || isDelegateConnection
                 ? {
                     w: "10",
                     opacity: 1,
@@ -116,12 +158,23 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 icon={<ArrowLeft size={20} />}
                 variant="ghost"
                 onClick={() => {
+                  if (isDelegateConnection && !(isConnected && !keyPair)) {
+                    setIsDelegateConnection(false)
+                    return
+                  }
                   set.reset()
-                  connector.deactivate()
+                  connector.resetState()
+                  connector.deactivate?.()
                 }}
               />
             </Box>
-            <Text>Connect wallet</Text>
+            <Text>
+              {shouldLinkToUser
+                ? "Link address"
+                : isDelegateConnection
+                ? "Connect hot wallet"
+                : "Connect wallet"}
+            </Text>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -146,6 +199,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   </CardMotionWrapper>
                 )
               })}
+              {!isDelegateConnection && (
+                <CardMotionWrapper>
+                  <DelegateCashButton />
+                </CardMotionWrapper>
+              )}
             </Stack>
             {isConnected && !keyPair && (
               <Box animation={"fadeIn .3s .1s both"}>
@@ -154,18 +212,18 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   mb="4"
                   colorScheme={"green"}
                   onClick={() => {
-                    set.onSubmit()
+                    set.onSubmit(shouldLinkToUser)
                     addDatadogAction("click on Verify account")
                   }}
                   isLoading={set.isLoading || !ready}
-                  isDisabled={!ready}
+                  isDisabled={!ready || shouldLinkToUser === undefined}
                   loadingText={
                     !ready
                       ? "Looking for keypairs"
                       : set.signLoadingText || "Check your wallet"
                   }
                 >
-                  Verify account
+                  {shouldLinkToUser ? "Link address" : "Verify account"}
                 </ModalButton>
               </Box>
             )}
@@ -196,4 +254,4 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   )
 }
 
-export default WithRumComponentContext("WalletSelectorModal", WalletSelectorModal)
+export default WalletSelectorModal

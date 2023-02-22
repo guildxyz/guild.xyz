@@ -20,14 +20,18 @@ module.exports = {
     if (options.isServer && options.nextRuntime === "edge") {
       config.resolve.alias = {
         ...config.resolve.alias,
+        "@chakra-ui/anatomy": false,
+        "@chakra-ui/react": false,
+        "@chakra-ui/theme-tools": false,
         "@datadog/browser-rum": false,
         "@datadog/rum-react-integration": false,
-        "@chakra-ui/react": false,
         "@web3-react/coinbase-wallet": false,
         "@web3-react/core": false,
         "@web3-react/metamask": false,
         "@web3-react/walletconnect": false,
         "@ethersproject/keccak256": false,
+        "chakra-react-select": false,
+        "chakra-ui-steps": false,
       }
     }
 
@@ -53,26 +57,6 @@ module.exports = {
   async rewrites() {
     return {
       beforeFiles: [
-        {
-          source: "/",
-          has: [
-            {
-              type: "host",
-              value: "guard.guild.xyz",
-            },
-          ],
-          destination: "/guard/",
-        },
-        {
-          source: "/setup",
-          has: [
-            {
-              type: "host",
-              value: "guard.guild.xyz",
-            },
-          ],
-          destination: "/guard/setup",
-        },
         {
           source: "/",
           has: [
@@ -195,9 +179,9 @@ module.exports = {
   async redirects() {
     return [
       {
-        source: "/guild-community",
+        source: "/community",
         destination:
-          "https://abalone-professor-5d6.notion.site/Welcome-to-the-guilds-of-Guild-d9604333bee9478497b05455437f03c1",
+          "https://help.guild.xyz/en/collections/3826818-our-guild-the-community",
         permanent: false,
       },
       {

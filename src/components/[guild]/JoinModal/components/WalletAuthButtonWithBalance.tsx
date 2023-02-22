@@ -1,11 +1,9 @@
 import { Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
-import useUsersTokenBalance from "components/[guild]/claim-poap/hooks/useUsersTokenBalance"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
-import useCoinBalance from "hooks/useCoinBalance"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useBalance from "hooks/useBalance"
 import { Wallet } from "phosphor-react"
-import { useContext } from "react"
 import { Token } from "types"
 import shortenHex from "utils/shortenHex"
 import JoinStep from "./JoinStep"
@@ -15,11 +13,10 @@ type Props = {
 }
 
 const WalletAuthButtonWithBalance = ({ token }: Props): JSX.Element => {
-  const { openWalletSelectorModal } = useContext(Web3Connection)
+  const { openWalletSelectorModal } = useWeb3ConnectionManager()
   const { account } = useWeb3React()
 
-  const { balance: coinBalance } = useCoinBalance()
-  const { balance, isBalanceLoading } = useUsersTokenBalance(token.address)
+  const { coinBalance, tokenBalance, isLoading } = useBalance(token.address)
 
   const balanceColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700")
 
@@ -35,13 +32,13 @@ const WalletAuthButtonWithBalance = ({ token }: Props): JSX.Element => {
               {shortenHex(account, 3)}
             </Text>
             <Text as="span" fontSize="xs" fontWeight="medium" color={balanceColor}>
-              {isBalanceLoading
+              {isLoading
                 ? "..."
                 : `${parseFloat(
                     formatUnits(
                       (token.address === "0x0000000000000000000000000000000000000000"
                         ? coinBalance
-                        : balance) ?? "0",
+                        : tokenBalance) ?? "0",
                       token.decimals ?? 18
                     )
                   )?.toFixed(2)} ${token.symbol}`}

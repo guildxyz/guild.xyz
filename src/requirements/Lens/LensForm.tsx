@@ -9,12 +9,11 @@ import {
   NumberInputStepper,
   Stack,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import { useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import useLensProfiles from "./hooks/useLensProfiles"
 
@@ -63,27 +62,18 @@ const LensForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       <FormControl isRequired>
         <FormLabel>Type:</FormLabel>
 
-        <Controller
-          name={`${baseFieldPath}.type` as const}
-          control={control}
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
           rules={{
             required: "This field is required.",
           }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              options={typeOptions}
-              placeholder="Choose type"
-              value={typeOptions?.find((option) => option.value === value)}
-              onChange={(newSelectedOption: SelectOption) => {
-                onChange(newSelectedOption.value)
-                // Resetting fields separately to avoid validation bugs
-                setValue(`${baseFieldPath}.data.id`, "")
-                setValue(`${baseFieldPath}.data.min`, "")
-              }}
-              onBlur={onBlur}
-            />
-          )}
+          options={typeOptions}
+          placeholder="Choose type"
+          afterOnChange={() => {
+            // Resetting fields separately to avoid validation bugs
+            setValue(`${baseFieldPath}.data.id`, "")
+            setValue(`${baseFieldPath}.data.min`, "")
+          }}
         />
       </FormControl>
 
@@ -146,6 +136,10 @@ const LensForm = ({ baseFieldPath, field }: RequirementFormProps) => {
                 value: 1,
                 message: "Amount must be positive",
               },
+              max: {
+                value: 20,
+                message: "Max amount is 20",
+              },
             }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <NumberInput
@@ -157,6 +151,7 @@ const LensForm = ({ baseFieldPath, field }: RequirementFormProps) => {
                 }}
                 onBlur={onBlur}
                 min={1}
+                max={20}
               >
                 <NumberInputField />
                 <NumberInputStepper>
@@ -184,16 +179,21 @@ const LensProfileSelect = ({
   placeholder,
 }: LensProfileSelectProps) => {
   const {
-    control,
     formState: { errors },
   } = useFormContext()
+
+  const id = useWatch({ name: `${baseFieldPath}.data.id` })
+
   // provide default value so there's options data on role edit
   // split before "." because I couldn't get the graphql query to work with "." in it
   const [search, setSearch] = useState(field?.data?.id?.split(".")?.[0] ?? "")
 
   const { handles, restCount, isLoading } = useLensProfiles(search)
 
-  const options = handles?.map((handle) => ({ label: handle, value: handle }))
+  const options = handles?.map((handle) => ({
+    label: handle,
+    value: handle,
+  }))
 
   if (restCount > 0)
     options.push({ label: `${restCount} more`, value: 0, isDisabled: true })
@@ -205,34 +205,29 @@ const LensProfileSelect = ({
     >
       <FormLabel>Profile username:</FormLabel>
 
-      <Controller
-        name={`${baseFieldPath}.data.id` as const}
-        control={control}
+      <ControlledSelect
+        name={`${baseFieldPath}.data.id`}
         rules={{
           required: "This field is required.",
         }}
-        render={({ field: { onChange, onBlur, value, ref } }) => (
-          <StyledSelect
-            ref={ref}
-            isClearable
-            options={options}
-            placeholder={placeholder}
-            value={value ? options?.find((option) => option.value === value) : null}
-            onChange={(newSelectedOption: SelectOption) =>
-              onChange(newSelectedOption?.value)
-            }
-            onInputChange={(inputValue) => setSearch(inputValue.split(".")[0])}
-            isLoading={isLoading}
-            onBlur={onBlur}
-            // so restCount stays visible
-            filterOption={() => true}
-            menuIsOpen={search ? undefined : false}
-            components={{
-              DropdownIndicator: () => null,
-              IndicatorSeparator: () => null,
-            }}
-          />
-        )}
+        isClearable
+        options={options}
+        placeholder={placeholder}
+        onInputChange={(inputValue) => setSearch(inputValue.split(".")[0])}
+        isLoading={isLoading}
+        // so restCount stays visible
+        filterOption={() => true}
+        menuIsOpen={search ? undefined : false}
+        components={{
+          DropdownIndicator: () => null,
+          IndicatorSeparator: () => null,
+        }}
+        fallbackValue={
+          id && {
+            label: id,
+            value: id,
+          }
+        }
       />
 
       <FormErrorMessage>

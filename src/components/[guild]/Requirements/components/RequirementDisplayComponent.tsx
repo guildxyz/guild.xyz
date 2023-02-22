@@ -1,16 +1,22 @@
 import { Icon } from "@chakra-ui/react"
-import DataBlock from "components/common/DataBlock"
 import { Warning } from "phosphor-react"
 import REQUIREMENTS from "requirements"
-import Requirement from "requirements/common/Requirement"
-import { Requirement as RequirementType } from "types"
+import { Requirement as RequirementType, Rest } from "types"
+import DataBlock from "./DataBlock"
 import RequiementAccessIndicator from "./RequiementAccessIndicator"
+import Requirement from "./Requirement"
+import { RequirementProvider } from "./RequirementContext"
 
 type Props = {
   requirement: RequirementType
-}
+  rightElement?: JSX.Element
+} & Rest
 
-const RequirementDisplayComponent = ({ requirement }: Props) => {
+const RequirementDisplayComponent = ({
+  requirement,
+  rightElement,
+  ...rest
+}: Props) => {
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
 
   if (!RequirementComponent)
@@ -20,12 +26,13 @@ const RequirementDisplayComponent = ({ requirement }: Props) => {
         <DataBlock>{requirement.type}</DataBlock>
       </Requirement>
     )
-
   return (
-    <RequirementComponent
-      requirement={requirement}
-      rightElement={<RequiementAccessIndicator requirement={requirement} />}
-    />
+    <RequirementProvider requirement={requirement}>
+      <RequirementComponent
+        rightElement={rightElement ?? <RequiementAccessIndicator />}
+        {...rest}
+      />
+    </RequirementProvider>
   )
 }
 

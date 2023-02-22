@@ -1,9 +1,20 @@
 import { useDisclosure } from "@chakra-ui/react"
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
+import { WalletConnect } from "@web3-react/walletconnect"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
+import requestNetworkChangeHandler from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
+import { Chains, RPC } from "connectors"
+import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { createContext, PropsWithChildren, useEffect } from "react"
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 
@@ -18,12 +29,20 @@ const Web3Connection = createContext({
   isAccountModalOpen: false,
   openAccountModal: () => {},
   closeAccountModal: () => {},
+  requestNetworkChange: (
+    chainId: number,
+    callback?: () => void,
+    errorHandler?: (err) => void
+  ) => {},
+  isDelegateConnection: false,
+  setIsDelegateConnection: (_: boolean) => {},
+  newtowrkChangeInProgress: false,
 })
 
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
-  const { isActive } = useWeb3React()
+  const { isActive, connector } = useWeb3React()
   const router = useRouter()
 
   const {
@@ -42,6 +61,8 @@ const Web3ConnectionManager = ({
     onClose: closeAccountModal,
   } = useDisclosure()
 
+  const [isDelegateConnection, setIsDelegateConnection] = useState<boolean>(false)
+
   // try to eagerly connect to an injected provider, if it exists and has granted access already
   const triedEager = useEagerConnect()
 
@@ -49,6 +70,32 @@ const Web3ConnectionManager = ({
     if (triedEager && !isActive && router.query.redirectUrl)
       openWalletSelectorModal()
   }, [triedEager, isActive, router.query])
+
+  const [newtowrkChangeInProgress, setNetworkChangeInProgress] = useState(false)
+  const toast = useToast()
+  const requestManualNetworkChange = (chain) => () =>
+    toast({
+      title: "Your wallet doesn't support switching chains automatically",
+      description: `Please switch to ${RPC[chain].chainName} from your wallet manually!`,
+      status: "info",
+    })
+
+  const requestNetworkChange = async (
+    newChainId: number,
+    callback?: () => void,
+    errorHandler?: (err: unknown) => void
+  ) => {
+    if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet)
+      requestManualNetworkChange(Chains[newChainId])()
+    else {
+      setNetworkChangeInProgress(true)
+      await requestNetworkChangeHandler(
+        Chains[newChainId],
+        callback,
+        errorHandler
+      )().finally(() => setNetworkChangeInProgress(false))
+    }
+  }
 
   return (
     <Web3Connection.Provider
@@ -63,6 +110,10 @@ const Web3ConnectionManager = ({
         isAccountModalOpen,
         openAccountModal,
         closeAccountModal,
+        requestNetworkChange,
+        isDelegateConnection,
+        setIsDelegateConnection,
+        newtowrkChangeInProgress,
       }}
     >
       {children}
@@ -76,4 +127,7 @@ const Web3ConnectionManager = ({
     </Web3Connection.Provider>
   )
 }
-export { Web3Connection, Web3ConnectionManager }
+
+const useWeb3ConnectionManager = () => useContext(Web3Connection)
+
+export { Web3ConnectionManager, useWeb3ConnectionManager }
