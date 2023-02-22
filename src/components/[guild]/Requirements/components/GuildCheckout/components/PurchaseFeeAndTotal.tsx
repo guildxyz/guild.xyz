@@ -73,14 +73,16 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
             {error ? (
               "Couldn't calculate"
             ) : pickedCurrency ? (
-              <>
-                {isTooSmallFee
-                  ? "< 0.001"
-                  : (calculatedGasFee ?? 0 + guildFeeInSellToken ?? 0)?.toFixed(
-                      3
-                    )}{" "}
-                {symbol}
-              </>
+              calculatedGasFee && calculatedGasFee ? (
+                <>
+                  {isTooSmallFee
+                    ? "< 0.001"
+                    : (calculatedGasFee + guildFeeInSellToken)?.toFixed(3)}{" "}
+                  {symbol}
+                </>
+              ) : (
+                "Couldn't calculate"
+              )
             ) : (
               "Choose currency"
             )}
