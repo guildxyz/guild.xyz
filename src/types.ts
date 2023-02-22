@@ -77,20 +77,29 @@ type NFT = {
 
 type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
 
-type PlatformAccount = {
+type PlatformUserData = {
+  acessToken?: string
+  scope?: string
+  expiresIn?: number
+  invalidToken?: boolean
+  refreshToken?: string
+  avatar?: string
+  username?: string
+  readonly?: boolean
+}
+type PlatformAccountDetails = {
   platformId: number
   platformName: PlatformName
-}
-type PlatformAccountDetails = PlatformAccount & {
   platformUserId: string
-  username: string
-  avatar: string
-  platformUserData?: Record<string, any> // TODO: better types once we decide which properties will we store in this object on the backend
+  platformUserData?: PlatformUserData
 }
+
+type AddressConnectionProvider = "DELEGATE"
 
 type User = {
   id: number
   addresses: Array<string>
+  addressProviders: Record<string, AddressConnectionProvider>
   platformUsers: PlatformAccountDetails[]
   signingKey?: string
   isSuperAdmin: boolean
@@ -470,5 +479,6 @@ export type {
   VoiceParticipationForm,
   VoiceRequirementParams,
   PoapEventDetails,
+  AddressConnectionProvider,
 }
 export { ValidationMethod, supportedSocialLinks }

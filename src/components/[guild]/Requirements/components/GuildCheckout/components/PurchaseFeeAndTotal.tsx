@@ -15,8 +15,9 @@ import { GUILD_FEE_PERCENTAGE } from "utils/guildCheckout/constants"
 import usePrice from "../hooks/usePrice"
 import usePurchaseAsset from "../hooks/usePurchaseAsset"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
+import PriceFallback from "./PriceFallback"
 
-const FeeAndTotal = (): JSX.Element => {
+const PurchaseFeeAndTotal = (): JSX.Element => {
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
 
   const {
@@ -45,7 +46,7 @@ const FeeAndTotal = (): JSX.Element => {
   const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
   const calculatedGasFee = isNativeCurrency ? estimatedGasInFloat ?? 0 : 0
 
-  const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) <= 0.001
+  const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) < 0.001
   const isTooSmallPrice = parseFloat(priceInSellToken?.toFixed(3)) < 0.001
 
   return (
@@ -139,22 +140,4 @@ const FeeAndTotal = (): JSX.Element => {
   )
 }
 
-const PriceFallback = ({ error, pickedCurrency, children }) => {
-  if (error)
-    return (
-      <Text as="span" colorScheme={"gray"}>
-        Couldn't calculate
-      </Text>
-    )
-
-  if (!pickedCurrency)
-    return (
-      <Text as="span" colorScheme={"gray"}>
-        Choose currency
-      </Text>
-    )
-
-  return children
-}
-
-export default FeeAndTotal
+export default PurchaseFeeAndTotal

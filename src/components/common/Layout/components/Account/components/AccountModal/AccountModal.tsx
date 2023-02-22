@@ -20,12 +20,14 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
+  const { setIsDelegateConnection } = useWeb3ConnectionManager()
   const { id } = useUser()
 
   const connectorName = (c) =>
@@ -40,6 +42,7 @@ const AccountModal = ({ isOpen, onClose }) => {
       : ""
 
   const handleLogout = () => {
+    setIsDelegateConnection(false)
     onClose()
     connector.resetState()
     connector.deactivate?.()

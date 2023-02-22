@@ -1,28 +1,32 @@
+import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useDatadog from "components/_app/Datadog/useDatadog"
-import { Chains } from "connectors"
+import { Chains, RPC } from "connectors"
+import useBalance from "hooks/useBalance"
 import useContract from "hooks/useContract"
 import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
-import { Dispatch, SetStateAction, useMemo } from "react"
+import { useMemo } from "react"
+import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
-import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
+import { ADDRESS_REGEX, TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
 import {
   GeneratedGetAssetsParams,
   generateGetAssetsParams,
 } from "utils/guildCheckout/utils"
 import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
+import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
+import useSubmitTransaction from "./useSubmitTransaction"
 
 const purchaseAsset = async (
   tokenBuyerContract: Contract,
-  generatedGetAssetsParams: GeneratedGetAssetsParams,
-  setTxHash: Dispatch<SetStateAction<string>>
+  generatedGetAssetsParams: GeneratedGetAssetsParams
 ) => {
   // We shouldn't run into these issues, but rejecting here in case something wrong happens.
   if (!tokenBuyerContract) return Promise.reject("Can't find TokenBuyer contract.")
@@ -50,13 +54,7 @@ const purchaseAsset = async (
     }
   }
 
-  const getAssetsCall = await tokenBuyerContract.getAssets(
-    ...generatedGetAssetsParams
-  )
-
-  setTxHash(getAssetsCall.hash)
-
-  return getAssetsCall.wait()
+  return tokenBuyerContract.getAssets(...generatedGetAssetsParams)
 }
 
 const usePurchaseAsset = () => {
@@ -67,59 +65,79 @@ const usePurchaseAsset = () => {
 
   const { account, chainId } = useWeb3React()
 
-  const {
-    requirement,
-    pickedCurrency,
-    txHash,
-    setTxHash,
-    setTxSuccess,
-    setTxError,
-  } = useGuildCheckoutContext()
+  const { id: guildId } = useGuild()
+  const { requirement, pickedCurrency } = useGuildCheckoutContext()
   const {
     data: { symbol },
   } = useTokenData(requirement.chain, requirement.address)
   const { data: priceData } = usePrice(pickedCurrency)
 
   const tokenBuyerContract = useContract(
-    TOKEN_BUYER_CONTRACT[chainId],
-    TOKEN_BUYER_ABI,
+    TOKEN_BUYER_CONTRACT[Chains[chainId]],
+    ["ARBITRUM", "GOERLI"].includes(Chains[chainId])
+      ? OLD_TOKEN_BUYER_ABI
+      : TOKEN_BUYER_ABI,
     true
   )
 
   const generatedGetAssetsParams = useMemo(
-    () => generateGetAssetsParams(account, chainId, pickedCurrency, priceData),
-    [account, chainId, pickedCurrency, priceData]
+    () =>
+      generateGetAssetsParams(guildId, account, chainId, pickedCurrency, priceData),
+    [guildId, account, chainId, pickedCurrency, priceData]
   )
+
+  const { allowance } = useAllowance(
+    pickedCurrency,
+    TOKEN_BUYER_CONTRACT[Chains[chainId]]
+  )
+
+  const { coinBalance, tokenBalance } = useBalance(
+    pickedCurrency,
+    Chains[requirement?.chain]
+  )
+
+  const pickedCurrencyIsNative =
+    pickedCurrency === RPC[Chains[chainId]].nativeCurrency.symbol
+
+  const isSufficientBalance =
+    priceData?.priceInWei &&
+    (coinBalance || tokenBalance) &&
+    (pickedCurrencyIsNative
+      ? coinBalance?.gt(BigNumber.from(priceData.priceInWei))
+      : tokenBalance?.gt(BigNumber.from(priceData.priceInWei)))
+
+  const shouldEstimateGas =
+    requirement?.chain === Chains[chainId] &&
+    priceData?.priceInWei &&
+    isSufficientBalance &&
+    (ADDRESS_REGEX.test(pickedCurrency)
+      ? allowance && BigNumber.from(priceData.priceInWei).lte(allowance)
+      : true)
 
   const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
     useEstimateGasFee(
       requirement?.id?.toString(),
-      requirement?.chain === Chains[chainId] ? tokenBuyerContract : null,
+      shouldEstimateGas ? tokenBuyerContract : null,
       "getAssets",
       generatedGetAssetsParams
     )
 
-  const purchaseAssetWithSetTx = (data?: GeneratedGetAssetsParams) =>
-    purchaseAsset(tokenBuyerContract, data, setTxHash)
+  const purchaseAssetTransaction = (data?: GeneratedGetAssetsParams) =>
+    purchaseAsset(tokenBuyerContract, data)
 
-  const useSubmitData = useSubmit<GeneratedGetAssetsParams, any>(
-    purchaseAssetWithSetTx,
+  const useSubmitData = useSubmitTransaction<GeneratedGetAssetsParams>(
+    purchaseAssetTransaction,
     {
       onError: (error) => {
-        const prettyError =
-          error?.code === "ACTION_REJECTED" ? "User rejected the transaction" : error
-        showErrorToast(prettyError)
-        if (txHash) setTxError(true)
+        showErrorToast(error)
         addDatadogError("general purchase requirement error (GuildCheckout)")
         addDatadogError("purchase requirement pre-call error (GuildCheckout)", {
-          error: prettyError,
+          error,
         })
       },
       onSuccess: (receipt) => {
         if (receipt.status !== 1) {
           showErrorToast("Transaction failed")
-          setTxError(true)
-          console.log("[DEBUG]: TX RECEIPT", receipt)
           addDatadogError("general purchase requirement error (GuildCheckout)")
           addDatadogError("purchase requirement error (GuildCheckout)", {
             receipt,
@@ -133,7 +151,6 @@ const usePurchaseAsset = () => {
           title: "Your new asset:",
           description: `${requirement.data.minAmount} ${symbol}`,
         })
-        setTxSuccess(true)
       },
     }
   )

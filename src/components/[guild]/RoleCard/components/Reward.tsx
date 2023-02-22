@@ -15,6 +15,7 @@ import capitalize from "utils/capitalize"
 type Props = {
   role: Role // should change to just roleId when we won't need memberCount anymore
   platform: RolePlatform
+  withLink?: boolean
 }
 
 const getRewardLabel = (platform: RolePlatform) => {
@@ -30,7 +31,7 @@ const getRewardLabel = (platform: RolePlatform) => {
   }
 }
 
-const Reward = ({ role, platform }: Props) => {
+const Reward = ({ role, platform, withLink }: Props) => {
   const isMember = useIsMember()
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
@@ -75,18 +76,25 @@ const Reward = ({ role, platform }: Props) => {
       </Circle>
       <Text px="2" maxW="calc(100% - var(--chakra-sizes-12))">
         {getRewardLabel(platform)}
-        <Tooltip label={state.tooltipLabel} hasArrow>
-          <Button
-            variant="link"
-            rightIcon={<ArrowSquareOut />}
-            iconSpacing="1"
-            {...state.buttonProps}
-            maxW="full"
-          >
+        {withLink ? (
+          <Tooltip label={state.tooltipLabel} hasArrow>
+            <Button
+              variant="link"
+              rightIcon={<ArrowSquareOut />}
+              iconSpacing="1"
+              {...state.buttonProps}
+              maxW="full"
+            >
+              {platform.guildPlatform?.platformGuildName ||
+                platform.guildPlatform?.platformGuildId}
+            </Button>
+          </Tooltip>
+        ) : (
+          <Text as="span" fontWeight="bold">
             {platform.guildPlatform?.platformGuildName ||
               platform.guildPlatform?.platformGuildId}
-          </Button>
-        </Tooltip>
+          </Text>
+        )}
       </Text>
 
       {platform.guildPlatform?.platformId === PlatformType.GOOGLE && (
@@ -100,7 +108,7 @@ const Reward = ({ role, platform }: Props) => {
   )
 }
 
-const RewardWrapper = ({ role, platform }: Props) => {
+const RewardWrapper = ({ role, platform, withLink }: Props) => {
   const { guildPlatforms } = useGuild()
 
   const guildPlatform = guildPlatforms?.find(
@@ -111,7 +119,9 @@ const RewardWrapper = ({ role, platform }: Props) => {
 
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
-  return <Reward platform={platformWithGuildPlatform} role={role} />
+  return (
+    <Reward platform={platformWithGuildPlatform} role={role} withLink={withLink} />
+  )
 }
 
 export default RewardWrapper

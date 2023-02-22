@@ -1,6 +1,7 @@
 import { datadogRum } from "@datadog/browser-rum"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
+import { pushToIntercomSetting } from "components/_app/IntercomProvider"
 import useKeyPair from "hooks/useKeyPair"
 import { sign } from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
@@ -72,6 +73,9 @@ const fetcher = async (
               response: errorMsg,
             }
           )
+
+          const correlationId = response.headers.get("X-Correlation-ID")
+          if (correlationId) pushToIntercomSetting("correlationId", correlationId)
 
           return Promise.reject(errorMsg)
         }

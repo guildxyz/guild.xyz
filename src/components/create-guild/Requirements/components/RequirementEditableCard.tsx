@@ -30,6 +30,7 @@ const RequirementEditableCard = ({
   field,
   removeRequirement,
   updateRequirement,
+  isEditDisabled,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const RequirementComponent = REQUIREMENTS[type]?.displayComponent
@@ -94,9 +95,11 @@ const RequirementEditableCard = ({
             footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
             setValueForBalancy={setValueForBalancy}
             rightElement={
-              <Button ref={ref} size="sm" onClick={onOpen}>
-                Edit
-              </Button>
+              !isEditDisabled && (
+                <Button ref={ref} size="sm" onClick={onOpen}>
+                  Edit
+                </Button>
+              )
             }
           />
         </RequirementProvider>

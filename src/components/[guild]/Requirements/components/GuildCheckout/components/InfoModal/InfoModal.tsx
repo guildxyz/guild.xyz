@@ -6,30 +6,34 @@ import InProgress from "./components/InProgress"
 import Success from "./components/Success"
 import TxError from "./components/TxError"
 
-const InfoModal = (): JSX.Element => {
-  const { isInfoModalOpen, txHash, txSuccess, txError } = useGuildCheckoutContext()
+type Props = {
+  title: string
+  progressComponent?: JSX.Element
+  successComponent?: JSX.Element
+  errorComponent?: JSX.Element
+}
 
-  const modalTitle = txError
-    ? "Transaction failed"
-    : txSuccess
-    ? "Purchase successful"
-    : txHash
-    ? "Transaction is processing..."
-    : "Buy requirement"
+const InfoModal = ({
+  title,
+  progressComponent,
+  successComponent,
+  errorComponent,
+}: Props): JSX.Element => {
+  const { isInfoModalOpen, txSuccess, txError } = useGuildCheckoutContext()
 
   return (
     <Modal isOpen={isInfoModalOpen} onClose={() => {}}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{modalTitle}</ModalHeader>
+        <ModalHeader>{title}</ModalHeader>
 
         <AnimatePresence>
           {txError ? (
-            <TxError />
+            <TxError>{errorComponent}</TxError>
           ) : txSuccess ? (
-            <Success tx={txHash} />
+            <Success>{successComponent}</Success>
           ) : (
-            <InProgress tx={txHash} />
+            <InProgress>{progressComponent}</InProgress>
           )}
         </AnimatePresence>
       </ModalContent>
