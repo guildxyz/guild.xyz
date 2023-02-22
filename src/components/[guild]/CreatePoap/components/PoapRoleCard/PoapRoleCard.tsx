@@ -27,36 +27,32 @@ import { ArrowSquareOut, Clock, EyeSlash, PencilSimple } from "phosphor-react"
 import { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
-import PoapAccessIndicator from "requirements/PoapPayment/components/PoapAccessIndicator"
-import PoapRequiementAccessIndicator from "requirements/PoapPayment/components/PoapRequirementAccessIndicator"
 import PoapPaymentRequirement from "requirements/PoapPayment/PoapPaymentRequirement"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
 import { GuildPoap } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import parseDescription from "utils/parseDescription"
-import { useCreatePoapContext } from "../CreatePoapContext"
+import PoapAccessIndicator from "../PoapAccessIndicator"
+import PoapRequiementAccessIndicator from "../PoapRequirementAccessIndicator"
 
 type Props = {
-  poap: GuildPoap
+  guildPoap: GuildPoap
 }
 
-const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
-  const poapFancyId = guildPoap?.fancyId
+const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
+  const { colorMode } = useColorMode()
+  const { urlName } = useGuild()
   const { isAdmin } = useGuildPermission()
 
-  const { urlName } = useGuild()
-
-  const { poap, isLoading } = usePoap(poapFancyId)
+  const { poap, isLoading } = usePoap(guildPoap.fancyId)
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
 
-  const { setStep, setPoapData } = useCreatePoapContext()
-
-  const timeDiff = guildPoap?.expiryDate * 1000 - Date.now()
+  const timeDiff = guildPoap.expiryDate * 1000 - Date.now()
 
   const isActive = useMemo(
-    () => (!poap ? false : guildPoap?.activated && timeDiff > 0),
-    [poap, guildPoap, timeDiff]
+    () => guildPoap.activated && timeDiff > 0,
+    [guildPoap, timeDiff]
   )
 
   const status =
@@ -72,15 +68,13 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
         }
       : {
           label: `Temporary until ${new Date(
-            guildPoap?.expiryDate * 1000
+            guildPoap.expiryDate * 1000
           ).toLocaleDateString()}`,
           color: "gray",
         }
 
-  const { colorMode } = useColorMode()
-
   const requirementRightElement = isActive ? (
-    <PoapRequiementAccessIndicator poapIdentifier={poap?.id} />
+    <PoapRequiementAccessIndicator poapIdentifier={guildPoap.poapIdentifier} />
   ) : null
 
   const requirementComponents = guildPoap && [
@@ -153,14 +147,14 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
                   minW={0}
                   overflowWrap={"break-word"}
                 >
-                  {poap?.name}
+                  {poap?.name ?? guildPoap.fancyId}
                 </Heading>
                 <HStack spacing={0}>
                   <Tag colorScheme={status.color}>{status.label}</Tag>
                   {isActive && !guildPoap.poapRequirements?.length && (
                     <Text as="span" fontSize="xs" colorScheme="gray" pl="4">
                       <Link
-                        href={`/${urlName}/claim-poap/${poapFancyId}`}
+                        href={`/${urlName}/claim-poap/${guildPoap.fancyId}`}
                         isExternal
                       >
                         <Text as="span">Mint page</Text>
@@ -181,10 +175,6 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
                     rounded="full"
                     aria-label="Edit role"
                     isDisabled
-                    onClick={() => {
-                      setPoapData(poap)
-                      setStep(0)
-                    }}
                   />
                 </Tooltip>
               </>
@@ -238,6 +228,7 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
           <Stack
             spacing="0"
             divider={
+              /* have to wrap in a Box, otherwise it looks broken */
               <Box border="0">
                 <LogicDivider logic={"AND"} />
               </Box>
@@ -251,8 +242,6 @@ const PoapRoleCard = ({ poap: guildPoap }: Props): JSX.Element => {
               <FreeRequirement />
             )}
           </Stack>
-
-          {/* <RoleRequirements role={role} /> */}
         </Flex>
       </SimpleGrid>
     </Card>

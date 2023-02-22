@@ -6,7 +6,7 @@ import {
 } from "./components/CreatePoapContext"
 import CreatePoapForm from "./components/CreatePoapForm"
 import ImportPoap from "./components/ImportPoap"
-import PoapRequirements from "./components/Requirements"
+import PoapRequirements from "./components/PoapRequirements"
 import usePoapLinks from "./hooks/usePoapLinks"
 
 type Props = {
@@ -15,11 +15,12 @@ type Props = {
 
 const AddPoapPanel = ({ onSuccess }: Props): JSX.Element => {
   const { poapData } = useCreatePoapContext()
-  const [showSetReqs, setShowSetReqs] = useState(false)
   const { poapLinks } = usePoapLinks(poapData?.id)
-  const [tab, setTab] = useState("new")
 
-  if (showSetReqs) return <PoapRequirements onSuccess={onSuccess} />
+  const [tab, setTab] = useState("new")
+  const [step, setStep] = useState("home")
+
+  if (step === "requirements") return <PoapRequirements onSuccess={onSuccess} />
 
   return (
     <Box>
@@ -50,7 +51,7 @@ const AddPoapPanel = ({ onSuccess }: Props): JSX.Element => {
         <Button
           colorScheme="indigo"
           isDisabled={!poapData || (tab === "existing" && !poapLinks)}
-          onClick={() => setShowSetReqs(true)}
+          onClick={() => setStep("requirements")}
         >
           Next
         </Button>

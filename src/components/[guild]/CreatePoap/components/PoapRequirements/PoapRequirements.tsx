@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Stack, Text } from "@chakra-ui/react"
+import { Button, Flex, Heading, Stack, Text, useToast } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
 import RequirementEditableCard from "components/create-guild/Requirements/components/RequirementEditableCard"
@@ -18,7 +18,10 @@ import useUpdatePoapRequirements from "../../hooks/useUpdatePoapRequirements"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import AddPoapRequirement from "./components/AddPoapRequirement"
 
-const PoapRequirements = ({ onSuccess }: UseSubmitOptions): JSX.Element => {
+const PoapRequirements = ({
+  onSuccess: onModalClose,
+}: UseSubmitOptions): JSX.Element => {
+  const toast = useToast()
   const { isSuperAdmin } = useUser()
   const { poaps } = useGuild()
   const { poapData } = useCreatePoapContext()
@@ -38,6 +41,14 @@ const PoapRequirements = ({ onSuccess }: UseSubmitOptions): JSX.Element => {
     ...field,
     ...watchFieldArray[index],
   }))
+
+  const onSuccess = () => {
+    toast({
+      status: "success",
+      title: "Successfully added POAP",
+    })
+    onModalClose()
+  }
 
   const { onSubmit, isLoading } = useUpdatePoapRequirements(guildPoap, { onSuccess })
 

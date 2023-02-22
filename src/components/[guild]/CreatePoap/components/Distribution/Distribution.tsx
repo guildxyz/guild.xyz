@@ -1,4 +1,12 @@
-import { Box, Flex, Stack, Text, useClipboard, VStack } from "@chakra-ui/react"
+import {
+  Box,
+  Flex,
+  Stack,
+  Text,
+  useClipboard,
+  useToast,
+  VStack,
+} from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -15,13 +23,26 @@ type Props = {
   poap: Poap
 } & UseSubmitOptions
 
-const Distribution = ({ guildPoap, poap, onSuccess }: Props): JSX.Element => {
+const Distribution = ({
+  guildPoap,
+  poap,
+  onSuccess: onModalClose,
+}: Props): JSX.Element => {
   const { urlName, guildPlatforms } = useGuild()
   const { poapEventDetails } = usePoapEventDetails()
+  const toast = useToast()
 
   const { hasCopied, onCopy } = useClipboard(
     `https://guild.xyz/${urlName}/claim-poap/${poap?.fancy_id}`
   )
+
+  const onSuccess = () => {
+    onModalClose()
+    toast({
+      status: "success",
+      title: "Successfully activated POAP",
+    })
+  }
 
   const { onSubmit: onActivateSubmit, isLoading: isActivateLoading } =
     useUpdateGuildPoap(guildPoap, { onSuccess })

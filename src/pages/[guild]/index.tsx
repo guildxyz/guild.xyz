@@ -140,7 +140,8 @@ const GuildPage = (): JSX.Element => {
   const showOnboarding = isAdmin && !onboardingComplete
   const showAccessHub = (isMember || isAdmin) && !showOnboarding
 
-  const { isOpen: isExpiredOpen, onToggle } = useDisclosure()
+  const { isOpen: isExpiredRolesOpen, onToggle: onExpiredRolesToggle } =
+    useDisclosure()
 
   const currentTime = Date.now() / 1000
   const { activePoaps, expiredPoaps } = poaps
@@ -240,7 +241,7 @@ const GuildPage = (): JSX.Element => {
           {renderedRoles.length ? (
             <Stack ref={rolesEl} spacing={4}>
               {activePoaps.map((poap) => (
-                <PoapRoleCard key={poap?.id} poap={poap} />
+                <PoapRoleCard key={poap?.id} guildPoap={poap} />
               ))}
               {renderedRoles.map((role) => (
                 <RoleCard key={role.id} role={role} />
@@ -266,22 +267,22 @@ const GuildPage = (): JSX.Element => {
                 rightIcon={
                   <Icon
                     as={CaretDown}
-                    transform={isExpiredOpen && "rotate(-180deg)"}
+                    transform={isExpiredRolesOpen && "rotate(-180deg)"}
                     transition="transform .3s"
                   />
                 }
-                onClick={onToggle}
+                onClick={onExpiredRolesToggle}
               >
                 {capitalize(
-                  `${isExpiredOpen ? "" : "view "} ${
+                  `${isExpiredRolesOpen ? "" : "view "} ${
                     expiredPoaps?.length
                   } expired role${expiredPoaps?.length > 1 ? "s" : ""}`
                 )}
               </Button>
-              <Collapse in={isExpiredOpen}>
+              <Collapse in={isExpiredRolesOpen}>
                 <Stack spacing={4} pt="3">
                   {expiredPoaps.map((poap) => (
-                    <PoapRoleCard key={poap?.id} poap={poap} />
+                    <PoapRoleCard key={poap?.id} guildPoap={poap} />
                   ))}
                 </Stack>
               </Collapse>

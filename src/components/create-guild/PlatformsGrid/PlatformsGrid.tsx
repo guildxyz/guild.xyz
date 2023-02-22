@@ -1,4 +1,4 @@
-import { SimpleGrid, SimpleGridProps } from "@chakra-ui/react"
+import { SimpleGrid } from "@chakra-ui/react"
 import platforms from "platforms"
 import { PlatformName } from "types"
 import PlatformSelectButton from "./components/PlatformSelectButton"
@@ -7,15 +7,10 @@ import useOAuthButtonProps from "./hooks/useOAuthButtonProps"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
-  columns?: SimpleGridProps["columns"]
   showPoap?: boolean
 }
 
-const PlatformsGrid = ({
-  onSelection,
-  columns = { base: 1, md: 2 },
-  showPoap = false,
-}: Props) => {
+const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
   const platformsData: Record<
     Exclude<PlatformName, "" | "TWITTER" | "POAP">,
@@ -49,7 +44,7 @@ const PlatformsGrid = ({
   }
 
   return (
-    <SimpleGrid columns={columns} gap={{ base: 4, md: 5 }}>
+    <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
       {Object.entries(platformsData).map(([platform, { description, hook }]) => (
         <PlatformSelectButton
           key={platform}

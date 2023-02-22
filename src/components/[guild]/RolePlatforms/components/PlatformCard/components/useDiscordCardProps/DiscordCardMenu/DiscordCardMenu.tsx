@@ -8,7 +8,6 @@ import {
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
 import {
   ArrowsCounterClockwise,
@@ -26,11 +25,6 @@ type Props = {
 
 const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   const {
-    isOpen: isCreatePoapOpen,
-    onOpen: onCreatePoapOpen,
-    onClose: onCreatePoapClose,
-  } = useDisclosure()
-  const {
     isOpen: isSendJoinButtonOpen,
     onOpen: onSendJoinButtonOpen,
     onClose: onSendJoinButtonClose,
@@ -40,8 +34,6 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     onOpen: onSettingsOpen,
     onClose: onSettingsClose,
   } = useDisclosure()
-
-  const { poaps } = useGuild()
 
   const { response, isLoading, triggerSync } = useSyncMembersFromDiscord()
 

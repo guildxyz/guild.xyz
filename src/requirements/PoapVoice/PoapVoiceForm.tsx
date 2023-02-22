@@ -19,7 +19,6 @@ import DiscordServerRewardPicker from "components/[guild]/CreatePoap/components/
 import { useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import { VoiceParticipationForm } from "types"
-import useEditVoiceRequirement from "./hooks/useEditVoiceRequirement"
 import usePoapEventDetails from "./hooks/usePoapEventDetails"
 import useSetVoiceRequirement from "./hooks/useSetVoiceRequirement"
 import useVoiceChannels from "./hooks/useVoiceChannels"
@@ -88,15 +87,13 @@ const PoapVoiceForm = ({ onClose }): JSX.Element => {
       setValue("voiceChannelId", poapEventDetails.voiceChannelId)
   }, [voiceChannels, poapEventDetails])
 
-  const { onSubmit, isLoading } = useSetVoiceRequirement({ onSuccess: onClose })
-  const { onSubmit: onEditSubmit, isLoading: isEditLoading } =
-    useEditVoiceRequirement({ onSuccess: onClose })
+  const { onSubmit, isLoading } = useSetVoiceRequirement(
+    !poapEventDetails?.voiceChannelId ? "POST" : "PATCH",
+    { onSuccess: onClose }
+  )
 
-  const onSetVoiceRequirementSubmit = (
-    data: VoiceParticipationForm,
-    method: "POST" | "PATCH"
-  ) =>
-    (method === "POST" ? onSubmit : onEditSubmit)({
+  const onPreparedSubmit = (data: VoiceParticipationForm) =>
+    onSubmit({
       poapId: poapData?.id,
       voiceChannelId: data?.voiceChannelId,
       voiceRequirement:
@@ -207,21 +204,18 @@ const PoapVoiceForm = ({ onClose }): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
       </Stack>
+
       <ButtonGroup mt={8} justifyContent="right" w="full">
         <Button
           colorScheme="green"
-          onClick={handleSubmit((data) =>
-            onSetVoiceRequirementSubmit(
-              data,
-              !poapEventDetails?.voiceChannelId ? "POST" : "PATCH"
-            )
-          )}
-          isLoading={isLoading || isEditLoading}
+          onClick={handleSubmit(onPreparedSubmit)}
+          isLoading={isLoading}
           isDisabled={!isDirty}
         >
           Save
         </Button>
       </ButtonGroup>
+
       <DynamicDevTool control={control} />
     </FormProvider>
   )

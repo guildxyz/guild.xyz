@@ -66,10 +66,10 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "account",
   },
   POAP: {
-    icon: TwitterLogo,
+    icon: null,
     name: "POAP",
     colorScheme: "purple",
-    gatedEntity: "poap",
+    gatedEntity: "POAP",
   },
   GOOGLE: {
     icon: GoogleLogo,

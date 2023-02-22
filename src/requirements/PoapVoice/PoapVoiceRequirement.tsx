@@ -17,10 +17,12 @@ type Props = { guildPoap: GuildPoap } & RequirementProps
 const PoapPaymentRequirement = ({ guildPoap, ...props }: Props) => {
   const { isAdmin } = useGuildPermission()
   const { guildPlatforms } = useGuild()
+
   // TODO: only works if there's only one Discord reward in the guild
   const discordGuildPlatform = guildPlatforms?.find(
     (platform) => platform.platformId === PlatformType.DISCORD
   )
+
   const { voiceChannels, isVoiceChannelsLoading } = useVoiceChannels(
     discordGuildPlatform.platformGuildId
   )

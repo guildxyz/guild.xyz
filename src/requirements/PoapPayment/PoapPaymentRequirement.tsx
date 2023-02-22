@@ -43,7 +43,6 @@ const PoapPaymentRequirement = ({ guildPoap, poapContract, ...props }: Props) =>
   const {
     data: { hasPaid },
   } = useUserPoapEligibility(guildPoap?.poapIdentifier)
-  // console.log("asd", guildPoap?.fancyId, guildPoap?.poapIdentifier, hasPaid)
 
   return (
     <RequirementProvider requirement={requirement}>

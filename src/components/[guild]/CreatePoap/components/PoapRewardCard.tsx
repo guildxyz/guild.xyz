@@ -42,10 +42,11 @@ const PoapRewardCard = ({
 }: PropsWithChildren<Props>) => {
   const { account } = useWeb3React()
   const { isAdmin } = useGuildPermission()
+
   const { poap } = usePoap(guildPoap?.fancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
   const { image_url: image, name } = poap ?? {}
-  const colorScheme = guildPoap.activated ? `purple` : `gray`
+
   const {
     isOpen: isLinkModalOpen,
     onOpen: onLinkModalOpen,
@@ -72,6 +73,8 @@ const PoapRewardCard = ({
 
   if ((!data.access || !guildPoap.activated) && !isAdmin) return null
 
+  const colorScheme = guildPoap.activated ? `purple` : `gray`
+
   return (
     <>
       <RewardCard
@@ -80,8 +83,8 @@ const PoapRewardCard = ({
         description={
           <Tag mt="1">{`${poapLinks?.total - poapLinks?.claimed} available`}</Tag>
         }
-        {...{ image, colorScheme, actionRow, cornerButton }}
         borderStyle={!guildPoap?.activated && "dashed"}
+        {...{ image, colorScheme, actionRow, cornerButton }}
         {...rest}
       >
         {!poapLinks?.total ? (

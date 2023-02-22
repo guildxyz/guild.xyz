@@ -183,11 +183,7 @@ const CreatePoapForm = (): JSX.Element => {
     },
   })
 
-  // const {
-  //   onSubmit: onCreateRoleSubmit,
-  //   isLoading: isCreateRoleLoading,
-  //   response: createRoleResponse,
-  // } = useCreateRole("SIMPLE")
+  /* TODO: put back edit functionality */
 
   // const createRoleWithPoap = () =>
   //   onCreateRoleSubmit({
