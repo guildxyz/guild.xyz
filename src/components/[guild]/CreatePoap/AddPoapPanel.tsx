@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup } from "@chakra-ui/react"
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
 import { useState } from "react"
 import { CreatePoapProvider } from "./components/CreatePoapContext"
 import CreatePoapForm from "./components/CreatePoapForm"
@@ -11,7 +11,6 @@ type Props = {
 }
 
 const AddPoapPanel = ({ onSuccess, scrollToTop }: Props): JSX.Element => {
-  const [tab, setTab] = useState("new")
   const [step, setStep] = useState("home")
 
   const handleSetStep = (newStep) => {
@@ -23,32 +22,20 @@ const AddPoapPanel = ({ onSuccess, scrollToTop }: Props): JSX.Element => {
 
   return (
     <Box>
-      {/* TODO: use Tabs */}
-      <ButtonGroup size="sm" w="full" mb="8">
-        <Button
-          w="full"
-          borderRadius="md"
-          onClick={() => setTab("new")}
-          colorScheme={tab === "new" ? "indigo" : null}
-        >
-          Create new POAP
-        </Button>
-
-        <Button
-          w="full"
-          borderRadius="md"
-          onClick={() => setTab("existing")}
-          colorScheme={tab === "existing" ? "indigo" : null}
-        >
-          Import existing
-        </Button>
-      </ButtonGroup>
-
-      {tab === "new" ? (
-        <CreatePoapForm setStep={handleSetStep} />
-      ) : (
-        <ImportPoap setStep={handleSetStep} />
-      )}
+      <Tabs size="sm" isFitted variant="solid" mb="8" colorScheme="indigo">
+        <TabList mb="8">
+          <Tab>Create new POAP</Tab>
+          <Tab>Import existing</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <CreatePoapForm setStep={handleSetStep} />
+          </TabPanel>
+          <TabPanel>
+            <ImportPoap setStep={handleSetStep} />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Box>
   )
 }
