@@ -103,6 +103,7 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
         ]
       : []),
   ]
+  console.log(guildPoap)
 
   return (
     <Card
@@ -230,7 +231,10 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
             divider={
               /* have to wrap in a Box, otherwise it looks broken */
               <Box border="0">
-                <LogicDivider logic={"AND"} />
+                {/* retrofit: show OR for previously made POAPs with multiple payment methods */}
+                <LogicDivider
+                  logic={guildPoap?.poapContracts?.length > 1 ? "OR" : "AND"}
+                />
               </Box>
             }
           >
