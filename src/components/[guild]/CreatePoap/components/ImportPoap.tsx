@@ -1,4 +1,5 @@
 import {
+  Flex,
   FormControl,
   FormLabel,
   HStack,
@@ -20,7 +21,7 @@ import useSavePoap from "../hooks/useSavePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
 import UploadMintLinks from "./UploadMintLinks"
 
-const ImportPoap = (): JSX.Element => {
+const ImportPoap = ({ setStep }): JSX.Element => {
   const { id } = useGuild()
 
   const methods = useForm()
@@ -84,6 +85,11 @@ const ImportPoap = (): JSX.Element => {
         </FormControl>
         <UploadMintLinks poapId={poapId} />
       </Stack>
+      <Flex justifyContent={"right"} pt="2" mt="auto">
+        <Button colorScheme="indigo" onClick={() => setStep("requirements")}>
+          Next
+        </Button>
+      </Flex>
     </FormProvider>
   )
 }

@@ -1,22 +1,15 @@
-import { Box, Button, ButtonGroup, Flex } from "@chakra-ui/react"
+import { Box, Button, ButtonGroup } from "@chakra-ui/react"
 import { useState } from "react"
-import {
-  CreatePoapProvider,
-  useCreatePoapContext,
-} from "./components/CreatePoapContext"
+import { CreatePoapProvider } from "./components/CreatePoapContext"
 import CreatePoapForm from "./components/CreatePoapForm"
 import ImportPoap from "./components/ImportPoap"
 import PoapRequirements from "./components/PoapRequirements"
-import usePoapLinks from "./hooks/usePoapLinks"
 
 type Props = {
   onSuccess: () => void
 }
 
 const AddPoapPanel = ({ onSuccess }: Props): JSX.Element => {
-  const { poapData } = useCreatePoapContext()
-  const { poapLinks } = usePoapLinks(poapData?.id)
-
   const [tab, setTab] = useState("new")
   const [step, setStep] = useState("home")
 
@@ -45,17 +38,11 @@ const AddPoapPanel = ({ onSuccess }: Props): JSX.Element => {
         </Button>
       </ButtonGroup>
 
-      {tab === "new" ? <CreatePoapForm /> : <ImportPoap />}
-
-      <Flex justifyContent={"right"} mt="2">
-        <Button
-          colorScheme="indigo"
-          isDisabled={!poapData || (tab === "existing" && !poapLinks)}
-          onClick={() => setStep("requirements")}
-        >
-          Next
-        </Button>
-      </Flex>
+      {tab === "new" ? (
+        <CreatePoapForm setStep={setStep} />
+      ) : (
+        <ImportPoap setStep={setStep} />
+      )}
     </Box>
   )
 }

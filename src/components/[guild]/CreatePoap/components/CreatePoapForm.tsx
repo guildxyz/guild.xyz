@@ -6,6 +6,7 @@ import {
   Box,
   Checkbox,
   Circle,
+  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -33,7 +34,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDropzone from "hooks/useDropzone"
-import { Calendar, File, Question, WarningCircle } from "phosphor-react"
+import { Calendar, Image, Question, WarningCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import { CreatePoapForm as CreatePoapFormType } from "types"
@@ -60,8 +61,10 @@ const convertPoapDate = (date: string): string => {
   return newExpiryDateValue
 }
 
-const CreatePoapForm = (): JSX.Element => {
-  const { nextStep, setIsFormDirty, poapData, setPoapData } = useCreatePoapContext()
+const IMAGE_SIZE = 32
+
+const CreatePoapForm = ({ setStep }): JSX.Element => {
+  const { setIsFormDirty, poapData, setPoapData } = useCreatePoapContext()
 
   const defaultValues = poapData?.id
     ? {
@@ -225,61 +228,75 @@ const CreatePoapForm = (): JSX.Element => {
 
   if (savePoapResponse)
     return (
-      <VStack spacing={4}>
-        <Alert status="success">
-          <AlertIcon />
-          <Box>
-            <AlertTitle>Drop successfully submitted</AlertTitle>
-            <AlertDescription>
-              <Text>
-                The POAP Curation Body will review your petition according to the
-                POAP drop policies and you'll receive a confirmation email with the
-                minting links that you’ll have to upload
-              </Text>
-            </AlertDescription>
-          </Box>
-        </Alert>
-        <Card p={4} flexDirection="row" alignItems="center" w="full">
-          <SkeletonCircle boxSize={24} mr="4" isLoaded={!!poapData?.image_url}>
-            <Img
-              src={poapData?.image_url}
-              alt={poapData?.name}
-              boxSize={24}
-              rounded="full"
-            />
-          </SkeletonCircle>
-          <VStack alignItems="start">
-            <Skeleton isLoaded={!!poapData}>
-              <Text fontFamily="display" fontWeight="bold">
-                {poapData
-                  ? `#${poapData?.id} - ${poapData?.name}`
-                  : "#0 - Unknown POAP"}
-              </Text>
-            </Skeleton>
+      <>
+        <VStack spacing={4}>
+          <Alert status="success">
+            <AlertIcon />
+            <Box>
+              <AlertTitle>Drop successfully submitted</AlertTitle>
+              <AlertDescription>
+                <Text>
+                  The POAP Curation Body will review your petition according to the
+                  POAP drop policies and you'll receive a confirmation email with the
+                  minting links that you’ll have to upload
+                </Text>
+              </AlertDescription>
+            </Box>
+          </Alert>
+          <Card p={4} flexDirection="row" alignItems="center" w="full">
+            <SkeletonCircle boxSize={24} mr="4" isLoaded={!!poapData?.image_url}>
+              <Img
+                src={poapData?.image_url}
+                alt={poapData?.name}
+                boxSize={24}
+                rounded="full"
+              />
+            </SkeletonCircle>
+            <VStack alignItems="start">
+              <Skeleton isLoaded={!!poapData}>
+                <Text fontFamily="display" fontWeight="bold">
+                  {poapData
+                    ? `#${poapData?.id} - ${poapData?.name}`
+                    : "#0 - Unknown POAP"}
+                </Text>
+              </Skeleton>
 
-            <Skeleton isLoaded={!!poapData}>
-              <HStack>
-                <Icon as={Calendar} />
-                <Text>{poapData?.start_date || "Unknown date"}</Text>
-              </HStack>
-            </Skeleton>
-          </VStack>
-        </Card>
-      </VStack>
+              <Skeleton isLoaded={!!poapData}>
+                <HStack>
+                  <Icon as={Calendar} />
+                  <Text>{poapData?.start_date || "Unknown date"}</Text>
+                </HStack>
+              </Skeleton>
+            </VStack>
+          </Card>
+        </VStack>
+
+        <Flex justifyContent={"right"} pt="4" mt="auto">
+          <Button colorScheme="indigo" onClick={() => setStep("requirements")}>
+            Next
+          </Button>
+        </Flex>
+      </>
     )
 
   return (
     <FormProvider {...methods}>
-      <Stack mb={12} spacing="6">
-        <Grid gap="4" templateColumns={{ md: "auto 1fr" }}>
+      <Stack spacing="6" {...(poapData?.id ? {} : getRootProps())}>
+        <Grid gap="6" templateColumns={{ md: "auto 1fr" }}>
           <FormControl
+            w={IMAGE_SIZE}
+            justifySelf="center"
             textAlign="left"
             isInvalid={!!errors?.image || !!fileRejections?.[0]}
             isRequired
             isDisabled={!!poapData?.id}
           >
-            <HStack alignItems="start" spacing={0}>
-              <FormLabel>POAP artwork</FormLabel>
+            <HStack
+              alignItems="start"
+              spacing={0}
+              justifyContent={{ base: "center", md: "start" }}
+            >
+              <FormLabel>Artwork</FormLabel>
               {!poapData?.id && (
                 <Tooltip
                   label="You can't edit image after POAP creation!"
@@ -290,57 +307,85 @@ const CreatePoapForm = (): JSX.Element => {
               )}
             </HStack>
 
-            <HStack>
-              {(poapData?.image_url || base64Image) && (
-                <Circle size={10} overflow="hidden" borderWidth={1}>
-                  <Img
-                    src={poapData?.image_url || base64Image}
-                    alt="POAP artwork"
-                    boxSize={10}
-                  />
-                </Circle>
-              )}
-              <Tooltip
-                isDisabled={!poapData?.id}
-                label="You can't edit image after POAP creation!"
-                shouldWrapChildren
-              >
-                <Button
-                  {...(poapData?.id ? {} : getRootProps())}
-                  as={poapData?.id ? undefined : "label"}
-                  leftIcon={<File />}
-                  h={10}
-                  w="full"
-                  isDisabled={!!poapData?.id}
+            <Circle
+              as={poapData?.id ? undefined : "label"}
+              size={IMAGE_SIZE}
+              overflow="hidden"
+              borderWidth={1}
+              bg={"blackAlpha.100"}
+              transition="background .2s"
+              _hover={{ bg: "whiteAlpha.100" }}
+              cursor="pointer"
+            >
+              <input {...(poapData?.id ? {} : getInputProps())} hidden />
+              {isDragActive ? (
+                <Text
+                  textAlign={"center"}
+                  fontSize="sm"
+                  fontWeight={"semibold"}
+                  colorScheme="gray"
+                  mb="-1"
                 >
-                  <input {...(poapData?.id ? {} : getInputProps())} hidden />
-                  <Text
-                    as="span"
-                    maxW={{ base: 44, md: 28 }}
-                    noOfLines={1}
-                    sx={{
-                      display: "block",
-                    }}
-                  >
-                    {isDragActive
-                      ? "Drop the file here"
-                      : acceptedFiles?.[0]?.name || "Choose image"}
-                  </Text>
-                </Button>
-              </Tooltip>
-            </HStack>
-            {!poapData?.image_url && (
-              <FormHelperText>In PNG or GIF format</FormHelperText>
-            )}
+                  Drop file here
+                </Text>
+              ) : poapData?.image_url || base64Image ? (
+                <Img
+                  src={poapData?.image_url || base64Image}
+                  alt="POAP artwork"
+                  boxSize={IMAGE_SIZE}
+                />
+              ) : (
+                <Icon as={Image} boxSize="8" />
+              )}
+            </Circle>
+            {/* {!poapData?.image_url && <FormHelperText>PNG or GIF</FormHelperText>} */}
             <FormErrorMessage>
               {errors?.image?.message || fileRejections?.[0]?.errors?.[0]?.message}
             </FormErrorMessage>
           </FormControl>
-          <FormControl isRequired isInvalid={!!errors?.name} width="full">
-            <FormLabel tabIndex={0}>What are you commemorating?</FormLabel>
-            <Input {...register("name", { required: "This field is required." })} />
-            <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
-          </FormControl>
+          <Stack spacing="4">
+            <FormControl isRequired isInvalid={!!errors?.name} width="full">
+              <FormLabel tabIndex={0}>What are you commemorating?</FormLabel>
+              <Input
+                {...register("name", { required: "This field is required." })}
+              />
+              <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
+            </FormControl>
+            <Stack direction={{ base: "column", md: "row" }} spacing={4}>
+              <FormControl
+                isInvalid={!!errors?.start_date}
+                isRequired
+                isDisabled={!!poapData?.id}
+              >
+                <FormLabel>Event date:</FormLabel>
+                <Input
+                  type="date"
+                  max={endDate}
+                  {...register("start_date", {
+                    required: "This field is required",
+                  })}
+                />
+                <FormErrorMessage>{errors?.start_date?.message}</FormErrorMessage>
+              </FormControl>
+              <FormControl
+                isDisabled={!startDate}
+                isInvalid={!!errors?.expiry_date}
+                isRequired
+              >
+                <FormLabel>POAP expiry date:</FormLabel>
+                <Input
+                  type="date"
+                  min={startDate}
+                  {...register("expiry_date", {
+                    required: "This field is required",
+                    validate: (value) =>
+                      value !== startDate || "Shouldn't be the same as start date.",
+                  })}
+                />
+                <FormErrorMessage>{errors?.expiry_date?.message}</FormErrorMessage>
+              </FormControl>
+            </Stack>
+          </Stack>
         </Grid>
 
         <FormControl isRequired isInvalid={!!errors?.description}>
@@ -359,42 +404,6 @@ const CreatePoapForm = (): JSX.Element => {
           />
           <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
         </FormControl>
-
-        <Stack direction={{ base: "column", md: "row" }} spacing={4}>
-          <FormControl
-            isInvalid={!!errors?.start_date}
-            isRequired
-            isDisabled={!!poapData?.id}
-          >
-            <FormLabel>Event date:</FormLabel>
-            <Input
-              type="date"
-              max={endDate}
-              {...register("start_date", {
-                required: "This field is required",
-              })}
-            />
-            <FormErrorMessage>{errors?.start_date?.message}</FormErrorMessage>
-          </FormControl>
-
-          <FormControl
-            isDisabled={!startDate}
-            isInvalid={!!errors?.expiry_date}
-            isRequired
-          >
-            <FormLabel>POAP expiry date:</FormLabel>
-            <Input
-              type="date"
-              min={startDate}
-              {...register("expiry_date", {
-                required: "This field is required",
-                validate: (value) =>
-                  value !== startDate || "Shouldn't be the same as start date.",
-              })}
-            />
-            <FormErrorMessage>{errors?.expiry_date?.message}</FormErrorMessage>
-          </FormControl>
-        </Stack>
 
         {/* <FormControl>
           <FormLabel>Website</FormLabel>
@@ -506,6 +515,8 @@ const CreatePoapForm = (): JSX.Element => {
         </FormControl>
       </Stack>
       <Stack
+        pt="6"
+        mt="auto"
         direction={{ base: "column", sm: "row" }}
         justifyContent="end"
         spacing={2}
