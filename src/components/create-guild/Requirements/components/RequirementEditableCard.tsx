@@ -30,7 +30,7 @@ const RequirementEditableCard = ({
   field,
   removeRequirement,
   updateRequirement,
-  isEditDisabled,
+  isEditDisabled = false,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const RequirementComponent = REQUIREMENTS[type]?.displayComponent

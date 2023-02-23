@@ -52,7 +52,7 @@ const DiscordGuildSetup = ({
 
   if ((!servers || servers.length <= 0) && isLoading) {
     return (
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 5 }}>
         {[...Array(3)].map((i) => (
           <GridItem key={i}>
             <OptionSkeletonCard />
@@ -69,7 +69,7 @@ const DiscordGuildSetup = ({
   }
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
+    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 5 }}>
       <AnimatePresence>
         {(selectedServerOption ? [selectedServerOption] : servers ?? [])
           .filter(
@@ -99,7 +99,7 @@ const DiscordGuildSetup = ({
           ))}
       </AnimatePresence>
       {debounceSelectedServer && (
-        <GridItem colSpan={2}>
+        <GridItem>
           <ServerSetupCard selectedServer={selectedServer} onSubmit={onSubmit} />
         </GridItem>
       )}

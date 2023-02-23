@@ -76,7 +76,7 @@ type NFT = {
   slug: string
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
+type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE" | "POAP"
 
 type PlatformUserData = {
   acessToken?: string
@@ -222,6 +222,7 @@ type GuildPoap = {
   activated: boolean
   expiryDate: number
   poapContracts?: PoapContract[]
+  poapRequirements?: Requirement[]
 }
 
 const supportedSocialLinks = [
@@ -386,7 +387,7 @@ enum ValidationMethod {
 }
 
 type MonetizePoapForm = {
-  chainId: number
+  chain: Chain
   token: string
   fee: number
   owner: string
@@ -409,6 +410,7 @@ type GoogleFile = {
 
 type VoiceParticipationForm = {
   poapId: number
+  serverId: string
   voiceChannelId: string
   voiceRequirement: {
     type: "PERCENT" | "MINUTE"

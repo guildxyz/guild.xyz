@@ -1,4 +1,4 @@
-import { Flex, Icon, Stack, Tooltip } from "@chakra-ui/react"
+import { HStack, Icon, Stack, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
@@ -63,10 +63,9 @@ const PaymentForm = ({
         <RegisterVaultForm isDisabled={!!vaultId} />
       </FormProvider>
 
-      <Flex pt={4} w="full" justifyContent="end">
+      <HStack pt={4} w="full" justifyContent="end">
         {isOnCorrectChain ? (
           <Button
-            mr={2}
             colorScheme={isOnCorrectChain ? "green" : "gray"}
             onClick={registerVaultFormHandleSubmit(onSubmit)}
             isDisabled={
@@ -84,7 +83,6 @@ const PaymentForm = ({
           </Button>
         ) : (
           <Button
-            mr={2}
             colorScheme="blue"
             onClick={() => requestNetworkChange(Chains[chain])}
             rightIcon={
@@ -96,7 +94,7 @@ const PaymentForm = ({
             Switch network
           </Button>
         )}
-      </Flex>
+      </HStack>
     </Stack>
   )
 }

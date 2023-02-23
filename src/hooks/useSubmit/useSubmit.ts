@@ -15,7 +15,7 @@ import { ValidationMethod } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
-export type Options<ResponseType> = {
+export type UseSubmitOptions<ResponseType = void> = {
   onSuccess?: (response: ResponseType) => void
   onError?: (error: any) => void
 }
@@ -30,7 +30,7 @@ type FetcherFunction<ResponseType> = ({
 
 const useSubmit = <DataType, ResponseType>(
   fetch: (data?: DataType) => Promise<ResponseType>,
-  { onSuccess, onError }: Options<ResponseType> = {}
+  { onSuccess, onError }: UseSubmitOptions<ResponseType> = {}
 ) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<any>(undefined)
@@ -111,7 +111,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
     forcePrompt = false,
     keyPair,
     ...options
-  }: Options<ResponseType> & {
+  }: UseSubmitOptions<ResponseType> & {
     message?: string
     forcePrompt?: boolean
     keyPair: CryptoKeyPair
@@ -200,7 +200,7 @@ const useSubmitWithSign = <ResponseType>(
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
     ...options
-  }: Options<ResponseType> & {
+  }: UseSubmitOptions<ResponseType> & {
     message?: string
     forcePrompt?: boolean
   } = {

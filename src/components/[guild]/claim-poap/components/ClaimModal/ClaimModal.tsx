@@ -26,7 +26,6 @@ import NetworkButtonsList from "components/common/Layout/components/Account/comp
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import usePoapEventDetails from "components/[guild]/CreatePoap/components/Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useIsMember from "components/[guild]/hooks/useIsMember"
@@ -50,10 +49,11 @@ import {
 } from "phosphor-react"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import { GuildPoap, Poap } from "types"
-import useAllowance from "../../hooks/useAllowance"
 import useClaimPoap from "../../hooks/useClaimPoap"
-import usePayFee from "../../hooks/usePayFee"
+import usePoapAllowance from "../../hooks/usePoapAllowance"
+import usePoapPayFee from "../../hooks/usePoapPayFee"
 import useUserPoapEligibility from "../../hooks/useUserPoapEligibility"
 import PayFeeMenuItem from "./components/PayFeeMenuItem"
 
@@ -122,9 +122,10 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     signLoadingText,
   } = useJoin(onClaimPoapSubmit)
 
-  const { onSubmit: onPayFeeSubmit, loadingText: payFeeLoadingText } = usePayFee(
+  const { onSubmit: onPayFeeSubmit, loadingText: payFeeLoadingText } = usePoapPayFee(
     vaultId,
-    vaultChainId
+    vaultChainId,
+    guildPoap?.fancyId
   )
   const [childLoadingText, setChildLoadingText] = useState<string>(null)
   const loadingText = payFeeLoadingText || childLoadingText
@@ -133,7 +134,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
 
   const {
     data: { hasPaid, voiceEligibility },
-    hasPaidLoading,
+    isLoading: hasPaidLoading,
   } = useUserPoapEligibility(poap?.id)
 
   const isMember = useIsMember()
@@ -156,7 +157,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     vaultData?.token === NULL_ADDRESS ? coinBalance : tokenBalance
   )?.gte(vaultData?.fee ?? BigNumber.from(0))
 
-  const allowance = useAllowance(vaultData?.token, vaultChainId)
+  const allowance = usePoapAllowance(vaultData?.token, vaultChainId)
 
   const formattedPrice = formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
 
@@ -277,6 +278,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                                     key={poapContract.id}
                                     poapContractData={poapContract}
                                     setLoadingText={setChildLoadingText}
+                                    fancy_id={guildPoap?.fancyId}
                                   />
                                 ))}
                               </MenuList>

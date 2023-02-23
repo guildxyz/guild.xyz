@@ -13,8 +13,8 @@ import {
 import { BigNumber } from "@ethersproject/bignumber"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
-import useAllowance from "components/[guild]/claim-poap/hooks/useAllowance"
-import usePayFee from "components/[guild]/claim-poap/hooks/usePayFee"
+import usePoapAllowance from "components/[guild]/claim-poap/hooks/usePoapAllowance"
+import usePoapPayFee from "components/[guild]/claim-poap/hooks/usePoapPayFee"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
@@ -26,6 +26,7 @@ import { PoapContract } from "types"
 type Props = {
   poapContractData: PoapContract
   setLoadingText: (newLoadingText: string) => void
+  fancy_id: string
 }
 
 const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
@@ -33,6 +34,7 @@ const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 const PayFeeMenuItem = ({
   poapContractData,
   setLoadingText,
+  fancy_id,
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
@@ -59,11 +61,12 @@ const PayFeeMenuItem = ({
     vaultData?.token === NULL_ADDRESS ? coinBalance : tokenBalance
   )?.gte(vaultData?.fee ?? BigNumber.from(0))
 
-  const allowance = useAllowance(vaultData?.token, poapContractData?.chainId)
+  const allowance = usePoapAllowance(vaultData?.token, poapContractData?.chainId)
 
-  const { onSubmit, loadingText } = usePayFee(
+  const { onSubmit, loadingText } = usePoapPayFee(
     poapContractData.vaultId,
-    poapContractData.chainId
+    poapContractData.chainId,
+    fancy_id
   )
 
   useEffect(() => setLoadingText(loadingText), [loadingText])
