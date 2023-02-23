@@ -4,7 +4,7 @@ import { Guild, PlatformName } from "types"
 const useGuildByPlatformId = (platform: PlatformName, platformId: string) => {
   const shouldFetch = platformId?.length > 0
   const { data, error, isValidating } = useSWR<Partial<Guild>>(
-    shouldFetch ? `/guild/platform/${platform}/${platformId}` : null,
+    shouldFetch ? `/platform/guild/${platform}/${platformId}` : null,
     { fallbackData: { id: null } }
   )
 
