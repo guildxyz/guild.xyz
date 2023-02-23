@@ -59,18 +59,18 @@ const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<
     >
   >
 > = {
-  // Alongside
-  7635: {
-    ...DEFAULT_TOKEN_BUYER_CONTRACTS,
-    ETHEREUM: {
-      address: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
-      abi: TOKEN_BUYER_ABI,
-    },
-    POLYGON: {
-      address: "0x151c518390d38487a4ddcb02e3f156a77c184cb9",
-      abi: TOKEN_BUYER_ABI,
-    },
-  },
+  // Alongside - TODO
+  // 7635: {
+  //   ...DEFAULT_TOKEN_BUYER_CONTRACTS,
+  //   ETHEREUM: {
+  //     address: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
+  //     abi: TOKEN_BUYER_ABI,
+  //   },
+  //   POLYGON: {
+  //     address: "0x151c518390d38487a4ddcb02e3f156a77c184cb9",
+  //     abi: TOKEN_BUYER_ABI,
+  //   },
+  // },
 }
 
 export const getTokenBuyerContractData = (

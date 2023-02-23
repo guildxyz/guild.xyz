@@ -43,6 +43,7 @@ const purchaseAsset = async (
     return Promise.reject("Couldn't generate getAssets params.")
 
   // Adjusting the gas limit to avoid failing transactions)
+  // TODO: rethink the way we use generateGetAssetsParams, maybe we can find a cleaner solution for adjusting gas fee here.
   const generatedGetAssetsParamsWithGasLimit = [...generatedGetAssetsParams]
   const customGasLimit = estimatedGasLimit?.mul(15)?.div(10)
   if (isConfigParam(generatedGetAssetsParamsWithGasLimit[4]))
