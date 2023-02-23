@@ -103,7 +103,6 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
         ]
       : []),
   ]
-  console.log(guildPoap)
 
   return (
     <Card

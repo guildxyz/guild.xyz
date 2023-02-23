@@ -71,7 +71,10 @@ const PoapRewardCard = ({
     response: claimPoapResponse,
   } = useClaimPoap(poap, { onSuccess: onMintModalOpen })
 
-  if ((!data.access || !guildPoap.activated) && !isAdmin) return null
+  const availableLinks = poapLinks?.total - poapLinks?.claimed
+
+  if ((!data.access || !guildPoap.activated || !availableLinks) && !isAdmin)
+    return null
 
   const colorScheme = guildPoap.activated ? `purple` : `gray`
 
@@ -80,9 +83,7 @@ const PoapRewardCard = ({
       <RewardCard
         label={`POAP ${!guildPoap?.activated ? "- not active yet" : ""}`}
         title={name}
-        description={
-          <Tag mt="1">{`${poapLinks?.total - poapLinks?.claimed} available`}</Tag>
-        }
+        description={<Tag mt="1">{`${availableLinks} available`}</Tag>}
         borderStyle={!guildPoap?.activated && "dashed"}
         {...{ image, colorScheme, actionRow, cornerButton }}
         {...rest}
