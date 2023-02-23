@@ -28,6 +28,7 @@ enum Chains {
   PALM = 11297108109,
   BASE_GOERLI = 84531,
   EXOSAMA = 2109,
+  EVMOS = 9001,
 }
 
 export type Chain = keyof typeof Chains
@@ -511,6 +512,25 @@ const RPC: RpcConfig = {
     iconUrls: ["/networkLogos/exosama.png"],
     rpcUrls: ["https://rpc.exosama.com"],
     multicallAddress: "0x2feFC828e2fEfdE0C9f7740919c6A9139F886067",
+  },
+  EVMOS: {
+    chainId: 9001,
+    chainName: "Evmos",
+    nativeCurrency: {
+      name: "Evmos",
+      symbol: "EVMOS",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI: "/networkLogos/evmos.svg",
+    },
+    blockExplorerUrls: ["https://escan.live"],
+    blockExplorerIcons: {
+      light: "/networkLogos/evmos.svg",
+      dark: "/networkLogos/evmos.svg",
+    },
+    iconUrls: ["/networkLogos/evmos.svg"],
+    rpcUrls: ["https://eth.bd.evmos.org:8545"],
+    multicallAddress: "",
   },
 }
 

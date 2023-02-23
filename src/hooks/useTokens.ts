@@ -36,6 +36,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   PALM: [],
   BASE_GOERLI: [],
   EXOSAMA: [],
+  EVMOS: ["https://tokens.coingecko.com/evmos/all.json"],
 }
 
 const fetchTokens = async (_: string, chain: string) =>
