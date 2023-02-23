@@ -15,9 +15,9 @@ const setVoiceRequirement = (signedValdation: SignedValdation) =>
     ...signedValdation,
   })
 
-const useDeleteVoiceRequirement = () => {
-  const { mutatePoapEventDetails } = usePoapEventDetails()
-  const { mutateVoiceParticipants } = useVoiceParticipants()
+const useDeleteVoiceRequirement = (poapId) => {
+  const { mutatePoapEventDetails } = usePoapEventDetails(poapId)
+  const { mutateVoiceParticipants } = useVoiceParticipants(poapId)
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()

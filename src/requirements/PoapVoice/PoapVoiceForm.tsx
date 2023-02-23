@@ -10,6 +10,7 @@ import {
   NumberInputStepper,
   Select,
   Stack,
+  Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -203,6 +204,10 @@ const PoapVoiceForm = ({ onClose }): JSX.Element => {
             {errors?.voiceRequirement?.percentOrMinute?.message}
           </FormErrorMessage>
         </FormControl>
+        <Text colorScheme={"gray"} fontSize="sm">
+          You'll have to start & stop monitoring participation at the time of the
+          event manually
+        </Text>
       </Stack>
 
       <ButtonGroup mt={8} justifyContent="right" w="full">

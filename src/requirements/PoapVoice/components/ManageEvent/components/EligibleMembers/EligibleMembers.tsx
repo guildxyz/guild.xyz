@@ -1,4 +1,6 @@
 import {
+  ButtonGroup,
+  Divider,
   Flex,
   Icon,
   IconButton,
@@ -10,7 +12,6 @@ import {
   ModalOverlay,
   Spinner,
   Text,
-  Tooltip,
   UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -22,14 +23,14 @@ import { FixedSizeList } from "react-window"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import useVoiceParticipants from "./hooks/useVoiceParticipants"
 
-const EligibleMembers = (): JSX.Element => {
-  const { poapEventDetails } = usePoapEventDetails()
+const EligibleMembers = ({ poapId }): JSX.Element => {
+  const { poapEventDetails } = usePoapEventDetails(poapId)
   const {
     voiceParticipants,
     isVoiceParticipantsLoading,
     latestFetch,
     mutateVoiceParticipants,
-  } = useVoiceParticipants()
+  } = useVoiceParticipants(poapId)
 
   const [canFetch, setCanFetch] = useState(false)
 
@@ -61,31 +62,29 @@ const EligibleMembers = (): JSX.Element => {
 
   return (
     <>
-      <Button
-        size="xs"
-        borderRadius="md"
-        isLoading={isVoiceParticipantsLoading}
-        loadingText="Refreshing"
-        leftIcon={<Icon as={Users} />}
-        onClick={onOpen}
-      >
-        {`${eligibleMembers?.length ?? 0}/${
-          voiceParticipants?.length ?? 0
-        } eligible`}
-      </Button>
-
-      {!poapEventDetails?.voiceEventEndedAt && (
-        <Tooltip label="Please wait" isDisabled={canFetch} shouldWrapChildren>
+      <ButtonGroup size="xs" isAttached>
+        <Button
+          isLoading={isVoiceParticipantsLoading}
+          borderRadius="md"
+          loadingText="Refreshing"
+          leftIcon={<Icon as={Users} />}
+          onClick={onOpen}
+        >
+          {`${eligibleMembers?.length ?? 0}/${
+            voiceParticipants?.length ?? 0
+          } eligible`}
+        </Button>
+        <Divider orientation="vertical" />
+        {!poapEventDetails?.voiceEventEndedAt && (
           <IconButton
+            borderRadius="md"
             aria-label="Refresh eligible members"
             icon={<Icon as={ArrowsClockwise} />}
-            size="xs"
-            borderRadius="md"
             onClick={() => mutateVoiceParticipants()}
             isDisabled={!canFetch}
           />
-        </Tooltip>
-      )}
+        )}
+      </ButtonGroup>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
