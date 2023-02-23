@@ -22,7 +22,7 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
   }
 
   const {
-    data: { priceInSellToken },
+    data: { estimatedPriceInSellToken },
     isValidating,
     error,
   } = usePrice(address)
@@ -42,7 +42,7 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
       onClick={onClick}
       chainId={chainId}
       address={address}
-      requiredAmount={priceInSellToken}
+      requiredAmount={estimatedPriceInSellToken}
       isLoading={isValidating}
       error={error}
     />

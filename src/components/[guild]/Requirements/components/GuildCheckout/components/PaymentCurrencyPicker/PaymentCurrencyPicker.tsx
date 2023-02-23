@@ -44,7 +44,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
   useEffect(() => setPickedCurrency(currencyOptions[0].address), [])
 
   const {
-    data: { priceInSellToken },
+    data: { estimatedPriceInSellToken },
     isValidating,
     error,
   } = usePrice(pickedCurrency)
@@ -78,7 +78,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                   <TokenInfo
                     chainId={Chains[requirement.chain]}
                     address={pickedCurrency}
-                    requiredAmount={priceInSellToken}
+                    requiredAmount={estimatedPriceInSellToken}
                     isLoading={isValidating}
                     error={error}
                   />

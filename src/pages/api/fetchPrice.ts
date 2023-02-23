@@ -23,6 +23,9 @@ import { flipPath } from "utils/guildCheckout/utils"
 export type FetchPriceResponse = {
   buyAmount: number
   buyAmountInWei: BigNumber
+  estimatedPriceInSellToken: number
+  estimatedPriceInWei: BigNumber
+  estimatedPriceInUSD: number
   priceInSellToken: number
   priceInWei: BigNumber
   priceInUSD: number
@@ -212,6 +215,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       includedSources: ZEROX_SUPPORTED_SOURCES.toString(),
     }).toString()
 
+    console.log(`${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`)
     const response = await fetch(
       `${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`
     )
@@ -245,11 +249,19 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const { path: rawPath, uniswapPath, tokenAddressPath } = relevantOrder.fillData
     const path = flipPath(rawPath ?? uniswapPath)
 
+    const estimatedPriceInSellToken = parseFloat(responseData.price) * minAmount
     const priceInSellToken = parseFloat(responseData.guaranteedPrice) * minAmount
 
+    const estimatedPriceInUSD =
+      (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) *
+      estimatedPriceInSellToken
     const priceInUSD =
       (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) * priceInSellToken
 
+    // TODO: maybe we shouldn't use takerAmount for "priceInWei"? We should think about it.
+    const estimatedPriceInWei = BigNumber.from(
+      (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()
+    )
     const priceInWei = BigNumber.from(
       (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()
     )
@@ -285,6 +297,9 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     return res.json({
       buyAmount: minAmount,
       buyAmountInWei,
+      estimatedPriceInSellToken,
+      estimatedPriceInWei,
+      estimatedPriceInUSD,
       priceInSellToken,
       priceInUSD,
       priceInWei,
@@ -386,10 +401,12 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     const source = responseData.tokens[0].market.floorAsk.source.name
 
-    // TODO: source, tokenAddressPath, path
     return res.json({
       buyAmount: minAmount,
-      buyAmountInWei: BigNumber.from(0),
+      buyAmountInWei: BigNumber.from(0), // TODO
+      estimatedPriceInSellToken: 0, // TODO
+      estimatedPriceInWei: BigNumber.from(0), // TODO
+      estimatedPriceInUSD: 0, // TODO
       priceInSellToken,
       priceInUSD,
       priceInWei,
@@ -397,9 +414,9 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       guildFeeInSellToken,
       guildFeeInUSD,
       guildFeeInWei,
-      source,
-      tokenAddressPath: [],
-      path: "",
+      source, // TODO
+      tokenAddressPath: [], // TODO
+      path: "", // TODO
     })
   }
 

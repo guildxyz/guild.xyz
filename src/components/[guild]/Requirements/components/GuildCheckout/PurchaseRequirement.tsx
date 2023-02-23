@@ -59,7 +59,7 @@ const PurchaseRequirement = (): JSX.Element => {
     txSuccess,
     txHash,
   } = useGuildCheckoutContext()
-  const { id, name } = useGuild()
+  const { name } = useGuild()
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
   )
@@ -69,7 +69,7 @@ const PurchaseRequirement = (): JSX.Element => {
   const isMember = useIsMember()
 
   const {
-    data: { priceInUSD },
+    data: { estimatedPriceInUSD },
     isValidating,
     error,
   } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
@@ -117,9 +117,11 @@ const PurchaseRequirement = (): JSX.Element => {
                   <Spinner size="sm" />
                 ) : (
                   <Text as="span">
-                    {!isNaN(priceInUSD)
+                    {!isNaN(estimatedPriceInUSD)
                       ? `${
-                          priceInUSD < 0.01 ? "< $0.01" : `$${priceInUSD.toFixed(2)}`
+                          estimatedPriceInUSD < 0.01
+                            ? "< $0.01"
+                            : `$${estimatedPriceInUSD.toFixed(2)}`
                         }`
                       : ""}
                   </Text>
