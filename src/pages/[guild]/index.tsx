@@ -279,7 +279,10 @@ const GuildPage = (): JSX.Element => {
                   } expired role${expiredPoaps?.length > 1 ? "s" : ""}`
                 )}
               </Button>
-              <Collapse in={isExpiredRolesOpen}>
+              <Collapse
+                in={isExpiredRolesOpen}
+                style={{ padding: "6px", margin: "-6px" }}
+              >
                 <Stack spacing={4} pt="3">
                   {expiredPoaps.map((poap) => (
                     <PoapRoleCard key={poap?.id} guildPoap={poap} />
