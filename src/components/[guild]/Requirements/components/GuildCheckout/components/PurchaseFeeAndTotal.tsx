@@ -36,7 +36,8 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
     error,
   } = usePrice(pickedCurrency)
 
-  const { estimatedGasFee, estimatedGasFeeInUSD } = usePurchaseAsset()
+  const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
+    usePurchaseAsset()
 
   const nativeCurrency = RPC[requirement.chain].nativeCurrency
   const estimatedGasInFloat = estimatedGasFee
@@ -71,7 +72,9 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
           </HStack>
           <Skeleton
             isLoaded={Boolean(
-              pickedCurrency && calculatedGasFee && guildFeeInSellToken
+              error ||
+                estimateGasError ||
+                (pickedCurrency && calculatedGasFee && guildFeeInSellToken)
             )}
           >
             <Text as="span" colorScheme="gray">
