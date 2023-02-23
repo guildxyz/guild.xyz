@@ -26,6 +26,7 @@ enum Chains {
   BOBA = 288,
   BOBA_AVAX = 43288,
   PALM = 11297108109,
+  BASE_GOERLI = 84531,
 }
 
 export type Chain = keyof typeof Chains
@@ -368,6 +369,22 @@ const RPC = {
     apiUrl: "https://api-goerli.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
     multicallAddress: "0x77dCa2C955b15e9dE4dbBCf1246B4B85b651e50e",
+  },
+  BASE_GOERLI: {
+    chainId: 84531,
+    chainName: "Base Goerli",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI: "/networkLogos/base.svg",
+    },
+    blockExplorerUrls: ["https://goerli.basescan.org"],
+    apiUrl: "https://api-goerli.basescan.org",
+    iconUrls: ["/networkLogos/base.svg"],
+    rpcUrls: ["https://goerli.base.org"],
+    multicallAddress: "",
   },
 }
 
