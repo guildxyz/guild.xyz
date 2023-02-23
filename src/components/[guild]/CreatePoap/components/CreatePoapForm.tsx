@@ -1,12 +1,6 @@
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Box,
   Checkbox,
   Circle,
-  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -20,21 +14,18 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Skeleton,
-  SkeletonCircle,
   Stack,
   Text,
   Textarea,
   Tooltip,
-  VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDropzone from "hooks/useDropzone"
-import { Calendar, Image, Question, WarningCircle } from "phosphor-react"
+import useToast from "hooks/useToast"
+import { Image, Question, WarningCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import { CreatePoapForm as CreatePoapFormType } from "types"
@@ -65,6 +56,7 @@ const IMAGE_SIZE = 32
 
 const CreatePoapForm = ({ setStep }): JSX.Element => {
   const { poapData, setPoapData } = useCreatePoapContext()
+  const toast = useToast()
 
   const defaultValues = poapData?.id
     ? {
@@ -132,32 +124,29 @@ const CreatePoapForm = ({ setStep }): JSX.Element => {
     setBase64Image(URL.createObjectURL(image))
   }, [image])
 
-  const {
-    onSubmit: onCreatePoapSubmit,
-    isLoading: isCreatePoapLoading,
-    response: createPoapResponse,
-  } = useCreatePoap()
-  const {
-    onSubmit: onSavePoapSubmit,
-    isLoading: isSavePoapLoading,
-    response: savePoapResponse,
-  } = useSavePoap()
+  const { onSubmit: onSavePoapSubmit, isLoading: isSavePoapLoading } = useSavePoap({
+    onSuccess: () => setStep("requirements"),
+  })
 
-  const onSubmit = (data: CreatePoapFormType) => {
-    setPoapData(data)
-    onCreatePoapSubmit(data)
-  }
-
-  useEffect(() => {
-    if (!createPoapResponse) return
-    setPoapData({ ...(poapData || {}), ...createPoapResponse })
-    onSavePoapSubmit({
-      poapId: createPoapResponse?.id,
-      fancyId: createPoapResponse?.fancy_id,
-      expiryDate: convertPoapExpiryDate(createPoapResponse.expiry_date),
-      guildId: id,
+  const { onSubmit: onCreatePoapSubmit, isLoading: isCreatePoapLoading } =
+    useCreatePoap({
+      onSuccess: (response) => {
+        toast({
+          status: "success",
+          title: "Drop successfully submitted",
+          description:
+            "The POAP Curation Body will review your POAP, and you'll receive an email with the minting links that you’ll have to upload",
+          duration: 6000,
+        })
+        setPoapData(response)
+        onSavePoapSubmit({
+          poapId: response?.id,
+          fancyId: response?.fancy_id,
+          expiryDate: convertPoapExpiryDate(response.expiry_date),
+          guildId: id,
+        })
+      },
     })
-  }, [createPoapResponse])
 
   const {
     isDragActive,
@@ -215,59 +204,6 @@ const CreatePoapForm = ({ setStep }): JSX.Element => {
   //         : undefined,
   //     })
   //   )
-
-  if (savePoapResponse)
-    return (
-      <>
-        <VStack spacing={4}>
-          <Alert status="success">
-            <AlertIcon />
-            <Box>
-              <AlertTitle>Drop successfully submitted</AlertTitle>
-              <AlertDescription>
-                <Text>
-                  The POAP Curation Body will review your petition according to the
-                  POAP drop policies and you'll receive a confirmation email with the
-                  minting links that you’ll have to upload
-                </Text>
-              </AlertDescription>
-            </Box>
-          </Alert>
-          <Card p={4} flexDirection="row" alignItems="center" w="full">
-            <SkeletonCircle boxSize={24} mr="4" isLoaded={!!poapData?.image_url}>
-              <Img
-                src={poapData?.image_url}
-                alt={poapData?.name}
-                boxSize={24}
-                rounded="full"
-              />
-            </SkeletonCircle>
-            <VStack alignItems="start">
-              <Skeleton isLoaded={!!poapData}>
-                <Text fontFamily="display" fontWeight="bold">
-                  {poapData
-                    ? `#${poapData?.id} - ${poapData?.name}`
-                    : "#0 - Unknown POAP"}
-                </Text>
-              </Skeleton>
-
-              <Skeleton isLoaded={!!poapData}>
-                <HStack>
-                  <Icon as={Calendar} />
-                  <Text>{poapData?.start_date || "Unknown date"}</Text>
-                </HStack>
-              </Skeleton>
-            </VStack>
-          </Card>
-        </VStack>
-
-        <Flex justifyContent={"right"} pt="4" mt="auto">
-          <Button colorScheme="indigo" onClick={() => setStep("requirements")}>
-            Next
-          </Button>
-        </Flex>
-      </>
-    )
 
   return (
     <FormProvider {...methods}>
@@ -513,7 +449,9 @@ const CreatePoapForm = ({ setStep }): JSX.Element => {
       >
         <Button
           colorScheme="green"
-          onClick={handleSubmit(/* poapData?.id ? onUpdatePoapSubmit :  */ onSubmit)}
+          onClick={handleSubmit(
+            /* poapData?.id ? onUpdatePoapSubmit :  */ onCreatePoapSubmit
+          )}
           isDisabled={
             isCreatePoapLoading || isSavePoapLoading /*  ||
             isUpdatePoapLoading ||

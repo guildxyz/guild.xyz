@@ -18,6 +18,7 @@ import PoapVoiceRequirementEditable from "requirements/PoapVoice/PoapVoiceRequir
 import logo from "static/logo.svg"
 import useUpdatePoapRequirements from "../../hooks/useUpdatePoapRequirements"
 import { useCreatePoapContext } from "../CreatePoapContext"
+import PoapSuccessCard from "../PoapSuccessCard"
 import AddPoapRequirement from "./components/AddPoapRequirement"
 import OriginalGuildRoleForm from "./components/OriginalGuildRoleForm"
 
@@ -62,10 +63,12 @@ const PoapRequirements = ({
         POAP.
       </Text>
     )
+  console.log(poapData)
 
   return (
     <FormProvider {...methods}>
-      <Heading size="sm" mb="3">
+      <PoapSuccessCard />
+      <Heading size="sm" mb="3" mt="8">
         Set requirements
       </Heading>
       <Stack spacing={0}>

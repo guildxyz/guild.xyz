@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useEffect } from "react"
+import useToast from "hooks/useToast"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
 import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
@@ -23,6 +23,7 @@ import UploadMintLinks from "./UploadMintLinks"
 
 const ImportPoap = ({ setStep }): JSX.Element => {
   const { id } = useGuild()
+  const toast = useToast()
 
   const methods = useForm()
   const poapId = useWatch({ control: methods.control, name: "poapId" })
@@ -30,7 +31,12 @@ const ImportPoap = ({ setStep }): JSX.Element => {
   const { isPoapByIdLoading, poap } = usePoapById(poapId)
 
   const { setPoapData } = useCreatePoapContext()
-  const { onSubmit, isLoading, response } = useSavePoap()
+  const { onSubmit, isLoading, response } = useSavePoap({
+    onSuccess: () => {
+      toast({ status: "success", title: "POAP successfully imported" })
+      setPoapData(poap)
+    },
+  })
 
   const importPoap = () => {
     onSubmit({
@@ -40,11 +46,6 @@ const ImportPoap = ({ setStep }): JSX.Element => {
       expiryDate: convertPoapExpiryDate(poap?.expiry_date),
     })
   }
-
-  useEffect(() => {
-    if (!response) return
-    setPoapData(poap)
-  }, [response])
 
   return (
     <FormProvider {...methods}>

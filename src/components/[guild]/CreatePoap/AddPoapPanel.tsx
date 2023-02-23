@@ -22,37 +22,41 @@ const AddPoapPanel = ({ onSuccess, scrollToTop }: Props): JSX.Element => {
   if (step === "requirements") return <PoapRequirements onSuccess={onSuccess} />
 
   return (
-    <CreatePoapProvider>
-      <Box>
-        {/* TODO: use Tabs */}
-        <ButtonGroup size="sm" w="full" mb="8">
-          <Button
-            w="full"
-            borderRadius="md"
-            onClick={() => setTab("new")}
-            colorScheme={tab === "new" ? "indigo" : null}
-          >
-            Create new POAP
-          </Button>
+    <Box>
+      {/* TODO: use Tabs */}
+      <ButtonGroup size="sm" w="full" mb="8">
+        <Button
+          w="full"
+          borderRadius="md"
+          onClick={() => setTab("new")}
+          colorScheme={tab === "new" ? "indigo" : null}
+        >
+          Create new POAP
+        </Button>
 
-          <Button
-            w="full"
-            borderRadius="md"
-            onClick={() => setTab("existing")}
-            colorScheme={tab === "existing" ? "indigo" : null}
-          >
-            Import existing
-          </Button>
-        </ButtonGroup>
+        <Button
+          w="full"
+          borderRadius="md"
+          onClick={() => setTab("existing")}
+          colorScheme={tab === "existing" ? "indigo" : null}
+        >
+          Import existing
+        </Button>
+      </ButtonGroup>
 
-        {tab === "new" ? (
-          <CreatePoapForm setStep={handleSetStep} />
-        ) : (
-          <ImportPoap setStep={handleSetStep} />
-        )}
-      </Box>
-    </CreatePoapProvider>
+      {tab === "new" ? (
+        <CreatePoapForm setStep={handleSetStep} />
+      ) : (
+        <ImportPoap setStep={handleSetStep} />
+      )}
+    </Box>
   )
 }
 
-export default AddPoapPanel
+const AddPoapPanelWrapper = ({ onSuccess, scrollToTop }: Props): JSX.Element => (
+  <CreatePoapProvider>
+    <AddPoapPanel {...{ onSuccess, scrollToTop }} />
+  </CreatePoapProvider>
+)
+
+export default AddPoapPanelWrapper
