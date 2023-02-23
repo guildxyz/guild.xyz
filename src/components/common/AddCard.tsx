@@ -81,7 +81,7 @@ const AddCard = forwardRef(
             <Icon
               as={rightIcon}
               boxSize={5}
-              color={colorMode === "light" ? "gray.300" : "gray.500"}
+              color={colorMode === "light" ? "gray.400" : "gray.500"}
             />
           )}
         </HStack>
