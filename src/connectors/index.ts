@@ -471,7 +471,7 @@ const RPC: RpcConfig = {
   },
   BASE_GOERLI: {
     chainId: 84531,
-    chainName: "Base Goerli",
+    chainName: "Base Testnet",
     nativeCurrency: {
       name: "Ether",
       symbol: "ETH",
