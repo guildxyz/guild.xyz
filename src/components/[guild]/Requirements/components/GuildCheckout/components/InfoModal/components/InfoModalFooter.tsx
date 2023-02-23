@@ -30,7 +30,7 @@ const InfoModalFooter = (): JSX.Element => {
             : "CloseModalButton (GuildCheckout)"
         }
       >
-        {isJoinButton ? "Join guild to get roles" : "Close"}
+        {isJoinButton ? "Join guild" : "Close"}
       </Button>
     </ModalFooter>
   )

@@ -18,6 +18,7 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useIsMember from "components/[guild]/hooks/useIsMember"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
 import {
@@ -64,6 +65,7 @@ const PurchaseRequirement = (): JSX.Element => {
   const satisfiesRequirement = accessData?.requirements?.find(
     (req) => req.requirementId === requirement.id
   )?.access
+  const isMember = useIsMember()
 
   const {
     data: { priceInUSD },
@@ -202,7 +204,9 @@ const PurchaseRequirement = (): JSX.Element => {
         successComponent={
           <>
             <Text mb={4}>
-              Requirement successfully purchased! Your access is being rechecked
+              {isMember
+                ? "Your access is being rechecked"
+                : "Join the Guild now to get your roles"}
             </Text>
 
             <TransactionLink />
