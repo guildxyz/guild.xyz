@@ -50,6 +50,14 @@ const coingeckoCoinIds = {
   5: "ethereum",
 }
 
+const POAP_DROP_SUPPORTED_CHAINS: Chain[] = [
+  "ETHEREUM",
+  "POLYGON",
+  "BSC",
+  "GNOSIS",
+  "GOERLI",
+]
+
 const handlePriceChange = (newValue, onChange) => {
   if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
   const parsedValue = parseFloat(newValue)
@@ -61,7 +69,7 @@ const PoapPaymentForm = ({ onClose }): JSX.Element => {
   const { requestNetworkChange, isNetworkChangeInProgress } =
     useWeb3ConnectionManager()
 
-  const { poapDropSupportedChains } = useCreatePoapContext()
+  const { poapData } = useCreatePoapContext()
   const feeCollectorContract = useFeeCollectorContract()
 
   const defaultValues = {
@@ -118,8 +126,6 @@ const PoapPaymentForm = ({ onClose }): JSX.Element => {
     onClose()
   }
 
-  const { poapData } = useCreatePoapContext()
-
   const { onSubmit: onMonetizeSubmit, isLoading: isMonetizeLoading } =
     useMonetizePoap(onModalClose)
   const { onSubmit, isLoading } = useRegisterVault((vaultId) =>
@@ -139,7 +145,7 @@ const PoapPaymentForm = ({ onClose }): JSX.Element => {
       <Stack spacing="4">
         <ChainPicker
           controlName={`chain` as const}
-          supportedChains={poapDropSupportedChains}
+          supportedChains={POAP_DROP_SUPPORTED_CHAINS}
           onChange={() => setValue("token", null)}
         />
         <TokenPicker fieldName="token" chain={chain} />

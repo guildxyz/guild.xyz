@@ -64,7 +64,7 @@ const convertPoapDate = (date: string): string => {
 const IMAGE_SIZE = 32
 
 const CreatePoapForm = ({ setStep }): JSX.Element => {
-  const { setIsFormDirty, poapData, setPoapData } = useCreatePoapContext()
+  const { poapData, setPoapData } = useCreatePoapContext()
 
   const defaultValues = poapData?.id
     ? {
@@ -142,16 +142,6 @@ const CreatePoapForm = ({ setStep }): JSX.Element => {
     isLoading: isSavePoapLoading,
     response: savePoapResponse,
   } = useSavePoap()
-
-  useEffect(() => {
-    if (savePoapResponse) return
-    setIsFormDirty(isDirty)
-  }, [isDirty])
-
-  useEffect(() => {
-    if (!savePoapResponse) return
-    setIsFormDirty(false)
-  }, [savePoapResponse])
 
   const onSubmit = (data: CreatePoapFormType) => {
     setPoapData(data)
