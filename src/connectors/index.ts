@@ -489,7 +489,7 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api-goerli.basescan.org",
     iconUrls: ["/networkLogos/base.svg"],
-    rpcUrls: ["https://ether-proxy.guild.xyz/base"],
+    rpcUrls: ["https://goerli.base.org"],
     multicallAddress: "",
   },
   EXOSAMA: {
