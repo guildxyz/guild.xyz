@@ -162,7 +162,7 @@ const ManageEvent = ({ poapId }): JSX.Element => {
               <Spacer />
               <EligibleMembers poapId={poapId} />
             </HStack>
-            <HStack w="full" pt="6">
+            <HStack w="full" pt="8">
               <Button
                 w="full"
                 h="10"

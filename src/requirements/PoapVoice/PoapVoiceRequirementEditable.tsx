@@ -29,7 +29,7 @@ const PoapVoiceRequirementEditable = ({ guildPoap, ...props }: Props) => {
 
   return (
     <Card px="6" py="4" pr="8" pos="relative">
-      <PoapVoiceRequirement {...{ guildPoap }} />
+      <PoapVoiceRequirement {...{ guildPoap }} footer={null} />
 
       <CloseButton
         position="absolute"
