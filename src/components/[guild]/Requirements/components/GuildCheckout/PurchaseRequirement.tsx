@@ -24,7 +24,6 @@ import { ShoppingCartSimple } from "phosphor-react"
 import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
-  PURCHASE_ALLOWED_GUILDS,
 } from "utils/guildCheckout/constants"
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import AlphaTag from "./components/AlphaTag"
@@ -47,6 +46,8 @@ import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
+  const { featureFlags } = useGuild()
+
   const { account, chainId } = useWeb3React()
   const {
     requirement,
@@ -76,8 +77,7 @@ const PurchaseRequirement = (): JSX.Element => {
   if (
     !isOpen &&
     !isInfoModalOpen &&
-    // TODO: we'll be able to control this properly once we'll have feature flags
-    (!PURCHASE_ALLOWED_GUILDS.includes(id) ||
+    (!featureFlags?.includes("PURCHASE_REQUIREMENT") ||
       (!accessData && isAccessLoading) ||
       satisfiesRequirement ||
       !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||

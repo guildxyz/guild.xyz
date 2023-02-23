@@ -39,7 +39,8 @@ const ConnectPlatform = ({ platform }: Props) => {
       icon={<Icon as={platforms[platform].icon} />}
       colorScheme={platforms[platform].colorScheme as string}
       isConnected={
-        (platformFromDb?.username ?? platformFromDb?.platformUserId) ||
+        (platformFromDb?.platformUserData?.username ??
+          platformFromDb?.platformUserId) ||
         response?.platformUserId ||
         (authData && "hidden")
       }

@@ -1,3 +1,4 @@
+import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import type { Chain } from "connectors"
 import { RequirementType } from "requirements"
 
@@ -77,15 +78,21 @@ type NFT = {
 
 type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
 
-type PlatformAccount = {
+type PlatformUserData = {
+  acessToken?: string
+  scope?: string
+  expiresIn?: number
+  invalidToken?: boolean
+  refreshToken?: string
+  avatar?: string
+  username?: string
+  readonly?: boolean
+}
+type PlatformAccountDetails = {
   platformId: number
   platformName: PlatformName
-}
-type PlatformAccountDetails = PlatformAccount & {
   platformUserId: string
-  username: string
-  avatar: string
-  platformUserData?: Record<string, any> // TODO: better types once we decide which properties will we store in this object on the backend
+  platformUserData?: PlatformUserData
 }
 
 type AddressConnectionProvider = "DELEGATE"
@@ -255,11 +262,19 @@ type Guild = {
   members: Array<string>
   poaps: Array<GuildPoap>
   onboardingComplete: boolean
+  featureFlags: FeatureFlag[]
 }
 type GuildFormType = Partial<
   Pick<
     Guild,
-    "id" | "urlName" | "name" | "imageUrl" | "description" | "theme" | "contacts"
+    | "id"
+    | "urlName"
+    | "name"
+    | "imageUrl"
+    | "description"
+    | "theme"
+    | "contacts"
+    | "featureFlags"
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
