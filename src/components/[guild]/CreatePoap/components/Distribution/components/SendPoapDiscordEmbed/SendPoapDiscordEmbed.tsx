@@ -53,7 +53,7 @@ type Props = {
 
 const EMBED_IMAGE_SIZE = "70px"
 
-const SendDiscordEmbed = ({ poap, onSuccess }: Props): JSX.Element => {
+const SendPoapDiscordEmbed = ({ poap, onSuccess }: Props): JSX.Element => {
   const { poapEventDetails } = usePoapEventDetails()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -111,7 +111,7 @@ const SendDiscordEmbed = ({ poap, onSuccess }: Props): JSX.Element => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent maxW="lg">
-          <ModalHeader>Set up mint embed</ModalHeader>
+          <ModalHeader>Set up claim embed</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormProvider {...methods}>
@@ -254,4 +254,4 @@ const SendDiscordEmbed = ({ poap, onSuccess }: Props): JSX.Element => {
   )
 }
 
-export default SendDiscordEmbed
+export default SendPoapDiscordEmbed

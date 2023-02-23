@@ -1,8 +1,8 @@
-import useVoiceParticipants from "components/[guild]/CreatePoap/components/Distribution/components/ManageEvent/components/EligibleMembers/hooks/useVoiceParticipants"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
+import useVoiceParticipants from "../components/ManageEvent/components/EligibleMembers/hooks/useVoiceParticipants"
 import usePoapEventDetails from "./usePoapEventDetails"
 
 type DeleteVoiceRequirementParams = {

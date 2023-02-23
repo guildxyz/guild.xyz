@@ -16,7 +16,7 @@ import { useState } from "react"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import { GuildPoap, PlatformType, Poap } from "types"
 import useUpdateGuildPoap from "../../hooks/useUpdateGuildPoap"
-import SendDiscordEmbed from "./components/SendDiscordEmbed"
+import SendPoapDiscordEmbed from "./components/SendPoapDiscordEmbed"
 
 type Props = {
   guildPoap: GuildPoap
@@ -108,7 +108,10 @@ const Distribution = ({
             {showDiscord && (
               <>
                 <LogicDivider logic="OR" />
-                <SendDiscordEmbed poap={poap} onSuccess={() => setSuccess(true)} />
+                <SendPoapDiscordEmbed
+                  poap={poap}
+                  onSuccess={() => setSuccess(true)}
+                />
               </>
             )}
           </Stack>
