@@ -7,6 +7,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
+import { Coin, SpeakerHigh } from "phosphor-react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { RequirementType } from "requirements"
 import PoapPaymentForm from "requirements/PoapPayment"
@@ -112,7 +113,7 @@ const PoapRequirements = ({
           <AddPoapRequirement
             title="Payment"
             description="Monetize POAP with different payment methods that the users will be able to choose from"
-            // rightIcon={Coin}
+            rightIcon={Coin}
             FormComponent={PoapPaymentForm}
           />
         )}
@@ -120,7 +121,7 @@ const PoapRequirements = ({
           <AddPoapRequirement
             title="Voice participation"
             description="Users will have to be in a Discord voice channel at the time of the event"
-            // rightIcon={SpeakerHigh}
+            rightIcon={SpeakerHigh}
             FormComponent={PoapVoiceForm}
           />
         )}

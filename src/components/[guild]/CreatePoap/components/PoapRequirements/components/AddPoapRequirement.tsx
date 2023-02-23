@@ -14,6 +14,7 @@ import { Modal } from "components/common/Modal"
 const AddPoapRequirement = ({
   title,
   description,
+  rightIcon,
   isDisabled = false,
   FormComponent,
 }) => {
@@ -21,8 +22,7 @@ const AddPoapRequirement = ({
   return (
     <>
       <AddCard
-        title={title}
-        description={description}
+        {...{ title, description, rightIcon }}
         py="5"
         mb="2 !important"
         onClick={onOpen}
