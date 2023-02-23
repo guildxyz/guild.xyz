@@ -49,9 +49,8 @@ const RPC = {
     rpcUrls: [
       process.env.MAINNET_ALCHEMY_KEY
         ? `https://eth-mainnet.g.alchemy.com/v2/${process.env.MAINNET_ALCHEMY_KEY}`
-        : "",
-      "https://cloudflare-eth.com",
-    ].filter((url) => !!url),
+        : "https://cloudflare-eth.com",
+    ],
     multicallAddress: "0x5ba1e12693dc8f9c48aad8770482f4739beed696",
   },
   BSC: {
@@ -85,9 +84,8 @@ const RPC = {
     rpcUrls: [
       process.env.POLYGON_ALCHEMY_KEY
         ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.POLYGON_ALCHEMY_KEY}`
-        : "",
-      "https://polygon-rpc.com",
-    ].filter((url) => !!url),
+        : "https://polygon-rpc.com",
+    ],
     blockExplorerUrls: ["https://polygonscan.com"],
     apiUrl: "https://api.polygonscan.com",
     iconUrls: ["/networkLogos/polygon.svg"],
@@ -362,9 +360,8 @@ const RPC = {
     rpcUrls: [
       process.env.GOERLI_ALCHEMY_KEY
         ? `https://eth-goerli.g.alchemy.com/v2/${process.env.GOERLI_ALCHEMY_KEY}`
-        : "",
-      "https://ethereum-goerli-rpc.allthatnode.com/",
-    ].filter((url) => !!url),
+        : "https://ethereum-goerli-rpc.allthatnode.com",
+    ],
     blockExplorerUrls: ["https://goerli.etherscan.io"],
     apiUrl: "https://api-goerli.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
