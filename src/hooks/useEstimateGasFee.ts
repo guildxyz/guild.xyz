@@ -21,16 +21,21 @@ const useEstimateGasFee = (
       contract.estimateGas[methodName](...params),
     ])
 
-    return gasPrice.mul(gas)
+    return {
+      estimatedGasLimit: gas,
+      estimatedGasFee: gasPrice.mul(gas),
+    }
   }
 
   const shouldFetch = Boolean(contract && methodName && params?.length)
 
   const {
-    data: estimatedGasFee,
+    data,
     isValidating: isGasEstimationLoading,
     error: estimateGasError,
   } = useSWRImmutable(shouldFetch ? ["estimateGas", key] : null, estimateGasFee)
+
+  const { estimatedGasLimit, estimatedGasFee } = data ?? {}
 
   const convertGasFeeToUSD = async () => {
     const { chainId } = await contract.provider.getNetwork()
@@ -57,6 +62,7 @@ const useEstimateGasFee = (
   )
 
   return {
+    estimatedGasLimit,
     estimatedGasFee,
     estimatedGasFeeInUSD,
     isEstimateGasLoading: isGasEstimationLoading || isConvertLoading,

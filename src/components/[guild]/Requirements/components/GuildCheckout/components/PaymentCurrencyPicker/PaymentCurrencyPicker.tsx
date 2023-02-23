@@ -127,26 +127,28 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                 ))}
               </Stack>
 
-              <HStack
-                justifyContent="space-between"
-                bgColor={lightShade}
-                h={8}
-                px={4}
-                fontSize="sm"
-              >
-                <Text as="span" colorScheme="gray">
-                  Connected address:
-                </Text>
-
-                <Button
-                  size="sm"
-                  variant="link"
-                  rightIcon={<Icon as={ArrowSquareOut} />}
-                  onClick={openAccountModal}
+              {account && (
+                <HStack
+                  justifyContent="space-between"
+                  bgColor={lightShade}
+                  h={8}
+                  px={4}
+                  fontSize="sm"
                 >
-                  {shortenHex(account, 3)}
-                </Button>
-              </HStack>
+                  <Text as="span" colorScheme="gray">
+                    Connected address:
+                  </Text>
+
+                  <Button
+                    size="sm"
+                    variant="link"
+                    rightIcon={<Icon as={ArrowSquareOut} />}
+                    onClick={openAccountModal}
+                  >
+                    {shortenHex(account, 3)}
+                  </Button>
+                </HStack>
+              )}
             </MenuList>
           </>
         )}

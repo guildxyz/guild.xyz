@@ -36,7 +36,12 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
     error,
   } = usePrice(pickedCurrency)
 
-  const { estimatedGasFee, estimatedGasFeeInUSD } = usePurchaseAsset()
+  const {
+    estimatedGasFee,
+    estimatedGasFeeInUSD,
+    estimateGasError,
+    isLoading: isEstimateGasLoading,
+  } = usePurchaseAsset()
 
   const nativeCurrency = RPC[requirement.chain].nativeCurrency
   const estimatedGasInFloat = estimatedGasFee
@@ -69,22 +74,28 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
               <Icon as={Info} color="gray" />
             </Tooltip>
           </HStack>
-          <Text as="span" colorScheme="gray">
-            {error ? (
-              "Couldn't calculate"
-            ) : pickedCurrency ? (
-              <>
-                {isTooSmallFee
-                  ? "< 0.001"
-                  : (calculatedGasFee ?? 0 + guildFeeInSellToken ?? 0)?.toFixed(
-                      3
-                    )}{" "}
-                {symbol}
-              </>
-            ) : (
-              "Choose currency"
+          <Skeleton
+            isLoaded={Boolean(
+              error ||
+                estimateGasError ||
+                (pickedCurrency && !isEstimateGasLoading && guildFeeInSellToken)
             )}
-          </Text>
+          >
+            <Text as="span" colorScheme="gray">
+              {error || !estimatedGasFee ? (
+                "Couldn't calculate"
+              ) : pickedCurrency ? (
+                <>
+                  {isTooSmallFee
+                    ? "< 0.001"
+                    : (calculatedGasFee + guildFeeInSellToken)?.toFixed(3)}{" "}
+                  {symbol}
+                </>
+              ) : (
+                "Choose currency"
+              )}
+            </Text>
+          </Skeleton>
         </HStack>
 
         <HStack justifyContent="space-between">
