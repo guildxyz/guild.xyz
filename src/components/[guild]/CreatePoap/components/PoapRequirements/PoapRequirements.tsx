@@ -15,9 +15,11 @@ import PoapPaymentRequirementEditable from "requirements/PoapPayment/PoapPayment
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import PoapVoiceForm from "requirements/PoapVoice/PoapVoiceForm"
 import PoapVoiceRequirementEditable from "requirements/PoapVoice/PoapVoiceRequirementEditable"
+import logo from "static/logo.svg"
 import useUpdatePoapRequirements from "../../hooks/useUpdatePoapRequirements"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import AddPoapRequirement from "./components/AddPoapRequirement"
+import OriginalGuildRoleForm from "./components/OriginalGuildRoleForm"
 
 const PoapRequirements = ({
   onSuccess: onModalClose,
@@ -103,16 +105,19 @@ const PoapRequirements = ({
           )}
         </AnimatePresence>
 
-        {/* <AddPoapRequirement
-          title="Original guild role"
-          isDisabled
-          description="Same as if you’d add it to an existing role, but you can set other requirements too"
-          FormComponent={Role}
-        /> */}
+        {!fields.some((field: any) => field.type === "GUILD_ROLE") && (
+          <AddPoapRequirement
+            title="Original guild role"
+            description="Same as if you’d add it to an existing role, but you can set other requirements too"
+            rightIcon={logo}
+            FormComponent={OriginalGuildRoleForm}
+            onAdd={(d) => append(d)}
+          />
+        )}
         {!guildPoap?.poapContracts?.length && (
           <AddPoapRequirement
             title="Payment"
-            description="Monetize POAP with different payment methods that the users will be able to choose from"
+            description="Monetize POAP with different payment methods"
             rightIcon={Coin}
             FormComponent={PoapPaymentForm}
           />
