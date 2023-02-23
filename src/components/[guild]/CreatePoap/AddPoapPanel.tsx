@@ -22,7 +22,7 @@ const AddPoapPanel = ({ onSuccess, scrollToTop }: Props): JSX.Element => {
 
   return (
     <Box>
-      <Tabs size="sm" isFitted variant="solid" mb="8" colorScheme="indigo">
+      <Tabs size="sm" isFitted variant="solid" colorScheme="indigo">
         <TabList mb="8">
           <Tab>Create new POAP</Tab>
           <Tab>Import existing</Tab>
