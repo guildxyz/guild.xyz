@@ -26,6 +26,7 @@ enum Chains {
   BOBA = 288,
   BOBA_AVAX = 43288,
   PALM = 11297108109,
+  BASE_GOERLI = 84531,
 }
 
 export type Chain = keyof typeof Chains
@@ -48,9 +49,8 @@ const RPC = {
     rpcUrls: [
       process.env.MAINNET_ALCHEMY_KEY
         ? `https://eth-mainnet.g.alchemy.com/v2/${process.env.MAINNET_ALCHEMY_KEY}`
-        : "",
-      "https://cloudflare-eth.com",
-    ].filter((url) => !!url),
+        : "https://cloudflare-eth.com",
+    ],
     multicallAddress: "0x5ba1e12693dc8f9c48aad8770482f4739beed696",
   },
   BSC: {
@@ -84,9 +84,8 @@ const RPC = {
     rpcUrls: [
       process.env.POLYGON_ALCHEMY_KEY
         ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.POLYGON_ALCHEMY_KEY}`
-        : "",
-      "https://polygon-rpc.com",
-    ].filter((url) => !!url),
+        : "https://polygon-rpc.com",
+    ],
     blockExplorerUrls: ["https://polygonscan.com"],
     apiUrl: "https://api.polygonscan.com",
     iconUrls: ["/networkLogos/polygon.svg"],
@@ -361,13 +360,28 @@ const RPC = {
     rpcUrls: [
       process.env.GOERLI_ALCHEMY_KEY
         ? `https://eth-goerli.g.alchemy.com/v2/${process.env.GOERLI_ALCHEMY_KEY}`
-        : "",
-      "https://ethereum-goerli-rpc.allthatnode.com/",
-    ].filter((url) => !!url),
+        : "https://ethereum-goerli-rpc.allthatnode.com",
+    ],
     blockExplorerUrls: ["https://goerli.etherscan.io"],
     apiUrl: "https://api-goerli.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
     multicallAddress: "0x77dCa2C955b15e9dE4dbBCf1246B4B85b651e50e",
+  },
+  BASE_GOERLI: {
+    chainId: 84531,
+    chainName: "Base Goerli",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI: "/networkLogos/base.svg",
+    },
+    blockExplorerUrls: ["https://goerli.basescan.org"],
+    apiUrl: "https://api-goerli.basescan.org",
+    iconUrls: ["/networkLogos/base.svg"],
+    rpcUrls: ["https://ether-proxy.guild.xyz/base"],
+    multicallAddress: "",
   },
 }
 
