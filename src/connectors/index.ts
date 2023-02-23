@@ -380,7 +380,7 @@ const RPC = {
     blockExplorerUrls: ["https://goerli.basescan.org"],
     apiUrl: "https://api-goerli.basescan.org",
     iconUrls: ["/networkLogos/base.svg"],
-    rpcUrls: ["https://goerli.base.org"],
+    rpcUrls: ["https://ether-proxy.guild.xyz/base"],
     multicallAddress: "",
   },
 }
