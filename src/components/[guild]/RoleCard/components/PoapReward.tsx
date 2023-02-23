@@ -5,20 +5,18 @@ import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
-import { useMemo } from "react"
 import { Poap } from "types"
 
 type Props = {
   poap: Poap
+  isExpired?: boolean
 }
 
-const PoapReward = ({ poap }: Props) => {
+const PoapReward = ({ poap, isExpired }: Props) => {
   const isMember = useIsMember()
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
-  const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
-
-  const isExpired = useMemo(() => new Date(poap?.expiry_date) < new Date(), [poap])
+  const { poapLinks } = usePoapLinks(poap?.id)
 
   return (
     <HStack pt="3" spacing={0} alignItems={"flex-start"}>
@@ -52,9 +50,14 @@ const PoapReward = ({ poap }: Props) => {
             {poap?.name}
           </Text>
         )}
-        {!isExpired && (
-          <Tag ml="2">{`${poapLinks?.total - poapLinks?.claimed} available`}</Tag>
-        )}
+        {poapLinks &&
+          (isExpired ? (
+            <Tag ml="2">{`${poapLinks?.claimed}/${
+              poapLinks?.total - poapLinks?.claimed
+            } minted`}</Tag>
+          ) : (
+            <Tag ml="2">{`${poapLinks?.total - poapLinks?.claimed} available`}</Tag>
+          ))}
       </Text>
     </HStack>
   )

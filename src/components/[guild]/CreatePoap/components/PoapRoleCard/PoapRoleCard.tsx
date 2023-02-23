@@ -188,7 +188,7 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
           )}
 
           <Box mt="auto">
-            <PoapReward poap={poap} />
+            <PoapReward poap={poap} isExpired={timeDiff < 0} />
           </Box>
         </Flex>
         <Flex
