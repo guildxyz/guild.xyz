@@ -1,16 +1,9 @@
-import {
-  Box,
-  Flex,
-  Stack,
-  Text,
-  useClipboard,
-  useToast,
-  VStack,
-} from "@chakra-ui/react"
+import { Box, Flex, Stack, Text, useClipboard, VStack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
+import useToast from "hooks/useToast"
 import { Check, CopySimple } from "phosphor-react"
 import { useState } from "react"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
