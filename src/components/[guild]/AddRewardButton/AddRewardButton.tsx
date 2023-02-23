@@ -50,9 +50,11 @@ const AddRewardButton = () => {
 
   const AddPlatformPanel = addPlatformComponents[selection]
 
+  const scrollToTop = () => modalRef.current?.scrollTo({ top: 0 })
+
   const setSelection = (platform: PlatformName) => {
     setSelectionOg(platform)
-    modalRef.current?.scrollTo({ top: 0 })
+    scrollToTop()
   }
 
   const goBack = () => {
@@ -124,6 +126,7 @@ const AddRewardButton = () => {
                   onSuccess={
                     selection === "POAP" ? onSuccess : () => setShowRoleSelect(true)
                   }
+                  scrollToTop={scrollToTop}
                   skipSettings
                 />
               )}
