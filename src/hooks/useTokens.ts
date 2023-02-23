@@ -35,6 +35,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   BOBA_AVAX: ["https://tokens.coingecko.com/boba/all.json"],
   PALM: [],
   BASE_GOERLI: [],
+  EXOSAMA: [],
 }
 
 const fetchTokens = async (_: string, chain: string) =>

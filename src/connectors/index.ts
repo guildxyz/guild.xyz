@@ -27,6 +27,7 @@ enum Chains {
   BOBA_AVAX = 43288,
   PALM = 11297108109,
   BASE_GOERLI = 84531,
+  EXOSAMA = 2109,
 }
 
 export type Chain = keyof typeof Chains
@@ -489,6 +490,27 @@ const RPC: RpcConfig = {
     iconUrls: ["/networkLogos/base.svg"],
     rpcUrls: ["https://ether-proxy.guild.xyz/base"],
     multicallAddress: "",
+  },
+  EXOSAMA: {
+    chainId: 2109,
+    chainName: "Exosama Network",
+    nativeCurrency: {
+      name: "Moonsama",
+      symbol: "SAMA",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://raw.githubusercontent.com/nico-ma1/Exosama-Network-Brand/main/sama-token%403x.png",
+    },
+    blockExplorerUrls: ["https://explorer.exosama.com"],
+    blockExplorerIcons: {
+      light: "/networkLogos/exosama.png",
+      dark: "/networkLogos/exosama.png",
+    },
+    apiUrl: "https://explorer.exosama.com",
+    iconUrls: ["/networkLogos/exosama.png"],
+    rpcUrls: ["https://rpc.exosama.com"],
+    multicallAddress: "0x2feFC828e2fEfdE0C9f7740919c6A9139F886067",
   },
 }
 
