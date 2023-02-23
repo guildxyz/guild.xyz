@@ -31,7 +31,33 @@ enum Chains {
 
 export type Chain = keyof typeof Chains
 
-const RPC = {
+type NativeCurrency = {
+  name: string
+  symbol: string
+  decimals: number
+  address: string
+  logoURI: string
+}
+
+type RpcConfig = Record<
+  Chain,
+  {
+    chainId: number
+    chainName: string
+    nativeCurrency: NativeCurrency
+    blockExplorerUrls: string[]
+    blockExplorerIcons: {
+      light: string
+      dark: string
+    }
+    apiUrl?: string
+    iconUrls: string[]
+    rpcUrls: string[]
+    multicallAddress?: string
+  }
+>
+
+const RPC: RpcConfig = {
   ETHEREUM: {
     chainId: 1,
     chainName: "Ethereum",
@@ -44,6 +70,10 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://etherscan.io"],
+    blockExplorerIcons: {
+      light: "/explorerLogos/etherscan-light.svg",
+      dark: "/explorerLogos/etherscan-dark.svg",
+    },
     apiUrl: "https://api.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
     rpcUrls: [
@@ -66,6 +96,10 @@ const RPC = {
     },
     rpcUrls: ["https://bsc-dataseed1.binance.org"],
     blockExplorerUrls: ["https://bscscan.com"],
+    blockExplorerIcons: {
+      light: "/explorerLogos/bscscan-light.svg",
+      dark: "/explorerLogos/bscscan-dark.svg",
+    },
     apiUrl: "https://api.bscscan.com",
     iconUrls: ["/networkLogos/bsc.svg"],
     multicallAddress: "0x41263cba59eb80dc200f3e2544eda4ed6a90e76c",
@@ -87,6 +121,10 @@ const RPC = {
         : "https://polygon-rpc.com",
     ],
     blockExplorerUrls: ["https://polygonscan.com"],
+    blockExplorerIcons: {
+      light: "/networkLogos/polygon.svg",
+      dark: "/networkLogos/polygon.svg",
+    },
     apiUrl: "https://api.polygonscan.com",
     iconUrls: ["/networkLogos/polygon.svg"],
     multicallAddress: "0x11ce4B23bD875D7F5C6a31084f55fDe1e9A87507",
@@ -104,6 +142,10 @@ const RPC = {
     },
     rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
     blockExplorerUrls: ["https://snowtrace.io"],
+    blockExplorerIcons: {
+      light: "/explorerLogos/snowtrace.svg",
+      dark: "/explorerLogos/snowtrace.svg",
+    },
     apiUrl: "https://api.snowtrace.io",
     iconUrls: ["/networkLogos/avalanche.svg"],
     multicallAddress: "0x98e2060F672FD1656a07bc12D7253b5e41bF3876",
@@ -121,6 +163,10 @@ const RPC = {
     },
     rpcUrls: ["https://rpc.gnosischain.com"],
     blockExplorerUrls: ["https://gnosisscan.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/gnosis.svg",
+      dark: "/networkLogos/gnosis.svg",
+    },
     apiUrl: "https://api.gnosisscan.io",
     iconUrls: ["/networkLogos/gnosis.svg"],
     multicallAddress: "0xb5b692a88bdfc81ca69dcb1d924f59f0413a602a",
@@ -138,6 +184,10 @@ const RPC = {
     },
     rpcUrls: ["https://rpc.ftm.tools"],
     blockExplorerUrls: ["https://ftmscan.com"],
+    blockExplorerIcons: {
+      light: "/explorerLogos/ftmscan.svg",
+      dark: "/networkLogos/fantom.svg",
+    },
     apiUrl: "https://api.ftmscan.com",
     iconUrls: ["/networkLogos/fantom.svg"],
     multicallAddress: "0xD98e3dBE5950Ca8Ce5a4b59630a5652110403E5c",
@@ -157,6 +207,10 @@ const RPC = {
       "https://arb-mainnet.g.alchemy.com/v2/FmkOXUHKolu3zhBNecrZ7tmJPzhsV7J_",
     ],
     blockExplorerUrls: ["https://arbiscan.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/arbitrum.svg",
+      dark: "/networkLogos/arbitrum.svg",
+    },
     apiUrl: "https://api.arbiscan.io",
     iconUrls: ["/networkLogos/arbitrum.svg"],
     multicallAddress: "0x52bfe8fE06c8197a8e3dCcE57cE012e13a7315EB",
@@ -174,6 +228,10 @@ const RPC = {
     },
     rpcUrls: ["https://nova.arbitrum.io/rpc"],
     blockExplorerUrls: ["https://nova.arbiscan.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/nova.svg",
+      dark: "/networkLogos/nova.svg",
+    },
     apiUrl: "https://api-nova.arbiscan.io",
     iconUrls: ["/networkLogos/nova.svg"],
     multicallAddress: "0x5e1eE626420A354BbC9a95FeA1BAd4492e3bcB86",
@@ -191,6 +249,10 @@ const RPC = {
     },
     rpcUrls: ["https://forno.celo.org"],
     blockExplorerUrls: ["https://explorer.celo.org"],
+    blockExplorerIcons: {
+      light: "/networkLogos/celo.svg",
+      dark: "/networkLogos/celo.svg",
+    },
     apiUrl: "https://explorer.celo.org",
     iconUrls: ["/networkLogos/celo.svg"],
     multicallAddress: "0xb74C3A8108F1534Fc0D9b776A9B487c84fe8eD06",
@@ -208,6 +270,10 @@ const RPC = {
     },
     rpcUrls: ["https://api.harmony.one"],
     blockExplorerUrls: ["https://explorer.harmony.one"],
+    blockExplorerIcons: {
+      light: "/networkLogos/harmony.svg",
+      dark: "/networkLogos/harmony.svg",
+    },
     iconUrls: ["/networkLogos/harmony.svg"],
     multicallAddress: "0x34b415f4d3b332515e66f70595ace1dcf36254c5",
   },
@@ -223,6 +289,10 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://optimistic.etherscan.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/optimism.svg",
+      dark: "/networkLogos/optimism.svg",
+    },
     apiUrl: "https://api-optimistic.etherscan.io",
     iconUrls: ["/networkLogos/optimism.svg"],
     rpcUrls: ["https://mainnet.optimism.io"],
@@ -240,6 +310,10 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/22459/small/glmr.png?1641880985",
     },
     blockExplorerUrls: ["https://moonbeam.moonscan.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/moonbeam.svg",
+      dark: "/networkLogos/moonbeam.svg",
+    },
     apiUrl: "https://api-moonbeam.moonscan.io",
     iconUrls: ["/networkLogos/moonbeam.svg"],
     rpcUrls: ["https://rpc.api.moonbeam.network"],
@@ -257,6 +331,10 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/17984/small/9285.png?1630028620",
     },
     blockExplorerUrls: ["https://moonriver.moonscan.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/moonriver.svg",
+      dark: "/networkLogos/moonriver.svg",
+    },
     apiUrl: "https://api-moonriver.moonscan.io",
     iconUrls: ["/networkLogos/moonriver.svg"],
     rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
@@ -274,6 +352,10 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/15595/small/metis.PNG?1621298076",
     },
     blockExplorerUrls: ["https://andromeda-explorer.metis.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/metis.svg",
+      dark: "/explorerLogos/metis-dark.svg",
+    },
     apiUrl: "https://andromeda-explorer.metis.io",
     iconUrls: ["/networkLogos/metis.svg"],
     rpcUrls: ["https://andromeda.metis.io/?owner=1088"],
@@ -291,6 +373,10 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/7310/small/oCw2s3GI_400x400.jpeg?1645172042",
     },
     blockExplorerUrls: ["https://cronos.org/explorer"],
+    blockExplorerIcons: {
+      light: "/networkLogos/cronos.svg",
+      dark: "/explorerLogos/cronos-dark.svg",
+    },
     apiUrl: "https://cronos.org/explorer",
     iconUrls: ["/networkLogos/cronos.svg"],
     rpcUrls: ["https://evm.cronos.org"],
@@ -308,6 +394,10 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://blockexplorer.boba.network"],
+    blockExplorerIcons: {
+      light: "/explorerLogos/boba-light.svg",
+      dark: "/networkLogos/boba.svg",
+    },
     apiUrl: "https://api.bobascan.com",
     iconUrls: ["/networkLogos/boba.svg"],
     rpcUrls: ["https://mainnet.boba.network"],
@@ -325,6 +415,10 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/20285/small/BOBA.png?1636811576",
     },
     blockExplorerUrls: ["https://blockexplorer.avax.boba.network"],
+    blockExplorerIcons: {
+      light: "/explorerLogos/boba-light.svg",
+      dark: "/networkLogos/boba.svg",
+    },
     apiUrl: "https://blockexplorer.avax.boba.network",
     iconUrls: ["/networkLogos/boba.svg"],
     rpcUrls: ["https://avax.boba.network"],
@@ -341,6 +435,10 @@ const RPC = {
       logoURI: "/networkLogos/palm.png",
     },
     blockExplorerUrls: ["https://explorer.palm.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/palm.png",
+      dark: "/networkLogos/palm.png",
+    },
     apiUrl: "https://explorer.palm.io",
     iconUrls: ["/networkLogos/palm.png"],
     rpcUrls: ["https://palm-mainnet.infura.io/v3/84722b0c96da4e09a6305118494aeeaa"],
@@ -363,6 +461,10 @@ const RPC = {
         : "https://ethereum-goerli-rpc.allthatnode.com",
     ],
     blockExplorerUrls: ["https://goerli.etherscan.io"],
+    blockExplorerIcons: {
+      light: "/explorerLogos/etherscan-light.svg",
+      dark: "/explorerLogos/etherscan-dark.svg",
+    },
     apiUrl: "https://api-goerli.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
     multicallAddress: "0x77dCa2C955b15e9dE4dbBCf1246B4B85b651e50e",
@@ -379,6 +481,10 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://goerli.basescan.org"],
+    blockExplorerIcons: {
+      light: "/networkLogos/base.svg",
+      dark: "/networkLogos/base.svg",
+    },
     apiUrl: "https://api-goerli.basescan.org",
     iconUrls: ["/networkLogos/base.svg"],
     rpcUrls: ["https://ether-proxy.guild.xyz/base"],
@@ -394,89 +500,6 @@ supportedChains.forEach(
   (chain) => (RPC_URLS[RPC[chain].chainId] = RPC[chain].rpcUrls)
 )
 
-const blockExplorerIcons = {
-  "https://etherscan.io": {
-    light: "/explorerLogos/etherscan-light.svg",
-    dark: "/explorerLogos/etherscan-dark.svg",
-  },
-  "https://bscscan.com": {
-    light: "/explorerLogos/bscscan-light.svg",
-    dark: "/explorerLogos/bscscan-dark.svg",
-  },
-  "https://polygonscan.com": {
-    light: "/networkLogos/polygon.svg",
-    dark: "/networkLogos/polygon.svg",
-  },
-  "https://snowtrace.io": {
-    light: "/explorerLogos/snowtrace.svg",
-    dark: "/explorerLogos/snowtrace.svg",
-  },
-  "https://gnosisscan.io": {
-    light: "/networkLogos/gnosis.svg",
-    dark: "/networkLogos/gnosis.svg",
-  },
-  "https://ftmscan.com": {
-    light: "/explorerLogos/ftmscan.svg",
-    dark: "/networkLogos/fantom.svg",
-  },
-  "https://arbiscan.io": {
-    light: "/networkLogos/arbitrum.svg",
-    dark: "/networkLogos/arbitrum.svg",
-  },
-  "https://nova.arbiscan.io": {
-    light: "/networkLogos/nova.svg",
-    dark: "/networkLogos/nova.svg",
-  },
-  "https://explorer.celo.org": {
-    light: "/networkLogos/celo.svg",
-    dark: "/networkLogos/celo.svg",
-  },
-  "https://explorer.harmony.one": {
-    light: "/networkLogos/harmony.svg",
-    dark: "/networkLogos/harmony.svg",
-  },
-  "https://optimistic.etherscan.io": {
-    light: "/networkLogos/optimism.svg",
-    dark: "/networkLogos/optimism.svg",
-  },
-  "https://moonriver.moonscan.io": {
-    light: "/networkLogos/moonriver.svg",
-    dark: "/networkLogos/moonriver.svg",
-  },
-  "https://moonbeam.moonscan.io": {
-    light: "/networkLogos/moonbeam.svg",
-    dark: "/networkLogos/moonbeam.svg",
-  },
-  "https://andromeda-explorer.metis.io": {
-    light: "/networkLogos/metis.svg",
-    dark: "/explorerLogos/metis-dark.svg",
-  },
-  "https://cronos.org/explorer": {
-    light: "/networkLogos/cronos.svg",
-    dark: "/explorerLogos/cronos-dark.svg",
-  },
-  "https://blockexplorer.boba.network": {
-    light: "/explorerLogos/boba-light.svg",
-    dark: "/networkLogos/boba.svg",
-  },
-  "https://blockexplorer.avax.boba.network": {
-    light: "/explorerLogos/boba-light.svg",
-    dark: "/networkLogos/boba.svg",
-  },
-  "https://explorer.palm.io": {
-    light: "/networkLogos/palm.png",
-    dark: "/networkLogos/palm.png",
-  },
-  "https://goerli.etherscan.io": {
-    light: "/explorerLogos/etherscan-light.svg",
-    dark: "/explorerLogos/etherscan-dark.svg",
-  },
-  "https://goerli.basescan.org": {
-    light: "/networkLogos/base.svg",
-    dark: "/networkLogos/base.svg",
-  },
-}
-
 const [metaMask, metaMaskHooks] = initializeMetaMaskConnector()
 const [walletConnect, walletConnectHooks] = initializeWalletConnectConnector()
 const [coinbaseWallet, coinbaseWalletHooks] = initializeCoinbaseWalletConnector()
@@ -487,4 +510,4 @@ const connectors: [MetaMask | WalletConnect | CoinbaseWallet, Web3ReactHooks][] 
   [coinbaseWallet, coinbaseWalletHooks],
 ]
 
-export { supportedChains, Chains, RPC, RPC_URLS, blockExplorerIcons, connectors }
+export { Chains, supportedChains, RPC, RPC_URLS, connectors }
