@@ -4,10 +4,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  HStack,
   Input,
   InputGroup,
   InputRightAddon,
@@ -270,10 +270,9 @@ const PoapPaymentForm = ({ onClose }): JSX.Element => {
           receive payments. You'll be able to collect funds from it anytime.
         </Text>
       </Stack>
-      <Flex justifyContent={"right"} mt="8">
+      <HStack justifyContent={"right"} mt="8">
         {isOnCorrectChain ? (
           <Button
-            mr={2}
             colorScheme={"green"}
             onClick={handleSubmit(onSubmit)}
             isDisabled={!isOnCorrectChain || !token || !fee}
@@ -284,7 +283,6 @@ const PoapPaymentForm = ({ onClose }): JSX.Element => {
           </Button>
         ) : (
           <Button
-            mr={2}
             colorScheme="blue"
             onClick={() => requestNetworkChange(Chains[chain])}
             isLoading={isNetworkChangeInProgress}
@@ -293,7 +291,7 @@ const PoapPaymentForm = ({ onClose }): JSX.Element => {
             Switch network
           </Button>
         )}
-      </Flex>
+      </HStack>
       <Alert
         isOpen={isAlertOpen}
         onClose={onAlertClose}

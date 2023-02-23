@@ -51,7 +51,7 @@ const ImportPoap = ({ setStep }): JSX.Element => {
     <FormProvider {...methods}>
       <Stack textAlign="left" spacing={6}>
         <FormControl>
-          <FormLabel>Event ID:</FormLabel>
+          <FormLabel>POAP ID:</FormLabel>
           <HStack>
             <InputGroup maxW={{ base: 40, sm: 52 }}>
               <Input {...methods.register("poapId")} />
@@ -86,7 +86,11 @@ const ImportPoap = ({ setStep }): JSX.Element => {
         <UploadMintLinks poapId={poapId} />
       </Stack>
       <Flex justifyContent={"right"} pt="2" mt="auto">
-        <Button colorScheme="indigo" onClick={() => setStep("requirements")}>
+        <Button
+          colorScheme="indigo"
+          onClick={() => setStep("requirements")}
+          isDisabled={!response}
+        >
           Next
         </Button>
       </Flex>

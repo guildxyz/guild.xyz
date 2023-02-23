@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Stack, Text, useToast } from "@chakra-ui/react"
+import { Button, Flex, Heading, Stack, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
 import RequirementEditableCard from "components/create-guild/Requirements/components/RequirementEditableCard"
@@ -7,6 +7,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
+import useToast from "hooks/useToast"
 import { Coin, SpeakerHigh } from "phosphor-react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { RequirementType } from "requirements"
@@ -143,7 +144,7 @@ const PoapRequirements = ({
           }
           isLoading={isLoading}
         >
-          Done
+          Save
         </Button>
       </Flex>
     </FormProvider>

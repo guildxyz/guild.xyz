@@ -8,7 +8,7 @@ import fetcher from "utils/fetcher"
 import usePoapLinks from "./usePoapLinks"
 
 type UploadMintLinksData = {
-  poapId: number // (event ID)
+  poapId: number
   links: string[]
 }
 
