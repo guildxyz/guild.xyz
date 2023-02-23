@@ -36,8 +36,12 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
     error,
   } = usePrice(pickedCurrency)
 
-  const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
-    usePurchaseAsset()
+  const {
+    estimatedGasFee,
+    estimatedGasFeeInUSD,
+    estimateGasError,
+    isLoading: isEstimateGasLoading,
+  } = usePurchaseAsset()
 
   const nativeCurrency = RPC[requirement.chain].nativeCurrency
   const estimatedGasInFloat = estimatedGasFee
@@ -74,19 +78,17 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
             isLoaded={Boolean(
               error ||
                 estimateGasError ||
-                (pickedCurrency && calculatedGasFee && guildFeeInSellToken)
+                (pickedCurrency && !isEstimateGasLoading && guildFeeInSellToken)
             )}
           >
             <Text as="span" colorScheme="gray">
-              {error ? (
+              {error || !estimatedGasFee ? (
                 "Couldn't calculate"
               ) : pickedCurrency ? (
                 <>
                   {isTooSmallFee
                     ? "< 0.001"
-                    : (calculatedGasFee ?? 0 + guildFeeInSellToken ?? 0)?.toFixed(
-                        3
-                      )}{" "}
+                    : (calculatedGasFee + guildFeeInSellToken)?.toFixed(3)}{" "}
                   {symbol}
                 </>
               ) : (
