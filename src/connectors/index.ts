@@ -375,7 +375,8 @@ const RPC = {
       symbol: "ETH",
       decimals: 18,
       address: "0x0000000000000000000000000000000000000000",
-      logoURI: "/networkLogos/base.svg",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://goerli.basescan.org"],
     apiUrl: "https://api-goerli.basescan.org",
@@ -469,6 +470,10 @@ const blockExplorerIcons = {
   "https://goerli.etherscan.io": {
     light: "/explorerLogos/etherscan-light.svg",
     dark: "/explorerLogos/etherscan-dark.svg",
+  },
+  "https://goerli.basescan.org": {
+    light: "/networkLogos/base.svg",
+    dark: "/networkLogos/base.svg",
   },
 }
 
