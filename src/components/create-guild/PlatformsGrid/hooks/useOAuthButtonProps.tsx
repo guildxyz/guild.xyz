@@ -25,7 +25,8 @@ type Props = {
 const useOAuthButtonProps = ({ onSelection, platform }: Props) => {
   const showErrorToast = useShowErrorToast()
 
-  const scope = platform === "GITHUB" ? "repo,read:user" : null
+  const scope =
+    platform === "GITHUB" ? "repo,read:user" : "guilds identify guilds.members.read"
 
   const user = useUser()
   const isPlatformConnected = user.platformUsers?.some(
