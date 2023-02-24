@@ -28,10 +28,10 @@ const useUserPoapEligibility = (poapIdentifier: number) => {
 
   return {
     data: {
-      access: voiceEligibility && hasPaid && generalReqAccess,
+      ...generalReqData,
       voiceEligibility,
       hasPaid,
-      ...generalReqData,
+      access: voiceEligibility && hasPaid && generalReqAccess,
     },
     isLoading: isValidating && !data,
     mutate,
