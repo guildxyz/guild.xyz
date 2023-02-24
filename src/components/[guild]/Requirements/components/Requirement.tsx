@@ -1,6 +1,7 @@
 import {
   Box,
   Circle,
+  HStack,
   Img,
   SimpleGrid,
   Skeleton,
@@ -10,10 +11,12 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import SetVisibility from "components/[guild]/SetVisibility"
 import { PropsWithChildren } from "react"
 import { useRequirementContext } from "./RequirementContext"
 
 export type RequirementProps = PropsWithChildren<{
+  fieldRoot?: string
   isImageLoading?: boolean
   image?: string | JSX.Element
   withImgBg?: boolean
@@ -28,6 +31,7 @@ const Requirement = ({
   withImgBg = true,
   rightElement,
   children,
+  fieldRoot,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
   const requirement = useRequirementContext()
@@ -80,10 +84,15 @@ const Requirement = ({
         </SkeletonCircle>
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center">
-        <Text wordBreak="break-word">
-          {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-          {children}
-        </Text>
+        <HStack>
+          <Text wordBreak="break-word">
+            {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
+            {children}
+          </Text>
+          {fieldRoot && (
+            <SetVisibility entityType="requirement" fieldBase={fieldRoot} />
+          )}
+        </HStack>
 
         {footer}
       </VStack>

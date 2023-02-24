@@ -14,6 +14,7 @@ type Option = PropsWithChildren<{
   description?: string
   icon?: React.FC
   disabled?: string
+  RightComponent?: () => JSX.Element
 }>
 
 type Props = {

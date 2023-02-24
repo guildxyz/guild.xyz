@@ -169,6 +169,7 @@ type Requirement = {
   symbol: string
   decimals?: number
   isNegated: boolean
+  visibility?: Visibility
 
   // Props used inside the forms on the UI
   nftRequirementType?: string
@@ -183,6 +184,13 @@ type RolePlatform = {
   isNew?: boolean
   roleId?: number
   platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
+  visibility?: Visibility
+}
+
+enum Visibility {
+  PUBLIC = "PUBLIC",
+  PRIVATE = "PRIVATE",
+  HIDDEN = "HIDDEN",
 }
 
 type Role = {
@@ -195,6 +203,9 @@ type Role = {
   memberCount: number
   requirements: Requirement[]
   rolePlatforms: RolePlatform[]
+  visibility?: Visibility
+  hiddenRequirements?: number
+  hiddenRewards?: number
 }
 
 type GuildPlatform = {
@@ -264,6 +275,7 @@ type Guild = {
   poaps: Array<GuildPoap>
   onboardingComplete: boolean
   featureFlags: FeatureFlag[]
+  hiddenRoles?: number
 }
 type GuildFormType = Partial<
   Pick<
@@ -492,4 +504,4 @@ export type {
   PoapEventDetails,
   AddressConnectionProvider,
 }
-export { ValidationMethod, supportedSocialLinks }
+export { ValidationMethod, Visibility, supportedSocialLinks }

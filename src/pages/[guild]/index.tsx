@@ -82,8 +82,8 @@ const GuildPage = (): JSX.Element => {
     onboardingComplete,
     socialLinks,
     poaps,
+    hiddenRoles,
   } = useGuild()
-
   useAutoStatusUpdate()
 
   const { data: roleAccesses } = useAccess()

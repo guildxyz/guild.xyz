@@ -1,4 +1,11 @@
-import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
+import {
+  Box,
+  Collapse,
+  Spinner,
+  Tag,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
 import React, { memo, useEffect, useRef, useState } from "react"
 import { VariableSizeList } from "react-window"
 import { Role } from "types"
@@ -137,6 +144,11 @@ const RoleRequirements = ({ role }: Props) => {
             transition="opacity 0.2s ease"
           />
         </>
+      )}
+      {!!role.hiddenRequirements && (
+        <Tag mt={2} size={"sm"}>
+          + some hidden requirements
+        </Tag>
       )}
     </VStack>
   )

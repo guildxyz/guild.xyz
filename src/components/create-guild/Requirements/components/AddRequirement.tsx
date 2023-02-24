@@ -31,6 +31,7 @@ import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
+import { Visibility } from "types"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
@@ -154,7 +155,7 @@ const AddRequirementForm = forwardRef(
     }, [isPresent])
 
     const onSubmit = methods.handleSubmit((data) => {
-      onAdd({ type: selectedType, ...data })
+      onAdd({ type: selectedType, visibility: Visibility.PUBLIC, ...data })
       handleClose()
     })
 

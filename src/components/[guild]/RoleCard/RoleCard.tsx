@@ -5,6 +5,7 @@ import {
   HStack,
   SimpleGrid,
   Spacer,
+  Tag,
   Text,
   useColorMode,
 } from "@chakra-ui/react"
@@ -91,6 +92,11 @@ const RoleCard = memo(({ role }: Props) => {
                 role={role}
               />
             ))}
+            {!!role.hiddenRewards && (
+              <Tag mt={2} size={"sm"}>
+                + some extra hidden rewards
+              </Tag>
+            )}
           </Box>
         </Flex>
         <Flex

@@ -40,6 +40,7 @@ const RadioOption = (props) => {
         disabled
       >
         <Flex as="label" py="4" px="5" alignItems="center">
+          {props?.RightComponent && <props.RightComponent />}
           <Box whiteSpace="break-spaces" w="full">
             <Heading size="sm">
               {title}
@@ -90,6 +91,7 @@ const RadioOption = (props) => {
     >
       <HStack as="label" py="4" px="5" cursor="pointer" spacing={4}>
         <input {...input} />
+        {props?.RightComponent && <props.RightComponent />}
         <Box w="full" ml="0 !important">
           <Heading size="sm">{title}</Heading>
           {description && (
