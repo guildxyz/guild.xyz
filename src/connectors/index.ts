@@ -17,7 +17,6 @@ enum Chains {
   NOVA = 42170,
   CELO = 42220,
   HARMONY = 1666600000,
-  GOERLI = 5,
   OPTIMISM = 10,
   MOONBEAM = 1284,
   MOONRIVER = 1285,
@@ -29,6 +28,8 @@ enum Chains {
   BASE_GOERLI = 84531,
   EXOSAMA = 2109,
   EVMOS = 9001,
+  GOERLI = 5,
+  POLYGON_MUMBAI = 80001,
 }
 
 export type Chain = keyof typeof Chains
@@ -446,31 +447,6 @@ const RPC: RpcConfig = {
     rpcUrls: ["https://palm-mainnet.infura.io/v3/84722b0c96da4e09a6305118494aeeaa"],
     multicallAddress: "0xfFE2FF36c5b8D948f788a34f867784828aa7415D",
   },
-  GOERLI: {
-    chainId: 5,
-    chainName: "Goerli",
-    nativeCurrency: {
-      name: "Ether",
-      symbol: "ETH",
-      decimals: 18,
-      address: "0x0000000000000000000000000000000000000000",
-      logoURI:
-        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-    },
-    rpcUrls: [
-      process.env.GOERLI_ALCHEMY_KEY
-        ? `https://eth-goerli.g.alchemy.com/v2/${process.env.GOERLI_ALCHEMY_KEY}`
-        : "https://ethereum-goerli-rpc.allthatnode.com",
-    ],
-    blockExplorerUrls: ["https://goerli.etherscan.io"],
-    blockExplorerIcons: {
-      light: "/explorerLogos/etherscan-light.svg",
-      dark: "/explorerLogos/etherscan-dark.svg",
-    },
-    apiUrl: "https://api-goerli.etherscan.io",
-    iconUrls: ["/networkLogos/ethereum.svg"],
-    multicallAddress: "0x77dCa2C955b15e9dE4dbBCf1246B4B85b651e50e",
-  },
   BASE_GOERLI: {
     chainId: 84531,
     chainName: "Base Testnet",
@@ -531,6 +507,51 @@ const RPC: RpcConfig = {
     iconUrls: ["/networkLogos/evmos.svg"],
     rpcUrls: ["https://eth.bd.evmos.org:8545"],
     multicallAddress: "",
+  },
+  GOERLI: {
+    chainId: 5,
+    chainName: "Goerli",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: [
+      process.env.GOERLI_ALCHEMY_KEY
+        ? `https://eth-goerli.g.alchemy.com/v2/${process.env.GOERLI_ALCHEMY_KEY}`
+        : "https://ethereum-goerli-rpc.allthatnode.com",
+    ],
+    blockExplorerUrls: ["https://goerli.etherscan.io"],
+    blockExplorerIcons: {
+      light: "/explorerLogos/etherscan-light.svg",
+      dark: "/explorerLogos/etherscan-dark.svg",
+    },
+    apiUrl: "https://api-goerli.etherscan.io",
+    iconUrls: ["/networkLogos/ethereum.svg"],
+    multicallAddress: "0x77dCa2C955b15e9dE4dbBCf1246B4B85b651e50e",
+  },
+  POLYGON_MUMBAI: {
+    chainId: 80001,
+    chainName: "Polygon Mumbai",
+    nativeCurrency: {
+      name: "Matic",
+      symbol: "MATIC",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912",
+    },
+    rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
+    blockExplorerUrls: ["https://mumbai.polygonscan.com"],
+    blockExplorerIcons: {
+      light: "/networkLogos/polygon.svg",
+      dark: "/networkLogos/polygon.svg",
+    },
+    apiUrl: "https://api-testnet.polygonscan.com",
+    iconUrls: ["/networkLogos/polygon.svg"],
   },
 }
 
