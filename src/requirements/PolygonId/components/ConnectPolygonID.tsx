@@ -17,6 +17,7 @@ import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -65,14 +66,13 @@ const ConnectPolygonIDModal = ({ isOpen, onClose }) => {
     data: response,
     isValidating,
     error,
+    mutate,
   } = useSWRImmutable(
     isOpen
       ? [`/util/getGateCallback/${type}`, { body: { query: data.query } }]
       : null,
     fetcherWithSign
   )
-
-  const qrCode = JSON.stringify(response)
 
   return (
     <Modal
@@ -99,8 +99,21 @@ const ConnectPolygonIDModal = ({ isOpen, onClose }) => {
             ) : (
               <>
                 <Box borderRadius={"md"} borderWidth={3} overflow={"hidden"}>
-                  <QRCodeSVG value={qrCode} size={300} />
+                  <QRCodeSVG value={JSON.stringify(response)} size={300} />
                 </Box>
+                <Button
+                  size="xs"
+                  borderRadius="lg"
+                  mt="2"
+                  variant="ghost"
+                  leftIcon={<ArrowsClockwise />}
+                  isLoading={isValidating}
+                  loadingText={"Generating QR code"}
+                  color="gray"
+                  onClick={() => mutate()}
+                >
+                  Generate new QR code
+                </Button>
                 <Text mt="10" textAlign={"center"}>
                   Scan with your Polygon ID app! The modal will automatically close
                   on successful connect
