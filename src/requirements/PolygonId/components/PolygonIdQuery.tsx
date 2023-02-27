@@ -33,9 +33,14 @@ const PolygonIdQuery = ({ baseFieldPath }: RequirementFormProps) => {
           control={control}
           name={`${baseFieldPath}.data.query` as const}
           rules={{
-            validate: (value) =>
-              typeof value === "object" ||
-              "Invalid JSON. Please paste it to a validator to find out more!",
+            validate: {
+              isObject: (value) =>
+                typeof value === "object" ||
+                "Invalid JSON. Please paste it to a validator to find out more!",
+              isArray: (value) =>
+                Array.isArray(value) ||
+                "The value should be an array of request objects. You should probably just wrap it in a []",
+            },
           }}
           render={({ field: { onChange, onBlur, value: textareaValue, ref } }) => (
             <Textarea
