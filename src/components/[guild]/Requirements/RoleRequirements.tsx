@@ -1,6 +1,7 @@
 import {
   Box,
   Collapse,
+  Flex,
   Spinner,
   Tag,
   useColorModeValue,
@@ -75,7 +76,11 @@ const RoleRequirements = ({ role }: Props) => {
   return (
     <VStack spacing="0">
       {!role.requirements?.length ? (
-        <Spinner />
+        role.id ? (
+          <Tag p={2}>All the requirements are hidden</Tag>
+        ) : (
+          <Spinner />
+        )
       ) : isVirtualList ? (
         <Box ref={listWrapperRef} w="full" alignSelf="flex-start">
           <VariableSizeList
@@ -145,10 +150,10 @@ const RoleRequirements = ({ role }: Props) => {
           />
         </>
       )}
-      {!!role.hiddenRequirements && (
-        <Tag mt={2} size={"sm"}>
-          + some hidden requirements
-        </Tag>
+      {!!role.hiddenRequirements && role.requirements?.length > 0 && (
+        <Flex mt={3} justifyContent={"end"} w="full">
+          <Tag size={"sm"}>+ some hidden requirements</Tag>
+        </Flex>
       )}
     </VStack>
   )

@@ -8,6 +8,7 @@ import useDatadog from "components/_app/Datadog/useDatadog"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
@@ -77,7 +78,7 @@ guild.xyz/${urlName} @guildxyz`)}`}
         status: "success",
       })
 
-      mutate(`/guild/access/${id}/${account}`)
+      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
       mutate(`/statusUpdate/guild/${id}`)
 
       matchMutate(/^\/guild\/address\//)

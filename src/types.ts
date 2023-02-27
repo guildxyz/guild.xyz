@@ -204,8 +204,8 @@ type Role = {
   requirements: Requirement[]
   rolePlatforms: RolePlatform[]
   visibility?: Visibility
-  hiddenRequirements?: number
-  hiddenRewards?: number
+  hiddenRequirements?: boolean
+  hiddenRewards?: boolean
 }
 
 type GuildPlatform = {
@@ -275,7 +275,7 @@ type Guild = {
   poaps: Array<GuildPoap>
   onboardingComplete: boolean
   featureFlags: FeatureFlag[]
-  hiddenRoles?: number
+  hiddenRoles?: boolean
 }
 type GuildFormType = Partial<
   Pick<

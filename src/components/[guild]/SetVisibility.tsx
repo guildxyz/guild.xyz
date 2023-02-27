@@ -66,16 +66,16 @@ const SetVisibilityModal = ({
   isOpen: boolean
   onClose: () => void
 } & FormControlProps) => {
-  const { setValue } = useFormContext()
-  const saveAndClose = () => {
-    setValue(visibilityField, localVisibility)
-    onClose()
-  }
   const visibilityField = `${fieldBase}.visibility`
+  const { setValue } = useFormContext()
   const actualVisibility = useWatch({ name: visibilityField })
-
   const [localVisibility, setLocalVisibility] =
     useState<Visibility>(actualVisibility)
+
+  const saveAndClose = () => {
+    setValue(visibilityField, localVisibility, { shouldValidate: false })
+    onClose()
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={saveAndClose} size="lg">

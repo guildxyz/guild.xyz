@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useSWR from "swr"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 
 const useAccess = (roleId?: number) => {
   const { account } = useWeb3React()
@@ -8,7 +8,7 @@ const useAccess = (roleId?: number) => {
 
   const shouldFetch = account && id
 
-  const { data, isValidating, mutate } = useSWR(
+  const { data, isValidating, mutate } = useSWRWithOptionalAuth(
     shouldFetch ? `/guild/access/${id}/${account}` : null,
     { shouldRetryOnError: false }
   )

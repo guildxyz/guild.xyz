@@ -2,6 +2,7 @@ import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import fetcher from "utils/fetcher"
@@ -30,7 +31,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
       })
       if (onSuccess) onSuccess()
       mutateGuild()
-      mutate(`/guild/access/${id}/${account}`)
+      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
       mutate(`/statusUpdate/guild/${id}`)
     },
     onError: (err) => showErrorToast(err),

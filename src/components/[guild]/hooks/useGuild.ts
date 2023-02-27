@@ -1,40 +1,26 @@
+import { useWeb3React } from "@web3-react/core"
 import useKeyPair from "hooks/useKeyPair"
+import { default as useSWRWithOptionalAuth } from "hooks/useSWRWithOptionalAuth"
 import { useRouter } from "next/router"
-import useSWRImmutable from "swr/immutable"
 import { Guild } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
-import useUser from "./useUser"
 
 const useGuild = (guildId?: string | number) => {
   const router = useRouter()
 
-  const { addresses, isSuperAdmin } = useUser()
-
   const id = guildId ?? router.query.guild
 
-  const { ready, keyPair } = useKeyPair()
-  const fetcherWithSign = useFetcherWithSign()
+  const { keyPair } = useKeyPair()
+  const { account } = useWeb3React()
 
-  const { data, mutate, isValidating } = useSWRImmutable<Guild>(
+  const { data, mutate, isValidating } = useSWRWithOptionalAuth<Guild>(
     id ? `/guild/${id}` : null
   )
 
-  const isAdmin = !!data?.admins?.some(
-    (admin) => admin.address === addresses?.[0].toLowerCase()
-  )
-
-  const { data: dataDetails, mutate: mutateDetails } = useSWRImmutable<Guild>(
-    id && ready && keyPair && (isAdmin || isSuperAdmin)
-      ? [`/guild/details/${id}`, { method: "POST", body: {} }]
-      : null,
-    fetcherWithSign
-  )
-
   return {
-    ...(dataDetails ?? data),
-    isDetailed: !!dataDetails,
+    ...data,
+    isDetailed: !!keyPair && !!account && !!data,
     isLoading: !data && isValidating,
-    mutateGuild: data ? mutateDetails : mutate,
+    mutateGuild: mutate,
   }
 }
 

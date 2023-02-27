@@ -5,6 +5,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
@@ -80,7 +81,7 @@ const useJoin = (onSuccess?: () => void) => {
 
       addDatadogAction(`Successfully joined a guild`)
 
-      mutate(`/user/membership/${account}`)
+      mutateOptionalAuthSWRKey(`/user/membership/${account}`)
       // show user in guild's members
       mutate(`/guild/${router.query.guild}`)
 

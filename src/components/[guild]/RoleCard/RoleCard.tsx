@@ -93,7 +93,7 @@ const RoleCard = memo(({ role }: Props) => {
               />
             ))}
             {!!role.hiddenRewards && (
-              <Tag mt={2} size={"sm"}>
+              <Tag mt={3} size={"sm"}>
                 + some extra hidden rewards
               </Tag>
             )}
