@@ -44,9 +44,13 @@ const Page = (): JSX.Element => {
 
   const { theme, urlName, imageUrl, name, poaps } = useGuild()
 
-  const guildPoap = poaps?.find(
-    (p) => p.fancyId === router.query.fancyId?.toString()
-  )
+  const rawPoapFancyIdFromUrl = router.query.fancyId?.toString()
+  const poapFancyIdFromUrl =
+    rawPoapFancyIdFromUrl === "daodenver-2023"
+      ? "joseph-turner-2023"
+      : rawPoapFancyIdFromUrl
+
+  const guildPoap = poaps?.find((p) => p.fancyId === poapFancyIdFromUrl)
 
   const guildPoapChainId = guildPoap?.poapContracts
     ?.map((poapContract) => poapContract.chainId)
@@ -54,7 +58,7 @@ const Page = (): JSX.Element => {
     ? chainId
     : guildPoap?.poapContracts?.[0]?.chainId
 
-  const { poap, isLoading } = usePoap(router.query.fancyId?.toString())
+  const { poap, isLoading } = usePoap(poapFancyIdFromUrl)
 
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
 

@@ -20,7 +20,7 @@ import preprocessRequirements from "utils/preprocessRequirements"
 
 type RoleOrGuild = Role & { guildId: number }
 
-const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
+const useCreateRole = () => {
   const { addDatadogAction, addDatadogError } = useDatadog()
 
   const toastIdRef = useRef<ToastId>()
@@ -49,7 +49,7 @@ const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
     onSuccess: async (response_) => {
       addDatadogAction(`Successful role creation`)
 
-      if (mode === "CONFETTI") triggerConfetti()
+      triggerConfetti()
 
       toastIdRef.current = toast({
         duration: 8000,

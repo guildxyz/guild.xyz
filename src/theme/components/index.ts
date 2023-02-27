@@ -8,8 +8,10 @@ import Modal from "./modal"
 import NumberInput from "./number-input"
 import Popover from "./popover"
 import Select from "./select"
+import Spinner from "./spinner"
 import Steps from "./steps"
 import Switch from "./switch"
+import Tabs from "./tabs"
 import Tag from "./tag"
 import Text from "./text"
 import Textarea from "./textarea"
@@ -28,10 +30,12 @@ const components = {
   Text,
   Textarea,
   Tooltip,
+  Tabs,
   Switch,
   Popover,
   Drawer,
   Steps,
+  Spinner,
 }
 
 export default components

@@ -1,3 +1,4 @@
+import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import type { Chain } from "connectors"
 import { RequirementType } from "requirements"
 
@@ -75,22 +76,31 @@ type NFT = {
   slug: string
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
+type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE" | "POAP"
 
-type PlatformAccount = {
+type PlatformUserData = {
+  acessToken?: string
+  scope?: string
+  expiresIn?: number
+  invalidToken?: boolean
+  refreshToken?: string
+  avatar?: string
+  username?: string
+  readonly?: boolean
+}
+type PlatformAccountDetails = {
   platformId: number
   platformName: PlatformName
-}
-type PlatformAccountDetails = PlatformAccount & {
   platformUserId: string
-  username: string
-  avatar: string
-  platformUserData?: Record<string, any> // TODO: better types once we decide which properties will we store in this object on the backend
+  platformUserData?: PlatformUserData
 }
+
+type AddressConnectionProvider = "DELEGATE"
 
 type User = {
   id: number
   addresses: Array<string>
+  addressProviders: Record<string, AddressConnectionProvider>
   platformUsers: PlatformAccountDetails[]
   signingKey?: string
   isSuperAdmin: boolean
@@ -212,6 +222,7 @@ type GuildPoap = {
   activated: boolean
   expiryDate: number
   poapContracts?: PoapContract[]
+  poapRequirements?: Requirement[]
 }
 
 const supportedSocialLinks = [
@@ -225,7 +236,7 @@ const supportedSocialLinks = [
   "SNAPSHOT",
   "WEBSITE",
 ] as const
-type SocialLinkKey = typeof supportedSocialLinks[number]
+type SocialLinkKey = (typeof supportedSocialLinks)[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
 
 type GuildContact = {
@@ -242,7 +253,7 @@ type Guild = {
   showMembers: boolean
   memberCount: number
   hideFromExplorer: boolean
-  socialLinks?: SocialLinks // TODO
+  socialLinks?: SocialLinks
   contacts?: GuildContact[]
   createdAt: string
   admins: GuildAdmin[]
@@ -252,11 +263,19 @@ type Guild = {
   members: Array<string>
   poaps: Array<GuildPoap>
   onboardingComplete: boolean
+  featureFlags: FeatureFlag[]
 }
 type GuildFormType = Partial<
   Pick<
     Guild,
-    "id" | "urlName" | "name" | "imageUrl" | "description" | "theme" | "contacts"
+    | "id"
+    | "urlName"
+    | "name"
+    | "imageUrl"
+    | "description"
+    | "theme"
+    | "contacts"
+    | "featureFlags"
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
@@ -368,7 +387,7 @@ enum ValidationMethod {
 }
 
 type MonetizePoapForm = {
-  chainId: number
+  chain: Chain
   token: string
   fee: number
   owner: string
@@ -391,6 +410,7 @@ type GoogleFile = {
 
 type VoiceParticipationForm = {
   poapId: number
+  serverId: string
   voiceChannelId: string
   voiceRequirement: {
     type: "PERCENT" | "MINUTE"
@@ -470,5 +490,6 @@ export type {
   VoiceParticipationForm,
   VoiceRequirementParams,
   PoapEventDetails,
+  AddressConnectionProvider,
 }
 export { ValidationMethod, supportedSocialLinks }

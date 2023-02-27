@@ -13,13 +13,12 @@ import {
 import { BigNumber } from "@ethersproject/bignumber"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
-import useAllowance from "components/[guild]/claim-poap/hooks/useAllowance"
-import usePayFee from "components/[guild]/claim-poap/hooks/usePayFee"
+import usePoapAllowance from "components/[guild]/claim-poap/hooks/usePoapAllowance"
+import usePoapPayFee from "components/[guild]/claim-poap/hooks/usePoapPayFee"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
-import useCoinBalance from "hooks/useCoinBalance"
-import useTokenBalance from "hooks/useTokenBalance"
+import useBalance from "hooks/useBalance"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
 import { PoapContract } from "types"
@@ -27,6 +26,7 @@ import { PoapContract } from "types"
 type Props = {
   poapContractData: PoapContract
   setLoadingText: (newLoadingText: string) => void
+  fancy_id: string
 }
 
 const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
@@ -34,6 +34,7 @@ const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 const PayFeeMenuItem = ({
   poapContractData,
   setLoadingText,
+  fancy_id,
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
@@ -50,23 +51,22 @@ const PayFeeMenuItem = ({
   } = useTokenData(Chains[poapContractData.chainId], vaultData?.token)
   const formattedPrice = formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
 
-  const { balance: usersCoinBalance, isLoading: isUsersCoinBalanceLoading } =
-    useCoinBalance(poapContractData?.chainId)
-  const { balance: usersTokenBalance, isLoading: isUsersTokenBalanceLoading } =
-    useTokenBalance(
-      vaultData?.token === NULL_ADDRESS ? null : vaultData?.token,
-      poapContractData?.chainId
-    )
+  const {
+    coinBalance,
+    tokenBalance,
+    isLoading: isBalanceLoading,
+  } = useBalance(vaultData?.token, poapContractData?.chainId)
 
   const sufficientBalance = (
-    vaultData?.token === NULL_ADDRESS ? usersCoinBalance : usersTokenBalance
+    vaultData?.token === NULL_ADDRESS ? coinBalance : tokenBalance
   )?.gte(vaultData?.fee ?? BigNumber.from(0))
 
-  const allowance = useAllowance(vaultData?.token, poapContractData?.chainId)
+  const allowance = usePoapAllowance(vaultData?.token, poapContractData?.chainId)
 
-  const { onSubmit, loadingText } = usePayFee(
+  const { onSubmit, loadingText } = usePoapPayFee(
     poapContractData.vaultId,
-    poapContractData.chainId
+    poapContractData.chainId,
+    fancy_id
   )
 
   useEffect(() => setLoadingText(loadingText), [loadingText])
@@ -86,11 +86,7 @@ const PayFeeMenuItem = ({
           <HStack>
             <SkeletonCircle
               boxSize={5}
-              isLoaded={
-                !isValidating &&
-                !isUsersCoinBalanceLoading &&
-                !isUsersTokenBalanceLoading
-              }
+              isLoaded={!isValidating && !isBalanceLoading}
             >
               <Circle
                 size={5}
@@ -103,13 +99,7 @@ const PayFeeMenuItem = ({
                 />
               </Circle>
             </SkeletonCircle>
-            <Skeleton
-              isLoaded={
-                !isValidating &&
-                !isUsersCoinBalanceLoading &&
-                !isUsersTokenBalanceLoading
-              }
-            >
+            <Skeleton isLoaded={!isValidating && !isBalanceLoading}>
               <Text as="span" pr={4}>
                 {isValidating
                   ? "Pay fee"

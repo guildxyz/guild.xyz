@@ -1,5 +1,6 @@
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { CreatedPoapData, CreatePoapForm } from "types"
 
 const fetchData = async (data: CreatePoapForm) => {
@@ -29,11 +30,14 @@ const fetchData = async (data: CreatePoapForm) => {
   })
 }
 
-const useCreatePoap = () => {
+const useCreatePoap = ({
+  onSuccess,
+}: UseSubmitOptions<CreatePoapForm & CreatedPoapData> = {}) => {
   const showErrorToast = useShowErrorToast()
 
   return useSubmit<CreatePoapForm, CreatePoapForm & CreatedPoapData>(fetchData, {
     onError: (error) => showErrorToast(error?.error?.message ?? error?.error),
+    onSuccess,
   })
 }
 

@@ -124,6 +124,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
           "BOBA_AVAX",
           "PALM",
           "GOERLI",
+          "BASE_GOERLI",
         ]}
         onChange={resetForm}
       />

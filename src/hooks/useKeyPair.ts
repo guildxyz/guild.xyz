@@ -1,12 +1,13 @@
 import { datadogRum } from "@datadog/browser-rum"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { randomBytes } from "crypto"
 import { createStore, del, get, set } from "idb-keyval"
 import { useEffect } from "react"
 import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
-import { User } from "types"
+import { AddressConnectionProvider, User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import useLocalStorage from "./useLocalStorage"
@@ -21,11 +22,19 @@ type StoredKeyPair = {
   pubKey: string
 }
 
-type AddressLinkParams = {
-  userId: number
-  signature: string
-  nonce: string
-}
+type AddressLinkParams =
+  | ({
+      userId: number
+      signature: string
+      nonce: string
+    } & { addressConnectionProvider: never })
+  | ({
+      addressConnectionProvider: AddressConnectionProvider
+    } & {
+      userId: never
+      signature: never
+      nonce: never
+    })
 
 type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> & Partial<AddressLinkParams>
 
@@ -102,6 +111,7 @@ const setKeyPair = async ({
     userId: signedUserId,
     signature,
     nonce,
+    addressConnectionProvider,
   } = JSON.parse(signedValidation.signedPayload)
 
   const shouldSendLink =
@@ -116,7 +126,9 @@ const setKeyPair = async ({
 
   let storedKeyPair: StoredKeyPair
 
-  if (!shouldSendLink) {
+  const prevKeyPair = await getKeyPairFromIdb(userId).catch(() => null)
+
+  if (!shouldSendLink && (!addressConnectionProvider || !prevKeyPair)) {
     storedKeyPair = generatedKeyPair
 
     /**
@@ -154,6 +166,9 @@ const useKeyPair = () => {
   const addDatadogError = useRumError()
 
   const { account } = useWeb3React()
+
+  const { isDelegateConnection, setIsDelegateConnection } =
+    useWeb3ConnectionManager()
 
   const { data: user, error: userError } = usePublicUserData()
 
@@ -264,6 +279,24 @@ const useKeyPair = () => {
         }
       },
       onSuccess: ([newKeyPair, shouldDeleteUserId]) => {
+        setTimeout(() => {
+          mutate(
+            unstable_serialize([
+              `/user/details/${account}`,
+              { method: "POST", body: {} },
+            ])
+          ).then(() =>
+            setTimeout(() => {
+              mutate(unstable_serialize(["delegateCashVaults", user?.id])).then(
+                () => {
+                  window.localStorage.removeItem(`isDelegateDismissed_${user?.id}`)
+                }
+              )
+            }, 500)
+          )
+        }, 500)
+
+        setIsDelegateConnection(false)
         if (shouldDeleteUserId) {
           try {
             window.localStorage.removeItem("userId")
@@ -325,7 +358,10 @@ const useKeyPair = () => {
     isValid,
     set: {
       ...setSubmitResponse,
-      onSubmit: async (shouldLinkToUser: boolean) => {
+      onSubmit: async (
+        shouldLinkToUser: boolean,
+        provider?: AddressConnectionProvider
+      ) => {
         const body: SetKeypairPayload = { pubKey: undefined }
 
         try {
@@ -370,6 +406,12 @@ const useKeyPair = () => {
             body.userId = userId
             body.nonce = nonce
           }
+        }
+
+        if (isDelegateConnection || provider === "DELEGATE") {
+          const prevKeyPair = await getKeyPairFromIdb(user?.id)
+          body.addressConnectionProvider = "DELEGATE"
+          body.pubKey = prevKeyPair?.pubKey ?? body.pubKey
         }
 
         return setSubmitResponse.onSubmit(body)

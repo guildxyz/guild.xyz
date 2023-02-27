@@ -21,7 +21,6 @@ const ColorCardLabel = <LabelType extends string>({
 }: PropsWithChildren<Props<LabelType>>): JSX.Element => (
   <HStack
     position="absolute"
-    h={7}
     overflow="hidden"
     backgroundColor={backgroundColor}
     color={color || fallbackColor}

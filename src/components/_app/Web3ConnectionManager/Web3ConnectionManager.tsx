@@ -8,7 +8,13 @@ import requestNetworkChangeHandler from "components/common/Layout/components/Acc
 import { Chains, RPC } from "connectors"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { createContext, PropsWithChildren, useContext, useEffect } from "react"
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 
@@ -28,6 +34,9 @@ const Web3Connection = createContext({
     callback?: () => void,
     errorHandler?: (err) => void
   ) => {},
+  isDelegateConnection: false,
+  setIsDelegateConnection: (_: boolean) => {},
+  isNetworkChangeInProgress: false,
 })
 
 const Web3ConnectionManager = ({
@@ -52,6 +61,8 @@ const Web3ConnectionManager = ({
     onClose: closeAccountModal,
   } = useDisclosure()
 
+  const [isDelegateConnection, setIsDelegateConnection] = useState<boolean>(false)
+
   // try to eagerly connect to an injected provider, if it exists and has granted access already
   const triedEager = useEagerConnect()
 
@@ -60,6 +71,7 @@ const Web3ConnectionManager = ({
       openWalletSelectorModal()
   }, [triedEager, isActive, router.query])
 
+  const [isNetworkChangeInProgress, setNetworkChangeInProgress] = useState(false)
   const toast = useToast()
   const requestManualNetworkChange = (chain) => () =>
     toast({
@@ -75,8 +87,14 @@ const Web3ConnectionManager = ({
   ) => {
     if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet)
       requestManualNetworkChange(Chains[newChainId])()
-    else
-      await requestNetworkChangeHandler(Chains[newChainId], callback, errorHandler)()
+    else {
+      setNetworkChangeInProgress(true)
+      await requestNetworkChangeHandler(
+        Chains[newChainId],
+        callback,
+        errorHandler
+      )().finally(() => setNetworkChangeInProgress(false))
+    }
   }
 
   return (
@@ -93,6 +111,9 @@ const Web3ConnectionManager = ({
         openAccountModal,
         closeAccountModal,
         requestNetworkChange,
+        isDelegateConnection,
+        setIsDelegateConnection,
+        isNetworkChangeInProgress,
       }}
     >
       {children}

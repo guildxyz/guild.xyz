@@ -115,7 +115,7 @@ const NavMenu = (): JSX.Element => (
             </NavButton>
             <NavButton
               target="_blank"
-              href="https://docs.guild.xyz/guild"
+              href="https://help.guild.xyz"
               rel="noopener"
               leftIcon={<Info />}
               data-dd-action-name="Navigation menu - Guide"

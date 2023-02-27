@@ -40,7 +40,7 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
 
   return (
     <>
-      <HStack spacing={4} alignItems="center" w="full">
+      <HStack spacing={3} alignItems="center" w="full">
         <Avatar src={image} size="sm">
           <AvatarBadge
             boxSize={5}

@@ -89,11 +89,11 @@ const GoogleGuildSetup = ({
   if (isGoogleGateablesLoading)
     return (
       <SimpleGrid
-        columns={{ base: 1, sm: 2, lg: 3 }}
-        spacing={{ base: 4, md: 6 }}
+        columns={{ base: 1, md: 2 }}
+        spacing={{ base: 4, md: 5 }}
         alignItems="stretch"
       >
-        {[...Array(5)].map((i) => (
+        {[...Array(5)].map((_, i) => (
           <GridItem key={i}>
             <GoogleSkeletonCard />
           </GridItem>
@@ -104,12 +104,12 @@ const GoogleGuildSetup = ({
   return (
     <>
       <SimpleGrid
-        columns={{ base: 1, sm: 2, lg: 3 }}
-        spacing={{ base: 4, md: 6 }}
+        columns={{ base: 1, md: 2 }}
+        spacing={{ base: 4, md: 5 }}
         alignItems="stretch"
       >
         <AnimatePresence>
-          {(selectedFile ? [selectedFile] : googleGateables).map((file) => (
+          {(selectedFile ? [selectedFile] : googleGateables)?.map((file) => (
             <CardMotionWrapper key={file.platformGuildId}>
               <GridItem>
                 <GoogleDocCard
@@ -143,7 +143,7 @@ const GoogleGuildSetup = ({
 
           {!selectedFile && (
             <CardMotionWrapper key={"add-file"}>
-              <AddCard text="Add document" minH={"28"} onClick={onOpen} />
+              <AddCard title="Add document" minH={"26"} onClick={onOpen} />
             </CardMotionWrapper>
           )}
         </AnimatePresence>
@@ -217,7 +217,7 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
               onClick={openAccountModal}
               rightIcon={<PencilSimple />}
             >
-              {googleAcc?.username}
+              {googleAcc?.platformUserData?.username}
             </Button>
           </Text>
         </ModalFooter>
