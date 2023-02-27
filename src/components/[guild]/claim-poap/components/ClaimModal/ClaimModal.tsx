@@ -111,7 +111,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     onSubmit: onClaimPoapSubmit,
     isLoading: isClaimPoapLoading,
     response: claimPoapResponse,
-  } = useClaimPoap(poap)
+  } = useClaimPoap(poap?.id)
 
   const {
     response: joinResponse,
