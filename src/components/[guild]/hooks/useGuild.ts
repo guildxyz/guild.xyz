@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
 import useKeyPair from "hooks/useKeyPair"
-import { default as useSWRWithOptionalAuth } from "hooks/useSWRWithOptionalAuth"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useRouter } from "next/router"
 import { Guild } from "types"
 
