@@ -71,6 +71,7 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
             platformRoleData: {},
             platformRoleId: null,
             isNew: true,
+            visibility: Visibility.PUBLIC,
           },
         ]
       : [],
@@ -182,7 +183,9 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
                 spacing={1}
                 alignItems="center"
               >
-                <SetVisibility entityType="role" />
+                <Box>
+                  <SetVisibility entityType="role" />
+                </Box>
               </DrawerHeader>
 
               <VStack spacing={10} alignItems="start">
