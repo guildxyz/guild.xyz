@@ -11,9 +11,12 @@ import {
   Spacer,
   Stack,
   Tag,
+  TagLeftIcon,
   Text,
   Tooltip,
   useColorMode,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
@@ -149,20 +152,25 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
                 >
                   {poap?.name ?? guildPoap.fancyId}
                 </Heading>
-                <HStack spacing={0}>
-                  <Tag colorScheme={status.color}>{status.label}</Tag>
+                <Wrap>
+                  <Tag colorScheme={status.color}>
+                    <TagLeftIcon as={Clock} mr="1.5" />
+                    {status.label}
+                  </Tag>
                   {isActive && !guildPoap.poapRequirements?.length && (
-                    <Text as="span" fontSize="xs" colorScheme="gray" pl="4">
-                      <Link
-                        href={`/${urlName}/claim-poap/${guildPoap.fancyId}`}
-                        isExternal
-                      >
-                        <Text as="span">Mint page</Text>
-                        <Icon ml={1} as={ArrowSquareOut} />
-                      </Link>
-                    </Text>
+                    <WrapItem alignItems={"center"}>
+                      <Text as="span" fontSize="xs" colorScheme="gray">
+                        <Link
+                          href={`/${urlName}/claim-poap/${guildPoap.fancyId}`}
+                          isExternal
+                        >
+                          <Text as="span">Mint page</Text>
+                          <Icon ml={1} as={ArrowSquareOut} />
+                        </Link>
+                      </Text>
+                    </WrapItem>
                   )}
-                </HStack>
+                </Wrap>
               </Stack>
             </HStack>
             {isAdmin && (
