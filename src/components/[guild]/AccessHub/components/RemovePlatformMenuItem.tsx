@@ -1,7 +1,7 @@
 import { MenuItem, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import RemovePlatformAlert from "components/[guild]/RemovePlatformAlert"
 import useRemoveGuildPlatform from "components/[guild]/RolePlatforms/components/PlatformCard/components/useDiscordCardProps/DiscordCardMenu/hooks/useRemoveGuildPlatform"
-import { RemovePlatformAlert } from "components/[guild]/RolePlatforms/components/RemovePlatformButton/RemovePlatformButton"
 import { TrashSimple } from "phosphor-react"
 
 type Props = {
