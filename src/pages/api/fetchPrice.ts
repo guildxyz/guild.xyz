@@ -24,7 +24,6 @@ export type FetchPriceResponse = {
   buyAmount: number
   buyAmountInWei: BigNumber
   estimatedPriceInSellToken: number
-  estimatedPriceInWei: BigNumber
   estimatedPriceInUSD: number
   priceInSellToken: number
   priceInWei: BigNumber
@@ -215,7 +214,6 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       includedSources: ZEROX_SUPPORTED_SOURCES.toString(),
     }).toString()
 
-    console.log(`${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`)
     const response = await fetch(
       `${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`
     )
@@ -258,12 +256,11 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const priceInUSD =
       (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) * priceInSellToken
 
-    // TODO: maybe we shouldn't use takerAmount for "priceInWei"? We should think about it.
-    const estimatedPriceInWei = BigNumber.from(
-      (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()
-    )
+    // const priceInWei = BigNumber.from(
+    //   (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()
+    // )
     const priceInWei = BigNumber.from(
-      (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()
+      (Math.ceil(relevantOrder.fill.adjustedOutput / 10000 + 1) * 10000).toString()
     )
 
     let guildFeeData
@@ -298,7 +295,6 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       buyAmount: minAmount,
       buyAmountInWei,
       estimatedPriceInSellToken,
-      estimatedPriceInWei,
       estimatedPriceInUSD,
       priceInSellToken,
       priceInUSD,
@@ -405,7 +401,6 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       buyAmount: minAmount,
       buyAmountInWei: BigNumber.from(0), // TODO
       estimatedPriceInSellToken: 0, // TODO
-      estimatedPriceInWei: BigNumber.from(0), // TODO
       estimatedPriceInUSD: 0, // TODO
       priceInSellToken,
       priceInUSD,

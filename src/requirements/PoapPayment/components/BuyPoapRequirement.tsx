@@ -135,7 +135,7 @@ const BuyPoapRequirement = ({ guildPoap, poapContract }: Props) => {
               </Alert>
             )}
 
-            <PoapReward poap={poap} />
+            <PoapReward poap={poap} isInteractive={false} />
           </ModalBody>
 
           <ModalFooter pt={10} flexDir="column">
