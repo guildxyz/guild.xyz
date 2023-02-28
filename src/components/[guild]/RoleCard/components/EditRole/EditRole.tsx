@@ -32,7 +32,7 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
@@ -74,6 +74,18 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
   const methods = useForm({
     mode: "all",
     defaultValues,
+  })
+
+  useEffect(() => {
+    const role = roles?.find((r) => r.id === roleId)
+    if (!role) return
+
+    methods.reset({
+      ...role,
+      roleId: role.id,
+      requirements: mapRequirements(role.requirements),
+      rolePlatforms: role.rolePlatforms ?? [],
+    })
   })
 
   const handleOpen = () => {
