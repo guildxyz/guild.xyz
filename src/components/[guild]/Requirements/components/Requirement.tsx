@@ -96,7 +96,7 @@ const Requirement = ({
             <SetVisibility entityType="requirement" fieldBase={fieldRoot} />
           ) : (
             <Visibility
-              entityVisibility={requirement.visibility ?? VisibilityType.PUBLIC}
+              entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
             />
           )}
         </HStack>
