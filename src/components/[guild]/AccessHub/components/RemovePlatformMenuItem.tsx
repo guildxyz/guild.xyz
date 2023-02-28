@@ -1,4 +1,4 @@
-import { MenuItem, useDisclosure } from "@chakra-ui/react"
+import { MenuItem, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRemoveGuildPlatform from "components/[guild]/RolePlatforms/components/PlatformCard/components/useDiscordCardProps/DiscordCardMenu/hooks/useRemoveGuildPlatform"
 import { RemovePlatformAlert } from "components/[guild]/RolePlatforms/components/RemovePlatformButton/RemovePlatformButton"
@@ -17,10 +17,12 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
       guildPlatforms.find((gp) => gp.platformGuildId === platformGuildId)?.id
     )
 
+  const color = useColorModeValue("red.600", "red.300")
+
   return (
     <>
-      <MenuItem icon={<TrashSimple />} onClick={onOpen}>
-        Remove platform
+      <MenuItem icon={<TrashSimple />} onClick={onOpen} color={color}>
+        Remove reward...
       </MenuItem>
 
       <RemovePlatformAlert

@@ -25,12 +25,12 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
 
   return (
     <>
-      <Tooltip label={"Remove platform..."}>
+      <Tooltip label={"Remove reward..."}>
         <CloseButton
           size="sm"
           color={removeButtonColor}
           rounded="full"
-          aria-label="Remove platform"
+          aria-label="Remove reward"
           zIndex="1"
           onClick={onOpen}
         />
@@ -71,7 +71,7 @@ const RemovePlatformAlert = ({
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
-          <AlertDialogHeader>Remove platform</AlertDialogHeader>
+          <AlertDialogHeader>Remove reward</AlertDialogHeader>
           <AlertDialogBody>
             <FormLabel mb="3">
               What to do with existing members on the platform?
