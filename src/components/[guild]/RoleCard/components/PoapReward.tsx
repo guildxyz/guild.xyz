@@ -22,9 +22,10 @@ import { Poap } from "types"
 type Props = {
   poap: Poap
   isExpired?: boolean
+  isInteractive?: boolean
 }
 
-const PoapReward = ({ poap, isExpired }: Props) => {
+const PoapReward = ({ poap, isExpired, isInteractive = true }: Props) => {
   const isMember = useIsMember()
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
@@ -69,28 +70,34 @@ const PoapReward = ({ poap, isExpired }: Props) => {
       <Wrap spacingY="1">
         <Text maxW="calc(100% - var(--chakra-sizes-3))">
           {"Claim: "}
-          <Tooltip label={state.tooltipLabel} hasArrow>
-            {state.showMintButton ? (
-              <MintPoapButton
-                poapId={poap?.id}
-                variant="link"
-                maxW="full"
-                iconSpacing="1"
-              >
-                {poap?.name}
-              </MintPoapButton>
-            ) : (
-              <Button
-                variant="link"
-                rightIcon={<ArrowSquareOut />}
-                iconSpacing="1"
-                maxW="full"
-                {...state.buttonProps}
-              >
-                {poap?.name}
-              </Button>
-            )}
-          </Tooltip>
+          {isExpired || !isInteractive ? (
+            <Text as="span" fontWeight={"semibold"}>
+              {poap?.name}
+            </Text>
+          ) : (
+            <Tooltip label={state.tooltipLabel} hasArrow>
+              {state.showMintButton ? (
+                <MintPoapButton
+                  poapId={poap?.id}
+                  variant="link"
+                  maxW="full"
+                  iconSpacing="1"
+                >
+                  {poap?.name}
+                </MintPoapButton>
+              ) : (
+                <Button
+                  variant="link"
+                  rightIcon={<ArrowSquareOut />}
+                  iconSpacing="1"
+                  maxW="full"
+                  {...state.buttonProps}
+                >
+                  {poap?.name}
+                </Button>
+              )}
+            </Tooltip>
+          )}
         </Text>
         {poapLinks &&
           (isExpired ? (
