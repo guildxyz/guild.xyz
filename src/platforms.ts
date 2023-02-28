@@ -29,7 +29,6 @@ type PlatformData = {
   name: string
   colorScheme: ChakraProps["color"]
   gatedEntity: string
-  paramName: string
   cardPropsHook?: (guildPlatform: GuildPlatform) => {
     type: PlatformName
     name: string
@@ -48,7 +47,6 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "Telegram",
     colorScheme: "TELEGRAM",
     gatedEntity: "group",
-    paramName: "telegramId",
     cardPropsHook: useTelegramCardProps,
     cardMenuComponent: TelegramCardMenu,
   },
@@ -57,7 +55,6 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "Discord",
     colorScheme: "DISCORD",
     gatedEntity: "server",
-    paramName: "discordId",
     cardPropsHook: useDiscordCardProps,
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
@@ -67,7 +64,6 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "GitHub",
     colorScheme: "GITHUB",
     gatedEntity: "repo",
-    paramName: "githubId",
     cardPropsHook: useGithubCardProps,
     cardMenuComponent: GithubCardMenu,
   },
@@ -76,14 +72,18 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
-    paramName: "twitterId",
+  },
+  POAP: {
+    icon: null,
+    name: "POAP",
+    colorScheme: "purple",
+    gatedEntity: "POAP",
   },
   GOOGLE: {
     icon: GoogleLogo,
     name: "Google Workspace",
     colorScheme: "blue",
     gatedEntity: "document",
-    paramName: "googleId",
     cardPropsHook: useGoogleCardProps,
     cardSettingsComponent: GoogleCardSettings,
     cardMenuComponent: GoogleCardMenu,

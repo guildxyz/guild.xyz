@@ -11,6 +11,7 @@ import useMemberships from "components/explorer/hooks/useMemberships"
 import { StarHalf } from "phosphor-react"
 import platforms from "platforms"
 import { PlatformType } from "types"
+import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
@@ -36,8 +37,14 @@ const useAccessedGuildPlatforms = () => {
 }
 
 const AccessHub = (): JSX.Element => {
+  const { poaps } = useGuild()
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
   const { isAdmin } = useGuildPermission()
+
+  const futurePoaps = poaps?.filter((poap) => {
+    const currentTime = Date.now() / 1000
+    return poap.expiryDate > currentTime
+  })
 
   return (
     <SimpleGrid
@@ -48,31 +55,37 @@ const AccessHub = (): JSX.Element => {
       gap={4}
       mb="10"
     >
-      {accessedGuildPlatforms?.length ? (
-        accessedGuildPlatforms.map((platform) => {
-          const {
-            cardPropsHook: useCardProps,
-            cardMenuComponent: PlatformCardMenu,
-            cardWarningComponent: PlatformCardWarning,
-          } = platforms[PlatformType[platform.platformId]]
+      {accessedGuildPlatforms?.length || futurePoaps?.length ? (
+        <>
+          {accessedGuildPlatforms.map((platform) => {
+            const {
+              cardPropsHook: useCardProps,
+              cardMenuComponent: PlatformCardMenu,
+              cardWarningComponent: PlatformCardWarning,
+            } = platforms[PlatformType[platform.platformId]]
 
-          return (
-            <PlatformCard
-              usePlatformProps={useCardProps}
-              guildPlatform={platform}
-              key={platform.id}
-              cornerButton={
-                isAdmin && PlatformCardMenu ? (
-                  <PlatformCardMenu platformGuildId={platform.platformGuildId} />
-                ) : PlatformCardWarning ? (
-                  <PlatformCardWarning guildPlatform={platform} />
-                ) : null
-              }
-            >
-              <PlatformCardButton platform={platform} />
-            </PlatformCard>
-          )
-        })
+            return (
+              <PlatformCard
+                usePlatformProps={useCardProps}
+                guildPlatform={platform}
+                key={platform.id}
+                cornerButton={
+                  isAdmin && PlatformCardMenu ? (
+                    <PlatformCardMenu platformGuildId={platform.platformGuildId} />
+                  ) : PlatformCardWarning ? (
+                    <PlatformCardWarning guildPlatform={platform} />
+                  ) : null
+                }
+              >
+                <PlatformCardButton platform={platform} />
+              </PlatformCard>
+            )
+          })}
+
+          {futurePoaps.map((poap) => (
+            <PoapRewardCard key={poap?.id} guildPoap={poap} />
+          ))}
+        </>
       ) : (
         <Card>
           <Alert status="info">

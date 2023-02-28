@@ -1,4 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
 import { useEffect, useState } from "react"
 import { SWRResponse } from "swr"
@@ -13,6 +14,7 @@ import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 
 const fetchPrice = (
   _: string,
+  guildId: number,
   account: string,
   requirement: Requirement,
   sellAddress: string
@@ -20,6 +22,7 @@ const fetchPrice = (
   fetcher(`/api/fetchPrice`, {
     method: "POST",
     body: {
+      guildId,
       account,
       ...requirement,
       sellToken: sellAddress,
@@ -28,12 +31,12 @@ const fetchPrice = (
 
 const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
   const { account } = useWeb3React()
+  const { id } = useGuild()
   const { requirement, isOpen, pickedCurrency } = useGuildCheckoutContext()
 
   const [fallbackData, setFallbackData] = useState<FetchPriceResponse>()
 
   const shouldFetch =
-    account &&
     purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain) &&
     isOpen &&
     PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) &&
@@ -41,7 +44,7 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
 
   const { data, ...swrResponse } = useSWRImmutable<FetchPriceResponse>(
     shouldFetch
-      ? ["fetchPrice", account, requirement, sellAddress ?? pickedCurrency]
+      ? ["fetchPrice", id, account, requirement, sellAddress ?? pickedCurrency]
       : null,
     fetchPrice,
     {

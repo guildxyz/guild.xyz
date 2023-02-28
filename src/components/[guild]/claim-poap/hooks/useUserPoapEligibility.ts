@@ -1,37 +1,41 @@
 import { useWeb3React } from "@web3-react/core"
-import useSWR, { KeyedMutator } from "swr"
+import useGuild from "components/[guild]/hooks/useGuild"
+import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
+import useSWR from "swr"
 
-const useUserPoapEligibility = (
-  poapIdentifier: number
-): {
-  data: {
-    hasPaid?: boolean
-    voiceEligibility?: boolean
-  }
-  hasPaidLoading: boolean
-  mutate: KeyedMutator<any>
-} => {
+const useUserPoapEligibility = (poapIdentifier: number) => {
   const { account } = useWeb3React()
+  const { poapEventDetails } = usePoapEventDetails(poapIdentifier)
+  const { poaps } = useGuild()
+  const guildPoap = poaps?.find((p) => p.poapIdentifier === poapIdentifier)
 
-  const {
-    data,
-    isValidating: hasPaidLoading,
-    mutate,
-  } = useSWR(
+  const { data, isValidating, mutate } = useSWR(
     account && poapIdentifier
       ? `/assets/poap/checkUserPoapEligibility/${poapIdentifier}/${account}`
       : null,
     {
-      fallbackData: {
-        hasPaid: null,
-        voiceEligibility: null,
-      },
       revalidateOnFocus: false,
       shouldRetryOnError: false,
     }
   )
+  const generalReqData = data?.userAccesses?.[0]?.users?.[0]
 
-  return { data, hasPaidLoading, mutate }
+  const generalReqAccess = generalReqData ? generalReqData.access : true
+  const voiceEligibility = poapEventDetails?.voiceChannelId
+    ? data?.voiceEligibility
+    : true
+  const hasPaid = guildPoap?.poapContracts?.length ? data?.hasPaid : true
+
+  return {
+    data: {
+      ...generalReqData,
+      voiceEligibility,
+      hasPaid,
+      access: voiceEligibility && hasPaid && generalReqAccess,
+    },
+    isLoading: isValidating && !data,
+    mutate,
+  }
 }
 
 export default useUserPoapEligibility

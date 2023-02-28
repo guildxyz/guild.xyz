@@ -5,11 +5,11 @@ import {
   Skeleton,
   SkeletonCircle,
   Stack,
-  Text,
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
+import OptionCard from "components/common/OptionCard"
 import { fileTypeNames } from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/useGoogleCardProps"
 import { GoogleFile } from "types"
 
@@ -20,33 +20,19 @@ type Props = {
 }
 
 const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
-  const imageBgColor = useColorModeValue("gray.100", "gray.800")
+  const imageBgColor = useColorModeValue("gray.100", "gray.600")
 
   return (
-    <Card px={{ base: 5, sm: 6 }} py="7" h="full">
+    <OptionCard
+      title={file.name}
+      description={fileTypeNames[file.mimeType]}
+      image={
+        <Circle size={14} bgColor={imageBgColor}>
+          <Img src={file.iconLink} alt={file.mimeType} />
+        </Circle>
+      }
+    >
       <Stack w="full" spacing={4} justifyContent="space-between" h="full">
-        <HStack>
-          <Circle size={10} bgColor={imageBgColor}>
-            <Img src={file.iconLink} alt={file.mimeType} />
-          </Circle>
-          <Stack spacing={0} overflow={"hidden"}>
-            <Text
-              as="span"
-              fontFamily="display"
-              fontSize="lg"
-              fontWeight="bold"
-              letterSpacing="wide"
-              maxW="full"
-              noOfLines={1}
-            >
-              {file.name}
-            </Text>
-            <Text as="span" color="gray">
-              {fileTypeNames[file.mimeType]}
-            </Text>
-          </Stack>
-        </HStack>
-
         {onSelect && (
           <Button
             colorScheme="blue"
@@ -68,7 +54,7 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
           </Button>
         )}
       </Stack>
-    </Card>
+    </OptionCard>
   )
 }
 
@@ -83,7 +69,6 @@ const GoogleSkeletonCard = () => (
           <Skeleton h={4} w={20} />
         </Stack>
       </HStack>
-      <Skeleton h={10} borderRadius="xl" w="full" />
     </Stack>
   </Card>
 )

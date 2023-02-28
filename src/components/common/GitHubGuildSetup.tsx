@@ -38,7 +38,7 @@ const GitHubGuildSetup = ({
           <SearchBar placeholder="Search repo" {...{ search, setSearch }} />
         </Box>
 
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 6 }}>
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 5 }}>
           {[...Array(9)].map((i) => (
             <GridItem key={i}>
               <RepoSkeletonCard />
@@ -60,7 +60,7 @@ const GitHubGuildSetup = ({
           <SearchBar placeholder="Search repo" {...{ search, setSearch }} />
         </Box>
 
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 6 }}>
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 5 }}>
           {(filteredRepos ?? gateables)?.map?.((repo) => (
             <CardMotionWrapper key={repo.platformGuildId}>
               <GridItem>

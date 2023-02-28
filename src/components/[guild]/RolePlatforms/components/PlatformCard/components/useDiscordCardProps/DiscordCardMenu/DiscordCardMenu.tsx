@@ -1,15 +1,5 @@
-import {
-  Img,
-  MenuItem,
-  Spinner,
-  Stack,
-  Tag,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react"
+import { MenuItem, Spinner, useDisclosure } from "@chakra-ui/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
-import CreatePoap from "components/[guild]/CreatePoap"
-import useGuild from "components/[guild]/hooks/useGuild"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
 import { ArrowsCounterClockwise, ChatDots, Check, Gear } from "phosphor-react"
 import PlatformCardMenu from "../../PlatformCardMenu"
@@ -22,11 +12,6 @@ type Props = {
 
 const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   const {
-    isOpen: isCreatePoapOpen,
-    onOpen: onCreatePoapOpen,
-    onClose: onCreatePoapClose,
-  } = useDisclosure()
-  const {
     isOpen: isSendJoinButtonOpen,
     onOpen: onSendJoinButtonOpen,
     onClose: onSendJoinButtonClose,
@@ -37,26 +22,11 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     onClose: onSettingsClose,
   } = useDisclosure()
 
-  const { poaps } = useGuild()
-
   const { response, isLoading, triggerSync } = useSyncMembersFromDiscord()
 
   return (
     <>
       <PlatformCardMenu>
-        <MenuItem
-          icon={
-            <Img boxSize={3} src="/requirementLogos/poap.svg" alt="Drop POAP icon" />
-          }
-          onClick={onCreatePoapOpen}
-        >
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Text as="span">{poaps?.length ? "Manage POAPs" : "Drop POAP"}</Text>
-            <Tag fontSize="x-small" fontWeight="semibold" h={5} minH={0}>
-              Alpha
-            </Tag>
-          </Stack>
-        </MenuItem>
         <MenuItem icon={<ChatDots />} onClick={onSendJoinButtonOpen}>
           Send join button
         </MenuItem>
@@ -81,12 +51,6 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
       </PlatformCardMenu>
 
-      <CreatePoap
-        isOpen={isCreatePoapOpen}
-        onOpen={onCreatePoapOpen}
-        onClose={onCreatePoapClose}
-        discordServerId={platformGuildId}
-      />
       <SendDiscordJoinButtonModal
         isOpen={isSendJoinButtonOpen}
         onClose={onSendJoinButtonClose}

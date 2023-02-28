@@ -13,7 +13,10 @@ import useGoogleAuth from "./useGoogleAuth"
 import useTGAuth from "./useTGAuth"
 import useTwitterAuth from "./useTwitterAuth"
 
-const platformAuthHooks: Record<PlatformName, (scope?: string) => any> = {
+const platformAuthHooks: Record<
+  Exclude<PlatformName, "POAP">,
+  (scope?: string) => any
+> = {
   DISCORD: useDCAuth,
   GITHUB: useGHAuth,
   TWITTER: useTwitterAuth,

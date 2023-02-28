@@ -8,19 +8,35 @@ import {
   purchaseSupportedChains,
 } from "./constants"
 
-export type GeneratedGetAssetsParams = [
-  {
-    tokenAddress: string
-    amount: BigNumberish
-  },
-  string,
-  string[],
-  {
-    value?: BigNumberish
-  }
-]
+export type GeneratedGetAssetsParams =
+  | [
+      number,
+      {
+        tokenAddress: string
+        amount: BigNumberish
+      },
+      string,
+      string[],
+      {
+        value?: BigNumberish
+        gasLimit?: BigNumberish
+      }
+    ]
+  | [
+      {
+        tokenAddress: string
+        amount: BigNumberish
+      },
+      string,
+      string[],
+      {
+        value?: BigNumberish
+        gasLimit?: BigNumberish
+      }
+    ]
 
 const generateGetAssetsParams = (
+  guildId: number,
   account: string,
   chainId: number,
   pickedCurrency: string,
@@ -39,6 +55,8 @@ const generateGetAssetsParams = (
   } = priceData
 
   if (
+    !guildId ||
+    !account ||
     !priceInWei ||
     !rawGuildFeeInWei ||
     !buyAmountInWei ||
@@ -68,7 +86,23 @@ const generateGetAssetsParams = (
     .map((rpcData) => rpcData.nativeCurrency.symbol)
     .includes(pickedCurrency)
 
+  if (["ARBITRUM", "GOERLI"].includes(Chains[chainId]))
+    return [
+      {
+        tokenAddress: isNativeCurrency ? NULL_ADDRESS : pickedCurrency,
+        amount: isNativeCurrency ? 0 : amountInWithFee,
+      },
+      `0x${
+        getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][source].commands
+      }`,
+      getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][
+        source
+      ].getEncodedParams(formattedData),
+      { value: isNativeCurrency ? amountInWithFee : undefined },
+    ]
+
   return [
+    guildId,
     {
       tokenAddress: isNativeCurrency ? NULL_ADDRESS : pickedCurrency,
       amount: isNativeCurrency ? 0 : amountInWithFee,

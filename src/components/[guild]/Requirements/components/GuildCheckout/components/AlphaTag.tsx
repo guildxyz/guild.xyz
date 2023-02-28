@@ -19,7 +19,7 @@ const AlphaTag = () => {
   return (
     <Popover trigger="hover">
       <PopoverTrigger>
-        <Tag size="sm" position="relative" top={0.5} fontFamily="body">
+        <Tag size="sm" position="relative" top={2} fontFamily="body">
           Alpha
         </Tag>
       </PopoverTrigger>

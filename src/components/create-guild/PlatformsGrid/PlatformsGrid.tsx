@@ -1,57 +1,64 @@
-import { SimpleGrid, SimpleGridProps } from "@chakra-ui/react"
-import OptionCard from "components/common/OptionCard"
+import { SimpleGrid } from "@chakra-ui/react"
 import platforms from "platforms"
 import { PlatformName } from "types"
-import DiscordSelectButton from "./components/DiscordSelectButton"
-import GitHubSelectButton from "./components/GitHubSelectButton"
-import GoogleSelectButton from "./components/GoogleSelectButton"
-import TelegramSelectButton from "./components/TelegramSelectButton"
+import PlatformSelectButton from "./components/PlatformSelectButton"
+import useGoogleButtonProps from "./hooks/useGoogleButtonProps"
+import useOAuthButtonProps from "./hooks/useOAuthButtonProps"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
-  columns?: SimpleGridProps["columns"]
+  showPoap?: boolean
 }
 
-const platformsData: Record<
-  Exclude<PlatformName, "" | "TWITTER">,
-  {
-    description: string
-    Btn?: (props: { onSelection: Props["onSelection"] }) => JSX.Element
+const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
+  // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
+  const platformsData: Record<
+    Exclude<PlatformName, "" | "TWITTER" | "POAP">,
+    {
+      description: string
+      hook?: any
+    }
+  > = {
+    DISCORD: {
+      description: "Manage roles",
+      hook: useOAuthButtonProps,
+    },
+    TELEGRAM: {
+      description: "Manage groups",
+    },
+    GOOGLE: {
+      description: "Manage documents",
+      hook: useGoogleButtonProps,
+    },
+    GITHUB: {
+      description: "Manage repositories",
+      hook: useOAuthButtonProps,
+    },
+    ...(showPoap
+      ? {
+          POAP: {
+            description: "Mint POAP",
+          },
+        }
+      : {}),
   }
-> = {
-  DISCORD: {
-    description: "Token gate roles",
-    Btn: DiscordSelectButton,
-  },
-  TELEGRAM: {
-    description: "Token gate your group",
-    Btn: TelegramSelectButton,
-  },
-  GOOGLE: {
-    description: "Token gate documents",
-    Btn: GoogleSelectButton,
-  },
-  GITHUB: {
-    description: "Token gate your repositories",
-    Btn: GitHubSelectButton,
-  },
-}
 
-const PlatformsGrid = ({ onSelection, columns = { base: 1, md: 2 } }: Props) => (
-  <SimpleGrid columns={columns} gap={{ base: 4, md: 6 }}>
-    {Object.entries(platformsData).map(([platformName, { description, Btn }]) => (
-      <OptionCard
-        key={platformName}
-        size="lg"
-        title={platforms[platformName].name}
-        image={`/platforms/${platformName.toLowerCase()}.png`}
-        bgImage={`/platforms/${platformName.toLowerCase()}_bg.png`}
-        description={description}
-      >
-        {Btn && <Btn onSelection={onSelection} />}
-      </OptionCard>
-    ))}
-  </SimpleGrid>
-)
+  return (
+    <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
+      {Object.entries(platformsData).map(([platform, { description, hook }]) => (
+        <PlatformSelectButton
+          key={platform}
+          platform={platform}
+          hook={hook}
+          title={platforms[platform].name}
+          description={description}
+          imageUrl={`/platforms/${platform.toLowerCase()}.png`}
+          onSelection={onSelection}
+          size="md"
+        />
+      ))}
+    </SimpleGrid>
+  )
+}
 
 export default PlatformsGrid

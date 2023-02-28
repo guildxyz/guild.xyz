@@ -1,9 +1,9 @@
-import { Checkbox } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
+import { Checkbox, useColorModeValue } from "@chakra-ui/react"
+import { PropsWithChildren } from "react"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 
-const TOSCheckbox = (): JSX.Element => {
-  const { name } = useGuild()
+const TOSCheckbox = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
+  const borderColor = useColorModeValue("gray.300", "inherit")
   const { agreeWithTOS, setAgreeWithTOS } = useGuildCheckoutContext()
 
   return (
@@ -13,6 +13,7 @@ const TOSCheckbox = (): JSX.Element => {
         "> .chakra-checkbox__control": {
           marginTop: 1,
           borderWidth: 1,
+          borderColor,
         },
       }}
       _checked={{
@@ -27,8 +28,7 @@ const TOSCheckbox = (): JSX.Element => {
       onChange={(e) => setAgreeWithTOS(e.target.checked)}
       size="sm"
     >
-      {`I understand that I purchase from decentralized exchanges, not from 
-      ${name} or Guild.xyz itself`}
+      {children}
     </Checkbox>
   )
 }

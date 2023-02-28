@@ -1,6 +1,7 @@
 import { useColorModeValue } from "@chakra-ui/react"
 import { useGuildCheckoutContext } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import useDatadog from "components/_app/Datadog/useDatadog"
+import usePrice from "../../../hooks/usePrice"
 import TokenInfo from "./TokenInfo"
 
 type Props = {
@@ -20,6 +21,12 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
     addDatadogAction("user picked currency (GuildCheckout)")
   }
 
+  const {
+    data: { estimatedPriceInSellToken },
+    isValidating,
+    error,
+  } = usePrice(address)
+
   return (
     <TokenInfo
       asMenuItem
@@ -35,6 +42,9 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
       onClick={onClick}
       chainId={chainId}
       address={address}
+      requiredAmount={estimatedPriceInSellToken}
+      isLoading={isValidating}
+      error={error}
     />
   )
 }
