@@ -19,12 +19,26 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import useSnapshots from "requirements/Snapshot/hooks/useSnapshots"
+import useSWRImmutable from "swr/immutable"
 import parseFromObject from "utils/parseFromObject"
 
 type Props = {
   baseFieldPath: string
   index: number
+}
+
+type SnapshotStrategy = {
+  key: string
+  schema?: {
+    definitions: {
+      Strategy: {
+        title: string
+        properties: Record<string, any>
+        required: string[]
+      }
+    }
+  }
+  examples: { strategy: { params: Record<string, any> } }[]
 }
 
 const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
@@ -41,7 +55,9 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
     name: `${baseFieldPath}.data.strategies.${index}.name`,
   })
 
-  const { strategies, isLoading } = useSnapshots()
+  const { data: strategies, isValidating: isLoading } = useSWRImmutable<
+    Record<string, SnapshotStrategy>
+  >("/assets/snapshot/strategies")
 
   const mappedStrategies = useMemo(
     () =>

@@ -4,14 +4,19 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { useMemo } from "react"
 import { useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import useSpaces from "../hooks/useSpaces"
 
 type Props = RequirementFormProps & {
   isDisabled?: boolean
   optional?: boolean // Using "optional" here because this field is required most of the time anyways
   helperText?: string
+}
+
+export type Space = {
+  id: string
+  name: string
 }
 
 const customFilterOption = (candidate, input) =>
@@ -28,7 +33,10 @@ const SpaceSelect = ({
     formState: { errors },
   } = useFormContext()
 
-  const { spaces, isSpacesLoading } = useSpaces()
+  const { data: spaces, isValidating: isSpacesLoading } = useSWRImmutable<Space[]>(
+    "/assets/snapshot/spaces"
+  )
+
   const mappedSpaces = useMemo<SelectOption[]>(
     () =>
       spaces?.map((space) => ({
