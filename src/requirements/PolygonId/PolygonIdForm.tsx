@@ -1,9 +1,9 @@
 import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useEffect } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
 import PolygonIdBasic from "./components/PolygonIdBasic"
 import PolygonIdQuery from "./components/PolygonIdQuery"
@@ -30,20 +30,16 @@ const PolygonIdForm = ({
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
-  /**
-   * Temporary, will use ChainPicker when we add it to the supported chains (and the
-   * other option will be POLYGON mainnet once PolygonID is available there too)
-   */
-  useEffect(() => {
-    setValue(`${baseFieldPath}.chain`, "POLYGON_MUMBAI")
-  }, [])
-
   const selected = polygonIdRequirementTypes.find(
     (reqType) => reqType.value === type
   )
 
   return (
     <Stack spacing={4} alignItems="start">
+      <ChainPicker
+        controlName={`${baseFieldPath}.chain`}
+        supportedChains={[/* "POLYGON",  */ "POLYGON_MUMBAI"]}
+      />
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
       >
