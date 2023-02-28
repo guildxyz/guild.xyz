@@ -17,6 +17,7 @@ import { Role } from "types"
 import parseDescription from "utils/parseDescription"
 import useGuildPermission from "../hooks/useGuildPermission"
 import RoleRequirements from "../Requirements"
+import Visibility from "../Visibility"
 import AccessIndicator from "./components/AccessIndicator"
 import MemberCount from "./components/MemberCount"
 import Reward from "./components/Reward"
@@ -70,7 +71,10 @@ const RoleCard = memo(({ role }: Props) => {
                 {role.name}
               </Heading>
             </HStack>
-            <MemberCount memberCount={role.memberCount} roleId={role.id} />
+            <Flex>
+              <MemberCount memberCount={role.memberCount} roleId={role.id} />
+              <Visibility entityVisibility={role.visibility} mt="6px !important" />
+            </Flex>
             {isAdmin && (
               <>
                 <Spacer m="0 !important" />

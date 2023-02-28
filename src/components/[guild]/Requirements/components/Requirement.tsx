@@ -12,7 +12,9 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import SetVisibility from "components/[guild]/SetVisibility"
+import Visibility from "components/[guild]/Visibility"
 import { PropsWithChildren } from "react"
+import { Visibility as VisibilityType } from "types"
 import { useRequirementContext } from "./RequirementContext"
 
 export type RequirementProps = PropsWithChildren<{
@@ -89,8 +91,13 @@ const Requirement = ({
             {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
             {children}
           </Text>
-          {fieldRoot && (
+
+          {fieldRoot ? (
             <SetVisibility entityType="requirement" fieldBase={fieldRoot} />
+          ) : (
+            <Visibility
+              entityVisibility={requirement.visibility ?? VisibilityType.PUBLIC}
+            />
           )}
         </HStack>
 

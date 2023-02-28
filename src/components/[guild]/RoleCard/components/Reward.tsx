@@ -7,6 +7,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import GoogleCardWarning from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardWarning"
+import Visibility from "components/[guild]/Visibility"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { useMemo } from "react"
 import { PlatformType, Role, RolePlatform } from "types"
@@ -96,6 +97,8 @@ const Reward = ({ role, platform, withLink }: Props) => {
           </Text>
         )}
       </Text>
+
+      <Visibility entityVisibility={platform.visibility} />
 
       {platform.guildPlatform?.platformId === PlatformType.GOOGLE && (
         <GoogleCardWarning

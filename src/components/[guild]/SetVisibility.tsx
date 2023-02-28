@@ -18,16 +18,22 @@ import { ForwardRefExoticComponent, RefAttributes, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { Visibility } from "types"
 
-const VisibilityIcons = {
-  [Visibility.PUBLIC]: GlobeHemisphereWest,
-  [Visibility.PRIVATE]: UserPlus,
-  [Visibility.HIDDEN]: LockSimple,
-}
-
-const VisibilityReadableName = {
-  [Visibility.PUBLIC]: "Public",
-  [Visibility.PRIVATE]: "Private",
-  [Visibility.HIDDEN]: "Hidden",
+export const visibilityData = {
+  [Visibility.PUBLIC]: {
+    title: "Public",
+    Icon: GlobeHemisphereWest,
+    description: "Visible to everyone",
+  },
+  [Visibility.PRIVATE]: {
+    title: "Private",
+    Icon: UserPlus,
+    description: "Only visible to role holders",
+  },
+  [Visibility.HIDDEN]: {
+    title: "Hidden",
+    Icon: LockSimple,
+    description: "Only visible to you and other admins of the guild",
+  },
 }
 
 const SetVisibility = (props: {
@@ -37,14 +43,16 @@ const SetVisibility = (props: {
   const parentField = props.fieldBase ?? ""
   const { isOpen, onClose, onOpen } = useDisclosure()
 
-  const currentVisibility = useWatch({ name: `${parentField}.visibility` })
+  const currentVisibility: Visibility = useWatch({
+    name: `${parentField}.visibility`,
+  })
 
-  const Icon = VisibilityIcons[currentVisibility ?? Visibility.PUBLIC]
+  const Icon = visibilityData[currentVisibility ?? Visibility.PUBLIC].Icon
 
   return (
     <>
       <Button ml={3} size="xs" leftIcon={<Icon />} onClick={onOpen}>
-        {VisibilityReadableName[currentVisibility]}
+        {visibilityData[currentVisibility].title}
       </Button>
 
       <SetVisibilityModal
@@ -102,26 +110,13 @@ const SetVisibilityModal = ({
             onChange={(newVisibility) =>
               setLocalVisibility(newVisibility as Visibility)
             }
-            options={[
-              {
-                value: Visibility.PUBLIC,
-                title: VisibilityReadableName[Visibility.PUBLIC],
-                description: "Visible to everyone",
-                RightComponent: getLeftSideIcon(VisibilityIcons[Visibility.PUBLIC]),
-              },
-              {
-                value: Visibility.PRIVATE,
-                title: VisibilityReadableName[Visibility.PRIVATE],
-                description: "Only visible to role holders",
-                RightComponent: getLeftSideIcon(VisibilityIcons[Visibility.PRIVATE]),
-              },
-              {
-                value: Visibility.HIDDEN,
-                title: VisibilityReadableName[Visibility.HIDDEN],
-                description: "Only visible to you and other admins of the guild",
-                RightComponent: getLeftSideIcon(VisibilityIcons[Visibility.HIDDEN]),
-              },
-            ]}
+            options={Object.entries(visibilityData).map(
+              ([visibility, { Icon, ...rest }]) => ({
+                value: visibility,
+                ...rest,
+                RightComponent: getLeftSideIcon(Icon),
+              })
+            )}
           />
         </ModalBody>
 
