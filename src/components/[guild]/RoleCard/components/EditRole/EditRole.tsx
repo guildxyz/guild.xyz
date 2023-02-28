@@ -86,7 +86,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       requirements: mapRequirements(role.requirements),
       rolePlatforms: role.rolePlatforms ?? [],
     })
-  })
+  }, [roles, roleId])
 
   const handleOpen = () => {
     onOpen()
