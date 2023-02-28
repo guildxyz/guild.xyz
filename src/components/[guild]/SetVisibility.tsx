@@ -2,7 +2,6 @@ import {
   Circle,
   FormControlProps,
   HStack,
-  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -14,34 +13,46 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import RadioSelect from "components/common/RadioSelect"
-import {
-  GlobeHemisphereEast,
-  GlobeHemisphereWest,
-  IconProps,
-  LockSimple,
-  UserPlus,
-} from "phosphor-react"
+import { GlobeHemisphereWest, IconProps, LockSimple, UserPlus } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { Visibility } from "types"
+
+const VisibilityIcons = {
+  [Visibility.PUBLIC]: GlobeHemisphereWest,
+  [Visibility.PRIVATE]: UserPlus,
+  [Visibility.HIDDEN]: LockSimple,
+}
+
+const VisibilityReadableName = {
+  [Visibility.PUBLIC]: "Public",
+  [Visibility.PRIVATE]: "Private",
+  [Visibility.HIDDEN]: "Hidden",
+}
 
 const SetVisibility = (props: {
   entityType: "role" | "requirement" | "reward"
   fieldBase?: string
 }) => {
+  const parentField = props.fieldBase ?? ""
   const { isOpen, onClose, onOpen } = useDisclosure()
+
+  const currentVisibility = useWatch({ name: `${parentField}.visibility` })
+
+  const Icon = VisibilityIcons[currentVisibility ?? Visibility.PUBLIC]
 
   return (
     <>
-      <IconButton
-        variant="gh"
-        size={props.entityType === "reward" ? "xs" : undefined}
-        aria-label="Set visibility attribute"
-        icon={<GlobeHemisphereEast color="var(--chakra-colors-gray-500)" />}
-        onClick={onOpen}
-      />
+      <Button ml={3} size="xs" leftIcon={<Icon />} onClick={onOpen}>
+        {VisibilityReadableName[currentVisibility]}
+      </Button>
 
-      <SetVisibilityModal {...props} isOpen={isOpen} onClose={onClose} />
+      <SetVisibilityModal
+        {...props}
+        fieldBase={parentField}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </>
   )
 }
@@ -94,21 +105,21 @@ const SetVisibilityModal = ({
             options={[
               {
                 value: Visibility.PUBLIC,
-                title: "Public",
+                title: VisibilityReadableName[Visibility.PUBLIC],
                 description: "Visible to everyone",
-                RightComponent: getLeftSideIcon(GlobeHemisphereWest),
+                RightComponent: getLeftSideIcon(VisibilityIcons[Visibility.PUBLIC]),
               },
               {
                 value: Visibility.PRIVATE,
-                title: "Private",
+                title: VisibilityReadableName[Visibility.PRIVATE],
                 description: "Only visible to role holders",
-                RightComponent: getLeftSideIcon(UserPlus),
+                RightComponent: getLeftSideIcon(VisibilityIcons[Visibility.PRIVATE]),
               },
               {
                 value: Visibility.HIDDEN,
-                title: "Hidden",
+                title: VisibilityReadableName[Visibility.HIDDEN],
                 description: "Only visible to you and other admins of the guild",
-                RightComponent: getLeftSideIcon(LockSimple),
+                RightComponent: getLeftSideIcon(VisibilityIcons[Visibility.HIDDEN]),
               },
             ]}
           />
