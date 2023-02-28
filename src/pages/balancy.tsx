@@ -25,7 +25,7 @@ const FORM_COMPONENTS = {
 
 const Page = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
-  const { control, getValues, setValue, clearErrors } = methods
+  const { control, getValues } = methods
 
   const { fields, append, remove } = useFieldArray({
     name: "requirements",

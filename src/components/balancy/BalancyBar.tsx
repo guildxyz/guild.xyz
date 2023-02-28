@@ -13,16 +13,19 @@ import Card from "components/common/Card"
 import useBalancy from "components/create-guild/Requirements/hooks/useBalancy"
 import useIsStuck from "hooks/useIsStuck"
 import { Copy, DownloadSimple } from "phosphor-react"
-import { useWatch } from "react-hook-form"
+import { useEffect } from "react"
 import pluralize from "utils/pluralize"
 
 const BalancyBar = ({ ...rest }) => {
   const { ref, isStuck } = useIsStuck()
   const { holders, addresses, isLoading, inaccuracy, usedLogic } = useBalancy()
 
-  const logic = useWatch({ name: "logic" })
+  const { hasCopied, onCopy, setValue } = useClipboard("")
 
-  const { hasCopied, onCopy } = useClipboard(addresses ? addresses?.join("\n") : "")
+  useEffect(() => {
+    if (!addresses) return
+    setValue(addresses.join("\n"))
+  }, [addresses])
 
   const exportAddresses = () => {
     const csvContent = "data:text/csv;charset=utf-8," + addresses?.join("\n")
