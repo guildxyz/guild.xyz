@@ -12,10 +12,12 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { guildPlatforms } = useGuild()
+  const guildPlatform = guildPlatforms.find(
+    (gp) => gp.platformGuildId === platformGuildId
+  )
+
   const { onSubmit, isLoading: isRemoveGuildPlatformLoading } =
-    useRemoveGuildPlatform(
-      guildPlatforms.find((gp) => gp.platformGuildId === platformGuildId)?.id
-    )
+    useRemoveGuildPlatform(guildPlatform?.id)
 
   const color = useColorModeValue("red.600", "red.300")
 
@@ -26,6 +28,9 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
       </MenuItem>
 
       <RemovePlatformAlert
+        guildPlatform={guildPlatform}
+        keepAccessDescription="Everything on the platform will remain as is for existing members, but accesses by this Guild won’t be managed anymore"
+        revokeAccessDescription="Existing members will lose their accesses on the platform granted by this Guild"
         isOpen={isOpen}
         onClose={onClose}
         onSubmit={onSubmit}

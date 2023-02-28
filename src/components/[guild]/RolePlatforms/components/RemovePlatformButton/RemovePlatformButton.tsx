@@ -12,14 +12,20 @@ import {
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import ShouldKeepPlatformAccesses from "components/[guild]/ShouldKeepPlatformAccesses"
+import platforms from "platforms"
 import { useRef, useState } from "react"
+import { GuildPlatform, PlatformType } from "types"
 import useRemovePlatform from "./hooks/useRemovePlatform"
 
 type Props = {
   removeButtonColor: string
+  guildPlatform: GuildPlatform
 }
 
-const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
+const RemovePlatformButton = ({
+  removeButtonColor,
+  guildPlatform,
+}: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onSubmit, isLoading } = useRemovePlatform(onClose)
 
@@ -37,6 +43,9 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
       </Tooltip>
 
       <RemovePlatformAlert
+        guildPlatform={guildPlatform}
+        keepAccessDescription="Everything on the platform will remain as is for existing members, but accesses by this role won’t be managed anymore"
+        revokeAccessDescription="Existing members will lose their accesses on the platform granted by this role"
         isOpen={isOpen}
         onClose={onClose}
         onSubmit={onSubmit}
@@ -47,16 +56,22 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
 }
 
 type RemovePlatformAlertProps = {
+  guildPlatform: GuildPlatform
   isOpen: boolean
   onClose: () => void
   onSubmit: (data: Record<string, any>) => void
+  keepAccessDescription: string
+  revokeAccessDescription: string
   isLoading: boolean
 }
 
 const RemovePlatformAlert = ({
+  guildPlatform,
   isOpen,
   onClose,
   onSubmit,
+  keepAccessDescription,
+  revokeAccessDescription,
   isLoading,
 }: RemovePlatformAlertProps): JSX.Element => {
   const [removeAccess, setRemoveAccess] = useState(false)
@@ -71,14 +86,15 @@ const RemovePlatformAlert = ({
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
-          <AlertDialogHeader>Remove reward</AlertDialogHeader>
+          <AlertDialogHeader>{`Remove reward: ${guildPlatform?.platformGuildName} (${
+            platforms[PlatformType[guildPlatform?.platformId]]?.name
+          })`}</AlertDialogHeader>
           <AlertDialogBody>
             <FormLabel mb="3">
               What to do with existing members on the platform?
             </FormLabel>
             <ShouldKeepPlatformAccesses
-              keepAccessDescription="Everything on the platform will remain as is for existing members, but accesses by this role won’t be managed anymore"
-              revokeAccessDescription="Existing members will lose their accesses on the platform granted by this role"
+              {...{ keepAccessDescription, revokeAccessDescription }}
               onChange={(newValue) => setRemoveAccess(newValue === "true")}
               value={removeAccess as any}
             />
