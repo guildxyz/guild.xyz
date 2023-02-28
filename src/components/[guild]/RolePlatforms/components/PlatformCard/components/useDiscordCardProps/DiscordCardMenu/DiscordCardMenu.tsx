@@ -1,4 +1,4 @@
-import { MenuItem, Spinner, useDisclosure } from "@chakra-ui/react"
+import { MenuDivider, MenuItem, Spinner, useDisclosure } from "@chakra-ui/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
 import { ArrowsCounterClockwise, ChatDots, Check, Gear } from "phosphor-react"
@@ -49,6 +49,10 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
           Settings
         </MenuItem>
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
+        <MenuDivider />
+        <MenuItem isDisabled fontSize="sm">
+          POAPs have moved into Add reward
+        </MenuItem>
       </PlatformCardMenu>
 
       <SendDiscordJoinButtonModal

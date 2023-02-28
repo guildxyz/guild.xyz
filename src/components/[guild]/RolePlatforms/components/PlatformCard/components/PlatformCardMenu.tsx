@@ -7,12 +7,11 @@ const PlatformCardMenu = ({ children }: PropsWithChildren<unknown>) => (
     <MenuButton
       as={IconButton}
       icon={<DotsThree />}
-      aria-label="Menu"
+      aria-label="Reward menu"
       boxSize={8}
       minW={8}
       rounded="full"
       colorScheme="alpha"
-      data-dd-action-name="Discord card menu"
     />
 
     <Portal>
