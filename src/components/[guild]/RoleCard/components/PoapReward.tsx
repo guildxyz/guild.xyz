@@ -3,6 +3,7 @@ import {
   HStack,
   Icon,
   Img,
+  Skeleton,
   Tag,
   Text,
   Tooltip,
@@ -67,13 +68,15 @@ const PoapReward = ({ poap, isExpired, isInteractive = true }: Props) => {
       <Circle size={6} overflow="hidden">
         <Img src={`/platforms/poap.png`} alt={"POAP image"} boxSize={6} />
       </Circle>
-      <Wrap spacingY="1">
+      <Wrap spacingY="1" w="full">
         <Text maxW="calc(100% - var(--chakra-sizes-3))">
           {"Claim: "}
-          {isExpired || !isInteractive ? (
-            <Text as="span" fontWeight={"semibold"}>
-              {poap?.name}
-            </Text>
+          {isExpired || !isInteractive || !poap ? (
+            <Skeleton as="span" isLoaded={!!poap}>
+              <Text as="span" fontWeight={"semibold"}>
+                {poap?.name ?? "Loading POAP name..."}
+              </Text>
+            </Skeleton>
           ) : (
             <Tooltip label={state.tooltipLabel} hasArrow>
               {state.showMintButton ? (
