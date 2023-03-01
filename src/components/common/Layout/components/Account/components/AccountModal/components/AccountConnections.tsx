@@ -18,10 +18,16 @@ import capitalize from "utils/capitalize"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkedAddress from "./LinkedAddress"
 import LinkedSocialAccount from "./LinkedSocialAccount"
+import LinkMoreSocialAccount from "./LinkMoreSocialAccount"
 
 const AccountConnections = () => {
   const { isLoading, addresses, platformUsers } = useUser()
   const { account } = useWeb3React()
+  const allPlatforms = ["TELEGRAM", "DISCORD", "GITHUB", "TWITTER", "GOOGLE"] // fake it till you make it
+  const missingPlatforms = allPlatforms.filter(
+    (p) =>
+      !platformUsers?.map((platform) => platform.platformName.toString()).includes(p)
+  )
 
   return (
     <Stack spacing="10" w="full">
@@ -64,6 +70,15 @@ const AccountConnections = () => {
           )
         ) : (
           <Text colorScheme={"gray"}>No linked social accounts yet</Text>
+        )}
+      </Section>
+      <Section title="Link more social accounts">
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          missingPlatforms?.map((platform) => (
+            <LinkMoreSocialAccount key={platform} platformName={platform} />
+          ))
         )}
       </Section>
       <Section
