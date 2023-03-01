@@ -78,7 +78,9 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
 
   const requirementRightElement = isActive ? (
     <PoapRequiementAccessIndicator poapIdentifier={guildPoap.poapIdentifier} />
-  ) : null
+  ) : (
+    <></>
+  )
 
   const requirementComponents = guildPoap && [
     ...(guildPoap.poapContracts ?? []).map((poapContract) => (
