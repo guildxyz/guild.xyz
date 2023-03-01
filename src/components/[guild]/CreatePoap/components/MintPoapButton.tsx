@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useClaimPoap from "components/[guild]/claim-poap/hooks/useClaimPoap"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
@@ -35,18 +36,14 @@ const MintPoapButton = forwardRef(
       onClose: onMintModalClose,
     } = useDisclosure()
 
-    const {
-      onSubmit: onClaimPoapSubmit,
-      isLoading: isClaimPoapLoading,
-      response: claimPoapResponse,
-    } = useClaimPoap(poapId)
-    const mintingLink = `${claimPoapResponse}?address=${account}`
+    const { onSubmit, isLoading, response, error } = useClaimPoap(poapId)
+    const mintingLink = `${response}?address=${account}`
 
-    const props = claimPoapResponse
+    const props = response
       ? { as: "a", target: "_blank", href: mintingLink }
       : {
           onClick: () => {
-            onClaimPoapSubmit()
+            onSubmit()
             onMintModalOpen()
           },
         }
@@ -62,14 +59,14 @@ const MintPoapButton = forwardRef(
             <ModalCloseButton />
             <ModalHeader>Mint POAP</ModalHeader>
             <ModalBody>
-              {isClaimPoapLoading ? (
+              {isLoading ? (
                 <HStack spacing="6">
                   <Center boxSize="16">
                     <Spinner />
                   </Center>
                   <Text>Getting your minting link...</Text>
                 </HStack>
-              ) : (
+              ) : response ? (
                 <HStack spacing={0}>
                   <Icon
                     as={CheckCircle}
@@ -94,6 +91,8 @@ const MintPoapButton = forwardRef(
                     </Link>
                   </Box>
                 </HStack>
+              ) : (
+                <ErrorAlert label={error} />
               )}
             </ModalBody>
           </ModalContent>
