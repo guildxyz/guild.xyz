@@ -20,6 +20,7 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
+import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -30,6 +31,7 @@ import { ArrowSquareOut, Clock, EyeSlash, PencilSimple } from "phosphor-react"
 import { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
+import BuyPoapRequirement from "requirements/PoapPayment/components/BuyPoapRequirement"
 import PoapPaymentRequirement from "requirements/PoapPayment/PoapPaymentRequirement"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
@@ -50,6 +52,9 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
 
   const { poap, isLoading } = usePoap(guildPoap.fancyId)
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
+  const {
+    data: { hasPaid },
+  } = useUserPoapEligibility(guildPoap?.poapIdentifier)
 
   const timeDiff = guildPoap.expiryDate * 1000 - Date.now()
 
@@ -88,7 +93,13 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
         key={poapContract.id}
         poapContract={poapContract}
         guildPoap={guildPoap}
-        rightElement={requirementRightElement}
+        rightElement={
+          isActive && !hasPaid ? (
+            <BuyPoapRequirement {...{ guildPoap: guildPoap, poapContract }} />
+          ) : (
+            requirementRightElement
+          )
+        }
       />
     )),
     ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (
@@ -159,7 +170,7 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
                     <TagLeftIcon as={Clock} mr="1.5" />
                     {status.label}
                   </Tag>
-                  {isActive && !guildPoap.poapRequirements?.length && (
+                  {isActive && (
                     <WrapItem alignItems={"center"}>
                       <Text as="span" fontSize="xs" colorScheme="gray">
                         <Link

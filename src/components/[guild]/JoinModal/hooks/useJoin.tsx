@@ -119,15 +119,17 @@ guild.xyz/${guild.urlName} @guildxyz`
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) =>
+    onSubmit: (data?) =>
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
-        platforms: Object.entries(data.platforms)
-          .filter(([_, value]) => !!value)
-          .map(([key, value]: any) => ({
-            name: key,
-            ...value,
-          })),
+        platforms:
+          data &&
+          Object.entries(data.platforms)
+            .filter(([_, value]) => !!value)
+            .map(([key, value]: any) => ({
+              name: key,
+              ...value,
+            })),
       }),
   }
 }

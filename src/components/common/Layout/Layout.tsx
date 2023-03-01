@@ -28,6 +28,7 @@ type Props = {
   backgroundImage?: string
   backgroundOffset?: number
   showBackButton?: boolean
+  maxWidth?: string
 }
 
 const Layout = ({
@@ -41,6 +42,7 @@ const Layout = ({
   backgroundImage,
   backgroundOffset = 128,
   showBackButton,
+  maxWidth = "container.lg",
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
@@ -112,7 +114,7 @@ const Layout = ({
         <Container
           // to be above the absolutely positioned background box
           position="relative"
-          maxW="container.lg"
+          maxW={maxWidth}
           pt={{ base: 6, md: 9 }}
           pb={24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}

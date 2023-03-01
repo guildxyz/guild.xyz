@@ -122,7 +122,6 @@ const usePoapPayFee = (
     onSuccess: () => {
       toast({
         title: "Successful transaction!",
-        description: "You can mint your POAP now",
         status: "success",
       })
       onSuccess?.()

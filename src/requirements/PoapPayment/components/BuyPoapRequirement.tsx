@@ -2,6 +2,7 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  ButtonProps,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -21,6 +22,7 @@ import usePoapPayFee from "components/[guild]/claim-poap/hooks/usePoapPayFee"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import AlphaTag from "components/[guild]/Requirements/components/GuildCheckout/components/AlphaTag"
+import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import {
   GuildCheckoutProvider,
@@ -37,13 +39,13 @@ import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import PoapBuyTotal from "./PoapBuyTotal"
 import PoapPaymentFeeCurrency from "./PoapPaymentFeeCurrency"
 
-type Props = { guildPoap: GuildPoap; poapContract: PoapContract }
+type Props = { guildPoap: GuildPoap; poapContract: PoapContract } & ButtonProps
 
 /**
  * This is copy-pasted from BuyPass and adjusted to work with legacy POAP logic. We
  * will switch to general payment requirement once POAP is a real reward
  */
-const BuyPoapRequirement = ({ guildPoap, poapContract }: Props) => {
+const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
   const { id, vaultId, chainId: vaultChainId, contract } = poapContract
   const { account, chainId } = useWeb3React()
 
@@ -84,8 +86,7 @@ const BuyPoapRequirement = ({ guildPoap, poapContract }: Props) => {
 
   if (
     !poap ||
-    poapLinks?.claimed === poapLinks?.total ||
-    !account
+    poapLinks?.claimed === poapLinks?.total
     // (!accessData && isAccessLoading) ||
     // !paymentSupportedChains.includes(requirement?.chain)
   )
@@ -102,7 +103,8 @@ const BuyPoapRequirement = ({ guildPoap, poapContract }: Props) => {
         borderRadius="lg"
         fontWeight="medium"
         onClick={onOpen}
-        data-dd-action-name="Pay (Requierment)"
+        data-dd-action-name="Pay (POAP)"
+        {...rest}
       >
         Pay
       </Button>
@@ -155,20 +157,26 @@ const BuyPoapRequirement = ({ guildPoap, poapContract }: Props) => {
                   },
                 }}
               >
-                <SwitchNetworkButton />
+                {!account ? (
+                  <ConnectWalletButton />
+                ) : (
+                  <>
+                    <SwitchNetworkButton />
 
-                <Button
-                  size="lg"
-                  isLoading={payFeeLoadingText}
-                  isDisabled={isDisabled}
-                  colorScheme={!isDisabled ? "blue" : "gray"}
-                  loadingText={payFeeLoadingText}
-                  w="full"
-                  onClick={onPayFeeSubmit}
-                  data-dd-action-name="BuyPoapButton"
-                >
-                  {payButtonLabel}
-                </Button>
+                    <Button
+                      size="lg"
+                      isLoading={payFeeLoadingText}
+                      isDisabled={isDisabled}
+                      colorScheme={!isDisabled ? "blue" : "gray"}
+                      loadingText={payFeeLoadingText}
+                      w="full"
+                      onClick={onPayFeeSubmit}
+                      data-dd-action-name="BuyPoapButton"
+                    >
+                      {payButtonLabel}
+                    </Button>
+                  </>
+                )}
               </Stack>
             </Stack>
           </ModalFooter>
@@ -178,9 +186,9 @@ const BuyPoapRequirement = ({ guildPoap, poapContract }: Props) => {
   )
 }
 
-const BuyPassWrapper = ({ guildPoap, poapContract }: Props) => (
+const BuyPassWrapper = ({ guildPoap, poapContract, ...rest }: Props) => (
   <GuildCheckoutProvider>
-    <BuyPoapRequirement {...{ guildPoap, poapContract }} />
+    <BuyPoapRequirement {...{ guildPoap, poapContract }} {...rest} />
   </GuildCheckoutProvider>
 )
 

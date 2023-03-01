@@ -36,11 +36,10 @@ const MintPoapButton = forwardRef(
       onClose: onMintModalClose,
     } = useDisclosure()
 
-    const { onSubmit, isLoading, response, error } = useClaimPoap(poapId)
-    const mintingLink = `${response}?address=${account}`
+    const { onSubmit, response, ...rest } = useClaimPoap(poapId)
 
     const props = response
-      ? { as: "a", target: "_blank", href: mintingLink }
+      ? { as: "a", target: "_blank", href: `${response}?address=${account}` }
       : {
           onClick: () => {
             onSubmit()
@@ -53,53 +52,62 @@ const MintPoapButton = forwardRef(
         <Button ref={ref} rightIcon={<ArrowSquareOut />} {...buttonProps} {...props}>
           {children}
         </Button>
-        <Modal isOpen={isMintModalOpen} onClose={onMintModalClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalCloseButton />
-            <ModalHeader>Mint POAP</ModalHeader>
-            <ModalBody>
-              {isLoading ? (
-                <HStack spacing="6">
-                  <Center boxSize="16">
-                    <Spinner />
-                  </Center>
-                  <Text>Getting your minting link...</Text>
-                </HStack>
-              ) : response ? (
-                <HStack spacing={0}>
-                  <Icon
-                    as={CheckCircle}
-                    color="green.500"
-                    boxSize="16"
-                    weight="light"
-                  />
-                  <Box pl="6" w="calc(100% - var(--chakra-sizes-16))">
-                    <Text>{`You can mint your POAP on the link below:`}</Text>
-                    <Link
-                      mt={2}
-                      maxW="full"
-                      href={mintingLink}
-                      colorScheme="blue"
-                      isExternal
-                      fontWeight="semibold"
-                    >
-                      <Text as="span" noOfLines={1}>
-                        {mintingLink}
-                      </Text>
-                      <Icon as={ArrowSquareOut} />
-                    </Link>
-                  </Box>
-                </HStack>
-              ) : (
-                <ErrorAlert label={error} />
-              )}
-            </ModalBody>
-          </ModalContent>
-        </Modal>
+        <MintModal
+          isOpen={isMintModalOpen}
+          onClose={onMintModalClose}
+          response={response}
+          {...rest}
+        />
       </>
     )
   }
 )
 
+const MintModal = ({ isOpen, onClose, isLoading, response, error }) => {
+  const { account } = useWeb3React()
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalCloseButton />
+        <ModalHeader>Mint POAP</ModalHeader>
+        <ModalBody>
+          {isLoading ? (
+            <HStack spacing="6">
+              <Center boxSize="16">
+                <Spinner />
+              </Center>
+              <Text>Getting your minting link...</Text>
+            </HStack>
+          ) : response ? (
+            <HStack spacing={0}>
+              <Icon as={CheckCircle} color="green.500" boxSize="16" weight="light" />
+              <Box pl="6" w="calc(100% - var(--chakra-sizes-16))">
+                <Text>{`You can mint your POAP on the link below:`}</Text>
+                <Link
+                  mt={2}
+                  maxW="full"
+                  href={`${response}?address=${account}`}
+                  colorScheme="blue"
+                  isExternal
+                  fontWeight="semibold"
+                >
+                  <Text as="span" noOfLines={1}>
+                    {response}
+                  </Text>
+                  <Icon as={ArrowSquareOut} />
+                </Link>
+              </Box>
+            </HStack>
+          ) : (
+            <ErrorAlert label={error} />
+          )}
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  )
+}
+
+export { MintModal }
 export default MintPoapButton
