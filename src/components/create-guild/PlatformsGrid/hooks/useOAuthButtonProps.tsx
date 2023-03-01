@@ -7,7 +7,7 @@ import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useMemo } from "react"
-import { PlatformName } from "types"
+import { PlatformName, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
 type Props = {
@@ -34,7 +34,7 @@ const useOAuthButtonProps = ({ onSelection, platform }: Props) => {
       platformName === platform && !platformUserData?.readonly
   )
 
-  const { mutate: mutateGateables } = useGateables(platform)
+  const { mutate: mutateGateables } = useGateables(PlatformType[platform])
 
   const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
     (signedValidation) =>

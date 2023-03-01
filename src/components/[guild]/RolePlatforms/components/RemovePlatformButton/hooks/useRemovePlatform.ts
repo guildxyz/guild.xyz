@@ -7,10 +7,6 @@ import { useFieldArray, useFormContext, useFormState } from "react-hook-form"
 import fetcher from "utils/fetcher"
 import { useRolePlatform } from "../../RolePlatformProvider"
 
-type Data = {
-  removePlatformAccess: boolean
-}
-
 const useRemovePlatform = ({ onSuccess }: any) => {
   const { mutateGuild } = useGuild()
   const toast = useToast()
@@ -22,7 +18,7 @@ const useRemovePlatform = ({ onSuccess }: any) => {
     name: "rolePlatforms",
   })
 
-  const { mutate: mutateGateables } = useGateables(guildPlatform?.platformName)
+  const { mutate: mutateGateables } = useGateables(guildPlatform?.platformId)
 
   const submit = async (signedValidation: SignedValdation) =>
     fetcher(`/role/${roleId}/platform/${guildPlatformId}`, {

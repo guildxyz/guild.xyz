@@ -10,7 +10,7 @@ const useRemoveGuildPlatform = (guildPlatformId: number) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const { mutate: mutateGateables } = useGateables(
-    guildPlatforms?.find((gp) => gp.id === guildPlatformId)?.platformName
+    guildPlatforms?.find((gp) => gp.id === guildPlatformId)?.platformId
   )
 
   const submit = async (signedValidation: SignedValdation) =>
