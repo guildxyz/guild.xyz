@@ -17,6 +17,7 @@ import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetail
 import PoapVoiceForm from "requirements/PoapVoice/PoapVoiceForm"
 import PoapVoiceRequirementEditable from "requirements/PoapVoice/PoapVoiceRequirementEditable"
 import logo from "static/logo.svg"
+import { PlatformType } from "types"
 import useUpdatePoapRequirements from "../../hooks/useUpdatePoapRequirements"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import PoapSuccessCard from "../PoapSuccessCard"
@@ -28,7 +29,11 @@ const PoapRequirements = ({
 }: UseSubmitOptions): JSX.Element => {
   const toast = useToast()
   const { isSuperAdmin } = useUser()
-  const { poaps } = useGuild()
+  const { poaps, guildPlatforms } = useGuild()
+  const hasDiscord = guildPlatforms?.some(
+    (platform) => platform.platformId === PlatformType.DISCORD
+  )
+
   const { poapData } = useCreatePoapContext()
   const { poapEventDetails } = usePoapEventDetails()
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
@@ -126,7 +131,7 @@ const PoapRequirements = ({
             FormComponent={PoapPaymentForm}
           />
         )}
-        {!poapEventDetails?.voiceChannelId && (
+        {hasDiscord && !poapEventDetails?.voiceChannelId && (
           <AddPoapRequirement
             title="Voice participation"
             description="Users will have to be in a Discord voice channel at the time of the event"
