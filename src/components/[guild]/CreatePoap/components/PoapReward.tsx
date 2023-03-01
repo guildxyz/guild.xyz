@@ -26,6 +26,10 @@ type Props = {
   isInteractive?: boolean
 }
 
+/**
+ * This is copy-pasted from Reward and adjusted to work with legacy POAP logic. Will
+ * delete once POAP is a real reward
+ */
 const PoapReward = ({ poap, isExpired, isInteractive = true }: Props) => {
   const isMember = useIsMember()
   const { account } = useWeb3React()

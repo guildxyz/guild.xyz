@@ -26,7 +26,6 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import AccessIndicatorUI from "components/[guild]/RoleCard/components/AccessIndicator/components/AccessIndicatorUI"
-import PoapReward from "components/[guild]/RoleCard/components/PoapReward"
 import { ArrowSquareOut, Clock, EyeSlash, PencilSimple } from "phosphor-react"
 import { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
@@ -40,6 +39,7 @@ import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import parseDescription from "utils/parseDescription"
 import PoapAccessIndicator from "../PoapAccessIndicator"
 import PoapRequiementAccessIndicator from "../PoapRequirementAccessIndicator"
+import PoapReward from "../PoapReward"
 
 type Props = {
   guildPoap: GuildPoap
