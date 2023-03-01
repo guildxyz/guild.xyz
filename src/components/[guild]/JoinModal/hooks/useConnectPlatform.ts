@@ -1,4 +1,4 @@
-import { usePrevious } from "@chakra-ui/react"
+import { usePrevious, useToast } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
@@ -54,6 +54,7 @@ const useConnectPlatform = (
 
       return body
     })
+  const toast = useToast()
 
   const { onSubmit, isLoading, response } = useSubmitWithSign<{
     platformName: PlatformName
@@ -63,6 +64,11 @@ const useConnectPlatform = (
     onSuccess: () => {
       addDatadogAction("Successfully connected 3rd party account")
       mutateUser()
+      toast({
+        title: `Account Connected!`,
+        status: "success",
+        position: "top-right",
+      })
       onSuccess?.()
     },
     onError: (err) => {
