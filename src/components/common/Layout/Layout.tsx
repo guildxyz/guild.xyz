@@ -57,8 +57,14 @@ const Layout = ({
 
     const rect = childrenWrapper.current.getBoundingClientRect()
     setBgHeight(`${rect.top + (window?.scrollY ?? 0) + backgroundOffset}px`)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, description, childrenWrapper?.current, action])
+  }, [
+    title,
+    description,
+    background,
+    backgroundImage,
+    childrenWrapper?.current,
+    action,
+  ])
 
   const { colorMode } = useColorMode()
 

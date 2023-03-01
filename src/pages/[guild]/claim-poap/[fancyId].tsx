@@ -4,17 +4,15 @@ import {
   AlertIcon,
   AlertTitle,
   Box,
-  Center,
   Flex,
   Heading,
   HStack,
-  Icon,
-  IconButton,
   Img,
   SimpleGrid,
+  Skeleton,
   SkeletonCircle,
+  SkeletonText,
   Spacer,
-  Spinner,
   Stack,
   Tag,
   TagLeftIcon,
@@ -33,14 +31,14 @@ import JoinAndMintPoapButton from "components/[guild]/claim-poap/components/Join
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import PoapRequiementAccessIndicator from "components/[guild]/CreatePoap/components/PoapRequirementAccessIndicator"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
 import LogicDivider from "components/[guild]/LogicDivider"
+import { RequirementSkeleton } from "components/[guild]/Requirements/components/Requirement"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import PoapReward from "components/[guild]/RoleCard/components/PoapReward"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { ArrowLeft, Clock, PencilSimple } from "phosphor-react"
+import { ArrowLeft, Clock } from "phosphor-react"
 import { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
@@ -57,7 +55,6 @@ const Page = (): JSX.Element => {
 
   const { account } = useWeb3React()
   const { theme, urlName, imageUrl, name, poaps } = useGuild()
-  const { isAdmin } = useGuildPermission()
 
   const rawPoapFancyIdFromUrl = router.query.fancyId?.toString()
   const poapFancyIdFromUrl =
@@ -89,21 +86,25 @@ const Page = (): JSX.Element => {
   const correctPoap =
     poaps && !isLoading ? poaps.find((p) => p.fancyId === poap?.fancy_id) : true
 
-  const status =
-    timeDiff < 0
-      ? {
-          label: `Expired ${formatRelativeTimeFromNow(timeDiff * -1)} ago`,
-          color: "gray",
-        }
-      : isActive
-      ? {
-          label: `Claim ends in ${formatRelativeTimeFromNow(timeDiff)}`,
-          color: "purple",
-        }
-      : {
-          label: `Not active`,
-          color: "gray",
-        }
+  const status = !guildPoap
+    ? {
+        label: "Loading",
+        color: "gray",
+      }
+    : timeDiff < 0
+    ? {
+        label: `Expired ${formatRelativeTimeFromNow(timeDiff * -1)} ago`,
+        color: "gray",
+      }
+    : isActive
+    ? {
+        label: `Claim ends in ${formatRelativeTimeFromNow(timeDiff)}`,
+        color: "purple",
+      }
+    : {
+        label: `Not active`,
+        color: "gray",
+      }
 
   const requirementRightElement = isActive ? (
     account ? (
@@ -115,63 +116,51 @@ const Page = (): JSX.Element => {
     <></>
   )
 
-  const requirementComponents = guildPoap && [
-    ...(guildPoap?.poapContracts ?? []).map((poapContract) => (
-      <PoapPaymentRequirement
-        key={poapContract.id}
-        poapContract={poapContract}
-        guildPoap={guildPoap}
-        rightElement={
-          isActive && !hasPaid ? (
-            <BuyPoapRequirement
-              size="md"
-              borderRadius={"xl"}
-              h="10"
-              {...{ guildPoap: guildPoap, poapContract }}
-            />
-          ) : (
-            requirementRightElement
-          )
-        }
-      />
-    )),
-    ...(guildPoap?.poapRequirements ?? []).map((requirement: any, i) => (
-      <RequirementDisplayComponent
-        key={requirement.id}
-        requirement={{ ...requirement, id: requirement.requirementId }}
-        rightElement={requirementRightElement}
-      />
-    )),
-    ...(poapEventDetails?.voiceChannelId
-      ? [
-          <PoapVoiceRequirement
-            key="voice"
+  const requirementComponents = guildPoap
+    ? [
+        ...(guildPoap?.poapContracts ?? []).map((poapContract) => (
+          <PoapPaymentRequirement
+            key={poapContract.id}
+            poapContract={poapContract}
             guildPoap={guildPoap}
             rightElement={
-              isActive && account && !discordFromDb ? (
-                <ConnectDiscordButton />
+              isActive && !hasPaid ? (
+                <BuyPoapRequirement
+                  size="md"
+                  borderRadius={"xl"}
+                  h="10"
+                  {...{ guildPoap: guildPoap, poapContract }}
+                />
               ) : (
                 requirementRightElement
               )
             }
-          />,
-        ]
-      : []),
-  ]
-
-  /**
-   * If we mount Layout before we have theme data from useGuild, it won't update when
-   * the data gets available, so currently just showing a spinner until there's no
-   * data
-   */
-  if (!guildPoap)
-    return (
-      <Layout title="">
-        <Center minH={48}>
-          <Spinner />
-        </Center>
-      </Layout>
-    )
+          />
+        )),
+        ...(guildPoap?.poapRequirements ?? []).map((requirement: any, i) => (
+          <RequirementDisplayComponent
+            key={requirement.id}
+            requirement={{ ...requirement, id: requirement.requirementId }}
+            rightElement={requirementRightElement}
+          />
+        )),
+        ...(poapEventDetails?.voiceChannelId
+          ? [
+              <PoapVoiceRequirement
+                key="voice"
+                guildPoap={guildPoap}
+                rightElement={
+                  isActive && account && !discordFromDb ? (
+                    <ConnectDiscordButton />
+                  ) : (
+                    requirementRightElement
+                  )
+                }
+              />,
+            ]
+          : []),
+      ]
+    : [...Array(2)].map((i) => <RequirementSkeleton key={i} />)
 
   return (
     <>
@@ -189,7 +178,7 @@ const Page = (): JSX.Element => {
 
       <Layout
         title=""
-        background={theme?.color}
+        background={theme?.color ?? "gray.900"}
         backgroundImage={theme?.backgroundImage}
         maxWidth="container.xl"
       >
@@ -238,15 +227,17 @@ const Page = (): JSX.Element => {
                         />
                       </SkeletonCircle>
                       <Stack spacing="3">
-                        <Heading
-                          as="h3"
-                          fontSize={{ base: "xl", lg: "2xl" }}
-                          fontFamily="display"
-                          minW={0}
-                          overflowWrap={"break-word"}
-                        >
-                          {poap?.name ?? guildPoap?.fancyId}
-                        </Heading>
+                        <Skeleton isLoaded={!!guildPoap || !!poap}>
+                          <Heading
+                            as="h3"
+                            fontSize={{ base: "xl", lg: "2xl" }}
+                            fontFamily="display"
+                            minW={0}
+                            overflowWrap={"break-word"}
+                          >
+                            {poap?.name ?? guildPoap?.fancyId ?? "Loading POAP..."}
+                          </Heading>
+                        </Skeleton>
                         <Wrap>
                           <Tag colorScheme={status.color}>
                             <TagLeftIcon as={Clock} mr="1.5" />
@@ -255,27 +246,18 @@ const Page = (): JSX.Element => {
                         </Wrap>
                       </Stack>
                     </HStack>
-                    {isAdmin && (
-                      <>
-                        <Spacer m="0 !important" />
-                        <Tooltip label="Soon">
-                          <IconButton
-                            icon={<Icon as={PencilSimple} />}
-                            size="sm"
-                            rounded="full"
-                            aria-label="Edit role"
-                            isDisabled
-                          />
-                        </Tooltip>
-                      </>
-                    )}
                   </HStack>
 
-                  {poap?.description && (
-                    <Box mb={6} wordBreak="break-word">
-                      {parseDescription(poap?.description)}
-                    </Box>
-                  )}
+                  <SkeletonText
+                    noOfLines={3}
+                    skeletonHeight={4}
+                    isLoaded={!isLoading}
+                    speed={0.8}
+                    mb={{ base: 6, md: 8 }}
+                    wordBreak="break-word"
+                  >
+                    {parseDescription(poap?.description)}
+                  </SkeletonText>
 
                   <Box mt="auto">
                     <PoapReward
