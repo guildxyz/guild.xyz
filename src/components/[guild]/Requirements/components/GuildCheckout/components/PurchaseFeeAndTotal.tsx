@@ -52,8 +52,24 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
   const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
   const calculatedGasFee = isNativeCurrency ? estimatedGasInFloat ?? 0 : 0
 
-  const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) < 0.001
-  const isTooSmallPrice = parseFloat(estimatedPriceInSellToken?.toFixed(3)) < 0.001
+  // TODO: we'll need to rewrite this logic once we'll support payments with ERC20 tokens!
+  const feeSum = Number(
+    ((calculatedGasFee ?? 0) + (guildFeeInSellToken ?? 0))?.toFixed(3)
+  )
+  const estimatedPriceSum = Number(
+    (
+      estimatedPriceInSellToken +
+      (calculatedGasFee ?? 0) +
+      (guildFeeInSellToken ?? 0)
+    )?.toFixed(3)
+  )
+  const maxPriceSum = Number(
+    (
+      priceInSellToken +
+      (calculatedGasFee ?? 0) +
+      (guildFeeInSellToken ?? 0)
+    )?.toFixed(3)
+  )
 
   return (
     <Stack spacing={3}>
@@ -87,11 +103,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
                 "Couldn't calculate"
               ) : pickedCurrency ? (
                 <>
-                  {isTooSmallFee
-                    ? "< 0.001"
-                    : (
-                        (calculatedGasFee ?? 0) + (guildFeeInSellToken ?? 0)
-                      )?.toFixed(3)}{" "}
+                  {feeSum < 0.001 ? "< 0.001 " : `${feeSum} `}
                   {symbol}
                 </>
               ) : (
@@ -122,13 +134,9 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
                 <Text as="span" fontWeight="semibold">
                   {estimatedPriceInSellToken && guildFeeInSellToken
                     ? `${
-                        isTooSmallPrice
-                          ? "< 0.001"
-                          : (
-                              estimatedPriceInSellToken +
-                              guildFeeInSellToken +
-                              calculatedGasFee
-                            )?.toFixed(3)
+                        estimatedPriceSum < 0.001
+                          ? "< 0.001 "
+                          : `${estimatedPriceSum} `
                       } `
                     : "0.00 "}
                   {symbol}
@@ -139,14 +147,10 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
         </HStack>
       </Stack>
 
-      {priceInSellToken && guildFeeInSellToken && !isTooSmallPrice && (
+      {priceInSellToken && guildFeeInSellToken && (
         <HStack justifyContent="end" spacing={1}>
           <Text as="span" colorScheme="gray" fontSize="sm">
-            {`Max: ${(
-              priceInSellToken +
-              guildFeeInSellToken +
-              (calculatedGasFee ?? 0)
-            )?.toFixed(3)} ${symbol}`}
+            {`Max: ${maxPriceSum} ${symbol}`}
           </Text>
 
           <Tooltip
