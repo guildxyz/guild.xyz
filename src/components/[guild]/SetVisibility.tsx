@@ -36,8 +36,10 @@ export const visibilityData = {
   },
 }
 
+type FilterableEntity = "role" | "requirement" | "reward"
+
 const SetVisibility = (props: {
-  entityType: "role" | "requirement" | "reward"
+  entityType: FilterableEntity
   fieldBase?: string
 }) => {
   const parentField = props.fieldBase ?? ""
