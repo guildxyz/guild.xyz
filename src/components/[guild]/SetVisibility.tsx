@@ -70,7 +70,7 @@ const visibilityDataFromRoleVisibility: Record<
       tooltipLabel: (
         <>
           Make the role <VisibilityTag visibility={Visibility.PUBLIC} /> first.{" "}
-          Requirements and rewards can't behave as{" "}
+          Requirements and rewards can't be{" "}
           <VisibilityTag visibility={Visibility.PUBLIC} /> in a{" "}
           <VisibilityTag visibility={Visibility.PRIVATE} /> role
         </>
@@ -81,7 +81,7 @@ const visibilityDataFromRoleVisibility: Record<
       tooltipLabel: (
         <>
           Make the role <VisibilityTag visibility={Visibility.PUBLIC} /> first.{" "}
-          Requirements and rewards can't behave as{" "}
+          Requirements and rewards can't be{" "}
           <VisibilityTag visibility={Visibility.PUBLIC} /> in a{" "}
           <VisibilityTag visibility={Visibility.HIDDEN} /> role
         </>
@@ -94,7 +94,7 @@ const visibilityDataFromRoleVisibility: Record<
       tooltipLabel: (
         <>
           Make the role <VisibilityTag visibility={Visibility.PRIVATE} /> first.
-          Requirements and rewards can't behave as{" "}
+          Requirements and rewards can't be{" "}
           <VisibilityTag visibility={Visibility.PRIVATE} /> in a{" "}
           <VisibilityTag visibility={Visibility.HIDDEN} /> role
         </>
