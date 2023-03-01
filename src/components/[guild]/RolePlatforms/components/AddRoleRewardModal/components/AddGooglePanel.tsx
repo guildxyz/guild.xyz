@@ -1,5 +1,6 @@
 import GoogleGuildSetup from "components/common/GoogleGuildSetup"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
+import { Visibility } from "types"
 
 type Props = {
   onSuccess: () => void
@@ -30,6 +31,7 @@ const AddGooglePanel = ({ onSuccess, skipSettings }: Props): JSX.Element => {
             guildPlatform: { ...guildPlatformData, platformName: "GOOGLE" },
             platformRoleData,
             isNew: true,
+            visibility: Visibility.PUBLIC,
           })
           onSuccess?.()
         }}

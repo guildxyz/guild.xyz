@@ -1,6 +1,7 @@
 import Button from "components/common/Button"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
+import { Visibility } from "types"
 
 type Props = {
   onSuccess: () => void
@@ -35,6 +36,7 @@ const AddTelegramPanel = ({ onSuccess }: Props) => {
                 platformGuildId,
               },
               isNew: true,
+              visibility: Visibility.PUBLIC,
             })
             onSuccess()
           }}

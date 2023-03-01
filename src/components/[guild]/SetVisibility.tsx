@@ -45,13 +45,17 @@ const SetVisibility = (props: {
   const parentField = props.fieldBase ?? ""
   const { isOpen, onClose, onOpen } = useDisclosure()
 
+  const buttonRef = useRef()
+
   const currentVisibility: Visibility = useWatch({
     name: `${parentField}.visibility`,
   })
 
-  const Icon = visibilityData[currentVisibility ?? Visibility.PUBLIC].Icon
+  if (!currentVisibility) {
+    return null
+  }
 
-  const buttonRef = useRef()
+  const Icon = visibilityData[currentVisibility].Icon
 
   return (
     <>

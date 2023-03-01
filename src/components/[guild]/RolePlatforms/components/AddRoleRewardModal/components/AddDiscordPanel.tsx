@@ -1,5 +1,6 @@
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
+import { Visibility } from "types"
 
 type Props = {
   onSuccess: () => void
@@ -35,6 +36,7 @@ const AddDiscordPanel = ({ onSuccess }: Props) => {
             guildPlatform: { platformName: "DISCORD", platformGuildId },
             isNew: true,
             platformRoleId: null,
+            visibility: Visibility.PUBLIC,
           })
           onSuccess()
         }}

@@ -1,5 +1,6 @@
 import GitHubGuildSetup from "components/common/GitHubGuildSetup"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
+import { Visibility } from "types"
 
 type Props = {
   onSuccess: () => void
@@ -26,6 +27,7 @@ const AddGithubPanel = ({ onSuccess }: Props) => {
               platformGuildId: encodeURIComponent(platformGuildId),
             },
             isNew: true,
+            visibility: Visibility.PUBLIC,
           })
           onSuccess()
         }}

@@ -4,7 +4,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
 import platforms from "platforms"
 import { useFieldArray } from "react-hook-form"
-import { PlatformType } from "types"
+import { PlatformType, Visibility } from "types"
 import PlatformCard from "../../PlatformCard"
 
 const SelectExistingPlatform = ({ onClose }) => {
@@ -49,6 +49,7 @@ const SelectExistingPlatform = ({ onClose }) => {
                     isNew: true,
                     platformRoleData: {},
                     platformRoleId: null,
+                    visibility: Visibility.PUBLIC,
                   })
                   onClose()
                 }}
