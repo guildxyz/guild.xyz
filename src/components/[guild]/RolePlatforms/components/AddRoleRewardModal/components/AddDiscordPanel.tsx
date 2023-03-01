@@ -24,6 +24,8 @@ const AddDiscordPanel = ({ onSuccess }: Props) => {
     name: `platformGuildId`,
   })
 
+  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
+
   return (
     <FormProvider {...methods}>
       <DiscordGuildSetup
@@ -36,7 +38,7 @@ const AddDiscordPanel = ({ onSuccess }: Props) => {
             guildPlatform: { platformName: "DISCORD", platformGuildId },
             isNew: true,
             platformRoleId: null,
-            visibility: Visibility.PUBLIC,
+            visibility: roleVisibility,
           })
           onSuccess()
         }}

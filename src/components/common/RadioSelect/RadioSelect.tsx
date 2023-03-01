@@ -5,15 +5,16 @@ import {
   UseRadioGroupProps,
   VStack,
 } from "@chakra-ui/react"
-import React, { PropsWithChildren } from "react"
+import React, { PropsWithChildren, ReactNode } from "react"
 import RadioOption from "./components/RadioOption"
 
-type Option = PropsWithChildren<{
+export type Option = PropsWithChildren<{
   value: any
   title: string
   description?: string
   icon?: React.FC
-  disabled?: string
+  disabled?: string | boolean
+  tooltipLabel?: ReactNode
   RightComponent?: () => JSX.Element
 }>
 

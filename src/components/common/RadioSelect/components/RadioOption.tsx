@@ -7,6 +7,7 @@ import {
   Icon,
   Tag,
   Text,
+  Tooltip,
   useColorMode,
   useRadio,
 } from "@chakra-ui/react"
@@ -18,45 +19,57 @@ const RadioOption = (props) => {
   const input = getInputProps()
   const checkbox = getCheckboxProps()
 
-  const { title, description, icon, disabled, colorScheme, isChecked, children } =
-    props
+  const {
+    title,
+    description,
+    icon,
+    disabled,
+    colorScheme,
+    isChecked,
+    children,
+    tooltipLabel,
+  } = props
 
   const { colorMode } = useColorMode()
 
   if (disabled)
     return (
-      <Button
-        as="fieldset"
-        w="full"
-        h="auto"
-        p="0"
-        flexDir="column"
-        alignItems="stretch"
-        borderRadius="none"
-        _first={{ borderTopRadius: "xl" }}
-        _last={{ borderBottomRadius: "xl" }}
-        boxShadow="none !important"
-        _active={{ bg: null }}
-        disabled
-      >
-        <Flex as="label" py="4" px="5" alignItems="center">
-          {props?.RightComponent && <props.RightComponent />}
-          <Box whiteSpace="break-spaces" w="full">
-            <Heading size="sm">
-              {title}
-              <Tag colorScheme="gray" size="sm" ml="3" mt="-1px">
-                {disabled}
-              </Tag>
-            </Heading>
-            {description && (
-              <Text fontWeight="normal" colorScheme="gray" mt="1">
-                {description}
-              </Text>
-            )}
-          </Box>
-          <Icon as={icon} width="1.2em" height="1.2em" ml="6" />
-        </Flex>
-      </Button>
+      <Tooltip label={tooltipLabel}>
+        <Button
+          as="fieldset"
+          w="full"
+          h="auto"
+          p="0"
+          flexDir="column"
+          alignItems="stretch"
+          borderRadius="none"
+          _first={{ borderTopRadius: "xl" }}
+          _last={{ borderBottomRadius: "xl" }}
+          boxShadow="none !important"
+          _active={{ bg: null }}
+          disabled
+        >
+          <Flex as="label" py="4" px="5" alignItems="center">
+            {props?.RightComponent && <props.RightComponent />}
+            <Box whiteSpace="break-spaces" w="full">
+              <Heading size="sm">
+                {title}
+                {typeof disabled === "string" && (
+                  <Tag colorScheme="gray" size="sm" ml="3" mt="-1px">
+                    {disabled}
+                  </Tag>
+                )}
+              </Heading>
+              {description && (
+                <Text fontWeight="normal" colorScheme="gray" mt="1">
+                  {description}
+                </Text>
+              )}
+            </Box>
+            {icon && <Icon as={icon} width="1.2em" height="1.2em" ml="6" />}
+          </Flex>
+        </Button>
+      </Tooltip>
     )
 
   return (

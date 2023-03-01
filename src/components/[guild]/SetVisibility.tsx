@@ -1,4 +1,5 @@
 import {
+  ButtonProps,
   Circle,
   HStack,
   Modal,
@@ -13,12 +14,20 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import RadioSelect from "components/common/RadioSelect"
+import { Option } from "components/common/RadioSelect/RadioSelect"
 import { Eye, EyeClosed, EyeSlash, IconProps } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes, useRef } from "react"
-import { useController, useWatch } from "react-hook-form"
+import { useController, useFormContext, useWatch } from "react-hook-form"
 import { Visibility } from "types"
 
-export const visibilityData = {
+export const visibilityData: Record<
+  Visibility,
+  Partial<Option> & {
+    Icon: React.ForwardRefExoticComponent<
+      IconProps & React.RefAttributes<SVGSVGElement>
+    >
+  }
+> = {
   [Visibility.PUBLIC]: {
     title: "Public",
     Icon: Eye,
@@ -33,6 +42,65 @@ export const visibilityData = {
     title: "Hidden",
     Icon: EyeClosed,
     description: "Only visible to admins",
+  },
+}
+
+const VisibilityTag = ({ visibility }: { visibility: Visibility }) => {
+  const { Icon, title } = visibilityData[visibility]
+
+  return (
+    <Button
+      size={"xs"}
+      colorScheme={"blackAlpha" as ButtonProps["colorScheme"]}
+      leftIcon={<Icon />}
+      isDisabled
+      opacity={"1 !important"}
+    >
+      {title}
+    </Button>
+  )
+}
+
+const visibilityDataFromRoleVisibility: Record<
+  Exclude<Visibility, "HIDDEN">,
+  Partial<Record<Exclude<Visibility, "PUBLIC">, Partial<Option>>>
+> = {
+  [Visibility.PUBLIC]: {
+    [Visibility.PRIVATE]: {
+      tooltipLabel: (
+        <>
+          Make the role <VisibilityTag visibility={Visibility.PUBLIC} /> first.{" "}
+          Requirements and rewards can't behave as{" "}
+          <VisibilityTag visibility={Visibility.PUBLIC} /> in a{" "}
+          <VisibilityTag visibility={Visibility.PRIVATE} /> role
+        </>
+      ),
+      disabled: true,
+    },
+    [Visibility.HIDDEN]: {
+      tooltipLabel: (
+        <>
+          Make the role <VisibilityTag visibility={Visibility.PUBLIC} /> first.{" "}
+          Requirements and rewards can't behave as{" "}
+          <VisibilityTag visibility={Visibility.PUBLIC} /> in a{" "}
+          <VisibilityTag visibility={Visibility.HIDDEN} /> role
+        </>
+      ),
+      disabled: true,
+    },
+  },
+  [Visibility.PRIVATE]: {
+    [Visibility.HIDDEN]: {
+      tooltipLabel: (
+        <>
+          Make the role <VisibilityTag visibility={Visibility.PRIVATE} /> first.
+          Requirements and rewards can't behave as{" "}
+          <VisibilityTag visibility={Visibility.PRIVATE} /> in a{" "}
+          <VisibilityTag visibility={Visibility.HIDDEN} /> role
+        </>
+      ),
+      disabled: true,
+    },
   },
 }
 
@@ -102,6 +170,39 @@ const SetVisibilityModal = ({
     onClose()
   }
 
+  const requirements = useWatch({ name: "requirements" })
+  const rolePlatforms = useWatch({ name: "rolePlatforms" })
+  const { setValue } = useFormContext()
+  const roleVisibility = useWatch({ name: ".visibility" })
+
+  const mapToAtLeastPrivate = (entities, base) =>
+    entities.forEach(({ visibility }, index) => {
+      if (visibility === Visibility.PUBLIC) {
+        setValue(`${base}.${index}.visibility`, Visibility.PRIVATE)
+      }
+    })
+
+  const mapToHidden = (entities, base) =>
+    entities.forEach(({ visibility }, index) => {
+      if (visibility !== Visibility.HIDDEN) {
+        setValue(`${base}.${index}.visibility`, Visibility.HIDDEN)
+      }
+    })
+
+  const onChange = (newValue: Visibility) => {
+    if (entityType === "role") {
+      if (newValue === Visibility.PRIVATE) {
+        mapToAtLeastPrivate(requirements, "requirements")
+        mapToAtLeastPrivate(rolePlatforms, "rolePlatforms")
+      } else if (newValue === Visibility.HIDDEN) {
+        mapToHidden(requirements, "requirements")
+        mapToHidden(rolePlatforms, "rolePlatforms")
+      }
+    }
+
+    setValue(visibilityField, newValue)
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={saveAndClose} size="lg" {...modalProps}>
       <ModalOverlay />
@@ -113,13 +214,17 @@ const SetVisibilityModal = ({
           <RadioSelect
             colorScheme="indigo"
             options={Object.entries(visibilityData).map(
-              ([value, { Icon, ...rest }]) => ({
+              ([value, { Icon, ...options }]) => ({
                 value,
-                ...rest,
+                ...options,
                 RightComponent: getLeftSideIcon(Icon),
+                ...(entityType === "role"
+                  ? {}
+                  : visibilityDataFromRoleVisibility[value]?.[roleVisibility] ?? {}),
               })
             )}
             {...field}
+            onChange={onChange}
           />
         </ModalBody>
 

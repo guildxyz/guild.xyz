@@ -20,6 +20,8 @@ const AddTelegramPanel = ({ onSuccess }: Props) => {
     control: methods.control,
   })
 
+  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
+
   const { append } = useFieldArray({
     name: "rolePlatforms",
   })
@@ -36,7 +38,7 @@ const AddTelegramPanel = ({ onSuccess }: Props) => {
                 platformGuildId,
               },
               isNew: true,
-              visibility: Visibility.PUBLIC,
+              visibility: roleVisibility,
             })
             onSuccess()
           }}
