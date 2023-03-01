@@ -1,6 +1,5 @@
 import {
   Circle,
-  FormControlProps,
   HStack,
   Modal,
   ModalBody,
@@ -9,12 +8,13 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  ModalProps,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import RadioSelect from "components/common/RadioSelect"
 import { Eye, EyeClosed, EyeSlash, IconProps } from "phosphor-react"
-import { ForwardRefExoticComponent, RefAttributes } from "react"
+import { ForwardRefExoticComponent, RefAttributes, useRef } from "react"
 import { useController, useWatch } from "react-hook-form"
 import { Visibility } from "types"
 
@@ -51,9 +51,11 @@ const SetVisibility = (props: {
 
   const Icon = visibilityData[currentVisibility ?? Visibility.PUBLIC].Icon
 
+  const buttonRef = useRef()
+
   return (
     <>
-      <Button ml={3} size="xs" leftIcon={<Icon />} onClick={onOpen}>
+      <Button ml={3} size="xs" leftIcon={<Icon />} onClick={onOpen} ref={buttonRef}>
         {visibilityData[currentVisibility].title}
       </Button>
 
@@ -62,6 +64,7 @@ const SetVisibility = (props: {
         fieldBase={parentField}
         isOpen={isOpen}
         onClose={onClose}
+        finalFocusRef={buttonRef}
       />
     </>
   )
@@ -81,12 +84,13 @@ const SetVisibilityModal = ({
   fieldBase = "",
   isOpen,
   onClose,
+  ...modalProps
 }: {
   entityType: "role" | "requirement" | "reward"
   fieldBase?: string
   isOpen: boolean
   onClose: () => void
-} & FormControlProps) => {
+} & Partial<ModalProps>) => {
   const visibilityField = `${fieldBase}.visibility`
   const { field } = useController({ name: visibilityField })
 
@@ -95,7 +99,7 @@ const SetVisibilityModal = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={saveAndClose} size="lg">
+    <Modal isOpen={isOpen} onClose={saveAndClose} size="lg" {...modalProps}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Change {entityType} visibility</ModalHeader>
