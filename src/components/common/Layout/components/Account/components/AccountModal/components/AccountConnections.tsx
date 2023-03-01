@@ -72,15 +72,13 @@ const AccountConnections = () => {
           <Text colorScheme={"gray"}>No linked social accounts yet</Text>
         )}
       </Section>
-      <Section title="Link more social accounts">
-        {isLoading ? (
-          <Spinner />
-        ) : (
-          missingPlatforms?.map((platform) => (
+      {missingPlatforms.length > 0 && (
+        <Section title="Link more social accounts">
+          {missingPlatforms?.map((platform) => (
             <LinkMoreSocialAccount key={platform} platformName={platform} />
-          ))
-        )}
-      </Section>
+          ))}
+        </Section>
+      )}
       <Section
         title="Linked addresses"
         titleRightElement={

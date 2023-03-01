@@ -76,7 +76,16 @@ type NFT = {
   slug: string
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE" | "POAP"
+export const platformNames = [
+  "TELEGRAM",
+  "DISCORD",
+  "GITHUB",
+  "TWITTER",
+  "GOOGLE",
+  "POAP",
+] as const
+
+type PlatformName = (typeof platformNames)[number]
 
 type PlatformUserData = {
   acessToken?: string

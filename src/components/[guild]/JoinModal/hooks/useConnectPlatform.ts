@@ -1,9 +1,10 @@
-import { usePrevious, useToast } from "@chakra-ui/react"
+import { usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import useToast from "hooks/useToast"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
@@ -54,8 +55,8 @@ const useConnectPlatform = (
 
       return body
     })
-  const toast = useToast()
 
+  const toast = useToast()
   const { onSubmit, isLoading, response } = useSubmitWithSign<{
     platformName: PlatformName
     authData: any
@@ -67,7 +68,6 @@ const useConnectPlatform = (
       toast({
         title: `Account Connected!`,
         status: "success",
-        position: "top-right",
       })
       onSuccess?.()
     },
