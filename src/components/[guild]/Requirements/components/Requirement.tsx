@@ -90,15 +90,14 @@ const Requirement = ({
           <Text wordBreak="break-word">
             {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
             {children}
+            {fieldRoot ? (
+              <SetVisibility ml={2} entityType="requirement" fieldBase={fieldRoot} />
+            ) : (
+              <Visibility
+                entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
+              />
+            )}
           </Text>
-
-          {fieldRoot ? (
-            <SetVisibility entityType="requirement" fieldBase={fieldRoot} />
-          ) : (
-            <Visibility
-              entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
-            />
-          )}
         </HStack>
 
         {footer}

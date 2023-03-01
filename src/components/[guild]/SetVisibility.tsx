@@ -106,11 +106,15 @@ const visibilityDataFromRoleVisibility: Record<
 
 type FilterableEntity = "role" | "requirement" | "reward"
 
-const SetVisibility = (props: {
+const SetVisibility = ({
+  entityType,
+  fieldBase,
+  ...buttonProps
+}: {
   entityType: FilterableEntity
   fieldBase?: string
-}) => {
-  const parentField = props.fieldBase ?? ""
+} & ButtonProps) => {
+  const parentField = fieldBase ?? ""
   const { isOpen, onClose, onOpen } = useDisclosure()
 
   const buttonRef = useRef()
@@ -127,12 +131,19 @@ const SetVisibility = (props: {
 
   return (
     <>
-      <Button ml={3} size="xs" leftIcon={<Icon />} onClick={onOpen} ref={buttonRef}>
+      <Button
+        ml={3}
+        size="xs"
+        leftIcon={<Icon />}
+        onClick={onOpen}
+        ref={buttonRef}
+        {...buttonProps}
+      >
         {visibilityData[currentVisibility].title}
       </Button>
 
       <SetVisibilityModal
-        {...props}
+        entityType={entityType}
         fieldBase={parentField}
         isOpen={isOpen}
         onClose={onClose}
