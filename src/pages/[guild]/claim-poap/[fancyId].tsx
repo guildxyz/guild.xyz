@@ -32,7 +32,6 @@ import ConnectWalletButton from "components/[guild]/claim-poap/components/Connec
 import JoinAndMintPoapButton from "components/[guild]/claim-poap/components/JoinAndMintPoapButton"
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import PoapRequiementAccessIndicator from "components/[guild]/CreatePoap/components/PoapRequirementAccessIndicator"
-import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
@@ -70,7 +69,6 @@ const Page = (): JSX.Element => {
 
   const { poap, isLoading } = usePoap(poapFancyIdFromUrl)
 
-  const { poapLinks } = usePoapLinks(poap?.id)
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
   const {
     data: { access, hasPaid },
@@ -79,8 +77,7 @@ const Page = (): JSX.Element => {
   const timeDiff = guildPoap?.expiryDate * 1000 - Date.now()
 
   const isActive = useMemo(
-    () =>
-      guildPoap?.activated && poapLinks?.total > poapLinks?.claimed && timeDiff > 0,
+    () => guildPoap?.activated && timeDiff > 0,
     [guildPoap, timeDiff]
   )
 
