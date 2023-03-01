@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import RadioSelect from "components/common/RadioSelect"
-import { GlobeHemisphereWest, IconProps, LockSimple, UserPlus } from "phosphor-react"
+import { Eye, EyeClosed, EyeSlash, IconProps } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { Visibility } from "types"
@@ -21,18 +21,18 @@ import { Visibility } from "types"
 export const visibilityData = {
   [Visibility.PUBLIC]: {
     title: "Public",
-    Icon: GlobeHemisphereWest,
+    Icon: Eye,
     description: "Visible to everyone",
   },
   [Visibility.PRIVATE]: {
     title: "Private",
-    Icon: UserPlus,
+    Icon: EyeSlash,
     description: "Only visible to role holders",
   },
   [Visibility.HIDDEN]: {
     title: "Hidden",
-    Icon: LockSimple,
-    description: "Only visible to you and other admins of the guild",
+    Icon: EyeClosed,
+    description: "Only visible to admins",
   },
 }
 
