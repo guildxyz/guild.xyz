@@ -14,7 +14,6 @@ import Requirement, {
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { ArrowSquareOut } from "phosphor-react"
-
 import pluralize from "utils/pluralize"
 import SnapshotSpaceLink from "./components/SnapshotSpaceLink"
 import StrategyParamsTable from "./components/StrategyParamsTable"

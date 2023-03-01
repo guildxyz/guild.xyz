@@ -2,33 +2,26 @@ import { FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import RelativeTimeInput from "components/common/RelativeTimeInput"
 import { useFormState } from "react-hook-form"
+import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 
-type Props = {
-  baseFieldPath: string
-}
-
-const TwitterAccountAgeRelative = ({ baseFieldPath }: Props): JSX.Element => {
+const PolygonIdProofAge = ({ baseFieldPath }: RequirementFormProps) => {
   const { errors } = useFormState()
 
   return (
-    <FormControl
-      isRequired
-      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
-    >
-      <FormLabel>Minimum account age</FormLabel>
+    <FormControl>
+      <FormLabel>Maximum proof age</FormLabel>
 
       <RelativeTimeInput
-        fieldName={`${baseFieldPath}.data.minAmount`}
+        fieldName={`${baseFieldPath}.data.maxAmount`}
         checkForTouched="data"
-        isRequired
       />
 
       <FormErrorMessage>
-        {parseFromObject(errors, baseFieldPath).data?.minAmount?.message}
+        {parseFromObject(errors, baseFieldPath).data?.maxAmount?.message}
       </FormErrorMessage>
     </FormControl>
   )
 }
 
-export default TwitterAccountAgeRelative
+export default PolygonIdProofAge
