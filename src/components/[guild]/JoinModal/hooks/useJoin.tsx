@@ -10,7 +10,7 @@ import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
-import { mutate } from "swr"
+import { mutate, unstable_serialize } from "swr"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 
@@ -81,9 +81,16 @@ const useJoin = (onSuccess?: () => void) => {
 
       addDatadogAction(`Successfully joined a guild`)
 
-      mutateOptionalAuthSWRKey(`/user/membership/${account}`)
-      // show user in guild's members
-      mutate(`/guild/${router.query.guild}`)
+      setTimeout(() => {
+        mutateOptionalAuthSWRKey(`/user/membership/${account}`)
+        // show user in guild's members
+        mutate(
+          unstable_serialize([
+            `/guild/${router.query.guild}`,
+            { method: "GET", body: {} },
+          ])
+        )
+      }, 800)
 
       toastIdRef.current = toast({
         title: `Successfully joined guild`,
