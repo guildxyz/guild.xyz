@@ -173,6 +173,8 @@ type Requirement = {
   // Props used inside the forms on the UI
   nftRequirementType?: string
   balancyDecimals?: number
+  createdAt?: string
+  updatedAt?: string
 }
 
 type RolePlatform = {
