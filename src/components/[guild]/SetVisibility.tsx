@@ -14,8 +14,8 @@ import {
 import Button from "components/common/Button"
 import RadioSelect from "components/common/RadioSelect"
 import { Eye, EyeClosed, EyeSlash, IconProps } from "phosphor-react"
-import { ForwardRefExoticComponent, RefAttributes, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { ForwardRefExoticComponent, RefAttributes } from "react"
+import { useController, useWatch } from "react-hook-form"
 import { Visibility } from "types"
 
 export const visibilityData = {
@@ -88,13 +88,9 @@ const SetVisibilityModal = ({
   onClose: () => void
 } & FormControlProps) => {
   const visibilityField = `${fieldBase}.visibility`
-  const { setValue } = useFormContext()
-  const actualVisibility = useWatch({ name: visibilityField })
-  const [localVisibility, setLocalVisibility] =
-    useState<Visibility>(actualVisibility)
+  const { field } = useController({ name: visibilityField })
 
   const saveAndClose = () => {
-    setValue(visibilityField, localVisibility, { shouldValidate: false })
     onClose()
   }
 
@@ -108,31 +104,19 @@ const SetVisibilityModal = ({
         <ModalBody>
           <RadioSelect
             colorScheme="indigo"
-            value={localVisibility}
-            onChange={(newVisibility) =>
-              setLocalVisibility(newVisibility as Visibility)
-            }
             options={Object.entries(visibilityData).map(
-              ([visibility, { Icon, ...rest }]) => ({
-                value: visibility,
+              ([value, { Icon, ...rest }]) => ({
+                value,
                 ...rest,
                 RightComponent: getLeftSideIcon(Icon),
               })
             )}
+            {...field}
           />
         </ModalBody>
 
         <ModalFooter>
           <HStack justifyContent={"end"}>
-            <Button
-              variant={"ghost"}
-              onClick={() => {
-                setLocalVisibility(Visibility.PUBLIC)
-                onClose()
-              }}
-            >
-              Cancel
-            </Button>
             <Button colorScheme={"green"} onClick={saveAndClose}>
               Done
             </Button>
