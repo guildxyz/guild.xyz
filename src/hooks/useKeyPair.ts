@@ -142,7 +142,7 @@ const setKeyPair = async ({
   await mutate(`/user/${account}`)
   if (shouldSendLink) {
     await mutate(
-      unstable_serialize([`/user/details/${account}`, { method: "POST", body: {} }])
+      unstable_serialize([`/user/${account}`, { method: "GET", body: {} }])
     )
   }
   await mutateKeyPair()
@@ -281,10 +281,7 @@ const useKeyPair = () => {
       onSuccess: ([newKeyPair, shouldDeleteUserId]) => {
         setTimeout(() => {
           mutate(
-            unstable_serialize([
-              `/user/details/${account}`,
-              { method: "POST", body: {} },
-            ])
+            unstable_serialize([`/user/${account}`, { method: "GET", body: {} }])
           ).then(() =>
             setTimeout(() => {
               mutate(unstable_serialize(["delegateCashVaults", user?.id])).then(
