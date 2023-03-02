@@ -5,22 +5,22 @@ import {
   HStack,
   SimpleGrid,
   Spacer,
-  Tag,
   Text,
   useColorMode,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
+import { Question } from "phosphor-react"
 import { memo } from "react"
-import { Role } from "types"
+import { Role, Visibility as VisibilityType } from "types"
 import parseDescription from "utils/parseDescription"
 import useGuildPermission from "../hooks/useGuildPermission"
 import RoleRequirements from "../Requirements"
 import Visibility from "../Visibility"
 import AccessIndicator from "./components/AccessIndicator"
 import MemberCount from "./components/MemberCount"
-import Reward from "./components/Reward"
+import Reward, { RewardDisplay } from "./components/Reward"
 
 type Props = {
   role: Role
@@ -106,10 +106,11 @@ const RoleCard = memo(({ role }: Props) => {
                 role={role}
               />
             ))}
-            {!!role.hiddenRewards && (
-              <Tag mt={3} size={"sm"}>
-                + some extra hidden rewards
-              </Tag>
+            {role.hiddenRewards && (
+              <RewardDisplay
+                label={"Some secret rewards"}
+                icon={<Question size={25} />}
+              />
             )}
           </Box>
         </Flex>
