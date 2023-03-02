@@ -20,6 +20,8 @@ const PoapRewardCardMenu = ({ guildPoap }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { poap } = usePoap(guildPoap?.fancyId)
 
+  if (!poap || !guildPoap) return null
+
   return (
     <>
       <Menu placement="bottom-end" closeOnSelect={false}>
