@@ -47,6 +47,12 @@ const RoleCard = memo(({ role }: Props) => {
       onClick={() => {
         if (window.location.hash === `#role-${role.id}`) window.location.hash = "!"
       }}
+      {...(role.visibility === VisibilityType.HIDDEN
+        ? {
+            borderWidth: 2,
+            borderStyle: "dashed",
+          }
+        : {})}
     >
       <SimpleGrid columns={{ base: 1, md: 2 }}>
         <Flex
