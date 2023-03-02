@@ -1,15 +1,7 @@
-import {
-  Box,
-  Collapse,
-  Flex,
-  Spinner,
-  Tag,
-  useColorModeValue,
-  VStack,
-} from "@chakra-ui/react"
+import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
 import React, { memo, useEffect, useRef, useState } from "react"
 import { VariableSizeList } from "react-window"
-import { Role } from "types"
+import { Requirement, Role } from "types"
 import LogicDivider from "../LogicDivider"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
 import RequirementDisplayComponent from "./components/RequirementDisplayComponent"
@@ -22,11 +14,18 @@ const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
 const PARENT_PADDING = "var(--chakra-space-5)"
 
 const RoleRequirements = ({ role }: Props) => {
-  const isVirtualList = role.requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
-  const sliceIndex = (role.requirements?.length ?? 0) - 3
-  const shownRequirements = (role.requirements ?? []).slice(0, 3)
+  const requirements = role.hiddenRequirements
+    ? [
+        ...role.requirements,
+        { isHidden: true, type: "FREE" } as unknown as Requirement,
+      ]
+    : role.requirements
+
+  const isVirtualList = requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
+  const sliceIndex = (requirements?.length ?? 0) - 3
+  const shownRequirements = (requirements ?? []).slice(0, 3)
   const hiddenRequirements =
-    sliceIndex > 0 ? (role.requirements ?? []).slice(-sliceIndex) : []
+    sliceIndex > 0 ? (requirements ?? []).slice(-sliceIndex) : []
 
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
   const shadowColor = useColorModeValue(
@@ -64,10 +63,8 @@ const RoleRequirements = ({ role }: Props) => {
     return (
       <Box style={style}>
         <Box ref={rowRef} paddingRight={PARENT_PADDING}>
-          <RequirementDisplayComponent requirement={role.requirements[index]} />
-          {index < role.requirements?.length - 1 && (
-            <LogicDivider logic={role.logic} />
-          )}
+          <RequirementDisplayComponent requirement={requirements[index]} />
+          {index < requirements?.length - 1 && <LogicDivider logic={role.logic} />}
         </Box>
       </Box>
     )
@@ -75,19 +72,15 @@ const RoleRequirements = ({ role }: Props) => {
 
   return (
     <VStack spacing="0">
-      {!role.requirements?.length ? (
-        role.id ? (
-          <Tag p={2}>All the requirements are hidden</Tag>
-        ) : (
-          <Spinner />
-        )
+      {!requirements?.length ? (
+        <Spinner />
       ) : isVirtualList ? (
         <Box ref={listWrapperRef} w="full" alignSelf="flex-start">
           <VariableSizeList
             ref={listRef}
             width={`calc(100% + ${PARENT_PADDING})`}
             height={isRequirementsExpanded ? 340 : 280}
-            itemCount={role.requirements.length}
+            itemCount={requirements.length}
             itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
             className="custom-scrollbar"
             style={{
@@ -149,11 +142,6 @@ const RoleRequirements = ({ role }: Props) => {
             transition="opacity 0.2s ease"
           />
         </>
-      )}
-      {!!role.hiddenRequirements && role.requirements?.length > 0 && (
-        <Flex mt={3} justifyContent={"end"} w="full">
-          <Tag size={"sm"}>+ some hidden requirements</Tag>
-        </Flex>
       )}
     </VStack>
   )
