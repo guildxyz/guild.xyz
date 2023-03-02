@@ -1,11 +1,10 @@
-import { Tag, TagLeftIcon, TagProps, Tooltip } from "@chakra-ui/react"
+import { Tag, TagLabel, TagLeftIcon, TagProps, Tooltip } from "@chakra-ui/react"
 import { Visibility as VisibilityType } from "types"
-import useGuildPermission from "./hooks/useGuildPermission"
 import { visibilityData } from "./SetVisibility"
 
-type Props = { entityVisibility: VisibilityType } & TagProps
+type Props = { entityVisibility: VisibilityType; showTagLabel?: boolean } & TagProps
 
-const Visibility = ({ entityVisibility, ...tagProps }: Props) => {
+const Visibility = ({ entityVisibility, showTagLabel, ...tagProps }: Props) => {
   const VisibilityIcon = visibilityData[entityVisibility].Icon
 
   if (entityVisibility === VisibilityType.PUBLIC) return null
@@ -16,6 +15,9 @@ const Visibility = ({ entityVisibility, ...tagProps }: Props) => {
     >
       <Tag bg="unset" color="gray" {...tagProps}>
         <TagLeftIcon as={VisibilityIcon} boxSize={"16px"} />
+        {showTagLabel && (
+          <TagLabel>{visibilityData[entityVisibility].title}</TagLabel>
+        )}
       </Tag>
     </Tooltip>
   )
