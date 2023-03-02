@@ -10,6 +10,8 @@ import {
   ModalHeader,
   ModalOverlay,
   ModalProps,
+  Tag,
+  TagLeftIcon,
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -132,16 +134,28 @@ const SetVisibility = ({
 
   return (
     <>
-      <Button
-        ml={3}
-        size="xs"
-        leftIcon={<Icon />}
-        onClick={onOpen}
-        ref={buttonRef}
-        {...buttonProps}
-      >
-        {visibilityData[currentVisibility].title}
-      </Button>
+      {entityType === "role" ? (
+        <Button
+          ml={3}
+          size="xs"
+          leftIcon={<Icon />}
+          onClick={onOpen}
+          ref={buttonRef}
+          {...buttonProps}
+        >
+          {visibilityData[currentVisibility].title}
+        </Button>
+      ) : (
+        <Tag
+          bg="unset"
+          color="gray"
+          onClick={onOpen}
+          ref={buttonRef}
+          cursor="pointer"
+        >
+          <TagLeftIcon as={Icon} boxSize={"16px"} />
+        </Tag>
+      )}
 
       <SetVisibilityModal
         entityType={entityType}
