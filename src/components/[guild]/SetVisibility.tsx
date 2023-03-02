@@ -224,7 +224,13 @@ const SetVisibilityModal = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={saveAndClose} size="lg" {...modalProps}>
+    <Modal
+      colorScheme={"dark"}
+      isOpen={isOpen}
+      onClose={saveAndClose}
+      size="lg"
+      {...modalProps}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Change {entityType} visibility</ModalHeader>
