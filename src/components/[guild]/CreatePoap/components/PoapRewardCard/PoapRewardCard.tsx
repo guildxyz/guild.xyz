@@ -66,7 +66,9 @@ const PoapRewardCard = ({
         label={`POAP ${!guildPoap?.activated ? "- not active yet" : ""}`}
         title={name}
         description={
-          <Tag mt="1">{`${availableLinks}/${poapLinks?.total} available`}</Tag>
+          !isPoapLinksLoading && (
+            <Tag mt="1">{`${availableLinks}/${poapLinks?.total} available`}</Tag>
+          )
         }
         borderStyle={!guildPoap?.activated && "dashed"}
         {...{ image, colorScheme, actionRow, cornerButton }}
