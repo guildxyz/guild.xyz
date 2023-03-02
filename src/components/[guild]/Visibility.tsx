@@ -8,9 +8,7 @@ type Props = { entityVisibility: VisibilityType } & TagProps
 const Visibility = ({ entityVisibility, ...tagProps }: Props) => {
   const VisibilityIcon = visibilityData[entityVisibility].Icon
 
-  const { isAdmin } = useGuildPermission()
-
-  if (!isAdmin) return null
+  if (entityVisibility === VisibilityType.PUBLIC) return null
 
   return (
     <Tooltip
