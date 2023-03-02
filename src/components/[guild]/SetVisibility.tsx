@@ -15,7 +15,7 @@ import {
 import Button from "components/common/Button"
 import RadioSelect from "components/common/RadioSelect"
 import { Option } from "components/common/RadioSelect/RadioSelect"
-import { Eye, EyeClosed, EyeSlash, IconProps } from "phosphor-react"
+import { Detective, Eye, EyeSlash, IconProps } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes, useRef } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { Visibility } from "types"
@@ -34,13 +34,13 @@ export const visibilityData: Record<
     description: "Visible to everyone",
   },
   [Visibility.PRIVATE]: {
-    title: "Private",
-    Icon: EyeSlash,
+    title: "Secret",
+    Icon: Detective,
     description: "Only visible to role holders",
   },
   [Visibility.HIDDEN]: {
     title: "Hidden",
-    Icon: EyeClosed,
+    Icon: EyeSlash,
     description: "Only visible to admins",
   },
 }
