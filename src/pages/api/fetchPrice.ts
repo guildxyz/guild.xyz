@@ -285,8 +285,13 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const source = foundSource.name as ZeroXSupportedSources
 
     // We're sending this amount to the contract. The unused tokens will be sent back to the user during the transaction.
+    const shouldUseGuaranteedPrice =
+      relevantOrder.fill.adjustedOutput === relevantOrder.fill.output
     const priceToSendInWei = parseUnits(
-      priceInSellToken.toFixed(sellTokenDecimals),
+      (shouldUseGuaranteedPrice
+        ? estimatedPriceInSellToken
+        : priceInSellToken
+      ).toFixed(sellTokenDecimals),
       sellTokenDecimals
     )
     // This was previously "priceInWei"
