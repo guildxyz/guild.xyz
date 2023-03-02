@@ -33,11 +33,12 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
   }
 }
 
+/**
+ * We could do a mutate(url) here as well, but I removed it as it seemed unnecessary,
+ * since the user is already authenticated, when we call this.
+ */
 const mutateOptionalAuthSWRKey = (url: string) =>
-  Promise.all([
-    mutate(url),
-    mutate(unstable_serialize([url, { method: "GET", body: {} }])),
-  ])
+  mutate(unstable_serialize([url, { method: "GET", body: {} }]))
 
 export { mutateOptionalAuthSWRKey }
 export default useSWRWithOptionalAuth
