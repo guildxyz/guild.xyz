@@ -3,7 +3,7 @@ import { useState } from "react"
 import { CreatePoapProvider } from "./components/CreatePoapContext"
 import CreatePoapForm from "./components/CreatePoapForm"
 import ImportPoap from "./components/ImportPoap"
-import PoapRequirements from "./components/PoapRequirements"
+import { SetupPoapRequirements } from "./components/PoapRequirements/PoapRequirements"
 
 type Props = {
   onSuccess: () => void
@@ -18,7 +18,7 @@ const AddPoapPanel = ({ onSuccess, scrollToTop }: Props): JSX.Element => {
     scrollToTop()
   }
 
-  if (step === "requirements") return <PoapRequirements onSuccess={onSuccess} />
+  if (step === "requirements") return <SetupPoapRequirements onSuccess={onSuccess} />
 
   return (
     <Box>

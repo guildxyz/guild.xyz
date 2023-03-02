@@ -13,7 +13,6 @@ import {
   Tag,
   TagLeftIcon,
   Text,
-  Tooltip,
   useColorMode,
   Wrap,
   WrapItem,
@@ -26,7 +25,7 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import AccessIndicatorUI from "components/[guild]/RoleCard/components/AccessIndicator/components/AccessIndicatorUI"
-import { ArrowSquareOut, Clock, EyeSlash, PencilSimple } from "phosphor-react"
+import { ArrowSquareOut, Clock, EyeSlash } from "phosphor-react"
 import { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
@@ -37,6 +36,7 @@ import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
 import { GuildPoap } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import parseDescription from "utils/parseDescription"
+import EditPoapRole from "../EditPoapRole"
 import PoapAccessIndicator from "../PoapAccessIndicator"
 import PoapRequiementAccessIndicator from "../PoapRequirementAccessIndicator"
 import PoapReward from "../PoapReward"
@@ -189,15 +189,16 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
             {isAdmin && (
               <>
                 <Spacer m="0 !important" />
-                <Tooltip label="Soon">
+                {poap && guildPoap ? (
+                  <EditPoapRole poap={poap} guildPoap={guildPoap} />
+                ) : (
                   <IconButton
-                    icon={<Icon as={PencilSimple} />}
                     size="sm"
                     rounded="full"
                     aria-label="Edit role"
-                    isDisabled
+                    isLoading
                   />
-                </Tooltip>
+                )}
               </>
             )}
           </HStack>

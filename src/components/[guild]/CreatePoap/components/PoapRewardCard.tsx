@@ -72,15 +72,16 @@ const PoapRewardCard = ({
         {...{ image, colorScheme, actionRow, cornerButton }}
         {...rest}
       >
-        {!poapLinks?.total ? (
-          <Button onClick={onLinkModalOpen}>Upload minting links</Button>
-        ) : !guildPoap.activated ? (
-          <Button onClick={onActivateModalOpen}>Activate</Button>
-        ) : (
-          <MintPoapButton poapId={poap?.id} colorScheme="purple">
-            Mint POAP
-          </MintPoapButton>
-        )}
+        {!actionRow &&
+          (!poapLinks?.total ? (
+            <Button onClick={onLinkModalOpen}>Upload minting links</Button>
+          ) : !guildPoap.activated ? (
+            <Button onClick={onActivateModalOpen}>Activate</Button>
+          ) : (
+            <MintPoapButton poapId={poap?.id} colorScheme="purple">
+              Mint POAP
+            </MintPoapButton>
+          ))}
       </RewardCard>
       <Modal isOpen={isLinkModalOpen} onClose={onLinkModalClose}>
         <ModalOverlay />
