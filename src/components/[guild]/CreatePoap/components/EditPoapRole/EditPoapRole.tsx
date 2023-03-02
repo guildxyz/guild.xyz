@@ -29,6 +29,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { GuildPoap, Poap } from "types"
 import mapRequirements from "utils/mapRequirements"
 import useUpdatePoapRequirements from "../../hooks/useUpdatePoapRequirements"
+import EditPoapModal from "../PoapDataForm/EditPoapModal"
 import PoapRequirements from "../PoapRequirements/PoapRequirements"
 import PoapRewardCard from "../PoapRewardCard"
 
@@ -113,15 +114,7 @@ const EditPoapRole = ({ poap, guildPoap }: Props): JSX.Element => {
                 <Section title={"Rewards"}>
                   <PoapRewardCard
                     guildPoap={guildPoap}
-                    actionRow={
-                      <Button
-                        size="sm"
-                        isDisabled
-                        alignSelf={{ base: "stretch", md: "center" }}
-                      >
-                        Edit POAP
-                      </Button>
-                    }
+                    actionRow={<EditPoapButton guildPoap={guildPoap} poap={poap} />}
                   />
                 </Section>
                 <Section
@@ -167,6 +160,30 @@ const EditPoapRole = ({ poap, guildPoap }: Props): JSX.Element => {
         isOpen={isAlertOpen}
         onClose={onAlertClose}
         onDiscard={onCloseAndClear}
+      />
+    </>
+  )
+}
+
+const EditPoapButton = ({ guildPoap, poap }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  return (
+    <>
+      <Button
+        size="sm"
+        alignSelf={{ base: "stretch", md: "center" }}
+        onClick={onOpen}
+      >
+        Edit POAP
+      </Button>
+      <EditPoapModal
+        {...{
+          guildPoap,
+          poap,
+          isOpen,
+          onClose,
+        }}
       />
     </>
   )

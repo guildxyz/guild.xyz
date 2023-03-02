@@ -1,8 +1,8 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
 import { useState } from "react"
 import { CreatePoapProvider } from "./components/CreatePoapContext"
-import CreatePoapForm from "./components/CreatePoapForm"
 import ImportPoap from "./components/ImportPoap"
+import CreatePoapForm from "./components/PoapDataForm/CreatePoapForm"
 import { SetupPoapRequirements } from "./components/PoapRequirements/PoapRequirements"
 
 type Props = {

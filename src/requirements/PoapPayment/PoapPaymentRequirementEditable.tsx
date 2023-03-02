@@ -27,13 +27,11 @@ const PoapPaymentRequirementEditable = ({
   ...props
 }: Props) => {
   const { id: poapContractId, vaultId, chainId } = poapContract
-  const deleteDisabled = guildPoap?.activated
 
-  const { isVaultLoading, vaultData } = usePoapVault(vaultId, chainId)
+  const { vaultData } = usePoapVault(vaultId, chainId)
 
   const {
     data: { symbol, decimals },
-    isValidating: isTokenDataLoading,
   } = useTokenData(Chains[chainId], vaultData?.token)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -63,7 +61,6 @@ const PoapPaymentRequirementEditable = ({
         size="sm"
         onClick={onOpen}
         aria-label="Remove requirement"
-        isDisabled={!deleteDisabled && !isVaultLoading && !isTokenDataLoading}
       />
 
       <Alert

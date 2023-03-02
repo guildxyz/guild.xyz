@@ -17,9 +17,9 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { PropsWithChildren } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { GuildPoap, Rest } from "types"
-import Distribution from "./Distribution"
-import MintPoapButton from "./MintPoapButton"
-import UploadMintLinks from "./UploadMintLinks"
+import Distribution from "../Distribution"
+import MintPoapButton from "../MintPoapButton"
+import UploadMintLinks from "../UploadMintLinks"
 
 type Props = {
   actionRow?: JSX.Element
