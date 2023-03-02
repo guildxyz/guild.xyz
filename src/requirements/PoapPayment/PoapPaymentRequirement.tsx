@@ -1,6 +1,5 @@
 import { Icon, Skeleton, Text } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
-import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import Withdraw from "components/[guild]/CreatePoap/components/PoapRoleCard/components/Withdraw"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -12,7 +11,6 @@ import { Chain, Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
 import { GuildPoap, PoapContract, RequirementType } from "types"
-import BuyPoapRequirement from "./components/BuyPoapRequirement"
 
 type Props = { guildPoap: GuildPoap; poapContract: PoapContract } & RequirementProps
 
@@ -40,25 +38,13 @@ const PoapPaymentRequirement = ({ guildPoap, poapContract, ...props }: Props) =>
     isNegated: null,
   }
 
-  const {
-    data: { hasPaid },
-  } = useUserPoapEligibility(guildPoap?.poapIdentifier)
-
   return (
     <RequirementProvider requirement={requirement}>
       <Requirement
         image={<Icon as={Coins} boxSize={6} />}
         footer={isAdmin && <Withdraw poapId={guildPoap?.id} />}
         {...props}
-        rightElement={
-          props?.rightElement ? (
-            hasPaid ? (
-              props?.rightElement
-            ) : (
-              <BuyPoapRequirement {...{ guildPoap: guildPoap, poapContract }} />
-            )
-          ) : null
-        }
+        rightElement={props?.rightElement}
       >
         <Skeleton as="span" isLoaded={!isVaultLoading && !isTokenDataLoading}>
           <Text as="span">{`Pay ${formatUnits(

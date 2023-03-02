@@ -86,7 +86,7 @@ export const getTokenBuyerContractData = (
 > => SPECIAL_TOKEN_BUYER_CONTRACTS[guildId] ?? DEFAULT_TOKEN_BUYER_CONTRACTS
 
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
-  ETHEREUM: "https://api.0x.org",
+  // ETHEREUM: "https://api.0x.org",
   GOERLI: "https://goerli.api.0x.org",
   POLYGON: "https://polygon.api.0x.org",
   // BSC: "https://bsc.api.0x.org",

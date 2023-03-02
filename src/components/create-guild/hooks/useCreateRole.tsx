@@ -16,7 +16,6 @@ import { useSWRConfig } from "swr"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
-import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 type RoleOrGuild = Role & { guildId: number }
@@ -96,14 +95,6 @@ guild.xyz/${urlName} @guildxyz`)}`}
     ...useSubmitResponse,
     onSubmit: (data) => {
       data.requirements = preprocessRequirements(data?.requirements)
-
-      data.rolePlatforms = data.rolePlatforms.map((rolePlatform) => {
-        if (rolePlatform.platformRoleData?.gatedChannels)
-          rolePlatform.platformRoleData.gatedChannels = preprocessGatedChannels(
-            rolePlatform.platformRoleData.gatedChannels
-          )
-        return rolePlatform
-      })
 
       delete data.roleType
 

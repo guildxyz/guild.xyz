@@ -7,7 +7,6 @@ import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
-import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
@@ -41,14 +40,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     ...useSubmitResponse,
     onSubmit: (data) => {
       data.requirements = preprocessRequirements(data?.requirements)
-
-      data.rolePlatforms = data.rolePlatforms.map((rolePlatform) => {
-        if (rolePlatform.platformRoleData?.gatedChannels)
-          rolePlatform.platformRoleData.gatedChannels = preprocessGatedChannels(
-            rolePlatform.platformRoleData.gatedChannels
-          )
-        return rolePlatform
-      })
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },

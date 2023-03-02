@@ -22,7 +22,7 @@ const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
 const PARENT_PADDING = "var(--chakra-space-5)"
 
 const RoleRequirements = ({ role }: Props) => {
-  const isVirtualList = role.requirements.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
+  const isVirtualList = role.requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
   const sliceIndex = (role.requirements?.length ?? 0) - 3
   const shownRequirements = (role.requirements ?? []).slice(0, 3)
   const hiddenRequirements =
@@ -64,8 +64,8 @@ const RoleRequirements = ({ role }: Props) => {
     return (
       <Box style={style}>
         <Box ref={rowRef} paddingRight={PARENT_PADDING}>
-          <RequirementDisplayComponent requirement={hiddenRequirements[index]} />
-          {index < hiddenRequirements.length - 1 && (
+          <RequirementDisplayComponent requirement={role.requirements[index]} />
+          {index < role.requirements?.length - 1 && (
             <LogicDivider logic={role.logic} />
           )}
         </Box>
@@ -87,7 +87,7 @@ const RoleRequirements = ({ role }: Props) => {
             ref={listRef}
             width={`calc(100% + ${PARENT_PADDING})`}
             height={isRequirementsExpanded ? 340 : 280}
-            itemCount={hiddenRequirements.length}
+            itemCount={role.requirements.length}
             itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
             className="custom-scrollbar"
             style={{

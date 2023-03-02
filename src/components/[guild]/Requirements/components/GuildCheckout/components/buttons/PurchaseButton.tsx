@@ -15,7 +15,7 @@ const PurchaseButton = (): JSX.Element => {
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const {
-    data: { priceInWei },
+    data: { priceToSendInWei },
     isValidating: isPriceLoading,
     error,
   } = usePrice()
@@ -30,7 +30,9 @@ const PurchaseButton = (): JSX.Element => {
   const { onSubmit, isLoading, estimateGasError } = usePurchaseAsset()
 
   const isSufficientAllowance =
-    priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
+    priceToSendInWei && allowance
+      ? BigNumber.from(priceToSendInWei).lte(allowance)
+      : false
 
   const {
     coinBalance,
@@ -42,11 +44,11 @@ const PurchaseButton = (): JSX.Element => {
     pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
 
   const isSufficientBalance =
-    priceInWei &&
+    priceToSendInWei &&
     (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gt(BigNumber.from(priceInWei))
-      : tokenBalance?.gt(BigNumber.from(priceInWei)))
+      ? coinBalance?.gt(BigNumber.from(priceToSendInWei))
+      : tokenBalance?.gt(BigNumber.from(priceToSendInWei)))
 
   const isDisabled =
     !account ||

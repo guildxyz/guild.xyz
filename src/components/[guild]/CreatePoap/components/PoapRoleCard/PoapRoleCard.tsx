@@ -11,22 +11,26 @@ import {
   Spacer,
   Stack,
   Tag,
+  TagLeftIcon,
   Text,
   Tooltip,
   useColorMode,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
+import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import AccessIndicatorUI from "components/[guild]/RoleCard/components/AccessIndicator/components/AccessIndicatorUI"
-import PoapReward from "components/[guild]/RoleCard/components/PoapReward"
 import { ArrowSquareOut, Clock, EyeSlash, PencilSimple } from "phosphor-react"
 import { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
+import BuyPoapRequirement from "requirements/PoapPayment/components/BuyPoapRequirement"
 import PoapPaymentRequirement from "requirements/PoapPayment/PoapPaymentRequirement"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
@@ -35,6 +39,7 @@ import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import parseDescription from "utils/parseDescription"
 import PoapAccessIndicator from "../PoapAccessIndicator"
 import PoapRequiementAccessIndicator from "../PoapRequirementAccessIndicator"
+import PoapReward from "../PoapReward"
 
 type Props = {
   guildPoap: GuildPoap
@@ -47,6 +52,9 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
 
   const { poap, isLoading } = usePoap(guildPoap.fancyId)
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
+  const {
+    data: { hasPaid },
+  } = useUserPoapEligibility(guildPoap?.poapIdentifier)
 
   const timeDiff = guildPoap.expiryDate * 1000 - Date.now()
 
@@ -75,7 +83,9 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
 
   const requirementRightElement = isActive ? (
     <PoapRequiementAccessIndicator poapIdentifier={guildPoap.poapIdentifier} />
-  ) : null
+  ) : (
+    <></>
+  )
 
   const requirementComponents = guildPoap && [
     ...(guildPoap.poapContracts ?? []).map((poapContract) => (
@@ -83,7 +93,13 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
         key={poapContract.id}
         poapContract={poapContract}
         guildPoap={guildPoap}
-        rightElement={requirementRightElement}
+        rightElement={
+          isActive && !hasPaid ? (
+            <BuyPoapRequirement {...{ guildPoap: guildPoap, poapContract }} />
+          ) : (
+            requirementRightElement
+          )
+        }
       />
     )),
     ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (
@@ -149,20 +165,25 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
                 >
                   {poap?.name ?? guildPoap.fancyId}
                 </Heading>
-                <HStack spacing={0}>
-                  <Tag colorScheme={status.color}>{status.label}</Tag>
-                  {isActive && !guildPoap.poapRequirements?.length && (
-                    <Text as="span" fontSize="xs" colorScheme="gray" pl="4">
-                      <Link
-                        href={`/${urlName}/claim-poap/${guildPoap.fancyId}`}
-                        isExternal
-                      >
-                        <Text as="span">Mint page</Text>
-                        <Icon ml={1} as={ArrowSquareOut} />
-                      </Link>
-                    </Text>
+                <Wrap>
+                  <Tag colorScheme={status.color}>
+                    <TagLeftIcon as={Clock} mr="1.5" />
+                    {status.label}
+                  </Tag>
+                  {isActive && (
+                    <WrapItem alignItems={"center"}>
+                      <Text as="span" fontSize="xs" colorScheme="gray">
+                        <Link
+                          href={`/${urlName}/claim-poap/${guildPoap.fancyId}`}
+                          isExternal
+                        >
+                          <Text as="span">Mint page</Text>
+                          <Icon ml={1} as={ArrowSquareOut} />
+                        </Link>
+                      </Text>
+                    </WrapItem>
                   )}
-                </HStack>
+                </Wrap>
               </Stack>
             </HStack>
             {isAdmin && (

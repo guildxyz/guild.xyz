@@ -24,11 +24,10 @@ export type FetchPriceResponse = {
   buyAmount: number
   buyAmountInWei: BigNumber
   estimatedPriceInSellToken: number
-  estimatedPriceInWei: BigNumber
   estimatedPriceInUSD: number
-  priceInSellToken: number
-  priceInWei: BigNumber
-  priceInUSD: number
+  priceInSellToken: number // Max price
+  priceInUSD: number // Max price
+  priceToSendInWei: BigNumber // Max price (we're sending this to the contract)
   guildBaseFeeInSellToken: number
   guildFeeInSellToken: number
   guildFeeInWei: BigNumber
@@ -215,7 +214,6 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       includedSources: ZEROX_SUPPORTED_SOURCES.toString(),
     }).toString()
 
-    console.log(`${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`)
     const response = await fetch(
       `${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`
     )
@@ -258,14 +256,6 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const priceInUSD =
       (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) * priceInSellToken
 
-    // TODO: maybe we shouldn't use takerAmount for "priceInWei"? We should think about it.
-    const estimatedPriceInWei = BigNumber.from(
-      (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()
-    )
-    const priceInWei = BigNumber.from(
-      (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()
-    )
-
     let guildFeeData
     try {
       guildFeeData = await getGuildFee(
@@ -294,15 +284,24 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     const source = foundSource.name as ZeroXSupportedSources
 
+    // We're sending this amount to the contract. The unused tokens will be sent back to the user during the transaction.
+    const priceToSendInWei = parseUnits(
+      priceInSellToken.toFixed(sellTokenDecimals),
+      sellTokenDecimals
+    )
+    // This was previously "priceInWei"
+    // BigNumber.from(
+    //   (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()
+    // )
+
     return res.json({
       buyAmount: minAmount,
       buyAmountInWei,
       estimatedPriceInSellToken,
-      estimatedPriceInWei,
       estimatedPriceInUSD,
       priceInSellToken,
       priceInUSD,
-      priceInWei,
+      priceToSendInWei,
       guildBaseFeeInSellToken,
       guildFeeInSellToken,
       guildFeeInUSD,
@@ -371,7 +370,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       .map((t) => t.market.floorAsk.price.amount.usd)
       .reduce((p1, p2) => p1 + p2, 0)
 
-    const priceInWei = parseUnits(
+    const priceToSendInWei = parseUnits(
       priceInSellToken.toString(),
       RPC[chain].nativeCurrency.decimals
     )
@@ -405,11 +404,10 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       buyAmount: minAmount,
       buyAmountInWei: BigNumber.from(0), // TODO
       estimatedPriceInSellToken: 0, // TODO
-      estimatedPriceInWei: BigNumber.from(0), // TODO
       estimatedPriceInUSD: 0, // TODO
       priceInSellToken,
       priceInUSD,
-      priceInWei,
+      priceToSendInWei,
       guildBaseFeeInSellToken,
       guildFeeInSellToken,
       guildFeeInUSD,

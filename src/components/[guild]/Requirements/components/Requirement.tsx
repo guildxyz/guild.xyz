@@ -109,7 +109,7 @@ const Requirement = ({
 
 export const RequirementSkeleton = () => (
   <Requirement isImageLoading={true}>
-    <Skeleton>Loading requirement...</Skeleton>
+    <Skeleton as="span">Loading requirement...</Skeleton>
   </Requirement>
 )
 
