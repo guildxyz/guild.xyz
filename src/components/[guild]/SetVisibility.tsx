@@ -10,6 +10,7 @@ import {
   ModalHeader,
   ModalOverlay,
   ModalProps,
+  useColorMode,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -155,12 +156,20 @@ const SetVisibility = ({
 
 const getLeftSideIcon =
   (Icon: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>) =>
-  () =>
-    (
-      <Circle bg={"gray.600"} p={3} ml={"0 !important"} mr={"3 !important"}>
+  () => {
+    const { colorMode } = useColorMode()
+
+    return (
+      <Circle
+        bg={colorMode === "dark" ? "gray.600" : "blackAlpha.200"}
+        p={3}
+        ml={"0 !important"}
+        mr={"3 !important"}
+      >
         <Icon />
       </Circle>
     )
+  }
 
 const SetVisibilityModal = ({
   entityType,
