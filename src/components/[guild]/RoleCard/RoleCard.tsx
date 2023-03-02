@@ -79,7 +79,11 @@ const RoleCard = memo(({ role }: Props) => {
             </HStack>
             <Flex>
               <MemberCount memberCount={role.memberCount} roleId={role.id} />
-              <Visibility entityVisibility={role.visibility} mt="6px !important" />
+              <Visibility
+                entityVisibility={role.visibility}
+                mt="6px !important"
+                showTagLabel
+              />
             </Flex>
             {isAdmin && (
               <>
