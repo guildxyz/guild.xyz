@@ -54,7 +54,7 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
   const {
     data: { hasPaid },
-  } = useUserPoapEligibility(guildPoap?.poapIdentifier)
+  } = useUserPoapEligibility(guildPoap.poapIdentifier)
 
   const timeDiff = guildPoap.expiryDate * 1000 - Date.now()
 
@@ -105,7 +105,11 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
     ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (
       <RequirementDisplayComponent
         key={requirement.id}
-        requirement={{ ...requirement, id: requirement.requirementId }}
+        requirement={{
+          ...requirement,
+          id: requirement.requirementId,
+          poapId: guildPoap.poapIdentifier,
+        }}
         rightElement={requirementRightElement}
       />
     )),
