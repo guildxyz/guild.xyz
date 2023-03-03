@@ -49,6 +49,7 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         // needed for POAP requirements, temporary
         delete (processedRequirement as any).requirementId
         delete (processedRequirement as any).logic
+        delete (processedRequirement as any).balancyDecimals
 
         return processedRequirement
       })
