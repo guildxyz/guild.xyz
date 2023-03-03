@@ -17,6 +17,7 @@ const AddPoapRequirement = ({
   rightIcon,
   isDisabled = false,
   FormComponent,
+  poapId,
   onAdd = null,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -48,7 +49,12 @@ const AddPoapRequirement = ({
             </HStack>
           </ModalHeader>
           <ModalBody>
-            <FormComponent baseFieldPath="" onClose={onClose} onAdd={handleAdd} />
+            <FormComponent
+              baseFieldPath=""
+              poapId={poapId}
+              onClose={onClose}
+              onAdd={handleAdd}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

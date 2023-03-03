@@ -25,7 +25,6 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chain, Chains } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
@@ -64,12 +63,11 @@ const handlePriceChange = (newValue, onChange) => {
   return onChange(isNaN(parsedValue) ? "" : parsedValue)
 }
 
-const PoapPaymentForm = ({ onClose }): JSX.Element => {
+const PoapPaymentForm = ({ onClose, poapId }): JSX.Element => {
   const { account, chainId } = useWeb3React()
   const { requestNetworkChange, isNetworkChangeInProgress } =
     useWeb3ConnectionManager()
 
-  const { poapData } = useCreatePoapContext()
   const feeCollectorContract = useFeeCollectorContract()
 
   const defaultValues = {
@@ -128,14 +126,15 @@ const PoapPaymentForm = ({ onClose }): JSX.Element => {
 
   const { onSubmit: onMonetizeSubmit, isLoading: isMonetizeLoading } =
     useMonetizePoap(onModalClose)
-  const { onSubmit, isLoading } = useRegisterVault((vaultId) =>
-    onMonetizeSubmit({
-      poapId: poapData?.id,
-      vaultId,
-      chainId,
-      contract: feeCollectorContract?.address,
-    })
-  )
+  const { onSubmit, isLoading } = useRegisterVault(poapId, {
+    onSuccess: (vaultId) =>
+      onMonetizeSubmit({
+        poapId,
+        vaultId,
+        chainId,
+        contract: feeCollectorContract?.address,
+      }),
+  })
 
   const chain: Chain = useWatch({ control, name: "chain" })
   const isOnCorrectChain = chainId === Chains[chain]

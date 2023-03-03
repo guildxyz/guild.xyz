@@ -24,7 +24,7 @@ const PoapVoiceRequirementEditable = ({ guildPoap, ...props }: Props) => {
   const removeRef = useRef()
 
   const { onSubmit: onDeleteSubmit, isLoading: isDeleteLoading } =
-    useDeleteVoiceRequirement(guildPoap.poapIdentifier)
+    useDeleteVoiceRequirement(guildPoap.poapIdentifier, { onSuccess: onClose })
 
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
 
