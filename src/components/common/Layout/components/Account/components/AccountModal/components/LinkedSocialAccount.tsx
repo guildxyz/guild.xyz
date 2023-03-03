@@ -6,6 +6,7 @@ import {
   AlertDialogOverlay,
   Avatar,
   AvatarBadge,
+  Collapse,
   HStack,
   Icon,
   IconButton,
@@ -18,7 +19,7 @@ import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import { LinkBreak } from "phosphor-react"
 import platforms from "platforms"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { PlatformName } from "types"
 import useDisconnect from "../hooks/useDisconnect"
 
@@ -30,9 +31,19 @@ type Props = {
 
 const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const alertCancelRef = useRef()
+  const {
+    isOpen: isOpenRow,
+    onOpen: onOpenRow,
+    onClose: onCloseRow,
+  } = useDisclosure()
+  useEffect(() => onOpenRow(), [name])
 
-  const { onSubmit, isLoading, signLoadingText } = useDisconnect(onClose)
+  const alertCancelRef = useRef()
+  const close = () => {
+    onClose()
+    onCloseRow()
+  }
+  const { onSubmit, isLoading, signLoadingText } = useDisconnect(close)
 
   const circleBorderColor = useColorModeValue("gray.100", "gray.800")
 
@@ -40,31 +51,33 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
 
   return (
     <>
-      <HStack spacing={3} alignItems="center" w="full">
-        <Avatar src={image} size="sm">
-          <AvatarBadge
-            boxSize={5}
-            bgColor={`${platforms[type]?.colorScheme}.500`}
-            borderWidth={1}
-            borderColor={circleBorderColor}
-          >
-            <Icon as={platforms[type]?.icon} boxSize={3} color="white" />
-          </AvatarBadge>
-        </Avatar>
-        <Text fontWeight="semibold">{name}</Text>
-        <Tooltip label="Disconnect account" placement="top" hasArrow>
-          <IconButton
-            rounded="full"
-            variant="ghost"
-            size="sm"
-            icon={<Icon as={LinkBreak} />}
-            colorScheme="red"
-            ml="auto !important"
-            onClick={onOpen}
-            aria-label="Disconnect account"
-          />
-        </Tooltip>
-      </HStack>
+      <Collapse in={isOpenRow} animateOpacity style={{ overflow: "unset" }}>
+        <HStack spacing={3} alignItems="center" w="full">
+          <Avatar src={image} size="sm">
+            <AvatarBadge
+              boxSize={5}
+              bgColor={`${platforms[type]?.colorScheme}.500`}
+              borderWidth={1}
+              borderColor={circleBorderColor}
+            >
+              <Icon as={platforms[type]?.icon} boxSize={3} color="white" />
+            </AvatarBadge>
+          </Avatar>
+          <Text fontWeight="semibold">{name}</Text>
+          <Tooltip label="Disconnect account" placement="top" hasArrow>
+            <IconButton
+              rounded="full"
+              variant="ghost"
+              size="sm"
+              icon={<Icon as={LinkBreak} />}
+              colorScheme="red"
+              ml="auto !important"
+              onClick={onOpen}
+              aria-label="Disconnect account"
+            />
+          </Tooltip>
+        </HStack>
+      </Collapse>
 
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
         <AlertDialogOverlay>
