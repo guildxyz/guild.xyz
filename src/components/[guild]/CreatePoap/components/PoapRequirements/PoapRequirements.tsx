@@ -60,7 +60,7 @@ const SetupPoapRequirements = ({
       <Heading size="sm" mb="3" mt="8">
         Set requirements
       </Heading>
-      <PoapRequirements guildPoap={guildPoap} />
+      <PoapRequirements guildPoap={guildPoap ?? { poapIdentifier: poapData?.id }} />
       <Flex justifyContent={"right"} mt="8">
         <Button
           colorScheme="green"
@@ -141,7 +141,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
           rightIcon={logo}
           FormComponent={OriginalGuildRoleForm}
           onAdd={(d) => append(d)}
-          poapId={guildPoap.poapIdentifier}
+          poapId={guildPoap?.poapIdentifier}
         />
       )}
       {!guildPoap?.poapContracts?.length && (
@@ -150,7 +150,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
           description="Monetize POAP with different payment methods"
           rightIcon={Coin}
           FormComponent={PoapPaymentForm}
-          poapId={guildPoap.poapIdentifier}
+          poapId={guildPoap?.poapIdentifier}
         />
       )}
       {hasDiscord && !poapEventDetails?.voiceChannelId && (
@@ -159,7 +159,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
           description="Users will have to be in a Discord voice channel at the time of the event"
           rightIcon={SpeakerHigh}
           FormComponent={PoapVoiceForm}
-          poapId={guildPoap.poapIdentifier}
+          poapId={guildPoap?.poapIdentifier}
         />
       )}
       <AddRequirement onAdd={(d) => append(d)} />
