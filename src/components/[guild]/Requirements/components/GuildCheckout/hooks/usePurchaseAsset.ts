@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber"
+import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -25,17 +25,39 @@ import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
 import useSubmitTransaction from "./useSubmitTransaction"
 
+const isConfigParam = (
+  param: any
+): param is {
+  value?: BigNumberish
+  gasLimit?: BigNumberish
+} => "value" in (param ?? {})
+
 const purchaseAsset = async (
   tokenBuyerContract: Contract,
-  generatedGetAssetsParams: GeneratedGetAssetsParams
+  generatedGetAssetsParams: GeneratedGetAssetsParams,
+  estimatedGasLimit?: BigNumber
 ) => {
   // We shouldn't run into these issues, but rejecting here in case something wrong happens.
   if (!tokenBuyerContract) return Promise.reject("Can't find TokenBuyer contract.")
   if (!generatedGetAssetsParams)
     return Promise.reject("Couldn't generate getAssets params.")
 
+  // Adjusting the gas limit to avoid failing transactions)
+  // TODO: rethink the way we use generateGetAssetsParams, maybe we can find a cleaner solution for adjusting gas fee here.
+  const generatedGetAssetsParamsWithGasLimit = [...generatedGetAssetsParams]
+
+  if (estimatedGasLimit) {
+    const customGasLimit = estimatedGasLimit.mul(12)?.div(10)
+    if (isConfigParam(generatedGetAssetsParamsWithGasLimit[4]))
+      generatedGetAssetsParamsWithGasLimit[4].gasLimit = customGasLimit
+    else if (isConfigParam(generatedGetAssetsParamsWithGasLimit[3]))
+      generatedGetAssetsParamsWithGasLimit[3].gasLimit = customGasLimit
+  }
+
   try {
-    await tokenBuyerContract.callStatic.getAssets(...generatedGetAssetsParams)
+    await tokenBuyerContract.callStatic.getAssets(
+      ...generatedGetAssetsParamsWithGasLimit
+    )
   } catch (callStaticError) {
     if (callStaticError.error) {
       const walletError = processWalletError(callStaticError.error)
@@ -54,7 +76,7 @@ const purchaseAsset = async (
     }
   }
 
-  return tokenBuyerContract.getAssets(...generatedGetAssetsParams)
+  return tokenBuyerContract.getAssets(...generatedGetAssetsParamsWithGasLimit)
 }
 
 const usePurchaseAsset = () => {
@@ -113,16 +135,20 @@ const usePurchaseAsset = () => {
       ? allowance && BigNumber.from(priceData.priceToSendInWei).lte(allowance)
       : true)
 
-  const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
-    useEstimateGasFee(
-      requirement?.id?.toString(),
-      shouldEstimateGas ? tokenBuyerContract : null,
-      "getAssets",
-      generatedGetAssetsParams
-    )
+  const {
+    estimatedGasLimit,
+    estimatedGasFee,
+    estimatedGasFeeInUSD,
+    estimateGasError,
+  } = useEstimateGasFee(
+    requirement?.id?.toString(),
+    shouldEstimateGas ? tokenBuyerContract : null,
+    "getAssets",
+    generatedGetAssetsParams
+  )
 
   const purchaseAssetTransaction = (data?: GeneratedGetAssetsParams) =>
-    purchaseAsset(tokenBuyerContract, data)
+    purchaseAsset(tokenBuyerContract, data, estimatedGasLimit)
 
   const useSubmitData = useSubmitTransaction<GeneratedGetAssetsParams>(
     purchaseAssetTransaction,

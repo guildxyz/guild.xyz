@@ -25,7 +25,7 @@ const useMonetizePoap = (callback?: () => void) => {
     onSuccess: () => {
       mutateGuild()
       toast({
-        title: "Successfully created vault",
+        title: "Successfully added payment requirement",
         status: "success",
       })
       callback?.()

@@ -7,7 +7,7 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
   const { account } = useWeb3React()
   const { id } = useGuild()
 
-  const shouldFetch = account && id
+  const shouldFetch = account && id && roleId !== 0
 
   const { data, isValidating, mutate } = useSWRWithOptionalAuth(
     shouldFetch ? `/guild/access/${id}/${account}` : null,

@@ -27,17 +27,16 @@ const PoapPaymentRequirementEditable = ({
   ...props
 }: Props) => {
   const { id: poapContractId, vaultId, chainId } = poapContract
-  const deleteDisabled = guildPoap?.activated
 
-  const { isVaultLoading, vaultData } = usePoapVault(vaultId, chainId)
+  const { vaultData } = usePoapVault(vaultId, chainId)
 
   const {
     data: { symbol, decimals },
-    isValidating: isTokenDataLoading,
   } = useTokenData(Chains[chainId], vaultData?.token)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
+  const removeRef = useRef()
 
   const { onSubmit, isLoading, response } = useDeleteMonetization(poapContractId)
 
@@ -53,6 +52,7 @@ const PoapPaymentRequirementEditable = ({
       <PoapPaymentRequirement {...{ guildPoap, poapContract }} />
 
       <CloseButton
+        ref={removeRef}
         position="absolute"
         top={2}
         right={2}
@@ -61,18 +61,19 @@ const PoapPaymentRequirementEditable = ({
         size="sm"
         onClick={onOpen}
         aria-label="Remove requirement"
-        isDisabled={!deleteDisabled && !isVaultLoading && !isTokenDataLoading}
       />
 
-      <Alert {...{ isOpen, onClose }} leastDestructiveRef={cancelRef}>
+      <Alert
+        {...{ isOpen, onClose }}
+        leastDestructiveRef={cancelRef}
+        finalFocusRef={removeRef}
+      >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader>Are you sure?</AlertDialogHeader>
-            <AlertDialogBody>
-              {`If you delete this monetization, users won't be able to pay for your POAP with ${
-                symbol ?? RPC[Chains[chainId]]?.nativeCurrency?.symbol
-              }.`}
-            </AlertDialogBody>
+            <AlertDialogHeader>{`Remove ${
+              symbol ?? RPC[Chains[chainId]]?.nativeCurrency?.symbol
+            } payment requirement`}</AlertDialogHeader>
+            <AlertDialogBody>Are you sure?</AlertDialogBody>
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel

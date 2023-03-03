@@ -171,6 +171,9 @@ type Requirement = {
   isNegated: boolean
   visibility?: Visibility
 
+  // temporary until POAP is not a real reward (for PoapRequirements instead of roleId)
+  poapId?: number
+
   // Props used inside the forms on the UI
   nftRequirementType?: string
   balancyDecimals?: number

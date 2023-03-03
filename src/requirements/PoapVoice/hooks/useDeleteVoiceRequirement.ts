@@ -1,5 +1,6 @@
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 import useVoiceParticipants from "../components/ManageEvent/components/EligibleMembers/hooks/useVoiceParticipants"
@@ -15,7 +16,7 @@ const setVoiceRequirement = (signedValdation: SignedValdation) =>
     ...signedValdation,
   })
 
-const useDeleteVoiceRequirement = (poapId) => {
+const useDeleteVoiceRequirement = (poapId, { onSuccess }: UseSubmitOptions) => {
   const { mutatePoapEventDetails } = usePoapEventDetails(poapId)
   const { mutateVoiceParticipants } = useVoiceParticipants(poapId)
 
@@ -29,8 +30,9 @@ const useDeleteVoiceRequirement = (poapId) => {
       mutatePoapEventDetails()
       toast({
         status: "success",
-        title: "Removed voice requirement",
+        title: "Successfully removed voice requirement",
       })
+      onSuccess?.()
     },
   })
 }
