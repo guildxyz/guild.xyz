@@ -50,7 +50,7 @@ const AccountConnections = () => {
           </Text>
         ) : platformUsers?.length > 0 || missingPlatforms.length > 0 ? (
           <>
-            {platformUsers.map(
+            {platformUsers?.map(
               ({
                 platformId,
                 platformUserId,
