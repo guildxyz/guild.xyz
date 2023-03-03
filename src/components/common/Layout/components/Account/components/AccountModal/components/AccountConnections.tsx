@@ -31,7 +31,7 @@ const AccountConnections = () => {
 
   return (
     <Stack spacing="10" w="full">
-      <Section title="Linked social accounts">
+      <Section title="Social accounts">
         {isLoading ? (
           <Spinner />
         ) : !!platformUsers?.[0] && !("platformUserId" in platformUsers[0]) ? (
@@ -48,37 +48,38 @@ const AccountConnections = () => {
                 " and "
               )} hidden. Verify that you're the owner of this account below to view`}
           </Text>
-        ) : platformUsers?.length > 0 ? (
-          platformUsers.map(
-            ({
-              platformId,
-              platformUserId,
-              platformUserData,
-            }: PlatformAccountDetails) => (
-              <LinkedSocialAccount
-                key={platformUserId}
-                name={
-                  platformUserData?.username ??
-                  `${capitalize(
-                    PlatformType[platformId]?.toLowerCase() ?? "Platform"
-                  )} connected`
-                }
-                image={platformUserData?.avatar}
-                type={PlatformType[platformId] as PlatformName}
-              />
-            )
-          )
+        ) : platformUsers?.length > 0 || missingPlatforms.length > 0 ? (
+          <>
+            {platformUsers.map(
+              ({
+                platformId,
+                platformUserId,
+                platformUserData,
+              }: PlatformAccountDetails) => (
+                <LinkedSocialAccount
+                  key={platformUserId}
+                  name={
+                    platformUserData?.username ??
+                    `${capitalize(
+                      PlatformType[platformId]?.toLowerCase() ?? "Platform"
+                    )} connected`
+                  }
+                  image={platformUserData?.avatar}
+                  type={PlatformType[platformId] as PlatformName}
+                />
+              )
+            )}
+            {missingPlatforms?.map((platform) => (
+              <LinkMoreSocialAccount key={platform} platformName={platform} />
+            ))}
+          </>
         ) : (
           <Text colorScheme={"gray"}>No linked social accounts yet</Text>
         )}
       </Section>
-      {missingPlatforms.length > 0 && (
-        <Section title="Link more social accounts">
-          {missingPlatforms?.map((platform) => (
-            <LinkMoreSocialAccount key={platform} platformName={platform} />
-          ))}
-        </Section>
-      )}
+      {/* {missingPlatforms.length > 0 && (
+        <Section title="Link more social accounts"></Section>
+      )} */}
       <Section
         title="Linked addresses"
         titleRightElement={
