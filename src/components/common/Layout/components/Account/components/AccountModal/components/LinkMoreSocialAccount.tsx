@@ -1,15 +1,17 @@
 import {
   Avatar,
+  Button,
+  Collapse,
   HStack,
   Icon,
-  IconButton,
   Spinner,
   Text,
-  Tooltip,
+  useDisclosure,
 } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { Link } from "phosphor-react"
 import platforms from "platforms"
+import { useEffect } from "react"
 import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
 
@@ -18,12 +20,16 @@ type Props = {
 }
 
 const LinkMoreSocialAccount = ({ platformName }: Props): JSX.Element => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const { onConnect, isLoading, response } = useConnectPlatform(
-    platformName as PlatformName
+    platformName as PlatformName,
+    onClose
   )
+  useEffect(() => onOpen(), [platformName])
 
   return (
-    <>
+    <Collapse in={isOpen} animateOpacity>
       <HStack spacing={3} alignItems="center" w="full">
         <Avatar
           icon={
@@ -33,21 +39,20 @@ const LinkMoreSocialAccount = ({ platformName }: Props): JSX.Element => {
           bgColor={`${platforms[platformName]?.colorScheme}.500`}
         />
         <Text fontWeight="semibold">{capitalize(platformName.toLowerCase())}</Text>
-        <Tooltip label="Connect account" placement="top" hasArrow>
-          <IconButton
-            rounded="full"
-            variant="ghost"
-            size="sm"
-            isDisabled={isLoading || response}
-            icon={isLoading ? <Spinner size="sm" /> : <Icon as={Link} />}
-            colorScheme="green"
-            ml="auto !important"
-            onClick={onConnect}
-            aria-label="Connecting account"
-          />
-        </Tooltip>
+
+        <Button
+          rightIcon={isLoading ? <Spinner size="sm" /> : <Icon as={Link} />}
+          onClick={onConnect}
+          isDisabled={isLoading || response}
+          variant="ghost"
+          colorScheme="green"
+          size="sm"
+          ml="auto !important"
+        >
+          {!isLoading && "Connect"}
+        </Button>
       </HStack>
-    </>
+    </Collapse>
   )
 }
 
