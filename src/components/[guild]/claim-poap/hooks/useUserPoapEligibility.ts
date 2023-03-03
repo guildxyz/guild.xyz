@@ -19,7 +19,7 @@ const useUserPoapEligibility = (poapIdentifier: number) => {
     }
   )
 
-  if (!poapIdentifier) return { data: null }
+  if (!poapIdentifier) return { data: {} }
 
   const generalReqData = data?.userAccesses?.[0]?.users?.[0]
 
