@@ -72,7 +72,7 @@ const PoapDataForm = ({ isCreate = false }): JSX.Element => {
     accept: { "image/*": [".gif", ".png"] },
     onDrop: (accepted) => {
       if (accepted.length > 0) {
-        setValue("image", accepted[0])
+        setValue("image", accepted[0], { shouldValidate: true })
         setBase64Image(URL.createObjectURL(accepted[0]))
       }
     },
@@ -130,9 +130,9 @@ const PoapDataForm = ({ isCreate = false }): JSX.Element => {
               >
                 Drop file here
               </Text>
-            ) : image || base64Image ? (
+            ) : base64Image || image ? (
               <Img
-                src={image || base64Image}
+                src={base64Image || image}
                 alt="POAP artwork"
                 boxSize={IMAGE_SIZE}
               />
