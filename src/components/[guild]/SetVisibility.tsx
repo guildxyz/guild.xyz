@@ -2,6 +2,7 @@ import {
   ButtonProps,
   Circle,
   HStack,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,8 +11,7 @@ import {
   ModalHeader,
   ModalOverlay,
   ModalProps,
-  Tag,
-  TagLeftIcon,
+  Tooltip,
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -146,15 +146,21 @@ const SetVisibility = ({
           {visibilityData[currentVisibility].title}
         </Button>
       ) : (
-        <Tag
-          bg="unset"
-          color="gray"
-          onClick={onOpen}
-          ref={buttonRef}
-          cursor="pointer"
+        <Tooltip
+          label={`${visibilityData[currentVisibility].title}: ${visibilityData[currentVisibility].description}`}
         >
-          <TagLeftIcon as={Icon} boxSize={"16px"} />
-        </Tag>
+          <IconButton
+            size={"sm"}
+            variant="ghost"
+            bg="unset !important"
+            icon={<Icon />}
+            aria-label="Set visibility"
+            onClick={onOpen}
+            ref={buttonRef}
+            ml={1}
+            color="gray"
+          />
+        </Tooltip>
       )}
 
       <SetVisibilityModal
