@@ -169,6 +169,7 @@ type Requirement = {
   symbol: string
   decimals?: number
   isNegated: boolean
+  visibility?: Visibility
 
   // temporary until POAP is not a real reward (for PoapRequirements instead of roleId)
   poapId?: number
@@ -188,6 +189,13 @@ type RolePlatform = {
   isNew?: boolean
   roleId?: number
   platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
+  visibility?: Visibility
+}
+
+enum Visibility {
+  PUBLIC = "PUBLIC",
+  PRIVATE = "PRIVATE",
+  HIDDEN = "HIDDEN",
 }
 
 type Role = {
@@ -200,6 +208,9 @@ type Role = {
   memberCount: number
   requirements: Requirement[]
   rolePlatforms: RolePlatform[]
+  visibility?: Visibility
+  hiddenRequirements?: boolean
+  hiddenRewards?: boolean
 }
 
 type GuildPlatform = {
@@ -269,6 +280,7 @@ type Guild = {
   poaps: Array<GuildPoap>
   onboardingComplete: boolean
   featureFlags: FeatureFlag[]
+  hiddenRoles?: boolean
 }
 type GuildFormType = Partial<
   Pick<
@@ -497,4 +509,4 @@ export type {
   PoapEventDetails,
   AddressConnectionProvider,
 }
-export { ValidationMethod, supportedSocialLinks }
+export { ValidationMethod, Visibility, supportedSocialLinks }

@@ -29,8 +29,9 @@ import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion
 import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
+import { Visibility } from "types"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
@@ -147,6 +148,7 @@ const AddRequirementForm = forwardRef(
     const FormComponent = REQUIREMENTS[selectedType].formComponent
 
     const methods = useForm({ mode: "all" })
+    const roleVisibility: Visibility = useWatch({ name: ".visibility" })
 
     const [isPresent, safeToRemove] = usePresence()
     useEffect(() => {
@@ -154,7 +156,11 @@ const AddRequirementForm = forwardRef(
     }, [isPresent])
 
     const onSubmit = methods.handleSubmit((data) => {
-      onAdd({ type: selectedType, ...data })
+      onAdd({
+        type: selectedType,
+        visibility: roleVisibility,
+        ...data,
+      })
       handleClose()
     })
 
