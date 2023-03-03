@@ -1,10 +1,10 @@
 import { parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
-import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
 import { Chains } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { TokenApiURLs } from "hooks/useTokens"
 import fetcher from "utils/fetcher"
 
@@ -14,10 +14,8 @@ type RegisterVaultParams = {
   fee: number
 }
 
-const useRegisterVault = (onSuccess: (vaultId: number) => void) => {
+const useRegisterVault = (poapId, { onSuccess }: UseSubmitOptions) => {
   const showErrorToast = useShowErrorToast()
-
-  const { poapData } = useCreatePoapContext()
 
   const { chainId } = useWeb3React()
   const feeCollectorContract = useFeeCollectorContract()
@@ -34,10 +32,9 @@ const useRegisterVault = (onSuccess: (vaultId: number) => void) => {
       fee?.toString(),
       tokenDataFromJSON?.decimals ?? tokenData?.decimals ?? 18
     )
-    console.log(poapData, feeInWei)
 
     const registerVaultCall = await feeCollectorContract.registerVault(
-      poapData?.id,
+      poapId,
       owner,
       token,
       feeInWei

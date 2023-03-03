@@ -15,7 +15,6 @@ import {
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
 import DiscordServerRewardPicker from "components/[guild]/CreatePoap/components/DiscordServerRewardPicker"
 import { useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
@@ -35,18 +34,17 @@ const voiceRequirementTypeOptions = [
   },
 ]
 
-const PoapVoiceForm = ({ onClose }): JSX.Element => {
-  const { poapData } = useCreatePoapContext()
-  const { poapEventDetails } = usePoapEventDetails()
+const PoapVoiceForm = ({ onClose, poapId }): JSX.Element => {
+  const { poapEventDetails, mutatePoapEventDetails } = usePoapEventDetails(poapId)
 
   const methods = useForm<VoiceParticipationForm>({
     mode: "all",
   })
 
   useEffect(() => {
-    if (!poapData || !poapEventDetails?.voiceChannelId) return
+    if (!poapId || !poapEventDetails?.voiceChannelId) return
     methods.reset({
-      poapId: poapData.id,
+      poapId,
       voiceChannelId: poapEventDetails.voiceChannelId,
       voiceRequirement: {
         percentOrMinute:
@@ -55,7 +53,7 @@ const PoapVoiceForm = ({ onClose }): JSX.Element => {
         type: poapEventDetails?.voiceRequirement?.minute ? "MINUTE" : "PERCENT",
       },
     })
-  }, [poapData, poapEventDetails])
+  }, [poapId, poapEventDetails])
 
   const {
     control,
@@ -90,12 +88,17 @@ const PoapVoiceForm = ({ onClose }): JSX.Element => {
 
   const { onSubmit, isLoading } = useSetVoiceRequirement(
     !poapEventDetails?.voiceChannelId ? "POST" : "PATCH",
-    { onSuccess: onClose }
+    {
+      onSuccess: () => {
+        onClose()
+        mutatePoapEventDetails()
+      },
+    }
   )
 
   const onPreparedSubmit = (data: VoiceParticipationForm) =>
     onSubmit({
-      poapId: poapData?.id,
+      poapId,
       voiceChannelId: data?.voiceChannelId,
       voiceRequirement:
         data?.voiceRequirement?.type === "MINUTE"

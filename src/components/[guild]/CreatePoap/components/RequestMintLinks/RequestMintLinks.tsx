@@ -1,4 +1,5 @@
 import {
+  Flex,
   FormControl,
   FormLabel,
   Grid,
@@ -62,11 +63,13 @@ const RequestsMintLinks = (): JSX.Element => {
   return (
     <>
       {/* <Button w="full" h={10} onClick={onOpen}> */}
-      <Tooltip label="Coming soon" shouldWrapChildren>
-        <Button w="full" h={10} isDisabled>
-          Request more links
-        </Button>
-      </Tooltip>
+      <Flex sx={{ "> *": { w: "full" } }}>
+        <Tooltip label="Coming soon" shouldWrapChildren hasArrow>
+          <Button w="full" h={10} isDisabled>
+            Request more links
+          </Button>
+        </Tooltip>
+      </Flex>
 
       <Modal isOpen={isOpen} onClose={onClose} size="sm">
         <ModalOverlay />
