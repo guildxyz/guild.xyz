@@ -206,6 +206,16 @@ const AddRequirementHome = forwardRef(
       TRANSITION_DURATION_MS
     )
 
+    const openPaymentRequirementNotionForm = () => {
+      if (typeof window === "undefined") return
+      window
+        .open(
+          "https://notionforms.io/forms/payment-requirement-alpha-interest-form-warden-edition",
+          "_blank"
+        )
+        ?.focus()
+    }
+
     return (
       <ModalBody
         ref={ref}
@@ -226,8 +236,11 @@ const AddRequirementHome = forwardRef(
                 key={requirementButton.types[0]}
                 w="full"
                 py={11}
-                onClick={() => setSelectedType(requirementButton.types[0])}
-                isDisabled={isPayment && !isPaymentAllowed}
+                onClick={() =>
+                  isPayment && !isPaymentAllowed
+                    ? openPaymentRequirementNotionForm()
+                    : setSelectedType(requirementButton.types[0])
+                }
               >
                 <VStack w="full" whiteSpace="break-spaces">
                   <Icon as={requirementButton.icon as FC} boxSize={6} />
@@ -240,10 +253,10 @@ const AddRequirementHome = forwardRef(
                     top={2}
                     right={2}
                     size="sm"
-                    bgColor={isPaymentAllowed && "blue.500"}
-                    color={isPaymentAllowed && "white"}
+                    bgColor="blue.500"
+                    color="white"
                   >
-                    {isPaymentAllowed ? "Alpha" : "Soon"}
+                    Alpha
                   </Tag>
                 )}
               </Button>
