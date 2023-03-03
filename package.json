@@ -40,6 +40,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@ethersproject/strings": "^5.7.0",
     "@ethersproject/units": "^5.7.0",
+    "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@lottiefiles/react-lottie-player": "^3.5.0",
     "@metamask/onboarding": "^1.0.1",
     "@nouns/assets": "^0.4.2",
