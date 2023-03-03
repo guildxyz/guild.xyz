@@ -1,3 +1,4 @@
+import useAccess from "components/[guild]/hooks/useAccess"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -14,13 +15,17 @@ const useVerifyCaptcha = () => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
+  const { mutate } = useAccess()
+
   return useSubmit(verifycCaptcha, {
     onError: () => showErrorToast("Couldn't verify CAPTCHA"),
-    onSuccess: () =>
+    onSuccess: () => {
+      mutate()
       toast({
         status: "success",
         title: "Successful verification",
-      }),
+      })
+    },
   })
 }
 
