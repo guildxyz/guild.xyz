@@ -1,6 +1,4 @@
 import {
-  Divider,
-  HStack,
   Icon,
   Popover,
   PopoverArrow,
@@ -14,6 +12,7 @@ import {
   Td,
   Tr,
   useColorModeValue,
+  VStack,
 } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -35,7 +34,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
     <Requirement
       image={<Icon as={Function} boxSize={6} />}
       footer={
-        <HStack divider={<Divider orientation="vertical" h="4" />} spacing={3}>
+        <VStack alignItems="start">
           <BlockExplorerUrl />
 
           <Popover placement="bottom">
@@ -92,7 +91,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
               </PopoverContent>
             </Portal>
           </Popover>
-        </HStack>
+        </VStack>
       }
       {...props}
     >
