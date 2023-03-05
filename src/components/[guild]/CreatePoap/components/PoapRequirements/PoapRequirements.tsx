@@ -1,6 +1,7 @@
 import { Button, Flex, Heading, Stack } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
+import LogicPicker from "components/create-guild/Requirements/components/LogicPicker"
 import RequirementEditableCard from "components/create-guild/Requirements/components/RequirementEditableCard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -132,7 +133,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
                 removeRequirement={remove}
                 updateRequirement={update}
               />
-              <LogicDivider logic="AND" />
+              <LogicPicker />
             </CardMotionWrapper>
           )
         })}
