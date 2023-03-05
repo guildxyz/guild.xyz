@@ -26,7 +26,7 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import AccessIndicatorUI from "components/[guild]/RoleCard/components/AccessIndicator/components/AccessIndicatorUI"
 import { ArrowSquareOut, Clock, EyeSlash } from "phosphor-react"
-import { useMemo } from "react"
+import React, { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import BuyPoapRequirement from "requirements/PoapPayment/components/BuyPoapRequirement"
@@ -49,7 +49,6 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const { urlName } = useGuild()
   const { isAdmin } = useGuildPermission()
-
   const { poap, isLoading } = usePoap(guildPoap.fancyId)
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
   const {
@@ -88,40 +87,53 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
   )
 
   const requirementComponents = guildPoap && [
-    ...(guildPoap.poapContracts ?? []).map((poapContract) => (
-      <PoapPaymentRequirement
-        key={poapContract.id}
-        poapContract={poapContract}
-        guildPoap={guildPoap}
-        rightElement={
-          isActive && !hasPaid ? (
-            <BuyPoapRequirement {...{ guildPoap: guildPoap, poapContract }} />
-          ) : (
-            requirementRightElement
-          )
-        }
-      />
-    )),
-    ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (
-      <RequirementDisplayComponent
-        key={requirement.id}
-        requirement={{
-          ...requirement,
-          id: requirement.requirementId,
-          poapId: guildPoap.poapIdentifier,
-        }}
-        rightElement={requirementRightElement}
-      />
-    )),
     ...(poapEventDetails?.voiceChannelId
       ? [
-          <PoapVoiceRequirement
-            key="voice"
-            guildPoap={guildPoap}
-            rightElement={requirementRightElement}
-          />,
+          <>
+            <PoapVoiceRequirement
+              key="voice"
+              guildPoap={guildPoap}
+              rightElement={requirementRightElement}
+            />
+            <LogicDivider logic="AND" />
+          </>,
         ]
       : []),
+    ...(guildPoap.poapContracts ?? []).map((poapContract, i) => (
+      <React.Fragment key={poapContract.id}>
+        <PoapPaymentRequirement
+          key={poapContract.id}
+          poapContract={poapContract}
+          guildPoap={guildPoap}
+          rightElement={
+            isActive && !hasPaid ? (
+              <BuyPoapRequirement {...{ guildPoap: guildPoap, poapContract }} />
+            ) : (
+              requirementRightElement
+            )
+          }
+        />
+        <LogicDivider
+          logic={i === guildPoap.poapContracts.length - 1 ? "AND" : "OR"}
+        />
+      </React.Fragment>
+    )),
+    ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (
+      <React.Fragment key={requirement.id}>
+        <RequirementDisplayComponent
+          key={requirement.id}
+          requirement={{
+            ...requirement,
+            id: requirement.requirementId,
+            poapId: guildPoap.poapIdentifier,
+          }}
+          rightElement={requirementRightElement}
+        />
+        {i < guildPoap.poapRequirements.length - 1 && (
+          <LogicDivider logic={requirement.logic} />
+        )}
+      </React.Fragment>
+    )),
   ]
 
   return (
@@ -251,18 +263,7 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
             )}
           </HStack>
 
-          <Stack
-            spacing="0"
-            divider={
-              /* have to wrap in a Box, otherwise it looks broken */
-              <Box border="0">
-                {/* retrofit: show OR for previously made POAPs with multiple payment methods */}
-                <LogicDivider
-                  logic={guildPoap?.poapContracts?.length > 1 ? "OR" : "AND"}
-                />
-              </Box>
-            }
-          >
+          <Stack spacing="0">
             {requirementComponents.length ? (
               requirementComponents?.map(
                 (RequirementComponent, i) => RequirementComponent

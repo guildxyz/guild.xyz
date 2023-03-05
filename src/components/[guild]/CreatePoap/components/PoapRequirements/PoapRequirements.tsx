@@ -99,6 +99,27 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
   return (
     <Stack spacing={0}>
       <AnimatePresence>
+        {poapEventDetails?.voiceChannelId && (
+          <CardMotionWrapper>
+            <PoapVoiceRequirementEditable guildPoap={guildPoap} />
+
+            <LogicDivider logic="AND" />
+          </CardMotionWrapper>
+        )}
+
+        {guildPoap?.poapContracts?.map((poapContract, i) => (
+          <CardMotionWrapper key={poapContract.id}>
+            <PoapPaymentRequirementEditable
+              poapContract={poapContract}
+              guildPoap={guildPoap}
+            />
+
+            <LogicDivider
+              logic={i === guildPoap.poapContracts.length - 1 ? "AND" : "OR"}
+            />
+          </CardMotionWrapper>
+        ))}
+
         {controlledFields.map((field, i) => {
           const type: RequirementType = getValues(`requirements.${i}.type`)
 
@@ -115,23 +136,6 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
             </CardMotionWrapper>
           )
         })}
-        {guildPoap?.poapContracts?.map((poapContract) => (
-          <CardMotionWrapper key={poapContract.id}>
-            <PoapPaymentRequirementEditable
-              poapContract={poapContract}
-              guildPoap={guildPoap}
-            />
-
-            <LogicDivider logic="AND" />
-          </CardMotionWrapper>
-        ))}
-        {poapEventDetails?.voiceChannelId && (
-          <CardMotionWrapper>
-            <PoapVoiceRequirementEditable guildPoap={guildPoap} />
-
-            <LogicDivider logic="AND" />
-          </CardMotionWrapper>
-        )}
       </AnimatePresence>
 
       {!fields.some((field: any) => field.type === "GUILD_ROLE") && (
@@ -144,15 +148,13 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
           poapId={guildPoap?.poapIdentifier}
         />
       )}
-      {!guildPoap?.poapContracts?.length && (
-        <AddPoapRequirement
-          title="Payment"
-          description="Monetize POAP with different payment methods"
-          rightIcon={Coin}
-          FormComponent={PoapPaymentForm}
-          poapId={guildPoap?.poapIdentifier}
-        />
-      )}
+      <AddPoapRequirement
+        title="Payment"
+        description="Monetize POAP with different payment methods"
+        rightIcon={Coin}
+        FormComponent={PoapPaymentForm}
+        poapId={guildPoap?.poapIdentifier}
+      />
       {hasDiscord && !poapEventDetails?.voiceChannelId && (
         <AddPoapRequirement
           title="Voice participation"
