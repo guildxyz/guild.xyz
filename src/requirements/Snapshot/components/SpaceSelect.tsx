@@ -20,7 +20,8 @@ export type Space = {
 }
 
 const customFilterOption = (candidate, input) =>
-  candidate.label.toLowerCase().includes(input?.toLowerCase())
+  candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
+  candidate.data.details.toLowerCase().includes(input?.toLowerCase())
 
 const SpaceSelect = ({
   baseFieldPath,
@@ -34,7 +35,7 @@ const SpaceSelect = ({
   } = useFormContext()
 
   const { data: spaces, isValidating: isSpacesLoading } = useSWRImmutable<Space[]>(
-    "/assets/snapshot/spaces"
+    "/assets/snapshot/space"
   )
 
   const mappedSpaces = useMemo<SelectOption[]>(

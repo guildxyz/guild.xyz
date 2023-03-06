@@ -12,13 +12,27 @@ const useProposals = (
   spaceId?: string
 ): { proposals: Proposal[]; isProposalsLoading: boolean } => {
   const { data, isValidating } = useSWRImmutable<Proposal[]>(
-    search?.length >= 3 || spaceId
-      ? `/assets/snapshot/proposals?search=${search ?? ""}&spaceId=${spaceId ?? ""}`
-      : null
+    `/assets/snapshot/proposal`
   )
 
+  const proposals =
+    search || spaceId
+      ? data?.filter((proposal) => {
+          let shouldKeep = false
+          if (spaceId) {
+            shouldKeep = proposal.space.id === spaceId
+          }
+
+          if (search) {
+            shouldKeep = proposal.title.toLowerCase().includes(search.toLowerCase())
+          }
+
+          return shouldKeep
+        })
+      : data
+
   return {
-    proposals: data,
+    proposals,
     isProposalsLoading: isValidating,
   }
 }

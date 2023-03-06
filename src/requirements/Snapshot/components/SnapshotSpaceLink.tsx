@@ -5,7 +5,7 @@ import { Space } from "./SpaceSelect"
 const SnapshotSpaceLink = ({ requirement }) => {
   const { data: space } = useSWRImmutable<Space>(
     requirement.data.space
-      ? `/assets/snapshot/spaces/${requirement.data.space}`
+      ? `/assets/snapshot/space/${requirement.data.space}`
       : null
   )
 
