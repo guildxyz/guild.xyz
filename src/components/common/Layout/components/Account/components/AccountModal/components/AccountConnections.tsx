@@ -13,7 +13,12 @@ import { useWeb3React } from "@web3-react/core"
 import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
 import { Question } from "phosphor-react"
-import { PlatformAccountDetails, PlatformName, PlatformType } from "types"
+import {
+  PlatformAccountDetails,
+  PlatformName,
+  platformNames,
+  PlatformType,
+} from "types"
 import capitalize from "utils/capitalize"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkedAddress from "./LinkedAddress"
@@ -23,11 +28,14 @@ import LinkMoreSocialAccount from "./LinkMoreSocialAccount"
 const AccountConnections = () => {
   const { isLoading, addresses, platformUsers } = useUser()
   const { account } = useWeb3React()
-  const allPlatforms = ["TELEGRAM", "DISCORD", "GITHUB", "TWITTER", "GOOGLE"] // fake it till you make it
-  const missingPlatforms = allPlatforms.filter(
-    (p) =>
-      !platformUsers?.map((platform) => platform.platformName.toString()).includes(p)
-  )
+  const missingPlatforms = platformNames
+    .filter((platform) => platform !== "POAP")
+    .filter(
+      (p) =>
+        !platformUsers
+          ?.map((platform) => platform.platformName.toString())
+          .includes(p)
+    )
 
   return (
     <Stack spacing="10" w="full">
