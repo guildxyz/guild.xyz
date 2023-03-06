@@ -17,9 +17,9 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { PropsWithChildren } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { GuildPoap, Rest } from "types"
-import Distribution from "./Distribution"
-import MintPoapButton from "./MintPoapButton"
-import UploadMintLinks from "./UploadMintLinks"
+import Distribution from "../Distribution"
+import MintPoapButton from "../MintPoapButton"
+import UploadMintLinks from "../UploadMintLinks"
 
 type Props = {
   actionRow?: JSX.Element
@@ -37,7 +37,7 @@ const PoapRewardCard = ({
   const { isAdmin } = useGuildPermission()
 
   const { poap } = usePoap(guildPoap?.fancyId)
-  const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
+  const { poapLinks } = usePoapLinks(poap?.id)
   const { image_url: image, name } = poap ?? {}
 
   const {
@@ -66,21 +66,24 @@ const PoapRewardCard = ({
         label={`POAP ${!guildPoap?.activated ? "- not active yet" : ""}`}
         title={name}
         description={
-          <Tag mt="1">{`${availableLinks}/${poapLinks?.total} available`}</Tag>
+          !!poapLinks && (
+            <Tag mt="1">{`${availableLinks}/${poapLinks?.total} available`}</Tag>
+          )
         }
         borderStyle={!guildPoap?.activated && "dashed"}
         {...{ image, colorScheme, actionRow, cornerButton }}
         {...rest}
       >
-        {!poapLinks?.total ? (
-          <Button onClick={onLinkModalOpen}>Upload minting links</Button>
-        ) : !guildPoap.activated ? (
-          <Button onClick={onActivateModalOpen}>Activate</Button>
-        ) : (
-          <MintPoapButton poapId={poap?.id} colorScheme="purple">
-            Mint POAP
-          </MintPoapButton>
-        )}
+        {!actionRow &&
+          (!poapLinks?.total ? (
+            <Button onClick={onLinkModalOpen}>Upload minting links</Button>
+          ) : !guildPoap.activated ? (
+            <Button onClick={onActivateModalOpen}>Activate</Button>
+          ) : (
+            <MintPoapButton poapId={poap?.id} colorScheme="purple">
+              Mint POAP
+            </MintPoapButton>
+          ))}
       </RewardCard>
       <Modal isOpen={isLinkModalOpen} onClose={onLinkModalClose}>
         <ModalOverlay />

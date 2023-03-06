@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { Chain, RPC } from "connectors"
 import { Info } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -105,27 +106,9 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
     <Stack spacing={4} alignItems="start">
       <ChainPicker
         controlName={`${baseFieldPath}.chain` as const}
-        supportedChains={[
-          "ETHEREUM",
-          "POLYGON",
-          "AVALANCHE",
-          "GNOSIS",
-          "FANTOM",
-          "ARBITRUM",
-          "NOVA",
-          "CELO",
-          "BSC",
-          "OPTIMISM",
-          "MOONRIVER",
-          "MOONBEAM",
-          "METIS",
-          "CRONOS",
-          "BOBA",
-          "BOBA_AVAX",
-          "PALM",
-          "GOERLI",
-          "BASE_GOERLI",
-        ]}
+        supportedChains={Object.entries(RPC)
+          .filter(([, rpcData]) => !!rpcData.apiUrl)
+          .map(([chainIdentifier]) => chainIdentifier as Chain)}
         onChange={resetForm}
       />
 

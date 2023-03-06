@@ -3,8 +3,8 @@ import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
 import platforms from "platforms"
-import { useFieldArray } from "react-hook-form"
-import { PlatformType } from "types"
+import { useFieldArray, useWatch } from "react-hook-form"
+import { PlatformType, Visibility } from "types"
 import PlatformCard from "../../PlatformCard"
 
 const SelectExistingPlatform = ({ onClose }) => {
@@ -13,6 +13,8 @@ const SelectExistingPlatform = ({ onClose }) => {
   const { fields, append } = useFieldArray({
     name: "rolePlatforms",
   })
+
+  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
 
   const filteredPlatforms = guildPlatforms.filter(
     (guildPlatform) =>
@@ -49,6 +51,7 @@ const SelectExistingPlatform = ({ onClose }) => {
                     isNew: true,
                     platformRoleData: {},
                     platformRoleId: null,
+                    visibility: roleVisibility,
                   })
                   onClose()
                 }}

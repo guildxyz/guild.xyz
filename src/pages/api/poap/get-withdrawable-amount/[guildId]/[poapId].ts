@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units"
-import { Chains } from "connectors"
+import { Chains, RPC } from "connectors"
 import { NextApiRequest, NextApiResponse } from "next"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -45,11 +45,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             ? 18
             : tokenData.decimals
 
+        const symbol =
+          data.token === "0x0000000000000000000000000000000000000000"
+            ? RPC[Chains[poapContract.chainId]].nativeCurrency.symbol
+            : tokenData.symbol
+
         return {
           id: poapContract.id,
           chainId: poapContract.chainId,
           vaultId: poapContract.vaultId,
-          tokenSymbol: tokenData.symbol,
+          tokenSymbol: symbol,
           collected: parseFloat(formatUnits(data.collected, decimals ?? 18)),
         }
       })
