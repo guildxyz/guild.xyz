@@ -13,7 +13,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { ArrowSquareOut } from "phosphor-react"
+import { CaretDown } from "phosphor-react"
 import pluralize from "utils/pluralize"
 import SnapshotSpaceLink from "./components/SnapshotSpaceLink"
 import StrategyParamsTable from "./components/StrategyParamsTable"
@@ -38,7 +38,7 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
         Object.keys(requirement.data.strategies[0].params ?? {}).length && (
           <Popover placement="bottom">
             <PopoverTrigger>
-              <RequirementButton rightIcon={<Icon as={ArrowSquareOut} />}>
+              <RequirementButton rightIcon={<Icon as={CaretDown} />}>
                 View parameters
               </RequirementButton>
             </PopoverTrigger>
