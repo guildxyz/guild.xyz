@@ -85,9 +85,6 @@ const AccountConnections = () => {
           <Text colorScheme={"gray"}>No linked social accounts yet</Text>
         )}
       </Section>
-      {/* {missingPlatforms.length > 0 && (
-        <Section title="Link more social accounts"></Section>
-      )} */}
       <Section
         title="Linked addresses"
         titleRightElement={
