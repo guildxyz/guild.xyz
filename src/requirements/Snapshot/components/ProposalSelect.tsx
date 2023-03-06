@@ -52,7 +52,7 @@ const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
         beforeOnChange={(newValue) =>
           setValue(
             `${baseFieldPath}.data.space`,
-            proposals?.find((p) => p.id === newValue.value)?.space?.id
+            proposals?.find((p) => p.id === newValue?.value)?.space?.id
           )
         }
         afterOnChange={(newValue) => onChange?.(newValue)}
