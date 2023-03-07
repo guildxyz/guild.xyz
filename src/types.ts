@@ -128,6 +128,7 @@ type PlatformGuildData = {
     inviteChannel: string
     invite?: string
     joinButton?: boolean
+    needCaptcha?: boolean
     mimeType?: never
     iconLink?: never
   }
@@ -135,6 +136,7 @@ type PlatformGuildData = {
     role?: "reader" | "commenter" | "writer"
     inviteChannel?: never
     joinButton?: never
+    needCaptcha?: never
     mimeType?: string
     iconLink?: string
   }
