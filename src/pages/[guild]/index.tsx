@@ -83,7 +83,6 @@ const GuildPage = (): JSX.Element => {
     socialLinks,
     poaps,
   } = useGuild()
-
   useAutoStatusUpdate()
 
   const { data: roleAccesses } = useAccess()
@@ -144,19 +143,20 @@ const GuildPage = (): JSX.Element => {
     useDisclosure()
 
   const currentTime = Date.now() / 1000
-  const { activePoaps, expiredPoaps } = poaps
-    ?.sort((poapA, poapB) => poapB.expiryDate - poapA.expiryDate)
-    .reduce(
-      (acc, currPoap) => {
-        if (!currPoap.activated && !isAdmin) return acc
+  const { activePoaps, expiredPoaps } =
+    poaps
+      ?.sort((poapA, poapB) => poapB.expiryDate - poapA.expiryDate)
+      .reduce(
+        (acc, currPoap) => {
+          if (!currPoap.activated && !isAdmin) return acc
 
-        if (currPoap.expiryDate > currentTime) acc.activePoaps.push(currPoap)
-        else acc.expiredPoaps.push(currPoap)
+          if (currPoap.expiryDate > currentTime) acc.activePoaps.push(currPoap)
+          else acc.expiredPoaps.push(currPoap)
 
-        return acc
-      },
-      { activePoaps: [], expiredPoaps: [] }
-    )
+          return acc
+        },
+        { activePoaps: [], expiredPoaps: [] }
+      ) ?? {}
 
   return (
     <DynamicOnboardingProvider>

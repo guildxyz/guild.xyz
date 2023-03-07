@@ -4,6 +4,8 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
   requirements?.map((requirement) => {
     const newRequirement: Requirement = {
       ...requirement,
+      createdAt: undefined,
+      updatedAt: undefined,
     }
 
     if (requirement.type === "COIN")

@@ -4,44 +4,56 @@ import {
   AlertIcon,
   AlertTitle,
   Box,
-  Circle,
-  Container,
   Flex,
   Heading,
   HStack,
-  Icon,
   Img,
+  SimpleGrid,
   Skeleton,
   SkeletonCircle,
   SkeletonText,
+  Spacer,
   Stack,
   Tag,
+  TagLeftIcon,
   Text,
   Tooltip,
   useColorMode,
-  useDisclosure,
+  Wrap,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import Card from "components/common/Card"
-import Footer from "components/common/Layout/components/Footer"
-import Header from "components/common/Layout/components/Header"
-import Link from "components/common/Link"
-import ClaimModal from "components/[guild]/claim-poap/components/ClaimModal"
+import Layout from "components/common/Layout"
+import LinkButton from "components/common/LinkButton"
+import ConnectDiscordButton from "components/[guild]/claim-poap/components/ConnectDiscordButton"
+import ConnectWalletButton from "components/[guild]/claim-poap/components/ConnectWalletButton"
+import JoinAndMintPoapButton from "components/[guild]/claim-poap/components/JoinAndMintPoapButton"
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
-import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
-import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
+import PoapRequiementAccessIndicator from "components/[guild]/CreatePoap/components/PoapRequirementAccessIndicator"
+import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { Chains, RPC } from "connectors"
+import useUser from "components/[guild]/hooks/useUser"
+import LogicDivider from "components/[guild]/LogicDivider"
+import { RequirementSkeleton } from "components/[guild]/Requirements/components/Requirement"
+import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { DownloadSimple } from "phosphor-react"
+import { ArrowLeft, Clock } from "phosphor-react"
+import { useMemo } from "react"
+import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
+import BuyPoapRequirement from "requirements/PoapPayment/components/BuyPoapRequirement"
+import PoapPaymentRequirement from "requirements/PoapPayment/PoapPaymentRequirement"
+import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
+import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
+import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+import parseDescription from "utils/parseDescription"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
-  const { chainId } = useWeb3React()
+  const { colorMode } = useColorMode()
 
+  const { account } = useWeb3React()
   const { theme, urlName, imageUrl, name, poaps } = useGuild()
 
   const rawPoapFancyIdFromUrl = router.query.fancyId?.toString()
@@ -52,42 +64,103 @@ const Page = (): JSX.Element => {
 
   const guildPoap = poaps?.find((p) => p.fancyId === poapFancyIdFromUrl)
 
-  const guildPoapChainId = guildPoap?.poapContracts
-    ?.map((poapContract) => poapContract.chainId)
-    ?.includes(chainId)
-    ? chainId
-    : guildPoap?.poapContracts?.[0]?.chainId
-
   const { poap, isLoading } = usePoap(poapFancyIdFromUrl)
 
-  const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
-
-  const guildPoapVaultId = guildPoap?.poapContracts
-    ?.map((poapContract) => poapContract.chainId)
-    ?.includes(chainId)
-    ? guildPoap?.poapContracts?.find(
-        (poapContract) => poapContract?.chainId === chainId
-      )?.vaultId
-    : guildPoap?.poapContracts?.[0]?.vaultId
-  const { isVaultLoading, vaultError, vaultData } = usePoapVault(
-    guildPoapVaultId,
-    guildPoapChainId
-  )
+  const { poapEventDetails } = usePoapEventDetails(poap?.id)
   const {
-    data: { hasPaid },
-  } = useUserPoapEligibility(vaultData ? poap?.id : null)
+    data: { access, hasPaid },
+  } = useUserPoapEligibility(poap?.id)
+
+  const timeDiff = guildPoap?.expiryDate * 1000 - Date.now()
+
+  const isActive = useMemo(
+    () => guildPoap?.activated && timeDiff > 0,
+    [guildPoap, timeDiff]
+  )
+
+  const { platformUsers } = useUser()
+  const discordFromDb = platformUsers?.some(
+    (platformAccount) => platformAccount.platformName === "DISCORD"
+  )
 
   const correctPoap =
     poaps && !isLoading ? poaps.find((p) => p.fancyId === poap?.fancy_id) : true
 
-  const hasExpired =
-    poaps?.length && poap
-      ? Date.now() / 1000 >=
-        (poaps?.find((p) => p.fancyId === poap?.fancy_id)?.expiryDate || 0)
-      : false
+  const status = !guildPoap
+    ? {
+        label: "Loading",
+        color: "gray",
+      }
+    : timeDiff < 0
+    ? {
+        label: `Expired ${formatRelativeTimeFromNow(timeDiff * -1)} ago`,
+        color: "gray",
+      }
+    : isActive
+    ? {
+        label: `Claim ends in ${formatRelativeTimeFromNow(timeDiff)}`,
+        color: "purple",
+      }
+    : {
+        label: `Not active`,
+        color: "gray",
+      }
 
-  const { colorMode } = useColorMode()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const requirementRightElement = isActive ? (
+    account ? (
+      <PoapRequiementAccessIndicator poapIdentifier={guildPoap?.poapIdentifier} />
+    ) : (
+      <ConnectWalletButton />
+    )
+  ) : (
+    <></>
+  )
+
+  const requirementComponents = guildPoap
+    ? [
+        ...(guildPoap?.poapContracts ?? []).map((poapContract) => (
+          <PoapPaymentRequirement
+            key={poapContract.id}
+            poapContract={poapContract}
+            guildPoap={guildPoap}
+            rightElement={
+              isActive && !hasPaid ? (
+                <BuyPoapRequirement
+                  size="md"
+                  borderRadius={"xl"}
+                  h="10"
+                  {...{ guildPoap: guildPoap, poapContract }}
+                />
+              ) : (
+                requirementRightElement
+              )
+            }
+          />
+        )),
+        ...(guildPoap?.poapRequirements ?? []).map((requirement: any, i) => (
+          <RequirementDisplayComponent
+            key={requirement.id}
+            requirement={{ ...requirement, id: requirement.requirementId }}
+            rightElement={requirementRightElement}
+          />
+        )),
+        ...(poapEventDetails?.voiceChannelId
+          ? [
+              <PoapVoiceRequirement
+                key="voice"
+                guildPoap={guildPoap}
+                rightElement={
+                  isActive && account && !discordFromDb ? (
+                    <ConnectDiscordButton />
+                  ) : (
+                    requirementRightElement
+                  )
+                }
+              />,
+            ]
+          : []),
+      ]
+    : [...Array(2)].map((i) => <RequirementSkeleton key={i} />)
 
   return (
     <>
@@ -103,162 +176,168 @@ const Page = (): JSX.Element => {
         />
       </Head>
 
-      <Header />
-      <Container maxW="xl" pt={{ base: 16, md: 24 }} pb={12}>
+      <Layout
+        title=""
+        background={theme?.color ?? "gray.900"}
+        backgroundImage={theme?.backgroundImage}
+        maxWidth="container.xl"
+      >
         {correctPoap ? (
           <>
-            <Card overflow="hidden">
-              <Box
-                position="relative"
-                h={48}
-                bgColor={theme?.color ?? "gray.900"}
-                bgImage={
-                  theme?.backgroundImage
-                    ? `url('${theme?.backgroundImage}')`
-                    : undefined
-                }
-                bgSize="cover"
-                bgPosition="center center"
-              >
+            <LinkButton
+              href={`/${urlName}`}
+              variant="link"
+              opacity={0.75}
+              size="sm"
+              leftIcon={<ArrowLeft />}
+              alignSelf="flex-start"
+              mb="6"
+            >
+              {`Go back to `}
+              <Text as="span" fontFamily={"display"} fontWeight="bold">
+                {name}
+              </Text>
+            </LinkButton>
+            <Card
+              sx={{
+                ":target": {
+                  boxShadow: "var(--chakra-shadows-outline)",
+                },
+              }}
+            >
+              <SimpleGrid columns={{ base: 1, md: 2 }}>
                 <Flex
-                  position="absolute"
-                  left={0}
-                  right={0}
-                  bottom={-8}
-                  justifyContent="center"
+                  direction="column"
+                  p={{ base: 5, md: 8 }}
+                  borderRightWidth={{ base: 0, md: 1 }}
+                  borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
                 >
-                  <Box position="relative" p={1} bgColor="gray.700" rounded="full">
-                    {guildPoapChainId && (
-                      <Tooltip
-                        label={`Monetized on ${
-                          RPC[Chains[guildPoapChainId]]?.chainName
-                        }`}
+                  <HStack justifyContent="space-between" mb={8} spacing={3}>
+                    <HStack spacing={4} minW={0}>
+                      <SkeletonCircle
+                        boxSize={{ base: "20", lg: "24" }}
+                        isLoaded={!isLoading && !!poap?.image_url}
+                        flexShrink={0}
                       >
-                        <Circle
-                          position="absolute"
-                          bottom={2}
-                          right={2}
-                          size={8}
-                          bgColor={colorMode === "light" ? "white" : "gray.100"}
-                          borderColor={colorMode === "light" ? "white" : "gray.700"}
-                          borderWidth={3}
-                        >
-                          <Img
-                            src={RPC[Chains[guildPoapChainId]]?.iconUrls?.[0]}
-                            alt={RPC[Chains[guildPoapChainId]]?.chainName}
-                            boxSize={5}
-                          />
-                        </Circle>
-                      </Tooltip>
-                    )}
-                    <SkeletonCircle boxSize={36} isLoaded={poap && !isLoading}>
-                      <Img boxSize={36} rounded="full" src={poap?.image_url} />
-                    </SkeletonCircle>
+                        <Img
+                          src={poap?.image_url}
+                          alt={poap?.name}
+                          boxSize={{ base: "20", lg: "24" }}
+                          rounded="full"
+                        />
+                      </SkeletonCircle>
+                      <Stack spacing="3">
+                        <Skeleton isLoaded={!!guildPoap || !!poap}>
+                          <Heading
+                            as="h3"
+                            fontSize={{ base: "xl", lg: "2xl" }}
+                            fontFamily="display"
+                            minW={0}
+                            overflowWrap={"break-word"}
+                          >
+                            {poap?.name ?? guildPoap?.fancyId ?? "Loading POAP..."}
+                          </Heading>
+                        </Skeleton>
+                        <Wrap>
+                          <Tag colorScheme={status.color}>
+                            <TagLeftIcon as={Clock} mr="1.5" />
+                            {status.label}
+                          </Tag>
+                        </Wrap>
+                      </Stack>
+                    </HStack>
+                  </HStack>
+
+                  <SkeletonText
+                    noOfLines={3}
+                    skeletonHeight={4}
+                    isLoaded={!isLoading}
+                    speed={0.8}
+                    mb={{ base: 6, md: 8 }}
+                    wordBreak="break-word"
+                  >
+                    {parseDescription(poap?.description)}
+                  </SkeletonText>
+
+                  <Box mt="auto">
+                    <PoapReward
+                      poap={poap}
+                      isExpired={timeDiff < 0}
+                      isInteractive={false}
+                    />
                   </Box>
                 </Flex>
-              </Box>
-              <Stack
-                px={{ base: 6, sm: 12 }}
-                pt={12}
-                pb={7}
-                alignItems="center"
-                spacing={4}
-              >
-                <Skeleton isLoaded={poap && !isLoading}>
-                  <Heading
-                    as="h2"
-                    fontSize={{ base: "2xl", sm: "3xl" }}
-                    fontFamily="display"
-                    textAlign="center"
-                  >
-                    Mint your
-                    <br />
-                    {` ${poap?.name} POAP`}
-                  </Heading>
-                </Skeleton>
-
-                <HStack>
-                  <Circle bgColor="gray.800" size={6} overflow="hidden">
-                    <Img
-                      src={imageUrl}
-                      alt={name}
-                      boxSize={imageUrl?.includes("guildLogos") ? 3 : 6}
-                    />
-                  </Circle>
-                  <Text
-                    color="gray"
-                    textTransform="uppercase"
-                    fontWeight="bold"
-                    fontSize="xs"
-                  >
-                    {`created by `}
-                    <Link href={`/${urlName}`}>{name}</Link>
-                  </Text>
-                </HStack>
-
-                <Skeleton
-                  isLoaded={!!poapLinks || (poapLinks && !isPoapLinksLoading)}
+                <Flex
+                  direction="column"
+                  p={{ base: 5, md: 8 }}
+                  position="relative"
+                  bgColor={colorMode === "light" ? "gray.50" : "blackAlpha.300"}
                 >
-                  <Tag
-                    fontWeight="bold"
-                    textTransform="uppercase"
-                    size="sm"
-                  >{`${poapLinks?.claimed}/${poapLinks?.total} minted`}</Tag>
-                </Skeleton>
+                  <HStack mb={{ base: 4, md: 6 }}>
+                    <Text
+                      as="span"
+                      mt="1"
+                      mr="2"
+                      fontSize="xs"
+                      fontWeight="bold"
+                      color="gray"
+                      textTransform="uppercase"
+                      noOfLines={1}
+                    >
+                      Requirements to claim
+                    </Text>
+                    <Spacer />
+                  </HStack>
 
-                <SkeletonText isLoaded={poap && !isLoading}>
-                  <Text py={2} color="gray" textAlign="center">
-                    {poap?.description}
-                  </Text>
-                </SkeletonText>
+                  <Stack
+                    spacing="0"
+                    divider={
+                      /* have to wrap in a Box, otherwise it looks broken */
+                      <Box border="0">
+                        {/* retrofit: show OR for previously made POAPs with multiple payment methods */}
+                        <LogicDivider
+                          logic={guildPoap?.poapContracts?.length > 1 ? "OR" : "AND"}
+                        />
+                      </Box>
+                    }
+                  >
+                    {requirementComponents?.length ? (
+                      requirementComponents?.map(
+                        (RequirementComponent, i) => RequirementComponent
+                      )
+                    ) : (
+                      <FreeRequirement
+                        rightElement={!account && <ConnectWalletButton />}
+                      />
+                    )}
+                  </Stack>
 
-                {vaultError ? (
-                  <Alert status="error">
-                    <AlertIcon />
-                    <Stack>
-                      <AlertTitle>Contract error</AlertTitle>
-                      <AlertDescription>
-                        Uh-oh, we couldn't fetch the vault data for this POAP.
-                      </AlertDescription>
-                    </Stack>
-                  </Alert>
-                ) : (vaultData ? !hasPaid : poapLinks?.claimed > 0) &&
-                  poapLinks?.claimed === poapLinks?.total ? (
-                  <Alert status="info">
-                    <AlertIcon />
-                    <Stack>
-                      <AlertTitle>Maybe next time...</AlertTitle>
-                      <AlertDescription>
-                        We're sorry, but it seems like all available POAPs have been
-                        minted.
-                      </AlertDescription>
-                    </Stack>
-                  </Alert>
-                ) : (
-                  <>
-                    <Flex pt={8} w="full" justifyContent="center">
-                      <Button
-                        minW={{ base: "full", md: "50%" }}
-                        colorScheme="indigo"
-                        isDisabled={hasExpired || isLoading || isVaultLoading}
-                        isLoading={isLoading || isVaultLoading}
-                        leftIcon={!hasExpired && <Icon as={DownloadSimple} />}
-                        onClick={onOpen}
+                  <Flex mt="auto" pt="8">
+                    <Tooltip
+                      label="Satisfy requirements above to mint POAP"
+                      hasArrow
+                      isDisabled={!isActive || access}
+                    >
+                      <JoinAndMintPoapButton
+                        poapId={guildPoap?.poapIdentifier}
+                        colorScheme="purple"
+                        w="full"
+                        isDisabled={!isActive || !account || !access}
                       >
-                        {hasExpired ? "This POAP has expired" : "Mint"}
-                      </Button>
-                    </Flex>
-                  </>
-                )}
-              </Stack>
+                        Mint POAP
+                      </JoinAndMintPoapButton>
+                    </Tooltip>
+                  </Flex>
+                </Flex>
+              </SimpleGrid>
             </Card>
-
-            <ClaimModal
-              isOpen={isOpen}
-              onClose={onClose}
-              poap={poap}
-              guildPoap={guildPoap}
-            />
+            {/* <HStack mt="6">
+              <Text colorScheme="gray" fontWeight={"bold"}>
+                by:
+              </Text>
+              <GuildLogo imageUrl={imageUrl} size="32px" />
+              <Heading fontSize="md">{name}</Heading>
+            </HStack> */}
           </>
         ) : (
           <Alert status="error">
@@ -269,8 +348,7 @@ const Page = (): JSX.Element => {
             </Stack>
           </Alert>
         )}
-      </Container>
-      <Footer />
+      </Layout>
     </>
   )
 }

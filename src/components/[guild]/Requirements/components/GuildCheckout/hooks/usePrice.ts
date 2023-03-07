@@ -2,8 +2,7 @@ import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
 import { useEffect, useState } from "react"
-import { SWRResponse } from "swr"
-import useSWRImmutable from "swr/immutable"
+import useSWR, { SWRResponse } from "swr"
 import { Requirement } from "types"
 import fetcher from "utils/fetcher"
 import {
@@ -42,13 +41,15 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
     PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) &&
     (sellAddress ?? pickedCurrency)
 
-  const { data, ...swrResponse } = useSWRImmutable<FetchPriceResponse>(
+  const { data, ...swrResponse } = useSWR<FetchPriceResponse>(
     shouldFetch
       ? ["fetchPrice", id, account, requirement, sellAddress ?? pickedCurrency]
       : null,
     fetchPrice,
     {
       shouldRetryOnError: false,
+      revalidateOnFocus: false,
+      refreshInterval: 30000,
     }
   )
 

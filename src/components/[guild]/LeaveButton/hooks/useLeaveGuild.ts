@@ -2,8 +2,8 @@ import { useWeb3React } from "@web3-react/core"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
-import { mutate } from "swr"
 import fetcher from "utils/fetcher"
 
 type Data = {
@@ -26,7 +26,7 @@ const useLeaveGuild = () => {
         title: "You've successfully left this guild",
         status: "success",
       })
-      mutate(`/user/membership/${account}`)
+      mutateOptionalAuthSWRKey(`/user/membership/${account}`)
       matchMutate(/^\/guild\/address\//)
     },
     onError: (error) => showErrorToast(error),

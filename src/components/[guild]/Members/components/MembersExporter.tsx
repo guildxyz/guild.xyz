@@ -24,14 +24,14 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RoleOptionCard from "components/[guild]/RoleOptionCard"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Check, Copy, DownloadSimple, Export } from "phosphor-react"
 import { useRef } from "react"
-import useSWRImmutable from "swr/immutable"
 
 const MembersExporter = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { id, roles } = useGuild()
-  const { data, isValidating } = useSWRImmutable(
+  const { data, isValidating } = useSWRWithOptionalAuth(
     isOpen ? `/guild/${id}/members` : null
   )
 

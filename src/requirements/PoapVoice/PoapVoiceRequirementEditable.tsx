@@ -21,9 +21,10 @@ type Props = { guildPoap: GuildPoap }
 const PoapVoiceRequirementEditable = ({ guildPoap, ...props }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
+  const removeRef = useRef()
 
   const { onSubmit: onDeleteSubmit, isLoading: isDeleteLoading } =
-    useDeleteVoiceRequirement(guildPoap.poapIdentifier)
+    useDeleteVoiceRequirement(guildPoap.poapIdentifier, { onSuccess: onClose })
 
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
 
@@ -32,6 +33,7 @@ const PoapVoiceRequirementEditable = ({ guildPoap, ...props }: Props) => {
       <PoapVoiceRequirement {...{ guildPoap }} footer={null} />
 
       <CloseButton
+        ref={removeRef}
         position="absolute"
         top={2}
         right={2}
@@ -42,7 +44,11 @@ const PoapVoiceRequirementEditable = ({ guildPoap, ...props }: Props) => {
         aria-label="Remove requirement"
       />
 
-      <Alert {...{ isOpen, onClose }} leastDestructiveRef={cancelRef}>
+      <Alert
+        {...{ isOpen, onClose }}
+        leastDestructiveRef={cancelRef}
+        finalFocusRef={removeRef}
+      >
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader>

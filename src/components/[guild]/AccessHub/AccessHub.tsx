@@ -12,6 +12,7 @@ import { StarHalf } from "phosphor-react"
 import platforms from "platforms"
 import { PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
+import PoapRewardCardMenu from "../CreatePoap/components/PoapRewardCard/components/PoapRewardCardMenu"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
@@ -83,7 +84,11 @@ const AccessHub = (): JSX.Element => {
           })}
 
           {futurePoaps.map((poap) => (
-            <PoapRewardCard key={poap?.id} guildPoap={poap} />
+            <PoapRewardCard
+              key={poap?.id}
+              guildPoap={poap}
+              cornerButton={isAdmin && <PoapRewardCardMenu guildPoap={poap} />}
+            />
           ))}
         </>
       ) : (

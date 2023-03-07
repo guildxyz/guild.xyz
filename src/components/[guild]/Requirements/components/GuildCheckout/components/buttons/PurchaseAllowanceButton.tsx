@@ -27,7 +27,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
 
   const {
-    data: { priceInWei },
+    data: { priceToSendInWei },
     isValidating: isPriceLoading,
   } = usePrice()
 
@@ -43,7 +43,9 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   } = useAllowance(pickedCurrency, tokenBuyerContractData[Chains[chainId]]?.address)
 
   const isEnoughAllowance =
-    priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
+    priceToSendInWei && allowance
+      ? BigNumber.from(priceToSendInWei).lte(allowance)
+      : false
 
   return (
     <Collapse

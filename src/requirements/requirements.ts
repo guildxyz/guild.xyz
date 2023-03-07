@@ -496,6 +496,18 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["GITCOIN", "GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
   },
+  {
+    icon: "/requirementLogos/polygonId.svg",
+    name: "PolygonID",
+    fileNameBase: "PolygonID",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/PolygonId/PolygonIdRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/PolygonId/PolygonIdForm")
+    ),
+    types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA

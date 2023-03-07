@@ -35,7 +35,7 @@ const isConfigParam = (
 const purchaseAsset = async (
   tokenBuyerContract: Contract,
   generatedGetAssetsParams: GeneratedGetAssetsParams,
-  estimatedGasLimit: BigNumber
+  estimatedGasLimit?: BigNumber
 ) => {
   // We shouldn't run into these issues, but rejecting here in case something wrong happens.
   if (!tokenBuyerContract) return Promise.reject("Can't find TokenBuyer contract.")
@@ -45,14 +45,19 @@ const purchaseAsset = async (
   // Adjusting the gas limit to avoid failing transactions)
   // TODO: rethink the way we use generateGetAssetsParams, maybe we can find a cleaner solution for adjusting gas fee here.
   const generatedGetAssetsParamsWithGasLimit = [...generatedGetAssetsParams]
-  const customGasLimit = estimatedGasLimit?.mul(15)?.div(10)
-  if (isConfigParam(generatedGetAssetsParamsWithGasLimit[4]))
-    generatedGetAssetsParamsWithGasLimit[4].gasLimit = customGasLimit
-  else if (isConfigParam(generatedGetAssetsParamsWithGasLimit[3]))
-    generatedGetAssetsParamsWithGasLimit[3].gasLimit = customGasLimit
+
+  if (estimatedGasLimit) {
+    const customGasLimit = estimatedGasLimit.mul(12)?.div(10)
+    if (isConfigParam(generatedGetAssetsParamsWithGasLimit[4]))
+      generatedGetAssetsParamsWithGasLimit[4].gasLimit = customGasLimit
+    else if (isConfigParam(generatedGetAssetsParamsWithGasLimit[3]))
+      generatedGetAssetsParamsWithGasLimit[3].gasLimit = customGasLimit
+  }
 
   try {
-    await tokenBuyerContract.callStatic.getAssets(...generatedGetAssetsParams)
+    await tokenBuyerContract.callStatic.getAssets(
+      ...generatedGetAssetsParamsWithGasLimit
+    )
   } catch (callStaticError) {
     if (callStaticError.error) {
       const walletError = processWalletError(callStaticError.error)
@@ -71,7 +76,7 @@ const purchaseAsset = async (
     }
   }
 
-  return tokenBuyerContract.getAssets(...generatedGetAssetsParams)
+  return tokenBuyerContract.getAssets(...generatedGetAssetsParamsWithGasLimit)
 }
 
 const usePurchaseAsset = () => {
@@ -116,18 +121,18 @@ const usePurchaseAsset = () => {
     pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
 
   const isSufficientBalance =
-    priceData?.priceInWei &&
+    priceData?.priceToSendInWei &&
     (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gt(BigNumber.from(priceData.priceInWei))
-      : tokenBalance?.gt(BigNumber.from(priceData.priceInWei)))
+      ? coinBalance?.gt(BigNumber.from(priceData.priceToSendInWei))
+      : tokenBalance?.gt(BigNumber.from(priceData.priceToSendInWei)))
 
   const shouldEstimateGas =
     requirement?.chain === Chains[chainId] &&
-    priceData?.priceInWei &&
+    priceData?.priceToSendInWei &&
     isSufficientBalance &&
     (ADDRESS_REGEX.test(pickedCurrency)
-      ? allowance && BigNumber.from(priceData.priceInWei).lte(allowance)
+      ? allowance && BigNumber.from(priceData.priceToSendInWei).lte(allowance)
       : true)
 
   const {

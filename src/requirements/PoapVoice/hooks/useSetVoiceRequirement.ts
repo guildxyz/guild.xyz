@@ -4,7 +4,6 @@ import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { VoiceRequirementParams } from "types"
 import fetcher from "utils/fetcher"
-import usePoapEventDetails from "./usePoapEventDetails"
 
 type Method = "POST" | "PATCH"
 
@@ -19,15 +18,12 @@ const useSetVoiceRequirement = (
   method: Method,
   { onSuccess }: UseSubmitOptions = {}
 ) => {
-  const { mutatePoapEventDetails } = usePoapEventDetails()
-
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
   return useSubmitWithSign<VoiceRequirementParams>(setVoiceRequirement(method), {
     onError: (error) => showErrorToast(error),
     onSuccess: () => {
-      mutatePoapEventDetails()
       toast({
         status: "success",
         title: `Successfully ${
