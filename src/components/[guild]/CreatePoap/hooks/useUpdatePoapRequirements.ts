@@ -23,8 +23,8 @@ const useUpdatePoapRequirements = (
   const { onSubmit, ...rest } = useSubmitWithSign<GuildPoap>(
     updatePoapRequirements,
     {
-      onError: (error) => showErrorToast(error?.error?.message ?? error?.error),
-      onSuccess: async (response) => {
+      onError: (error) => showErrorToast(error),
+      onSuccess: async () => {
         mutateGuild()
 
         onSuccess?.()
@@ -36,7 +36,6 @@ const useUpdatePoapRequirements = (
     ...rest,
     onSubmit: (data) => {
       data.requirements = preprocessRequirements(data?.requirements)
-      data.logic = "AND"
       return onSubmit(data)
     },
   }

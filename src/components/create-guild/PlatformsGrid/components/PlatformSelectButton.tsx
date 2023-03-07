@@ -10,7 +10,7 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import DisplayCard from "components/common/DisplayCard"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { default as Image } from "next/image"
+import Image from "next/image"
 import { CaretRight } from "phosphor-react"
 
 const PlatformSelectButton = ({

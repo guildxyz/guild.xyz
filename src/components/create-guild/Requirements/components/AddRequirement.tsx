@@ -29,8 +29,9 @@ import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion
 import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
+import { Visibility } from "types"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
@@ -148,6 +149,7 @@ const AddRequirementForm = forwardRef(
     const FormComponent = REQUIREMENTS[selectedType].formComponent
 
     const methods = useForm({ mode: "all" })
+    const roleVisibility: Visibility = useWatch({ name: ".visibility" })
 
     const [isPresent, safeToRemove] = usePresence()
     useEffect(() => {
@@ -155,7 +157,11 @@ const AddRequirementForm = forwardRef(
     }, [isPresent])
 
     const onSubmit = methods.handleSubmit((data) => {
-      onAdd({ type: selectedType, ...data })
+      onAdd({
+        type: selectedType,
+        visibility: roleVisibility,
+        ...data,
+      })
       handleClose()
     })
 
@@ -201,6 +207,16 @@ const AddRequirementHome = forwardRef(
       TRANSITION_DURATION_MS
     )
 
+    const openPaymentRequirementNotionForm = () => {
+      if (typeof window === "undefined") return
+      window
+        .open(
+          "https://notionforms.io/forms/payment-requirement-alpha-interest-form-warden-edition",
+          "_blank"
+        )
+        ?.focus()
+    }
+
     return (
       <ModalBody
         ref={ref}
@@ -221,8 +237,11 @@ const AddRequirementHome = forwardRef(
                 key={requirementButton.types[0]}
                 w="full"
                 py={11}
-                onClick={() => setSelectedType(requirementButton.types[0])}
-                isDisabled={isPayment && !isPaymentAllowed}
+                onClick={() =>
+                  isPayment && !isPaymentAllowed
+                    ? openPaymentRequirementNotionForm()
+                    : setSelectedType(requirementButton.types[0])
+                }
               >
                 <VStack w="full" whiteSpace="break-spaces">
                   <Icon as={requirementButton.icon as FC} boxSize={6} />
@@ -235,10 +254,10 @@ const AddRequirementHome = forwardRef(
                     top={2}
                     right={2}
                     size="sm"
-                    bgColor={isPaymentAllowed && "blue.500"}
-                    color={isPaymentAllowed && "white"}
+                    bgColor="blue.500"
+                    color="white"
                   >
-                    {isPaymentAllowed ? "Alpha" : "Soon"}
+                    Alpha
                   </Tag>
                 )}
               </Button>

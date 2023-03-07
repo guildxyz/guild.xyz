@@ -18,6 +18,9 @@ const useUserPoapEligibility = (poapIdentifier: number) => {
       shouldRetryOnError: false,
     }
   )
+
+  if (!poapIdentifier) return { data: {} }
+
   const generalReqData = data?.userAccesses?.[0]?.users?.[0]
 
   const generalReqAccess = generalReqData ? generalReqData.access : true

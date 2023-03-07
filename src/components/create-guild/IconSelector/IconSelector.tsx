@@ -33,9 +33,10 @@ import icons from "./icons.json"
 
 type Props = {
   uploader: Uploader
+  isDisabled?: boolean
 }
 
-const IconSelector = ({ uploader }: Props) => {
+const IconSelector = ({ uploader, isDisabled }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { control } = useFormContext<GuildFormType>()
 
@@ -88,82 +89,85 @@ const IconSelector = ({ uploader }: Props) => {
         bg={iconButtonBgColor}
         _hover={{ bg: iconButtonHoverBgColor }}
         _active={{ bg: iconButtonActiveBgColor }}
+        isDisabled={isDisabled}
       />
-      <Modal {...{ isOpen, onClose }} size="3xl" scrollBehavior="inside">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Choose logo</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody className="custom-scrollbar">
-            <PhotoUploader uploader={uploader} closeModal={onClose} />
-            <LogicDivider logic="OR" px="0" my="5" />
-            <FormControl>
-              <FormLabel>Choose from default icons</FormLabel>
-              <Tabs
-                isFitted
-                variant="enclosed"
-                defaultIndex={tabIndex}
-                colorScheme="white"
-                onChange={(index) => setTabIndex(index)}
-              >
-                <Box mx={{ base: -4, md: 0 }}>
-                  <TabList
-                    px={{ base: 4, md: 0 }}
-                    maxW="full"
-                    overflowX="auto"
-                    overflowY="hidden"
-                    sx={{
-                      WebkitMaskImage: [
-                        "linear-gradient(to right, transparent 0px, black 20px, black calc(100% - 20px), transparent)",
-                        "linear-gradient(to right, transparent 0px, black 20px, black calc(100% - 20px), transparent)",
-                        "none",
-                      ],
-                    }}
-                    className="invisible-scrollbar"
-                  >
+      {!isDisabled && (
+        <Modal {...{ isOpen, onClose }} size="3xl" scrollBehavior="inside">
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Choose logo</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody className="custom-scrollbar">
+              <PhotoUploader uploader={uploader} closeModal={onClose} />
+              <LogicDivider logic="OR" px="0" my="5" />
+              <FormControl>
+                <FormLabel>Choose from default icons</FormLabel>
+                <Tabs
+                  isFitted
+                  variant="enclosed"
+                  defaultIndex={tabIndex}
+                  colorScheme="white"
+                  onChange={(index) => setTabIndex(index)}
+                >
+                  <Box mx={{ base: -4, md: 0 }}>
+                    <TabList
+                      px={{ base: 4, md: 0 }}
+                      maxW="full"
+                      overflowX="auto"
+                      overflowY="hidden"
+                      sx={{
+                        WebkitMaskImage: [
+                          "linear-gradient(to right, transparent 0px, black 20px, black calc(100% - 20px), transparent)",
+                          "linear-gradient(to right, transparent 0px, black 20px, black calc(100% - 20px), transparent)",
+                          "none",
+                        ],
+                      }}
+                      className="invisible-scrollbar"
+                    >
+                      {icons.map((tab, index) => (
+                        <Tab
+                          border={0}
+                          bgColor={index === tabIndex && tabBgColor}
+                          key={index}
+                          minW="max-content"
+                        >
+                          {index === tabIndex && (
+                            <Text as="span" mr={2} fontSize="sm">
+                              {tab.name}
+                            </Text>
+                          )}
+                          <Img
+                            src={`/guildLogos/${tab.logo}.svg`}
+                            sx={guildLogoSxProp}
+                          />
+                        </Tab>
+                      ))}
+                    </TabList>
+                  </Box>
+                  <TabPanels>
                     {icons.map((tab, index) => (
-                      <Tab
-                        border={0}
-                        bgColor={index === tabIndex && tabBgColor}
-                        key={index}
-                        minW="max-content"
-                      >
-                        {index === tabIndex && (
-                          <Text as="span" mr={2} fontSize="sm">
-                            {tab.name}
-                          </Text>
-                        )}
-                        <Img
-                          src={`/guildLogos/${tab.logo}.svg`}
-                          sx={guildLogoSxProp}
-                        />
-                      </Tab>
+                      <TabPanel px={0} py={4} key={index}>
+                        <SimpleGrid
+                          minChildWidth="var(--chakra-sizes-10)"
+                          spacing="4"
+                          {...group}
+                        >
+                          {tab.icons.map((x, i) => {
+                            const radio = getRadioProps({
+                              value: `/guildLogos/${x}.svg`,
+                            })
+                            return <SelectorButton key={i} {...radio} />
+                          })}
+                        </SimpleGrid>
+                      </TabPanel>
                     ))}
-                  </TabList>
-                </Box>
-                <TabPanels>
-                  {icons.map((tab, index) => (
-                    <TabPanel px={0} key={index}>
-                      <SimpleGrid
-                        minChildWidth="var(--chakra-sizes-10)"
-                        spacing="4"
-                        {...group}
-                      >
-                        {tab.icons.map((x, i) => {
-                          const radio = getRadioProps({
-                            value: `/guildLogos/${x}.svg`,
-                          })
-                          return <SelectorButton key={i} {...radio} />
-                        })}
-                      </SimpleGrid>
-                    </TabPanel>
-                  ))}
-                </TabPanels>
-              </Tabs>
-            </FormControl>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+                  </TabPanels>
+                </Tabs>
+              </FormControl>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      )}
     </>
   )
 }
