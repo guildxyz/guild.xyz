@@ -40,7 +40,7 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
     onSuccess: () => {
       toast({
         status: "success",
-        title: "Successfully updated invite link",
+        title: "Successfully updated Discord settings",
       })
       methods.reset(undefined, { keepValues: true })
       mutateGuild()
