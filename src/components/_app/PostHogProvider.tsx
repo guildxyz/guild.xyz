@@ -27,7 +27,7 @@ if (typeof window !== "undefined") {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com",
     // Capture custom events only
-    // autocapture: false,
+    autocapture: false,
     // Disable in development
     loaded: (ph) => {
       // if (process.env.NODE_ENV === 'development') ph.opt_out_capturing()
