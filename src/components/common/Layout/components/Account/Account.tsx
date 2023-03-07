@@ -35,6 +35,7 @@ const Account = (): JSX.Element => {
   const lensName = useLensProtocolName()
 
   const { addresses } = useUser()
+
   if (!account) {
     return (
       <AccountButton

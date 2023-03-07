@@ -3,44 +3,23 @@ import Chakra from "components/_app/Chakra"
 import Datadog from "components/_app/Datadog"
 import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
+import PostHogProvider from "components/_app/PostHogProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import Script from "next/script"
 import { IconContext } from "phosphor-react"
-import posthog from "posthog-js"
-import { PostHogProvider } from "posthog-js/react"
-import { Fragment, useEffect } from "react"
+import { Fragment } from "react"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import fetcher from "utils/fetcher"
-
-if (typeof window !== "undefined") {
-  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com",
-    // Disable in development
-    loaded: (ph) => {
-      // if (process.env.NODE_ENV === 'development') ph.opt_out_capturing()
-    },
-  })
-}
 
 const App = ({
   Component,
   pageProps,
 }: AppProps<{ cookies: string }>): JSX.Element => {
   const router = useRouter()
-
-  // PostHog - Track page views
-  useEffect(() => {
-    const handleRouteChange = () => posthog.capture("$pageview")
-    router.events.on("routeChangeComplete", handleRouteChange)
-
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange)
-    }
-  }, [])
 
   const DatadogComponent = router.asPath.includes("linkpreview") ? Fragment : Datadog
 
@@ -60,7 +39,7 @@ const App = ({
             <Web3ReactProvider connectors={connectors}>
               <Web3ConnectionManager>
                 <DatadogComponent>
-                  <PostHogProvider client={posthog}>
+                  <PostHogProvider>
                     <IntercomProvider>
                       <ExplorerProvider>
                         <Component {...pageProps} />
