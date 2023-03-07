@@ -1,8 +1,8 @@
 import { MenuDivider, MenuItem, Spinner, useDisclosure } from "@chakra-ui/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
+import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import { ArrowsCounterClockwise, ChatDots, Check, Gear } from "phosphor-react"
-import PlatformCardMenu from "../../PlatformCardMenu"
 import DiscordRewardSettings from "./components/DiscordRewardSettings.tsx"
 import useSyncMembersFromDiscord from "./hooks/useSyncMembersFromDiscord"
 

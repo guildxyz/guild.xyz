@@ -1,8 +1,9 @@
 import { MenuItem, useColorModeValue, useDisclosure } from "@chakra-ui/react"
+import useRemoveGuildPlatform from "components/[guild]/AccessHub/hooks/useRemoveGuildPlatform"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RemovePlatformAlert from "components/[guild]/RemovePlatformAlert"
-import useRemoveGuildPlatform from "components/[guild]/RolePlatforms/components/PlatformCard/components/useDiscordCardProps/DiscordCardMenu/hooks/useRemoveGuildPlatform"
 import { TrashSimple } from "phosphor-react"
+import { useEffect } from "react"
 
 type Props = {
   platformGuildId: string
@@ -16,8 +17,16 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
     (gp) => gp.platformGuildId === platformGuildId
   )
 
-  const { onSubmit, isLoading: isRemoveGuildPlatformLoading } =
-    useRemoveGuildPlatform(guildPlatform?.id)
+  const {
+    onSubmit,
+    isLoading: isRemoveGuildPlatformLoading,
+    response,
+  } = useRemoveGuildPlatform(guildPlatform?.id)
+
+  useEffect(() => {
+    if (!response) return
+    onClose()
+  }, [response])
 
   const color = useColorModeValue("red.600", "red.300")
 

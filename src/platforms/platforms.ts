@@ -1,19 +1,4 @@
 import { ChakraProps } from "@chakra-ui/react"
-import useDiscordCardProps, {
-  DiscordCardMenu,
-  DiscordCardSettings,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/useDiscordCardProps"
-import useGithubCardProps, {
-  GithubCardMenu,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGithubCardProps"
-import useGoogleCardProps, {
-  GoogleCardMenu,
-  GoogleCardSettings,
-  GoogleCardWarning,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps"
-import useTelegramCardProps, {
-  TelegramCardMenu,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps"
 import {
   DiscordLogo,
   GithubLogo,
@@ -23,6 +8,17 @@ import {
   TwitterLogo,
 } from "phosphor-react"
 import { GuildPlatform, PlatformName } from "types"
+import DiscordCardMenu from "./Discord/DiscordCardMenu"
+import DiscordCardSettings from "./Discord/DiscordCardSettings"
+import useDiscordCardProps from "./Discord/useDiscordCardProps"
+import GithubCardMenu from "./Github/GithubCardMenu"
+import useGithubCardProps from "./Github/useGithubCardProps"
+import GoogleCardMenu from "./Google/GoogleCardMenu"
+import GoogleCardSettings from "./Google/GoogleCardSettings"
+import GoogleCardWarning from "./Google/GoogleCardWarning"
+import useGoogleCardProps from "./Google/useGoogleCardProps"
+import TelegramCardMenu from "./Telegram/TelegramCardMenu"
+import useTelegramCardProps from "./Telegram/useTelegramCardProps"
 
 type PlatformData = {
   icon: (props: IconProps) => JSX.Element

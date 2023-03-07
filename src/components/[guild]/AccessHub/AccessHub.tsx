@@ -9,7 +9,7 @@ import {
 import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import { StarHalf } from "phosphor-react"
-import platforms from "platforms"
+import platforms from "platforms/platforms"
 import { PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
 import PoapRewardCardMenu from "../CreatePoap/components/PoapRewardCard/components/PoapRewardCardMenu"

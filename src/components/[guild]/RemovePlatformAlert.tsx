@@ -9,7 +9,7 @@ import {
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import ShouldKeepPlatformAccesses from "components/[guild]/ShouldKeepPlatformAccesses"
-import platforms from "platforms"
+import platforms from "platforms/platforms"
 import { useRef, useState } from "react"
 import { GuildPlatform, PlatformType } from "types"
 
