@@ -135,23 +135,19 @@ const SetVisibility = ({
   return (
     <>
       {entityType === "role" ? (
-        <Tooltip label={"This feature is temporarily disabled"}>
-          <Button
-            ml={3}
-            size="xs"
-            leftIcon={<Icon />}
-            onClick={onOpen}
-            ref={buttonRef}
-            {...buttonProps}
-            isDisabled
-          >
-            {visibilityData[currentVisibility].title}
-          </Button>
-        </Tooltip>
+        <Button
+          ml={3}
+          size="xs"
+          leftIcon={<Icon />}
+          onClick={onOpen}
+          ref={buttonRef}
+          {...buttonProps}
+        >
+          {visibilityData[currentVisibility].title}
+        </Button>
       ) : (
         <Tooltip
-          // label={`${visibilityData[currentVisibility].title}: ${visibilityData[currentVisibility].description}`}
-          label={"This feature is temporarily disabled"}
+          label={`${visibilityData[currentVisibility].title}: ${visibilityData[currentVisibility].description}`}
         >
           <IconButton
             size={"sm"}
@@ -163,7 +159,6 @@ const SetVisibility = ({
             ref={buttonRef}
             ml={1}
             color="gray"
-            isDisabled
           />
         </Tooltip>
       )}
