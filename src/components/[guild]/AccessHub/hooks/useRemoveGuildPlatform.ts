@@ -3,25 +3,18 @@ import useGateables from "hooks/useGateables"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { useFieldArray, useFormContext, useFormState } from "react-hook-form"
 import fetcher from "utils/fetcher"
-import { useRolePlatform } from "../../RolePlatformProvider"
 
-const useRemovePlatform = ({ onSuccess }: any) => {
-  const { mutateGuild } = useGuild()
+const useRemoveGuildPlatform = (guildPlatformId: number) => {
+  const { id, guildPlatforms, mutateGuild } = useGuild()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const { index, guildPlatformId, roleId, guildPlatform } = useRolePlatform()
-  const { dirtyFields } = useFormState()
-  const { reset } = useFormContext()
-  const { remove } = useFieldArray({
-    name: "rolePlatforms",
-  })
-
-  const { mutate: mutateGateables } = useGateables(guildPlatform?.platformId)
+  const { mutate: mutateGateables } = useGateables(
+    guildPlatforms?.find((gp) => gp.id === guildPlatformId)?.platformId
+  )
 
   const submit = async (signedValidation: SignedValdation) =>
-    fetcher(`/role/${roleId}/platform/${guildPlatformId}`, {
+    fetcher(`/guild/${id}/platform/${guildPlatformId}`, {
       method: "DELETE",
       ...signedValidation,
     })
@@ -33,9 +26,6 @@ const useRemovePlatform = ({ onSuccess }: any) => {
         title: `Platform removed!`,
         status: "success",
       })
-      remove(index)
-      onSuccess?.()
-      if (!Object.keys(dirtyFields).length) reset(undefined, { keepValues: true })
 
       mutateGuild()
       mutateGateables()
@@ -44,4 +34,4 @@ const useRemovePlatform = ({ onSuccess }: any) => {
   })
 }
 
-export default useRemovePlatform
+export default useRemoveGuildPlatform

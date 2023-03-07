@@ -10,7 +10,7 @@ import {
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import OptionCard from "components/common/OptionCard"
-import { fileTypeNames } from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/useGoogleCardProps"
+import { fileTypeNames } from "platforms/Google/useGoogleCardProps"
 import { GoogleFile } from "types"
 
 type Props = {

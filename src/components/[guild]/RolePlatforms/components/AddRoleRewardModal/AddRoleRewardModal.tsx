@@ -10,7 +10,7 @@ import {
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft } from "phosphor-react"
-import platforms from "platforms"
+import platforms from "platforms/platforms"
 import { useRef, useState } from "react"
 import { PlatformName } from "types"
 import AddDiscordPanel from "./components/AddDiscordPanel"
