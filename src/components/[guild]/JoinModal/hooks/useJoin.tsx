@@ -1,13 +1,13 @@
 import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
-import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
 import { PlatformName } from "types"
@@ -37,9 +37,9 @@ export type JoinData = {
 const useJoin = (onSuccess?: () => void) => {
   const { addDatadogAction, addDatadogError } = useDatadog()
 
-  const router = useRouter()
   const { account } = useWeb3React()
 
+  const access = useAccess()
   const guild = useGuild()
   const user = useUser()
 
@@ -64,6 +64,7 @@ const useJoin = (onSuccess?: () => void) => {
 
   const useSubmitResponse = useSubmitWithSign<Response>(submit, {
     onSuccess: (response) => {
+      access?.mutate?.()
       // mutate user in case they connected new platforms during the join flow
       user?.mutate?.()
 
@@ -83,7 +84,7 @@ const useJoin = (onSuccess?: () => void) => {
       setTimeout(() => {
         mutateOptionalAuthSWRKey(`/user/membership/${account}`)
         // show user in guild's members
-        mutateOptionalAuthSWRKey(`/guild/${router.query.guild}`)
+        guild.mutateGuild()
       }, 800)
 
       toastIdRef.current = toast({

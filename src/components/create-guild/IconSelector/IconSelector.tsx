@@ -89,7 +89,7 @@ const IconSelector = ({ uploader, isDisabled }: Props) => {
         bg={iconButtonBgColor}
         _hover={{ bg: iconButtonHoverBgColor }}
         _active={{ bg: iconButtonActiveBgColor }}
-        isDisabled
+        isDisabled={isDisabled}
       />
       {!isDisabled && (
         <Modal {...{ isOpen, onClose }} size="3xl" scrollBehavior="inside">
@@ -146,7 +146,7 @@ const IconSelector = ({ uploader, isDisabled }: Props) => {
                   </Box>
                   <TabPanels>
                     {icons.map((tab, index) => (
-                      <TabPanel px={0} key={index}>
+                      <TabPanel px={0} py={4} key={index}>
                         <SimpleGrid
                           minChildWidth="var(--chakra-sizes-10)"
                           spacing="4"

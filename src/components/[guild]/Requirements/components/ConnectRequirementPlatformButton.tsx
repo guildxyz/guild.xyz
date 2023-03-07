@@ -25,7 +25,9 @@ const ConnectRequirementPlatformButton = (props: ButtonProps) => {
   const toast = useToast()
   const onSuccess = () => {
     mutateAccesses()
-    mutatePoapAccesses()
+    if (poapId) {
+      mutatePoapAccesses()
+    }
     toast({
       title: `Successfully connected ${platforms[platform].name}`,
       description: `Your access is being re-checked...`,

@@ -36,7 +36,6 @@ const useUpdatePoapRequirements = (
     ...rest,
     onSubmit: (data) => {
       data.requirements = preprocessRequirements(data?.requirements)
-      data.logic = "AND"
       return onSubmit(data)
     },
   }

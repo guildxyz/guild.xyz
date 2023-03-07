@@ -124,7 +124,7 @@ const EditPoapRole = ({ poap, guildPoap }: Props): JSX.Element => {
                   <Box>
                     <FormLabel opacity={0.4}>Logo and name</FormLabel>
                     <HStack spacing={2} alignItems="start">
-                      <IconSelector uploader={null} />
+                      <IconSelector uploader={null} isDisabled />
                       <Name isDisabled />
                     </HStack>
                   </Box>
