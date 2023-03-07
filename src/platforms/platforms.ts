@@ -1,13 +1,4 @@
 import { ChakraProps } from "@chakra-ui/react"
-import useDiscordCardProps, {
-  DiscordCardMenu,
-  DiscordCardSettings,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/useDiscordCardProps"
-import useGithubCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGithubCardProps"
-import useGoogleCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps"
-import GoogleCardSettings from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardSettings"
-import GoogleCardWarning from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardWarning"
-import useTelegramCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps"
 import {
   DiscordLogo,
   GithubLogo,
@@ -17,6 +8,17 @@ import {
   TwitterLogo,
 } from "phosphor-react"
 import { GuildPlatform, PlatformName } from "types"
+import DiscordCardMenu from "./Discord/DiscordCardMenu"
+import DiscordCardSettings from "./Discord/DiscordCardSettings"
+import useDiscordCardProps from "./Discord/useDiscordCardProps"
+import GithubCardMenu from "./Github/GithubCardMenu"
+import useGithubCardProps from "./Github/useGithubCardProps"
+import GoogleCardMenu from "./Google/GoogleCardMenu"
+import GoogleCardSettings from "./Google/GoogleCardSettings"
+import GoogleCardWarning from "./Google/GoogleCardWarning"
+import useGoogleCardProps from "./Google/useGoogleCardProps"
+import TelegramCardMenu from "./Telegram/TelegramCardMenu"
+import useTelegramCardProps from "./Telegram/useTelegramCardProps"
 
 type PlatformData = {
   icon: (props: IconProps) => JSX.Element
@@ -42,6 +44,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "TELEGRAM",
     gatedEntity: "group",
     cardPropsHook: useTelegramCardProps,
+    cardMenuComponent: TelegramCardMenu,
   },
   DISCORD: {
     icon: DiscordLogo,
@@ -58,6 +61,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "GITHUB",
     gatedEntity: "repo",
     cardPropsHook: useGithubCardProps,
+    cardMenuComponent: GithubCardMenu,
   },
   TWITTER: {
     icon: TwitterLogo,
@@ -78,6 +82,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "document",
     cardPropsHook: useGoogleCardProps,
     cardSettingsComponent: GoogleCardSettings,
+    cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
   },
 }

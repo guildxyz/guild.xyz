@@ -7,6 +7,7 @@ import useDebouncedState from "hooks/useDebouncedState"
 import useGateables from "hooks/useGateables"
 import { useMemo } from "react"
 import { useFormContext } from "react-hook-form"
+import { PlatformType } from "types"
 import { OptionSkeletonCard } from "../OptionCard"
 import ReconnectAlert from "../ReconnectAlert"
 import DCServerCard from "./components/DCServerCard"
@@ -21,7 +22,11 @@ const DiscordGuildSetup = ({
 }) => {
   const { reset, setValue } = useFormContext()
 
-  const { gateables, isLoading, error: gateablesError } = useGateables("DISCORD")
+  const {
+    gateables,
+    isLoading,
+    error: gateablesError,
+  } = useGateables(PlatformType.DISCORD)
 
   const servers = Object.entries(gateables || {}).map(([id, serverData]) => ({
     id,

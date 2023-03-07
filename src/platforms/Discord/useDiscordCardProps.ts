@@ -1,7 +1,7 @@
 import useServerData from "hooks/useServerData"
 import { useMemo } from "react"
 import { GuildPlatform, PlatformName } from "types"
-import { useRolePlatform } from "../../../RolePlatformProvider"
+import { useRolePlatform } from "../../components/[guild]/RolePlatforms/components/RolePlatformProvider"
 
 const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
   const rolePlatform = useRolePlatform()
