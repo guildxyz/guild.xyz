@@ -104,7 +104,7 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
               </FormControl>
 
               <FormControl>
-                <FormLabel>Inline CAPTCHA</FormLabel>
+                <FormLabel>Discord CAPTCHA</FormLabel>
 
                 <Switch
                   title={needCaptcha ? "Enabled" : "Disabled"}
