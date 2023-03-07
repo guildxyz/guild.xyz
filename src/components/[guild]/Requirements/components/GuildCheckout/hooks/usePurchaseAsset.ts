@@ -10,6 +10,7 @@ import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
+import { usePostHog } from "posthog-js/react"
 import { useMemo } from "react"
 import {
   ADDRESS_REGEX,
@@ -81,6 +82,7 @@ const purchaseAsset = async (
 
 const usePurchaseAsset = () => {
   const { addDatadogAction, addDatadogError } = useDatadog()
+  const posthog = usePostHog()
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
@@ -159,6 +161,10 @@ const usePurchaseAsset = () => {
         addDatadogError("purchase requirement pre-call error (GuildCheckout)", {
           error,
         })
+        posthog.capture("Purchase requirement error (GuildCheckout)")
+        posthog.capture("getAssets pre-call error (GuildCheckout)", {
+          error,
+        })
       },
       onSuccess: (receipt) => {
         if (receipt.status !== 1) {
@@ -167,10 +173,16 @@ const usePurchaseAsset = () => {
           addDatadogError("purchase requirement error (GuildCheckout)", {
             receipt,
           })
+          posthog.capture("Purchase requirement error (GuildCheckout)")
+          posthog.capture("getAssets error (GuildCheckout)", {
+            receipt,
+          })
           return
         }
 
         addDatadogAction("purchased requirement (GuildCheckout)")
+        posthog.capture("Purchased requirement (GuildCheckout)")
+
         toast({
           status: "success",
           title: "Your new asset:",

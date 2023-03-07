@@ -21,6 +21,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
+import { usePostHog } from "posthog-js/react"
 import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
@@ -46,6 +47,8 @@ import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
+  const posthog = usePostHog()
+
   const { featureFlags } = useGuild()
 
   const { account, chainId } = useWeb3React()
@@ -74,6 +77,11 @@ const PurchaseRequirement = (): JSX.Element => {
     error,
   } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
 
+  const onClick = () => {
+    onOpen()
+    posthog.capture("Click: Purchase (Requirement)")
+  }
+
   if (
     !isOpen &&
     !isInfoModalOpen &&
@@ -93,7 +101,7 @@ const PurchaseRequirement = (): JSX.Element => {
         leftIcon={<Icon as={ShoppingCartSimple} />}
         borderRadius="md"
         fontWeight="medium"
-        onClick={onOpen}
+        onClick={onClick}
         data-dd-action-name="Purchase (Requierment)"
       >
         Purchase

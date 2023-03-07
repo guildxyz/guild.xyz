@@ -4,6 +4,7 @@ import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
+import { usePostHog } from "posthog-js/react"
 import { getTokenBuyerContractData } from "utils/guildCheckout/constants"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
@@ -11,6 +12,8 @@ import usePurchaseAsset from "../../hooks/usePurchaseAsset"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseButton = (): JSX.Element => {
+  const posthog = usePostHog()
+
   const { account, chainId } = useWeb3React()
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
@@ -72,6 +75,11 @@ const PurchaseButton = (): JSX.Element => {
         : "Couldn't estimate gas")) ??
     (account && !isSufficientBalance && "Insufficient balance")
 
+  const onClick = () => {
+    onSubmit()
+    posthog.capture("Click: PurchaseButton (GuildCheckout)")
+  }
+
   return (
     <Button
       size="lg"
@@ -80,7 +88,7 @@ const PurchaseButton = (): JSX.Element => {
       loadingText="Check your wallet"
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
-      onClick={onSubmit}
+      onClick={onClick}
       data-dd-action-name="PurchaseButton (GuildCheckout)"
     >
       {errorMsg || "Purchase"}

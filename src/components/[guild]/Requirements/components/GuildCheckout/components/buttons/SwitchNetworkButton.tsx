@@ -5,9 +5,11 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains } from "connectors"
+import { usePostHog } from "posthog-js/react"
 
 const SwitchNetworkButton = (): JSX.Element => {
   const { addDatadogAction, addDatadogError } = useDatadog()
+  const posthog = usePostHog()
 
   const { chainId } = useWeb3React()
   const { chain } = useRequirementContext()
@@ -16,6 +18,21 @@ const SwitchNetworkButton = (): JSX.Element => {
   const { requestNetworkChange, isNetworkChangeInProgress } =
     useWeb3ConnectionManager()
 
+  const onClick = () => {
+    posthog.capture("Click: SwitchNetworkButton (GuildCheckout)")
+    requestNetworkChange(
+      requirementChainId,
+      () => {
+        addDatadogAction("changed network (GuildCheckout)")
+        posthog.capture("Changed network (GuildCheckout)")
+      },
+      () => {
+        addDatadogError("network change error (GuildCheckout)")
+        posthog.capture("Network change error (GuildCheckout)")
+      }
+    )
+  }
+
   return (
     <Collapse in={chainId !== requirementChainId}>
       <Button
@@ -23,13 +40,7 @@ const SwitchNetworkButton = (): JSX.Element => {
         colorScheme="blue"
         isLoading={isNetworkChangeInProgress}
         loadingText="Check your wallet"
-        onClick={() =>
-          requestNetworkChange(
-            requirementChainId,
-            () => addDatadogAction("changed network (GuildCheckout)"),
-            () => addDatadogError("network change error (GuildCheckout)")
-          )
-        }
+        onClick={onClick}
         w="full"
         data-dd-action-name="SwitchNetworkButton (GuildCheckout)"
       >

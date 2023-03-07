@@ -7,11 +7,14 @@ import useAllowance from "components/[guild]/Requirements/components/GuildChecko
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
+import { usePostHog } from "posthog-js/react"
 import { getTokenBuyerContractData } from "utils/guildCheckout/constants"
 import usePrice from "../../hooks/usePrice"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseAllowanceButton = (): JSX.Element => {
+  const posthog = usePostHog()
+
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
   const requirementChainId = Chains[requirement.chain]
 
@@ -47,6 +50,11 @@ const PurchaseAllowanceButton = (): JSX.Element => {
       ? BigNumber.from(priceToSendInWei).lte(allowance)
       : false
 
+  const onClick = () => {
+    onSubmit()
+    posthog.capture("Click: PurchaseAllowanceButton (GuildCheckout)")
+  }
+
   return (
     <Collapse
       in={
@@ -68,7 +76,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
             ? "Allowing"
             : "Check your wallet"
         }
-        onClick={onSubmit}
+        onClick={onClick}
         w="full"
         leftIcon={
           allowanceError ? (

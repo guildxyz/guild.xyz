@@ -22,6 +22,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Reward from "components/[guild]/RoleCard/components/Reward"
 import { Chains } from "connectors"
 import { Coin, StarHalf } from "phosphor-react"
+import { usePostHog } from "posthog-js/react"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
 import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
@@ -39,6 +40,8 @@ import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
 
 const BuyPass = () => {
+  const posthog = usePostHog()
+
   const { featureFlags } = useGuild()
 
   const { account, chainId } = useWeb3React()
@@ -62,6 +65,11 @@ const BuyPass = () => {
     ?.filter((r) => r.requirementId !== requirement?.id)
     ?.every((r) => r.access)
 
+  const onClick = () => {
+    onOpen()
+    posthog.capture("Click: Buy (Requirement)")
+  }
+
   if (
     (!isInfoModalOpen && !featureFlags?.includes("PAYMENT_REQUIREMENT")) ||
     !account ||
@@ -79,7 +87,7 @@ const BuyPass = () => {
         leftIcon={<Icon as={Coin} />}
         borderRadius="lg"
         fontWeight="medium"
-        onClick={onOpen}
+        onClick={onClick}
         data-dd-action-name="Pay (Requierment)"
       >
         Pay

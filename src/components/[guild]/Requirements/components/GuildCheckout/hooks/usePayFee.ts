@@ -7,6 +7,7 @@ import useContract from "hooks/useContract"
 import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
+import { usePostHog } from "posthog-js/react"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
@@ -57,6 +58,7 @@ const payFee = async (
 
 const usePayFee = () => {
   const { addDatadogAction, addDatadogError } = useDatadog()
+  const posthog = usePostHog()
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
@@ -129,6 +131,8 @@ const usePayFee = () => {
       addDatadogError("payFee pre-call error (GuildCheckout)", {
         error,
       })
+      posthog.capture("Buy pass error (GuildCheckout)")
+      posthog.capture("payFee pre-call error (GuildCheckout)")
     },
     onSuccess: (receipt) => {
       if (receipt.status !== 1) {
@@ -137,10 +141,13 @@ const usePayFee = () => {
         addDatadogError("payFee error (GuildCheckout)", {
           receipt,
         })
+        posthog.capture("Buy pass error (GuildCheckout)")
+        posthog.capture("payFee error (GuildCheckout)")
         return
       }
 
       addDatadogAction("successful payFee (GuildCheckout)")
+      posthog.capture("Bought pass (GuildCheckout)")
       toast({
         status: "success",
         title: "Successful payment",
