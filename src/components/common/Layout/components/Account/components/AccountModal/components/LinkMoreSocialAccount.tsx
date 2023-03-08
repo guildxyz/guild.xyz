@@ -4,12 +4,10 @@ import {
   Collapse,
   HStack,
   Icon,
-  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import { Link } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useEffect } from "react"
 import { PlatformName } from "types"
@@ -41,15 +39,14 @@ const LinkMoreSocialAccount = ({ platformName }: Props): JSX.Element => {
         <Text fontWeight="semibold">{capitalize(platformName.toLowerCase())}</Text>
 
         <Button
-          rightIcon={isLoading ? <Spinner size="sm" /> : <Icon as={Link} />}
+          isLoading={isLoading}
           onClick={onConnect}
-          isDisabled={isLoading || response}
-          variant="ghost"
-          colorScheme="green"
+          isDisabled={response}
+          colorScheme={platforms[platformName].colorScheme}
           size="sm"
           ml="auto !important"
         >
-          {!isLoading && "Connect"}
+          {"Connect"}
         </Button>
       </HStack>
     </Collapse>
