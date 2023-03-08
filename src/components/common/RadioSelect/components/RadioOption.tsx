@@ -47,7 +47,7 @@ const RadioOption = (props) => {
           _last={{ borderBottomRadius: "xl" }}
           boxShadow="none !important"
           _active={{ bg: null }}
-          disabled
+          isDisabled
         >
           <Flex as="label" py="4" px="5" alignItems="center">
             {props?.RightComponent && <props.RightComponent />}

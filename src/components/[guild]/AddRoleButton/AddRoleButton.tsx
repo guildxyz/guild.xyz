@@ -220,7 +220,6 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || isUploadingShown}
               isLoading={isLoading || isSigning || isUploadingShown}
               colorScheme="green"
               loadingText={loadingText}
