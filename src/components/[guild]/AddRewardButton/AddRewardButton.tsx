@@ -15,7 +15,7 @@ import {
 import Button from "components/common/Button"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft, Plus } from "phosphor-react"
-import platforms from "platforms"
+import platforms from "platforms/platforms"
 import { useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName } from "types"

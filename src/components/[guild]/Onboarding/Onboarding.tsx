@@ -7,8 +7,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Player } from "@lottiefiles/react-lottie-player"
-import { Step, Steps, useSteps } from "chakra-ui-steps"
+import { Step, useSteps } from "chakra-ui-steps"
 import Card from "components/common/Card"
+import DynamicSteps from "components/common/DynamicSteps"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { useEffect, useState } from "react"
 import useGuild from "../hooks/useGuild"
@@ -105,7 +106,7 @@ const Onboarding = (): JSX.Element => {
         }
         sx={{ "*": { zIndex: 1 } }}
       >
-        <Steps
+        <DynamicSteps
           onClickStep={
             orientation === "horizontal"
               ? (step) => {
@@ -126,7 +127,7 @@ const Onboarding = (): JSX.Element => {
               </Box>
             </Step>
           ))}
-        </Steps>
+        </DynamicSteps>
         <HStack
           spacing={3}
           pos="absolute"

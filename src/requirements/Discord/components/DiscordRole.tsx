@@ -13,6 +13,7 @@ import useGateables from "hooks/useGateables"
 import useServerData from "hooks/useServerData"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import { PlatformType } from "types"
 import parseFromObject from "utils/parseFromObject"
 import shortenHex from "utils/shortenHex"
 import ServerPicker from "./ServerPicker"
@@ -21,7 +22,7 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
   const { errors } = useFormState()
   const { register, setValue } = useFormContext()
 
-  const { error } = useGateables("DISCORD")
+  const { error } = useGateables(PlatformType.DISCORD)
 
   const roleId = useWatch({ name: `${baseFieldPath}.data.roleId` })
 

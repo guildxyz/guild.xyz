@@ -15,6 +15,7 @@ import useGateables from "hooks/useGateables"
 import Link from "next/link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useState } from "react"
+import { PlatformType } from "types"
 import Button from "./Button"
 import ReconnectAlert from "./ReconnectAlert"
 
@@ -23,7 +24,7 @@ const GitHubGuildSetup = ({
 }: {
   onSelection?: (platformGuildId: string) => void
 }) => {
-  const { gateables, isLoading, error } = useGateables("GITHUB")
+  const { gateables, isLoading, error } = useGateables(PlatformType.GITHUB)
   const [search, setSearch] = useState<string>("")
   const filteredRepos = gateables?.filter?.((repo) =>
     [repo.platformGuildId, repo.repositoryName, repo.description].some((prop) =>
