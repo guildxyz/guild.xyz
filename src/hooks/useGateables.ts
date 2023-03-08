@@ -20,6 +20,8 @@ type Gateables = {
   }>
 } & Record<PlatformType, unknown>
 
+const platformsWithoutGateables: PlatformType[] = [PlatformType.TELEGRAM]
+
 const useGateables = <K extends keyof Gateables>(
   platformId: K,
   swrConfig?: SWRConfiguration
@@ -33,7 +35,11 @@ const useGateables = <K extends keyof Gateables>(
 
   const fetcherWithSign = useFetcherWithSign()
 
-  const shouldFetch = isConnected && !!keyPair && platformId
+  const shouldFetch =
+    isConnected &&
+    !!keyPair &&
+    platformId &&
+    !platformsWithoutGateables.includes(platformId)
 
   const { data, isValidating, mutate, error } = useSWR<Gateables[K]>(
     shouldFetch
