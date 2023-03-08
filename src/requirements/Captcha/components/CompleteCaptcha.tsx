@@ -30,12 +30,11 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
 
   const { data: roleAccess } = useAccess(roleId, isOpen && { refreshInterval: 5000 })
 
-  const errorType = roleAccess?.errors?.find(
-    (err) => err.requirementId === id
-  )?.errorType
+  const hasAccess = roleAccess?.requirements?.find(
+    (req) => req.requirementId === id
+  )?.access
 
-  if (!["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(errorType))
-    return null
+  if (hasAccess) return null
 
   return (
     <>
