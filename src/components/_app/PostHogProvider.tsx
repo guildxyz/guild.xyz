@@ -14,7 +14,13 @@ const PostHogProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
   const { id } = useUser()
 
   useEffect(() => {
-    if (!account || !id || !posthogFromHook) return
+    if (!posthogFromHook) return
+
+    if (!account || !id) {
+      posthog.reset()
+      return
+    }
+
     posthogFromHook.identify(id.toString(), {
       address: account.toLowerCase(),
     })
