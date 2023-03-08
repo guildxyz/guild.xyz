@@ -34,7 +34,7 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
     (req) => req.requirementId === id
   )?.access
 
-  if (hasAccess) return null
+  if (!roleAccess || hasAccess) return null
 
   return (
     <>
