@@ -8,6 +8,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import { useEffect } from "react"
 import { PlatformName } from "types"
@@ -17,17 +18,26 @@ type Props = {
   platformName: string
 }
 
-const LinkMoreSocialAccount = ({ platformName }: Props): JSX.Element => {
+const LinkNewSocialAccount = ({ platformName }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const toast = useToast()
+  const onSuccess = () => {
+    onClose()
+    toast({
+      title: `Account Connected!`,
+      status: "success",
+    })
+  }
 
   const { onConnect, isLoading, response } = useConnectPlatform(
     platformName as PlatformName,
-    onClose
+    onSuccess
   )
-  useEffect(() => onOpen(), [platformName])
+  useEffect(() => onOpen(), [platformName]) // {defaultIsOpen: true} doesn't works, when i disconnect an account (no animation)
 
   return (
-    <Collapse in={isOpen} animateOpacity>
+    <Collapse in={isOpen}>
       <HStack spacing={3} alignItems="center" w="full">
         <Avatar
           icon={
@@ -53,4 +63,4 @@ const LinkMoreSocialAccount = ({ platformName }: Props): JSX.Element => {
   )
 }
 
-export default LinkMoreSocialAccount
+export default LinkNewSocialAccount

@@ -23,7 +23,7 @@ import capitalize from "utils/capitalize"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkedAddress from "./LinkedAddress"
 import LinkedSocialAccount from "./LinkedSocialAccount"
-import LinkMoreSocialAccount from "./LinkMoreSocialAccount"
+import LinkMoreSocialAccount from "./LinkNewSocialAccount"
 
 const AccountConnections = () => {
   const { isLoading, addresses, platformUsers } = useUser()

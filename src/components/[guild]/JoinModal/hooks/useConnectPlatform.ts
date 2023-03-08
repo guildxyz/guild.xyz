@@ -3,7 +3,6 @@ import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
@@ -52,7 +51,6 @@ const useConnectPlatform = (
       return body
     })
 
-  const toast = useToast()
   const { onSubmit, isLoading, response } = useSubmitWithSign<{
     platformName: PlatformName
     authData: any
@@ -61,10 +59,6 @@ const useConnectPlatform = (
     onSuccess: () => {
       addDatadogAction("Successfully connected 3rd party account")
       mutateUser()
-      toast({
-        title: `Account Connected!`,
-        status: "success",
-      })
       onSuccess?.()
     },
     onError: (err) => {
