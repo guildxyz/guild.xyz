@@ -178,6 +178,7 @@ const Page = (): JSX.Element => {
 
       <Layout
         title=""
+        imageUrl={poap?.image_url}
         background={theme?.color ?? "gray.900"}
         backgroundImage={theme?.backgroundImage}
         maxWidth="container.xl"
