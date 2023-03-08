@@ -19,7 +19,7 @@ import { Alert } from "components/common/Modal"
 import { motion } from "framer-motion"
 import { LinkBreak } from "phosphor-react"
 import platforms from "platforms/platforms"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { PlatformName } from "types"
 import useDisconnect from "../hooks/useDisconnect"
 
@@ -33,15 +33,9 @@ const MotionHStack = motion(HStack)
 
 const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onOpen: onOpenRow, onClose: onCloseRow } = useDisclosure()
-  useEffect(() => onOpenRow(), [name])
-
   const alertCancelRef = useRef()
-  const close = () => {
-    onClose()
-    onCloseRow()
-  }
-  const { onSubmit, isLoading, signLoadingText } = useDisconnect(close)
+
+  const { onSubmit, isLoading, signLoadingText } = useDisconnect(onClose)
 
   const circleBorderColor = useColorModeValue("gray.100", "gray.800")
 

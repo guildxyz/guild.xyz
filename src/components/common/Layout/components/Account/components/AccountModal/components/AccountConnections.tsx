@@ -13,12 +13,8 @@ import { useWeb3React } from "@web3-react/core"
 import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
 import { Question } from "phosphor-react"
-import {
-  PlatformAccountDetails,
-  PlatformName,
-  platformNames,
-  PlatformType,
-} from "types"
+import platforms from "platforms/platforms"
+import { PlatformAccountDetails, PlatformName, PlatformType } from "types"
 import capitalize from "utils/capitalize"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkedAddress from "./LinkedAddress"
@@ -28,7 +24,7 @@ import LinkNewSocialAccount from "./LinkNewSocialAccount"
 const AccountConnections = () => {
   const { isLoading, addresses, platformUsers } = useUser()
   const { account } = useWeb3React()
-  const missingPlatforms = platformNames
+  const missingPlatforms = Object.keys(platforms)
     .filter((platform) => platform !== "POAP")
     .filter(
       (p) =>
@@ -42,21 +38,7 @@ const AccountConnections = () => {
       <Section title="Social accounts">
         {isLoading ? (
           <Spinner />
-        ) : !!platformUsers?.[0] && !("platformUserId" in platformUsers[0]) ? (
-          <Text colorScheme="gray">
-            {`${platformUsers
-              ?.map((platformUser) =>
-                /**
-                 * TODO: the BE will return the displayable names for the platforms
-                 * too
-                 */
-                capitalize(platformUser.platformName.toLowerCase())
-              )
-              .join(
-                " and "
-              )} hidden. Verify that you're the owner of this account below to view`}
-          </Text>
-        ) : platformUsers?.length > 0 || missingPlatforms.length > 0 ? (
+        ) : (
           <>
             {platformUsers?.map(
               ({
@@ -81,8 +63,6 @@ const AccountConnections = () => {
               <LinkNewSocialAccount key={platform} platformName={platform} />
             ))}
           </>
-        ) : (
-          <Text colorScheme={"gray"}>No linked social accounts yet</Text>
         )}
       </Section>
       <Section

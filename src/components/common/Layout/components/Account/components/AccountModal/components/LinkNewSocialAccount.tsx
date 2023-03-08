@@ -1,9 +1,8 @@
-import { Avatar, Button, HStack, Icon, Text, useDisclosure } from "@chakra-ui/react"
+import { Avatar, Button, HStack, Icon, Text } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { motion } from "framer-motion"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
-import { useEffect } from "react"
 import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
 
@@ -14,11 +13,9 @@ type Props = {
 const MotionHStack = motion(HStack)
 
 const LinkNewSocialAccount = ({ platformName }: Props): JSX.Element => {
-  const { onOpen, onClose } = useDisclosure()
-
   const toast = useToast()
+
   const onSuccess = () => {
-    onClose()
     toast({
       title: `Account Connected!`,
       status: "success",
@@ -29,7 +26,6 @@ const LinkNewSocialAccount = ({ platformName }: Props): JSX.Element => {
     platformName as PlatformName,
     onSuccess
   )
-  useEffect(() => onOpen(), [platformName]) // {defaultIsOpen: true} doesn't works, when I disconnect an account (no animation)
 
   return (
     <MotionHStack layoutId={platformName} spacing={3} alignItems="center" w="full">
