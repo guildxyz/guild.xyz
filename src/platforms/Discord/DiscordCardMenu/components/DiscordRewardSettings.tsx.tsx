@@ -9,16 +9,14 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import Switch from "components/common/Switch"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
+import { Controller, FormProvider, useForm } from "react-hook-form"
 import fetcher from "utils/fetcher"
 
 const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
@@ -40,7 +38,7 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
     onSuccess: () => {
       toast({
         status: "success",
-        title: "Successfully updated Discord settings",
+        title: "Successfully updated invite link",
       })
       methods.reset(undefined, { keepValues: true })
       mutateGuild()
@@ -61,11 +59,6 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
     defaultValues,
   })
 
-  const needCaptcha = useWatch({
-    control: methods.control,
-    name: "platformGuildData.needCaptcha",
-  })
-
   const handleClose = () => {
     if (methods.formState.isDirty) methods.reset(defaultValues)
     onClose()
@@ -79,44 +72,28 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
         <ModalCloseButton />
         <ModalBody>
           <FormProvider {...methods}>
-            <Stack spacing={6}>
-              <FormControl>
-                <FormLabel>Go to server link</FormLabel>
-                <Controller
-                  name={`platformGuildData.invite`}
-                  control={methods.control}
-                  render={({ field: { onChange, onBlur, value, ref } }) => (
-                    <Input
-                      type="text"
-                      ref={ref}
-                      value={value ?? ""}
-                      placeholder="Paste invite link"
-                      onChange={(newChange) => {
-                        onChange(newChange.target.value)
-                      }}
-                      onBlur={onBlur}
-                    />
-                  )}
-                />
-                <FormHelperText>
-                  Use your custom invite link instead of the default generated one
-                </FormHelperText>
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>Discord CAPTCHA</FormLabel>
-
-                <Switch
-                  title={needCaptcha ? "Enabled" : "Disabled"}
-                  {...methods.register("platformGuildData.needCaptcha")}
-                />
-
-                <FormHelperText>
-                  If enabled, users will need to complete a CAPTCHA before joining
-                  your guild on Discord
-                </FormHelperText>
-              </FormControl>
-            </Stack>
+            <FormControl>
+              <FormLabel>Go to server link</FormLabel>
+              <Controller
+                name={`platformGuildData.invite`}
+                control={methods.control}
+                render={({ field: { onChange, onBlur, value, ref } }) => (
+                  <Input
+                    type="text"
+                    ref={ref}
+                    value={value ?? ""}
+                    placeholder="Paste invite link"
+                    onChange={(newChange) => {
+                      onChange(newChange.target.value)
+                    }}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+              <FormHelperText>
+                Use your custom invite link instead of the default generated one
+              </FormHelperText>
+            </FormControl>
           </FormProvider>
         </ModalBody>
         <ModalFooter>

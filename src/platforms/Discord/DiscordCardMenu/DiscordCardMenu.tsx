@@ -2,13 +2,8 @@ import { MenuDivider, MenuItem, Spinner, useDisclosure } from "@chakra-ui/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
-import {
-  ArrowsCounterClockwise,
-  ChatDots,
-  Check,
-  Gear,
-  Shield,
-} from "phosphor-react"
+import { ArrowsCounterClockwise, ChatDots, Check, Gear } from "phosphor-react"
+import DiscordCaptchaSwitch from "./components/DiscordCaptchaSwitch"
 import DiscordRewardSettings from "./components/DiscordRewardSettings.tsx"
 import useSyncMembersFromDiscord from "./hooks/useSyncMembersFromDiscord"
 
@@ -54,10 +49,9 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         <MenuItem icon={<Gear />} onClick={onSettingsOpen}>
           Settings
         </MenuItem>
-        <MenuItem icon={<Shield />} onClick={onSettingsOpen}>
-          Discord CAPTCHA
-        </MenuItem>
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
+        <MenuDivider />
+        <DiscordCaptchaSwitch serverId={platformGuildId} />
         <MenuDivider />
         <MenuItem isDisabled fontSize="sm">
           POAPs have moved into Add reward
