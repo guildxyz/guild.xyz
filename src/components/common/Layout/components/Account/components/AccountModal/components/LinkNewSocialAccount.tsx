@@ -1,13 +1,6 @@
-import {
-  Avatar,
-  Button,
-  Collapse,
-  HStack,
-  Icon,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react"
+import { Avatar, Button, HStack, Icon, Text, useDisclosure } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { motion } from "framer-motion"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import { useEffect } from "react"
@@ -17,6 +10,8 @@ import capitalize from "utils/capitalize"
 type Props = {
   platformName: string
 }
+
+const MotionHStack = motion(HStack)
 
 const LinkNewSocialAccount = ({ platformName }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -37,29 +32,25 @@ const LinkNewSocialAccount = ({ platformName }: Props): JSX.Element => {
   useEffect(() => onOpen(), [platformName]) // {defaultIsOpen: true} doesn't works, when i disconnect an account (no animation)
 
   return (
-    <Collapse in={isOpen}>
-      <HStack spacing={3} alignItems="center" w="full">
-        <Avatar
-          icon={
-            <Icon as={platforms[platformName]?.icon} boxSize={4} color="white" />
-          }
-          boxSize={8}
-          bgColor={`${platforms[platformName]?.colorScheme}.500`}
-        />
-        <Text fontWeight="semibold">{capitalize(platformName.toLowerCase())}</Text>
+    <MotionHStack layoutId={platformName} spacing={3} alignItems="center" w="full">
+      <Avatar
+        icon={<Icon as={platforms[platformName]?.icon} boxSize={4} color="white" />}
+        boxSize={8}
+        bgColor={`${platforms[platformName]?.colorScheme}.500`}
+      />
+      <Text fontWeight="semibold">{capitalize(platformName.toLowerCase())}</Text>
 
-        <Button
-          isLoading={isLoading}
-          onClick={onConnect}
-          isDisabled={response}
-          colorScheme={platforms[platformName].colorScheme}
-          size="sm"
-          ml="auto !important"
-        >
-          {"Connect"}
-        </Button>
-      </HStack>
-    </Collapse>
+      <Button
+        isLoading={isLoading}
+        onClick={onConnect}
+        isDisabled={response}
+        colorScheme={platforms[platformName].colorScheme}
+        size="sm"
+        ml="auto !important"
+      >
+        {"Connect"}
+      </Button>
+    </MotionHStack>
   )
 }
 
