@@ -25,11 +25,13 @@ const PostHogProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
 
 if (typeof window !== "undefined") {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com",
+    api_host: "/api/posthog",
+
     // Capture custom events only
     autocapture: false,
     // Disable in development
     loaded: (ph) => {
+      // TODO: uncomment this
       // if (process.env.NODE_ENV === 'development') ph.opt_out_capturing()
     },
   })
