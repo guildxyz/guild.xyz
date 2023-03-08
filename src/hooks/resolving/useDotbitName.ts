@@ -1,15 +1,14 @@
-import { useWeb3React } from "@web3-react/core"
 import { createInstance } from "dotbit"
 import useSWRImmutable from "swr/immutable"
 
 const fetchDotbitName = (_, dotbitResolver, account) =>
-  dotbitResolver.accountById(account).then((res) => res.account)
+  dotbitResolver
+    .accountById("0x5728088435fb8788472a9ca601fbc0b9cbea8be3")
+    .then((res) => res.account)
 
 const dotbit = createInstance()
 
-const useDotbitName = () => {
-  const { account } = useWeb3React()
-
+const useDotbitName = (account: string) => {
   const shouldFetch = Boolean(dotbit && account)
 
   const { data } = useSWRImmutable(
