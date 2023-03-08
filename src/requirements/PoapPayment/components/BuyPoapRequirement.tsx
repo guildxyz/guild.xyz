@@ -20,7 +20,6 @@ import { Modal } from "components/common/Modal"
 import usePoapAllowance from "components/[guild]/claim-poap/hooks/usePoapAllowance"
 import usePoapPayFee from "components/[guild]/claim-poap/hooks/usePoapPayFee"
 import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
-import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import AlphaTag from "components/[guild]/Requirements/components/GuildCheckout/components/AlphaTag"
 import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
@@ -51,7 +50,7 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
 
   const { poap } = usePoapById(guildPoap?.poapIdentifier?.toString())
   const { vaultData, isVaultLoading } = usePoapVault(vaultId, vaultChainId)
-  const { poapLinks } = usePoapLinks(guildPoap?.poapIdentifier)
+  // const { poapLinks } = usePoapLinks(guildPoap?.poapIdentifier)
 
   const { isOpen, onOpen, onClose } = useGuildCheckoutContext()
 
@@ -85,8 +84,8 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
     ?.every((r) => r.access) */
 
   if (
-    !poap ||
-    poapLinks?.claimed === poapLinks?.total
+    !poap
+    // || poapLinks?.claimed === poapLinks?.total
     // (!accessData && isAccessLoading) ||
     // !paymentSupportedChains.includes(requirement?.chain)
   )
