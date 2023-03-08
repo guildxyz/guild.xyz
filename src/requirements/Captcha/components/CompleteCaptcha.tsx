@@ -69,6 +69,12 @@ const CompleteCaptchaModal = ({ isOpen, onClose }) => {
 
   const { onSubmit, isLoading, response } = useVerifyCaptcha()
 
+  const onVerify = (token: string) =>
+    onSubmit({
+      callback: getGateCallbackData?.callbackUrl,
+      token,
+    })
+
   useEffect(() => {
     if (!response) return
     onClose()
@@ -101,12 +107,7 @@ const CompleteCaptchaModal = ({ isOpen, onClose }) => {
                 <Box>
                   <HCaptcha
                     sitekey="05bdce9d-3de2-4457-8318-85633ffd281c"
-                    onVerify={(token) =>
-                      onSubmit({
-                        callback: getGateCallbackData?.callbackUrl,
-                        token,
-                      })
-                    }
+                    onVerify={onVerify}
                   />
                 </Box>
                 <Text mt="10" textAlign="center">
