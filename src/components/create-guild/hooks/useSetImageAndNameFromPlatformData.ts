@@ -4,6 +4,7 @@ import { Uploader } from "hooks/usePinata/usePinata"
 import { useEffect } from "react"
 import { useFormContext, useFormState } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
+import slugify from "utils/slugify"
 
 const useSetImageAndNameFromPlatformData = (
   platformImage: string,
@@ -17,6 +18,7 @@ const useSetImageAndNameFromPlatformData = (
     if (!(platformName?.length > 0) || !!touchedFields.name || !onUpload) return
 
     setValue("name", platformName)
+    setValue("urlName", slugify(platformName))
   }, [platformName])
 
   useEffect(() => {
