@@ -15,7 +15,7 @@ const checkUrlName = (urlName: string) =>
     async (response) => response.ok && response.status !== 204
   )
 
-const UrlName = () => {
+const UrlName = ({ maxWidth = "sm" }) => {
   const { errors } = useFormState()
   const { register, setError, clearErrors, setValue } = useFormContext()
 
@@ -24,12 +24,14 @@ const UrlName = () => {
   return (
     <FormControl isInvalid={!!errors?.urlName}>
       <FormLabel>URL name</FormLabel>
-      <InputGroup size="lg" maxWidth="sm">
+      <InputGroup size="lg" maxWidth={maxWidth}>
         <InputLeftAddon>guild.xyz/</InputLeftAddon>
         <Input
           {...register("urlName")}
           onChange={(event) => {
-            setValue("urlName", slugify(event.target.value, { trim: false }))
+            setValue("urlName", slugify(event.target.value, { trim: false }), {
+              shouldDirty: true,
+            })
           }}
           onBlur={(event) => {
             if (!event.target.value.length) {
@@ -38,7 +40,7 @@ const UrlName = () => {
             }
 
             const newUrlName = slugify(event.target.value)
-            setValue("urlName", newUrlName)
+            setValue("urlName", newUrlName, { shouldDirty: true })
 
             checkUrlName(newUrlName).then((alreadyExists) => {
               if (alreadyExists && currentUrlName !== newUrlName)

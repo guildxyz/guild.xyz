@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import { Modal } from "components/common/Modal"
+import { useRef } from "react"
 
 const AddPoapRequirement = ({
   title,
@@ -17,9 +18,11 @@ const AddPoapRequirement = ({
   rightIcon,
   isDisabled = false,
   FormComponent,
+  poapId,
   onAdd = null,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const buttonRef = useRef()
 
   const handleAdd = (data) => {
     onAdd(data)
@@ -29,13 +32,19 @@ const AddPoapRequirement = ({
   return (
     <>
       <AddCard
+        ref={buttonRef}
         {...{ title, description, rightIcon }}
         py="5"
         mb="2 !important"
         onClick={onOpen}
         isDisabled={isDisabled}
       />
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        scrollBehavior="inside"
+        finalFocusRef={buttonRef}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
@@ -48,7 +57,12 @@ const AddPoapRequirement = ({
             </HStack>
           </ModalHeader>
           <ModalBody>
-            <FormComponent baseFieldPath="" onClose={onClose} onAdd={handleAdd} />
+            <FormComponent
+              baseFieldPath=""
+              poapId={poapId}
+              onClose={onClose}
+              onAdd={handleAdd}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -289,6 +289,9 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       priceInSellToken.toFixed(sellTokenDecimals),
       sellTokenDecimals
     )
+      .sub(100000)
+      .div(100000)
+      .mul(100000)
     // This was previously "priceInWei"
     // BigNumber.from(
     //   (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()

@@ -1,5 +1,5 @@
 import { SimpleGrid } from "@chakra-ui/react"
-import platforms from "platforms"
+import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 import PlatformSelectButton from "./components/PlatformSelectButton"
 import useGoogleButtonProps from "./hooks/useGoogleButtonProps"

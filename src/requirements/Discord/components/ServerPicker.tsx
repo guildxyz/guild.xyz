@@ -9,6 +9,7 @@ import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useGateables from "hooks/useGateables"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
+import { PlatformType } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 type Props = {
@@ -21,7 +22,7 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
 
   const serverId = useWatch({ name: `${baseFieldPath}.data.serverId` })
 
-  const { gateables, isLoading } = useGateables("DISCORD")
+  const { gateables, isLoading } = useGateables(PlatformType.DISCORD)
 
   const serverOptions = (gateables ?? []).map(({ img, name, id }) => ({
     value: id,

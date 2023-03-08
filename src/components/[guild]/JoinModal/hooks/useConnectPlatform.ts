@@ -34,7 +34,7 @@ const useConnectPlatform = (
 
   const { mutate: mutateUser, platformUsers } = useUser()
   const { onOpen, authData, isAuthenticating, ...rest } =
-    platformAuthHooks[platform]()
+    platformAuthHooks[platform]?.() ?? {}
   const prevAuthData = usePrevious(authData)
 
   const submit = (signedValidation: SignedValdation) =>

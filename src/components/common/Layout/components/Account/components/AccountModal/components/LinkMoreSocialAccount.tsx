@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { Link } from "phosphor-react"
-import platforms from "platforms"
+import platforms from "platforms/platforms"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import capitalize from "utils/capitalize"

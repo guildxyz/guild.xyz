@@ -84,9 +84,9 @@ const TokenInfo = ({
         </SkeletonCircle>
 
         <Stack spacing={1.5} maxW="calc(100% - 3rem)" alignItems={"flex-start"}>
-          <Skeleton isLoaded={!isTokenDataLoading && !isLoading} h={5}>
+          <Skeleton isLoaded={!isTokenDataLoading && !isLoading} w="full" h={5}>
             <Text as="span" display="block" isTruncated>
-              {error
+              {tokenDataError
                 ? "Couldn't fetch token data"
                 : error
                 ? `[?] ${symbol}`

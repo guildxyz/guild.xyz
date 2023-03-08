@@ -27,11 +27,12 @@ import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RolePlatforms from "components/[guild]/RolePlatforms"
+import SetVisibility from "components/[guild]/SetVisibility"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
@@ -49,8 +50,16 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
   const btnRef = useRef()
 
   const { roles } = useGuild()
-  const { id, name, description, imageUrl, logic, requirements, rolePlatforms } =
-    roles?.find((role) => role.id === roleId) ?? {}
+  const {
+    id,
+    name,
+    description,
+    imageUrl,
+    logic,
+    requirements,
+    rolePlatforms,
+    visibility,
+  } = roles?.find((role) => role.id === roleId) ?? {}
 
   const defaultValues = {
     roleId: id,
@@ -60,11 +69,24 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     logic,
     requirements: mapRequirements(requirements),
     rolePlatforms: rolePlatforms ?? [],
+    visibility,
   }
   const methods = useForm({
     mode: "all",
     defaultValues,
   })
+
+  useEffect(() => {
+    const role = roles?.find((r) => r.id === roleId)
+    if (!role) return
+
+    methods.reset({
+      ...role,
+      roleId: role.id,
+      requirements: mapRequirements(role.requirements),
+      rolePlatforms: role.rolePlatforms ?? [],
+    })
+  }, [roles, roleId])
 
   const handleOpen = () => {
     onOpen()
@@ -168,12 +190,21 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
-            <DrawerHeader title="Edit role">
-              {roles?.length > 1 && (
-                <DeleteRoleButton roleId={id} onDrawerClose={onClose} />
-              )}
-            </DrawerHeader>
             <FormProvider {...methods}>
+              <DrawerHeader
+                title="Edit role"
+                justifyContent="start"
+                spacing={1}
+                alignItems="center"
+                w="full"
+              >
+                <HStack justifyContent={"space-between"} flexGrow={1}>
+                  <SetVisibility entityType="role" />
+                  {roles?.length > 1 && (
+                    <DeleteRoleButton roleId={id} onDrawerClose={onClose} />
+                  )}
+                </HStack>
+              </DrawerHeader>
               <VStack spacing={10} alignItems="start">
                 <RolePlatforms roleId={roleId} />
                 <Section title="General">

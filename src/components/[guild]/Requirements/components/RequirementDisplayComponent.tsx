@@ -1,5 +1,5 @@
 import { Icon } from "@chakra-ui/react"
-import { Warning } from "phosphor-react"
+import { Question, Warning } from "phosphor-react"
 import REQUIREMENTS from "requirements"
 import { Requirement as RequirementType, Rest } from "types"
 import DataBlock from "./DataBlock"
@@ -17,6 +17,14 @@ const RequirementDisplayComponent = ({
   rightElement,
   ...rest
 }: Props) => {
+  if ((requirement as any).isHidden) {
+    return (
+      <Requirement image={<Icon as={Question} boxSize={5} />}>
+        Some secret requirements
+      </Requirement>
+    )
+  }
+
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
 
   if (!RequirementComponent)

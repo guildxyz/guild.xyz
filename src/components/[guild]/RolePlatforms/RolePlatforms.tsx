@@ -12,8 +12,8 @@ import Button from "components/common/Button"
 import Section from "components/common/Section"
 import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
 import { Plus } from "phosphor-react"
-import platforms from "platforms"
-import { useFieldArray, useWatch } from "react-hook-form"
+import platforms from "platforms/platforms"
+import { useFormContext, useWatch } from "react-hook-form"
 import { GuildPlatform, PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
@@ -27,9 +27,7 @@ type Props = {
 
 const RolePlatforms = ({ roleId }: Props) => {
   const { guildPlatforms } = useGuild()
-  const { remove } = useFieldArray({
-    name: "rolePlatforms",
-  })
+  const { setValue } = useFormContext()
 
   /**
    * Using fields like this with useWatch because the one from useFieldArray is not
@@ -106,7 +104,10 @@ const RolePlatforms = ({ roleId }: Props) => {
                   guildPlatform={guildPlatform}
                   cornerButton={
                     !rolePlatform.isNew ? (
-                      <RemovePlatformButton removeButtonColor={removeButtonColor} />
+                      <RemovePlatformButton
+                        removeButtonColor={removeButtonColor}
+                        guildPlatform={guildPlatform}
+                      />
                     ) : (
                       <CloseButton
                         size="sm"
@@ -114,7 +115,12 @@ const RolePlatforms = ({ roleId }: Props) => {
                         rounded="full"
                         aria-label="Remove platform"
                         zIndex="1"
-                        onClick={() => remove(index)}
+                        onClick={() => {
+                          setValue(
+                            `rolePlatforms`,
+                            fields.filter((_, i) => i !== index)
+                          )
+                        }}
                       />
                     )
                   }

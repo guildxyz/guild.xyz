@@ -89,7 +89,8 @@ const PoapRequiementAccessIndicator = ({ poapIdentifier }) => {
     )
   }
 
-  const reqObj = REQUIREMENTS[type]
+  const reqObj =
+    type === ("VOICE" as RequirementType) ? { isPlatform: true } : REQUIREMENTS[type]
 
   return (
     <RequiementAccessIndicatorUI

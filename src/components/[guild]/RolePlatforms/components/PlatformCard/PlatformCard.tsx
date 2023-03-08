@@ -1,5 +1,5 @@
 import RewardCard from "components/common/RewardCard"
-import platforms from "platforms"
+import platforms from "platforms/platforms"
 import { PropsWithChildren } from "react"
 import { GuildPlatform, PlatformName, Rest } from "types"
 

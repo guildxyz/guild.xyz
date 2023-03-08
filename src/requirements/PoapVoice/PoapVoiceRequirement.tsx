@@ -24,7 +24,7 @@ const PoapPaymentRequirement = ({ guildPoap, ...props }: Props) => {
   )
 
   const { voiceChannels, isVoiceChannelsLoading } = useVoiceChannels(
-    discordGuildPlatform.platformGuildId
+    discordGuildPlatform?.platformGuildId
   )
   const { poapEventDetails, isPoapEventDetailsLoading } = usePoapEventDetails(
     guildPoap?.poapIdentifier

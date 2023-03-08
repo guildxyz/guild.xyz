@@ -3,6 +3,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import ReconnectAlert from "components/common/ReconnectAlert"
 import useGateables from "hooks/useGateables"
 import { Controller, useFormContext, useFormState } from "react-hook-form"
+import { PlatformType } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ServerPicker from "./ServerPicker"
 
@@ -13,7 +14,7 @@ type Props = {
 const DiscordMemberSince = ({ baseFieldPath }: Props): JSX.Element => {
   const { errors } = useFormState()
   const { control } = useFormContext()
-  const { error } = useGateables("DISCORD")
+  const { error } = useGateables(PlatformType.DISCORD)
 
   return (
     <>
