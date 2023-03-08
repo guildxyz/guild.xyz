@@ -3,7 +3,7 @@ import useReverseDotbitName from "./useReverseDotbitName"
 import useReverseLensProtocol from "./useReverseLensProtocol"
 import useReverseNNSName from "./useReverseNNSName"
 import useReverseUnstoppableDomain from "./useReverseUnstoppableDomain"
-const ReverseResolve = () => {
+const useReverseResolve = () => {
   const { provider, account } = useWeb3React()
   const NNSAddress = useReverseNNSName(provider, "nnsregistry.⌐◨-◨")
   const dotbitAddress = useReverseDotbitName("imac.bit")
@@ -11,4 +11,4 @@ const ReverseResolve = () => {
   const lensAddress = useReverseLensProtocol("ladidaix.lens")
 }
 
-export default ReverseResolve
+export default useReverseResolve
