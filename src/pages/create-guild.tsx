@@ -1,5 +1,6 @@
 import { Stack, useBreakpointValue } from "@chakra-ui/react"
-import { Step, Steps } from "chakra-ui-steps"
+import { Step } from "chakra-ui-steps"
+import DynamicSteps from "components/common/DynamicSteps"
 import SimpleLayout from "components/common/Layout/SimpleLayout"
 import {
   CreateGuildProvider,
@@ -23,7 +24,7 @@ const CreateGuildPage = (): JSX.Element => {
   return (
     <>
       <SimpleLayout title="Create Guild">
-        <Steps
+        <DynamicSteps
           activeStep={activeStep}
           colorScheme="indigo"
           textAlign="left"
@@ -36,7 +37,7 @@ const CreateGuildPage = (): JSX.Element => {
               </Stack>
             </Step>
           ))}
-        </Steps>
+        </DynamicSteps>
       </SimpleLayout>
       <DynamicDevTool control={control} />
     </>
