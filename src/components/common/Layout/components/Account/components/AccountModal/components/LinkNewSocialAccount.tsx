@@ -14,7 +14,7 @@ type Props = {
 const MotionHStack = motion(HStack)
 
 const LinkNewSocialAccount = ({ platformName }: Props): JSX.Element => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { onOpen, onClose } = useDisclosure()
 
   const toast = useToast()
   const onSuccess = () => {
@@ -29,7 +29,7 @@ const LinkNewSocialAccount = ({ platformName }: Props): JSX.Element => {
     platformName as PlatformName,
     onSuccess
   )
-  useEffect(() => onOpen(), [platformName]) // {defaultIsOpen: true} doesn't works, when i disconnect an account (no animation)
+  useEffect(() => onOpen(), [platformName]) // {defaultIsOpen: true} doesn't works, when I disconnect an account (no animation)
 
   return (
     <MotionHStack layoutId={platformName} spacing={3} alignItems="center" w="full">

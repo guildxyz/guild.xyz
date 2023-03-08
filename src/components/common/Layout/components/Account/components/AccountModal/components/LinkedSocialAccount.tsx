@@ -33,11 +33,7 @@ const MotionHStack = motion(HStack)
 
 const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const {
-    isOpen: isOpenRow,
-    onOpen: onOpenRow,
-    onClose: onCloseRow,
-  } = useDisclosure()
+  const { onOpen: onOpenRow, onClose: onCloseRow } = useDisclosure()
   useEffect(() => onOpenRow(), [name])
 
   const alertCancelRef = useRef()
