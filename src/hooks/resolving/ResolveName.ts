@@ -4,7 +4,7 @@ import useDotbitName from "./useDotbitName"
 import useLensProtocolName from "./useLensProtocolName"
 import useNNSName from "./useNNSName"
 
-const useResolveName = () => {
+const ResolveName = () => {
   const { provider, account, ENSName } = useWeb3React()
   const NNSName = useNNSName(provider, account)
   const dotbitName = useDotbitName(account)
@@ -14,4 +14,4 @@ const useResolveName = () => {
   return NNSName || ENSName || lensName || unstoppableDomainName || dotbitName
 }
 
-export default useResolveName
+export default ResolveName

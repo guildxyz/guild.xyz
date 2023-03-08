@@ -15,6 +15,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import ResolveName from "hooks/resolving/ResolveName"
+import ReverseResolve from "hooks/resolving/ReverseResolve"
 import { LinkBreak, SignIn } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
@@ -26,6 +27,7 @@ const Account = (): JSX.Element => {
     useWeb3ConnectionManager()
 
   const domainName = ResolveName()
+  ReverseResolve()
   const { addresses } = useUser()
   if (!account) {
     return (
