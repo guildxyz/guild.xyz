@@ -14,56 +14,28 @@ import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
 import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
-import { PlatformAccountDetails, PlatformName, PlatformType } from "types"
-import capitalize from "utils/capitalize"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkedAddress from "./LinkedAddress"
-import LinkedSocialAccount from "./LinkedSocialAccount"
-import LinkNewSocialAccount from "./LinkNewSocialAccount"
+import SocialAccount from "./SocialAccount"
 
 const AccountConnections = () => {
-  const { isLoading, addresses, platformUsers } = useUser()
+  const { isLoading, addresses } = useUser()
   const { account } = useWeb3React()
-  const missingPlatforms = Object.keys(platforms)
-    .filter((platform) => platform !== "POAP")
-    .filter(
-      (p) =>
-        !platformUsers
-          ?.map((platform) => platform.platformName.toString())
-          .includes(p)
-    )
 
   return (
     <Stack spacing="10" w="full">
       <Section title="Social accounts">
-        {isLoading ? (
-          <Spinner />
-        ) : (
-          <>
-            {platformUsers?.map(
-              ({
-                platformId,
-                platformUserId,
-                platformUserData,
-              }: PlatformAccountDetails) => (
-                <LinkedSocialAccount
-                  key={platformUserId}
-                  name={
-                    platformUserData?.username ??
-                    `${capitalize(
-                      PlatformType[platformId]?.toLowerCase() ?? "Platform"
-                    )} connected`
-                  }
-                  image={platformUserData?.avatar}
-                  type={PlatformType[platformId] as PlatformName}
-                />
-              )
-            )}
-            {missingPlatforms?.map((platform) => (
-              <LinkNewSocialAccount key={platform} platformName={platform} />
-            ))}
-          </>
-        )}
+        {Object.entries(platforms)
+          .filter(([platform]) => platform !== "POAP")
+          ?.map(([key, value]: any) => (
+            <SocialAccount
+              key={key}
+              type={key}
+              icon={value.icon}
+              colorScheme={value.colorScheme}
+              name={value.name}
+            />
+          ))}
       </Section>
       <Section
         title="Linked addresses"
