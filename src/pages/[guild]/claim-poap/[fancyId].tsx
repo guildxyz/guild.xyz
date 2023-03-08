@@ -36,7 +36,6 @@ import useUser from "components/[guild]/hooks/useUser"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { RequirementSkeleton } from "components/[guild]/Requirements/components/Requirement"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import Head from "next/head"
 import { useRouter } from "next/router"
 import { ArrowLeft, Clock } from "phosphor-react"
 import { useMemo } from "react"
@@ -164,20 +163,8 @@ const Page = (): JSX.Element => {
 
   return (
     <>
-      <Head>
-        <title>
-          {correctPoap && name ? `${name} - mint your POAP` : "Mint your POAP"}
-        </title>
-        <meta
-          name="og:title"
-          content={
-            correctPoap && name ? `${name} - mint your POAP` : "Mint your POAP"
-          }
-        />
-      </Head>
-
       <Layout
-        title=""
+        ogTitle={`${poap?.name ?? "Mint"} POAP`}
         imageUrl={poap?.image_url}
         background={theme?.color ?? "gray.900"}
         backgroundImage={theme?.backgroundImage}

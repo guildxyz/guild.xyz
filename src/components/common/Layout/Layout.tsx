@@ -20,7 +20,8 @@ import Header from "./components/Header"
 type Props = {
   image?: JSX.Element
   imageUrl?: string
-  title: string
+  ogTitle?: string
+  title?: string
   ogDescription?: string
   description?: JSX.Element
   textColor?: string
@@ -35,6 +36,7 @@ type Props = {
 const Layout = ({
   image,
   imageUrl,
+  ogTitle,
   title,
   ogDescription,
   description,
@@ -73,8 +75,8 @@ const Layout = ({
   return (
     <>
       <Head>
-        <title>{`${title}`}</title>
-        <meta property="og:title" content={`${title}`} />
+        <title>{`${ogTitle ?? title}`}</title>
+        <meta property="og:title" content={`${ogTitle ?? title}`} />
         <link rel="shortcut icon" href={imageUrl ?? "/guild-icon.png"} />
         {ogDescription && (
           <>
