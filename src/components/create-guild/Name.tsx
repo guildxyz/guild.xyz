@@ -4,7 +4,10 @@ import useDatadog from "components/_app/Datadog/useDatadog"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 
-const Name = ({ isDisabled = false }): JSX.Element => {
+const Name = ({
+  isDisabled = false,
+  width = { base: "full", md: "sm" },
+}): JSX.Element => {
   const { addDatadogAction, addDatadogError } = useDatadog()
 
   const {
@@ -35,15 +38,9 @@ const Name = ({ isDisabled = false }): JSX.Element => {
       isRequired
       isInvalid={!!errors?.name}
       isDisabled={isDisabled}
-      w={{ base: "full", md: "auto" }}
+      width={width}
     >
-      <Input
-        size="lg"
-        width={{ base: "full", md: "sm" }}
-        {...rest}
-        onBlur={onBlur}
-        isDisabled={isDisabled}
-      />
+      <Input size="lg" {...rest} onBlur={onBlur} isDisabled={isDisabled} />
       <FormErrorMessage>{errors?.name?.message as string}</FormErrorMessage>
     </FormControl>
   )

@@ -1,6 +1,6 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
+import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import { GuildPlatform, PlatformName } from "types"
-import { useRolePlatform } from "../../../RolePlatformProvider"
 
 const fileTypeNames = {
   "application/vnd.google-apps.audio": "Audio",

@@ -9,10 +9,10 @@ import {
 import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import { StarHalf } from "phosphor-react"
-import platforms from "platforms"
+import platforms from "platforms/platforms"
+import PoapCardMenu from "platforms/Poap/PoapCardMenu"
 import { PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
-import PoapRewardCardMenu from "../CreatePoap/components/PoapRewardCard/components/PoapRewardCardMenu"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
@@ -71,25 +71,23 @@ const AccessHub = (): JSX.Element => {
                 guildPlatform={platform}
                 key={platform.id}
                 cornerButton={
-                  PlatformCardWarning ? (
+                  isAdmin && PlatformCardMenu ? (
+                    <PlatformCardMenu platformGuildId={platform.platformGuildId} />
+                  ) : PlatformCardWarning ? (
                     <PlatformCardWarning guildPlatform={platform} />
-                  ) : (
-                    isAdmin &&
-                    PlatformCardMenu && (
-                      <PlatformCardMenu platformGuildId={platform.platformGuildId} />
-                    )
-                  )
+                  ) : null
                 }
               >
                 <PlatformCardButton platform={platform} />
               </PlatformCard>
             )
           })}
+
           {futurePoaps.map((poap) => (
             <PoapRewardCard
               key={poap?.id}
               guildPoap={poap}
-              cornerButton={isAdmin && <PoapRewardCardMenu guildPoap={poap} />}
+              cornerButton={isAdmin && <PoapCardMenu guildPoap={poap} />}
             />
           ))}
         </>
