@@ -19,6 +19,7 @@ import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { Robot } from "phosphor-react"
+import { useEffect } from "react"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 import useVerifyCaptcha from "../hooks/useVerifyCaptcha"
@@ -67,7 +68,12 @@ const CompleteCaptchaModal = ({ isOpen, onClose }) => {
     fetcherWithSign
   )
 
-  const { onSubmit, isLoading } = useVerifyCaptcha()
+  const { onSubmit, isLoading, response } = useVerifyCaptcha()
+
+  useEffect(() => {
+    if (!response) return
+    onClose()
+  }, [response])
 
   return (
     <Modal
