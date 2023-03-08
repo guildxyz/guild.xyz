@@ -1,5 +1,6 @@
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
@@ -65,6 +66,7 @@ const usePayFee = () => {
 
   const { chainId } = useWeb3React()
 
+  const { urlName } = useGuild()
   const { requirement, pickedCurrency } = useGuildCheckoutContext()
 
   const feeCollectorContract = useContract(
@@ -147,7 +149,9 @@ const usePayFee = () => {
       }
 
       addDatadogAction("successful payFee (GuildCheckout)")
-      posthog.capture("Bought pass (GuildCheckout)")
+      posthog.capture("Bought pass (GuildCheckout)", {
+        guild: urlName,
+      })
       toast({
         status: "success",
         title: "Successful payment",

@@ -89,7 +89,7 @@ const usePurchaseAsset = () => {
 
   const { account, chainId } = useWeb3React()
 
-  const { id: guildId } = useGuild()
+  const { id: guildId, urlName } = useGuild()
   const { requirement, pickedCurrency } = useGuildCheckoutContext()
   const {
     data: { symbol },
@@ -181,7 +181,9 @@ const usePurchaseAsset = () => {
         }
 
         addDatadogAction("purchased requirement (GuildCheckout)")
-        posthog.capture("Purchased requirement (GuildCheckout)")
+        posthog.capture("Purchased requirement (GuildCheckout)", {
+          guild: urlName,
+        })
 
         toast({
           status: "success",
