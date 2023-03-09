@@ -19,6 +19,7 @@ export type GeneratedGetAssetsParams =
       string[],
       {
         value?: BigNumberish
+        gasLimit?: BigNumberish
       }
     ]
   | [
@@ -30,6 +31,7 @@ export type GeneratedGetAssetsParams =
       string[],
       {
         value?: BigNumberish
+        gasLimit?: BigNumberish
       }
     ]
 
@@ -44,7 +46,7 @@ const generateGetAssetsParams = (
     return undefined
 
   const {
-    priceInWei,
+    priceToSendInWei,
     guildFeeInWei: rawGuildFeeInWei,
     buyAmountInWei,
     source,
@@ -54,7 +56,8 @@ const generateGetAssetsParams = (
 
   if (
     !guildId ||
-    !priceInWei ||
+    !account ||
+    !priceToSendInWei ||
     !rawGuildFeeInWei ||
     !buyAmountInWei ||
     !source ||
@@ -62,7 +65,7 @@ const generateGetAssetsParams = (
   )
     return undefined
 
-  const amountIn = BigNumber.from(priceInWei)
+  const amountIn = BigNumber.from(priceToSendInWei)
   const guildFeeInWei = BigNumber.from(rawGuildFeeInWei)
   const amountInWithFee = amountIn.add(guildFeeInWei)
   const amountOut = BigNumber.from(buyAmountInWei)

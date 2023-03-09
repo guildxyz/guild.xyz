@@ -19,7 +19,9 @@ import Header from "./components/Header"
 
 type Props = {
   image?: JSX.Element
-  title: string
+  imageUrl?: string
+  ogTitle?: string
+  title?: string
   ogDescription?: string
   description?: JSX.Element
   textColor?: string
@@ -28,10 +30,13 @@ type Props = {
   backgroundImage?: string
   backgroundOffset?: number
   showBackButton?: boolean
+  maxWidth?: string
 }
 
 const Layout = ({
   image,
+  imageUrl,
+  ogTitle,
   title,
   ogDescription,
   description,
@@ -41,6 +46,7 @@ const Layout = ({
   backgroundImage,
   backgroundOffset = 128,
   showBackButton,
+  maxWidth = "container.lg",
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
@@ -55,16 +61,23 @@ const Layout = ({
 
     const rect = childrenWrapper.current.getBoundingClientRect()
     setBgHeight(`${rect.top + (window?.scrollY ?? 0) + backgroundOffset}px`)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, description, childrenWrapper?.current, action])
+  }, [
+    title,
+    description,
+    background,
+    backgroundImage,
+    childrenWrapper?.current,
+    action,
+  ])
 
   const { colorMode } = useColorMode()
 
   return (
     <>
       <Head>
-        <title>{`${title}`}</title>
-        <meta property="og:title" content={`${title}`} />
+        <title>{`${ogTitle ?? title}`}</title>
+        <meta property="og:title" content={`${ogTitle ?? title}`} />
+        <link rel="shortcut icon" href={imageUrl ?? "/guild-icon.png"} />
         {ogDescription && (
           <>
             <meta name="description" content={ogDescription} />
@@ -112,7 +125,7 @@ const Layout = ({
         <Container
           // to be above the absolutely positioned background box
           position="relative"
-          maxW="container.lg"
+          maxW={maxWidth}
           pt={{ base: 6, md: 9 }}
           pb={24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}

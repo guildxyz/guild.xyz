@@ -10,7 +10,7 @@ import {
 import { formatUnits } from "@ethersproject/units"
 import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
-import { Info } from "phosphor-react"
+import { Info, Question } from "phosphor-react"
 import { GUILD_FEE_PERCENTAGE } from "utils/guildCheckout/constants"
 import usePrice from "../hooks/usePrice"
 import usePurchaseAsset from "../hooks/usePurchaseAsset"
@@ -28,15 +28,21 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
     data: {
       guildBaseFeeInSellToken,
       guildFeeInSellToken,
-      priceInSellToken,
-      priceInUSD,
+      estimatedPriceInSellToken,
+      estimatedPriceInUSD,
       guildFeeInUSD,
+      priceInSellToken,
     },
     isValidating,
     error,
   } = usePrice(pickedCurrency)
 
-  const { estimatedGasFee, estimatedGasFeeInUSD } = usePurchaseAsset()
+  const {
+    estimatedGasFee,
+    estimatedGasFeeInUSD,
+    estimateGasError,
+    isLoading: isEstimateGasLoading,
+  } = usePurchaseAsset()
 
   const nativeCurrency = RPC[requirement.chain].nativeCurrency
   const estimatedGasInFloat = estimatedGasFee
@@ -46,8 +52,24 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
   const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
   const calculatedGasFee = isNativeCurrency ? estimatedGasInFloat ?? 0 : 0
 
-  const isTooSmallFee = parseFloat(guildFeeInSellToken?.toFixed(3)) < 0.001
-  const isTooSmallPrice = parseFloat(priceInSellToken?.toFixed(3)) < 0.001
+  // TODO: we'll need to rewrite this logic once we'll support payments with ERC20 tokens!
+  const feeSum = Number(
+    ((calculatedGasFee ?? 0) + (guildFeeInSellToken ?? 0))?.toFixed(3)
+  )
+  const estimatedPriceSum = Number(
+    (
+      estimatedPriceInSellToken +
+      (calculatedGasFee ?? 0) +
+      (guildFeeInSellToken ?? 0)
+    )?.toFixed(3)
+  )
+  const maxPriceSum = Number(
+    (
+      priceInSellToken +
+      (calculatedGasFee ?? 0) +
+      (guildFeeInSellToken ?? 0)
+    )?.toFixed(3)
+  )
 
   return (
     <Stack spacing={3}>
@@ -69,22 +91,26 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
               <Icon as={Info} color="gray" />
             </Tooltip>
           </HStack>
-          <Text as="span" colorScheme="gray">
-            {error ? (
-              "Couldn't calculate"
-            ) : pickedCurrency ? (
-              <>
-                {isTooSmallFee
-                  ? "< 0.001"
-                  : (calculatedGasFee ?? 0 + guildFeeInSellToken ?? 0)?.toFixed(
-                      3
-                    )}{" "}
-                {symbol}
-              </>
-            ) : (
-              "Choose currency"
+          <Skeleton
+            isLoaded={Boolean(
+              error ||
+                estimateGasError ||
+                (pickedCurrency && !isEstimateGasLoading && guildFeeInSellToken)
             )}
-          </Text>
+          >
+            <Text as="span" colorScheme="gray">
+              {error || (!estimatedGasFee && !guildFeeInSellToken) ? (
+                "Couldn't calculate"
+              ) : pickedCurrency ? (
+                <>
+                  {feeSum < 0.001 ? "< 0.001 " : `${feeSum} `}
+                  {symbol}
+                </>
+              ) : (
+                "Choose currency"
+              )}
+            </Text>
+          </Skeleton>
         </HStack>
 
         <HStack justifyContent="space-between">
@@ -96,9 +122,9 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
             <Text as="span">
               <Skeleton isLoaded={!isValidating}>
                 <Text as="span" colorScheme="gray">
-                  {priceInUSD
+                  {estimatedPriceInUSD
                     ? `$${(
-                        priceInUSD +
+                        estimatedPriceInUSD +
                         guildFeeInUSD +
                         (estimatedGasFeeInUSD ?? 0)
                       )?.toFixed(2)}`
@@ -106,15 +132,11 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
                   {" = "}
                 </Text>
                 <Text as="span" fontWeight="semibold">
-                  {priceInSellToken && guildFeeInSellToken
+                  {estimatedPriceInSellToken && guildFeeInSellToken
                     ? `${
-                        isTooSmallPrice
-                          ? "< 0.001"
-                          : (
-                              priceInSellToken +
-                              guildFeeInSellToken +
-                              calculatedGasFee
-                            )?.toFixed(3)
+                        estimatedPriceSum < 0.001
+                          ? "< 0.001 "
+                          : `${estimatedPriceSum} `
                       } `
                     : "0.00 "}
                   {symbol}
@@ -124,6 +146,22 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
           </PriceFallback>
         </HStack>
       </Stack>
+
+      {priceInSellToken && guildFeeInSellToken && (
+        <HStack justifyContent="end" spacing={1}>
+          <Text as="span" colorScheme="gray" fontSize="sm">
+            {`Max: ${maxPriceSum} ${symbol}`}
+          </Text>
+
+          <Tooltip
+            placement="top"
+            hasArrow
+            label="You will pay no more than this, including slippage"
+          >
+            <Icon as={Question} boxSize={4} color="gray" />
+          </Tooltip>
+        </HStack>
+      )}
 
       {estimatedGasFee && !isNativeCurrency && (
         // We're displaying gas fee here when the user picked an ERC20 as sellToken

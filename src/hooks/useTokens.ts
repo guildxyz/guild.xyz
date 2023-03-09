@@ -1,9 +1,9 @@
-import { Chains, RPC } from "connectors"
+import { Chain, Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { CoingeckoToken } from "types"
 import fetcher from "utils/fetcher"
 
-export const TokenApiURLs = {
+export const TokenApiURLs: Record<Chain, string[]> = {
   ETHEREUM: ["https://tokens.coingecko.com/uniswap/all.json"],
   BSC: ["https://tokens.coingecko.com/binance-smart-chain/all.json"],
   GNOSIS: [
@@ -34,6 +34,10 @@ export const TokenApiURLs = {
   BOBA: ["https://tokens.coingecko.com/boba/all.json"],
   BOBA_AVAX: ["https://tokens.coingecko.com/boba/all.json"],
   PALM: [],
+  BASE_GOERLI: [],
+  EXOSAMA: [],
+  EVMOS: ["https://tokens.coingecko.com/evmos/all.json"],
+  POLYGON_MUMBAI: [],
 }
 
 const fetchTokens = async (_: string, chain: string) =>

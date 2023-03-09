@@ -17,7 +17,7 @@ import {
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import { LinkBreak } from "phosphor-react"
-import platforms from "platforms"
+import platforms from "platforms/platforms"
 import { useRef } from "react"
 import { PlatformName } from "types"
 import useDisconnect from "../hooks/useDisconnect"

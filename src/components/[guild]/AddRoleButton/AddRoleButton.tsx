@@ -32,10 +32,11 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { PlatformType } from "types"
+import { PlatformType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
+import SetVisibility from "../SetVisibility"
 
 const noRequirementsErrorMessage = "Set some requirements, or make the role free"
 
@@ -62,6 +63,7 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
     requirements: [],
     roleType: "NEW",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+    visibility: Visibility.PUBLIC,
     rolePlatforms: discordPlatform
       ? [
           {
@@ -69,6 +71,7 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
             platformRoleData: {},
             platformRoleId: null,
             isNew: true,
+            visibility: Visibility.PUBLIC,
           },
         ]
       : [],
@@ -173,9 +176,18 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
-            <DrawerHeader title="Add role" />
-
             <FormProvider {...methods}>
+              <DrawerHeader
+                title="Add role"
+                justifyContent="start"
+                spacing={1}
+                alignItems="center"
+              >
+                <Box>
+                  <SetVisibility entityType="role" />
+                </Box>
+              </DrawerHeader>
+
               <VStack spacing={10} alignItems="start">
                 <RolePlatforms />
 
@@ -208,7 +220,6 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || isUploadingShown}
               isLoading={isLoading || isSigning || isUploadingShown}
               colorScheme="green"
               loadingText={loadingText}

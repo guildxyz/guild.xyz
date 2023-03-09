@@ -10,6 +10,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
+import { useWeb3React } from "@web3-react/core"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import useTokenData from "hooks/useTokenData"
@@ -46,6 +47,7 @@ const TokenInfo = ({
     isValidating: isTokenDataLoading,
   } = useTokenData(Chains[chainId], address)
 
+  const { account } = useWeb3React()
   const {
     coinBalance,
     tokenBalance,
@@ -82,9 +84,9 @@ const TokenInfo = ({
         </SkeletonCircle>
 
         <Stack spacing={1.5} maxW="calc(100% - 3rem)" alignItems={"flex-start"}>
-          <Skeleton isLoaded={!isTokenDataLoading && !isLoading} h={5}>
+          <Skeleton isLoaded={!isTokenDataLoading && !isLoading} w="full" h={5}>
             <Text as="span" display="block" isTruncated>
-              {error
+              {tokenDataError
                 ? "Couldn't fetch token data"
                 : error
                 ? `[?] ${symbol}`
@@ -100,15 +102,21 @@ const TokenInfo = ({
           </Skeleton>
 
           <Text as="span" colorScheme="gray" fontSize="xs">
-            {`Balance: `}
-            <Skeleton
-              isLoaded={!isBalanceLoading}
-              h={4}
-              display="inline-flex"
-              alignItems="center"
-            >
-              {`${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
-            </Skeleton>
+            {account ? (
+              <>
+                {`Balance: `}
+                <Skeleton
+                  isLoaded={!isBalanceLoading}
+                  h={4}
+                  display="inline-flex"
+                  alignItems="center"
+                >
+                  {`${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
+                </Skeleton>
+              </>
+            ) : (
+              "Connect wallet to check balance"
+            )}
           </Text>
         </Stack>
       </HStack>

@@ -13,7 +13,7 @@ const SwitchNetworkButton = (): JSX.Element => {
   const { chain } = useRequirementContext()
   const requirementChainId = Chains[chain]
 
-  const { requestNetworkChange, newtowrkChangeInProgress } =
+  const { requestNetworkChange, isNetworkChangeInProgress } =
     useWeb3ConnectionManager()
 
   return (
@@ -21,7 +21,7 @@ const SwitchNetworkButton = (): JSX.Element => {
       <Button
         size="lg"
         colorScheme="blue"
-        isLoading={newtowrkChangeInProgress}
+        isLoading={isNetworkChangeInProgress}
         loadingText="Check your wallet"
         onClick={() =>
           requestNetworkChange(

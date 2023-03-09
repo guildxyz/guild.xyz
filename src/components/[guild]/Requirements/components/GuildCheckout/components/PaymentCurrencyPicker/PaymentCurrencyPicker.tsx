@@ -44,7 +44,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
   useEffect(() => setPickedCurrency(currencyOptions[0].address), [])
 
   const {
-    data: { priceInSellToken },
+    data: { estimatedPriceInSellToken },
     isValidating,
     error,
   } = usePrice(pickedCurrency)
@@ -78,7 +78,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                   <TokenInfo
                     chainId={Chains[requirement.chain]}
                     address={pickedCurrency}
-                    requiredAmount={priceInSellToken}
+                    requiredAmount={estimatedPriceInSellToken}
                     isLoading={isValidating}
                     error={error}
                   />
@@ -127,26 +127,28 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                 ))}
               </Stack>
 
-              <HStack
-                justifyContent="space-between"
-                bgColor={lightShade}
-                h={8}
-                px={4}
-                fontSize="sm"
-              >
-                <Text as="span" colorScheme="gray">
-                  Connected address:
-                </Text>
-
-                <Button
-                  size="sm"
-                  variant="link"
-                  rightIcon={<Icon as={ArrowSquareOut} />}
-                  onClick={openAccountModal}
+              {account && (
+                <HStack
+                  justifyContent="space-between"
+                  bgColor={lightShade}
+                  h={8}
+                  px={4}
+                  fontSize="sm"
                 >
-                  {shortenHex(account, 3)}
-                </Button>
-              </HStack>
+                  <Text as="span" colorScheme="gray">
+                    Connected address:
+                  </Text>
+
+                  <Button
+                    size="sm"
+                    variant="link"
+                    rightIcon={<Icon as={ArrowSquareOut} />}
+                    onClick={openAccountModal}
+                  >
+                    {shortenHex(account, 3)}
+                  </Button>
+                </HStack>
+              )}
             </MenuList>
           </>
         )}

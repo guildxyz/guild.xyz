@@ -18,15 +18,16 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useIsMember from "components/[guild]/hooks/useIsMember"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
 import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
-  PURCHASE_ALLOWED_GUILDS,
 } from "utils/guildCheckout/constants"
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import AlphaTag from "./components/AlphaTag"
+import ConnectWalletButton from "./components/buttons/ConnectWalletButton"
 import PurchaseAllowanceButton from "./components/buttons/PurchaseAllowanceButton"
 import PurchaseButton from "./components/buttons/PurchaseButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
@@ -45,6 +46,8 @@ import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
+  const { featureFlags } = useGuild()
+
   const { account, chainId } = useWeb3React()
   const {
     requirement,
@@ -56,25 +59,25 @@ const PurchaseRequirement = (): JSX.Element => {
     txSuccess,
     txHash,
   } = useGuildCheckoutContext()
-  const { id, name } = useGuild()
+  const { name } = useGuild()
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
   )
   const satisfiesRequirement = accessData?.requirements?.find(
     (req) => req.requirementId === requirement.id
   )?.access
+  const isMember = useIsMember()
 
   const {
-    data: { priceInUSD },
+    data: { estimatedPriceInUSD },
     isValidating,
     error,
   } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
 
   if (
+    !isOpen &&
     !isInfoModalOpen &&
-    // TODO: we'll be able to control this properly once we'll have feature flags
-    (!PURCHASE_ALLOWED_GUILDS.includes(id) ||
-      !account ||
+    (!featureFlags?.includes("PURCHASE_REQUIREMENT") ||
       (!accessData && isAccessLoading) ||
       satisfiesRequirement ||
       !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
@@ -114,9 +117,11 @@ const PurchaseRequirement = (): JSX.Element => {
                   <Spinner size="sm" />
                 ) : (
                   <Text as="span">
-                    {!isNaN(priceInUSD)
+                    {!isNaN(estimatedPriceInUSD)
                       ? `${
-                          priceInUSD < 0.01 ? "< $0.01" : `$${priceInUSD.toFixed(2)}`
+                          estimatedPriceInUSD < 0.01
+                            ? "< $0.01"
+                            : `$${estimatedPriceInUSD.toFixed(2)}`
                         }`
                       : ""}
                   </Text>
@@ -144,18 +149,22 @@ const PurchaseRequirement = (): JSX.Element => {
                   },
                 }}
               >
-                {!error && (
-                  <>
-                    <SwitchNetworkButton />
+                {!account ? (
+                  <ConnectWalletButton />
+                ) : (
+                  !error && (
+                    <>
+                      <SwitchNetworkButton />
 
-                    <Collapse in={chainId === Chains[requirement.chain]}>
-                      <TOSCheckbox>
-                        {`I understand that I purchase from decentralized exchanges, not from ${name} or Guild.xyz itself`}
-                      </TOSCheckbox>
+                      <Collapse in={chainId === Chains[requirement.chain]}>
+                        <TOSCheckbox>
+                          {`I understand that I purchase from decentralized exchanges, not from ${name} or Guild.xyz itself`}
+                        </TOSCheckbox>
 
-                      <PurchaseAllowanceButton />
-                    </Collapse>
-                  </>
+                        <PurchaseAllowanceButton />
+                      </Collapse>
+                    </>
+                  )
                 )}
                 <PurchaseButton />
               </Stack>
@@ -197,7 +206,9 @@ const PurchaseRequirement = (): JSX.Element => {
         successComponent={
           <>
             <Text mb={4}>
-              Requirement successfully purchased! Your access is being rechecked
+              {isMember
+                ? "Your access is being rechecked"
+                : "Join the Guild now to get your roles"}
             </Text>
 
             <TransactionLink />

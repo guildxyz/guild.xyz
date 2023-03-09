@@ -21,7 +21,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { ArrowSquareOut, Function } from "phosphor-react"
+import { CaretDown, Function } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -39,7 +39,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
 
           <Popover placement="bottom">
             <PopoverTrigger>
-              <RequirementButton rightIcon={<Icon as={ArrowSquareOut} />}>
+              <RequirementButton rightIcon={<Icon as={CaretDown} />}>
                 View query
               </RequirementButton>
             </PopoverTrigger>

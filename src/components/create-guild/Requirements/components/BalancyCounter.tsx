@@ -66,7 +66,7 @@ const BalancyCounterWithPopover = ({ ...rest }) => {
                     pt="1px"
                     rounded="md"
                     onClick={onCopy}
-                    disabled={!addresses?.length}
+                    isDisabled={!addresses?.length}
                     leftIcon={<Copy />}
                   >
                     {hasCopied ? "Copied!" : "Copy addresses"}
@@ -76,7 +76,7 @@ const BalancyCounterWithPopover = ({ ...rest }) => {
                     pt="1px"
                     rounded="md"
                     onClick={exportAddresses}
-                    disabled={!addresses?.length}
+                    isDisabled={!addresses?.length}
                     leftIcon={<DownloadSimple />}
                   >
                     Export addresses

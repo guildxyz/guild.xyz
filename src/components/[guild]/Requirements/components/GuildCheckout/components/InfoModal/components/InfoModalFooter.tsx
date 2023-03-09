@@ -1,20 +1,36 @@
 import { ModalFooter } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import { useEffect } from "react"
 import { useGuildCheckoutContext } from "../../GuildCheckoutContex"
 
 const InfoModalFooter = (): JSX.Element => {
-  const { onInfoModalClose } = useGuildCheckoutContext()
+  const { onInfoModalClose, txSuccess } = useGuildCheckoutContext()
+  const openJoinModal = useOpenJoinModal()
+  const isMember = useIsMember()
+
+  useEffect(() => {
+    if (!isMember || !txSuccess) return
+    onInfoModalClose()
+  }, [isMember, txSuccess])
+
+  const isJoinButton = txSuccess && !isMember
 
   return (
     <ModalFooter>
       <Button
         size="lg"
-        colorScheme="blue"
+        colorScheme={isJoinButton ? "green" : "blue"}
         w="full"
-        onClick={onInfoModalClose}
-        data-dd-action-name="CloseModalButton (GuildCheckout)"
+        onClick={isJoinButton ? openJoinModal : onInfoModalClose}
+        data-dd-action-name={
+          isJoinButton
+            ? "JoinGuildButton (GuildCheckout)"
+            : "CloseModalButton (GuildCheckout)"
+        }
       >
-        Close
+        {isJoinButton ? "Join guild" : "Close"}
       </Button>
     </ModalFooter>
   )

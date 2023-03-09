@@ -7,6 +7,7 @@ import useDebouncedState from "hooks/useDebouncedState"
 import useGateables from "hooks/useGateables"
 import { useMemo } from "react"
 import { useFormContext } from "react-hook-form"
+import { PlatformType } from "types"
 import { OptionSkeletonCard } from "../OptionCard"
 import ReconnectAlert from "../ReconnectAlert"
 import DCServerCard from "./components/DCServerCard"
@@ -21,7 +22,11 @@ const DiscordGuildSetup = ({
 }) => {
   const { reset, setValue } = useFormContext()
 
-  const { gateables, isLoading, error: gateablesError } = useGateables("DISCORD")
+  const {
+    gateables,
+    isLoading,
+    error: gateablesError,
+  } = useGateables(PlatformType.DISCORD)
 
   const servers = Object.entries(gateables || {}).map(([id, serverData]) => ({
     id,
@@ -52,7 +57,7 @@ const DiscordGuildSetup = ({
 
   if ((!servers || servers.length <= 0) && isLoading) {
     return (
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 5 }}>
         {[...Array(3)].map((i) => (
           <GridItem key={i}>
             <OptionSkeletonCard />
@@ -69,7 +74,7 @@ const DiscordGuildSetup = ({
   }
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
+    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 5 }}>
       <AnimatePresence>
         {(selectedServerOption ? [selectedServerOption] : servers ?? [])
           .filter(
@@ -99,7 +104,7 @@ const DiscordGuildSetup = ({
           ))}
       </AnimatePresence>
       {debounceSelectedServer && (
-        <GridItem colSpan={2}>
+        <GridItem>
           <ServerSetupCard selectedServer={selectedServer} onSubmit={onSubmit} />
         </GridItem>
       )}

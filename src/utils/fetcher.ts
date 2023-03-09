@@ -7,6 +7,9 @@ import { sign } from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 
+const SIG_HEADER_NAME = "x-guild-sig"
+const PARAMS_HEADER_NAME = "x-guild-params"
+
 const fetcher = async (
   resource: string,
   { body, validation, signedPayload, ...init }: Record<string, any> = {}
@@ -35,6 +38,18 @@ const fetcher = async (
       ...(body || signedPayload ? { "Content-Type": "application/json" } : {}),
       ...init.headers,
     },
+  }
+
+  if ((!options.method || options.method?.toUpperCase() === "GET") && !!validation) {
+    delete options.body
+
+    options.headers[PARAMS_HEADER_NAME] = Buffer.from(
+      JSON.stringify(validation.params)
+    ).toString("base64")
+
+    options.headers[SIG_HEADER_NAME] = Buffer.from(validation.sig, "hex").toString(
+      "base64"
+    )
   }
 
   if (isGuildApiCall || isServerless)

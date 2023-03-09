@@ -14,11 +14,11 @@ import {
   Text,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import useFeeInUSD from "components/[guild]/CreatePoap/components/Requirements/components/MonetizePoap/hooks/useFeeInUSD"
 import { Chain } from "connectors"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"
 import TokenPicker from "requirements/common/TokenPicker"
+import useFeeInUSD from "requirements/PoapPayment/hooks/useFeeInUSD"
 import {
   ADDRESS_REGEX,
   NULL_ADDRESS,
@@ -26,6 +26,7 @@ import {
 } from "utils/guildCheckout/constants"
 
 const coingeckoCoinIds: Partial<Record<Chain, string>> = {
+  ETHEREUM: "ethereum",
   POLYGON: "matic-network",
   GOERLI: "ethereum",
 }
@@ -139,29 +140,18 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
 
       <FormControl isRequired isInvalid={!!errors?.owner}>
         <FormLabel>Address to receive payments to</FormLabel>
-        <InputGroup>
-          {/* {isGnosisSafe && (
-                <InputLeftElement>
-                  <Img
-                    src={gnosisSafeLogoUrl}
-                    alt="Gnosis Safe"
-                    boxSize={5}
-                  />
-                </InputLeftElement>
-              )} */}
 
-          <Input
-            isDisabled={isDisabled}
-            {...register("owner", {
-              required: "This field is required.",
-              pattern: {
-                value: ADDRESS_REGEX,
-                message:
-                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-              },
-            })}
-          />
-        </InputGroup>
+        <Input
+          isDisabled={isDisabled}
+          {...register("owner", {
+            required: "This field is required.",
+            pattern: {
+              value: ADDRESS_REGEX,
+              message:
+                "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+            },
+          })}
+        />
         <FormErrorMessage>{errors?.owner?.message}</FormErrorMessage>
       </FormControl>
       <Text colorScheme="gray" fontSize="sm">

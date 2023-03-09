@@ -3,8 +3,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
-import { mutate } from "swr"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 
@@ -32,7 +32,7 @@ const useDisconnect = (onSuccess?: () => void) => {
   return useSubmitWithSign<any>(submit, {
     onSuccess: () => {
       mutateUser()
-      mutate(`/guild/access/${id}/${account}`)
+      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
 
       toast({
         title: `Account disconnected!`,

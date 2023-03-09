@@ -37,7 +37,7 @@ const TabButton = ({
   ) : (
     <Tooltip label={tooltipText} placement="bottom">
       <Box>
-        <Button variant="ghost" disabled {...rest}>
+        <Button variant="ghost" isDisabled {...rest}>
           {children}
         </Button>
       </Box>

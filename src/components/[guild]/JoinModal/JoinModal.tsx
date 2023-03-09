@@ -47,7 +47,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const hasGithubRequirement = !!roles?.some((role) =>
     role.requirements?.some((requirement) => requirement?.type?.startsWith("GITHUB"))
   )
-  const allPlatforms = guildPlatforms.map(
+  const allPlatforms = guildPlatforms?.map(
     (platform) => PlatformType[platform.platformId]
   )
   if (hasTwitterRequirement) allPlatforms.push("TWITTER")

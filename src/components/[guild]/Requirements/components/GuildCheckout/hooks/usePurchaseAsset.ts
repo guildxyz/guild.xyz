@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber"
+import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -11,9 +11,10 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { useMemo } from "react"
-import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
-import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
-import { ADDRESS_REGEX, TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
+import {
+  ADDRESS_REGEX,
+  getTokenBuyerContractData,
+} from "utils/guildCheckout/constants"
 import {
   GeneratedGetAssetsParams,
   generateGetAssetsParams,
@@ -24,16 +25,39 @@ import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
 import useSubmitTransaction from "./useSubmitTransaction"
 
+const isConfigParam = (
+  param: any
+): param is {
+  value?: BigNumberish
+  gasLimit?: BigNumberish
+} => "value" in (param ?? {})
+
 const purchaseAsset = async (
   tokenBuyerContract: Contract,
-  generatedGetAssetsParams: GeneratedGetAssetsParams
+  generatedGetAssetsParams: GeneratedGetAssetsParams,
+  estimatedGasLimit?: BigNumber
 ) => {
   // We shouldn't run into these issues, but rejecting here in case something wrong happens.
   if (!tokenBuyerContract) return Promise.reject("Can't find TokenBuyer contract.")
   if (!generatedGetAssetsParams)
     return Promise.reject("Couldn't generate getAssets params.")
+
+  // Adjusting the gas limit to avoid failing transactions)
+  // TODO: rethink the way we use generateGetAssetsParams, maybe we can find a cleaner solution for adjusting gas fee here.
+  const generatedGetAssetsParamsWithGasLimit = [...generatedGetAssetsParams]
+
+  if (estimatedGasLimit) {
+    const customGasLimit = estimatedGasLimit.mul(12)?.div(10)
+    if (isConfigParam(generatedGetAssetsParamsWithGasLimit[4]))
+      generatedGetAssetsParamsWithGasLimit[4].gasLimit = customGasLimit
+    else if (isConfigParam(generatedGetAssetsParamsWithGasLimit[3]))
+      generatedGetAssetsParamsWithGasLimit[3].gasLimit = customGasLimit
+  }
+
   try {
-    await tokenBuyerContract.callStatic.getAssets(...generatedGetAssetsParams)
+    await tokenBuyerContract.callStatic.getAssets(
+      ...generatedGetAssetsParamsWithGasLimit
+    )
   } catch (callStaticError) {
     if (callStaticError.error) {
       const walletError = processWalletError(callStaticError.error)
@@ -42,8 +66,6 @@ const purchaseAsset = async (
 
     if (!callStaticError.errorName) return Promise.reject(callStaticError)
 
-    // TODO: we could handle Uniswap universal router errors too
-    // https://github.com/Uniswap/universal-router/blob/main/contracts/interfaces/IUniversalRouter.sol
     switch (callStaticError.errorName) {
       case "AccessDenied":
         return Promise.reject("TokenBuyer contract error: access denied")
@@ -54,7 +76,7 @@ const purchaseAsset = async (
     }
   }
 
-  return tokenBuyerContract.getAssets(...generatedGetAssetsParams)
+  return tokenBuyerContract.getAssets(...generatedGetAssetsParamsWithGasLimit)
 }
 
 const usePurchaseAsset = () => {
@@ -72,11 +94,10 @@ const usePurchaseAsset = () => {
   } = useTokenData(requirement.chain, requirement.address)
   const { data: priceData } = usePrice(pickedCurrency)
 
+  const tokenBuyerContractData = getTokenBuyerContractData(guildId)
   const tokenBuyerContract = useContract(
-    TOKEN_BUYER_CONTRACT[Chains[chainId]],
-    ["ARBITRUM", "GOERLI"].includes(Chains[chainId])
-      ? OLD_TOKEN_BUYER_ABI
-      : TOKEN_BUYER_ABI,
+    tokenBuyerContractData[Chains[chainId]]?.address,
+    tokenBuyerContractData[Chains[chainId]]?.abi,
     true
   )
 
@@ -88,7 +109,7 @@ const usePurchaseAsset = () => {
 
   const { allowance } = useAllowance(
     pickedCurrency,
-    TOKEN_BUYER_CONTRACT[Chains[chainId]]
+    tokenBuyerContractData[Chains[chainId]]?.address
   )
 
   const { coinBalance, tokenBalance } = useBalance(
@@ -97,33 +118,37 @@ const usePurchaseAsset = () => {
   )
 
   const pickedCurrencyIsNative =
-    pickedCurrency === RPC[Chains[chainId]].nativeCurrency.symbol
+    pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
 
   const isSufficientBalance =
-    priceData?.priceInWei &&
+    priceData?.priceToSendInWei &&
     (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gt(BigNumber.from(priceData.priceInWei))
-      : tokenBalance?.gt(BigNumber.from(priceData.priceInWei)))
+      ? coinBalance?.gt(BigNumber.from(priceData.priceToSendInWei))
+      : tokenBalance?.gt(BigNumber.from(priceData.priceToSendInWei)))
 
   const shouldEstimateGas =
     requirement?.chain === Chains[chainId] &&
-    priceData?.priceInWei &&
+    priceData?.priceToSendInWei &&
     isSufficientBalance &&
     (ADDRESS_REGEX.test(pickedCurrency)
-      ? allowance && BigNumber.from(priceData.priceInWei).lte(allowance)
+      ? allowance && BigNumber.from(priceData.priceToSendInWei).lte(allowance)
       : true)
 
-  const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
-    useEstimateGasFee(
-      requirement?.id?.toString(),
-      shouldEstimateGas ? tokenBuyerContract : null,
-      "getAssets",
-      generatedGetAssetsParams
-    )
+  const {
+    estimatedGasLimit,
+    estimatedGasFee,
+    estimatedGasFeeInUSD,
+    estimateGasError,
+  } = useEstimateGasFee(
+    requirement?.id?.toString(),
+    shouldEstimateGas ? tokenBuyerContract : null,
+    "getAssets",
+    generatedGetAssetsParams
+  )
 
   const purchaseAssetTransaction = (data?: GeneratedGetAssetsParams) =>
-    purchaseAsset(tokenBuyerContract, data)
+    purchaseAsset(tokenBuyerContract, data, estimatedGasLimit)
 
   const useSubmitData = useSubmitTransaction<GeneratedGetAssetsParams>(
     purchaseAssetTransaction,

@@ -17,7 +17,7 @@ import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
 const SetRequirements = (): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
-  const { control, getValues, watch, clearErrors } = useFormContext()
+  const { control, getValues, watch, clearErrors, setValue } = useFormContext()
 
   const { fields, append, replace, remove, update } = useFieldArray({
     name: "requirements",
@@ -52,6 +52,13 @@ const SetRequirements = (): JSX.Element => {
     ...field,
     ...watchFieldArray[index],
   }))
+
+  const removeReq = (index: number) => {
+    setValue(
+      `requirements`,
+      watchFieldArray.filter((_, i) => i !== index)
+    )
+  }
 
   const freeEntry = useMemo(
     () => !!controlledFields?.find((requirement) => requirement.type === "FREE"),
@@ -109,7 +116,7 @@ const SetRequirements = (): JSX.Element => {
                     type={type}
                     field={field}
                     index={i}
-                    removeRequirement={remove}
+                    removeRequirement={removeReq}
                     updateRequirement={update}
                     isEditDisabled={type === "PAYMENT"}
                   />

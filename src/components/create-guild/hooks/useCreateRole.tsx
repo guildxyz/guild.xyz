@@ -8,6 +8,7 @@ import useDatadog from "components/_app/Datadog/useDatadog"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
@@ -15,12 +16,11 @@ import { useSWRConfig } from "swr"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
-import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 type RoleOrGuild = Role & { guildId: number }
 
-const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
+const useCreateRole = () => {
   const { addDatadogAction, addDatadogError } = useDatadog()
 
   const toastIdRef = useRef<ToastId>()
@@ -49,7 +49,7 @@ const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
     onSuccess: async (response_) => {
       addDatadogAction(`Successful role creation`)
 
-      if (mode === "CONFETTI") triggerConfetti()
+      triggerConfetti()
 
       toastIdRef.current = toast({
         duration: 8000,
@@ -77,7 +77,7 @@ guild.xyz/${urlName} @guildxyz`)}`}
         status: "success",
       })
 
-      mutate(`/guild/access/${id}/${account}`)
+      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
       mutate(`/statusUpdate/guild/${id}`)
 
       matchMutate(/^\/guild\/address\//)
@@ -95,14 +95,6 @@ guild.xyz/${urlName} @guildxyz`)}`}
     ...useSubmitResponse,
     onSubmit: (data) => {
       data.requirements = preprocessRequirements(data?.requirements)
-
-      data.rolePlatforms = data.rolePlatforms.map((rolePlatform) => {
-        if (rolePlatform.platformRoleData?.gatedChannels)
-          rolePlatform.platformRoleData.gatedChannels = preprocessGatedChannels(
-            rolePlatform.platformRoleData.gatedChannels
-          )
-        return rolePlatform
-      })
 
       delete data.roleType
 

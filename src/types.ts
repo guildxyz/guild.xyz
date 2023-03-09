@@ -1,3 +1,4 @@
+import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import type { Chain } from "connectors"
 import { RequirementType } from "requirements"
 
@@ -75,7 +76,7 @@ type NFT = {
   slug: string
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
+type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE" | "POAP"
 
 type PlatformUserData = {
   acessToken?: string
@@ -168,10 +169,16 @@ type Requirement = {
   symbol: string
   decimals?: number
   isNegated: boolean
+  visibility?: Visibility
+
+  // temporary until POAP is not a real reward (for PoapRequirements instead of roleId)
+  poapId?: number
 
   // Props used inside the forms on the UI
   nftRequirementType?: string
   balancyDecimals?: number
+  createdAt?: string
+  updatedAt?: string
 }
 
 type RolePlatform = {
@@ -182,6 +189,13 @@ type RolePlatform = {
   isNew?: boolean
   roleId?: number
   platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
+  visibility?: Visibility
+}
+
+enum Visibility {
+  PUBLIC = "PUBLIC",
+  PRIVATE = "PRIVATE",
+  HIDDEN = "HIDDEN",
 }
 
 type Role = {
@@ -194,6 +208,9 @@ type Role = {
   memberCount: number
   requirements: Requirement[]
   rolePlatforms: RolePlatform[]
+  visibility?: Visibility
+  hiddenRequirements?: boolean
+  hiddenRewards?: boolean
 }
 
 type GuildPlatform = {
@@ -221,6 +238,7 @@ type GuildPoap = {
   activated: boolean
   expiryDate: number
   poapContracts?: PoapContract[]
+  poapRequirements?: Requirement[]
 }
 
 const supportedSocialLinks = [
@@ -261,11 +279,20 @@ type Guild = {
   members: Array<string>
   poaps: Array<GuildPoap>
   onboardingComplete: boolean
+  featureFlags: FeatureFlag[]
+  hiddenRoles?: boolean
 }
 type GuildFormType = Partial<
   Pick<
     Guild,
-    "id" | "urlName" | "name" | "imageUrl" | "description" | "theme" | "contacts"
+    | "id"
+    | "urlName"
+    | "name"
+    | "imageUrl"
+    | "description"
+    | "theme"
+    | "contacts"
+    | "featureFlags"
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
@@ -377,7 +404,7 @@ enum ValidationMethod {
 }
 
 type MonetizePoapForm = {
-  chainId: number
+  chain: Chain
   token: string
   fee: number
   owner: string
@@ -400,6 +427,7 @@ type GoogleFile = {
 
 type VoiceParticipationForm = {
   poapId: number
+  serverId: string
   voiceChannelId: string
   voiceRequirement: {
     type: "PERCENT" | "MINUTE"
@@ -481,4 +509,4 @@ export type {
   PoapEventDetails,
   AddressConnectionProvider,
 }
-export { ValidationMethod, supportedSocialLinks }
+export { ValidationMethod, Visibility, supportedSocialLinks }

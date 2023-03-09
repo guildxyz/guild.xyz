@@ -13,7 +13,10 @@ import useGoogleAuth from "./useGoogleAuth"
 import useTGAuth from "./useTGAuth"
 import useTwitterAuth from "./useTwitterAuth"
 
-const platformAuthHooks: Record<PlatformName, (scope?: string) => any> = {
+const platformAuthHooks: Record<
+  Exclude<PlatformName, "POAP">,
+  (scope?: string) => any
+> = {
   DISCORD: useDCAuth,
   GITHUB: useGHAuth,
   TWITTER: useTwitterAuth,
@@ -32,7 +35,7 @@ const useConnectPlatform = (
   const user = useUser()
   const { mutate: mutateUser, platformUsers } = useUser()
   const { onOpen, authData, isAuthenticating, ...rest } =
-    platformAuthHooks[platform]()
+    platformAuthHooks[platform]?.() ?? {}
   const prevAuthData = usePrevious(authData)
   const { account } = useWeb3React()
   const fetcherWithSign = useFetcherWithSign()

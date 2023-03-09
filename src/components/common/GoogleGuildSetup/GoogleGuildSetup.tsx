@@ -89,8 +89,8 @@ const GoogleGuildSetup = ({
   if (isGoogleGateablesLoading)
     return (
       <SimpleGrid
-        columns={{ base: 1, sm: 2, lg: 3 }}
-        spacing={{ base: 4, md: 6 }}
+        columns={{ base: 1, md: 2 }}
+        spacing={{ base: 4, md: 5 }}
         alignItems="stretch"
       >
         {[...Array(5)].map((_, i) => (
@@ -104,8 +104,8 @@ const GoogleGuildSetup = ({
   return (
     <>
       <SimpleGrid
-        columns={{ base: 1, sm: 2, lg: 3 }}
-        spacing={{ base: 4, md: 6 }}
+        columns={{ base: 1, md: 2 }}
+        spacing={{ base: 4, md: 5 }}
         alignItems="stretch"
       >
         <AnimatePresence>
@@ -143,7 +143,7 @@ const GoogleGuildSetup = ({
 
           {!selectedFile && (
             <CardMotionWrapper key={"add-file"}>
-              <AddCard text="Add document" minH={"28"} onClick={onOpen} />
+              <AddCard title="Add document" minH={"26"} onClick={onOpen} />
             </CardMotionWrapper>
           )}
         </AnimatePresence>
