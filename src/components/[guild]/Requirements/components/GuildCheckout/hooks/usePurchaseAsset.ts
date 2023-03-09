@@ -81,13 +81,14 @@ const purchaseAsset = async (
 const usePurchaseAsset = () => {
   const { addDatadogAction, addDatadogError } = useDatadog()
   const posthog = usePostHog()
+  const { id: guildId, urlName } = useGuild()
+  const postHogOptions = { guild: urlName }
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
   const { account, chainId } = useWeb3React()
 
-  const { id: guildId, urlName } = useGuild()
   const { requirement, pickedCurrency } = useGuildCheckoutContext()
   const {
     data: { symbol },
@@ -160,8 +161,9 @@ const usePurchaseAsset = () => {
         addDatadogError("purchase requirement pre-call error (GuildCheckout)", {
           error,
         })
-        posthog.capture("Purchase requirement error (GuildCheckout)")
+        posthog.capture("Purchase requirement error (GuildCheckout)", postHogOptions)
         posthog.capture("getAssets pre-call error (GuildCheckout)", {
+          ...postHogOptions,
           error,
         })
       },
@@ -172,17 +174,19 @@ const usePurchaseAsset = () => {
           addDatadogError("purchase requirement error (GuildCheckout)", {
             receipt,
           })
-          posthog.capture("Purchase requirement error (GuildCheckout)")
+          posthog.capture(
+            "Purchase requirement error (GuildCheckout)",
+            postHogOptions
+          )
           posthog.capture("getAssets error (GuildCheckout)", {
+            ...postHogOptions,
             receipt,
           })
           return
         }
 
         addDatadogAction("purchased requirement (GuildCheckout)")
-        posthog.capture("Purchased requirement (GuildCheckout)", {
-          guild: urlName,
-        })
+        posthog.capture("Purchased requirement (GuildCheckout)", postHogOptions)
 
         toast({
           status: "success",
