@@ -87,7 +87,8 @@ const PurchaseRequirement = (): JSX.Element => {
     !isInfoModalOpen &&
     (!featureFlags?.includes("PURCHASE_REQUIREMENT") ||
       (!accessData && isAccessLoading) ||
-      satisfiesRequirement ||
+      // TODO: uncomment this
+      // satisfiesRequirement ||
       !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
       !purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain))
   )

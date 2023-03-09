@@ -24,6 +24,7 @@ import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
+import useShouldABTest from "./useShouldABTest"
 import useSubmitTransaction from "./useSubmitTransaction"
 
 const isConfigParam = (
@@ -96,7 +97,9 @@ const usePurchaseAsset = () => {
   } = useTokenData(requirement.chain, requirement.address)
   const { data: priceData } = usePrice(pickedCurrency)
 
-  const tokenBuyerContractData = getTokenBuyerContractData(guildId)
+  const shouldABTest = useShouldABTest()
+  const tokenBuyerContractData = getTokenBuyerContractData(guildId, shouldABTest)
+
   const tokenBuyerContract = useContract(
     tokenBuyerContractData[Chains[chainId]]?.address,
     tokenBuyerContractData[Chains[chainId]]?.abi,

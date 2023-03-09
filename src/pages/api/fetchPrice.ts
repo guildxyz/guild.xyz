@@ -38,6 +38,7 @@ export type FetchPriceResponse = {
 }
 
 type FetchPriceBodyParams = {
+  shouldABTest: boolean
   guildId: number
   type: RequirementType
   chain: Chain
@@ -58,6 +59,7 @@ const getDecimals = async (chain: Chain, tokenAddress: string) => {
 }
 
 const getGuildFee = async (
+  shouldABTest: boolean,
   guildId: number,
   sellToken: string,
   chainId: number,
@@ -70,7 +72,7 @@ const getGuildFee = async (
   guildFeeInSellToken: number
   guildFeeInUSD: number
 }> => {
-  const tokenBuyerContractData = getTokenBuyerContractData(guildId)
+  const tokenBuyerContractData = getTokenBuyerContractData(guildId, shouldABTest)
 
   if (!tokenBuyerContractData[Chains[chainId]])
     return Promise.reject("Unsupported chain")
@@ -184,8 +186,15 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
   if (!isValid) return res.status(400).json({ error })
 
-  const { guildId, type, chain, sellToken, address, data }: FetchPriceBodyParams =
-    req.body
+  const {
+    shouldABTest,
+    guildId,
+    type,
+    chain,
+    sellToken,
+    address,
+    data,
+  }: FetchPriceBodyParams = req.body
   const minAmount = parseFloat(data.minAmount ?? 1)
 
   if (type === "ERC20") {
@@ -259,6 +268,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     let guildFeeData
     try {
       guildFeeData = await getGuildFee(
+        shouldABTest,
         guildId,
         sellToken,
         Chains[chain],
@@ -381,6 +391,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     let guildFeeData
     try {
       guildFeeData = await getGuildFee(
+        shouldABTest,
         guildId,
         sellToken,
         Chains[chain],

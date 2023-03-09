@@ -9,6 +9,7 @@ import { getTokenBuyerContractData } from "utils/guildCheckout/constants"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
 import usePurchaseAsset from "../../hooks/usePurchaseAsset"
+import useShouldABTest from "../../hooks/useShouldABTest"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseButton = (): JSX.Element => {
@@ -24,7 +25,10 @@ const PurchaseButton = (): JSX.Element => {
   } = usePrice()
 
   const { id } = useGuild()
-  const tokenBuyerContractData = getTokenBuyerContractData(id)
+
+  const shouldABTest = useShouldABTest()
+  const tokenBuyerContractData = getTokenBuyerContractData(id, shouldABTest)
+
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
     tokenBuyerContractData[Chains[chainId]]?.address

@@ -10,6 +10,7 @@ import { Check, Question, Warning } from "phosphor-react"
 import { usePostHog } from "posthog-js/react"
 import { getTokenBuyerContractData } from "utils/guildCheckout/constants"
 import usePrice from "../../hooks/usePrice"
+import useShouldABTest from "../../hooks/useShouldABTest"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseAllowanceButton = (): JSX.Element => {
@@ -35,7 +36,10 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   } = usePrice()
 
   const { id } = useGuild()
-  const tokenBuyerContractData = getTokenBuyerContractData(id)
+
+  const shouldABTest = useShouldABTest()
+  const tokenBuyerContractData = getTokenBuyerContractData(id, shouldABTest)
+
   const {
     allowance,
     isAllowanceLoading,
