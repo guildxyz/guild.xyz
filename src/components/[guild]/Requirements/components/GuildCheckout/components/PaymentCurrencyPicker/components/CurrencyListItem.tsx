@@ -1,4 +1,5 @@
 import { useColorModeValue } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildCheckoutContext } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { usePostHog } from "posthog-js/react"
@@ -13,6 +14,7 @@ type Props = {
 const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
   const { addDatadogAction } = useDatadog()
   const posthog = usePostHog()
+  const { urlName } = useGuild()
 
   const { setPickedCurrency } = useGuildCheckoutContext()
 
@@ -21,7 +23,9 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
   const onClick = () => {
     setPickedCurrency(address)
     addDatadogAction("user picked currency (GuildCheckout)")
-    posthog.capture("Picked currency (GuildCheckout)")
+    posthog.capture("Picked currency (GuildCheckout)", {
+      guild: urlName,
+    })
   }
 
   const {

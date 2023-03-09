@@ -55,7 +55,7 @@ const BuyPass = () => {
     txSuccess,
     txHash,
   } = useGuildCheckoutContext()
-  const { id, name, roles } = useGuild()
+  const { urlName, name, roles } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
@@ -67,7 +67,9 @@ const BuyPass = () => {
 
   const onClick = () => {
     onOpen()
-    posthog.capture("Click: Buy (Requirement)")
+    posthog.capture("Click: Buy (Requirement)", {
+      guild: urlName,
+    })
   }
 
   if (

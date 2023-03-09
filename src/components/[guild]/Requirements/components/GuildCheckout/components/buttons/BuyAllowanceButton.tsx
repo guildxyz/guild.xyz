@@ -1,6 +1,7 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
@@ -11,6 +12,7 @@ import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const BuyAllowanceButton = (): JSX.Element => {
   const posthog = usePostHog()
+  const { urlName } = useGuild()
 
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
   const requirementChainId = Chains[requirement.chain]
@@ -44,7 +46,9 @@ const BuyAllowanceButton = (): JSX.Element => {
 
   const onClick = () => {
     onSubmit()
-    posthog.capture("Click: BuyAllowanceButton (GuildCheckout)")
+    posthog.capture("Click: BuyAllowanceButton (GuildCheckout)", {
+      guild: urlName,
+    })
   }
 
   return (

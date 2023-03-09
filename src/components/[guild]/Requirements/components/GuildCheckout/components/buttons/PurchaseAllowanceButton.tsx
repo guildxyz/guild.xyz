@@ -2,6 +2,7 @@ import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
 import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
@@ -13,6 +14,7 @@ import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseAllowanceButton = (): JSX.Element => {
   const posthog = usePostHog()
+  const { urlName } = useGuild()
 
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
   const requirementChainId = Chains[requirement.chain]
@@ -51,7 +53,9 @@ const PurchaseAllowanceButton = (): JSX.Element => {
 
   const onClick = () => {
     onSubmit()
-    posthog.capture("Click: PurchaseAllowanceButton (GuildCheckout)")
+    posthog.capture("Click: PurchaseAllowanceButton (GuildCheckout)", {
+      guild: urlName,
+    })
   }
 
   return (

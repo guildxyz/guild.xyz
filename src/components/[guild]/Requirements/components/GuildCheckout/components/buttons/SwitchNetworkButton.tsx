@@ -1,6 +1,7 @@
 import { Collapse } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
@@ -10,6 +11,7 @@ import { usePostHog } from "posthog-js/react"
 const SwitchNetworkButton = (): JSX.Element => {
   const { addDatadogAction, addDatadogError } = useDatadog()
   const posthog = usePostHog()
+  const { urlName } = useGuild()
 
   const { chainId } = useWeb3React()
   const { chain } = useRequirementContext()
@@ -19,16 +21,22 @@ const SwitchNetworkButton = (): JSX.Element => {
     useWeb3ConnectionManager()
 
   const onClick = () => {
-    posthog.capture("Click: SwitchNetworkButton (GuildCheckout)")
+    posthog.capture("Click: SwitchNetworkButton (GuildCheckout)", {
+      guild: urlName,
+    })
     requestNetworkChange(
       requirementChainId,
       () => {
         addDatadogAction("changed network (GuildCheckout)")
-        posthog.capture("Changed network (GuildCheckout)")
+        posthog.capture("Changed network (GuildCheckout)", {
+          guild: urlName,
+        })
       },
       () => {
         addDatadogError("network change error (GuildCheckout)")
-        posthog.capture("Network change error (GuildCheckout)")
+        posthog.capture("Network change error (GuildCheckout)", {
+          guild: urlName,
+        })
       }
     )
   }

@@ -1,5 +1,6 @@
 import { ModalFooter } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { usePostHog } from "posthog-js/react"
@@ -8,6 +9,7 @@ import { useGuildCheckoutContext } from "../../GuildCheckoutContex"
 
 const InfoModalFooter = (): JSX.Element => {
   const posthog = usePostHog()
+  const { urlName } = useGuild()
 
   const { onInfoModalClose, txSuccess } = useGuildCheckoutContext()
   const openJoinModal = useOpenJoinModal()
@@ -30,7 +32,10 @@ const InfoModalFooter = (): JSX.Element => {
     posthog.capture(
       `Click: ${
         isJoinButton ? "JoinGuildButton" : "CloseModalButton"
-      } (GuildCheckout)`
+      } (GuildCheckout)`,
+      {
+        guild: urlName,
+      }
     )
   }
 

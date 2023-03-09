@@ -60,13 +60,14 @@ const payFee = async (
 const usePayFee = () => {
   const { addDatadogAction, addDatadogError } = useDatadog()
   const posthog = usePostHog()
+  const { urlName } = useGuild()
+  const postHogOptions = { guild: urlName }
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
   const { chainId } = useWeb3React()
 
-  const { urlName } = useGuild()
   const { requirement, pickedCurrency } = useGuildCheckoutContext()
 
   const feeCollectorContract = useContract(
@@ -133,8 +134,8 @@ const usePayFee = () => {
       addDatadogError("payFee pre-call error (GuildCheckout)", {
         error,
       })
-      posthog.capture("Buy pass error (GuildCheckout)")
-      posthog.capture("payFee pre-call error (GuildCheckout)")
+      posthog.capture("Buy pass error (GuildCheckout)", postHogOptions)
+      posthog.capture("payFee pre-call error (GuildCheckout)", postHogOptions)
     },
     onSuccess: (receipt) => {
       if (receipt.status !== 1) {
@@ -143,15 +144,13 @@ const usePayFee = () => {
         addDatadogError("payFee error (GuildCheckout)", {
           receipt,
         })
-        posthog.capture("Buy pass error (GuildCheckout)")
-        posthog.capture("payFee error (GuildCheckout)")
+        posthog.capture("Buy pass error (GuildCheckout)", postHogOptions)
+        posthog.capture("payFee error (GuildCheckout)", postHogOptions)
         return
       }
 
       addDatadogAction("successful payFee (GuildCheckout)")
-      posthog.capture("Bought pass (GuildCheckout)", {
-        guild: urlName,
-      })
+      posthog.capture("Bought pass (GuildCheckout)", postHogOptions)
       toast({
         status: "success",
         title: "Successful payment",

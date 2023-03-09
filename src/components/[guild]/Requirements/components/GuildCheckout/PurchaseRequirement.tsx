@@ -62,7 +62,7 @@ const PurchaseRequirement = (): JSX.Element => {
     txSuccess,
     txHash,
   } = useGuildCheckoutContext()
-  const { name } = useGuild()
+  const { urlName, name } = useGuild()
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
   )
@@ -79,7 +79,9 @@ const PurchaseRequirement = (): JSX.Element => {
 
   const onClick = () => {
     onOpen()
-    posthog.capture("Click: Purchase (Requirement)")
+    posthog.capture("Click: Purchase (Requirement)", {
+      guild: urlName,
+    })
   }
 
   if (

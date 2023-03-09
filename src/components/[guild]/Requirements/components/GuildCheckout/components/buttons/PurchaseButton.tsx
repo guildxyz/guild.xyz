@@ -1,6 +1,7 @@
 import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import { usePostHog } from "posthog-js/react"
@@ -12,6 +13,7 @@ import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseButton = (): JSX.Element => {
   const posthog = usePostHog()
+  const { urlName } = useGuild()
 
   const { account, chainId } = useWeb3React()
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
@@ -76,7 +78,9 @@ const PurchaseButton = (): JSX.Element => {
 
   const onClick = () => {
     onSubmit()
-    posthog.capture("Click: PurchaseButton (GuildCheckout)")
+    posthog.capture("Click: PurchaseButton (GuildCheckout)", {
+      guild: urlName,
+    })
   }
 
   return (

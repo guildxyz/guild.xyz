@@ -1,5 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import { usePostHog } from "posthog-js/react"
@@ -11,6 +12,7 @@ import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const BuyButton = (): JSX.Element => {
   const posthog = usePostHog()
+  const { urlName } = useGuild()
 
   const { chainId } = useWeb3React()
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
@@ -72,7 +74,9 @@ const BuyButton = (): JSX.Element => {
 
   const onClick = () => {
     onSubmit()
-    posthog.capture("Click: BuyButton (GuildCheckout)")
+    posthog.capture("Click: BuyButton (GuildCheckout)", {
+      guild: urlName,
+    })
   }
 
   return (
