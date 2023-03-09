@@ -37,8 +37,7 @@ const usePoapPayFee = (
   const {
     data: { decimals },
   } = useTokenData(Chains[chainId], vaultData?.token)
-  const { data: userPoapEligibilityData, mutate: mutateUserPoapEligibility } =
-    useUserPoapEligibility(poap?.id)
+  const { mutate: mutateUserPoapEligibility } = useUserPoapEligibility(poap?.id)
 
   const feeCollectorContract = useFeeCollectorContract()
   const erc20Contract = useContract(vaultData?.token, ERC20_ABI, true)
@@ -125,7 +124,10 @@ const usePoapPayFee = (
         status: "success",
       })
       onSuccess?.()
-      mutateUserPoapEligibility({ ...userPoapEligibilityData, hasPaid: true })
+      mutateUserPoapEligibility((userPoapEligibilityData) => ({
+        ...userPoapEligibilityData,
+        hasPaid: true,
+      }))
     },
   })
 

@@ -201,6 +201,7 @@ const GuildPage = (): JSX.Element => {
             bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
           />
         }
+        imageUrl={imageUrl}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
         action={isAdmin && <DynamicEditGuildButton />}

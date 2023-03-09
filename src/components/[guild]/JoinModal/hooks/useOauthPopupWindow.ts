@@ -83,7 +83,10 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
   /** On a window creation, we set a new listener */
   useEffect(() => {
-    if (!windowInstance) return
+    if (!windowInstance) {
+      setIsAuthenticating(false)
+      return
+    }
 
     const windowInstanceOpenInitially = !windowInstance.closed
 

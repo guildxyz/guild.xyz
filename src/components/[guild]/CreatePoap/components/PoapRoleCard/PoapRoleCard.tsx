@@ -95,7 +95,8 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
               guildPoap={guildPoap}
               rightElement={requirementRightElement}
             />
-            <LogicDivider logic="AND" />
+            {(guildPoap.poapContracts?.length ||
+              guildPoap.poapRequirements?.length) && <LogicDivider logic="AND" />}
           </>,
         ]
       : []),
@@ -113,9 +114,11 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
             )
           }
         />
-        <LogicDivider
-          logic={i === guildPoap.poapContracts.length - 1 ? "AND" : "OR"}
-        />
+        {i < guildPoap.poapContracts?.length - 1 ? (
+          <LogicDivider logic={"OR"} />
+        ) : guildPoap.poapRequirements?.length ? (
+          <LogicDivider logic={"AND"} />
+        ) : null}
       </React.Fragment>
     )),
     ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (

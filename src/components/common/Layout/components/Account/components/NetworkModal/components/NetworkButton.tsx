@@ -30,7 +30,7 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
         border={isCurrentChain && "2px"}
         borderColor="primary.500"
         borderRadius={"xl"}
-        disabled={isCurrentChain}
+        isDisabled={isCurrentChain}
         onClick={requestNetworkChange}
         w="full"
         size={"xl"}

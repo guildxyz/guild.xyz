@@ -25,7 +25,6 @@ class MyDocument extends Document {
           )}
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:site" content="@guildxyz" />
-          <link rel="shortcut icon" href="/guild-icon.png" />
         </Head>
         <body>
           <Main />
