@@ -56,9 +56,9 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const user = useUser()
 
   const isEverythingConnected = allUniquePlatforms.every((guildPlatform) =>
-    user.platformUsers
-      ?.map((platform) => platform.platformName.toString())
-      .includes(guildPlatform)
+    user.platformUsers?.some(
+      (platform) => platform.platformName.toString() === guildPlatform
+    )
   )
 
   useEffect(() => {
@@ -97,7 +97,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               onClick={handleSubmit(onSubmit)}
               colorScheme="green"
               isLoading={isSigning || isLoading}
-              loadingText={"Joining Guild"}
+              loadingText={signLoadingText || "Joining Guild"}
               isDisabled={!isActive}
             >
               Join guild
