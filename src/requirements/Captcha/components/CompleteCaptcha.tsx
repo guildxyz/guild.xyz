@@ -2,6 +2,7 @@ import {
   Box,
   ButtonProps,
   Center,
+  Code,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -105,10 +106,18 @@ const CompleteCaptchaModal = ({ isOpen, onClose }) => {
             ) : (
               <>
                 <Box>
-                  <HCaptcha
-                    sitekey="05bdce9d-3de2-4457-8318-85633ffd281c"
-                    onVerify={onVerify}
-                  />
+                  {typeof window !== "undefined" &&
+                  window.location.hostname === "localhost" ? (
+                    <Text textAlign="left">
+                      HCaptcha doesn't work on localhost. Please use{" "}
+                      <Code>127.0.0.1</Code> instead.
+                    </Text>
+                  ) : (
+                    <HCaptcha
+                      sitekey="05bdce9d-3de2-4457-8318-85633ffd281c"
+                      onVerify={onVerify}
+                    />
+                  )}
                 </Box>
                 <Text mt="10" textAlign="center">
                   Please complete the CAPTCHA above! The modal will automatically
