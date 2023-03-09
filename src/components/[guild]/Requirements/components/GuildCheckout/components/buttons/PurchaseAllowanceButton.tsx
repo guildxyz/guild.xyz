@@ -2,15 +2,13 @@ import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
 import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
 import { usePostHog } from "posthog-js/react"
-import { getTokenBuyerContractData } from "utils/guildCheckout/constants"
 import usePrice from "../../hooks/usePrice"
-import useShouldABTest from "../../hooks/useShouldABTest"
+import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseAllowanceButton = (): JSX.Element => {
@@ -35,10 +33,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
     isValidating: isPriceLoading,
   } = usePrice()
 
-  const { id } = useGuild()
-
-  const shouldABTest = useShouldABTest()
-  const tokenBuyerContractData = getTokenBuyerContractData(id, shouldABTest)
+  const tokenBuyerContractData = useTokenBuyerContractData()
 
   const {
     allowance,

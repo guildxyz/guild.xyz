@@ -12,7 +12,7 @@ import {
   UNIVERSAL_ROUTER_COMMANDS,
 } from "./encoders"
 
-type TokenBuyerContractConfig = Partial<
+export type TokenBuyerContractConfig = Partial<
   Record<
     Chain,
     {
@@ -79,15 +79,7 @@ const HIGH_FEE_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
 export const getTokenBuyerContractData = (
   guildId?: number,
   shouldTestHighFee?: boolean
-): Partial<
-  Record<
-    Chain,
-    {
-      address: string
-      abi: object
-    }
-  >
-> =>
+): TokenBuyerContractConfig =>
   shouldTestHighFee
     ? HIGH_FEE_TOKEN_BUYER_CONTRACTS
     : SPECIAL_TOKEN_BUYER_CONTRACTS[guildId] ?? DEFAULT_TOKEN_BUYER_CONTRACTS

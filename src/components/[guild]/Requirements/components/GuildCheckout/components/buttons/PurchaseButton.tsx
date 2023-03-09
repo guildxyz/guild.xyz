@@ -1,15 +1,13 @@
 import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import { usePostHog } from "posthog-js/react"
-import { getTokenBuyerContractData } from "utils/guildCheckout/constants"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
 import usePurchaseAsset from "../../hooks/usePurchaseAsset"
-import useShouldABTest from "../../hooks/useShouldABTest"
+import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseButton = (): JSX.Element => {
@@ -24,10 +22,7 @@ const PurchaseButton = (): JSX.Element => {
     error,
   } = usePrice()
 
-  const { id } = useGuild()
-
-  const shouldABTest = useShouldABTest()
-  const tokenBuyerContractData = getTokenBuyerContractData(id, shouldABTest)
+  const tokenBuyerContractData = useTokenBuyerContractData()
 
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,

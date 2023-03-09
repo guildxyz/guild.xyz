@@ -12,10 +12,7 @@ import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { usePostHog } from "posthog-js/react"
 import { useMemo } from "react"
-import {
-  ADDRESS_REGEX,
-  getTokenBuyerContractData,
-} from "utils/guildCheckout/constants"
+import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import {
   GeneratedGetAssetsParams,
   generateGetAssetsParams,
@@ -24,8 +21,8 @@ import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
-import useShouldABTest from "./useShouldABTest"
 import useSubmitTransaction from "./useSubmitTransaction"
+import useTokenBuyerContractData from "./useTokenBuyerContractData"
 
 const isConfigParam = (
   param: any
@@ -97,8 +94,7 @@ const usePurchaseAsset = () => {
   } = useTokenData(requirement.chain, requirement.address)
   const { data: priceData } = usePrice(pickedCurrency)
 
-  const shouldABTest = useShouldABTest()
-  const tokenBuyerContractData = getTokenBuyerContractData(guildId, shouldABTest)
+  const tokenBuyerContractData = useTokenBuyerContractData()
 
   const tokenBuyerContract = useContract(
     tokenBuyerContractData[Chains[chainId]]?.address,
