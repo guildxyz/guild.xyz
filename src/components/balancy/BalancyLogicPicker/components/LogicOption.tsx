@@ -17,7 +17,7 @@ const LogicOption = (props) => {
         <Box>
           <Button
             leftIcon={<Icon as={icon} boxSize={5} />}
-            disabled
+            isDisabled
             w="full"
             data-dd-action-name={value}
           >
