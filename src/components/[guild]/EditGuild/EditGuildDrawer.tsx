@@ -282,9 +282,7 @@ const EditGuildDrawer = ({
                 Cancel
               </Button>
               <Button
-                disabled={
-                  /* !isDirty || */ isLoading || isSigning || isUploadingShown
-                }
+                // isDisabled={!isDirty}
                 isLoading={isLoading || isSigning || isUploadingShown}
                 colorScheme="green"
                 loadingText={loadingText}

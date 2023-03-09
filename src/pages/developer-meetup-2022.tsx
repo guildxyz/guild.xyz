@@ -24,6 +24,7 @@ const Page = (): JSX.Element => (
     <Head>
       <title>Guild Developer Meetup 2022</title>
       <meta name="og:title" content="Guild Developer Meetup 2022" />
+      <link rel="shortcut icon" href="/guild-icon.png" />
     </Head>
     <Container
       maxW="container.md"

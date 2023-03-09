@@ -7,6 +7,7 @@ const Page = () => (
     <Head>
       <title>Guild Lego</title>
       <meta name="og:title" content="Guild Lego" />
+      <link rel="shortcut icon" href="/guild-icon.png" />
     </Head>
 
     <Container maxW={{ base: "container.sm", lg: "container.lg" }}>

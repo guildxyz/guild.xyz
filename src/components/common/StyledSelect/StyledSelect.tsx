@@ -34,21 +34,6 @@ const StyledSelect = forwardRef(
             maxWidth: "full",
             ...props.chakraStyles?.container,
           }),
-          control: (provided) => ({
-            ...provided,
-            width: "full",
-            ...props.chakraStyles?.control,
-          }),
-          inputContainer: () => ({
-            // ...provided,
-            display: "flex",
-            ...props.chakraStyles?.inputContainer,
-          }),
-          menu: (provided) => ({
-            ...provided,
-            overflow: "visible",
-            ...props.chakraStyles?.menu,
-          }),
           placeholder: (provided) => ({
             ...provided,
             maxWidth: "calc(100% - 2rem)",
