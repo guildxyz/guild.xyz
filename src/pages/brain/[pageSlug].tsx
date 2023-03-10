@@ -71,7 +71,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, res }) =>
   const pageId = allPages
     .map((page) => ({
       id: page.id,
-      slugifiedTitle: slugify(page.properties.title.title[0].plain_text, {
+      slugifiedTitle: slugify(page.properties.title.title[0]?.plain_text ?? "", {
         lower: true,
       }),
     }))

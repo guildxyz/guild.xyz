@@ -22,7 +22,7 @@ export const FILTER_OPTIONS: Array<FilterOption> = [
   { value: "web3", label: "web3" },
 ]
 
-const Guildverse = ({ cards: cards }): JSX.Element => {
+const Guildverse = ({ cards: cards }: Props): JSX.Element => {
   const [search, setSearch] = useState<string>("")
   const [filterData, setFilterData] = useState<Array<FilterOption>>([])
   const renderedCards = useMemo(
@@ -89,13 +89,15 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     ],
   })
 
-  const cards: Array<BrainCardData> = response.results.map((page) => ({
-    id: page.id,
-    title: page.properties.title.title[0].plain_text,
-    tags: page.properties.tags.multi_select.map((tag) => tag.name),
-    icon: page.icon?.file?.url ?? null,
-    backgroundImage: page.cover?.file?.url ?? null,
-  }))
+  const cards: Array<BrainCardData> = response.results
+    .map((page) => ({
+      id: page.id,
+      title: page.properties.title.title[0]?.plain_text ?? "",
+      tags: page.properties.tags.multi_select.map((tag) => tag.name),
+      icon: page.icon?.file?.url ?? null,
+      backgroundImage: page.cover?.file?.url ?? null,
+    }))
+    .filter((card) => card.title !== "")
 
   return {
     props: { cards },
