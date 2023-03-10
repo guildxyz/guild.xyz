@@ -16,8 +16,7 @@ type Props = {
 export const FILTER_OPTIONS: Array<FilterOption> = [
   { value: "requirement", label: "requirement" },
   { value: "reward", label: "reward" },
-  { value: "core", label: "core" },
-  { value: "build with Guild", label: "build with Guild" },
+  { value: "built with Guild", label: "built with Guild" },
   { value: "web2", label: "web2" },
   { value: "web3", label: "web3" },
 ]
