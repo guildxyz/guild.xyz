@@ -7,12 +7,12 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Portal,
+  Stack,
   Table,
   Tbody,
   Td,
   Tr,
   useColorModeValue,
-  VStack,
 } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -34,7 +34,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
     <Requirement
       image={<Icon as={Function} boxSize={6} />}
       footer={
-        <VStack alignItems="start">
+        <Stack direction={["column", "row"]} spacing={2} alignItems="start">
           <BlockExplorerUrl />
 
           <Popover placement="bottom">
@@ -91,7 +91,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
               </PopoverContent>
             </Portal>
           </Popover>
-        </VStack>
+        </Stack>
       }
       {...props}
     >

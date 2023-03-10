@@ -1,10 +1,7 @@
 import {
-  Box,
   Center,
   GridItem,
-  Progress,
   SimpleGrid,
-  Slide,
   Spinner,
   Stack,
   Tag,
@@ -27,7 +24,6 @@ import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
-import { useRouter } from "next/router"
 import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
@@ -116,49 +112,8 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     setColorMode("dark")
   }, [])
 
-  const router = useRouter()
-  const [isRouteChanges, setisRouteChanges] = useState(false)
-  const { colorMode } = useColorMode()
-
-  useEffect(() => {
-    const handleRouteChangeStart = () => {
-      setisRouteChanges(true)
-    }
-
-    const handleRouteChangeComplete = () => {
-      setisRouteChanges(false)
-    }
-
-    router.events.on("routeChangeStart", handleRouteChangeStart)
-    router.events.on("routeChangeComplete", handleRouteChangeComplete)
-
-    return () => {
-      router.events.off("routeChangeStart", handleRouteChangeStart)
-      router.events.off("routeChangeComplete", handleRouteChangeComplete)
-    }
-  }, [])
-
   return (
     <>
-      {isRouteChanges ? (
-        <Slide
-          direction="top"
-          in={isRouteChanges}
-          initial="0.3s"
-          style={{ zIndex: 10 }}
-        >
-          <Box position="relative" w="100%" h="100px" zIndex={2}>
-            <Progress
-              isIndeterminate
-              w="100%"
-              bg={colorMode === "light" ? "blue.50" : null}
-              position="fixed"
-              size="xs"
-              transition="width .3s"
-            />
-          </Box>
-        </Slide>
-      ) : null}
       <LinkPreviewHead path="" />
       <Layout
         title="Guildhall"
