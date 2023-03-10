@@ -74,7 +74,6 @@ const TelegramGroup = ({
                 target="_blank"
                 rightIcon={<Icon as={ArrowSquareOut} mt="-1px" />}
                 isLoading={isLoading}
-                disabled={isLoading}
                 data-dd-action-name="Add bot (telegram group setup)"
               >
                 Add Guild bot
@@ -83,7 +82,7 @@ const TelegramGroup = ({
               <Button
                 h="var(--chakra-space-11)"
                 w="full"
-                disabled
+                isDisabled
                 rightIcon={<Check />}
               >
                 Guild bot added

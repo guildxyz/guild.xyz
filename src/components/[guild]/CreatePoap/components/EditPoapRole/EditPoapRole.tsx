@@ -142,7 +142,6 @@ const EditPoapRole = ({ poap, guildPoap }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning}
               isLoading={isLoading || isSigning}
               colorScheme="green"
               loadingText={loadingText}
