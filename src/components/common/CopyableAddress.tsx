@@ -5,10 +5,16 @@ import shortenHex from "utils/shortenHex"
 
 type Props = {
   address: string
+  domain?: string
   decimals?: number
 } & Rest
 
-const CopyableAddress = ({ address, decimals = 3, ...rest }: Props): JSX.Element => {
+const CopyableAddress = ({
+  address,
+  domain,
+  decimals = 3,
+  ...rest
+}: Props): JSX.Element => {
   const { hasCopied, onCopy } = useClipboard(address)
 
   return (
@@ -19,7 +25,7 @@ const CopyableAddress = ({ address, decimals = 3, ...rest }: Props): JSX.Element
       hasArrow
     >
       <Button onClick={onCopy} variant="unstyled" height="auto" {...rest}>
-        <Text>{shortenHex(address, decimals)}</Text>
+        <Text>{domain ? domain : shortenHex(address, decimals)}</Text>
       </Button>
     </Tooltip>
   )
