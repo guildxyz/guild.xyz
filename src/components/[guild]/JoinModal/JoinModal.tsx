@@ -16,6 +16,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, PlatformType } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
+import ConnectPolygonID from "./components/ConnectPolygonID"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
@@ -52,6 +53,12 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   if (hasGithubRequirement) allPlatforms.push("GITHUB")
   const allUniquePlatforms = [...new Set(allPlatforms)]
 
+  const hasPolygonIDRequirement = !!roles?.some((role) =>
+    role.requirements?.some((requirement) =>
+      requirement?.type?.startsWith("POLYGON")
+    )
+  )
+
   const {
     isLoading,
     onSubmit,
@@ -66,17 +73,21 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent overflow="visible">
         <FormProvider {...methods}>
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Error error={joinError} processError={processJoinPlatformError} />
-            <VStack spacing="3" alignItems="stretch" w="full" divider={<Divider />}>
+            <VStack spacing="3" alignItems="stretch" w="full">
               <WalletAuthButton />
               {allUniquePlatforms.map((platform: PlatformName) => (
-                <ConnectPlatform key={platform} {...{ platform }} />
+                <>
+                  <Divider />
+                  <ConnectPlatform key={platform} {...{ platform }} />
+                </>
               ))}
+              {hasPolygonIDRequirement && <ConnectPolygonID />}
             </VStack>
             <ModalButton
               mt="8"
