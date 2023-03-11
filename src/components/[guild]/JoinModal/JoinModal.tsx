@@ -15,6 +15,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, PlatformType } from "types"
+import CompleteCaptchaJoinStep from "./components/CompleteCaptchaJoinStep"
 import ConnectPlatform from "./components/ConnectPlatform"
 import ConnectPolygonID from "./components/ConnectPolygonID"
 import WalletAuthButton from "./components/WalletAuthButton"
@@ -53,10 +54,14 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   if (hasGithubRequirement) allPlatforms.push("GITHUB")
   const allUniquePlatforms = [...new Set(allPlatforms)]
 
-  const hasPolygonIDRequirement = !!roles?.some((role) =>
-    role.requirements?.some((requirement) =>
-      requirement?.type?.startsWith("POLYGON")
-    )
+  const allRequirements = roles?.flatMap((role) => role.requirements)
+
+  const hasCaptchaRequirement = !!allRequirements?.some(
+    (req) => req.type === "CAPTCHA"
+  )
+
+  const hasPolygonIDRequirement = !!allRequirements?.some((req) =>
+    req.type.startsWith("POLYGON")
   )
 
   const {
@@ -87,6 +92,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                   <ConnectPlatform key={platform} {...{ platform }} />
                 </>
               ))}
+              {hasCaptchaRequirement && <CompleteCaptchaJoinStep />}
               {hasPolygonIDRequirement && <ConnectPolygonID />}
             </VStack>
             <ModalButton

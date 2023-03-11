@@ -11,13 +11,15 @@ const ConnectPolygonID = (): JSX.Element => {
     ?.filter((req) => req.type === "POLYGON_ID_BASIC")
     .map((req) => req.id)
 
-  const { onOpen, onClose, isOpen } = useDisclosure()
   const { data: accesses } = useAccess()
   const requirementAccesses = accesses?.flatMap((access) => access.requirements)
 
-  const isConnected = requirementAccesses?.some((reqAccess) =>
-    polygonIDRequirements.includes(reqAccess.requirementId && reqAccess.access)
+  const isConnected = requirementAccesses?.some(
+    (reqAccess) =>
+      polygonIDRequirements.includes(reqAccess.requirementId) && reqAccess.access
   )
+
+  const { onOpen, onClose, isOpen } = useDisclosure()
 
   if (!polygonIDRequirements?.length) return null
 
