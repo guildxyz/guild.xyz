@@ -1,4 +1,4 @@
-import { Divider, Icon, useDisclosure } from "@chakra-ui/react"
+import { Icon, useDisclosure } from "@chakra-ui/react"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Robot } from "phosphor-react"
@@ -24,7 +24,6 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
 
   return (
     <>
-      <Divider />
       <JoinStep
         isDone={isDone}
         colorScheme="cyan"

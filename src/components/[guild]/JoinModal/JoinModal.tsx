@@ -17,7 +17,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, PlatformType } from "types"
 import CompleteCaptchaJoinStep from "./components/CompleteCaptchaJoinStep"
 import ConnectPlatform from "./components/ConnectPlatform"
-import ConnectPolygonID from "./components/ConnectPolygonID"
+import ConnectPolygonIDJoinStep from "./components/ConnectPolygonIDJoinStep"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
@@ -64,6 +64,14 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     req.type.startsWith("POLYGON")
   )
 
+  const renderedSteps = [
+    ...allUniquePlatforms.map((platform: PlatformName) => (
+      <ConnectPlatform key={platform} {...{ platform }} />
+    )),
+    hasCaptchaRequirement && <CompleteCaptchaJoinStep />,
+    hasPolygonIDRequirement && <ConnectPolygonIDJoinStep />,
+  ].filter(Boolean)
+
   const {
     isLoading,
     onSubmit,
@@ -84,16 +92,9 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalCloseButton />
           <ModalBody>
             <Error error={joinError} processError={processJoinPlatformError} />
-            <VStack spacing="3" alignItems="stretch" w="full">
+            <VStack spacing="3" alignItems="stretch" w="full" divider={<Divider />}>
               <WalletAuthButton />
-              {allUniquePlatforms.map((platform: PlatformName) => (
-                <>
-                  <Divider />
-                  <ConnectPlatform key={platform} {...{ platform }} />
-                </>
-              ))}
-              {hasCaptchaRequirement && <CompleteCaptchaJoinStep />}
-              {hasPolygonIDRequirement && <ConnectPolygonID />}
+              {renderedSteps}
             </VStack>
             <ModalButton
               mt="8"

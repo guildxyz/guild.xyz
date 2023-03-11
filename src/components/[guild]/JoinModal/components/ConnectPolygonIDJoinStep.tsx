@@ -1,10 +1,10 @@
-import { Divider, Img, useDisclosure } from "@chakra-ui/react"
+import { Img, useDisclosure } from "@chakra-ui/react"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { ConnectPolygonIDModal } from "requirements/PolygonId/components/ConnectPolygonID"
 import JoinStep from "./JoinStep"
 
-const ConnectPolygonID = (): JSX.Element => {
+const ConnectPolygonIDJoinStep = (): JSX.Element => {
   const { roles } = useGuild()
   const requirements = roles?.flatMap((role) => role.requirements) ?? []
   const polygonIDRequirements = requirements
@@ -25,7 +25,6 @@ const ConnectPolygonID = (): JSX.Element => {
 
   return (
     <>
-      <Divider />
       <JoinStep
         isDone={isConnected}
         colorScheme="purple"
@@ -46,4 +45,4 @@ const ConnectPolygonID = (): JSX.Element => {
   )
 }
 
-export default ConnectPolygonID
+export default ConnectPolygonIDJoinStep
