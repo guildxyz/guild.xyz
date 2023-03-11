@@ -86,7 +86,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent overflow="visible">
+      <ModalContent>
         <FormProvider {...methods}>
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
