@@ -65,7 +65,7 @@ const getPage = async (pageId) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ params, res }) => {
-  res.setHeader("Cache-Control", "public, s-maxage=10000")
+  res.setHeader("Cache-Control", "public, s-maxage=600")
 
   const allPages = await getAllPages()
   const pageId = allPages
