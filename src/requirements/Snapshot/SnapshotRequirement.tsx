@@ -14,17 +14,22 @@ import Requirement, {
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { CaretDown } from "phosphor-react"
+import useSWRImmutable from "swr/immutable"
 import pluralize from "utils/pluralize"
 import SnapshotSpaceLink from "./components/SnapshotSpaceLink"
 import StrategyParamsTable from "./components/StrategyParamsTable"
-import useProposal from "./hooks/useProposal"
+import { Proposal } from "./hooks/useProposals"
 
 const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
   const strategies = requirement.data.strategies
 
-  const { proposal } = useProposal(requirement.data.proposal)
+  const { data: proposal } = useSWRImmutable<Proposal>(
+    requirement.data.proposal
+      ? `/assets/snapshot/proposal/${requirement.data.proposal}`
+      : null
+  )
 
   const formattedDate = requirement.data.since
     ? new Date(requirement.data.since).toLocaleDateString()
