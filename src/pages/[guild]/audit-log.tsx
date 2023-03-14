@@ -1,4 +1,5 @@
 import Layout from "components/common/Layout"
+import AuditLogFiltersBar from "components/[guild]/audit-log/AuditLogFiltersBar"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -17,6 +18,7 @@ const AuditLog = (): JSX.Element => {
       showBackButton
     >
       <Tabs />
+      <AuditLogFiltersBar />
     </Layout>
   )
 }

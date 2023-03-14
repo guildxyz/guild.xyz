@@ -11,7 +11,11 @@ import useGuild from "../hooks/useGuild"
 import { useThemeContext } from "../ThemeContext"
 import TabButton from "./components/TabButton"
 
-const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
+type Props = {
+  sticky?: boolean
+}
+
+const Tabs = ({ sticky, children }: PropsWithChildren<Props>): JSX.Element => {
   const { ref, isStuck } = useIsStuck()
   const { colorMode } = useColorMode()
   const { textColor } = useThemeContext()
@@ -26,13 +30,13 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       direction="row"
       justifyContent="space-between"
       alignItems={"center"}
-      position="sticky"
+      position={sticky ? "sticky" : "relative"}
       top={0}
       py={3}
       mt={-3}
       mb={2}
       width="full"
-      zIndex={isStuck ? "banner" : "auto"}
+      zIndex={sticky && isStuck ? "banner" : "auto"}
       _before={{
         content: `""`,
         position: "fixed",
@@ -44,8 +48,8 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
         bgColor: bgColor,
         boxShadow: "md",
         transition: "opacity 0.2s ease, visibility 0.1s ease",
-        visibility: isStuck ? "visible" : "hidden",
-        opacity: isStuck ? 1 : 0,
+        visibility: sticky && isStuck ? "visible" : "hidden",
+        opacity: sticky && isStuck ? 1 : 0,
       }}
     >
       <Box

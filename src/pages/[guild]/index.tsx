@@ -210,7 +210,7 @@ const GuildPage = (): JSX.Element => {
         {showOnboarding ? (
           <DynamicOnboarding />
         ) : (
-          <Tabs>
+          <Tabs sticky>
             {!isMember ? (
               <JoinButton />
             ) : !isAdmin ? (
