@@ -56,15 +56,13 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
 }
 
 const CompleteCaptchaModal = ({ isOpen, onClose }) => {
-  const { type } = useRequirementContext()
-
   const fetcherWithSign = useFetcherWithSign()
   const {
     data: getGateCallbackData,
     isValidating,
     error: getGateCallbackError,
   } = useSWRImmutable(
-    isOpen ? [`/util/getGateCallback/${type}`, { body: {} }] : null,
+    isOpen ? [`/util/getGateCallback/CAPTCHA`, { body: {} }] : null,
     fetcherWithSign
   )
 
@@ -133,3 +131,4 @@ const CompleteCaptchaModal = ({ isOpen, onClose }) => {
 }
 
 export default CompleteCaptcha
+export { CompleteCaptchaModal }
