@@ -11,11 +11,7 @@ import useGuild from "../hooks/useGuild"
 import { useThemeContext } from "../ThemeContext"
 import TabButton from "./components/TabButton"
 
-type Props = {
-  tabTitle: string
-}
-
-const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => {
+const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const { ref, isStuck } = useIsStuck()
   const { colorMode } = useColorMode()
   const { textColor } = useThemeContext()
@@ -72,10 +68,8 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
             scrollbarWidth: "none",
           }}
         >
-          <TabButton href={`${urlName}`}>{tabTitle}</TabButton>
-          {/* <TabButton href="#" disabled tooltipText="Stay tuned!">
-            More tabs soon
-          </TabButton> */}
+          <TabButton href={`/${urlName}`}>Home</TabButton>
+          <TabButton href={`/${urlName}/audit-log`}>Audit log</TabButton>
         </HStack>
       </Box>
 
