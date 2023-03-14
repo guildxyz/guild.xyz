@@ -135,7 +135,7 @@ const SetVisibility = ({
   return (
     <>
       {entityType === "role" ? (
-        <Tooltip label={"This feature is temporarily disabled"}>
+        <Tooltip label="Visibility - coming soon">
           <Button
             ml={3}
             size="xs"
@@ -151,7 +151,7 @@ const SetVisibility = ({
       ) : (
         <Tooltip
           // label={`${visibilityData[currentVisibility].title}: ${visibilityData[currentVisibility].description}`}
-          label={"This feature is temporarily disabled"}
+          label="Visibility - coming soon"
         >
           <IconButton
             size={"sm"}

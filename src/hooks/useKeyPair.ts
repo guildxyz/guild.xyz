@@ -220,7 +220,9 @@ const useKeyPair = () => {
           })
 
           deleteKeyPairFromIdb(user?.id).then(() => {
-            mutateKeyPair({ pubKey: undefined, keyPair: undefined })
+            mutateKeyPair({ pubKey: undefined, keyPair: undefined }).then(() => {
+              mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
+            })
           })
         } else if (
           !!window.localStorage.getItem("userId") &&

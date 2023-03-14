@@ -18,6 +18,7 @@ import Button from "components/common/Button"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence } from "framer-motion"
+import useGateables from "hooks/useGateables"
 import { Check, CopySimple, PencilSimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -27,7 +28,6 @@ import CardMotionWrapper from "../CardMotionWrapper"
 import { Modal } from "../Modal"
 import GoogleDocCard, { GoogleSkeletonCard } from "./components/GoogleDocCard"
 import GoogleDocSetupCard from "./components/GoogleDocSetupCard"
-import useGoogleGateables from "./hooks/useGoogleGateables"
 
 type Props = {
   defaultValues: Record<string, any>
@@ -48,24 +48,26 @@ const GoogleGuildSetup = ({
 }: Props): JSX.Element => {
   const fieldName = `${fieldNameBase}platformGuildId`
 
-  const { googleGateables, isGoogleGateablesLoading } = useGoogleGateables()
+  const { gateables, isLoading } = useGateables(PlatformType.GOOGLE, {
+    refreshInterval: 10_000,
+  })
 
   const { isOpen, onClose, onOpen } = useDisclosure()
 
-  const prevGoogleGateables = usePrevious(googleGateables)
+  const prevGateables = usePrevious(gateables)
   useEffect(() => {
-    if (googleGateables?.length > prevGoogleGateables?.length) {
+    if (gateables?.length > prevGateables?.length) {
       onClose()
     }
-  }, [prevGoogleGateables, googleGateables])
+  }, [prevGateables, gateables])
   useEffect(() => {
-    if (googleGateables?.length === 0) onOpen()
-  }, [googleGateables])
+    if (gateables?.length === 0) onOpen()
+  }, [gateables])
 
   const { control, setValue, reset, handleSubmit } = useFormContext()
   const platformGuildId = useWatch({ control, name: fieldName })
 
-  const selectedFile = googleGateables?.find(
+  const selectedFile = gateables?.find(
     (file) => file.platformGuildId === platformGuildId
   )
 
@@ -86,7 +88,7 @@ const GoogleGuildSetup = ({
     else setShowForm(false)
   }, [selectedFile])
 
-  if (isGoogleGateablesLoading)
+  if (isLoading)
     return (
       <SimpleGrid
         columns={{ base: 1, md: 2 }}
@@ -109,7 +111,7 @@ const GoogleGuildSetup = ({
         alignItems="stretch"
       >
         <AnimatePresence>
-          {(selectedFile ? [selectedFile] : googleGateables)?.map((file) => (
+          {(selectedFile ? [selectedFile] : gateables)?.map((file) => (
             <CardMotionWrapper key={file.platformGuildId}>
               <GridItem>
                 <GoogleDocCard

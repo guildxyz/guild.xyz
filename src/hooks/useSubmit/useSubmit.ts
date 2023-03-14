@@ -73,7 +73,7 @@ const DEFAULT_MESSAGE = "Please sign this message"
 
 const signCallbacks = [
   {
-    nameRegex: /Gnosis Safe Multisig/i,
+    domain: "safe.global",
     signCallback: gnosisSafeSignCallback,
     loadingText: "Safe transaction in progress",
   },
@@ -161,8 +161,8 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
           throw error
         })
         .then(async ([signed, val]) => {
-          const callbackData = signCallbacks.find(({ nameRegex }) =>
-            nameRegex.test(peerMeta?.name)
+          const callbackData = signCallbacks.find(({ domain }) =>
+            peerMeta?.url?.includes?.(domain)
           )
           if ((forcePrompt || !keyPair) && callbackData) {
             setSignLoadingText(callbackData.loadingText || defaultLoadingText)
