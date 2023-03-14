@@ -1,4 +1,5 @@
 import { Icon, useDisclosure } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Robot } from "phosphor-react"
@@ -6,6 +7,8 @@ import { CompleteCaptchaModal } from "requirements/Captcha/components/CompleteCa
 import JoinStep from "./JoinStep"
 
 const CompleteCaptchaJoinStep = (): JSX.Element => {
+  const { isActive } = useWeb3React()
+
   const { roles } = useGuild()
   const requirements = roles?.flatMap((role) => role.requirements) ?? []
   const captchaRequirements = requirements
@@ -30,8 +33,9 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
         icon={<Icon as={Robot} />}
         title="Complete CAPTCHA"
         buttonLabel={isDone ? "Completed" : "Complete"}
-        datadogActionName={"Complete CAPTCHA (JoinModal)"}
+        datadogActionName="Complete CAPTCHA (JoinModal)"
         onClick={onOpen}
+        isDisabled={!isActive && "Connect wallet first"}
       />
 
       <CompleteCaptchaModal isOpen={isOpen} onClose={onClose} />
