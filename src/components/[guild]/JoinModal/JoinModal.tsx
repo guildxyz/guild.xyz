@@ -69,12 +69,13 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     })
   )
 
-  const renderedSteps = [...allJoinables].map(
-    (platform) =>
-      customJoinStep[platform]?.() ?? (
-        <ConnectPlatform key={platform} platform={platform as PlatformName} />
-      )
-  )
+  const renderedSteps = [...allJoinables].map((platform) => {
+    if (platform in customJoinStep) {
+      const ConnectComponent = customJoinStep[platform]
+      return <ConnectComponent key={platform} />
+    }
+    return <ConnectPlatform key={platform} platform={platform as PlatformName} />
+  })
 
   const {
     isLoading,
