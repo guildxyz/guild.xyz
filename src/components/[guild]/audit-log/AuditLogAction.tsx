@@ -59,11 +59,11 @@ const AuditLogAction = ({
             icon={
               <Icon
                 as={CaretDown}
-                onClick={onToggle}
                 transform={isOpen && "rotate(-180deg)"}
                 transition="transform .3s"
               />
             }
+            onClick={onToggle}
             variant="ghost"
             minW={8}
             minH={8}
