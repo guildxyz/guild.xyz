@@ -9,6 +9,7 @@ import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 
 const SIG_HEADER_NAME = "x-guild-sig"
 const PARAMS_HEADER_NAME = "x-guild-params"
+const AUTH_FLAG_HEADER_NAME = "x-guild-auth-location"
 
 const fetcher = async (
   resource: string,
@@ -40,16 +41,22 @@ const fetcher = async (
     },
   }
 
-  if ((!options.method || options.method?.toUpperCase() === "GET") && !!validation) {
-    delete options.body
+  if (!!validation) {
+    if (!options.method || options.method?.toUpperCase() === "GET") {
+      delete options.body
 
-    options.headers[PARAMS_HEADER_NAME] = Buffer.from(
-      JSON.stringify(validation.params)
-    ).toString("base64")
+      options.headers[PARAMS_HEADER_NAME] = Buffer.from(
+        JSON.stringify(validation.params)
+      ).toString("base64")
 
-    options.headers[SIG_HEADER_NAME] = Buffer.from(validation.sig, "hex").toString(
-      "base64"
-    )
+      options.headers[SIG_HEADER_NAME] = Buffer.from(validation.sig, "hex").toString(
+        "base64"
+      )
+
+      options.headers[AUTH_FLAG_HEADER_NAME] = "header"
+    } else {
+      options.headers[AUTH_FLAG_HEADER_NAME] = "body"
+    }
   }
 
   if (isGuildApiCall || isServerless)
