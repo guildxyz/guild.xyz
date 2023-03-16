@@ -77,7 +77,7 @@ const RolePlatforms = ({ roleId }: Props) => {
               type = PlatformType[guildPlatform?.platformId]
             } else {
               guildPlatform = rolePlatform.guildPlatform
-              type = guildPlatform.platformName
+              type = guildPlatform?.platformName
             }
 
             if (!type) return null
