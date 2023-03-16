@@ -1,94 +1,71 @@
 import AuthRedirect from "components/AuthRedirect"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { useRouter } from "next/dist/client/router"
-import { useEffect, useMemo } from "react"
+import { useEffect } from "react"
 
-type OAuthResponse = {
+export type OAuthResponse = {
   error_description?: string
   error?: string
-  state?: string
   csrfToken: string
-  clientId: string
 } & Record<string, any>
 
 const OAuth = () => {
   const router = useRouter()
   const { addDatadogAction } = useDatadog()
-  const params = useMemo<OAuthResponse>(() => {
+
+  const handleOauthResponse = async () => {
     if (!router.isReady || typeof window === "undefined") return null
+
+    // Parse params
+    let params: OAuthResponse
     if (typeof router.query?.state !== "string") {
-      if (!window.location.hash) router.push("/")
       const fragment = new URLSearchParams(window.location.hash.slice(1))
-
-      const [clientId, csrfToken] = fragment.get("state")?.split(";") ?? [
-        undefined,
-        undefined,
-      ]
-
-      return { ...Object.fromEntries(fragment.entries()), clientId, csrfToken }
+      const { state, ...rest } = Object.fromEntries(fragment.entries())
+      params = { csrfToken: state, ...rest }
     } else {
-      const [clientId, csrfToken] = router.query.state?.split(";") ?? [
-        undefined,
-        undefined,
-      ]
-
-      return { ...router.query, clientId, csrfToken }
-    }
-  }, [router])
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !params) return
-
-    const shouldCloseKey = `oauth_window_should_close_${params.clientId}`
-
-    const interval = setInterval(() => {
-      try {
-        const shouldClose = JSON.parse(window.localStorage.getItem(shouldCloseKey))
-        if (shouldClose) {
-          window.localStorage.removeItem(shouldCloseKey)
-          window.close()
-        }
-      } catch {}
-    }, 500)
-
-    return () => clearInterval(interval)
-  }, [params])
-
-  useEffect(() => {
-    if (!router.isReady || typeof window === "undefined" || !params) return
-
-    if (Object.keys(params).length <= 0) router.push("/")
-
-    const dataKey = `oauth_popup_data_${params.clientId}`
-
-    if (params.error) {
-      const { error, errorDescription } = params
-      window.localStorage.setItem(
-        dataKey,
-        JSON.stringify({
-          type: "OAUTH_ERROR",
-          data: { error, errorDescription },
-        })
-      )
-      return
+      const { state, ...rest } = router.query
+      params = { csrfToken: state, ...rest }
     }
 
     addDatadogAction(`CSRF - OAuth window received CSRF token: ${params.csrfToken}`)
 
-    delete params.error
-    delete params.error_description
-    delete params.state
+    // Navigate to home page, if opened incorrectly
+    if (Object.keys(params).length <= 0) {
+      await router.push("/")
+    }
 
-    window.localStorage.setItem(
-      dataKey,
-      JSON.stringify({
+    // Open Broadcast Channel
+    const channel = new BroadcastChannel(params.csrfToken)
+
+    // Send response
+    if (params.error) {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { error, error_description } = params
+
+      channel.postMessage({
+        type: "OAUTH_ERROR",
+        data: { error, errorDescription: error_description },
+      })
+    } else {
+      delete params.error
+      delete params.error_description
+      delete params.csrfToken
+
+      channel.postMessage({
         type: "OAUTH_SUCCESS",
         data: params,
-        csrfToken: params.csrfToken,
       })
-    )
-  }, [router, params])
+    }
+
+    channel.close()
+    window.close()
+  }
+
+  useEffect(() => {
+    handleOauthResponse()
+  }, [router])
 
   return <AuthRedirect />
 }
+
 export default OAuth
