@@ -4,6 +4,7 @@ import capitalize from "utils/capitalize"
 import { AUDITLOG, AuditLogAction } from "../../constants"
 import RoleTag from "../../RoleTag"
 import UserTag from "../../UserTag"
+import { useAuditLogActionContext } from "../AuditLogActionContext"
 
 type Props = {
   action: AuditLogAction
@@ -18,9 +19,9 @@ const platformTagColorSchemes: Record<PlatformName, string> = {
   GOOGLE: "blue",
 }
 
-const ActionLabel = ({
-  action: { actionName, values, ids, data },
-}: Props): JSX.Element => {
+const ActionLabel = (): JSX.Element => {
+  const { actionName, values, ids, data } = useAuditLogActionContext()
+
   const capitalizedName = capitalize(actionName)
 
   if (

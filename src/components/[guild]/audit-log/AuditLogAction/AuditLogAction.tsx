@@ -12,6 +12,10 @@ import Card from "components/common/Card"
 import { CaretDown } from "phosphor-react"
 import AuditLogChildAction from "../AuditLogChildAction"
 import { AuditLogAction as Action } from "../constants"
+import {
+  AuditLogActionProvider,
+  useAuditLogActionContext,
+} from "./AuditLogActionContext"
 import ActionIcon from "./components/ActionIcon"
 import ActionLabel from "./components/ActionLabel"
 
@@ -19,11 +23,11 @@ type Props = {
   action: Action
 }
 
-const AuditLogAction = ({ action }: Props): JSX.Element => {
+const AuditLogAction = (): JSX.Element => {
   const collapseBgColor = useColorModeValue("gray.50", "blackAlpha.400")
   const { isOpen, onToggle } = useDisclosure()
 
-  const { actionName, timestamp, children } = action
+  const { timestamp, children } = useAuditLogActionContext()
 
   const shouldRenderCollapse = children?.length > 0
 
@@ -31,9 +35,9 @@ const AuditLogAction = ({ action }: Props): JSX.Element => {
     <Card>
       <HStack justifyContent="space-between" px={{ base: 5, sm: 6 }} py={7}>
         <HStack spacing={4}>
-          <ActionIcon actionName={actionName} />
+          <ActionIcon />
           <Stack spacing={0.5}>
-            <ActionLabel action={action} />
+            <ActionLabel />
             <Text as="span" colorScheme="gray" fontSize="sm">
               {new Date(Number(timestamp)).toLocaleString()}
             </Text>
@@ -64,7 +68,9 @@ const AuditLogAction = ({ action }: Props): JSX.Element => {
         <Collapse in={isOpen}>
           <Stack spacing={3} pr={6} pl="4.5rem" py={4} bgColor={collapseBgColor}>
             {children.map((childAction) => (
-              <AuditLogChildAction key={childAction.id} action={childAction} />
+              <AuditLogActionProvider key={childAction.id} action={childAction}>
+                <AuditLogChildAction />
+              </AuditLogActionProvider>
             ))}
           </Stack>
         </Collapse>
@@ -73,4 +79,10 @@ const AuditLogAction = ({ action }: Props): JSX.Element => {
   )
 }
 
-export default AuditLogAction
+const AuditLogActionWrapper = ({ action }: Props): JSX.Element => (
+  <AuditLogActionProvider action={action}>
+    <AuditLogAction />
+  </AuditLogActionProvider>
+)
+
+export default AuditLogActionWrapper
