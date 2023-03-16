@@ -9,7 +9,7 @@ type Props = {
 const UserTag = ({ address }: Props): JSX.Element => (
   <Tag variant="solid" colorScheme="gray">
     <TagLeftIcon mr={0.5} as={GuildAvatar} address={address} size={3} />
-    <TagLabel>{shortenHex(address)}</TagLabel>
+    <TagLabel>{shortenHex(address, 3)}</TagLabel>
   </Tag>
 )
 
