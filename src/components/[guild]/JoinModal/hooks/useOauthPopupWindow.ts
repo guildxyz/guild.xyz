@@ -101,10 +101,10 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     )
 
     // Wait for an OAuth response
-    await hasReceivedResponse
-
-    // Close Broadcast Channel
-    channel.close()
+    await hasReceivedResponse.finally(() => {
+      // Close Broadcast Channel
+      channel.close()
+    })
   }
 
   useEffect(() => {
