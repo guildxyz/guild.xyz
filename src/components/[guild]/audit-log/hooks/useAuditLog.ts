@@ -1,16 +1,26 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import useSWRImmutable from "swr/immutable"
-import fetcher from "utils/fetcher"
+import useSWRInfinite from "swr/infinite"
+import { AuditLogAction } from "../constants"
 
 // TODO: add filters, limit, etc.
-
-const fetchAuditLog = (_: string, guildId: number) =>
-  fetcher(`/auditLog?tree=true&guildId=${guildId}&limit=100`)
+const LIMIT = 10
 
 const useAuditLog = () => {
   const { id } = useGuild()
 
-  return useSWRImmutable(id ? ["auditLog", id] : null, fetchAuditLog)
+  const getKey = (pageIndex: number, previousPageData: any) => {
+    if (!id || (previousPageData && !previousPageData.length)) return null
+    return `/auditLog?tree=true&guildId=${id}&limit=${LIMIT}&offset=${pageIndex}`
+  }
+
+  const infiniteData = useSWRInfinite<AuditLogAction[]>(getKey, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateFirstPage: false,
+  })
+
+  return infiniteData
 }
 
 export default useAuditLog
