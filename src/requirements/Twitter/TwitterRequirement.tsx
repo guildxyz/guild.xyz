@@ -22,7 +22,10 @@ const TwitterRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      image={twitterAvatar ?? <Icon as={TwitterLogo} boxSize={6} />}
+      image={
+        (["TWITTER_FOLLOW", "TWITTER_FOLLOWED_BY"].includes(requirement.type) &&
+          twitterAvatar) || <Icon as={TwitterLogo} boxSize={6} />
+      }
       footer={<ConnectRequirementPlatformButton />}
       {...props}
     >
