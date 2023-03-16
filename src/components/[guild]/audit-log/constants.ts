@@ -59,7 +59,7 @@ export enum AUDITLOG {
   KickFromGuild = "kick from guild",
   UserStatusUpdate = "user status update",
   GetRole = "get role",
-  LoseRole = "loseRole",
+  LoseRole = "lose role",
   SendReward = "send reward",
   GetReward = "get reward",
   RevokeReward = "revoke reward",
@@ -74,6 +74,7 @@ export type AuditLogActionType = keyof typeof AUDITLOG
 
 export type AuditLogAction = {
   id: string
+  parentId?: string
   actionName: AUDITLOG
   correlationId: string
   service: string
