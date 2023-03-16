@@ -30,7 +30,6 @@ const TwitterUserInput = ({ baseFieldPath }: RequirementFormProps) => {
   const { data: twitterAvatar, isValidating } = useSWRImmutable(
     debouncedUsername ? `/assets/twitter/avatar/${debouncedUsername}` : null
   )
-  const {} = useSWRImmutable(debouncedUsername)
 
   return (
     <FormControl
