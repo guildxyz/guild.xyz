@@ -5,8 +5,6 @@ import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
 import { OneOf } from "types"
 
-const OAUTH_TIMEOUT_MS = 1000 * 60 * 10
-
 type OAuthData<Data> = {
   redirect_url: string
   scope?: string
