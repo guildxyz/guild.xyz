@@ -1,6 +1,6 @@
 import { ChakraProps, HStack, Stack, Text } from "@chakra-ui/react"
 import capitalize from "utils/capitalize"
-import ActionIcon from "./ActionIcon"
+import ActionIcon from "./AuditLogAction/components/ActionIcon"
 import { AuditLogAction } from "./constants"
 
 type Props = {

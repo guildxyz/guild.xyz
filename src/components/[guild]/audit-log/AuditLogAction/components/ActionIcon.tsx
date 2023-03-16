@@ -1,7 +1,7 @@
 import { Icon } from "@chakra-ui/react"
 import { SystemStyleObject } from "@chakra-ui/theme-tools"
 import { IconProps, Question } from "phosphor-react"
-import { auditLogActionIcons } from "./constants"
+import { auditLogActionIcons } from "../../constants"
 
 type Props = {
   actionName: string

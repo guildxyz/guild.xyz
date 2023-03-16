@@ -10,28 +10,20 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { CaretDown } from "phosphor-react"
-import capitalize from "utils/capitalize"
-import ActionIcon from "./ActionIcon"
-import AuditLogChildAction from "./AuditLogChildAction"
-import { AuditLogAction as Action } from "./constants"
-import RoleTag from "./RoleTag"
-import UserTag from "./UserTag"
+import AuditLogChildAction from "../AuditLogChildAction"
+import { AuditLogAction as Action } from "../constants"
+import ActionIcon from "./components/ActionIcon"
+import ActionLabel from "./components/ActionLabel"
 
 type Props = {
   action: Action
 }
 
-const AuditLogAction = ({
-  action: { actionName, timestamp, values, children },
-}: Props): JSX.Element => {
+const AuditLogAction = ({ action }: Props): JSX.Element => {
   const collapseBgColor = useColorModeValue("gray.50", "blackAlpha.400")
   const { isOpen, onToggle } = useDisclosure()
 
-  const tagElement = values.role ? (
-    <RoleTag role={values.role} />
-  ) : values.user ? (
-    <UserTag address={values.user} />
-  ) : null
+  const { actionName, timestamp, children } = action
 
   const shouldRenderCollapse = children?.length > 0
 
@@ -41,12 +33,7 @@ const AuditLogAction = ({
         <HStack spacing={4}>
           <ActionIcon actionName={actionName} />
           <Stack spacing={0.5}>
-            <HStack>
-              <Text as="span" fontWeight="semibold">
-                {capitalize(actionName)}:
-              </Text>
-              {tagElement}
-            </HStack>
+            <ActionLabel action={action} />
             <Text as="span" colorScheme="gray" fontSize="sm">
               {new Date(Number(timestamp)).toLocaleString()}
             </Text>
