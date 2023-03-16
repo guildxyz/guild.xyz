@@ -44,7 +44,7 @@ const TwitterUserInput = ({ baseFieldPath }: RequirementFormProps) => {
         </InputGroup>
         {debouncedUsername?.length > 0 && (
           <SkeletonCircle
-            size="40px"
+            boxSize={10}
             flexShrink={0}
             border="1px solid var(--chakra-colors-whiteAlpha-300)"
             overflow="hidden"
@@ -53,7 +53,7 @@ const TwitterUserInput = ({ baseFieldPath }: RequirementFormProps) => {
             <Img
               src={twitterAvatar ?? "/default_twitter_icon.png"}
               alt="Twitter avatar"
-              boxSize="40px"
+              boxSize={10}
             />
           </SkeletonCircle>
         )}
