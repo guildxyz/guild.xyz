@@ -1,8 +1,8 @@
-import { Spinner } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import AuditLogAction from "components/[guild]/audit-log/AuditLogAction"
 import AuditLogFiltersBar from "components/[guild]/audit-log/AuditLogFiltersBar"
+import AuditLogSkeleton from "components/[guild]/audit-log/AuditLogSkeleton"
 import useAuditLog from "components/[guild]/audit-log/hooks/useAuditLog"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Tabs from "components/[guild]/Tabs/Tabs"
@@ -32,8 +32,7 @@ const AuditLog = (): JSX.Element => {
         {data?.length ? (
           data.map((action) => <AuditLogAction key={action.id} action={action} />)
         ) : (
-          // TODO: skeleton loader!
-          <Spinner />
+          <AuditLogSkeleton />
         )}
       </Section>
     </Layout>

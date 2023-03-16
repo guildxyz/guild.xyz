@@ -38,7 +38,7 @@ const AuditLogAction = ({
   return (
     <Card>
       <HStack justifyContent="space-between" px={{ base: 5, sm: 6 }} py={7}>
-        <HStack alignItems="center" spacing={4}>
+        <HStack spacing={4}>
           <ActionIcon actionName={actionName} />
           <Stack spacing={0.5}>
             <HStack>
