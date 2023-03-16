@@ -15,10 +15,7 @@ const PARENT_PADDING = "var(--chakra-space-5)"
 
 const RoleRequirements = ({ role }: Props) => {
   const requirements = role.hiddenRequirements
-    ? [
-        ...role.requirements,
-        { isHidden: true, type: "FREE" } as unknown as Requirement,
-      ]
+    ? [...role.requirements, { isHidden: true, type: "FREE" } as Requirement]
     : role.requirements
 
   const isVirtualList = requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
