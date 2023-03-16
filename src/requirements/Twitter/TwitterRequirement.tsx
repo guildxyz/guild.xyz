@@ -7,6 +7,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { TwitterLogo } from "phosphor-react"
+import useSWRImmutable from "swr/immutable"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
@@ -15,16 +16,13 @@ import TwitterUserLink from "./components/TwitterUserLink"
 const TwitterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
+  const { data: twitterAvatar } = useSWRImmutable(
+    requirement.data.id ? `/assets/twitter/avatar/${requirement.data.id}` : null
+  )
+
   return (
     <Requirement
-      image={
-        ["TWITTER_FOLLOW", "TWITTER_FOLLOWED_BY"].includes(requirement.type) &&
-        requirement.data.id ? (
-          `/api/twitter-avatar?username=${requirement.data.id}`
-        ) : (
-          <Icon as={TwitterLogo} boxSize={6} />
-        )
-      }
+      image={twitterAvatar ?? <Icon as={TwitterLogo} boxSize={6} />}
       footer={<ConnectRequirementPlatformButton />}
       {...props}
     >
