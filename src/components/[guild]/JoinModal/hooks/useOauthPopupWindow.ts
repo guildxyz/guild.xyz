@@ -59,7 +59,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     })
 
     // Generate csrf token
-    const csrfToken = randomBytes(32).toString("hex")
+    const csrfToken = randomBytes(64).toString("base64")
 
     // Create Broadcast Channel
     const channel = new BroadcastChannel(csrfToken)
@@ -97,7 +97,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
         .map(([key, value]) => `${key}=${value}`)
         .join("&")}&redirect_uri=${encodeURIComponent(
         redirectUri
-      )}&state=${csrfToken}`
+      )}&state=${encodeURIComponent(csrfToken)}`
     )
 
     // Wait for an OAuth response

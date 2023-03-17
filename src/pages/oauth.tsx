@@ -21,10 +21,10 @@ const OAuth = () => {
     if (typeof router.query?.state !== "string") {
       const fragment = new URLSearchParams(window.location.hash.slice(1))
       const { state, ...rest } = Object.fromEntries(fragment.entries())
-      params = { csrfToken: state, ...rest }
+      params = { csrfToken: decodeURIComponent(state), ...rest }
     } else {
       const { state, ...rest } = router.query
-      params = { csrfToken: state, ...rest }
+      params = { csrfToken: decodeURIComponent(state), ...rest }
     }
 
     addDatadogAction(`CSRF - OAuth window received CSRF token: ${params.csrfToken}`)
