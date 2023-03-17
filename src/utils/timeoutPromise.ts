@@ -1,4 +1,4 @@
-const timeoutPromise = <T>(promise: Promise<T>, ms = 1500) =>
+const timeoutPromise = <T>(promise: Promise<T>, ms: number) =>
   Promise.race([
     promise,
     new Promise((_resolve, reject) => {
