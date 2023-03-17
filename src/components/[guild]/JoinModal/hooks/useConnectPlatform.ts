@@ -3,14 +3,12 @@ import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 import useDCAuth from "./useDCAuth"
 import useGHAuth from "./useGHAuth"
 import useGoogleAuth from "./useGoogleAuth"
-import { Message } from "./useOauthPopupWindow"
 import useTGAuth from "./useTGAuth"
 import useTwitterAuth from "./useTwitterAuth"
 
@@ -30,47 +28,12 @@ const useConnectPlatform = (
   onSuccess?: () => void,
   isReauth?: boolean // Temporary, once /connect works without it, we can remove this
 ) => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
-  const showErrorToast = useShowErrorToast()
-
   const { platformUsers } = useUser()
   const { onOpen, authData, isAuthenticating, ...rest } =
     platformAuthHooks[platform]?.() ?? {}
   const prevAuthData = usePrevious(authData)
 
   const { onSubmit, isLoading, response } = useConnect(onSuccess)
-
-  const toast = useToast()
-
-  useEffect(() => {
-    if (!platformUsers) {
-      return
-    }
-
-    const storageKey = `${platform}_shouldConnect`
-    const strData = window.localStorage.getItem(storageKey)
-    window.localStorage.removeItem(storageKey)
-
-    const isAlreadyConnected = platformUsers.some(
-      (platformUser) => platformUser.platformName === platform
-    )
-    if (isAlreadyConnected) return
-
-    if (strData) {
-      const data: Message = JSON.parse(strData)
-
-      if (data.type === "OAUTH_SUCCESS") {
-        onSubmit({ platformName: platform, authData: data.data })
-      } else {
-        toast({
-          status: "error",
-          title: data.data.error ?? "Error",
-          description: data.data.errorDescription || `Failed to connect ${platform}`,
-        })
-        addDatadogError("OAuth error from localStorage data", data.data)
-      }
-    }
-  }, [platform, platformUsers])
 
   useEffect(() => {
     // couldn't prevent spamming requests without all these three conditions
@@ -97,7 +60,7 @@ const useConnect = (onSuccess?: () => void) => {
   const { addDatadogAction, addDatadogError } = useDatadog()
   const showErrorToast = useShowErrorToast()
 
-  const { mutate: mutateUser, platformUsers } = useUser()
+  const { mutate: mutateUser } = useUser()
 
   const submit = (signedValidation: SignedValdation) =>
     fetcher("/user/connect", signedValidation).then((body) => {
