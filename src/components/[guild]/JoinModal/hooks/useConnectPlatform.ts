@@ -43,6 +43,10 @@ const useConnectPlatform = (
   const toast = useToast()
 
   useEffect(() => {
+    if (!platformUsers) {
+      return
+    }
+
     const storageKey = `${platform}_shouldConnect`
     const strData = window.localStorage.getItem(storageKey)
     window.localStorage.removeItem(storageKey)
@@ -66,7 +70,7 @@ const useConnectPlatform = (
         addDatadogError("OAuth error from localStorage data", data.data)
       }
     }
-  }, [platform])
+  }, [platform, platformUsers])
 
   useEffect(() => {
     // couldn't prevent spamming requests without all these three conditions
