@@ -3,7 +3,7 @@ import { randomBytes } from "crypto"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
-import { OneOf } from "types"
+import { OneOf, PlatformName } from "types"
 
 type OAuthData<Data> = {
   redirect_url: string
@@ -20,12 +20,13 @@ type OAuthOptions = {
 
 type OAuthError = { error: string; errorDescription: string }
 
-type Message = OneOf<
+export type Message = OneOf<
   { type: "OAUTH_ERROR"; data: OAuthError },
   { type: "OAUTH_SUCCESS"; data: any }
 >
 
 const useOauthPopupWindow = <OAuthResponse = { code: string }>(
+  platformName: PlatformName,
   url: string,
   oauthOptions: OAuthOptions
 ) => {
@@ -61,6 +62,14 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     // Generate csrf token
     const csrfToken = randomBytes(64).toString("base64")
 
+    const state = {
+      csrfToken,
+      from: window.location.toString(),
+      platformName,
+      redirect_url: redirectUri,
+      scope: oauthOptions.scope,
+    }
+
     // Create Broadcast Channel
     const channel = new BroadcastChannel(csrfToken)
 
@@ -79,11 +88,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           setOauthState({
             isAuthenticating: false,
             error: null,
-            authData: {
-              redirect_url: redirectUri,
-              scope: oauthOptions.scope,
-              ...data,
-            },
+            authData: data,
           })
         }
 
@@ -97,11 +102,13 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
         .map(([key, value]) => `${key}=${value}`)
         .join("&")}&redirect_uri=${encodeURIComponent(
         redirectUri
-      )}&state=${encodeURIComponent(csrfToken)}`
+      )}&state=${encodeURIComponent(JSON.stringify(state))}`
     )
 
     // Wait for an OAuth response
     await hasReceivedResponse.finally(() => {
+      channel.postMessage({ type: "OAUTH_CONFIRMATION" })
+
       // Close Broadcast Channel
       channel.close()
     })

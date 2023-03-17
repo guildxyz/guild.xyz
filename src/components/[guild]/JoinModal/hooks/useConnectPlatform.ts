@@ -3,12 +3,14 @@ import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import useToast from "hooks/useToast"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 import useDCAuth from "./useDCAuth"
 import useGHAuth from "./useGHAuth"
 import useGoogleAuth from "./useGoogleAuth"
+import { Message } from "./useOauthPopupWindow"
 import useTGAuth from "./useTGAuth"
 import useTwitterAuth from "./useTwitterAuth"
 
@@ -31,41 +33,40 @@ const useConnectPlatform = (
   const { addDatadogAction, addDatadogError } = useDatadog()
   const showErrorToast = useShowErrorToast()
 
-  const { mutate: mutateUser, platformUsers } = useUser()
+  const { platformUsers } = useUser()
   const { onOpen, authData, isAuthenticating, ...rest } =
     platformAuthHooks[platform]?.() ?? {}
   const prevAuthData = usePrevious(authData)
 
-  const submit = (signedValidation: SignedValdation) =>
-    fetcher("/user/connect", signedValidation).then((body) => {
-      if (body === "rejected") {
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
-        throw "Something went wrong, connect request rejected."
+  const { onSubmit, isLoading, response } = useConnect(onSuccess)
+
+  const toast = useToast()
+
+  useEffect(() => {
+    const storageKey = `${platform}_shouldConnect`
+    const strData = window.localStorage.getItem(storageKey)
+    window.localStorage.removeItem(storageKey)
+
+    const isAlreadyConnected = platformUsers.some(
+      (platformUser) => platformUser.platformName === platform
+    )
+    if (isAlreadyConnected) return
+
+    if (strData) {
+      const data: Message = JSON.parse(strData)
+
+      if (data.type === "OAUTH_SUCCESS") {
+        onSubmit({ platformName: platform, authData: data.data })
+      } else {
+        toast({
+          status: "error",
+          title: data.data.error ?? "Error",
+          description: data.data.errorDescription || `Failed to connect ${platform}`,
+        })
+        addDatadogError("OAuth error from localStorage data", data.data)
       }
-
-      if (typeof body === "string") {
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
-        throw body
-      }
-
-      return body
-    })
-
-  const { onSubmit, isLoading, response } = useSubmitWithSign<{
-    platformName: PlatformName
-    authData: any
-    reauth?: boolean
-  }>(submit, {
-    onSuccess: () => {
-      addDatadogAction("Successfully connected 3rd party account")
-      mutateUser()
-      onSuccess?.()
-    },
-    onError: (err) => {
-      showErrorToast(err)
-      addDatadogError("3rd party account connection error", { error: err })
-    },
-  })
+    }
+  }, [platform])
 
   useEffect(() => {
     // couldn't prevent spamming requests without all these three conditions
@@ -88,5 +89,43 @@ const useConnectPlatform = (
   }
 }
 
+const useConnect = (onSuccess?: () => void) => {
+  const { addDatadogAction, addDatadogError } = useDatadog()
+  const showErrorToast = useShowErrorToast()
+
+  const { mutate: mutateUser, platformUsers } = useUser()
+
+  const submit = (signedValidation: SignedValdation) =>
+    fetcher("/user/connect", signedValidation).then((body) => {
+      if (body === "rejected") {
+        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+        throw "Something went wrong, connect request rejected."
+      }
+
+      if (typeof body === "string") {
+        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+        throw body
+      }
+
+      return body
+    })
+
+  return useSubmitWithSign<{
+    platformName: PlatformName
+    authData: any
+    reauth?: boolean
+  }>(submit, {
+    onSuccess: () => {
+      addDatadogAction("Successfully connected 3rd party account")
+      mutateUser()
+      onSuccess?.()
+    },
+    onError: (err) => {
+      showErrorToast(err)
+      addDatadogError("3rd party account connection error", { error: err })
+    },
+  })
+}
+
 export default useConnectPlatform
-export { platformAuthHooks }
+export { platformAuthHooks, useConnect }
