@@ -9,11 +9,10 @@ const resolution = new Resolution()
 const useReverseUnstoppableDomain = (domain: string) => {
   const shouldFetch = Boolean(resolution && domain)
 
-  const { data } = useSWRImmutable(
+  return useSWRImmutable(
     shouldFetch ? ["unstoppableDomain", domain, resolution] : null,
     fetchUnstoppableName
   )
-  return data
 }
 
 export default useReverseUnstoppableDomain

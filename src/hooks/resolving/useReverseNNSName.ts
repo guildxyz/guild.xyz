@@ -8,15 +8,13 @@ const fetchNNSName = (_, provider, domain) => {
   return provider.resolveName(domain)
 }
 
-const useReverseNNSName = (provider: Web3Provider, domain: string): string => {
+const useReverseNNSName = (provider: Web3Provider, domain: string) => {
   const shouldFetch = Boolean(provider && domain)
 
-  const { data } = useSWRImmutable(
+  return useSWRImmutable(
     shouldFetch ? ["NNS", provider, domain] : null,
     fetchNNSName
   )
-
-  return data
 }
 
 export default useReverseNNSName

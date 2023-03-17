@@ -9,12 +9,10 @@ const dotbit = createInstance()
 const useDotbitName = (domain: string) => {
   const shouldFetch = Boolean(dotbit && domain)
 
-  const { data } = useSWRImmutable(
+  return useSWRImmutable(
     shouldFetch ? ["dotbit", dotbit, domain] : null,
     fetchDotbitName
   )
-
-  return data
 }
 
 export default useDotbitName

@@ -66,7 +66,7 @@ const Admins = () => {
     const ownerOption = {
       ...(options.find((o) => o.value === ownerAddress) ?? {
         value: ownerAddress,
-        label: shortenHex(ownerAddress),
+        label: ownerAddress.length === 42 ? shortenHex(ownerAddress) : ownerAddress,
         img: <GuildAvatar address={ownerAddress} size={4} mr="2" />,
       }),
       isFixed: true,
@@ -81,7 +81,10 @@ const Admins = () => {
           return {
             ...(option ?? {
               value: admin,
-              label: shortenHex(admin),
+              label:
+                admin.startsWith("0x") && admin.length === 42
+                  ? shortenHex(admin)
+                  : admin,
               img: <GuildAvatar address={admin} size={4} mr="2" />,
             }),
           }

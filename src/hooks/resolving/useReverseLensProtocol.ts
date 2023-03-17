@@ -13,16 +13,10 @@ const fetchLensProtocolName = (_, domain) =>
         }}
     }`,
     },
-  }).then((res) => res.data.profiles.items[0].ownedBy)
+  }).then((res) => res?.data?.profiles.items[0].ownedBy)
 
-const useReverseLensProtocol = (domain: string) => {
-  const { data } = useSWRImmutable(
-    domain ? ["lensProtocol", domain] : null,
-    fetchLensProtocolName
-  )
-
-  return data
-}
+const useReverseLensProtocol = (domain: string) =>
+  useSWRImmutable(domain ? ["lensProtocol", domain] : null, fetchLensProtocolName)
 
 export default useReverseLensProtocol
 
