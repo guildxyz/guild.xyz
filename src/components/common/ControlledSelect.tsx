@@ -36,9 +36,13 @@ const ControlledSelect = ({
       ref={ref}
       name={name}
       options={options}
-      defaultValue={options?.find((option) => option.value === defaultValue)}
+      defaultValue={options?.find(
+        (option: SelectOption) => option.value === defaultValue
+      )}
       value={
-        options?.find((option) => option.value === value) ?? fallbackValue ?? null
+        options?.find((option: SelectOption) => option.value === value) ??
+        fallbackValue ??
+        null
       }
       onChange={(newValue: SelectOption) => {
         beforeOnChange?.(newValue)
