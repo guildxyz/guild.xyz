@@ -70,6 +70,7 @@ const JoinStep = ({
             leftIcon={icon}
             colorScheme={colorScheme}
             flexShrink="0"
+            minW="max-content"
             maxW={isDone && "40"}
             {...buttonProps}
             isDisabled={isDone || buttonProps.isDisabled}

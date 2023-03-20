@@ -20,8 +20,6 @@ const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
-  const proposalFieldValue = useWatch({ name: `${baseFieldPath}.data.proposal` })
-
   const spaceId = useWatch({ control, name: `${baseFieldPath}.data.space` })
 
   const [search, setSearch] = useState("")
@@ -54,7 +52,7 @@ const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
         beforeOnChange={(newValue) =>
           setValue(
             `${baseFieldPath}.data.space`,
-            proposals?.find((p) => p.id === newValue.value)?.space?.id
+            proposals?.find((p) => p.id === newValue?.value)?.space?.id
           )
         }
         afterOnChange={(newValue) => onChange?.(newValue)}

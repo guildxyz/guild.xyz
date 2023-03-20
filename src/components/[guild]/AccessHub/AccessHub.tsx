@@ -38,7 +38,7 @@ const useAccessedGuildPlatforms = () => {
 }
 
 const AccessHub = (): JSX.Element => {
-  const { poaps } = useGuild()
+  const { id: guildId, poaps } = useGuild()
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
   const { isAdmin } = useGuildPermission()
 
@@ -83,13 +83,15 @@ const AccessHub = (): JSX.Element => {
             )
           })}
 
-          {futurePoaps.map((poap) => (
-            <PoapRewardCard
-              key={poap?.id}
-              guildPoap={poap}
-              cornerButton={isAdmin && <PoapCardMenu guildPoap={poap} />}
-            />
-          ))}
+          {/* Custom logic for Chainlink */}
+          {(isAdmin || guildId !== 16389) &&
+            futurePoaps.map((poap) => (
+              <PoapRewardCard
+                key={poap?.id}
+                guildPoap={poap}
+                cornerButton={isAdmin && <PoapCardMenu guildPoap={poap} />}
+              />
+            ))}
         </>
       ) : (
         <Card>

@@ -71,6 +71,7 @@ const DynamicActiveStatusUpdates = dynamic(
 
 const GuildPage = (): JSX.Element => {
   const {
+    id: guildId,
     name,
     description,
     imageUrl,
@@ -244,9 +245,11 @@ const GuildPage = (): JSX.Element => {
         >
           {renderedRoles.length ? (
             <Stack ref={rolesEl} spacing={4}>
-              {activePoaps.map((poap) => (
-                <PoapRoleCard key={poap?.id} guildPoap={poap} />
-              ))}
+              {/* Custom logic for Chainlink */}
+              {(isAdmin || guildId !== 16389) &&
+                activePoaps.map((poap) => (
+                  <PoapRoleCard key={poap?.id} guildPoap={poap} />
+                ))}
               {renderedRoles.map((role) => (
                 <RoleCard key={role.id} role={role} />
               ))}
@@ -286,6 +289,7 @@ const GuildPage = (): JSX.Element => {
               <Collapse
                 in={isExpiredRolesOpen}
                 style={{ padding: "6px", margin: "-6px" }}
+                unmountOnExit
               >
                 <Stack spacing={4} pt="3">
                   {expiredPoaps.map((poap) => (

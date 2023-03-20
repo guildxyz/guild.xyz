@@ -38,6 +38,12 @@ const AdminSelect = forwardRef((props: Props, ref) => (
     components={customComponents}
     ref={ref}
     {...props}
+    chakraStyles={{
+      input: (provided) => ({
+        ...provided,
+        minWidth: "31ch",
+      }),
+    }}
   />
 ))
 
