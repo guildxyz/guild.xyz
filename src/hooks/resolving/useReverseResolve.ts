@@ -1,11 +1,9 @@
 import { useWeb3React } from "@web3-react/core"
-import { useState } from "react"
 import useReverseDotbitName from "./useReverseDotbitName"
 import useReverseLensProtocol from "./useReverseLensProtocol"
 import useReverseNNSName from "./useReverseNNSName"
 import useReverseUnstoppableDomain from "./useReverseUnstoppableDomain"
 const useReverseResolve = (domain) => {
-  const [resolvedAddress, setResolvedAddress] = useState(null)
   const { provider, account } = useWeb3React() // reverse ENS
   const { data: NNSAddress, error: NNSError } = useReverseNNSName(provider, domain)
   const { data: dotbitAddress, error: dotbitError } = useReverseDotbitName(domain)
@@ -16,10 +14,7 @@ const useReverseResolve = (domain) => {
   return {
     resolvedAddress:
       NNSAddress || lensAddress || unstoppableDomainAddress || dotbitAddress, // ENS MISSING
-    error:
-      NNSError && lensError && unstoppableDomainError && dotbitError
-        ? true
-        : undefined,
+    error: NNSAddress === null && lensError && unstoppableDomainError && dotbitError,
   }
 }
 
