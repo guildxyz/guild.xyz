@@ -240,9 +240,19 @@ const useBalancy = (
   return {
     addresses: holders?.addresses,
     holders:
-      requirement?.type === "ALLOWLIST"
+      holders?.addresses?.length ??
+      (!!baseFieldPath
         ? requirement.data?.validAddresses?.length
-        : holders?.addresses?.length,
+        : (logic === "OR"
+            ? [...new Set(allowlists?.flat()?.filter(Boolean))]
+            : [
+                ...allowlists?.reduce(
+                  (prev, curr) =>
+                    new Set(curr?.filter((addr) => !!addr && prev.has(addr)) ?? []),
+                  new Set(allowlists?.[0]?.filter(Boolean))
+                ),
+              ]
+          )?.length || undefined),
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
     inaccuracy:
