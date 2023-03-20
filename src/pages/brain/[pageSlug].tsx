@@ -3,6 +3,10 @@ import CustomImage from "components/brain/CustomImage"
 import CustomLink from "components/brain/CustomLink"
 import Header from "components/brain/Header"
 import PageBrainCard from "components/brain/PageBrainCard"
+import {
+  getAllPages,
+  getRelatedPageLinks,
+} from "components/brain/utils/brainFetchers"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
@@ -12,7 +16,6 @@ import { NotionAPI } from "notion-client"
 import { NotionRenderer } from "react-notion-x"
 import "react-notion-x/src/styles.css"
 import slugify from "slugify"
-import { getAllPages, getRelatedPageLinks } from "utils/brain/fetcher"
 
 const PageDetails = ({ blockMap, linkedPageContents, pageId, pageLogo }) => (
   <>
