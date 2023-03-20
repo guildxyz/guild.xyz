@@ -108,18 +108,17 @@ const OAuth = () => {
       window.close()
     } else {
       localStorage.setItem(
-        `${params.platformName}_shouldConnect`,
+        `${localStorageInfo.platformName}_shouldConnect`,
         JSON.stringify(response)
       )
-      router.push(params.from)
+      router.push(localStorageInfo.from)
     }
   }
 
   useEffect(() => {
     handleOauthResponse().catch((error) => {
       addDatadogError("OAuth - Unexpected error", error)
-      // errorToast(`An unexpected error happened while connecting a platform`)
-      errorToast(error.message ?? error.toString() ?? error)
+      errorToast(`An unexpected error happened while connecting a platform`)
       router.push("/")
     })
   }, [router])
