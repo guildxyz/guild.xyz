@@ -23,16 +23,12 @@ const App = ({
 
   const DatadogComponent = router.asPath.includes("linkpreview") ? Fragment : Datadog
 
-  const [isRouteChanges, setisRouteChanges] = useState(false)
+  const [isRouteChangeInProgress, setIsRouteChangeInProgress] = useState(false)
   const { colorMode } = useColorMode()
 
   useEffect(() => {
-    const handleRouteChangeStart = () =>
-      setTimeout(() => setisRouteChanges(true), 500)
-
-    const handleRouteChangeComplete = () => {
-      setisRouteChanges(false)
-    }
+    const handleRouteChangeStart = () => setIsRouteChangeInProgress(true)
+    const handleRouteChangeComplete = () => setIsRouteChangeInProgress(false)
 
     router.events.on("routeChangeStart", handleRouteChangeStart)
     router.events.on("routeChangeComplete", handleRouteChangeComplete)
@@ -47,10 +43,10 @@ const App = ({
     <>
       <Script src="/intercom.js" />
       <Chakra cookies={pageProps.cookies}>
-        {isRouteChanges ? (
+        {isRouteChangeInProgress ? (
           <Slide
             direction="top"
-            in={isRouteChanges}
+            in={isRouteChangeInProgress}
             initial="0.3s"
             style={{ zIndex: 10 }}
           >
