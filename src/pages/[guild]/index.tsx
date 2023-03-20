@@ -286,6 +286,7 @@ const GuildPage = (): JSX.Element => {
               <Collapse
                 in={isExpiredRolesOpen}
                 style={{ padding: "6px", margin: "-6px" }}
+                unmountOnExit
               >
                 <Stack spacing={4} pt="3">
                   {expiredPoaps.map((poap) => (
