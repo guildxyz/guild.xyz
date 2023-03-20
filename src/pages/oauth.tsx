@@ -118,7 +118,8 @@ const OAuth = () => {
   useEffect(() => {
     handleOauthResponse().catch((error) => {
       addDatadogError("OAuth - Unexpected error", error)
-      errorToast(`An unexpected error happened while connecting a platform`)
+      // errorToast(`An unexpected error happened while connecting a platform`)
+      errorToast(error.message ?? error.toString() ?? error)
       router.push("/")
     })
   }, [router])
