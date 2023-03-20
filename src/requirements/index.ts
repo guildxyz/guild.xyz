@@ -12,11 +12,12 @@ const REQUIREMENTS: Record<RequirementType, RequirementData> =
   )
 
 const requirementTypes = REQUIREMENTS_DATA.flatMap((obj) => obj.types)
-export type RequirementType = typeof requirementTypes[number]
+export type RequirementType = (typeof requirementTypes)[number]
 
 export type RequirementFormProps = {
   baseFieldPath: string
   field?: Requirement
+  addRequirement?: () => void
 }
 
 export type RequirementData = {

@@ -1,9 +1,10 @@
 import { useWeb3React } from "@web3-react/core"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import useDatadog from "components/_app/Datadog/useDatadog"
+import useKeyPair from "hooks/useKeyPair"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useEffect } from "react"
-import { mutate as swrMutate } from "swr"
-import fetcher from "utils/fetcher"
+import { useFetcherWithSign } from "utils/fetcher"
 import useAccess from "./useAccess"
 import useGuild from "./useGuild"
 
@@ -11,6 +12,7 @@ const useAutoStatusUpdate = () => {
   const { addDatadogAction, addDatadogError } = useDatadog()
   const { account } = useWeb3React()
   const { id } = useGuild()
+  const { keyPair } = useKeyPair()
 
   const { data: accesses } = useAccess()
   const memberships = useMemberships()
@@ -19,9 +21,12 @@ const useAutoStatusUpdate = () => {
     (membership) => membership.guildId === id
   )?.roleIds
 
+  const fetcherWithSign = useFetcherWithSign()
+
   useEffect(() => {
     try {
       if (
+        !keyPair ||
         !account ||
         !Array.isArray(accesses) ||
         !Array.isArray(roleMemberships) ||
@@ -46,13 +51,15 @@ const useAutoStatusUpdate = () => {
           (accessedRoleId) => !roleMembershipsSet.has(accessedRoleId)
         ) ||
           roleMemberships.some((roleId) => unaccessedRoleIdsSet.has(roleId)))
-
       if (shouldSendStatusUpdate) {
         addDatadogAction("Automatic statusUpdate")
-        fetcher(`/user/${account}/statusUpdate/${id}`).then(() =>
+        fetcherWithSign(`/user/${account}/statusUpdate/${id}`, {
+          method: "GET",
+          body: {},
+        }).then(() =>
           Promise.all([
-            swrMutate(`/guild/access/${id}/${account}`),
-            swrMutate(`/user/membership/${account}`),
+            mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`),
+            mutateOptionalAuthSWRKey(`/user/membership/${account}`),
           ])
         )
       }

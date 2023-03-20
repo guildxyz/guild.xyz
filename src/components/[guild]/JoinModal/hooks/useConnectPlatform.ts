@@ -1,19 +1,21 @@
 import { usePrevious } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
 import { PlatformName } from "types"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import fetcher from "utils/fetcher"
 import useDCAuth from "./useDCAuth"
 import useGHAuth from "./useGHAuth"
 import useGoogleAuth from "./useGoogleAuth"
 import useTGAuth from "./useTGAuth"
 import useTwitterAuth from "./useTwitterAuth"
 
-const platformAuthHooks: Record<PlatformName, (scope?: string) => any> = {
+const platformAuthHooks: Record<
+  Exclude<PlatformName, "POAP">,
+  (scope?: string) => any
+> = {
   DISCORD: useDCAuth,
   GITHUB: useGHAuth,
   TWITTER: useTwitterAuth,
@@ -29,13 +31,10 @@ const useConnectPlatform = (
   const { addDatadogAction, addDatadogError } = useDatadog()
   const showErrorToast = useShowErrorToast()
 
-  const user = useUser()
   const { mutate: mutateUser, platformUsers } = useUser()
   const { onOpen, authData, isAuthenticating, ...rest } =
-    platformAuthHooks[platform]()
+    platformAuthHooks[platform]?.() ?? {}
   const prevAuthData = usePrevious(authData)
-  const { account } = useWeb3React()
-  const fetcherWithSign = useFetcherWithSign()
 
   const submit = (signedValidation: SignedValdation) =>
     fetcher("/user/connect", signedValidation).then((body) => {

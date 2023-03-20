@@ -1,6 +1,7 @@
 import {
   Box,
   Circle,
+  HStack,
   Img,
   SimpleGrid,
   Skeleton,
@@ -10,16 +11,19 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import SetVisibility from "components/[guild]/SetVisibility"
+import Visibility from "components/[guild]/Visibility"
 import { PropsWithChildren } from "react"
+import { Visibility as VisibilityType } from "types"
 import { useRequirementContext } from "./RequirementContext"
 
 export type RequirementProps = PropsWithChildren<{
+  fieldRoot?: string
   isImageLoading?: boolean
   image?: string | JSX.Element
   withImgBg?: boolean
   footer?: JSX.Element
   rightElement?: JSX.Element
-  simple?: boolean
 }>
 
 const Requirement = ({
@@ -28,8 +32,8 @@ const Requirement = ({
   footer,
   withImgBg = true,
   rightElement,
-  simple,
   children,
+  fieldRoot,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
   const requirement = useRequirementContext()
@@ -38,7 +42,7 @@ const Requirement = ({
     <SimpleGrid
       spacing={4}
       w="full"
-      py={simple ? 1 : 2}
+      py={2}
       templateColumns={`auto 1fr ${rightElement ? "auto" : ""}`}
       alignItems="center"
     >
@@ -82,20 +86,30 @@ const Requirement = ({
         </SkeletonCircle>
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center">
-        <Text wordBreak="break-word">
-          {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-          {children}
-        </Text>
-        {!simple && footer}
+        <HStack>
+          <Text wordBreak="break-word">
+            {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
+            {children}
+            {fieldRoot ? (
+              <SetVisibility ml={2} entityType="requirement" fieldBase={fieldRoot} />
+            ) : (
+              <Visibility
+                entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
+              />
+            )}
+          </Text>
+        </HStack>
+
+        {footer}
       </VStack>
-      {!simple && rightElement}
+      {rightElement}
     </SimpleGrid>
   )
 }
 
 export const RequirementSkeleton = () => (
   <Requirement isImageLoading={true}>
-    <Skeleton>Loading requirement...</Skeleton>
+    <Skeleton as="span">Loading requirement...</Skeleton>
   </Requirement>
 )
 

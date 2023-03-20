@@ -18,6 +18,7 @@ const SimpleLayout = ({
     <>
       <Head>
         <title>{title}</title>
+        <link rel="shortcut icon" href="/guild-icon.png" />
       </Head>
       <Box bgColor={bgColor} minHeight="100vh" display="flex" flexDir="column">
         <Header />

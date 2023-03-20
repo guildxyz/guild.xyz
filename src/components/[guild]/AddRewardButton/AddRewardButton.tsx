@@ -15,16 +15,17 @@ import {
 import Button from "components/common/Button"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft, Plus } from "phosphor-react"
-import platforms from "platforms"
-import { useState } from "react"
+import platforms from "platforms/platforms"
+import { useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName } from "types"
+import AddPoapPanel from "../CreatePoap"
 import useGuild from "../hooks/useGuild"
 import RoleOptionCard from "../RoleOptionCard"
-import AddDiscordPanel from "../RolePlatforms/components/AddRewardModal/components/AddDiscordPanel"
-import AddGithubPanel from "../RolePlatforms/components/AddRewardModal/components/AddGithubPanel"
-import AddGooglePanel from "../RolePlatforms/components/AddRewardModal/components/AddGooglePanel"
-import AddTelegramPanel from "../RolePlatforms/components/AddRewardModal/components/AddTelegramPanel"
+import AddDiscordPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
+import AddGithubPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
+import AddGooglePanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
+import AddTelegramPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
 import useAddReward from "./hooks/useAddReward"
 
 const addPlatformComponents: Record<
@@ -35,17 +36,26 @@ const addPlatformComponents: Record<
   TELEGRAM: AddTelegramPanel,
   GITHUB: AddGithubPanel,
   GOOGLE: AddGooglePanel,
+  POAP: AddPoapPanel,
 }
 
 const AddRewardButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const methods = useForm()
   const { roles } = useGuild()
+  const modalRef = useRef(null)
 
-  const [selection, setSelection] = useState<PlatformName>(null)
+  const [selection, setSelectionOg] = useState<PlatformName>(null)
   const [showRoleSelect, setShowRoleSelect] = useState(false)
 
   const AddPlatformPanel = addPlatformComponents[selection]
+
+  const scrollToTop = () => modalRef.current?.scrollTo({ top: 0 })
+
+  const setSelection = (platform: PlatformName) => {
+    setSelectionOg(platform)
+    scrollToTop()
+  }
 
   const goBack = () => {
     methods.reset()
@@ -59,7 +69,6 @@ const AddRewardButton = () => {
     setSelection(null)
     methods.reset()
   }
-
   const { onSubmit, isLoading } = useAddReward(onSuccess)
 
   return (
@@ -71,12 +80,12 @@ const AddRewardButton = () => {
         <Modal
           isOpen={isOpen}
           onClose={onClose}
-          size="5xl"
+          size="4xl"
           scrollBehavior="inside"
           colorScheme={"dark"}
         >
           <ModalOverlay />
-          <ModalContent minH="70vh">
+          <ModalContent minH="550px">
             <ModalHeader>
               <HStack>
                 {selection !== null && (
@@ -95,12 +104,9 @@ const AddRewardButton = () => {
                 </Text>
               </HStack>
             </ModalHeader>
-            <ModalBody>
+            <ModalBody ref={modalRef}>
               {selection === null ? (
-                <PlatformsGrid
-                  onSelection={setSelection}
-                  columns={{ base: 1, lg: 2 }}
-                />
+                <PlatformsGrid onSelection={setSelection} showPoap />
               ) : showRoleSelect ? (
                 <>
                   <FormLabel mb="4">Select role(s) to add reward to</FormLabel>
@@ -117,7 +123,10 @@ const AddRewardButton = () => {
                 </>
               ) : (
                 <AddPlatformPanel
-                  onSuccess={() => setShowRoleSelect(true)}
+                  onSuccess={
+                    selection === "POAP" ? onSuccess : () => setShowRoleSelect(true)
+                  }
+                  scrollToTop={scrollToTop}
                   skipSettings
                 />
               )}

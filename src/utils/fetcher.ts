@@ -1,10 +1,15 @@
 import { datadogRum } from "@datadog/browser-rum"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
+import { pushToIntercomSetting } from "components/_app/IntercomProvider"
 import useKeyPair from "hooks/useKeyPair"
 import { sign } from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
+
+const SIG_HEADER_NAME = "x-guild-sig"
+const PARAMS_HEADER_NAME = "x-guild-params"
+const AUTH_FLAG_HEADER_NAME = "x-guild-auth-location"
 
 const fetcher = async (
   resource: string,
@@ -34,6 +39,24 @@ const fetcher = async (
       ...(body || signedPayload ? { "Content-Type": "application/json" } : {}),
       ...init.headers,
     },
+  }
+
+  if (!!validation) {
+    if (!options.method || options.method?.toUpperCase() === "GET") {
+      delete options.body
+
+      options.headers[PARAMS_HEADER_NAME] = Buffer.from(
+        JSON.stringify(validation.params)
+      ).toString("base64")
+
+      options.headers[SIG_HEADER_NAME] = Buffer.from(validation.sig, "hex").toString(
+        "base64"
+      )
+
+      options.headers[AUTH_FLAG_HEADER_NAME] = "header"
+    } else {
+      options.headers[AUTH_FLAG_HEADER_NAME] = "body"
+    }
   }
 
   if (isGuildApiCall || isServerless)
@@ -72,6 +95,9 @@ const fetcher = async (
               response: errorMsg,
             }
           )
+
+          const correlationId = response.headers.get("X-Correlation-ID")
+          if (correlationId) pushToIntercomSetting("correlationId", correlationId)
 
           return Promise.reject(errorMsg)
         }

@@ -1,4 +1,5 @@
-import { Img, Link } from "@chakra-ui/react"
+import { Img } from "@chakra-ui/react"
+import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
@@ -10,6 +11,7 @@ import pluralize from "utils/pluralize"
 const HaveRole = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
+  const { id } = useGuild()
   const { name, roles, urlName, isLoading } = useGuild(requirement.data.guildId)
   const role = roles?.find((r) => r.id === requirement.data.roleId)
 
@@ -27,16 +29,14 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
       {...props}
     >
       {"Have the "}
-      <DataBlock isLoading={isLoading}>{role?.name ?? "unknown"}</DataBlock>
-      {" role in the "}
       <Link
-        href={`https://guild.xyz/${urlName ?? requirement.data.guildId}`}
-        isExternal={true}
+        href={`/${urlName ?? requirement.data.guildId}#role-${role?.id}`}
         colorScheme="blue"
       >
-        {name ?? `#${requirement.data.guildId}`}
+        {`${role?.name ?? "unknown"} role`}
+        {id !== requirement.data.guildId &&
+          ` in the ${name ?? `#${requirement.data.guildId}`} guild`}
       </Link>
-      {" guild"}
     </Requirement>
   )
 }

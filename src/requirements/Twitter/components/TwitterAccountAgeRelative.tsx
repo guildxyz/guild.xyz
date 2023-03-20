@@ -21,6 +21,7 @@ const TwitterAccountAgeRelative = ({ baseFieldPath }: Props): JSX.Element => {
       <RelativeTimeInput
         fieldName={`${baseFieldPath}.data.minAmount`}
         checkForTouched="data"
+        isRequired
       />
 
       <FormErrorMessage>

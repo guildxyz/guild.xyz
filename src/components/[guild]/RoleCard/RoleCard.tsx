@@ -11,14 +11,16 @@ import {
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
+import { Question } from "phosphor-react"
 import { memo } from "react"
-import { Role } from "types"
+import { Role, Visibility as VisibilityType } from "types"
 import parseDescription from "utils/parseDescription"
 import useGuildPermission from "../hooks/useGuildPermission"
 import RoleRequirements from "../Requirements"
+import Visibility from "../Visibility"
 import AccessIndicator from "./components/AccessIndicator"
 import MemberCount from "./components/MemberCount"
-import Reward from "./components/Reward"
+import Reward, { RewardDisplay } from "./components/Reward"
 
 type Props = {
   role: Role
@@ -45,6 +47,12 @@ const RoleCard = memo(({ role }: Props) => {
       onClick={() => {
         if (window.location.hash === `#role-${role.id}`) window.location.hash = "!"
       }}
+      {...(role.visibility === VisibilityType.HIDDEN
+        ? {
+            borderWidth: 2,
+            borderStyle: "dashed",
+          }
+        : {})}
     >
       <SimpleGrid columns={{ base: 1, md: 2 }}>
         <Flex
@@ -68,8 +76,15 @@ const RoleCard = memo(({ role }: Props) => {
               >
                 {role.name}
               </Heading>
+              <Visibility
+                entityVisibility={role.visibility}
+                mt="6px !important"
+                showTagLabel
+              />
             </HStack>
+
             <MemberCount memberCount={role.memberCount} roleId={role.id} />
+
             {isAdmin && (
               <>
                 <Spacer m="0 !important" />
@@ -85,11 +100,18 @@ const RoleCard = memo(({ role }: Props) => {
           <Box mt="auto">
             {role.rolePlatforms?.map((platform) => (
               <Reward
+                withLink
                 key={platform.guildPlatformId}
                 platform={platform}
                 role={role}
               />
             ))}
+            {role.hiddenRewards && (
+              <RewardDisplay
+                label={"Some secret rewards"}
+                icon={<Question size={25} />}
+              />
+            )}
           </Box>
         </Flex>
         <Flex

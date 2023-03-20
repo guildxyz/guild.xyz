@@ -1,6 +1,4 @@
 import {
-  Divider,
-  HStack,
   Icon,
   Popover,
   PopoverArrow,
@@ -9,6 +7,7 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Portal,
+  Stack,
   Table,
   Tbody,
   Td,
@@ -22,7 +21,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { ArrowSquareOut, Function } from "phosphor-react"
+import { CaretDown, Function } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -35,12 +34,12 @@ const ContractStateRequirement = (props: RequirementProps) => {
     <Requirement
       image={<Icon as={Function} boxSize={6} />}
       footer={
-        <HStack divider={<Divider orientation="vertical" h="4" />} spacing={3}>
+        <Stack direction={["column", "row"]} spacing={2} alignItems="start">
           <BlockExplorerUrl />
 
           <Popover placement="bottom">
             <PopoverTrigger>
-              <RequirementButton rightIcon={<Icon as={ArrowSquareOut} />}>
+              <RequirementButton rightIcon={<Icon as={CaretDown} />}>
                 View query
               </RequirementButton>
             </PopoverTrigger>
@@ -92,7 +91,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
               </PopoverContent>
             </Portal>
           </Popover>
-        </HStack>
+        </Stack>
       }
       {...props}
     >

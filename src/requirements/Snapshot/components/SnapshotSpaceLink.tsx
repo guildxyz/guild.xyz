@@ -1,8 +1,13 @@
 import { Link } from "@chakra-ui/react"
-import useSpace from "../hooks/useSpace"
+import useSWRImmutable from "swr/immutable"
+import { Space } from "./SpaceSelect"
 
 const SnapshotSpaceLink = ({ requirement }) => {
-  const { space } = useSpace(requirement.data.space)
+  const { data: space } = useSWRImmutable<Space>(
+    requirement.data.space
+      ? `/assets/snapshot/space/${requirement.data.space}`
+      : null
+  )
 
   return (
     <Link

@@ -1,20 +1,12 @@
-import { SimpleGrid, Text, useColorMode, VStack } from "@chakra-ui/react"
+import { useColorMode } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
-import GuildLogo from "./GuildLogo"
-
-type Props = {
-  image?: string
-  title: string
-} & Rest
 
 const DisplayCard = ({
-  image,
-  title,
   children,
   ...rest
-}: PropsWithChildren<Props>): JSX.Element => {
+}: PropsWithChildren<Rest>): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
@@ -34,7 +26,7 @@ const DisplayCard = ({
         bottom: 0,
         left: 0,
         right: 0,
-        bg: "primary.300",
+        bg: "gray.300",
         opacity: 0,
         transition: "opacity 0.2s",
       }}
@@ -50,27 +42,7 @@ const DisplayCard = ({
       }}
       {...rest}
     >
-      <SimpleGrid
-        templateColumns={image ? "3rem calc(100% - 4.25rem)" : "1fr"}
-        gap={4}
-        alignItems="center"
-      >
-        {image && <GuildLogo imageUrl={image} size={"48px"} imageQuality={2} />}
-        <VStack spacing={2} alignItems="start" w="full" maxW="full" mb="1" mt="-1">
-          <Text
-            as="span"
-            fontFamily="display"
-            fontSize="xl"
-            fontWeight="bold"
-            letterSpacing="wide"
-            maxW="full"
-            noOfLines={1}
-          >
-            {title}
-          </Text>
-          {children}
-        </VStack>
-      </SimpleGrid>
+      {children}
     </Card>
   )
 }

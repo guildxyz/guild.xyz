@@ -21,6 +21,7 @@ const DiscordJoinFromNow = ({ baseFieldPath }: Props): JSX.Element => {
         <RelativeTimeInput
           fieldName={`${baseFieldPath}.data.memberSince`}
           checkForTouched="data"
+          isRequired
         />
 
         <FormErrorMessage>

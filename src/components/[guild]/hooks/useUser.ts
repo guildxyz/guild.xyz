@@ -11,7 +11,7 @@ const useUser = () => {
 
   const { isValidating, data, mutate } = useSWRImmutable<User>(
     account && ready && keyPair && isValid
-      ? [`/user/details/${account}`, { method: "POST", body: {} }]
+      ? [`/user/${account}`, { method: "GET", body: {} }]
       : null,
     fetcherWithSign
   )

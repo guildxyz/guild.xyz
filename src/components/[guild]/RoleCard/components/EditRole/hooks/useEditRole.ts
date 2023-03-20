@@ -2,11 +2,11 @@ import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
-import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
@@ -23,7 +23,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     })
 
   const useSubmitResponse = useSubmitWithSign<any>(submit, {
-    forcePrompt: true,
     onSuccess: () => {
       toast({
         title: `Role successfully updated!`,
@@ -31,7 +30,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
       })
       if (onSuccess) onSuccess()
       mutateGuild()
-      mutate(`/guild/access/${id}/${account}`)
+      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
       mutate(`/statusUpdate/guild/${id}`)
     },
     onError: (err) => showErrorToast(err),
@@ -41,14 +40,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     ...useSubmitResponse,
     onSubmit: (data) => {
       data.requirements = preprocessRequirements(data?.requirements)
-
-      data.rolePlatforms = data.rolePlatforms.map((rolePlatform) => {
-        if (rolePlatform.platformRoleData?.gatedChannels)
-          rolePlatform.platformRoleData.gatedChannels = preprocessGatedChannels(
-            rolePlatform.platformRoleData.gatedChannels
-          )
-        return rolePlatform
-      })
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },

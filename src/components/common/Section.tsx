@@ -31,6 +31,7 @@ const SectionTitle = ({ title, titleRightElement }: Props) => (
         sm: "lg",
       }}
       as="h3"
+      flexShrink="0"
     >
       {title}
     </Heading>

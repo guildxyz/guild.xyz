@@ -12,9 +12,12 @@ import {
   Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
-import { Controller, useFieldArray, useFormContext } from "react-hook-form"
+import { useEffect } from "react"
+import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, SelectOption } from "types"
 
 const contactTypeOptions: SelectOption[] = [
@@ -27,10 +30,12 @@ type Props = {
 }
 
 const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
+  const { addDatadogAction } = useDatadog()
   const {
     control,
     register,
     getValues,
+    resetField,
     formState: { errors },
   } = useFormContext<GuildFormType>()
 
@@ -39,6 +44,13 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
     name: "contacts",
     keyName: "formId",
   })
+
+  const contacts = useWatch({ control, name: "contacts" })
+
+  useEffect(() => {
+    if (!contacts?.length) return
+    addDatadogAction("Added contact (basic info)")
+  }, [contacts])
 
   return (
     <>
@@ -52,7 +64,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
             key={contactField.formId}
             isInvalid={!!errors?.contacts?.[index]}
           >
-            <HStack>
+            <HStack alignItems="start">
               <Box maxW="64">
                 <Controller
                   control={control}
@@ -63,41 +75,58 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
                       options={contactTypeOptions}
                       value={contactTypeOptions.find((ct) => ct.value === value)}
                       onBlur={onBlur}
-                      onChange={(newValue: SelectOption) => onChange(newValue.value)}
+                      onChange={(newValue: SelectOption) => {
+                        onChange(newValue.value)
+                        resetField(`contacts.${index}.contact`)
+                      }}
                       size="lg"
                     />
                   )}
                 />
               </Box>
-              <InputGroup size="lg">
-                <Input
-                  isInvalid={!!errors?.contacts?.[index]}
-                  placeholder={
-                    getValues(`contacts.${index}.type`) === "EMAIL"
-                      ? `E-mail address`
-                      : "Phone / Telegram username"
-                  }
-                  {...register(`contacts.${index}.contact`, {
-                    required:
-                      getValues("contacts")?.length > 1 &&
-                      index >= getValues("contacts")?.length - 1
-                        ? "This field is required"
-                        : false,
-                  })}
-                />
-                {fields?.length > 1 && (
-                  <InputRightElement>
-                    <IconButton
-                      variant="ghost"
-                      icon={<Icon as={TrashSimple} />}
-                      size="xs"
-                      rounded="full"
-                      aria-label="Remove contact"
-                      onClick={() => remove(index)}
-                    />
-                  </InputRightElement>
-                )}
-              </InputGroup>
+
+              <Stack spacing={0}>
+                <InputGroup size="lg">
+                  <Input
+                    isInvalid={!!errors?.contacts?.[index]}
+                    placeholder={
+                      getValues(`contacts.${index}.type`) === "EMAIL"
+                        ? `E-mail address`
+                        : "Phone / Telegram username"
+                    }
+                    {...register(`contacts.${index}.contact`, {
+                      required:
+                        getValues("contacts")?.length > 1 &&
+                        index >= getValues("contacts")?.length - 1
+                          ? "This field is required"
+                          : false,
+                      pattern:
+                        getValues(`contacts.${index}.type`) === "EMAIL"
+                          ? {
+                              value: /\S+@\S+\.\S+/,
+                              message: "Invalid e-mail format",
+                            }
+                          : undefined,
+                    })}
+                  />
+                  {fields?.length > 1 && (
+                    <InputRightElement>
+                      <IconButton
+                        variant="ghost"
+                        icon={<Icon as={TrashSimple} />}
+                        size="xs"
+                        rounded="full"
+                        aria-label="Remove contact"
+                        onClick={() => remove(index)}
+                      />
+                    </InputRightElement>
+                  )}
+                </InputGroup>
+
+                <FormErrorMessage>
+                  {errors?.contacts?.[index]?.contact?.message}
+                </FormErrorMessage>
+              </Stack>
             </HStack>
           </FormControl>
         ))}

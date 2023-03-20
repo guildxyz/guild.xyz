@@ -45,6 +45,7 @@ const Page = (): JSX.Element => {
           name="description"
           content="Automated membership management for the platforms your community already use."
         />
+        <link rel="shortcut icon" href="/guild-icon.png" />
       </Head>
 
       <Box

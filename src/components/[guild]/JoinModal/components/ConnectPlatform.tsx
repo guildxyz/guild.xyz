@@ -2,7 +2,7 @@ import { Icon } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import Script from "next/script"
-import platforms from "platforms"
+import platforms from "platforms/platforms"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
@@ -21,7 +21,7 @@ const ConnectPlatform = ({ platform }: Props) => {
 
   const platformFromDb = platformUsers?.find(
     (platformAccount) => platformAccount.platformName === platform
-  )?.username
+  )
 
   const { setValue } = useFormContext()
 
@@ -30,7 +30,7 @@ const ConnectPlatform = ({ platform }: Props) => {
   }, [isActive, authData])
 
   useEffect(() => {
-    if (platformFromDb) setValue(`platforms.${platform}`, null)
+    if (platformFromDb?.platformUserId) setValue(`platforms.${platform}`, null)
   }, [platformFromDb])
 
   return (
@@ -39,7 +39,10 @@ const ConnectPlatform = ({ platform }: Props) => {
       icon={<Icon as={platforms[platform].icon} />}
       colorScheme={platforms[platform].colorScheme as string}
       isConnected={
-        platformFromDb || response?.platformUserId || (authData && "hidden")
+        (platformFromDb?.platformUserData?.username ??
+          platformFromDb?.platformUserId) ||
+        response?.platformUserId ||
+        (authData && "hidden")
       }
       isLoading={isLoading || (!platformUsers && isLoadingUser)}
       onClick={onConnect}

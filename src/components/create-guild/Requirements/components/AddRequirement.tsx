@@ -13,6 +13,7 @@ import {
   ModalOverlay,
   SimpleGrid,
   Stack,
+  Tag,
   Text,
   Tooltip,
   useDisclosure,
@@ -23,17 +24,20 @@ import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
+import { Visibility } from "types"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
-const general = REQUIREMENTS_DATA.slice(1, 5)
-const integrations = REQUIREMENTS_DATA.slice(5)
+const GENERAL_REQUIREMENTS_COUNT = 7
+const general = REQUIREMENTS_DATA.slice(1, GENERAL_REQUIREMENTS_COUNT + 1)
+const integrations = REQUIREMENTS_DATA.slice(GENERAL_REQUIREMENTS_COUNT + 1)
 
 // call undocumented preload() from next/dynamic, so the components are already loaded when they mount, which is needed for the height animation
 Object.values(REQUIREMENTS).forEach((a: any) => a.formComponent?.render?.preload?.())
@@ -81,7 +85,7 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
   return (
     <>
       <CardMotionWrapper>
-        <AddCard ref={addCardRef} text="Add requirement" onClick={onOpen} />
+        <AddCard ref={addCardRef} title="Add requirement" onClick={onOpen} />
       </CardMotionWrapper>
       <Modal
         isOpen={isOpen}
@@ -145,6 +149,7 @@ const AddRequirementForm = forwardRef(
     const FormComponent = REQUIREMENTS[selectedType].formComponent
 
     const methods = useForm({ mode: "all" })
+    const roleVisibility: Visibility = useWatch({ name: ".visibility" })
 
     const [isPresent, safeToRemove] = usePresence()
     useEffect(() => {
@@ -152,7 +157,11 @@ const AddRequirementForm = forwardRef(
     }, [isPresent])
 
     const onSubmit = methods.handleSubmit((data) => {
-      onAdd({ type: selectedType, ...data })
+      onAdd({
+        type: selectedType,
+        visibility: roleVisibility,
+        ...data,
+      })
       handleClose()
     })
 
@@ -167,15 +176,17 @@ const AddRequirementForm = forwardRef(
       >
         <FormProvider {...methods}>
           <ModalBody>
-            <IsNegatedPicker baseFieldPath="" />
-            <FormComponent baseFieldPath="" />
+            {selectedType !== "PAYMENT" && <IsNegatedPicker baseFieldPath="" />}
+            <FormComponent baseFieldPath="" addRequirement={onSubmit} />
           </ModalBody>
-          <ModalFooter gap="3">
-            <BalancyFooter baseFieldPath={null} />
-            <Button colorScheme="green" onClick={onSubmit} ml="auto">
-              Add requirement
-            </Button>
-          </ModalFooter>
+          {selectedType !== "PAYMENT" && (
+            <ModalFooter gap="3">
+              <BalancyFooter baseFieldPath={null} />
+              <Button colorScheme="green" onClick={onSubmit} ml="auto">
+                Add requirement
+              </Button>
+            </ModalFooter>
+          )}
         </FormProvider>
       </Box>
     )
@@ -184,39 +195,74 @@ const AddRequirementForm = forwardRef(
 
 const AddRequirementHome = forwardRef(
   ({ selectedType, setSelectedType }: any, ref: any) => {
+    const { featureFlags } = useGuild()
+
     const [search, setSearch] = useState("")
     const filteredIntegrations = integrations?.filter((integration) =>
       integration.name.toLowerCase().includes(search.toLowerCase())
     )
 
-    const debouncedSeéectedValue = useDebouncedState(
+    const debouncedSelectedValue = useDebouncedState(
       selectedType,
       TRANSITION_DURATION_MS
     )
 
+    const openPaymentRequirementNotionForm = () => {
+      if (typeof window === "undefined") return
+      window
+        .open(
+          "https://notionforms.io/forms/payment-requirement-alpha-interest-form-warden-edition",
+          "_blank"
+        )
+        ?.focus()
+    }
+
     return (
       <ModalBody
         ref={ref}
-        minHeight={!debouncedSeéectedValue ? HOME_MAXHEIGHT : undefined}
+        minHeight={!debouncedSelectedValue ? HOME_MAXHEIGHT : undefined}
         maxHeight={HOME_MAXHEIGHT}
         className="custom-scrollbar"
       >
         <Heading size="sm" mb="3">
           General
         </Heading>
-        <SimpleGrid columns={2} gap="2">
-          {general.map((requirementButton) => (
-            <Button
-              key={requirementButton.types[0]}
-              minH={24}
-              onClick={() => setSelectedType(requirementButton.types[0])}
-            >
-              <VStack w="full" whiteSpace="break-spaces">
-                <Icon as={requirementButton.icon as FC} boxSize={6} />
-                <Text as="span">{requirementButton.name}</Text>
-              </VStack>
-            </Button>
-          ))}
+        <SimpleGrid columns={2} gap={2}>
+          {general.map((requirementButton) => {
+            const isPayment = requirementButton.types[0] === "PAYMENT"
+            const isPaymentAllowed = featureFlags?.includes("PAYMENT_REQUIREMENT")
+
+            return (
+              <Button
+                key={requirementButton.types[0]}
+                w="full"
+                py={11}
+                onClick={() =>
+                  isPayment && !isPaymentAllowed
+                    ? openPaymentRequirementNotionForm()
+                    : setSelectedType(requirementButton.types[0])
+                }
+              >
+                <VStack w="full" whiteSpace="break-spaces">
+                  <Icon as={requirementButton.icon as FC} boxSize={6} />
+                  <Text as="span">{requirementButton.name}</Text>
+                </VStack>
+
+                {isPayment && (
+                  <Tag
+                    position="absolute"
+                    top={2}
+                    right={2}
+                    size="sm"
+                    bgColor="blue.500"
+                    color="white"
+                  >
+                    Alpha
+                  </Tag>
+                )}
+              </Button>
+            )
+          })}
         </SimpleGrid>
 
         <Heading size="sm" mb="3" mt="8">

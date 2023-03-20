@@ -12,6 +12,10 @@ type Badge101 = {
       image: string
     }
   }[]
+  contract: {
+    address
+    chainId
+  }
 }
 
 const fetchBadges = (endpoint: string) =>
@@ -33,6 +37,7 @@ const fetchBadges = (endpoint: string) =>
             }
           }
           contract {
+            address
             chainId
           }
         }
@@ -41,7 +46,7 @@ const fetchBadges = (endpoint: string) =>
   }).then((res) =>
     res?.data?.badges.filter(
       (badge) =>
-        badge.contract.chainId === 137 &&
+        (badge.contract.chainId === 137 || badge.contract.chainId === 42220) &&
         badge.courses[0] &&
         // Temporarily filtering out [Testnet] and [archive] badges so we don't get duplicate IDs here
         !badge.courses[0].title?.toLowerCase()?.includes("[testnet]") &&
