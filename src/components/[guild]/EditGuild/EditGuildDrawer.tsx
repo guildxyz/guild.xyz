@@ -258,7 +258,7 @@ const EditGuildDrawer = ({
                   <HideFromExplorerToggle />
 
                   <Admins />
-                  <NewOwner />
+                  {isOwner ? <NewOwner /> : null}
                 </Section>
 
                 <Divider />
