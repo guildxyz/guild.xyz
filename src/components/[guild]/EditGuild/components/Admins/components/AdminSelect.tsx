@@ -22,33 +22,40 @@ const CustomMultiValueContainer = ({
     ? undefined
     : multiValueContainerProps.data.value
 
-  const address = useReverseResolve(domain)
+  const { resolvedAddress, error: resolveError } = useReverseResolve(domain)
   const { setError, setValue, control, trigger } = useFormContext()
   const admins = useWatch({ control: control, name: "admins" })
 
   useEffect(() => {
-    if (domain && address?.resolvedAddress) {
+    if (domain && resolvedAddress && !admins.includes(resolvedAddress)) {
       setValue(
         "admins",
-        admins.map((admin) => (admin === domain ? address?.resolvedAddress : admin))
+        admins.map((admin) => (admin === domain ? resolvedAddress : admin))
       )
       trigger("admins")
     }
 
-    if (address.error) {
+    if (resolveError) {
       setError("admins", {
         message: "Reverse resolving failed",
       })
     }
-  }, [address, domain])
+
+    if (admins.includes(resolvedAddress)) {
+      setError("admins", {
+        message: "User already added",
+      })
+      return
+    }
+  }, [resolvedAddress, domain])
 
   return (
     <chakraComponents.MultiValueContainer
-      {...{ ...multiValueContainerProps, data: { value: address?.resolvedAddress } }}
+      {...{ ...multiValueContainerProps, data: { value: resolvedAddress } }}
     >
-      {domain && !address ? (
+      {domain && !resolvedAddress && !resolveError ? (
         <Spinner size="xs" mr={2} />
-      ) : address.error === true ? (
+      ) : resolveError || admins.includes(resolvedAddress) ? (
         <Icon as={Bug} mr={1} color="red.300" boxSize={4} weight="bold" />
       ) : (
         multiValueContainerProps.data.img
