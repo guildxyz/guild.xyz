@@ -32,7 +32,6 @@ const OAuth = () => {
   const handleOauthResponse = async () => {
     if (!router.isReady || typeof window === "undefined") return null
 
-    // Parse params
     let params: OAuthResponse
     if (typeof router.query?.state !== "string") {
       const fragment = new URLSearchParams(window.location.hash.slice(1))
@@ -43,7 +42,6 @@ const OAuth = () => {
       params = { csrfToken: decodeURIComponent(state), ...rest }
     }
 
-    // Navigate to home page, if opened incorrectly
     if (Object.keys(params).length <= 0) {
       await router.push("/")
       return
@@ -68,7 +66,6 @@ const OAuth = () => {
       return
     }
 
-    // Open Broadcast Channel
     const channel = new BroadcastChannel(params.csrfToken)
 
     const isMessageConfirmed = timeoutPromise(
@@ -83,7 +80,6 @@ const OAuth = () => {
         return false
       })
 
-    // Send response
     let response: Message
     if (params.error) {
       const { error, error_description: errorDescription } = params
