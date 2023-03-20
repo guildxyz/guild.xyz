@@ -43,7 +43,7 @@ const customJoinStep: Partial<Record<Joinable, () => JSX.Element>> = {
 }
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
-  const { isActive } = useWeb3React()
+  const { isActive, account } = useWeb3React()
   const { name, guildPlatforms, roles } = useGuild()
 
   const methods = useForm({
@@ -106,7 +106,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               onClick={handleSubmit(onSubmit)}
               colorScheme="green"
               isLoading={isSigning || isLoading}
-              loadingText={signLoadingText}
+              loadingText={signLoadingText || "Joining Guild"}
               isDisabled={!isActive}
             >
               Join guild
