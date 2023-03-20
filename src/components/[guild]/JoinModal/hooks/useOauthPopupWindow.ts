@@ -60,15 +60,21 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     })
 
     // Generate csrf token
-    const csrfToken = randomBytes(64).toString("base64")
+    const csrfToken = randomBytes(32).toString("base64")
+    const localStorageKey = `oauth_${csrfToken}`
 
-    const state = {
+    const infoToPassInLocalStorage = {
       csrfToken,
       from: window.location.toString(),
       platformName,
       redirect_url: redirectUri,
       scope: oauthOptions.scope,
     }
+
+    window.localStorage.setItem(
+      localStorageKey,
+      JSON.stringify(infoToPassInLocalStorage)
+    )
 
     // Create Broadcast Channel
     const channel = new BroadcastChannel(csrfToken)
@@ -102,13 +108,13 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
         .map(([key, value]) => `${key}=${value}`)
         .join("&")}&redirect_uri=${encodeURIComponent(
         redirectUri
-      )}&state=${encodeURIComponent(JSON.stringify(state))}`
+      )}&state=${encodeURIComponent(csrfToken)}`
     )
 
     // Wait for an OAuth response
     await hasReceivedResponse.finally(() => {
       channel.postMessage({ type: "OAUTH_CONFIRMATION" })
-
+      window.localStorage.removeItem(localStorageKey)
       // Close Broadcast Channel
       channel.close()
     })

@@ -2,6 +2,7 @@
 import AuthRedirect from "components/AuthRedirect"
 import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
 import useDatadog from "components/_app/Datadog/useDatadog"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
 import { PlatformName } from "types"
@@ -13,15 +14,20 @@ export type OAuthResponse = {
   error_description?: string
   error?: string
   csrfToken: string
+} & Record<string, any>
+
+export type OAuthLocalStorageInfo = {
+  csrfToken: string
   from: string
   platformName: PlatformName
   redirect_url: string
   scope: string
-} & Record<string, any>
+}
 
 const OAuth = () => {
   const router = useRouter()
-  const { addDatadogAction } = useDatadog()
+  const { addDatadogAction, addDatadogError } = useDatadog()
+  const errorToast = useShowErrorToast()
 
   const handleOauthResponse = async () => {
     if (!router.isReady || typeof window === "undefined") return null
@@ -31,17 +37,35 @@ const OAuth = () => {
     if (typeof router.query?.state !== "string") {
       const fragment = new URLSearchParams(window.location.hash.slice(1))
       const { state, ...rest } = Object.fromEntries(fragment.entries())
-      params = { ...JSON.parse(decodeURIComponent(state)), ...rest }
+      params = { csrfToken: decodeURIComponent(state), ...rest }
     } else {
       const { state, ...rest } = router.query
-      params = { ...JSON.parse(decodeURIComponent(state)), ...rest }
+      params = { csrfToken: decodeURIComponent(state), ...rest }
     }
-
-    addDatadogAction(`CSRF - OAuth window received CSRF token: ${params.csrfToken}`)
 
     // Navigate to home page, if opened incorrectly
     if (Object.keys(params).length <= 0) {
       await router.push("/")
+      return
+    }
+
+    const localStorageInfoKey = `oauth_${params.csrfToken}`
+    const localStorageInfo: OAuthLocalStorageInfo = JSON.parse(
+      window.localStorage.getItem(localStorageInfoKey) ?? "{}"
+    )
+    window.localStorage.removeItem(localStorageInfoKey)
+
+    if (
+      !!localStorageInfo.csrfToken &&
+      localStorageInfo.csrfToken !== params.csrfToken
+    ) {
+      addDatadogError(`OAuth - Invalid CSRF token`, {
+        received: params.csrfToken,
+        expected: localStorageInfo.csrfToken,
+      })
+      errorToast(`Failed to connect ${params.platformName}`)
+      await router.push(params.from)
+      return
     }
 
     // Open Broadcast Channel
@@ -54,7 +78,10 @@ const OAuth = () => {
       OAUTH_CONFIRMATION_TIMEOUT_MS
     )
       .then(() => true)
-      .catch(() => false)
+      .catch(() => {
+        addDatadogAction(`OAuth - Message confirmation timed out`)
+        return false
+      })
 
     // Send response
     let response: Message
@@ -62,16 +89,19 @@ const OAuth = () => {
       const { error, error_description: errorDescription } = params
       response = { type: "OAUTH_ERROR", data: { error, errorDescription } }
     } else {
-      const { error, error_description, csrfToken, from, platformName, ...data } =
-        params
-      response = { type: "OAUTH_SUCCESS", data }
+      const { error, error_description, csrfToken, ...data } = params
+      const {
+        csrfToken: _csrfToken,
+        from,
+        platformName,
+        ...infoRest
+      } = localStorageInfo
+      response = { type: "OAUTH_SUCCESS", data: { ...data, ...infoRest } }
     }
 
     channel.postMessage(response)
 
     const isReceived = await isMessageConfirmed
-
-    // TODO: isRecieved could be false because of wrong CSRF token
 
     if (isReceived) {
       channel.close()
@@ -86,7 +116,11 @@ const OAuth = () => {
   }
 
   useEffect(() => {
-    handleOauthResponse()
+    handleOauthResponse().catch((error) => {
+      addDatadogError("OAuth - Unexpected error", error)
+      errorToast(`An unexpected error happened while connecting a platform`)
+      router.push("/")
+    })
   }, [router])
 
   return <AuthRedirect />
