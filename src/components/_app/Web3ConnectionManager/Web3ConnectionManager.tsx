@@ -6,6 +6,7 @@ import AccountModal from "components/common/Layout/components/Account/components
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import requestNetworkChangeHandler from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import { Chains, RPC } from "connectors"
+import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import {
@@ -46,6 +47,7 @@ const Web3ConnectionManager = ({
   const { isActive, connector } = useWeb3React()
   const router = useRouter()
 
+  useContractWalletInfoToast()
   useConnectFromLocalStorage()
 
   const {
