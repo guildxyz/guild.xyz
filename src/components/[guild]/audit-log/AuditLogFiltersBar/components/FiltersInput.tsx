@@ -11,7 +11,7 @@ import {
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
 import { useRouter } from "next/router"
-import { CaretDown } from "phosphor-react"
+import { CaretDown, X } from "phosphor-react"
 import { KeyboardEvent, useEffect, useState } from "react"
 import { SupportedQueryParam, SUPPORTED_QUERY_PARAMS } from "../../hooks/useAuditLog"
 import TagInput from "./TagInput"
@@ -133,9 +133,7 @@ const FiltersInput = (): JSX.Element => {
     nativeTagInput?.focus()
   }, [selectedValue, inputValue])
 
-  const onEnterKeyPress = (e: KeyboardEvent) => {
-    if (e.code !== "Enter") return
-
+  const triggerSearch = () => {
     const query: typeof router.query = { ...router.query }
 
     searchOptions.forEach((option) => {
@@ -147,7 +145,7 @@ const FiltersInput = (): JSX.Element => {
 
     activeFilters.forEach(({ filter, value }) => (query[filter] = value))
 
-    if (search) query.search = search
+    query.search = inputValue ?? ""
 
     Object.entries(query).forEach(([key, value]) => {
       if (!value) {
@@ -159,6 +157,11 @@ const FiltersInput = (): JSX.Element => {
       pathname: router.pathname,
       query,
     })
+  }
+
+  const onKeyUp = (e: KeyboardEvent) => {
+    if (e.code !== "Enter") return
+    triggerSearch()
   }
 
   return (
@@ -218,15 +221,31 @@ const FiltersInput = (): JSX.Element => {
               px={2}
               minW="max-content"
               htmlSize={size}
-              onKeyUp={onEnterKeyPress}
+              onKeyUp={onKeyUp}
               {...filteredInputProps}
               onChange={(e) => {
                 setSearch(e.target.value)
-
                 filteredInputProps.onChange(e)
               }}
             />
           </Flex>
+
+          {(activeFilters.length > 0 || inputValue.length > 0) && (
+            <IconButton
+              aria-label="Clear filters"
+              icon={<X />}
+              size="sm"
+              boxSize={6}
+              minW={6}
+              minH={6}
+              borderRadius="full"
+              variant="ghost"
+              onClick={() => {
+                setActiveFilters([])
+                setInputValue("")
+              }}
+            />
+          )}
 
           <IconButton
             aria-label="Show filter options"
