@@ -472,7 +472,16 @@ type VoiceRequirementParams = {
   voiceEventStartedAt?: number
 }
 
+type Without<First, Second> = {
+  [P in Exclude<keyof First, keyof Second>]?: never
+}
+
+type OneOf<First, Second> = First | Second extends object
+  ? (Without<First, Second> & Second) | (Without<Second, First> & First)
+  : First | Second
+
 export type {
+  OneOf,
   WalletConnectConnectionData,
   DiscordServerData,
   GuildAdmin,

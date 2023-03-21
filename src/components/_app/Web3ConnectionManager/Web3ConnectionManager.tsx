@@ -16,6 +16,7 @@ import {
   useState,
 } from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
+import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
 import useEagerConnect from "./hooks/useEagerConnect"
 
 const Web3Connection = createContext({
@@ -44,6 +45,8 @@ const Web3ConnectionManager = ({
 }: PropsWithChildren<any>): JSX.Element => {
   const { isActive, connector } = useWeb3React()
   const router = useRouter()
+
+  useConnectFromLocalStorage()
 
   const {
     isOpen: isWalletSelectorModalOpen,
