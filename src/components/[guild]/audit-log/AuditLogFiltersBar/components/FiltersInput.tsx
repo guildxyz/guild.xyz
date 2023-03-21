@@ -83,8 +83,6 @@ const FiltersInput = (): JSX.Element => {
     setInputValue?.(router.query.search?.toString() ?? "")
   }, [router.query])
 
-  const [search, setSearch] = useState(router.query.search?.toString() ?? "")
-
   const [state, send] = useMachine(
     combobox.machine({
       id: "filter-input-combobox",
@@ -131,7 +129,7 @@ const FiltersInput = (): JSX.Element => {
     )
     if (!foundOption) return
 
-    setInputValue(search)
+    setInputValue("")
     const nativeTagInput: HTMLInputElement = document.querySelector(
       `#combobox\\:filter-input-combobox #${selectedValue}`
     )
@@ -232,10 +230,6 @@ const FiltersInput = (): JSX.Element => {
               htmlSize={size}
               onKeyUp={onKeyUp}
               {...filteredInputProps}
-              onChange={(e) => {
-                setSearch(e.target.value)
-                filteredInputProps.onChange(e)
-              }}
             />
           </Flex>
 
