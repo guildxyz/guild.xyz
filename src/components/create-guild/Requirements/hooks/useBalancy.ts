@@ -269,7 +269,7 @@ const useBalancy = (
 
   return {
     addresses,
-    holders: addresses?.length,
+    holders: addresses?.length || (!!data ? 0 : undefined),
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
     inaccuracy:
