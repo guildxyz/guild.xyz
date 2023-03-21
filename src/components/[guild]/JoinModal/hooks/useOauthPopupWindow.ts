@@ -59,7 +59,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     })
 
     const csrfToken = randomBytes(32).toString("base64")
-    const localStorageKey = `oauth_${csrfToken}`
+    const localStorageKey = `${platformName}_oauthinfo`
 
     const infoToPassInLocalStorage = {
       csrfToken,
@@ -101,7 +101,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     const searchParams = new URLSearchParams({
       ...oauthOptions,
       redirect_uri: redirectUri,
-      state: csrfToken,
+      state: JSON.stringify([platformName, csrfToken]),
     }).toString()
 
     onOpen(`${url}?${searchParams}`)

@@ -14,12 +14,12 @@ export type OAuthResponse = {
   error_description?: string
   error?: string
   csrfToken: string
+  platformName: PlatformName
 } & Record<string, any>
 
 export type OAuthLocalStorageInfo = {
   csrfToken: string
   from: string
-  platformName: PlatformName
   redirect_url: string
   scope: string
 }
@@ -36,10 +36,12 @@ const OAuth = () => {
     if (typeof router.query?.state !== "string") {
       const fragment = new URLSearchParams(window.location.hash.slice(1))
       const { state, ...rest } = Object.fromEntries(fragment.entries())
-      params = { csrfToken: decodeURIComponent(state), ...rest }
+      const [platformName, csrfToken] = JSON.parse(state ?? "{}")
+      params = { ...{ platformName, csrfToken }, ...rest }
     } else {
       const { state, ...rest } = router.query
-      params = { csrfToken: decodeURIComponent(state), ...rest }
+      const [platformName, csrfToken] = JSON.parse(state ?? "{}")
+      params = { ...{ platformName, csrfToken }, ...rest }
     }
 
     if (Object.keys(params).length <= 0) {
@@ -47,7 +49,7 @@ const OAuth = () => {
       return
     }
 
-    const localStorageInfoKey = `oauth_${params.csrfToken}`
+    const localStorageInfoKey = `${params.platformName}_oauthinfo`
     const localStorageInfo: OAuthLocalStorageInfo = JSON.parse(
       window.localStorage.getItem(localStorageInfoKey) ?? "{}"
     )
@@ -62,7 +64,7 @@ const OAuth = () => {
         expected: localStorageInfo.csrfToken,
       })
       errorToast(`Failed to connect ${params.platformName}`)
-      await router.push(params.from)
+      await router.push(localStorageInfo.from)
       return
     }
 
@@ -85,13 +87,8 @@ const OAuth = () => {
       const { error, error_description: errorDescription } = params
       response = { type: "OAUTH_ERROR", data: { error, errorDescription } }
     } else {
-      const { error, error_description, csrfToken, ...data } = params
-      const {
-        csrfToken: _csrfToken,
-        from,
-        platformName,
-        ...infoRest
-      } = localStorageInfo
+      const { error, error_description, csrfToken, platformName, ...data } = params
+      const { csrfToken: _csrfToken, from, ...infoRest } = localStorageInfo
       response = { type: "OAUTH_SUCCESS", data: { ...data, ...infoRest } }
     }
 
@@ -104,7 +101,7 @@ const OAuth = () => {
       window.close()
     } else {
       localStorage.setItem(
-        `${localStorageInfo.platformName}_shouldConnect`,
+        `${params.platformName}_shouldConnect`,
         JSON.stringify(response)
       )
       router.push(localStorageInfo.from)
@@ -113,13 +110,9 @@ const OAuth = () => {
 
   useEffect(() => {
     handleOauthResponse().catch((error) => {
+      console.error(error)
       addDatadogError("OAuth - Unexpected error", error)
-      // errorToast(`An unexpected error happened while connecting a platform`)
-      errorToast(
-        error?.message ??
-          error?.toString?.() ??
-          JSON.stringify(error ?? "Unknown error")
-      )
+      errorToast(`An unexpected error happened while connecting a platform`)
       router.push("/")
     })
   }, [router])
