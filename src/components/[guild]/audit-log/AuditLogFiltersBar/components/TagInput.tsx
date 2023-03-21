@@ -1,6 +1,6 @@
 import { HStack, IconButton, Tag, Text } from "@chakra-ui/react"
 import { X } from "phosphor-react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { SupportedQueryParam } from "../../hooks/useAuditLog"
 import DynamicWidthInput from "./DynamicWidthInput"
 import { Filter } from "./FiltersInput"
@@ -20,6 +20,7 @@ const TagInput = ({
   onRemove,
   onEnter,
 }: Props): JSX.Element => {
+  const inputRef = useRef<HTMLInputElement>(null)
   const [filterValue, setFilterValue] = useState(value)
 
   const filter = {
@@ -34,12 +35,14 @@ const TagInput = ({
       _focusWithin={{
         borderColor: "gray",
       }}
+      onClick={() => inputRef.current?.focus()}
     >
       <HStack>
         <Text as="span" fontSize="sm" fontWeight="bold">
           {name}:
         </Text>
         <DynamicWidthInput
+          ref={inputRef}
           id={name}
           variant="unstyled"
           borderRadius="none"
