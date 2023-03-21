@@ -52,6 +52,8 @@ const OAuth = () => {
       params = { ...getDataFromState(state), ...rest }
     }
 
+    addDatadogAction("OAuth - params", { params })
+
     if (Object.keys(params).length <= 0) {
       addDatadogAction("OAuth - No params found", { params })
       await router.push("/")
@@ -63,6 +65,8 @@ const OAuth = () => {
       window.localStorage.getItem(localStorageInfoKey) ?? "{}"
     )
     window.localStorage.removeItem(localStorageInfoKey)
+
+    addDatadogAction("OAuth - localStorageInfo", { localStorageInfo })
 
     if (
       !!localStorageInfo.csrfToken &&
