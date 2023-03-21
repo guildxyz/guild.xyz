@@ -28,7 +28,7 @@ const getDataFromState = (
   state: string
 ): { csrfToken: string; platformName: PlatformName } => {
   if (!state) {
-    return { csrfToken: undefined, platformName: undefined }
+    return {} as { csrfToken: string; platformName: PlatformName }
   }
   const [platformName, csrfToken] = state.split("-")
   return { csrfToken, platformName: platformName as PlatformName }
@@ -53,6 +53,7 @@ const OAuth = () => {
     }
 
     if (Object.keys(params).length <= 0) {
+      addDatadogAction("OAuth - No params found", { params })
       await router.push("/")
       return
     }
