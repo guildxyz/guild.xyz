@@ -196,7 +196,9 @@ const useBalancy = (
     () =>
       renderedRequirements
         ?.filter(({ type, isNegated }) => type === "ALLOWLIST" && !isNegated)
-        ?.map(({ data: { addresses } }) => addresses) ?? [],
+        ?.map(({ data: { addresses } }) =>
+          addresses?.map((addr) => addr.toLowerCase())
+        ) ?? [],
     [renderedRequirements]
   )
 
@@ -209,7 +211,7 @@ const useBalancy = (
 
     if (balancyLogic === "OR") {
       const holdersList = new Set([
-        ...(data?.addresses ?? []),
+        ...(data?.addresses?.map((addr) => addr.toLowerCase()) ?? []),
         ...allowlists.filter((_) => !!_).flat(),
       ])
 
@@ -221,7 +223,9 @@ const useBalancy = (
       return
     }
 
-    const holdersList = (data?.addresses ?? []).filter((address) =>
+    const holdersList = (
+      data?.addresses?.map((addr) => addr?.toLowerCase()) ?? []
+    ).filter((address) =>
       allowlists.filter((_) => !!_).every((list) => list.includes(address))
     )
 
@@ -242,12 +246,24 @@ const useBalancy = (
     (!!baseFieldPath
       ? requirement.data?.validAddresses
       : (logic === "OR"
-          ? [...new Set(allowlists?.flat()?.filter(Boolean))]
+          ? [
+              ...new Set(
+                allowlists
+                  ?.flat()
+                  ?.filter(Boolean)
+                  ?.map((addr) => addr.toLowerCase())
+              ),
+            ]
           : [
               ...allowlists?.reduce(
                 (prev, curr) =>
-                  new Set(curr?.filter((addr) => !!addr && prev.has(addr)) ?? []),
-                new Set(allowlists?.[0]?.filter(Boolean))
+                  new Set(
+                    curr?.filter((addr) => !!addr && prev.has(addr.toLowerCase())) ??
+                      []
+                  ),
+                new Set(
+                  allowlists?.[0]?.filter(Boolean)?.map((addr) => addr.toLowerCase())
+                )
               ),
             ]) || undefined)
 
