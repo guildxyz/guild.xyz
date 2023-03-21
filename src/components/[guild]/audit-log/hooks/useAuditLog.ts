@@ -3,8 +3,8 @@ import { useRouter } from "next/router"
 import useSWRInfinite from "swr/infinite"
 import { AuditLogAction } from "../constants"
 
-// TODO: add filters, limit, etc.
-const LIMIT = 10
+const LIMIT = 25
+
 export const SUPPORTED_QUERY_PARAMS = [
   "order",
   "limit",

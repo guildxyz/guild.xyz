@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { CaretDown } from "phosphor-react"
-import AuditLogChildAction from "../AuditLogChildAction"
 import { AuditLogAction as Action } from "../constants"
 import {
   AuditLogActionProvider,
@@ -18,6 +17,7 @@ import {
 } from "./AuditLogActionContext"
 import ActionIcon from "./components/ActionIcon"
 import ActionLabel from "./components/ActionLabel"
+import AuditLogChildAction from "./components/AuditLogChildAction"
 
 type Props = {
   action: Action

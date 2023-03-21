@@ -2,9 +2,9 @@ import { HStack, Stack } from "@chakra-ui/react"
 import {
   AuditLogActionProvider,
   useAuditLogActionContext,
-} from "./AuditLogAction/AuditLogActionContext"
-import ActionIcon from "./AuditLogAction/components/ActionIcon"
-import ActionLabel from "./AuditLogAction/components/ActionLabel"
+} from "../AuditLogActionContext"
+import ActionIcon from "./ActionIcon"
+import ActionLabel from "./ActionLabel"
 
 const AuditLogChildAction = (): JSX.Element => {
   const { children } = useAuditLogActionContext()

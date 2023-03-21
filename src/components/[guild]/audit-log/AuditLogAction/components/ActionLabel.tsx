@@ -4,9 +4,9 @@ import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
 import { AUDITLOG } from "../../constants"
 import useAuditLog from "../../hooks/useAuditLog"
-import RoleTag from "../../RoleTag"
-import UserTag from "../../UserTag"
 import { useAuditLogActionContext } from "../AuditLogActionContext"
+import RoleTag from "./RoleTag"
+import UserTag from "./UserTag"
 
 const platformTagColorSchemes: Record<PlatformName, string> = {
   DISCORD: "DISCORD",
