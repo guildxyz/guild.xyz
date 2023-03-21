@@ -7,7 +7,7 @@ import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import { useEffect } from "react"
 
-const useConnectFromLocalstorage = () => {
+const useConnectFromLocalStorage = () => {
   const { keyPair, isValid } = useKeyPair()
   const { addDatadogError } = useDatadog()
   const toast = useToast()
@@ -48,4 +48,4 @@ const useConnectFromLocalstorage = () => {
   }, [keyPair, isValid, platformUsers])
 }
 
-export default useConnectFromLocalstorage
+export default useConnectFromLocalStorage
