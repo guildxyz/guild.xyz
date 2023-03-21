@@ -24,6 +24,16 @@ export type OAuthLocalStorageInfo = {
   scope: string
 }
 
+const getDataFromState = (
+  state: string
+): { csrfToken: string; platformName: PlatformName } => {
+  if (!state) {
+    return { csrfToken: undefined, platformName: undefined }
+  }
+  const [platformName, csrfToken] = state.split("-")
+  return { csrfToken, platformName: platformName as PlatformName }
+}
+
 const OAuth = () => {
   const router = useRouter()
   const { addDatadogAction, addDatadogError } = useDatadog()
@@ -36,12 +46,10 @@ const OAuth = () => {
     if (typeof router.query?.state !== "string") {
       const fragment = new URLSearchParams(window.location.hash.slice(1))
       const { state, ...rest } = Object.fromEntries(fragment.entries())
-      const [platformName, csrfToken] = JSON.parse(decodeURIComponent(state ?? "{}"))
-      params = { ...{ platformName, csrfToken }, ...rest }
+      params = { ...getDataFromState(state), ...rest }
     } else {
       const { state, ...rest } = router.query
-      const [platformName, csrfToken] = JSON.parse(decodeURIComponent(state ?? "{}"))
-      params = { ...{ platformName, csrfToken }, ...rest }
+      params = { ...getDataFromState(state), ...rest }
     }
 
     if (Object.keys(params).length <= 0) {
