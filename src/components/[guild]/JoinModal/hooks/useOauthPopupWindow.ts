@@ -98,13 +98,13 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       }
     })
 
-    onOpen(
-      `${url}?${Object.entries(oauthOptions)
-        .map(([key, value]) => `${key}=${value}`)
-        .join("&")}&redirect_uri=${encodeURIComponent(
-        redirectUri
-      )}&state=${encodeURIComponent(csrfToken)}`
-    )
+    const searchParams = new URLSearchParams({
+      ...oauthOptions,
+      redirect_uri: redirectUri,
+      state: csrfToken,
+    }).toString()
+
+    onOpen(`${url}?${searchParams}`)
 
     await hasReceivedResponse.finally(() => {
       channel.postMessage({ type: "OAUTH_CONFIRMATION" })
