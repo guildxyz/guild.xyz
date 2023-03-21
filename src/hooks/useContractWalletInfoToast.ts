@@ -34,11 +34,6 @@ const useContractWalletInfoToast = () => {
   useEffect(() => {
     chainsOfAddressWithDeployedContract(account)
       .then((chainsWithDeployedContract) => {
-        const isDeployedOnMultipleChains = chainsWithDeployedContract.size > 1
-        const chainNames = [...chainsWithDeployedContract].map(
-          (chainName: Chain) => RPC[chainName].chainName
-        )
-
         if (
           chainsWithDeployedContract.size > 0 &&
           !chainsWithDeployedContract.has(Chains[chainId] as Chain)
@@ -46,15 +41,7 @@ const useContractWalletInfoToast = () => {
           toast({
             status: "info",
             title: "Verification might fail",
-            description: `We detected that you have${
-              isDeployedOnMultipleChains ? "" : " a"
-            } contract wallet${
-              isDeployedOnMultipleChains ? "s" : ""
-            } on ${chainNames.join(
-              ", "
-            )}. If you intend to sign with a smart contract wallet, please switch to ${
-              isDeployedOnMultipleChains ? "one of the listed chains" : chainNames[0]
-            }`,
+            description: `If you connected a smart contract wallet, you might need to switch to a chain which has a deployed contract`,
           })
         }
       })
