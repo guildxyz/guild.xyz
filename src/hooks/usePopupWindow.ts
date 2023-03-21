@@ -41,7 +41,7 @@ const usePopupWindow = (
 
     setWindowInstance(
       window.open(
-        url ?? uri,
+        typeof url === "string" ? url : uri,
         "_blank",
         Object.entries({ ...defaultWindowFeatures, ...windowFeatures })
           .map(([key, value]) =>
