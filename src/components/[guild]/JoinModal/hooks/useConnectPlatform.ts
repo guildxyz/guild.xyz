@@ -38,10 +38,6 @@ const useConnectPlatform = (
   useEffect(() => {
     // couldn't prevent spamming requests without all these three conditions
     if (!platformUsers || !authData || prevAuthData) return
-    // const alreadyConnected = platformUsers.some(
-    //   (platformAccount) => platformAccount.platformName === platform
-    // )
-    // if (alreadyConnected) return
 
     onSubmit({ platformName: platform, authData, reauth: isReauth || undefined })
   }, [authData, platformUsers])
