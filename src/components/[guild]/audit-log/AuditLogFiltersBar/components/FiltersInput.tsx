@@ -138,6 +138,8 @@ const FiltersInput = (): JSX.Element => {
     nativeTagInput?.focus()
   }, [selectedValue, inputValue])
 
+  const [shouldRemoveLastFilter, setShouldRemoveLastFilter] = useState(false)
+
   const triggerSearch = () => {
     const query: typeof router.query = { ...router.query }
 
@@ -164,9 +166,23 @@ const FiltersInput = (): JSX.Element => {
     })
   }
 
-  const onKeyUp = (e: KeyboardEvent) => {
-    if (e.code !== "Enter") return
-    triggerSearch()
+  const onKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === "Enter") {
+      triggerSearch()
+    }
+
+    if (e.code !== "Backspace") return
+
+    if (shouldRemoveLastFilter) {
+      // TODO
+      dispatch({
+        type: "removeLastFilter",
+      })
+      setShouldRemoveLastFilter(false)
+      return
+    }
+
+    if (e.currentTarget.selectionStart === 0) setShouldRemoveLastFilter(true)
   }
 
   return (

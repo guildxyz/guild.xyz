@@ -2,7 +2,13 @@ import { useReducer } from "react"
 import { Filter } from "../FiltersInput"
 
 type Action = {
-  type: "addFilter" | "updateFilter" | "removeFilter" | "setFilters" | "clearFilters"
+  type:
+    | "addFilter"
+    | "updateFilter"
+    | "removeFilter"
+    | "removeLastFilter"
+    | "setFilters"
+    | "clearFilters"
   filter?: Filter
   filters?: Filter[]
 }
@@ -24,6 +30,11 @@ const activeFiltersReducer = (activeFilters: Filter[], action: Action) => {
     }
     case "removeFilter":
       return [...activeFilters.filter((f) => f.filter !== action.filter?.filter)]
+    case "removeLastFilter": {
+      const modifiedFilters = [...activeFilters]
+      modifiedFilters.pop()
+      return modifiedFilters
+    }
     case "setFilters":
       return action.filters
     case "clearFilters":
