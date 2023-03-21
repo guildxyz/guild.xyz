@@ -13,7 +13,7 @@ const chainsOfAddressWithDeployedContract = (address: string) =>
       const prov = new JsonRpcProvider(rpcUrl)
 
       const bytecode = await prov.getCode(address).catch((error) => {
-        datadogRum?.addError(`Retrieving bytecode failed on chain ${chain}`, {
+        datadogRum?.addAction(`Retrieving bytecode failed on chain ${chain}`, {
           error,
         })
         return null
@@ -32,6 +32,10 @@ const useContractWalletInfoToast = () => {
   const toast = useToast()
 
   useEffect(() => {
+    if (!account || !chainId) {
+      return
+    }
+
     chainsOfAddressWithDeployedContract(account)
       .then((chainsWithDeployedContract) => {
         if (
@@ -46,7 +50,7 @@ const useContractWalletInfoToast = () => {
         }
       })
       .catch(() => {})
-  }, [chainId])
+  }, [chainId, account])
 }
 
 export default useContractWalletInfoToast
