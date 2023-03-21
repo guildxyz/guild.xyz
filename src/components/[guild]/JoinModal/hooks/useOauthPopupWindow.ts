@@ -101,7 +101,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     const searchParams = new URLSearchParams({
       ...oauthOptions,
       redirect_uri: redirectUri,
-      state: JSON.stringify([platformName, csrfToken]),
+      state: encodeURIComponent(JSON.stringify([platformName, csrfToken])),
     }).toString()
 
     onOpen(`${url}?${searchParams}`)

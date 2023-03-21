@@ -36,11 +36,11 @@ const OAuth = () => {
     if (typeof router.query?.state !== "string") {
       const fragment = new URLSearchParams(window.location.hash.slice(1))
       const { state, ...rest } = Object.fromEntries(fragment.entries())
-      const [platformName, csrfToken] = JSON.parse(state ?? "{}")
+      const [platformName, csrfToken] = JSON.parse(decodeURIComponent(state ?? "{}"))
       params = { ...{ platformName, csrfToken }, ...rest }
     } else {
       const { state, ...rest } = router.query
-      const [platformName, csrfToken] = JSON.parse(state ?? "{}")
+      const [platformName, csrfToken] = JSON.parse(decodeURIComponent(state ?? "{}"))
       params = { ...{ platformName, csrfToken }, ...rest }
     }
 
