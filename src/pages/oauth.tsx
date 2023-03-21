@@ -54,8 +54,10 @@ const OAuth = () => {
 
     addDatadogAction("OAuth - params", { params })
 
-    if (Object.keys(params).length <= 0) {
-      addDatadogAction("OAuth - No params found", { params })
+    if (!params.csrfToken || !params.platformName) {
+      addDatadogAction("OAuth - No params found, or it is in invalid form", {
+        params,
+      })
       await router.push("/")
       return
     }
