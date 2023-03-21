@@ -75,9 +75,10 @@ const FiltersInput = (): JSX.Element => {
       .filter(Boolean)
 
     setActiveFilters(initialFilters)
+    setInputValue?.(router.query.search?.toString() ?? "")
   }, [router.query])
 
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState(router.query.search?.toString() ?? "")
 
   const [state, send] = useMachine(
     combobox.machine({
@@ -145,6 +146,14 @@ const FiltersInput = (): JSX.Element => {
     })
 
     activeFilters.forEach(({ filter, value }) => (query[filter] = value))
+
+    if (search) query.search = search
+
+    Object.entries(query).forEach(([key, value]) => {
+      if (!value) {
+        delete query[key]
+      }
+    })
 
     router.replace({
       pathname: router.pathname,

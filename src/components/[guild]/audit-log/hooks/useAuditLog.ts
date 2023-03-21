@@ -59,7 +59,18 @@ const useAuditLog = () => {
     revalidateFirstPage: false,
   })
 
-  return infiniteData
+  const searchQuery = query.search?.toString()
+
+  return {
+    ...infiniteData,
+    data: searchQuery?.length
+      ? infiniteData.data?.map((chunk) =>
+          chunk.filter((action) =>
+            action.actionName.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+        )
+      : infiniteData.data,
+  }
 }
 
 export default useAuditLog
