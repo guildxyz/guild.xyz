@@ -237,22 +237,23 @@ const useBalancy = (
     0
   )
 
+  const addresses =
+    holders?.addresses ??
+    (!!baseFieldPath
+      ? requirement.data?.validAddresses
+      : (logic === "OR"
+          ? [...new Set(allowlists?.flat()?.filter(Boolean))]
+          : [
+              ...allowlists?.reduce(
+                (prev, curr) =>
+                  new Set(curr?.filter((addr) => !!addr && prev.has(addr)) ?? []),
+                new Set(allowlists?.[0]?.filter(Boolean))
+              ),
+            ]) || undefined)
+
   return {
-    addresses: holders?.addresses,
-    holders:
-      holders?.addresses?.length ??
-      (!!baseFieldPath
-        ? requirement.data?.validAddresses?.length
-        : (logic === "OR"
-            ? [...new Set(allowlists?.flat()?.filter(Boolean))]
-            : [
-                ...allowlists?.reduce(
-                  (prev, curr) =>
-                    new Set(curr?.filter((addr) => !!addr && prev.has(addr)) ?? []),
-                  new Set(allowlists?.[0]?.filter(Boolean))
-                ),
-              ]
-          )?.length || undefined),
+    addresses,
+    holders: addresses?.length,
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
     inaccuracy:
