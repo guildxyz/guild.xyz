@@ -1,6 +1,6 @@
 import { HStack, IconButton, Tag, Text } from "@chakra-ui/react"
 import { X } from "phosphor-react"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { SupportedQueryParam } from "../../hooks/useAuditLog"
 import DynamicWidthInput from "./DynamicWidthInput"
 import { Filter } from "./FiltersInput"
@@ -21,12 +21,16 @@ const TagInput = ({
   onEnter,
 }: Props): JSX.Element => {
   const inputRef = useRef<HTMLInputElement>(null)
+  const [shouldRemove, setShouldRemove] = useState(value.length === 0)
+
   const [filterValue, setFilterValue] = useState(value)
 
   const filter = {
     filter: name,
     value: filterValue,
   }
+
+  useEffect(() => inputRef.current.focus(), [])
 
   return (
     <Tag
@@ -35,7 +39,7 @@ const TagInput = ({
       _focusWithin={{
         borderColor: "gray",
       }}
-      onClick={() => inputRef.current?.focus()}
+      onClick={() => inputRef.current.focus()}
     >
       <HStack>
         <Text as="span" fontSize="sm" fontWeight="bold">
@@ -51,8 +55,15 @@ const TagInput = ({
           onBlur={() => onChange(filter)}
           onKeyUp={(e) => {
             if (e.currentTarget.value.length > 0 && e.code === "Enter") onEnter()
-            if (!e.currentTarget.value.length && e.code === "Backspace")
+
+            if (
+              e.currentTarget.value.length === 0 &&
+              e.code === "Backspace" &&
+              shouldRemove
+            )
               onRemove(filter)
+
+            setShouldRemove(e.currentTarget.value.length === 0)
           }}
         />
         <IconButton

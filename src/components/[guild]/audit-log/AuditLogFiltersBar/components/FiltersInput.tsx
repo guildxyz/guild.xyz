@@ -171,10 +171,9 @@ const FiltersInput = (): JSX.Element => {
       triggerSearch()
     }
 
-    if (e.code !== "Backspace") return
+    if (e.code !== "Backspace" || e.currentTarget.selectionStart !== 0) return
 
     if (shouldRemoveLastFilter) {
-      // TODO
       dispatch({
         type: "removeLastFilter",
       })
@@ -182,7 +181,7 @@ const FiltersInput = (): JSX.Element => {
       return
     }
 
-    if (e.currentTarget.selectionStart === 0) setShouldRemoveLastFilter(true)
+    setShouldRemoveLastFilter(true)
   }
 
   return (
