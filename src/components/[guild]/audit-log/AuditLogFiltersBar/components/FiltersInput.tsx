@@ -14,6 +14,7 @@ import { useRouter } from "next/router"
 import { CaretDown, X } from "phosphor-react"
 import { KeyboardEvent, useEffect, useState } from "react"
 import { SupportedQueryParam, SUPPORTED_QUERY_PARAMS } from "../../hooks/useAuditLog"
+import { useActiveFiltersReducer } from "./hooks/useActiveFiltersReducer"
 import TagInput from "./TagInput"
 
 type SearchOption = {
@@ -62,7 +63,7 @@ const FiltersInput = (): JSX.Element => {
 
   const router = useRouter()
 
-  const [activeFilters, setActiveFilters] = useState<Filter[]>([])
+  const [activeFilters, dispatch] = useActiveFiltersReducer([])
 
   useEffect(() => {
     if (activeFilters.length > 0) return
@@ -74,7 +75,11 @@ const FiltersInput = (): JSX.Element => {
       )
       .filter(Boolean)
 
-    setActiveFilters(initialFilters)
+    dispatch({
+      type: "setFilters",
+      filters: initialFilters,
+    })
+
     setInputValue?.(router.query.search?.toString() ?? "")
   }, [router.query])
 
@@ -92,13 +97,13 @@ const FiltersInput = (): JSX.Element => {
       onSelect({ value: filterNameOrSearch }) {
         if (!isSupportedQueryParam(filterNameOrSearch)) return
 
-        setActiveFilters((previousActiveFilters) => [
-          ...previousActiveFilters,
-          {
+        dispatch({
+          type: "addFilter",
+          filter: {
             filter: filterNameOrSearch,
             value: "",
           },
-        ])
+        })
       },
     })
   )
@@ -192,25 +197,14 @@ const FiltersInput = (): JSX.Element => {
                   name={filter}
                   value={value}
                   onRemove={(filterToRemove) => {
-                    setActiveFilters((previousActiveFilters) => [
-                      ...previousActiveFilters.filter(
-                        (f) => f.filter !== filterToRemove
-                      ),
-                    ])
+                    dispatch({
+                      type: "removeFilter",
+                      filter: filterToRemove,
+                    })
                     focus()
                   }}
                   onChange={(newFilter) =>
-                    setActiveFilters((previousFilters) => {
-                      const modifiedFilters = [...previousFilters]
-                      const filterToModify = modifiedFilters.find(
-                        (f) => f.filter === newFilter.filter
-                      )
-                      if (filterToModify) {
-                        filterToModify.value = newFilter.value
-                      }
-
-                      return modifiedFilters
-                    })
+                    dispatch({ type: "updateFilter", filter: newFilter })
                   }
                   onEnter={focus}
                 />
@@ -241,7 +235,7 @@ const FiltersInput = (): JSX.Element => {
               borderRadius="full"
               variant="ghost"
               onClick={() => {
-                setActiveFilters([])
+                dispatch({ type: "clearFilters" })
                 setInputValue("")
               }}
             />

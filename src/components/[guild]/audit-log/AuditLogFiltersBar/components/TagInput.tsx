@@ -8,8 +8,8 @@ import { Filter } from "./FiltersInput"
 type Props = {
   name: SupportedQueryParam
   value: string
-  onChange: ({ filter, value }: Filter) => void
-  onRemove: (filter: string) => void
+  onChange: (filter: Filter) => void
+  onRemove: (filter: Filter) => void
   onEnter: () => void
 }
 
@@ -21,6 +21,11 @@ const TagInput = ({
   onEnter,
 }: Props): JSX.Element => {
   const [filterValue, setFilterValue] = useState(value)
+
+  const filter = {
+    filter: name,
+    value: filterValue,
+  }
 
   return (
     <Tag
@@ -40,16 +45,11 @@ const TagInput = ({
           borderRadius="none"
           value={filterValue}
           onChange={(e) => setFilterValue(e.target.value)}
-          onBlur={() =>
-            onChange({
-              filter: name,
-              value: filterValue,
-            })
-          }
+          onBlur={() => onChange(filter)}
           onKeyUp={(e) => {
             if (e.currentTarget.value.length > 0 && e.code === "Enter") onEnter()
             if (!e.currentTarget.value.length && e.code === "Backspace")
-              onRemove(name)
+              onRemove(filter)
           }}
         />
         <IconButton
@@ -59,7 +59,7 @@ const TagInput = ({
           boxSize={4}
           minW={4}
           minH={4}
-          onClick={() => onRemove(name)}
+          onClick={() => onRemove(filter)}
         />
       </HStack>
     </Tag>
