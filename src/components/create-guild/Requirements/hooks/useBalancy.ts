@@ -244,7 +244,7 @@ const useBalancy = (
   const addresses =
     holders?.addresses ??
     (!!baseFieldPath
-      ? requirement.data?.validAddresses
+      ? requirement?.data?.validAddresses
       : (logic === "OR"
           ? [
               ...new Set(
