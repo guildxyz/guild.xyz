@@ -444,7 +444,7 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://explorer.palm.io",
     iconUrls: ["/networkLogos/palm.png"],
-    rpcUrls: ["https://palm-mainnet.infura.io/v3/84722b0c96da4e09a6305118494aeeaa"],
+    rpcUrls: ["https://palm-mainnet.infura.io/v3/3a961d6501e54add9a41aa53f15de99b"],
     multicallAddress: "0xfFE2FF36c5b8D948f788a34f867784828aa7415D",
   },
   BASE_GOERLI: {
