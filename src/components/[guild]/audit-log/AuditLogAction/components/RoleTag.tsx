@@ -16,6 +16,8 @@ type Props = {
 }
 
 const RoleTag = ({ data, roleId }: Props): JSX.Element => {
+  const colorScheme = useColorModeValue("alpha", "blackalpha")
+
   const { roles } = useGuild()
   const role = roles?.find((r) => r.id === roleId)
 
@@ -29,7 +31,7 @@ const RoleTag = ({ data, roleId }: Props): JSX.Element => {
     <Tooltip label="Filter by role">
       <Tag
         as="button"
-        colorScheme="blackalpha"
+        colorScheme={colorScheme}
         onClick={() => {
           router.replace({
             pathname: router.pathname,

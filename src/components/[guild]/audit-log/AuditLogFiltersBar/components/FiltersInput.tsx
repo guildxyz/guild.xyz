@@ -56,6 +56,7 @@ const searchOptions: SearchOption[] = [
 ]
 
 const FiltersInput = (): JSX.Element => {
+  const rootBgColor = useColorModeValue("white", "blackAlpha.300")
   const dropdownBgColor = useColorModeValue("white", "gray.700")
   const dropdownBorderColor = useColorModeValue("gray.200", "gray.500")
   const dropdownShadow = useColorModeValue("lg", "dark-lg")
@@ -187,7 +188,7 @@ const FiltersInput = (): JSX.Element => {
       <Box
         h={10}
         px={2}
-        bgColor="blackAlpha.300"
+        bgColor={rootBgColor}
         borderWidth={1}
         borderRadius="lg"
         _focusWithin={{

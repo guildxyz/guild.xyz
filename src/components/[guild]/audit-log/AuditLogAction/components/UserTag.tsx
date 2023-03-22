@@ -1,4 +1,10 @@
-import { Tag, TagLabel, TagLeftIcon, Tooltip } from "@chakra-ui/react"
+import {
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  Tooltip,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
 import { useRouter } from "next/router"
 import shortenHex from "utils/shortenHex"
@@ -8,14 +14,17 @@ type Props = {
 }
 
 const UserTag = ({ address }: Props): JSX.Element => {
+  const variant = useColorModeValue("subtle", "solid")
+  const colorScheme = useColorModeValue("alpha", "gray")
+
   const router = useRouter()
 
   return (
     <Tooltip label="Filter by user">
       <Tag
         as="button"
-        variant="solid"
-        colorScheme="gray"
+        variant={variant}
+        colorScheme={colorScheme}
         cursor="pointer"
         onClick={() => {
           router.replace({

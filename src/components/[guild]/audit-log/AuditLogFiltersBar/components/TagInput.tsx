@@ -1,4 +1,4 @@
-import { HStack, IconButton, Tag, Text } from "@chakra-ui/react"
+import { HStack, IconButton, Tag, Text, useColorModeValue } from "@chakra-ui/react"
 import { X } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import { SupportedQueryParam } from "../../hooks/useAuditLog"
@@ -20,6 +20,9 @@ const TagInput = ({
   onRemove,
   onEnter,
 }: Props): JSX.Element => {
+  const tagFocusBorderColor = useColorModeValue("gray.300", "gray.500")
+  const closeBtnFocusBgColor = useColorModeValue("blackAlpha.300", "whiteAlpha.500")
+
   const inputRef = useRef<HTMLInputElement>(null)
   const [shouldRemove, setShouldRemove] = useState(value.length === 0)
 
@@ -37,7 +40,7 @@ const TagInput = ({
       borderWidth={1}
       borderColor="transparent"
       _focusWithin={{
-        borderColor: "gray",
+        borderColor: tagFocusBorderColor,
       }}
       onClick={() => inputRef.current.focus()}
     >
@@ -74,6 +77,10 @@ const TagInput = ({
           minW={4}
           minH={4}
           onClick={() => onRemove(filter)}
+          _focusVisible={{
+            bgColor: closeBtnFocusBgColor,
+            boxShadow: "none",
+          }}
         />
       </HStack>
     </Tag>
