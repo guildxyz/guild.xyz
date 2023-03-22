@@ -1,5 +1,5 @@
 import { RequirementFormProps } from "requirements"
-import BlockNumberFormField from "./BlockNumberFormField"
+import MinMaxBlockNumberFormFields from "./MinMaxBlockNumberFormFields"
 import TxCountFormField from "./TxCountFormField"
 
 const AlchemyContractDeploy = ({
@@ -11,19 +11,7 @@ const AlchemyContractDeploy = ({
       formLabel="Number of contracts"
     />
 
-    <BlockNumberFormField
-      baseFieldPath={baseFieldPath}
-      fieldName="minAmount"
-      formLabel="Minimum block number"
-      formHelperText="Start checking from this block"
-    />
-
-    <BlockNumberFormField
-      baseFieldPath={baseFieldPath}
-      fieldName="minAmount"
-      formLabel="Maximum block number"
-      formHelperText="Stop checking at this block"
-    />
+    <MinMaxBlockNumberFormFields baseFieldPath={baseFieldPath} />
   </>
 )
 
