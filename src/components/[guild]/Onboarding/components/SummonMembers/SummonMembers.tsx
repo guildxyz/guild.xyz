@@ -78,7 +78,7 @@ const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
           as="a"
           h="10"
           href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-            `Just summoned my guild on @guildxyz! Join me on my noble quest: guild.xyz/${urlName}`
+            `Just summoned my guild on Guild.xyz! Join me on my noble quest: guild.xyz/${urlName}`
           )}`}
           target="_blank"
           leftIcon={<TwitterLogo />}

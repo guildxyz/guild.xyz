@@ -97,7 +97,7 @@ const useJoin = (onSuccess?: () => void) => {
               as="a"
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
                 `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
-guild.xyz/${guild.urlName} @guildxyz`
+guild.xyz/${guild.urlName}`
               )}`}
               target="_blank"
               bg={tweetButtonBackground}
