@@ -6,8 +6,10 @@ const AlchemyFirstTxRelative = ({
 }: RequirementFormProps): JSX.Element => (
   <BlockNumberInput
     baseFieldPath={baseFieldPath}
+    fieldName="minAmount"
     formLabel="Block number"
     formHelperText="Wallet should be created before this block"
+    isRequired
   />
 )
 

@@ -1,14 +1,21 @@
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormState } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import ControlledNumberInput from "./ControlledNumberInput"
 
-type Props = { formLabel: string; formHelperText?: string } & RequirementFormProps
+type Props = {
+  baseFieldPath: string
+  fieldName: string
+  isRequired?: boolean
+  formLabel: string
+  formHelperText?: string
+}
 
 const BlockNumberInput = ({
   baseFieldPath,
+  fieldName,
+  isRequired,
   formLabel,
   formHelperText,
 }: Props): JSX.Element => {
@@ -17,15 +24,18 @@ const BlockNumberInput = ({
   return (
     <FormControl
       w="full"
-      isRequired
-      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.maxAmount}
+      isRequired={isRequired}
+      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.[fieldName]}
     >
       <FormLabel>{formLabel}</FormLabel>
 
-      <ControlledNumberInput name={`${baseFieldPath}.data.maxAmount`} isRequired />
+      <ControlledNumberInput
+        name={`${baseFieldPath}.data.${fieldName}`}
+        isRequired={isRequired}
+      />
 
       <FormErrorMessage>
-        {parseFromObject(errors, baseFieldPath)?.data?.maxAmount?.message}
+        {parseFromObject(errors, baseFieldPath)?.data?.[fieldName]?.message}
       </FormErrorMessage>
 
       {formHelperText && <FormHelperText>{formHelperText}</FormHelperText>}

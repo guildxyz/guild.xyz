@@ -4,8 +4,10 @@ import BlockNumberInput from "./BlockNumberInput"
 const AlchemyFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element => (
   <BlockNumberInput
     baseFieldPath={baseFieldPath}
+    fieldName="minAmount"
     formLabel="Number of blocks"
     formHelperText="Wallet should be at least x blocks old"
+    isRequired
   />
 )
 
