@@ -1,21 +1,11 @@
 import { HStack, Text } from "@chakra-ui/react"
 import platforms from "platforms/platforms"
-import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
 import { AUDITLOG } from "../../constants"
 import useAuditLog from "../../hooks/useAuditLog"
 import { useAuditLogActionContext } from "../AuditLogActionContext"
 import RoleTag from "./RoleTag"
 import UserTag from "./UserTag"
-
-const platformTagColorSchemes: Record<PlatformName, string> = {
-  DISCORD: "DISCORD",
-  TELEGRAM: "TELEGRAM",
-  TWITTER: "TWITTER",
-  POAP: "POAP",
-  GITHUB: "GITHUB",
-  GOOGLE: "blue",
-}
 
 const ActionLabel = (): JSX.Element => {
   const { data: auditLog } = useAuditLog()
