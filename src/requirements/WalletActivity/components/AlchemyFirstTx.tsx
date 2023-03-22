@@ -1,8 +1,8 @@
 import { RequirementFormProps } from "requirements"
-import BlockNumberInput from "./BlockNumberInput"
+import BlockNumberFormField from "./BlockNumberFormField"
 
 const AlchemyFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element => (
-  <BlockNumberInput
+  <BlockNumberFormField
     baseFieldPath={baseFieldPath}
     fieldName="minAmount"
     formLabel="Number of blocks"

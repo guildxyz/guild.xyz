@@ -43,7 +43,7 @@ const walletActivityRequirementTypes: SelectOption[] = [
   },
   {
     label: "Deployed a contract (relative)",
-    value: "ALCHEMY_CONTRACT_DEPLOY",
+    value: "ALCHEMY_CONTRACT_DEPLOY_RELATIVE",
     WalletActivityRequirement: AlchemyContractDeployRelative,
   },
   {

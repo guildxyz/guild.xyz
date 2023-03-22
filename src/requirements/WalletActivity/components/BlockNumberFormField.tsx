@@ -12,7 +12,7 @@ type Props = {
   formHelperText?: string
 }
 
-const BlockNumberInput = ({
+const BlockNumberFormField = ({
   baseFieldPath,
   fieldName,
   isRequired,
@@ -43,4 +43,4 @@ const BlockNumberInput = ({
   )
 }
 
-export default BlockNumberInput
+export default BlockNumberFormField

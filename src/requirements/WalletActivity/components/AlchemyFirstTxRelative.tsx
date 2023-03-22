@@ -1,10 +1,10 @@
 import { RequirementFormProps } from "requirements"
-import BlockNumberInput from "./BlockNumberInput"
+import BlockNumberFormField from "./BlockNumberFormField"
 
 const AlchemyFirstTxRelative = ({
   baseFieldPath,
 }: RequirementFormProps): JSX.Element => (
-  <BlockNumberInput
+  <BlockNumberFormField
     baseFieldPath={baseFieldPath}
     fieldName="minAmount"
     formLabel="Block number"
