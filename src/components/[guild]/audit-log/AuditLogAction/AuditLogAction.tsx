@@ -1,4 +1,5 @@
 import {
+  Box,
   Collapse,
   HStack,
   Icon,
@@ -24,6 +25,7 @@ type Props = {
 }
 
 const AuditLogAction = (): JSX.Element => {
+  const groupHoverBgColor = useColorModeValue("gray.50", "whiteAlpha.100")
   const collapseBgColor = useColorModeValue("gray.50", "blackAlpha.400")
   const { isOpen, onToggle } = useDisclosure()
 
@@ -32,37 +34,57 @@ const AuditLogAction = (): JSX.Element => {
   const shouldRenderCollapse = children?.length > 0
 
   return (
-    <Card>
-      <HStack justifyContent="space-between" px={{ base: 5, sm: 6 }} py={7}>
-        <HStack spacing={4}>
-          <ActionIcon />
-          <Stack spacing={0.5}>
-            <ActionLabel />
-            <Text as="span" colorScheme="gray" fontSize="sm">
-              {new Date(Number(timestamp)).toLocaleString()}
-            </Text>
-          </Stack>
-        </HStack>
+    <Card role="group">
+      <Box position="relative">
+        <Box
+          position="absolute"
+          inset={0}
+          cursor={shouldRenderCollapse ? "pointer" : "default"}
+          onClick={onToggle}
+          bgColor="transparent"
+          transition="background .2s"
+          _groupHover={{
+            bgColor: shouldRenderCollapse ? groupHoverBgColor : "transparent",
+          }}
+        />
+        <HStack
+          position="relative"
+          justifyContent="space-between"
+          px={{ base: 5, sm: 6 }}
+          py={7}
+          pointerEvents="none"
+        >
+          <HStack spacing={4} pointerEvents="all">
+            <ActionIcon />
+            <Stack spacing={0.5}>
+              <ActionLabel />
+              <Text as="span" colorScheme="gray" fontSize="sm">
+                {new Date(Number(timestamp)).toLocaleString()}
+              </Text>
+            </Stack>
+          </HStack>
 
-        {shouldRenderCollapse && (
-          <IconButton
-            aria-label="Show details"
-            icon={
-              <Icon
-                as={CaretDown}
-                transform={isOpen && "rotate(-180deg)"}
-                transition="transform .3s"
-              />
-            }
-            onClick={onToggle}
-            variant="ghost"
-            minW={8}
-            minH={8}
-            boxSize={8}
-            borderRadius="full"
-          />
-        )}
-      </HStack>
+          {shouldRenderCollapse && (
+            <IconButton
+              aria-label="Show details"
+              icon={
+                <Icon
+                  as={CaretDown}
+                  transform={isOpen && "rotate(-180deg)"}
+                  transition="transform .3s"
+                />
+              }
+              onClick={onToggle}
+              variant="ghost"
+              minW={8}
+              minH={8}
+              boxSize={8}
+              borderRadius="full"
+              pointerEvents="all"
+            />
+          )}
+        </HStack>
+      </Box>
 
       {shouldRenderCollapse && (
         <Collapse in={isOpen}>
