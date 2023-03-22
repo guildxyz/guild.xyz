@@ -55,6 +55,7 @@
     "chakra-ui-steps": "^2.0.4",
     "color": "^4.2.3",
     "colorthief": "^2.3.2",
+    "crypto-browserify": "^3.12.0",
     "dotbit": "^0.4.14",
     "ethers-multicall": "^0.2.3",
     "events": "^3.3.0",

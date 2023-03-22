@@ -71,6 +71,7 @@ const DynamicActiveStatusUpdates = dynamic(
 
 const GuildPage = (): JSX.Element => {
   const {
+    id: guildId,
     name,
     description,
     imageUrl,
@@ -160,6 +161,9 @@ const GuildPage = (): JSX.Element => {
 
   return (
     <DynamicOnboardingProvider>
+      <Head>
+        <meta name="theme-color" content={localThemeColor} />
+      </Head>
       <Layout
         title={name}
         textColor={textColor}
@@ -241,9 +245,11 @@ const GuildPage = (): JSX.Element => {
         >
           {renderedRoles.length ? (
             <Stack ref={rolesEl} spacing={4}>
-              {activePoaps.map((poap) => (
-                <PoapRoleCard key={poap?.id} guildPoap={poap} />
-              ))}
+              {/* Custom logic for Chainlink */}
+              {(isAdmin || guildId !== 16389) &&
+                activePoaps.map((poap) => (
+                  <PoapRoleCard key={poap?.id} guildPoap={poap} />
+                ))}
               {renderedRoles.map((role) => (
                 <RoleCard key={role.id} role={role} />
               ))}
@@ -283,6 +289,7 @@ const GuildPage = (): JSX.Element => {
               <Collapse
                 in={isExpiredRolesOpen}
                 style={{ padding: "6px", margin: "-6px" }}
+                unmountOnExit
               >
                 <Stack spacing={4} pt="3">
                   {expiredPoaps.map((poap) => (
@@ -303,7 +310,13 @@ const GuildPage = (): JSX.Element => {
                 <HStack justifyContent="space-between" w="full" my="-2 !important">
                   <Tag maxH={6} pt={0.5}>
                     <TagLeftIcon as={Users} />
-                    {isLoading ? <Spinner size="xs" /> : memberCount ?? 0}
+                    {isLoading ? (
+                      <Spinner size="xs" />
+                    ) : (
+                      new Intl.NumberFormat("en", { notation: "compact" }).format(
+                        memberCount ?? 0
+                      ) ?? 0
+                    )}
                   </Tag>
                   {isAdmin && <DynamicMembersExporter />}
                 </HStack>

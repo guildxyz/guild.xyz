@@ -95,8 +95,10 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
               guildPoap={guildPoap}
               rightElement={requirementRightElement}
             />
-            {(guildPoap.poapContracts?.length ||
-              guildPoap.poapRequirements?.length) && <LogicDivider logic="AND" />}
+            {guildPoap.poapContracts?.length ||
+            guildPoap.poapRequirements?.length ? (
+              <LogicDivider logic="AND" />
+            ) : null}
           </>,
         ]
       : []),

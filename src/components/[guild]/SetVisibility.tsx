@@ -22,6 +22,7 @@ import { Detective, Eye, EyeSlash, IconProps } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes, useRef } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { Visibility } from "types"
+import useGuild from "./hooks/useGuild"
 
 export const visibilityData: Record<
   Visibility,
@@ -117,6 +118,7 @@ const SetVisibility = ({
   entityType: FilterableEntity
   fieldBase?: string
 } & ButtonProps) => {
+  const { featureFlags } = useGuild()
   const parentField = fieldBase ?? ""
   const { isOpen, onClose, onOpen } = useDisclosure()
 
@@ -132,10 +134,12 @@ const SetVisibility = ({
 
   const Icon = visibilityData[currentVisibility].Icon
 
+  const isDisabled = !featureFlags.includes("VISIBILITY")
+
   return (
     <>
       {entityType === "role" ? (
-        <Tooltip label={"This feature is temporarily disabled"}>
+        <Tooltip label="Visibility - coming soon" isDisabled={!isDisabled}>
           <Button
             ml={3}
             size="xs"
@@ -143,15 +147,18 @@ const SetVisibility = ({
             onClick={onOpen}
             ref={buttonRef}
             {...buttonProps}
-            isDisabled
+            isDisabled={isDisabled}
           >
             {visibilityData[currentVisibility].title}
           </Button>
         </Tooltip>
       ) : (
         <Tooltip
-          // label={`${visibilityData[currentVisibility].title}: ${visibilityData[currentVisibility].description}`}
-          label={"This feature is temporarily disabled"}
+          label={
+            isDisabled
+              ? "Visibility - coming soon"
+              : `${visibilityData[currentVisibility].title}: ${visibilityData[currentVisibility].description}`
+          }
         >
           <IconButton
             size={"sm"}
@@ -163,7 +170,7 @@ const SetVisibility = ({
             ref={buttonRef}
             ml={1}
             color="gray"
-            isDisabled
+            isDisabled={isDisabled}
           />
         </Tooltip>
       )}

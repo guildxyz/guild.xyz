@@ -18,7 +18,7 @@ import PolygonIdProofAge from "./PolygonIdProofAge"
 const PolygonIdQuery = ({ baseFieldPath }: RequirementFormProps) => {
   const {
     control,
-    formState: { errors, touchedFields },
+    formState: { errors },
   } = useFormContext()
 
   return (

@@ -3,7 +3,7 @@ import { ForwardedRef, forwardRef } from "react"
 import { Rest } from "types"
 
 type Props = {
-  title: string | JSX.Element
+  title?: string | JSX.Element
   description?: string
   isDisabled?: boolean
 } & Rest
@@ -22,14 +22,16 @@ const Switch = forwardRef(
       isDisabled={isDisabled}
       {...rest}
     >
-      <Box opacity={isDisabled && 0.5}>
-        <Text mb="1">{title}</Text>
-        {description && (
-          <Text fontWeight="normal" colorScheme="gray">
-            {description}
-          </Text>
-        )}
-      </Box>
+      {(title || description) && (
+        <Box opacity={isDisabled && 0.5}>
+          <Text mb="1">{title}</Text>
+          {description && (
+            <Text fontWeight="normal" colorScheme="gray">
+              {description}
+            </Text>
+          )}
+        </Box>
+      )}
     </ChakraSwitch>
   )
 )
