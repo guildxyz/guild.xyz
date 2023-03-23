@@ -62,7 +62,7 @@ const RelativeTimeInput = forwardRef(
           value={value && !isNaN(value) ? value / multipliers[format] : ""}
           onChange={(_, valueAsNumber) => {
             const newValue =
-              typeof valueAsNumber === "number"
+              typeof valueAsNumber === "number" && !isNaN(valueAsNumber)
                 ? valueAsNumber * multipliers[format]
                 : undefined
             setValue(newValue)
