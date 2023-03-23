@@ -59,8 +59,8 @@ const styles = {
       width: "var(--chakra-sizes-full) !important",
       "@media (min-width : 1080px)": {
         borderRadius: "15px",
-        background: "rgba(63,63,70, 0.45)",
-        paddingX: "25px !important",
+        background: "var(--chakra-colors-whiteAlpha-50)",
+        paddingX: "6 !important",
         paddingY: "20px !important",
       },
       display: "inline-block !important",
@@ -77,7 +77,7 @@ const styles = {
     },
     ".notion": {
       fontFamily: "var(--chakra-fonts-body)",
-      lineHeight: "var(--chakra-lineHeights-base",
+      lineHeight: "var(--chakra-lineHeights-base)",
     },
 
     "#walletconnect-wrapper": {

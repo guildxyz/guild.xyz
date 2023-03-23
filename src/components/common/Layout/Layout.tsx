@@ -83,7 +83,6 @@ const Layout = ({
         <title>{`${ogTitle ?? title}`}</title>
         <meta property="og:title" content={`${ogTitle ?? title}`} />
         <link rel="shortcut icon" href={imageUrl ?? "/guild-icon.png"} />
-        <meta httpEquiv="Cache-Control" content="max-age=31536000, public" />
         {ogDescription && (
           <>
             <meta name="description" content={ogDescription} />

@@ -23,7 +23,7 @@ const PageBrainCard = ({ pageData }: Props): JSX.Element => {
         py="4"
         w="full"
         h="full"
-        background="rgba(63,63,70, 0.45)"
+        background="whiteAlpha.50"
         justifyContent="top"
         _before={{
           content: `""`,

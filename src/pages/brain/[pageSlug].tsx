@@ -50,7 +50,7 @@ const PageDetails = ({ blockMap, linkedPageContents, pageId, pageLogo }) => (
         }}
       />
       {linkedPageContents && (
-        <CategorySection fallbackText={"there are no linked pages"} mt="24px">
+        <CategorySection fallbackText="There are no linked pages" mt="6">
           {linkedPageContents?.map((page) => (
             <PageBrainCard pageData={page} key={page.id} />
           ))}

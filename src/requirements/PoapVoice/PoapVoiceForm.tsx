@@ -132,7 +132,7 @@ const PoapVoiceForm = ({ onClose, poapId }): JSX.Element => {
         </FormControl>
         <FormControl
           isRequired
-          isInvalid={!!(errors?.voiceRequirement as any)?.percentOrMinute}
+          isInvalid={!!errors?.voiceRequirement?.percentOrMinute}
         >
           <FormLabel>Minimum participation:</FormLabel>
           <HStack spacing={0}>

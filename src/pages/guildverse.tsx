@@ -13,7 +13,7 @@ type Props = {
   cards: BrainCardData[]
 }
 
-export const FILTER_OPTIONS: Array<FilterOption> = [
+export const filterOptions: Array<FilterOption> = [
   { value: "requirement", label: "requirement" },
   { value: "reward", label: "reward" },
   { value: "built with Guild", label: "built with Guild" },
@@ -40,13 +40,13 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
       <Layout title="Guildverse">
         <SimpleGrid
           templateColumns={{ md: "2fr 3fr" }}
-          gap={{ base: 2, md: "6" }}
+          gap={{ base: 2, md: 6 }}
           mb={8}
         >
           <SearchBar placeholder="Search" {...{ search, setSearch }} />
-          <FilterSelect {...{ FILTER_OPTIONS, setFilterData }} />
+          <FilterSelect setFilterData={setFilterData} />
         </SimpleGrid>
-        <CategorySection fallbackText={"There are no pages"}>
+        <CategorySection fallbackText="There are no pages">
           {renderedCards.map((card) => (
             <BrainCard pageData={card} key={card.id} />
           ))}

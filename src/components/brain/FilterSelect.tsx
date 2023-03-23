@@ -1,29 +1,25 @@
 import dynamic from "next/dynamic"
-import { FILTER_OPTIONS } from "pages/guildverse"
+import { filterOptions } from "pages/guildverse"
 
 export type FilterOption = {
   value: string
   label: string
 }
 
-type Props = {
-  setFilterData
-}
-
 const DynamicStyledSelect = dynamic(() => import("components/common/StyledSelect"))
 
-const FilterSelect = ({ setFilterData }: Props): JSX.Element => {
+const FilterSelect = ({ setFilterData }): JSX.Element => {
   if (typeof window === "undefined") return null
   return (
     <DynamicStyledSelect
       isMulti
       instanceId="filter-select"
-      options={FILTER_OPTIONS}
+      options={filterOptions}
       placeholder="Filter"
       chakraStyles={{
         control: (provided) => ({
           ...provided,
-          minH: "48px",
+          minH: "12",
           borderRadius: "0.75rem",
         }),
         menu: (provided) => ({

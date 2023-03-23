@@ -35,9 +35,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
         gap={4}
         alignItems="center"
       >
-        {image && (
-          <GuildLogo imageUrl={guildData.imageUrl} size={"48px"} imageQuality={2} />
-        )}
+        {image && <GuildLogo imageUrl={guildData.imageUrl} />}
         <VStack spacing={2} alignItems="start" w="full" maxW="full" mb="1" mt="-1">
           <Text
             as="span"
