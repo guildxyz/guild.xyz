@@ -1,6 +1,6 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import RelativeTimeInput from "components/common/RelativeTimeInput"
+import ControlledRelativeTimeInput from "components/common/RelativeTimeInput"
 import { useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -12,10 +12,7 @@ const CaptchaForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     <FormControl>
       <FormLabel>Maximum completed captcha age</FormLabel>
 
-      <RelativeTimeInput
-        fieldName={`${baseFieldPath}.data.maxAmount`}
-        checkForTouched="data"
-      />
+      <ControlledRelativeTimeInput fieldName={`${baseFieldPath}.data.maxAmount`} />
 
       <FormErrorMessage>
         {parseFromObject(errors, baseFieldPath).data?.maxAmount?.message}
