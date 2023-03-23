@@ -8,12 +8,13 @@ import RequirementDisplayComponent from "./components/RequirementDisplayComponen
 
 type Props = {
   role: Role
+  isOpen: any
 }
 
 const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
 const PARENT_PADDING = "var(--chakra-space-5)"
 
-const RoleRequirements = ({ role }: Props) => {
+const RoleRequirements = ({ role, isOpen }: Props) => {
   const requirements = role.hiddenRequirements
     ? [...role.requirements, { isHidden: true, type: "FREE" } as Requirement]
     : role.requirements
@@ -29,6 +30,10 @@ const RoleRequirements = ({ role }: Props) => {
     "var(--chakra-colors-gray-300)",
     "var(--chakra-colors-gray-900)"
   )
+
+  useEffect(() => {
+    if (!isOpen) setIsRequirementsExpanded(false)
+  }, [isOpen])
 
   // Row related refs, state, and functions
   const listWrapperRef = useRef<HTMLDivElement>(null)
@@ -68,7 +73,7 @@ const RoleRequirements = ({ role }: Props) => {
   }
 
   return (
-    <VStack spacing="0">
+    <VStack spacing="0" opacity={isOpen ? 1 : 0} transition="opacity .2s">
       {!requirements?.length ? (
         <Spinner />
       ) : isVirtualList ? (
@@ -129,7 +134,7 @@ const RoleRequirements = ({ role }: Props) => {
           />
           <Box
             position="absolute"
-            bottom={{ base: 8, md: 0 }}
+            bottom={0}
             left={0}
             right={0}
             height={6}

@@ -1,18 +1,20 @@
-import { useBreakpointValue } from "@chakra-ui/react"
+import { HStack, Icon, useBreakpointValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { Check, LockSimple, Warning, X } from "phosphor-react"
+import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
 
 type Props = {
   roleId: number
+  isOpen: any
+  onToggle: any
 }
 
-const AccessIndicator = ({ roleId }: Props): JSX.Element => {
+const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { hasAccess, isLoading, data } = useAccess(roleId)
 
   const { isActive } = useWeb3React()
@@ -35,7 +37,32 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
 
   if (hasAccess)
     return (
-      <AccessIndicatorUI colorScheme="green" label="You have access" icon={Check} />
+      <HStack spacing="0">
+        <AccessIndicatorUI
+          colorScheme="green"
+          label="You have access"
+          icon={Check}
+          flex="1 0 auto"
+          borderTopRightRadius="0 !important"
+          borderBottomRightRadius="0 !important"
+        />
+        <Button
+          size="sm"
+          {...ACCESS_INDICATOR_STYLES}
+          borderTopLeftRadius="0 !important"
+          borderBottomLeftRadius="0 !important"
+          rightIcon={
+            <Icon
+              as={CaretDown}
+              transform={isOpen && "rotate(-180deg)"}
+              transition="transform .3s"
+            />
+          }
+          onClick={onToggle}
+        >
+          {!isOpen ? "View" : "Close"}
+        </Button>
+      </HStack>
     )
 
   if (isLoading)
