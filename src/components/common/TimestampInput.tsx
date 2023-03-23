@@ -53,5 +53,4 @@ const TimestampInput = forwardRef(
   }
 )
 
-export default ControlledTimestampInput
-export { TimestampInput }
+export { ControlledTimestampInput, TimestampInput }

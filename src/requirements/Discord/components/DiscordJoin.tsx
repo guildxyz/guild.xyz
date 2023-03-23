@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import ControlledTimestampInput from "components/common/TimestampInput"
+import { ControlledTimestampInput } from "components/common/TimestampInput"
 import { useFormState } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 

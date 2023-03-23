@@ -1,7 +1,7 @@
 import { Divider, FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import ReconnectAlert from "components/common/ReconnectAlert"
-import ControlledTimestampInput from "components/common/TimestampInput"
+import { ControlledTimestampInput } from "components/common/TimestampInput"
 import useGateables from "hooks/useGateables"
 import { useFormState } from "react-hook-form"
 import { PlatformType } from "types"

@@ -102,5 +102,4 @@ const RelativeTimeInput = forwardRef(
   }
 )
 
-export default ControlledRelativeTimeInput
-export { RelativeTimeInput }
+export { ControlledRelativeTimeInput, RelativeTimeInput }
