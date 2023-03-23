@@ -177,6 +177,7 @@ type Requirement = {
   poapId?: number
 
   // Props used inside the forms on the UI
+  formFieldId?: number
   nftRequirementType?: string
   balancyDecimals?: number
   createdAt?: string
