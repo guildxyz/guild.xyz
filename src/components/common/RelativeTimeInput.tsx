@@ -52,7 +52,7 @@ const RelativeTimeInput = forwardRef(
     const [value, setValue] = useState<number>(
       !isNaN(Number(props.value)) ? Number(props.value) : undefined
     )
-    const [format, setFormat] = useState<"DAY" | "MONTH" | "YEAR">("DAY")
+    const [format, setFormat] = useState<Format>("DAY")
 
     return (
       <InputGroup>
