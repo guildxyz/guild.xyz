@@ -20,7 +20,7 @@ const FilterSelect = ({ setFilterData }): JSX.Element => {
         control: (provided) => ({
           ...provided,
           minH: "12",
-          borderRadius: "0.75rem",
+          borderRadius: "xl",
         }),
         menu: (provided) => ({
           ...provided,
