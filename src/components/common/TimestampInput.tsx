@@ -11,7 +11,6 @@ const ControlledTimestampInput = ({ fieldName, ...props }: Props): JSX.Element =
     field: { ref, name, value, onChange, onBlur },
   } = useController({
     name: fieldName,
-    shouldUnregister: true,
     rules: { required: props.isRequired && "This field is required." },
   })
 
