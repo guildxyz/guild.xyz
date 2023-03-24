@@ -22,6 +22,7 @@ import parseDescription from "utils/parseDescription"
 import useAccess from "../hooks/useAccess"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
+import useIsMember from "../hooks/useIsMember"
 import RoleRequirements from "../Requirements"
 import Visibility from "../Visibility"
 import AccessIndicator from "./components/AccessIndicator"
@@ -37,6 +38,7 @@ const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 const RoleCard = memo(({ role }: Props) => {
   const { guildPlatforms } = useGuild()
   const { isAdmin } = useGuildPermission()
+  const isMember = useIsMember()
   const { hasAccess } = useAccess(role.id)
   /**
    * If using defaultIsOpen: !hasAccess, the RewardIcons doesn't show initially in
@@ -44,14 +46,17 @@ const RoleCard = memo(({ role }: Props) => {
    * opening and closing the role, because the same layoutId is mounted twice and it
    * animates to the later one in the dom (the hidden Rewards below)
    */
-  const { isOpen, onClose, onToggle } = useDisclosure({ defaultIsOpen: true })
+  const { isOpen, onClose, onOpen, onToggle } = useDisclosure({
+    defaultIsOpen: true,
+  })
 
   const { colorMode } = useColorMode()
   const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
 
   useEffect(() => {
-    if (!isAdmin && hasAccess) onClose()
-  }, [hasAccess])
+    if (isMember && hasAccess && !isAdmin) onClose()
+    else onOpen()
+  }, [hasAccess, isMember])
 
   return (
     <Card

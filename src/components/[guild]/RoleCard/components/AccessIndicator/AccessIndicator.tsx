@@ -9,6 +9,7 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
+import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
@@ -25,11 +26,12 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { hasAccess, isLoading, data, error } = useAccess(roleId)
 
   const { isActive } = useWeb3React()
+  const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
   const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")
 
-  if (!isActive)
+  if (!isActive || (hasAccess && !isMember))
     return (
       <Button
         leftIcon={!isMobile && <LockSimple width={"0.9em"} height="0.9em" />}
@@ -39,7 +41,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         onClick={openJoinModal}
         {...ACCESS_INDICATOR_STYLES}
       >
-        Join Guild to check access
+        {`Join Guild to ${hasAccess ? "get" : "check"} access`}
       </Button>
     )
 
