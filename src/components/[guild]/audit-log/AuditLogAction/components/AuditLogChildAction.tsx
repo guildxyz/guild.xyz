@@ -1,20 +1,40 @@
 import { HStack, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
+import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { PropsWithChildren } from "react"
+import { Requirement } from "types"
+import { AUDITLOG } from "../../constants"
 import {
   AuditLogActionProvider,
   useAuditLogActionContext,
 } from "../AuditLogActionContext"
 import ActionIcon from "./ActionIcon"
 import ActionLabel from "./ActionLabel"
+import UpdatedDataGrid from "./UpdatedDataGrid"
 
 const AuditLogChildAction = (): JSX.Element => {
-  const { children } = useAuditLogActionContext()
+  const { action, data, children } = useAuditLogActionContext()
 
   return (
     <AuditLogChildActionLayout
       icon={<ActionIcon size={6} />}
       label={<ActionLabel />}
     >
+      {[
+        AUDITLOG.AddRequirement,
+        AUDITLOG.UpdateRequirement,
+        AUDITLOG.RemoveRequirement,
+      ].includes(action) && (
+        <UpdatedDataGrid
+          before={
+            <RequirementDisplayComponent
+              requirement={data as Requirement}
+              rightElement={null}
+              footer={null}
+            />
+          }
+        />
+      )}
+
       {children?.map((childAction) => (
         <AuditLogActionProvider key={childAction.id} action={childAction}>
           <AuditLogChildAction />
