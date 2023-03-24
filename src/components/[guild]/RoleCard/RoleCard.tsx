@@ -45,7 +45,7 @@ const RoleCard = memo(({ role }: Props) => {
   const { isOpen, onClose, onToggle } = useDisclosure({ defaultIsOpen: !hasAccess })
 
   const { colorMode } = useColorMode()
-  const isMobile = useBreakpointValue({ base: true, md: false })
+  const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
 
   useEffect(() => {
     if (!isAdmin && hasAccess) onClose()
