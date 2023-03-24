@@ -85,8 +85,14 @@ const RoleCard = memo(({ role }: Props) => {
           <Flex
             direction="column"
             p={5}
-            borderRightWidth={isOpen && { base: 0, md: 1 }}
-            borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
+            borderRightWidth={{ base: 0, md: 1 }}
+            borderRightColor={
+              !isOpen
+                ? "transparent"
+                : colorMode === "light"
+                ? "gray.200"
+                : "gray.600"
+            }
           >
             <HStack justifyContent="space-between" spacing={3} pos="relative">
               <HStack spacing={4} minW={0} flexShrink={0}>

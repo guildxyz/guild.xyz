@@ -15,7 +15,7 @@ import RequirementDisplayComponent from "./components/RequirementDisplayComponen
 
 type Props = {
   role: Role
-  isOpen: any
+  isOpen: boolean
 }
 
 const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
@@ -135,6 +135,7 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
             </Collapse>
           </>
         )}
+
         {hiddenRequirements.length > 0 && (
           <>
             <ExpandRequirementsButton

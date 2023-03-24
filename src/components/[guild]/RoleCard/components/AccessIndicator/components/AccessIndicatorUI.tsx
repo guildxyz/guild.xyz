@@ -16,24 +16,14 @@ type Props = {
   label: string
 } & Rest
 
-const ACCESS_INDICATOR_STYLES: ChakraProps = {
+const STYLES: ChakraProps = {
   flexShrink: 0,
   borderRadius: "lg",
   borderTopRadius: { base: 0, md: "lg" },
+  justifyContent: { base: "space-between", md: "start" },
   px: { base: 5, md: 3 },
   py: { base: 2, md: 0 },
-  justifyContent: { base: "space-between", md: "start" },
-  // width: { base: "full", md: "auto" },
-  // ml: { base: "0 !important", md: "unset !important" },
 }
-// const ACCESS_INDICATOR_LAYOUT_STYLES: ChakraProps = {
-//   position: { base: "absolute", md: "relative" },
-//   left: 0,
-//   bottom: 0,
-//   width: { base: "full", md: "auto" },
-//   justifyContent: { base: "space-between", md: "start" },
-//   ml: { base: "0 !important", md: "unset !important" },
-// }
 
 const AccessIndicatorUI = ({
   isLoading,
@@ -45,14 +35,7 @@ const AccessIndicatorUI = ({
   const IconComponent = useBreakpointValue({ base: TagRightIcon, md: TagLeftIcon })
 
   return (
-    <Tag
-      title={label}
-      size="lg"
-      colorScheme={colorScheme}
-      {...ACCESS_INDICATOR_STYLES}
-      // {...ACCESS_INDICATOR_LAYOUT_STYLES}
-      {...rest}
-    >
+    <Tag title={label} size="lg" colorScheme={colorScheme} {...STYLES} {...rest}>
       <TagLabel fontSize="sm" order={{ md: 1 }}>
         {label}
       </TagLabel>
@@ -63,4 +46,4 @@ const AccessIndicatorUI = ({
 }
 
 export default AccessIndicatorUI
-export { ACCESS_INDICATOR_STYLES }
+export { STYLES as ACCESS_INDICATOR_STYLES }
