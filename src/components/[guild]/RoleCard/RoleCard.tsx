@@ -131,22 +131,17 @@ const RoleCard = memo(({ role }: Props) => {
                   </HStack>
                 )}
               </HStack>
-              <SlideFade
-                offsetY={10}
-                in={isOpen}
-                style={{
-                  width: isOpen ? "auto" : "0 !important",
-                  overflow: "hidden",
-                }}
-              >
+              <SlideFade offsetY={10} in={isOpen}>
                 <MemberCount memberCount={role.memberCount} roleId={role.id} />
-                {isAdmin && (
-                  <>
-                    <Spacer m="0 !important" />
-                    <DynamicEditRole roleId={role.id} />
-                  </>
-                )}
               </SlideFade>
+              {isAdmin && (
+                <>
+                  <Spacer m="0 !important" />
+                  <SlideFade offsetY={10} in={isOpen}>
+                    <DynamicEditRole roleId={role.id} />
+                  </SlideFade>
+                </>
+              )}
             </HStack>
             {role.description && (
               <SlideFade offsetY={10} in={isOpen}>
