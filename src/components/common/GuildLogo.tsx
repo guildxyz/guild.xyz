@@ -5,12 +5,19 @@ import { Rest } from "types"
 
 type Props = {
   imageUrl?: string
+  imageQuality?: number
   size?: ResponsiveValue<number | string>
   priority?: boolean
 } & Rest
 
 const GuildLogo = memo(
-  ({ imageUrl, size = "48px", priority = false, ...rest }: Props): JSX.Element => {
+  ({
+    imageUrl,
+    imageQuality = 70,
+    size = "48px",
+    priority = false,
+    ...rest
+  }: Props): JSX.Element => {
     const { colorMode } = useColorMode()
 
     return (
@@ -27,6 +34,7 @@ const GuildLogo = memo(
           ) : (
             <Image
               src={imageUrl}
+              quality={imageQuality}
               alt="Guild logo"
               layout="fill"
               priority={priority}

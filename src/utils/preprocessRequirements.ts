@@ -43,9 +43,6 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         )
           processedRequirement.data.addresses = []
 
-        // Deleting ID here, we don't want to update it, and it might also cause bugs
-        delete processedRequirement.id
-
         // needed for POAP requirements, temporary
         delete (processedRequirement as any).requirementId
         delete (processedRequirement as any).logic

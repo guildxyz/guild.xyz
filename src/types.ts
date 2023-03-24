@@ -116,6 +116,14 @@ type GuildBase = {
   memberCount: number
 }
 
+type BrainCardData = {
+  id: string
+  title: string
+  tags?: Array<string>
+  icon?: string
+  backgroundImage?: string
+}
+
 type GuildAdmin = {
   id: number
   address: string
@@ -177,6 +185,7 @@ type Requirement = {
   poapId?: number
 
   // Props used inside the forms on the UI
+  formFieldId?: number
   nftRequirementType?: string
   balancyDecimals?: number
   createdAt?: string
@@ -499,6 +508,7 @@ export type {
   Role,
   GuildPlatform,
   GuildBase,
+  BrainCardData,
   Guild,
   SocialLinkKey,
   SocialLinks,
