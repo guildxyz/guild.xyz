@@ -1,6 +1,4 @@
 import {
-  Button,
-  FormControl,
   FormLabel,
   HStack,
   Icon,
@@ -11,10 +9,11 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
+  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import ModalButton from "components/common/ModalButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -26,46 +25,31 @@ import fetcher from "utils/fetcher"
 
 const NewOwner = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [newOwner, setNewOwner] = useState("")
 
   return (
     <>
-      <FormControl w="full">
-        <HStack>
-          <FormLabel mb="0">Hand over owner role</FormLabel>
-        </HStack>
-        <Text colorScheme="gray" mb={2}>
-          You will lose your ownership and become an admin{" "}
-        </Text>
-        <Stack direction={["column", "row"]} spacing={4} alignItems="center">
-          <Input
-            type="url"
-            placeholder="new owner"
-            onChange={(e) => setNewOwner(e.target.value)}
-          />
-          <Button
-            isDisabled={newOwner.length !== 42}
-            px="64px"
-            as="label"
-            variant="outline"
-            leftIcon={<Icon as={Warning} color="red" />}
-            fontWeight="medium"
-            onClick={onOpen}
-            data-dd-action-name="hand over ownership"
-          >
-            Hand over ownership
-          </Button>
-        </Stack>
-      </FormControl>
+      <HStack justifyContent="space-between">
+        <FormLabel mb="0">Hand over owner role</FormLabel>
+        <Button
+          size="sm"
+          as="label"
+          variant="outline"
+          fontWeight="medium"
+          onClick={onOpen}
+          data-dd-action-name="hand over ownership"
+        >
+          Hand over ownership
+        </Button>
+      </HStack>
 
-      <NewOwnerModal isOpen={isOpen} onClose={onClose} newOwner={newOwner} />
+      <NewOwnerModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }
 
-const NewOwnerModal = ({ isOpen, onClose, newOwner }) => {
-  const { id } = useGuild()
-
+const NewOwnerModal = ({ isOpen, onClose }) => {
+  const { mutateGuild, id } = useGuild()
+  const [newOwner, setNewOwner] = useState("")
   const changeOwner = async (signedValidation: SignedValdation) => {
     fetcher(`/guild/${id}/ownership`, {
       method: "PUT",
@@ -74,17 +58,17 @@ const NewOwnerModal = ({ isOpen, onClose, newOwner }) => {
   }
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-
-  const { onSubmit } = useSubmitWithSign(changeOwner, {
+  const { onSubmit, isLoading } = useSubmitWithSign(changeOwner, {
+    forcePrompt: true,
     onSuccess: () => {
       toast({
         title: `Owner changed!`,
         status: "success",
       })
+      mutateGuild()
       onClose()
     },
     onError: (error) => showErrorToast(error),
-    forcePrompt: true,
   })
 
   return (
@@ -104,10 +88,23 @@ const NewOwnerModal = ({ isOpen, onClose, newOwner }) => {
             Are you sure, that you hand over your ownership? Your role will switch to
             owner.
           </Text>
+          <Input
+            type="url"
+            placeholder="new owner"
+            onChange={(e) => setNewOwner(e.target.value)}
+          />
           <ModalButton
             mt="8"
             onClick={() => onSubmit({ to: newOwner })}
             colorScheme="green"
+            leftIcon={
+              isLoading ? (
+                <Spinner size="sm" />
+              ) : (
+                <Icon as={Warning} color="red.500" />
+              )
+            }
+            isDisabled={newOwner.length !== 42 || !newOwner.startsWith("0x")}
           >
             Hand over ownership
           </ModalButton>
