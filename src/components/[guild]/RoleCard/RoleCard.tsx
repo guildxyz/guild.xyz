@@ -109,7 +109,7 @@ const RoleCard = memo(({ role }: Props) => {
                       )
                       return (
                         <RewardIcon
-                          roleId={role.id}
+                          rolePlatformId={platform.id}
                           guildPlatform={guildPlatform}
                           transition={{
                             bounce: 0.2,

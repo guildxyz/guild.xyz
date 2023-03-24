@@ -67,7 +67,12 @@ const Reward = ({ role, platform, withLink }: Props) => {
 
   return (
     <RewardDisplay
-      icon={<RewardIcon roleId={role.id} guildPlatform={platform?.guildPlatform} />}
+      icon={
+        <RewardIcon
+          rolePlatformId={platform.id}
+          guildPlatform={platform?.guildPlatform}
+        />
+      }
       label={
         <>
           {getRewardLabel(platform)}
@@ -131,16 +136,16 @@ const RewardDisplay = ({
 const MotionImg = motion(Img)
 
 const RewardIcon = ({
-  roleId,
+  rolePlatformId,
   guildPlatform,
   transition,
 }: {
-  roleId: number
+  rolePlatformId: number
   guildPlatform?: GuildPlatform
   transition?: Transition
 }) => (
   <MotionImg
-    layoutId={`${roleId}_role_${guildPlatform?.id}_reward_img`}
+    layoutId={`${rolePlatformId}_reward_img`}
     transition={{ type: "spring", duration: 0.5, ...transition }}
     src={`/platforms/${PlatformType[guildPlatform?.platformId]?.toLowerCase()}.png`}
     alt={guildPlatform?.platformGuildName}
