@@ -204,7 +204,7 @@ const PoapVoiceForm = ({ onClose, poapId }): JSX.Element => {
             </Select>
           </HStack>
           <FormErrorMessage>
-            {errors?.voiceRequirement?.percentOrMinute?.message}
+            {(errors?.voiceRequirement as any)?.percentOrMinute?.message}
           </FormErrorMessage>
         </FormControl>
         <Text colorScheme={"gray"} fontSize="sm">

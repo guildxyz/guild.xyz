@@ -116,6 +116,14 @@ type GuildBase = {
   memberCount: number
 }
 
+type BrainCardData = {
+  id: string
+  title: string
+  tags?: Array<string>
+  icon?: string
+  backgroundImage?: string
+}
+
 type GuildAdmin = {
   id: number
   address: string
@@ -500,6 +508,7 @@ export type {
   Role,
   GuildPlatform,
   GuildBase,
+  BrainCardData,
   Guild,
   SocialLinkKey,
   SocialLinks,

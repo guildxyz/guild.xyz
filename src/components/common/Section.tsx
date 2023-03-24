@@ -2,9 +2,9 @@ import { Heading, HStack, Stack, StackProps } from "@chakra-ui/react"
 import { forwardRef, PropsWithChildren } from "react"
 
 type Props = {
-  title: string | JSX.Element
+  title?: string | JSX.Element
   titleRightElement?: JSX.Element
-}
+} & Omit<StackProps, "title">
 
 const Section = forwardRef(
   (
