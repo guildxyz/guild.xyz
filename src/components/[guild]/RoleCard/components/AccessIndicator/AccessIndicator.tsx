@@ -1,4 +1,11 @@
-import { HStack, Icon, useBreakpointValue } from "@chakra-ui/react"
+import {
+  Box,
+  Divider,
+  HStack,
+  Icon,
+  useBreakpointValue,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -20,6 +27,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { isActive } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
+  const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")
 
   if (!isActive)
     return (
@@ -37,7 +45,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
 
   if (hasAccess)
     return (
-      <HStack spacing="0">
+      <HStack spacing="0" flexShrink={0}>
         <AccessIndicatorUI
           colorScheme="green"
           label="You have access"
@@ -46,11 +54,13 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
           borderTopRightRadius="0 !important"
           borderBottomRightRadius="0 !important"
         />
+        <Divider orientation="vertical" h="8" borderColor={dividerColor} />
         <Button
           size="sm"
           {...ACCESS_INDICATOR_STYLES}
           borderTopLeftRadius="0 !important"
           borderBottomLeftRadius="0 !important"
+          iconSpacing="0"
           rightIcon={
             <Icon
               as={CaretDown}
@@ -60,7 +70,14 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
           }
           onClick={onToggle}
         >
-          {!isOpen ? "View" : "Close"}
+          <Box
+            w={isOpen ? "0" : "90px"}
+            transition={"width .2s"}
+            overflow="hidden"
+            textAlign={"left"}
+          >
+            View details
+          </Box>
         </Button>
       </HStack>
     )
