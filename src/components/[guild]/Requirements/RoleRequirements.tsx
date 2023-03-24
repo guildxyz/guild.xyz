@@ -1,4 +1,11 @@
-import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
+import {
+  Box,
+  Collapse,
+  SlideFade,
+  Spinner,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
 import React, { memo, useEffect, useRef, useState } from "react"
 import { VariableSizeList } from "react-window"
 import { Requirement, Role } from "types"
@@ -73,79 +80,85 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
   }
 
   return (
-    <VStack spacing="0" opacity={isOpen ? 1 : 0} transition="opacity .2s">
-      {!requirements?.length ? (
-        <Spinner />
-      ) : isVirtualList ? (
-        <Box ref={listWrapperRef} w="full" alignSelf="flex-start">
-          <VariableSizeList
-            ref={listRef}
-            width={`calc(100% + ${PARENT_PADDING})`}
-            height={isRequirementsExpanded ? 340 : 280}
-            itemCount={requirements.length}
-            itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
-            className="custom-scrollbar"
-            style={{
-              marginBottom: isRequirementsExpanded && `calc(${PARENT_PADDING} * -1)`,
-              overflowY: isRequirementsExpanded ? "scroll" : "hidden",
-              WebkitMaskImage: `linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)`,
-            }}
-          >
-            {Row}
-          </VariableSizeList>
-        </Box>
-      ) : (
-        <>
-          {shownRequirements.map((requirement, i) => (
-            <React.Fragment key={i}>
-              <RequirementDisplayComponent requirement={requirement} />
-              {i < shownRequirements.length - 1 && (
-                <LogicDivider logic={role.logic} />
-              )}
-            </React.Fragment>
-          ))}
-
-          <Collapse
-            in={isRequirementsExpanded}
-            animateOpacity={false}
-            style={{ width: "100%" }}
-          >
-            {hiddenRequirements.map((requirement, i) => (
-              <React.Fragment key={i}>
-                {i === 0 && <LogicDivider logic={role.logic} />}
+    <SlideFade in={isOpen}>
+      <VStack spacing="0">
+        {!requirements?.length ? (
+          <Spinner />
+        ) : isVirtualList ? (
+          <Box ref={listWrapperRef} w="full" alignSelf="flex-start">
+            <VariableSizeList
+              ref={listRef}
+              width={`calc(100% + ${PARENT_PADDING})`}
+              height={isRequirementsExpanded ? 340 : 280}
+              itemCount={requirements.length}
+              itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
+              className="custom-scrollbar"
+              style={{
+                marginBottom:
+                  isRequirementsExpanded && `calc(${PARENT_PADDING} * -1)`,
+                overflowY: isRequirementsExpanded ? "scroll" : "hidden",
+                WebkitMaskImage: `linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)`,
+              }}
+            >
+              {Row}
+            </VariableSizeList>
+          </Box>
+        ) : (
+          <>
+            {shownRequirements.map((requirement, i) => (
+              <SlideFade
+                key={i}
+                in={isOpen}
+                transition={{ enter: { delay: i * 0.1 } }}
+                style={{ width: "100%" }}
+              >
                 <RequirementDisplayComponent requirement={requirement} />
-                {i < hiddenRequirements.length - 1 && (
+                {i < shownRequirements.length - 1 && (
                   <LogicDivider logic={role.logic} />
                 )}
-              </React.Fragment>
+              </SlideFade>
             ))}
-          </Collapse>
-        </>
-      )}
-
-      {hiddenRequirements.length > 0 && (
-        <>
-          <ExpandRequirementsButton
-            logic={role.logic}
-            hiddenRequirements={hiddenRequirements.length}
-            isRequirementsExpanded={isRequirementsExpanded}
-            setIsRequirementsExpanded={setIsRequirementsExpanded}
-            isHidden={isVirtualList && isRequirementsExpanded}
-          />
-          <Box
-            position="absolute"
-            bottom={0}
-            left={0}
-            right={0}
-            height={6}
-            bgGradient={`linear-gradient(to top, ${shadowColor}, transparent)`}
-            pointerEvents="none"
-            opacity={!isVirtualList && isRequirementsExpanded ? 0 : 0.6}
-            transition="opacity 0.2s ease"
-          />
-        </>
-      )}
-    </VStack>
+            <Collapse
+              in={isRequirementsExpanded}
+              animateOpacity={false}
+              style={{ width: "100%" }}
+            >
+              {hiddenRequirements.map((requirement, i) => (
+                <React.Fragment key={i}>
+                  {i === 0 && <LogicDivider logic={role.logic} />}
+                  <RequirementDisplayComponent requirement={requirement} />
+                  {i < hiddenRequirements.length - 1 && (
+                    <LogicDivider logic={role.logic} />
+                  )}
+                </React.Fragment>
+              ))}
+            </Collapse>
+          </>
+        )}
+        {hiddenRequirements.length > 0 && (
+          <>
+            <ExpandRequirementsButton
+              logic={role.logic}
+              hiddenRequirements={hiddenRequirements.length}
+              isRequirementsExpanded={isRequirementsExpanded}
+              setIsRequirementsExpanded={setIsRequirementsExpanded}
+              isHidden={isVirtualList && isRequirementsExpanded}
+            />
+            <Box
+              position="absolute"
+              bottom={0}
+              left={0}
+              right={0}
+              height={6}
+              bgGradient={`linear-gradient(to top, ${shadowColor}, transparent)`}
+              pointerEvents="none"
+              opacity={!isVirtualList && isRequirementsExpanded ? 0 : 0.6}
+              transition="opacity 0.2s ease"
+            />
+          </>
+        )}
+      </VStack>
+    </SlideFade>
   )
 }
 

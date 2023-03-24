@@ -1,12 +1,12 @@
 import {
   Box,
   Collapse,
-  Fade,
   Flex,
   Heading,
   HStack,
   Img,
   SimpleGrid,
+  SlideFade,
   Spacer,
   Text,
   useBreakpointValue,
@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
+import { motion } from "framer-motion"
 import dynamic from "next/dynamic"
 import { Question } from "phosphor-react"
 import { memo, useEffect } from "react"
@@ -34,6 +35,8 @@ type Props = {
 }
 
 const DynamicEditRole = dynamic(() => import("./components/EditRole"))
+
+const MotionImg = motion(Img)
 
 const RoleCard = memo(({ role }: Props) => {
   const { guildPlatforms } = useGuild()
@@ -106,7 +109,14 @@ const RoleCard = memo(({ role }: Props) => {
                         (p) => p.id === platform.guildPlatformId
                       )
                       return (
-                        <Img
+                        <MotionImg
+                          layoutId={`${role.id}_role_${guildPlatform?.id}_reward_img`}
+                          transition={{
+                            type: "spring",
+                            duration: 0.6,
+                            bounce: 0.2,
+                            delay: i * 0.05,
+                          }}
                           key={i}
                           src={`/platforms/${PlatformType[
                             guildPlatform?.platformId
@@ -118,29 +128,37 @@ const RoleCard = memo(({ role }: Props) => {
                   </HStack>
                 )}
               </HStack>
-              <Fade in={isOpen} style={{ width: isOpen ? "auto" : "0 !important" }}>
+              <SlideFade
+                offsetY={10}
+                in={isOpen}
+                style={{ width: isOpen ? "auto" : "0 !important" }}
+              >
                 <MemberCount memberCount={role.memberCount} roleId={role.id} />
-              </Fade>
-              {isAdmin && isOpen && (
-                <>
-                  <Spacer m="0 !important" />
-                  <DynamicEditRole roleId={role.id} />
-                </>
-              )}
+                {isAdmin && (
+                  <>
+                    <Spacer m="0 !important" />
+                    <DynamicEditRole roleId={role.id} />
+                  </>
+                )}
+              </SlideFade>
             </HStack>
             {role.description && (
-              <Box pt={6} wordBreak="break-word">
-                {parseDescription(role.description)}
-              </Box>
+              <SlideFade offsetY={10} in={isOpen}>
+                <Box pt={6} wordBreak="break-word">
+                  {parseDescription(role.description)}
+                </Box>
+              </SlideFade>
             )}
             <Box pt={6} mt="auto">
-              {role.rolePlatforms?.map((platform) => (
-                <Reward
-                  withLink
+              {role.rolePlatforms?.map((platform, i) => (
+                <SlideFade
                   key={platform.guildPlatformId}
-                  platform={platform}
-                  role={role}
-                />
+                  offsetY={10}
+                  in={isOpen}
+                  transition={{ enter: { delay: i * 0.1 } }}
+                >
+                  <Reward withLink platform={platform} role={role} />
+                </SlideFade>
               ))}
               {role.hiddenRewards && (
                 <RewardDisplay
@@ -156,6 +174,7 @@ const RoleCard = memo(({ role }: Props) => {
             bgColor={
               isOpen && (colorMode === "light" ? "gray.50" : "blackAlpha.300")
             }
+            transition="background .2s"
             pos="relative"
           >
             <HStack
@@ -163,20 +182,20 @@ const RoleCard = memo(({ role }: Props) => {
               transform={!isOpen && "translateY(10px)"}
               transition="transform .2s"
             >
-              {isOpen ? (
-                <Text
-                  as="span"
-                  mt="1"
-                  mr="2"
-                  fontSize="xs"
-                  fontWeight="bold"
-                  color="gray"
-                  textTransform="uppercase"
-                  noOfLines={1}
-                >
-                  Requirements to qualify
-                </Text>
-              ) : null}
+              <Text
+                as="span"
+                mt="1"
+                mr="2"
+                fontSize="xs"
+                fontWeight="bold"
+                color="gray"
+                textTransform="uppercase"
+                noOfLines={1}
+                opacity={isOpen ? 1 : 0}
+                transition="opacity .2s"
+              >
+                Requirements to qualify
+              </Text>
               <Spacer />
               {!isMobile && (
                 <AccessIndicator roleId={role.id} {...{ isOpen, onToggle }} />

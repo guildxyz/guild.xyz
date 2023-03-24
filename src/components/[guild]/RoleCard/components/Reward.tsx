@@ -1,4 +1,4 @@
-import { Circle, HStack, Icon, Img, Text, Tooltip } from "@chakra-ui/react"
+import { HStack, Icon, Img, Text, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
@@ -7,6 +7,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import Visibility from "components/[guild]/Visibility"
+import { motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import { ReactNode, useMemo } from "react"
@@ -69,6 +70,7 @@ const Reward = ({ role, platform, withLink }: Props) => {
       imgSrc={`/platforms/${PlatformType[
         platform.guildPlatform?.platformId
       ]?.toLowerCase()}.png`}
+      layoutId={`${role.id}_role_${platform.guildPlatformId}_reward_img`}
       imgAlt={platform.guildPlatform?.platformGuildName}
       label={
         <>
@@ -111,23 +113,33 @@ const Reward = ({ role, platform, withLink }: Props) => {
   )
 }
 
+const MotionImg = motion(Img)
+
 const RewardDisplay = ({
   imgSrc,
   imgAlt,
+  icon,
   label,
   rightElement,
-  icon,
+  layoutId,
 }: {
   imgSrc?: string
   imgAlt?: string
   icon?: ReactNode
   label: ReactNode
   rightElement?: ReactNode
+  layoutId?: string
 }) => (
   <HStack pt="3" spacing={0} alignItems={"flex-start"}>
-    <Circle size={6} overflow="hidden">
-      {icon ?? <Img src={imgSrc} alt={imgAlt} boxSize={6} />}
-    </Circle>
+    {icon ?? (
+      <MotionImg
+        layoutId={layoutId}
+        transition={{ type: "spring", duration: 0.6, bounce: 0.2 }}
+        src={imgSrc}
+        alt={imgAlt}
+        boxSize={6}
+      />
+    )}
     <Text px="2" maxW="calc(100% - var(--chakra-sizes-12))">
       {label}
     </Text>
