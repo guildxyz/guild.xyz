@@ -1,32 +1,36 @@
 import { Tag, TagLabel, TagLeftIcon, Tooltip } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import platforms from "platforms/platforms"
-import { PlatformName } from "types"
+import useAuditLog from "../../hooks/useAuditLog"
 
 type Props = {
-  type: PlatformName
-  rolePlatformId: string
-  name: string
+  rolePlatformId: number
 }
-const RewardTag = ({ type, rolePlatformId, name }: Props): JSX.Element => {
+const RewardTag = ({ rolePlatformId }: Props): JSX.Element => {
+  const { data } = useAuditLog()
+
+  const reward = data.values.rolePlatforms.find((rp) => rp.id === rolePlatformId)
+
   const router = useRouter()
 
   return (
     <Tooltip label="Filter by reward">
       <Tag
         as="button"
-        bgColor={`${platforms[type]?.colorScheme}.500` ?? "gray.500"}
+        bgColor={`${platforms[reward?.platformName]?.colorScheme}.500` ?? "gray.500"}
         color="white"
         onClick={() => {
-          router.replace({
+          router.push({
             pathname: router.pathname,
             query: { ...router.query, rolePlatformId },
           })
         }}
       >
-        {platforms[type]?.icon && <TagLeftIcon as={platforms[type].icon} />}
+        {platforms[reward?.platformName]?.icon && (
+          <TagLeftIcon as={platforms[reward?.platformName].icon} />
+        )}
 
-        <TagLabel>{name}</TagLabel>
+        <TagLabel>{reward?.platformGuildName}</TagLabel>
       </Tag>
     </Tooltip>
   )

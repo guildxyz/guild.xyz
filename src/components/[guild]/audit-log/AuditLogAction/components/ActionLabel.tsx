@@ -4,20 +4,21 @@ import capitalize from "utils/capitalize"
 import { AUDITLOG } from "../../constants"
 import useAuditLog from "../../hooks/useAuditLog"
 import { useAuditLogActionContext } from "../AuditLogActionContext"
+import RewardTag from "./RewardTag"
 import RoleTag from "./RoleTag"
 import UserTag from "./UserTag"
 
 const ActionLabel = (): JSX.Element => {
   const { data: auditLog } = useAuditLog()
 
-  const { actionName, values, ids, data, parentId } = useAuditLogActionContext()
+  const { action, ids, data, parentId } = useAuditLogActionContext()
 
-  const capitalizedName = capitalize(actionName)
+  const capitalizedName = capitalize(action)
 
   return (
     <HStack>
       {(() => {
-        switch (actionName) {
+        switch (action) {
           case AUDITLOG.AddAdmin:
           case AUDITLOG.RemoveAdmin:
             return (
@@ -32,9 +33,9 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
-                <RoleTag data={data} />
+                <RoleTag id={ids.role} data={data} />
                 <Text as="span">by</Text>
-                <UserTag address={values.user} />
+                <UserTag id={ids.user} />
               </>
             )
           case AUDITLOG.AddReward:
@@ -46,7 +47,7 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
-                {/* TODO: we'll only see reward id, which is not enough info for us - Devid will add platformId and platformGuildName so we can show that data here */}
+                <RewardTag rolePlatformId={ids.rolePlatform} />
               </>
             )
           case AUDITLOG.ClickJoinOnWeb:
@@ -59,16 +60,16 @@ const ActionLabel = (): JSX.Element => {
             )
           case AUDITLOG.GetRole:
           case AUDITLOG.LoseRole:
-            const parentActionName = auditLog
-              ?.flat()
-              ?.find((log) => log.id === parentId)?.actionName
+            const parentaction = auditLog?.entries?.find(
+              (log) => log.id === parentId
+            )?.action
             const isChildOfUserStatusUpdate = [
               AUDITLOG.UserStatusUpdate,
               AUDITLOG.JoinGuild,
               AUDITLOG.ClickJoinOnWeb,
               AUDITLOG.ClickJoinOnPlatform,
               AUDITLOG.LeaveGuild,
-            ].includes(parentActionName)
+            ].includes(parentaction)
 
             return (
               <>
@@ -77,9 +78,9 @@ const ActionLabel = (): JSX.Element => {
                   {isChildOfUserStatusUpdate ? ":" : ""}
                 </Text>
                 {isChildOfUserStatusUpdate ? (
-                  <RoleTag roleId={ids.roleId} />
+                  <RoleTag id={ids.role} />
                 ) : (
-                  <UserTag address={values.user} />
+                  <UserTag id={ids.user} />
                 )}
               </>
             )
@@ -102,10 +103,10 @@ const ActionLabel = (): JSX.Element => {
                 <Text as="span" fontWeight="semibold">
                   {capitalizedName}
                 </Text>
-                {ids.roleId ? (
-                  <RoleTag data={data} roleId={ids.roleId} />
-                ) : values.user ? (
-                  <UserTag address={values.user} />
+                {ids.role ? (
+                  <RoleTag id={ids.role} data={data} />
+                ) : ids.user ? (
+                  <UserTag id={ids.user} />
                 ) : null}
               </>
             )

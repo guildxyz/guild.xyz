@@ -1,6 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRouter } from "next/router"
-import useSWRInfinite from "swr/infinite"
+import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite"
+import { PlatformName, Requirement } from "types"
 import { AuditLogAction } from "../constants"
 
 const LIMIT = 25
@@ -12,7 +13,7 @@ export const SUPPORTED_QUERY_PARAMS = [
   "tree",
   "before",
   "after",
-  "actionName",
+  "action",
   "service",
   "guildId",
   "roleId",
@@ -23,12 +24,35 @@ export const SUPPORTED_QUERY_PARAMS = [
 ] as const
 export type SupportedQueryParam = (typeof SUPPORTED_QUERY_PARAMS)[number]
 
+type AuditLogActionResponse = {
+  entries: AuditLogAction[]
+  values: {
+    guilds: { id: number; name: string }[]
+    poaps: any[] // TODO
+    requirements: Requirement[]
+    rolePlatforms: {
+      id: number
+      platformId: number
+      guildId: number
+      platformRoleId: string
+      platformName: PlatformName
+      platformGuildId: string
+      platformGuildName: string
+    }[]
+    roles: { id: number; name: string }[]
+    users: { id: number; address: string }[]
+  }
+}
+
 const isSupportedQueryParam = (arg: any): arg is SupportedQueryParam => {
   if (typeof arg !== "string") return false
   return SUPPORTED_QUERY_PARAMS.includes(arg as SupportedQueryParam)
 }
 
-const useAuditLog = () => {
+const useAuditLog = (): Omit<
+  SWRInfiniteResponse<AuditLogActionResponse>,
+  "mutate" | "data"
+> & { data: AuditLogActionResponse; mutate: () => void } => {
   const { id } = useGuild()
 
   const { query } = useRouter()
@@ -52,7 +76,7 @@ const useAuditLog = () => {
     return `/auditLog?${searchParams}`
   }
 
-  const infiniteData = useSWRInfinite<AuditLogAction[]>(getKey, {
+  const swrResponse = useSWRInfinite<AuditLogActionResponse>(getKey, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
@@ -61,16 +85,50 @@ const useAuditLog = () => {
 
   const searchQuery = query.search?.toString()
 
+  // return {
+  //   ...infiniteData,
+  //   data: searchQuery?.length
+  //     ? infiniteData.data?.map((chunk) =>
+  //         chunk.filter((actionData) =>
+  //           actionData.action.toLowerCase().includes(searchQuery.toLowerCase())
+  //         )
+  //       )
+  //     : infiniteData.data,
+  // }
+
   return {
-    ...infiniteData,
-    data: searchQuery?.length
-      ? infiniteData.data?.map((chunk) =>
-          chunk.filter((action) =>
-            action.actionName.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-        )
-      : infiniteData.data,
+    ...swrResponse,
+    data: transformAuditLogInfiniteResponse(swrResponse.data),
+    mutate: () => swrResponse.mutate(),
   }
+}
+
+const transformAuditLogInfiniteResponse = (
+  rawResponse: AuditLogActionResponse[]
+): AuditLogActionResponse => {
+  if (!rawResponse) return undefined
+
+  const transformedResponse: AuditLogActionResponse = {
+    entries: [],
+    values: {
+      guilds: [],
+      poaps: [],
+      requirements: [],
+      rolePlatforms: [],
+      roles: [],
+      users: [],
+    },
+  }
+
+  rawResponse.forEach((chunk) => {
+    transformedResponse.entries.push(...chunk.entries)
+
+    Object.keys(chunk.values).forEach((key) =>
+      transformedResponse.values[key]?.push(...chunk.values[key])
+    )
+  })
+
+  return transformedResponse
 }
 
 export default useAuditLog

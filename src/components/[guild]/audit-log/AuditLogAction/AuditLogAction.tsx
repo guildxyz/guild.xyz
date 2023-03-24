@@ -34,8 +34,8 @@ const AuditLogAction = (): JSX.Element => {
   const shouldRenderCollapse = children?.length > 0
 
   return (
-    <Card role="group">
-      <Box position="relative">
+    <Card>
+      <Box role="group" position="relative">
         <Box
           position="absolute"
           inset={0}

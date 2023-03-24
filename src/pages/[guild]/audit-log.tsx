@@ -43,10 +43,10 @@ const AuditLog = (): JSX.Element => {
       <AuditLogFiltersBar />
 
       <Section ref={listRef} title="Actions" mt={8}>
-        {data?.length > 0 &&
-          data
-            .flat()
-            .map((action) => <AuditLogAction key={action.id} action={action} />)}
+        {data?.entries?.length > 0 &&
+          data.entries.map((action) => (
+            <AuditLogAction key={action.id} action={action} />
+          ))}
 
         {isValidating && <AuditLogSkeleton />}
       </Section>

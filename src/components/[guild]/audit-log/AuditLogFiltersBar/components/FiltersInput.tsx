@@ -159,7 +159,7 @@ const FiltersInput = (): JSX.Element => {
       }
     })
 
-    router.replace({
+    router.push({
       pathname: router.pathname,
       query,
     })

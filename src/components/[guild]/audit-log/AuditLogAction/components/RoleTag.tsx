@@ -12,14 +12,14 @@ import { useRouter } from "next/router"
 
 type Props = {
   data?: Record<string, string>
-  roleId?: number
+  id?: number
 }
 
-const RoleTag = ({ data, roleId }: Props): JSX.Element => {
+const RoleTag = ({ data, id }: Props): JSX.Element => {
   const colorScheme = useColorModeValue("alpha", "blackalpha")
 
   const { roles } = useGuild()
-  const role = roles?.find((r) => r.id === roleId)
+  const role = roles?.find((r) => r.id === id)
 
   const roleName = role?.name ?? data?.name
   const roleImageUrl = role?.imageUrl ?? data?.imageUrl
@@ -28,16 +28,20 @@ const RoleTag = ({ data, roleId }: Props): JSX.Element => {
   const router = useRouter()
 
   return (
-    <Tooltip label="Filter by role">
+    <Tooltip label="Filter by role" isDisabled={!id}>
       <Tag
         as="button"
         colorScheme={colorScheme}
-        onClick={() => {
-          router.replace({
-            pathname: router.pathname,
-            query: { ...router.query, roleId: "todo" },
-          })
-        }}
+        onClick={
+          id
+            ? () => {
+                router.push({
+                  pathname: router.pathname,
+                  query: { ...router.query, roleId: id },
+                })
+              }
+            : undefined
+        }
       >
         {!roleName ? (
           "Unknown role"

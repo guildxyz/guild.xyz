@@ -8,14 +8,18 @@ import {
 import GuildAvatar from "components/common/GuildAvatar"
 import { useRouter } from "next/router"
 import shortenHex from "utils/shortenHex"
+import useAuditLog from "../../hooks/useAuditLog"
 
 type Props = {
-  address: string
+  id: number
 }
 
-const UserTag = ({ address }: Props): JSX.Element => {
+const UserTag = ({ id }: Props): JSX.Element => {
   const variant = useColorModeValue("subtle", "solid")
   const colorScheme = useColorModeValue("alpha", "gray")
+
+  const { data } = useAuditLog()
+  const address = data.values.users.find((u) => u.id === id)?.address
 
   const router = useRouter()
 
@@ -27,9 +31,9 @@ const UserTag = ({ address }: Props): JSX.Element => {
         colorScheme={colorScheme}
         cursor="pointer"
         onClick={() => {
-          router.replace({
+          router.push({
             pathname: router.pathname,
-            query: { ...router.query, userId: "todo" },
+            query: { ...router.query, userId: id },
           })
         }}
       >

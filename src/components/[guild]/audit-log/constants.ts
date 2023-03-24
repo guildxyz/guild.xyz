@@ -75,20 +75,19 @@ export type AuditLogActionType = keyof typeof AUDITLOG
 export type AuditLogAction = {
   id: string
   parentId?: string
-  actionName: AUDITLOG
+  action: AUDITLOG
   correlationId: string
   service: string
   timestamp: string
-  before: any // TODO
-  data?: Record<string, any> // TODO
+  before?: Record<string, any>
+  data?: Record<string, any>
   ids: {
     // TODO: maybe there are some missing ids here
-    userId?: number
-    guildId?: number
-    roleId?: number
-    rolePlatformId?: number
+    user?: number
+    guild?: number
+    role?: number
+    rolePlatform?: number
   }
-  values: Record<string, any> // TODO
   children?: Array<AuditLogAction>
 }
 

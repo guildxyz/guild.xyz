@@ -15,7 +15,7 @@ type ActionIconProps = {
   sx: SystemStyleObject
 }
 
-const getActionIconProps = (actionName: string, size = 8): ActionIconProps => {
+const getActionIconProps = (action: string, size = 8): ActionIconProps => {
   const propsBase: ActionIconProps = {
     as: Question,
     boxSize: size,
@@ -28,14 +28,14 @@ const getActionIconProps = (actionName: string, size = 8): ActionIconProps => {
 
   return {
     ...propsBase,
-    ...auditLogActionIcons[actionName],
+    ...auditLogActionIcons[action],
   }
 }
 
 const ActionIcon = ({ size }: Props): JSX.Element => {
-  const { actionName } = useAuditLogActionContext()
+  const { action } = useAuditLogActionContext()
 
-  return <Icon {...getActionIconProps(actionName, size)} />
+  return <Icon {...getActionIconProps(action, size)} />
 }
 
 export default ActionIcon
