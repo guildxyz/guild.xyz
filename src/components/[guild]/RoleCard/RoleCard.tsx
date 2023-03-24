@@ -116,7 +116,7 @@ const RoleCard = memo(({ role }: Props) => {
                           layoutId={`${role.id}_role_${guildPlatform?.id}_reward_img`}
                           transition={{
                             type: "spring",
-                            duration: 0.6,
+                            duration: 0.5,
                             bounce: 0.2,
                             delay: i * 0.05,
                           }}

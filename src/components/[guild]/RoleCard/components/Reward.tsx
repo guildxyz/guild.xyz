@@ -134,7 +134,7 @@ const RewardDisplay = ({
     {icon ?? (
       <MotionImg
         layoutId={layoutId}
-        transition={{ type: "spring", duration: 0.6, bounce: 0.2 }}
+        transition={{ type: "spring", duration: 0.5 }}
         src={imgSrc}
         alt={imgAlt}
         boxSize={6}
