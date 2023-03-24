@@ -19,6 +19,7 @@ import {
 import ActionIcon from "./components/ActionIcon"
 import ActionLabel from "./components/ActionLabel"
 import AuditLogChildAction from "./components/AuditLogChildAction"
+import BeforeAfterActions from "./components/BeforeAfterActions"
 
 type Props = {
   action: Action
@@ -27,11 +28,13 @@ type Props = {
 const AuditLogAction = (): JSX.Element => {
   const groupHoverBgColor = useColorModeValue("gray.50", "whiteAlpha.100")
   const collapseBgColor = useColorModeValue("gray.50", "blackAlpha.400")
+
   const { isOpen, onToggle } = useDisclosure()
 
-  const { timestamp, children } = useAuditLogActionContext()
+  const { timestamp, children, before } = useAuditLogActionContext()
 
-  const shouldRenderCollapse = children?.length > 0
+  const shouldRenderCollapse =
+    children?.length > 0 || Object.keys(before ?? {}).length > 0
 
   return (
     <Card>
@@ -89,6 +92,7 @@ const AuditLogAction = (): JSX.Element => {
       {shouldRenderCollapse && (
         <Collapse in={isOpen}>
           <Stack spacing={3} pr={6} pl="4.5rem" py={4} bgColor={collapseBgColor}>
+            <BeforeAfterActions />
             {children.map((childAction) => (
               <AuditLogActionProvider key={childAction.id} action={childAction}>
                 <AuditLogChildAction />

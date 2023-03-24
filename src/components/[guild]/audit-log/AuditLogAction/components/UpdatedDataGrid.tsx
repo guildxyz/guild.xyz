@@ -3,6 +3,7 @@ import {
   Center,
   Grid,
   Icon,
+  SpaceProps,
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
@@ -11,18 +12,33 @@ import { ArrowDown, ArrowRight } from "phosphor-react"
 type Props = {
   before: JSX.Element
   after?: JSX.Element
+  boxPadding?: SpaceProps["p"]
+  unstyled?: boolean
 }
 
-const UpdatedDataGrid = ({ before, after }: Props): JSX.Element => {
+const UpdatedDataGrid = ({
+  before,
+  after,
+  boxPadding = 4,
+  unstyled,
+}: Props): JSX.Element => {
   const borderColor = useColorModeValue("gray.100", "gray.700")
   const templateColumns = useBreakpointValue({ base: "1fr", md: "1fr 2rem 1fr" })
   const icon = useBreakpointValue({ base: ArrowDown, md: ArrowRight })
 
+  const boxProps = unstyled
+    ? {}
+    : {
+        p: boxPadding,
+        borderWidth: 1,
+        borderColor,
+        borderRadius: "xl",
+        overflow: "hidden",
+      }
+
   return (
     <Grid templateColumns={templateColumns} gap={4}>
-      <Box p={4} borderWidth={1} borderColor={borderColor} borderRadius="xl">
-        {before}
-      </Box>
+      <Box {...boxProps}>{before}</Box>
 
       {after && (
         <Center>
@@ -30,11 +46,7 @@ const UpdatedDataGrid = ({ before, after }: Props): JSX.Element => {
         </Center>
       )}
 
-      {after && (
-        <Box p={4} borderWidth={1} borderColor={borderColor} borderRadius="xl">
-          {after}
-        </Box>
-      )}
+      {after && <Box {...boxProps}>{after}</Box>}
     </Grid>
   )
 }

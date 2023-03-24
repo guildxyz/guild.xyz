@@ -7,12 +7,16 @@ import {
   House,
   IconProps,
   IdentificationCard,
+  LinkSimple,
   LockKey,
+  PaintBrushBroad,
+  PlusMinus,
   Question,
   SignIn,
   SignOut,
   Star,
   StarHalf,
+  TextT,
   UserCircleGear,
   UserFocus,
   UserList,
@@ -68,6 +72,13 @@ export enum AUDITLOG {
   DisconnectIdentity = "disconnect identity",
   // Poap (temporary)
   // TODO?
+
+  // These actions are only used on the frontend
+  UpdateUrlName = "UpdateUrlName",
+  UpdateLogoOrTitle = "UpdateLogoOrTitle",
+  UpdateDescription = "UpdateDescription",
+  UpdateLogic = "UpdateLogic",
+  UpdateTheme = "UpdateTheme",
 }
 
 export type AuditLogActionType = keyof typeof AUDITLOG
@@ -104,7 +115,7 @@ export const auditLogActionIcons: Record<
   },
   [AUDITLOG.UpdateGuild]: {
     as: House,
-    color: "blue.500",
+    color: "blue.400",
   },
   [AUDITLOG.DeleteGuild]: {
     as: House,
@@ -148,7 +159,7 @@ export const auditLogActionIcons: Record<
   },
   [AUDITLOG.UpdateRole]: {
     as: FolderUser,
-    color: "blue.500",
+    color: "blue.400",
   },
   [AUDITLOG.DeleteRole]: {
     as: FolderUser,
@@ -164,7 +175,7 @@ export const auditLogActionIcons: Record<
   },
   [AUDITLOG.UpdateReward]: {
     as: Star,
-    color: "blue.500",
+    color: "blue.400",
   },
   [AUDITLOG.AddRequirement]: {
     as: LockKey,
@@ -172,7 +183,7 @@ export const auditLogActionIcons: Record<
   },
   [AUDITLOG.UpdateRequirement]: {
     as: LockKey,
-    color: "blue.500",
+    color: "blue.400",
   },
   [AUDITLOG.RemoveRequirement]: {
     as: LockKey,
@@ -180,7 +191,7 @@ export const auditLogActionIcons: Record<
   },
   [AUDITLOG.StartStatusUpdate]: {
     as: ArrowsClockwise,
-    color: "blue.500",
+    color: "blue.400",
   },
   [AUDITLOG.RestartStatusUpdate]: {
     as: ArrowsClockwise,
@@ -212,7 +223,7 @@ export const auditLogActionIcons: Record<
   },
   [AUDITLOG.UserStatusUpdate]: {
     as: UserSwitch,
-    color: "blue.500",
+    color: "blue.400",
   },
   [AUDITLOG.GetRole]: {
     as: IdentificationCard,
@@ -243,5 +254,27 @@ export const auditLogActionIcons: Record<
   [AUDITLOG.DisconnectIdentity]: {
     as: UserFocus,
     color: "red.500",
+  },
+
+  // Custom actions
+  [AUDITLOG.UpdateUrlName]: {
+    as: LinkSimple,
+    color: "blue.400",
+  },
+  [AUDITLOG.UpdateLogoOrTitle]: {
+    as: TextT,
+    color: "blue.400",
+  },
+  [AUDITLOG.UpdateDescription]: {
+    as: TextT,
+    color: "blue.400",
+  },
+  [AUDITLOG.UpdateLogic]: {
+    as: PlusMinus,
+    color: "blue.400",
+  },
+  [AUDITLOG.UpdateTheme]: {
+    as: PaintBrushBroad,
+    color: "blue.400",
   },
 }

@@ -11,7 +11,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react"
 import { ThemeMode } from "types"
@@ -34,7 +33,6 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
   const [localBackgroundImage, setLocalBackgroundImage] = useState(backgroundImage)
   const generatedColors = useColorPalette("chakra-colors-primary", localThemeColor)
   const { setColorMode } = useColorMode()
-  const ref = useRef(null)
 
   // the initial value isn't enough, have to keep them in sync when they change due to SWR refetch
   useEffect(() => {

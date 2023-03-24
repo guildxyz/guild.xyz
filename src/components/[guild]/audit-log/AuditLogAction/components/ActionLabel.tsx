@@ -16,9 +16,16 @@ const ActionLabel = (): JSX.Element => {
   const capitalizedName = capitalize(action)
 
   return (
-    <HStack>
+    <HStack fontWeight="semibold">
       {(() => {
         switch (action) {
+          case AUDITLOG.UpdateGuild:
+            return (
+              <>
+                <Text as="span">{capitalizedName} by </Text>
+                <UserTag id={ids.user} />
+              </>
+            )
           case AUDITLOG.AddAdmin:
           case AUDITLOG.RemoveAdmin:
             return (
@@ -87,11 +94,7 @@ const ActionLabel = (): JSX.Element => {
           case AUDITLOG.AddRequirement:
           case AUDITLOG.UpdateRequirement:
           case AUDITLOG.RemoveRequirement:
-            return (
-              <Text as="span" fontWeight="semibold">
-                {capitalizedName}
-              </Text>
-            )
+            return <Text as="span">{capitalizedName}</Text>
 
           // TODO:
           //   ConnectIdentity,
@@ -100,9 +103,7 @@ const ActionLabel = (): JSX.Element => {
           default:
             return (
               <>
-                <Text as="span" fontWeight="semibold">
-                  {capitalizedName}
-                </Text>
+                <Text as="span">{capitalizedName}</Text>
                 {ids.role ? (
                   <RoleTag id={ids.role} data={data} />
                 ) : ids.user ? (
