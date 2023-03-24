@@ -38,7 +38,13 @@ const RoleCard = memo(({ role }: Props) => {
   const { guildPlatforms } = useGuild()
   const { isAdmin } = useGuildPermission()
   const { hasAccess } = useAccess(role.id)
-  const { isOpen, onClose, onToggle } = useDisclosure({ defaultIsOpen: !hasAccess })
+  /**
+   * If using defaultIsOpen: !hasAccess, the RewardIcons doesn't show initially in
+   * collapsed state when going back to explorer -> coming back to guild until
+   * opening and closing the role, because the same layoutId is mounted twice and it
+   * animates to the later one in the dom (the hidden Rewards below)
+   */
+  const { isOpen, onClose, onToggle } = useDisclosure({ defaultIsOpen: true })
 
   const { colorMode } = useColorMode()
   const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
