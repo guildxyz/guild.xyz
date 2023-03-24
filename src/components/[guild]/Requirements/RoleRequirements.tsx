@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react"
 import React, { memo, useEffect, useRef, useState } from "react"
 import { VariableSizeList } from "react-window"
-import { Requirement, Role } from "types"
+import { Logic, Requirement, Role } from "types"
 import LogicDivider from "../LogicDivider"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
 import RequirementDisplayComponent from "./components/RequirementDisplayComponent"
@@ -42,67 +42,16 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
     if (!isOpen) setIsRequirementsExpanded(false)
   }, [isOpen])
 
-  // Row related refs, state, and functions
-  const listWrapperRef = useRef<HTMLDivElement>(null)
-
-  const listRef = useRef(null)
-  const rowHeights = useRef<Record<number, number>>({})
-
-  useEffect(() => {
-    if (!isRequirementsExpanded || !listWrapperRef.current) return
-    listWrapperRef.current.children?.[0]?.scrollTo({
-      behavior: "smooth",
-      top: 30,
-    })
-  }, [isRequirementsExpanded])
-
-  const Row = ({ index, style }: any) => {
-    const rowRef = useRef<HTMLDivElement>(null)
-
-    useEffect(() => {
-      if (!rowRef.current) return
-      // Recalculating row heights, then setting new row heights
-      listRef.current.resetAfterIndex(0)
-      rowHeights.current = {
-        ...rowHeights.current,
-        [index]: rowRef.current.clientHeight,
-      }
-    }, [rowRef])
-
-    return (
-      <Box style={style}>
-        <Box ref={rowRef} paddingRight={PARENT_PADDING}>
-          <RequirementDisplayComponent requirement={requirements[index]} />
-          {index < requirements?.length - 1 && <LogicDivider logic={role.logic} />}
-        </Box>
-      </Box>
-    )
-  }
-
   return (
     <SlideFade in={isOpen}>
       <VStack spacing="0">
         {!requirements?.length ? (
           <Spinner />
         ) : isVirtualList ? (
-          <Box ref={listWrapperRef} w="full" alignSelf="flex-start">
-            <VariableSizeList
-              ref={listRef}
-              width={`calc(100% + ${PARENT_PADDING})`}
-              height={isRequirementsExpanded ? 340 : 280}
-              itemCount={requirements.length}
-              itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
-              className="custom-scrollbar"
-              style={{
-                marginBottom:
-                  isRequirementsExpanded && `calc(${PARENT_PADDING} * -1)`,
-                overflowY: isRequirementsExpanded ? "scroll" : "hidden",
-                WebkitMaskImage: `linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)`,
-              }}
-            >
-              {Row}
-            </VariableSizeList>
-          </Box>
+          <VirtualRequirements
+            {...{ isRequirementsExpanded, requirements }}
+            logic={role.logic}
+          />
         ) : (
           <>
             {shownRequirements.map((requirement, i) => (
@@ -162,5 +111,73 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
     </SlideFade>
   )
 }
+
+const VirtualRequirements = memo(
+  ({
+    isRequirementsExpanded,
+    requirements,
+    logic,
+  }: {
+    isRequirementsExpanded: boolean
+    requirements: Requirement[]
+    logic: Logic
+  }) => {
+    const listWrapperRef = useRef<HTMLDivElement>(null)
+
+    const listRef = useRef(null)
+    const rowHeights = useRef<Record<number, number>>({})
+
+    useEffect(() => {
+      if (!isRequirementsExpanded || !listWrapperRef.current) return
+      listWrapperRef.current.children?.[0]?.scrollTo({
+        behavior: "smooth",
+        top: 30,
+      })
+    }, [isRequirementsExpanded])
+
+    const Row = ({ index, style }: any) => {
+      const rowRef = useRef<HTMLDivElement>(null)
+
+      useEffect(() => {
+        if (!rowRef.current) return
+        // Recalculating row heights, then setting new row heights
+        listRef.current.resetAfterIndex(0)
+        rowHeights.current = {
+          ...rowHeights.current,
+          [index]: rowRef.current.clientHeight,
+        }
+      }, [rowRef])
+
+      return (
+        <Box style={style}>
+          <Box ref={rowRef} paddingRight={PARENT_PADDING}>
+            <RequirementDisplayComponent requirement={requirements[index]} />
+            {index < requirements?.length - 1 && <LogicDivider logic={logic} />}
+          </Box>
+        </Box>
+      )
+    }
+
+    return (
+      <Box ref={listWrapperRef} w="full" alignSelf="flex-start">
+        <VariableSizeList
+          ref={listRef}
+          width={`calc(100% + ${PARENT_PADDING})`}
+          height={isRequirementsExpanded ? 340 : 280}
+          itemCount={requirements.length}
+          itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
+          className="custom-scrollbar"
+          style={{
+            marginBottom: isRequirementsExpanded && `calc(${PARENT_PADDING} * -1)`,
+            overflowY: isRequirementsExpanded ? "scroll" : "hidden",
+            WebkitMaskImage: `linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)`,
+          }}
+        >
+          {Row}
+        </VariableSizeList>
+      </Box>
+    )
+  }
+)
 
 export default memo(RoleRequirements)
