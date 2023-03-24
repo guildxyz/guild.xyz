@@ -4,7 +4,6 @@ import {
   Flex,
   Heading,
   HStack,
-  Img,
   SimpleGrid,
   SlideFade,
   Spacer,
@@ -15,11 +14,10 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
-import { motion } from "framer-motion"
 import dynamic from "next/dynamic"
 import { Question } from "phosphor-react"
 import { memo, useEffect } from "react"
-import { PlatformType, Role, Visibility as VisibilityType } from "types"
+import { Role, Visibility as VisibilityType } from "types"
 import parseDescription from "utils/parseDescription"
 import useAccess from "../hooks/useAccess"
 import useGuild from "../hooks/useGuild"
@@ -28,15 +26,13 @@ import RoleRequirements from "../Requirements"
 import Visibility from "../Visibility"
 import AccessIndicator from "./components/AccessIndicator"
 import MemberCount from "./components/MemberCount"
-import Reward, { RewardDisplay } from "./components/Reward"
+import Reward, { RewardDisplay, RewardIcon } from "./components/Reward"
 
 type Props = {
   role: Role
 }
 
 const DynamicEditRole = dynamic(() => import("./components/EditRole"))
-
-const MotionImg = motion(Img)
 
 const RoleCard = memo(({ role }: Props) => {
   const { guildPlatforms } = useGuild()
@@ -112,19 +108,14 @@ const RoleCard = memo(({ role }: Props) => {
                         (p) => p.id === platform.guildPlatformId
                       )
                       return (
-                        <MotionImg
-                          layoutId={`${role.id}_role_${guildPlatform?.id}_reward_img`}
+                        <RewardIcon
+                          roleId={role.id}
+                          guildPlatform={guildPlatform}
                           transition={{
-                            type: "spring",
-                            duration: 0.5,
                             bounce: 0.2,
                             delay: i * 0.05,
                           }}
                           key={i}
-                          src={`/platforms/${PlatformType[
-                            guildPlatform?.platformId
-                          ]?.toLowerCase()}.png`}
-                          boxSize="6"
                         />
                       )
                     })}
