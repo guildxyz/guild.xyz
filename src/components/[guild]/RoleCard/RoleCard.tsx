@@ -81,8 +81,8 @@ const RoleCard = memo(({ role }: Props) => {
             borderRightWidth={isOpen && { base: 0, md: 1 }}
             borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
           >
-            <HStack justifyContent="space-between" spacing={3}>
-              <HStack spacing={4} minW={0}>
+            <HStack justifyContent="space-between" spacing={3} pos="relative">
+              <HStack spacing={4} minW={0} flexShrink={0}>
                 <GuildLogo
                   imageUrl={role.imageUrl}
                   size={{ base: "48px", md: "52px" }}
@@ -103,7 +103,10 @@ const RoleCard = memo(({ role }: Props) => {
                     showTagLabel
                   />
                 ) : (
-                  <HStack>
+                  <HStack
+                    pos={{ base: "absolute", md: "unset" }}
+                    right={{ base: 0, md: "unset" }}
+                  >
                     {role.rolePlatforms?.map((platform, i) => {
                       const guildPlatform = guildPlatforms?.find(
                         (p) => p.id === platform.guildPlatformId
@@ -131,7 +134,10 @@ const RoleCard = memo(({ role }: Props) => {
               <SlideFade
                 offsetY={10}
                 in={isOpen}
-                style={{ width: isOpen ? "auto" : "0 !important" }}
+                style={{
+                  width: isOpen ? "auto" : "0 !important",
+                  overflow: "hidden",
+                }}
               >
                 <MemberCount memberCount={role.memberCount} roleId={role.id} />
                 {isAdmin && (
