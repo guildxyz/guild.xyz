@@ -25,7 +25,7 @@ const Account = (): JSX.Element => {
   const { openWalletSelectorModal, openNetworkModal, openAccountModal, triedEager } =
     useWeb3ConnectionManager()
 
-  const domainName = useResolveName()
+  const domainName = useResolveName(account)
   const { addresses } = useUser()
   if (!account) {
     return (

@@ -59,7 +59,7 @@ const AccountModal = ({ isOpen, onClose }) => {
     deleteKeyPairFromIdb(id).catch(() => {})
   }
 
-  const domain = useResolveName()
+  const domain = useResolveName(account)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} colorScheme="duotone">
