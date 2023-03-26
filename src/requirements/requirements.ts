@@ -4,6 +4,7 @@ import {
   Coins,
   CurrencyCircleDollar,
   ImageSquare,
+  Key,
   ListChecks,
   Robot,
   Wallet,
@@ -111,6 +112,18 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Captcha/CaptchaForm")
     ),
     types: ["CAPTCHA"],
+  },
+  {
+    icon: Key,
+    name: "Password",
+    fileNameBase: "Password",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Password/PasswordRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Password/PasswordForm")
+    ),
+    types: ["PASSWORD"],
   },
   {
     icon: "/requirementLogos/twitter.svg",
