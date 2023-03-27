@@ -11,6 +11,7 @@ import {
   useBreakpointValue,
   useColorMode,
   useDisclosure,
+  Wrap,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
@@ -58,6 +59,9 @@ const RoleCard = memo(({ role }: Props) => {
     else onOpen()
   }, [hasAccess, isMember])
 
+  const collapsedHeight =
+    isMobile && role.visibility === VisibilityType.PUBLIC ? "90px" : "94px"
+
   return (
     <Card
       id={`role-${role.id}`}
@@ -80,7 +84,7 @@ const RoleCard = memo(({ role }: Props) => {
         : {})}
       position="relative"
     >
-      <Collapse in={isOpen} startingHeight={isMobile ? "90px" : "94px"}>
+      <Collapse in={isOpen} startingHeight={collapsedHeight}>
         <SimpleGrid columns={{ base: 1, md: 2 }}>
           <Flex
             direction="column"
@@ -94,62 +98,69 @@ const RoleCard = memo(({ role }: Props) => {
                 : "gray.600"
             }
           >
-            <HStack justifyContent="space-between" spacing={3} pos="relative">
-              <HStack spacing={4} minW={0} flexShrink={0}>
+            <HStack spacing={3}>
+              <HStack spacing={4} minW={0}>
                 <GuildLogo
                   imageUrl={role.imageUrl}
                   size={{ base: "48px", md: "52px" }}
                 />
-                <Heading
-                  as="h3"
-                  fontSize="xl"
-                  fontFamily="display"
-                  minW={0}
-                  overflowWrap={"break-word"}
-                >
-                  {role.name}
-                </Heading>
-                {isOpen ? (
-                  <Visibility
-                    entityVisibility={role.visibility}
-                    mt="6px !important"
-                    showTagLabel
-                  />
-                ) : (
-                  <HStack
-                    pos={{ base: "absolute", md: "unset" }}
-                    right={{ base: 0, md: "unset" }}
+                <Wrap spacingX={3} spacingY={1}>
+                  <Heading
+                    as="h3"
+                    fontSize="xl"
+                    fontFamily="display"
+                    minW={0}
+                    overflowWrap={"break-word"}
+                    noOfLines={!isOpen && 1}
+                    mt="-1px !important"
                   >
-                    {role.rolePlatforms?.map((platform, i) => {
-                      const guildPlatform = guildPlatforms?.find(
-                        (p) => p.id === platform.guildPlatformId
-                      )
-                      return (
-                        <RewardIcon
-                          rolePlatformId={platform.id}
-                          guildPlatform={guildPlatform}
-                          transition={{
-                            bounce: 0.2,
-                            delay: i * 0.05,
-                          }}
-                          key={i}
-                        />
-                      )
-                    })}
-                  </HStack>
+                    {role.name}
+                  </Heading>
+                  <Visibility entityVisibility={role.visibility} showTagLabel />
+                </Wrap>
+              </HStack>
+              {!isOpen && (
+                <HStack
+                  flex="1 0 auto"
+                  justifyContent={{ base: "flex-end", md: "unset" }}
+                >
+                  {role.rolePlatforms?.map((platform, i) => {
+                    const guildPlatform = guildPlatforms?.find(
+                      (p) => p.id === platform.guildPlatformId
+                    )
+                    return (
+                      <RewardIcon
+                        rolePlatformId={platform.id}
+                        guildPlatform={guildPlatform}
+                        transition={{
+                          bounce: 0.2,
+                          delay: i * 0.05,
+                        }}
+                        key={i}
+                      />
+                    )
+                  })}
+                </HStack>
+              )}
+              {/**
+               * Using `display: none` instead of conditional rendering or Fade wrapper so these
+               * expensive components don't rerender but do get removed from the layout
+               */}
+              <HStack
+                flex="1 0 auto"
+                justifyContent="flex-end"
+                sx={!isOpen && { display: "none" }}
+                animation="fadeIn .2s"
+              >
+                <MemberCount memberCount={role.memberCount} roleId={role.id} />
+
+                {isAdmin && (
+                  <>
+                    <Spacer m="0 !important" />
+                    <DynamicEditRole roleId={role.id} />
+                  </>
                 )}
               </HStack>
-              <SlideFade offsetY={10} in={isOpen}>
-                <MemberCount memberCount={role.memberCount} roleId={role.id} />
-              </SlideFade>
-              {isAdmin && (
-                <>
-                  <Spacer m="0 !important" />
-                  <SlideFade offsetY={10} in={isOpen}>
-                    <DynamicEditRole roleId={role.id} />
-                  </SlideFade>
-                </>
-              )}
             </HStack>
             {role.description && (
               <SlideFade offsetY={10} in={isOpen}>
