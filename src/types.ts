@@ -264,6 +264,7 @@ const supportedSocialLinks = [
   "MEDIUM",
   "SUBSTACK",
   "SNAPSHOT",
+  "SOUND",
   "WEBSITE",
 ] as const
 type SocialLinkKey = (typeof supportedSocialLinks)[number]
