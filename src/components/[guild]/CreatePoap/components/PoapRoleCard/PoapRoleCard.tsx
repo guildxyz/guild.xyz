@@ -239,7 +239,6 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
         <Flex
           direction="column"
           p={5}
-          position="relative"
           bgColor={colorMode === "light" ? "gray.50" : "blackAlpha.300"}
         >
           <HStack mb={{ base: 4, md: 6 }}>
