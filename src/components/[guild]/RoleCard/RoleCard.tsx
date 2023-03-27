@@ -163,7 +163,15 @@ const RoleCard = memo(({ role }: Props) => {
               </HStack>
             </HStack>
             {role.description && (
-              <SlideFade offsetY={10} in={isOpen}>
+              <SlideFade
+                offsetY={10}
+                in={isOpen}
+                /**
+                 * Spreading inert because it's not added to @types/react yet:
+                 * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
+                 */
+                {...(!isOpen && { inert: "true" })}
+              >
                 <Box pt={6} wordBreak="break-word">
                   {parseDescription(role.description)}
                 </Box>
@@ -176,6 +184,11 @@ const RoleCard = memo(({ role }: Props) => {
                   offsetY={10}
                   in={isOpen}
                   transition={{ enter: { delay: i * 0.1 } }}
+                  /**
+                   * Spreading inert because it's not added to @types/react yet:
+                   * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
+                   */
+                  {...(!isOpen && { inert: "true" })}
                 >
                   <Reward withLink platform={platform} role={role} />
                 </SlideFade>

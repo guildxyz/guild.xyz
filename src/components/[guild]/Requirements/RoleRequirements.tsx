@@ -43,7 +43,11 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
   }, [isOpen])
 
   return (
-    <SlideFade in={isOpen}>
+    /**
+     * Spreading inert because it's not added to @types/react yet:
+     * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
+     */
+    <SlideFade in={isOpen} {...(!isOpen && { inert: "true" })}>
       <VStack spacing="0">
         {!requirements?.length ? (
           <Spinner />
