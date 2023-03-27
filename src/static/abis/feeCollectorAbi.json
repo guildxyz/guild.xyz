@@ -3,16 +3,10 @@
     "inputs": [
       {
         "internalType": "address payable",
-        "name": "guildFeeCollector_",
+        "name": "guildTreasury_",
         "type": "address"
       },
-      { "internalType": "uint96", "name": "guildSharex100_", "type": "uint96" },
-      {
-        "internalType": "address payable",
-        "name": "poapFeeCollector_",
-        "type": "address"
-      },
-      { "internalType": "uint96", "name": "poapSharex100_", "type": "uint96" }
+      { "internalType": "uint96", "name": "totalFeeBps_", "type": "uint96" }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
@@ -23,6 +17,14 @@
       { "internalType": "address", "name": "owner", "type": "address" }
     ],
     "name": "AccessDenied",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "vaultId", "type": "uint256" },
+      { "internalType": "address", "name": "sender", "type": "address" }
+    ],
+    "name": "AlreadyPaid",
     "type": "error"
   },
   {
@@ -82,14 +84,41 @@
   {
     "anonymous": false,
     "inputs": [
+      { "indexed": false, "internalType": "string", "name": "key", "type": "string" }
+    ],
+    "name": "FeeSchemaAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
       {
         "indexed": false,
         "internalType": "address",
-        "name": "newFeeCollector",
+        "name": "newTreasury",
         "type": "address"
       }
     ],
-    "name": "GuildFeeCollectorChanged",
+    "name": "GuildTreasuryChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
     "type": "event"
   },
   {
@@ -102,7 +131,7 @@
         "type": "uint96"
       }
     ],
-    "name": "GuildSharex100Changed",
+    "name": "TotalFeeBpsChanged",
     "type": "event"
   },
   {
@@ -110,25 +139,12 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "newFeeCollector",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "vaultId",
+        "type": "uint256"
       }
     ],
-    "name": "PoapFeeCollectorChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint96",
-        "name": "newShare",
-        "type": "uint96"
-      }
-    ],
-    "name": "PoapSharex100Changed",
+    "name": "VaultDetailsChanged",
     "type": "event"
   },
   {
@@ -142,13 +158,7 @@
       },
       {
         "indexed": true,
-        "internalType": "uint256",
-        "name": "eventId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
+        "internalType": "address payable",
         "name": "owner",
         "type": "address"
       },
@@ -176,36 +186,61 @@
         "internalType": "uint256",
         "name": "vaultId",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "guildAmount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "poapAmount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "ownerAmount",
-        "type": "uint256"
       }
     ],
     "name": "Withdrawn",
     "type": "event"
   },
   {
+    "inputs": [
+      { "internalType": "string", "name": "key", "type": "string" },
+      {
+        "components": [
+          {
+            "internalType": "address payable",
+            "name": "treasury",
+            "type": "address"
+          },
+          { "internalType": "uint96", "name": "feeShareBps", "type": "uint96" }
+        ],
+        "internalType": "struct IFeeCollector.FeeShare[]",
+        "name": "feeShare",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "addFeeSchema",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "string", "name": "key", "type": "string" }],
+    "name": "getFeeSchema",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address payable",
+            "name": "treasury",
+            "type": "address"
+          },
+          { "internalType": "uint96", "name": "feeShareBps", "type": "uint96" }
+        ],
+        "internalType": "struct IFeeCollector.FeeShare[]",
+        "name": "schema",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [{ "internalType": "uint256", "name": "vaultId", "type": "uint256" }],
     "name": "getVault",
     "outputs": [
-      { "internalType": "uint256", "name": "eventId", "type": "uint256" },
-      { "internalType": "address", "name": "owner", "type": "address" },
+      { "internalType": "address payable", "name": "owner", "type": "address" },
       { "internalType": "address", "name": "token", "type": "address" },
+      { "internalType": "bool", "name": "multiplePayments", "type": "bool" },
       { "internalType": "uint128", "name": "fee", "type": "uint128" },
       { "internalType": "uint128", "name": "collected", "type": "uint128" }
     ],
@@ -214,17 +249,10 @@
   },
   {
     "inputs": [],
-    "name": "guildFeeCollector",
+    "name": "guildTreasury",
     "outputs": [
       { "internalType": "address payable", "name": "", "type": "address" }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "guildSharex100",
-    "outputs": [{ "internalType": "uint96", "name": "", "type": "uint96" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -239,6 +267,20 @@
     "type": "function"
   },
   {
+    "inputs": [{ "internalType": "bytes[]", "name": "data", "type": "bytes[]" }],
+    "name": "multicall",
+    "outputs": [{ "internalType": "bytes[]", "name": "results", "type": "bytes[]" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [{ "internalType": "uint256", "name": "vaultId", "type": "uint256" }],
     "name": "payFee",
     "outputs": [],
@@ -246,26 +288,10 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "poapFeeCollector",
-    "outputs": [
-      { "internalType": "address payable", "name": "", "type": "address" }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "poapSharex100",
-    "outputs": [{ "internalType": "uint96", "name": "", "type": "uint96" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
-      { "internalType": "uint256", "name": "eventId", "type": "uint256" },
-      { "internalType": "address", "name": "owner", "type": "address" },
+      { "internalType": "address payable", "name": "owner", "type": "address" },
       { "internalType": "address", "name": "token", "type": "address" },
+      { "internalType": "bool", "name": "multiplePayments", "type": "bool" },
       { "internalType": "uint128", "name": "fee", "type": "uint128" }
     ],
     "name": "registerVault",
@@ -274,47 +300,59 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address payable",
-        "name": "newFeeCollector",
-        "type": "address"
-      }
-    ],
-    "name": "setGuildFeeCollector",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint96", "name": "newShare", "type": "uint96" }],
-    "name": "setGuildSharex100",
+    "inputs": [],
+    "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address payable",
-        "name": "newFeeCollector",
-        "type": "address"
-      }
+      { "internalType": "address payable", "name": "newTreasury", "type": "address" }
     ],
-    "name": "setPoapFeeCollector",
+    "name": "setGuildTreasury",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [{ "internalType": "uint96", "name": "newShare", "type": "uint96" }],
-    "name": "setPoapSharex100",
+    "name": "setTotalFeeBps",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "vaultId", "type": "uint256" }],
+    "inputs": [
+      { "internalType": "uint256", "name": "vaultId", "type": "uint256" },
+      { "internalType": "address payable", "name": "newOwner", "type": "address" },
+      { "internalType": "bool", "name": "newMultiplePayments", "type": "bool" },
+      { "internalType": "uint128", "name": "newFee", "type": "uint128" }
+    ],
+    "name": "setVaultDetails",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalFeeBps",
+    "outputs": [{ "internalType": "uint96", "name": "", "type": "uint96" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "vaultId", "type": "uint256" },
+      { "internalType": "string", "name": "feeSchemaKey", "type": "string" }
+    ],
     "name": "withdraw",
     "outputs": [],
     "stateMutability": "nonpayable",

@@ -2,7 +2,7 @@ import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider } from "@ethersproject/providers"
 import { Chain, Chains, RPC } from "connectors"
-import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
+import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
 import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
 
