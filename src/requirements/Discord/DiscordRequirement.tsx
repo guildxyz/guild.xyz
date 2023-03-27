@@ -2,6 +2,7 @@ import { Icon } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -50,21 +51,17 @@ const DiscordRequirement = (props: RequirementProps) => {
 
           case "DISCORD_MEMBER_SINCE":
           case "DISCORD_JOIN":
-            const formattedDate = new Date(
-              requirement.data.memberSince
-            ).toLocaleDateString()
-
             return requirement.type === "DISCORD_MEMBER_SINCE" ? (
               <>
                 {`Be member of the `}
                 <DataBlock>{serverName || requirement.data.serverName}</DataBlock>
                 {` server since at least `}
-                <DataBlock>{formattedDate}</DataBlock>
+                <DataBlockWithDate timestamp={requirement.data.memberSince} />
               </>
             ) : (
               <>
                 {`Be a Discord user since at least `}
-                <DataBlock>{formattedDate}</DataBlock>
+                <DataBlockWithDate timestamp={requirement.data.memberSince} />
               </>
             )
 
