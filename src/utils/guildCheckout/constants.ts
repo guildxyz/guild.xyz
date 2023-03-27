@@ -226,7 +226,7 @@ export const getAssetsCallParams: Record<
 export const FEE_COLLECTOR_CONTRACT: Partial<Record<Chain, string>> = {
   ETHEREUM: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
   POLYGON: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  GOERLI: "0x32547e6cc18651647e58f57164a0117da82f77f0",
+  GOERLI: "0x6ee2dD02FBFb71F518827042B6aDca242F1ba0B2",
 }
 export const paymentSupportedChains: Chain[] = Object.keys(
   FEE_COLLECTOR_CONTRACT
