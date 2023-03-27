@@ -62,6 +62,8 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
           {...ACCESS_INDICATOR_STYLES}
           borderTopLeftRadius="0 !important"
           borderBottomLeftRadius="0 !important"
+          // Card's `overflow: clip` isn't enough in Safari
+          borderBottomRightRadius={{ base: "2xl", md: "lg" }}
           iconSpacing="0"
           rightIcon={
             <Icon

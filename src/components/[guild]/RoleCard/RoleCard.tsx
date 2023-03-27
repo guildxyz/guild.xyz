@@ -208,6 +208,9 @@ const RoleCard = memo(({ role }: Props) => {
               isOpen && (colorMode === "light" ? "gray.50" : "blackAlpha.300")
             }
             transition="background .2s"
+            // Card's `overflow: clip` isn't enough in Safari
+            borderTopRightRadius={{ md: "2xl" }}
+            borderBottomRightRadius={{ md: "2xl" }}
             pos="relative"
           >
             <HStack
