@@ -12,7 +12,6 @@ type GetVaultResponse = {
   fee: BigNumber
   collected: BigNumber
   multiplePayments: boolean
-  guildShareBps: number
 }
 
 const fetchVault = async (
@@ -20,7 +19,7 @@ const fetchVault = async (
   contractAddress: string,
   vaultId: string,
   chain: Chain
-): Promise<GetVaultResponse & { guildShareBps: number }> => {
+): Promise<GetVaultResponse & { totalFeeBps: number }> => {
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0], Chains[chain])
   const feeCollectorContract = new Contract(
     contractAddress,
@@ -28,17 +27,17 @@ const fetchVault = async (
     provider
   )
 
-  const [getVaultRes, guildShareBps]: [GetVaultResponse, BigNumber] =
+  const [getVaultRes, totalFeeBps]: [GetVaultResponse, BigNumber] =
     await Promise.all([
       feeCollectorContract.getVault(vaultId),
-      feeCollectorContract.guildShareBps(),
+      feeCollectorContract.totalFeeBps(),
     ])
 
-  if (!getVaultRes || !guildShareBps) return undefined
+  if (!getVaultRes || !totalFeeBps) return undefined
 
   return {
     ...getVaultRes,
-    guildShareBps: guildShareBps.toNumber(),
+    totalFeeBps: totalFeeBps.toNumber(),
   }
 }
 
@@ -56,7 +55,7 @@ const useVault = (
   return {
     ...swrResponse,
     data: swrResponse?.data ?? {
-      guildShareBps: undefined,
+      totalFeeBps: undefined,
       owner: undefined,
       fee: undefined,
       token: undefined,
