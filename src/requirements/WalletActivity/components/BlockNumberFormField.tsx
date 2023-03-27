@@ -30,8 +30,10 @@ const BlockNumberFormField = ({
       <FormLabel>{formLabel}</FormLabel>
 
       <ControlledNumberInput
+        placeholder="Filled out automatically"
         name={`${baseFieldPath}.data.${fieldName}`}
         isRequired={isRequired}
+        isDisabled
       />
 
       <FormErrorMessage>

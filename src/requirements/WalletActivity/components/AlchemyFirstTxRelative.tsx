@@ -8,7 +8,7 @@ const AlchemyFirstTxRelative = ({
     baseFieldPath={baseFieldPath}
     fieldName="minAmount"
     formLabel="Block number"
-    formHelperText="Wallet should be created before this block"
+    formHelperText="Wallet should be at least x blocks old"
     isRequired
   />
 )
