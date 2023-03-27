@@ -13,7 +13,7 @@ type Props = {
 }
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
-  const { hasAccess, isLoading, data } = useAccess(roleId)
+  const { hasAccess, isLoading, data, error } = useAccess(roleId)
 
   const { isActive } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
@@ -61,7 +61,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
     )
   }
 
-  if (data?.errors)
+  if (data?.errors || error)
     return (
       <AccessIndicatorUI
         colorScheme="orange"

@@ -12,6 +12,7 @@ import {
 import Button from "components/common/Button"
 import dynamic from "next/dynamic"
 import {
+  Brain,
   Code,
   Cpu,
   DiscordLogo,
@@ -83,6 +84,13 @@ const NavMenu = (): JSX.Element => (
               href="/balancy"
             >
               Balancy playground
+            </NavButton>
+            <NavButton
+              leftIcon={<Brain />}
+              data-dd-action-name="Navigation menu - Guildverse"
+              href="/guildverse"
+            >
+              Guildverse
             </NavButton>
           </NavGroup>
           <NavGroup title="Other">
