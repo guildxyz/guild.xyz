@@ -5,6 +5,7 @@ import {
   CurrencyCircleDollar,
   ImageSquare,
   ListChecks,
+  Robot,
   Wallet,
   Wrench,
 } from "phosphor-react"
@@ -98,6 +99,18 @@ export const REQUIREMENTS_DATA = [
       "GUILD_ADMIN",
       "GUILD_USER_SINCE",
     ],
+  },
+  {
+    icon: Robot,
+    name: "Captcha",
+    fileNameBase: "Captcha",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Captcha/CaptchaRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Captcha/CaptchaForm")
+    ),
+    types: ["CAPTCHA"],
   },
   {
     icon: "/requirementLogos/twitter.svg",
@@ -333,18 +346,18 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["CASK"],
   },
-  {
-    icon: "/requirementLogos/101.png",
-    name: "101",
-    fileNameBase: "101",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/101/101Requirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/101/101Form")
-    ),
-    types: ["101"],
-  },
+  // {
+  //   icon: "/requirementLogos/101.png",
+  //   name: "101",
+  //   fileNameBase: "101",
+  //   displayComponent: dynamic<RequirementProps>(
+  //     () => import("requirements/101/101Requirement")
+  //   ),
+  //   formComponent: dynamic<RequirementFormProps>(
+  //     () => import("requirements/101/101Form")
+  //   ),
+  //   types: ["101"],
+  // },
   {
     icon: "/requirementLogos/rabbithole.png",
     name: "RabbitHole",

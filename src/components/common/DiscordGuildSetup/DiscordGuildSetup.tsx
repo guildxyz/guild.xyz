@@ -26,7 +26,9 @@ const DiscordGuildSetup = ({
     gateables,
     isLoading,
     error: gateablesError,
-  } = useGateables(PlatformType.DISCORD)
+  } = useGateables(PlatformType.DISCORD, {
+    refreshInterval: 10_000,
+  })
 
   const servers = Object.entries(gateables || {}).map(([id, serverData]) => ({
     id,

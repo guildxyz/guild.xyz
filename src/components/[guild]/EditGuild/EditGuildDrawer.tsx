@@ -89,7 +89,7 @@ const EditGuildDrawer = ({
     contacts,
     socialLinks,
     guildPlatforms,
-    featureFlags,
+    featureFlags: isSuperAdmin ? featureFlags : undefined,
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
@@ -282,9 +282,7 @@ const EditGuildDrawer = ({
                 Cancel
               </Button>
               <Button
-                disabled={
-                  /* !isDirty || */ isLoading || isSigning || isUploadingShown
-                }
+                // isDisabled={!isDirty}
                 isLoading={isLoading || isSigning || isUploadingShown}
                 colorScheme="green"
                 loadingText={loadingText}

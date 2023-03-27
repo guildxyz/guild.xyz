@@ -17,7 +17,7 @@ const RequirementDisplayComponent = ({
   rightElement,
   ...rest
 }: Props) => {
-  if ((requirement as any).isHidden) {
+  if (requirement.isHidden) {
     return (
       <Requirement image={<Icon as={Question} boxSize={5} />}>
         Some secret requirements

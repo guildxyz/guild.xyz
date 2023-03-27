@@ -2,11 +2,13 @@ import { Icon } from "@chakra-ui/react"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
+import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { TwitterLogo } from "phosphor-react"
+import useSWRImmutable from "swr/immutable"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
@@ -15,15 +17,15 @@ import TwitterUserLink from "./components/TwitterUserLink"
 const TwitterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
+  const { data: twitterAvatar } = useSWRImmutable(
+    requirement.data.id ? `/assets/twitter/avatar/${requirement.data.id}` : null
+  )
+
   return (
     <Requirement
       image={
-        ["TWITTER_FOLLOW", "TWITTER_FOLLOWED_BY"].includes(requirement.type) &&
-        requirement.data.id ? (
-          `/api/twitter-avatar?username=${requirement.data.id}`
-        ) : (
-          <Icon as={TwitterLogo} boxSize={6} />
-        )
+        (["TWITTER_FOLLOW", "TWITTER_FOLLOWED_BY"].includes(requirement.type) &&
+          twitterAvatar) || <Icon as={TwitterLogo} boxSize={6} />
       }
       footer={<ConnectRequirementPlatformButton />}
       {...props}
@@ -106,14 +108,10 @@ const TwitterRequirement = (props: RequirementProps) => {
               </>
             )
           case "TWITTER_ACCOUNT_AGE":
-            const formattedDate = new Date(
-              requirement.data.minAmount
-            ).toLocaleDateString()
-
             return (
               <>
                 {`Have a Twitter account since at least `}
-                <DataBlock>{formattedDate}</DataBlock>
+                <DataBlockWithDate timestamp={requirement.data.minAmount} />
               </>
             )
         }

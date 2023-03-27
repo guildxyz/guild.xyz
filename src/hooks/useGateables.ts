@@ -1,6 +1,6 @@
 import useUser from "components/[guild]/hooks/useUser"
 import useSWR, { SWRConfiguration } from "swr"
-import { PlatformType } from "types"
+import { GoogleFile, PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import useKeyPair from "./useKeyPair"
 
@@ -18,7 +18,10 @@ type Gateables = {
     repositoryName: string
     url: string
   }>
+  [PlatformType.GOOGLE]: Array<GoogleFile>
 } & Record<PlatformType, unknown>
+
+const platformsWithoutGateables: PlatformType[] = [PlatformType.TELEGRAM]
 
 const useGateables = <K extends keyof Gateables>(
   platformId: K,
@@ -33,7 +36,11 @@ const useGateables = <K extends keyof Gateables>(
 
   const fetcherWithSign = useFetcherWithSign()
 
-  const shouldFetch = isConnected && !!keyPair && platformId
+  const shouldFetch =
+    isConnected &&
+    !!keyPair &&
+    platformId &&
+    !platformsWithoutGateables.includes(platformId)
 
   const { data, isValidating, mutate, error } = useSWR<Gateables[K]>(
     shouldFetch
@@ -49,7 +56,11 @@ const useGateables = <K extends keyof Gateables>(
         }
         return body ?? []
       }),
-    swrConfig
+    {
+      revalidateOnFocus: false,
+      shouldRetryOnError: false,
+      ...swrConfig,
+    }
   )
 
   return {

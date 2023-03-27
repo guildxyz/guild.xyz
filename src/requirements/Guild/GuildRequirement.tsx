@@ -1,7 +1,7 @@
 import { Img } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -44,12 +44,10 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
 const UserSince = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
-  const formattedDate = new Date(requirement.data.creationDate).toLocaleDateString()
-
   return (
     <Requirement image="/requirementLogos/guild.png" {...props}>
       {"Be a Guild.xyz user since at least "}
-      <DataBlock>{formattedDate}</DataBlock>
+      <DataBlockWithDate timestamp={requirement.data.creationDate} />
     </Requirement>
   )
 }

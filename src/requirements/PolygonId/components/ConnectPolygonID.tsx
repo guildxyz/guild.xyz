@@ -19,11 +19,12 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
+import { RequirementType } from "requirements"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 
 const ConnectPolygonID = (props: ButtonProps) => {
-  const { id, roleId, type } = useRequirementContext()
+  const { id, roleId, type, data } = useRequirementContext()
   const { onOpen, onClose, isOpen } = useDisclosure()
 
   const { data: roleAccess } = useAccess(roleId, isOpen && { refreshInterval: 5000 })
@@ -32,7 +33,10 @@ const ConnectPolygonID = (props: ButtonProps) => {
     (err) => err.requirementId === id
   )?.errorType
 
-  if (!["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(errorType))
+  if (
+    (type !== "POLYGON_ID_QUERY" && type !== "POLYGON_ID_BASIC") ||
+    !["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(errorType)
+  )
     return null
 
   return (
@@ -40,9 +44,9 @@ const ConnectPolygonID = (props: ButtonProps) => {
       <Button
         size="xs"
         onClick={onOpen}
-        colorScheme={"purple"}
+        colorScheme="purple"
         leftIcon={<Img src="requirementLogos/polygonId_white.svg" width="1.5em" />}
-        iconSpacing="1"
+        iconSpacing={1}
         {...props}
       >
         {`${
@@ -53,14 +57,29 @@ const ConnectPolygonID = (props: ButtonProps) => {
       <ConnectPolygonIDModal
         onClose={onClose}
         isOpen={isOpen}
+        type={type}
+        data={data}
       ></ConnectPolygonIDModal>
     </>
   )
 }
 
-const ConnectPolygonIDModal = ({ isOpen, onClose }) => {
-  const { type, data } = useRequirementContext()
+type ConnectPolygonIDModalProps = {
+  isOpen: boolean
+  onClose: () => void
+  type: Extract<RequirementType, "POLYGON_ID_QUERY" | "POLYGON_ID_BASIC">
+  data: {
+    maxAmount?: number
+    query?: Record<string, any>
+  }
+}
 
+const ConnectPolygonIDModal = ({
+  isOpen,
+  onClose,
+  type,
+  data,
+}: ConnectPolygonIDModalProps) => {
   const fetcherWithSign = useFetcherWithSign()
   const {
     data: response,
@@ -114,7 +133,7 @@ const ConnectPolygonIDModal = ({ isOpen, onClose }) => {
                 >
                   Generate new QR code
                 </Button>
-                <Text mt="10" textAlign={"center"}>
+                <Text mt="10" textAlign="center">
                   Scan with your Polygon ID app! The modal will automatically close
                   on successful connect
                 </Text>
@@ -128,3 +147,4 @@ const ConnectPolygonIDModal = ({ isOpen, onClose }) => {
 }
 
 export default ConnectPolygonID
+export { ConnectPolygonIDModal }
