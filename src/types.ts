@@ -196,6 +196,7 @@ type Requirement = {
 }
 
 type RolePlatform = {
+  id: number
   platformRoleId?: string
   guildPlatformId?: number
   guildPlatform?: GuildPlatform

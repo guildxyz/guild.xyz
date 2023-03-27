@@ -5,6 +5,7 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Portal,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { WarningCircle } from "phosphor-react"
@@ -47,18 +48,21 @@ const GoogleCardWarning = memo(
             tabIndex={0}
           />
         </PopoverTrigger>
-        <PopoverContent>
-          <PopoverArrow />
-          <PopoverBody>
-            {/* {`Google limits documentum sharing to 600 users, and there're already ${eligibleMembers.length}
-          eligible members, so you might not get access to this reward.`} */}
-            {`Google limits documentum sharing to 600 users, and there're already ${
-              roleMemberCount ??
-              rolesWithPlatform?.find((role) => role.memberCount >= 600)?.memberCount
-            }
-          eligible members, so you might not get access to this reward.`}
-          </PopoverBody>
-        </PopoverContent>
+        <Portal>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverBody>
+              {/* {`Google limits documentum sharing to 600 users, and there're already ${eligibleMembers.length}
+            eligible members, so you might not get access to this reward.`} */}
+              {`Google limits documentum sharing to 600 users, and there're already ${
+                roleMemberCount ??
+                rolesWithPlatform?.find((role) => role.memberCount >= 600)
+                  ?.memberCount
+              }
+            eligible members, so you might not get access to this reward.`}
+            </PopoverBody>
+          </PopoverContent>
+        </Portal>
       </Popover>
     )
   }
