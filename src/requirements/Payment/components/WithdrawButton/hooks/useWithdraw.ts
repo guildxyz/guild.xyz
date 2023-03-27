@@ -26,7 +26,7 @@ const useWithdraw = (contractAddress: string, vaultId: number, chain: Chain) => 
       return Promise.reject("Couldn't find FeeCollector contract.")
 
     try {
-      await feeCollectorContract.callStatic.withdraw(vaultId)
+      await feeCollectorContract.callStatic.withdraw(vaultId, "guild")
     } catch (callStaticError) {
       return Promise.reject(
         callStaticError.errorName === "TransferFailed"
@@ -35,7 +35,7 @@ const useWithdraw = (contractAddress: string, vaultId: number, chain: Chain) => 
       )
     }
 
-    const withdrawRes = await feeCollectorContract.withdraw(vaultId)
+    const withdrawRes = await feeCollectorContract.withdraw(vaultId, "guild")
     return withdrawRes.wait()
   }
 
