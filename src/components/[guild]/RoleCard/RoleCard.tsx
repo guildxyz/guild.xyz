@@ -139,7 +139,7 @@ const RoleCard = memo(({ role }: Props) => {
                 flex="1 0 auto"
                 justifyContent="flex-end"
                 sx={!isOpen && { display: "none" }}
-                animation="fadeIn .2s"
+                animation="slideFadeIn .2s"
               >
                 <MemberCount memberCount={role.memberCount} roleId={role.id} />
 
