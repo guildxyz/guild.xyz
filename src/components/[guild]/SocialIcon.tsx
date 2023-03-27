@@ -58,11 +58,9 @@ const sizes: Record<Size, { bg: number; icon: number }> = {
   },
 }
 
-const isString = (arg: any): arg is string => typeof arg === "string"
-
 const SocialIcon = ({ type, size = "md" }: Props): JSX.Element => (
   <Circle bgColor={colors[type].bg} color={colors[type].icon} size={sizes[size].bg}>
-    {isString(icons[type]) ? (
+    {typeof icons[type] === "string" ? (
       <Img boxSize={sizes[size].bg} src={icons[type] as string} />
     ) : (
       <Icon
