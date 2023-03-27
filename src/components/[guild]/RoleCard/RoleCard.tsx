@@ -9,7 +9,7 @@ import {
   Spacer,
   Text,
   useBreakpointValue,
-  useColorMode,
+  useColorModeValue,
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
@@ -51,13 +51,14 @@ const RoleCard = memo(({ role }: Props) => {
     defaultIsOpen: true,
   })
 
-  const { colorMode } = useColorMode()
-  const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
-
   useEffect(() => {
     if (isMember && hasAccess && !isAdmin) onClose()
     else onOpen()
   }, [hasAccess, isMember])
+
+  const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
+  const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
+  const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
 
   const collapsedHeight =
     isMobile && role.visibility === VisibilityType.PUBLIC ? "90px" : "94px"
@@ -85,18 +86,7 @@ const RoleCard = memo(({ role }: Props) => {
     >
       <Collapse in={isOpen} startingHeight={collapsedHeight}>
         <SimpleGrid columns={{ base: 1, md: 2 }}>
-          <Flex
-            direction="column"
-            p={5}
-            borderRightWidth={{ base: 0, md: 1 }}
-            borderRightColor={
-              !isOpen
-                ? "transparent"
-                : colorMode === "light"
-                ? "gray.200"
-                : "gray.600"
-            }
-          >
+          <Flex direction="column" p={5}>
             <HStack spacing={3}>
               <HStack spacing={4} minW={0}>
                 <GuildLogo
@@ -203,9 +193,9 @@ const RoleCard = memo(({ role }: Props) => {
           <Flex
             direction="column"
             p={5}
-            bgColor={
-              isOpen && (colorMode === "light" ? "gray.50" : "blackAlpha.300")
-            }
+            bgColor={isOpen && requirementsSectionBgColor}
+            borderLeftWidth={{ base: 0, md: 1 }}
+            borderLeftColor={isOpen ? requirementsSectionBorderColor : "transparent"}
             transition="background .2s"
             // Card's `overflow: clip` isn't enough in Safari
             borderTopRightRadius={{ md: "2xl" }}
