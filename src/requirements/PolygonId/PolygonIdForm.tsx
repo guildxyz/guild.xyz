@@ -35,8 +35,8 @@ const PolygonIdForm = ({
   )
 
   const resetFields = () => {
-    resetField(`${baseFieldPath}.data.maxAmount`)
-    resetField(`${baseFieldPath}.data.query`)
+    resetField(`${baseFieldPath}.data.maxAmount`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.query`, { defaultValue: "" })
   }
 
   return (

@@ -91,8 +91,8 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const selected = twitterRequirementTypes.find((reqType) => reqType.value === type)
 
   const resetFields = () => {
-    resetField(`${baseFieldPath}.data.id`)
-    resetField(`${baseFieldPath}.data.minAmount`)
+    resetField(`${baseFieldPath}.data.id`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: "" })
   }
 
   return (
