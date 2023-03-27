@@ -116,6 +116,14 @@ type GuildBase = {
   memberCount: number
 }
 
+type BrainCardData = {
+  id: string
+  title: string
+  tags?: Array<string>
+  icon?: string
+  backgroundImage?: string
+}
+
 type GuildAdmin = {
   id: number
   address: string
@@ -177,6 +185,7 @@ type Requirement = {
   poapId?: number
 
   // Props used inside the forms on the UI
+  formFieldId?: number
   nftRequirementType?: string
   balancyDecimals?: number
   createdAt?: string
@@ -255,6 +264,7 @@ const supportedSocialLinks = [
   "MEDIUM",
   "SUBSTACK",
   "SNAPSHOT",
+  "SOUND",
   "WEBSITE",
 ] as const
 type SocialLinkKey = (typeof supportedSocialLinks)[number]
@@ -499,6 +509,7 @@ export type {
   Role,
   GuildPlatform,
   GuildBase,
+  BrainCardData,
   Guild,
   SocialLinkKey,
   SocialLinks,
