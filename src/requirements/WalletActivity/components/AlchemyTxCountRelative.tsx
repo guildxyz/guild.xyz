@@ -1,12 +1,12 @@
 import { RequirementFormProps } from "requirements"
 import MinMaxBlockNumberFormControls from "./MinMaxBlockNumberFormControls"
-import TxCountFormField from "./TxCountFormField"
+import TxCountFormControl from "./TxCountFormControl"
 
 const AlchemyTxCountRelative = ({
   baseFieldPath,
 }: RequirementFormProps): JSX.Element => (
   <>
-    <TxCountFormField
+    <TxCountFormControl
       baseFieldPath={baseFieldPath}
       formLabel="Number of transactions"
     />

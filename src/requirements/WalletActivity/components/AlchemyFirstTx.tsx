@@ -4,7 +4,7 @@ import BlockNumberFormControl from "./BlockNumberFormControl"
 const AlchemyFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element => (
   <BlockNumberFormControl
     baseFieldPath={baseFieldPath}
-    dataFieldName="minAmount"
+    dataFieldName="maxAmount"
     label="Wallet creation date"
     isRequired
   />

@@ -72,7 +72,7 @@ const WalletActivityForm = ({
   baseFieldPath,
 }: RequirementFormProps): JSX.Element => {
   const {
-    setValue,
+    resetField,
     formState: { errors },
   } = useFormContext()
 
@@ -81,6 +81,13 @@ const WalletActivityForm = ({
   const selected = walletActivityRequirementTypes.find(
     (reqType) => reqType.value === type
   )
+
+  const resetFields = () => {
+    resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.maxAmount`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.timestamps.minAmount`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.timestamps.maxAmount`, { defaultValue: "" })
+  }
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -93,7 +100,7 @@ const WalletActivityForm = ({
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={walletActivityRequirementTypes}
-          afterOnChange={() => setValue(`${baseFieldPath}.data`, "")}
+          beforeOnChange={resetFields}
         />
 
         <FormErrorMessage>

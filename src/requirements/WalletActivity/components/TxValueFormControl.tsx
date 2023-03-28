@@ -6,26 +6,29 @@ import ControlledNumberInput from "./ControlledNumberInput"
 
 type Props = {
   baseFieldPath: string
-  formLabel: string
 }
 
-const TxCountFormField = ({ baseFieldPath, formLabel }: Props): JSX.Element => {
+const TxValueFormControl = ({ baseFieldPath }: Props): JSX.Element => {
   const { errors } = useFormState()
 
   return (
     <FormControl
       isRequired
-      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.txCount}
+      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.txValue}
     >
-      <FormLabel>{formLabel}</FormLabel>
+      <FormLabel>Asset amount</FormLabel>
 
-      <ControlledNumberInput name={`${baseFieldPath}.data.txCount`} isRequired />
+      <ControlledNumberInput
+        numberFormat="FLOAT"
+        name={`${baseFieldPath}.data.txValue`}
+        isRequired
+      />
 
       <FormErrorMessage>
-        {parseFromObject(errors, baseFieldPath)?.data?.txCount?.message}
+        {parseFromObject(errors, baseFieldPath)?.data?.txValue?.message}
       </FormErrorMessage>
     </FormControl>
   )
 }
 
-export default TxCountFormField
+export default TxValueFormControl

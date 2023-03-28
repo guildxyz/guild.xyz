@@ -19,7 +19,7 @@ const MinMaxBlockNumberFormControls = ({
 
     <BlockNumberFormControl
       baseFieldPath={baseFieldPath}
-      dataFieldName="minAmount"
+      dataFieldName="maxAmount"
       label="To"
       type={type}
     />

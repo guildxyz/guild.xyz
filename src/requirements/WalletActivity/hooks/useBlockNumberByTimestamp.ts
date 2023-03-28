@@ -1,6 +1,17 @@
 import { Chain, RPC } from "connectors"
 import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
+import fetcher from "utils/fetcher"
+
+const getBlockByTime = (_: string, chain: Chain, timestamp: number) =>
+  fetcher(
+    `${RPC[chain].apiUrl}/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before`
+  ).then((json) => {
+    if (json.status !== "1")
+      throw new Error("Rate limited, will try again in 5 seconds")
+
+    return json
+  })
 
 const useBlockNumberByTimestamp = (
   chain: Chain,
@@ -9,18 +20,17 @@ const useBlockNumberByTimestamp = (
   const shouldFetch = chain && timestamp
 
   const swrResponse = useSWRImmutable(
-    shouldFetch
-      ? `${RPC[chain].apiUrl}/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before`
-      : null
+    shouldFetch ? ["getBlockByTime", chain, timestamp] : null,
+    getBlockByTime,
+    {
+      shouldRetryOnError: true,
+      errorRetryCount: 3,
+    }
   )
 
   return {
     ...swrResponse,
     data: swrResponse?.data?.result ? parseInt(swrResponse.data.result) : undefined,
-    error:
-      swrResponse?.data && swrResponse.data.status !== "1"
-        ? "Rate limited, please try again later"
-        : swrResponse?.error,
   }
 }
 

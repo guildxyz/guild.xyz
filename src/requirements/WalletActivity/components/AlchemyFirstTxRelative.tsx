@@ -7,7 +7,7 @@ const AlchemyFirstTxRelative = ({
   <BlockNumberFormControl
     type="RELATIVE"
     baseFieldPath={baseFieldPath}
-    dataFieldName="minAmount"
+    dataFieldName="maxAmount"
     label="Relative wallet age"
     isRequired
   />
