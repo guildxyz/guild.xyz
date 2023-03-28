@@ -1,4 +1,4 @@
-import { Circle, HStack, Icon, Img, Text, Tooltip } from "@chakra-ui/react"
+import { HStack, Icon, Img, Text, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
@@ -7,10 +7,11 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import Visibility from "components/[guild]/Visibility"
+import { motion, Transition } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import { ReactNode, useMemo } from "react"
-import { PlatformType, Role, RolePlatform } from "types"
+import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 
 type Props = {
@@ -66,10 +67,12 @@ const Reward = ({ role, platform, withLink }: Props) => {
 
   return (
     <RewardDisplay
-      imgSrc={`/platforms/${PlatformType[
-        platform.guildPlatform?.platformId
-      ]?.toLowerCase()}.png`}
-      imgAlt={platform.guildPlatform?.platformGuildName}
+      icon={
+        <RewardIcon
+          rolePlatformId={platform.id}
+          guildPlatform={platform?.guildPlatform}
+        />
+      }
       label={
         <>
           {getRewardLabel(platform)}
@@ -112,27 +115,42 @@ const Reward = ({ role, platform, withLink }: Props) => {
 }
 
 const RewardDisplay = ({
-  imgSrc,
-  imgAlt,
+  icon,
   label,
   rightElement,
-  icon,
 }: {
-  imgSrc?: string
-  imgAlt?: string
   icon?: ReactNode
   label: ReactNode
   rightElement?: ReactNode
 }) => (
   <HStack pt="3" spacing={0} alignItems={"flex-start"}>
-    <Circle size={6} overflow="hidden">
-      {icon ?? <Img src={imgSrc} alt={imgAlt} boxSize={6} />}
-    </Circle>
+    {icon}
+
     <Text px="2" maxW="calc(100% - var(--chakra-sizes-12))">
       {label}
     </Text>
     {rightElement}
   </HStack>
+)
+
+const MotionImg = motion(Img)
+
+const RewardIcon = ({
+  rolePlatformId,
+  guildPlatform,
+  transition,
+}: {
+  rolePlatformId: number
+  guildPlatform?: GuildPlatform
+  transition?: Transition
+}) => (
+  <MotionImg
+    layoutId={`${rolePlatformId}_reward_img`}
+    transition={{ type: "spring", duration: 0.5, ...transition }}
+    src={`/platforms/${PlatformType[guildPlatform?.platformId]?.toLowerCase()}.png`}
+    alt={guildPlatform?.platformGuildName}
+    boxSize={6}
+  />
 )
 
 const RewardWrapper = ({ role, platform, withLink }: Props) => {
@@ -151,5 +169,5 @@ const RewardWrapper = ({ role, platform, withLink }: Props) => {
   )
 }
 
-export { RewardDisplay }
+export { RewardDisplay, RewardIcon }
 export default RewardWrapper
