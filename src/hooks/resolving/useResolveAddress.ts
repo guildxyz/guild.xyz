@@ -42,10 +42,7 @@ const useResolveAddress = (account) => {
     const NNS = await fetchNNSName(provider, account) // "0xe5358cab95014e2306815743793f16c93a8a5c70"
     if (NNS) return NNS
 
-    const ENS = await fetchENSName(
-      provider,
-      "0x5df52E6B70F25919Ad29add390EFE2614f91b2C6"
-    ) // "0x5df52E6B70F25919Ad29add390EFE2614f91b2C6"
+    const ENS = await fetchENSName(provider, account) // "0x5df52E6B70F25919Ad29add390EFE2614f91b2C6"
     if (ENS) return ENS
 
     const lens = await fetchLensProtocolName(account) // "0xe055721b972d58f0bcf6370c357879fb3a37d2f3"
