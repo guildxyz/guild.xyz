@@ -15,6 +15,11 @@ import { Fragment, useEffect, useState } from "react"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import fetcher from "utils/fetcher"
+/**
+ * Polyfill HTML inert property for Firefox support:
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
+ */
+import "wicg-inert"
 
 const App = ({
   Component,

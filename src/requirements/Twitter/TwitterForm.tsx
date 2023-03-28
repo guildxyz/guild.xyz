@@ -84,11 +84,16 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   ]
 
   const { errors } = useFormState()
-  const { setValue } = useFormContext()
+  const { resetField } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
   const selected = twitterRequirementTypes.find((reqType) => reqType.value === type)
+
+  const resetFields = () => {
+    resetField(`${baseFieldPath}.data.id`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: "" })
+  }
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -101,7 +106,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={twitterRequirementTypes}
-          afterOnChange={() => setValue(`${baseFieldPath}.data`, "")}
+          beforeOnChange={resetFields}
         />
 
         <FormErrorMessage>

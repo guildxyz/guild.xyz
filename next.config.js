@@ -41,6 +41,7 @@ module.exports = {
   },
   productionBrowserSourceMaps: true,
   images: {
+    dangerouslyAllowSVG: true,
     domains: [
       "storageapi.fleek.co",
       "ipfs.fleek.co",
@@ -51,7 +52,10 @@ module.exports = {
       "abs.twimg.com",
       "localhost",
       "guild.xyz",
+      "s3.us-west-2.amazonaws.com",
+      "www.notion.so",
     ],
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   experimental: {
     scrollRestoration: true,

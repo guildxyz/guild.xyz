@@ -9,7 +9,7 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
 
   const shouldFetch = account && id && roleId !== 0
 
-  const { data, isValidating, mutate } = useSWRWithOptionalAuth(
+  const { data, error, isValidating, mutate } = useSWRWithOptionalAuth(
     shouldFetch ? `/guild/access/${id}/${account}` : null,
     { shouldRetryOnError: false, ...swrOptions }
   )
@@ -20,6 +20,7 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
 
   return {
     data: roleData ?? data,
+    error,
     hasAccess,
     isLoading: isValidating,
     mutate,

@@ -207,7 +207,9 @@ const RPC: RpcConfig = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     rpcUrls: [
-      "https://arb-mainnet.g.alchemy.com/v2/FmkOXUHKolu3zhBNecrZ7tmJPzhsV7J_",
+      process.env.ARBITRUM_ALCHEMY_KEY
+        ? `https://arb-mainnet.g.alchemy.com/v2/${process.env.ARBITRUM_ALCHEMY_KEY}`
+        : "https://arb-mainnet.g.alchemy.com/v2/FmkOXUHKolu3zhBNecrZ7tmJPzhsV7J_",
     ],
     blockExplorerUrls: ["https://arbiscan.io"],
     blockExplorerIcons: {
@@ -444,7 +446,7 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://explorer.palm.io",
     iconUrls: ["/networkLogos/palm.png"],
-    rpcUrls: ["https://palm-mainnet.infura.io/v3/84722b0c96da4e09a6305118494aeeaa"],
+    rpcUrls: ["https://palm-mainnet.infura.io/v3/3a961d6501e54add9a41aa53f15de99b"],
     multicallAddress: "0xfFE2FF36c5b8D948f788a34f867784828aa7415D",
   },
   BASE_GOERLI: {

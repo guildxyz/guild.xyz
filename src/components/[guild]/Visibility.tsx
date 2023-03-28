@@ -15,7 +15,6 @@ const Visibility = ({ entityVisibility, showTagLabel, ...tagProps }: Props) => {
     >
       <Tag
         bg={showTagLabel ? undefined : "unset"}
-        ml={1}
         color={showTagLabel ? undefined : "gray"}
         {...tagProps}
       >

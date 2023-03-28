@@ -8,6 +8,7 @@ import {
   Portal,
 } from "@chakra-ui/react"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -30,10 +31,6 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
       ? `/assets/snapshot/proposal/${requirement.data.proposal}`
       : null
   )
-
-  const formattedDate = requirement.data.since
-    ? new Date(requirement.data.since).toLocaleDateString()
-    : null
 
   return (
     <Requirement
@@ -102,7 +99,7 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
                 {requirement.type === "SNAPSHOT_FOLLOW_SINCE" && (
                   <>
                     {` since at least `}
-                    <DataBlock>{formattedDate}</DataBlock>
+                    <DataBlockWithDate timestamp={requirement.data.since} />
                   </>
                 )}
               </>
@@ -111,7 +108,7 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
             return (
               <>
                 {`Be a Snapshot user since at least `}
-                <DataBlock>{formattedDate}</DataBlock>
+                <DataBlockWithDate timestamp={requirement.data.since} />
               </>
             )
           case "SNAPSHOT_VOTES":

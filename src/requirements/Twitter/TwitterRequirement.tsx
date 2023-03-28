@@ -2,6 +2,7 @@ import { Icon } from "@chakra-ui/react"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
+import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -107,14 +108,10 @@ const TwitterRequirement = (props: RequirementProps) => {
               </>
             )
           case "TWITTER_ACCOUNT_AGE":
-            const formattedDate = new Date(
-              requirement.data.minAmount
-            ).toLocaleDateString()
-
             return (
               <>
                 {`Have a Twitter account since at least `}
-                <DataBlock>{formattedDate}</DataBlock>
+                <DataBlockWithDate timestamp={requirement.data.minAmount} />
               </>
             )
         }
