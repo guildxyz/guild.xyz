@@ -1,8 +1,10 @@
-import { Divider, FormControl, FormLabel, Input } from "@chakra-ui/react"
+import { Divider, FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import ReconnectAlert from "components/common/ReconnectAlert"
+import { ControlledTimestampInput } from "components/common/TimestampInput"
 import useGateables from "hooks/useGateables"
-import { Controller, useFormContext, useFormState } from "react-hook-form"
+import { useFormState } from "react-hook-form"
+import { PlatformType } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ServerPicker from "./ServerPicker"
 
@@ -12,8 +14,7 @@ type Props = {
 
 const DiscordMemberSince = ({ baseFieldPath }: Props): JSX.Element => {
   const { errors } = useFormState()
-  const { control } = useFormContext()
-  const { error } = useGateables("DISCORD")
+  const { error } = useGateables(PlatformType.DISCORD)
 
   return (
     <>
@@ -25,30 +26,9 @@ const DiscordMemberSince = ({ baseFieldPath }: Props): JSX.Element => {
       >
         <FormLabel>Joined server before</FormLabel>
 
-        <Controller
-          control={control}
-          name={`${baseFieldPath}.data.memberSince`}
-          defaultValue={null}
-          rules={{
-            required: "This field is required.",
-          }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <Input
-              type="date"
-              ref={ref}
-              onBlur={onBlur}
-              onChange={(e) => {
-                const valueAsTimestamp = new Date(e.target.value).getTime()
-                onChange(valueAsTimestamp)
-              }}
-              value={
-                value && !isNaN(value)
-                  ? new Date(value).toISOString().split("T")[0]
-                  : ""
-              }
-              max={new Date().toISOString().split("T")[0]}
-            />
-          )}
+        <ControlledTimestampInput
+          fieldName={`${baseFieldPath}.data.memberSince`}
+          isRequired
         />
 
         <FormErrorMessage>

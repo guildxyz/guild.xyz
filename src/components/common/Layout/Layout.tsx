@@ -17,9 +17,16 @@ import LinkButton from "../LinkButton"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
 
+type BackButtonProps = {
+  href: string
+  text: string
+}
+
 type Props = {
   image?: JSX.Element
-  title: string
+  imageUrl?: string
+  ogTitle?: string
+  title?: string
   ogDescription?: string
   description?: JSX.Element
   textColor?: string
@@ -27,11 +34,14 @@ type Props = {
   background?: string
   backgroundImage?: string
   backgroundOffset?: number
-  showBackButton?: boolean
+  backButton?: BackButtonProps
+  maxWidth?: string
 }
 
 const Layout = ({
   image,
+  imageUrl,
+  ogTitle,
   title,
   ogDescription,
   description,
@@ -40,7 +50,8 @@ const Layout = ({
   background,
   backgroundImage,
   backgroundOffset = 128,
-  showBackButton,
+  backButton,
+  maxWidth = "container.lg",
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
@@ -55,16 +66,23 @@ const Layout = ({
 
     const rect = childrenWrapper.current.getBoundingClientRect()
     setBgHeight(`${rect.top + (window?.scrollY ?? 0) + backgroundOffset}px`)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, description, childrenWrapper?.current, action])
+  }, [
+    title,
+    description,
+    background,
+    backgroundImage,
+    childrenWrapper?.current,
+    action,
+  ])
 
   const { colorMode } = useColorMode()
 
   return (
     <>
       <Head>
-        <title>{`${title}`}</title>
-        <meta property="og:title" content={`${title}`} />
+        <title>{`${ogTitle ?? title}`}</title>
+        <meta property="og:title" content={`${ogTitle ?? title}`} />
+        <link rel="shortcut icon" href={imageUrl ?? "/guild-icon.png"} />
         {ogDescription && (
           <>
             <meta name="description" content={ogDescription} />
@@ -112,23 +130,23 @@ const Layout = ({
         <Container
           // to be above the absolutely positioned background box
           position="relative"
-          maxW="container.lg"
+          maxW={maxWidth}
           pt={{ base: 6, md: 9 }}
           pb={24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
-          {showBackButton && hasNavigated && (
+          {backButton && hasNavigated && (
             <LinkButton
-              href="/explorer"
+              href={backButton.href}
               variant="link"
-              color={colorContext.textColor}
+              color={colorContext?.textColor}
               opacity={0.75}
               size="sm"
               leftIcon={<ArrowLeft />}
               alignSelf="flex-start"
               mb="6"
             >
-              Go back to explorer
+              {backButton.text}
             </LinkButton>
           )}
           <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">

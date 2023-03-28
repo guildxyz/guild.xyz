@@ -30,11 +30,13 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
+import dynamic from "next/dynamic"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
+import useUser from "../hooks/useUser"
 import LeaveButton from "../LeaveButton"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
@@ -49,6 +51,8 @@ type Props = {
   isOpen: boolean
   onClose: () => void
 }
+
+const DynamicFeatureFlags = dynamic(() => import("./components/FeatureFlags"))
 
 const EditGuildDrawer = ({
   finalFocusRef,
@@ -68,8 +72,10 @@ const EditGuildDrawer = ({
     socialLinks,
     contacts,
     isDetailed,
+    featureFlags,
   } = useGuild()
   const { isOwner } = useGuildPermission()
+  const { isSuperAdmin } = useUser()
 
   const defaultValues = {
     name,
@@ -83,6 +89,7 @@ const EditGuildDrawer = ({
     contacts,
     socialLinks,
     guildPlatforms,
+    featureFlags: isSuperAdmin ? featureFlags : undefined,
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
@@ -253,9 +260,20 @@ const EditGuildDrawer = ({
                 </Section>
 
                 <Divider />
+
                 <Section title="Contact info" spacing="4">
                   <ContactInfo />
                 </Section>
+
+                {isSuperAdmin && (
+                  <>
+                    <Divider />
+
+                    <Section title="Enabled features" spacing="4">
+                      <DynamicFeatureFlags />
+                    </Section>
+                  </>
+                )}
               </VStack>
             </DrawerBody>
 
@@ -264,9 +282,7 @@ const EditGuildDrawer = ({
                 Cancel
               </Button>
               <Button
-                disabled={
-                  /* !isDirty || */ isLoading || isSigning || isUploadingShown
-                }
+                // isDisabled={!isDirty}
                 isLoading={isLoading || isSigning || isUploadingShown}
                 colorScheme="green"
                 loadingText={loadingText}

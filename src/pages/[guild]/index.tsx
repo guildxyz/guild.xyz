@@ -2,6 +2,7 @@ import {
   Box,
   Center,
   Collapse,
+  Divider,
   Heading,
   HStack,
   Icon,
@@ -11,14 +12,17 @@ import {
   Tag,
   TagLeftIcon,
   Text,
+  useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
+import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
+import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -39,10 +43,11 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { Info, Users } from "phosphor-react"
+import { CaretDown, Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey } from "types"
+import capitalize from "utils/capitalize"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
 
@@ -66,6 +71,7 @@ const DynamicActiveStatusUpdates = dynamic(
 
 const GuildPage = (): JSX.Element => {
   const {
+    id: guildId,
     name,
     description,
     imageUrl,
@@ -76,8 +82,8 @@ const GuildPage = (): JSX.Element => {
     isLoading,
     onboardingComplete,
     socialLinks,
+    poaps,
   } = useGuild()
-
   useAutoStatusUpdate()
 
   const { data: roleAccesses } = useAccess()
@@ -134,8 +140,30 @@ const GuildPage = (): JSX.Element => {
   const showOnboarding = isAdmin && !onboardingComplete
   const showAccessHub = (isMember || isAdmin) && !showOnboarding
 
+  const { isOpen: isExpiredRolesOpen, onToggle: onExpiredRolesToggle } =
+    useDisclosure()
+
+  const currentTime = Date.now() / 1000
+  const { activePoaps, expiredPoaps } =
+    poaps
+      ?.sort((poapA, poapB) => poapB.expiryDate - poapA.expiryDate)
+      .reduce(
+        (acc, currPoap) => {
+          if (!currPoap.activated && !isAdmin) return acc
+
+          if (currPoap.expiryDate > currentTime) acc.activePoaps.push(currPoap)
+          else acc.expiredPoaps.push(currPoap)
+
+          return acc
+        },
+        { activePoaps: [], expiredPoaps: [] }
+      ) ?? {}
+
   return (
     <DynamicOnboardingProvider>
+      <Head>
+        <meta name="theme-color" content={localThemeColor} />
+      </Head>
       <Layout
         title={name}
         textColor={textColor}
@@ -145,20 +173,26 @@ const GuildPage = (): JSX.Element => {
             {description && parseDescription(description)}
             {Object.keys(socialLinks ?? {}).length > 0 && (
               <Wrap w="full" spacing={3} mt="3">
-                {Object.entries(socialLinks).map(([type, link]) => (
-                  <HStack key={type} spacing={1.5}>
-                    <SocialIcon type={type as SocialLinkKey} size="sm" />
-                    <Link
-                      href={link?.startsWith("http") ? link : `https://${link}`}
-                      isExternal
-                      fontSize="sm"
-                      fontWeight="semibold"
-                      color={textColor}
-                    >
-                      {link.replace(/(http(s)?:\/\/)*(www\.)*/i, "")}
-                    </Link>
-                  </HStack>
-                ))}
+                {Object.entries(socialLinks).map(([type, link]) => {
+                  const prettyLink = link
+                    .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
+                    .replace(/\/+$/, "")
+
+                  return (
+                    <HStack key={type} spacing={1.5}>
+                      <SocialIcon type={type as SocialLinkKey} size="sm" />
+                      <Link
+                        href={link?.startsWith("http") ? link : `https://${link}`}
+                        isExternal
+                        fontSize="sm"
+                        fontWeight="semibold"
+                        color={textColor}
+                      >
+                        {prettyLink}
+                      </Link>
+                    </HStack>
+                  )
+                })}
               </Wrap>
             )}
           </>
@@ -171,10 +205,11 @@ const GuildPage = (): JSX.Element => {
             bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
           />
         }
+        imageUrl={imageUrl}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
         action={isAdmin && <DynamicEditGuildButton />}
-        showBackButton
+        backButton={{ href: "/explorer", text: "Go back to explorer" }}
       >
         {showOnboarding ? (
           <DynamicOnboarding />
@@ -206,10 +241,15 @@ const GuildPage = (): JSX.Element => {
               </Box>
             )
           }
-          mb="12"
+          mb="10"
         >
           {renderedRoles.length ? (
             <Stack ref={rolesEl} spacing={4}>
+              {/* Custom logic for Chainlink */}
+              {(isAdmin || guildId !== 16389) &&
+                activePoaps.map((poap) => (
+                  <PoapRoleCard key={poap?.id} guildPoap={poap} />
+                ))}
               {renderedRoles.map((role) => (
                 <RoleCard key={role.id} role={role} />
               ))}
@@ -223,37 +263,82 @@ const GuildPage = (): JSX.Element => {
               <Spinner />
             </Center>
           )}
+
+          {!!expiredPoaps?.length && (
+            <Box>
+              <Button
+                variant="link"
+                size="sm"
+                fontWeight="bold"
+                color="gray"
+                rightIcon={
+                  <Icon
+                    as={CaretDown}
+                    transform={isExpiredRolesOpen && "rotate(-180deg)"}
+                    transition="transform .3s"
+                  />
+                }
+                onClick={onExpiredRolesToggle}
+              >
+                {capitalize(
+                  `${isExpiredRolesOpen ? "" : "view "} ${
+                    expiredPoaps?.length
+                  } expired role${expiredPoaps?.length > 1 ? "s" : ""}`
+                )}
+              </Button>
+              <Collapse
+                in={isExpiredRolesOpen}
+                style={{ padding: "6px", margin: "-6px" }}
+                unmountOnExit
+              >
+                <Stack spacing={4} pt="3">
+                  {expiredPoaps.map((poap) => (
+                    <PoapRoleCard key={poap?.id} guildPoap={poap} />
+                  ))}
+                </Stack>
+              </Collapse>
+            </Box>
+          )}
         </Section>
 
         {(showMembers || isAdmin) && (
-          <Section
-            title="Members"
-            titleRightElement={
-              <HStack justifyContent="space-between" w="full" my="-2 !important">
-                <Tag maxH={6} pt={0.5}>
-                  <TagLeftIcon as={Users} />
-                  {isLoading ? <Spinner size="xs" /> : memberCount ?? 0}
-                </Tag>
-                {isAdmin && <DynamicMembersExporter />}
-              </HStack>
-            }
-          >
-            <Box>
-              {isAdmin && <DynamicActiveStatusUpdates />}
-              {showMembers ? (
-                <>
-                  <Members members={members} />
-                  {/* Temporary until the BE returns members again  */}
-                  <Text mt="6" colorScheme={"gray"}>
-                    <Icon as={Info} mr="2" mb="-2px" />
-                    Members are temporarily hidden, only admins are shown
-                  </Text>
-                </>
-              ) : (
-                <Text>Members are hidden</Text>
-              )}
-            </Box>
-          </Section>
+          <>
+            <Divider my={10} />
+            <Section
+              title="Members"
+              titleRightElement={
+                <HStack justifyContent="space-between" w="full" my="-2 !important">
+                  <Tag maxH={6} pt={0.5}>
+                    <TagLeftIcon as={Users} />
+                    {isLoading ? (
+                      <Spinner size="xs" />
+                    ) : (
+                      new Intl.NumberFormat("en", { notation: "compact" }).format(
+                        memberCount ?? 0
+                      ) ?? 0
+                    )}
+                  </Tag>
+                  {isAdmin && <DynamicMembersExporter />}
+                </HStack>
+              }
+            >
+              <Box>
+                {isAdmin && <DynamicActiveStatusUpdates />}
+                {showMembers ? (
+                  <>
+                    <Members members={members} />
+                    {/* Temporary until the BE returns members again  */}
+                    <Text mt="6" colorScheme={"gray"}>
+                      <Icon as={Info} mr="2" mb="-2px" />
+                      Members are temporarily hidden, only admins are shown
+                    </Text>
+                  </>
+                ) : (
+                  <Text>Members are hidden</Text>
+                )}
+              </Box>
+            </Section>
+          </>
         )}
       </Layout>
     </DynamicOnboardingProvider>

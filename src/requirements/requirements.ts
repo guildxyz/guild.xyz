@@ -1,13 +1,16 @@
 import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
 import dynamic from "next/dynamic"
 import {
+  Coins,
   CurrencyCircleDollar,
   ImageSquare,
   ListChecks,
+  Robot,
   Wallet,
   Wrench,
 } from "phosphor-react"
 import { RequirementFormProps } from "requirements"
+import GuildLogo from "static/logo.svg"
 
 export const REQUIREMENTS_DATA = [
   {
@@ -56,8 +59,20 @@ export const REQUIREMENTS_DATA = [
     types: ["ALLOWLIST"],
   },
   {
+    icon: Coins,
+    name: "Payment",
+    fileNameBase: "Payment",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Payment/PaymentRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Payment/PaymentForm")
+    ),
+    types: ["PAYMENT"],
+  },
+  {
     icon: Wrench,
-    name: "Custom contract query",
+    name: "Contract query",
     fileNameBase: "ContractState",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/ContractState/ContractStateRequirement")
@@ -66,6 +81,36 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/ContractState/ContractStateForm")
     ),
     types: ["CONTRACT"],
+  },
+  {
+    icon: GuildLogo,
+    name: "Guild",
+    fileNameBase: "Guild",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Guild/GuildRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Guild/GuildForm")
+    ),
+    types: [
+      "GUILD",
+      "GUILD_ROLE",
+      "GUILD_MINGUILDS",
+      "GUILD_ADMIN",
+      "GUILD_USER_SINCE",
+    ],
+  },
+  {
+    icon: Robot,
+    name: "Captcha",
+    fileNameBase: "Captcha",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Captcha/CaptchaRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Captcha/CaptchaForm")
+    ),
+    types: ["CAPTCHA"],
   },
   {
     icon: "/requirementLogos/twitter.svg",
@@ -124,24 +169,6 @@ export const REQUIREMENTS_DATA = [
       "DISCORD_MEMBER_SINCE",
     ],
     isPlatform: true,
-  },
-  {
-    icon: "/requirementLogos/guild.png",
-    name: "Guild",
-    fileNameBase: "Guild",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Guild/GuildRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Guild/GuildForm")
-    ),
-    types: [
-      "GUILD",
-      "GUILD_ROLE",
-      "GUILD_MINGUILDS",
-      "GUILD_ADMIN",
-      "GUILD_USER_SINCE",
-    ],
   },
   {
     icon: "/requirementLogos/unlock.png",
@@ -319,18 +346,18 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["CASK"],
   },
-  {
-    icon: "/requirementLogos/101.png",
-    name: "101",
-    fileNameBase: "101",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/101/101Requirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/101/101Form")
-    ),
-    types: ["101"],
-  },
+  // {
+  //   icon: "/requirementLogos/101.png",
+  //   name: "101",
+  //   fileNameBase: "101",
+  //   displayComponent: dynamic<RequirementProps>(
+  //     () => import("requirements/101/101Requirement")
+  //   ),
+  //   formComponent: dynamic<RequirementFormProps>(
+  //     () => import("requirements/101/101Form")
+  //   ),
+  //   types: ["101"],
+  // },
   {
     icon: "/requirementLogos/rabbithole.png",
     name: "RabbitHole",
@@ -469,6 +496,30 @@ export const REQUIREMENTS_DATA = [
       "SHIELD_INDIRECT_DEPOSITS",
       "SHIELD_TORNADO_CASH",
     ],
+  },
+  {
+    icon: "/requirementLogos/gitcoin-passport.svg",
+    name: "Gitcoin Passport",
+    fileNameBase: "GitcoinPassport",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/GitcoinPassport/GitcoinPassportForm")
+    ),
+    types: ["GITCOIN", "GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
+  },
+  {
+    icon: "/requirementLogos/polygonId.svg",
+    name: "PolygonID",
+    fileNameBase: "PolygonID",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/PolygonId/PolygonIdRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/PolygonId/PolygonIdForm")
+    ),
+    types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
   },
 ] as const
 

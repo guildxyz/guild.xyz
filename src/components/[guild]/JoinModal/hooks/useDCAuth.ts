@@ -8,9 +8,13 @@ type DCAuth = {
 }
 
 const useDCAuth = (scope = "guilds identify guilds.members.read") =>
-  useOauthPopupWindow<DCAuth>("https://discord.com/api/oauth2/authorize", {
-    client_id: process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID,
-    scope,
-  })
+  useOauthPopupWindow<DCAuth>(
+    "DISCORD",
+    "https://discord.com/api/oauth2/authorize",
+    {
+      client_id: process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID,
+      scope,
+    }
+  )
 
 export default useDCAuth

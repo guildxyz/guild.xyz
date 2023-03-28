@@ -1,6 +1,5 @@
 import {
   FormControl,
-  FormHelperText,
   FormLabel,
   InputGroup,
   InputLeftElement,
@@ -130,7 +129,7 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
             isClearable
             isLoading={isLoading}
             options={mappedPoaps}
-            placeholder="Search..."
+            placeholder="Search or paste ID"
             onInputChange={(text, _) => {
               const id = text?.replace("#", "")
               if (id?.length > 2 && FANCY_ID_REGEX.test(id)) setPastedId(id)
@@ -138,8 +137,6 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
             filterOption={customFilterOption}
           />
         </InputGroup>
-
-        <FormHelperText>Search by name or paste ID</FormHelperText>
 
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.data?.id?.message}

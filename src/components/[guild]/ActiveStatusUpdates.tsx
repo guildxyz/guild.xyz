@@ -19,9 +19,13 @@ const ActiveStatusUpdates = () => {
       <Card mb="5" shadow="sm" borderRadius="xl">
         <Alert status="info" pos="relative" pb="6">
           <AlertIcon mt="2px" boxSize="5" as={Spinner} />
-          <AlertTitle>{`Syncing ${progress.actionsDone}/${progress.total} members ${
-            params?.guildify ? "from Discord into your guild" : ""
-          }`}</AlertTitle>
+          <AlertTitle>
+            {progress.actionsDone === 0 && progress.total === 0
+              ? "Preparing sync"
+              : `Syncing ${progress.actionsDone}/${progress.total} members ${
+                  params?.guildify ? "from Discord into your guild" : ""
+                }`}
+          </AlertTitle>
           <Progress
             value={
               status === null

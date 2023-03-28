@@ -119,7 +119,7 @@ const ConnectorButton = ({
           </Center>
         )
       }
-      disabled={
+      isDisabled={
         isActivating ||
         (account && isActive && !ready) ||
         (isActive && activeConnector.constructor === connector.constructor)

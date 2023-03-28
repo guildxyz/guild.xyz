@@ -1,3 +1,4 @@
+import { StepsTheme as Steps } from "chakra-ui-steps"
 import Alert from "./alert"
 import Button from "./button"
 import Drawer from "./drawer"
@@ -8,8 +9,9 @@ import Modal from "./modal"
 import NumberInput from "./number-input"
 import Popover from "./popover"
 import Select from "./select"
-import Steps from "./steps"
+import Spinner from "./spinner"
 import Switch from "./switch"
+import Tabs from "./tabs"
 import Tag from "./tag"
 import Text from "./text"
 import Textarea from "./textarea"
@@ -28,10 +30,12 @@ const components = {
   Text,
   Textarea,
   Tooltip,
+  Tabs,
   Switch,
   Popover,
   Drawer,
   Steps,
+  Spinner,
 }
 
 export default components

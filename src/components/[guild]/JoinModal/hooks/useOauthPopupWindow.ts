@@ -3,42 +3,12 @@ import { randomBytes } from "crypto"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
-import useSWRImmutable from "swr/immutable"
+import { OneOf, PlatformName } from "types"
 
 type OAuthData<Data> = {
   redirect_url: string
   scope?: string
 } & Data
-
-const fallbackData = {
-  [process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID]: randomBytes(16).toString("hex"),
-  [process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID]: randomBytes(16).toString("hex"),
-  [process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID]: randomBytes(16).toString("hex"),
-  [process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID]: randomBytes(16).toString("hex"),
-}
-
-const fetcherWithAuthorization = async (authorization: string, endpoint: string) => {
-  const response = await fetch(endpoint, {
-    headers: {
-      authorization,
-    },
-  }).catch(() => {
-    Promise.reject({
-      error: "Network error",
-      errorDescription: `Unable to connect to reach "${endpoint}". If you're using some tracking blocker extension, please try turning that off`,
-    })
-    return undefined
-  })
-
-  if (!response?.ok) {
-    Promise.reject({
-      error: "Authentication error",
-      errorDescription: "There was an error, while fetching the user data",
-    })
-  }
-
-  return response.json()
-}
 
 type OAuthOptions = {
   client_id: string
@@ -48,18 +18,20 @@ type OAuthOptions = {
   code_challenge_method?: "plain"
 }
 
+type OAuthError = { error: string; errorDescription: string }
+
+export type Message = OneOf<
+  { type: "OAUTH_ERROR"; data: OAuthError },
+  { type: "OAUTH_SUCCESS"; data: any }
+>
+
 const useOauthPopupWindow = <OAuthResponse = { code: string }>(
+  platformName: PlatformName,
   url: string,
   oauthOptions: OAuthOptions
 ) => {
-  const { addDatadogError, addDatadogAction } = useDatadog()
+  const { addDatadogError } = useDatadog()
   const toast = useToast()
-
-  const { data: csrfToken, mutate: mutateCSRFToken } = useSWRImmutable(
-    ["CSRFToken", oauthOptions.client_id],
-    () => randomBytes(16).toString("hex"),
-    { revalidateOnMount: false, fallbackData: fallbackData[oauthOptions.client_id] }
-  )
 
   const redirectUri =
     typeof window !== "undefined" &&
@@ -67,107 +39,95 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
   oauthOptions.response_type = oauthOptions.response_type ?? "code"
 
-  const state = `${oauthOptions.client_id};${csrfToken}`
+  const { onOpen } = usePopupWindow()
 
-  // prettier-ignore
-  const { onOpen, windowInstance } = usePopupWindow(
-    `${url}?${Object.entries(oauthOptions).map(([key, value]) => `${key}=${value}`).join("&")}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}`
-  )
+  const [oauthState, setOauthState] = useState<{
+    error: OAuthError
+    authData: OAuthData<OAuthResponse>
+    isAuthenticating: boolean
+  }>({
+    error: null,
+    authData: null,
+    isAuthenticating: false,
+  })
 
-  const [error, setError] = useState(null)
-  const [authData, setAuthData] = useState<OAuthData<OAuthResponse>>(null)
-  const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false)
-
-  const dataKey = `oauth_popup_data_${oauthOptions.client_id}`
-  const shouldCloseKey = `oauth_window_should_close_${oauthOptions.client_id}`
-
-  /** On a window creation, we set a new listener */
-  useEffect(() => {
-    if (!windowInstance) return
-
-    const windowInstanceOpenInitially = !windowInstance.closed
-
-    setIsAuthenticating(true)
-
-    new Promise<OAuthData<OAuthResponse>>((resolve, reject) => {
-      const interval = setInterval(() => {
-        try {
-          const {
-            data,
-            type,
-            csrfToken: receivedCsrfToken,
-          } = JSON.parse(window.localStorage.getItem(dataKey))
-
-          addDatadogAction(
-            `CSRF - Main window received CSRF token: ${receivedCsrfToken}. Should equal: ${csrfToken}`
-          )
-
-          if (type === "OAUTH_ERROR") {
-            clearInterval(interval)
-            const title = data?.error ?? "Unknown error"
-            const errorDescription = data?.errorDescription ?? ""
-            reject({ error: title, errorDescription })
-            toast({ status: "error", title, description: errorDescription })
-          }
-          if (type === "OAUTH_SUCCESS") {
-            clearInterval(interval)
-
-            if (receivedCsrfToken !== csrfToken) {
-              const title = "Error"
-              const errorDescription =
-                "Authentication attempt can't be validated. Refresh and try connecting again"
-
-              addDatadogError(`OAuth error - ${title}`, {
-                error: errorDescription,
-                receivedCsrfToken,
-                csrfToken,
-              })
-              reject({ error: title, errorDescription })
-              toast({ status: "error", title, description: errorDescription })
-            } else {
-              resolve({
-                redirect_url: redirectUri,
-                scope: oauthOptions.scope,
-                ...(data as OAuthResponse),
-              })
-            }
-          }
-        } catch {}
-      }, 500)
+  const oauthPopupHandler = async () => {
+    setOauthState({
+      isAuthenticating: true,
+      authData: null,
+      error: null,
     })
-      .then(setAuthData)
-      .catch(setError)
-      .finally(() => {
-        if (windowInstanceOpenInitially) {
-          const closeInterval = setInterval(() => {
-            if (windowInstance.closed) {
-              setIsAuthenticating(false)
-              clearInterval(closeInterval)
-            }
-          }, 500)
+
+    const csrfToken = randomBytes(32).toString("hex")
+    const localStorageKey = `${platformName}_oauthinfo`
+
+    const infoToPassInLocalStorage = {
+      csrfToken,
+      from: window.location.toString(),
+      platformName,
+      redirect_url: redirectUri,
+      scope: oauthOptions.scope,
+    }
+
+    window.localStorage.setItem(
+      localStorageKey,
+      JSON.stringify(infoToPassInLocalStorage)
+    )
+
+    const channel = new BroadcastChannel(csrfToken)
+
+    const hasReceivedResponse = new Promise<void>((resolve) => {
+      channel.onmessage = (event: MessageEvent<Message>) => {
+        const { type, data } = event.data
+
+        if (type === "OAUTH_ERROR") {
+          setOauthState({
+            isAuthenticating: false,
+            error: data,
+            authData: null,
+          })
+        } else {
+          setOauthState({
+            isAuthenticating: false,
+            error: null,
+            authData: data,
+          })
         }
 
-        window.localStorage.removeItem(dataKey)
-        setIsAuthenticating(false)
-        window.localStorage.setItem(shouldCloseKey, "true")
-        mutateCSRFToken(randomBytes(16).toString("hex"))
-      })
-  }, [windowInstance])
+        resolve()
+      }
+    })
+
+    const searchParams = new URLSearchParams({
+      ...oauthOptions,
+      redirect_uri: redirectUri,
+      state: `${platformName}-${csrfToken}`,
+    }).toString()
+
+    onOpen(`${url}?${searchParams}`)
+
+    await hasReceivedResponse.finally(() => {
+      channel.postMessage({ type: "OAUTH_CONFIRMATION" })
+      window.localStorage.removeItem(localStorageKey)
+      // Close Broadcast Channel
+      channel.close()
+    })
+  }
+
+  useEffect(() => {
+    if (!oauthState.error) return
+
+    const title = oauthState.error.error ?? "Unknown error"
+    const errorDescription = oauthState.error.errorDescription ?? ""
+
+    toast({ status: "error", title, description: errorDescription })
+    addDatadogError(`OAuth error - ${title}`, { error: errorDescription })
+  }, [oauthState.error])
 
   return {
-    authData,
-    error,
-    onOpen: () => {
-      setError(null)
-      if (typeof csrfToken === "string" && csrfToken.length > 0) {
-        onOpen()
-      } else {
-        mutateCSRFToken()
-      }
-    },
-    isAuthenticating,
+    ...oauthState,
+    onOpen: oauthPopupHandler,
   }
 }
 
-export { fetcherWithAuthorization }
 export default useOauthPopupWindow

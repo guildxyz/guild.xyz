@@ -20,14 +20,20 @@ module.exports = {
     if (options.isServer && options.nextRuntime === "edge") {
       config.resolve.alias = {
         ...config.resolve.alias,
+        "@chakra-ui/anatomy": false,
+        "@chakra-ui/react": false,
+        "@chakra-ui/theme-tools": false,
         "@datadog/browser-rum": false,
         "@datadog/rum-react-integration": false,
-        "@chakra-ui/react": false,
         "@web3-react/coinbase-wallet": false,
         "@web3-react/core": false,
         "@web3-react/metamask": false,
         "@web3-react/walletconnect": false,
         "@ethersproject/keccak256": false,
+        "chakra-react-select": false,
+        "chakra-ui-steps": false,
+        crypto: "crypto-browserify",
+        stream: false,
       }
     }
 
@@ -35,6 +41,7 @@ module.exports = {
   },
   productionBrowserSourceMaps: true,
   images: {
+    dangerouslyAllowSVG: true,
     domains: [
       "storageapi.fleek.co",
       "ipfs.fleek.co",
@@ -45,7 +52,10 @@ module.exports = {
       "abs.twimg.com",
       "localhost",
       "guild.xyz",
+      "s3.us-west-2.amazonaws.com",
+      "www.notion.so",
     ],
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   experimental: {
     scrollRestoration: true,
@@ -177,7 +187,7 @@ module.exports = {
       {
         source: "/community",
         destination:
-          "https://guildxyz.notion.site/Our-Guild-The-Community-eb1cdcb680af40e6b4cdf31d13150a17",
+          "https://help.guild.xyz/en/collections/3826818-our-guild-the-community",
         permanent: false,
       },
       {
