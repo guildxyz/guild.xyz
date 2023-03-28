@@ -6,10 +6,10 @@ import {
   Text,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { RelativeTimeInput } from "components/common/RelativeTimeInput"
-import { TimestampInput } from "components/common/TimestampInput"
+import { ControlledRelativeTimeInput } from "components/common/RelativeTimeInput"
+import { ControlledTimestampInput } from "components/common/TimestampInput"
 import useDebouncedState from "hooks/useDebouncedState"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 import useBlockNumberByTimestamp from "../hooks/useBlockNumberByTimestamp"
@@ -29,15 +29,6 @@ const BlockNumberFormControl = ({
   label,
   isRequired,
 }: Props): JSX.Element => {
-  const [timestamp, setTimestamp] = useState<number>()
-  const debouncedTimestamp = useDebouncedState(timestamp)
-  const unixTimestamp =
-    typeof debouncedTimestamp === "number" && !isNaN(debouncedTimestamp)
-      ? type === "ABSOLUTE"
-        ? Math.floor(debouncedTimestamp / 1000)
-        : Math.floor((Date.now() - debouncedTimestamp) / 1000)
-      : undefined
-
   const {
     register,
     setValue,
@@ -47,15 +38,26 @@ const BlockNumberFormControl = ({
     formState: { errors },
   } = useFormContext()
 
-  const chain = useWatch({ name: `${baseFieldPath}.chain` })
-
-  const { data, error } = useBlockNumberByTimestamp(chain, unixTimestamp)
-
   useEffect(() => {
     register(`${baseFieldPath}.data.${dataFieldName}`, {
       required: isRequired && "This field is required.",
     })
   }, [])
+
+  const timestamp = useWatch({
+    name: `${baseFieldPath}.data.timestamps.${dataFieldName}`,
+  })
+  const debouncedTimestamp = useDebouncedState(timestamp)
+  const unixTimestamp =
+    typeof debouncedTimestamp === "number" && !isNaN(debouncedTimestamp)
+      ? type === "ABSOLUTE"
+        ? Math.floor(debouncedTimestamp / 1000)
+        : Math.floor((Date.now() - debouncedTimestamp) / 1000)
+      : undefined
+
+  const chain = useWatch({ name: `${baseFieldPath}.chain` })
+
+  const { data, error } = useBlockNumberByTimestamp(chain, unixTimestamp)
 
   useEffect(() => {
     if (!error) {
@@ -68,9 +70,9 @@ const BlockNumberFormControl = ({
   }, [error])
 
   useEffect(() => {
-    setValue(`${baseFieldPath}.data.${dataFieldName}`, unixTimestamp)
-    if (unixTimestamp) trigger(`${baseFieldPath}.data.${dataFieldName}`)
-  }, [unixTimestamp])
+    setValue(`${baseFieldPath}.data.${dataFieldName}`, data)
+    if (data) trigger(`${baseFieldPath}.data.${dataFieldName}`)
+  }, [data])
 
   return (
     <FormControl
@@ -80,9 +82,13 @@ const BlockNumberFormControl = ({
       <FormLabel>{label}</FormLabel>
 
       {type === "ABSOLUTE" ? (
-        <TimestampInput onChange={(v) => setTimestamp(v)} />
+        <ControlledTimestampInput
+          fieldName={`${baseFieldPath}.data.timestamps.${dataFieldName}`}
+        />
       ) : (
-        <RelativeTimeInput onChange={(_, v) => setTimestamp(v)} />
+        <ControlledRelativeTimeInput
+          fieldName={`${baseFieldPath}.data.timestamps.${dataFieldName}`}
+        />
       )}
 
       {unixTimestamp && (
