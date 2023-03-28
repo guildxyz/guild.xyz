@@ -19,7 +19,7 @@ const fetchVault = async (
   contractAddress: string,
   vaultId: string,
   chain: Chain
-): Promise<GetVaultResponse & { totalFeeBps: number }> => {
+): Promise<GetVaultResponse> => {
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0], Chains[chain])
   const feeCollectorContract = new Contract(
     contractAddress,
@@ -27,18 +27,11 @@ const fetchVault = async (
     provider
   )
 
-  const [getVaultRes, totalFeeBps]: [GetVaultResponse, BigNumber] =
-    await Promise.all([
-      feeCollectorContract.getVault(vaultId),
-      feeCollectorContract.totalFeeBps(),
-    ])
+  const getVaultRes: GetVaultResponse = feeCollectorContract.getVault(vaultId)
 
-  if (!getVaultRes || !totalFeeBps) return undefined
+  if (!getVaultRes) return undefined
 
-  return {
-    ...getVaultRes,
-    totalFeeBps: totalFeeBps.toNumber(),
-  }
+  return getVaultRes
 }
 
 const useVault = (
@@ -55,7 +48,6 @@ const useVault = (
   return {
     ...swrResponse,
     data: swrResponse?.data ?? {
-      totalFeeBps: undefined,
       owner: undefined,
       fee: undefined,
       token: undefined,
