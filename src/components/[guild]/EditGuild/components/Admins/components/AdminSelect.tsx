@@ -1,4 +1,4 @@
-import { forwardRef, Icon, Spinner } from "@chakra-ui/react"
+import { forwardRef, Icon } from "@chakra-ui/react"
 import {
   chakraComponents,
   CreatableSelect,
@@ -26,7 +26,11 @@ const CustomMultiValueContainer = ({
   const admins = useWatch({ control: control, name: "admins" })
 
   useEffect(() => {
-    if (domain && resolvedAddress && !admins.includes(resolvedAddress)) {
+    if (
+      domain &&
+      resolvedAddress &&
+      !admins.includes(resolvedAddress.toLowerCase())
+    ) {
       setValue(
         "admins",
         admins.map((admin) => (admin === domain ? resolvedAddress : admin))
@@ -39,13 +43,6 @@ const CustomMultiValueContainer = ({
         message: "Reverse resolving failed",
       })
     }
-
-    if (admins.includes(resolvedAddress)) {
-      setError("admins", {
-        message: "User already added",
-      })
-      return
-    }
   }, [resolvedAddress, domain])
 
   return (
@@ -55,9 +52,8 @@ const CustomMultiValueContainer = ({
         data: { value: resolvedAddress },
       }}
     >
-      {domain && !resolvedAddress && !resolvedAddress === null ? (
-        <Spinner size="xs" mr={2} />
-      ) : resolvedAddress === null || admins.includes(resolvedAddress) ? (
+      {resolvedAddress === null ||
+      admins.includes(resolvedAddress?.toLowerCase()) ? (
         <Icon as={Bug} mr={1} color="red.300" boxSize={4} weight="bold" />
       ) : (
         multiValueContainerProps.data.img
