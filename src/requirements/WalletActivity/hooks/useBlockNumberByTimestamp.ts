@@ -2,7 +2,7 @@ import { Chain, RPC } from "connectors"
 import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
 
-const useBlockNumberByTimeStamp = (
+const useBlockNumberByTimestamp = (
   chain: Chain,
   timestamp: number
 ): SWRResponse<number> => {
@@ -16,7 +16,7 @@ const useBlockNumberByTimeStamp = (
 
   return {
     ...swrResponse,
-    data: swrResponse?.data ? parseInt(swrResponse.data.result) : undefined,
+    data: swrResponse?.data?.result ? parseInt(swrResponse.data.result) : undefined,
     error:
       swrResponse?.data && swrResponse.data.status !== "1"
         ? "Rate limited, please try again later"
@@ -24,4 +24,4 @@ const useBlockNumberByTimeStamp = (
   }
 }
 
-export default useBlockNumberByTimeStamp
+export default useBlockNumberByTimestamp
