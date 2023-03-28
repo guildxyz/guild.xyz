@@ -1,4 +1,4 @@
-import { HStack, Icon, Img, Text, Tooltip } from "@chakra-ui/react"
+import { Icon, Img } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
@@ -6,7 +6,7 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { Detective, Info } from "phosphor-react"
+import { Detective } from "phosphor-react"
 import pluralize from "utils/pluralize"
 
 const HaveRole = (props: RequirementProps): JSX.Element => {
@@ -36,12 +36,7 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
       {...props}
     >
       {isRoleInvisible ? (
-        <HStack>
-          <Text>Have an invisibile role</Text>
-          <Tooltip label="Requires having another role, that is invisible">
-            <Info />
-          </Tooltip>
-        </HStack>
+        "The required guild role is invisible"
       ) : (
         <>
           {"Have the "}
