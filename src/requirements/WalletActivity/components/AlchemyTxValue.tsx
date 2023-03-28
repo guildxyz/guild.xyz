@@ -1,7 +1,7 @@
 import { useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import TokenPicker from "requirements/common/TokenPicker"
-import MinMaxBlockNumberFormFields from "./MinMaxBlockNumberFormFields"
+import MinMaxBlockNumberFormControls from "./MinMaxBlockNumberFormControls"
 import TxCountFormField from "./TxCountFormField"
 
 const AlchemyTxValue = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
@@ -20,7 +20,7 @@ const AlchemyTxValue = ({ baseFieldPath }: RequirementFormProps): JSX.Element =>
         formLabel="Number of transactions"
       />
 
-      <MinMaxBlockNumberFormFields baseFieldPath={baseFieldPath} />
+      <MinMaxBlockNumberFormControls baseFieldPath={baseFieldPath} />
     </>
   )
 }

@@ -1,5 +1,5 @@
 import { RequirementFormProps } from "requirements"
-import MinMaxBlockNumberFormFields from "./MinMaxBlockNumberFormFields"
+import MinMaxBlockNumberFormControls from "./MinMaxBlockNumberFormControls"
 import TxCountFormField from "./TxCountFormField"
 
 const AlchemyContractDeployRelative = ({
@@ -11,7 +11,7 @@ const AlchemyContractDeployRelative = ({
       formLabel="Number of contracts"
     />
 
-    <MinMaxBlockNumberFormFields baseFieldPath={baseFieldPath} />
+    <MinMaxBlockNumberFormControls baseFieldPath={baseFieldPath} type="RELATIVE" />
   </>
 )
 
