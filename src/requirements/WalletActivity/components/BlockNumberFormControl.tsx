@@ -6,27 +6,36 @@ import {
   Text,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { RelativeTimeInput } from "components/common/RelativeTimeInput"
 import { TimestampInput } from "components/common/TimestampInput"
+import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 import useBlockNumberByTimestamp from "../hooks/useBlockNumberByTimestamp"
 
 type Props = {
+  type?: "ABSOLUTE" | "RELATIVE"
   baseFieldPath: string
   dataFieldName: string
   label: string
+  isRequired?: boolean
 }
 
-const AbsoluteBlockNumberFormControl = ({
+const BlockNumberFormControl = ({
+  type = "ABSOLUTE",
   baseFieldPath,
   dataFieldName,
   label,
+  isRequired,
 }: Props): JSX.Element => {
   const [timestamp, setTimestamp] = useState<number>()
+  const debouncedTimestamp = useDebouncedState(timestamp)
   const unixTimestamp =
-    typeof timestamp === "number" && !isNaN(timestamp)
-      ? Math.floor(timestamp / 1000)
+    typeof debouncedTimestamp === "number" && !isNaN(debouncedTimestamp)
+      ? type === "ABSOLUTE"
+        ? Math.floor(debouncedTimestamp / 1000)
+        : Math.floor((Date.now() - debouncedTimestamp) / 1000)
       : undefined
 
   const {
@@ -44,7 +53,7 @@ const AbsoluteBlockNumberFormControl = ({
 
   useEffect(() => {
     register(`${baseFieldPath}.data.${dataFieldName}`, {
-      required: "This field is required.",
+      required: isRequired && "This field is required.",
     })
   }, [])
 
@@ -70,7 +79,11 @@ const AbsoluteBlockNumberFormControl = ({
     >
       <FormLabel>{label}</FormLabel>
 
-      <TimestampInput onChange={(v) => setTimestamp(v)} />
+      {type === "ABSOLUTE" ? (
+        <TimestampInput onChange={(v) => setTimestamp(v)} />
+      ) : (
+        <RelativeTimeInput onChange={(_, v) => setTimestamp(v)} />
+      )}
 
       {unixTimestamp && (
         <FormHelperText>
@@ -89,4 +102,4 @@ const AbsoluteBlockNumberFormControl = ({
   )
 }
 
-export default AbsoluteBlockNumberFormControl
+export default BlockNumberFormControl

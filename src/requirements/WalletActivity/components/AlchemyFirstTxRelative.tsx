@@ -1,14 +1,14 @@
 import { RequirementFormProps } from "requirements"
-import BlockNumberFormField from "./BlockNumberFormField"
+import BlockNumberFormControl from "./BlockNumberFormControl"
 
 const AlchemyFirstTxRelative = ({
   baseFieldPath,
 }: RequirementFormProps): JSX.Element => (
-  <BlockNumberFormField
+  <BlockNumberFormControl
+    type="RELATIVE"
     baseFieldPath={baseFieldPath}
-    fieldName="minAmount"
-    formLabel="Block number"
-    formHelperText="Wallet should be at least x blocks old"
+    dataFieldName="minAmount"
+    label="Relative wallet age"
     isRequired
   />
 )

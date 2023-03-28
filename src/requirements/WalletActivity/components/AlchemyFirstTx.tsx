@@ -1,11 +1,12 @@
 import { RequirementFormProps } from "requirements"
-import AbsoluteBlockNumberFormControl from "./AbsoluteBlockNumberInput"
+import BlockNumberFormControl from "./BlockNumberFormControl"
 
 const AlchemyFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element => (
-  <AbsoluteBlockNumberFormControl
+  <BlockNumberFormControl
     baseFieldPath={baseFieldPath}
     dataFieldName="minAmount"
     label="Wallet creation date"
+    isRequired
   />
 )
 
