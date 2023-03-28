@@ -8,7 +8,7 @@ import {
 } from "chakra-react-select"
 import StyledSelect from "components/common/StyledSelect"
 import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
-import useReverseResolve from "hooks/resolving/useReverseResolve"
+import useReverseENSName from "hooks/resolving/useReverseENSName"
 import { Bug } from "phosphor-react"
 import { PropsWithChildren, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -21,8 +21,7 @@ const CustomMultiValueContainer = ({
   const domain = multiValueContainerProps.data.value.startsWith("0x")
     ? undefined
     : multiValueContainerProps.data.value
-
-  const { resolvedAddress, error: resolveError } = useReverseResolve(domain)
+  const resolvedAddress = useReverseENSName(domain)
   const { setError, setValue, control, trigger } = useFormContext()
   const admins = useWatch({ control: control, name: "admins" })
 
@@ -35,7 +34,7 @@ const CustomMultiValueContainer = ({
       trigger("admins")
     }
 
-    if (resolveError) {
+    if (resolvedAddress === null) {
       setError("admins", {
         message: "Reverse resolving failed",
       })
@@ -51,11 +50,14 @@ const CustomMultiValueContainer = ({
 
   return (
     <chakraComponents.MultiValueContainer
-      {...{ ...multiValueContainerProps, data: { value: resolvedAddress } }}
+      {...{
+        ...multiValueContainerProps,
+        data: { value: resolvedAddress },
+      }}
     >
-      {domain && !resolvedAddress && !resolveError ? (
+      {domain && !resolvedAddress && !resolvedAddress === null ? (
         <Spinner size="xs" mr={2} />
-      ) : resolveError || admins.includes(resolvedAddress) ? (
+      ) : resolvedAddress === null || admins.includes(resolvedAddress) ? (
         <Icon as={Bug} mr={1} color="red.300" boxSize={4} weight="bold" />
       ) : (
         multiValueContainerProps.data.img

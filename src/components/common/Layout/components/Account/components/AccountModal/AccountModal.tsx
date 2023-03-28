@@ -21,7 +21,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import useResolveName from "hooks/resolving/useResolveName"
+import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
@@ -59,7 +59,7 @@ const AccountModal = ({ isOpen, onClose }) => {
     deleteKeyPairFromIdb(id).catch(() => {})
   }
 
-  const domain = useResolveName(account)
+  const domain = useResolveAddress(account)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} colorScheme="duotone">
