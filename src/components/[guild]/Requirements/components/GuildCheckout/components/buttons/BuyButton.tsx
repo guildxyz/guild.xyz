@@ -4,6 +4,7 @@ import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
+import fetcher from "utils/fetcher"
 import useAllowance from "../../hooks/useAllowance"
 import usePayFee from "../../hooks/usePayFee"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
@@ -30,6 +31,15 @@ const BuyButton = (): JSX.Element => {
   )
 
   const { estimateGasError, onSubmit, isLoading } = usePayFee()
+
+  // temporary in this form until POAPs are real roles
+  const handleSubmit = async () => {
+    if (requirement?.poapId)
+      await fetcher(`/api/poap/can-claim/${requirement.poapId}`).catch((e) => {
+        throw new Error(e?.error ?? "An unknown error occurred")
+      })
+    onSubmit()
+  }
 
   const isSufficientAllowance = fee && allowance ? fee.lte(allowance) : false
 
@@ -75,7 +85,7 @@ const BuyButton = (): JSX.Element => {
       loadingText="Check your wallet"
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
-      onClick={onSubmit}
+      onClick={handleSubmit}
       data-dd-action-name="BuyButton (GuildCheckout)"
     >
       {errorMsg || "Buy pass"}
