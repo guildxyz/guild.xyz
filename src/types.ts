@@ -296,6 +296,7 @@ type GuildFormType = Partial<
     | "name"
     | "imageUrl"
     | "description"
+    | "roles"
     | "theme"
     | "contacts"
     | "featureFlags"
