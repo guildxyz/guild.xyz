@@ -36,6 +36,11 @@ const SelectExistingPlatform = ({ onClose }) => {
           const useCardProps =
             platforms[PlatformType[platform.platformId]].cardPropsHook
 
+          const isGoogleReward = platform.platformId === PlatformType.GOOGLE
+          const isForm =
+            platform.platformGuildData?.mimeType ===
+            "application/vnd.google-apps.form"
+
           return (
             <PlatformCard
               usePlatformProps={useCardProps}
@@ -50,7 +55,11 @@ const SelectExistingPlatform = ({ onClose }) => {
                     guildPlatformId: platform.id,
                     isNew: true,
                     platformRoleData: {},
-                    platformRoleId: null,
+                    platformRoleId: isGoogleReward
+                      ? isForm
+                        ? "writer"
+                        : "reader"
+                      : null,
                     visibility: roleVisibility,
                   })
                   onClose()
