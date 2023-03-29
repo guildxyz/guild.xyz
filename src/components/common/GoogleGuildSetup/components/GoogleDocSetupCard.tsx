@@ -31,7 +31,7 @@ const GoogleDocSetupCard = ({
       <Card px={{ base: 5, sm: 6 }} py={7}>
         <Stack spacing={8}>
           <PermissionSelection
-            fieldName={permissionField ?? `${fieldNameBase}platformRoleData.role`}
+            fieldName={permissionField ?? `${fieldNameBase}platformRoleId`}
             mimeType={mimeType}
           />
           <Flex justifyContent="end">

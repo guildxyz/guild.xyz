@@ -150,15 +150,6 @@ type PlatformGuildData = {
   }
 }
 
-type PlatformRoleData = {
-  DISCORD: {
-    role?: never
-  }
-  GOOGLE: {
-    role: "reader" | "commenter" | "writer"
-  }
-}
-
 type Trait = {
   trait_type?: string
   value?: string
@@ -203,7 +194,6 @@ type RolePlatform = {
   index?: number
   isNew?: boolean
   roleId?: number
-  platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
   visibility?: Visibility
 }
 
