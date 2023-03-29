@@ -34,6 +34,9 @@ module.exports = {
         "chakra-ui-steps": false,
         crypto: "crypto-browserify",
         stream: false,
+        "crypto-addr-codec": false,
+        "@ensdomains/address-encoder": false,
+        dotbit: false,
       }
     }
 
