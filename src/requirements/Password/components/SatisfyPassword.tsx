@@ -54,7 +54,7 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
 const CompletePasswordModal = ({ isOpen, onClose }) => {
   const fetcherWithSign = useFetcherWithSign()
   const [password, setPassword] = useState("")
-  const { data: getGateCallbackData, error: getGateCallbackError } = useSWRImmutable(
+  const { data: getGateCallbackData } = useSWRImmutable(
     isOpen ? ["/util/getGateCallback/PASSWORD", { body: {} }] : null,
     fetcherWithSign
   )
