@@ -1,5 +1,6 @@
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
@@ -10,6 +11,7 @@ import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
+import { mutate } from "swr"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
@@ -57,11 +59,12 @@ const payFee = async (
 
 const usePayFee = () => {
   const { addDatadogAction, addDatadogError } = useDatadog()
+  const { id } = useGuild()
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { chainId } = useWeb3React()
+  const { chainId, account } = useWeb3React()
 
   const { requirement, pickedCurrency } = useGuildCheckoutContext()
 
@@ -74,7 +77,7 @@ const usePayFee = () => {
   const {
     data: { token, fee, multiplePayments },
     isValidating: isVaultLoading,
-    mutate,
+    mutate: mutateVault,
   } = useVault(requirement.address, requirement.data.id, requirement.chain)
 
   const { data: hasPaid, isValidating: isHasPaidLoading } = useHasPaid(
@@ -146,7 +149,12 @@ const usePayFee = () => {
         title: "Successful payment",
       })
 
-      mutate()
+      mutateVault()
+      if (requirement?.poapId)
+        mutate(
+          `/assets/poap/checkUserPoapEligibility/${requirement.poapId}/${account}`
+        )
+      else mutate(`/guild/access/${id}/${account}`)
     },
   })
 
