@@ -1,5 +1,5 @@
 import {
-  FormLabel,
+  Button,
   HStack,
   Icon,
   Input,
@@ -13,7 +13,6 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import ModalButton from "components/common/ModalButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -28,8 +27,7 @@ const NewOwner = () => {
 
   return (
     <>
-      <HStack justifyContent="space-between">
-        <FormLabel mb="0">Hand over owner role</FormLabel>
+      <HStack justifyContent="end">
         <Button
           size="sm"
           as="label"
