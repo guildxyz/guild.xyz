@@ -17,11 +17,14 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Reward from "components/[guild]/RoleCard/components/Reward"
 import { Chains } from "connectors"
 import { Coin, StarHalf } from "phosphor-react"
+import { useEffect } from "react"
+import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
 import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
@@ -51,9 +54,18 @@ const BuyPass = () => {
     txError,
     txSuccess,
     txHash,
+    setAgreeWithTOS,
   } = useGuildCheckoutContext()
-  const { id, name, roles } = useGuild()
+  const { id, name, roles, poaps } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
+
+  // temporary until POAPs are real roles
+  const guildPoap = poaps?.find((p) => p.poapIdentifier === requirement?.poapId)
+  const { poap } = usePoap(guildPoap?.fancyId)
+  useEffect(() => {
+    if (requirement?.poapId) setAgreeWithTOS(true)
+  }, [requirement?.poapId])
+
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
   )
@@ -63,7 +75,6 @@ const BuyPass = () => {
     ?.every((r) => r.access)
 
   if (
-    (!isInfoModalOpen && !featureFlags?.includes("PAYMENT_REQUIREMENT")) ||
     !account ||
     (!accessData && isAccessLoading) ||
     requirement?.type !== "PAYMENT" ||
@@ -113,20 +124,24 @@ const BuyPass = () => {
               </Alert>
             )}
 
-            {role?.rolePlatforms?.map((platform) => (
-              <Reward
-                key={platform.guildPlatformId}
-                platform={platform}
-                role={role}
-              />
-            )) || (
-              <HStack pt="3" spacing={0} alignItems={"flex-start"} opacity=".7">
-                <Icon as={StarHalf} boxSize={5} overflow="hidden" />
-                <Text px="2">
-                  No auto-managed rewards. The owner might add some in the future or
-                  reward you another way!
-                </Text>
-              </HStack>
+            {poap ? (
+              <PoapReward poap={poap} isExpired={false} isInteractive={false} />
+            ) : (
+              role?.rolePlatforms?.map((platform) => (
+                <Reward
+                  key={platform.guildPlatformId}
+                  platform={platform}
+                  role={role}
+                />
+              )) || (
+                <HStack pt="3" spacing={0} alignItems={"flex-start"} opacity=".7">
+                  <Icon as={StarHalf} boxSize={5} overflow="hidden" />
+                  <Text px="2">
+                    No auto-managed rewards. The owner might add some in the future
+                    or reward you another way!
+                  </Text>
+                </HStack>
+              )
             )}
           </ModalBody>
 
@@ -150,10 +165,12 @@ const BuyPass = () => {
                 <SwitchNetworkButton />
 
                 <Collapse in={chainId === Chains[requirement.chain]}>
-                  <TOSCheckbox>
-                    I understand that if the owner changes the requirements, I could
-                    lose access.
-                  </TOSCheckbox>
+                  {!guildPoap && (
+                    <TOSCheckbox>
+                      I understand that if the owner changes the requirements, I
+                      could lose access.
+                    </TOSCheckbox>
+                  )}
 
                   <BuyAllowanceButton />
                 </Collapse>

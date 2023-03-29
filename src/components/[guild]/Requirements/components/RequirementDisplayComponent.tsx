@@ -14,7 +14,7 @@ type Props = {
 
 const RequirementDisplayComponent = ({
   requirement,
-  rightElement,
+  rightElement = <RequiementAccessIndicator />,
   ...rest
 }: Props) => {
   if (requirement.isHidden) {
@@ -36,10 +36,7 @@ const RequirementDisplayComponent = ({
     )
   return (
     <RequirementProvider requirement={requirement}>
-      <RequirementComponent
-        rightElement={rightElement ?? <RequiementAccessIndicator />}
-        {...rest}
-      />
+      <RequirementComponent rightElement={rightElement} {...rest} />
     </RequirementProvider>
   )
 }
