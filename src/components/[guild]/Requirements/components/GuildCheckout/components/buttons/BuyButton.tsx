@@ -32,7 +32,7 @@ const BuyButton = (): JSX.Element => {
 
   const { estimateGasError, onSubmit, isLoading } = usePayFee()
 
-  // temporary in this form until POAPs are real roles
+  // temporary (in it's current form) until POAPs are real roles
   const handleSubmit = async () => {
     if (requirement?.poapId)
       await fetcher(`/api/poap/can-claim/${requirement.poapId}`).catch((e) => {
