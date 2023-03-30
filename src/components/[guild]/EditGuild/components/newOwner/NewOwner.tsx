@@ -15,12 +15,10 @@ import {
 } from "@chakra-ui/react"
 import ModalButton from "components/common/ModalButton"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { Warning } from "phosphor-react"
 import { useState } from "react"
-import fetcher from "utils/fetcher"
+import useNewOwner from "./hooks/useNewOwner"
 
 const NewOwner = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -39,35 +37,26 @@ const NewOwner = () => {
           Hand over ownership
         </Button>
       </HStack>
-
       <NewOwnerModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }
 
 const NewOwnerModal = ({ isOpen, onClose }) => {
-  const { mutateGuild, id } = useGuild()
   const [newOwner, setNewOwner] = useState("")
-  const changeOwner = async (signedValidation: SignedValdation) => {
-    fetcher(`/guild/${id}/ownership`, {
-      method: "PUT",
-      ...signedValidation,
-    })
-  }
+  const { mutateGuild } = useGuild()
   const toast = useToast()
-  const showErrorToast = useShowErrorToast()
-  const { onSubmit, isLoading } = useSubmitWithSign(changeOwner, {
-    forcePrompt: true,
-    onSuccess: () => {
-      toast({
-        title: `Owner changed!`,
-        status: "success",
-      })
-      mutateGuild()
-      onClose()
-    },
-    onError: (error) => showErrorToast(error),
-  })
+
+  const onSuccess = () => {
+    toast({
+      title: `Owner changed!`,
+      status: "success",
+    })
+    onClose()
+    mutateGuild()
+  }
+
+  const { onSubmit, isLoading } = useNewOwner({ onSuccess })
 
   return (
     <Modal
@@ -80,7 +69,7 @@ const NewOwnerModal = ({ isOpen, onClose }) => {
       <ModalContent>
         {" "}
         <ModalHeader pb="7">Hand over ownership</ModalHeader>
-        <ModalCloseButton />{" "}
+        <ModalCloseButton />
         <ModalBody>
           <Text mb="6" fontSize={"lg"}>
             Are you sure, that you hand over your ownership? Your role will switch to

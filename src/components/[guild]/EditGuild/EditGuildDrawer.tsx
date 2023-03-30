@@ -44,7 +44,7 @@ import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
-import NewOwner from "./components/NewOwner"
+import NewOwner from "./components/newOwner/NewOwner"
 import SocialLinks from "./components/SocialLinks"
 import useEditGuild from "./hooks/useEditGuild"
 
