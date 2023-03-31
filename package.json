@@ -92,7 +92,7 @@
     "@types/react": "^18.0.26",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "cypress-file-upload": "^5.0.8",
-    "dotenv-cli": "^7.0.0",
+    "dotenv-cli": "^7.1.0",
     "eslint": "^8.35.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
