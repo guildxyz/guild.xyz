@@ -45,7 +45,7 @@
     "@metamask/onboarding": "^1.0.1",
     "@notionhq/client": "^2.2.2",
     "@nouns/assets": "^0.4.2",
-    "@snyk/protect": "latest",
+    "@snyk/protect": "1.1117.0",
     "@unstoppabledomains/resolution": "^8.4.0",
     "@vercel/og": "^0.2.0",
     "@web3-react/coinbase-wallet": "8.0.34-beta.0",
