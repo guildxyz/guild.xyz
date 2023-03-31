@@ -42,8 +42,6 @@ import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
 
 const BuyPass = () => {
-  const { featureFlags } = useGuild()
-
   const { account, chainId } = useWeb3React()
   const {
     requirement,
@@ -75,7 +73,6 @@ const BuyPass = () => {
     ?.every((r) => r.access)
 
   if (
-    !isInfoModalOpen ||
     !account ||
     (!accessData && isAccessLoading) ||
     requirement?.type !== "PAYMENT" ||
