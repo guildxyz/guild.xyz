@@ -133,6 +133,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
                 index={i}
                 removeRequirement={remove}
                 updateRequirement={update}
+                isEditDisabled={type === "PAYMENT"}
               />
               <LogicPicker />
             </CardMotionWrapper>
