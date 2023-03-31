@@ -27,13 +27,14 @@ import useDisconnect from "../hooks/useDisconnect"
 
 type Props = {
   address: string
+  isPrimary: boolean
 }
 
 const providerIcons: Record<AddressConnectionProvider, string> = {
   DELEGATE: "delegatecash.png",
 }
 
-const LinkedAddress = ({ address }: Props) => {
+const LinkedAddress = ({ address, isPrimary }: Props) => {
   const { addressProviders } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -63,6 +64,17 @@ const LinkedAddress = ({ address }: Props) => {
             </Tag>
           </Tooltip>
         )}
+        {isPrimary ? (
+          <Tooltip
+            label="The guild owner will receive it if they export the list of users from their guild."
+            placement="top"
+            hasArrow
+          >
+            <Tag alignSelf="center" cursor="default">
+              primary
+            </Tag>
+          </Tooltip>
+        ) : null}
         <Tooltip label="Disconnect address" placement="top" hasArrow>
           <IconButton
             rounded="full"

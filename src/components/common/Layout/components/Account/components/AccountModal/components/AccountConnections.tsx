@@ -67,7 +67,11 @@ const AccountConnections = () => {
             {addresses
               ?.filter((address) => address?.toLowerCase() !== account.toLowerCase())
               .map((address) => (
-                <LinkedAddress key={address} address={address} />
+                <LinkedAddress
+                  key={address}
+                  isPrimary={addresses.indexOf(address) === 0}
+                  address={address}
+                />
               ))}
             <LinkAddressButton />
           </Stack>
