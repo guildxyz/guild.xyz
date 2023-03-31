@@ -27,7 +27,7 @@ const WithdrawButton = (): JSX.Element => {
   const isButtonDisabled = collected && collected.eq(BigNumber.from(0))
 
   const formattedWithdrawableAmount =
-    collected && decimals && Number(formatUnits(collected, decimals))
+    collected && decimals && Number(formatUnits(collected, decimals)) * 0.9
 
   const { onSubmit, isLoading } = useWithdraw(address, data?.id, chain)
 
@@ -58,11 +58,11 @@ const WithdrawButton = (): JSX.Element => {
           : isButtonDisabled || !formattedWithdrawableAmount
           ? "Withdraw"
           : isOnVaultsChain
-          ? `Withdraw ${Number(
-              formattedWithdrawableAmount.toFixed(
-                formattedWithdrawableAmount < 0.001 ? 5 : 3
-              )
-            )} ${symbol}`
+          ? `Withdraw ${
+              formattedWithdrawableAmount < 0.001
+                ? "< 0.001"
+                : formattedWithdrawableAmount.toFixed(3)
+            } ${symbol}`
           : `Switch to ${RPC[chain]?.chainName} to withdraw`}
       </Button>
     </Tooltip>
