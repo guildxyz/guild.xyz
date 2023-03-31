@@ -1,4 +1,5 @@
 {
+  "plugins": ["prettier-plugin-jsdoc"],
   "semi": false,
   "singleQuote": false,
   "printWidth": 85
