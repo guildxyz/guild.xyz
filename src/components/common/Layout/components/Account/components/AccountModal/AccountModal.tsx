@@ -9,6 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
+  Tag,
   Text,
   Tooltip,
 } from "@chakra-ui/react"
@@ -28,7 +29,7 @@ import AccountConnections from "./components/AccountConnections"
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
   const { setIsDelegateConnection } = useWeb3ConnectionManager()
-  const { id } = useUser()
+  const { id, addresses } = useUser()
 
   const connectorName = (c) =>
     c instanceof MetaMask
@@ -70,6 +71,17 @@ const AccountModal = ({ isOpen, onClose }) => {
               <Stack mb={9} direction="row" spacing="4" alignItems="center">
                 <GuildAvatar address={account} />
                 <CopyableAddress address={account} decimals={5} fontSize="2xl" />
+                {addresses?.indexOf(account.toLowerCase()) === 0 ? (
+                  <Tooltip
+                    label="The guild owner will receive it if they export the list of users from their guild."
+                    placement="top"
+                    hasArrow
+                  >
+                    <Tag alignSelf="center" cursor="default">
+                      primary
+                    </Tag>
+                  </Tooltip>
+                ) : null}
               </Stack>
 
               <Stack
