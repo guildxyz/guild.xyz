@@ -10,7 +10,8 @@ import {
 } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import { Modal } from "components/common/Modal"
-import { useRef } from "react"
+import useToast from "hooks/useToast"
+import { useRef, useState } from "react"
 
 const AddPoapRequirement = ({
   title,
@@ -22,6 +23,8 @@ const AddPoapRequirement = ({
   onAdd = null,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [onCloseAttemptToast, setOnCloseAttemptToast] = useState()
+  const toast = useToast()
   const buttonRef = useRef()
 
   const handleAdd = (data) => {
@@ -41,7 +44,11 @@ const AddPoapRequirement = ({
       />
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={
+          onCloseAttemptToast
+            ? () => toast({ status: "warning", title: onCloseAttemptToast })
+            : onClose
+        }
         scrollBehavior="inside"
         finalFocusRef={buttonRef}
       >
@@ -61,6 +68,7 @@ const AddPoapRequirement = ({
               baseFieldPath=""
               poapId={poapId}
               onClose={onClose}
+              setOnCloseAttemptToast={setOnCloseAttemptToast}
               onAdd={handleAdd}
             />
           </ModalBody>
