@@ -75,6 +75,7 @@ const BuyPass = () => {
     ?.every((r) => r.access)
 
   if (
+    !isInfoModalOpen ||
     !account ||
     (!accessData && isAccessLoading) ||
     requirement?.type !== "PAYMENT" ||
