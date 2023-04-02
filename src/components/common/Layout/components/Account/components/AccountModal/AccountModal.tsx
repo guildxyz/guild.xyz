@@ -17,11 +17,11 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
+import useUser from "components/[guild]/hooks/useUser"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
@@ -71,7 +71,8 @@ const AccountModal = ({ isOpen, onClose }) => {
               <Stack mb={9} direction="row" spacing="4" alignItems="center">
                 <GuildAvatar address={account} />
                 <CopyableAddress address={account} decimals={5} fontSize="2xl" />
-                {addresses?.indexOf(account.toLowerCase()) === 0 ? (
+                {addresses?.indexOf(account.toLowerCase()) === 0 &&
+                addresses.length > 1 ? (
                   <Tooltip
                     label="The guild owner will receive it if they export the list of users from their guild."
                     placement="top"
