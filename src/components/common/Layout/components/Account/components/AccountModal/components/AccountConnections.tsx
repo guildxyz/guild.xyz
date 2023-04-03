@@ -10,8 +10,8 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
+import Section from "components/common/Section"
 import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import LinkAddressButton from "./LinkAddressButton"
@@ -67,11 +67,7 @@ const AccountConnections = () => {
             {addresses
               ?.filter((address) => address?.toLowerCase() !== account.toLowerCase())
               .map((address) => (
-                <LinkedAddress
-                  key={address}
-                  isPrimary={addresses.indexOf(address) === 0}
-                  address={address}
-                />
+                <LinkedAddress key={address} address={address} />
               ))}
             <LinkAddressButton />
           </Stack>

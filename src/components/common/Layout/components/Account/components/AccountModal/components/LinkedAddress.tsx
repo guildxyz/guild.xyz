@@ -13,11 +13,11 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
+import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
 import Image from "next/image"
 import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
@@ -27,15 +27,14 @@ import useDisconnect from "../hooks/useDisconnect"
 
 type Props = {
   address: string
-  isPrimary: boolean
 }
 
 const providerIcons: Record<AddressConnectionProvider, string> = {
   DELEGATE: "delegatecash.png",
 }
 
-const LinkedAddress = ({ address, isPrimary }: Props) => {
-  const { addressProviders } = useUser()
+const LinkedAddress = ({ address }: Props) => {
+  const { addressProviders, addresses } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { onSubmit, isLoading, signLoadingText } = useDisconnect(onClose)
@@ -64,14 +63,14 @@ const LinkedAddress = ({ address, isPrimary }: Props) => {
             </Tag>
           </Tooltip>
         )}
-        {isPrimary ? (
+        {addresses.indexOf(address) === 0 ? (
           <Tooltip
             label="The guild owner will receive it if they export the list of users from their guild."
             placement="top"
             hasArrow
           >
             <Tag alignSelf="center" cursor="default">
-              primary
+              Primary
             </Tag>
           </Tooltip>
         ) : null}

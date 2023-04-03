@@ -79,7 +79,7 @@ const AccountModal = ({ isOpen, onClose }) => {
                     hasArrow
                   >
                     <Tag alignSelf="center" cursor="default">
-                      primary
+                      Primary
                     </Tag>
                   </Tooltip>
                 ) : null}
