@@ -17,15 +17,15 @@ export enum GuildAction {
 type GuildCredentialAttribute =
   | {
       trait_type: "Type"
-      value: GuildAction
+      value: (typeof GuildAction)[number]
     }
   | {
       trait_type: "Guild"
-      value: number
+      value: string
     }
   | {
       trait_type: "User ID"
-      value: number
+      value: string
     }
   | {
       trait_type: "Date"

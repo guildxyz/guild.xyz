@@ -61,7 +61,7 @@ const useMintCredential = () => {
   const [loadingText, setLoadingText] = useState<string>("")
 
   const partialMetadata: PartialMetadata =
-    !guildId || !userId || typeof credentialType === "undefined"
+    !guildId || !userId || typeof credentialType !== "number"
       ? undefined
       : {
           name:
@@ -75,15 +75,15 @@ const useMintCredential = () => {
           attributes: [
             {
               trait_type: "Type",
-              value: credentialType,
+              value: GuildAction[credentialType],
             },
             {
               trait_type: "Guild",
-              value: guildId,
+              value: guildId.toString(),
             },
             {
               trait_type: "User ID",
-              value: userId,
+              value: userId.toString(),
             },
             {
               trait_type: "Date",
