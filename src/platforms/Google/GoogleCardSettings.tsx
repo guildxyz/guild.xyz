@@ -22,7 +22,7 @@ const GoogleCardSettings = () => {
 
   useEffect(() => {
     if (!register) return
-    register(`rolePlatforms.${index}.platformRoleData.role`, {
+    register(`rolePlatforms.${index}.platformRoleId`, {
       value:
         guildPlatform?.platformGuildData?.mimeType ===
         "application/vnd.google-apps.form"
@@ -44,19 +44,9 @@ const GoogleCardSettings = () => {
           <ModalCloseButton />
           <ModalBody>
             <PermissionSelection
-              fieldName={`rolePlatforms.${index}.platformRoleData.role`}
+              fieldName={`rolePlatforms.${index}.platformRoleId`}
               mimeType={guildPlatform?.platformGuildData?.mimeType}
             />
-            {/* <Alert status="info" mt="8">
-              <AlertIcon mt="0" />
-              <Box>
-                <AlertTitle>Can't edit later</AlertTitle>
-                <AlertDescription>
-                  After you save you'll have to re-add the reward to change access
-                  level
-                </AlertDescription>
-              </Box>
-            </Alert> */}
           </ModalBody>
         </ModalContent>
       </Modal>
