@@ -10,11 +10,9 @@ import {
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
-import useShouldABTest from "./useShouldABTest"
 
 const fetchPrice = (
   _: string,
-  shouldABTest: boolean,
   guildId: number,
   account: string,
   requirement: Requirement,
@@ -23,7 +21,6 @@ const fetchPrice = (
   fetcher(`/api/fetchPrice`, {
     method: "POST",
     body: {
-      shouldABTest,
       guildId,
       account,
       ...requirement,
@@ -38,8 +35,6 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
 
   const [fallbackData, setFallbackData] = useState<FetchPriceResponse>()
 
-  const shouldABTest = useShouldABTest()
-
   const shouldFetch =
     purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain) &&
     isOpen &&
@@ -48,14 +43,7 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
 
   const { data, ...swrResponse } = useSWR<FetchPriceResponse>(
     shouldFetch
-      ? [
-          "fetchPrice",
-          shouldABTest,
-          id,
-          account,
-          requirement,
-          sellAddress ?? pickedCurrency,
-        ]
+      ? ["fetchPrice", id, account, requirement, sellAddress ?? pickedCurrency]
       : null,
     fetchPrice,
     {
