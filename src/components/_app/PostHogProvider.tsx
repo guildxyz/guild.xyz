@@ -36,11 +36,11 @@ if (typeof window !== "undefined") {
     autocapture: false,
     // Disable in development
     loaded: (ph) => {
-      // if (
-      //   process.env.NODE_ENV !== "production" ||
-      //   window.location.host !== "guild.xyz"
-      // )
-      //   ph.opt_out_capturing()
+      if (
+        process.env.NODE_ENV !== "production" ||
+        window.location.host !== "guild.xyz"
+      )
+        ph.opt_out_capturing()
     },
   })
 }
