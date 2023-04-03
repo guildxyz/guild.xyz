@@ -13,12 +13,14 @@ import { Bug } from "phosphor-react"
 import { PropsWithChildren, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 
+const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
+
 type PropsHelper = MultiValueGenericProps<unknown, boolean, GroupBase<unknown>>
 const CustomMultiValueContainer = ({
   children,
   ...multiValueContainerProps
 }: PropsWithChildren<PropsHelper>) => {
-  const domain = multiValueContainerProps.data.value.startsWith("0x")
+  const domain = ADDRESS_REGEX.test(multiValueContainerProps.data.value)
     ? undefined
     : multiValueContainerProps.data.value
   const resolvedAddress = useReverseENSName(domain)

@@ -25,7 +25,7 @@ const CopyableAddress = ({
       hasArrow
     >
       <Button onClick={onCopy} variant="unstyled" height="auto" {...rest}>
-        <Text>{domain ? domain : shortenHex(address, decimals)}</Text>
+        <Text>{domain || shortenHex(address, decimals)}</Text>
       </Button>
     </Tooltip>
   )

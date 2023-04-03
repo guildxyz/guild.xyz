@@ -29,10 +29,15 @@ const fetchLensProtocolName = (account) =>
     },
   }).then((res) => res?.data?.profiles?.items?.[0]?.handle)
 
-const fetchDotbitName = (dotbitResolver, account) =>
-  dotbitResolver?.accountById(account)?.then((res) => res?.account)
+const fetchDotbitName = (account) => {
+  const dotbitResolver = createInstance()
+  return dotbitResolver?.accountById(account)?.then((res) => res?.account)
+}
 
-const fetchUnstoppableName = (resolver, account) => resolver.reverse(account)
+const fetchUnstoppableName = (account) => {
+  const unstoppableResolver = new Resolution()
+  return unstoppableResolver.reverse(account)
+}
 
 const useResolveAddress = (account) => {
   const { provider } = useWeb3React()
@@ -48,16 +53,10 @@ const useResolveAddress = (account) => {
     const lens = await fetchLensProtocolName(account) // "0xe055721b972d58f0bcf6370c357879fb3a37d2f3"
     if (lens) return lens
 
-    const unstoppableResolver = new Resolution()
-
-    const unstoppableDomain = await fetchUnstoppableName(
-      unstoppableResolver,
-      account
-    ) // "0x94ef5300cbc0aa600a821ccbc561b057e456ab23"
+    const unstoppableDomain = await fetchUnstoppableName(account) // "0x94ef5300cbc0aa600a821ccbc561b057e456ab23"
     if (unstoppableDomain) return unstoppableDomain
 
-    const dotbitResolver = createInstance()
-    const dotbit = await fetchDotbitName(dotbitResolver, account) // "0x5728088435fb8788472a9ca601fbc0b9cbea8be3"
+    const dotbit = await fetchDotbitName(account) // "0x5728088435fb8788472a9ca601fbc0b9cbea8be3"
     if (dotbit) return dotbit
 
     return null
