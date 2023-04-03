@@ -1,7 +1,7 @@
 import Resolution from "@unstoppabledomains/resolution"
 import { useWeb3React } from "@web3-react/core"
 import { createInstance } from "dotbit"
-import useSWRImmutable from "swr"
+import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
 const fetchENSName = (provider, address) => provider.lookupAddress(address)
