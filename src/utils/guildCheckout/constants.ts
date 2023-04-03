@@ -1,15 +1,17 @@
 import { BigNumberish } from "@ethersproject/bignumber"
+import { ContractInterface } from "@ethersproject/contracts"
 import { Chain, RPC } from "connectors"
 import { RequirementType } from "requirements"
+import GUILD_CREDENTIAL_ABI from "static/abis/guildCredential.json"
 import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import {
+  UNIVERSAL_ROUTER_COMMANDS,
   encodePermit2Permit,
   encodeUnwrapEth,
   encodeV2SwapExactOut,
   encodeV3SwapExactOut,
   encodeWrapEth,
-  UNIVERSAL_ROUTER_COMMANDS,
 } from "./encoders"
 
 export const ZEROX_SUPPORTED_SOURCES = ["Uniswap_V2", "Uniswap_V3"] as const
@@ -231,3 +233,12 @@ export const FEE_COLLECTOR_CONTRACT: Partial<Record<Chain, string>> = {
 export const paymentSupportedChains: Chain[] = Object.keys(
   FEE_COLLECTOR_CONTRACT
 ) as Chain[]
+
+export const GUILD_CREDENTIAL_CONTRACT: Partial<
+  Record<Chain, { address: string; abi: ContractInterface }>
+> = {
+  GOERLI: {
+    address: "0xa445e7d3af54867d14467b44d5487352403d1e59",
+    abi: GUILD_CREDENTIAL_ABI,
+  },
+}

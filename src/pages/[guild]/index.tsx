@@ -16,11 +16,6 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
-import Button from "components/common/Button"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -33,10 +28,18 @@ import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
+import MintCredential from "components/[guild]/Requirements/components/GuildCheckout/MintCredential"
+import { GuildAction } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import Button from "components/common/Button"
+import Card from "components/common/Card"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -230,6 +233,20 @@ const GuildPage = (): JSX.Element => {
         <Collapse in={showAccessHub} unmountOnExit>
           <AccessHub />
         </Collapse>
+
+        {isMember && (
+          <Card mb={4} px={{ base: 5, sm: 6 }} py={7}>
+            <HStack justifyContent="space-between">
+              <Heading as="h3" fontFamily="display" fontSize="2xl">
+                Mint your credential
+              </Heading>
+              <MintCredential
+                credentialChain="GOERLI"
+                credentialType={GuildAction.JOINED_GUILD}
+              />
+            </HStack>
+          </Card>
+        )}
 
         <Section
           title={(showAccessHub || showOnboarding) && "Roles"}

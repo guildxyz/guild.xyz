@@ -52,7 +52,7 @@ const BuyPass = () => {
     txSuccess,
     txHash,
   } = useGuildCheckoutContext()
-  const { id, name, roles } = useGuild()
+  const { name, roles } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
@@ -147,7 +147,7 @@ const BuyPass = () => {
                   },
                 }}
               >
-                <SwitchNetworkButton />
+                <SwitchNetworkButton targetChainId={Chains[requirement.chain]} />
 
                 <Collapse in={chainId === Chains[requirement.chain]}>
                   <TOSCheckbox>
