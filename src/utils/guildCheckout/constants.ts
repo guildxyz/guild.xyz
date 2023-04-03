@@ -64,25 +64,10 @@ const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<number, TokenBuyerContractConfig> = 
   // },
 }
 
-const HIGH_FEE_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
-  ...DEFAULT_TOKEN_BUYER_CONTRACTS,
-  // ARBITRUM: {
-  //   address: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
-  //   abi: OLD_TOKEN_BUYER_ABI,
-  // },
-  GOERLI: {
-    address: "0x84bfcd52a2ae130391307932114a4d1e2af7fcfe",
-    abi: TOKEN_BUYER_ABI,
-  },
-}
-
 export const getTokenBuyerContractData = (
-  guildId?: number,
-  shouldTestHighFee?: boolean
+  guildId?: number
 ): TokenBuyerContractConfig =>
-  shouldTestHighFee
-    ? HIGH_FEE_TOKEN_BUYER_CONTRACTS
-    : SPECIAL_TOKEN_BUYER_CONTRACTS[guildId] ?? DEFAULT_TOKEN_BUYER_CONTRACTS
+  SPECIAL_TOKEN_BUYER_CONTRACTS[guildId] ?? DEFAULT_TOKEN_BUYER_CONTRACTS
 
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   ETHEREUM: "https://api.0x.org",
