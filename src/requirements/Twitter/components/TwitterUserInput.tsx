@@ -14,6 +14,7 @@ import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
 import parseFromObject from "utils/parseFromObject"
+import { TWITTER_HANDLE_REGEX } from "../TwitterRequirement"
 
 const TwitterUserInput = ({ baseFieldPath }: RequirementFormProps) => {
   const { errors } = useFormState()
@@ -28,7 +29,9 @@ const TwitterUserInput = ({ baseFieldPath }: RequirementFormProps) => {
   const debouncedUsername = useDebouncedState(field.value)
 
   const { data: twitterAvatar, isValidating } = useSWRImmutable(
-    debouncedUsername ? `/assets/twitter/avatar/${debouncedUsername}` : null
+    debouncedUsername && TWITTER_HANDLE_REGEX.test(debouncedUsername)
+      ? `/assets/twitter/avatar/${debouncedUsername}`
+      : null
   )
 
   return (

@@ -18,7 +18,7 @@ const CreateGuildGoogle = (): JSX.Element => {
         defaultValues={defaultValues.GOOGLE}
         fieldNameBase="guildPlatforms.0."
         shouldSetName
-        permissionField="roles.0.rolePlatforms.0.platformRoleData.role"
+        permissionField="roles.0.rolePlatforms.0.platformRoleId"
       />
 
       <Pagination nextButtonDisabled={!selectedDocument} />

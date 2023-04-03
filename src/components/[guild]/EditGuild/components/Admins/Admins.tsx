@@ -10,6 +10,7 @@ import { useWeb3React } from "@web3-react/core"
 import GuildAvatar from "components/common/GuildAvatar"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useUser from "components/[guild]/hooks/useUser"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { useMemo } from "react"
 import { useController, useFormContext } from "react-hook-form"
@@ -36,6 +37,7 @@ const fetchMemberOptions = (_: string, members: string[], provider: Web3Provider
   ).catch(() => [])
 
 const Admins = () => {
+  const { isSuperAdmin } = useUser()
   const { formState } = useFormContext()
   const { roles, admins: guildAdmins } = useGuild()
   const { isOwner } = useGuildPermission()
@@ -97,7 +99,8 @@ const Admins = () => {
     <>
       <FormControl w="full" isInvalid={!!formState.errors.admins}>
         <FormLabel>
-          Admins {!isOwner && <Tag>only editable by the Guild owner</Tag>}
+          Admins{" "}
+          {!isOwner && !isSuperAdmin && <Tag>only editable by the Guild owner</Tag>}
         </FormLabel>
 
         <AdminSelect
@@ -130,7 +133,7 @@ const Admins = () => {
           }}
           isLoading={isLoading}
           isClearable={false}
-          isDisabled={!isOwner}
+          isDisabled={!isOwner && !isSuperAdmin}
           chakraStyles={{ valueContainer: (base) => ({ ...base, py: 2 }) }}
         />
 

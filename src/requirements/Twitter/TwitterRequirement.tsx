@@ -14,11 +14,16 @@ import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
 
+// https://help.twitter.com/en/managing-your-account/twitter-username-rules
+export const TWITTER_HANDLE_REGEX = /^[a-z0-9_]+$/i
+
 const TwitterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   const { data: twitterAvatar } = useSWRImmutable(
-    requirement.data.id ? `/assets/twitter/avatar/${requirement.data.id}` : null
+    requirement.data.id && TWITTER_HANDLE_REGEX.test(requirement.data.id)
+      ? `/assets/twitter/avatar/${requirement.data.id}`
+      : null
   )
 
   return (
