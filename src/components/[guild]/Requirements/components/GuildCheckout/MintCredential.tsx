@@ -1,5 +1,4 @@
 import {
-  Icon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -12,13 +11,9 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { Chain, Chains } from "connectors"
-import { ImageSquare } from "phosphor-react"
-import {
-  GuildAction,
-  MintCredentialProvider,
-  useMintCredentialContext,
-} from "./MintCredentialContext"
 import AlphaTag from "./components/AlphaTag"
+import MintCredentialButton from "./components/buttons/MintCredentialButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import CredentialFeeCurrency from "./components/CredentialFeeCurrency"
 import CredentialImage from "./components/CredentialImage"
 import {
@@ -27,8 +22,11 @@ import {
 } from "./components/GuildCheckoutContex"
 import InfoModal from "./components/InfoModal"
 import TransactionLink from "./components/InfoModal/components/TransactionLink"
-import MintCredentialButton from "./components/buttons/MintCredentialButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
+import {
+  GuildAction,
+  MintCredentialProvider,
+  useMintCredentialContext,
+} from "./MintCredentialContext"
 
 type Props = {
   credentialChain: Chain
@@ -42,15 +40,7 @@ const MintCredential = (): JSX.Element => {
 
   return (
     <>
-      <Button
-        colorScheme="blue"
-        size="sm"
-        leftIcon={<Icon as={ImageSquare} />}
-        borderRadius="lg"
-        fontWeight="medium"
-        onClick={onOpen}
-        data-dd-action-name="Mint Credential"
-      >
+      <Button onClick={onOpen} data-dd-action-name="Mint Credential">
         Mint Credential
       </Button>
 

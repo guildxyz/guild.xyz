@@ -7,6 +7,7 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import RewardCard from "components/common/RewardCard"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import { StarHalf } from "phosphor-react"
 import platforms from "platforms/platforms"
@@ -15,6 +16,10 @@ import { PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
+import useHasGuildCredential from "../hooks/useHasGuildCredential"
+import useIsMember from "../hooks/useIsMember"
+import MintCredential from "../Requirements/components/GuildCheckout/MintCredential"
+import { GuildAction } from "../Requirements/components/GuildCheckout/MintCredentialContext"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import PlatformCardButton from "./components/PlatformCardButton"
 
@@ -47,6 +52,9 @@ const AccessHub = (): JSX.Element => {
     return poap.expiryDate > currentTime
   })
 
+  const isMember = useIsMember()
+  const { data: hasGuildCredentials } = useHasGuildCredential()
+
   return (
     <SimpleGrid
       templateColumns={{
@@ -56,6 +64,20 @@ const AccessHub = (): JSX.Element => {
       gap={4}
       mb="10"
     >
+      {isMember && hasGuildCredentials === false && (
+        <RewardCard
+          label="Guild Credential"
+          title="Mint credential NFT"
+          image="/img/guild-credential-placeholder.svg"
+          colorScheme="gray"
+          description=""
+        >
+          <MintCredential
+            credentialType={GuildAction.JOINED_GUILD}
+            credentialChain="GOERLI"
+          />
+        </RewardCard>
+      )}
       {accessedGuildPlatforms?.length || futurePoaps?.length ? (
         <>
           {accessedGuildPlatforms.map((platform) => {
@@ -95,7 +117,7 @@ const AccessHub = (): JSX.Element => {
         </>
       ) : (
         <Card>
-          <Alert status="info">
+          <Alert status="info" h="full">
             <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
             <Stack>
               <AlertTitle>No accessed reward</AlertTitle>
