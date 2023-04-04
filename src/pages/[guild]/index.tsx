@@ -23,7 +23,6 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -54,8 +53,8 @@ import parseDescription from "utils/parseDescription"
 const BATCH_SIZE = 10
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
-const DynamicAddRoleButton = dynamic(
-  () => import("components/[guild]/AddRoleButton")
+const DynamicAddAndOrderRoles = dynamic(
+  () => import("components/[guild]/AddAndOrderRoles")
 )
 const DynamicAddRewardButton = dynamic(
   () => import("components/[guild]/AddRewardButton")
@@ -86,24 +85,11 @@ const GuildPage = (): JSX.Element => {
   } = useGuild()
   useAutoStatusUpdate()
 
-  const { data: roleAccesses } = useAccess()
-
-  const sortedRoles = useMemo(() => {
-    const byMembers = roles?.sort(
-      (role1, role2) => role2.memberCount - role1.memberCount
-    )
-    if (!roleAccesses) return byMembers
-
-    // prettier-ignore
-    const accessedRoles = [], otherRoles = []
-    byMembers?.forEach((role) =>
-      (roleAccesses?.find(({ roleId }) => roleId === role.id)?.access
-        ? accessedRoles
-        : otherRoles
-      ).push(role)
-    )
-    return accessedRoles.concat(otherRoles)
-  }, [roles, roleAccesses])
+  // temporary, will order roles already in the SQL query in the future
+  const sortedRoles = useMemo(
+    () => roles?.sort((role1, role2) => role1.position - role2.position),
+    [roles]
+  )
 
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
@@ -220,7 +206,7 @@ const GuildPage = (): JSX.Element => {
             ) : !isAdmin ? (
               <LeaveButton />
             ) : isAddRoleStuck ? (
-              <DynamicAddRoleButton />
+              <DynamicAddAndOrderRoles />
             ) : (
               <DynamicAddRewardButton />
             )}
@@ -237,7 +223,7 @@ const GuildPage = (): JSX.Element => {
             isAdmin &&
             (showAccessHub || showOnboarding) && (
               <Box my="-2 !important" ml="auto !important">
-                <DynamicAddRoleButton setIsStuck={setIsAddRoleStuck} />
+                <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
               </Box>
             )
           }
