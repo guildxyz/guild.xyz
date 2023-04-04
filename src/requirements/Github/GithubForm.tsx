@@ -10,6 +10,9 @@ import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import GithubAccountAge from "./components/GithubAccountAge"
+import GithubAccountAgeRelative from "./components/GithubAccountAgeRelative"
+import GithubCommitCount from "./components/GithubCommitCount"
+import GithubCommitCountRelative from "./components/GithubCommitCountRelative"
 import GithubStar from "./components/GithubStar"
 
 const githubRequirementTypes = [
@@ -23,14 +26,28 @@ const githubRequirementTypes = [
     value: "GITHUB_ACCOUNT_AGE",
     GithubRequirement: GithubAccountAge,
   },
+  {
+    label: "Relative Github account age",
+    value: "GITHUB_ACCOUNT_AGE_RELATIVE",
+    GithubRequirement: GithubAccountAgeRelative,
+  },
+  {
+    label: "Github commit count",
+    value: "GITHUB_COMMIT_COUNT",
+    GithubRequirement: GithubCommitCount,
+  },
+  {
+    label: "relative Github commit count",
+    value: "GITHUB_COMMIT_COUNT_RELATIVE",
+    GithubRequirement: GithubCommitCountRelative,
+  },
 ]
 
 const GithubForm = ({ baseFieldPath }: RequirementFormProps) => {
   const { resetField } = useFormContext()
 
   const resetFields = () => {
-    // TODO
-    // resetField(`${baseFieldPath}.data.id`)
+    resetField(`${baseFieldPath}.data.id`)
     resetField(`${baseFieldPath}.data.minAmount`)
     resetField(`${baseFieldPath}.data.maxAmount`)
   }
