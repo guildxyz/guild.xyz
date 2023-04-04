@@ -4,6 +4,7 @@ import Chakra from "components/_app/Chakra"
 import Datadog from "components/_app/Datadog"
 import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
+import PostHogProvider from "components/_app/PostHogProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
 import type { AppProps } from "next/app"
@@ -14,6 +15,11 @@ import { Fragment, useEffect, useState } from "react"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import fetcher from "utils/fetcher"
+/**
+ * Polyfill HTML inert property for Firefox support:
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
+ */
+import "wicg-inert"
 
 const App = ({
   Component,
@@ -74,11 +80,13 @@ const App = ({
             <Web3ReactProvider connectors={connectors}>
               <Web3ConnectionManager>
                 <DatadogComponent>
-                  <IntercomProvider>
-                    <ExplorerProvider>
-                      <Component {...pageProps} />
-                    </ExplorerProvider>
-                  </IntercomProvider>
+                  <PostHogProvider>
+                    <IntercomProvider>
+                      <ExplorerProvider>
+                        <Component {...pageProps} />
+                      </ExplorerProvider>
+                    </IntercomProvider>
+                  </PostHogProvider>
                 </DatadogComponent>
               </Web3ConnectionManager>
             </Web3ReactProvider>

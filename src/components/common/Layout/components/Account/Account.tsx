@@ -27,6 +27,7 @@ const Account = (): JSX.Element => {
 
   const domainName = useResolveAddress(account)
   const { addresses } = useUser()
+
   if (!account) {
     return (
       <AccountButton

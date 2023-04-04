@@ -1,25 +1,37 @@
-import { useBreakpointValue } from "@chakra-ui/react"
+import {
+  Box,
+  Divider,
+  HStack,
+  Icon,
+  useBreakpointValue,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
+import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { Check, LockSimple, Warning, X } from "phosphor-react"
+import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
 
 type Props = {
   roleId: number
+  isOpen: any
+  onToggle: any
 }
 
-const AccessIndicator = ({ roleId }: Props): JSX.Element => {
+const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { hasAccess, isLoading, data, error } = useAccess(roleId)
 
   const { isActive } = useWeb3React()
+  const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
+  const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")
 
-  if (!isActive)
+  if (!isActive || (hasAccess && !isMember))
     return (
       <Button
         leftIcon={!isMobile && <LockSimple width={"0.9em"} height="0.9em" />}
@@ -29,13 +41,49 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
         onClick={openJoinModal}
         {...ACCESS_INDICATOR_STYLES}
       >
-        Join Guild to check access
+        {`Join Guild to ${hasAccess ? "get" : "check"} access`}
       </Button>
     )
 
   if (hasAccess)
     return (
-      <AccessIndicatorUI colorScheme="green" label="You have access" icon={Check} />
+      <HStack spacing="0" flexShrink={0}>
+        <AccessIndicatorUI
+          colorScheme="green"
+          label="You have access"
+          icon={Check}
+          flex="1 0 auto"
+          borderTopRightRadius="0 !important"
+          borderBottomRightRadius="0 !important"
+        />
+        <Divider orientation="vertical" h="8" borderColor={dividerColor} />
+        <Button
+          size="sm"
+          {...ACCESS_INDICATOR_STYLES}
+          borderTopLeftRadius="0 !important"
+          borderBottomLeftRadius="0 !important"
+          // Card's `overflow: clip` isn't enough in Safari
+          borderBottomRightRadius={{ base: "2xl", md: "lg" }}
+          iconSpacing="0"
+          rightIcon={
+            <Icon
+              as={CaretDown}
+              transform={isOpen && "rotate(-180deg)"}
+              transition="transform .3s"
+            />
+          }
+          onClick={onToggle}
+        >
+          <Box
+            w={isOpen ? "0" : "90px"}
+            transition={"width .2s"}
+            overflow="hidden"
+            textAlign={"left"}
+          >
+            View details
+          </Box>
+        </Button>
+      </HStack>
     )
 
   if (isLoading)

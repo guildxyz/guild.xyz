@@ -85,35 +85,39 @@ const PoapRewardCard = ({
             </MintPoapButton>
           ))}
       </RewardCard>
-      <Modal isOpen={isLinkModalOpen} onClose={onLinkModalClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <ModalHeader>Upload POAP minting links</ModalHeader>
-          <ModalBody>
-            <UploadMintLinks poapId={poap?.id} onSuccess={onLinkModalClose}>
-              <Text>
-                Uploading the links won't activate your POAP yet, you'll be able to
-                do it when you want
-              </Text>
-            </UploadMintLinks>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-      <Modal isOpen={isActivateModalOpen} onClose={onActivateModalClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <ModalHeader>Activate POAP</ModalHeader>
-          <ModalBody>
-            <Distribution
-              guildPoap={guildPoap}
-              poap={poap}
-              onSuccess={onActivateModalClose}
-            />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      {!poapLinks?.total && (
+        <Modal isOpen={isLinkModalOpen} onClose={onLinkModalClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalCloseButton />
+            <ModalHeader>Upload POAP minting links</ModalHeader>
+            <ModalBody>
+              <UploadMintLinks poapId={poap?.id} onSuccess={onLinkModalClose}>
+                <Text>
+                  Uploading the links won't activate your POAP yet, you'll be able to
+                  do it when you want
+                </Text>
+              </UploadMintLinks>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      )}
+      {!guildPoap.activated && (
+        <Modal isOpen={isActivateModalOpen} onClose={onActivateModalClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalCloseButton />
+            <ModalHeader>Activate POAP</ModalHeader>
+            <ModalBody>
+              <Distribution
+                guildPoap={guildPoap}
+                poap={poap}
+                onSuccess={onActivateModalClose}
+              />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      )}
     </>
   )
 }

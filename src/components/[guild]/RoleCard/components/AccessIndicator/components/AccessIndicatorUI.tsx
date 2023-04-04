@@ -7,26 +7,22 @@ import {
   TagRightIcon,
   useBreakpointValue,
 } from "@chakra-ui/react"
+import { Rest } from "types"
 
 type Props = {
   isLoading?: boolean
   colorScheme: string
   icon?: any // TODO: proper type
   label: string
-}
+} & Rest
 
 const STYLES: ChakraProps = {
   flexShrink: 0,
   borderRadius: "lg",
-  position: { base: "absolute", md: "relative" },
-  left: 0,
-  bottom: 0,
-  width: { base: "full", md: "auto" },
   borderTopRadius: { base: 0, md: "lg" },
   justifyContent: { base: "space-between", md: "start" },
   px: { base: 5, md: 3 },
   py: { base: 2, md: 0 },
-  ml: { base: "0 !important", md: "unset !important" },
 }
 
 const AccessIndicatorUI = ({
@@ -34,11 +30,12 @@ const AccessIndicatorUI = ({
   colorScheme,
   icon,
   label,
+  ...rest
 }: Props): JSX.Element => {
   const IconComponent = useBreakpointValue({ base: TagRightIcon, md: TagLeftIcon })
 
   return (
-    <Tag title={label} size="lg" colorScheme={colorScheme} {...STYLES}>
+    <Tag title={label} size="lg" colorScheme={colorScheme} {...STYLES} {...rest}>
       <TagLabel fontSize="sm" order={{ md: 1 }}>
         {label}
       </TagLabel>

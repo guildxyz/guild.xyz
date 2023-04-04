@@ -207,7 +207,9 @@ const RPC: RpcConfig = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     rpcUrls: [
-      "https://arb-mainnet.g.alchemy.com/v2/FmkOXUHKolu3zhBNecrZ7tmJPzhsV7J_",
+      process.env.ARBITRUM_ALCHEMY_KEY
+        ? `https://arb-mainnet.g.alchemy.com/v2/${process.env.ARBITRUM_ALCHEMY_KEY}`
+        : "https://arbitrum.public-rpc.com",
     ],
     blockExplorerUrls: ["https://arbiscan.io"],
     blockExplorerIcons: {

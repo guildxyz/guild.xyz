@@ -150,15 +150,6 @@ type PlatformGuildData = {
   }
 }
 
-type PlatformRoleData = {
-  DISCORD: {
-    role?: never
-  }
-  GOOGLE: {
-    role: "reader" | "commenter" | "writer"
-  }
-}
-
 type Trait = {
   trait_type?: string
   value?: string
@@ -196,13 +187,13 @@ type Requirement = {
 }
 
 type RolePlatform = {
+  id: number
   platformRoleId?: string
   guildPlatformId?: number
   guildPlatform?: GuildPlatform
   index?: number
   isNew?: boolean
   roleId?: number
-  platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
   visibility?: Visibility
 }
 
@@ -305,6 +296,7 @@ type GuildFormType = Partial<
     | "name"
     | "imageUrl"
     | "description"
+    | "roles"
     | "theme"
     | "contacts"
     | "featureFlags"
