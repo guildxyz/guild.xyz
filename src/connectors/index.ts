@@ -209,7 +209,7 @@ const RPC: RpcConfig = {
     rpcUrls: [
       process.env.ARBITRUM_ALCHEMY_KEY
         ? `https://arb-mainnet.g.alchemy.com/v2/${process.env.ARBITRUM_ALCHEMY_KEY}`
-        : "https://arb-mainnet.g.alchemy.com/v2/FmkOXUHKolu3zhBNecrZ7tmJPzhsV7J_",
+        : "https://arbitrum.public-rpc.com",
     ],
     blockExplorerUrls: ["https://arbiscan.io"],
     blockExplorerIcons: {

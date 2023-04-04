@@ -27,6 +27,7 @@ import SearchBar from "components/explorer/SearchBar"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
+import useToast from "hooks/useToast"
 import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
@@ -47,6 +48,8 @@ const HOME_MAXHEIGHT = "550px"
 
 const AddRequirement = ({ onAdd }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [onCloseAttemptToast, setOnCloseAttemptToast] = useState()
+  const toast = useToast()
   const [selectedType, setSelectedType] = useState<string>()
   const [height, setHeight] = useState("auto")
   const addCardRef = useRef()
@@ -54,6 +57,9 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
   const formRef = useRef(null)
 
   const handleClose = () => {
+    if (onCloseAttemptToast)
+      return toast({ status: "warning", title: onCloseAttemptToast })
+
     onClose()
     setTimeout(() => {
       setSelectedType(null)
@@ -133,7 +139,7 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
               {selectedType && (
                 <AddRequirementForm
                   ref={formRef}
-                  {...{ onAdd, handleClose, selectedType }}
+                  {...{ onAdd, handleClose, selectedType, setOnCloseAttemptToast }}
                 />
               )}
             </AnimatePresence>
@@ -145,7 +151,7 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
 }
 
 const AddRequirementForm = forwardRef(
-  ({ onAdd, handleClose, selectedType }: any, ref: any) => {
+  ({ onAdd, handleClose, selectedType, setOnCloseAttemptToast }: any, ref: any) => {
     const FormComponent = REQUIREMENTS[selectedType].formComponent
 
     const methods = useForm({ mode: "all" })
@@ -177,7 +183,11 @@ const AddRequirementForm = forwardRef(
         <FormProvider {...methods}>
           <ModalBody>
             {selectedType !== "PAYMENT" && <IsNegatedPicker baseFieldPath="" />}
-            <FormComponent baseFieldPath="" addRequirement={onSubmit} />
+            <FormComponent
+              baseFieldPath=""
+              addRequirement={onSubmit}
+              setOnCloseAttemptToast={setOnCloseAttemptToast}
+            />
           </ModalBody>
           {selectedType !== "PAYMENT" && (
             <ModalFooter gap="3">

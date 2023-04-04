@@ -18,6 +18,7 @@ export type RequirementFormProps = {
   baseFieldPath: string
   field?: Requirement
   addRequirement?: () => void
+  setOnCloseAttemptToast?: (msg: string | boolean) => void
 }
 
 export type RequirementData = {
