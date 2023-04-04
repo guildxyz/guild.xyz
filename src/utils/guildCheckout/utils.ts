@@ -86,7 +86,7 @@ const generateGetAssetsParams = (
     .map((rpcData) => rpcData.nativeCurrency.symbol)
     .includes(pickedCurrency)
 
-  if (["ARBITRUM", "GOERLI"].includes(Chains[chainId]))
+  if (Chains[chainId] === "ARBITRUM")
     return [
       {
         tokenAddress: isNativeCurrency ? NULL_ADDRESS : pickedCurrency,

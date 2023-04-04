@@ -12,6 +12,16 @@ import {
   UNIVERSAL_ROUTER_COMMANDS,
 } from "./encoders"
 
+export type TokenBuyerContractConfig = Partial<
+  Record<
+    Chain,
+    {
+      address: string
+      abi: object
+    }
+  >
+>
+
 export const ZEROX_SUPPORTED_SOURCES = ["Uniswap_V2", "Uniswap_V3"] as const
 export type ZeroXSupportedSources = (typeof ZEROX_SUPPORTED_SOURCES)[number]
 
@@ -20,15 +30,7 @@ export const GUILD_FEE_PERCENTAGE = 0.01
 export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
-const DEFAULT_TOKEN_BUYER_CONTRACTS: Partial<
-  Record<
-    Chain,
-    {
-      address: string
-      abi: object
-    }
-  >
-> = {
+const DEFAULT_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
   ETHEREUM: {
     address: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
     abi: TOKEN_BUYER_ABI,
@@ -42,23 +44,12 @@ const DEFAULT_TOKEN_BUYER_CONTRACTS: Partial<
     abi: OLD_TOKEN_BUYER_ABI,
   },
   GOERLI: {
-    address: "0x7605143a3122e0329d1f9a8dcec44f326e8fd46f",
-    abi: OLD_TOKEN_BUYER_ABI,
+    address: "0x1eeaab336061d64f1d271eed529991f7ae7cc478",
+    abi: TOKEN_BUYER_ABI,
   },
 }
 
-const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<
-  number,
-  Partial<
-    Record<
-      Chain,
-      {
-        address: string
-        abi: object
-      }
-    >
-  >
-> = {
+const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<number, TokenBuyerContractConfig> = {
   // Alongside - TODO
   // 7635: {
   //   ...DEFAULT_TOKEN_BUYER_CONTRACTS,
@@ -75,15 +66,8 @@ const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<
 
 export const getTokenBuyerContractData = (
   guildId?: number
-): Partial<
-  Record<
-    Chain,
-    {
-      address: string
-      abi: object
-    }
-  >
-> => SPECIAL_TOKEN_BUYER_CONTRACTS[guildId] ?? DEFAULT_TOKEN_BUYER_CONTRACTS
+): TokenBuyerContractConfig =>
+  SPECIAL_TOKEN_BUYER_CONTRACTS[guildId] ?? DEFAULT_TOKEN_BUYER_CONTRACTS
 
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   ETHEREUM: "https://api.0x.org",

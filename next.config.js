@@ -179,6 +179,10 @@ module.exports = {
           ],
           destination: "https://:ddforward",
         },
+        {
+          source: "/api/posthog/:path*",
+          destination: "https://app.posthog.com/:path*",
+        },
       ],
     }
   },
