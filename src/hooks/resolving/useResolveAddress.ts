@@ -44,19 +44,19 @@ const useResolveAddress = (account) => {
   const shouldFetch = Boolean(provider && account)
 
   const fetchDomains = async () => {
-    const NNS = await fetchNNSName(provider, account) // "0xe5358cab95014e2306815743793f16c93a8a5c70"
+    const NNS = await fetchNNSName(provider, account) // "test address: 0xe5358cab95014e2306815743793f16c93a8a5c70"
     if (NNS) return NNS
 
-    const ENS = await fetchENSName(provider, account) // "0x5df52E6B70F25919Ad29add390EFE2614f91b2C6"
+    const ENS = await fetchENSName(provider, account) // "test address: 0x5df52E6B70F25919Ad29add390EFE2614f91b2C6"
     if (ENS) return ENS
 
-    const lens = await fetchLensProtocolName(account) // "0xe055721b972d58f0bcf6370c357879fb3a37d2f3"
+    const lens = await fetchLensProtocolName(account) // "test address: 0xe055721b972d58f0bcf6370c357879fb3a37d2f3"
     if (lens) return lens
 
-    const unstoppableDomain = await fetchUnstoppableName(account) // "0x94ef5300cbc0aa600a821ccbc561b057e456ab23"
+    const unstoppableDomain = await fetchUnstoppableName(account) // "test address: 0x94ef5300cbc0aa600a821ccbc561b057e456ab23"
     if (unstoppableDomain) return unstoppableDomain
 
-    const dotbit = await fetchDotbitName(account) // "0x5728088435fb8788472a9ca601fbc0b9cbea8be3"
+    const dotbit = await fetchDotbitName(account) // "test address: 0x5728088435fb8788472a9ca601fbc0b9cbea8be3"
     if (dotbit) return dotbit
 
     return null
