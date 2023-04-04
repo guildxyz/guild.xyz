@@ -41,11 +41,11 @@ const fetchUnstoppableName = (account) => {
   return unstoppableResolver.reverse(account)
 }
 
-const useResolveAddress = (account) => {
+const useResolveAddress = (accountParam: string) => {
   const { provider } = useWeb3React()
-  const shouldFetch = Boolean(provider && account)
+  const shouldFetch = Boolean(provider && accountParam)
 
-  const fetchDomains = async () => {
+  const fetchDomains = async (_: string, account: string) => {
     const NNS = await fetchNNSName(provider, account) // "test address: 0xe5358cab95014e2306815743793f16c93a8a5c70"
     if (NNS) return NNS
 
@@ -64,7 +64,10 @@ const useResolveAddress = (account) => {
     return null
   }
 
-  const { data } = useSWRImmutable(shouldFetch ? ["domain"] : null, fetchDomains)
+  const { data } = useSWRImmutable(
+    shouldFetch ? ["domain", accountParam] : null,
+    fetchDomains
+  )
 
   return data
 }
