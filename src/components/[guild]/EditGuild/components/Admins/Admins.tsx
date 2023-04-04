@@ -7,10 +7,10 @@ import {
 } from "@chakra-ui/react"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import GuildAvatar from "components/common/GuildAvatar"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
+import GuildAvatar from "components/common/GuildAvatar"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { useMemo } from "react"
 import { useController, useFormContext } from "react-hook-form"
@@ -68,7 +68,9 @@ const Admins = () => {
     const ownerOption = {
       ...(options.find((o) => o.value === ownerAddress) ?? {
         value: ownerAddress,
-        label: shortenHex(ownerAddress),
+        label: ADDRESS_REGEX.test(ownerAddress)
+          ? shortenHex(ownerAddress)
+          : ownerAddress,
         img: <GuildAvatar address={ownerAddress} size={4} mr="2" />,
       }),
       isFixed: true,
@@ -83,7 +85,7 @@ const Admins = () => {
           return {
             ...(option ?? {
               value: admin,
-              label: shortenHex(admin),
+              label: ADDRESS_REGEX.test(ownerAddress) ? shortenHex(admin) : admin,
               img: <GuildAvatar address={admin} size={4} mr="2" />,
             }),
           }

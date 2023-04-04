@@ -14,10 +14,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
-import useDotbitName from "hooks/useDotbitName"
-import useLensProtocolName from "hooks/useLensProtocolName"
-import useNNSName from "hooks/useNNSName"
-import useUnstoppableDomainName from "hooks/useUnstoppableName"
+import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { LinkBreak, SignIn } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
@@ -28,12 +25,7 @@ const Account = (): JSX.Element => {
   const { openWalletSelectorModal, openNetworkModal, openAccountModal, triedEager } =
     useWeb3ConnectionManager()
 
-  const { ENSName } = useWeb3React()
-  const NNSName = useNNSName()
-  const dotbitName = useDotbitName()
-  const unstoppableDomainName = useUnstoppableDomainName()
-  const lensName = useLensProtocolName()
-
+  const domainName = useResolveAddress(account)
   const { addresses } = useUser()
 
   if (!account) {
@@ -86,12 +78,7 @@ const Account = (): JSX.Element => {
                 fontSize={linkedAddressesCount ? "sm" : "md"}
                 fontWeight={linkedAddressesCount ? "bold" : "semibold"}
               >
-                {ENSName ||
-                  lensName ||
-                  NNSName ||
-                  unstoppableDomainName ||
-                  dotbitName ||
-                  `${shortenHex(account, 3)}`}
+                {domainName || `${shortenHex(account, 3)}`}
               </Text>
               {linkedAddressesCount && (
                 <Text

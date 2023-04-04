@@ -21,6 +21,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
@@ -58,6 +59,8 @@ const AccountModal = ({ isOpen, onClose }) => {
     deleteKeyPairFromIdb(id).catch(() => {})
   }
 
+  const domain = useResolveAddress(account)
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} colorScheme="duotone">
       <ModalOverlay />
@@ -69,7 +72,12 @@ const AccountModal = ({ isOpen, onClose }) => {
             <ModalBody>
               <Stack mb={9} direction="row" spacing="4" alignItems="center">
                 <GuildAvatar address={account} />
-                <CopyableAddress address={account} decimals={5} fontSize="2xl" />
+                <CopyableAddress
+                  address={account}
+                  domain={domain}
+                  decimals={5}
+                  fontSize="2xl"
+                />
               </Stack>
 
               <Stack
