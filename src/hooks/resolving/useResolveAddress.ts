@@ -4,15 +4,17 @@ import { createInstance } from "dotbit"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
-const fetchENSName = (provider, address) => provider.lookupAddress(address)
+const ENS_REGISTRY = "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
+const NNS_REGISTRY = "0x3e1970dc478991b49c4327973ea8a4862ef5a4de"
+
+const fetchENSName = (provider, address) => {
+  provider.network.ensAddress = ENS_REGISTRY
+  return provider.lookupAddress(address)
+}
 
 const fetchNNSName = async (provider, account) => {
-  const NNS_REGISTRY = "0x3e1970dc478991b49c4327973ea8a4862ef5a4de"
-  const ENS_REGISTRY = "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
   provider.network.ensAddress = NNS_REGISTRY
-  const NNSDomain = await provider.lookupAddress(account)
-  provider.network.ensAddress = ENS_REGISTRY
-  return NNSDomain
+  return provider.lookupAddress(account)
 }
 
 const fetchLensProtocolName = (account) =>
