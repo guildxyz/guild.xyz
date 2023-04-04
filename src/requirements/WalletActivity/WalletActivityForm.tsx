@@ -57,12 +57,12 @@ const walletActivityRequirementTypes: SelectOption[] = [
     WalletActivityRequirement: AlchemyTxCountRelative,
   },
   {
-    label: "Asset activity",
+    label: "Asset movement",
     value: "ALCHEMY_TX_VALUE",
     WalletActivityRequirement: AlchemyTxValue,
   },
   {
-    label: "Asset activity (relative)",
+    label: "Asset movement (relative)",
     value: "ALCHEMY_TX_VALUE_RELATIVE",
     WalletActivityRequirement: AlchemyTxValueRelative,
   },

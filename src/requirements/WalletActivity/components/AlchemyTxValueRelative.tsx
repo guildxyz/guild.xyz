@@ -1,27 +1,18 @@
-import { useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import TokenPicker from "requirements/common/TokenPicker"
+import AddressFormControl from "./AddressFormControl"
 import MinMaxBlockNumberFormControls from "./MinMaxBlockNumberFormControls"
 import TxValueFormControl from "./TxValueFormControl"
 
 const AlchemyTxValueRelative = ({
   baseFieldPath,
-}: RequirementFormProps): JSX.Element => {
-  const chain = useWatch({ name: `${baseFieldPath}.chain` })
+}: RequirementFormProps): JSX.Element => (
+  <>
+    <AddressFormControl baseFieldPath={baseFieldPath} />
 
-  return (
-    <>
-      <TokenPicker
-        chain={chain}
-        fieldName={`${baseFieldPath}.address`}
-        rules={{ required: "This field is required" }}
-      />
+    <TxValueFormControl baseFieldPath={baseFieldPath} />
 
-      <TxValueFormControl baseFieldPath={baseFieldPath} />
-
-      <MinMaxBlockNumberFormControls baseFieldPath={baseFieldPath} type="RELATIVE" />
-    </>
-  )
-}
+    <MinMaxBlockNumberFormControls baseFieldPath={baseFieldPath} type="RELATIVE" />
+  </>
+)
 
 export default AlchemyTxValueRelative

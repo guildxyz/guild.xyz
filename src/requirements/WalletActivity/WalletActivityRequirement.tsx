@@ -60,9 +60,9 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
           case "ALCHEMY_CONTRACT_DEPLOY":
             return (
               <>
-                {`Have ${
+                {`Deployed ${
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } deployed contract${requirement.data.txCount > 1 ? "s" : ""}
+                } contract${requirement.data.txCount > 1 ? "s" : ""}
                 `}
                 {requirement.data.timestamps.maxAmount &&
                 requirement.data.timestamps.minAmount ? (
@@ -97,9 +97,9 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
 
             return (
               <>
-                {`Have ${
+                {`Deployed ${
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } deployed contract${requirement.data.txCount > 1 ? "s" : ""}
+                } contract${requirement.data.txCount > 1 ? "s" : ""}
                 `}
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>
@@ -182,9 +182,12 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {`Moved at least ${requirement.data.txValue} `}
                 <DataBlock>
-                  {requirement.symbol ?? requirement.address
-                    ? shortenHex(requirement.address, 3)
-                    : RPC[requirement.chain].nativeCurrency.symbol}
+                  <>
+                    {requirement.symbol ??
+                      (requirement.address
+                        ? shortenHex(requirement.address, 3)
+                        : RPC[requirement.chain].nativeCurrency.symbol)}
+                  </>
                 </DataBlock>
                 {requirement.data.timestamps.maxAmount &&
                 requirement.data.timestamps.minAmount ? (
@@ -221,9 +224,10 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {`Moved at least ${requirement.data.txValue} `}
                 <DataBlock>
-                  {requirement.symbol ?? requirement.address
-                    ? shortenHex(requirement.address, 3)
-                    : RPC[requirement.chain].nativeCurrency.symbol}
+                  {requirement.symbol ??
+                    (requirement.address
+                      ? shortenHex(requirement.address, 3)
+                      : RPC[requirement.chain].nativeCurrency.symbol)}
                 </DataBlock>
 
                 {formattedMaxAmount && formattedMinAmount ? (

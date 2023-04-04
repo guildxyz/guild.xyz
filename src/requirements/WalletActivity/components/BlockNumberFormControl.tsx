@@ -23,6 +23,7 @@ type Props = {
   dataFieldName: string
   label: string
   isRequired?: boolean
+  formHelperText?: string
 }
 
 const currentDate = Date.now()
@@ -33,6 +34,7 @@ const BlockNumberFormControl = ({
   dataFieldName,
   label,
   isRequired,
+  formHelperText,
 }: Props): JSX.Element => {
   const {
     register,
@@ -75,7 +77,6 @@ const BlockNumberFormControl = ({
   const isBlockNumberLoading =
     shouldFetchBlockNumber && (!currentBlock || isValidating)
 
-  console.log("unixTimestamp", unixTimestamp)
   const { data, error } = useBlockNumberByTimestamp(chain, unixTimestamp)
 
   useEffect(() => {
@@ -131,6 +132,8 @@ const BlockNumberFormControl = ({
             {data ?? "loading"}
           </Skeleton>
         </FormHelperText>
+      ) : formHelperText ? (
+        <FormHelperText>{formHelperText}</FormHelperText>
       ) : null}
 
       <FormErrorMessage>

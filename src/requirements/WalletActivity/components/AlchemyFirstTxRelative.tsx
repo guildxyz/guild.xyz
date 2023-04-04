@@ -8,8 +8,9 @@ const AlchemyFirstTxRelative = ({
     type="RELATIVE"
     baseFieldPath={baseFieldPath}
     dataFieldName="maxAmount"
-    label="Relative wallet age"
+    label="Relative minimum wallet age"
     isRequired
+    formHelperText="The date of the wallet's first transaction"
   />
 )
 
