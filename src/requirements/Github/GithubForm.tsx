@@ -6,9 +6,10 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
-import { useFormState, useWatch } from "react-hook-form"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
+import GithubAccountAge from "./components/GithubAccountAge"
 import GithubStar from "./components/GithubStar"
 
 const githubRequirementTypes = [
@@ -17,9 +18,22 @@ const githubRequirementTypes = [
     value: "GITHUB_STARRING",
     GithubRequirement: GithubStar,
   },
+  {
+    label: "Github account age",
+    value: "GITHUB_ACCOUNT_AGE",
+    GithubRequirement: GithubAccountAge,
+  },
 ]
 
 const GithubForm = ({ baseFieldPath }: RequirementFormProps) => {
+  const { resetField } = useFormContext()
+
+  const resetFields = () => {
+    // TODO
+    // resetField(`${baseFieldPath}.data.id`)
+    resetField(`${baseFieldPath}.data.minAmount`)
+    resetField(`${baseFieldPath}.data.maxAmount`)
+  }
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
   const { errors } = useFormState()
@@ -30,6 +44,7 @@ const GithubForm = ({ baseFieldPath }: RequirementFormProps) => {
     <Stack spacing={4} alignItems="start">
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
+        isRequired
       >
         <FormLabel>Type</FormLabel>
 
@@ -37,7 +52,7 @@ const GithubForm = ({ baseFieldPath }: RequirementFormProps) => {
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={githubRequirementTypes}
-          defaultValue="GITHUB_STARRING"
+          beforeOnChange={resetFields}
         />
 
         <FormErrorMessage>

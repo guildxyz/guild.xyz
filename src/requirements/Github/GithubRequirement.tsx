@@ -1,5 +1,4 @@
 import { Icon } from "@chakra-ui/react"
-import Link from "components/common/Link"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import Requirement, {
   RequirementProps,
@@ -16,7 +15,7 @@ const GithubRequirement = (props: RequirementProps) => {
       footer={<ConnectRequirementPlatformButton />}
       {...props}
     >
-      Give a star to the{" "}
+      {/* Give a star to the{" "}
       <Link
         href={requirement.data.id ?? ""}
         isExternal
@@ -25,7 +24,7 @@ const GithubRequirement = (props: RequirementProps) => {
       >
         {requirement.data.id.match(/https:\/\/github\.com\/(.+)$/i)[1]}
       </Link>{" "}
-      repository
+      repository */}
     </Requirement>
   )
 }
