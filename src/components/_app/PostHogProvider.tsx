@@ -34,6 +34,8 @@ if (typeof window !== "undefined") {
     api_host: "/api/posthog",
     // Capture custom events only
     autocapture: false,
+    capture_pageleave: false,
+    capture_pageview: false,
     // Disable in development
     loaded: (ph) => {
       if (
