@@ -31,7 +31,6 @@ const PoapRewardCard = ({
   guildPoap,
   actionRow,
   cornerButton,
-  children,
   ...rest
 }: PropsWithChildren<Props>) => {
   const { isAdmin } = useGuildPermission()
