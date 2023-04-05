@@ -1,23 +1,39 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import { ControlledRelativeTimeInput } from "components/common/RelativeTimeInput"
-import { useFormState } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { useFormContext, useFormState } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
-
-const GithubAccountAgeRelative = ({ baseFieldPath }: RequirementFormProps) => {
+type Props = {
+  baseFieldPath: string
+  isMinAmountRequired: boolean
+  isMaxAmountRequired: boolean
+}
+const GithubAccountAgeRelative = ({
+  baseFieldPath,
+  isMinAmountRequired,
+  isMaxAmountRequired,
+}: Props) => {
   const { errors } = useFormState()
+  const { getValues } = useFormContext()
 
   return (
     <>
       <FormControl
-        isRequired
+        isRequired={
+          !isMinAmountRequired
+            ? false
+            : !getValues(`${baseFieldPath}.data.maxAmount`)
+        }
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
       >
         <FormLabel>From</FormLabel>
 
         <ControlledRelativeTimeInput
           fieldName={`${baseFieldPath}.data.minAmount`}
-          isRequired
+          isRequired={
+            !isMinAmountRequired
+              ? false
+              : !getValues(`${baseFieldPath}.data.maxAmount`)
+          }
         />
 
         <FormErrorMessage>
@@ -25,14 +41,22 @@ const GithubAccountAgeRelative = ({ baseFieldPath }: RequirementFormProps) => {
         </FormErrorMessage>
       </FormControl>
       <FormControl
-        isRequired
+        isRequired={
+          !isMaxAmountRequired
+            ? false
+            : !getValues(`${baseFieldPath}.data.minAmount`)
+        }
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.maxAmount}
       >
         <FormLabel>To</FormLabel>
 
         <ControlledRelativeTimeInput
           fieldName={`${baseFieldPath}.data.maxAmount`}
-          isRequired
+          isRequired={
+            !isMaxAmountRequired
+              ? false
+              : !getValues(`${baseFieldPath}.data.minAmount`)
+          }
         />
 
         <FormErrorMessage>
