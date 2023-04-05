@@ -4,15 +4,17 @@ import { createInstance } from "dotbit"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
-const fetchENSName = (provider, address) => provider.lookupAddress(address)
+const ENS_REGISTRY = "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
+const NNS_REGISTRY = "0x3e1970dc478991b49c4327973ea8a4862ef5a4de"
+
+const fetchENSName = (provider, address) => {
+  provider.network.ensAddress = ENS_REGISTRY
+  return provider.lookupAddress(address)
+}
 
 const fetchNNSName = async (provider, account) => {
-  const NNS_REGISTRY = "0x3e1970dc478991b49c4327973ea8a4862ef5a4de"
-  const ENS_REGISTRY = "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
   provider.network.ensAddress = NNS_REGISTRY
-  const NNSDomain = await provider.lookupAddress(account)
-  provider.network.ensAddress = ENS_REGISTRY
-  return NNSDomain
+  return provider.lookupAddress(account)
 }
 
 const fetchLensProtocolName = (account) =>
@@ -39,11 +41,11 @@ const fetchUnstoppableName = (account) => {
   return unstoppableResolver.reverse(account)
 }
 
-const useResolveAddress = (account) => {
+const useResolveAddress = (accountParam: string) => {
   const { provider } = useWeb3React()
-  const shouldFetch = Boolean(provider && account)
+  const shouldFetch = Boolean(provider && accountParam)
 
-  const fetchDomains = async () => {
+  const fetchDomains = async (_: string, account: string) => {
     const NNS = await fetchNNSName(provider, account) // "test address: 0xe5358cab95014e2306815743793f16c93a8a5c70"
     if (NNS) return NNS
 
@@ -62,7 +64,10 @@ const useResolveAddress = (account) => {
     return null
   }
 
-  const { data } = useSWRImmutable(shouldFetch ? ["domain"] : null, fetchDomains)
+  const { data } = useSWRImmutable(
+    shouldFetch ? ["domain", accountParam] : null,
+    fetchDomains
+  )
 
   return data
 }

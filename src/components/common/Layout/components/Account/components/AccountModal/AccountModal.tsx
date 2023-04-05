@@ -25,11 +25,12 @@ import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
+import PrimaryAddressTag from "./components/PrimaryAddressTag"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
   const { setIsDelegateConnection } = useWeb3ConnectionManager()
-  const { id } = useUser()
+  const { id, addresses } = useUser()
 
   const connectorName = (c) =>
     c instanceof MetaMask
@@ -78,6 +79,10 @@ const AccountModal = ({ isOpen, onClose }) => {
                   decimals={5}
                   fontSize="2xl"
                 />
+                {addresses?.indexOf(account.toLowerCase()) === 0 &&
+                addresses.length > 1 ? (
+                  <PrimaryAddressTag />
+                ) : null}
               </Stack>
 
               <Stack
