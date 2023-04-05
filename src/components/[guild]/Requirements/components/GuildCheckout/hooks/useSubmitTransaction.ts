@@ -25,6 +25,7 @@ const useSubmitTransaction = <DataType>(
       if (receipt.status !== 1) {
         setTxError(true)
         console.log("TX RECEIPT", receipt)
+        return
       }
       onSuccess?.(receipt)
       setTxSuccess(true)

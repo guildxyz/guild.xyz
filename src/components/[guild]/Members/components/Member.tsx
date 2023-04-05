@@ -1,6 +1,6 @@
 import { Icon, Text, Tooltip, VStack } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
-import useENSName from "hooks/useENSName"
+import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { Crown } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 
@@ -11,7 +11,7 @@ type Props = {
 }
 
 const Member = ({ address, isOwner, isAdmin }: Props): JSX.Element => {
-  const ENSName = useENSName(address)
+  const domain = useResolveAddress(address)
 
   if (!address) return null
 
@@ -30,9 +30,9 @@ const Member = ({ address, isOwner, isAdmin }: Props): JSX.Element => {
         fontSize="sm"
         noOfLines={1}
         maxW="full"
-        title={ENSName || address}
+        title={domain || address}
       >
-        {ENSName || `${shortenHex(address, 3)}`}
+        {domain || `${shortenHex(address, 3)}`}
       </Text>
       {(isOwner || isAdmin) && (
         <Tooltip label={isOwner ? "Guild Master" : "Guild Admin"}>

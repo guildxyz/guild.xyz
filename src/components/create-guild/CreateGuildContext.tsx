@@ -100,6 +100,20 @@ const CreateGuildProvider = ({
   })
   const guildName = useWatch({ control: methods.control, name: "name" })
 
+  const rolePlatforms =
+    platform !== "DEFAULT"
+      ? [
+          {
+            guildPlatformIndex: 0,
+            // This is needed so we don't delete the access type which the user selected in the previous step
+            platformRoleId:
+              platform === "GOOGLE"
+                ? methods.getValues("roles.0.rolePlatforms.0.platformRoleId")
+                : undefined,
+          },
+        ]
+      : undefined
+
   const TEMPLATES: Record<TemplateType, Template> = {
     BASIC: {
       name: "Start from scratch",
@@ -114,10 +128,9 @@ const CreateGuildProvider = ({
               type: "FREE",
             },
           ],
-          rolePlatforms:
-            platform !== "DEFAULT" ? [{ guildPlatformIndex: 0 }] : undefined,
+          rolePlatforms,
         },
-      ],
+      ] as any[],
     },
     GROWTH: {
       name: "Growth",
@@ -143,8 +156,7 @@ const CreateGuildProvider = ({
               },
             },
           ],
-          rolePlatforms:
-            platform !== "DEFAULT" ? [{ guildPlatformIndex: 0 }] : undefined,
+          rolePlatforms,
         },
         {
           name: "Twitter fam",
@@ -164,10 +176,9 @@ const CreateGuildProvider = ({
               },
             },
           ],
-          rolePlatforms:
-            platform !== "DEFAULT" ? [{ guildPlatformIndex: 0 }] : undefined,
+          rolePlatforms,
         },
-      ],
+      ] as any[],
     },
   }
 

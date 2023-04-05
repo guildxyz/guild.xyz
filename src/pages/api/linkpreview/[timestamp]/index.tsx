@@ -347,7 +347,11 @@ const GuildCard = ({ guild, baseUrl }: GuildCardProps): JSX.Element => (
               stroke-width="24"
             />
           </svg>
-          <span>{guild.memberCount}</span>
+          <span>
+            {new Intl.NumberFormat("en", { notation: "compact" }).format(
+              guild.memberCount ?? 0
+            )}
+          </span>
         </div>
 
         <div
