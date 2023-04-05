@@ -95,17 +95,16 @@ const GithubRequirement = (props: RequirementProps) => {
           case "GITHUB_COMMIT_COUNT":
             return (
               <>
-                {" Github account was created "}
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {" between "}
+                    {"Github account was created between "}
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
                     {" and "}
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"since at least "}
+                    {"Github account was created since at least "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
@@ -115,7 +114,9 @@ const GithubRequirement = (props: RequirementProps) => {
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : null}
-                {" and"} it has{" "}
+                {requirement.data.maxAmount || requirement.data.minAmount
+                  ? " and it has at least "
+                  : "Github account has at least "}
                 <DataBlock>
                   {requirement.data.id} commit{requirement.data.id > 1 ? "s" : ""}
                 </DataBlock>
@@ -124,10 +125,9 @@ const GithubRequirement = (props: RequirementProps) => {
           case "GITHUB_COMMIT_COUNT_RELATIVE":
             return (
               <>
-                {" Github account was created "}
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {" between "}
+                    {"Github account was created between "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
@@ -138,20 +138,23 @@ const GithubRequirement = (props: RequirementProps) => {
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"at least "}
+                    {"Github account was created at least "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    {"after "}
+                    {"Github account was created after "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.maxAmount}
                     />
                   </>
                 ) : null}
-                {" and"} it has{" "}
+                {requirement.data.maxAmount || requirement.data.minAmount
+                  ? " and it has at least "
+                  : "Github account has at least "}
+
                 <DataBlock>
                   {requirement.data.id} commit{requirement.data.id > 1 ? "s" : ""}
                 </DataBlock>
