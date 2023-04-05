@@ -19,7 +19,7 @@ const GithubAccountAgeRelative = ({
     <>
       <FormControl
         isRequired={
-          isMinAmountRequired ?? !getValues(`${baseFieldPath}.data.maxAmount`)
+          isMinAmountRequired && !getValues(`${baseFieldPath}.data.maxAmount`)
         }
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
       >
@@ -28,7 +28,7 @@ const GithubAccountAgeRelative = ({
         <ControlledRelativeTimeInput
           fieldName={`${baseFieldPath}.data.minAmount`}
           isRequired={
-            isMinAmountRequired ?? !getValues(`${baseFieldPath}.data.maxAmount`)
+            isMinAmountRequired && !getValues(`${baseFieldPath}.data.maxAmount`)
           }
         />
 
@@ -38,7 +38,7 @@ const GithubAccountAgeRelative = ({
       </FormControl>
       <FormControl
         isRequired={
-          isMaxAmountRequired ?? !getValues(`${baseFieldPath}.data.minAmount`)
+          isMaxAmountRequired && !getValues(`${baseFieldPath}.data.minAmount`)
         }
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.maxAmount}
       >
@@ -47,7 +47,7 @@ const GithubAccountAgeRelative = ({
         <ControlledRelativeTimeInput
           fieldName={`${baseFieldPath}.data.maxAmount`}
           isRequired={
-            isMaxAmountRequired ?? !getValues(`${baseFieldPath}.data.minAmount`)
+            isMaxAmountRequired && !getValues(`${baseFieldPath}.data.minAmount`)
           }
         />
 
