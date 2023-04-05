@@ -116,7 +116,7 @@ const GithubRequirement = (props: RequirementProps) => {
                   </>
                 ) : null}
                 {" and"} it has <DataBlock>{requirement.data.id} commit</DataBlock>
-                {requirement.data.id > 1 ?? "s"}
+                {requirement.data.id > 1 ? "s" : ""}
               </>
             )
           case "GITHUB_COMMIT_COUNT_RELATIVE":

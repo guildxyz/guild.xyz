@@ -37,7 +37,7 @@ const githubRequirementTypes = [
     GithubRequirement: GithubCommitCount,
   },
   {
-    label: "relative Github commit count",
+    label: "Relative Github commit count",
     value: "GITHUB_COMMIT_COUNT_RELATIVE",
     GithubRequirement: GithubCommitCountRelative,
   },
