@@ -20,14 +20,18 @@ const GithubAccountAge = ({
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
         isRequired={
-          isMinAmountRequired && !getValues(`${baseFieldPath}.data.maxAmount`)
+          !isMinAmountRequired
+            ? false
+            : !getValues(`${baseFieldPath}.data.maxAmount`)
         }
       >
         <FormLabel>From</FormLabel>
         <ControlledTimestampInput
           fieldName={`${baseFieldPath}.data.minAmount`}
           isRequired={
-            isMinAmountRequired && !getValues(`${baseFieldPath}.data.maxAmount`)
+            !isMinAmountRequired
+              ? false
+              : !getValues(`${baseFieldPath}.data.maxAmount`)
           }
         />
         <FormErrorMessage>
@@ -37,7 +41,9 @@ const GithubAccountAge = ({
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.maxAmount}
         isRequired={
-          isMaxAmountRequired && !getValues(`${baseFieldPath}.data.minAmount`)
+          !isMaxAmountRequired
+            ? false
+            : !getValues(`${baseFieldPath}.data.minAmount`)
         }
       >
         <FormLabel>To</FormLabel>
@@ -45,7 +51,9 @@ const GithubAccountAge = ({
         <ControlledTimestampInput
           fieldName={`${baseFieldPath}.data.maxAmount`}
           isRequired={
-            isMaxAmountRequired && !getValues(`${baseFieldPath}.data.minAmount`)
+            !isMaxAmountRequired
+              ? false
+              : !getValues(`${baseFieldPath}.data.minAmount`)
           }
         />
 
