@@ -26,9 +26,15 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
         ) : (
           role?.imageUrl &&
           (role.imageUrl?.match("guildLogos") ? (
-            <Img src={role.imageUrl} alt="Guild logo" boxSize="40%" />
+            <Img src={role.imageUrl} alt="Role image" boxSize="40%" />
           ) : (
-            role.imageUrl
+            <Img
+              src={role.imageUrl}
+              alt="Role image"
+              w="full"
+              h="full"
+              objectFit="cover"
+            />
           ))
         )
       }

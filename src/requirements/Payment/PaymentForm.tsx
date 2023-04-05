@@ -16,6 +16,7 @@ import useRegisterVault from "./components/RegisterVaultForm/hooks/useRegisterVa
 const PaymentForm = ({
   baseFieldPath,
   addRequirement,
+  setOnCloseAttemptToast,
 }: RequirementFormProps): JSX.Element => {
   const { chainId, account } = useWeb3React()
   const { requestNetworkChange } = useWeb3ConnectionManager()
@@ -56,6 +57,14 @@ const PaymentForm = ({
     if (!vaultId) return
     addRequirement()
   }, [vaultId])
+
+  useEffect(() => {
+    if (isLoading)
+      setOnCloseAttemptToast(
+        "You can't close the modal until the transaction finishes"
+      )
+    else setOnCloseAttemptToast(false)
+  }, [isLoading])
 
   return (
     <Stack spacing={4}>

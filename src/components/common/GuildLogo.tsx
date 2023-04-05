@@ -37,6 +37,7 @@ const GuildLogo = memo(
               quality={imageQuality}
               alt="Guild logo"
               layout="fill"
+              objectFit="cover"
               priority={priority}
             />
           ))}

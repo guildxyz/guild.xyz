@@ -1,5 +1,6 @@
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useDatadog from "components/_app/Datadog/useDatadog"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
@@ -7,6 +8,7 @@ import useContract from "hooks/useContract"
 import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
+import { usePostHog } from "posthog-js/react"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
@@ -57,6 +59,9 @@ const payFee = async (
 
 const usePayFee = () => {
   const { addDatadogAction, addDatadogError } = useDatadog()
+  const posthog = usePostHog()
+  const { urlName } = useGuild()
+  const postHogOptions = { guild: urlName }
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
@@ -129,6 +134,8 @@ const usePayFee = () => {
       addDatadogError("payFee pre-call error (GuildCheckout)", {
         error,
       })
+      posthog.capture("Buy pass error (GuildCheckout)", postHogOptions)
+      posthog.capture("payFee pre-call error (GuildCheckout)", postHogOptions)
     },
     onSuccess: (receipt) => {
       if (receipt.status !== 1) {
@@ -137,10 +144,13 @@ const usePayFee = () => {
         addDatadogError("payFee error (GuildCheckout)", {
           receipt,
         })
+        posthog.capture("Buy pass error (GuildCheckout)", postHogOptions)
+        posthog.capture("payFee error (GuildCheckout)", postHogOptions)
         return
       }
 
       addDatadogAction("successful payFee (GuildCheckout)")
+      posthog.capture("Bought pass (GuildCheckout)", postHogOptions)
       toast({
         status: "success",
         title: "Successful payment",

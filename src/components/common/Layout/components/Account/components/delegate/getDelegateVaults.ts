@@ -14,8 +14,15 @@ const delegateAddresses = {
   [Chains.GOERLI]: "0x00000000000076a84fef008cdabe6409d2fe638b",
 }
 
+enum DelegationType {
+  NONE,
+  ALL,
+  CONTRACT,
+  TOKEN,
+}
+
 type RawDelegationResult = [
-  number, // Delegation type, enum, could be typed better, but we don't use this information
+  DelegationType,
   string, // Vault address
   string, // Delegate address
   string, // Contract address (zero address if irrelevant)
@@ -39,7 +46,9 @@ const multicallGetDelegationsByDelegate = async (
 
   return results
     .flatMap((contractResults) =>
-      contractResults.map(([, vault]) => vault.toLowerCase())
+      contractResults
+        .filter(([type]) => type === DelegationType.ALL)
+        .map(([, vault]) => vault.toLowerCase())
     )
     .filter(Boolean)
 }
