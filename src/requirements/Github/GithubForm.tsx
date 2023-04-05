@@ -47,9 +47,9 @@ const GithubForm = ({ baseFieldPath }: RequirementFormProps) => {
   const { resetField } = useFormContext()
 
   const resetFields = () => {
-    resetField(`${baseFieldPath}.data.id`)
-    resetField(`${baseFieldPath}.data.minAmount`)
-    resetField(`${baseFieldPath}.data.maxAmount`)
+    resetField(`${baseFieldPath}.data.id`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.maxAmount`, { defaultValue: "" })
   }
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
