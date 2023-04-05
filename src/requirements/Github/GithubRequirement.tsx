@@ -39,17 +39,17 @@ const GithubRequirement = (props: RequirementProps) => {
           case "GITHUB_ACCOUNT_AGE":
             return (
               <>
-                {" Github account was created "}
+                {" Github account"}
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {" between "}
+                    {" is between "}
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
                     {" and "}
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"since at least "}
+                    {" exist since at least "}
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
                   </>
                 ) : requirement.data.maxAmount ? (
@@ -63,7 +63,7 @@ const GithubRequirement = (props: RequirementProps) => {
           case "GITHUB_ACCOUNT_AGE_RELATIVE":
             return (
               <>
-                {" Github account was created "}
+                {" Github account is "}
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
                     {" between "}
@@ -81,10 +81,11 @@ const GithubRequirement = (props: RequirementProps) => {
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
+                    {" at least "}
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    {"later than "}
+                    {"older than "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.maxAmount}
                     />
@@ -97,17 +98,18 @@ const GithubRequirement = (props: RequirementProps) => {
               <>
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {"Github account was created between "}
+                    {"Github account is between "}
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
                     {" and "}
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"Github account was created since at least "}
+                    {"Github account was created at least "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
+                    {" ago"}
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
@@ -127,7 +129,7 @@ const GithubRequirement = (props: RequirementProps) => {
               <>
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {"Github account was created between "}
+                    {"Github account is between "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
@@ -142,6 +144,7 @@ const GithubRequirement = (props: RequirementProps) => {
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
+                    {" ago"}
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
