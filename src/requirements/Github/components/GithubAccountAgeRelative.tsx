@@ -4,8 +4,8 @@ import { useFormContext, useFormState } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 type Props = {
   baseFieldPath: string
-  isMinAmountRequired: boolean
-  isMaxAmountRequired: boolean
+  isMinAmountRequired?: boolean
+  isMaxAmountRequired?: boolean
 }
 const GithubAccountAgeRelative = ({
   baseFieldPath,
