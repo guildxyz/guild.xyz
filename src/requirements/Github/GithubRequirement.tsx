@@ -115,8 +115,10 @@ const GithubRequirement = (props: RequirementProps) => {
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : null}
-                {" and"} it has <DataBlock>{requirement.data.id} commit</DataBlock>
-                {requirement.data.id > 1 ? "s" : ""}
+                {" and"} it has{" "}
+                <DataBlock>
+                  {requirement.data.id} commit{requirement.data.id > 1 ? "s" : ""}
+                </DataBlock>
               </>
             )
           case "GITHUB_COMMIT_COUNT_RELATIVE":
@@ -149,8 +151,10 @@ const GithubRequirement = (props: RequirementProps) => {
                     />
                   </>
                 ) : null}
-                {" and"} it has <DataBlock>{requirement.data.id} commit</DataBlock>
-                {requirement.data.id > 1 ? "s" : ""}
+                {" and"} it has{" "}
+                <DataBlock>
+                  {requirement.data.id} commit{requirement.data.id > 1 ? "s" : ""}
+                </DataBlock>
               </>
             )
         }
