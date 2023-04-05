@@ -13,17 +13,18 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
-import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
+import useUser from "components/[guild]/hooks/useUser"
 import Image from "next/image"
 import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
 import { AddressConnectionProvider } from "types"
 import shortenHex from "utils/shortenHex"
 import useDisconnect from "../hooks/useDisconnect"
+import PrimaryAddressTag from "./PrimaryAddressTag"
 
 type Props = {
   address: string
@@ -63,17 +64,7 @@ const LinkedAddress = ({ address }: Props) => {
             </Tag>
           </Tooltip>
         )}
-        {addresses.indexOf(address) === 0 ? (
-          <Tooltip
-            label="The guild owner will receive it if they export the list of users from their guild."
-            placement="top"
-            hasArrow
-          >
-            <Tag alignSelf="center" cursor="default">
-              Primary
-            </Tag>
-          </Tooltip>
-        ) : null}
+        {addresses.indexOf(address) === 0 ? <PrimaryAddressTag size="sm" /> : null}
         <Tooltip label="Disconnect address" placement="top" hasArrow>
           <IconButton
             rounded="full"

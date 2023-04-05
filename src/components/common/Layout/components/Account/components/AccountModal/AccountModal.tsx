@@ -9,7 +9,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Tag,
   Text,
   Tooltip,
 } from "@chakra-ui/react"
@@ -26,6 +25,7 @@ import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
+import PrimaryAddressTag from "./components/PrimaryAddressTag"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
@@ -81,15 +81,7 @@ const AccountModal = ({ isOpen, onClose }) => {
                 />
                 {addresses?.indexOf(account.toLowerCase()) === 0 &&
                 addresses.length > 1 ? (
-                  <Tooltip
-                    label="The guild owner will receive it if they export the list of users from their guild."
-                    placement="top"
-                    hasArrow
-                  >
-                    <Tag alignSelf="center" cursor="default">
-                      Primary
-                    </Tag>
-                  </Tooltip>
+                  <PrimaryAddressTag />
                 ) : null}
               </Stack>
 
