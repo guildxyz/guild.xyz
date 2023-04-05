@@ -1,5 +1,6 @@
 import { Icon } from "@chakra-ui/react"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import DataBlockWithRelativeDate from "components/[guild]/Requirements/components/DataBlockWithRelativeDate"
 import Requirement, {
@@ -48,7 +49,7 @@ const GithubRequirement = (props: RequirementProps) => {
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"after "}
+                    {"since at least "}
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
                   </>
                 ) : requirement.data.maxAmount ? (
@@ -76,14 +77,14 @@ const GithubRequirement = (props: RequirementProps) => {
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"before "}
+                    {"at least "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    {"after "}
+                    {"later than "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.maxAmount}
                     />
@@ -104,18 +105,17 @@ const GithubRequirement = (props: RequirementProps) => {
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"before "}
+                    {"since at least "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    {"after "}
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : null}
-                {" and"} it has {requirement.data.id} commit
+                {" and"} it has <DataBlock>{requirement.data.id} commit</DataBlock>
                 {requirement.data.id > 1 ?? "s"}
               </>
             )
@@ -136,7 +136,7 @@ const GithubRequirement = (props: RequirementProps) => {
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"before "}
+                    {"at least "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
@@ -148,9 +148,9 @@ const GithubRequirement = (props: RequirementProps) => {
                       timestamp={requirement.data.maxAmount}
                     />
                   </>
-                ) : null}{" "}
-                {" and"} it has {requirement.data.id} commit
-                {requirement.data.id > 1 ?? "s"}
+                ) : null}
+                {" and"} it has <DataBlock>{requirement.data.id} commit</DataBlock>
+                {requirement.data.id > 1 ? "s" : ""}
               </>
             )
         }
