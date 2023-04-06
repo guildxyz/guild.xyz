@@ -7,8 +7,9 @@ type Props = {
 const GithubAccountAgeRelative = ({ baseFieldPath }: Props) => (
   <RelativeMinMaxAmountFormControls
     baseFieldPath={baseFieldPath}
-    minAmountLabel="Minimum account age"
-    maxAmountLabel="Maximum account age"
+    // The labels are flipped intentionally!
+    minAmountLabel="Maximum account age"
+    maxAmountLabel="Minimum account age"
   />
 )
 
