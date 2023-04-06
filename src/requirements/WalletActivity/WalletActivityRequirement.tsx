@@ -1,4 +1,5 @@
 import { Icon } from "@chakra-ui/react"
+import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
@@ -31,6 +32,11 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
   return (
     <Requirement
       image={<Icon as={requirementIcons[requirement.type]} boxSize={6} />}
+      footer={
+        ["ALCHEMY_TX_VALUE", "ALCHEMY_TX_VALUE_RELATIVE"].includes(
+          requirement.type
+        ) && <BlockExplorerUrl />
+      }
       {...props}
     >
       {(() => {
@@ -62,8 +68,9 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {`Deployed ${
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } contract${requirement.data.txCount > 1 ? "s" : ""}
-                `}
+                } contract${requirement.data.txCount > 1 ? "s" : ""} on ${
+                  RPC[requirement.chain].chainName
+                }`}
                 {requirement.data.timestamps.maxAmount &&
                 requirement.data.timestamps.minAmount ? (
                   <>
@@ -99,8 +106,9 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {`Deployed ${
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } contract${requirement.data.txCount > 1 ? "s" : ""}
-                `}
+                } contract${requirement.data.txCount > 1 ? "s" : ""} on ${
+                  RPC[requirement.chain].chainName
+                }`}
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>
                     {" between the last "}
@@ -122,8 +130,9 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {`Have ${
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } transaction${requirement.data.txCount > 1 ? "s" : ""}
-                `}
+                } transaction${requirement.data.txCount > 1 ? "s" : ""} on ${
+                  RPC[requirement.chain].chainName
+                }`}
                 {requirement.data.timestamps.maxAmount &&
                 requirement.data.timestamps.minAmount ? (
                   <>
@@ -159,8 +168,9 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {`Have ${
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } transaction${requirement.data.txCount > 1 ? "s" : ""}
-                `}
+                } transaction${requirement.data.txCount > 1 ? "s" : ""} on ${
+                  RPC[requirement.chain].chainName
+                }`}
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>
                     {" between the last "}
@@ -229,7 +239,6 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                       ? shortenHex(requirement.address, 3)
                       : RPC[requirement.chain].nativeCurrency.symbol)}
                 </DataBlock>
-
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>
                     {" between the last "}

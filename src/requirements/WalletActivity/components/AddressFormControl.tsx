@@ -36,7 +36,7 @@ const AddressFormControl = ({
 
   return (
     <FormControl
-      isRequired
+      isRequired={type === "ASSET"}
       isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
     >
       <FormLabel>{`${type === "ADDRESS" ? "Wallet" : "Asset"} address`}</FormLabel>
@@ -48,7 +48,7 @@ const AddressFormControl = ({
         )}
         <Input
           {...register(`${baseFieldPath}.address`, {
-            required: "This field is required",
+            required: type === "ASSET" ? "This field is required" : false,
             pattern: {
               value: ADDRESS_REGEX,
               message: "Invalid address",
