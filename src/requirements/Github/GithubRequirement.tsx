@@ -96,38 +96,36 @@ const GithubRequirement = (props: RequirementProps) => {
           case "GITHUB_COMMIT_COUNT":
             return (
               <>
-                {"Have a GitHub account"}
+                {`Have at least `}
+                <DataBlock>{pluralize(requirement.data.id, "commit")}</DataBlock>
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {" which was created between "}
+                    {" between "}
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
                     {" and "}
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {" which was created after "}
+                    {" after "}
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    {" which was created before "}
+                    {" before "}
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : null}
-                {requirement.data.maxAmount || requirement.data.minAmount
-                  ? " and it has at least "
-                  : " with at least "}
-                <DataBlock>{pluralize(requirement.data.id, "commit")}</DataBlock>
               </>
             )
           case "GITHUB_COMMIT_COUNT_RELATIVE":
             return (
               <>
-                {"Have a GitHub account "}
+                {`Have at least `}
+                <DataBlock>{pluralize(requirement.data.id, "commit")}</DataBlock>
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {" which was created in the last "}
+                    {" in the last "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
@@ -138,23 +136,19 @@ const GithubRequirement = (props: RequirementProps) => {
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"no older than "}
+                    {" during the last "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    {"older than "}
+                    {" before the last "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.maxAmount}
                     />
                   </>
                 ) : null}
-                {requirement.data.maxAmount || requirement.data.minAmount
-                  ? " and it has at least "
-                  : " with at least "}
-                <DataBlock>{pluralize(requirement.data.id, "commit")}</DataBlock>
               </>
             )
         }

@@ -11,7 +11,7 @@ import {
 import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
-import GithubAccountAgeRelative from "./GithubAccountAgeRelative"
+import RelativeMinMaxAmountFormControls from "./RelativeMinMaxAmountFormControls"
 
 const GithubCommitCountRelative = ({ baseFieldPath }: RequirementFormProps) => {
   const { errors } = useFormState()
@@ -31,7 +31,12 @@ const GithubCommitCountRelative = ({ baseFieldPath }: RequirementFormProps) => {
 
   return (
     <>
-      <GithubAccountAgeRelative baseFieldPath={baseFieldPath} />
+      <RelativeMinMaxAmountFormControls
+        baseFieldPath={baseFieldPath}
+        minAmountLabel="From"
+        maxAmountLabel="To"
+      />
+
       <FormControl
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
