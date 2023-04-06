@@ -33,6 +33,7 @@ import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
+import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
@@ -244,16 +245,18 @@ const GuildPage = (): JSX.Element => {
           mb="10"
         >
           {renderedRoles.length ? (
-            <Stack ref={rolesEl} spacing={4}>
-              {/* Custom logic for Chainlink */}
-              {(isAdmin || guildId !== 16389) &&
-                activePoaps.map((poap) => (
-                  <PoapRoleCard key={poap?.id} guildPoap={poap} />
+            <RequirementErrorConfigProvider>
+              <Stack ref={rolesEl} spacing={4}>
+                {/* Custom logic for Chainlink */}
+                {(isAdmin || guildId !== 16389) &&
+                  activePoaps.map((poap) => (
+                    <PoapRoleCard key={poap?.id} guildPoap={poap} />
+                  ))}
+                {renderedRoles.map((role) => (
+                  <RoleCard key={role.id} role={role} />
                 ))}
-              {renderedRoles.map((role) => (
-                <RoleCard key={role.id} role={role} />
-              ))}
-            </Stack>
+              </Stack>
+            </RequirementErrorConfigProvider>
           ) : (
             <DynamicNoRolesAlert />
           )}
