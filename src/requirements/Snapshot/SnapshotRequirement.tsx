@@ -8,28 +8,29 @@ import {
   Portal,
 } from "@chakra-ui/react"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { ArrowSquareOut } from "phosphor-react"
-
+import { CaretDown } from "phosphor-react"
+import useSWRImmutable from "swr/immutable"
 import pluralize from "utils/pluralize"
 import SnapshotSpaceLink from "./components/SnapshotSpaceLink"
 import StrategyParamsTable from "./components/StrategyParamsTable"
-import useProposal from "./hooks/useProposal"
+import { Proposal } from "./hooks/useProposals"
 
 const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
   const strategies = requirement.data.strategies
 
-  const { proposal } = useProposal(requirement.data.proposal)
-
-  const formattedDate = requirement.data.since
-    ? new Date(requirement.data.since).toLocaleDateString()
-    : null
+  const { data: proposal } = useSWRImmutable<Proposal>(
+    requirement.data.proposal
+      ? `/assets/snapshot/proposal/${requirement.data.proposal}`
+      : null
+  )
 
   return (
     <Requirement
@@ -39,7 +40,7 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
         Object.keys(requirement.data.strategies[0].params ?? {}).length && (
           <Popover placement="bottom">
             <PopoverTrigger>
-              <RequirementButton rightIcon={<Icon as={ArrowSquareOut} />}>
+              <RequirementButton rightIcon={<Icon as={CaretDown} />}>
                 View parameters
               </RequirementButton>
             </PopoverTrigger>
@@ -98,7 +99,7 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
                 {requirement.type === "SNAPSHOT_FOLLOW_SINCE" && (
                   <>
                     {` since at least `}
-                    <DataBlock>{formattedDate}</DataBlock>
+                    <DataBlockWithDate timestamp={requirement.data.since} />
                   </>
                 )}
               </>
@@ -107,7 +108,7 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
             return (
               <>
                 {`Be a Snapshot user since at least `}
-                <DataBlock>{formattedDate}</DataBlock>
+                <DataBlockWithDate timestamp={requirement.data.since} />
               </>
             )
           case "SNAPSHOT_VOTES":

@@ -1,8 +1,7 @@
 import {
-  Divider,
+  Flex,
   FormControl,
   FormLabel,
-  Heading,
   HStack,
   Img,
   Input,
@@ -14,23 +13,30 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useEffect } from "react"
+import useToast from "hooks/useToast"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
 import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
 import useSavePoap from "../hooks/useSavePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
+import UploadMintLinks from "./UploadMintLinks"
 
-const ImportPoap = (): JSX.Element => {
+const ImportPoap = ({ setStep }): JSX.Element => {
   const { id } = useGuild()
+  const toast = useToast()
 
   const methods = useForm()
   const poapId = useWatch({ control: methods.control, name: "poapId" })
 
   const { isPoapByIdLoading, poap } = usePoapById(poapId)
 
-  const { setPoapData, nextStep } = useCreatePoapContext()
-  const { onSubmit, isLoading, response } = useSavePoap()
+  const { setPoapData } = useCreatePoapContext()
+  const { onSubmit, isLoading, response } = useSavePoap({
+    onSuccess: () => {
+      toast({ status: "success", title: "POAP successfully imported" })
+      setPoapData(poap)
+    },
+  })
 
   const importPoap = () => {
     onSubmit({
@@ -41,39 +47,11 @@ const ImportPoap = (): JSX.Element => {
     })
   }
 
-  useEffect(() => {
-    if (!response) return
-    setPoapData(poap)
-    nextStep()
-  }, [response])
-
   return (
     <FormProvider {...methods}>
-      <Stack textAlign="left">
-        <HStack py={8}>
-          <Divider />
-          <Text
-            as="span"
-            fontWeight="bold"
-            fontSize="sm"
-            color="gray"
-            textTransform="uppercase"
-            minW="max-content"
-          >
-            or import an existing POAP
-          </Text>
-          <Divider />
-        </HStack>
-
-        <Heading as="h4" fontSize="lg" fontFamily="display">
-          Already created a POAP?
-        </Heading>
-        <Text>
-          You can import your POAP to Guild.xyz by pasting its ID in the field below.
-        </Text>
-
-        <FormControl pt={2}>
-          <FormLabel>Event ID:</FormLabel>
+      <Stack textAlign="left" spacing={6}>
+        <FormControl>
+          <FormLabel>POAP ID:</FormLabel>
           <HStack>
             <InputGroup maxW={{ base: 40, sm: 52 }}>
               <Input {...methods.register("poapId")} />
@@ -84,7 +62,8 @@ const ImportPoap = (): JSX.Element => {
               )}
             </InputGroup>
             <Button
-              isDisabled={!poap}
+              colorScheme="green"
+              isDisabled={!poap || !!response}
               h={10}
               borderRadius="lg"
               onClick={importPoap}
@@ -104,7 +83,17 @@ const ImportPoap = (): JSX.Element => {
             </HStack>
           )}
         </FormControl>
+        <UploadMintLinks poapId={poapId} />
       </Stack>
+      <Flex justifyContent={"right"} pt="2" mt="auto">
+        <Button
+          colorScheme="indigo"
+          onClick={() => setStep("requirements")}
+          isDisabled={!response}
+        >
+          Next
+        </Button>
+      </Flex>
     </FormProvider>
   )
 }

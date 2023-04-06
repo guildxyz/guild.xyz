@@ -14,6 +14,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
+import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { LinkBreak, SignIn } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
@@ -23,7 +24,8 @@ const Account = (): JSX.Element => {
   const { account, chainId } = useWeb3React()
   const { openWalletSelectorModal, openNetworkModal, openAccountModal, triedEager } =
     useWeb3ConnectionManager()
-  const { ENSName } = useWeb3React()
+
+  const domainName = useResolveAddress(account)
   const { addresses } = useUser()
 
   if (!account) {
@@ -76,7 +78,7 @@ const Account = (): JSX.Element => {
                 fontSize={linkedAddressesCount ? "sm" : "md"}
                 fontWeight={linkedAddressesCount ? "bold" : "semibold"}
               >
-                {ENSName || `${shortenHex(account, 3)}`}
+                {domainName || `${shortenHex(account, 3)}`}
               </Text>
               {linkedAddressesCount && (
                 <Text

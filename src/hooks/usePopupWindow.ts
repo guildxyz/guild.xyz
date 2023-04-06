@@ -18,12 +18,12 @@ const defaultWindowFeatures = {
 }
 
 const usePopupWindow = (
-  uri: string,
+  uri?: string,
   windowFeatures: WindowFeatures = defaultWindowFeatures
 ) => {
   const [windowInstance, setWindowInstance] = useState<Window>(null)
 
-  const onOpen = () => {
+  const onOpen = (url?: string) => {
     const dualScreenLeft = window.screenLeft ?? window.screenX
     const dualScreenTop = window.screenTop ?? window.screenY
 
@@ -41,7 +41,7 @@ const usePopupWindow = (
 
     setWindowInstance(
       window.open(
-        uri,
+        typeof url === "string" ? url : uri,
         "_blank",
         Object.entries({ ...defaultWindowFeatures, ...windowFeatures })
           .map(([key, value]) =>

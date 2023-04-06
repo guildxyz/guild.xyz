@@ -6,15 +6,14 @@ import { Chain, Chains, RPC } from "connectors"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
 import ERC20_ABI from "static/abis/erc20Abi.json"
-import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import capitalize from "utils/capitalize"
 import {
   ADDRESS_REGEX,
+  getTokenBuyerContractData,
   GUILD_FEE_PERCENTAGE,
   NULL_ADDRESS,
   PURCHASABLE_REQUIREMENT_TYPES,
   RESERVOIR_API_URLS,
-  TOKEN_BUYER_CONTRACT,
   ZeroXSupportedSources,
   ZEROX_API_URLS,
   ZEROX_SUPPORTED_SOURCES,
@@ -24,9 +23,11 @@ import { flipPath } from "utils/guildCheckout/utils"
 export type FetchPriceResponse = {
   buyAmount: number
   buyAmountInWei: BigNumber
-  priceInSellToken: number
-  priceInWei: BigNumber
-  priceInUSD: number
+  estimatedPriceInSellToken: number
+  estimatedPriceInUSD: number
+  priceInSellToken: number // Max price
+  priceInUSD: number // Max price
+  priceToSendInWei: BigNumber // Max price (we're sending this to the contract)
   guildBaseFeeInSellToken: number
   guildFeeInSellToken: number
   guildFeeInWei: BigNumber
@@ -37,6 +38,7 @@ export type FetchPriceResponse = {
 }
 
 type FetchPriceBodyParams = {
+  guildId: number
   type: RequirementType
   chain: Chain
   sellToken: string
@@ -56,6 +58,7 @@ const getDecimals = async (chain: Chain, tokenAddress: string) => {
 }
 
 const getGuildFee = async (
+  guildId: number,
   sellToken: string,
   chainId: number,
   nativeCurrencyPriceInUSD: number,
@@ -67,12 +70,15 @@ const getGuildFee = async (
   guildFeeInSellToken: number
   guildFeeInUSD: number
 }> => {
-  if (!TOKEN_BUYER_CONTRACT[chainId]) return Promise.reject("Unsupported chain")
+  const tokenBuyerContractData = getTokenBuyerContractData(guildId)
+
+  if (!tokenBuyerContractData[Chains[chainId]])
+    return Promise.reject("Unsupported chain")
 
   const provider = new JsonRpcProvider(RPC[Chains[chainId]].rpcUrls[0], chainId)
   const tokenBuyerContract = new Contract(
-    TOKEN_BUYER_CONTRACT[chainId],
-    TOKEN_BUYER_ABI,
+    tokenBuyerContractData[Chains[chainId]].address,
+    tokenBuyerContractData[Chains[chainId]].abi,
     provider
   )
 
@@ -104,6 +110,12 @@ const validateBody = (
     return {
       isValid: false,
       error: "You must provide a request body.",
+    }
+
+  if (typeof obj.guildId !== "number")
+    return {
+      isValid: false,
+      error: "Missing or invalid param: guildId",
     }
 
   if (
@@ -172,7 +184,8 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
   if (!isValid) return res.status(400).json({ error })
 
-  const { type, chain, sellToken, address, data }: FetchPriceBodyParams = req.body
+  const { guildId, type, chain, sellToken, address, data }: FetchPriceBodyParams =
+    req.body
   const minAmount = parseFloat(data.minAmount ?? 1)
 
   if (type === "ERC20") {
@@ -199,7 +212,6 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       buyToken: address,
       buyAmount: buyAmountInWei.toString(),
       includedSources: ZEROX_SUPPORTED_SOURCES.toString(),
-      slippagePercentage: "0.1",
     }).toString()
 
     const response = await fetch(
@@ -235,18 +247,19 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const { path: rawPath, uniswapPath, tokenAddressPath } = relevantOrder.fillData
     const path = flipPath(rawPath ?? uniswapPath)
 
+    const estimatedPriceInSellToken = parseFloat(responseData.price) * minAmount
     const priceInSellToken = parseFloat(responseData.guaranteedPrice) * minAmount
 
+    const estimatedPriceInUSD =
+      (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) *
+      estimatedPriceInSellToken
     const priceInUSD =
       (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) * priceInSellToken
-
-    const priceInWei = BigNumber.from(
-      (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()
-    )
 
     let guildFeeData
     try {
       guildFeeData = await getGuildFee(
+        guildId,
         sellToken,
         Chains[chain],
         nativeCurrencyPriceInUSD,
@@ -271,12 +284,27 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     const source = foundSource.name as ZeroXSupportedSources
 
+    // We're sending this amount to the contract. The unused tokens will be sent back to the user during the transaction.
+    const priceToSendInWei = parseUnits(
+      priceInSellToken.toFixed(sellTokenDecimals),
+      sellTokenDecimals
+    )
+      .sub(100000)
+      .div(100000)
+      .mul(100000)
+    // This was previously "priceInWei"
+    // BigNumber.from(
+    //   (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()
+    // )
+
     return res.json({
       buyAmount: minAmount,
       buyAmountInWei,
+      estimatedPriceInSellToken,
+      estimatedPriceInUSD,
       priceInSellToken,
       priceInUSD,
-      priceInWei,
+      priceToSendInWei,
       guildBaseFeeInSellToken,
       guildFeeInSellToken,
       guildFeeInUSD,
@@ -345,7 +373,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       .map((t) => t.market.floorAsk.price.amount.usd)
       .reduce((p1, p2) => p1 + p2, 0)
 
-    const priceInWei = parseUnits(
+    const priceToSendInWei = parseUnits(
       priceInSellToken.toString(),
       RPC[chain].nativeCurrency.decimals
     )
@@ -353,6 +381,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     let guildFeeData
     try {
       guildFeeData = await getGuildFee(
+        guildId,
         sellToken,
         Chains[chain],
         nativeCurrencyPriceInUSD,
@@ -374,20 +403,21 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     const source = responseData.tokens[0].market.floorAsk.source.name
 
-    // TODO: source, tokenAddressPath, path
     return res.json({
       buyAmount: minAmount,
-      buyAmountInWei: BigNumber.from(0),
+      buyAmountInWei: BigNumber.from(0), // TODO
+      estimatedPriceInSellToken: 0, // TODO
+      estimatedPriceInUSD: 0, // TODO
       priceInSellToken,
       priceInUSD,
-      priceInWei,
+      priceToSendInWei,
       guildBaseFeeInSellToken,
       guildFeeInSellToken,
       guildFeeInUSD,
       guildFeeInWei,
-      source,
-      tokenAddressPath: [],
-      path: "",
+      source, // TODO
+      tokenAddressPath: [], // TODO
+      path: "", // TODO
     })
   }
 

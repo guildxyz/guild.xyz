@@ -173,7 +173,19 @@
     "name": "FeePercentBpsChanged",
     "type": "event"
   },
-  { "anonymous": false, "inputs": [], "name": "TokensBought", "type": "event" },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "guildId",
+        "type": "uint256"
+      }
+    ],
+    "name": "TokensBought",
+    "type": "event"
+  },
   {
     "anonymous": false,
     "inputs": [
@@ -224,6 +236,7 @@
   },
   {
     "inputs": [
+      { "internalType": "uint256", "name": "guildId", "type": "uint256" },
       {
         "components": [
           { "internalType": "address", "name": "tokenAddress", "type": "address" },

@@ -18,6 +18,7 @@ import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import { useEffect } from "react"
 import { SUPPORTED_CURRENCIES } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
+import usePrice from "../../hooks/usePrice"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 import CurrencyListItem from "./components/CurrencyListItem"
 import TokenInfo from "./components/TokenInfo"
@@ -41,6 +42,12 @@ const PaymentCurrencyPicker = (): JSX.Element => {
   )
 
   useEffect(() => setPickedCurrency(currencyOptions[0].address), [])
+
+  const {
+    data: { estimatedPriceInSellToken },
+    isValidating,
+    error,
+  } = usePrice(pickedCurrency)
 
   return (
     <Stack spacing={3}>
@@ -71,6 +78,9 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                   <TokenInfo
                     chainId={Chains[requirement.chain]}
                     address={pickedCurrency}
+                    requiredAmount={estimatedPriceInSellToken}
+                    isLoading={isValidating}
+                    error={error}
                   />
                 ) : (
                   <HStack spacing={4}>
@@ -117,26 +127,28 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                 ))}
               </Stack>
 
-              <HStack
-                justifyContent="space-between"
-                bgColor={lightShade}
-                h={8}
-                px={4}
-                fontSize="sm"
-              >
-                <Text as="span" colorScheme="gray">
-                  Connected address:
-                </Text>
-
-                <Button
-                  size="sm"
-                  variant="link"
-                  rightIcon={<Icon as={ArrowSquareOut} />}
-                  onClick={openAccountModal}
+              {account && (
+                <HStack
+                  justifyContent="space-between"
+                  bgColor={lightShade}
+                  h={8}
+                  px={4}
+                  fontSize="sm"
                 >
-                  {shortenHex(account, 3)}
-                </Button>
-              </HStack>
+                  <Text as="span" colorScheme="gray">
+                    Connected address:
+                  </Text>
+
+                  <Button
+                    size="sm"
+                    variant="link"
+                    rightIcon={<Icon as={ArrowSquareOut} />}
+                    onClick={openAccountModal}
+                  >
+                    {shortenHex(account, 3)}
+                  </Button>
+                </HStack>
+              )}
             </MenuList>
           </>
         )}

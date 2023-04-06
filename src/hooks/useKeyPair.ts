@@ -15,6 +15,7 @@ import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
 } from "./useSubmit/useSubmit"
+import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import useToast from "./useToast"
 
 type StoredKeyPair = {
@@ -141,9 +142,7 @@ const setKeyPair = async ({
 
   await mutate(`/user/${account}`)
   if (shouldSendLink) {
-    await mutate(
-      unstable_serialize([`/user/details/${account}`, { method: "POST", body: {} }])
-    )
+    await mutateOptionalAuthSWRKey(`/user/${account}`)
   }
   await mutateKeyPair()
 
@@ -221,7 +220,9 @@ const useKeyPair = () => {
           })
 
           deleteKeyPairFromIdb(user?.id).then(() => {
-            mutateKeyPair({ pubKey: undefined, keyPair: undefined })
+            mutateKeyPair({ pubKey: undefined, keyPair: undefined }).then(() => {
+              mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
+            })
           })
         } else if (
           !!window.localStorage.getItem("userId") &&
@@ -280,12 +281,7 @@ const useKeyPair = () => {
       },
       onSuccess: ([newKeyPair, shouldDeleteUserId]) => {
         setTimeout(() => {
-          mutate(
-            unstable_serialize([
-              `/user/details/${account}`,
-              { method: "POST", body: {} },
-            ])
-          ).then(() =>
+          mutateOptionalAuthSWRKey(`/user/${account}`).then(() =>
             setTimeout(() => {
               mutate(unstable_serialize(["delegateCashVaults", user?.id])).then(
                 () => {

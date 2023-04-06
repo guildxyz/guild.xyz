@@ -10,57 +10,32 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
+import Section from "components/common/Section"
 import { Question } from "phosphor-react"
-import { PlatformAccountDetails, PlatformName, PlatformType } from "types"
-import capitalize from "utils/capitalize"
+import platforms from "platforms/platforms"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkedAddress from "./LinkedAddress"
-import LinkedSocialAccount from "./LinkedSocialAccount"
+import SocialAccount from "./SocialAccount"
 
 const AccountConnections = () => {
-  const { isLoading, addresses, platformUsers } = useUser()
+  const { isLoading, addresses } = useUser()
   const { account } = useWeb3React()
 
   return (
     <Stack spacing="10" w="full">
-      <Section title="Linked social accounts">
-        {isLoading ? (
-          <Spinner />
-        ) : !!platformUsers?.[0] && !("platformUserId" in platformUsers[0]) ? (
-          <Text colorScheme="gray">
-            {`${platformUsers
-              ?.map((platformUser) =>
-                /**
-                 * TODO: the BE will return the displayable names for the platforms
-                 * too
-                 */
-                capitalize(platformUser.platformName.toLowerCase())
-              )
-              .join(
-                " and "
-              )} hidden. Verify that you're the owner of this account below to view`}
-          </Text>
-        ) : platformUsers?.length > 0 ? (
-          platformUsers.map(
-            ({
-              platformId,
-              platformUserId,
-              username,
-              avatar,
-            }: PlatformAccountDetails) => (
-              <LinkedSocialAccount
-                key={platformUserId}
-                name={username}
-                image={avatar}
-                type={PlatformType[platformId] as PlatformName}
-              />
-            )
-          )
-        ) : (
-          <Text colorScheme={"gray"}>No linked social accounts yet</Text>
-        )}
+      <Section title="Social accounts">
+        {Object.entries(platforms)
+          .filter(([platform]) => platform !== "POAP")
+          ?.map(([key, value]: any) => (
+            <SocialAccount
+              key={key}
+              type={key}
+              icon={value.icon}
+              colorScheme={value.colorScheme}
+              name={value.name}
+            />
+          ))}
       </Section>
       <Section
         title="Linked addresses"

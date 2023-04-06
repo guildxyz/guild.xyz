@@ -10,6 +10,8 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import REQUIREMENTS from "requirements"
+import CompleteCaptcha from "requirements/Captcha/components/CompleteCaptcha"
+import ConnectPolygonID from "requirements/PolygonId/components/ConnectPolygonID"
 import ConnectRequirementPlatformButton from "./ConnectRequirementPlatformButton"
 import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
@@ -52,10 +54,18 @@ const RequiementAccessIndicator = () => {
         isAlwaysOpen={!accessData?.access}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
-          Connect account to check access
+          {type === "CAPTCHA"
+            ? "Complete CAPTCHA to check access"
+            : "Connect account to check access"}
         </PopoverHeader>
         <PopoverFooter {...POPOVER_FOOTER_STYLES}>
-          <ConnectRequirementPlatformButton size="sm" iconSpacing={2} />
+          {type === "POLYGON_ID_QUERY" || type === "POLYGON_ID_BASIC" ? (
+            <ConnectPolygonID size="sm" iconSpacing={2} />
+          ) : type === "CAPTCHA" ? (
+            <CompleteCaptcha size="sm" iconSpacing={2} />
+          ) : (
+            <ConnectRequirementPlatformButton size="sm" iconSpacing={2} />
+          )}
         </PopoverFooter>
       </RequiementAccessIndicatorUI>
     )
@@ -69,7 +79,9 @@ const RequiementAccessIndicator = () => {
         isAlwaysOpen={!accessData?.access}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
-          {reqErrorData.msg ? `Error: ${reqErrorData.msg}` : `Couldn't check access`}
+          {reqErrorData?.msg
+            ? `Error: ${reqErrorData.msg}`
+            : `Couldn't check access`}
         </PopoverHeader>
       </RequiementAccessIndicatorUI>
     )

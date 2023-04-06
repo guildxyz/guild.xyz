@@ -1,32 +1,42 @@
 import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
-import { TOKEN_BUYER_CONTRACT } from "utils/guildCheckout/constants"
+import { usePostHog } from "posthog-js/react"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
 import usePurchaseAsset from "../../hooks/usePurchaseAsset"
+import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseButton = (): JSX.Element => {
-  const { chainId } = useWeb3React()
+  const posthog = usePostHog()
+  const { urlName } = useGuild()
+
+  const { account, chainId } = useWeb3React()
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const {
-    data: { priceInWei },
+    data: { priceToSendInWei },
     isValidating: isPriceLoading,
     error,
   } = usePrice()
+
+  const tokenBuyerContractData = useTokenBuyerContractData()
+
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
-    TOKEN_BUYER_CONTRACT[chainId]
+    tokenBuyerContractData[Chains[chainId]]?.address
   )
 
   const { onSubmit, isLoading, estimateGasError } = usePurchaseAsset()
 
   const isSufficientAllowance =
-    priceInWei && allowance ? BigNumber.from(priceInWei).lte(allowance) : false
+    priceToSendInWei && allowance
+      ? BigNumber.from(priceToSendInWei).lte(allowance)
+      : false
 
   const {
     coinBalance,
@@ -35,16 +45,17 @@ const PurchaseButton = (): JSX.Element => {
   } = useBalance(pickedCurrency, Chains[requirement?.chain])
 
   const pickedCurrencyIsNative =
-    pickedCurrency === RPC[Chains[chainId]].nativeCurrency.symbol
+    pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
 
   const isSufficientBalance =
-    priceInWei &&
+    priceToSendInWei &&
     (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gt(BigNumber.from(priceInWei))
-      : tokenBalance?.gt(BigNumber.from(priceInWei)))
+      ? coinBalance?.gt(BigNumber.from(priceToSendInWei))
+      : tokenBalance?.gt(BigNumber.from(priceToSendInWei)))
 
   const isDisabled =
+    !account ||
     error ||
     estimateGasError ||
     !agreeWithTOS ||
@@ -63,7 +74,14 @@ const PurchaseButton = (): JSX.Element => {
       (estimateGasError?.data?.message?.includes("insufficient")
         ? "Insufficient funds for gas"
         : "Couldn't estimate gas")) ??
-    (!isSufficientBalance && "Insufficient balance")
+    (account && !isSufficientBalance && "Insufficient balance")
+
+  const onClick = () => {
+    onSubmit()
+    posthog.capture("Click: PurchaseButton (GuildCheckout)", {
+      guild: urlName,
+    })
+  }
 
   return (
     <Button
@@ -73,7 +91,7 @@ const PurchaseButton = (): JSX.Element => {
       loadingText="Check your wallet"
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
-      onClick={onSubmit}
+      onClick={onClick}
       data-dd-action-name="PurchaseButton (GuildCheckout)"
     >
       {errorMsg || "Purchase"}

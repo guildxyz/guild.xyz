@@ -8,15 +8,16 @@ type JuiceboxProject = {
 }
 
 export const useJuicebox = () => {
-  const { data, isValidating } =
-    useSWRImmutable<Array<JuiceboxProject>>("/assets/juicebox")
+  const { data, isValidating } = useSWRImmutable<Array<JuiceboxProject>>(
+    "/assets/juicebox/project"
+  )
 
   return { projects: data, isLoading: isValidating }
 }
 
 export const useJuiceboxProject = (id: string) => {
   const { data, isValidating, error } = useSWRImmutable<JuiceboxProject>(
-    id ? `/assets/juicebox/${id}` : null
+    id ? `/assets/juicebox/project/${id}` : null
   )
 
   return { project: data, isLoading: isValidating, error }

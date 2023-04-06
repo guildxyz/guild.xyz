@@ -15,7 +15,7 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       env: "prod",
       silentMultipleInit: true,
       sessionReplaySampleRate: 10,
-      sessionSampleRate: 100,
+      sessionSampleRate: 50,
       trackInteractions: true,
       version: "1.0.0",
       proxyUrl: "/api/ddrum",

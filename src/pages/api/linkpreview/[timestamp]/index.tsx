@@ -120,20 +120,22 @@ const handler = async (req, _) => {
               </h1>
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: "16px",
-                paddingRight: "16px",
-                height: "32px",
-                backgroundColor: "#52525b",
-                color: "white",
-                fontWeight: "bold",
-                borderRadius: "6px",
-                fontSize: "18px",
-              }}
-            >{`${guilds?.length || 0} guilds`}</div>
+            <div style={{ display: "flex" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  paddingLeft: "16px",
+                  paddingRight: "16px",
+                  height: "32px",
+                  backgroundColor: "#52525b",
+                  color: "white",
+                  fontWeight: "bold",
+                  borderRadius: "6px",
+                  fontSize: "18px",
+                }}
+              >{`${guilds?.length || 0} guilds`}</div>
+            </div>
 
             <div
               style={{
@@ -345,7 +347,11 @@ const GuildCard = ({ guild, baseUrl }: GuildCardProps): JSX.Element => (
               stroke-width="24"
             />
           </svg>
-          <span>{guild.memberCount}</span>
+          <span>
+            {new Intl.NumberFormat("en", { notation: "compact" }).format(
+              guild.memberCount ?? 0
+            )}
+          </span>
         </div>
 
         <div

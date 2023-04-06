@@ -1,3 +1,4 @@
+import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import type { Chain } from "connectors"
 import { RequirementType } from "requirements"
 
@@ -75,17 +76,23 @@ type NFT = {
   slug: string
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
+type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE" | "POAP"
 
-type PlatformAccount = {
+type PlatformUserData = {
+  acessToken?: string
+  scope?: string
+  expiresIn?: number
+  invalidToken?: boolean
+  refreshToken?: string
+  avatar?: string
+  username?: string
+  readonly?: boolean
+}
+type PlatformAccountDetails = {
   platformId: number
   platformName: PlatformName
-}
-type PlatformAccountDetails = PlatformAccount & {
   platformUserId: string
-  username: string
-  avatar: string
-  platformUserData?: Record<string, any> // TODO: better types once we decide which properties will we store in this object on the backend
+  platformUserData?: PlatformUserData
 }
 
 type AddressConnectionProvider = "DELEGATE"
@@ -109,6 +116,14 @@ type GuildBase = {
   memberCount: number
 }
 
+type BrainCardData = {
+  id: string
+  title: string
+  tags?: Array<string>
+  icon?: string
+  backgroundImage?: string
+}
+
 type GuildAdmin = {
   id: number
   address: string
@@ -121,6 +136,7 @@ type PlatformGuildData = {
     inviteChannel: string
     invite?: string
     joinButton?: boolean
+    needCaptcha?: boolean
     mimeType?: never
     iconLink?: never
   }
@@ -128,17 +144,9 @@ type PlatformGuildData = {
     role?: "reader" | "commenter" | "writer"
     inviteChannel?: never
     joinButton?: never
+    needCaptcha?: never
     mimeType?: string
     iconLink?: string
-  }
-}
-
-type PlatformRoleData = {
-  DISCORD: {
-    role?: never
-  }
-  GOOGLE: {
-    role: "reader" | "commenter" | "writer"
   }
 }
 
@@ -162,20 +170,37 @@ type Requirement = {
   symbol: string
   decimals?: number
   isNegated: boolean
+  visibility?: Visibility
+
+  // temporary until POAP is not a real reward (for PoapRequirements instead of roleId)
+  poapId?: number
 
   // Props used inside the forms on the UI
+  formFieldId?: number
   nftRequirementType?: string
   balancyDecimals?: number
+  createdAt?: string
+  updatedAt?: string
+
+  // Used for creating a dummy requirement, when there are some requirements that are invisibile to the user
+  isHidden?: boolean
 }
 
 type RolePlatform = {
+  id: number
   platformRoleId?: string
   guildPlatformId?: number
   guildPlatform?: GuildPlatform
   index?: number
   isNew?: boolean
   roleId?: number
-  platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
+  visibility?: Visibility
+}
+
+enum Visibility {
+  PUBLIC = "PUBLIC",
+  PRIVATE = "PRIVATE",
+  HIDDEN = "HIDDEN",
 }
 
 type Role = {
@@ -188,6 +213,9 @@ type Role = {
   memberCount: number
   requirements: Requirement[]
   rolePlatforms: RolePlatform[]
+  visibility?: Visibility
+  hiddenRequirements?: boolean
+  hiddenRewards?: boolean
 }
 
 type GuildPlatform = {
@@ -215,6 +243,7 @@ type GuildPoap = {
   activated: boolean
   expiryDate: number
   poapContracts?: PoapContract[]
+  poapRequirements?: Requirement[]
 }
 
 const supportedSocialLinks = [
@@ -226,6 +255,7 @@ const supportedSocialLinks = [
   "MEDIUM",
   "SUBSTACK",
   "SNAPSHOT",
+  "SOUND",
   "WEBSITE",
 ] as const
 type SocialLinkKey = (typeof supportedSocialLinks)[number]
@@ -255,11 +285,21 @@ type Guild = {
   members: Array<string>
   poaps: Array<GuildPoap>
   onboardingComplete: boolean
+  featureFlags: FeatureFlag[]
+  hiddenRoles?: boolean
 }
 type GuildFormType = Partial<
   Pick<
     Guild,
-    "id" | "urlName" | "name" | "imageUrl" | "description" | "theme" | "contacts"
+    | "id"
+    | "urlName"
+    | "name"
+    | "imageUrl"
+    | "description"
+    | "roles"
+    | "theme"
+    | "contacts"
+    | "featureFlags"
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
@@ -371,7 +411,7 @@ enum ValidationMethod {
 }
 
 type MonetizePoapForm = {
-  chainId: number
+  chain: Chain
   token: string
   fee: number
   owner: string
@@ -394,6 +434,7 @@ type GoogleFile = {
 
 type VoiceParticipationForm = {
   poapId: number
+  serverId: string
   voiceChannelId: string
   voiceRequirement: {
     type: "PERCENT" | "MINUTE"
@@ -433,7 +474,16 @@ type VoiceRequirementParams = {
   voiceEventStartedAt?: number
 }
 
+type Without<First, Second> = {
+  [P in Exclude<keyof First, keyof Second>]?: never
+}
+
+type OneOf<First, Second> = First | Second extends object
+  ? (Without<First, Second> & Second) | (Without<Second, First> & First)
+  : First | Second
+
 export type {
+  OneOf,
   WalletConnectConnectionData,
   DiscordServerData,
   GuildAdmin,
@@ -451,6 +501,7 @@ export type {
   Role,
   GuildPlatform,
   GuildBase,
+  BrainCardData,
   Guild,
   SocialLinkKey,
   SocialLinks,
@@ -475,4 +526,4 @@ export type {
   PoapEventDetails,
   AddressConnectionProvider,
 }
-export { ValidationMethod, supportedSocialLinks }
+export { ValidationMethod, Visibility, supportedSocialLinks }

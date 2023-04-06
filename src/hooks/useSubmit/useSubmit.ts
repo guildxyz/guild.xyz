@@ -15,7 +15,7 @@ import { ValidationMethod } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
-type Options<ResponseType> = {
+export type UseSubmitOptions<ResponseType = void> = {
   onSuccess?: (response: ResponseType) => void
   onError?: (error: any) => void
 }
@@ -30,7 +30,7 @@ type FetcherFunction<ResponseType> = ({
 
 const useSubmit = <DataType, ResponseType>(
   fetch: (data?: DataType) => Promise<ResponseType>,
-  { onSuccess, onError }: Options<ResponseType> = {}
+  { onSuccess, onError }: UseSubmitOptions<ResponseType> = {}
 ) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<any>(undefined)
@@ -73,7 +73,7 @@ const DEFAULT_MESSAGE = "Please sign this message"
 
 const signCallbacks = [
   {
-    nameRegex: /Gnosis Safe Multisig/i,
+    domain: "safe.global",
     signCallback: gnosisSafeSignCallback,
     loadingText: "Safe transaction in progress",
   },
@@ -111,7 +111,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
     forcePrompt = false,
     keyPair,
     ...options
-  }: Options<ResponseType> & {
+  }: UseSubmitOptions<ResponseType> & {
     message?: string
     forcePrompt?: boolean
     keyPair: CryptoKeyPair
@@ -161,8 +161,8 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
           throw error
         })
         .then(async ([signed, val]) => {
-          const callbackData = signCallbacks.find(({ nameRegex }) =>
-            nameRegex.test(peerMeta?.name)
+          const callbackData = signCallbacks.find(({ domain }) =>
+            peerMeta?.url?.includes?.(domain)
           )
           if ((forcePrompt || !keyPair) && callbackData) {
             setSignLoadingText(callbackData.loadingText || defaultLoadingText)
@@ -200,7 +200,7 @@ const useSubmitWithSign = <ResponseType>(
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
     ...options
-  }: Options<ResponseType> & {
+  }: UseSubmitOptions<ResponseType> & {
     message?: string
     forcePrompt?: boolean
   } = {

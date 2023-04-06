@@ -1,15 +1,13 @@
-import { Circle, Icon } from "@chakra-ui/react"
+import { Circle, Icon, Img } from "@chakra-ui/react"
 import {
   GlobeHemisphereEast,
   IconProps,
-  Lightning,
   MediumLogo,
   SpotifyLogo,
   TwitterLogo,
   YoutubeLogo,
 } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
-import LensLogo from "static/socialIcons/lens.svg"
 import MirrorLogo from "static/socialIcons/mirror.svg"
 import SubstackLogo from "static/socialIcons/substack.svg"
 import { SocialLinkKey } from "types"
@@ -23,16 +21,17 @@ type Props = {
 
 const icons: Record<
   SocialLinkKey,
-  ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+  ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>> | string
 > = {
   TWITTER: TwitterLogo,
-  LENS: LensLogo,
+  LENS: "/requirementLogos/lens.png",
   YOUTUBE: YoutubeLogo,
   SPOTIFY: SpotifyLogo,
   MIRROR: MirrorLogo,
   MEDIUM: MediumLogo,
   SUBSTACK: SubstackLogo,
-  SNAPSHOT: Lightning,
+  SNAPSHOT: "/requirementLogos/snapshot.png",
+  SOUND: "/requirementLogos/sound.png",
   WEBSITE: GlobeHemisphereEast,
 }
 
@@ -45,6 +44,7 @@ const colors: Record<SocialLinkKey, { bg: string; icon: string }> = {
   MEDIUM: { bg: "#000000", icon: "white" },
   SUBSTACK: { bg: "#FF6719", icon: "white" },
   SNAPSHOT: { bg: "white", icon: "#F3B04E" },
+  SOUND: { bg: "black", icon: "white" },
   WEBSITE: { bg: "gray.900", icon: "white" },
 }
 const sizes: Record<Size, { bg: number; icon: number }> = {
@@ -60,7 +60,18 @@ const sizes: Record<Size, { bg: number; icon: number }> = {
 
 const SocialIcon = ({ type, size = "md" }: Props): JSX.Element => (
   <Circle bgColor={colors[type].bg} color={colors[type].icon} size={sizes[size].bg}>
-    <Icon boxSize={sizes[size].icon} as={icons[type]} />
+    {typeof icons[type] === "string" ? (
+      <Img boxSize={sizes[size].bg} src={icons[type] as string} />
+    ) : (
+      <Icon
+        boxSize={sizes[size].icon}
+        as={
+          icons[type] as ForwardRefExoticComponent<
+            IconProps & RefAttributes<SVGSVGElement>
+          >
+        }
+      />
+    )}
   </Circle>
 )
 

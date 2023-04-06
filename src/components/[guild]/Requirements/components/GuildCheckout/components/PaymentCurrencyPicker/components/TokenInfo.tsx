@@ -10,7 +10,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
-import usePrice from "components/[guild]/Requirements/components/GuildCheckout/hooks/usePrice"
+import { useWeb3React } from "@web3-react/core"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import useTokenData from "hooks/useTokenData"
@@ -20,6 +20,9 @@ import { Rest } from "types"
 type Props = {
   chainId: number
   address: string
+  isLoading?: boolean
+  error?: any
+  requiredAmount: number
   asMenuItem?: boolean
 } & Rest
 
@@ -27,27 +30,29 @@ const TokenInfo = ({
   chainId,
   address,
   asMenuItem,
+  isLoading,
+  error,
+  requiredAmount,
   ...rest
 }: Props): JSX.Element => {
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
-  const {
-    data: { priceInSellToken },
-    isValidating: isPriceDataLoading,
-    error: priceError,
-  } = usePrice(address)
-
-  const isTooSmallPrice = priceInSellToken
-    ? parseFloat(priceInSellToken.toFixed(3)) <= 0.0
+  const isTooSmallRequiredAmount = requiredAmount
+    ? parseFloat(requiredAmount.toFixed(3)) <= 0.0
     : undefined
 
   const {
     data: { symbol, decimals, logoURI },
-    error,
+    error: tokenDataError,
     isValidating: isTokenDataLoading,
   } = useTokenData(Chains[chainId], address)
 
-  const { coinBalance, tokenBalance, isLoading } = useBalance(address, chainId)
+  const { account } = useWeb3React()
+  const {
+    coinBalance,
+    tokenBalance,
+    isLoading: isBalanceLoading,
+  } = useBalance(address, chainId)
 
   const balance = formatUnits(
     (address === RPC[Chains[chainId]]?.nativeCurrency?.symbol
@@ -57,13 +62,13 @@ const TokenInfo = ({
       ? RPC[Chains[chainId]]?.nativeCurrency?.decimals
       : decimals ?? 18
   )
-  const formattedBalance = Number(balance).toFixed(3)
+  const formattedBalance = Number(Number(balance).toFixed(3))
 
   const Wrapper = asMenuItem ? MenuItem : Fragment
 
   return (
     <Wrapper
-      {...(asMenuItem ? { ...rest, isDisabled: !!priceError || !!error } : {})}
+      {...(asMenuItem ? { ...rest, isDisabled: !!error || !!tokenDataError } : {})}
     >
       <HStack spacing={4} maxW="calc(100% - 2rem)" {...(asMenuItem ? {} : rest)}>
         <SkeletonCircle isLoaded={!isTokenDataLoading} size="var(--chakra-space-11)">
@@ -79,14 +84,16 @@ const TokenInfo = ({
         </SkeletonCircle>
 
         <Stack spacing={1.5} maxW="calc(100% - 3rem)" alignItems={"flex-start"}>
-          <Skeleton isLoaded={!isTokenDataLoading && !isPriceDataLoading} h={5}>
+          <Skeleton isLoaded={!isTokenDataLoading && !isLoading} w="full" h={5}>
             <Text as="span" display="block" isTruncated>
-              {error
+              {tokenDataError
                 ? "Couldn't fetch token data"
-                : priceError
+                : error
                 ? `[?] ${symbol}`
                 : `${
-                    isTooSmallPrice ? "< 0.001" : priceInSellToken?.toFixed(3)
+                    isTooSmallRequiredAmount
+                      ? "< 0.001"
+                      : Number(requiredAmount?.toFixed(3))
                   } ${symbol}`}
               <Text as="span" colorScheme="gray">
                 {` (${RPC[Chains[chainId]].chainName})`}
@@ -95,15 +102,21 @@ const TokenInfo = ({
           </Skeleton>
 
           <Text as="span" colorScheme="gray" fontSize="xs">
-            {`Balance: `}
-            <Skeleton
-              isLoaded={!isLoading}
-              h={4}
-              display="inline-flex"
-              alignItems="center"
-            >
-              {`${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
-            </Skeleton>
+            {account ? (
+              <>
+                {`Balance: `}
+                <Skeleton
+                  isLoaded={!isBalanceLoading}
+                  h={4}
+                  display="inline-flex"
+                  alignItems="center"
+                >
+                  {`${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
+                </Skeleton>
+              </>
+            ) : (
+              "Connect wallet to check balance"
+            )}
           </Text>
         </Stack>
       </HStack>

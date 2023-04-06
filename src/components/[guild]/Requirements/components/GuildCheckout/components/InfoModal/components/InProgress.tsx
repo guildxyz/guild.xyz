@@ -1,22 +1,9 @@
-import {
-  Center,
-  Divider,
-  Flex,
-  ModalBody,
-  Spinner,
-  Stack,
-  Text,
-} from "@chakra-ui/react"
+import { Center, Flex, ModalBody, Spinner } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
+import { PropsWithChildren } from "react"
 import InfoModalFooter from "./InfoModalFooter"
-import PurchasedRequirementInfo from "./PurchasedRequirementInfo"
-import TransactionLink from "./TransactionLink"
 
-type Props = {
-  tx: string
-}
-
-const InProgress = ({ tx }: Props): JSX.Element => (
+const InProgress = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
   <CardMotionWrapper>
     <ModalBody>
       <Flex direction="column">
@@ -25,22 +12,7 @@ const InProgress = ({ tx }: Props): JSX.Element => (
         </Center>
       </Flex>
 
-      <Text mb={4}>
-        The blockchain is working its magic... Your transaction should be confirmed
-        shortly
-      </Text>
-
-      <TransactionLink tx={tx} />
-
-      <Divider mb={6} />
-
-      <Stack spacing={4}>
-        <Text as="span" fontWeight="bold">
-          You'll get:
-        </Text>
-
-        <PurchasedRequirementInfo />
-      </Stack>
+      {children}
     </ModalBody>
 
     <InfoModalFooter />

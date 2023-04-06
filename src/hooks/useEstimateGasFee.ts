@@ -1,7 +1,9 @@
 import { Contract } from "@ethersproject/contracts"
 import { formatUnits } from "@ethersproject/units"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { Chain, Chains, RPC } from "connectors"
 import { fetchNativeCurrencyPriceInUSD } from "pages/api/fetchPrice"
+import { useEffect, useState } from "react"
 import useSWRImmutable from "swr/immutable"
 
 const useEstimateGasFee = (
@@ -21,16 +23,21 @@ const useEstimateGasFee = (
       contract.estimateGas[methodName](...params),
     ])
 
-    return gasPrice.mul(gas)
+    return {
+      estimatedGasLimit: gas,
+      estimatedGasFee: gasPrice.mul(gas),
+    }
   }
 
   const shouldFetch = Boolean(contract && methodName && params?.length)
 
   const {
-    data: estimatedGasFee,
+    data,
     isValidating: isGasEstimationLoading,
     error: estimateGasError,
   } = useSWRImmutable(shouldFetch ? ["estimateGas", key] : null, estimateGasFee)
+
+  const { estimatedGasLimit, estimatedGasFee } = data ?? {}
 
   const convertGasFeeToUSD = async () => {
     const { chainId } = await contract.provider.getNetwork()
@@ -50,17 +57,26 @@ const useEstimateGasFee = (
   const {
     data: estimatedGasFeeInUSD,
     isValidating: isConvertLoading,
-    error: covertError,
+    error: convertError,
   } = useSWRImmutable(
     shouldConvert ? ["estimateGasUSD", contract, estimatedGasFee] : null,
     convertGasFeeToUSD
   )
 
+  const { addDatadogAction } = useDatadog()
+  const [sentError, setSentError] = useState(false)
+  useEffect(() => {
+    if (sentError || estimateGasError?.error?.data !== "0x6a12f104") return
+    addDatadogAction("InsufficientETH error (GuildCheckout)")
+    setSentError(true)
+  }, [sentError, estimateGasError])
+
   return {
+    estimatedGasLimit,
     estimatedGasFee,
     estimatedGasFeeInUSD,
     isEstimateGasLoading: isGasEstimationLoading || isConvertLoading,
-    estimateGasError: estimateGasError ?? covertError,
+    estimateGasError: estimateGasError ?? convertError,
   }
 }
 

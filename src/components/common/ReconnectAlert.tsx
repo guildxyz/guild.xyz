@@ -1,12 +1,12 @@
 import { Alert, AlertDescription, AlertIcon, HStack, Text } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useGateables from "hooks/useGateables"
-import platforms from "platforms"
-import { PlatformName } from "types"
+import platforms from "platforms/platforms"
+import { PlatformName, PlatformType } from "types"
 import Button from "./Button"
 
 const ReconnectAlert = ({ platformName }: { platformName: PlatformName }) => {
-  const { mutate } = useGateables(platformName)
+  const { mutate } = useGateables(PlatformType[platformName])
 
   const {
     onConnect,

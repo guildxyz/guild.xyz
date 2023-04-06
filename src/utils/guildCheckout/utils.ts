@@ -8,19 +8,35 @@ import {
   purchaseSupportedChains,
 } from "./constants"
 
-export type GeneratedGetAssetsParams = [
-  {
-    tokenAddress: string
-    amount: BigNumberish
-  },
-  string,
-  string[],
-  {
-    value?: BigNumberish
-  }
-]
+export type GeneratedGetAssetsParams =
+  | [
+      number,
+      {
+        tokenAddress: string
+        amount: BigNumberish
+      },
+      string,
+      string[],
+      {
+        value?: BigNumberish
+        gasLimit?: BigNumberish
+      }
+    ]
+  | [
+      {
+        tokenAddress: string
+        amount: BigNumberish
+      },
+      string,
+      string[],
+      {
+        value?: BigNumberish
+        gasLimit?: BigNumberish
+      }
+    ]
 
 const generateGetAssetsParams = (
+  guildId: number,
   account: string,
   chainId: number,
   pickedCurrency: string,
@@ -30,7 +46,7 @@ const generateGetAssetsParams = (
     return undefined
 
   const {
-    priceInWei,
+    priceToSendInWei,
     guildFeeInWei: rawGuildFeeInWei,
     buyAmountInWei,
     source,
@@ -39,7 +55,9 @@ const generateGetAssetsParams = (
   } = priceData
 
   if (
-    !priceInWei ||
+    !guildId ||
+    !account ||
+    !priceToSendInWei ||
     !rawGuildFeeInWei ||
     !buyAmountInWei ||
     !source ||
@@ -47,7 +65,7 @@ const generateGetAssetsParams = (
   )
     return undefined
 
-  const amountIn = BigNumber.from(priceInWei)
+  const amountIn = BigNumber.from(priceToSendInWei)
   const guildFeeInWei = BigNumber.from(rawGuildFeeInWei)
   const amountInWithFee = amountIn.add(guildFeeInWei)
   const amountOut = BigNumber.from(buyAmountInWei)
@@ -68,7 +86,23 @@ const generateGetAssetsParams = (
     .map((rpcData) => rpcData.nativeCurrency.symbol)
     .includes(pickedCurrency)
 
+  if (Chains[chainId] === "ARBITRUM")
+    return [
+      {
+        tokenAddress: isNativeCurrency ? NULL_ADDRESS : pickedCurrency,
+        amount: isNativeCurrency ? 0 : amountInWithFee,
+      },
+      `0x${
+        getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][source].commands
+      }`,
+      getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][
+        source
+      ].getEncodedParams(formattedData),
+      { value: isNativeCurrency ? amountInWithFee : undefined },
+    ]
+
   return [
+    guildId,
     {
       tokenAddress: isNativeCurrency ? NULL_ADDRESS : pickedCurrency,
       amount: isNativeCurrency ? 0 : amountInWithFee,

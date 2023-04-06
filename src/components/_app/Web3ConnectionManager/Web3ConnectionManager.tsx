@@ -6,6 +6,7 @@ import AccountModal from "components/common/Layout/components/Account/components
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import requestNetworkChangeHandler from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import { Chains, RPC } from "connectors"
+import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import {
@@ -16,6 +17,7 @@ import {
   useState,
 } from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
+import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
 import useEagerConnect from "./hooks/useEagerConnect"
 
 const Web3Connection = createContext({
@@ -36,7 +38,7 @@ const Web3Connection = createContext({
   ) => {},
   isDelegateConnection: false,
   setIsDelegateConnection: (_: boolean) => {},
-  newtowrkChangeInProgress: false,
+  isNetworkChangeInProgress: false,
 })
 
 const Web3ConnectionManager = ({
@@ -44,6 +46,9 @@ const Web3ConnectionManager = ({
 }: PropsWithChildren<any>): JSX.Element => {
   const { isActive, connector } = useWeb3React()
   const router = useRouter()
+
+  useContractWalletInfoToast()
+  useConnectFromLocalStorage()
 
   const {
     isOpen: isWalletSelectorModalOpen,
@@ -71,7 +76,7 @@ const Web3ConnectionManager = ({
       openWalletSelectorModal()
   }, [triedEager, isActive, router.query])
 
-  const [newtowrkChangeInProgress, setNetworkChangeInProgress] = useState(false)
+  const [isNetworkChangeInProgress, setNetworkChangeInProgress] = useState(false)
   const toast = useToast()
   const requestManualNetworkChange = (chain) => () =>
     toast({
@@ -113,7 +118,7 @@ const Web3ConnectionManager = ({
         requestNetworkChange,
         isDelegateConnection,
         setIsDelegateConnection,
-        newtowrkChangeInProgress,
+        isNetworkChangeInProgress,
       }}
     >
       {children}

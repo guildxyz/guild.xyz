@@ -11,10 +11,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import {
-  useRumAction,
-  WithRumComponentContext,
-} from "@datadog/rum-react-integration"
+import { useRumAction } from "@datadog/rum-react-integration"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useWeb3React } from "@web3-react/core"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -151,7 +148,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     opacity: 0,
                   })}
               transition="width .2s, opacity .2s"
-              overflow="hidden"
               mt="-1px"
             >
               <IconButton
@@ -257,4 +253,4 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   )
 }
 
-export default WithRumComponentContext("WalletSelectorModal", WalletSelectorModal)
+export default WalletSelectorModal

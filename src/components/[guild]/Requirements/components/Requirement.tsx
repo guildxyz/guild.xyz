@@ -1,6 +1,7 @@
 import {
   Box,
   Circle,
+  HStack,
   Img,
   SimpleGrid,
   Skeleton,
@@ -10,10 +11,14 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import SetVisibility from "components/[guild]/SetVisibility"
+import Visibility from "components/[guild]/Visibility"
 import { PropsWithChildren } from "react"
+import { Visibility as VisibilityType } from "types"
 import { useRequirementContext } from "./RequirementContext"
 
 export type RequirementProps = PropsWithChildren<{
+  fieldRoot?: string
   isImageLoading?: boolean
   image?: string | JSX.Element
   withImgBg?: boolean
@@ -28,6 +33,7 @@ const Requirement = ({
   withImgBg = true,
   rightElement,
   children,
+  fieldRoot,
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
   const requirement = useRequirementContext()
@@ -80,10 +86,20 @@ const Requirement = ({
         </SkeletonCircle>
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center">
-        <Text wordBreak="break-word">
-          {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-          {children}
-        </Text>
+        <HStack>
+          <Text wordBreak="break-word">
+            {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
+            {children}
+            {fieldRoot ? (
+              <SetVisibility ml={2} entityType="requirement" fieldBase={fieldRoot} />
+            ) : (
+              <Visibility
+                entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
+                ml="1"
+              />
+            )}
+          </Text>
+        </HStack>
 
         {footer}
       </VStack>
@@ -94,7 +110,7 @@ const Requirement = ({
 
 export const RequirementSkeleton = () => (
   <Requirement isImageLoading={true}>
-    <Skeleton>Loading requirement...</Skeleton>
+    <Skeleton as="span">Loading requirement...</Skeleton>
   </Requirement>
 )
 
