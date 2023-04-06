@@ -7,15 +7,19 @@ describe("without wallet", () => {
     cy.visit("/create-guild")
   })
 
-  it("shows connect wallet buttons", () => {
+  it("shows connect wallet modal", () => {
     cy.getByDataTest("platforms-grid").within(() => {
-      cy.get("button").each(($btn) => {
-        cy.wrap($btn).should("contain.text", "Connect Wallet")
-      })
+      cy.get("div[role='group']").first().click()
     })
-  })
+    cy.getByDataTest("wallet-selector-modal").should("exist")
 
-  // TODO: we shouldn't allow starting the  platformless guild creation flow without wallet
+    cy.getByDataTest("wallet-selector-modal").within(() => {
+      cy.get("button[aria-label='Close']").click()
+    })
+
+    cy.findByText("Create guild without platform").click()
+    cy.getByDataTest("wallet-selector-modal").should("exist")
+  })
 })
 
 describe("with wallet", () => {
