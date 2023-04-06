@@ -5,7 +5,7 @@ import TxValueFormControl from "./TxValueFormControl"
 
 const AlchemyTxValue = ({ baseFieldPath }: RequirementFormProps): JSX.Element => (
   <>
-    <AddressFormControl baseFieldPath={baseFieldPath} />
+    <AddressFormControl baseFieldPath={baseFieldPath} type="ASSET" />
 
     <TxValueFormControl baseFieldPath={baseFieldPath} />
 

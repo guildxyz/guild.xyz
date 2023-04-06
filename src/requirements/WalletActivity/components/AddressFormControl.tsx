@@ -13,10 +13,14 @@ import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import parseFromObject from "utils/parseFromObject"
 
 type Props = {
+  type?: "ASSET" | "ADDRESS"
   baseFieldPath: string
 }
 
-const AddressFormControl = ({ baseFieldPath }: Props): JSX.Element => {
+const AddressFormControl = ({
+  type = "ADDRESS",
+  baseFieldPath,
+}: Props): JSX.Element => {
   const {
     register,
     formState: { errors },
@@ -35,7 +39,7 @@ const AddressFormControl = ({ baseFieldPath }: Props): JSX.Element => {
       isRequired
       isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
     >
-      <FormLabel>Asset address</FormLabel>
+      <FormLabel>{`${type === "ADDRESS" ? "Wallet" : "Asset"} address`}</FormLabel>
       <InputGroup>
         {address && (symbol || isValidating) && (
           <InputLeftAddon fontWeight="semibold">

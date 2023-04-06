@@ -7,7 +7,7 @@ const AlchemyTxValueRelative = ({
   baseFieldPath,
 }: RequirementFormProps): JSX.Element => (
   <>
-    <AddressFormControl baseFieldPath={baseFieldPath} />
+    <AddressFormControl baseFieldPath={baseFieldPath} type="ASSET" />
 
     <TxValueFormControl baseFieldPath={baseFieldPath} />
 
