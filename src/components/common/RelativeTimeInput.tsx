@@ -31,7 +31,7 @@ const ControlledRelativeTimeInput = ({ fieldName, ...props }: Props) => {
   } = useController({
     name: fieldName,
     rules: props.isRequired && {
-      validate: (newValue) => !isNaN(newValue) || "Invalid value.",
+      validate: (newValue) => !newValue || !isNaN(newValue) || "Invalid value.",
     },
   })
 
@@ -79,6 +79,7 @@ const RelativeTimeInput = forwardRef(
               borderBottomRightRadius: 0,
             },
           }}
+          min={0}
         >
           <NumberInputField />
           <NumberInputStepper>

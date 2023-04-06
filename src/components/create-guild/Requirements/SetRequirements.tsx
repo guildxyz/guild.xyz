@@ -112,7 +112,7 @@ const SetRequirements = (): JSX.Element => {
               const type: RequirementType = getValues(`requirements.${i}.type`)
 
               return (
-                <CardMotionWrapper key={field.id}>
+                <CardMotionWrapper key={field.formFieldId}>
                   <RequirementEditableCard
                     type={type}
                     field={field}

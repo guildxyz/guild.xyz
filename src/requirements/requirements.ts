@@ -148,7 +148,14 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Github/GithubForm")
     ),
-    types: ["GITHUB", "GITHUB_STARRING"],
+    types: [
+      "GITHUB",
+      "GITHUB_STARRING",
+      "GITHUB_ACCOUNT_AGE",
+      "GITHUB_ACCOUNT_AGE_RELATIVE",
+      "GITHUB_COMMIT_COUNT",
+      "GITHUB_COMMIT_COUNT_RELATIVE",
+    ],
     isPlatform: true,
   },
   {
