@@ -1,37 +1,30 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import { ControlledTimestampInput } from "components/common/TimestampInput"
-import { useFormContext, useFormState } from "react-hook-form"
+import { useFormState, useWatch } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 type Props = {
   baseFieldPath: string
   isMinAmountRequired?: boolean
   isMaxAmountRequired?: boolean
 }
-const GithubAccountAge = ({
-  baseFieldPath,
-  isMinAmountRequired,
-  isMaxAmountRequired,
-}: Props) => {
+const GithubAccountAge = ({ baseFieldPath }: Props) => {
   const { errors } = useFormState()
-  const { getValues } = useFormContext()
+
+  const minAmount = useWatch({ name: `${baseFieldPath}.data.minAmount` })
+  const maxAmount = useWatch({ name: `${baseFieldPath}.data.maxAmount` })
 
   return (
     <>
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
-        isRequired={
-          !isMinAmountRequired
-            ? false
-            : !getValues(`${baseFieldPath}.data.maxAmount`)
-        }
       >
-        <FormLabel>From</FormLabel>
+        <FormLabel>Minimum registration date</FormLabel>
         <ControlledTimestampInput
           fieldName={`${baseFieldPath}.data.minAmount`}
-          isRequired={
-            !isMinAmountRequired
-              ? false
-              : !getValues(`${baseFieldPath}.data.maxAmount`)
+          max={
+            maxAmount
+              ? new Date(maxAmount).toISOString().split("T")[0]
+              : new Date().toISOString().split("T")[0]
           }
         />
         <FormErrorMessage>
@@ -40,21 +33,12 @@ const GithubAccountAge = ({
       </FormControl>
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.maxAmount}
-        isRequired={
-          !isMaxAmountRequired
-            ? false
-            : !getValues(`${baseFieldPath}.data.minAmount`)
-        }
       >
-        <FormLabel>To</FormLabel>
+        <FormLabel>Maximum registration date</FormLabel>
 
         <ControlledTimestampInput
           fieldName={`${baseFieldPath}.data.maxAmount`}
-          isRequired={
-            !isMaxAmountRequired
-              ? false
-              : !getValues(`${baseFieldPath}.data.minAmount`)
-          }
+          min={new Date(minAmount || null).toISOString().split("T")[0]}
         />
 
         <FormErrorMessage>

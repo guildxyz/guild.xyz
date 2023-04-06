@@ -48,6 +48,9 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         delete (processedRequirement as any).logic
         delete (processedRequirement as any).balancyDecimals
 
+        // only used on the frontend
+        delete (processedRequirement as any).formFieldId
+
         return processedRequirement
       })
   )

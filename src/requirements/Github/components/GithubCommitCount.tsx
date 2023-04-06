@@ -31,11 +31,7 @@ const GithubCommitCount = ({ baseFieldPath }: RequirementFormProps) => {
 
   return (
     <>
-      <GithubAccountAge
-        baseFieldPath={baseFieldPath}
-        isMinAmountRequired={false}
-        isMaxAmountRequired={false}
-      />
+      <GithubAccountAge baseFieldPath={baseFieldPath} />
 
       <FormControl
         isRequired

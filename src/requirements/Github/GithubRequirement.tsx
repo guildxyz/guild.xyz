@@ -1,4 +1,5 @@
 import { Icon } from "@chakra-ui/react"
+import Link from "components/common/Link"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
@@ -7,8 +8,8 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import Link from "components/common/Link"
 import { GithubLogo } from "phosphor-react"
+import pluralize from "utils/pluralize"
 
 const GithubRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
@@ -24,7 +25,7 @@ const GithubRequirement = (props: RequirementProps) => {
           case "GITHUB_STARRING":
             return (
               <>
-                Give a star to the{" "}
+                {"Give a star to the "}
                 <Link
                   href={requirement.data.id ?? ""}
                   isExternal
@@ -32,29 +33,29 @@ const GithubRequirement = (props: RequirementProps) => {
                   fontWeight="medium"
                 >
                   {requirement.data.id.match(/https:\/\/github\.com\/(.+)$/i)[1]}
-                </Link>{" "}
-                repository
+                </Link>
+                {" repository"}
               </>
             )
           case "GITHUB_ACCOUNT_AGE":
             return (
               <>
-                {" Github account"}
+                {"Have a GitHub account"}
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {" is between "}
+                    {" which was created between "}
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
                     {" and "}
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {" exist since at least "}
+                    {" which was created after "}
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    {"before "}
+                    {" which was created before "}
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : null}
@@ -63,25 +64,24 @@ const GithubRequirement = (props: RequirementProps) => {
           case "GITHUB_ACCOUNT_AGE_RELATIVE":
             return (
               <>
-                {" Github account is "}
+                {"Have a GitHub account "}
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {" between "}
+                    {" which was created in the last "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
-                    {" and "}
+                    {" - "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.maxAmount}
                     />
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"at least "}
+                    {"no older than "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
-                    {" at least "}
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
@@ -96,59 +96,56 @@ const GithubRequirement = (props: RequirementProps) => {
           case "GITHUB_COMMIT_COUNT":
             return (
               <>
+                {"Have a GitHub account"}
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {"Github account is between "}
+                    {" which was created between "}
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
                     {" and "}
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"Github account was created at least "}
-                    <DataBlockWithRelativeDate
-                      timestamp={requirement.data.minAmount}
-                    />
-                    {" ago"}
+                    {" which was created after "}
+                    <DataBlockWithDate timestamp={requirement.data.minAmount} />
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
+                    {" which was created before "}
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : null}
                 {requirement.data.maxAmount || requirement.data.minAmount
                   ? " and it has at least "
-                  : "Github account has at least "}
-                <DataBlock>
-                  {requirement.data.id} commit{requirement.data.id > 1 ? "s" : ""}
-                </DataBlock>
+                  : " with at least "}
+                <DataBlock>{pluralize(requirement.data.id, "commit")}</DataBlock>
               </>
             )
           case "GITHUB_COMMIT_COUNT_RELATIVE":
             return (
               <>
+                {"Have a GitHub account "}
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {"Github account is between "}
+                    {" which was created in the last "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
-                    {" and "}
+                    {" - "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.maxAmount}
                     />
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"Github account was created at least "}
+                    {"no older than "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
-                    {" ago"}
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    {"Github account was created after "}
+                    {"older than "}
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.maxAmount}
                     />
@@ -156,11 +153,8 @@ const GithubRequirement = (props: RequirementProps) => {
                 ) : null}
                 {requirement.data.maxAmount || requirement.data.minAmount
                   ? " and it has at least "
-                  : "Github account has at least "}
-
-                <DataBlock>
-                  {requirement.data.id} commit{requirement.data.id > 1 ? "s" : ""}
-                </DataBlock>
+                  : " with at least "}
+                <DataBlock>{pluralize(requirement.data.id, "commit")}</DataBlock>
               </>
             )
         }

@@ -1,63 +1,34 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import { ControlledRelativeTimeInput } from "components/common/RelativeTimeInput"
-import { useFormContext, useFormState } from "react-hook-form"
+import { useFormState } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 type Props = {
   baseFieldPath: string
   isMinAmountRequired?: boolean
   isMaxAmountRequired?: boolean
 }
-const GithubAccountAgeRelative = ({
-  baseFieldPath,
-  isMinAmountRequired,
-  isMaxAmountRequired,
-}: Props) => {
+const GithubAccountAgeRelative = ({ baseFieldPath }: Props) => {
   const { errors } = useFormState()
-  const { getValues } = useFormContext()
 
   return (
     <>
       <FormControl
-        isRequired={
-          !isMinAmountRequired
-            ? false
-            : !getValues(`${baseFieldPath}.data.maxAmount`)
-        }
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
       >
-        <FormLabel>From</FormLabel>
+        <FormLabel>Minimum account age</FormLabel>
 
-        <ControlledRelativeTimeInput
-          fieldName={`${baseFieldPath}.data.minAmount`}
-          isRequired={
-            !isMinAmountRequired
-              ? false
-              : !getValues(`${baseFieldPath}.data.maxAmount`)
-          }
-        />
+        <ControlledRelativeTimeInput fieldName={`${baseFieldPath}.data.minAmount`} />
 
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath).data?.minAmount?.message}
         </FormErrorMessage>
       </FormControl>
       <FormControl
-        isRequired={
-          !isMaxAmountRequired
-            ? false
-            : !getValues(`${baseFieldPath}.data.minAmount`)
-        }
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.maxAmount}
       >
-        <FormLabel>To</FormLabel>
+        <FormLabel>Maximum account age</FormLabel>
 
-        <ControlledRelativeTimeInput
-          fieldName={`${baseFieldPath}.data.maxAmount`}
-          isRequired={
-            !isMaxAmountRequired
-              ? false
-              : !getValues(`${baseFieldPath}.data.minAmount`)
-          }
-        />
+        <ControlledRelativeTimeInput fieldName={`${baseFieldPath}.data.maxAmount`} />
 
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath).data?.maxAmount?.message}

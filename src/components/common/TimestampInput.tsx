@@ -21,6 +21,7 @@ const ControlledTimestampInput = ({ fieldName, ...props }: Props): JSX.Element =
       value={value}
       onChange={onChange}
       onBlur={onBlur}
+      {...props}
     />
   )
 }
