@@ -1,9 +1,20 @@
+import "../0-platformless/0-cleanup.spec"
+
+const USER_ADDRESS = "0x304Def656Babc745c53782639D3CaB00aCe8C843"
+const MOCK_AUTH_DATA = {
+  type: "OAUTH_SUCCESS",
+  data: {
+    platformName: "DISCORD",
+    scope: "guilds identify guilds.members.read",
+  },
+}
+
 before(() => {
   cy.disconnectMetamaskWalletFromAllDapps()
 })
 
 describe("create-discord-guild", () => {
-  beforeEach(() => {
+  before(() => {
     cy.visit("/create-guild", {
       onBeforeLoad(win) {
         cy.stub(win, "open").as("winOpen")
@@ -12,61 +23,85 @@ describe("create-discord-guild", () => {
     cy.connectWallet()
   })
 
-  it("can open Discord auth window", () => {
+  it("can authenticate with Discord and create a guild", () => {
+    cy.getByDataTest("DISCORD-select-button").click()
+
+    // TODO: Guild API URL to env?
     cy.intercept("https://api.guild.xyz/v1/guild/listGateables", {
       statusCode: 200,
       fixture: "testUserDiscordGateables.json",
     }).as("fetchDiscordGateables")
 
-    // TODO: use the data-test attr. here
-    cy.findByText("Select server").click()
+    cy.intercept("https://api.guild.xyz/v1/user/connect", {
+      statusCode: 200,
+      fixture: "connectDiscord.json",
+    }).as("connectDiscord")
+
+    cy.getByDataTest("DISCORD-select-button").click()
     cy.get("@winOpen").should("be.called")
 
-    // cy.window().then((wnd) => {
-    //   wnd.postMessage({
-    //     type: "OAUTH_SUCCESS",
-    //     data: "Bearer 12345",
-    //   })
-    // })
+    cy.window().then((popupWindow) => {
+      popupWindow.localStorage.setItem(
+        "DISCORD_shouldConnect",
+        JSON.stringify(MOCK_AUTH_DATA)
+      )
+      popupWindow.close()
+    })
 
-    window.localStorage.setItem(
-      `oauth_popup_data_${Cypress.env("discordClientId")}`,
-      JSON.stringify({
-        type: "OAUTH_SUCCESS",
-        csrfToken: "", // ?...
-        data: {},
+    cy.wait("@connectDiscord")
+
+    cy.visit("/create-guild")
+    cy.intercept(`https://api.guild.xyz/v1/user/${USER_ADDRESS}`, (req) => {
+      req.continue((res) => {
+        res.body = {
+          ...res.body,
+          platformUsers: [
+            {
+              platformId: 1,
+              platformName: "DISCORD",
+              platformUserId: "12345",
+            },
+          ],
+        }
       })
-    )
+    }).as("modifiedUserResponse")
 
+    // Select server
+    cy.getByDataTest("DISCORD-select-button-connected").click()
     cy.wait("@fetchDiscordGateables")
 
-    // TODO: select server, etc.
+    cy.intercept("https://api.guild.xyz/v1/platform/guild/DISCORD/*").as(
+      "useGuildByPlatformId"
+    )
+    cy.wait("@useGuildByPlatformId")
 
-    cy.get("div[aria-current='step']").should("contain.text", "2")
+    cy.getByDataTest("select-dc-server-button").click()
+    cy.get("video[src='/videos/dc-bot-role-config-guide.webm']").should("exist")
 
+    cy.findByText("Next").click()
+
+    // Select a template
+    cy.findByText("Growth").click({ force: true })
+    cy.get("div[aria-current='step']").last().should("contain.text", "Growth")
     cy.findByText("Start from scratch").click({ force: true })
     cy.get("div[aria-current='step']").last().should("contain.text", "Basic")
 
     cy.findByText("Next").click()
 
-    cy.get("input[name='name']").should("have.value")
-    cy.getByDataTest("create-guild-button").should("be.enabled")
+    // Check if the form is valid
+    cy.get("input[name='name']").should("have.value", Cypress.env("guildName"))
 
+    // Create guild
+    cy.getByDataTest("create-guild-button").should("be.enabled")
     cy.getByDataTest("create-guild-button").click()
+
     cy.wait(10_000)
   })
 
-  // it("can authenticate with Discord", () => {
-
-  // })
-
-  // it("can select a Discord server", () => {})
-
-  // it("can select a template", () => {})
-
-  // it("can fill basic info form", () => {})
-
-  // it("can create a guild", () => {})
+  it(`/${Cypress.env("guildUrlName")} exists`, () => {
+    cy.visit(`/${Cypress.env("guildUrlName")}`)
+    cy.get("h1").should("contain.text", Cypress.env("guildName"))
+  })
 })
 
 export {}

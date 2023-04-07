@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import DisplayCard from "components/common/DisplayCard"
+import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Image from "next/image"
 import { CaretRight } from "phosphor-react"
@@ -29,11 +30,20 @@ const PlatformSelectButton = ({
 
   const selectPlatform = () => onSelection(platform)
 
+  const user = useUser()
+  const isPlatformConnected = user.platformUsers?.some(
+    ({ platformName, platformUserData }) =>
+      platformName === platform && !platformUserData?.readonly
+  )
+
   return (
     <DisplayCard
       cursor="pointer"
       onClick={!account ? openWalletSelectorModal : onClick ?? selectPlatform}
       {...rest}
+      data-test={`${platform}-select-button${
+        isPlatformConnected ? "-connected" : ""
+      }`}
     >
       <HStack spacing={4}>
         <Circle size="14" pos="relative" overflow="hidden">
