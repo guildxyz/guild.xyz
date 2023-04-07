@@ -163,6 +163,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
           rightIcon={SpeakerHigh}
           FormComponent={PoapVoiceForm}
           poapId={guildPoap?.poapIdentifier}
+          isDisabled
         />
       )}
       <AddRequirement onAdd={(d) => append(d)} />
