@@ -93,7 +93,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Order roles</ModalHeader>
+          <ModalHeader>Role order</ModalHeader>
           <ModalCloseButton />
           <ModalBody className="custom-scrollbar">
             <Reorder.Group axis="y" values={roleIds} onReorder={setRoleIds}>

@@ -54,7 +54,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
           </Button>
         </OnboardingMarker>
         <Divider orientation="vertical" h="8" />
-        <Menu>
+        <Menu placement="bottom-end">
           <MenuButton
             isActive={isOrderModalOpen}
             as={IconButton}
@@ -66,7 +66,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
               onClick={onOrderModalOpen}
               icon={<ListNumbers />}
             >
-              Order roles
+              Reorder roles
             </MenuItem>
           </MenuList>
         </Menu>
