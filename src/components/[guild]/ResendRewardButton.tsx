@@ -6,15 +6,15 @@ import useJoin from "./JoinModal/hooks/useJoin"
 
 const TIMEOUT = 60_000
 
-const RecheckAccessButton = (): JSX.Element => {
-  const [latestRecheckDate, setLatestRecheckDate] = useLocalStorage(
-    "latestRecheckDate",
+const ResendRewardButton = (): JSX.Element => {
+  const [latestResendDate, setLatestResendDate] = useLocalStorage(
+    "latestResendDate",
     -Infinity
   )
   const [dateNow, setDateNow] = useState(Date.now())
-  const canRecheck = dateNow - latestRecheckDate > TIMEOUT
+  const canResend = dateNow - latestResendDate > TIMEOUT
 
-  const { onSubmit, isLoading } = useJoin(() => setLatestRecheckDate(Date.now()))
+  const { onSubmit, isLoading } = useJoin(() => setLatestResendDate(Date.now()))
 
   useEffect(() => {
     const interval = setInterval(() => setDateNow(Date.now()), TIMEOUT)
@@ -23,7 +23,13 @@ const RecheckAccessButton = (): JSX.Element => {
 
   return (
     <Tooltip
-      label={canRecheck ? "Re-check access" : "You can check access once per minute"}
+      label={
+        isLoading
+          ? "Sending rewards..."
+          : canResend
+          ? "Re-send rewards"
+          : "You can use this function once per minute"
+      }
       sx={{
         "@-webkit-keyframes rotate": {
           from: {
@@ -44,17 +50,17 @@ const RecheckAccessButton = (): JSX.Element => {
       }}
     >
       <IconButton
-        aria-label="Re-check access"
+        aria-label="Re-send rewards"
         icon={<ArrowsClockwise />}
         minW="44px"
         variant="ghost"
         rounded="full"
-        onClick={canRecheck ? onSubmit : undefined}
+        onClick={canResend ? onSubmit : undefined}
         animation={isLoading ? "rotate 1s infinite linear" : undefined}
-        isDisabled={isLoading || !canRecheck}
+        isDisabled={isLoading || !canResend}
       />
     </Tooltip>
   )
 }
 
-export default RecheckAccessButton
+export default ResendRewardButton

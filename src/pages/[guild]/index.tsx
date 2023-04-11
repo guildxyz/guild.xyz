@@ -69,8 +69,8 @@ const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAler
 const DynamicActiveStatusUpdates = dynamic(
   () => import("components/[guild]/ActiveStatusUpdates")
 )
-const DynamicRecheckAccessButton = dynamic(
-  () => import("components/[guild]/RecheckAccessButton")
+const DynamicResendRewardButton = dynamic(
+  () => import("components/[guild]/ResendRewardButton")
 )
 
 const GuildPage = (): JSX.Element => {
@@ -220,7 +220,7 @@ const GuildPage = (): JSX.Element => {
         ) : (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
             <HStack>
-              {isMember && <DynamicRecheckAccessButton />}
+              {isMember && <DynamicResendRewardButton />}
               {!isMember ? (
                 <JoinButton />
               ) : !isAdmin ? (
