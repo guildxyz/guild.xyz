@@ -174,6 +174,15 @@ const FiltersInput = (): JSX.Element => {
     setShouldRemoveLastFilter(true)
   }
 
+  useEffect(() => {
+    const foundSearchOption = searchOptions.find(({ label }) => label === inputValue)
+    if (
+      foundSearchOption &&
+      activeFilters.find(({ filter }) => foundSearchOption.value === filter)
+    )
+      setInputValue("")
+  }, [inputValue])
+
   return (
     <>
       <Box
@@ -222,8 +231,6 @@ const FiltersInput = (): JSX.Element => {
               htmlSize={size}
               onKeyUp={onKeyUp}
               {...filteredInputProps}
-              defaultValue={undefined}
-              data-value={undefined}
             />
           </Flex>
 
