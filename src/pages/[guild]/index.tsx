@@ -400,7 +400,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   if (!data?.id)
     return {
       props: {},
-      revalidate: 10,
+      revalidate: 60,
     }
 
   // Removing the members list, and then we refetch them on client side. This way the members won't be included in the SSG source code.
@@ -418,7 +418,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
         [endpoint]: filteredData,
       },
     },
-    revalidate: 10,
+    revalidate: 60,
   }
 }
 
