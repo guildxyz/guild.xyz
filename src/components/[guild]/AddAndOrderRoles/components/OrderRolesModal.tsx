@@ -47,13 +47,28 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     })
 
   const { onSubmit, isLoading } = useSubmitWithSign(submit, {
-    onSuccess: () => {
+    onSuccess: (res) => {
       toast({
         status: "success",
         title: "Successfully edited role order",
       })
       onClose()
-      mutateGuild()
+      mutateGuild(
+        (oldData) => ({
+          ...oldData,
+          /**
+           * Can't do just `roles: res`, because the requirements aren't included in
+           * the role objects in the response. After the API refactor (when they
+           * won't be in the original guild state anyway) we'll be able to switch to
+           * that
+           */
+          roles: oldData.roles.map((role) => ({
+            ...role,
+            position: res.find((resRole) => resRole.id === role.id).position,
+          })),
+        }),
+        { revalidate: false }
+      )
     },
     onError: (err) => showErrorToast(err),
   })
