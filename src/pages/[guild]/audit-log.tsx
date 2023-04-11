@@ -37,7 +37,6 @@ const AuditLog = (): JSX.Element => {
       textColor={textColor}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
-      showBackButton
     >
       <Tabs />
       <AuditLogFiltersBar />
