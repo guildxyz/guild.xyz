@@ -1,6 +1,4 @@
 import {
-  Divider,
-  HStack,
   Icon,
   Popover,
   PopoverArrow,
@@ -9,6 +7,7 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Portal,
+  Stack,
   Table,
   Tbody,
   Td,
@@ -35,7 +34,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
     <Requirement
       image={<Icon as={Function} boxSize={6} />}
       footer={
-        <HStack divider={<Divider orientation="vertical" h="4" />} spacing={3}>
+        <Stack direction={["column", "row"]} spacing={2} alignItems="start">
           <BlockExplorerUrl />
 
           <Popover placement="bottom">
@@ -92,7 +91,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
               </PopoverContent>
             </Portal>
           </Popover>
-        </HStack>
+        </Stack>
       }
       {...props}
     >

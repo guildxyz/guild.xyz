@@ -148,7 +148,14 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Github/GithubForm")
     ),
-    types: ["GITHUB", "GITHUB_STARRING"],
+    types: [
+      "GITHUB",
+      "GITHUB_STARRING",
+      "GITHUB_ACCOUNT_AGE",
+      "GITHUB_ACCOUNT_AGE_RELATIVE",
+      "GITHUB_COMMIT_COUNT",
+      "GITHUB_COMMIT_COUNT_RELATIVE",
+    ],
     isPlatform: true,
   },
   {
@@ -346,18 +353,18 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["CASK"],
   },
-  {
-    icon: "/requirementLogos/101.png",
-    name: "101",
-    fileNameBase: "101",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/101/101Requirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/101/101Form")
-    ),
-    types: ["101"],
-  },
+  // {
+  //   icon: "/requirementLogos/101.png",
+  //   name: "101",
+  //   fileNameBase: "101",
+  //   displayComponent: dynamic<RequirementProps>(
+  //     () => import("requirements/101/101Requirement")
+  //   ),
+  //   formComponent: dynamic<RequirementFormProps>(
+  //     () => import("requirements/101/101Form")
+  //   ),
+  //   types: ["101"],
+  // },
   {
     icon: "/requirementLogos/rabbithole.png",
     name: "RabbitHole",

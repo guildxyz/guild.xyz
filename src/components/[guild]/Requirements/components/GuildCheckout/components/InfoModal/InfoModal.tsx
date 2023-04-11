@@ -1,4 +1,9 @@
-import { ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react"
+import {
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+} from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
 import { AnimatePresence } from "framer-motion"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
@@ -19,13 +24,18 @@ const InfoModal = ({
   successComponent,
   errorComponent,
 }: Props): JSX.Element => {
-  const { isInfoModalOpen, txSuccess, txError } = useGuildCheckoutContext()
+  const { isInfoModalOpen, onInfoModalClose, txSuccess, txError } =
+    useGuildCheckoutContext()
 
   return (
-    <Modal isOpen={isInfoModalOpen} onClose={() => {}}>
+    <Modal
+      isOpen={isInfoModalOpen}
+      onClose={txSuccess ? onInfoModalClose : undefined}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>
+        {txSuccess && <ModalCloseButton />}
 
         <AnimatePresence>
           {txError ? (

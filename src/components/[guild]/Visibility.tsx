@@ -15,11 +15,10 @@ const Visibility = ({ entityVisibility, showTagLabel, ...tagProps }: Props) => {
     >
       <Tag
         bg={showTagLabel ? undefined : "unset"}
-        ml={1}
         color={showTagLabel ? undefined : "gray"}
         {...tagProps}
       >
-        <TagLeftIcon as={VisibilityIcon} boxSize={"16px"} />
+        <TagLeftIcon as={VisibilityIcon} boxSize={3.5} />
         {showTagLabel && (
           <TagLabel>{visibilityData[entityVisibility].title}</TagLabel>
         )}

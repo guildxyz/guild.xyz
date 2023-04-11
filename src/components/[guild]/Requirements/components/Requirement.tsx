@@ -95,6 +95,7 @@ const Requirement = ({
             ) : (
               <Visibility
                 entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
+                ml="1"
               />
             )}
           </Text>

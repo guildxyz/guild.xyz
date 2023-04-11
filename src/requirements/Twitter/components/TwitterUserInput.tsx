@@ -1,19 +1,20 @@
 import {
-  Circle,
   FormControl,
   FormErrorMessage,
   FormLabel,
   HStack,
+  Img,
   Input,
   InputGroup,
   InputLeftElement,
+  SkeletonCircle,
 } from "@chakra-ui/react"
 import useDebouncedState from "hooks/useDebouncedState"
-import Image from "next/image"
-import { useEffect, useState } from "react"
 import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import useSWRImmutable from "swr/immutable"
 import parseFromObject from "utils/parseFromObject"
+import { TWITTER_HANDLE_REGEX } from "../TwitterRequirement"
 
 const TwitterUserInput = ({ baseFieldPath }: RequirementFormProps) => {
   const { errors } = useFormState()
@@ -27,12 +28,11 @@ const TwitterUserInput = ({ baseFieldPath }: RequirementFormProps) => {
 
   const debouncedUsername = useDebouncedState(field.value)
 
-  const [shouldFallbackToDefaultImage, setShouldFallbackToDefaultImage] =
-    useState(false)
-
-  useEffect(() => {
-    setShouldFallbackToDefaultImage(false)
-  }, [debouncedUsername])
+  const { data: twitterAvatar, isValidating } = useSWRImmutable(
+    debouncedUsername && TWITTER_HANDLE_REGEX.test(debouncedUsername)
+      ? `/assets/twitter/avatar/${debouncedUsername}`
+      : null
+  )
 
   return (
     <FormControl
@@ -43,32 +43,22 @@ const TwitterUserInput = ({ baseFieldPath }: RequirementFormProps) => {
       <HStack>
         <InputGroup>
           <InputLeftElement>@</InputLeftElement>
-          <Input {...field} pl="7" />
+          <Input {...field} pl={7} />
         </InputGroup>
         {debouncedUsername?.length > 0 && (
-          <Circle
-            position={"relative"}
-            size={"40px"}
-            border={"1px solid var(--chakra-colors-whiteAlpha-300)"}
+          <SkeletonCircle
+            boxSize={10}
+            flexShrink={0}
+            border="1px solid var(--chakra-colors-whiteAlpha-300)"
             overflow="hidden"
+            isLoaded={!isValidating}
           >
-            <Image
-              blurDataURL={
-                typeof window !== "undefined"
-                  ? `${window.origin}/api/twitter-avatar?username=${debouncedUsername}&placeholder=true`
-                  : "/default_twitter_icon.png"
-              }
-              placeholder="blur"
-              src={
-                shouldFallbackToDefaultImage || typeof window === "undefined"
-                  ? "/default_twitter_icon.png"
-                  : `${window.origin}/api/twitter-avatar?username=${debouncedUsername}`
-              }
-              layout="fill"
+            <Img
+              src={twitterAvatar ?? "/default_twitter_icon.png"}
               alt="Twitter avatar"
-              onError={() => setShouldFallbackToDefaultImage(true)}
+              boxSize={10}
             />
-          </Circle>
+          </SkeletonCircle>
         )}
       </HStack>
       <FormErrorMessage>

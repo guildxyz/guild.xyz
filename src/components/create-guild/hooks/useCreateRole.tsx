@@ -60,7 +60,7 @@ const useCreateRole = () => {
             <Button
               as="a"
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I've just added a new role to my guild. Check it out, maybe you have access 😉
-guild.xyz/${urlName} @guildxyz`)}`}
+guild.xyz/${urlName}`)}`}
               target="_blank"
               bg={tweetButtonBackground}
               leftIcon={<TwitterLogo weight="fill" />}

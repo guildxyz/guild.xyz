@@ -1,11 +1,12 @@
-import { Img } from "@chakra-ui/react"
+import { Icon, Img } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import { Detective } from "phosphor-react"
 import pluralize from "utils/pluralize"
 
 const HaveRole = (props: RequirementProps): JSX.Element => {
@@ -15,28 +16,46 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
   const { name, roles, urlName, isLoading } = useGuild(requirement.data.guildId)
   const role = roles?.find((r) => r.id === requirement.data.roleId)
 
+  const isRoleInvisible = !!roles && !role
+
   return (
     <Requirement
       image={
-        role?.imageUrl &&
-        (role.imageUrl?.match("guildLogos") ? (
-          <Img src={role.imageUrl} alt="Guild logo" boxSize="40%" />
+        isRoleInvisible ? (
+          <Icon as={Detective} boxSize={6} />
         ) : (
-          role.imageUrl
-        ))
+          role?.imageUrl &&
+          (role.imageUrl?.match("guildLogos") ? (
+            <Img src={role.imageUrl} alt="Role image" boxSize="40%" />
+          ) : (
+            <Img
+              src={role.imageUrl}
+              alt="Role image"
+              w="full"
+              h="full"
+              objectFit="cover"
+            />
+          ))
+        )
       }
       isImageLoading={isLoading}
       {...props}
     >
-      {"Have the "}
-      <Link
-        href={`/${urlName ?? requirement.data.guildId}#role-${role?.id}`}
-        colorScheme="blue"
-      >
-        {`${role?.name ?? "unknown"} role`}
-        {id !== requirement.data.guildId &&
-          ` in the ${name ?? `#${requirement.data.guildId}`} guild`}
-      </Link>
+      {isRoleInvisible ? (
+        "The required guild role is invisible"
+      ) : (
+        <>
+          {"Have the "}
+          <Link
+            href={`/${urlName ?? requirement.data.guildId}#role-${role?.id}`}
+            colorScheme="blue"
+          >
+            {`${role?.name ?? "unknown"} role`}
+            {id !== requirement.data.guildId &&
+              ` in the ${name ?? `#${requirement.data.guildId}`} guild`}
+          </Link>
+        </>
+      )}
     </Requirement>
   )
 }
@@ -44,12 +63,10 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
 const UserSince = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
-  const formattedDate = new Date(requirement.data.creationDate).toLocaleDateString()
-
   return (
     <Requirement image="/requirementLogos/guild.png" {...props}>
       {"Be a Guild.xyz user since at least "}
-      <DataBlock>{formattedDate}</DataBlock>
+      <DataBlockWithDate timestamp={requirement.data.creationDate} />
     </Requirement>
   )
 }

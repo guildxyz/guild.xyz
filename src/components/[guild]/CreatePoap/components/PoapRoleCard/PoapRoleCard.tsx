@@ -13,6 +13,7 @@ import {
   Tag,
   TagLeftIcon,
   Text,
+  useBreakpointValue,
   useColorMode,
   Wrap,
   WrapItem,
@@ -24,8 +25,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import AccessIndicatorUI from "components/[guild]/RoleCard/components/AccessIndicator/components/AccessIndicatorUI"
-import { ArrowSquareOut, Clock, EyeSlash } from "phosphor-react"
+import { ArrowSquareOut, Clock } from "phosphor-react"
 import React, { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
@@ -95,8 +95,10 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
               guildPoap={guildPoap}
               rightElement={requirementRightElement}
             />
-            {(guildPoap.poapContracts?.length ||
-              guildPoap.poapRequirements?.length) && <LogicDivider logic="AND" />}
+            {guildPoap.poapContracts?.length ||
+            guildPoap.poapRequirements?.length ? (
+              <LogicDivider logic="AND" />
+            ) : null}
           </>,
         ]
       : []),
@@ -138,6 +140,8 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
       </React.Fragment>
     )),
   ]
+
+  const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
 
   return (
     <Card
@@ -235,8 +239,6 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
         <Flex
           direction="column"
           p={5}
-          pb={{ base: 14, md: 5 }}
-          position="relative"
           bgColor={colorMode === "light" ? "gray.50" : "blackAlpha.300"}
         >
           <HStack mb={{ base: 4, md: 6 }}>
@@ -253,16 +255,12 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
               Requirements to qualify
             </Text>
             <Spacer />
-            {isActive ? (
-              <PoapAccessIndicator poapIdentifier={poap?.id} />
-            ) : timeDiff > 0 ? (
-              <AccessIndicatorUI
-                colorScheme="gray"
-                label="Not active yet"
-                icon={EyeSlash}
+            {!isMobile && (
+              <PoapAccessIndicator
+                poapIdentifier={poap?.id}
+                isExpired={timeDiff < 0}
+                isActive={isActive}
               />
-            ) : (
-              <AccessIndicatorUI colorScheme="gray" label="Expired" icon={Clock} />
             )}
           </HStack>
 
@@ -277,6 +275,13 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
           </Stack>
         </Flex>
       </SimpleGrid>
+      {isMobile && (
+        <PoapAccessIndicator
+          poapIdentifier={poap?.id}
+          isExpired={timeDiff < 0}
+          isActive={isActive}
+        />
+      )}
     </Card>
   )
 }

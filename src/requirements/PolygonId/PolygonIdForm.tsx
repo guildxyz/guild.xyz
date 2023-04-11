@@ -26,7 +26,7 @@ const PolygonIdForm = ({
   field,
 }: RequirementFormProps): JSX.Element => {
   const { errors } = useFormState()
-  const { setValue } = useFormContext()
+  const { resetField } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
@@ -34,11 +34,17 @@ const PolygonIdForm = ({
     (reqType) => reqType.value === type
   )
 
+  const resetFields = () => {
+    resetField(`${baseFieldPath}.data.maxAmount`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.query`, { defaultValue: "" })
+  }
+
   return (
     <Stack spacing={4} alignItems="start">
       <ChainPicker
         controlName={`${baseFieldPath}.chain`}
         supportedChains={[/* "POLYGON",  */ "POLYGON_MUMBAI"]}
+        onChange={resetFields}
       />
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
@@ -49,7 +55,7 @@ const PolygonIdForm = ({
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={polygonIdRequirementTypes}
-          afterOnChange={() => setValue(`${baseFieldPath}.data`, "")}
+          beforeOnChange={resetFields}
         />
 
         <FormErrorMessage>

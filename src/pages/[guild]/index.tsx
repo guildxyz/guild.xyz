@@ -33,6 +33,7 @@ import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
+import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
@@ -71,6 +72,7 @@ const DynamicActiveStatusUpdates = dynamic(
 
 const GuildPage = (): JSX.Element => {
   const {
+    id: guildId,
     name,
     description,
     imageUrl,
@@ -160,6 +162,9 @@ const GuildPage = (): JSX.Element => {
 
   return (
     <DynamicOnboardingProvider>
+      <Head>
+        <meta name="theme-color" content={localThemeColor} />
+      </Head>
       <Layout
         title={name}
         textColor={textColor}
@@ -205,7 +210,7 @@ const GuildPage = (): JSX.Element => {
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
         action={isAdmin && <DynamicEditGuildButton />}
-        showBackButton
+        backButton={{ href: "/explorer", text: "Go back to explorer" }}
       >
         {showOnboarding ? (
           <DynamicOnboarding />
@@ -240,14 +245,18 @@ const GuildPage = (): JSX.Element => {
           mb="10"
         >
           {renderedRoles.length ? (
-            <Stack ref={rolesEl} spacing={4}>
-              {activePoaps.map((poap) => (
-                <PoapRoleCard key={poap?.id} guildPoap={poap} />
-              ))}
-              {renderedRoles.map((role) => (
-                <RoleCard key={role.id} role={role} />
-              ))}
-            </Stack>
+            <RequirementErrorConfigProvider>
+              <Stack ref={rolesEl} spacing={4}>
+                {/* Custom logic for Chainlink */}
+                {(isAdmin || guildId !== 16389) &&
+                  activePoaps.map((poap) => (
+                    <PoapRoleCard key={poap?.id} guildPoap={poap} />
+                  ))}
+                {renderedRoles.map((role) => (
+                  <RoleCard key={role.id} role={role} />
+                ))}
+              </Stack>
+            </RequirementErrorConfigProvider>
           ) : (
             <DynamicNoRolesAlert />
           )}
@@ -283,6 +292,7 @@ const GuildPage = (): JSX.Element => {
               <Collapse
                 in={isExpiredRolesOpen}
                 style={{ padding: "6px", margin: "-6px" }}
+                unmountOnExit
               >
                 <Stack spacing={4} pt="3">
                   {expiredPoaps.map((poap) => (
@@ -303,7 +313,13 @@ const GuildPage = (): JSX.Element => {
                 <HStack justifyContent="space-between" w="full" my="-2 !important">
                   <Tag maxH={6} pt={0.5}>
                     <TagLeftIcon as={Users} />
-                    {isLoading ? <Spinner size="xs" /> : memberCount ?? 0}
+                    {isLoading ? (
+                      <Spinner size="xs" />
+                    ) : (
+                      new Intl.NumberFormat("en", { notation: "compact" }).format(
+                        memberCount ?? 0
+                      ) ?? 0
+                    )}
                   </Tag>
                   {isAdmin && <DynamicMembersExporter />}
                 </HStack>
