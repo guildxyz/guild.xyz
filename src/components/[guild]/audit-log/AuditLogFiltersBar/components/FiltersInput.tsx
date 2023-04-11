@@ -103,6 +103,11 @@ const FiltersInput = (): JSX.Element => {
             value: "",
           },
         })
+
+        const nativeTagInput: HTMLInputElement = document.querySelector(
+          `#combobox\\:filter-input-combobox #${filterNameOrSearch}`
+        )
+        nativeTagInput?.focus()
       },
     })
   )
@@ -117,25 +122,11 @@ const FiltersInput = (): JSX.Element => {
     getOptionProps,
     focusedOption,
     inputValue,
-    selectedValue,
     setInputValue,
     focus,
   } = combobox.connect(state, send, normalizeProps)
 
   const { size, ...filteredInputProps } = inputProps
-
-  useEffect(() => {
-    const foundOption = searchOptions.find(
-      (option) => option.label === inputValue && option.value === selectedValue
-    )
-    if (!foundOption) return
-
-    setInputValue("")
-    const nativeTagInput: HTMLInputElement = document.querySelector(
-      `#combobox\\:filter-input-combobox #${selectedValue}`
-    )
-    nativeTagInput?.focus()
-  }, [selectedValue, inputValue])
 
   const [shouldRemoveLastFilter, setShouldRemoveLastFilter] = useState(false)
 
@@ -146,7 +137,7 @@ const FiltersInput = (): JSX.Element => {
       const relevantActiveFilter = activeFilters.find(
         (f) => f.filter === option.value
       )
-      query[option.value] = relevantActiveFilter ? relevantActiveFilter.value : ""
+      query[option.value] = relevantActiveFilter?.value ?? ""
     })
 
     activeFilters.forEach(({ filter, value }) => (query[filter] = value))
@@ -231,6 +222,8 @@ const FiltersInput = (): JSX.Element => {
               htmlSize={size}
               onKeyUp={onKeyUp}
               {...filteredInputProps}
+              defaultValue={undefined}
+              data-value={undefined}
             />
           </Flex>
 
