@@ -49,6 +49,13 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
             data-dd-action-name={
               localStep === null ? "Add role" : "Add role [onboarding]"
             }
+            /**
+             * Have to remove border radiuses explicitly because ButtonGroup's
+             * isAttached prop doesn't work when OnboardingMarker renders a wrapper
+             * around the button
+             */
+            borderTopRightRadius="0"
+            borderBottomRightRadius="0"
           >
             Add role
           </Button>
@@ -59,6 +66,8 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
             isActive={isOrderModalOpen}
             as={IconButton}
             icon={<CaretDown />}
+            borderTopLeftRadius="0"
+            borderBottomLeftRadius="0"
           ></MenuButton>
           <MenuList>
             <MenuItem
