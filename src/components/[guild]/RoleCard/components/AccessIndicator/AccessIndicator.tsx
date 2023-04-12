@@ -26,7 +26,11 @@ type Props = {
 
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { roles } = useGuild()
+  const role = roles.find((r) => r.id === roleId)
   const { hasAccess, isLoading, data, error } = useAccess(roleId)
+  const accessedRequirementCount = data?.requirements?.filter(
+    (r) => r.access
+  )?.length
 
   const { isActive } = useWeb3React()
   const isMember = useIsMember()
@@ -38,7 +42,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     (r) => r.access === null
   )
   const errors = useRequirementErrorConfig()
-  const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
+  const requirements = role?.requirements ?? []
   const firstRequirementWithErrorFromConfig = requirements.find(
     (req) => !!errors[req.type.split("_")[0]]
   )
@@ -140,7 +144,19 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  return <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
+  return (
+    <AccessIndicatorUI
+      colorScheme="gray"
+      label={`No access${
+        role.logic !== "ANY_OF" &&
+        typeof accessedRequirementCount === "number" &&
+        role.anyOfNum
+          ? ` (${accessedRequirementCount}/${role.anyOfNum})`
+          : ""
+      }`}
+      icon={X}
+    />
+  )
 }
 
 export default AccessIndicator
