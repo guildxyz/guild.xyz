@@ -44,7 +44,6 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   }, [roles])
 
   const defaultRoleIdsOrder = sortedRoles?.map((role) => role.id)
-
   const [roleIdsOrder, setRoleIdsOrder] = useState(defaultRoleIdsOrder)
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -84,7 +83,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
 
   /**
    * Using JSON.stringify to compare the values, not the object identity (so it works
-   * as expected after a successful save)
+   * as expected after a successful save too)
    */
   const isDirty =
     JSON.stringify(defaultRoleIdsOrder) !== JSON.stringify(roleIdsOrder)

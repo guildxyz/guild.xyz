@@ -3,14 +3,13 @@ import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import { DotsSixVertical } from "phosphor-react"
-import { forwardRef } from "react"
 import { Role } from "types"
 
 type Props = {
   role: Role
 }
 
-const DraggableRoleCard = forwardRef(({ role }: Props, ref: any) => {
+const DraggableRoleCard = ({ role }: Props) => {
   if (!role) return null
 
   return (
@@ -26,6 +25,6 @@ const DraggableRoleCard = forwardRef(({ role }: Props, ref: any) => {
       </HStack>
     </Card>
   )
-})
+}
 
 export default DraggableRoleCard
