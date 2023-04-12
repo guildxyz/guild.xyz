@@ -13,7 +13,8 @@ import {
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useEffect, useMemo } from "react"
+import useDebouncedState from "hooks/useDebouncedState"
+import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -22,21 +23,14 @@ import { useJuicebox } from "./hooks/useJuicebox"
 const JuiceboxForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
     control,
-    setValue,
     formState: { errors },
   } = useFormContext()
 
-  // Setting up a default address for now, it isn't editable in the UI
-  useEffect(() => {
-    setValue(
-      `${baseFieldPath}.address`,
-      "0xee2eBCcB7CDb34a8A822b589F9E8427C24351bfc"
-    )
-  }, [setValue])
-
   const id = useWatch({ name: `${baseFieldPath}.data.id` })
 
-  const { projects, isLoading } = useJuicebox()
+  const [searchText, setSearchText] = useState("")
+  const debouncedSearchText = useDebouncedState(searchText)
+  const { projects, isLoading } = useJuicebox(debouncedSearchText)
   const mappedOptions = useMemo(
     () =>
       projects?.map((project) => ({
@@ -72,6 +66,10 @@ const JuiceboxForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
             isLoading={isLoading}
             options={mappedOptions}
             placeholder="Search..."
+            onInputChange={(text, _) => setSearchText(text)}
+            noResultText={
+              !debouncedSearchText.length ? "Start typing..." : undefined
+            }
           />
         </InputGroup>
 
