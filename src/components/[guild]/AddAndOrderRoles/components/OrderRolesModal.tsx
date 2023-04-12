@@ -28,7 +28,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   } = useDisclosure()
 
   // temporary, will order roles already in the SQL query in the future
-  const defaultRoleIds = useMemo(
+  const defaultRoleIdsOrder = useMemo(
     () =>
       roles
         ?.sort((role1, role2) => role1.position - role2.position)
@@ -36,7 +36,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     [roles]
   )
 
-  const [roleIds, setRoleIds] = useState(defaultRoleIds)
+  const [roleIdsOrder, setRoleIdsOrder] = useState(defaultRoleIdsOrder)
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
@@ -73,13 +73,14 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     onError: (err) => showErrorToast(err),
   })
 
-  const isDirty = JSON.stringify(defaultRoleIds) !== JSON.stringify(roleIds)
+  const isDirty =
+    JSON.stringify(defaultRoleIdsOrder) !== JSON.stringify(roleIdsOrder)
 
   const handleSubmit = () =>
-    onSubmit(roleIds.map((roleId, i) => ({ id: roleId, position: i })))
+    onSubmit(roleIdsOrder.map((roleId, i) => ({ id: roleId, position: i })))
 
   const onCloseAndClear = () => {
-    setRoleIds(defaultRoleIds)
+    setRoleIdsOrder(defaultRoleIdsOrder)
     onClose()
     onAlertClose()
   }
@@ -98,8 +99,12 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
           <ModalHeader>Role order</ModalHeader>
           <ModalCloseButton />
           <ModalBody className="custom-scrollbar">
-            <Reorder.Group axis="y" values={roleIds} onReorder={setRoleIds}>
-              {roleIds?.map((roleId) => (
+            <Reorder.Group
+              axis="y"
+              values={roleIdsOrder}
+              onReorder={setRoleIdsOrder}
+            >
+              {roleIdsOrder?.map((roleId) => (
                 <Reorder.Item key={roleId} value={roleId}>
                   <DraggableRoleCard
                     role={roles.find((role) => role.id === roleId)}
