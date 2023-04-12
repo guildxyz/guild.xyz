@@ -86,15 +86,20 @@ const GuildPage = (): JSX.Element => {
   useAutoStatusUpdate()
 
   // temporary, will order roles already in the SQL query in the future
-  const sortedRoles = useMemo(
-    () =>
-      roles?.sort((role1, role2) => {
-        if (role1.position === null) return 1
-        if (role2.position === null) return -1
-        return role1.position - role2.position
-      }),
-    [roles]
-  )
+  const sortedRoles = useMemo(() => {
+    if (roles.every((role) => role.position === null)) {
+      const byMembers = roles?.sort(
+        (role1, role2) => role2.memberCount - role1.memberCount
+      )
+      return byMembers
+    }
+
+    return roles?.sort((role1, role2) => {
+      if (role1.position === null) return 1
+      if (role2.position === null) return -1
+      return role1.position - role2.position
+    })
+  }, [roles])
 
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)

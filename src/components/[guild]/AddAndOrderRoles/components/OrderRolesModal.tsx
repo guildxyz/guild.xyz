@@ -28,17 +28,22 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   } = useDisclosure()
 
   // temporary, will order roles already in the SQL query in the future
-  const defaultRoleIdsOrder = useMemo(
-    () =>
-      roles
-        ?.sort((role1, role2) => {
-          if (role1.position === null) return 1
-          if (role2.position === null) return -1
-          return role1.position - role2.position
-        })
-        ?.map((role) => role.id),
-    [roles]
-  )
+  const sortedRoles = useMemo(() => {
+    if (roles.every((role) => role.position === null)) {
+      const byMembers = roles?.sort(
+        (role1, role2) => role2.memberCount - role1.memberCount
+      )
+      return byMembers
+    }
+
+    return roles?.sort((role1, role2) => {
+      if (role1.position === null) return 1
+      if (role2.position === null) return -1
+      return role1.position - role2.position
+    })
+  }, [roles])
+
+  const defaultRoleIdsOrder = sortedRoles?.map((role) => role.id)
 
   const [roleIdsOrder, setRoleIdsOrder] = useState(defaultRoleIdsOrder)
   const toast = useToast()
@@ -77,6 +82,10 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     onError: (err) => showErrorToast(err),
   })
 
+  /**
+   * Using JSON.stringify to compare the values, not the object identity (so it works
+   * as expected after a successful save)
+   */
   const isDirty =
     JSON.stringify(defaultRoleIdsOrder) !== JSON.stringify(roleIdsOrder)
 
