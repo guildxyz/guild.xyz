@@ -73,6 +73,8 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     onError: (err) => showErrorToast(err),
   })
 
+  const isDirty = JSON.stringify(defaultRoleIds) !== JSON.stringify(roleIds)
+
   const handleSubmit = () =>
     onSubmit(roleIds.map((roleId, i) => ({ id: roleId, position: i })))
 
@@ -86,7 +88,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     <>
       <Modal
         isOpen={isOpen}
-        onClose={roleIds !== defaultRoleIds ? onAlertOpen : onClose}
+        onClose={isDirty ? onAlertOpen : onClose}
         colorScheme="dark"
         finalFocusRef={finalFocusRef}
         scrollBehavior="inside"
@@ -115,7 +117,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
               isLoading={isLoading}
               onClick={handleSubmit}
               colorScheme="green"
-              isDisabled={roleIds === defaultRoleIds}
+              isDisabled={!isDirty}
             >
               Save
             </Button>
