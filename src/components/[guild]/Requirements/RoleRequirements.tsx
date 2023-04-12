@@ -50,7 +50,7 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
      */
     <SlideFade in={isOpen} {...(!isOpen && { inert: "true" })}>
       <VStack spacing="0">
-        {role.logic === "ANY_OF" && <AnyOfHeader />}
+        {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
         {!requirements?.length ? (
           <Spinner />
         ) : isVirtualList ? (

@@ -1,6 +1,10 @@
 import { Box, HStack, Text, useColorModeValue } from "@chakra-ui/react"
 
-const AnyOfHeader = (): JSX.Element => {
+type Props = {
+  anyOfNum?: number
+}
+
+const AnyOfHeader = ({ anyOfNum }: Props): JSX.Element => {
   const borderColor = useColorModeValue("blackAlpha.400", "whiteAlpha.400")
   const textColor = useColorModeValue("blackAlpha.500", "whiteAlpha.400")
 
@@ -22,7 +26,7 @@ const AnyOfHeader = (): JSX.Element => {
         color={textColor}
         flexShrink={0}
       >
-        ANY OF
+        {`ANY ${anyOfNum} OF`}
       </Text>
       <Box
         width="full"
