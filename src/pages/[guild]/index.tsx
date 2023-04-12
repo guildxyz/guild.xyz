@@ -16,14 +16,8 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
-import Button from "components/common/Button"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -38,6 +32,11 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import Button from "components/common/Button"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -55,8 +54,8 @@ import parseDescription from "utils/parseDescription"
 const BATCH_SIZE = 10
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
-const DynamicAddRoleButton = dynamic(
-  () => import("components/[guild]/AddRoleButton")
+const DynamicAddAndOrderRoles = dynamic(
+  () => import("components/[guild]/AddAndOrderRoles")
 )
 const DynamicAddRewardButton = dynamic(
   () => import("components/[guild]/AddRewardButton")
@@ -87,24 +86,21 @@ const GuildPage = (): JSX.Element => {
   } = useGuild()
   useAutoStatusUpdate()
 
-  const { data: roleAccesses } = useAccess()
-
+  // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
-    const byMembers = roles?.sort(
-      (role1, role2) => role2.memberCount - role1.memberCount
-    )
-    if (!roleAccesses) return byMembers
+    if (roles.every((role) => role.position === null)) {
+      const byMembers = roles?.sort(
+        (role1, role2) => role2.memberCount - role1.memberCount
+      )
+      return byMembers
+    }
 
-    // prettier-ignore
-    const accessedRoles = [], otherRoles = []
-    byMembers?.forEach((role) =>
-      (roleAccesses?.find(({ roleId }) => roleId === role.id)?.access
-        ? accessedRoles
-        : otherRoles
-      ).push(role)
-    )
-    return accessedRoles.concat(otherRoles)
-  }, [roles, roleAccesses])
+    return roles?.sort((role1, role2) => {
+      if (role1.position === null) return 1
+      if (role2.position === null) return -1
+      return role1.position - role2.position
+    })
+  }, [roles])
 
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
@@ -221,7 +217,7 @@ const GuildPage = (): JSX.Element => {
             ) : !isAdmin ? (
               <LeaveButton />
             ) : isAddRoleStuck ? (
-              <DynamicAddRoleButton />
+              <DynamicAddAndOrderRoles />
             ) : (
               <DynamicAddRewardButton />
             )}
@@ -238,7 +234,7 @@ const GuildPage = (): JSX.Element => {
             isAdmin &&
             (showAccessHub || showOnboarding) && (
               <Box my="-2 !important" ml="auto !important">
-                <DynamicAddRoleButton setIsStuck={setIsAddRoleStuck} />
+                <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
               </Box>
             )
           }

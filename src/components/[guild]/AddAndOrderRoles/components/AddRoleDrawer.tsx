@@ -8,7 +8,6 @@ import {
   DrawerOverlay,
   FormLabel,
   HStack,
-  Icon,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -16,7 +15,6 @@ import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import ErrorAlert from "components/common/ErrorAlert"
-import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -25,32 +23,23 @@ import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsStuck from "hooks/useIsStuck"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Plus } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
-import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
-import RolePlatforms from "../RolePlatforms"
-import SetVisibility from "../SetVisibility"
+import RolePlatforms from "../../RolePlatforms"
+import SetVisibility from "../../SetVisibility"
 
 const noRequirementsErrorMessage = "Set some requirements, or make the role free"
 
-const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
+const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { id, guildPlatforms } = useGuild()
   const discordPlatform = guildPlatforms?.find(
     (p) => p.platformId === PlatformType.DISCORD
   )
-
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const { ref: finalFocusRef, isStuck } = useIsStuck()
-  useEffect(() => {
-    setIsStuck?.(isStuck)
-  }, [isStuck])
 
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
     useCreateRole()
@@ -148,24 +137,8 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
 
   const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
-  const { localStep } = useOnboardingContext()
-
   return (
     <>
-      <OnboardingMarker step={0} onClick={onOpen}>
-        <Button
-          ref={finalFocusRef}
-          variant="ghost"
-          size="sm"
-          leftIcon={<Icon as={Plus} />}
-          onClick={onOpen}
-          data-dd-action-name={
-            localStep === null ? "Add role" : "Add role [onboarding]"
-          }
-        >
-          Add role
-        </Button>
-      </OnboardingMarker>
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -241,4 +214,4 @@ const AddRoleButton = ({ setIsStuck = null }): JSX.Element => {
   )
 }
 
-export default AddRoleButton
+export default AddRoleDrawer
