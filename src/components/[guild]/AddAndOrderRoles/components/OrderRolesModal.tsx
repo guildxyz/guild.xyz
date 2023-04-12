@@ -72,7 +72,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
            */
           roles: oldData.roles.map((role) => ({
             ...role,
-            position: res.find((resRole) => resRole.id === role.id).position,
+            position: res.find((resRole) => resRole.id === role.id)?.position,
           })),
         }),
         { revalidate: false }
