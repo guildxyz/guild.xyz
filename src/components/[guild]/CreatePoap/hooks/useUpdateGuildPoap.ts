@@ -7,8 +7,6 @@ import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetail
 import { GuildPoap } from "types"
 import fetcher from "utils/fetcher"
 
-type UpdatePoapData = { id: number; expiryDate?: number; activate?: boolean }
-
 const updateGuildPoap = async (signedValidation: SignedValdation) =>
   fetcher(`/assets/poap`, {
     method: "PATCH",

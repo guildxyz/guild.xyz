@@ -66,7 +66,7 @@ const AddCard = forwardRef(
             >
               {title}
 
-              {isDisabled && <Tag ml="2">Soon</Tag>}
+              {isDisabled && <Tag ml="2">Temporarily disabled</Tag>}
             </Text>
             {description && (
               <Text

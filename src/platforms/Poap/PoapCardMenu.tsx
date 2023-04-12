@@ -15,6 +15,7 @@ import PlatformCardMenu from "components/[guild]/RolePlatforms/components/Platfo
 import { PencilSimple, UploadSimple } from "phosphor-react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { GuildPoap } from "types"
+import DeactivatePoapMenuItem from "./DeactivatePoapMenuItem"
 
 type Props = {
   guildPoap: GuildPoap
@@ -47,6 +48,7 @@ const PoapCardMenu = ({ guildPoap }: Props): JSX.Element => {
             Upload more mint links
           </MenuItem>
         )}
+        {guildPoap.activated && <DeactivatePoapMenuItem guildPoap={guildPoap} />}
       </PlatformCardMenu>
 
       <EditPoapModal

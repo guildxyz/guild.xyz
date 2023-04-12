@@ -44,10 +44,16 @@ const fetchBadges = async (endpoint: string) => {
   return badges
 }
 
+const path: Record<Extract<Chain, "ETHEREUM" | "OPTIMISM" | "GOERLI">, string> = {
+  ETHEREUM: "badges-mainnet",
+  OPTIMISM: "badges-optimism",
+  GOERLI: "badges-goerli",
+}
+
 const useOtterspaceBadges = (chain: Chain) =>
   useSWRImmutable<SelectOption[]>(
-    chain
-      ? `https://api.thegraph.com/subgraphs/name/otterspace-xyz/badges-${chain.toLowerCase()}`
+    chain && path[chain]
+      ? `https://api.thegraph.com/subgraphs/name/otterspace-xyz/${path[chain]}`
       : null,
     fetchBadges
   )

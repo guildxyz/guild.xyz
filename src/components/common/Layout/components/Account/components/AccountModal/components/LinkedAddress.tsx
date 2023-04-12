@@ -24,6 +24,7 @@ import { useRef } from "react"
 import { AddressConnectionProvider } from "types"
 import shortenHex from "utils/shortenHex"
 import useDisconnect from "../hooks/useDisconnect"
+import PrimaryAddressTag from "./PrimaryAddressTag"
 
 type Props = {
   address: string
@@ -34,7 +35,7 @@ const providerIcons: Record<AddressConnectionProvider, string> = {
 }
 
 const LinkedAddress = ({ address }: Props) => {
-  const { addressProviders } = useUser()
+  const { addressProviders, addresses } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { onSubmit, isLoading, signLoadingText } = useDisconnect(onClose)
@@ -63,6 +64,7 @@ const LinkedAddress = ({ address }: Props) => {
             </Tag>
           </Tooltip>
         )}
+        {addresses.indexOf(address) === 0 ? <PrimaryAddressTag size="sm" /> : null}
         <Tooltip label="Disconnect address" placement="top" hasArrow>
           <IconButton
             rounded="full"

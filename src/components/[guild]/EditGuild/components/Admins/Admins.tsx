@@ -7,9 +7,10 @@ import {
 } from "@chakra-ui/react"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import GuildAvatar from "components/common/GuildAvatar"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useUser from "components/[guild]/hooks/useUser"
+import GuildAvatar from "components/common/GuildAvatar"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { useMemo } from "react"
 import { useController, useFormContext } from "react-hook-form"
@@ -36,6 +37,7 @@ const fetchMemberOptions = (_: string, members: string[], provider: Web3Provider
   ).catch(() => [])
 
 const Admins = () => {
+  const { isSuperAdmin } = useUser()
   const { formState } = useFormContext()
   const { roles, admins: guildAdmins } = useGuild()
   const { isOwner } = useGuildPermission()
@@ -66,7 +68,9 @@ const Admins = () => {
     const ownerOption = {
       ...(options.find((o) => o.value === ownerAddress) ?? {
         value: ownerAddress,
-        label: shortenHex(ownerAddress),
+        label: ADDRESS_REGEX.test(ownerAddress)
+          ? shortenHex(ownerAddress)
+          : ownerAddress,
         img: <GuildAvatar address={ownerAddress} size={4} mr="2" />,
       }),
       isFixed: true,
@@ -81,7 +85,7 @@ const Admins = () => {
           return {
             ...(option ?? {
               value: admin,
-              label: shortenHex(admin),
+              label: ADDRESS_REGEX.test(ownerAddress) ? shortenHex(admin) : admin,
               img: <GuildAvatar address={admin} size={4} mr="2" />,
             }),
           }
@@ -97,7 +101,8 @@ const Admins = () => {
     <>
       <FormControl w="full" isInvalid={!!formState.errors.admins}>
         <FormLabel>
-          Admins {!isOwner && <Tag>only editable by the Guild owner</Tag>}
+          Admins{" "}
+          {!isOwner && !isSuperAdmin && <Tag>only editable by the Guild owner</Tag>}
         </FormLabel>
 
         <AdminSelect
@@ -130,7 +135,7 @@ const Admins = () => {
           }}
           isLoading={isLoading}
           isClearable={false}
-          isDisabled={!isOwner}
+          isDisabled={!isOwner && !isSuperAdmin}
           chakraStyles={{ valueContainer: (base) => ({ ...base, py: 2 }) }}
         />
 

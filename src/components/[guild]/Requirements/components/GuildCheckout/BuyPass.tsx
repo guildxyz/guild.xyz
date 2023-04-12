@@ -15,21 +15,19 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
+import Reward from "components/[guild]/RoleCard/components/Reward"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Reward from "components/[guild]/RoleCard/components/Reward"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { Chains } from "connectors"
 import { Coin, StarHalf } from "phosphor-react"
+import { usePostHog } from "posthog-js/react"
 import { useEffect } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
-import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
-import BuyButton from "./components/buttons/BuyButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import BuyTotal from "./components/BuyTotal"
 import {
   GuildCheckoutProvider,
@@ -40,8 +38,13 @@ import TransactionLink from "./components/InfoModal/components/TransactionLink"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
 import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
+import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
+import BuyButton from "./components/buttons/BuyButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
 const BuyPass = () => {
+  const posthog = usePostHog()
+
   const { account, chainId } = useWeb3React()
   const {
     requirement,
@@ -54,7 +57,7 @@ const BuyPass = () => {
     txHash,
     setAgreeWithTOS,
   } = useGuildCheckoutContext()
-  const { id, name, roles, poaps } = useGuild()
+  const { urlName, name, roles, poaps } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
 
   // temporary until POAPs are real roles
@@ -72,6 +75,13 @@ const BuyPass = () => {
     ?.filter((r) => r.requirementId !== requirement?.id)
     ?.every((r) => r.access)
 
+  const onClick = () => {
+    onOpen()
+    posthog.capture("Click: Buy (Requirement)", {
+      guild: urlName,
+    })
+  }
+
   if (
     !account ||
     (!accessData && isAccessLoading) ||
@@ -88,7 +98,7 @@ const BuyPass = () => {
         leftIcon={<Icon as={Coin} />}
         borderRadius="lg"
         fontWeight="medium"
-        onClick={onOpen}
+        onClick={onClick}
         data-dd-action-name="Pay (Requierment)"
       >
         Pay

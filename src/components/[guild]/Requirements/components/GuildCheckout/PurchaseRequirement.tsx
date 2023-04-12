@@ -21,7 +21,9 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
+import { usePostHog } from "posthog-js/react"
 import {
+  DISABLED_TOKENS,
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
@@ -46,6 +48,8 @@ import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
+  const posthog = usePostHog()
+
   const { featureFlags } = useGuild()
 
   const { account, chainId } = useWeb3React()
@@ -59,7 +63,7 @@ const PurchaseRequirement = (): JSX.Element => {
     txSuccess,
     txHash,
   } = useGuildCheckoutContext()
-  const { name } = useGuild()
+  const { urlName, name } = useGuild()
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
   )
@@ -74,14 +78,24 @@ const PurchaseRequirement = (): JSX.Element => {
     error,
   } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
 
+  const onClick = () => {
+    onOpen()
+    posthog.capture("Click: Purchase (Requirement)", {
+      guild: urlName,
+    })
+  }
+
   if (
     !isOpen &&
     !isInfoModalOpen &&
-    (!featureFlags?.includes("PURCHASE_REQUIREMENT") ||
+    (!featureFlags.includes("PURCHASE_REQUIREMENT") ||
+      DISABLED_TOKENS[requirement.chain]?.includes(
+        requirement.address?.toLowerCase()
+      ) ||
       (!accessData && isAccessLoading) ||
       satisfiesRequirement ||
-      !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
-      !purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain))
+      !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement.type) ||
+      !purchaseSupportedChains[requirement.type]?.includes(requirement.chain))
   )
     return null
 
@@ -93,7 +107,7 @@ const PurchaseRequirement = (): JSX.Element => {
         leftIcon={<Icon as={ShoppingCartSimple} />}
         borderRadius="md"
         fontWeight="medium"
-        onClick={onOpen}
+        onClick={onClick}
         data-dd-action-name="Purchase (Requierment)"
       >
         Purchase

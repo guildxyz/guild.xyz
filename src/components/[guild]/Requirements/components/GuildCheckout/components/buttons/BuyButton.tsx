@@ -1,7 +1,9 @@
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
+import { usePostHog } from "posthog-js/react"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import fetcher from "utils/fetcher"
@@ -10,6 +12,9 @@ import usePayFee from "../../hooks/usePayFee"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const BuyButton = (): JSX.Element => {
+  const posthog = usePostHog()
+  const { urlName } = useGuild()
+
   const { chainId } = useWeb3React()
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
@@ -39,6 +44,9 @@ const BuyButton = (): JSX.Element => {
         throw new Error(e?.error ?? "An unknown error occurred")
       })
     onSubmit()
+    posthog.capture("Click: BuyButton (GuildCheckout)", {
+      guild: urlName,
+    })
   }
 
   const isSufficientAllowance = fee && allowance ? fee.lte(allowance) : false
