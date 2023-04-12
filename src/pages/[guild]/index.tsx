@@ -16,11 +16,6 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
-import Button from "components/common/Button"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
@@ -36,6 +31,11 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import Button from "components/common/Button"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -87,7 +87,12 @@ const GuildPage = (): JSX.Element => {
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(
-    () => roles?.sort((role1, role2) => role1.position - role2.position),
+    () =>
+      roles?.sort((role1, role2) => {
+        if (role1.position === null) return 1
+        if (role2.position === null) return -1
+        return role1.position - role2.position
+      }),
     [roles]
   )
 

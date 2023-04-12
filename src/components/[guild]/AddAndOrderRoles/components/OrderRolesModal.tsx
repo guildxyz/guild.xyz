@@ -31,7 +31,11 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const defaultRoleIdsOrder = useMemo(
     () =>
       roles
-        ?.sort((role1, role2) => role1.position - role2.position)
+        ?.sort((role1, role2) => {
+          if (role1.position === null) return 1
+          if (role2.position === null) return -1
+          return role1.position - role2.position
+        })
         ?.map((role) => role.id),
     [roles]
   )
