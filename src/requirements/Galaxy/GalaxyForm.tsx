@@ -8,6 +8,7 @@ import {
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -33,7 +34,9 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
 
   const selectedId = useWatch({ control, name: `${baseFieldPath}.data.id` })
 
-  const { campaigns, isLoading } = useGalaxyCampaigns()
+  const [searchText, setSearchText] = useState("")
+  const debouncedSearchText = useDebouncedState(searchText)
+  const { campaigns, isLoading } = useGalaxyCampaigns(debouncedSearchText)
 
   const [pastedId, setPastedId] = useState(field?.data?.galaxyId)
   const { campaign, isLoading: isCampaignLoading } = useGalaxyCampaign(
@@ -115,9 +118,13 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
           onInputChange={(text, _) => {
             if (!text?.length) return
             const regex = /^[a-zA-Z0-9]+$/i
-            if (regex.test(text)) setPastedId(text)
+            if (regex.test(text)) {
+              setPastedId(text)
+            }
+            setSearchText(text)
           }}
           filterOption={customFilterOption}
+          noResultText={!debouncedSearchText.length ? "Start typing..." : undefined}
         />
       </InputGroup>
 
