@@ -13,8 +13,8 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import ModalButton from "components/common/ModalButton"
 import useGuild from "components/[guild]/hooks/useGuild"
+import ModalButton from "components/common/ModalButton"
 import useToast from "hooks/useToast"
 import { Warning } from "phosphor-react"
 import { useState } from "react"
@@ -47,13 +47,27 @@ const NewOwnerModal = ({ isOpen, onClose }) => {
   const { mutateGuild } = useGuild()
   const toast = useToast()
 
-  const onSuccess = () => {
+  const onSuccess = (res) => {
     toast({
       title: `Owner changed!`,
       status: "success",
     })
     onClose()
-    mutateGuild()
+    mutateGuild(
+      (oldData) => {
+        const newAdmins = oldData.admins.map((admin) => ({
+          id: admin.id,
+          address: admin.address,
+          isOwner: admin.id === res.id,
+        }))
+        if (newAdmins.every((admin) => admin.isOwner === false)) newAdmins.push(res)
+        return {
+          ...oldData,
+          admins: newAdmins,
+        }
+      },
+      { revalidate: false }
+    )
   }
 
   const { onSubmit, isLoading } = useNewOwner({ onSuccess })

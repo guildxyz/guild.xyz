@@ -3,11 +3,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
 
-type Props = {
-  onSuccess?: () => void
-}
-
-const useNewOwner = ({ onSuccess }: Props = {}) => {
+const useNewOwner = ({ onSuccess }) => {
   const { id } = useGuild()
   const submit = async (signedValidation: SignedValdation) =>
     fetcher(`/guild/${id}/ownership`, {
@@ -18,8 +14,8 @@ const useNewOwner = ({ onSuccess }: Props = {}) => {
 
   return useSubmitWithSign<any>(submit, {
     forcePrompt: true,
-    onSuccess: () => {
-      if (onSuccess) onSuccess()
+    onSuccess: (res) => {
+      if (onSuccess) onSuccess(res)
     },
     onError: (error) => showErrorToast(error),
   })
