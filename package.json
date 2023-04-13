@@ -84,7 +84,7 @@
     "wicg-inert": "^3.1.2"
   },
   "devDependencies": {
-    "@datadog/datadog-ci": "^2.5.1",
+    "@datadog/datadog-ci": "^2.8.0",
     "@hookform/devtools": "^4.3.0",
     "@svgr/webpack": "^6.5.1",
     "@synthetixio/synpress": "^2.4.1",
