@@ -42,6 +42,8 @@ const NewOwner = () => {
   )
 }
 
+const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
+
 const NewOwnerModal = ({ isOpen, onClose }) => {
   const [newOwner, setNewOwner] = useState("")
   const { mutateGuild } = useGuild()
@@ -49,7 +51,7 @@ const NewOwnerModal = ({ isOpen, onClose }) => {
 
   const onSuccess = (res) => {
     toast({
-      title: `Owner changed!`,
+      title: "Owner changed!",
       status: "success",
     })
     onClose()
@@ -73,15 +75,9 @@ const NewOwnerModal = ({ isOpen, onClose }) => {
   const { onSubmit, isLoading } = useNewOwner({ onSuccess })
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      colorScheme="dark"
-      scrollBehavior="inside"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
       <ModalOverlay />
       <ModalContent>
-        {" "}
         <ModalHeader pb="7">Hand over ownership</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -105,7 +101,7 @@ const NewOwnerModal = ({ isOpen, onClose }) => {
                 <Icon as={Warning} color="red.500" />
               )
             }
-            isDisabled={newOwner.length !== 42 || !newOwner.startsWith("0x")}
+            isDisabled={!ADDRESS_REGEX.test(newOwner)}
           >
             Hand over ownership
           </ModalButton>
