@@ -1,12 +1,12 @@
 import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
+import Button from "components/common/Button"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
@@ -28,6 +28,7 @@ type PlatformResult = {
 type Response = {
   success: boolean
   platformResults: PlatformResult[]
+  accessedRoleIds: number[]
 }
 
 export type JoinData = {
@@ -46,6 +47,8 @@ const useJoin = (onSuccess?: () => void) => {
   const toast = useToast()
   const toastIdRef = useRef<ToastId>()
   const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
+
+  const { mutate } = useMemberships()
 
   const submit = (signedValidation: SignedValdation): Promise<Response> =>
     fetcher(`/user/join`, signedValidation).then((body) => {
@@ -82,7 +85,13 @@ const useJoin = (onSuccess?: () => void) => {
       addDatadogAction(`Successfully joined a guild`)
 
       setTimeout(() => {
-        mutateOptionalAuthSWRKey(`/user/membership/${account}`)
+        mutate(
+          (prev) => [
+            ...prev,
+            { guildId: guild.id, isAdmin: false, roleIds: response.accessedRoleIds },
+          ],
+          { revalidate: false }
+        )
         // show user in guild's members
         guild.mutateGuild()
       }, 800)
