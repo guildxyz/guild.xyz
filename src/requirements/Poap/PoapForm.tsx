@@ -51,7 +51,7 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const isLoading = isGuildsPoapsLoading || isPoapsLoading || isPoapByIdLoading
 
   const mappedPoaps = useMemo(() => {
-    if (isLoading || !debouncedSearchText.length) return []
+    if (isLoading) return []
 
     let options = []
 
