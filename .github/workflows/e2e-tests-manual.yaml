@@ -27,8 +27,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "16"
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
+      # Install NPM dependencies, cache them correctly and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
@@ -38,3 +37,4 @@ jobs:
         env:
           CYPRESS_BASE_URL: "http://localhost:3000"
           SECRET_WORDS: ${{ secrets.SYNPRESS_SECRET_WORDS }}
+          DISPLAY: :0.0

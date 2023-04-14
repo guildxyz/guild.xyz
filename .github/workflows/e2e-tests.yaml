@@ -29,8 +29,7 @@ jobs:
         with:
           node-version: "16"
 
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
+      # Install NPM dependencies, cache them correctly and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
@@ -38,3 +37,4 @@ jobs:
         env:
           CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
           SECRET_WORDS: ${{ secrets.SYNPRESS_SECRET_WORDS }}
+          DISPLAY: :0.0
