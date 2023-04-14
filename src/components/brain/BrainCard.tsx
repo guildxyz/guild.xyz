@@ -69,13 +69,20 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
               <Image
                 src={pageData?.backgroundImage}
                 alt="background"
+                fontSize={0}
                 className="background"
                 style={{ transition: "filter 0.3s, opacity 0.3s" }}
               />
             )}
 
             {pageData.icon && (
-              <Image src={pageData?.icon} alt="icon" boxSize={16} pos="absolute" />
+              <Image
+                src={pageData?.icon}
+                alt="icon"
+                boxSize={16}
+                pos="absolute"
+                fontSize={0}
+              />
             )}
           </Center>
           {renderedTags.length > 0 && (

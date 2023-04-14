@@ -22,7 +22,9 @@ const PageDetails = ({ blockMap, linkedPageContents, pageId, pageLogo }) => (
     <Layout
       backButton={{ href: "/guildverse", text: "Go back to Guildverse" }}
       title={blockMap.block[pageId]?.value.properties.title[0][0]}
-      image={pageLogo && <Image src={pageLogo} boxSize="16" alt="logo" />}
+      image={
+        pageLogo && <Image src={pageLogo} boxSize="16" alt="logo" fontSize={0} />
+      }
     >
       <NotionRenderer
         recordMap={blockMap}
