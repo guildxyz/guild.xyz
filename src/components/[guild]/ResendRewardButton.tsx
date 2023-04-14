@@ -60,7 +60,7 @@ const ResendRewardButton = (): JSX.Element => {
           : isLoading
           ? "Sending rewards..."
           : canResend
-          ? "Re-send rewards"
+          ? "Re-check accesses & send rewards"
           : "You can use this function once per minute"
       }
       sx={{
