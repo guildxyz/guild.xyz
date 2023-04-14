@@ -216,7 +216,7 @@ const GuildPage = (): JSX.Element => {
         ) : (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
             <HStack>
-              {isMember && <DynamicResendRewardButton />}
+              {isMember && !isAdmin && <DynamicResendRewardButton />}
               {!isMember ? (
                 <JoinButton />
               ) : !isAdmin ? (
