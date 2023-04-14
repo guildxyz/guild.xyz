@@ -1,5 +1,9 @@
 import "../0-platformless/0-cleanup.spec"
 
+before(() => {
+  cy.disconnectMetamaskWalletFromAllDapps()
+})
+
 const USER_ADDRESS = "0x304Def656Babc745c53782639D3CaB00aCe8C843"
 const MOCK_AUTH_DATA = {
   type: "OAUTH_SUCCESS",
@@ -43,8 +47,6 @@ describe("create-discord-guild", () => {
       )
       popupWindow.close()
     })
-
-    cy.log(window.localStorage.getItem("DISCORD_shouldConnect"))
 
     cy.wait("@connectDiscord")
 
