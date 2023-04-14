@@ -45,5 +45,6 @@ jobs:
           command: npm run test
         env:
           CYPRESS_BASE_URL: "http://localhost:3000"
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           SECRET_WORDS: ${{ secrets.SYNPRESS_SECRET_WORDS }}
           DISPLAY: :0.0
