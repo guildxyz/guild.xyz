@@ -23,18 +23,6 @@ export const REQUIREMENTS_DATA = [
     types: ["FREE"],
   },
   {
-    icon: CurrencyCircleDollar,
-    name: "Token",
-    fileNameBase: "Token",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Token/TokenRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Token/TokenForm")
-    ),
-    types: ["ERC20", "COIN"],
-  },
-  {
     icon: ImageSquare,
     name: "NFT",
     fileNameBase: "Nft",
@@ -45,6 +33,18 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Nft/NftForm")
     ),
     types: ["ERC721", "ERC1155", "NOUNS"],
+  },
+  {
+    icon: CurrencyCircleDollar,
+    name: "Token",
+    fileNameBase: "Token",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Token/TokenRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Token/TokenForm")
+    ),
+    types: ["ERC20", "COIN"],
   },
   {
     icon: ListChecks,

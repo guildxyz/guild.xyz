@@ -216,6 +216,7 @@ type Role = {
   visibility?: Visibility
   hiddenRequirements?: boolean
   hiddenRewards?: boolean
+  position: number
 }
 
 type GuildPlatform = {
