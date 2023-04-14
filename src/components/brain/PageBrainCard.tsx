@@ -45,7 +45,7 @@ const PageBrainCard = ({ pageData }: Props): JSX.Element => {
         <HStack>
           {pageData.icon && (
             <Center boxSize={10} position="relative" mr={2}>
-              <Image src={pageData.icon} alt="logo" fontSize={0}></Image>
+              <Image src={pageData.icon} alt="logo" fontSize={0} />
             </Center>
           )}
           <Heading
