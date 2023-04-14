@@ -21,7 +21,6 @@ export default defineConfig({
   env: {
     guildName: "Cypress Gang",
     guildUrlName: "cypress-gang",
-    dcInvite: "https://discord.gg/P46EfccWcP",
     dcClientId: "868172385000509460",
     tgId: "-1001653099938",
   },

@@ -13,11 +13,11 @@
     "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx",
     "dd:sourcemaps": "npx datadog-ci sourcemaps upload ./.next --service guild.xyz --release-version 1.0.0 --minified-path-prefix https://guild.xyz/_next",
     "dd:sourcemaps:local": "npx dotenv-cli -e .env.local -- npm run dd:sourcemaps",
-    "test": "dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --spec 'cypress/e2e/1-discord/*.spec.ts'",
-    "test:mobile": "dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --config viewportWidth=375,viewportHeight=667",
-    "test:record": "dotenv -e .env.local -e .env.development.local -- synpress run -b chrome --configFile=synpress.config.ts --record",
-    "test:mobile:record": "dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --config viewportWidth=375,viewportHeight=667 --record",
-    "test:open": "dotenv -e .env.local -- synpress open --configFile=synpress.config.ts",
+    "test": "NETWORK_NAME='mainnet' dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --spec 'cypress/e2e/1-discord/*.spec.ts'",
+    "test:mobile": "NETWORK_NAME='mainnet' dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --config viewportWidth=375,viewportHeight=667",
+    "test:record": "NETWORK_NAME='mainnet' dotenv -e .env.local -e .env.development.local -- synpress run -b chrome --configFile=synpress.config.ts --record",
+    "test:mobile:record": "NETWORK_NAME='mainnet' dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --config viewportWidth=375,viewportHeight=667 --record",
+    "test:open": "NETWORK_NAME='mainnet' dotenv -e .env.local -- synpress open --configFile=synpress.config.ts",
     "snyk-protect": "snyk-protect"
   },
   "dependencies": {
