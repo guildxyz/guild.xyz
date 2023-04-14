@@ -1,6 +1,5 @@
 import "../0-platformless/0-cleanup.spec"
 
-const USER_ADDRESS = "0x304Def656Babc745c53782639D3CaB00aCe8C843"
 const MOCK_AUTH_DATA = {
   type: "OAUTH_SUCCESS",
   data: {
@@ -51,20 +50,6 @@ describe("create-discord-guild", () => {
     cy.wait("@connectDiscord")
 
     cy.visit("/create-guild")
-    cy.intercept(`https://api.guild.xyz/v1/user/${USER_ADDRESS}`, (req) => {
-      req.continue((res) => {
-        res.body = {
-          ...res.body,
-          platformUsers: [
-            {
-              platformId: 1,
-              platformName: "DISCORD",
-              platformUserId: "12345",
-            },
-          ],
-        }
-      })
-    }).as("modifiedUserResponse")
 
     // Select server
     cy.getByDataTest("DISCORD-select-button-connected").click()
