@@ -30,7 +30,18 @@ const useUpdateGuildPoap = (
         ...response,
         contracts: guildPoap?.poapContracts,
       })
-      mutateGuild()
+      mutateGuild(
+        (oldData) => ({
+          ...oldData,
+          poaps: oldData.poaps.map((poap) =>
+            poap.id === response.id ? response : poap
+          ),
+        }),
+        // needed until replication lag is solved
+        {
+          revalidate: false,
+        }
+      )
       mutatePoap()
       onSuccess?.()
     },
