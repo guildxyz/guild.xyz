@@ -4,6 +4,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { ArrowsClockwise, Check } from "phosphor-react"
+import { usePostHog } from "posthog-js/react"
 import { useEffect, useState } from "react"
 import fetcher from "utils/fetcher"
 import useGuild from "./hooks/useGuild"
@@ -14,10 +15,12 @@ const rejoin = (signedValidation: SignedValdation) =>
   fetcher(`/user/join`, signedValidation)
 
 const ResendRewardButton = (): JSX.Element => {
+  const posthog = usePostHog()
+
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const { id } = useGuild()
+  const { id, urlName } = useGuild()
 
   const [latestResendDate, setLatestResendDate] = useLocalStorage(
     "latestResendDate",
@@ -41,6 +44,13 @@ const ResendRewardButton = (): JSX.Element => {
     const interval = setInterval(() => setDateNow(Date.now()), TIMEOUT)
     return () => clearInterval(interval)
   }, [])
+
+  const onClick = () => {
+    onSubmit({ guildId: id })
+    posthog.capture("Click: ResendRewardButton", {
+      guild: urlName,
+    })
+  }
 
   return (
     <Tooltip
@@ -73,14 +83,12 @@ const ResendRewardButton = (): JSX.Element => {
       }}
     >
       <IconButton
-        aria-label="Re-send rewards"
+        aria-label="Re-check accesses & send rewards"
         icon={response ? <Check /> : <ArrowsClockwise />}
         minW="44px"
         variant="ghost"
         rounded="full"
-        onClick={
-          !response && canResend ? () => onSubmit({ guildId: id }) : undefined
-        }
+        onClick={!response && canResend ? onClick : undefined}
         animation={isLoading ? "rotate 1s infinite linear" : undefined}
         isDisabled={isLoading || response || !canResend}
       />
