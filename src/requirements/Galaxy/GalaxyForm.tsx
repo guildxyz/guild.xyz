@@ -46,17 +46,19 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
   )
 
   const mappedCampaigns = useMemo(() => {
-    if (isLoading || isCampaignLoading) return []
+    if (campaign)
+      return [
+        {
+          img: campaign.thumbnail,
+          label: campaign.name,
+          value: campaign.numberID?.toString(),
+          galaxyId: campaign.id,
+        },
+      ]
+
+    if (isLoading) return []
 
     let allCampaigns = []
-
-    if (campaign)
-      allCampaigns.push({
-        img: campaign.thumbnail,
-        label: campaign.name,
-        value: campaign.numberID?.toString(),
-        galaxyId: campaign.id,
-      })
 
     const publicCampaigns = campaigns?.map((c) => ({
       img: c.thumbnail,
