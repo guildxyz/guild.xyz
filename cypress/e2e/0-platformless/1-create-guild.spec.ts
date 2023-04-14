@@ -1,7 +1,3 @@
-before(() => {
-  cy.disconnectMetamaskWalletFromAllDapps()
-})
-
 describe("without wallet", () => {
   before(() => {
     cy.visit("/create-guild")

@@ -9,10 +9,6 @@ const MOCK_AUTH_DATA = {
   },
 }
 
-before(() => {
-  cy.disconnectMetamaskWalletFromAllDapps()
-})
-
 describe("create-discord-guild", () => {
   before(() => {
     cy.visit("/create-guild", {
@@ -47,6 +43,8 @@ describe("create-discord-guild", () => {
       )
       popupWindow.close()
     })
+
+    cy.log(window.localStorage.getItem("DISCORD_shouldConnect"))
 
     cy.wait("@connectDiscord")
 
