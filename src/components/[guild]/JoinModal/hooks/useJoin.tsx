@@ -136,7 +136,7 @@ guild.xyz/${guild.urlName}`
         guildId: guild?.id,
         platforms:
           data &&
-          Object.entries(data.platforms)
+          Object.entries(data.platforms ?? {})
             .filter(([_, value]) => !!value)
             .map(([key, value]: any) => ({
               name: key,
