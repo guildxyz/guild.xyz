@@ -19,7 +19,7 @@ class MyDocument extends Document {
                 src="/js/script.js"
                 data-api="/api/event"
                 data-domain="guild.xyz"
-                integrity="sha512-LJ7btOy88i7WFLNwfEuMMPb2sjcAtI3zrCPzs6Ap1vKPUd7wdakY9ZaBKmGkmkebvSYyas70chM1Mf1eHpGfFw=="
+                integrity="sha512-HVRUd9pld7dyE4GD9bua0YojsAokMtFExYGvwJhJ5zq37EEX7yEOeYEsh0yh/CypC832F1VkewDepCdoDlPwEw=="
                 data-exclude="/oauth**"
               />
             </>
