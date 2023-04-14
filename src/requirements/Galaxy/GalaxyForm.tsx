@@ -21,7 +21,6 @@ const customFilterOption = (candidate, input) =>
 
 const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const {
-    control,
     register,
     setValue,
     formState: { errors },
@@ -32,7 +31,9 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
     register(`${baseFieldPath}.data.galaxyId`)
   }, [register])
 
-  const selectedId = useWatch({ control, name: `${baseFieldPath}.data.id` })
+  const selectedGalaxyId = useWatch({
+    name: `${baseFieldPath}.data.galaxyId`,
+  })
 
   const [searchText, setSearchText] = useState("")
   const debouncedSearchText = useDebouncedState(searchText)
@@ -40,7 +41,8 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
 
   const [pastedId, setPastedId] = useState(field?.data?.galaxyId)
   const { campaign, isLoading: isCampaignLoading } = useGalaxyCampaign(
-    !campaigns || campaigns?.find((c) => c.id === pastedId) ? null : pastedId
+    selectedGalaxyId ??
+      (!campaigns || campaigns?.find((c) => c.id === pastedId) ? null : pastedId)
   )
 
   const mappedCampaigns = useMemo(() => {
@@ -68,27 +70,6 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
     return allCampaigns
   }, [campaigns, campaign])
 
-  const [campaignImage, setCampaignImage] = useState(null)
-
-  useEffect(() => {
-    if (!campaigns?.length) return
-    if (!selectedId) {
-      setCampaignImage(null)
-      return
-    }
-
-    const selectedCampaign = campaigns.find(
-      (c) => c.numberID?.toString() === selectedId
-    )
-
-    const isPrivateCampaign = selectedId === campaign?.numberID?.toString()
-
-    const thumbnail = isPrivateCampaign
-      ? campaign.thumbnail
-      : selectedCampaign?.thumbnail
-    setCampaignImage(thumbnail)
-  }, [campaigns, selectedId])
-
   return (
     <FormControl
       isRequired
@@ -97,9 +78,9 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
       <FormLabel>Campaign:</FormLabel>
 
       <InputGroup>
-        {campaignImage && (
+        {campaign?.thumbnail && (
           <InputLeftElement>
-            <OptionImage img={campaignImage} alt="Campaign thumbnail" />
+            <OptionImage img={campaign.thumbnail} alt="Campaign thumbnail" />
           </InputLeftElement>
         )}
 
