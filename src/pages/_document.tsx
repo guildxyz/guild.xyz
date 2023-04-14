@@ -20,7 +20,8 @@ class MyDocument extends Document {
                 data-api="/api/event"
                 data-domain="guild.xyz"
                 integrity="sha512-LJ7btOy88i7WFLNwfEuMMPb2sjcAtI3zrCPzs6Ap1vKPUd7wdakY9ZaBKmGkmkebvSYyas70chM1Mf1eHpGfFw=="
-              ></script>
+                data-exclude="/oauth**"
+              />
             </>
           )}
           <meta name="twitter:card" content="summary_large_image" />
