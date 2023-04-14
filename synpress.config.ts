@@ -19,6 +19,7 @@ export default defineConfig({
   requestTimeout: 30000,
   projectId: "kbncm6",
   env: {
+    guildApiUrl: "https://api.guild.xyz/v1",
     guildName: "Cypress Gang",
     guildUrlName: "cypress-gang",
     dcClientId: "868172385000509460",

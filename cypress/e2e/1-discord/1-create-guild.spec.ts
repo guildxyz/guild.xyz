@@ -26,13 +26,12 @@ describe("create-discord-guild", () => {
   it("can authenticate with Discord and create a guild", () => {
     cy.getByDataTest("DISCORD-select-button").click()
 
-    // TODO: Guild API URL to env?
-    cy.intercept("https://api.guild.xyz/v1/guild/listGateables", {
+    cy.intercept(`${Cypress.env("guildApiUrl")}/guild/listGateables`, {
       statusCode: 200,
       fixture: "testUserDiscordGateables.json",
     }).as("fetchDiscordGateables")
 
-    cy.intercept("https://api.guild.xyz/v1/user/connect", {
+    cy.intercept(`${Cypress.env("guildApiUrl")}/user/connect`, {
       statusCode: 200,
       fixture: "connectDiscord.json",
     }).as("connectDiscord")
@@ -53,7 +52,7 @@ describe("create-discord-guild", () => {
     cy.visit("/create-guild")
 
     // Intercepting this request, so we can set the `DISCORD-select-button-connected` data-test attribute properly
-    cy.intercept(`https://api.guild.xyz/v1/user/${USER_ADDRESS}`, (req) => {
+    cy.intercept(`${Cypress.env("guildApiUrl")}/user/${USER_ADDRESS}`, (req) => {
       req.continue((res) => {
         res.body = {
           ...res.body,
@@ -72,7 +71,7 @@ describe("create-discord-guild", () => {
     cy.getByDataTest("DISCORD-select-button-connected").click()
     cy.wait("@fetchDiscordGateables")
 
-    cy.intercept("https://api.guild.xyz/v1/platform/guild/DISCORD/*").as(
+    cy.intercept(`${Cypress.env("guildApiUrl")}/platform/guild/DISCORD/*`).as(
       "useGuildByPlatformId"
     )
     cy.wait("@useGuildByPlatformId")
@@ -97,7 +96,11 @@ describe("create-discord-guild", () => {
     cy.getByDataTest("create-guild-button").should("be.enabled")
     cy.getByDataTest("create-guild-button").click()
 
-    cy.wait(10_000)
+    cy.intercept("POST", `${Cypress.env("guildApiUrl")}/guild`).as(
+      "createGuildRequest"
+    )
+
+    cy.wait("@createGuildRequest")
   })
 
   it(`/${Cypress.env("guildUrlName")} exists`, () => {

@@ -22,7 +22,7 @@ describe("pre-test cleanup", () => {
 
             cy.get(".chakra-button[aria-label='Delete guild']").click()
             cy.findByText("Delete").click()
-            cy.wait(2000)
+
             cy.confirmMetamaskSignatureRequest()
           } else {
             cy.visit("/explorer")

@@ -65,7 +65,12 @@ describe("with wallet", () => {
     cy.getByDataTest("create-guild-button").should("be.enabled")
 
     cy.getByDataTest("create-guild-button").click()
-    cy.wait(10_000)
+
+    cy.intercept("POST", `${Cypress.env("guildApiUrl")}/guild`).as(
+      "createGuildRequest"
+    )
+
+    cy.wait("@createGuildRequest")
   })
 
   it(`/${Cypress.env("guildUrlName")} exists`, () => {
