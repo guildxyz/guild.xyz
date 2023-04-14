@@ -29,6 +29,14 @@ jobs:
         with:
           node-version: "16"
 
+      # Try to restore cached deps to speed up the workflow
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+
       # Install NPM dependencies, cache them correctly and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v5
