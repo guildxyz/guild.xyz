@@ -1,5 +1,4 @@
 import { Image } from "@chakra-ui/react"
-import CustomImage from "components/brain/CustomImage"
 import CustomLink from "components/brain/CustomLink"
 import Header from "components/brain/Header"
 import PageBrainCard from "components/brain/PageBrainCard"
@@ -28,9 +27,7 @@ const PageDetails = ({ blockMap, linkedPageContents, pageId, pageLogo }) => (
     >
       <NotionRenderer
         recordMap={blockMap}
-        forceCustomImages={true}
         components={{
-          nextImage: CustomImage,
           Collection: Header,
           PageLink: CustomLink,
         }}
