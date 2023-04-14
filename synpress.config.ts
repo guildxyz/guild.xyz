@@ -26,7 +26,6 @@ export default defineConfig({
     tgId: "-1001653099938",
   },
   e2e: {
-    baseUrl: "http://localhost:3000",
     setupNodeEvents,
     supportFile: "./cypress/support/e2e.ts",
     specPattern: "./cypress/e2e/**/*.spec.ts",

@@ -1,0 +1,21 @@
+name: E2E tests (manual run)
+
+on: [workflow_dispatch]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          build: npm run build
+          start: npm run start
+          command: npm run test
+        env:
+          CYPRESS_BASE_URL: "http://localhost:3000"
+          SECRET_WORDS: ${{ secrets.SYNPRESS_SECRET_WORDS }}

@@ -13,13 +13,11 @@
     "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx",
     "dd:sourcemaps": "npx datadog-ci sourcemaps upload ./.next --service guild.xyz --release-version 1.0.0 --minified-path-prefix https://guild.xyz/_next",
     "dd:sourcemaps:local": "npx dotenv-cli -e .env.local -- npm run dd:sourcemaps",
-    "test": "dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts",
-    "test:mobile": "dotenv -e .env.local -- synpress run --configFile=synpress.config.ts --config viewportWidth=375,viewportHeight=667' --env guildName='Cypress Mobile Gang',guildUrlName='cypress-mobile-gang',dcInvite='https://discord.gg/G6VWkWJrzp',tgId='-1001689086791' -b chrome",
-    "test:record": "dotenv -e .env.local -e .env.development.local -- synpress run --record --configFile=synpress.config.ts -b chrome",
-    "test:mobile:record": "dotenv -e .env.local -e .env.development.local -- synpress run --record --configFile=synpress.config.ts --config viewportWidth=375,viewportHeight=667' -b chrome",
+    "test": "dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --spec 'cypress/e2e/1-discord/*.spec.ts'",
+    "test:mobile": "dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --config viewportWidth=375,viewportHeight=667",
+    "test:record": "dotenv -e .env.local -e .env.development.local -- synpress run -b chrome --configFile=synpress.config.ts --record",
+    "test:mobile:record": "dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --config viewportWidth=375,viewportHeight=667 --record",
     "test:open": "dotenv -e .env.local -- synpress open --configFile=synpress.config.ts",
-    "test:gh": "synpress run --record --configFile=synpress.config.ts -b chrome",
-    "test:mobile:gh": "synpress run --record ---configFile=synpress.config.ts --config viewportWidth=375,viewportHeight=667' --group Mobile -b chrome",
     "snyk-protect": "snyk-protect"
   },
   "dependencies": {
