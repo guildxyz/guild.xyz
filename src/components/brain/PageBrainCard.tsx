@@ -1,6 +1,5 @@
-import { Card, Center, Heading, HStack } from "@chakra-ui/react"
+import { Card, Center, Heading, HStack, Image } from "@chakra-ui/react"
 import Link from "components/common/Link"
-import Image from "next/image"
 import slugify from "slugify"
 import { BrainCardData } from "types"
 type Props = {
@@ -46,16 +45,7 @@ const PageBrainCard = ({ pageData }: Props): JSX.Element => {
         <HStack>
           {pageData.icon && (
             <Center boxSize={10} position="relative" mr={2}>
-              <Image
-                src={pageData.icon}
-                layout="fill"
-                objectFit="contain"
-                quality="10"
-                style={{
-                  overflow: "visible",
-                }}
-                alt="logo"
-              ></Image>
+              <Image src={pageData.icon} alt="logo" fontSize={0}></Image>
             </Center>
           )}
           <Heading
