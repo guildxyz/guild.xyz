@@ -35,16 +35,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
         borderRadius="xl"
         borderWidth={0}
         p={0}
-        sx={{
-          "div:nth-child(2) div.images > img.background": {
-            filter: "blur(8px)",
-            opacity: 0.5,
-          },
-          ":hover div:nth-child(2) div.images > img.background": {
-            filter: "blur(7px)",
-            opacity: 0.7,
-          },
-        }}
+        role="group"
       >
         <ColorCardLabel
           labelSize="md"
@@ -63,14 +54,15 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
             overflow={"hidden"}
             borderRadius="xl"
             minHeight="160px"
-            className="images"
           >
             {pageData.backgroundImage && (
               <Image
                 src={pageData?.backgroundImage}
                 alt="background"
                 fontSize={0}
-                className="background"
+                filter="blur(8px)"
+                opacity="0.5"
+                _groupHover={{ filter: "blur(7px)", opacity: 0.8 }}
                 style={{ transition: "filter 0.3s, opacity 0.3s" }}
               />
             )}
