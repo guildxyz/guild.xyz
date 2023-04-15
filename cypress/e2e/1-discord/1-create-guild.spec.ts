@@ -1,5 +1,3 @@
-import "../0-platformless/0-cleanup.spec"
-
 before(() => {
   cy.disconnectMetamaskWalletFromAllDapps()
 })
