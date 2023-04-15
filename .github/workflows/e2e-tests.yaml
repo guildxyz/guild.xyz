@@ -38,7 +38,8 @@ jobs:
           restore-keys: npm-
 
       # Install NPM dependencies, cache them correctly and run all Cypress tests
-      - name: Cypress run
+      - id: cypressrun
+        name: Cypress run
         uses: cypress-io/github-action@v5
         with:
           command: npm run test
@@ -47,3 +48,8 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           SECRET_WORDS: ${{ secrets.SYNPRESS_SECRET_WORDS }}
           DISPLAY: :0.0
+
+      - name: Send Discord notification
+        if: steps.cypressrun.outcome == 'success' || steps.cypressrun.outcome == 'failure'
+        shell: bash
+        run: curl -X POST -H 'Content-Type:application/json' -d '{"username":"Cypress","embeds":[{"title":"Failing test","description":"Run ID:\s${{github.run_id}}","color":15548997}]}' https://discord.com/api/webhooks/1096828673237196810/rHgYc7BcwaZGZiEP-XJcwk15AQD3ELhlgWgMto6sWe5qlav8N88tEX8AHLfacnsYnSGP
