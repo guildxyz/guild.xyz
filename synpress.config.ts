@@ -18,6 +18,7 @@ export default defineConfig({
   pageLoadTimeout: 30000,
   requestTimeout: 30000,
   projectId: "kbncm6",
+  testIsolation: "on",
   env: {
     guildApiUrl: "https://api.guild.xyz/v1",
     guildName: "Cypress Gang",
