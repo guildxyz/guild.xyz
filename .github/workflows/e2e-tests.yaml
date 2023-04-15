@@ -50,6 +50,6 @@ jobs:
           DISPLAY: :0.0
 
       - name: Send Discord notification
-        if: steps.cypressrun.outcome == 'success' || steps.cypressrun.outcome == 'failure'
+        if: ${{ steps.cypressrun.outcome == 'success' || steps.cypressrun.outcome == 'failure' }}
         shell: bash
-        run: curl -X POST -H 'Content-Type:application/json' -d '{"username":"Cypress","embeds":[{"title":"Failing test","description":"Run ID:\s${{github.run_id}}","color":15548997}]}' https://discord.com/api/webhooks/1096828673237196810/rHgYc7BcwaZGZiEP-XJcwk15AQD3ELhlgWgMto6sWe5qlav8N88tEX8AHLfacnsYnSGP
+        run: curl -X POST -H 'Content-Type:application/json' -d '{"username":"Cypress","embeds":[{"title":"Failing test","description":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}","color":15548997}]}' https://discord.com/api/webhooks/1096828673237196810/rHgYc7BcwaZGZiEP-XJcwk15AQD3ELhlgWgMto6sWe5qlav8N88tEX8AHLfacnsYnSGP
