@@ -85,7 +85,7 @@
     "@datadog/datadog-ci": "^2.5.1",
     "@hookform/devtools": "^4.3.0",
     "@svgr/webpack": "^6.5.1",
-    "@synthetixio/synpress": "^3.1.0",
+    "@synthetixio/synpress": "^3.5.1",
     "@testing-library/cypress": "^9.0.0",
     "@types/color": "^3.0.3",
     "@types/node": "^18.14.2",
