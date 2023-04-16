@@ -23,6 +23,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
     "https://raw.githubusercontent.com/DefiKingdoms/community-token-list/main/src/defikingdoms-default.tokenlist.json",
     "https://raw.githubusercontent.com/DefiKingdoms/community-token-list/main/build/defikingdoms-community.tokenlist.json",
   ],
+  SCROLL: [],
   SEPOLIA: [],
   GOERLI: [
     "https://raw.githubusercontent.com/Uniswap/default-token-list/main/src/tokens/goerli.json",

@@ -28,6 +28,7 @@ enum Chains {
   BASE_GOERLI = 84531,
   EXOSAMA = 2109,
   EVMOS = 9001,
+  SCROLL = 534353,
   SEPOLIA = 11155111,
   GOERLI = 5,
   POLYGON_MUMBAI = 80001,
@@ -510,6 +511,26 @@ const RPC: RpcConfig = {
     iconUrls: ["/networkLogos/evmos.svg"],
     rpcUrls: ["https://eth.bd.evmos.org:8545"],
     multicallAddress: "",
+  },
+  SCROLL: {
+    chainId: 534353,
+    chainName: "Scroll Alpha",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://alpha-rpc.scroll.io/l2"],
+    blockExplorerUrls: ["https://blockscout.scroll.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/scroll.png",
+      dark: "/networkLogos/scroll.png",
+    },
+    apiUrl: "https://blockscout.scroll.io",
+    iconUrls: ["/networkLogos/scroll.png"],
   },
   SEPOLIA: {
     chainId: 11155111,
