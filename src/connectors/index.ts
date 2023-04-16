@@ -28,6 +28,7 @@ enum Chains {
   BASE_GOERLI = 84531,
   EXOSAMA = 2109,
   EVMOS = 9001,
+  SEPOLIA = 11155111,
   GOERLI = 5,
   POLYGON_MUMBAI = 80001,
 }
@@ -509,6 +510,26 @@ const RPC: RpcConfig = {
     iconUrls: ["/networkLogos/evmos.svg"],
     rpcUrls: ["https://eth.bd.evmos.org:8545"],
     multicallAddress: "",
+  },
+  SEPOLIA: {
+    chainId: 11155111,
+    chainName: "Sepolia",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://rpc.sepolia.org"],
+    blockExplorerUrls: ["https://sepolia.etherscan.io"],
+    blockExplorerIcons: {
+      light: "/explorerLogos/etherscan-light.svg",
+      dark: "/explorerLogos/etherscan-dark.svg",
+    },
+    apiUrl: "https://api-sepolia.etherscan.io",
+    iconUrls: ["/networkLogos/ethereum.svg"],
   },
   GOERLI: {
     chainId: 5,
