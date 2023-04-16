@@ -28,6 +28,7 @@ enum Chains {
   BASE_GOERLI = 84531,
   EXOSAMA = 2109,
   EVMOS = 9001,
+  ZKSYNC_ERA = 324,
   SCROLL = 534353,
   SEPOLIA = 11155111,
   GOERLI = 5,
@@ -512,6 +513,25 @@ const RPC: RpcConfig = {
     rpcUrls: ["https://eth.bd.evmos.org:8545"],
     multicallAddress: "",
   },
+  ZKSYNC_ERA: {
+    chainId: 324,
+    chainName: "zkSync Era",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://mainnet.era.zksync.io"],
+    blockExplorerUrls: ["https://explorer.zksync.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/zksync-era.svg",
+      dark: "/networkLogos/zksync-era.svg",
+    },
+    iconUrls: ["/networkLogos/zksync-era.svg"],
+  },
   SCROLL: {
     chainId: 534353,
     chainName: "Scroll Alpha",
@@ -529,7 +549,6 @@ const RPC: RpcConfig = {
       light: "/networkLogos/scroll.png",
       dark: "/networkLogos/scroll.png",
     },
-    apiUrl: "https://blockscout.scroll.io",
     iconUrls: ["/networkLogos/scroll.png"],
   },
   SEPOLIA: {
