@@ -83,10 +83,13 @@ const WalletActivityForm = ({
   )
 
   const resetFields = () => {
+    resetField(`${baseFieldPath}.address`, { defaultValue: "" })
     resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: "" })
     resetField(`${baseFieldPath}.data.maxAmount`, { defaultValue: "" })
     resetField(`${baseFieldPath}.data.timestamps.minAmount`, { defaultValue: "" })
     resetField(`${baseFieldPath}.data.timestamps.maxAmount`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.txCount`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.txValue`, { defaultValue: "" })
   }
 
   return (
