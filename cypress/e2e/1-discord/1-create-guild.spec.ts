@@ -38,12 +38,17 @@ describe("create-discord-guild", () => {
     cy.get("@winOpen").should("be.called")
 
     cy.window().then((popupWindow) => {
+      cy.log("OPEN WINDOW")
       popupWindow.localStorage.setItem(
         "DISCORD_shouldConnect",
         JSON.stringify(MOCK_AUTH_DATA)
       )
+      cy.log("CLOSE WINDOW")
       popupWindow.close()
     })
+
+    cy.log("LOCALSTORAGE")
+    cy.log(window.localStorage.getItem("DISCORD_shouldConnect"))
 
     cy.wait("@connectDiscord")
 
