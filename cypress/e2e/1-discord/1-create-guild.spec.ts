@@ -39,7 +39,7 @@ describe("create-discord-guild", () => {
 
     cy.window().then((popupWindow) => {
       popupWindow.localStorage.setItem(
-        "DISCORD_shouldConnect-TEST",
+        "DISCORD_shouldConnect",
         JSON.stringify(MOCK_AUTH_DATA)
       )
       popupWindow.close()
