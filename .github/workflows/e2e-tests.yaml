@@ -1,10 +1,12 @@
 name: E2E tests
 
-on: [deployment_status]
+on:
+  workflow_dispatch:
+  deployment_status:
 
 jobs:
   cypress-run:
-    if: github.event.deployment_status.state == 'success'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,7 +46,7 @@ jobs:
         with:
           command: npm run test
         env:
-          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
+          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url || "https://guild.xyz" }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           SECRET_WORDS: ${{ secrets.SYNPRESS_SECRET_WORDS }}
           DISPLAY: :0.0
