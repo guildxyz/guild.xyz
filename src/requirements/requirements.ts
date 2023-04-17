@@ -83,6 +83,40 @@ export const REQUIREMENTS_DATA = [
     types: ["CONTRACT"],
   },
   {
+    icon: Wallet,
+    name: "Wallet activity",
+    fileNameBase: "WalletActivity",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/WalletActivity/WalletActivityRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/WalletActivity/WalletActivityForm")
+    ),
+    types: [
+      "WALLET_ACTIVITY",
+      "ALCHEMY_FIRST_TX",
+      "ALCHEMY_FIRST_TX_RELATIVE",
+      "ALCHEMY_CONTRACT_DEPLOY",
+      "ALCHEMY_CONTRACT_DEPLOY_RELATIVE",
+      "ALCHEMY_TX_COUNT",
+      "ALCHEMY_TX_COUNT_RELATIVE",
+      "ALCHEMY_TX_VALUE",
+      "ALCHEMY_TX_VALUE_RELATIVE",
+    ],
+  },
+  {
+    icon: Robot,
+    name: "Captcha",
+    fileNameBase: "Captcha",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Captcha/CaptchaRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Captcha/CaptchaForm")
+    ),
+    types: ["CAPTCHA"],
+  },
+  {
     icon: GuildLogo,
     name: "Guild",
     fileNameBase: "Guild",
@@ -99,18 +133,6 @@ export const REQUIREMENTS_DATA = [
       "GUILD_ADMIN",
       "GUILD_USER_SINCE",
     ],
-  },
-  {
-    icon: Robot,
-    name: "Captcha",
-    fileNameBase: "Captcha",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Captcha/CaptchaRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Captcha/CaptchaForm")
-    ),
-    types: ["CAPTCHA"],
   },
   {
     icon: "/requirementLogos/twitter.svg",
