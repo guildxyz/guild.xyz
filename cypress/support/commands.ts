@@ -9,7 +9,7 @@ Cypress.Commands.add("getByDataTest", (selector: string) =>
 Cypress.Commands.add("connectWallet", () => {
   cy.findByText("Connect to a wallet").click()
   cy.findByText("MetaMask").click()
-  cy.task("acceptMetamaskAccess")
+  cy.acceptMetamaskAccess()
   cy.findByText("Verify account").click()
   cy.confirmMetamaskSignatureRequest()
 })
