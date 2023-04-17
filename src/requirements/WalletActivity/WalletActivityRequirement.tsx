@@ -85,7 +85,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                   </>
                 ) : requirement.data.timestamps.minAmount ? (
                   <>
-                    {"before "}
+                    {" before "}
                     <DataBlockWithDate
                       timestamp={requirement.data.timestamps.minAmount}
                     />
@@ -147,7 +147,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                   </>
                 ) : requirement.data.timestamps.minAmount ? (
                   <>
-                    {"before "}
+                    {" before "}
                     <DataBlockWithDate
                       timestamp={requirement.data.timestamps.minAmount}
                     />
@@ -213,7 +213,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                   </>
                 ) : requirement.data.timestamps.minAmount ? (
                   <>
-                    {"before "}
+                    {" before "}
                     <DataBlockWithDate
                       timestamp={requirement.data.timestamps.minAmount}
                     />
