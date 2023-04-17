@@ -59,4 +59,4 @@ jobs:
       - name: Send Discord notification
         if: steps.cypressrun.outcome != 'success'
         shell: bash
-        run: curl -X POST -H 'Content-Type:application/json' -d '{"embeds":[{"title":"Failing test","fields":[{"name":"Deployment","value":"${{github.event.deployment_status.target_url}}"},{"name":"Action","value":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"},{"name":"cypress outcome"}],"color":15548997}]}' ${{ secrets.FAILING_E2E_TEST_DC_WEBHOOK }}
+        run: curl -X POST -H 'Content-Type:application/json' -d '{"embeds":[{"title":"Failing test","fields":[{"name":"Deployment","value":"${{github.event.deployment_status.target_url}}"},{"name":"Action","value":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"}],"color":15548997}]}' ${{ secrets.FAILING_E2E_TEST_DC_WEBHOOK }}
