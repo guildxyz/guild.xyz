@@ -1,4 +1,5 @@
 import {
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -7,15 +8,16 @@ import {
 } from "@chakra-ui/react"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import GuildAvatar from "components/common/GuildAvatar"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import GuildAvatar from "components/common/GuildAvatar"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { useMemo } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import useSWR from "swr"
 import { SelectOption } from "types"
 import shortenHex from "utils/shortenHex"
+import NewOwner from "../newOwner/NewOwner"
 import AdminSelect from "./components/AdminSelect"
 
 const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
@@ -96,9 +98,12 @@ const Admins = () => {
   return (
     <>
       <FormControl w="full" isInvalid={!!formState.errors.admins}>
-        <FormLabel>
-          Admins {!isOwner && <Tag>only editable by the Guild owner</Tag>}
-        </FormLabel>
+        <Flex justifyContent={"space-between"} w="full">
+          <FormLabel>
+            Admins {!isOwner && <Tag>only editable by the Guild owner</Tag>}
+          </FormLabel>
+          {isOwner ? <NewOwner /> : null}
+        </Flex>
 
         <AdminSelect
           placeholder={!isLoading && "Add address or search members"}

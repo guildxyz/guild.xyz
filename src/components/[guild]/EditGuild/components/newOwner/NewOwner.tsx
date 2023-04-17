@@ -1,7 +1,6 @@
 import {
-  Button,
+  FormLabel,
   HStack,
-  Icon,
   Input,
   Modal,
   ModalBody,
@@ -13,10 +12,10 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
+
 import useGuild from "components/[guild]/hooks/useGuild"
-import ModalButton from "components/common/ModalButton"
 import useToast from "hooks/useToast"
-import { Warning } from "phosphor-react"
 import { useState } from "react"
 import useNewOwner from "./hooks/useNewOwner"
 
@@ -25,18 +24,15 @@ const NewOwner = () => {
 
   return (
     <>
-      <HStack justifyContent="end">
-        <Button
-          size="sm"
-          as="label"
-          variant="outline"
-          fontWeight="medium"
-          onClick={onOpen}
-          data-dd-action-name="hand over ownership"
-        >
-          Hand over ownership
-        </Button>
-      </HStack>
+      <Button
+        size="xs"
+        variant="ghost"
+        borderRadius={"lg"}
+        onClick={onOpen}
+        data-dd-action-name="hand over ownership"
+      >
+        <Text colorScheme={"gray"}>Hand over ownership</Text>
+      </Button>
       <NewOwnerModal isOpen={isOpen} onClose={onClose} />
     </>
   )
@@ -78,33 +74,33 @@ const NewOwnerModal = ({ isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader pb="7">Hand over ownership</ModalHeader>
+        <ModalHeader pb="3">Hand over ownership</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text mb="6" fontSize={"lg"}>
-            Are you sure, that you hand over your ownership? Your role will switch to
-            owner.
+          <Text mb="6">
+            Are you sure that you want to hand over your ownership? You'll remain an
+            admin, but the new owner will be able to remove you anytime.
           </Text>
+          <FormLabel>New owner</FormLabel>
+
           <Input
+            fontSize="lg"
             type="url"
-            placeholder="new owner"
+            placeholder="Paste address"
             onChange={(e) => setNewOwner(e.target.value)}
           />
-          <ModalButton
-            mt="8"
-            onClick={() => onSubmit({ to: newOwner })}
-            colorScheme="green"
-            leftIcon={
-              isLoading ? (
-                <Spinner size="sm" />
-              ) : (
-                <Icon as={Warning} color="red.500" />
-              )
-            }
-            isDisabled={!ADDRESS_REGEX.test(newOwner)}
-          >
-            Hand over ownership
-          </ModalButton>
+          <HStack justifyContent="end">
+            <Button
+              mt="8"
+              ml="auto"
+              onClick={() => onSubmit({ to: newOwner })}
+              colorScheme="red"
+              leftIcon={isLoading ? <Spinner size="sm" /> : null}
+              isDisabled={!ADDRESS_REGEX.test(newOwner)}
+            >
+              Hand over ownership
+            </Button>
+          </HStack>
         </ModalBody>
       </ModalContent>
     </Modal>
