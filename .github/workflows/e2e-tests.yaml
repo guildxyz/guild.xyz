@@ -1,8 +1,10 @@
 name: E2E tests
 
 on:
-  workflow_dispatch:
   deployment_status:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
 
 jobs:
   cypress-run:
