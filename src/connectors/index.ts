@@ -28,6 +28,7 @@ enum Chains {
   BASE_GOERLI = 84531,
   EXOSAMA = 2109,
   EVMOS = 9001,
+  ZETACHAIN_ATHENS = 7001,
   ZKSYNC_ERA = 324,
   SCROLL = 534353,
   SEPOLIA = 11155111,
@@ -512,6 +513,24 @@ const RPC: RpcConfig = {
     iconUrls: ["/networkLogos/evmos.svg"],
     rpcUrls: ["https://eth.bd.evmos.org:8545"],
     multicallAddress: "",
+  },
+  ZETACHAIN_ATHENS: {
+    chainId: 7001,
+    chainName: "ZetaChain Athens",
+    nativeCurrency: {
+      name: "aZETA",
+      symbol: "aZETA",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI: "https://explorer.zetachain.com/img/logos/zeta-logo.svg",
+    },
+    rpcUrls: ["https://api.athens2.zetachain.com/evm"],
+    blockExplorerUrls: ["https://explorer.zetachain.com"],
+    blockExplorerIcons: {
+      light: "/networkLogos/zetachain.svg",
+      dark: "/networkLogos/zetachain.svg",
+    },
+    iconUrls: ["/networkLogos/zetachain.svg"],
   },
   ZKSYNC_ERA: {
     chainId: 324,

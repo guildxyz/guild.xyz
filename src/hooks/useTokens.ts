@@ -23,6 +23,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
     "https://raw.githubusercontent.com/DefiKingdoms/community-token-list/main/src/defikingdoms-default.tokenlist.json",
     "https://raw.githubusercontent.com/DefiKingdoms/community-token-list/main/build/defikingdoms-community.tokenlist.json",
   ],
+  ZETACHAIN_ATHENS: [],
   ZKSYNC_ERA: [],
   SCROLL: [],
   SEPOLIA: [],
