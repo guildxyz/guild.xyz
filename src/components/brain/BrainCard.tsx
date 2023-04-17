@@ -1,8 +1,16 @@
-import { Box, Center, Divider, Flex, HStack, Img, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Center,
+  Divider,
+  Flex,
+  HStack,
+  Image,
+  Img,
+  Text,
+} from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import Link from "components/common/Link"
-import Image from "next/image"
 import slugify from "slugify"
 import { BrainCardData } from "types"
 type Props = {
@@ -27,16 +35,7 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
         borderRadius="xl"
         borderWidth={0}
         p={0}
-        sx={{
-          "div:nth-child(2) div.background > span img": {
-            filter: "blur(8px)",
-            opacity: 0.5,
-          },
-          ":hover div:nth-child(2) div.background > span img": {
-            filter: "blur(7px)",
-            opacity: 0.7,
-          },
-        }}
+        role="group"
       >
         <ColorCardLabel
           labelSize="md"
@@ -55,33 +54,27 @@ const BrainCard = ({ pageData }: Props): JSX.Element => {
             overflow={"hidden"}
             borderRadius="xl"
             minHeight="160px"
-            className="background"
           >
             {pageData.backgroundImage && (
               <Image
                 src={pageData?.backgroundImage}
                 alt="background"
-                layout="fill"
-                objectFit="cover"
-                quality="2"
+                fontSize={0}
+                filter="blur(8px)"
+                opacity="0.5"
+                _groupHover={{ filter: "blur(7px)", opacity: 0.8 }}
                 style={{ transition: "filter 0.3s, opacity 0.3s" }}
               />
             )}
 
             {pageData.icon && (
-              <Center boxSize={16} position="relative">
-                <Image
-                  src={pageData?.icon}
-                  alt="icon"
-                  layout="fill"
-                  objectFit="contain"
-                  quality="25"
-                  style={{
-                    zIndex: "1",
-                    overflow: "visible",
-                  }}
-                />
-              </Center>
+              <Image
+                src={pageData?.icon}
+                alt="icon"
+                boxSize={16}
+                pos="absolute"
+                fontSize={0}
+              />
             )}
           </Center>
           {renderedTags.length > 0 && (

@@ -2,8 +2,12 @@ import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Poap } from "types"
 
-export const usePoaps = (): { poaps: Array<Poap>; isLoading: boolean } => {
-  const { isValidating, data } = useSWRImmutable("/assets/poap")
+export const usePoaps = (
+  search = ""
+): { poaps: Array<Poap>; isLoading: boolean } => {
+  const { isValidating, data } = useSWRImmutable(
+    search.length > 0 ? `/assets/poap?search=${search}` : null
+  )
 
   return { isLoading: isValidating, poaps: data }
 }

@@ -1,5 +1,4 @@
-import { Center } from "@chakra-ui/react"
-import CustomImage from "components/brain/CustomImage"
+import { Image } from "@chakra-ui/react"
 import CustomLink from "components/brain/CustomLink"
 import Header from "components/brain/Header"
 import PageBrainCard from "components/brain/PageBrainCard"
@@ -11,7 +10,6 @@ import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
 import { GetServerSideProps } from "next"
-import Image from "next/image"
 import { NotionAPI } from "notion-client"
 import { NotionRenderer } from "react-notion-x"
 import "react-notion-x/src/styles.css"
@@ -24,27 +22,12 @@ const PageDetails = ({ blockMap, linkedPageContents, pageId, pageLogo }) => (
       backButton={{ href: "/guildverse", text: "Go back to Guildverse" }}
       title={blockMap.block[pageId]?.value.properties.title[0][0]}
       image={
-        pageLogo && (
-          <Center boxSize={16} position="relative">
-            <Image
-              src={pageLogo}
-              layout="fill"
-              objectFit="contain"
-              quality="10"
-              style={{
-                overflow: "visible",
-              }}
-              alt="logo"
-            ></Image>
-          </Center>
-        )
+        pageLogo && <Image src={pageLogo} boxSize="16" alt="logo" fontSize={0} />
       }
     >
       <NotionRenderer
         recordMap={blockMap}
-        forceCustomImages={true}
         components={{
-          nextImage: CustomImage,
           Collection: Header,
           PageLink: CustomLink,
         }}
