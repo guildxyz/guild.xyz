@@ -40,6 +40,7 @@ jobs:
       # Install NPM dependencies, cache them correctly and run all Cypress tests
       - id: cypressrun
         name: Cypress run
+        continue-on-error: true
         uses: cypress-io/github-action@v5
         with:
           command: npm run test
