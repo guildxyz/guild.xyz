@@ -23,18 +23,6 @@ export const REQUIREMENTS_DATA = [
     types: ["FREE"],
   },
   {
-    icon: CurrencyCircleDollar,
-    name: "Token",
-    fileNameBase: "Token",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Token/TokenRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Token/TokenForm")
-    ),
-    types: ["ERC20", "COIN"],
-  },
-  {
     icon: ImageSquare,
     name: "NFT",
     fileNameBase: "Nft",
@@ -45,6 +33,18 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Nft/NftForm")
     ),
     types: ["ERC721", "ERC1155", "NOUNS"],
+  },
+  {
+    icon: CurrencyCircleDollar,
+    name: "Token",
+    fileNameBase: "Token",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Token/TokenRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Token/TokenForm")
+    ),
+    types: ["ERC20", "COIN"],
   },
   {
     icon: ListChecks,
@@ -170,7 +170,14 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Github/GithubForm")
     ),
-    types: ["GITHUB", "GITHUB_STARRING"],
+    types: [
+      "GITHUB",
+      "GITHUB_STARRING",
+      "GITHUB_ACCOUNT_AGE",
+      "GITHUB_ACCOUNT_AGE_RELATIVE",
+      "GITHUB_COMMIT_COUNT",
+      "GITHUB_COMMIT_COUNT_RELATIVE",
+    ],
     isPlatform: true,
   },
   {

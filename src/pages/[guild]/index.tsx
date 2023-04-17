@@ -23,7 +23,6 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -55,8 +54,8 @@ import parseDescription from "utils/parseDescription"
 const BATCH_SIZE = 10
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
-const DynamicAddRoleButton = dynamic(
-  () => import("components/[guild]/AddRoleButton")
+const DynamicAddAndOrderRoles = dynamic(
+  () => import("components/[guild]/AddAndOrderRoles")
 )
 const DynamicAddRewardButton = dynamic(
   () => import("components/[guild]/AddRewardButton")
@@ -68,6 +67,9 @@ const DynamicOnboarding = dynamic(() => import("components/[guild]/Onboarding"))
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 const DynamicActiveStatusUpdates = dynamic(
   () => import("components/[guild]/ActiveStatusUpdates")
+)
+const DynamicResendRewardButton = dynamic(
+  () => import("components/[guild]/ResendRewardButton")
 )
 
 const GuildPage = (): JSX.Element => {
@@ -87,24 +89,21 @@ const GuildPage = (): JSX.Element => {
   } = useGuild()
   useAutoStatusUpdate()
 
-  const { data: roleAccesses } = useAccess()
-
+  // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
-    const byMembers = roles?.sort(
-      (role1, role2) => role2.memberCount - role1.memberCount
-    )
-    if (!roleAccesses) return byMembers
+    if (roles.every((role) => role.position === null)) {
+      const byMembers = roles?.sort(
+        (role1, role2) => role2.memberCount - role1.memberCount
+      )
+      return byMembers
+    }
 
-    // prettier-ignore
-    const accessedRoles = [], otherRoles = []
-    byMembers?.forEach((role) =>
-      (roleAccesses?.find(({ roleId }) => roleId === role.id)?.access
-        ? accessedRoles
-        : otherRoles
-      ).push(role)
-    )
-    return accessedRoles.concat(otherRoles)
-  }, [roles, roleAccesses])
+    return roles?.sort((role1, role2) => {
+      if (role1.position === null) return 1
+      if (role2.position === null) return -1
+      return role1.position - role2.position
+    })
+  }, [roles])
 
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
@@ -216,15 +215,18 @@ const GuildPage = (): JSX.Element => {
           <DynamicOnboarding />
         ) : (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            {!isMember ? (
-              <JoinButton />
-            ) : !isAdmin ? (
-              <LeaveButton />
-            ) : isAddRoleStuck ? (
-              <DynamicAddRoleButton />
-            ) : (
-              <DynamicAddRewardButton />
-            )}
+            <HStack>
+              {isMember && !isAdmin && <DynamicResendRewardButton />}
+              {!isMember ? (
+                <JoinButton />
+              ) : !isAdmin ? (
+                <LeaveButton />
+              ) : isAddRoleStuck ? (
+                <DynamicAddAndOrderRoles />
+              ) : (
+                <DynamicAddRewardButton />
+              )}
+            </HStack>
           </Tabs>
         )}
 
@@ -238,7 +240,7 @@ const GuildPage = (): JSX.Element => {
             isAdmin &&
             (showAccessHub || showOnboarding) && (
               <Box my="-2 !important" ml="auto !important">
-                <DynamicAddRoleButton setIsStuck={setIsAddRoleStuck} />
+                <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
               </Box>
             )
           }
@@ -400,7 +402,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   if (!data?.id)
     return {
       props: {},
-      revalidate: 10,
+      revalidate: 60,
     }
 
   // Removing the members list, and then we refetch them on client side. This way the members won't be included in the SSG source code.
@@ -418,7 +420,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
         [endpoint]: filteredData,
       },
     },
-    revalidate: 10,
+    revalidate: 60,
   }
 }
 

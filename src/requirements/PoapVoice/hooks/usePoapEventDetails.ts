@@ -1,7 +1,8 @@
 import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
-import { PoapEventDetails } from "types"
+import { PlatformType, PoapEventDetails } from "types"
 
 const usePoapEventDetails = (
   poapIdentifier?: number
@@ -10,9 +11,19 @@ const usePoapEventDetails = (
   isPoapEventDetailsLoading: boolean
   mutatePoapEventDetails: KeyedMutator<any>
 } => {
+  const { guildPlatforms } = useGuild()
   const { poapData } = useCreatePoapContext()
+
+  const hasDiscordGuildPlatform = guildPlatforms?.some(
+    (platform) => platform.platformId === PlatformType.DISCORD
+  )
+
+  const shouldFetch =
+    hasDiscordGuildPlatform &&
+    (typeof poapData?.id === "number" || typeof poapIdentifier === "number")
+
   const { data, isValidating, mutate } = useSWRImmutable(
-    typeof poapData?.id === "number" || typeof poapIdentifier === "number"
+    shouldFetch
       ? `/assets/poap/eventDetails/${poapData?.id ?? poapIdentifier}`
       : null
   )

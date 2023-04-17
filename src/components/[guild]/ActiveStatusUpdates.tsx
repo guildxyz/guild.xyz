@@ -17,7 +17,7 @@ const ActiveStatusUpdates = () => {
   const { colorMode } = useColorMode()
 
   return (
-    <Collapse in={status === "CREATED" || status === "STARTED"}>
+    <Collapse in={status === "STARTED"}>
       <Card mb="5" shadow="sm" borderRadius="xl">
         <Alert status="info" pos="relative" pb="6">
           <AlertIcon mt="2px" boxSize="5" as={Spinner} />

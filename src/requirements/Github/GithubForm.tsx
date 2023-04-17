@@ -6,9 +6,13 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
-import { useFormState, useWatch } from "react-hook-form"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
+import GithubAccountAge from "./components/GithubAccountAge"
+import GithubAccountAgeRelative from "./components/GithubAccountAgeRelative"
+import GithubCommitCount from "./components/GithubCommitCount"
+import GithubCommitCountRelative from "./components/GithubCommitCountRelative"
 import GithubStar from "./components/GithubStar"
 
 const githubRequirementTypes = [
@@ -17,9 +21,36 @@ const githubRequirementTypes = [
     value: "GITHUB_STARRING",
     GithubRequirement: GithubStar,
   },
+  {
+    label: "Github account age",
+    value: "GITHUB_ACCOUNT_AGE",
+    GithubRequirement: GithubAccountAge,
+  },
+  {
+    label: "Relative Github account age",
+    value: "GITHUB_ACCOUNT_AGE_RELATIVE",
+    GithubRequirement: GithubAccountAgeRelative,
+  },
+  {
+    label: "Github commit count",
+    value: "GITHUB_COMMIT_COUNT",
+    GithubRequirement: GithubCommitCount,
+  },
+  {
+    label: "Relative Github commit count",
+    value: "GITHUB_COMMIT_COUNT_RELATIVE",
+    GithubRequirement: GithubCommitCountRelative,
+  },
 ]
 
 const GithubForm = ({ baseFieldPath }: RequirementFormProps) => {
+  const { resetField } = useFormContext()
+
+  const resetFields = () => {
+    resetField(`${baseFieldPath}.data.id`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.maxAmount`, { defaultValue: "" })
+  }
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
   const { errors } = useFormState()
@@ -30,6 +61,7 @@ const GithubForm = ({ baseFieldPath }: RequirementFormProps) => {
     <Stack spacing={4} alignItems="start">
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
+        isRequired
       >
         <FormLabel>Type</FormLabel>
 
@@ -37,7 +69,7 @@ const GithubForm = ({ baseFieldPath }: RequirementFormProps) => {
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={githubRequirementTypes}
-          defaultValue="GITHUB_STARRING"
+          beforeOnChange={resetFields}
         />
 
         <FormErrorMessage>

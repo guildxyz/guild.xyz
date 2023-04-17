@@ -23,6 +23,7 @@ import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
 import { usePostHog } from "posthog-js/react"
 import {
+  DISABLED_TOKENS,
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
@@ -87,11 +88,14 @@ const PurchaseRequirement = (): JSX.Element => {
   if (
     !isOpen &&
     !isInfoModalOpen &&
-    (!featureFlags?.includes("PURCHASE_REQUIREMENT") ||
+    (!featureFlags.includes("PURCHASE_REQUIREMENT") ||
+      DISABLED_TOKENS[requirement.chain]?.includes(
+        requirement.address?.toLowerCase()
+      ) ||
       (!accessData && isAccessLoading) ||
       satisfiesRequirement ||
-      !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
-      !purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain))
+      !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement.type) ||
+      !purchaseSupportedChains[requirement.type]?.includes(requirement.chain))
   )
     return null
 

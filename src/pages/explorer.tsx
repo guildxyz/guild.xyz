@@ -96,7 +96,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     [filteredGuilds, renderedGuildsCount]
   )
 
-  const memberships = useMemberships()
+  const { memberships } = useMemberships()
   const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>(
     getUsersGuilds(memberships, allGuilds)
   )
@@ -202,7 +202,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: { guilds },
-    revalidate: 10,
+    revalidate: 60,
   }
 }
 
