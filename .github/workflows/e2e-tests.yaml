@@ -40,7 +40,6 @@ jobs:
       # Install NPM dependencies, cache them correctly and run all Cypress tests
       - id: cypressrun
         name: Cypress run
-        continue-on-error: true
         uses: cypress-io/github-action@v5
         with:
           command: npm run test
@@ -53,4 +52,4 @@ jobs:
       - name: Send Discord notification
         if: ${{ steps.cypressrun.outcome != 'success' }}
         shell: bash
-        run: curl -X POST -H 'Content-Type:application/json' -d '{"username":"Cypress","embeds":[{"title":"Failing test","fields":[{"name":"Deployment","value":"${{github.event.deployment_status.target_url}}""},{"name":"Action","value":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"}],"color":15548997}]}' https://discord.com/api/webhooks/1096828673237196810/rHgYc7BcwaZGZiEP-XJcwk15AQD3ELhlgWgMto6sWe5qlav8N88tEX8AHLfacnsYnSGP
+        run: curl -X POST -H 'Content-Type:application/json' -d '{"username":"Cypress","embeds":[{"title":"Failing test","fields":[{"name":"Deployment","value":"${{github.event.deployment_status.target_url}}"},{"name":"Action","value":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"}],"color":15548997}]}' https://discord.com/api/webhooks/1096828673237196810/rHgYc7BcwaZGZiEP-XJcwk15AQD3ELhlgWgMto6sWe5qlav8N88tEX8AHLfacnsYnSGP
