@@ -59,7 +59,7 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
 
   const { cache } = useSWRConfig()
 
-  const memberships = useMemberships()
+  const { memberships } = useMemberships()
 
   useEffect(() => {
     if (!cache || !account || !user || !memberships) return

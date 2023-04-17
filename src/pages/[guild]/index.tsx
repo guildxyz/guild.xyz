@@ -16,6 +16,11 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
+import Button from "components/common/Button"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
@@ -32,11 +37,6 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import Button from "components/common/Button"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -67,6 +67,9 @@ const DynamicOnboarding = dynamic(() => import("components/[guild]/Onboarding"))
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 const DynamicActiveStatusUpdates = dynamic(
   () => import("components/[guild]/ActiveStatusUpdates")
+)
+const DynamicResendRewardButton = dynamic(
+  () => import("components/[guild]/ResendRewardButton")
 )
 
 const GuildPage = (): JSX.Element => {
@@ -212,15 +215,18 @@ const GuildPage = (): JSX.Element => {
           <DynamicOnboarding />
         ) : (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            {!isMember ? (
-              <JoinButton />
-            ) : !isAdmin ? (
-              <LeaveButton />
-            ) : isAddRoleStuck ? (
-              <DynamicAddAndOrderRoles />
-            ) : (
-              <DynamicAddRewardButton />
-            )}
+            <HStack>
+              {isMember && !isAdmin && <DynamicResendRewardButton />}
+              {!isMember ? (
+                <JoinButton />
+              ) : !isAdmin ? (
+                <LeaveButton />
+              ) : isAddRoleStuck ? (
+                <DynamicAddAndOrderRoles />
+              ) : (
+                <DynamicAddRewardButton />
+              )}
+            </HStack>
           </Tabs>
         )}
 
