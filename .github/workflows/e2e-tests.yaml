@@ -46,7 +46,7 @@ jobs:
         with:
           command: npm run test
         env:
-          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url || "https://guild.xyz" }}
+          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url ||'https://guild.xyz' }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           SECRET_WORDS: ${{ secrets.SYNPRESS_SECRET_WORDS }}
           DISPLAY: :0.0
