@@ -34,19 +34,11 @@ describe("create-discord-guild", () => {
 
     cy.getByDataTest("DISCORD-select-button").click()
 
-    cy.get("@winOpen")
-      .should("be.called")
-      .then(() => {
-        cy.window().then((popupWindow) => {
-          popupWindow.localStorage.setItem(
-            "DISCORD_shouldConnect",
-            JSON.stringify(MOCK_AUTH_DATA)
-          )
-          popupWindow.close()
-        })
-      })
+    cy.get("@winOpen").should("be.called")
 
-    cy.visit("/create-guild")
+    // This triggers a connection flow (useConnectFromLocalStorage)
+    localStorage.setItem("DISCORD_shouldConnect", JSON.stringify(MOCK_AUTH_DATA))
+
     cy.wait("@connectDiscord")
 
     // Intercepting this request, so we can set the `DISCORD-select-button-connected` data-test attribute properly
