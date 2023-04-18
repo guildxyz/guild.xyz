@@ -30,7 +30,6 @@ const useConnectFromLocalStorage = () => {
       if (isAlreadyConnected) return
 
       if (strData) {
-        toast({ status: "info", title: "Should connect" })
         const data: Message = JSON.parse(strData)
 
         if (data.type === "OAUTH_SUCCESS") {

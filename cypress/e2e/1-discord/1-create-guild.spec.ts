@@ -22,8 +22,6 @@ describe("create-discord-guild", () => {
   })
 
   it("can authenticate with Discord and create a guild", () => {
-    cy.getByDataTest("DISCORD-select-button").click()
-
     cy.intercept(`${Cypress.env("guildApiUrl")}/guild/listGateables`, {
       statusCode: 200,
       fixture: "testUserDiscordGateables.json",
