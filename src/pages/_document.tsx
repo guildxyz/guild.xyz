@@ -15,6 +15,7 @@ class MyDocument extends Document {
           {/* {process.env.NODE_ENV === "production" && ( */}
           <>
             <Script
+              strategy="afterInteractive"
               src="/js/script.js"
               data-api="/api/event"
               data-domain="guild.xyz"
@@ -23,8 +24,9 @@ class MyDocument extends Document {
             />
           </>
           {/* )} */}
-          <Script src="/gtag/js?id=G-6X2TRPX90R" />
+          <Script strategy="afterInteractive" src="/gtag/js?id=G-6X2TRPX90R" />
           <Script
+            strategy="afterInteractive"
             id="google-analytics"
             dangerouslySetInnerHTML={{
               __html: `
