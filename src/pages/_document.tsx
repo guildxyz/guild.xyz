@@ -1,4 +1,5 @@
 import Document, { Head, Html, Main, NextScript } from "next/document"
+import Script from "next/script"
 
 class MyDocument extends Document {
   render(): JSX.Element {
@@ -24,6 +25,24 @@ class MyDocument extends Document {
               />
             </>
           )}
+          <Script
+            strategy="afterInteractive"
+            src="https://www.googletagmanager.com/gtag/js?id=G-6X2TRPX90R"
+          />
+          <Script
+            strategy="afterInteractive"
+            id="google-analytics"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-6X2TRPX90R', {
+                  page_path: window.location.pathname,
+                });
+              `,
+            }}
+          />
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:site" content="@guildxyz" />
         </Head>
