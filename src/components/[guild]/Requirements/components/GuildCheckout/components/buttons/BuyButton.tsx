@@ -3,6 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
+import useToast from "hooks/useToast"
 import { usePostHog } from "posthog-js/react"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
@@ -14,6 +15,7 @@ import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 const BuyButton = (): JSX.Element => {
   const posthog = usePostHog()
   const { urlName } = useGuild()
+  const toast = useToast()
 
   const { chainId } = useWeb3React()
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
@@ -37,12 +39,16 @@ const BuyButton = (): JSX.Element => {
 
   const { estimateGasError, onSubmit, isLoading } = usePayFee()
 
-  // temporary (in it's current form) until POAPs are real roles
+  // temporary (in it's current form) until POAPs are real roles and there's a capacity attribute
   const handleSubmit = async () => {
-    if (requirement?.poapId)
-      await fetcher(`/api/poap/can-claim/${requirement.poapId}`).catch((e) => {
-        throw new Error(e?.error ?? "An unknown error occurred")
-      })
+    if (requirement?.poapId) {
+      const poapLinks = await fetcher(`/assets/poap/links/${requirement.poapId}`)
+      if (poapLinks?.claimed === poapLinks?.total)
+        return toast({
+          status: "error",
+          title: "All available POAPs have already been claimed",
+        })
+    }
     onSubmit()
     posthog.capture("Click: BuyButton (GuildCheckout)", {
       guild: urlName,
