@@ -45,9 +45,8 @@ describe("create-discord-guild", () => {
       popupWindow.close()
     })
 
-    cy.wait("@connectDiscord")
-
     cy.visit("/create-guild")
+    cy.wait("@connectDiscord")
 
     // Intercepting this request, so we can set the `DISCORD-select-button-connected` data-test attribute properly
     cy.intercept(`${Cypress.env("guildApiUrl")}/user/${USER_ADDRESS}`, (req) => {
