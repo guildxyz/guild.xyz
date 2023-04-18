@@ -12,25 +12,19 @@ class MyDocument extends Document {
             href="/fonts/fonts.css"
             crossOrigin="anonymous"
           />
-          {process.env.NODE_ENV === "production" && (
-            <>
-              <script
-                async
-                defer
-                src="/js/script.js"
-                data-api="/api/event"
-                data-domain="guild.xyz"
-                integrity="sha512-HVRUd9pld7dyE4GD9bua0YojsAokMtFExYGvwJhJ5zq37EEX7yEOeYEsh0yh/CypC832F1VkewDepCdoDlPwEw=="
-                data-exclude="/oauth**"
-              />
-            </>
-          )}
+          {/* {process.env.NODE_ENV === "production" && ( */}
+          <>
+            <Script
+              src="/js/script.js"
+              data-api="/api/event"
+              data-domain="guild.xyz"
+              integrity="sha512-HVRUd9pld7dyE4GD9bua0YojsAokMtFExYGvwJhJ5zq37EEX7yEOeYEsh0yh/CypC832F1VkewDepCdoDlPwEw=="
+              data-exclude="/oauth**"
+            />
+          </>
+          {/* )} */}
+          <Script src="/gtag/js?id=G-6X2TRPX90R" />
           <Script
-            strategy="afterInteractive"
-            src="https://www.googletagmanager.com/gtag/js?id=G-6X2TRPX90R"
-          />
-          <Script
-            strategy="afterInteractive"
             id="google-analytics"
             dangerouslySetInnerHTML={{
               __html: `

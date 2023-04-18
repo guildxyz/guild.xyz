@@ -186,6 +186,10 @@ module.exports = {
           source: "/api/posthog/:path*",
           destination: "https://app.posthog.com/:path*",
         },
+        {
+          source: "/gtag/:path*",
+          destination: "https://www.googletagmanager.com/gtag/:path*",
+        },
       ],
     }
   },
