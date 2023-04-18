@@ -44,7 +44,7 @@ describe("with wallet", () => {
       .should("exist")
       .contains("This field is required")
     cy.getByDataTest("create-guild-button").should("be.disabled")
-    cy.get("input[name='name']").type("Cypress Gang")
+    cy.get("input[name='name']").type(Cypress.env("platformlessGuildName"))
     cy.getByDataTest("create-guild-button").should("be.disabled")
 
     cy.get("input[name='socialLinks.TWITTER']").focus().blur()
@@ -73,9 +73,9 @@ describe("with wallet", () => {
     cy.wait("@createGuildRequest")
   })
 
-  it(`/${Cypress.env("guildUrlName")} exists`, () => {
-    cy.visit(`/${Cypress.env("guildUrlName")}`)
-    cy.get("h1").should("contain.text", Cypress.env("guildName"))
+  it(`/${Cypress.env("platformlessGuildUrlName")} exists`, () => {
+    cy.visit(`/${Cypress.env("platformlessGuildUrlName")}`)
+    cy.get("h1").should("contain.text", Cypress.env("platformlessGuildName"))
   })
 })
 

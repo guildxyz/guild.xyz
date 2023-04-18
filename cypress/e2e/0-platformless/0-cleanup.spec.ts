@@ -4,7 +4,9 @@ before(() => {
 
 describe("pre-test cleanup", () => {
   before(() => {
-    cy.visit(`/${Cypress.env("guildUrlName")}`, { failOnStatusCode: false })
+    cy.visit(`/${Cypress.env("platformlessGuildUrlName")}`, {
+      failOnStatusCode: false,
+    })
   })
 
   it("cleans up test guild", () => {
