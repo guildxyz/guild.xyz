@@ -33,15 +33,18 @@ describe("create-discord-guild", () => {
     }).as("connectDiscord")
 
     cy.getByDataTest("DISCORD-select-button").click()
-    cy.get("@winOpen").should("be.called")
 
-    cy.window().then((popupWindow) => {
-      popupWindow.localStorage.setItem(
-        "DISCORD_shouldConnect",
-        JSON.stringify(MOCK_AUTH_DATA)
-      )
-      popupWindow.close()
-    })
+    cy.get("@winOpen")
+      .should("be.called")
+      .then(() => {
+        cy.window().then((popupWindow) => {
+          popupWindow.localStorage.setItem(
+            "DISCORD_shouldConnect",
+            JSON.stringify(MOCK_AUTH_DATA)
+          )
+          popupWindow.close()
+        })
+      })
 
     cy.visit("/create-guild")
     cy.wait("@connectDiscord")
