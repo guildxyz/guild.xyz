@@ -12,24 +12,22 @@ class MyDocument extends Document {
             href="/fonts/fonts.css"
             crossOrigin="anonymous"
           />
-          {/* {process.env.NODE_ENV === "production" && ( */}
-          <>
-            <Script
-              strategy="afterInteractive"
-              src="/js/script.js"
-              data-api="/api/event"
-              data-domain="guild.xyz"
-              integrity="sha512-HVRUd9pld7dyE4GD9bua0YojsAokMtFExYGvwJhJ5zq37EEX7yEOeYEsh0yh/CypC832F1VkewDepCdoDlPwEw=="
-              data-exclude="/oauth**"
-            />
-          </>
-          {/* )} */}
-          <Script strategy="afterInteractive" src="/gtag/js?id=G-6X2TRPX90R" />
-          <Script
-            strategy="afterInteractive"
-            id="google-analytics"
-            dangerouslySetInnerHTML={{
-              __html: `
+          {process.env.NODE_ENV === "production" && (
+            <>
+              <Script
+                strategy="afterInteractive"
+                src="/js/script.js"
+                data-api="/api/event"
+                data-domain="guild.xyz"
+                integrity="sha512-HVRUd9pld7dyE4GD9bua0YojsAokMtFExYGvwJhJ5zq37EEX7yEOeYEsh0yh/CypC832F1VkewDepCdoDlPwEw=="
+                data-exclude="/oauth**"
+              />
+              <Script strategy="afterInteractive" src="/gtag/js?id=G-6X2TRPX90R" />
+              <Script
+                strategy="afterInteractive"
+                id="google-analytics"
+                dangerouslySetInnerHTML={{
+                  __html: `
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
@@ -37,8 +35,10 @@ class MyDocument extends Document {
                   page_path: window.location.pathname,
                 });
               `,
-            }}
-          />
+                }}
+              />
+            </>
+          )}
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:site" content="@guildxyz" />
         </Head>
