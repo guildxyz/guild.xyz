@@ -17,6 +17,7 @@ const useConnectFromLocalStorage = () => {
   const { platformUsers } = useUser()
 
   useEffect(() => {
+    toast({ title: "SHOULD_AUTHENTICATE", status: "info" })
     if (!keyPair || !isValid || !platformUsers) return
 
     Object.keys(platforms).forEach((platformName) => {
