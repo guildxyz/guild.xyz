@@ -27,9 +27,9 @@ const TransferOwnership = () => {
         variant="ghost"
         borderRadius={"lg"}
         onClick={onOpen}
-        data-dd-action-name="hand over ownership"
+        data-dd-action-name="transfer ownership"
       >
-        <Text colorScheme={"gray"}>Hand over ownership</Text>
+        <Text colorScheme={"gray"}>Transfer ownership</Text>
       </Button>
       <TransferOwnershipModal isOpen={isOpen} onClose={onClose} />
     </>
@@ -45,7 +45,7 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
 
   const onSuccess = (res) => {
     toast({
-      title: "Owner changed!",
+      title: "Owner successfully changed!",
       status: "success",
     })
     onClose()
@@ -73,14 +73,14 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader pb="3">Hand over ownership</ModalHeader>
+        <ModalHeader pb="3">Transfer ownership</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text mb="6">
             Are you sure that you want to hand over your ownership? You'll remain an
             admin, but the new owner will be able to remove you anytime.
           </Text>
-          <FormLabel>New owner</FormLabel>
+          <FormLabel>Address to transfer to</FormLabel>
 
           <Input
             type="url"
@@ -97,7 +97,7 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
               loadingText={signLoadingText}
               isDisabled={!ADDRESS_REGEX.test(newOwner)}
             >
-              Hand over ownership
+              Transfer ownership
             </Button>
           </HStack>
         </ModalBody>
