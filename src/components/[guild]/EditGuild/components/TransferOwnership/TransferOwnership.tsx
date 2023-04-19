@@ -12,14 +12,13 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-
 import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
 import useToast from "hooks/useToast"
 import { useState } from "react"
-import useNewOwner from "./hooks/useNewOwner"
+import useTransferOwnership from "./hooks/useTransferOwnership"
 
-const NewOwner = () => {
+const TransferOwnership = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -33,14 +32,14 @@ const NewOwner = () => {
       >
         <Text colorScheme={"gray"}>Hand over ownership</Text>
       </Button>
-      <NewOwnerModal isOpen={isOpen} onClose={onClose} />
+      <TransferOwnershipModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }
 
 const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
 
-const NewOwnerModal = ({ isOpen, onClose }) => {
+const TransferOwnershipModal = ({ isOpen, onClose }) => {
   const [newOwner, setNewOwner] = useState("")
   const { mutateGuild } = useGuild()
   const toast = useToast()
@@ -54,8 +53,7 @@ const NewOwnerModal = ({ isOpen, onClose }) => {
     mutateGuild(
       (oldData) => {
         const newAdmins = oldData.admins.map((admin) => ({
-          id: admin.id,
-          address: admin.address,
+          ...admin,
           isOwner: admin.id === res.id,
         }))
         if (newAdmins.every((admin) => admin.isOwner === false)) newAdmins.push(res)
@@ -68,7 +66,7 @@ const NewOwnerModal = ({ isOpen, onClose }) => {
     )
   }
 
-  const { onSubmit, isLoading } = useNewOwner({ onSuccess })
+  const { onSubmit, isLoading } = useTransferOwnership({ onSuccess })
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
@@ -106,4 +104,4 @@ const NewOwnerModal = ({ isOpen, onClose }) => {
     </Modal>
   )
 }
-export default NewOwner
+export default TransferOwnership

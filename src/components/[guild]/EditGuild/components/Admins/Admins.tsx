@@ -18,7 +18,7 @@ import { useController, useFormContext } from "react-hook-form"
 import useSWR from "swr"
 import { SelectOption } from "types"
 import shortenHex from "utils/shortenHex"
-import NewOwner from "../newOwner/NewOwner"
+import TransferOwnership from "../TransferOwnership"
 import AdminSelect from "./components/AdminSelect"
 
 const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
@@ -109,7 +109,7 @@ const Admins = () => {
               <Tag>only editable by the Guild owner</Tag>
             )}
           </FormLabel>
-          {isOwner ? <NewOwner /> : null}
+          {isOwner ? <TransferOwnership /> : null}
         </Flex>
 
         <AdminSelect

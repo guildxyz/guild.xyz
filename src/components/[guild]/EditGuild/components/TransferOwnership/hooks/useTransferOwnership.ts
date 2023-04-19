@@ -3,7 +3,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
 
-const useNewOwner = ({ onSuccess }) => {
+const useTransferOwnership = ({ onSuccess }) => {
   const { id } = useGuild()
   const submit = async (signedValidation: SignedValdation) =>
     fetcher(`/guild/${id}/ownership`, {
@@ -21,4 +21,4 @@ const useNewOwner = ({ onSuccess }) => {
   })
 }
 
-export default useNewOwner
+export default useTransferOwnership
