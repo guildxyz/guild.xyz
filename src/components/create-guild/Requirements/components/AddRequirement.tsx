@@ -19,12 +19,12 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
 import useToast from "hooks/useToast"
@@ -56,8 +56,8 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
   const homeRef = useRef(null)
   const formRef = useRef(null)
 
-  const handleClose = () => {
-    if (onCloseAttemptToast)
+  const handleClose = (forceClose = false) => {
+    if (onCloseAttemptToast && !forceClose)
       return toast({ status: "warning", title: onCloseAttemptToast })
 
     onClose()
@@ -168,7 +168,7 @@ const AddRequirementForm = forwardRef(
         visibility: roleVisibility,
         ...data,
       })
-      handleClose()
+      handleClose(true)
     })
 
     return (

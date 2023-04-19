@@ -16,20 +16,24 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
+import useUser from "components/[guild]/hooks/useUser"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
 
-const AccountModal = ({ isOpen, onClose }) => {
+const AccountModal = () => {
   const { account, connector } = useWeb3React()
-  const { setIsDelegateConnection } = useWeb3ConnectionManager()
+  const {
+    setIsDelegateConnection,
+    isAccountModalOpen: isOpen,
+    closeAccountModal: onClose,
+  } = useWeb3ConnectionManager()
   const { id, addresses } = useUser()
 
   const connectorName = (c) =>
