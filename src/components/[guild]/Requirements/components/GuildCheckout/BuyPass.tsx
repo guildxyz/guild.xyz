@@ -20,6 +20,7 @@ import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Reward from "components/[guild]/RoleCard/components/Reward"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import { Coin, StarHalf } from "phosphor-react"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
@@ -39,6 +40,8 @@ import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
 
 const BuyPass = () => {
+  const { captureEvent } = usePostHogContext()
+
   const { featureFlags } = useGuild()
 
   const { account, chainId } = useWeb3React()
@@ -52,7 +55,7 @@ const BuyPass = () => {
     txSuccess,
     txHash,
   } = useGuildCheckoutContext()
-  const { id, name, roles } = useGuild()
+  const { urlName, name, roles } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
@@ -61,6 +64,13 @@ const BuyPass = () => {
   const userSatisfiesOtherRequirements = accessData?.requirements
     ?.filter((r) => r.requirementId !== requirement?.id)
     ?.every((r) => r.access)
+
+  const onClick = () => {
+    onOpen()
+    captureEvent("Click: Buy (Requirement)", {
+      guild: urlName,
+    })
+  }
 
   if (
     (!isInfoModalOpen && !featureFlags?.includes("PAYMENT_REQUIREMENT")) ||
@@ -79,7 +89,7 @@ const BuyPass = () => {
         leftIcon={<Icon as={Coin} />}
         borderRadius="lg"
         fontWeight="medium"
-        onClick={onOpen}
+        onClick={onClick}
         data-dd-action-name="Pay (Requierment)"
       >
         Pay

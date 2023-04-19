@@ -17,24 +17,32 @@ type Props = {
 const MemberCount = ({ memberCount, roleId }: Props) => {
   const { status, progress } = useActiveStatusUpdates(roleId)
 
-  if (status === "CREATED" || status === "STARTED")
+  if (status === "STARTED")
     return (
       <Tooltip
         label={`Syncing ${progress.actionsDone}/${progress.total} members`}
         hasArrow
       >
-        <Tag colorScheme="blue" mt="5px !important" ml="4 !important" flexShrink={0}>
+        <Tag colorScheme="blue" mt="2px !important" flexShrink={0}>
           <TagLeftIcon as={Users} boxSize={"16px"} />
-          <TagLabel mb="-1px">{memberCount}</TagLabel>
+          <TagLabel mb="-1px">
+            {new Intl.NumberFormat("en", { notation: "compact" }).format(
+              memberCount ?? 0
+            )}
+          </TagLabel>
           <TagRightIcon as={Spinner} />
         </Tag>
       </Tooltip>
     )
 
   return (
-    <Tag bg="unset" color="gray" mt="6px !important" flexShrink={0}>
+    <Tag bg="unset" color="gray" mt="3px !important" flexShrink={0}>
       <TagLeftIcon as={Users} boxSize={"16px"} />
-      <TagLabel mb="-1px">{memberCount}</TagLabel>
+      <TagLabel mb="-1px">
+        {new Intl.NumberFormat("en", { notation: "compact" }).format(
+          memberCount ?? 0
+        )}
+      </TagLabel>
     </Tag>
   )
 }

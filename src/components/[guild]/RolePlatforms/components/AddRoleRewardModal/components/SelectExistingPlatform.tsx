@@ -1,4 +1,4 @@
-import { SimpleGrid, Text } from "@chakra-ui/react"
+import { SimpleGrid, Text, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -8,7 +8,11 @@ import { PlatformType, Visibility } from "types"
 import PlatformCard from "../../PlatformCard"
 
 const SelectExistingPlatform = ({ onClose }) => {
-  const { guildPlatforms } = useGuild()
+  const { guildPlatforms, roles } = useGuild()
+  const alreadyUsedRolePlatforms = roles
+    ?.flatMap((role) => role.rolePlatforms)
+    .filter(Boolean)
+    .map((rp) => rp.guildPlatformId)
 
   const { fields, append } = useFieldArray({
     name: "rolePlatforms",
@@ -36,28 +40,49 @@ const SelectExistingPlatform = ({ onClose }) => {
           const useCardProps =
             platforms[PlatformType[platform.platformId]].cardPropsHook
 
+          const isGoogleReward = platform.platformId === PlatformType.GOOGLE
+          const isForm =
+            platform.platformGuildData?.mimeType ===
+            "application/vnd.google-apps.form"
+
+          const isAddButtonDisabled =
+            platform.platformId === PlatformType.TELEGRAM &&
+            alreadyUsedRolePlatforms?.includes(platform.id)
+
           return (
             <PlatformCard
-              usePlatformProps={useCardProps}
               key={platform.id}
+              usePlatformProps={useCardProps}
               guildPlatform={platform}
               colSpan={1}
             >
-              <Button
-                h="10"
-                onClick={() => {
-                  append({
-                    guildPlatformId: platform.id,
-                    isNew: true,
-                    platformRoleData: {},
-                    platformRoleId: null,
-                    visibility: roleVisibility,
-                  })
-                  onClose()
-                }}
+              <Tooltip
+                isDisabled={!isAddButtonDisabled}
+                label="You can only use a Telegram reward for one role"
+                placement="bottom"
+                hasArrow
               >
-                Add reward
-              </Button>
+                <Button
+                  h="10"
+                  isDisabled={isAddButtonDisabled}
+                  onClick={() => {
+                    append({
+                      guildPlatformId: platform.id,
+                      isNew: true,
+                      platformRoleData: {},
+                      platformRoleId: isGoogleReward
+                        ? isForm
+                          ? "writer"
+                          : "reader"
+                        : null,
+                      visibility: roleVisibility,
+                    })
+                    onClose()
+                  }}
+                >
+                  Add reward
+                </Button>
+              </Tooltip>
             </PlatformCard>
           )
         })}

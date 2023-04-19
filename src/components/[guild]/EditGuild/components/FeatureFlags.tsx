@@ -8,6 +8,7 @@ const FEATURE_FLAGS = [
   "PURCHASE_REQUIREMENT",
   "PAYMENT_REQUIREMENT",
   "TWITTER_EXTRA_REQUIREMENT",
+  "VISIBILITY",
 ] as const
 export type FeatureFlag = (typeof FEATURE_FLAGS)[number]
 

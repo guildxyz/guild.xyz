@@ -19,14 +19,15 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
+import useToast from "hooks/useToast"
 import { ArrowLeft, CaretRight } from "phosphor-react"
 import { FC, forwardRef, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
@@ -35,7 +36,7 @@ import { Visibility } from "types"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
-const GENERAL_REQUIREMENTS_COUNT = 7
+const GENERAL_REQUIREMENTS_COUNT = 8
 const general = REQUIREMENTS_DATA.slice(1, GENERAL_REQUIREMENTS_COUNT + 1)
 const integrations = REQUIREMENTS_DATA.slice(GENERAL_REQUIREMENTS_COUNT + 1)
 
@@ -47,13 +48,18 @@ const HOME_MAXHEIGHT = "550px"
 
 const AddRequirement = ({ onAdd }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [onCloseAttemptToast, setOnCloseAttemptToast] = useState()
+  const toast = useToast()
   const [selectedType, setSelectedType] = useState<string>()
   const [height, setHeight] = useState("auto")
   const addCardRef = useRef()
   const homeRef = useRef(null)
   const formRef = useRef(null)
 
-  const handleClose = () => {
+  const handleClose = (forceClose = false) => {
+    if (onCloseAttemptToast && !forceClose)
+      return toast({ status: "warning", title: onCloseAttemptToast })
+
     onClose()
     setTimeout(() => {
       setSelectedType(null)
@@ -133,7 +139,7 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
               {selectedType && (
                 <AddRequirementForm
                   ref={formRef}
-                  {...{ onAdd, handleClose, selectedType }}
+                  {...{ onAdd, handleClose, selectedType, setOnCloseAttemptToast }}
                 />
               )}
             </AnimatePresence>
@@ -145,7 +151,7 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
 }
 
 const AddRequirementForm = forwardRef(
-  ({ onAdd, handleClose, selectedType }: any, ref: any) => {
+  ({ onAdd, handleClose, selectedType, setOnCloseAttemptToast }: any, ref: any) => {
     const FormComponent = REQUIREMENTS[selectedType].formComponent
 
     const methods = useForm({ mode: "all" })
@@ -162,7 +168,7 @@ const AddRequirementForm = forwardRef(
         visibility: roleVisibility,
         ...data,
       })
-      handleClose()
+      handleClose(true)
     })
 
     return (
@@ -177,7 +183,11 @@ const AddRequirementForm = forwardRef(
         <FormProvider {...methods}>
           <ModalBody>
             {selectedType !== "PAYMENT" && <IsNegatedPicker baseFieldPath="" />}
-            <FormComponent baseFieldPath="" addRequirement={onSubmit} />
+            <FormComponent
+              baseFieldPath=""
+              addRequirement={onSubmit}
+              setOnCloseAttemptToast={setOnCloseAttemptToast}
+            />
           </ModalBody>
           {selectedType !== "PAYMENT" && (
             <ModalFooter gap="3">

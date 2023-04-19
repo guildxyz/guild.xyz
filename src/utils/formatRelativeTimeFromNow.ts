@@ -1,6 +1,8 @@
 import pluralize from "./pluralize"
 
 const formatRelativeTimeFromNow = (since: number) => {
+  if (!since) return undefined
+
   const dayInMs = 86400000
   const sinceDays = since / dayInMs
   const sinceMonths = since / dayInMs / 30

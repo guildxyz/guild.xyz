@@ -17,7 +17,7 @@ const OtterspaceRequirement = (props: RequirementProps) => {
       {!badge || isValidating || error ? (
         <DataBlock
           isLoading={isValidating}
-          error={error && "API error, please contact POAP to report."}
+          error={error && "API error, please contact Otterspace to report."}
         >
           {requirement.data.id}
         </DataBlock>

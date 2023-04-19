@@ -1,10 +1,12 @@
 import {
   Alert,
+  AlertDescription,
   AlertIcon,
   AlertTitle,
   Collapse,
   Progress,
   Spinner,
+  Stack,
   useColorMode,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
@@ -15,13 +17,23 @@ const ActiveStatusUpdates = () => {
   const { colorMode } = useColorMode()
 
   return (
-    <Collapse in={status === "CREATED" || status === "STARTED"}>
+    <Collapse in={status === "STARTED"}>
       <Card mb="5" shadow="sm" borderRadius="xl">
         <Alert status="info" pos="relative" pb="6">
           <AlertIcon mt="2px" boxSize="5" as={Spinner} />
-          <AlertTitle>{`Syncing ${progress.actionsDone}/${progress.total} members ${
-            params?.guildify ? "from Discord into your guild" : ""
-          }`}</AlertTitle>
+          <Stack spacing={0}>
+            <AlertTitle>
+              {progress.actionsDone === 0 && progress.total === 0
+                ? "Preparing sync"
+                : `Syncing ${progress.actionsDone}/${progress.total} members ${
+                    params?.guildify ? "from Discord into your guild" : ""
+                  }`}
+            </AlertTitle>
+            <AlertDescription>
+              Roles & accesses may not be accurate. This can take a few hours, please
+              be patient.
+            </AlertDescription>
+          </Stack>
           <Progress
             value={
               status === null

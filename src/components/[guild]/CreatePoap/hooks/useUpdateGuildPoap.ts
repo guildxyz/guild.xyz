@@ -7,8 +7,6 @@ import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetail
 import { GuildPoap } from "types"
 import fetcher from "utils/fetcher"
 
-type UpdatePoapData = { id: number; expiryDate?: number; activate?: boolean }
-
 const updateGuildPoap = async (signedValidation: SignedValdation) =>
   fetcher(`/assets/poap`, {
     method: "PATCH",
@@ -32,7 +30,18 @@ const useUpdateGuildPoap = (
         ...response,
         contracts: guildPoap?.poapContracts,
       })
-      mutateGuild()
+      mutateGuild(
+        (oldData) => ({
+          ...oldData,
+          poaps: oldData.poaps.map((poap) =>
+            poap.id === response.id ? response : poap
+          ),
+        }),
+        // needed until replication lag is solved
+        {
+          revalidate: false,
+        }
+      )
       mutatePoap()
       onSuccess?.()
     },

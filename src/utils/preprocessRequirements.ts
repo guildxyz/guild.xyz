@@ -22,7 +22,10 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
           nftRequirementType: undefined,
         }
 
-        if (requirement.address === "0x0000000000000000000000000000000000000000")
+        if (
+          !requirement.address ||
+          requirement.address === "0x0000000000000000000000000000000000000000"
+        )
           processedRequirement.address = undefined
 
         if (
@@ -43,13 +46,13 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         )
           processedRequirement.data.addresses = []
 
-        // Deleting ID here, we don't want to update it, and it might also cause bugs
-        delete processedRequirement.id
-
         // needed for POAP requirements, temporary
         delete (processedRequirement as any).requirementId
         delete (processedRequirement as any).logic
         delete (processedRequirement as any).balancyDecimals
+
+        // only used on the frontend
+        delete (processedRequirement as any).formFieldId
 
         return processedRequirement
       })

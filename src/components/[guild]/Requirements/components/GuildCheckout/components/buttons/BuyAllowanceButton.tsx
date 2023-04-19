@@ -1,6 +1,8 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
@@ -9,6 +11,9 @@ import useAllowance from "../../hooks/useAllowance"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const BuyAllowanceButton = (): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
+  const { urlName } = useGuild()
+
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
   const requirementChainId = Chains[requirement.chain]
 
@@ -39,6 +44,13 @@ const BuyAllowanceButton = (): JSX.Element => {
 
   const isEnoughAllowance = fee && allowance ? fee.lte(allowance) : false
 
+  const onClick = () => {
+    onSubmit()
+    captureEvent("Click: BuyAllowanceButton (GuildCheckout)", {
+      guild: urlName,
+    })
+  }
+
   return (
     <Collapse
       in={
@@ -60,7 +72,7 @@ const BuyAllowanceButton = (): JSX.Element => {
             ? "Allowing"
             : "Check your wallet"
         }
-        onClick={onSubmit}
+        onClick={onClick}
         w="full"
         leftIcon={
           allowanceError ? (

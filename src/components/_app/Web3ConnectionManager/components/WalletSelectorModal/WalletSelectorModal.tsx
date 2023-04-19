@@ -19,6 +19,7 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { connectors } from "connectors"
 import useKeyPair, {
   deleteKeyPairFromIdb,
@@ -73,6 +74,7 @@ const fetchShouldLinkToUser = async (_: "shouldLinkToUser", userId: number) => {
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
   const addDatadogAction = useRumAction("trackingAppAction")
 
   const { isActive, account, connector } = useWeb3React()
@@ -94,7 +96,17 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }, 200)
   }
 
-  const { ready, set, keyPair } = useKeyPair()
+  const { ready, set, keyPair, pubKey } = useKeyPair()
+
+  useEffect(() => {
+    // If it's not a "The user rejected the request" error
+    if (set.error && set.error.code !== 4001)
+      captureEvent("useKeyPair:set - error", {
+        error: set.error,
+        pubKey: pubKey,
+        keyPairPubKey: keyPair.publicKey,
+      })
+  }, [set.error])
 
   useEffect(() => {
     if (keyPair) onClose()
@@ -148,7 +160,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     opacity: 0,
                   })}
               transition="width .2s, opacity .2s"
-              overflow="hidden"
               mt="-1px"
             >
               <IconButton

@@ -23,18 +23,6 @@ export const REQUIREMENTS_DATA = [
     types: ["FREE"],
   },
   {
-    icon: CurrencyCircleDollar,
-    name: "Token",
-    fileNameBase: "Token",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Token/TokenRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Token/TokenForm")
-    ),
-    types: ["ERC20", "COIN"],
-  },
-  {
     icon: ImageSquare,
     name: "NFT",
     fileNameBase: "Nft",
@@ -45,6 +33,18 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Nft/NftForm")
     ),
     types: ["ERC721", "ERC1155", "NOUNS"],
+  },
+  {
+    icon: CurrencyCircleDollar,
+    name: "Token",
+    fileNameBase: "Token",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Token/TokenRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Token/TokenForm")
+    ),
+    types: ["ERC20", "COIN"],
   },
   {
     icon: ListChecks,
@@ -83,6 +83,40 @@ export const REQUIREMENTS_DATA = [
     types: ["CONTRACT"],
   },
   {
+    icon: Wallet,
+    name: "Wallet activity",
+    fileNameBase: "WalletActivity",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/WalletActivity/WalletActivityRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/WalletActivity/WalletActivityForm")
+    ),
+    types: [
+      "WALLET_ACTIVITY",
+      "ALCHEMY_FIRST_TX",
+      "ALCHEMY_FIRST_TX_RELATIVE",
+      "ALCHEMY_CONTRACT_DEPLOY",
+      "ALCHEMY_CONTRACT_DEPLOY_RELATIVE",
+      "ALCHEMY_TX_COUNT",
+      "ALCHEMY_TX_COUNT_RELATIVE",
+      "ALCHEMY_TX_VALUE",
+      "ALCHEMY_TX_VALUE_RELATIVE",
+    ],
+  },
+  {
+    icon: Robot,
+    name: "Captcha",
+    fileNameBase: "Captcha",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Captcha/CaptchaRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Captcha/CaptchaForm")
+    ),
+    types: ["CAPTCHA"],
+  },
+  {
     icon: GuildLogo,
     name: "Guild",
     fileNameBase: "Guild",
@@ -99,18 +133,6 @@ export const REQUIREMENTS_DATA = [
       "GUILD_ADMIN",
       "GUILD_USER_SINCE",
     ],
-  },
-  {
-    icon: Robot,
-    name: "Captcha",
-    fileNameBase: "Captcha",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Captcha/CaptchaRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Captcha/CaptchaForm")
-    ),
-    types: ["CAPTCHA"],
   },
   {
     icon: "/requirementLogos/twitter.svg",
@@ -148,7 +170,14 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Github/GithubForm")
     ),
-    types: ["GITHUB", "GITHUB_STARRING"],
+    types: [
+      "GITHUB",
+      "GITHUB_STARRING",
+      "GITHUB_ACCOUNT_AGE",
+      "GITHUB_ACCOUNT_AGE_RELATIVE",
+      "GITHUB_COMMIT_COUNT",
+      "GITHUB_COMMIT_COUNT_RELATIVE",
+    ],
     isPlatform: true,
   },
   {
@@ -346,18 +375,18 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["CASK"],
   },
-  {
-    icon: "/requirementLogos/101.png",
-    name: "101",
-    fileNameBase: "101",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/101/101Requirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/101/101Form")
-    ),
-    types: ["101"],
-  },
+  // {
+  //   icon: "/requirementLogos/101.png",
+  //   name: "101",
+  //   fileNameBase: "101",
+  //   displayComponent: dynamic<RequirementProps>(
+  //     () => import("requirements/101/101Requirement")
+  //   ),
+  //   formComponent: dynamic<RequirementFormProps>(
+  //     () => import("requirements/101/101Form")
+  //   ),
+  //   types: ["101"],
+  // },
   {
     icon: "/requirementLogos/rabbithole.png",
     name: "RabbitHole",

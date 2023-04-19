@@ -4,14 +4,18 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
-import { getTokenBuyerContractData } from "utils/guildCheckout/constants"
 import usePrice from "../../hooks/usePrice"
+import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseAllowanceButton = (): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
+  const { urlName } = useGuild()
+
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
   const requirementChainId = Chains[requirement.chain]
 
@@ -31,8 +35,8 @@ const PurchaseAllowanceButton = (): JSX.Element => {
     isValidating: isPriceLoading,
   } = usePrice()
 
-  const { id } = useGuild()
-  const tokenBuyerContractData = getTokenBuyerContractData(id)
+  const tokenBuyerContractData = useTokenBuyerContractData()
+
   const {
     allowance,
     isAllowanceLoading,
@@ -46,6 +50,13 @@ const PurchaseAllowanceButton = (): JSX.Element => {
     priceToSendInWei && allowance
       ? BigNumber.from(priceToSendInWei).lte(allowance)
       : false
+
+  const onClick = () => {
+    onSubmit()
+    captureEvent("Click: PurchaseAllowanceButton (GuildCheckout)", {
+      guild: urlName,
+    })
+  }
 
   return (
     <Collapse
@@ -68,7 +79,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
             ? "Allowing"
             : "Check your wallet"
         }
-        onClick={onSubmit}
+        onClick={onClick}
         w="full"
         leftIcon={
           allowanceError ? (

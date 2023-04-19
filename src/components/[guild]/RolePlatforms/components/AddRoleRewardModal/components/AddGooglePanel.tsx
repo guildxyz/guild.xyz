@@ -28,10 +28,10 @@ const AddGooglePanel = ({ onSuccess, skipSettings }: Props): JSX.Element => {
       <GoogleGuildSetup
         defaultValues={defaultValues}
         onSelect={(newPlatform) => {
-          const { platformRoleData, ...guildPlatformData } = newPlatform
+          const { platformRoleId, ...guildPlatformData } = newPlatform
           append({
             guildPlatform: { ...guildPlatformData, platformName: "GOOGLE" },
-            platformRoleData,
+            platformRoleId,
             isNew: true,
             visibility: roleVisibility,
           })

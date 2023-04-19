@@ -1,12 +1,13 @@
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useMemo } from "react"
+import useDebouncedState from "hooks/useDebouncedState"
+import { useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import useSpaces from "../hooks/useSpaces"
 
 type Props = RequirementFormProps & {
   isDisabled?: boolean
@@ -14,8 +15,16 @@ type Props = RequirementFormProps & {
   helperText?: string
 }
 
+const SPACE_ID_REGEX = /.+\.[a-z]*/
+
+export type Space = {
+  id: string
+  name: string
+}
+
 const customFilterOption = (candidate, input) =>
-  candidate.label.toLowerCase().includes(input?.toLowerCase())
+  candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
+  candidate.data.details.toLowerCase().includes(input?.toLowerCase())
 
 const SpaceSelect = ({
   baseFieldPath,
@@ -28,15 +37,26 @@ const SpaceSelect = ({
     formState: { errors },
   } = useFormContext()
 
-  const { spaces, isSpacesLoading } = useSpaces()
+  const [searchSpaceId, setSearchSpaceId] = useState("")
+  const debouncedSearchSpaceId = useDebouncedState(searchSpaceId)
+  const { data: spaces, isValidating: isSpacesLoading } = useSWRImmutable<Space[]>(
+    "/assets/snapshot/space"
+  )
+  const { data: singleSpace, isValidating: isSingleSpaceLoading } =
+    useSWRImmutable<Space>(
+      debouncedSearchSpaceId
+        ? `/assets/snapshot/space/${debouncedSearchSpaceId}`
+        : null
+    )
+
   const mappedSpaces = useMemo<SelectOption[]>(
     () =>
-      spaces?.map((space) => ({
+      (singleSpace ? [singleSpace] : spaces)?.map((space) => ({
         label: space.name,
         value: space.id,
         details: space.id,
       })) ?? [],
-    [spaces]
+    [spaces, singleSpace]
   )
 
   return (
@@ -52,12 +72,17 @@ const SpaceSelect = ({
         rules={{
           required: !optional && "This field is required.",
         }}
-        placeholder="Search..."
+        placeholder="Search by ID"
         isClearable
-        isLoading={isSpacesLoading}
+        isLoading={isSpacesLoading || isSingleSpaceLoading}
         options={mappedSpaces}
         beforeOnChange={() => resetField(`${baseFieldPath}.data.proposal`)}
         filterOption={customFilterOption}
+        onInputChange={(text, _) => {
+          setSearchSpaceId("")
+          if (!SPACE_ID_REGEX.test(text)) return
+          setSearchSpaceId(text)
+        }}
       />
 
       <FormErrorMessage>

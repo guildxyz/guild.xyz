@@ -116,6 +116,14 @@ type GuildBase = {
   memberCount: number
 }
 
+type BrainCardData = {
+  id: string
+  title: string
+  tags?: Array<string>
+  icon?: string
+  backgroundImage?: string
+}
+
 type GuildAdmin = {
   id: number
   address: string
@@ -139,15 +147,6 @@ type PlatformGuildData = {
     needCaptcha?: never
     mimeType?: string
     iconLink?: string
-  }
-}
-
-type PlatformRoleData = {
-  DISCORD: {
-    role?: never
-  }
-  GOOGLE: {
-    role: "reader" | "commenter" | "writer"
   }
 }
 
@@ -177,20 +176,24 @@ type Requirement = {
   poapId?: number
 
   // Props used inside the forms on the UI
+  formFieldId?: number
   nftRequirementType?: string
   balancyDecimals?: number
   createdAt?: string
   updatedAt?: string
+
+  // Used for creating a dummy requirement, when there are some requirements that are invisibile to the user
+  isHidden?: boolean
 }
 
 type RolePlatform = {
+  id: number
   platformRoleId?: string
   guildPlatformId?: number
   guildPlatform?: GuildPlatform
   index?: number
   isNew?: boolean
   roleId?: number
-  platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
   visibility?: Visibility
 }
 
@@ -213,6 +216,7 @@ type Role = {
   visibility?: Visibility
   hiddenRequirements?: boolean
   hiddenRewards?: boolean
+  position: number
 }
 
 type GuildPlatform = {
@@ -252,6 +256,7 @@ const supportedSocialLinks = [
   "MEDIUM",
   "SUBSTACK",
   "SNAPSHOT",
+  "SOUND",
   "WEBSITE",
 ] as const
 type SocialLinkKey = (typeof supportedSocialLinks)[number]
@@ -292,6 +297,7 @@ type GuildFormType = Partial<
     | "name"
     | "imageUrl"
     | "description"
+    | "roles"
     | "theme"
     | "contacts"
     | "featureFlags"
@@ -469,7 +475,16 @@ type VoiceRequirementParams = {
   voiceEventStartedAt?: number
 }
 
+type Without<First, Second> = {
+  [P in Exclude<keyof First, keyof Second>]?: never
+}
+
+type OneOf<First, Second> = First | Second extends object
+  ? (Without<First, Second> & Second) | (Without<Second, First> & First)
+  : First | Second
+
 export type {
+  OneOf,
   WalletConnectConnectionData,
   DiscordServerData,
   GuildAdmin,
@@ -487,6 +502,7 @@ export type {
   Role,
   GuildPlatform,
   GuildBase,
+  BrainCardData,
   Guild,
   SocialLinkKey,
   SocialLinks,

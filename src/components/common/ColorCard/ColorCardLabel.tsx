@@ -7,6 +7,7 @@ type Props<LabelType extends string> = {
   backgroundColor?: ChakraProps["color"]
   color?: ChakraProps["color"]
   label?: string
+  labelSize?: string
   fallbackColor?: ChakraProps["color"]
 } & Rest
 
@@ -15,6 +16,7 @@ const ColorCardLabel = <LabelType extends string>({
   backgroundColor,
   color,
   label,
+  labelSize = "sm",
   children,
   fallbackColor = "blackAlpha.700",
   ...rest
@@ -29,7 +31,12 @@ const ColorCardLabel = <LabelType extends string>({
     {...rest}
   >
     {children}
-    <Text as="span" fontSize="sm" fontWeight="extrabold" borderTopLeftRadius="xl">
+    <Text
+      as="span"
+      fontSize={labelSize}
+      fontWeight="extrabold"
+      borderTopLeftRadius="xl"
+    >
       {label ?? type}
     </Text>
   </HStack>

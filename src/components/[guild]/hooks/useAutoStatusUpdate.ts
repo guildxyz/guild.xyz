@@ -15,7 +15,7 @@ const useAutoStatusUpdate = () => {
   const { keyPair } = useKeyPair()
 
   const { data: accesses } = useAccess()
-  const memberships = useMemberships()
+  const { memberships } = useMemberships()
 
   const roleMemberships = memberships?.find(
     (membership) => membership.guildId === id

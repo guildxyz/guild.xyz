@@ -1,6 +1,5 @@
 import {
   FormControl,
-  FormHelperText,
   FormLabel,
   InputGroup,
   InputLeftElement,
@@ -10,6 +9,7 @@ import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useDebouncedState from "hooks/useDebouncedState"
 import { useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -41,7 +41,9 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     guildsPoapsList?.map((p) => p.fancyId)
   )
 
-  const { isLoading: isPoapsLoading, poaps } = usePoaps()
+  const [searchText, setSearchText] = useState("")
+  const debouncedSearchText = useDebouncedState(searchText)
+  const { isLoading: isPoapsLoading, poaps } = usePoaps(debouncedSearchText)
 
   const [pastedId, setPastedId] = useState(null)
   const { isPoapByIdLoading, poap } = usePoapById(pastedId)
@@ -130,16 +132,22 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
             isClearable
             isLoading={isLoading}
             options={mappedPoaps}
-            placeholder="Search..."
+            placeholder="Search or paste ID"
             onInputChange={(text, _) => {
               const id = text?.replace("#", "")
-              if (id?.length > 2 && FANCY_ID_REGEX.test(id)) setPastedId(id)
+              if (id?.length > 2 && FANCY_ID_REGEX.test(id)) {
+                setPastedId(id)
+                setSearchText("")
+              } else {
+                setSearchText(text)
+              }
             }}
             filterOption={customFilterOption}
+            noResultText={
+              !debouncedSearchText.length ? "Start typing..." : undefined
+            }
           />
         </InputGroup>
-
-        <FormHelperText>Search by name or paste ID</FormHelperText>
 
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.data?.id?.message}

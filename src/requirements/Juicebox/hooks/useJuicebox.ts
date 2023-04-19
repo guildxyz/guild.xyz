@@ -7,16 +7,17 @@ type JuiceboxProject = {
   logoUri: string
 }
 
-export const useJuicebox = () => {
-  const { data, isValidating } =
-    useSWRImmutable<Array<JuiceboxProject>>("/assets/juicebox")
+export const useJuicebox = (search = "") => {
+  const { data, isValidating } = useSWRImmutable<Array<JuiceboxProject>>(
+    search.length > 0 ? `/assets/juicebox/project?search=${search}` : null
+  )
 
   return { projects: data, isLoading: isValidating }
 }
 
 export const useJuiceboxProject = (id: string) => {
   const { data, isValidating, error } = useSWRImmutable<JuiceboxProject>(
-    id ? `/assets/juicebox/${id}` : null
+    id ? `/assets/juicebox/project/${id}` : null
   )
 
   return { project: data, isLoading: isValidating, error }

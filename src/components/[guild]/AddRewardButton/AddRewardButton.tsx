@@ -4,6 +4,7 @@ import {
   IconButton,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -86,6 +87,7 @@ const AddRewardButton = () => {
         >
           <ModalOverlay />
           <ModalContent minH="550px">
+            {!selection && <ModalCloseButton />}
             <ModalHeader>
               <HStack>
                 {selection !== null && (

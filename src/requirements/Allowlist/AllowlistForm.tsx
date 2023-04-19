@@ -89,7 +89,7 @@ const AllowlistForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => 
               if (validAddresses.length !== value_.length)
                 return "Field contains invalid addresses"
 
-              if (value_.length > 50000)
+              if (router.route !== "/balancy" && value_.length > 50000)
                 return `You've added ${value_.length} addresses but the maximum is 50000`
             },
           }}

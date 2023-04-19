@@ -96,7 +96,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     [filteredGuilds, renderedGuildsCount]
   )
 
-  const memberships = useMemberships()
+  const { memberships } = useMemberships()
   const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>(
     getUsersGuilds(memberships, allGuilds)
   )
@@ -122,7 +122,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         <SimpleGrid
           templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
           gap={{ base: 2, md: "6" }}
-          mb={16}
+          mb={{ base: 8, md: 12, lg: 16 }}
         >
           <GridItem colSpan={{ base: 1, md: 2 }}>
             <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
@@ -202,7 +202,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: { guilds },
-    revalidate: 10,
+    revalidate: 60,
   }
 }
 

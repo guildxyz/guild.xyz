@@ -19,9 +19,10 @@ const SetRequirements = (): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const { control, getValues, watch, clearErrors, setValue } = useFormContext()
 
-  const { fields, append, replace, remove, update } = useFieldArray({
+  const { fields, append, replace, update } = useFieldArray({
     name: "requirements",
     control,
+    keyName: "formFieldId",
   })
 
   const requirements = useWatch({ name: "requirements" })
@@ -111,7 +112,7 @@ const SetRequirements = (): JSX.Element => {
               const type: RequirementType = getValues(`requirements.${i}.type`)
 
               return (
-                <CardMotionWrapper key={field.id}>
+                <CardMotionWrapper key={field.formFieldId}>
                   <RequirementEditableCard
                     type={type}
                     field={field}

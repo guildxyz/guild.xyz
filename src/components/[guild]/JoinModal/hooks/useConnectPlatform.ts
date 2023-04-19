@@ -1,6 +1,7 @@
 import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
@@ -28,13 +29,40 @@ const useConnectPlatform = (
   onSuccess?: () => void,
   isReauth?: boolean // Temporary, once /connect works without it, we can remove this
 ) => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
-  const showErrorToast = useShowErrorToast()
-
-  const { mutate: mutateUser, platformUsers } = useUser()
+  const { platformUsers } = useUser()
   const { onOpen, authData, isAuthenticating, ...rest } =
     platformAuthHooks[platform]?.() ?? {}
   const prevAuthData = usePrevious(authData)
+
+  const { captureEvent } = usePostHogContext()
+  const { onSubmit, isLoading, response } = useConnect(() => {
+    onSuccess?.()
+    captureEvent("Platform connection", { platform, isReauth })
+  })
+
+  useEffect(() => {
+    // couldn't prevent spamming requests without all these three conditions
+    if (!platformUsers || !authData || prevAuthData) return
+
+    onSubmit({ platformName: platform, authData, reauth: isReauth || undefined })
+  }, [authData, platformUsers])
+
+  return {
+    onConnect: onOpen,
+    isLoading: isAuthenticating || isLoading,
+    loadingText: isAuthenticating && "Confirm in the pop-up",
+    response,
+    authData,
+    ...rest,
+  }
+}
+
+const useConnect = (onSuccess?: () => void) => {
+  const { captureEvent } = usePostHogContext()
+  const { addDatadogAction, addDatadogError } = useDatadog()
+  const showErrorToast = useShowErrorToast()
+
+  const { mutate: mutateUser } = useUser()
 
   const submit = (signedValidation: SignedValdation) =>
     fetcher("/user/connect", signedValidation).then((body) => {
@@ -51,7 +79,7 @@ const useConnectPlatform = (
       return body
     })
 
-  const { onSubmit, isLoading, response } = useSubmitWithSign<{
+  return useSubmitWithSign<{
     platformName: PlatformName
     authData: any
     reauth?: boolean
@@ -62,31 +90,12 @@ const useConnectPlatform = (
       onSuccess?.()
     },
     onError: (err) => {
+      captureEvent("Platform connection error", { error: err })
       showErrorToast(err)
       addDatadogError("3rd party account connection error", { error: err })
     },
   })
-
-  useEffect(() => {
-    // couldn't prevent spamming requests without all these three conditions
-    if (!platformUsers || !authData || prevAuthData) return
-    // const alreadyConnected = platformUsers.some(
-    //   (platformAccount) => platformAccount.platformName === platform
-    // )
-    // if (alreadyConnected) return
-
-    onSubmit({ platformName: platform, authData, reauth: isReauth || undefined })
-  }, [authData, platformUsers])
-
-  return {
-    onConnect: onOpen,
-    isLoading: isAuthenticating || isLoading,
-    loadingText: isAuthenticating && "Confirm in the pop-up",
-    response,
-    authData,
-    ...rest,
-  }
 }
 
 export default useConnectPlatform
-export { platformAuthHooks }
+export { platformAuthHooks, useConnect }
