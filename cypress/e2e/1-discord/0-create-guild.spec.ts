@@ -79,11 +79,13 @@ describe("create-discord-guild", () => {
 
     cy.findByText("Next").click()
 
-    // Check if the form is valid
-    cy.get("input[name='name']").should(
-      "have.value",
-      `${Cypress.env("guildName")} ${Cypress.env("DEPLOYMENT_ID")}`
-    )
+    // Check if the form is valid & edit the guild name
+    cy.get("input[name='name']")
+      .type(` ${Cypress.env("DEPLOYMENT_ID")}`)
+      .should(
+        "have.value",
+        `${Cypress.env("guildName")} ${Cypress.env("DEPLOYMENT_ID")}`
+      )
 
     // Create guild
     cy.getByDataTest("create-guild-button").should("be.enabled")
