@@ -3,7 +3,6 @@ import Button from "components/common/Button"
 import PulseMarker from "components/common/PulseMarker"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { Check, DiscordLogo, TwitterLogo } from "phosphor-react"
 import { PlatformType } from "types"
 import PaginationButtons from "../PaginationButtons"
@@ -25,8 +24,6 @@ export type SummonMembersForm = {
 }
 
 const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
-  const { addDatadogAction } = useDatadog()
-
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
     isOpen: isAlertOpen,
@@ -83,9 +80,6 @@ const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
           target="_blank"
           leftIcon={<TwitterLogo />}
           colorScheme="TWITTER"
-          onClick={() => {
-            addDatadogAction("click on Share [onboarding]")
-          }}
         >
           Share
         </Button>

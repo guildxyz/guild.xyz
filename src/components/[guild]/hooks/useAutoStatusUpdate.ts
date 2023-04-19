@@ -1,6 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
 import useMemberships from "components/explorer/hooks/useMemberships"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import useKeyPair from "hooks/useKeyPair"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useEffect } from "react"
@@ -9,7 +8,6 @@ import useAccess from "./useAccess"
 import useGuild from "./useGuild"
 
 const useAutoStatusUpdate = () => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
   const { account } = useWeb3React()
   const { id } = useGuild()
   const { keyPair } = useKeyPair()
@@ -24,47 +22,42 @@ const useAutoStatusUpdate = () => {
   const fetcherWithSign = useFetcherWithSign()
 
   useEffect(() => {
-    try {
-      if (
-        !keyPair ||
-        !account ||
-        !Array.isArray(accesses) ||
-        !Array.isArray(roleMemberships) ||
-        !accesses?.length ||
-        !roleMemberships?.length
+    if (
+      !keyPair ||
+      !account ||
+      !Array.isArray(accesses) ||
+      !Array.isArray(roleMemberships) ||
+      !accesses?.length ||
+      !roleMemberships?.length
+    )
+      return
+
+    const roleMembershipsSet = new Set(roleMemberships)
+
+    const accessedRoleIds = accesses
+      .filter(({ access }) => !!access)
+      .map(({ roleId }) => roleId)
+
+    const unaccessedRoleIdsSet = new Set(
+      accesses.filter(({ access }) => access === false).map(({ roleId }) => roleId)
+    )
+
+    const shouldSendStatusUpdate =
+      !accesses.some((roleAccess) => roleAccess.errors) &&
+      (accessedRoleIds.some(
+        (accessedRoleId) => !roleMembershipsSet.has(accessedRoleId)
+      ) ||
+        roleMemberships.some((roleId) => unaccessedRoleIdsSet.has(roleId)))
+    if (shouldSendStatusUpdate) {
+      fetcherWithSign(`/user/${account}/statusUpdate/${id}`, {
+        method: "GET",
+        body: {},
+      }).then(() =>
+        Promise.all([
+          mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`),
+          mutateOptionalAuthSWRKey(`/user/membership/${account}`),
+        ])
       )
-        return
-
-      const roleMembershipsSet = new Set(roleMemberships)
-
-      const accessedRoleIds = accesses
-        .filter(({ access }) => !!access)
-        .map(({ roleId }) => roleId)
-
-      const unaccessedRoleIdsSet = new Set(
-        accesses.filter(({ access }) => access === false).map(({ roleId }) => roleId)
-      )
-
-      const shouldSendStatusUpdate =
-        !accesses.some((roleAccess) => roleAccess.errors) &&
-        (accessedRoleIds.some(
-          (accessedRoleId) => !roleMembershipsSet.has(accessedRoleId)
-        ) ||
-          roleMemberships.some((roleId) => unaccessedRoleIdsSet.has(roleId)))
-      if (shouldSendStatusUpdate) {
-        addDatadogAction("Automatic statusUpdate")
-        fetcherWithSign(`/user/${account}/statusUpdate/${id}`, {
-          method: "GET",
-          body: {},
-        }).then(() =>
-          Promise.all([
-            mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`),
-            mutateOptionalAuthSWRKey(`/user/membership/${account}`),
-          ])
-        )
-      }
-    } catch (err) {
-      addDatadogError("Automatic statusUpdate error", { error: err })
     }
   }, [accesses, roleMemberships, account, id])
 }
