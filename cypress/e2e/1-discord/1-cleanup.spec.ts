@@ -2,9 +2,9 @@ before(() => {
   cy.disconnectMetamaskWalletFromAllDapps()
 })
 
-describe("pre-test cleanup", () => {
+describe("post-test cleanup", () => {
   before(() => {
-    cy.visit(`/${Cypress.env("platformlessGuildUrlName")}`, {
+    cy.visit(`/${Cypress.env("guildUrlName")}-${process.env.DEPLOYMENT_ID}`, {
       failOnStatusCode: false,
     })
   })

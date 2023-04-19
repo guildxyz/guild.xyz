@@ -56,6 +56,7 @@ jobs:
         env:
           CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url || (inputs.environment == 'production' && 'https://guild.xyz' || 'https://dev-app.guild.xyz') }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          DEPLOYMENT_ID: ${{ github.event.deployment_status.deployment.id || inputs.environment }}
           SECRET_WORDS: ${{ secrets.SYNPRESS_SECRET_WORDS }}
           DISPLAY: :0.0
 

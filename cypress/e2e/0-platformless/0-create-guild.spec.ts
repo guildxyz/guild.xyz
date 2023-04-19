@@ -11,11 +11,11 @@ describe("without wallet", () => {
     cy.getByDataTest("platforms-grid").within(() => {
       cy.get("div[role='group']").first().click()
     })
-    cy.getByDataTest("wallet-selector-modal").should("exist")
-
-    cy.getByDataTest("wallet-selector-modal").within(() => {
-      cy.get("button[aria-label='Close']").click()
-    })
+    cy.getByDataTest("wallet-selector-modal")
+      .should("exist")
+      .within(() => {
+        cy.get("button[aria-label='Close']").click()
+      })
 
     cy.findByText("Create guild without platform").click()
     cy.getByDataTest("wallet-selector-modal").should("exist")
@@ -44,21 +44,21 @@ describe("with wallet", () => {
       .should("exist")
       .contains("This field is required")
     cy.getByDataTest("create-guild-button").should("be.disabled")
-    cy.get("input[name='name']").type(Cypress.env("platformlessGuildName"))
+    cy.get("input[name='name']").type(
+      `${Cypress.env("platformlessGuildName")} ${process.env.DEPLOYMENT_ID}`
+    )
     cy.getByDataTest("create-guild-button").should("be.disabled")
 
     cy.get("input[name='socialLinks.TWITTER']").focus().blur()
     cy.get("input[name='socialLinks.TWITTER']")
       .parent()
       .siblings(".chakra-collapse")
-      .should("exist")
       .contains("This field is required")
     cy.getByDataTest("create-guild-button").should("be.disabled")
     cy.get("input[name='socialLinks.TWITTER']").type("guild.xyz")
     cy.get("input[name='socialLinks.TWITTER']")
       .parent()
       .siblings(".chakra-collapse")
-      .should("exist")
       .contains("Invalid Twitter URL")
     cy.getByDataTest("create-guild-button").should("be.disabled")
     cy.get("input[name='socialLinks.TWITTER']").clear().type("twitter.com/guildxyz")
@@ -69,14 +69,13 @@ describe("with wallet", () => {
     cy.intercept("POST", `${Cypress.env("guildApiUrl")}/guild`).as(
       "createGuildRequest"
     )
-
     cy.wait("@createGuildRequest").its("response.statusCode").should("eq", 201)
   })
 
   // This step wasn't too reliable because of the guild cache
-  // it(`/${Cypress.env("platformlessGuildUrlName")} exists`, () => {
-  //   cy.visit(`/${Cypress.env("platformlessGuildUrlName")}`)
-  //   cy.get("h1").should("contain.text", Cypress.env("platformlessGuildName"))
+  // it(`/${Cypress.env("platformlessGuildUrlName")}-${process.env.DEPLOYMENT_ID} exists`, () => {
+  //   cy.visit(`/${Cypress.env("platformlessGuildUrlName")}-${process.env.DEPLOYMENT_ID}`)
+  //   cy.get("h1").should("contain.text", `${Cypress.env("platformlessGuildName")} ${process.env.DEPLOYMENT_ID}`)
   // })
 })
 

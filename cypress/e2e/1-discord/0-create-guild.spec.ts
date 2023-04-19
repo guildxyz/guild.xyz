@@ -80,7 +80,10 @@ describe("create-discord-guild", () => {
     cy.findByText("Next").click()
 
     // Check if the form is valid
-    cy.get("input[name='name']").should("have.value", Cypress.env("guildName"))
+    cy.get("input[name='name']").should(
+      "have.value",
+      `${Cypress.env("guildName")} ${process.env.DEPLOYMENT_ID}`
+    )
 
     // Create guild
     cy.getByDataTest("create-guild-button").should("be.enabled")
@@ -89,14 +92,13 @@ describe("create-discord-guild", () => {
     cy.intercept("POST", `${Cypress.env("guildApiUrl")}/guild`).as(
       "createGuildRequest"
     )
-
     cy.wait("@createGuildRequest").its("response.statusCode").should("eq", 201)
   })
 
   // This step wasn't too reliable because of the guild cache
-  // it(`/${Cypress.env("guildUrlName")} exists`, () => {
-  //   cy.visit(`/${Cypress.env("guildUrlName")}`)
-  //   cy.get("h1").should("contain.text", Cypress.env("guildName"))
+  // it(`/${Cypress.env("guildUrlName")}-${process.env.DEPLOYMENT_ID} exists`, () => {
+  //   cy.visit(`/${Cypress.env("guildUrlName")}-${process.env.DEPLOYMENT_ID}`)
+  //   cy.get("h1").should("contain.text", `${Cypress.env("guildName")} ${process.env.DEPLOYMENT_ID}`)
   // })
 })
 
