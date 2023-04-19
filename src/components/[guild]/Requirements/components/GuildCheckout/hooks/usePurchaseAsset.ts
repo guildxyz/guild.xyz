@@ -2,7 +2,6 @@ import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
@@ -79,7 +78,6 @@ const purchaseAsset = async (
 }
 
 const usePurchaseAsset = () => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
   const { captureEvent } = usePostHogContext()
   const { id: guildId, urlName } = useGuild()
   const postHogOptions = { guild: urlName }
@@ -157,11 +155,10 @@ const usePurchaseAsset = () => {
     {
       onError: (error) => {
         showErrorToast(error)
-        addDatadogError("general purchase requirement error (GuildCheckout)")
-        addDatadogError("purchase requirement pre-call error (GuildCheckout)", {
+        captureEvent("Purchase requirement error (GuildCheckout)", {
+          ...postHogOptions,
           error,
         })
-        captureEvent("Purchase requirement error (GuildCheckout)", postHogOptions)
         captureEvent("getAssets pre-call error (GuildCheckout)", {
           ...postHogOptions,
           error,
@@ -170,11 +167,10 @@ const usePurchaseAsset = () => {
       onSuccess: (receipt) => {
         if (receipt.status !== 1) {
           showErrorToast("Transaction failed")
-          addDatadogError("general purchase requirement error (GuildCheckout)")
-          addDatadogError("purchase requirement error (GuildCheckout)", {
+          captureEvent("Purchase requirement error (GuildCheckout)", {
+            ...postHogOptions,
             receipt,
           })
-          captureEvent("Purchase requirement error (GuildCheckout)", postHogOptions)
           captureEvent("getAssets error (GuildCheckout)", {
             ...postHogOptions,
             receipt,
@@ -182,7 +178,6 @@ const usePurchaseAsset = () => {
           return
         }
 
-        addDatadogAction("purchased requirement (GuildCheckout)")
         captureEvent("Purchased requirement (GuildCheckout)", postHogOptions)
 
         toast({

@@ -11,7 +11,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useWeb3React } from "@web3-react/core"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -75,7 +74,6 @@ const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
-  const addDatadogAction = useRumAction("trackingAppAction")
 
   const { isActive, account, connector } = useWeb3React()
   const { data: user } = useSWRImmutable<User>(account ? `/user/${account}` : null)
@@ -89,7 +87,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   const closeModalAndSendAction = () => {
     onClose()
-    addDatadogAction("Wallet selector modal closed")
     setTimeout(() => {
       connector.resetState()
       connector.deactivate?.()
@@ -222,10 +219,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   size="xl"
                   mb="4"
                   colorScheme={"green"}
-                  onClick={() => {
-                    set.onSubmit(shouldLinkToUser)
-                    addDatadogAction("click on Verify account")
-                  }}
+                  onClick={() => set.onSubmit(shouldLinkToUser)}
                   isLoading={set.isLoading || !ready}
                   isDisabled={!ready || shouldLinkToUser === undefined}
                   loadingText={
