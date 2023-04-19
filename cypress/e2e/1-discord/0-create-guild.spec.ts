@@ -82,7 +82,7 @@ describe("create-discord-guild", () => {
     // Check if the form is valid
     cy.get("input[name='name']").should(
       "have.value",
-      `${Cypress.env("guildName")} ${process.env.DEPLOYMENT_ID}`
+      `${Cypress.env("guildName")} ${Cypress.env("DEPLOYMENT_ID")}`
     )
 
     // Create guild
@@ -96,9 +96,9 @@ describe("create-discord-guild", () => {
   })
 
   // This step wasn't too reliable because of the guild cache
-  // it(`/${Cypress.env("guildUrlName")}-${process.env.DEPLOYMENT_ID} exists`, () => {
-  //   cy.visit(`/${Cypress.env("guildUrlName")}-${process.env.DEPLOYMENT_ID}`)
-  //   cy.get("h1").should("contain.text", `${Cypress.env("guildName")} ${process.env.DEPLOYMENT_ID}`)
+  // it(`/${Cypress.env("guildUrlName")}-${Cypress.env("DEPLOYMENT_ID")} exists`, () => {
+  //   cy.visit(`/${Cypress.env("guildUrlName")}-${Cypress.env("DEPLOYMENT_ID")}`)
+  //   cy.get("h1").should("contain.text", `${Cypress.env("guildName")} ${Cypress.env("DEPLOYMENT_ID")}`)
   // })
 })
 

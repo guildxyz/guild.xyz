@@ -45,7 +45,7 @@ describe("with wallet", () => {
       .contains("This field is required")
     cy.getByDataTest("create-guild-button").should("be.disabled")
     cy.get("input[name='name']").type(
-      `${Cypress.env("platformlessGuildName")} ${process.env.DEPLOYMENT_ID}`
+      `${Cypress.env("platformlessGuildName")} ${Cypress.env("DEPLOYMENT_ID")}`
     )
     cy.getByDataTest("create-guild-button").should("be.disabled")
 
@@ -73,9 +73,9 @@ describe("with wallet", () => {
   })
 
   // This step wasn't too reliable because of the guild cache
-  // it(`/${Cypress.env("platformlessGuildUrlName")}-${process.env.DEPLOYMENT_ID} exists`, () => {
-  //   cy.visit(`/${Cypress.env("platformlessGuildUrlName")}-${process.env.DEPLOYMENT_ID}`)
-  //   cy.get("h1").should("contain.text", `${Cypress.env("platformlessGuildName")} ${process.env.DEPLOYMENT_ID}`)
+  // it(`/${Cypress.env("platformlessGuildUrlName")}-${Cypress.env("DEPLOYMENT_ID")} exists`, () => {
+  //   cy.visit(`/${Cypress.env("platformlessGuildUrlName")}-${Cypress.env("DEPLOYMENT_ID")}`)
+  //   cy.get("h1").should("contain.text", `${Cypress.env("platformlessGuildName")} ${Cypress.env("DEPLOYMENT_ID")}`)
   // })
 })
 

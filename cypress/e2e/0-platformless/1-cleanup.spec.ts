@@ -5,7 +5,7 @@ before(() => {
 describe("post-test cleanup", () => {
   before(() => {
     cy.visit(
-      `/${Cypress.env("platformlessGuildUrlName")}-${process.env.DEPLOYMENT_ID}`,
+      `/${Cypress.env("platformlessGuildUrlName")}-${Cypress.env("DEPLOYMENT_ID")}`,
       {
         failOnStatusCode: false,
       }
