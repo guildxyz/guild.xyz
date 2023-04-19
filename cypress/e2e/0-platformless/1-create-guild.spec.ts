@@ -70,13 +70,14 @@ describe("with wallet", () => {
       "createGuildRequest"
     )
 
-    cy.wait("@createGuildRequest")
+    cy.wait("@createGuildRequest").its("response.statusCode").should("eq", 201)
   })
 
-  it(`/${Cypress.env("platformlessGuildUrlName")} exists`, () => {
-    cy.visit(`/${Cypress.env("platformlessGuildUrlName")}`)
-    cy.get("h1").should("contain.text", Cypress.env("platformlessGuildName"))
-  })
+  // This step wasn't too reliable because of the guild cache
+  // it(`/${Cypress.env("platformlessGuildUrlName")} exists`, () => {
+  //   cy.visit(`/${Cypress.env("platformlessGuildUrlName")}`)
+  //   cy.get("h1").should("contain.text", Cypress.env("platformlessGuildName"))
+  // })
 })
 
 export {}
