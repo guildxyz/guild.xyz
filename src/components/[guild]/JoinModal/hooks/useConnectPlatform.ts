@@ -58,6 +58,7 @@ const useConnectPlatform = (
 }
 
 const useConnect = (onSuccess?: () => void) => {
+  const { captureEvent } = usePostHogContext()
   const { addDatadogAction, addDatadogError } = useDatadog()
   const showErrorToast = useShowErrorToast()
 
@@ -89,6 +90,7 @@ const useConnect = (onSuccess?: () => void) => {
       onSuccess?.()
     },
     onError: (err) => {
+      captureEvent("Platform connection error", { error: err })
       showErrorToast(err)
       addDatadogError("3rd party account connection error", { error: err })
     },
