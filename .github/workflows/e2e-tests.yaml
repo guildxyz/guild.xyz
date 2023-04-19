@@ -17,7 +17,7 @@ jobs:
   cypress-run:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event.deployment_status.state == 'success'
     runs-on:
-      group: public
+      group: Public
       labels: frontend
     steps:
       - name: Checkout
