@@ -1,4 +1,5 @@
 import {
+  FormControl,
   FormLabel,
   HStack,
   Input,
@@ -12,6 +13,7 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { useState } from "react"
@@ -74,6 +76,8 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
     onSuccess,
   })
 
+  const isValidAddress = ADDRESS_REGEX.test(newOwner)
+
   return (
     <Modal isOpen={isOpen} onClose={handleClose} colorScheme="dark">
       <ModalOverlay />
@@ -85,13 +89,18 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
             Are you sure that you want to hand over your ownership? You'll remain an
             admin, but the new owner will be able to remove you anytime.
           </Text>
-          <FormLabel>Address to transfer to</FormLabel>
+          <FormControl isInvalid={newOwner && !isValidAddress}>
+            <FormLabel>Address to transfer to</FormLabel>
+            <Input
+              type="url"
+              placeholder="Paste address"
+              onChange={(e) => setNewOwner(e.target.value)}
+            />
+            <FormErrorMessage>
+              Please input a 42 characters long, 0x-prefixed hexadecimal address
+            </FormErrorMessage>
+          </FormControl>
 
-          <Input
-            type="url"
-            placeholder="Paste address"
-            onChange={(e) => setNewOwner(e.target.value)}
-          />
           <HStack justifyContent="end">
             <Button
               mt="8"
@@ -100,7 +109,7 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
               colorScheme="red"
               isLoading={isLoading}
               loadingText={signLoadingText}
-              isDisabled={!ADDRESS_REGEX.test(newOwner)}
+              isDisabled={!isValidAddress}
             >
               Transfer ownership
             </Button>
