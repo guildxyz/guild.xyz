@@ -82,7 +82,6 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
           <FormLabel>New owner</FormLabel>
 
           <Input
-            fontSize="lg"
             type="url"
             placeholder="Paste address"
             onChange={(e) => setNewOwner(e.target.value)}
