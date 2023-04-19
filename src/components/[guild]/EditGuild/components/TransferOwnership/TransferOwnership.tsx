@@ -8,7 +8,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -66,7 +65,9 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
     )
   }
 
-  const { onSubmit, isLoading } = useTransferOwnership({ onSuccess })
+  const { onSubmit, isLoading, signLoadingText } = useTransferOwnership({
+    onSuccess,
+  })
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
@@ -92,7 +93,8 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
               ml="auto"
               onClick={() => onSubmit({ to: newOwner })}
               colorScheme="red"
-              leftIcon={isLoading ? <Spinner size="sm" /> : null}
+              isLoading={isLoading}
+              loadingText={signLoadingText}
               isDisabled={!ADDRESS_REGEX.test(newOwner)}
             >
               Hand over ownership
