@@ -1,9 +1,9 @@
 import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import { usePostHog } from "posthog-js/react"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
@@ -34,10 +34,10 @@ const useConnectPlatform = (
     platformAuthHooks[platform]?.() ?? {}
   const prevAuthData = usePrevious(authData)
 
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
   const { onSubmit, isLoading, response } = useConnect(() => {
     onSuccess?.()
-    posthog.capture("Platform connection", { platform, isReauth })
+    captureEvent("Platform connection", { platform, isReauth })
   })
 
   useEffect(() => {
@@ -58,6 +58,7 @@ const useConnectPlatform = (
 }
 
 const useConnect = (onSuccess?: () => void) => {
+  const { captureEvent } = usePostHogContext()
   const { addDatadogAction, addDatadogError } = useDatadog()
   const showErrorToast = useShowErrorToast()
 
@@ -89,6 +90,7 @@ const useConnect = (onSuccess?: () => void) => {
       onSuccess?.()
     },
     onError: (err) => {
+      captureEvent("Platform connection error", { error: err })
       showErrorToast(err)
       addDatadogError("3rd party account connection error", { error: err })
     },

@@ -3,12 +3,12 @@ import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { usePostHog } from "posthog-js/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useEffect } from "react"
 import { useGuildCheckoutContext } from "../../GuildCheckoutContex"
 
 const InfoModalFooter = (): JSX.Element => {
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
   const { onInfoModalClose, txSuccess } = useGuildCheckoutContext()
@@ -29,7 +29,7 @@ const InfoModalFooter = (): JSX.Element => {
       onInfoModalClose()
     }
 
-    posthog.capture(
+    captureEvent(
       `Click: ${
         isJoinButton ? "JoinGuildButton" : "CloseModalButton"
       } (GuildCheckout)`,
