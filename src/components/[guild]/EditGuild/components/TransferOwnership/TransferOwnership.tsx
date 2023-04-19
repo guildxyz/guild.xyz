@@ -43,12 +43,17 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
   const { mutateGuild } = useGuild()
   const toast = useToast()
 
+  const handleClose = () => {
+    setNewOwner("")
+    onClose()
+  }
+
   const onSuccess = (res) => {
     toast({
       title: "Owner successfully changed!",
       status: "success",
     })
-    onClose()
+    handleClose()
     mutateGuild(
       (oldData) => {
         const newAdmins = oldData.admins.map((admin) => ({
@@ -70,7 +75,7 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
   })
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
+    <Modal isOpen={isOpen} onClose={handleClose} colorScheme="dark">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader pb="3">Transfer ownership</ModalHeader>
