@@ -1,8 +1,8 @@
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import platforms from "platforms/platforms"
-import { usePostHog } from "posthog-js/react"
 import { SWRConfiguration } from "swr"
 
 const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
@@ -10,7 +10,7 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
   const { id } = useGuild()
 
   const shouldFetch = account && id && roleId !== 0
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
 
   const { data, error, isValidating, mutate } = useSWRWithOptionalAuth(
     shouldFetch ? `/guild/access/${id}/${account}` : null,
@@ -37,7 +37,7 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
           )
         )
 
-        posthog.capture("Access check", {
+        captureEvent("Access check", {
           accessCheckResult,
           unconnectedPlatforms,
           platformsToReconnect,

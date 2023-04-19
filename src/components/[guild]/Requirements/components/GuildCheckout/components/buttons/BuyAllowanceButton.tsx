@@ -2,16 +2,16 @@ import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
-import { usePostHog } from "posthog-js/react"
 import useVault from "requirements/Payment/hooks/useVault"
 import useAllowance from "../../hooks/useAllowance"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const BuyAllowanceButton = (): JSX.Element => {
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
@@ -46,7 +46,7 @@ const BuyAllowanceButton = (): JSX.Element => {
 
   const onClick = () => {
     onSubmit()
-    posthog.capture("Click: BuyAllowanceButton (GuildCheckout)", {
+    captureEvent("Click: BuyAllowanceButton (GuildCheckout)", {
       guild: urlName,
     })
   }
