@@ -1,19 +1,19 @@
 import { Box, ButtonGroup, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHog } from "posthog-js/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 
 const PaymentMethodButtons = () => {
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
   const onPayWithCryptoClick = () =>
-    posthog.capture("Click: Pay with crypto (GuildCheckout)", {
+    captureEvent("Click: Pay with crypto (GuildCheckout)", {
       guild: urlName,
     })
 
   const onPayWithCardClick = () =>
-    posthog.capture("Click: Pay with card (GuildCheckout)", {
+    captureEvent("Click: Pay with card (GuildCheckout)", {
       guild: urlName,
     })
 
