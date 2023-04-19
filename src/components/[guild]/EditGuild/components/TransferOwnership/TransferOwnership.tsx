@@ -2,7 +2,6 @@ import {
   FormLabel,
   HStack,
   Input,
-  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -13,6 +12,7 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { useState } from "react"
 import useTransferOwnership from "./hooks/useTransferOwnership"
