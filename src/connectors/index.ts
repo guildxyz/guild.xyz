@@ -30,7 +30,7 @@ enum Chains {
   EVMOS = 9001,
   ZETACHAIN_ATHENS = 7001,
   ZKSYNC_ERA = 324,
-  SCROLL = 534353,
+  SCROLL_ALPHA = 534353,
   SEPOLIA = 11155111,
   GOERLI = 5,
   POLYGON_MUMBAI = 80001,
@@ -551,7 +551,7 @@ const RPC: RpcConfig = {
     },
     iconUrls: ["/networkLogos/zksync-era.svg"],
   },
-  SCROLL: {
+  SCROLL_ALPHA: {
     chainId: 534353,
     chainName: "Scroll Alpha",
     nativeCurrency: {
