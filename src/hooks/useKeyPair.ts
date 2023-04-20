@@ -1,4 +1,3 @@
-import { datadogRum } from "@datadog/browser-rum"
 import { useWeb3React } from "@web3-react/core"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
@@ -61,26 +60,17 @@ const generateKeyPair = async () => {
       ["sign", "verify"]
     )
 
-    try {
-      const generatedPubKey = await window.crypto.subtle.exportKey(
-        "raw",
-        generatedKeys.publicKey
-      )
+    const generatedPubKey = await window.crypto.subtle.exportKey(
+      "raw",
+      generatedKeys.publicKey
+    )
 
-      const generatedPubKeyHex = bufferToHex(generatedPubKey)
-      keyPair.pubKey = generatedPubKeyHex
-      keyPair.keyPair = generatedKeys
-      return keyPair
-    } catch {
-      throw new Error("Pubkey export error")
-    }
-  } catch (error) {
-    if (error?.code !== 4001) {
-      datadogRum.addError(`Keypair generation error`, {
-        error: error?.message || error?.toString?.() || error,
-      })
-    }
-    throw error
+    const generatedPubKeyHex = bufferToHex(generatedPubKey)
+    keyPair.pubKey = generatedPubKeyHex
+    keyPair.keyPair = generatedKeys
+    return keyPair
+  } catch {
+    throw new Error("Pubkey export error")
   }
 }
 
