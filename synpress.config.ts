@@ -11,6 +11,7 @@ export default defineConfig({
   fixturesFolder: "./cypress/fixtures",
   screenshotsFolder: "./cypress/screenshots",
   videosFolder: "./cypress/videos",
+  videoUploadOnPasses: false,
   chromeWebSecurity: true,
   viewportWidth: 1920,
   viewportHeight: 1080,
