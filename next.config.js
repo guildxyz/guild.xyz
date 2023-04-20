@@ -170,17 +170,6 @@ module.exports = {
           destination: "/api/sitemap.xml",
         },
         {
-          source: "/api/ddrum",
-          has: [
-            {
-              type: "query",
-              key: "ddforward",
-              value: "https://(?<ddforward>.*)",
-            },
-          ],
-          destination: "https://:ddforward",
-        },
-        {
           source: "/api/posthog/:path*",
           destination: "https://app.posthog.com/:path*",
         },
