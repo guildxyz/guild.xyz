@@ -147,7 +147,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         closeOnEsc={!isActive || !!keyPair}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent data-test="wallet-selector-modal">
           <ModalHeader display={"flex"}>
             <Box
               {...((isConnected && !keyPair) || isDelegateConnection
