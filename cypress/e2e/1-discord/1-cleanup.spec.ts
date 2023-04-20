@@ -4,9 +4,14 @@ before(() => {
 
 describe("post-test cleanup", () => {
   before(() => {
-    cy.visit(`/${Cypress.env("guildUrlName")}-${Cypress.env("DEPLOYMENT_ID")}`, {
-      failOnStatusCode: false,
-    })
+    cy.visit(
+      Cypress.env("DEPLOYMENT_ID")
+        ? `/${Cypress.env("guildUrlName")}-${Cypress.env("DEPLOYMENT_ID")}`
+        : `/${Cypress.env("guildUrlName")}`,
+      {
+        failOnStatusCode: false,
+      }
+    )
   })
 
   it("cleans up test guild", () => {
