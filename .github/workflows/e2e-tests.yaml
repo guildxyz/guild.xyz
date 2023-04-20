@@ -6,7 +6,7 @@ on:
     - cron: "0 * * * *"
   workflow_dispatch:
     inputs:
-      url:
+      environment:
         type: choice
         default: production
         options:
@@ -54,7 +54,7 @@ jobs:
         with:
           command: npm run test
         env:
-          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url || (inputs.environment == 'production' && 'https://guild.xyz' || 'https://dev-app.guild.xyz') }}
+          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url || (github.event_name == 'schedule' && 'https://guild.xyz') || (inputs.environment == 'production' && 'https://guild.xyz' || 'https://dev-app.guild.xyz') }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CYPRESS_DEPLOYMENT_ID: ${{ github.event.deployment.id || inputs.environment }}
           SECRET_WORDS: ${{ secrets.SYNPRESS_SECRET_WORDS }}
