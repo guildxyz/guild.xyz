@@ -1,6 +1,7 @@
 import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useDatadog from "components/_app/Datadog/useDatadog"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
@@ -26,14 +27,19 @@ const platformAuthHooks: Record<
 const useConnectPlatform = (
   platform: PlatformName,
   onSuccess?: () => void,
-  isReauth?: boolean // Temporary, once /connect works without it, we can remove this
+  isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
+  scope?: string
 ) => {
   const { platformUsers } = useUser()
   const { onOpen, authData, isAuthenticating, ...rest } =
-    platformAuthHooks[platform]?.() ?? {}
+    platformAuthHooks[platform]?.(scope) ?? {}
   const prevAuthData = usePrevious(authData)
 
-  const { onSubmit, isLoading, response } = useConnect(onSuccess)
+  const { captureEvent } = usePostHogContext()
+  const { onSubmit, isLoading, response } = useConnect(() => {
+    onSuccess?.()
+    captureEvent("Platform connection", { platform, isReauth })
+  })
 
   useEffect(() => {
     // couldn't prevent spamming requests without all these three conditions
@@ -53,6 +59,7 @@ const useConnectPlatform = (
 }
 
 const useConnect = (onSuccess?: () => void) => {
+  const { captureEvent } = usePostHogContext()
   const { addDatadogAction, addDatadogError } = useDatadog()
   const showErrorToast = useShowErrorToast()
 
@@ -84,6 +91,7 @@ const useConnect = (onSuccess?: () => void) => {
       onSuccess?.()
     },
     onError: (err) => {
+      captureEvent("Platform connection error", { error: err })
       showErrorToast(err)
       addDatadogError("3rd party account connection error", { error: err })
     },

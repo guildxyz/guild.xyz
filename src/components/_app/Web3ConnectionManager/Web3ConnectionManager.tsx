@@ -2,7 +2,6 @@ import { useDisclosure } from "@chakra-ui/react"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect"
-import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import requestNetworkChangeHandler from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import { Chains, RPC } from "connectors"
@@ -10,8 +9,8 @@ import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import {
-  createContext,
   PropsWithChildren,
+  createContext,
   useContext,
   useEffect,
   useState,
@@ -128,7 +127,6 @@ const Web3ConnectionManager = ({
         onClose={closeWalletSelectorModal}
       />
       <NetworkModal isOpen={isNetworkModalOpen} onClose={closeNetworkModal} />
-      <AccountModal isOpen={isAccountModalOpen} onClose={closeAccountModal} />
     </Web3Connection.Provider>
   )
 }

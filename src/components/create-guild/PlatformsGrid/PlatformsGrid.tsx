@@ -44,7 +44,11 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   }
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
+    <SimpleGrid
+      data-test="platforms-grid"
+      columns={{ base: 1, md: 2 }}
+      gap={{ base: 4, md: 5 }}
+    >
       {Object.entries(platformsData).map(([platform, { description, hook }]) => (
         <PlatformSelectButton
           key={platform}

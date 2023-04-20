@@ -1,10 +1,11 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { Web3ReactProvider } from "@web3-react/core"
+import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import Chakra from "components/_app/Chakra"
 import Datadog from "components/_app/Datadog"
 import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
-import PostHogProvider from "components/_app/PostHogProvider"
+import { PostHogProvider } from "components/_app/PostHogProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
 import type { AppProps } from "next/app"
@@ -84,6 +85,7 @@ const App = ({
                     <IntercomProvider>
                       <ExplorerProvider>
                         <Component {...pageProps} />
+                        <AccountModal />
                       </ExplorerProvider>
                     </IntercomProvider>
                   </PostHogProvider>

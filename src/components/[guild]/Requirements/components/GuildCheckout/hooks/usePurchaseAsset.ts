@@ -3,6 +3,7 @@ import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDatadog from "components/_app/Datadog/useDatadog"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import useContract from "hooks/useContract"
@@ -10,7 +11,6 @@ import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
-import { usePostHog } from "posthog-js/react"
 import { useMemo } from "react"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import {
@@ -80,7 +80,7 @@ const purchaseAsset = async (
 
 const usePurchaseAsset = () => {
   const { addDatadogAction, addDatadogError } = useDatadog()
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
   const { id: guildId, urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
@@ -126,8 +126,8 @@ const usePurchaseAsset = () => {
     priceData?.priceToSendInWei &&
     (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gt(BigNumber.from(priceData.priceToSendInWei))
-      : tokenBalance?.gt(BigNumber.from(priceData.priceToSendInWei)))
+      ? coinBalance?.gte(BigNumber.from(priceData.priceToSendInWei))
+      : tokenBalance?.gte(BigNumber.from(priceData.priceToSendInWei)))
 
   const shouldEstimateGas =
     requirement?.chain === Chains[chainId] &&
@@ -161,8 +161,8 @@ const usePurchaseAsset = () => {
         addDatadogError("purchase requirement pre-call error (GuildCheckout)", {
           error,
         })
-        posthog.capture("Purchase requirement error (GuildCheckout)", postHogOptions)
-        posthog.capture("getAssets pre-call error (GuildCheckout)", {
+        captureEvent("Purchase requirement error (GuildCheckout)", postHogOptions)
+        captureEvent("getAssets pre-call error (GuildCheckout)", {
           ...postHogOptions,
           error,
         })
@@ -174,11 +174,8 @@ const usePurchaseAsset = () => {
           addDatadogError("purchase requirement error (GuildCheckout)", {
             receipt,
           })
-          posthog.capture(
-            "Purchase requirement error (GuildCheckout)",
-            postHogOptions
-          )
-          posthog.capture("getAssets error (GuildCheckout)", {
+          captureEvent("Purchase requirement error (GuildCheckout)", postHogOptions)
+          captureEvent("getAssets error (GuildCheckout)", {
             ...postHogOptions,
             receipt,
           })
@@ -186,7 +183,7 @@ const usePurchaseAsset = () => {
         }
 
         addDatadogAction("purchased requirement (GuildCheckout)")
-        posthog.capture("Purchased requirement (GuildCheckout)", postHogOptions)
+        captureEvent("Purchased requirement (GuildCheckout)", postHogOptions)
 
         toast({
           status: "success",

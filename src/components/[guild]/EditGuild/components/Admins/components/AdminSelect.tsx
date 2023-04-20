@@ -53,6 +53,7 @@ const CustomMultiValueContainer = ({
         ...multiValueContainerProps,
         data: { value: resolvedAddress },
       }}
+      sx={{ ...multiValueContainerProps.sx, minH: "7", fontSize: "sm" }}
     >
       {resolvedAddress === null ||
       admins.includes(resolvedAddress?.toLowerCase()) ? (
@@ -79,6 +80,7 @@ const customComponents = {
 
 const AdminSelect = forwardRef((props: Props, ref) => (
   <StyledSelect
+    size="lg"
     as={CreatableSelect}
     components={customComponents}
     ref={ref}

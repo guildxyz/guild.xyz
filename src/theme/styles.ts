@@ -10,6 +10,9 @@ const styles = {
       "--fg-color-5": "var(--chakra-colors-gray-600) !important",
     },
 
+    ul: {
+      listStyle: "none",
+    },
     /**
      * TODO: we want smooth scrolling for anchor tags, but don"t want it for page
      * navigation (e.g. explorer to guild)
