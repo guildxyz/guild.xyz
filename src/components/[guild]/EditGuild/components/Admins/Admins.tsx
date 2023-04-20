@@ -1,4 +1,5 @@
 import {
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -17,6 +18,7 @@ import { useController, useFormContext } from "react-hook-form"
 import useSWR from "swr"
 import { SelectOption } from "types"
 import shortenHex from "utils/shortenHex"
+import TransferOwnership from "../TransferOwnership"
 import AdminSelect from "./components/AdminSelect"
 
 const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
@@ -100,10 +102,15 @@ const Admins = () => {
   return (
     <>
       <FormControl w="full" isInvalid={!!formState.errors.admins}>
-        <FormLabel>
-          Admins{" "}
-          {!isOwner && !isSuperAdmin && <Tag>only editable by the Guild owner</Tag>}
-        </FormLabel>
+        <Flex justifyContent={"space-between"} w="full">
+          <FormLabel>
+            Admins{" "}
+            {!isOwner && !isSuperAdmin && (
+              <Tag>only editable by the Guild owner</Tag>
+            )}
+          </FormLabel>
+          {isOwner ? <TransferOwnership /> : null}
+        </Flex>
 
         <AdminSelect
           placeholder={!isLoading && "Add address or search members"}

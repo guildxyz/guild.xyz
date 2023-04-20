@@ -1,0 +1,66 @@
+name: E2E tests
+
+on:
+  deployment_status:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        default: production
+        options:
+          - production
+          - development
+
+jobs:
+  cypress-run:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # xvfb is needed so we can use MetaMask properly in our tests
+      - name: Install linux deps
+        run: |
+          sudo apt-get install --no-install-recommends -y \
+          fluxbox \
+          xvfb
+
+      - name: Run xvfb and fluxbox
+        run: |
+          Xvfb :0 -screen 0 1024x768x24 -listen tcp -ac &
+          fluxbox &
+        env:
+          DISPLAY: :0.0
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      # Try to restore cached deps to speed up the workflow
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+
+      # Install NPM dependencies, cache them correctly and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          command: npm run test
+        env:
+          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url || (github.event_name == 'schedule' && 'https://guild.xyz') || (inputs.environment == 'production' && 'https://guild.xyz' || 'https://dev-app.guild.xyz') }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_DEPLOYMENT_ID: ${{ github.event.deployment.id || inputs.environment || 'cron' }}
+          SECRET_WORDS: ${{ secrets.SYNPRESS_SECRET_WORDS }}
+          DISPLAY: :0.0
+
+      - name: Send Discord notification
+        if: failure()
+        shell: bash
+        run: curl -X POST -H 'Content-Type:application/json' -d '{"embeds":[{"title":"Failing test","fields":[{"name":"Trigger","value":"${{github.event_name}}"},{"name":"Deployment","value":"${{github.event.deployment_status.target_url}}"},{"name":"Action","value":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"}],"color":15548997}]}' ${{ secrets.FAILING_E2E_TEST_DC_WEBHOOK }}

@@ -18,6 +18,13 @@
     "incremental": true,
     "sourceMap": true
   },
-  "include": ["next-env.d.ts", "./src/**/*.ts", "./src/**/*.tsx", "api/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "api/**/*.ts",
+    "synpress.config.ts",
+    "cypress/**/*.ts"
+  ],
   "exclude": ["node_modules", ".next", "out"]
 }

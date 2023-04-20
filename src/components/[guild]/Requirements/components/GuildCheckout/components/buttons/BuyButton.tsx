@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
@@ -50,7 +50,7 @@ const BuyButton = (): JSX.Element => {
   const isSufficientBalance =
     fee &&
     (coinBalance || tokenBalance) &&
-    (pickedCurrencyIsNative ? coinBalance?.gt(fee) : tokenBalance?.gt(fee))
+    (pickedCurrencyIsNative ? coinBalance?.gte(fee) : tokenBalance?.gte(fee))
 
   const isDisabled =
     error ||

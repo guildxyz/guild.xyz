@@ -101,7 +101,7 @@ const usePayFee = () => {
   const isSufficientBalance =
     fee &&
     (coinBalance || tokenBalance) &&
-    (pickedCurrencyIsNative ? coinBalance?.gt(fee) : tokenBalance?.gt(fee))
+    (pickedCurrencyIsNative ? coinBalance?.gte(fee) : tokenBalance?.gte(fee))
 
   const { allowance } = useAllowance(pickedCurrency, requirement.address)
 
