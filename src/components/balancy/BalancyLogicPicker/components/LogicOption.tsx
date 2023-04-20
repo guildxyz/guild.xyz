@@ -15,12 +15,7 @@ const LogicOption = (props) => {
     return (
       <Tooltip label="Coming soon">
         <Box>
-          <Button
-            leftIcon={<Icon as={icon} boxSize={5} />}
-            isDisabled
-            w="full"
-            data-dd-action-name={value}
-          >
+          <Button leftIcon={<Icon as={icon} boxSize={5} />} isDisabled w="full">
             {value}
           </Button>
         </Box>

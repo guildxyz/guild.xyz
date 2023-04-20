@@ -57,11 +57,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
       image={serverData.img || "/default_discord_icon.png"}
     >
       {onCancel ? (
-        <Button
-          h={10}
-          onClick={onCancel}
-          data-dd-action-name="Cancel [dc server setup]"
-        >
+        <Button h={10} onClick={onCancel}>
           Cancel
         </Button>
       ) : isAdmin === undefined ? (
@@ -73,7 +69,6 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           onClick={openAddBotPopup}
           isLoading={!!activeAddBotPopup}
           rightIcon={<ArrowSquareIn />}
-          data-dd-action-name="Add bot [dc server setup]"
         >
           Add bot
         </Button>
@@ -82,19 +77,13 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           h={10}
           colorScheme="green"
           onClick={() => onSelect(serverData.id)}
-          data-dd-action-name="Select [dc server setup]"
           data-test="select-dc-server-button"
         >
           Select
         </Button>
       ) : id ? (
         <Link href={`/${urlName}`} passHref>
-          <Button
-            as="a"
-            h={10}
-            colorScheme="gray"
-            data-dd-action-name="Go to guild [dc server setup]"
-          >
+          <Button as="a" h={10} colorScheme="gray">
             Already guilded
           </Button>
         </Link>

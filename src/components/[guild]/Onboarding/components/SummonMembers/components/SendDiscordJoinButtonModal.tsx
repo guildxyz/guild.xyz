@@ -91,12 +91,7 @@ const SendDiscordJoinButtonModal = ({
           </FormProvider>
         </ModalBody>
         <ModalFooter>
-          <Button
-            variant="ghost"
-            onClick={handleClose}
-            mr="2"
-            data-dd-action-name="Cancel [discord join button]"
-          >
+          <Button variant="ghost" onClick={handleClose} mr="2">
             Cancel
           </Button>
           <Button

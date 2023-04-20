@@ -5,13 +5,7 @@ const ConnectWalletButton = (): JSX.Element => {
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
   return (
-    <Button
-      size="lg"
-      colorScheme="blue"
-      onClick={openWalletSelectorModal}
-      w="full"
-      data-dd-action-name="ConnectWalletButton (GuildCheckout)"
-    >
+    <Button size="lg" colorScheme="blue" onClick={openWalletSelectorModal} w="full">
       Connect wallet
     </Button>
   )

@@ -51,11 +51,7 @@ const RepoCard = ({
           <Button isLoading />
         ) : id ? (
           <NextLink href={`/${urlName}`} passHref>
-            <Button
-              as="a"
-              colorScheme="gray"
-              data-dd-action-name="Go to guild (github repo setup)"
-            >
+            <Button as="a" colorScheme="gray">
               Go to guild
             </Button>
           </NextLink>
@@ -64,7 +60,6 @@ const RepoCard = ({
             flexShrink={0}
             colorScheme="GITHUB"
             onClick={() => onSelection(platformGuildId)}
-            data-dd-action-name="Gate repo (github setup)"
           >
             Gate repo
           </Button>

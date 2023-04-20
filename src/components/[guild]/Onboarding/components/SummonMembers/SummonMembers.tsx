@@ -85,7 +85,6 @@ const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
         </Button>
       </Wrap>
       <PaginationButtons
-        activeStep={activeStep}
         prevStep={prevStep}
         nextStep={handleFinish}
         nextLabel="Finish"
