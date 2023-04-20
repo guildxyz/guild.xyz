@@ -126,8 +126,8 @@ const usePurchaseAsset = () => {
     priceData?.priceToSendInWei &&
     (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gt(BigNumber.from(priceData.priceToSendInWei))
-      : tokenBalance?.gt(BigNumber.from(priceData.priceToSendInWei)))
+      ? coinBalance?.gte(BigNumber.from(priceData.priceToSendInWei))
+      : tokenBalance?.gte(BigNumber.from(priceData.priceToSendInWei)))
 
   const shouldEstimateGas =
     requirement?.chain === Chains[chainId] &&

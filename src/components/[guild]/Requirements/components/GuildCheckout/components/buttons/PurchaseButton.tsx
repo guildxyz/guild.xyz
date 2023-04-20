@@ -1,8 +1,8 @@
 import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import useAllowance from "../../hooks/useAllowance"
@@ -51,8 +51,8 @@ const PurchaseButton = (): JSX.Element => {
     priceToSendInWei &&
     (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gt(BigNumber.from(priceToSendInWei))
-      : tokenBalance?.gt(BigNumber.from(priceToSendInWei)))
+      ? coinBalance?.gte(BigNumber.from(priceToSendInWei))
+      : tokenBalance?.gte(BigNumber.from(priceToSendInWei)))
 
   const isDisabled =
     !account ||
