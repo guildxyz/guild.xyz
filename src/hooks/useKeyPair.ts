@@ -1,6 +1,6 @@
 import { datadogRum } from "@datadog/browser-rum"
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { randomBytes } from "crypto"
 import { createStore, del, get, set } from "idb-keyval"
@@ -160,9 +160,7 @@ const usePublicUserData = (address?: string) => {
 }
 
 const useKeyPair = () => {
-  // Using the default Datadog implementation here, so the useDatadog, useUser, and useKeypair hooks don't call each other
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
+  const { captureEvent } = usePostHogContext()
 
   const { account } = useWeb3React()
 
@@ -170,11 +168,6 @@ const useKeyPair = () => {
     useWeb3ConnectionManager()
 
   const { data: user, error: userError } = usePublicUserData()
-
-  const defaultCustomAttributes = {
-    userId: user?.id,
-    userAddress: account?.toLowerCase(),
-  }
 
   const {
     data: { keyPair, pubKey },
@@ -206,9 +199,9 @@ const useKeyPair = () => {
     {
       onSuccess: (isKeyPairValid) => {
         if (!isKeyPairValid) {
-          addDatadogAction("Invalid keypair", {
-            ...defaultCustomAttributes,
-            data: { userId: user?.id, pubKey: keyPair.publicKey },
+          captureEvent("Invalid keypair", {
+            userId: user?.id,
+            pubKey: keyPair.publicKey,
           })
 
           toast({
@@ -255,27 +248,20 @@ const useKeyPair = () => {
       onError: (error) => {
         console.error("setKeyPair error", error)
         if (error?.code !== 4001) {
-          addDatadogError(
-            `Failed to set keypair`,
-            {
-              ...defaultCustomAttributes,
-              error: error?.message || error?.toString?.() || error,
-            },
-            "custom"
-          )
+          captureEvent(`Failed to set keypair`, {
+            error: error?.message || error?.toString?.() || error,
+          })
         }
 
         try {
           window.localStorage.removeItem("userId")
           mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
         } catch (err) {
-          addDatadogError(
+          captureEvent(
             `Failed to remove userId from localStorage after unsuccessful account link`,
             {
-              ...defaultCustomAttributes,
               error: err?.message || err?.toString?.() || err,
-            },
-            "custom"
+            }
           )
         }
       },
@@ -297,20 +283,15 @@ const useKeyPair = () => {
           try {
             window.localStorage.removeItem("userId")
           } catch (error) {
-            addDatadogError(
+            captureEvent(
               `Failed to remove userId from localStorage after account link`,
               {
-                ...defaultCustomAttributes,
                 error: error?.message || error?.toString?.() || error,
-              },
-              "custom"
+              }
             )
           }
-
-          addDatadogAction("Successfully linked address")
         } else {
           mutateKeyPair(newKeyPair)
-          addDatadogAction("Successfully generated keypair")
         }
       },
     }
@@ -364,14 +345,9 @@ const useKeyPair = () => {
           body.pubKey = generatedKeyPair.pubKey
         } catch (err) {
           if (error?.code !== 4001) {
-            addDatadogError(
-              `Keypair generation error`,
-              {
-                ...defaultCustomAttributes,
-                error: err?.message || err?.toString?.() || err,
-              },
-              "custom"
-            )
+            captureEvent(`Keypair generation error`, {
+              error: err?.message || err?.toString?.() || err,
+            })
           }
           throw err
         }

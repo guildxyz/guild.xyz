@@ -15,7 +15,6 @@ import {
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
-import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -443,4 +442,4 @@ const getStaticPaths: GetStaticPaths = async () => {
 
 export { getStaticPaths, getStaticProps }
 
-export default WithRumComponentContext("Guild page", GuildPageWrapper)
+export default GuildPageWrapper

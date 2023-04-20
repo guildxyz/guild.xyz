@@ -18,7 +18,6 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import { connectors } from "connectors"
 import useKeyPair, {
   deleteKeyPairFromIdb,
@@ -73,8 +72,6 @@ const fetchShouldLinkToUser = async (_: "shouldLinkToUser", userId: number) => {
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
-  const { captureEvent } = usePostHogContext()
-
   const { isActive, account, connector } = useWeb3React()
   const { data: user } = useSWRImmutable<User>(account ? `/user/${account}` : null)
   const [error, setError] = useState<WalletError & Error>(null)
@@ -93,17 +90,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }, 200)
   }
 
-  const { ready, set, keyPair, pubKey } = useKeyPair()
-
-  useEffect(() => {
-    // If it's not a "The user rejected the request" error
-    if (set.error && set.error.code !== 4001)
-      captureEvent("useKeyPair:set - error", {
-        error: set.error,
-        pubKey: pubKey,
-        keyPairPubKey: keyPair.publicKey,
-      })
-  }, [set.error])
+  const { ready, set, keyPair } = useKeyPair()
 
   useEffect(() => {
     if (keyPair) onClose()

@@ -24,7 +24,7 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 - Deployment:
   - Vercel
 - Monitoring:
-  - Datadog
+  - PostHog
 
 ## Development
 

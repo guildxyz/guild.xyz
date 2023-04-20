@@ -23,8 +23,6 @@ module.exports = {
         "@chakra-ui/anatomy": false,
         "@chakra-ui/react": false,
         "@chakra-ui/theme-tools": false,
-        "@datadog/browser-rum": false,
-        "@datadog/rum-react-integration": false,
         "@web3-react/coinbase-wallet": false,
         "@web3-react/core": false,
         "@web3-react/metamask": false,
