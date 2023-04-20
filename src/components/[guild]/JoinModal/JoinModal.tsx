@@ -43,7 +43,7 @@ const customJoinStep: Partial<Record<Joinable, () => JSX.Element>> = {
 }
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
-  const { isActive, account } = useWeb3React()
+  const { isActive } = useWeb3React()
   const { name, guildPlatforms, roles } = useGuild()
 
   const methods = useForm({

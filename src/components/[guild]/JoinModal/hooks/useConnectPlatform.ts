@@ -27,11 +27,12 @@ const platformAuthHooks: Record<
 const useConnectPlatform = (
   platform: PlatformName,
   onSuccess?: () => void,
-  isReauth?: boolean // Temporary, once /connect works without it, we can remove this
+  isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
+  scope?: string
 ) => {
   const { platformUsers } = useUser()
   const { onOpen, authData, isAuthenticating, ...rest } =
-    platformAuthHooks[platform]?.() ?? {}
+    platformAuthHooks[platform]?.(scope) ?? {}
   const prevAuthData = usePrevious(authData)
 
   const { captureEvent } = usePostHogContext()
