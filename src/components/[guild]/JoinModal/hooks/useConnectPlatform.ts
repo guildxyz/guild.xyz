@@ -37,7 +37,7 @@ const parseConnectError = (
     )
       return error
 
-    return { params, errors }
+    return { params: { ...params, code: undefined }, errors }
   } catch {
     return error
   }
