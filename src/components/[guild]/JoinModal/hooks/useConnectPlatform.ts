@@ -5,7 +5,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
-import { PlatformName, PlatformType } from "types"
+import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 import useDCAuth from "./useDCAuth"
 import useGHAuth from "./useGHAuth"
@@ -18,7 +18,6 @@ const parseConnectError = (
 ):
   | string
   | {
-      platform: PlatformName
       params: Record<string, string>
       errors: { msg: string }[]
     } => {
@@ -38,7 +37,7 @@ const parseConnectError = (
     )
       return error
 
-    return { platform: PlatformType[number] as PlatformName, params, errors }
+    return { params, errors }
   } catch {
     return error
   }
