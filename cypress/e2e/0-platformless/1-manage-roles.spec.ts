@@ -2,11 +2,20 @@ before(() => {
   cy.disconnectMetamaskWalletFromAllDapps()
 })
 
+const CONTEXT = {
+  createdRoleId: undefined,
+}
+
 describe("roles", () => {
   before(() => {
     // Using a pre-made test guild here, since it isn't guaranteed that the 0-create-guild spec will run successfully
-    cy.visit("/guild-e2e-cypress")
+    cy.visit("/explorer")
     cy.connectWallet()
+  })
+
+  beforeEach(() => {
+    // Using a pre-made test guild here, since it isn't guaranteed that the 0-create-guild spec will run successfully
+    cy.visit("/guild-e2e-cypress")
   })
 
   it("can create a role without rewards", () => {
@@ -38,12 +47,41 @@ describe("roles", () => {
       cy.getByDataTest("save-role-button").click()
 
       cy.wait("@createRoleApiCall")
+        .then((intercept) => {
+          CONTEXT.createdRoleId = intercept.response?.body.id
+          return intercept
+        })
+        .its("response.statusCode")
+        .should("eq", 201)
     })
   })
 
-  it("can edit general role data", () => {})
+  it("can edit general role data", () => {
+    if (!CONTEXT.createdRoleId)
+      throw new Error("Can't run test, because couldn't reate a role.")
 
-  it("can add/delete/edit a requirement", () => {})
+    cy.intercept(
+      "PATCH",
+      `${Cypress.env("guildApiUrl")}/role/${CONTEXT.createdRoleId}`
+    ).as("editRoleApiCall")
+
+    cy.get(`#role-${CONTEXT.createdRoleId}`).should("exist")
+
+    cy.get(`#role-${CONTEXT.createdRoleId}`).within(() => {
+      cy.get("button[aria-label='Edit role']").click()
+    })
+
+    cy.get("div[role='dialog'].chakra-slide").within(() => {
+      cy.get("input[name='name']").type(" (edited)")
+      cy.get("textarea[name='description']").type("wagmi")
+
+      cy.getByDataTest("save-role-button").click()
+
+      cy.wait("@editRoleApiCall").its("response.statusCode").should("eq", 200)
+    })
+  })
+
+  // it("can add/delete/edit a requirement", () => {})
 })
 
 export {}
