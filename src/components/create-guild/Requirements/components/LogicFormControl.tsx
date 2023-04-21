@@ -106,7 +106,6 @@ const LogicFormControl = (): JSX.Element => {
               position="relative"
               top={-0.5}
               {...anyOfNumFieldProps}
-              // value={value && !isNaN(value) ? value / multipliers[format] : ""}
               onChange={(_, valueAsNumber) =>
                 anyOfNumOnChange(!isNaN(valueAsNumber) ? valueAsNumber : "")
               }

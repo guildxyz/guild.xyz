@@ -102,7 +102,11 @@ const SetRequirements = (): JSX.Element => {
         {!freeEntry && <BalancyCounterWithPopover ml="auto !important" pl="5" />}
       </Wrap>
 
-      <LogicFormControl />
+      {!freeEntry && (
+        <CardMotionWrapper>
+          <LogicFormControl />
+        </CardMotionWrapper>
+      )}
 
       {freeEntry ? (
         <CardMotionWrapper>
