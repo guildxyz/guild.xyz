@@ -98,6 +98,8 @@ guild.xyz/${urlName}`)}`}
 
       delete data.roleType
 
+      if (data.logic !== "ANY_OF") delete data.anyOfNum
+
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },
   }

@@ -42,10 +42,13 @@ const LogicFormControl = (): JSX.Element => {
         value: 1,
         message: "Minimum value is 1",
       },
-      max: {
-        value: requirementCount - 1,
-        message: "Must be less than requirement count",
-      },
+      max:
+        requirementCount > 1
+          ? {
+              value: requirementCount - 1,
+              message: "Must be less than requirement count",
+            }
+          : undefined,
     },
   })
 
