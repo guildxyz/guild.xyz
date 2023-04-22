@@ -197,6 +197,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
               colorScheme="green"
               loadingText={loadingText}
               onClick={handleSubmit}
+              data-test="save-role-button"
             >
               Save
             </Button>

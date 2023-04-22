@@ -50,6 +50,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
              */
             borderTopRightRadius="0"
             borderBottomRightRadius="0"
+            data-test="add-role-button"
           >
             Add role
           </Button>

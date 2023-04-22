@@ -235,6 +235,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
               loadingText={loadingText}
               onClick={handleSubmit}
               leftIcon={<Icon as={Check} />}
+              data-test="save-role-button"
             >
               Save
             </Button>
