@@ -8,7 +8,6 @@ const CONTEXT = {
 
 describe("roles", () => {
   before(() => {
-    // Using a pre-made test guild here, since it isn't guaranteed that the 0-create-guild spec will run successfully
     cy.visit("/explorer")
     cy.connectWallet()
   })
@@ -58,7 +57,7 @@ describe("roles", () => {
 
   it("can edit general role data", () => {
     if (!CONTEXT.createdRoleId)
-      throw new Error("Can't run test, because couldn't reate a role.")
+      throw new Error("Can't run test, because couldn't create a role.")
 
     cy.intercept(
       "PATCH",
@@ -66,22 +65,71 @@ describe("roles", () => {
     ).as("editRoleApiCall")
 
     cy.get(`#role-${CONTEXT.createdRoleId}`).should("exist")
-
-    cy.get(`#role-${CONTEXT.createdRoleId}`).within(() => {
-      cy.get("button[aria-label='Edit role']").click()
-    })
+    cy.get(`#role-${CONTEXT.createdRoleId} button[aria-label='Edit role']`).click()
 
     cy.get("div[role='dialog'].chakra-slide").within(() => {
       cy.get("input[name='name']").type(" (edited)")
       cy.get("textarea[name='description']").type("wagmi")
 
       cy.getByDataTest("save-role-button").click()
-
       cy.wait("@editRoleApiCall").its("response.statusCode").should("eq", 200)
     })
   })
 
-  // it("can add/delete/edit a requirement", () => {})
+  it("can add requirements", () => {
+    if (!CONTEXT.createdRoleId)
+      throw new Error("Can't run test, because couldn't create a role.")
+
+    cy.intercept(
+      "PATCH",
+      `${Cypress.env("guildApiUrl")}/role/${CONTEXT.createdRoleId}`
+    ).as("editRoleApiCall")
+
+    cy.get(`#role-${CONTEXT.createdRoleId}`).should("exist")
+    cy.get(`#role-${CONTEXT.createdRoleId} button[aria-label='Edit role']`).click()
+
+    cy.get("div[role='dialog'].chakra-slide").should("exist")
+
+    cy.get("#free-entry-checkbox").parent().click()
+
+    cy.getByDataTest("add-requirement-button").click()
+    cy.getByDataTest("add-requirement-modal").within(() => {
+      cy.findByText("Allowlist").click()
+      cy.get("textarea").type(Cypress.env("userAddress"))
+      cy.findByText("Add requirement").click()
+    })
+
+    cy.getByDataTest("add-requirement-button").click()
+    cy.getByDataTest("add-requirement-modal").within(() => {
+      cy.findByText("Captcha").click()
+      cy.findByText("Add requirement").click()
+    })
+
+    cy.getByDataTest("save-role-button").click()
+    cy.wait("@editRoleApiCall").its("response.statusCode").should("eq", 200)
+  })
+
+  it("can edit requirements list", () => {
+    if (!CONTEXT.createdRoleId)
+      throw new Error("Can't run test, because couldn't create a role.")
+
+    cy.intercept(
+      "PATCH",
+      `${Cypress.env("guildApiUrl")}/role/${CONTEXT.createdRoleId}`
+    ).as("editRoleApiCall")
+
+    cy.get(`#role-${CONTEXT.createdRoleId}`).should("exist")
+    cy.get(`#role-${CONTEXT.createdRoleId} button[aria-label='Edit role']`).click()
+
+    cy.get("div[role='dialog'].chakra-slide").within(() => {
+      cy.get("button[aria-label='Remove requirement']").first().click()
+
+      cy.getByDataTest("save-role-button").click()
+      cy.wait("@editRoleApiCall")
+        .its("response.body.requirements.length")
+        .should("eq", 1)
+    })
+  })
 })
 
 export {}
