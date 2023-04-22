@@ -4,6 +4,7 @@ import useMemberships from "components/explorer/hooks/useMemberships"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { TwitterLogo } from "phosphor-react"
@@ -34,6 +35,8 @@ export type JoinData = {
 }
 
 const useJoin = (onSuccess?: () => void) => {
+  const { captureEvent } = usePostHogContext()
+
   const access = useAccess()
   const guild = useGuild()
   const user = useUser()
@@ -115,6 +118,9 @@ guild.xyz/${guild.urlName}`
         ),
         status: "success",
       })
+    },
+    onError: (error) => {
+      captureEvent(`Guild join error`, { error })
     },
   })
 
