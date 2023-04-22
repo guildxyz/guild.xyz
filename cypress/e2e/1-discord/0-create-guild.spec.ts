@@ -98,12 +98,6 @@ describe("create-discord-guild", () => {
     )
     cy.wait("@createGuildRequest").its("response.statusCode").should("eq", 201)
   })
-
-  // This step wasn't too reliable because of the guild cache
-  // it(`/${Cypress.env("guildUrlName")}-${Cypress.env("DEPLOYMENT_ID")} exists`, () => {
-  //   cy.visit(`/${Cypress.env("guildUrlName")}-${Cypress.env("DEPLOYMENT_ID")}`)
-  //   cy.get("h1").should("contain.text", `${Cypress.env("guildName")} ${Cypress.env("DEPLOYMENT_ID")}`)
-  // })
 })
 
 export {}
