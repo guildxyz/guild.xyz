@@ -1,6 +1,5 @@
 import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
@@ -92,7 +91,6 @@ const useConnectPlatform = (
 
 const useConnect = (onSuccess?: () => void) => {
   const { captureEvent } = usePostHogContext()
-  const { addDatadogAction, addDatadogError } = useDatadog()
   const showErrorToast = useShowErrorToast()
 
   const { mutate: mutateUser } = useUser()
@@ -118,7 +116,6 @@ const useConnect = (onSuccess?: () => void) => {
     reauth?: boolean
   }>(submit, {
     onSuccess: () => {
-      addDatadogAction("Successfully connected 3rd party account")
       mutateUser()
       onSuccess?.()
     },
@@ -137,7 +134,6 @@ const useConnect = (onSuccess?: () => void) => {
 
       captureEvent("Platform connection error", errorObject)
       showErrorToast(toastError ?? rawError)
-      addDatadogError("3rd party account connection error", errorObject)
     },
   })
 }

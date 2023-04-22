@@ -1,11 +1,10 @@
 import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import useDatadog from "components/_app/Datadog/useDatadog"
-import Button from "components/common/Button"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { TwitterLogo } from "phosphor-react"
@@ -36,9 +35,7 @@ export type JoinData = {
 }
 
 const useJoin = (onSuccess?: () => void) => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
-
-  const { account } = useWeb3React()
+  const { captureEvent } = usePostHogContext()
 
   const access = useAccess()
   const guild = useGuild()
@@ -82,8 +79,6 @@ const useJoin = (onSuccess?: () => void) => {
         return
       }
 
-      addDatadogAction(`Successfully joined a guild`)
-
       setTimeout(() => {
         mutate(
           (prev) => [
@@ -124,8 +119,8 @@ guild.xyz/${guild.urlName}`
         status: "success",
       })
     },
-    onError: (err) => {
-      addDatadogError(`Guild join error`, { error: err })
+    onError: (error) => {
+      captureEvent(`Guild join error`, { error })
     },
   })
 

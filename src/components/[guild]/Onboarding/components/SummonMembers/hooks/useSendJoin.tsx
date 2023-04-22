@@ -1,13 +1,10 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
 const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
-
   const { mutateGuild } = useGuild()
 
   const toast = useToast()
@@ -28,8 +25,6 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
         title: `Failed to send ${type === "JOIN" ? "join" : "mint"} button`,
         description: simpleError ?? processedError,
       })
-
-      if (type === "JOIN") addDatadogError("Discord button send error", { error })
     },
     onSuccess: () => {
       toast({
@@ -38,7 +33,6 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
       })
       mutateGuild()
       onSuccess?.()
-      if (type === "JOIN") addDatadogAction("Successfully sent Discord button")
     },
   })
 

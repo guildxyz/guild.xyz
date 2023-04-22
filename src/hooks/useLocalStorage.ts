@@ -1,4 +1,3 @@
-import { datadogRum } from "@datadog/browser-rum"
 import { useState } from "react"
 
 const getDataFromLocalstorage = <T>(
@@ -31,16 +30,12 @@ const useLocalStorage = <T>(
   )
 
   const setValue = (value: T | ((val: T) => T)) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value
-      setStoredValue(valueToStore)
-      if (valueToStore === undefined) {
-        window.localStorage.removeItem(key)
-      } else {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore))
-      }
-    } catch (error) {
-      datadogRum?.addError("useLocalStorage:setValue error", { error })
+    const valueToStore = value instanceof Function ? value(storedValue) : value
+    setStoredValue(valueToStore)
+    if (valueToStore === undefined) {
+      window.localStorage.removeItem(key)
+    } else {
+      window.localStorage.setItem(key, JSON.stringify(valueToStore))
     }
   }
   return [storedValue, setValue] as const

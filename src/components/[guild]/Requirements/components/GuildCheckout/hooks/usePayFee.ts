@@ -1,7 +1,6 @@
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
@@ -58,7 +57,6 @@ const payFee = async (
 }
 
 const usePayFee = () => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
   const postHogOptions = { guild: urlName }
@@ -130,26 +128,26 @@ const usePayFee = () => {
   const useSubmitData = useSubmitTransaction<number>(payFeeTransaction, {
     onError: (error) => {
       showErrorToast(error)
-      addDatadogError("general payFee error (GuildCheckout)")
-      addDatadogError("payFee pre-call error (GuildCheckout)", {
+      captureEvent("Buy pass error (GuildCheckout)", postHogOptions)
+      captureEvent("payFee pre-call error (GuildCheckout)", {
+        ...postHogOptions,
         error,
       })
-      captureEvent("Buy pass error (GuildCheckout)", postHogOptions)
-      captureEvent("payFee pre-call error (GuildCheckout)", postHogOptions)
     },
     onSuccess: (receipt) => {
       if (receipt.status !== 1) {
         showErrorToast("Transaction failed")
-        addDatadogError("general payFee error (GuildCheckout)")
-        addDatadogError("payFee error (GuildCheckout)", {
+        captureEvent("Buy pass error (GuildCheckout)", {
+          ...postHogOptions,
           receipt,
         })
-        captureEvent("Buy pass error (GuildCheckout)", postHogOptions)
-        captureEvent("payFee error (GuildCheckout)", postHogOptions)
+        captureEvent("payFee error (GuildCheckout)", {
+          ...postHogOptions,
+          receipt,
+        })
         return
       }
 
-      addDatadogAction("successful payFee (GuildCheckout)")
       captureEvent("Bought pass (GuildCheckout)", postHogOptions)
       toast({
         status: "success",

@@ -15,7 +15,11 @@ import {
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
-import { WithRumComponentContext } from "@datadog/rum-react-integration"
+import Button from "components/common/Button"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -33,11 +37,6 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import Button from "components/common/Button"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -445,4 +444,4 @@ const getStaticPaths: GetStaticPaths = async () => {
 
 export { getStaticPaths, getStaticProps }
 
-export default WithRumComponentContext("Guild page", GuildPageWrapper)
+export default GuildPageWrapper

@@ -90,7 +90,6 @@ const BuyPass = () => {
         borderRadius="lg"
         fontWeight="medium"
         onClick={onClick}
-        data-dd-action-name="Pay (Requierment)"
       >
         Pay
       </Button>

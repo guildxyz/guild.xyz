@@ -41,7 +41,6 @@ const AddCard = forwardRef(
         href={link}
         cursor="pointer"
         onClick={onClick}
-        data-dd-action-name={title}
         {...(isDisabled && {
           onClick: null,
           opacity: 0.5,

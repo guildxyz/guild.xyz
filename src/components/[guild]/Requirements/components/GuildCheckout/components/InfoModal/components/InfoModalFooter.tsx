@@ -46,11 +46,6 @@ const InfoModalFooter = (): JSX.Element => {
         colorScheme={isJoinButton ? "green" : "blue"}
         w="full"
         onClick={onClick}
-        data-dd-action-name={
-          isJoinButton
-            ? "JoinGuildButton (GuildCheckout)"
-            : "CloseModalButton (GuildCheckout)"
-        }
       >
         {isJoinButton ? "Join guild" : "Close"}
       </Button>

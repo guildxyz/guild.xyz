@@ -25,7 +25,6 @@ import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RolePlatforms from "components/[guild]/RolePlatforms"
 import SetVisibility from "components/[guild]/SetVisibility"
 import usePinata from "hooks/usePinata"
@@ -162,8 +161,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
-  const { localStep } = useOnboardingContext()
-
   return (
     <>
       <OnboardingMarker step={0} onClick={handleOpen}>
@@ -173,9 +170,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
           size="sm"
           rounded="full"
           aria-label="Edit role"
-          data-dd-action-name={
-            localStep === null ? "Edit role" : "Edit role [onboarding]"
-          }
           onClick={handleOpen}
         />
       </OnboardingMarker>
