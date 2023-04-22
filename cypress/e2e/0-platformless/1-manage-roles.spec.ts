@@ -130,6 +130,27 @@ describe("roles", () => {
         .should("eq", 1)
     })
   })
+
+  it("can delete a role", () => {
+    if (!CONTEXT.createdRoleId)
+      throw new Error("Can't run test, because couldn't create a role.")
+
+    cy.intercept(
+      "DELETE",
+      `${Cypress.env("guildApiUrl")}/role/${CONTEXT.createdRoleId}`
+    ).as("deleteRoleApiCall")
+
+    cy.get(`#role-${CONTEXT.createdRoleId}`).should("exist")
+    cy.get(`#role-${CONTEXT.createdRoleId} button[aria-label='Edit role']`).click()
+
+    cy.get(
+      "div[role='dialog'].chakra-slide button[aria-label='Delete role']"
+    ).click()
+
+    cy.getByDataTest("delete-role-confirmation-button").click()
+    cy.confirmMetamaskSignatureRequest()
+    cy.wait("@deleteRoleApiCall").its("response.statusCode").should("eq", 200)
+  })
 })
 
 export {}
