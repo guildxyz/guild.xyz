@@ -43,7 +43,11 @@ const PoapPaymentRequirement = ({ guildPoap, poapContract, ...props }: Props) =>
     <RequirementProvider requirement={requirement}>
       <Requirement
         image={<Icon as={Coins} boxSize={6} />}
-        footer={isAdmin && <Withdraw poapId={guildPoap?.id} />}
+        footer={
+          isAdmin && (
+            <Withdraw poapId={guildPoap?.id} vaultId={requirement.data.id} />
+          )
+        }
         {...props}
         rightElement={props?.rightElement}
       >
