@@ -59,7 +59,13 @@ const LogicFormControl = (): JSX.Element => {
   )
 
   useEffect(() => {
-    if (logic === "AND") return
+    if (logic === "AND") {
+      anyOfNumOnChange(1)
+      return
+    }
+
+    if (anyOfNumFieldProps.value >= requirementCount - 1)
+      anyOfNumOnChange(Math.max(requirementCount - 1, 1))
 
     if (
       anyOfNumFieldProps.value === 1 ||
@@ -70,9 +76,6 @@ const LogicFormControl = (): JSX.Element => {
     }
 
     if (requirementCount > anyOfNumFieldProps.value) logicOnChange("ANY_OF")
-
-    if (anyOfNumFieldProps.value >= requirementCount - 1)
-      anyOfNumOnChange(Math.max(requirementCount - 1, 1))
   }, [requirementCount, anyOfNumFieldProps.value])
 
   return (
