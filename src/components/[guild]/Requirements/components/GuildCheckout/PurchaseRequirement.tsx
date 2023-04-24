@@ -19,9 +19,9 @@ import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
-import { usePostHog } from "posthog-js/react"
 import {
   DISABLED_TOKENS,
   PURCHASABLE_REQUIREMENT_TYPES,
@@ -48,7 +48,7 @@ import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
 
   const { featureFlags } = useGuild()
 
@@ -80,7 +80,7 @@ const PurchaseRequirement = (): JSX.Element => {
 
   const onClick = () => {
     onOpen()
-    posthog.capture("Click: Purchase (Requirement)", {
+    captureEvent("Click: Purchase (Requirement)", {
       guild: urlName,
     })
   }
@@ -108,7 +108,6 @@ const PurchaseRequirement = (): JSX.Element => {
         borderRadius="md"
         fontWeight="medium"
         onClick={onClick}
-        data-dd-action-name="Purchase (Requierment)"
       >
         Purchase
       </Button>

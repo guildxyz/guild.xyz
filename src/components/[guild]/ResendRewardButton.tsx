@@ -1,10 +1,10 @@
 import { IconButton, Tooltip } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useLocalStorage from "hooks/useLocalStorage"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { ArrowsClockwise, Check } from "phosphor-react"
-import { usePostHog } from "posthog-js/react"
 import { useEffect, useState } from "react"
 import fetcher from "utils/fetcher"
 import useGuild from "./hooks/useGuild"
@@ -15,7 +15,7 @@ const rejoin = (signedValidation: SignedValdation) =>
   fetcher(`/user/join`, signedValidation)
 
 const ResendRewardButton = (): JSX.Element => {
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -47,7 +47,7 @@ const ResendRewardButton = (): JSX.Element => {
 
   const onClick = () => {
     onSubmit({ guildId: id })
-    posthog.capture("Click: ResendRewardButton", {
+    captureEvent("Click: ResendRewardButton", {
       guild: urlName,
     })
   }

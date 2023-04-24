@@ -42,7 +42,6 @@ const NavMenu = (): JSX.Element => (
         fontWeight="black"
         borderRadius={"2xl"}
         variant="ghost"
-        data-dd-action-name="Navigation menu"
       >
         <HStack spacing={"7px"}>
           <AnimatedLogo />
@@ -57,39 +56,19 @@ const NavMenu = (): JSX.Element => (
           gap={{ base: 2, sm: 12 }}
         >
           <NavGroup title="Navigation">
-            <NavButton
-              leftIcon={<House />}
-              data-dd-action-name="Navigation menu - Landing"
-              href="/"
-            >
+            <NavButton leftIcon={<House />} href="/">
               About Guild.xyz
             </NavButton>
-            <NavButton
-              leftIcon={<MagnifyingGlass />}
-              data-dd-action-name="Navigation menu - Explorer"
-              href="/explorer"
-            >
+            <NavButton leftIcon={<MagnifyingGlass />} href="/explorer">
               Explore all guilds
             </NavButton>
-            <NavButton
-              leftIcon={<Plus />}
-              data-dd-action-name="Navigation menu - Balancy playground"
-              href="/create-guild"
-            >
+            <NavButton leftIcon={<Plus />} href="/create-guild">
               Create guild
             </NavButton>
-            <NavButton
-              leftIcon={<Cpu />}
-              data-dd-action-name="Navigation menu - Balancy playground"
-              href="/balancy"
-            >
+            <NavButton leftIcon={<Cpu />} href="/balancy">
               Balancy playground
             </NavButton>
-            <NavButton
-              leftIcon={<Brain />}
-              data-dd-action-name="Navigation menu - Guildverse"
-              href="/guildverse"
-            >
+            <NavButton leftIcon={<Brain />} href="/guildverse">
               Guildverse
             </NavButton>
           </NavGroup>
@@ -99,7 +78,6 @@ const NavMenu = (): JSX.Element => (
               href="https://discord.gg/guildxyz"
               rel="noopener"
               leftIcon={<DiscordLogo />}
-              data-dd-action-name="Navigation menu - Discord"
             >
               Discord
             </NavButton>
@@ -108,7 +86,6 @@ const NavMenu = (): JSX.Element => (
               href="https://twitter.com/guildxyz"
               rel="noopener"
               leftIcon={<TwitterLogo />}
-              data-dd-action-name="Navigation menu - Twitter"
             >
               Twitter
             </NavButton>
@@ -117,7 +94,6 @@ const NavMenu = (): JSX.Element => (
               href="https://github.com/agoraxyz/guild.xyz"
               rel="noopener"
               leftIcon={<Code />}
-              data-dd-action-name="Navigation menu - Code"
             >
               Code
             </NavButton>
@@ -126,7 +102,6 @@ const NavMenu = (): JSX.Element => (
               href="https://help.guild.xyz"
               rel="noopener"
               leftIcon={<Info />}
-              data-dd-action-name="Navigation menu - Guide"
             >
               Guide
             </NavButton>

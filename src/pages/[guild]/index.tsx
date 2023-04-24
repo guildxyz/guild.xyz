@@ -15,7 +15,6 @@ import {
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
-import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -23,6 +22,7 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
+import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -123,6 +123,7 @@ const GuildPage = (): JSX.Element => {
 
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
+  const { hasAccess } = useAccess()
 
   // Passing the admin addresses here to make sure that we render all admin avatars in the members list
   const members = useUniqueMembers(
@@ -217,7 +218,7 @@ const GuildPage = (): JSX.Element => {
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
             <HStack>
               {isMember && !isAdmin && <DynamicResendRewardButton />}
-              {!isMember ? (
+              {!isMember && (isAdmin ? hasAccess : true) ? (
                 <JoinButton />
               ) : !isAdmin ? (
                 <LeaveButton />
@@ -443,4 +444,4 @@ const getStaticPaths: GetStaticPaths = async () => {
 
 export { getStaticPaths, getStaticProps }
 
-export default WithRumComponentContext("Guild page", GuildPageWrapper)
+export default GuildPageWrapper

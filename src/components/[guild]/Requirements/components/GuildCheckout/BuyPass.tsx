@@ -15,19 +15,22 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
-import Reward from "components/[guild]/RoleCard/components/Reward"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useGuild from "components/[guild]/hooks/useGuild"
+import Reward from "components/[guild]/RoleCard/components/Reward"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import { Coin, StarHalf } from "phosphor-react"
-import { usePostHog } from "posthog-js/react"
 import { useEffect } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
+import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
+import BuyButton from "./components/buttons/BuyButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import BuyTotal from "./components/BuyTotal"
 import {
   GuildCheckoutProvider,
@@ -38,12 +41,9 @@ import TransactionLink from "./components/InfoModal/components/TransactionLink"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
 import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
-import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
-import BuyButton from "./components/buttons/BuyButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
 const BuyPass = () => {
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
 
   const { account, chainId } = useWeb3React()
   const {
@@ -77,7 +77,7 @@ const BuyPass = () => {
 
   const onClick = () => {
     onOpen()
-    posthog.capture("Click: Buy (Requirement)", {
+    captureEvent("Click: Buy (Requirement)", {
       guild: urlName,
     })
   }
@@ -99,7 +99,6 @@ const BuyPass = () => {
         borderRadius="lg"
         fontWeight="medium"
         onClick={onClick}
-        data-dd-action-name="Pay (Requierment)"
       >
         Pay
       </Button>

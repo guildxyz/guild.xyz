@@ -1,18 +1,17 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { Web3ReactProvider } from "@web3-react/core"
+import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import Chakra from "components/_app/Chakra"
-import Datadog from "components/_app/Datadog"
 import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
-import PostHogProvider from "components/_app/PostHogProvider"
+import { PostHogProvider } from "components/_app/PostHogProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { connectors } from "connectors"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import Script from "next/script"
 import { IconContext } from "phosphor-react"
-import { Fragment, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import fetcher from "utils/fetcher"
@@ -27,8 +26,6 @@ const App = ({
   pageProps,
 }: AppProps<{ cookies: string }>): JSX.Element => {
   const router = useRouter()
-
-  const DatadogComponent = router.asPath.includes("linkpreview") ? Fragment : Datadog
 
   const [isRouteChangeInProgress, setIsRouteChangeInProgress] = useState(false)
   const { colorMode } = useColorMode()
@@ -80,16 +77,14 @@ const App = ({
           <SWRConfig value={{ fetcher }}>
             <Web3ReactProvider connectors={connectors}>
               <Web3ConnectionManager>
-                <DatadogComponent>
-                  <PostHogProvider>
-                    <IntercomProvider>
-                      <ExplorerProvider>
-                        <Component {...pageProps} />
-                        <AccountModal />
-                      </ExplorerProvider>
-                    </IntercomProvider>
-                  </PostHogProvider>
-                </DatadogComponent>
+                <PostHogProvider>
+                  <IntercomProvider>
+                    <ExplorerProvider>
+                      <Component {...pageProps} />
+                      <AccountModal />
+                    </ExplorerProvider>
+                  </IntercomProvider>
+                </PostHogProvider>
               </Web3ConnectionManager>
             </Web3ReactProvider>
           </SWRConfig>

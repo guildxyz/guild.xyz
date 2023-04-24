@@ -13,10 +13,7 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDatadog from "components/_app/Datadog/useDatadog"
-import useDebouncedState from "hooks/useDebouncedState"
 import useServerData from "hooks/useServerData"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useSendJoin from "../hooks/useSendJoin"
 import { SummonMembersForm } from "../SummonMembers"
@@ -30,8 +27,6 @@ const SendDiscordJoinButtonModal = ({
   onSuccess = undefined,
   serverId,
 }) => {
-  const { addDatadogAction } = useDatadog()
-
   const { isLoading, isSigning, onSubmit, signLoadingText } = useSendJoin(
     "JOIN",
     () => {
@@ -62,13 +57,6 @@ const SendDiscordJoinButtonModal = ({
     methods.reset()
     onClose()
   }
-
-  const isDirty = useDebouncedState(methods.formState.isDirty)
-
-  useEffect(() => {
-    if (!isDirty) return
-    addDatadogAction("modified dc embed")
-  }, [isDirty])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -103,20 +91,12 @@ const SendDiscordJoinButtonModal = ({
           </FormProvider>
         </ModalBody>
         <ModalFooter>
-          <Button
-            variant="ghost"
-            onClick={handleClose}
-            mr="2"
-            data-dd-action-name="Cancel [discord join button]"
-          >
+          <Button variant="ghost" onClick={handleClose} mr="2">
             Cancel
           </Button>
           <Button
             colorScheme="green"
-            onClick={methods.handleSubmit((data) => {
-              addDatadogAction("click on Send [discord join button]")
-              onSubmit(data)
-            })}
+            onClick={methods.handleSubmit(onSubmit)}
             isLoading={isLoading || isSigning}
             loadingText={loadingText}
             isDisabled={isLoading || isSigning}

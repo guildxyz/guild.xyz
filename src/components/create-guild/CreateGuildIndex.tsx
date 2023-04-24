@@ -44,7 +44,6 @@ const CreateGuildIndex = (): JSX.Element => {
           color="gray"
           fontWeight="normal"
           maxW="max-content"
-          data-dd-action-name="Create guild without platform"
           onClick={() => {
             setPlatform("DEFAULT")
             nextStep()

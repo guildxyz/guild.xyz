@@ -39,7 +39,6 @@ const Pagination = ({
               }
             : prevStep
         }
-        data-dd-action-name={prevStepText}
       >
         {prevStepText}
       </Button>
@@ -51,7 +50,6 @@ const Pagination = ({
           colorScheme="indigo"
           isDisabled={nextButtonDisabled}
           onClick={nextStepHandler ?? nextStep}
-          data-dd-action-name={nextStepLabel ?? "Next"}
         >
           {nextStepText}
         </Button>
