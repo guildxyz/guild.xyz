@@ -42,13 +42,10 @@ const LogicFormControl = (): JSX.Element => {
         value: 1,
         message: "Minimum value is 1",
       },
-      max:
-        requirementCount > 1
-          ? {
-              value: requirementCount - 1,
-              message: "Must be less than requirement count",
-            }
-          : undefined,
+      max: {
+        value: Math.max(requirementCount - 1, 1),
+        message: "Must be less than requirement count",
+      },
     },
   })
 
@@ -73,6 +70,9 @@ const LogicFormControl = (): JSX.Element => {
     }
 
     if (requirementCount > anyOfNumFieldProps.value) logicOnChange("ANY_OF")
+
+    if (anyOfNumFieldProps.value >= requirementCount - 1)
+      anyOfNumOnChange(Math.max(requirementCount - 1, 1))
   }, [requirementCount, anyOfNumFieldProps.value])
 
   return (
@@ -113,6 +113,7 @@ const LogicFormControl = (): JSX.Element => {
                 anyOfNumOnChange(!isNaN(valueAsNumber) ? valueAsNumber : "")
               }
               min={1}
+              max={Math.max(requirementCount - 1, 1)}
             >
               <NumberInputField />
               <NumberInputStepper>
