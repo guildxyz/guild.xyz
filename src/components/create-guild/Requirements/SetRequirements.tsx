@@ -1,5 +1,4 @@
 import { Checkbox, Stack, Text, Wrap } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
@@ -17,7 +16,6 @@ import RequirementEditableCard from "./components/RequirementEditableCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
 const SetRequirements = (): JSX.Element => {
-  const addDatadogAction = useRumAction("trackingAppAction")
   const { control, getValues, watch, clearErrors, setValue } = useFormContext()
 
   const logic = useWatch({ name: "logic" })
@@ -41,14 +39,6 @@ const SetRequirements = (): JSX.Element => {
   }, [requirements])
 
   useAddRequirementsFromQuery(append)
-
-  const addRequirement = (data) => {
-    append(data)
-
-    // Sending actions to datadog
-    addDatadogAction("Added a requirement")
-    addDatadogAction(`Added a requirement [${data.type}]`)
-  }
 
   // Watching the nested fields too, so we can properly update the list
   const watchFieldArray = watch("requirements")
@@ -134,7 +124,7 @@ const SetRequirements = (): JSX.Element => {
                 </CardMotionWrapper>
               )
             })}
-            <AddRequirement onAdd={addRequirement} />
+            <AddRequirement onAdd={append} />
           </AnimatePresence>
         </Stack>
       )}

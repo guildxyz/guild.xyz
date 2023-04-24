@@ -11,8 +11,6 @@
     "format": "prettier --write .",
     "lint": "next lint",
     "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx",
-    "dd:sourcemaps": "npx datadog-ci sourcemaps upload ./.next --service guild.xyz --release-version 1.0.0 --minified-path-prefix https://guild.xyz/_next",
-    "dd:sourcemaps:local": "npx dotenv-cli -e .env.local -- npm run dd:sourcemaps",
     "test": "NETWORK_NAME='mainnet' dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --record",
     "test:mobile": "NETWORK_NAME='mainnet' dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --config viewportWidth=375,viewportHeight=667",
     "test:record": "NETWORK_NAME='mainnet' dotenv -e .env.local -e .env.development.local -- synpress run -b chrome --configFile=synpress.config.ts --record",
@@ -24,8 +22,6 @@
     "@chakra-ui/anatomy": "^2.1.2",
     "@chakra-ui/react": "^2.5.1",
     "@chakra-ui/theme-tools": "^2.0.17",
-    "@datadog/browser-rum": "^4.34.2",
-    "@datadog/rum-react-integration": "github:DataDog/rum-react-integration-examples",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@ethersproject/abi": "^5.7.0",
@@ -82,7 +78,6 @@
     "wicg-inert": "^3.1.2"
   },
   "devDependencies": {
-    "@datadog/datadog-ci": "^2.5.1",
     "@hookform/devtools": "^4.3.0",
     "@svgr/webpack": "^6.5.1",
     "@synthetixio/synpress": "^3.5.1",

@@ -25,7 +25,6 @@ const PaymentMethodButtons = () => {
         variant="subtle"
         w="full"
         borderRadius="md"
-        data-dd-action-name="Pay with crypto (GuildCheckout)"
         onClick={onPayWithCryptoClick}
       >
         Pay with crypto
@@ -39,7 +38,6 @@ const PaymentMethodButtons = () => {
             w="full"
             borderRadius="md"
             isDisabled
-            data-dd-action-name="Pay with card (GuildCheckout)"
             _hover={""}
           >
             Pay with card

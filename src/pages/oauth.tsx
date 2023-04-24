@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import AuthRedirect from "components/AuthRedirect"
 import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
-import useDatadog from "components/_app/Datadog/useDatadog"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
@@ -36,7 +36,7 @@ const getDataFromState = (
 
 const OAuth = () => {
   const router = useRouter()
-  const { addDatadogAction, addDatadogError } = useDatadog()
+  const { captureEvent } = usePostHogContext()
   const errorToast = useShowErrorToast()
 
   const handleOauthResponse = async () => {
@@ -52,10 +52,8 @@ const OAuth = () => {
       params = { ...getDataFromState(state), ...rest }
     }
 
-    addDatadogAction("OAuth - params", { params })
-
     if (!params.csrfToken || !params.platformName) {
-      addDatadogAction("OAuth - No params found, or it is in invalid form", {
+      captureEvent("OAuth - No params found, or it is in invalid form", {
         params,
       })
       await router.push("/")
@@ -68,13 +66,11 @@ const OAuth = () => {
     )
     window.localStorage.removeItem(localStorageInfoKey)
 
-    addDatadogAction("OAuth - localStorageInfo", { localStorageInfo })
-
     if (
       !!localStorageInfo.csrfToken &&
       localStorageInfo.csrfToken !== params.csrfToken
     ) {
-      addDatadogError(`OAuth - Invalid CSRF token`, {
+      captureEvent(`OAuth - Invalid CSRF token`, {
         received: params.csrfToken,
         expected: localStorageInfo.csrfToken,
       })
@@ -92,10 +88,7 @@ const OAuth = () => {
       OAUTH_CONFIRMATION_TIMEOUT_MS
     )
       .then(() => true)
-      .catch(() => {
-        addDatadogAction(`OAuth - Message confirmation timed out`)
-        return false
-      })
+      .catch(() => false)
 
     let response: Message
     if (params.error) {
@@ -126,7 +119,7 @@ const OAuth = () => {
   useEffect(() => {
     handleOauthResponse().catch((error) => {
       console.error(error)
-      addDatadogError("OAuth - Unexpected error", {
+      captureEvent("OAuth - Unexpected error", {
         error:
           error?.message ?? error?.toString?.() ?? JSON.stringify(error ?? null),
       })

@@ -1,8 +1,8 @@
 import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import useAllowance from "../../hooks/useAllowance"
@@ -92,7 +92,6 @@ const PurchaseButton = (): JSX.Element => {
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
       onClick={onClick}
-      data-dd-action-name="PurchaseButton (GuildCheckout)"
     >
       {errorMsg || "Purchase"}
     </Button>

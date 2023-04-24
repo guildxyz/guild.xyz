@@ -14,7 +14,6 @@ import OnboardingMarker from "components/common/OnboardingMarker"
 import useIsStuck from "hooks/useIsStuck"
 import { CaretDown, ListNumbers, Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
-import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import AddRoleDrawer from "./components/AddRoleDrawer"
 import OrderRolesModal from "./components/OrderRolesModal"
 
@@ -36,8 +35,6 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
     setIsStuck?.(isStuck)
   }, [isStuck])
 
-  const { localStep } = useOnboardingContext()
-
   return (
     <>
       <ButtonGroup isAttached size="sm" variant="ghost">
@@ -46,9 +43,6 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
             ref={addRoleButtonRef}
             leftIcon={<Icon as={Plus} />}
             onClick={onAddDrawerOpen}
-            data-dd-action-name={
-              localStep === null ? "Add role" : "Add role [onboarding]"
-            }
             /**
              * Have to remove border radiuses explicitly because ButtonGroup's
              * isAttached prop doesn't work when OnboardingMarker renders a wrapper
@@ -56,6 +50,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
              */
             borderTopRightRadius="0"
             borderBottomRightRadius="0"
+            data-test="add-role-button"
           >
             Add role
           </Button>

@@ -21,6 +21,7 @@ export default defineConfig({
   projectId: "kbncm6",
   env: {
     guildApiUrl: "https://api.guild.xyz/v1",
+    userAddress: "0x304Def656Babc745c53782639D3CaB00aCe8C843",
     platformlessGuildName: "Platformless Cypress Gang",
     platformlessGuildUrlName: "platformless-cypress-gang",
     guildName: "Cypress Gang",

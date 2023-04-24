@@ -11,10 +11,10 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useToast from "hooks/useToast"
 import { useState } from "react"
 import useTransferOwnership from "./hooks/useTransferOwnership"
@@ -24,13 +24,7 @@ const TransferOwnership = () => {
 
   return (
     <>
-      <Button
-        size="xs"
-        variant="ghost"
-        borderRadius={"lg"}
-        onClick={onOpen}
-        data-dd-action-name="transfer ownership"
-      >
+      <Button size="xs" variant="ghost" borderRadius={"lg"} onClick={onOpen}>
         <Text colorScheme={"gray"}>Transfer ownership</Text>
       </Button>
       <TransferOwnershipModal isOpen={isOpen} onClose={onClose} />

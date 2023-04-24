@@ -108,7 +108,6 @@ const PurchaseRequirement = (): JSX.Element => {
         borderRadius="md"
         fontWeight="medium"
         onClick={onClick}
-        data-dd-action-name="Purchase (Requierment)"
       >
         Purchase
       </Button>

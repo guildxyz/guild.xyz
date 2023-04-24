@@ -2,7 +2,6 @@ before(() => {
   cy.disconnectMetamaskWalletFromAllDapps()
 })
 
-const USER_ADDRESS = "0x304Def656Babc745c53782639D3CaB00aCe8C843"
 const MOCK_AUTH_DATA = {
   type: "OAUTH_SUCCESS",
   data: {
@@ -42,20 +41,23 @@ describe("create-discord-guild", () => {
     cy.wait("@connectDiscord")
 
     // Intercepting this request, so we can set the `DISCORD-select-button-connected` data-test attribute properly
-    cy.intercept(`${Cypress.env("guildApiUrl")}/user/${USER_ADDRESS}`, (req) => {
-      req.continue((res) => {
-        res.body = {
-          ...res.body,
-          platformUsers: [
-            {
-              platformId: 1,
-              platformName: "DISCORD",
-              platformUserId: "12345",
-            },
-          ],
-        }
-      })
-    }).as("modifiedUserResponse")
+    cy.intercept(
+      `${Cypress.env("guildApiUrl")}/user/${Cypress.env("userAddress")}`,
+      (req) => {
+        req.continue((res) => {
+          res.body = {
+            ...res.body,
+            platformUsers: [
+              {
+                platformId: 1,
+                platformName: "DISCORD",
+                platformUserId: "12345",
+              },
+            ],
+          }
+        })
+      }
+    ).as("modifiedUserResponse")
 
     // Select server
     cy.getByDataTest("DISCORD-select-button-connected").click()
@@ -96,12 +98,6 @@ describe("create-discord-guild", () => {
     )
     cy.wait("@createGuildRequest").its("response.statusCode").should("eq", 201)
   })
-
-  // This step wasn't too reliable because of the guild cache
-  // it(`/${Cypress.env("guildUrlName")}-${Cypress.env("DEPLOYMENT_ID")} exists`, () => {
-  //   cy.visit(`/${Cypress.env("guildUrlName")}-${Cypress.env("DEPLOYMENT_ID")}`)
-  //   cy.get("h1").should("contain.text", `${Cypress.env("guildName")} ${Cypress.env("DEPLOYMENT_ID")}`)
-  // })
 })
 
 export {}

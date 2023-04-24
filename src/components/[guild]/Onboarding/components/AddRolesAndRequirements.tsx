@@ -2,12 +2,11 @@ import { Text } from "@chakra-ui/react"
 import PaginationButtons from "./PaginationButtons"
 
 type Props = {
-  activeStep: number
   prevStep: () => void
   nextStep: () => void
 }
 
-const AddRolesAndRequirements = ({ activeStep, prevStep, nextStep }: Props) => {
+const AddRolesAndRequirements = ({ prevStep, nextStep }: Props) => {
   const handleNextStep = () => {
     window.scrollTo({ top: 0, behavior: "smooth" })
     nextStep()
@@ -22,7 +21,6 @@ const AddRolesAndRequirements = ({ activeStep, prevStep, nextStep }: Props) => {
         roles below!
       </Text>
       <PaginationButtons
-        activeStep={activeStep}
         prevStep={prevStep}
         isPrevDisabled
         nextStep={handleNextStep}

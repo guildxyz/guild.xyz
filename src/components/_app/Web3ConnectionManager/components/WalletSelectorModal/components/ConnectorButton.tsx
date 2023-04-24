@@ -6,7 +6,6 @@ import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import useKeyPair from "hooks/useKeyPair"
 import { Dispatch, SetStateAction, useRef, useState } from "react"
 import { isMobile } from "react-device-detect"
@@ -26,8 +25,6 @@ const ConnectorButton = ({
   error,
   setError,
 }: Props): JSX.Element => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
-
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
   if (typeof window !== "undefined") {
@@ -52,20 +49,7 @@ const ConnectorButton = ({
     activeConnector?.deactivate?.()
     connector
       .activate()
-      .then(() => {
-        addDatadogAction("Successfully connected wallet", {
-          userAddress: account?.toLowerCase(),
-          wallet: connectorName,
-        })
-      })
-      .catch((err) => {
-        setError(err)
-        if (err?.code === 4001) {
-          addDatadogAction("Wallet connection error", { data: err })
-        } else {
-          addDatadogError("Wallet connection error", { error: err })
-        }
-      })
+      .catch((err) => setError(err))
       .finally(() => setIsActivating(false))
   }
 

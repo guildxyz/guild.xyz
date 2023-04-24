@@ -21,7 +21,6 @@ const ConnectAccount = ({
     isDone={!!isConnected}
     title={isConnected ? `${account} connected` : `Connect ${account}`}
     buttonLabel={isConnected ? isConnected : "Connect"}
-    datadogActionName={`Connect ${account} (JoinModal)`}
     {...rest}
   >
     {children}

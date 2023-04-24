@@ -1,6 +1,5 @@
 import { FormControl, FormLabel, Select, Text, Tooltip } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { Info } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -31,8 +30,6 @@ const EntryChannel = ({
   errorMessage,
   ...rest
 }: Props) => {
-  const { addDatadogAction } = useDatadog()
-
   const { register, setValue } = useFormContext()
 
   const channelId = useWatch({ name: "channelId" })
@@ -52,15 +49,7 @@ const EntryChannel = ({
         {/* not focusable so it doesn't automatically open on modal open */}
         {tooltip && (
           <Tooltip label={tooltip} /* shouldWrapChildren */>
-            <Info
-              tabIndex={withAction ? 0 : undefined}
-              onMouseOver={
-                withAction ? () => addDatadogAction("viewed (i) tooltip") : undefined
-              }
-              onFocus={
-                withAction ? () => addDatadogAction("viewed (i) tooltip") : undefined
-              }
-            />
+            <Info tabIndex={withAction ? 0 : undefined} />
           </Tooltip>
         )}
       </FormLabel>
