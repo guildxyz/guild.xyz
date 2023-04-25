@@ -179,7 +179,7 @@ const RoleCard = memo(({ role }: Props) => {
                    */
                   {...(!isOpen && { inert: "true" })}
                 >
-                  <Reward withLink platform={platform} role={role} />
+                  <Reward platform={platform} role={role} withLink withMotionImg />
                 </SlideFade>
               ))}
               {role.hiddenRewards && (
