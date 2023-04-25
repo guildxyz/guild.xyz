@@ -94,7 +94,7 @@
     "eslint-config-next": "^12.3.4",
     "eslint-config-prettier": "^8.6.0",
     "husky": "^7.0.4",
-    "lint-staged": "^12.1.2",
+    "lint-staged": "^13.0.0",
     "prettier": "^2.8.1",
     "prettier-plugin-jsdoc": "^0.4.2",
     "typescript": "^4.9.4"
