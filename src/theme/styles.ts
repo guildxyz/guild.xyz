@@ -86,6 +86,9 @@ const styles = {
       fontFamily: "var(--chakra-fonts-body)",
       lineHeight: "var(--chakra-lineHeights-base)",
     },
+    "#walletconnect-wrapper": {
+      color: "black",
+    },
   }),
 }
 
