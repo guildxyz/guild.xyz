@@ -15,7 +15,7 @@ import {
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
-import { WalletConnect } from "@web3-react/walletconnect"
+import { WalletConnect } from "@web3-react/walletconnect-v2"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import CopyableAddress from "components/common/CopyableAddress"

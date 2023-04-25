@@ -1,6 +1,6 @@
 import { initializeConnector, Web3ReactHooks } from "@web3-react/core"
-import { WalletConnect } from "@web3-react/walletconnect"
-import { RPC_URLS } from "connectors"
+import { WalletConnect } from "@web3-react/walletconnect-v2"
+import { RPC } from "connectors"
 
 const initializeWalletConnectConnector = (): [WalletConnect, Web3ReactHooks] => {
   /**
@@ -15,7 +15,16 @@ const initializeWalletConnectConnector = (): [WalletConnect, Web3ReactHooks] => 
         new WalletConnect({
           actions,
           options: {
-            rpc: RPC_URLS,
+            projectId: "5253997ecb729d8465fc4aa656937d43",
+            showQrModal: true,
+            chains: Object.values(RPC).map((chain) => chain.chainId),
+            qrModalOptions: {
+              explorerAllowList: [],
+              explorerDenyList: [],
+              themeVariables: {
+                "--w3m-z-index": "10001",
+              },
+            },
           },
         })
     )
