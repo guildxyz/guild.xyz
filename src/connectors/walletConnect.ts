@@ -14,9 +14,7 @@ const initializeWalletConnectConnector = (): [WalletConnect, Web3ReactHooks] => 
       (actions) =>
         new WalletConnect({
           actions,
-          options: {
-            rpc: RPC_URLS,
-          },
+          options: { rpc: RPC_URLS },
         })
     )
 

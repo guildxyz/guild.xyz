@@ -1,7 +1,7 @@
 import { Center, Img } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
-import { Web3ReactHooks, useWeb3React } from "@web3-react/core"
+import { useWeb3React, Web3ReactHooks } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
