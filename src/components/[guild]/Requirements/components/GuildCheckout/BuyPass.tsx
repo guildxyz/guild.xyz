@@ -3,7 +3,6 @@ import {
   AlertDescription,
   AlertIcon,
   Collapse,
-  Divider,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -26,12 +25,7 @@ import { Coin } from "phosphor-react"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
 import BuyTotal from "./components/BuyTotal"
-import {
-  GuildCheckoutProvider,
-  useGuildCheckoutContext,
-} from "./components/GuildCheckoutContex"
-import InfoModal from "./components/InfoModal"
-import TransactionLink from "./components/InfoModal/components/TransactionLink"
+import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
 import NoReward from "./components/NoReward"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
 import PaymentMethodButtons from "./components/PaymentMethodButtons"
@@ -46,16 +40,8 @@ const BuyPass = () => {
   const { featureFlags } = useGuild()
 
   const { account, chainId } = useWeb3React()
-  const {
-    requirement,
-    isOpen,
-    onOpen,
-    onClose,
-    isInfoModalOpen,
-    txError,
-    txSuccess,
-    txHash,
-  } = useGuildCheckoutContext()
+  const { requirement, isOpen, onOpen, onClose, isInfoModalOpen } =
+    useGuildCheckoutContext()
   const { urlName, name, roles } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
@@ -166,79 +152,8 @@ const BuyPass = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
-      <InfoModal
-        title={
-          txError
-            ? "Transaction failed"
-            : txSuccess
-            ? "Successful payment"
-            : txHash
-            ? "Transaction is processing..."
-            : `Buy ${name} pass`
-        }
-        progressComponent={
-          <>
-            <Text mb={2}>
-              The blockchain is working its magic... Your transaction should be
-              confirmed shortly
-            </Text>
-
-            <TransactionLink />
-
-            <Divider mb="6" />
-
-            <Text fontWeight={"bold"} mb="2">
-              Unlocking rewards...
-            </Text>
-            {role?.rolePlatforms?.map((platform) => (
-              <Reward
-                key={platform.guildPlatformId}
-                platform={platform}
-                role={role}
-                withLink
-              />
-            )) || <NoReward />}
-          </>
-        }
-        successComponent={
-          <>
-            <Text mb={2}>
-              Successful transaction! Your access is being rechecked.
-            </Text>
-
-            <TransactionLink />
-
-            <Divider mb="6" />
-
-            <Text fontWeight={"bold"} mb="2">
-              Unlocked rewards:
-            </Text>
-            {role?.rolePlatforms?.map((platform) => (
-              <Reward
-                key={platform.guildPlatformId}
-                platform={platform}
-                role={role}
-                withLink
-                isLinkColorful
-              />
-            )) || <NoReward />}
-          </>
-        }
-        errorComponent={
-          <>
-            <Text mb={4}>{`Couldn't buy ${name} pass`}</Text>
-          </>
-        }
-      />
     </>
   )
 }
 
-const BuyPassWrapper = () => (
-  <GuildCheckoutProvider>
-    <BuyPass />
-  </GuildCheckoutProvider>
-)
-
-export default BuyPassWrapper
+export default BuyPass
