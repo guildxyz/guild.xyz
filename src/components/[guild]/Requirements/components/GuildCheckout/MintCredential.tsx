@@ -7,13 +7,17 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  useColorMode,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { Chain, Chains } from "connectors"
+import {
+  GuildAction,
+  MintCredentialProvider,
+  useMintCredentialContext,
+} from "./MintCredentialContext"
 import AlphaTag from "./components/AlphaTag"
-import MintCredentialButton from "./components/buttons/MintCredentialButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import CredentialFeeCurrency from "./components/CredentialFeeCurrency"
 import CredentialImage from "./components/CredentialImage"
 import {
@@ -22,11 +26,8 @@ import {
 } from "./components/GuildCheckoutContex"
 import InfoModal from "./components/InfoModal"
 import TransactionLink from "./components/InfoModal/components/TransactionLink"
-import {
-  GuildAction,
-  MintCredentialProvider,
-  useMintCredentialContext,
-} from "./MintCredentialContext"
+import MintCredentialButton from "./components/buttons/MintCredentialButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
 type Props = {
   credentialChain: Chain
@@ -38,10 +39,27 @@ const MintCredential = (): JSX.Element => {
     useGuildCheckoutContext()
   const { credentialChain } = useMintCredentialContext()
 
+  const { colorMode } = useColorMode()
+
   return (
     <>
-      <Button onClick={onOpen} data-dd-action-name="Mint Credential">
-        Mint Credential
+      <Button
+        onClick={onOpen}
+        data-dd-action-name="Mint Credential"
+        variant="outline"
+        borderColor={colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"}
+        {...(colorMode === "light"
+          ? {
+              _hover: {
+                bg: "blackAlpha.50",
+              },
+              _active: {
+                bg: "blackAlpha.200",
+              },
+            }
+          : {})}
+      >
+        Mint NFT
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="duotone">
