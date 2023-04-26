@@ -1,4 +1,3 @@
-import { datadogRum } from "@datadog/browser-rum"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
@@ -59,54 +58,27 @@ const fetcher = async (
     }
   }
 
-  if (isGuildApiCall || isServerless)
-    datadogRum?.addAction(`FETCH ${resource}`, {
-      url: `${api}${resource}`,
-      options,
-      userAddress: resource.includes("checkPubKey")
-        ? body.address?.toLowerCase()
-        : undefined,
-    })
+  return fetch(`${api}${resource}`, options).then(async (response: Response) => {
+    const res = await response.json?.()
 
-  return fetch(`${api}${resource}`, options)
-    .catch((err) => {
-      datadogRum?.addError("Failed to fetch", {
-        url: `${api}${resource}`,
-        error: err?.message || err?.toString?.() || err,
-      })
-      throw err
-    })
-    .then(async (response: Response) => {
-      const res = await response.json?.()
+    if (!response.ok) {
+      if (isGuildApiCall) {
+        const error = res.errors?.[0]
+        const errorMsg = error
+          ? `${error.msg}${error.param ? ` : ${error.param}` : ""}`
+          : res
 
-      if (!response.ok) {
-        if (isGuildApiCall) {
-          const error = res.errors?.[0]
-          const errorMsg = error
-            ? `${error.msg}${error.param ? ` : ${error.param}` : ""}`
-            : res
+        const correlationId = response.headers.get("X-Correlation-ID")
+        if (correlationId) pushToIntercomSetting("correlationId", correlationId)
 
-          datadogRum?.addError(
-            !error && resource.startsWith("/guild/access")
-              ? "Access check error(s)"
-              : "FETCH ERROR",
-            {
-              url: `${api}${resource}`,
-              response: errorMsg,
-            }
-          )
-
-          const correlationId = response.headers.get("X-Correlation-ID")
-          if (correlationId) pushToIntercomSetting("correlationId", correlationId)
-
-          return Promise.reject(errorMsg)
-        }
-
-        return Promise.reject(res)
+        return Promise.reject(errorMsg)
       }
 
-      return res
-    })
+      return Promise.reject(res)
+    }
+
+    return res
+  })
 }
 
 const fetcherWithSign = async (

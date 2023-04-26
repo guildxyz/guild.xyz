@@ -12,7 +12,6 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { FC, PropsWithChildren, useState } from "react"
 
 type Props = {
@@ -44,18 +43,12 @@ const RequiementAccessIndicatorUI = ({
   const cardBg = useColorModeValue("var(--chakra-colors-gray-50)", "#35353A")
   const { colorMode } = useColorMode()
   const [openCount, setOpenCount] = useState(0)
-  const { addDatadogAction } = useDatadog()
 
   const onOpen = () => {
-    if (isAlwaysOpen)
-      return addDatadogAction("Open RequiementAccessIndicator", { colorScheme })
+    if (isAlwaysOpen) return
 
-    addDatadogAction("Open closed RequiementAccessIndicator", { colorScheme })
     setOpenCount((count) => {
       const newCount = count + 1
-      if (newCount === 5) addDatadogAction("Easteregg found: 1.")
-      if (newCount === 10) addDatadogAction("Easteregg found: 2.")
-
       return newCount
     })
   }

@@ -20,9 +20,9 @@ import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Reward from "components/[guild]/RoleCard/components/Reward"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import { Coin, StarHalf } from "phosphor-react"
-import { usePostHog } from "posthog-js/react"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
 import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
@@ -40,7 +40,7 @@ import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
 
 const BuyPass = () => {
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
 
   const { featureFlags } = useGuild()
 
@@ -67,7 +67,7 @@ const BuyPass = () => {
 
   const onClick = () => {
     onOpen()
-    posthog.capture("Click: Buy (Requirement)", {
+    captureEvent("Click: Buy (Requirement)", {
       guild: urlName,
     })
   }
@@ -90,7 +90,6 @@ const BuyPass = () => {
         borderRadius="lg"
         fontWeight="medium"
         onClick={onClick}
-        data-dd-action-name="Pay (Requierment)"
       >
         Pay
       </Button>

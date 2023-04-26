@@ -41,7 +41,6 @@ const AddCard = forwardRef(
         href={link}
         cursor="pointer"
         onClick={onClick}
-        data-dd-action-name={title}
         {...(isDisabled && {
           onClick: null,
           opacity: 0.5,
@@ -66,7 +65,7 @@ const AddCard = forwardRef(
             >
               {title}
 
-              {isDisabled && <Tag ml="2">Soon</Tag>}
+              {isDisabled && <Tag ml="2">Temporarily disabled</Tag>}
             </Text>
             {description && (
               <Text

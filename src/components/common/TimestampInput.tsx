@@ -21,6 +21,7 @@ const ControlledTimestampInput = ({ fieldName, ...props }: Props): JSX.Element =
       value={value}
       onChange={onChange}
       onBlur={onBlur}
+      {...props}
     />
   )
 }
@@ -44,8 +45,11 @@ const TimestampInput = forwardRef(
           value && !isNaN(value) ? new Date(value).toISOString().split("T")[0] : ""
         }
         onChange={(e) => {
-          setValue(e.target.valueAsNumber)
-          props.onChange?.(e.target.valueAsNumber)
+          const newValue = !isNaN(e.target.valueAsNumber)
+            ? e.target.valueAsNumber
+            : undefined
+          setValue(newValue)
+          props.onChange?.(newValue)
         }}
         max={new Date().toISOString().split("T")[0]}
       />

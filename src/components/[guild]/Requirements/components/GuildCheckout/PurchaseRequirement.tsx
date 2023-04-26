@@ -19,10 +19,11 @@ import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
-import { usePostHog } from "posthog-js/react"
 import {
+  DISABLED_TOKENS,
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
@@ -47,7 +48,7 @@ import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
 
   const { featureFlags } = useGuild()
 
@@ -79,7 +80,7 @@ const PurchaseRequirement = (): JSX.Element => {
 
   const onClick = () => {
     onOpen()
-    posthog.capture("Click: Purchase (Requirement)", {
+    captureEvent("Click: Purchase (Requirement)", {
       guild: urlName,
     })
   }
@@ -87,11 +88,14 @@ const PurchaseRequirement = (): JSX.Element => {
   if (
     !isOpen &&
     !isInfoModalOpen &&
-    (!featureFlags?.includes("PURCHASE_REQUIREMENT") ||
+    (!featureFlags.includes("PURCHASE_REQUIREMENT") ||
+      DISABLED_TOKENS[requirement.chain]?.includes(
+        requirement.address?.toLowerCase()
+      ) ||
       (!accessData && isAccessLoading) ||
       satisfiesRequirement ||
-      !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
-      !purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain))
+      !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement.type) ||
+      !purchaseSupportedChains[requirement.type]?.includes(requirement.chain))
   )
     return null
 
@@ -104,7 +108,6 @@ const PurchaseRequirement = (): JSX.Element => {
         borderRadius="md"
         fontWeight="medium"
         onClick={onClick}
-        data-dd-action-name="Purchase (Requierment)"
       >
         Purchase
       </Button>

@@ -1,4 +1,3 @@
-import { datadogRum } from "@datadog/browser-rum"
 import { hexStripZeros } from "@ethersproject/bytes"
 import { JsonRpcProvider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
@@ -12,12 +11,7 @@ const chainsOfAddressWithDeployedContract = (address: string) =>
       const rpcUrl = RPC[chain]?.rpcUrls?.[0]
       const prov = new JsonRpcProvider(rpcUrl)
 
-      const bytecode = await prov.getCode(address).catch((error) => {
-        datadogRum?.addAction(`Retrieving bytecode failed on chain ${chain}`, {
-          error,
-        })
-        return null
-      })
+      const bytecode = await prov.getCode(address).catch(() => null)
       return [chain, bytecode && hexStripZeros(bytecode) !== "0x"]
     })
   ).then(

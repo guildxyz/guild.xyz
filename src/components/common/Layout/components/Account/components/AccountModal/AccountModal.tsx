@@ -27,9 +27,13 @@ import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
 
-const AccountModal = ({ isOpen, onClose }) => {
+const AccountModal = () => {
   const { account, connector } = useWeb3React()
-  const { setIsDelegateConnection } = useWeb3ConnectionManager()
+  const {
+    setIsDelegateConnection,
+    isAccountModalOpen: isOpen,
+    closeAccountModal: onClose,
+  } = useWeb3ConnectionManager()
   const { id, addresses } = useUser()
 
   const connectorName = (c) =>

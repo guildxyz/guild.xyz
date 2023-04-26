@@ -33,7 +33,6 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
         icon={<Icon as={Robot} />}
         title="Complete CAPTCHA"
         buttonLabel={isDone ? "Completed" : "Complete"}
-        datadogActionName="Complete CAPTCHA (JoinModal)"
         onClick={onOpen}
         isDisabled={!isActive && "Connect wallet first"}
       />

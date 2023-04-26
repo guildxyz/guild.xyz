@@ -48,7 +48,6 @@ const JoinButton = (): JSX.Element => {
       onClick={openJoinModal}
       colorScheme="green"
       color="white !important"
-      data-dd-action-name="Join"
     >
       {buttonText}
     </Button>
