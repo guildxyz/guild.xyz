@@ -11,7 +11,6 @@ const TransactionLink = (): JSX.Element => {
       <Link
         isExternal
         href={`${RPC[requirement.chain].blockExplorerUrls[0]}/tx/${txHash}`}
-        fontWeight="semibold"
       >
         View on block explorer
         <Icon ml={1} as={ArrowSquareOut} />

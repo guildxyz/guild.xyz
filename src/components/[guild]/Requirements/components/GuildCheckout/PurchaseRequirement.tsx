@@ -14,12 +14,12 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
 import {
@@ -29,10 +29,6 @@ import {
 } from "utils/guildCheckout/constants"
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import AlphaTag from "./components/AlphaTag"
-import ConnectWalletButton from "./components/buttons/ConnectWalletButton"
-import PurchaseAllowanceButton from "./components/buttons/PurchaseAllowanceButton"
-import PurchaseButton from "./components/buttons/PurchaseButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import ErrorCollapse from "./components/ErrorCollapse"
 import {
   GuildCheckoutProvider,
@@ -45,6 +41,10 @@ import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
 import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import PurchaseFeeAndTotal from "./components/PurchaseFeeAndTotal"
 import TOSCheckbox from "./components/TOSCheckbox"
+import ConnectWalletButton from "./components/buttons/ConnectWalletButton"
+import PurchaseAllowanceButton from "./components/buttons/PurchaseAllowanceButton"
+import PurchaseButton from "./components/buttons/PurchaseButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
@@ -198,7 +198,7 @@ const PurchaseRequirement = (): JSX.Element => {
         }
         progressComponent={
           <>
-            <Text mb={4}>
+            <Text mb={2}>
               The blockchain is working its magic... Your transaction should be
               confirmed shortly
             </Text>
@@ -218,10 +218,10 @@ const PurchaseRequirement = (): JSX.Element => {
         }
         successComponent={
           <>
-            <Text mb={4}>
+            <Text mb={2}>
               {isMember
-                ? "Your access is being rechecked"
-                : "Join the Guild now to get your roles"}
+                ? "Successful transaction! Your access is being rechecked."
+                : "Successful transaction! Join the Guild now to get your roles"}
             </Text>
 
             <TransactionLink />

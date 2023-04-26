@@ -3,7 +3,7 @@ import {
   AlertDescription,
   AlertIcon,
   Collapse,
-  HStack,
+  Divider,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -15,19 +15,16 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
+import Reward from "components/[guild]/RoleCard/components/Reward"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Reward from "components/[guild]/RoleCard/components/Reward"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { Chains } from "connectors"
-import { Coin, StarHalf } from "phosphor-react"
+import { Coin } from "phosphor-react"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
-import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
-import BuyButton from "./components/buttons/BuyButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import BuyTotal from "./components/BuyTotal"
 import {
   GuildCheckoutProvider,
@@ -35,9 +32,13 @@ import {
 } from "./components/GuildCheckoutContex"
 import InfoModal from "./components/InfoModal"
 import TransactionLink from "./components/InfoModal/components/TransactionLink"
+import NoReward from "./components/NoReward"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
 import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
+import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
+import BuyButton from "./components/buttons/BuyButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
 const BuyPass = () => {
   const { captureEvent } = usePostHogContext()
@@ -128,15 +129,7 @@ const BuyPass = () => {
                 platform={platform}
                 role={role}
               />
-            )) || (
-              <HStack pt="3" spacing={0} alignItems={"flex-start"} opacity=".7">
-                <Icon as={StarHalf} boxSize={5} overflow="hidden" />
-                <Text px="2">
-                  No auto-managed rewards. The owner might add some in the future or
-                  reward you another way!
-                </Text>
-              </HStack>
-            )}
+            )) || <NoReward />}
           </ModalBody>
 
           <ModalFooter pt={10} flexDir="column">
@@ -179,28 +172,57 @@ const BuyPass = () => {
           txError
             ? "Transaction failed"
             : txSuccess
-            ? "Success"
+            ? "Successful payment"
             : txHash
             ? "Transaction is processing..."
             : `Buy ${name} pass`
         }
         progressComponent={
           <>
-            <Text mb={4}>
+            <Text mb={2}>
               The blockchain is working its magic... Your transaction should be
               confirmed shortly
             </Text>
 
             <TransactionLink />
+
+            <Divider mb="6" />
+
+            <Text fontWeight={"bold"} mb="2">
+              Unlocking rewards...
+            </Text>
+            {role?.rolePlatforms?.map((platform) => (
+              <Reward
+                key={platform.guildPlatformId}
+                platform={platform}
+                role={role}
+                withLink
+              />
+            )) || <NoReward />}
           </>
         }
         successComponent={
           <>
-            <Text mb={4}>
+            <Text mb={2}>
               Successful transaction! Your access is being rechecked.
             </Text>
 
             <TransactionLink />
+
+            <Divider mb="6" />
+
+            <Text fontWeight={"bold"} mb="2">
+              Unlocked rewards:
+            </Text>
+            {role?.rolePlatforms?.map((platform) => (
+              <Reward
+                key={platform.guildPlatformId}
+                platform={platform}
+                role={role}
+                withLink
+                isLinkColorful
+              />
+            )) || <NoReward />}
           </>
         }
         errorComponent={

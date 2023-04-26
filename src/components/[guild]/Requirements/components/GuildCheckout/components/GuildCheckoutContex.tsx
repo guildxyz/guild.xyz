@@ -1,7 +1,7 @@
 import { useDisclosure } from "@chakra-ui/react"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import {
   createContext,
   Dispatch,

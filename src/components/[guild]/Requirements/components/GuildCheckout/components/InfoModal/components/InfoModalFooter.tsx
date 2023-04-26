@@ -1,10 +1,9 @@
 import { ModalFooter } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { useEffect } from "react"
+import Button from "components/common/Button"
 import { useGuildCheckoutContext } from "../../GuildCheckoutContex"
 
 const InfoModalFooter = (): JSX.Element => {
@@ -14,11 +13,6 @@ const InfoModalFooter = (): JSX.Element => {
   const { onInfoModalClose, txSuccess } = useGuildCheckoutContext()
   const openJoinModal = useOpenJoinModal()
   const isMember = useIsMember()
-
-  useEffect(() => {
-    if (!isMember || !txSuccess) return
-    onInfoModalClose()
-  }, [isMember, txSuccess])
 
   const isJoinButton = txSuccess && !isMember
 
