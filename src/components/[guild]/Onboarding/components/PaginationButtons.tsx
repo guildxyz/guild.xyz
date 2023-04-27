@@ -2,7 +2,6 @@ import { Flex } from "@chakra-ui/react"
 import Button from "components/common/Button"
 
 const PaginationButtons = ({
-  activeStep,
   prevStep,
   nextStep,
   nextLoading = false,
@@ -15,7 +14,6 @@ const PaginationButtons = ({
       onClick={nextStep}
       isLoading={nextLoading}
       colorScheme="primary"
-      data-dd-action-name={`${activeStep + 1}-next [onboarding]`}
     >
       {nextLabel}
     </Button>
@@ -26,7 +24,6 @@ const PaginationButtons = ({
       size="sm"
       variant="ghost"
       order={{ md: -1 }}
-      data-dd-action-name={`${activeStep + 1}-prev [onboarding]`}
     >
       Prev
     </Button>

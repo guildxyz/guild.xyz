@@ -59,6 +59,7 @@ const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
                 Cancel
               </Button>
               <Button
+                data-test="delete-role-confirmation-button"
                 colorScheme="red"
                 ml={3}
                 isLoading={isLoading}

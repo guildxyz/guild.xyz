@@ -36,7 +36,7 @@ import { Visibility } from "types"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
-const GENERAL_REQUIREMENTS_COUNT = 7
+const GENERAL_REQUIREMENTS_COUNT = 8
 const general = REQUIREMENTS_DATA.slice(1, GENERAL_REQUIREMENTS_COUNT + 1)
 const integrations = REQUIREMENTS_DATA.slice(GENERAL_REQUIREMENTS_COUNT + 1)
 
@@ -56,8 +56,8 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
   const homeRef = useRef(null)
   const formRef = useRef(null)
 
-  const handleClose = () => {
-    if (onCloseAttemptToast)
+  const handleClose = (forceClose = false) => {
+    if (onCloseAttemptToast && !forceClose)
       return toast({ status: "warning", title: onCloseAttemptToast })
 
     onClose()
@@ -91,7 +91,12 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
   return (
     <>
       <CardMotionWrapper>
-        <AddCard ref={addCardRef} title="Add requirement" onClick={onOpen} />
+        <AddCard
+          ref={addCardRef}
+          title="Add requirement"
+          onClick={onOpen}
+          data-test="add-requirement-button"
+        />
       </CardMotionWrapper>
       <Modal
         isOpen={isOpen}
@@ -100,7 +105,7 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
         finalFocusRef={addCardRef}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent data-test="add-requirement-modal">
           <ModalCloseButton />
           <ModalHeader>
             <HStack>
@@ -168,7 +173,7 @@ const AddRequirementForm = forwardRef(
         visibility: roleVisibility,
         ...data,
       })
-      handleClose()
+      handleClose(true)
     })
 
     return (

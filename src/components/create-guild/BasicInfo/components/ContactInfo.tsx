@@ -14,10 +14,8 @@ import {
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
-import { useEffect } from "react"
-import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form"
+import { Controller, useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, SelectOption } from "types"
 
 const contactTypeOptions: SelectOption[] = [
@@ -30,7 +28,6 @@ type Props = {
 }
 
 const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
-  const { addDatadogAction } = useDatadog()
   const {
     control,
     register,
@@ -44,13 +41,6 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
     name: "contacts",
     keyName: "formId",
   })
-
-  const contacts = useWatch({ control, name: "contacts" })
-
-  useEffect(() => {
-    if (!contacts?.length) return
-    addDatadogAction("Added contact (basic info)")
-  }, [contacts])
 
   return (
     <>
@@ -140,7 +130,6 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
                 contact: "",
               })
             }
-            data-dd-action-name="Add contact"
           >
             Add contact
           </Button>

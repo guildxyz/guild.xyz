@@ -9,7 +9,6 @@ import {
 import { Player } from "@lottiefiles/react-lottie-player"
 import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Card from "components/common/Card"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { useEffect, useState } from "react"
 import useGuild from "../hooks/useGuild"
 import AddRolesAndRequirements from "./components/AddRolesAndRequirements"
@@ -49,7 +48,6 @@ const steps = [
 ]
 
 const Onboarding = (): JSX.Element => {
-  const { addDatadogAction } = useDatadog()
   const { onboardingComplete } = useGuild()
 
   const { localStep, setLocalStep } = useOnboardingContext()
@@ -106,14 +104,7 @@ const Onboarding = (): JSX.Element => {
         sx={{ "*": { zIndex: 1 } }}
       >
         <Steps
-          onClickStep={
-            orientation === "horizontal"
-              ? (step) => {
-                  addDatadogAction(`click on step ${step + 1} [onboarding]`)
-                  setStep(step)
-                }
-              : undefined
-          }
+          onClickStep={orientation === "horizontal" ? setStep : undefined}
           activeStep={activeStep}
           colorScheme="primary"
           orientation={orientation}

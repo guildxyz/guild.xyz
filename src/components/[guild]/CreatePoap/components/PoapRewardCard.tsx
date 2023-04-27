@@ -8,17 +8,17 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
+import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import RewardCard from "components/common/RewardCard"
-import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
-import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { PropsWithChildren } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { GuildPoap, Rest } from "types"
+import useMintPoapButton, { MintModal } from "../hooks/useMintPoapButton"
 import Distribution from "./Distribution"
-import MintPoapButton from "./MintPoapButton"
 import UploadMintLinks from "./UploadMintLinks"
 
 type Props = {
@@ -52,9 +52,16 @@ const PoapRewardCard = ({
 
   const { data } = useUserPoapEligibility(guildPoap?.poapIdentifier)
 
+  const { buttonProps, modalProps } = useMintPoapButton(poap?.id)
+
   const availableLinks = poapLinks?.total - poapLinks?.claimed
 
-  if ((!data.access || !guildPoap.activated || !availableLinks) && !isAdmin)
+  if (
+    (!data.access ||
+      !guildPoap.activated ||
+      (!availableLinks && !modalProps.response)) &&
+    !isAdmin
+  )
     return null
 
   const colorScheme = guildPoap.activated ? `purple` : `gray`
@@ -79,12 +86,12 @@ const PoapRewardCard = ({
           ) : !guildPoap.activated ? (
             <Button onClick={onActivateModalOpen}>Activate</Button>
           ) : (
-            <MintPoapButton poapId={poap?.id} colorScheme="purple">
+            <Button colorScheme="purple" {...buttonProps}>
               Mint POAP
-            </MintPoapButton>
+            </Button>
           ))}
       </RewardCard>
-      {!poapLinks?.total && (
+      {!poapLinks?.total ? (
         <Modal isOpen={isLinkModalOpen} onClose={onLinkModalClose}>
           <ModalOverlay />
           <ModalContent>
@@ -100,6 +107,8 @@ const PoapRewardCard = ({
             </ModalBody>
           </ModalContent>
         </Modal>
+      ) : (
+        <MintModal {...modalProps} />
       )}
       {!guildPoap.activated && (
         <Modal isOpen={isActivateModalOpen} onClose={onActivateModalClose}>

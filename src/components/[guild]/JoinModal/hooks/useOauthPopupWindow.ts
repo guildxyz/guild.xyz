@@ -1,4 +1,3 @@
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { randomBytes } from "crypto"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
@@ -30,7 +29,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   url: string,
   oauthOptions: OAuthOptions
 ) => {
-  const { addDatadogError } = useDatadog()
   const toast = useToast()
 
   const redirectUri =
@@ -121,7 +119,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     const errorDescription = oauthState.error.errorDescription ?? ""
 
     toast({ status: "error", title, description: errorDescription })
-    addDatadogError(`OAuth error - ${title}`, { error: errorDescription })
   }, [oauthState.error])
 
   return {
