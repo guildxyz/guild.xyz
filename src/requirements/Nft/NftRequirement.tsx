@@ -3,6 +3,8 @@ import { ImageData } from "@nouns/assets"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import PurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/PurchaseRequirement"
+import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
+import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -63,7 +65,10 @@ const NftRequirement = (props: RequirementProps) => {
       isImageLoading={nftDataLoading}
       footer={
         <HStack spacing={4}>
-          <PurchaseRequirement />
+          <GuildCheckoutProvider>
+            <PurchaseRequirement />
+            <PurchaseTransactionStatusModal />
+          </GuildCheckoutProvider>
           <BlockExplorerUrl />
         </HStack>
       }

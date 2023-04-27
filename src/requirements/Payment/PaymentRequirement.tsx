@@ -1,24 +1,27 @@
 import { Icon } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
-import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
+import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
+import PaymentTransactionStatusModal from "../../components/[guild]/Requirements/components/GuildCheckout/components/PaymentTransactionStatusModal"
 import WithdrawButton from "./components/WithdrawButton"
 import useVault from "./hooks/useVault"
 
 const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   const { isAdmin } = useGuildPermission()
+
   const {
     id,
     roleId,
@@ -55,12 +58,15 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
       {...props}
       rightElement={
         props?.rightElement ? (
-          (satisfiesRequirement && !multiplePayments) ||
-          poapLinks?.claimed === poapLinks?.total ? (
-            props?.rightElement
-          ) : (
-            <BuyPass />
-          )
+          <GuildCheckoutProvider>
+            {(satisfiesRequirement && !multiplePayments) ||
+            poapLinks?.claimed === poapLinks?.total ? (
+              props?.rightElement
+            ) : (
+              <BuyPass />
+            )}
+            <PaymentTransactionStatusModal />
+          </GuildCheckoutProvider>
         ) : null
       }
       footer={

@@ -3,7 +3,6 @@ import {
   AlertDescription,
   AlertIcon,
   Collapse,
-  HStack,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -15,48 +14,35 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
+import Reward from "components/[guild]/RoleCard/components/Reward"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Reward from "components/[guild]/RoleCard/components/Reward"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { Chains } from "connectors"
-import { Coin, StarHalf } from "phosphor-react"
+import { Coin } from "phosphor-react"
 import { useEffect } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
-import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
-import BuyButton from "./components/buttons/BuyButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import BuyTotal from "./components/BuyTotal"
-import {
-  GuildCheckoutProvider,
-  useGuildCheckoutContext,
-} from "./components/GuildCheckoutContex"
-import InfoModal from "./components/InfoModal"
-import TransactionLink from "./components/InfoModal/components/TransactionLink"
+import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
+import NoReward from "./components/NoReward"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
 import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
+import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
+import BuyButton from "./components/buttons/BuyButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
 const BuyPass = () => {
   const { captureEvent } = usePostHogContext()
 
   const { account, chainId } = useWeb3React()
-  const {
-    requirement,
-    isOpen,
-    onOpen,
-    onClose,
-    isInfoModalOpen,
-    txError,
-    txSuccess,
-    txHash,
-    setAgreeWithTOS,
-  } = useGuildCheckoutContext()
+  const { requirement, isOpen, onOpen, onClose, setAgreeWithTOS } =
+    useGuildCheckoutContext()
   const { urlName, name, roles, poaps } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
 
@@ -132,7 +118,7 @@ const BuyPass = () => {
             )}
 
             {poap ? (
-              <PoapReward poap={poap} isExpired={false} isInteractive={false} />
+              <PoapReward poap={poap} isInteractive={false} />
             ) : (
               role?.rolePlatforms?.map((platform) => (
                 <Reward
@@ -140,15 +126,7 @@ const BuyPass = () => {
                   platform={platform}
                   role={role}
                 />
-              )) || (
-                <HStack pt="3" spacing={0} alignItems={"flex-start"} opacity=".7">
-                  <Icon as={StarHalf} boxSize={5} overflow="hidden" />
-                  <Text px="2">
-                    No auto-managed rewards. The owner might add some in the future
-                    or reward you another way!
-                  </Text>
-                </HStack>
-              )
+              )) || <NoReward />
             )}
           </ModalBody>
 
@@ -188,50 +166,8 @@ const BuyPass = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
-      <InfoModal
-        title={
-          txError
-            ? "Transaction failed"
-            : txSuccess
-            ? "Success"
-            : txHash
-            ? "Transaction is processing..."
-            : `Buy ${name} pass`
-        }
-        progressComponent={
-          <>
-            <Text mb={4}>
-              The blockchain is working its magic... Your transaction should be
-              confirmed shortly
-            </Text>
-
-            <TransactionLink />
-          </>
-        }
-        successComponent={
-          <>
-            <Text mb={4}>
-              Successful transaction! Your access is being rechecked.
-            </Text>
-
-            <TransactionLink />
-          </>
-        }
-        errorComponent={
-          <>
-            <Text mb={4}>{`Couldn't buy ${name} pass`}</Text>
-          </>
-        }
-      />
     </>
   )
 }
 
-const BuyPassWrapper = () => (
-  <GuildCheckoutProvider>
-    <BuyPass />
-  </GuildCheckoutProvider>
-)
-
-export default BuyPassWrapper
+export default BuyPass

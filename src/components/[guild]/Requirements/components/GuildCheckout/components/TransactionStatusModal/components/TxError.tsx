@@ -1,11 +1,10 @@
-import { Center, Flex, Icon, ModalBody } from "@chakra-ui/react"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
+import { Center, Flex, Icon, ModalBody, ModalFooter } from "@chakra-ui/react"
 import { XCircle } from "phosphor-react"
 import { PropsWithChildren } from "react"
-import InfoModalFooter from "./InfoModalFooter"
+import TransactionModalCloseButton from "./TransactionModalCloseButton"
 
 const TxError = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
-  <CardMotionWrapper>
+  <>
     <ModalBody pb={0}>
       <Flex direction="column">
         <Center mb={10}>
@@ -25,8 +24,10 @@ const TxError = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
       {children}
     </ModalBody>
 
-    <InfoModalFooter />
-  </CardMotionWrapper>
+    <ModalFooter>
+      <TransactionModalCloseButton />
+    </ModalFooter>
+  </>
 )
 
 export default TxError

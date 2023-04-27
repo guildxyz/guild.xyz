@@ -5,11 +5,10 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
-import { AnimatePresence } from "framer-motion"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
-import InProgress from "./components/InProgress"
-import Success from "./components/Success"
 import TxError from "./components/TxError"
+import TxInProgress from "./components/TxInProgress"
+import TxSuccess from "./components/TxSuccess"
 
 type Props = {
   title: string
@@ -18,13 +17,13 @@ type Props = {
   errorComponent?: JSX.Element
 }
 
-const InfoModal = ({
+const TransactionStatusModal = ({
   title,
   progressComponent,
   successComponent,
   errorComponent,
 }: Props): JSX.Element => {
-  const { isInfoModalOpen, onInfoModalClose, txSuccess, txError } =
+  const { isInfoModalOpen, onInfoModalClose, txSuccess, txError, txHash } =
     useGuildCheckoutContext()
 
   return (
@@ -34,21 +33,27 @@ const InfoModal = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{title}</ModalHeader>
+        <ModalHeader>
+          {txError
+            ? "Transaction failed"
+            : txSuccess
+            ? "Successful payment"
+            : txHash
+            ? "Transaction is processing..."
+            : title}
+        </ModalHeader>
         {txSuccess && <ModalCloseButton />}
 
-        <AnimatePresence>
-          {txError ? (
-            <TxError>{errorComponent}</TxError>
-          ) : txSuccess ? (
-            <Success>{successComponent}</Success>
-          ) : (
-            <InProgress>{progressComponent}</InProgress>
-          )}
-        </AnimatePresence>
+        {txError ? (
+          <TxError>{errorComponent}</TxError>
+        ) : txSuccess ? (
+          <TxSuccess>{successComponent}</TxSuccess>
+        ) : (
+          <TxInProgress>{progressComponent}</TxInProgress>
+        )}
       </ModalContent>
     </Modal>
   )
 }
 
-export default InfoModal
+export default TransactionStatusModal

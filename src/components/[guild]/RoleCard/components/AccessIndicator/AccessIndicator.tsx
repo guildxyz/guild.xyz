@@ -34,16 +34,18 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const isMobile = useBreakpointValue({ base: true, md: false })
   const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")
 
-  const hasRequirementsWithErrors = data?.requirements?.some(
-    (r) => r.access === null
+  const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
+  const requirementIdsWithErrors =
+    data?.requirements?.filter((r) => r.access === null) ?? []
+  const requirementsWithErrors = requirements.filter((req) =>
+    requirementIdsWithErrors.includes(req.id)
   )
   const errors = useRequirementErrorConfig()
-  const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
-  const firstRequirementWithErrorFromConfig = requirements.find(
+  const firstRequirementWithErrorFromConfig = requirementsWithErrors.find(
     (req) => !!errors[req.type.split("_")[0]]
   )
   const errorTextFromConfig =
-    hasRequirementsWithErrors &&
+    requirementsWithErrors.length > 0 &&
     errors[firstRequirementWithErrorFromConfig?.type.split("_")[0]]
 
   if (!isActive || (hasAccess && !isMember))

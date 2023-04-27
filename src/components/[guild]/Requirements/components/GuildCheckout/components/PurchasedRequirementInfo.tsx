@@ -8,7 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useTokenData from "hooks/useTokenData"
-import { useGuildCheckoutContext } from "../../GuildCheckoutContex"
+import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 
 type Props = {
   rightElement?: JSX.Element
