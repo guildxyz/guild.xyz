@@ -66,6 +66,7 @@ const useMintCredential = () => {
       timestamp,
       cid,
       signature,
+      { value: credentialFee },
     ]
 
     try {
@@ -84,8 +85,6 @@ const useMintCredential = () => {
         toast({
           status: "success",
           title: "Successfully minted credential!",
-          description:
-            "You'll receive your NFT once our contract validates your eligibility",
         })
       },
       onError: (error) => {
