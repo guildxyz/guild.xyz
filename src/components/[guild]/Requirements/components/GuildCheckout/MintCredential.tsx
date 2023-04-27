@@ -12,9 +12,12 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { Chain, Chains } from "connectors"
+import {
+  GuildAction,
+  MintCredentialProvider,
+  useMintCredentialContext,
+} from "./MintCredentialContext"
 import AlphaTag from "./components/AlphaTag"
-import MintCredentialButton from "./components/buttons/MintCredentialButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import CredentialFeeCurrency from "./components/CredentialFeeCurrency"
 import CredentialImage from "./components/CredentialImage"
 import {
@@ -23,11 +26,8 @@ import {
 } from "./components/GuildCheckoutContex"
 import TransactionStatusModal from "./components/TransactionStatusModal"
 import TransactionLink from "./components/TransactionStatusModal/components/TransactionLink"
-import {
-  GuildAction,
-  MintCredentialProvider,
-  useMintCredentialContext,
-} from "./MintCredentialContext"
+import MintCredentialButton from "./components/buttons/MintCredentialButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
 type Props = {
   credentialChain: Chain

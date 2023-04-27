@@ -1,14 +1,14 @@
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Chains } from "connectors"
-import useMintCredential from "../../hooks/useMintCredential"
 import { useMintCredentialContext } from "../../MintCredentialContext"
+import useMintCredential from "../../hooks/useMintCredential"
 
 const MintCredentialButton = (): JSX.Element => {
-  const { credentialChain } = useMintCredentialContext()
+  const { credentialChain, error } = useMintCredentialContext()
 
   const { chainId } = useWeb3React()
-  const isDisabled = Chains[credentialChain] !== chainId
+  const isDisabled = Chains[credentialChain] !== chainId || error
 
   const { onSubmit, isLoading, loadingText } = useMintCredential()
 

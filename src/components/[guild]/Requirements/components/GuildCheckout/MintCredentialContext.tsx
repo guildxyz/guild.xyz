@@ -13,6 +13,7 @@ const MintCredentialContext = createContext<{
   credentialChain: Chain
   credentialType: GuildAction
   credentialImage: string
+  error: string
 }>(undefined)
 
 type Props = {
@@ -26,7 +27,7 @@ const MintCredentialProvider = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { id } = useGuild()
-  const { data: credentialImage } = useSWRImmutable(
+  const { data: credentialImage, error } = useSWRImmutable(
     `/assets/credentials/image?guildId=${id}&guildAction=${credentialType}`
   )
 
@@ -36,6 +37,7 @@ const MintCredentialProvider = ({
         credentialChain,
         credentialType,
         credentialImage,
+        error,
       }}
     >
       {children}
