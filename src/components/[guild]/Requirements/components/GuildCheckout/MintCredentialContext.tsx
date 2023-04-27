@@ -1,12 +1,5 @@
 import { Chain } from "connectors"
-import {
-  createContext,
-  Dispatch,
-  PropsWithChildren,
-  SetStateAction,
-  useContext,
-  useState,
-} from "react"
+import { createContext, PropsWithChildren, useContext } from "react"
 
 export enum GuildAction {
   JOINED_GUILD,
@@ -14,39 +7,9 @@ export enum GuildAction {
   IS_ADMIN,
 }
 
-type GuildCredentialAttribute =
-  | {
-      trait_type: "Type"
-      value: (typeof GuildAction)[number]
-    }
-  | {
-      trait_type: "Guild"
-      value: string
-    }
-  | {
-      trait_type: "User ID"
-      value: string
-    }
-  | {
-      trait_type: "Date"
-      display_type: "date"
-      value: number
-    }
-
-// Constructed according to the Opensea metadata standards: https://docs.opensea.io/docs/metadata-standards#metadata-structure
-export type GuildCredentialMetadata = {
-  name: string
-  description: string
-  // animation_url: string
-  image: string
-  attributes: GuildCredentialAttribute[]
-}
-
 const MintCredentialContext = createContext<{
   credentialChain: Chain
   credentialType: GuildAction
-  image?: File
-  setImage: Dispatch<SetStateAction<File>>
 }>(undefined)
 
 type Props = {
@@ -58,22 +21,16 @@ const MintCredentialProvider = ({
   credentialChain,
   credentialType,
   children,
-}: PropsWithChildren<Props>): JSX.Element => {
-  const [image, setImage] = useState<File>(null)
-
-  return (
-    <MintCredentialContext.Provider
-      value={{
-        credentialChain,
-        credentialType,
-        image,
-        setImage,
-      }}
-    >
-      {children}
-    </MintCredentialContext.Provider>
-  )
-}
+}: PropsWithChildren<Props>): JSX.Element => (
+  <MintCredentialContext.Provider
+    value={{
+      credentialChain,
+      credentialType,
+    }}
+  >
+    {children}
+  </MintCredentialContext.Provider>
+)
 
 const useMintCredentialContext = () => useContext(MintCredentialContext)
 

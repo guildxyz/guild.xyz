@@ -1,14 +1,14 @@
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Chains } from "connectors"
-import { useMintCredentialContext } from "../../MintCredentialContext"
 import useMintCredential from "../../hooks/useMintCredential"
+import { useMintCredentialContext } from "../../MintCredentialContext"
 
 const MintCredentialButton = (): JSX.Element => {
-  const { credentialChain, image } = useMintCredentialContext()
+  const { credentialChain } = useMintCredentialContext()
 
   const { chainId } = useWeb3React()
-  const isDisabled = !image || Chains[credentialChain] !== chainId
+  const isDisabled = Chains[credentialChain] !== chainId
 
   const { onSubmit, isLoading, loadingText } = useMintCredential()
 
@@ -23,9 +23,7 @@ const MintCredentialButton = (): JSX.Element => {
       onClick={onSubmit}
       data-dd-action-name="Mint credential (GuildCheckout)"
     >
-      {Chains[credentialChain] !== chainId || image
-        ? "Mint credential"
-        : "Generating credential"}
+      {"Mint credential"}
     </Button>
   )
 }
