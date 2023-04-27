@@ -80,14 +80,15 @@ const purchaseAsset = async (
 const usePurchaseAsset = () => {
   const { captureEvent } = usePostHogContext()
   const { id: guildId, urlName } = useGuild()
-  const postHogOptions = { guild: urlName }
+  const { requirement, pickedCurrency } = useGuildCheckoutContext()
+
+  const postHogOptions = { guild: urlName, chain: requirement.chain }
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
   const { account, chainId } = useWeb3React()
 
-  const { requirement, pickedCurrency } = useGuildCheckoutContext()
   const {
     data: { symbol },
   } = useTokenData(requirement.chain, requirement.address)
