@@ -156,6 +156,8 @@ const usePayFee = () => {
       })
 
       mutateVault()
+
+      // temporary until POAPs are real roles
       if (requirement?.poapId)
         mutate(
           `/assets/poap/checkUserPoapEligibility/${requirement.poapId}/${account}`

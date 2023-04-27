@@ -73,7 +73,7 @@ const Reward = ({
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, account, accessButtonProps])
+  }, [isMember, hasAccess, account, accessButtonProps, isLinkColorful])
 
   return (
     <RewardDisplay
