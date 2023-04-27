@@ -1,5 +1,7 @@
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Chain } from "connectors"
 import { createContext, PropsWithChildren, useContext } from "react"
+import useSWRImmutable from "swr/immutable"
 
 export enum GuildAction {
   JOINED_GUILD,
@@ -10,6 +12,7 @@ export enum GuildAction {
 const MintCredentialContext = createContext<{
   credentialChain: Chain
   credentialType: GuildAction
+  credentialImage: string
 }>(undefined)
 
 type Props = {
@@ -21,16 +24,24 @@ const MintCredentialProvider = ({
   credentialChain,
   credentialType,
   children,
-}: PropsWithChildren<Props>): JSX.Element => (
-  <MintCredentialContext.Provider
-    value={{
-      credentialChain,
-      credentialType,
-    }}
-  >
-    {children}
-  </MintCredentialContext.Provider>
-)
+}: PropsWithChildren<Props>): JSX.Element => {
+  const { id } = useGuild()
+  const { data: credentialImage } = useSWRImmutable(
+    `/assets/token/credentialImage?guildId=${id}&guildAction=${credentialType}`
+  )
+
+  return (
+    <MintCredentialContext.Provider
+      value={{
+        credentialChain,
+        credentialType,
+        credentialImage,
+      }}
+    >
+      {children}
+    </MintCredentialContext.Provider>
+  )
+}
 
 const useMintCredentialContext = () => useContext(MintCredentialContext)
 
