@@ -10,8 +10,11 @@ type GetVaultResponse = {
   owner: string
   token: string
   fee: BigNumber
-  collected: BigNumber
   multiplePayments: boolean
+
+  // it's 'collected' in legacy contracts and 'balance' in the new one
+  balance?: BigNumber
+  collected?: BigNumber
 }
 
 const fetchVault = async (
@@ -47,12 +50,12 @@ const useVault = (
   )
   return {
     ...swrResponse,
-    data: swrResponse?.data ?? {
-      owner: undefined,
-      fee: undefined,
-      token: undefined,
-      collected: undefined,
-      multiplePayments: undefined,
+    data: {
+      owner: swrResponse?.data?.owner,
+      fee: swrResponse?.data?.fee,
+      token: swrResponse?.data?.token,
+      collected: swrResponse?.data?.balance ?? swrResponse?.data?.collected,
+      multiplePayments: swrResponse?.data?.multiplePayments,
     },
   }
 }

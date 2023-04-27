@@ -6,7 +6,7 @@
         "name": "guildTreasury_",
         "type": "address"
       },
-      { "internalType": "uint96", "name": "totalFeeBps_", "type": "uint96" }
+      { "internalType": "uint256", "name": "totalFeeBps_", "type": "uint256" }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
@@ -242,7 +242,7 @@
       { "internalType": "address", "name": "token", "type": "address" },
       { "internalType": "bool", "name": "multiplePayments", "type": "bool" },
       { "internalType": "uint128", "name": "fee", "type": "uint128" },
-      { "internalType": "uint128", "name": "collected", "type": "uint128" }
+      { "internalType": "uint128", "name": "balance", "type": "uint128" }
     ],
     "stateMutability": "view",
     "type": "function"
