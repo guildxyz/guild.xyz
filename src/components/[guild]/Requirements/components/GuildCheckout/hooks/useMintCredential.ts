@@ -49,7 +49,7 @@ const useMintCredential = () => {
       timestamp,
       cid,
       signature,
-    }: MintData = await fetcher("/assets/token/issueCredential", {
+    }: MintData = await fetcher("/assets/credentials", {
       body: {
         userAddress: account,
         guildId: id,

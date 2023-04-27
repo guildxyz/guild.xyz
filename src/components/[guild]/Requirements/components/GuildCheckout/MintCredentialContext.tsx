@@ -27,7 +27,7 @@ const MintCredentialProvider = ({
 }: PropsWithChildren<Props>): JSX.Element => {
   const { id } = useGuild()
   const { data: credentialImage } = useSWRImmutable(
-    `/assets/token/credentialImage?guildId=${id}&guildAction=${credentialType}`
+    `/assets/credentials/image?guildId=${id}&guildAction=${credentialType}`
   )
 
   return (
