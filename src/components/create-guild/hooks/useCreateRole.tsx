@@ -4,7 +4,6 @@ import Button from "components/common/Button"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useGuild from "components/[guild]/hooks/useGuild"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
@@ -21,8 +20,6 @@ import preprocessRequirements from "utils/preprocessRequirements"
 type RoleOrGuild = Role & { guildId: number }
 
 const useCreateRole = () => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
-
   const toastIdRef = useRef<ToastId>()
   const { account } = useWeb3React()
 
@@ -41,14 +38,10 @@ const useCreateRole = () => {
 
   const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {
     onError: (error_) => {
-      addDatadogError(`Role creation error`, { error: error_ })
-
       const processedError = processConnectorError(error_)
       showErrorToast(processedError || error_)
     },
     onSuccess: async (response_) => {
-      addDatadogAction(`Successful role creation`)
-
       triggerConfetti()
 
       toastIdRef.current = toast({

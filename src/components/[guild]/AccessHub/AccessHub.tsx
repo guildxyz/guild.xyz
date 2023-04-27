@@ -25,7 +25,7 @@ import PlatformCardButton from "./components/PlatformCardButton"
 const useAccessedGuildPlatforms = () => {
   const { id, guildPlatforms, roles } = useGuild()
   const { isAdmin } = useGuildPermission()
-  const memberships = useMemberships()
+  const { memberships } = useMemberships()
 
   if (isAdmin) return guildPlatforms
   

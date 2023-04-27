@@ -12,11 +12,14 @@ const useMemberships = () => {
 
   const shouldFetch = !!account
 
-  const { data } = useSWRWithOptionalAuth<Memberships>(
+  const { data, mutate } = useSWRWithOptionalAuth<Memberships>(
     shouldFetch ? `/user/membership/${account}` : null
   )
 
-  return data
+  return {
+    memberships: data,
+    mutate,
+  }
 }
 
 export default useMemberships

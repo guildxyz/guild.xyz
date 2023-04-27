@@ -6,9 +6,8 @@ import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import useKeyPair from "hooks/useKeyPair"
-import { Dispatch, SetStateAction, useRef, useState } from "react"
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react"
 import { isMobile } from "react-device-detect"
 import { WalletError } from "types"
 import shortenHex from "utils/shortenHex"
@@ -26,8 +25,6 @@ const ConnectorButton = ({
   error,
   setError,
 }: Props): JSX.Element => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
-
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
   if (typeof window !== "undefined") {
@@ -52,26 +49,16 @@ const ConnectorButton = ({
     activeConnector?.deactivate?.()
     connector
       .activate()
-      .then(() => {
-        addDatadogAction("Successfully connected wallet", {
-          userAddress: account?.toLowerCase(),
-          wallet: connectorName,
-        })
-      })
-      .catch((err) => {
-        setError(err)
-        if (err?.code === 4001) {
-          addDatadogAction("Wallet connection error", { data: err })
-        } else {
-          addDatadogError("Wallet connection error", { error: err })
-        }
-      })
+      .catch((err) => setError(err))
       .finally(() => setIsActivating(false))
   }
 
   const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
-  const isBraveWallet =
-    typeof window !== "undefined" && (window.ethereum as any)?.isBraveWallet
+  // wrapping with useMemo to make sure it updates on window.ethereum change
+  const isBraveWallet = useMemo(
+    () => typeof window !== "undefined" && (window.ethereum as any)?.isBraveWallet,
+    [window?.ethereum]
+  )
 
   const iconUrl =
     connector instanceof MetaMask

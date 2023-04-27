@@ -1,8 +1,6 @@
 import {
   Collapse,
-  Divider,
   Icon,
-  Link,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -14,59 +12,48 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsMember from "components/[guild]/hooks/useIsMember"
+import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
 import {
+  DISABLED_TOKENS,
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import AlphaTag from "./components/AlphaTag"
+import ErrorCollapse from "./components/ErrorCollapse"
+import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
+import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
+import PaymentMethodButtons from "./components/PaymentMethodButtons"
+import PurchaseFeeAndTotal from "./components/PurchaseFeeAndTotal"
+import PurchasedRequirementInfo from "./components/PurchasedRequirementInfo"
+import TOSCheckbox from "./components/TOSCheckbox"
 import ConnectWalletButton from "./components/buttons/ConnectWalletButton"
 import PurchaseAllowanceButton from "./components/buttons/PurchaseAllowanceButton"
 import PurchaseButton from "./components/buttons/PurchaseButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
-import ErrorCollapse from "./components/ErrorCollapse"
-import {
-  GuildCheckoutProvider,
-  useGuildCheckoutContext,
-} from "./components/GuildCheckoutContex"
-import InfoModal from "./components/InfoModal"
-import PurchasedRequirementInfo from "./components/InfoModal/components/PurchasedRequirementInfo"
-import TransactionLink from "./components/InfoModal/components/TransactionLink"
-import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
-import PaymentMethodButtons from "./components/PaymentMethodButtons"
-import PurchaseFeeAndTotal from "./components/PurchaseFeeAndTotal"
-import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
+
   const { featureFlags } = useGuild()
 
   const { account, chainId } = useWeb3React()
-  const {
-    requirement,
-    isOpen,
-    onOpen,
-    onClose,
-    isInfoModalOpen,
-    txError,
-    txSuccess,
-    txHash,
-  } = useGuildCheckoutContext()
-  const { name } = useGuild()
+  const { requirement, isOpen, onOpen, onClose, isInfoModalOpen } =
+    useGuildCheckoutContext()
+  const { urlName, name } = useGuild()
   const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
   )
   const satisfiesRequirement = accessData?.requirements?.find(
     (req) => req.requirementId === requirement.id
   )?.access
-  const isMember = useIsMember()
 
   const {
     data: { estimatedPriceInUSD },
@@ -74,14 +61,24 @@ const PurchaseRequirement = (): JSX.Element => {
     error,
   } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
 
+  const onClick = () => {
+    onOpen()
+    captureEvent("Click: Purchase (Requirement)", {
+      guild: urlName,
+    })
+  }
+
   if (
     !isOpen &&
     !isInfoModalOpen &&
-    (!featureFlags?.includes("PURCHASE_REQUIREMENT") ||
+    (!featureFlags.includes("PURCHASE_REQUIREMENT") ||
+      DISABLED_TOKENS[requirement.chain]?.includes(
+        requirement.address?.toLowerCase()
+      ) ||
       (!accessData && isAccessLoading) ||
       satisfiesRequirement ||
-      !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) ||
-      !purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain))
+      !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement.type) ||
+      !purchaseSupportedChains[requirement.type]?.includes(requirement.chain))
   )
     return null
 
@@ -93,8 +90,7 @@ const PurchaseRequirement = (): JSX.Element => {
         leftIcon={<Icon as={ShoppingCartSimple} />}
         borderRadius="md"
         fontWeight="medium"
-        onClick={onOpen}
-        data-dd-action-name="Purchase (Requierment)"
+        onClick={onClick}
       >
         Purchase
       </Button>
@@ -174,81 +170,8 @@ const PurchaseRequirement = (): JSX.Element => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
-      <InfoModal
-        title={
-          txError
-            ? "Transaction failed"
-            : txSuccess
-            ? "Purchase successful"
-            : txHash
-            ? "Transaction is processing..."
-            : "Buy requirement"
-        }
-        progressComponent={
-          <>
-            <Text mb={4}>
-              The blockchain is working its magic... Your transaction should be
-              confirmed shortly
-            </Text>
-
-            <TransactionLink />
-
-            <Divider mb={6} />
-
-            <Stack spacing={4}>
-              <Text as="span" fontWeight="bold">
-                You'll get:
-              </Text>
-
-              <PurchasedRequirementInfo />
-            </Stack>
-          </>
-        }
-        successComponent={
-          <>
-            <Text mb={4}>
-              {isMember
-                ? "Your access is being rechecked"
-                : "Join the Guild now to get your roles"}
-            </Text>
-
-            <TransactionLink />
-
-            <Divider mb={6} />
-
-            <Stack spacing={4}>
-              <Text as="span" fontWeight="bold">
-                Your new asset:
-              </Text>
-
-              <PurchasedRequirementInfo />
-            </Stack>
-          </>
-        }
-        errorComponent={
-          <>
-            <Text mb={4}>
-              {"Couldn't purchase the assets. Learn about possible reasons here: "}
-              <Link
-                href="https://support.opensea.io/hc/en-us/articles/7597082600211"
-                colorScheme="blue"
-                isExternal
-              >
-                https://support.opensea.io/hc/en-us/articles/7597082600211
-              </Link>
-            </Text>
-          </>
-        }
-      />
     </>
   )
 }
 
-const PurchaseRequirementWrapper = () => (
-  <GuildCheckoutProvider>
-    <PurchaseRequirement />
-  </GuildCheckoutProvider>
-)
-
-export default PurchaseRequirementWrapper
+export default PurchaseRequirement

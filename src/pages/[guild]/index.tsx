@@ -15,7 +15,6 @@ import {
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
-import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -33,6 +32,7 @@ import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
+import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
@@ -54,8 +54,8 @@ import parseDescription from "utils/parseDescription"
 const BATCH_SIZE = 10
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
-const DynamicAddRoleButton = dynamic(
-  () => import("components/[guild]/AddRoleButton")
+const DynamicAddAndOrderRoles = dynamic(
+  () => import("components/[guild]/AddAndOrderRoles")
 )
 const DynamicAddRewardButton = dynamic(
   () => import("components/[guild]/AddRewardButton")
@@ -67,6 +67,9 @@ const DynamicOnboarding = dynamic(() => import("components/[guild]/Onboarding"))
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 const DynamicActiveStatusUpdates = dynamic(
   () => import("components/[guild]/ActiveStatusUpdates")
+)
+const DynamicResendRewardButton = dynamic(
+  () => import("components/[guild]/ResendRewardButton")
 )
 
 const GuildPage = (): JSX.Element => {
@@ -86,24 +89,21 @@ const GuildPage = (): JSX.Element => {
   } = useGuild()
   useAutoStatusUpdate()
 
-  const { data: roleAccesses } = useAccess()
-
+  // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
-    const byMembers = roles?.sort(
-      (role1, role2) => role2.memberCount - role1.memberCount
-    )
-    if (!roleAccesses) return byMembers
+    if (roles.every((role) => role.position === null)) {
+      const byMembers = roles?.sort(
+        (role1, role2) => role2.memberCount - role1.memberCount
+      )
+      return byMembers
+    }
 
-    // prettier-ignore
-    const accessedRoles = [], otherRoles = []
-    byMembers?.forEach((role) =>
-      (roleAccesses?.find(({ roleId }) => roleId === role.id)?.access
-        ? accessedRoles
-        : otherRoles
-      ).push(role)
-    )
-    return accessedRoles.concat(otherRoles)
-  }, [roles, roleAccesses])
+    return roles?.sort((role1, role2) => {
+      if (role1.position === null) return 1
+      if (role2.position === null) return -1
+      return role1.position - role2.position
+    })
+  }, [roles])
 
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
@@ -123,6 +123,7 @@ const GuildPage = (): JSX.Element => {
 
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
+  const { hasAccess } = useAccess()
 
   // Passing the admin addresses here to make sure that we render all admin avatars in the members list
   const members = useUniqueMembers(
@@ -215,15 +216,18 @@ const GuildPage = (): JSX.Element => {
           <DynamicOnboarding />
         ) : (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            {!isMember ? (
-              <JoinButton />
-            ) : !isAdmin ? (
-              <LeaveButton />
-            ) : isAddRoleStuck ? (
-              <DynamicAddRoleButton />
-            ) : (
-              <DynamicAddRewardButton />
-            )}
+            <HStack>
+              {isMember && !isAdmin && <DynamicResendRewardButton />}
+              {!isMember && (isAdmin ? hasAccess : true) ? (
+                <JoinButton />
+              ) : !isAdmin ? (
+                <LeaveButton />
+              ) : isAddRoleStuck ? (
+                <DynamicAddAndOrderRoles />
+              ) : (
+                <DynamicAddRewardButton />
+              )}
+            </HStack>
           </Tabs>
         )}
 
@@ -237,23 +241,25 @@ const GuildPage = (): JSX.Element => {
             isAdmin &&
             (showAccessHub || showOnboarding) && (
               <Box my="-2 !important" ml="auto !important">
-                <DynamicAddRoleButton setIsStuck={setIsAddRoleStuck} />
+                <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
               </Box>
             )
           }
           mb="10"
         >
           {renderedRoles.length ? (
-            <Stack ref={rolesEl} spacing={4}>
-              {/* Custom logic for Chainlink */}
-              {(isAdmin || guildId !== 16389) &&
-                activePoaps.map((poap) => (
-                  <PoapRoleCard key={poap?.id} guildPoap={poap} />
+            <RequirementErrorConfigProvider>
+              <Stack ref={rolesEl} spacing={4}>
+                {/* Custom logic for Chainlink */}
+                {(isAdmin || guildId !== 16389) &&
+                  activePoaps.map((poap) => (
+                    <PoapRoleCard key={poap?.id} guildPoap={poap} />
+                  ))}
+                {renderedRoles.map((role) => (
+                  <RoleCard key={role.id} role={role} />
                 ))}
-              {renderedRoles.map((role) => (
-                <RoleCard key={role.id} role={role} />
-              ))}
-            </Stack>
+              </Stack>
+            </RequirementErrorConfigProvider>
           ) : (
             <DynamicNoRolesAlert />
           )}
@@ -397,7 +403,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   if (!data?.id)
     return {
       props: {},
-      revalidate: 10,
+      revalidate: 60,
     }
 
   // Removing the members list, and then we refetch them on client side. This way the members won't be included in the SSG source code.
@@ -415,7 +421,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
         [endpoint]: filteredData,
       },
     },
-    revalidate: 10,
+    revalidate: 60,
   }
 }
 
@@ -438,4 +444,4 @@ const getStaticPaths: GetStaticPaths = async () => {
 
 export { getStaticPaths, getStaticProps }
 
-export default WithRumComponentContext("Guild page", GuildPageWrapper)
+export default GuildPageWrapper

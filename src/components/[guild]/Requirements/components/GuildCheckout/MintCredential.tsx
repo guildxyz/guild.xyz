@@ -12,22 +12,22 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { Chain, Chains } from "connectors"
-import {
-  GuildAction,
-  MintCredentialProvider,
-  useMintCredentialContext,
-} from "./MintCredentialContext"
 import AlphaTag from "./components/AlphaTag"
+import MintCredentialButton from "./components/buttons/MintCredentialButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import CredentialFeeCurrency from "./components/CredentialFeeCurrency"
 import CredentialImage from "./components/CredentialImage"
 import {
   GuildCheckoutProvider,
   useGuildCheckoutContext,
 } from "./components/GuildCheckoutContex"
-import InfoModal from "./components/InfoModal"
-import TransactionLink from "./components/InfoModal/components/TransactionLink"
-import MintCredentialButton from "./components/buttons/MintCredentialButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
+import TransactionStatusModal from "./components/TransactionStatusModal"
+import TransactionLink from "./components/TransactionStatusModal/components/TransactionLink"
+import {
+  GuildAction,
+  MintCredentialProvider,
+  useMintCredentialContext,
+} from "./MintCredentialContext"
 
 type Props = {
   credentialChain: Chain
@@ -90,7 +90,8 @@ const MintCredential = (): JSX.Element => {
         </ModalContent>
       </Modal>
 
-      <InfoModal
+      {/* TODO: extract this to its own component */}
+      <TransactionStatusModal
         title={
           txError
             ? "Transaction failed"

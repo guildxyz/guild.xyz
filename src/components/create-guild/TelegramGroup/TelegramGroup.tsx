@@ -2,7 +2,6 @@ import { FormControl, FormLabel, HStack, Icon, Input, Stack } from "@chakra-ui/r
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { Uploader } from "hooks/usePinata/usePinata"
 import { ArrowSquareOut, Check } from "phosphor-react"
 import { PropsWithChildren, useEffect } from "react"
@@ -21,8 +20,6 @@ const TelegramGroup = ({
   onUpload,
   children,
 }: PropsWithChildren<Props>) => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
-
   const {
     register,
     trigger,
@@ -40,23 +37,8 @@ const TelegramGroup = ({
 
   useSetImageAndNameFromPlatformData(groupIcon, groupName, onUpload)
 
-  // Sending actionst & errors to datadog
   useEffect(() => {
-    if (!platformId) return
-    addDatadogAction("Pasted a Telegram group ID")
-  }, [platformId])
-
-  useEffect(() => {
-    if (!isIn || errorMessage) {
-      addDatadogError("Telegram group ID error", { error: errorMessage })
-      return
-    }
-
-    if (isIn && !errorMessage) {
-      trigger(fieldName)
-      addDatadogAction("Telegram bot added successfully")
-      addDatadogAction("Successful platform setup")
-    }
+    if (isIn && !errorMessage) trigger(fieldName)
   }, [isIn, errorMessage])
 
   return (
@@ -74,7 +56,6 @@ const TelegramGroup = ({
                 target="_blank"
                 rightIcon={<Icon as={ArrowSquareOut} mt="-1px" />}
                 isLoading={isLoading}
-                data-dd-action-name="Add bot (telegram group setup)"
               >
                 Add Guild bot
               </Button>

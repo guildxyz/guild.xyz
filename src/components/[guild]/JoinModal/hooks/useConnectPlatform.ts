@@ -1,6 +1,6 @@
 import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
-import useDatadog from "components/_app/Datadog/useDatadog"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
@@ -11,6 +11,36 @@ import useGHAuth from "./useGHAuth"
 import useGoogleAuth from "./useGoogleAuth"
 import useTGAuth from "./useTGAuth"
 import useTwitterAuth from "./useTwitterAuth"
+
+const parseConnectError = (
+  error: string
+):
+  | string
+  | {
+      params: Record<string, string>
+      errors: { msg: string }[]
+    } => {
+  const regex = /^"(\d+)".*params: ({.*}), error: (\[.*\])/
+
+  try {
+    const [, rawNumber, rawParams, rawErrors] = error.match(regex)
+    const number: number = parseInt(rawNumber)
+    const params: Record<string, string> = JSON.parse(rawParams)
+    const errors: { msg: string }[] = JSON.parse(rawErrors)
+
+    if (
+      typeof number !== "number" ||
+      isNaN(number) ||
+      !params ||
+      !Array.isArray(errors)
+    )
+      return error
+
+    return { params: { ...params, code: undefined }, errors }
+  } catch {
+    return error
+  }
+}
 
 const platformAuthHooks: Record<
   Exclude<PlatformName, "POAP">,
@@ -26,20 +56,27 @@ const platformAuthHooks: Record<
 const useConnectPlatform = (
   platform: PlatformName,
   onSuccess?: () => void,
-  isReauth?: boolean // Temporary, once /connect works without it, we can remove this
+  isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
+  scope?: string
 ) => {
   const { platformUsers } = useUser()
   const { onOpen, authData, isAuthenticating, ...rest } =
-    platformAuthHooks[platform]?.() ?? {}
+    platformAuthHooks[platform]?.(scope) ?? {}
   const prevAuthData = usePrevious(authData)
 
-  const { onSubmit, isLoading, response } = useConnect(onSuccess)
+  const { onSubmit, isLoading, response } = useConnect(() => {
+    onSuccess?.()
+  })
 
   useEffect(() => {
     // couldn't prevent spamming requests without all these three conditions
     if (!platformUsers || !authData || prevAuthData) return
 
-    onSubmit({ platformName: platform, authData, reauth: isReauth || undefined })
+    onSubmit({
+      platformName: platform,
+      authData,
+      reauth: isReauth || undefined,
+    })
   }, [authData, platformUsers])
 
   return {
@@ -53,7 +90,7 @@ const useConnectPlatform = (
 }
 
 const useConnect = (onSuccess?: () => void) => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
+  const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
 
   const { mutate: mutateUser } = useUser()
@@ -79,13 +116,24 @@ const useConnect = (onSuccess?: () => void) => {
     reauth?: boolean
   }>(submit, {
     onSuccess: () => {
-      addDatadogAction("Successfully connected 3rd party account")
       mutateUser()
       onSuccess?.()
     },
-    onError: (err) => {
-      showErrorToast(err)
-      addDatadogError("3rd party account connection error", { error: err })
+    onError: (rawError) => {
+      const errorObject = { error: undefined }
+      let toastError
+
+      if (typeof rawError === "string") {
+        const parsedError = parseConnectError(rawError)
+        errorObject.error = parsedError
+        toastError =
+          typeof parsedError === "string" ? parsedError : parsedError.errors[0].msg
+      } else {
+        errorObject.error = rawError
+      }
+
+      captureEvent("Platform connection error", errorObject)
+      showErrorToast(toastError ?? rawError)
     },
   })
 }

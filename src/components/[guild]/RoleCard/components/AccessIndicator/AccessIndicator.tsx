@@ -9,8 +9,10 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
@@ -23,6 +25,7 @@ type Props = {
 }
 
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
+  const { roles } = useGuild()
   const { hasAccess, isLoading, data, error } = useAccess(roleId)
 
   const { isActive } = useWeb3React()
@@ -30,6 +33,20 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
   const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")
+
+  const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
+  const requirementIdsWithErrors =
+    data?.requirements?.filter((r) => r.access === null) ?? []
+  const requirementsWithErrors = requirements.filter((req) =>
+    requirementIdsWithErrors.includes(req.id)
+  )
+  const errors = useRequirementErrorConfig()
+  const firstRequirementWithErrorFromConfig = requirementsWithErrors.find(
+    (req) => !!errors[req.type.split("_")[0]]
+  )
+  const errorTextFromConfig =
+    requirementsWithErrors.length > 0 &&
+    errors[firstRequirementWithErrorFromConfig?.type.split("_")[0]]
 
   if (!isActive || (hasAccess && !isMember))
     return (
@@ -89,25 +106,32 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   if (isLoading)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
-  if (data?.errors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID")) {
+  if (errorTextFromConfig)
     return (
       <AccessIndicatorUI
         colorScheme="orange"
-        label={"Reconnect needed to check access"}
+        label={errorTextFromConfig}
         icon={Warning}
       />
     )
-  }
 
-  if (data?.errors?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED")) {
+  if (data?.errors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
+    return (
+      <AccessIndicatorUI
+        colorScheme="orange"
+        label="Reconnect needed to check access"
+        icon={Warning}
+      />
+    )
+
+  if (data?.errors?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED"))
     return (
       <AccessIndicatorUI
         colorScheme="blue"
-        label={"Auth needed to check access"}
+        label="Auth needed to check access"
         icon={LockSimple}
       />
     )
-  }
 
   if (data?.errors || error)
     return (

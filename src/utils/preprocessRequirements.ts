@@ -22,7 +22,10 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
           nftRequirementType: undefined,
         }
 
-        if (requirement.address === "0x0000000000000000000000000000000000000000")
+        if (
+          !requirement.address ||
+          requirement.address === "0x0000000000000000000000000000000000000000"
+        )
           processedRequirement.address = undefined
 
         if (
@@ -47,6 +50,9 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         delete (processedRequirement as any).requirementId
         delete (processedRequirement as any).logic
         delete (processedRequirement as any).balancyDecimals
+
+        // only used on the frontend
+        delete (processedRequirement as any).formFieldId
 
         return processedRequirement
       })

@@ -103,7 +103,6 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
         borderRadius="lg"
         fontWeight="medium"
         onClick={onOpen}
-        data-dd-action-name="Pay (POAP)"
         {...rest}
       >
         Pay
@@ -171,7 +170,6 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
                       loadingText={payFeeLoadingText}
                       w="full"
                       onClick={onPayFeeSubmit}
-                      data-dd-action-name="BuyPoapButton"
                     >
                       {payButtonLabel}
                     </Button>

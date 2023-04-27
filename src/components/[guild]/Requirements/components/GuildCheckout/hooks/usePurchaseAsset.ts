@@ -2,7 +2,7 @@ import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDatadog from "components/_app/Datadog/useDatadog"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import useContract from "hooks/useContract"
@@ -11,10 +11,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { useMemo } from "react"
-import {
-  ADDRESS_REGEX,
-  getTokenBuyerContractData,
-} from "utils/guildCheckout/constants"
+import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import {
   GeneratedGetAssetsParams,
   generateGetAssetsParams,
@@ -24,6 +21,7 @@ import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
 import useSubmitTransaction from "./useSubmitTransaction"
+import useTokenBuyerContractData from "./useTokenBuyerContractData"
 
 const isConfigParam = (
   param: any
@@ -80,21 +78,23 @@ const purchaseAsset = async (
 }
 
 const usePurchaseAsset = () => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
+  const { captureEvent } = usePostHogContext()
+  const { id: guildId, urlName } = useGuild()
+  const postHogOptions = { guild: urlName }
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
   const { account, chainId } = useWeb3React()
 
-  const { id: guildId } = useGuild()
   const { requirement, pickedCurrency } = useGuildCheckoutContext()
   const {
     data: { symbol },
   } = useTokenData(requirement.chain, requirement.address)
   const { data: priceData } = usePrice(pickedCurrency)
 
-  const tokenBuyerContractData = getTokenBuyerContractData(guildId)
+  const tokenBuyerContractData = useTokenBuyerContractData()
+
   const tokenBuyerContract = useContract(
     tokenBuyerContractData[Chains[chainId]]?.address,
     tokenBuyerContractData[Chains[chainId]]?.abi,
@@ -124,8 +124,8 @@ const usePurchaseAsset = () => {
     priceData?.priceToSendInWei &&
     (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gt(BigNumber.from(priceData.priceToSendInWei))
-      : tokenBalance?.gt(BigNumber.from(priceData.priceToSendInWei)))
+      ? coinBalance?.gte(BigNumber.from(priceData.priceToSendInWei))
+      : tokenBalance?.gte(BigNumber.from(priceData.priceToSendInWei)))
 
   const shouldEstimateGas =
     requirement?.chain === Chains[chainId] &&
@@ -155,22 +155,31 @@ const usePurchaseAsset = () => {
     {
       onError: (error) => {
         showErrorToast(error)
-        addDatadogError("general purchase requirement error (GuildCheckout)")
-        addDatadogError("purchase requirement pre-call error (GuildCheckout)", {
+        captureEvent("Purchase requirement error (GuildCheckout)", {
+          ...postHogOptions,
+          error,
+        })
+        captureEvent("getAssets pre-call error (GuildCheckout)", {
+          ...postHogOptions,
           error,
         })
       },
       onSuccess: (receipt) => {
         if (receipt.status !== 1) {
           showErrorToast("Transaction failed")
-          addDatadogError("general purchase requirement error (GuildCheckout)")
-          addDatadogError("purchase requirement error (GuildCheckout)", {
+          captureEvent("Purchase requirement error (GuildCheckout)", {
+            ...postHogOptions,
+            receipt,
+          })
+          captureEvent("getAssets error (GuildCheckout)", {
+            ...postHogOptions,
             receipt,
           })
           return
         }
 
-        addDatadogAction("purchased requirement (GuildCheckout)")
+        captureEvent("Purchased requirement (GuildCheckout)", postHogOptions)
+
         toast({
           status: "success",
           title: "Your new asset:",

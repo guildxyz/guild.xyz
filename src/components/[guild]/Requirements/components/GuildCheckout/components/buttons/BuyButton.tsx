@@ -1,4 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
@@ -9,6 +11,9 @@ import usePayFee from "../../hooks/usePayFee"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const BuyButton = (): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
+  const { urlName } = useGuild()
+
   const { chainId } = useWeb3React()
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
@@ -45,7 +50,7 @@ const BuyButton = (): JSX.Element => {
   const isSufficientBalance =
     fee &&
     (coinBalance || tokenBalance) &&
-    (pickedCurrencyIsNative ? coinBalance?.gt(fee) : tokenBalance?.gt(fee))
+    (pickedCurrencyIsNative ? coinBalance?.gte(fee) : tokenBalance?.gte(fee))
 
   const isDisabled =
     error ||
@@ -67,6 +72,13 @@ const BuyButton = (): JSX.Element => {
     (!isSufficientBalance && "Insufficient balance") ||
     (!multiplePayments && hasPaid && "Already paid")
 
+  const onClick = () => {
+    onSubmit()
+    captureEvent("Click: BuyButton (GuildCheckout)", {
+      guild: urlName,
+    })
+  }
+
   return (
     <Button
       size="lg"
@@ -75,8 +87,7 @@ const BuyButton = (): JSX.Element => {
       loadingText="Check your wallet"
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
-      onClick={onSubmit}
-      data-dd-action-name="BuyButton (GuildCheckout)"
+      onClick={onClick}
     >
       {errorMsg || "Buy pass"}
     </Button>

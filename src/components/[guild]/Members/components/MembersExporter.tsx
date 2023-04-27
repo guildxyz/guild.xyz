@@ -73,7 +73,6 @@ const MembersExporter = (): JSX.Element => {
         variant="ghost"
         leftIcon={<Icon as={Export} />}
         size="sm"
-        data-dd-action-name="Export members"
         onClick={onOpen}
       >
         {label}

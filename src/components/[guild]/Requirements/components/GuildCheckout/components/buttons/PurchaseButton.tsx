@@ -2,15 +2,19 @@ import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
-import { getTokenBuyerContractData } from "utils/guildCheckout/constants"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
 import usePurchaseAsset from "../../hooks/usePurchaseAsset"
+import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseButton = (): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
+  const { urlName } = useGuild()
+
   const { account, chainId } = useWeb3React()
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
@@ -20,8 +24,8 @@ const PurchaseButton = (): JSX.Element => {
     error,
   } = usePrice()
 
-  const { id } = useGuild()
-  const tokenBuyerContractData = getTokenBuyerContractData(id)
+  const tokenBuyerContractData = useTokenBuyerContractData()
+
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
     tokenBuyerContractData[Chains[chainId]]?.address
@@ -47,8 +51,8 @@ const PurchaseButton = (): JSX.Element => {
     priceToSendInWei &&
     (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gt(BigNumber.from(priceToSendInWei))
-      : tokenBalance?.gt(BigNumber.from(priceToSendInWei)))
+      ? coinBalance?.gte(BigNumber.from(priceToSendInWei))
+      : tokenBalance?.gte(BigNumber.from(priceToSendInWei)))
 
   const isDisabled =
     !account ||
@@ -72,6 +76,13 @@ const PurchaseButton = (): JSX.Element => {
         : "Couldn't estimate gas")) ??
     (account && !isSufficientBalance && "Insufficient balance")
 
+  const onClick = () => {
+    onSubmit()
+    captureEvent("Click: PurchaseButton (GuildCheckout)", {
+      guild: urlName,
+    })
+  }
+
   return (
     <Button
       size="lg"
@@ -80,8 +91,7 @@ const PurchaseButton = (): JSX.Element => {
       loadingText="Check your wallet"
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
-      onClick={onSubmit}
-      data-dd-action-name="PurchaseButton (GuildCheckout)"
+      onClick={onClick}
     >
       {errorMsg || "Purchase"}
     </Button>

@@ -14,6 +14,16 @@ import {
   encodeWrapEth,
 } from "./encoders"
 
+export type TokenBuyerContractConfig = Partial<
+  Record<
+    Chain,
+    {
+      address: string
+      abi: object
+    }
+  >
+>
+
 export const ZEROX_SUPPORTED_SOURCES = ["Uniswap_V2", "Uniswap_V3"] as const
 export type ZeroXSupportedSources = (typeof ZEROX_SUPPORTED_SOURCES)[number]
 
@@ -22,15 +32,7 @@ export const GUILD_FEE_PERCENTAGE = 0.01
 export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
-const DEFAULT_TOKEN_BUYER_CONTRACTS: Partial<
-  Record<
-    Chain,
-    {
-      address: string
-      abi: object
-    }
-  >
-> = {
+const DEFAULT_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
   ETHEREUM: {
     address: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
     abi: TOKEN_BUYER_ABI,
@@ -44,23 +46,12 @@ const DEFAULT_TOKEN_BUYER_CONTRACTS: Partial<
     abi: OLD_TOKEN_BUYER_ABI,
   },
   GOERLI: {
-    address: "0x7605143a3122e0329d1f9a8dcec44f326e8fd46f",
-    abi: OLD_TOKEN_BUYER_ABI,
+    address: "0x1eeaab336061d64f1d271eed529991f7ae7cc478",
+    abi: TOKEN_BUYER_ABI,
   },
 }
 
-const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<
-  number,
-  Partial<
-    Record<
-      Chain,
-      {
-        address: string
-        abi: object
-      }
-    >
-  >
-> = {
+const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<number, TokenBuyerContractConfig> = {
   // Alongside - TODO
   // 7635: {
   //   ...DEFAULT_TOKEN_BUYER_CONTRACTS,
@@ -77,15 +68,8 @@ const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<
 
 export const getTokenBuyerContractData = (
   guildId?: number
-): Partial<
-  Record<
-    Chain,
-    {
-      address: string
-      abi: object
-    }
-  >
-> => SPECIAL_TOKEN_BUYER_CONTRACTS[guildId] ?? DEFAULT_TOKEN_BUYER_CONTRACTS
+): TokenBuyerContractConfig =>
+  SPECIAL_TOKEN_BUYER_CONTRACTS[guildId] ?? DEFAULT_TOKEN_BUYER_CONTRACTS
 
 export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   ETHEREUM: "https://api.0x.org",
@@ -223,6 +207,45 @@ export const getAssetsCallParams: Record<
       ],
     },
   },
+}
+
+export const DISABLED_TOKENS: Partial<Record<Chain, string[]>> = {
+  ETHEREUM: [
+    "0x0e42acbd23faee03249daff896b78d7e79fbd58e",
+    "0x5b272ce3e225b019a3fbd968206824b24c674344",
+    "0x87165b659ba7746907a48763063efa3b323c2b07",
+    "0x472d0b0ddfe0bc02c27928b8bcbd67e65d07d48a",
+    "0x250316b3e46600417654b13bea68b5f64d61e609",
+    "0x59c1349bc6f28a427e78ddb6130ec669c2f39b48",
+    "0x742b70151cd3bc7ab598aaff1d54b90c3ebc6027",
+    "0x93dede06ae3b5590af1d4c111bc54c3f717e4b35",
+    "0x0ab87046fbb341d058f17cbc4c1133f25a20a52f",
+  ],
+  ARBITRUM: [
+    "0xf42ae1d54fd613c9bb14810b0588faaa09a426ca",
+    "0x1addd80e6039594ee970e5872d247bf0414c8903",
+    "0xd2D1162512F927a7e282Ef43a362659E4F2a728F",
+    "0xa7af63b5154eb5d6fb50a6d70d5c229e5f030ab2",
+    "0x59745774ed5eff903e615f5a2282cae03484985a",
+    "0xce3b19d820cb8b9ae370e423b0a329c4314335fe",
+    "0xb67c014fa700e69681a673876eb8bafaa36bff71",
+    "0x68f5d998f00bb2460511021741d098c05721d8ff",
+    "0xfbd849e6007f9bc3cc2d6eb159c045b8dc660268",
+    "0x7d1d610fe82482412842e8110aff1cb72fa66bc8",
+    "0xbabf696008ddade1e17d302b972376b8a7357698",
+  ],
+  POLYGON: [
+    "0x3ca3218d6c52b640b0857cc19b69aa9427bc842c",
+    "0x971039bf0a49c8d8a675f839739ee7a42511ec91",
+    "0x9d373d22fd091d7f9a6649eb067557cc12fb1a0a",
+    "0xbc4fb4ed825c65ff48163af7e59d49e32edb5269",
+    "0x8b7aa8f5cc9996216a88d900df8b8a0a3905939a",
+    "0x3ab2da31bbd886a7edf68a6b60d3cde657d3a15d",
+    "0x0cdf4195ed44fd661b4df304fb453096671b4099",
+    "0xe90056b377cbbb477e3950505ccbd8d00b9cdc75",
+    "0x5a6ae1fd70d04ba4a279fc219dfabc53825cb01d",
+    "0x11a83070d6f41ebe3764e4efed7df9b9d20a03fa",
+  ],
 }
 
 export const FEE_COLLECTOR_CONTRACT: Partial<Record<Chain, string>> = {
