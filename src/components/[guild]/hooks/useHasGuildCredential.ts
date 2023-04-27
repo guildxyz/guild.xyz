@@ -7,19 +7,42 @@ import { Chain, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { GUILD_CREDENTIAL_CONTRACT } from "utils/guildCheckout/constants"
 
-const fetchHasGuildCredentialsOnChain = (
+const fetchHasGuildCredentialsOnChain = async (
   address: string,
   chain: Chain,
   guildId: number
 ) => {
+  const PAGE_SIZE = 1000
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0])
   const contract = new Contract(
     GUILD_CREDENTIAL_CONTRACT[chain].address,
     GUILD_CREDENTIAL_CONTRACT[chain].abi,
     provider
   )
+  const currentBlock = await provider.getBlockNumber()
+  let from = currentBlock - PAGE_SIZE
+  let to = currentBlock
 
-  return contract.queryFilter(contract.filters.Claimed(address, null, guildId))
+  const claimedEvents = []
+
+  let shouldPaginate = true
+  do {
+    const newEvents = await contract.queryFilter(
+      contract.filters.Claimed(address, null, guildId),
+      from,
+      to
+    )
+
+    if (!newEvents.length) {
+      shouldPaginate = false
+    } else {
+      claimedEvents.push(newEvents)
+      to = from
+      from -= PAGE_SIZE
+    }
+  } while (shouldPaginate)
+
+  return claimedEvents
 }
 
 const fetchHasGuildCredentials = async (
@@ -35,6 +58,7 @@ const fetchHasGuildCredentials = async (
       )
     )
   )
+
   return responseArray.flat().length > 0
 }
 
