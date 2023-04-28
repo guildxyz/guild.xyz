@@ -8,7 +8,8 @@ type Props = {
 }
 
 const now = new Date().getTime()
-const TWO_DAYS_IN_MS = 172800000 * 2
+
+const TWO_DAYS_IN_MS = 172800000
 const LOCALE = "en-US"
 const TO_LOCALE_STRING_OPTIONS: Intl.DateTimeFormatOptions = {
   year: "numeric",
