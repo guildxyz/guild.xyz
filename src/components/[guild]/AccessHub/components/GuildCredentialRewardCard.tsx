@@ -16,7 +16,7 @@ const GuildCredentialRewardCard = () => {
             <Icon as={CircleWavyCheck} mb="-2px" mr="1.5" />
             Guild.xyz
             <Tooltip
-              label="This is an automatic reward by Guild.xyz. The card will disappear once you mint your credential"
+              label="This is a built in reward by Guild.xyz. The card will disappear once you mint your credential  "
               hasArrow
             >
               <Icon as={Question} mb="-2px" ml="1.5" />
