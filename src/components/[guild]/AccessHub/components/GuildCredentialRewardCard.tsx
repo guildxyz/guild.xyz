@@ -1,9 +1,9 @@
-import { Icon, useColorModeValue } from "@chakra-ui/react"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
-import RewardCard from "components/common/RewardCard"
+import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
 import MintCredential from "components/[guild]/Requirements/components/GuildCheckout/MintCredential"
 import { GuildAction } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
-import { CircleWavyCheck } from "phosphor-react"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
+import RewardCard from "components/common/RewardCard"
+import { CircleWavyCheck, Question } from "phosphor-react"
 
 const GuildCredentialRewardCard = () => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-100)", "#343439")
@@ -15,6 +15,12 @@ const GuildCredentialRewardCard = () => {
           <>
             <Icon as={CircleWavyCheck} mb="-2px" mr="1.5" />
             Guild.xyz
+            <Tooltip
+              label="This is an automatic reward by Guild.xyz. The card will disappear once you mint your credential"
+              hasArrow
+            >
+              <Icon as={Question} mb="-2px" ml="1.5" />
+            </Tooltip>
           </>
         }
         title="Guild Credential"
