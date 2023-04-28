@@ -14,6 +14,7 @@ type Props = {
   title: string
   progressComponent?: JSX.Element
   successComponent?: JSX.Element
+  successText?: string
   errorComponent?: JSX.Element
 }
 
@@ -21,6 +22,7 @@ const TransactionStatusModal = ({
   title,
   progressComponent,
   successComponent,
+  successText,
   errorComponent,
 }: Props): JSX.Element => {
   const { isInfoModalOpen, onInfoModalClose, txSuccess, txError, txHash } =
@@ -47,7 +49,7 @@ const TransactionStatusModal = ({
         {txError ? (
           <TxError>{errorComponent}</TxError>
         ) : txSuccess ? (
-          <TxSuccess>{successComponent}</TxSuccess>
+          <TxSuccess successText={successText}>{successComponent}</TxSuccess>
         ) : (
           <TxInProgress>{progressComponent}</TxInProgress>
         )}

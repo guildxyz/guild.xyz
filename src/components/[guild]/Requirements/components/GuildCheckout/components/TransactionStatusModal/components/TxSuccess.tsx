@@ -15,7 +15,12 @@ import { PropsWithChildren } from "react"
 import TransactionLink from "./TransactionLink"
 import TransactionModalCloseButton from "./TransactionModalCloseButton"
 
-const TxSuccess = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
+type Props = { successText?: string }
+
+const TxSuccess = ({
+  successText,
+  children,
+}: PropsWithChildren<Props>): JSX.Element => {
   const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
 
@@ -38,16 +43,20 @@ const TxSuccess = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
         </Flex>
 
         <Text mb={2}>
-          {isMember
-            ? "Transaction successful! Your access is being rechecked."
-            : "Transaction successful! Join the Guild now to get access"}
+          {successText ??
+            (isMember
+              ? "Transaction successful! Your access is being rechecked."
+              : "Transaction successful! Join the Guild now to get access")}
         </Text>
 
         <TransactionLink />
 
-        <Divider mb="6" />
-
-        {children}
+        {children && (
+          <>
+            <Divider mb="6" />
+            {children}
+          </>
+        )}
       </ModalBody>
 
       <ModalFooter>

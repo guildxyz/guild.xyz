@@ -25,7 +25,6 @@ import {
   useGuildCheckoutContext,
 } from "./components/GuildCheckoutContex"
 import TransactionStatusModal from "./components/TransactionStatusModal"
-import TransactionLink from "./components/TransactionStatusModal/components/TransactionLink"
 import MintCredentialButton from "./components/buttons/MintCredentialButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
@@ -90,41 +89,10 @@ const MintCredential = (): JSX.Element => {
         </ModalContent>
       </Modal>
 
-      {/* TODO: extract this to its own component */}
       <TransactionStatusModal
-        title={
-          txError
-            ? "Transaction failed"
-            : txSuccess
-            ? "Success"
-            : txHash
-            ? "Transaction is processing..."
-            : "Mint Credential"
-        }
-        progressComponent={
-          <>
-            <Text mb={4}>
-              The blockchain is working its magic... Your transaction should be
-              confirmed shortly
-            </Text>
-
-            <TransactionLink />
-          </>
-        }
-        successComponent={
-          <>
-            <Text mb={4}>
-              Successful transaction! You'll receive your Guild Credential NFT soon!
-            </Text>
-
-            <TransactionLink />
-          </>
-        }
-        errorComponent={
-          <>
-            <Text mb={4}>Couldn't mint credential</Text>
-          </>
-        }
+        title="Mint Credential"
+        successText="Successful transaction! You'll receive your Guild Credential NFT soon!"
+        errorComponent={<Text mb={4}>Couldn't mint credential</Text>}
       />
     </>
   )
