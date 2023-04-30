@@ -88,7 +88,7 @@ const App = ({
                       {typeof window !== "undefined" && (
                         <DynamicMaintenanceBanner
                           maintenanceFrom="2023-05-02T10:00:00"
-                          maintenanceTo="2023-05-02T12:00:00"
+                          maintenanceTo="2023-05-02T11:00:00"
                         />
                       )}
                       <Component {...pageProps} />

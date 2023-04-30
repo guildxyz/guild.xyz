@@ -1,5 +1,6 @@
 import { Alert, AlertIcon, HStack, IconButton, Text } from "@chakra-ui/react"
 import useLocalStorage from "hooks/useLocalStorage"
+import { useRouter } from "next/router"
 import { X } from "phosphor-react"
 
 type Props = {
@@ -19,6 +20,7 @@ const TO_LOCALE_STRING_OPTIONS: Intl.DateTimeFormatOptions = {
   minute: "2-digit",
   timeZone: "Europe/Budapest",
 }
+const IGNORED_PATHS = ["/", "/oauth"]
 
 const MaintenanceBanner = ({
   maintenanceFrom,
@@ -45,7 +47,10 @@ const MaintenanceBanner = ({
     false
   )
 
+  const { pathname } = useRouter()
+
   if (
+    IGNORED_PATHS.includes(pathname) ||
     isBannerClosed ||
     now < maintenanceFromDate.getTime() - TWO_DAYS_IN_MS ||
     now > maintenanceToDate.getTime()
@@ -53,7 +58,13 @@ const MaintenanceBanner = ({
     return null
 
   return (
-    <Alert status="info" borderRadius="none" py={1.5} fontSize="sm">
+    <Alert
+      status="info"
+      borderRadius="none"
+      py={1.5}
+      fontSize="sm"
+      fontWeight="medium"
+    >
       <HStack w="full" justifyContent="space-between">
         <HStack spacing={1.5} alignItems="start">
           <AlertIcon position="relative" top={0.5} m={0} boxSize={4} />
