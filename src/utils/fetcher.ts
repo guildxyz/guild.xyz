@@ -15,7 +15,6 @@ const fetcher = async (
   { body, validation, signedPayload, ...init }: Record<string, any> = {}
 ) => {
   const isGuildApiCall = !resource.startsWith("http") && !resource.startsWith("/api")
-  const isServerless = resource.startsWith("/api")
 
   const api = isGuildApiCall ? process.env.NEXT_PUBLIC_API : ""
 
