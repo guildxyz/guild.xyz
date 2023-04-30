@@ -27,24 +27,10 @@ jobs:
           sudo apt-get install --no-install-recommends -y fluxbox xvfb
 
       - name: Run xvfb and fluxbox
-        run: |
-          Xvfb :0 -screen 0 1024x768x24 -listen tcp -ac &
-          fluxbox
+        run: Xvfb :0 -screen 0 1024x768x24 -listen tcp -ac &
+          fluxbox &
         env:
           DISPLAY: :0.0
-
-      - name: Install NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-
-      # Try to restore cached deps to speed up the workflow
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: npm-
 
       # Install NPM dependencies, cache them correctly and run all Cypress tests
       - name: Cypress run
