@@ -7,6 +7,7 @@ import { CircleWavyCheck, Question } from "phosphor-react"
 
 const GuildCredentialRewardCard = () => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-100)", "#343439")
+  const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
 
   return (
     <CardMotionWrapper>
@@ -35,7 +36,7 @@ const GuildCredentialRewardCard = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          bg: `linear-gradient(to top right, ${bgColor} 70%, transparent), url('/landing/bg.svg')`,
+          bg: `linear-gradient(to top right, ${bgColor} 70%, transparent), url('/landing/${bgFile}')`,
           bgSize: "140%",
           bgRepeat: "no-repeat",
           bgPosition: "top 7px right 7px",
