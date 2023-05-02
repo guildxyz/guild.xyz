@@ -57,7 +57,7 @@ const MintCredential = (): JSX.Element => {
             }
           : {})}
       >
-        Mint NFT
+        Mint Credential
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">

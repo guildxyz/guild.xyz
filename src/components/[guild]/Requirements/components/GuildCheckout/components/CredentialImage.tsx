@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
 import Card from "components/common/Card"
 import { useMintCredentialContext } from "../MintCredentialContext"
 
@@ -22,7 +21,6 @@ const CredentialImage = (): JSX.Element => {
   const { credentialImage, error } = useMintCredentialContext()
   const { name, theme } = useGuild()
   const { textColor } = useThemeContext()
-  const { id } = useUser()
 
   if (error)
     return (
@@ -60,7 +58,8 @@ const CredentialImage = (): JSX.Element => {
                 zIndex={1}
                 src={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${credentialImage}`}
                 alt="Guild Credential image"
-                borderRadius="xl"
+                borderRadius="full"
+                // boxShadow="10px 10px 20px #171719, -10px -10px 20px #37373b;"
               />
             )}
             <Circle
@@ -83,11 +82,7 @@ const CredentialImage = (): JSX.Element => {
         </AspectRatio>
       </Box>
       <Text textAlign={"center"} p="4">
-        {"This is an on-chain proof that guild user "}
-        <Text as="span" fontWeight={"medium"}>
-          #{id}
-        </Text>
-        {` joined the ${name} guild on Guild.xyz.`}
+        {`This is an on-chain proof that you joined ${name} on Guild.xyz.`}
       </Text>
     </Card>
   )

@@ -23,7 +23,7 @@ const MintCredentialButton = (): JSX.Element => {
       onClick={onSubmit}
       data-dd-action-name="Mint credential (GuildCheckout)"
     >
-      {"Mint credential"}
+      Mint NFT
     </Button>
   )
 }
