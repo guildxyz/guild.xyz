@@ -27,6 +27,7 @@ export default defineConfig({
     guildName: "Cypress Gang",
     guildUrlName: "cypress-gang",
     dcClientId: "868172385000509460",
+    dcServerId: "1096417797292171365", // We'll delete the created roles in this Discord server
     tgId: "-1001653099938",
   },
   e2e: {
