@@ -9,18 +9,24 @@ type SWRSettings = Parameters<typeof useSWR>[2]
 const useSWRWithOptionalAuth = <Data = any, Error = any>(
   url: string | null,
   options: SWRSettings = {},
-  isMutable = false
+  isMutable = false,
+  onlyAuthRequest = true
 ): SWRResponse<Data, Error> => {
   const useSWRHook = isMutable ? useSWR : useSWRImmutable
 
   const { account } = useWeb3React()
-  const { keyPair } = useKeyPair()
+  const { keyPair, isValid, ready } = useKeyPair()
 
-  const publicResponse = useSWRImmutable<Data, Error, any>(url, options as any)
+  const shouldSendAuth = !!keyPair && ready && isValid && !!account
+
+  const publicResponse = useSWRImmutable<Data, Error, any>(
+    url && !onlyAuthRequest && !shouldSendAuth ? url : null,
+    options as any
+  )
 
   const fetcherWithSign = useFetcherWithSign()
   const authenticatedResponse = useSWRHook<Data, Error, any>(
-    url && !!keyPair && !!account ? [url, { method: "GET", body: {} }] : null,
+    url && shouldSendAuth ? [url, { method: "GET", body: {} }] : null,
     fetcherWithSign,
     options as any
   )
