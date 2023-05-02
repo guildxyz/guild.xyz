@@ -8,7 +8,6 @@ import { PostHogProvider } from "components/_app/PostHogProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
 import type { AppProps } from "next/app"
-import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import Script from "next/script"
 import { IconContext } from "phosphor-react"
@@ -21,10 +20,6 @@ import fetcher from "utils/fetcher"
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
  */
 import "wicg-inert"
-
-const DynamicMaintenanceBanner = dynamic(
-  () => import("components/_app/MaintenanceBanner")
-)
 
 const App = ({
   Component,
@@ -85,12 +80,6 @@ const App = ({
                 <PostHogProvider>
                   <IntercomProvider>
                     <ExplorerProvider>
-                      {typeof window !== "undefined" && (
-                        <DynamicMaintenanceBanner
-                          maintenanceFrom="2023-05-02T10:00:00"
-                          maintenanceTo="2023-05-02T11:00:00"
-                        />
-                      )}
                       <Component {...pageProps} />
                       <AccountModal />
                     </ExplorerProvider>
