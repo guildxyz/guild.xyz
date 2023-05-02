@@ -41,6 +41,7 @@ jobs:
           CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url || (github.event_name == 'schedule' && 'https://guild.xyz') || (inputs.environment == 'production' && 'https://guild.xyz' || 'https://dev-app.guild.xyz') }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CYPRESS_DEPLOYMENT_ID: ${{ github.event.deployment.id || inputs.environment || 'cron' }}
+          CYPRESS_DC_BOT_TOKEN: ${{ secrets.CYPRESS_DC_BOT_TOKEN }}
           SECRET_WORDS: ${{ secrets.SYNPRESS_SECRET_WORDS }}
           DISPLAY: :0.0
 
