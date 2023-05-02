@@ -34,8 +34,7 @@ type Props = {
 }
 
 const MintCredential = (): JSX.Element => {
-  const { isOpen, onOpen, onClose, txError, txSuccess, txHash } =
-    useGuildCheckoutContext()
+  const { isOpen, onOpen, onClose } = useGuildCheckoutContext()
   const { credentialChain } = useMintCredentialContext()
 
   const { colorMode } = useColorMode()
@@ -61,7 +60,7 @@ const MintCredential = (): JSX.Element => {
         Mint NFT
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} colorScheme="duotone">
+      <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader pb={4} pr={16}>
@@ -72,18 +71,15 @@ const MintCredential = (): JSX.Element => {
           </ModalHeader>
           <ModalCloseButton />
 
-          <ModalBody>
+          <ModalBody pb="6">
             <CredentialImage />
+            <CredentialFeeCurrency />
           </ModalBody>
 
-          <ModalFooter pt={10} flexDir="column">
-            <Stack spacing={8} w="full">
-              <CredentialFeeCurrency />
-
-              <Stack spacing={2}>
-                <SwitchNetworkButton targetChainId={Chains[credentialChain]} />
-                <MintCredentialButton />
-              </Stack>
+          <ModalFooter flexDir="column">
+            <Stack w="full">
+              <SwitchNetworkButton targetChainId={Chains[credentialChain]} />
+              <MintCredentialButton />
             </Stack>
           </ModalFooter>
         </ModalContent>
