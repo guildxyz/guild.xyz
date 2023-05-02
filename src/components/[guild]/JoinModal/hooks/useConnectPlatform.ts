@@ -89,7 +89,7 @@ const useConnectPlatform = (
   }
 }
 
-const useConnect = (onSuccess?: () => void) => {
+const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
 
@@ -130,8 +130,16 @@ const useConnect = (onSuccess?: () => void) => {
       onSuccess?.()
     },
     onError: ([platformName, rawError]) => {
-      const errorObject = { error: undefined, platformName }
+      const errorObject = {
+        error: undefined,
+        isAutoConnect: undefined,
+        platformName,
+      }
       let toastError
+
+      if (isAutoConnect) {
+        errorObject.isAutoConnect = true
+      }
 
       if (typeof rawError === "string") {
         const parsedError = parseConnectError(rawError)
