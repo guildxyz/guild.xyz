@@ -238,9 +238,7 @@ const useKeyPair = () => {
       onError: (error) => {
         console.error("setKeyPair error", error)
         if (error?.code !== 4001) {
-          captureEvent(`Failed to set keypair`, {
-            error: error?.message || error?.toString?.() || error,
-          })
+          captureEvent(`Failed to set keypair`, { error })
         }
 
         try {
