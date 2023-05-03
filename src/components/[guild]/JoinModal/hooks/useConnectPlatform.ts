@@ -89,26 +89,36 @@ const useConnectPlatform = (
   }
 }
 
-const useConnect = (onSuccess?: () => void) => {
+const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
 
   const { mutate: mutateUser } = useUser()
 
-  const submit = (signedValidation: SignedValdation) =>
-    fetcher("/user/connect", signedValidation).then((body) => {
-      if (body === "rejected") {
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
-        throw "Something went wrong, connect request rejected."
-      }
+  const submit = (signedValidation: SignedValdation) => {
+    const platformName =
+      JSON.parse(signedValidation?.signedPayload ?? "{}")?.platformName ??
+      "UNKNOWN_PLATFORM"
 
-      if (typeof body === "string") {
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
-        throw body
-      }
+    return fetcher("/user/connect", signedValidation)
+      .then((body) => {
+        if (body === "rejected") {
+          // eslint-disable-next-line @typescript-eslint/no-throw-literal
+          throw [platformName, "Something went wrong, connect request rejected."]
+        }
 
-      return body
-    })
+        if (typeof body === "string") {
+          // eslint-disable-next-line @typescript-eslint/no-throw-literal
+          throw [platformName, body]
+        }
+
+        return body
+      })
+      .catch((err) => {
+        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+        throw [platformName, err]
+      })
+  }
 
   return useSubmitWithSign<{
     platformName: PlatformName
@@ -119,9 +129,17 @@ const useConnect = (onSuccess?: () => void) => {
       mutateUser()
       onSuccess?.()
     },
-    onError: (rawError) => {
-      const errorObject = { error: undefined }
+    onError: ([platformName, rawError]) => {
+      const errorObject = {
+        error: undefined,
+        isAutoConnect: undefined,
+        platformName,
+      }
       let toastError
+
+      if (isAutoConnect) {
+        errorObject.isAutoConnect = true
+      }
 
       if (typeof rawError === "string") {
         const parsedError = parseConnectError(rawError)
