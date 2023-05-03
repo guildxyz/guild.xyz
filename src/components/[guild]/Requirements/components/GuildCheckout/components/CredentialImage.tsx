@@ -10,6 +10,7 @@ import {
   Spinner,
   Stack,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -20,6 +21,11 @@ const CredentialImage = (): JSX.Element => {
   const { credentialType, credentialImage, error } = useMintCredentialContext()
   const { name } = useGuild()
   const { textColor } = useThemeContext()
+
+  const imageShadow = useColorModeValue(
+    "none",
+    "10px 10px 20px #171719, -10px -10px 20px #37373b;"
+  )
 
   const credentialDescription: Record<GuildAction, string> = {
     [GuildAction.JOINED_GUILD]: `This is an on-chain proof that you joined ${name} on Guild.xyz.`,
@@ -64,7 +70,7 @@ const CredentialImage = (): JSX.Element => {
                 src={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${credentialImage}`}
                 alt="Guild Credential image"
                 borderRadius="full"
-                boxShadow="10px 10px 20px #171719, -10px -10px 20px #37373b;"
+                boxShadow={imageShadow}
               />
             )}
             <Circle
@@ -75,6 +81,7 @@ const CredentialImage = (): JSX.Element => {
               p="6"
               // needed so the image covers it entirely
               transform="scale(0.98)"
+              boxShadow={imageShadow}
             >
               <VStack color={textColor}>
                 <Spinner size="lg" />
