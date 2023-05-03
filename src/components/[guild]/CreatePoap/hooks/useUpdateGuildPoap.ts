@@ -34,7 +34,7 @@ const useUpdateGuildPoap = (
         (oldData) => ({
           ...oldData,
           poaps: oldData.poaps.map((poap) =>
-            poap.id === response.id ? response : poap
+            poap.id === response.id ? { ...poap, ...response } : poap
           ),
         }),
         // needed until replication lag is solved
