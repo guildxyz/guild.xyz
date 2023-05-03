@@ -86,7 +86,7 @@ const CredentialImage = (): JSX.Element => {
           </>
         </AspectRatio>
       </Box>
-      <Text textAlign={"center"} p="4">
+      <Text textAlign="center" fontWeight="medium" p="4">
         {credentialDescription[credentialType]}
       </Text>
     </>
