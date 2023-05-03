@@ -28,7 +28,7 @@ const WithdrawButton = (): JSX.Element => {
   const isDisabledLabel =
     collected && collected.eq(BigNumber.from(0))
       ? "Withdrawable amount is 0"
-      : owner !== account
+      : owner && owner !== account
       ? `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
       : null
 

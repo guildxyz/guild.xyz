@@ -60,7 +60,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
         props?.rightElement ? (
           <GuildCheckoutProvider>
             {(satisfiesRequirement && !multiplePayments) ||
-            poapLinks?.claimed === poapLinks?.total ? (
+            (poapLinks && poapLinks?.claimed === poapLinks?.total) ? (
               props?.rightElement
             ) : (
               <BuyPass />
