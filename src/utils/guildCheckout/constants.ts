@@ -1,5 +1,4 @@
 import { BigNumberish } from "@ethersproject/bignumber"
-import { ContractInterface } from "@ethersproject/contracts"
 import { Chain, RPC } from "connectors"
 import { RequirementType } from "requirements"
 import GUILD_CREDENTIAL_ABI from "static/abis/guildCredential.json"
@@ -257,11 +256,12 @@ export const paymentSupportedChains: Chain[] = Object.keys(
   FEE_COLLECTOR_CONTRACT
 ) as Chain[]
 
-export const GUILD_CREDENTIAL_CONTRACT: Partial<
-  Record<Chain, { address: string; abi: ContractInterface }>
-> = {
+export const GUILD_CREDENTIAL_CONTRACT = {
   POLYGON_MUMBAI: {
     address: "0x4205e56A69a0130a9e0828D45d0c84e45340a196",
     abi: GUILD_CREDENTIAL_ABI,
   },
 }
+// TODO: satisfies Partial<Record<Chain, { address: string; abi: ContractInterface }>> - we just can't use it in Next.js 12, but we should add it later.
+
+export type GuildCredentialsSupportedChain = keyof typeof GUILD_CREDENTIAL_CONTRACT

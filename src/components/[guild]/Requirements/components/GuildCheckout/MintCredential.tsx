@@ -21,6 +21,7 @@ import {
   useGuildCheckoutContext,
 } from "./components/GuildCheckoutContex"
 import TransactionStatusModal from "./components/TransactionStatusModal"
+import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaLink"
 import {
   GuildAction,
   MintCredentialProvider,
@@ -87,6 +88,7 @@ const MintCredential = (): JSX.Element => {
         title="Mint Credential"
         successTitle="Successful mint"
         successText="Successful transaction! You'll receive your Guild Credential NFT soon!"
+        successLinkComponent={<OpenseaLink />}
         errorComponent={<Text mb={4}>Couldn't mint credential</Text>}
       />
     </>

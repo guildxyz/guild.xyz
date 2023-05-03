@@ -7,18 +7,19 @@ import {
   ModalFooter,
   Text,
 } from "@chakra-ui/react"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { CheckCircle } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import TransactionLink from "./TransactionLink"
 import TransactionModalCloseButton from "./TransactionModalCloseButton"
 
-type Props = { successText?: string }
+type Props = { successText?: string; successLinkComponent?: JSX.Element }
 
 const TxSuccess = ({
   successText,
+  successLinkComponent,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const isMember = useIsMember()
@@ -49,7 +50,7 @@ const TxSuccess = ({
               : "Transaction successful! Join the Guild now to get access")}
         </Text>
 
-        <TransactionLink />
+        {successLinkComponent ?? <TransactionLink />}
 
         {children && (
           <>

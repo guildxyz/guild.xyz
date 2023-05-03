@@ -29,7 +29,7 @@ const useMintCredential = () => {
 
   const { chainId, account } = useWeb3React()
   const { id } = useGuild()
-  const { credentialType } = useMintCredentialContext()
+  const { credentialType, setMintedTokenId } = useMintCredentialContext()
   const [loadingText, setLoadingText] = useState<string>("")
 
   const guildCredentialContract = useContract(
@@ -80,8 +80,18 @@ const useMintCredential = () => {
 
   return {
     ...useSubmitTransaction<null>(mintCredential, {
-      onSuccess: () => {
+      onSuccess: (txReceipt) => {
         setLoadingText("")
+
+        const transferEvent = txReceipt.events?.find((e) => e.event === "Transfer")
+
+        if (transferEvent) {
+          try {
+            const tokenId = transferEvent.args.tokenId.toNumber()
+            setMintedTokenId(tokenId)
+          } catch {}
+        }
+
         toast({
           status: "success",
           title: "Successfully minted credential!",

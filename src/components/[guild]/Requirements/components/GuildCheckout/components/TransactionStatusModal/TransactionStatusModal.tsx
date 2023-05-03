@@ -15,6 +15,7 @@ type Props = {
   successTitle?: string
   progressComponent?: JSX.Element
   successComponent?: JSX.Element
+  successLinkComponent?: JSX.Element
   successText?: string
   errorComponent?: JSX.Element
 }
@@ -24,6 +25,7 @@ const TransactionStatusModal = ({
   successTitle,
   progressComponent,
   successComponent,
+  successLinkComponent,
   successText,
   errorComponent,
 }: Props): JSX.Element => {
@@ -51,7 +53,12 @@ const TransactionStatusModal = ({
         {txError ? (
           <TxError>{errorComponent}</TxError>
         ) : txSuccess ? (
-          <TxSuccess successText={successText}>{successComponent}</TxSuccess>
+          <TxSuccess
+            successText={successText}
+            successLinkComponent={successLinkComponent}
+          >
+            {successComponent}
+          </TxSuccess>
         ) : (
           <TxInProgress>{progressComponent}</TxInProgress>
         )}
