@@ -77,7 +77,9 @@ const useMintCredential = () => {
     try {
       await guildCredentialContract.callStatic.claim(...contractCallParams)
     } catch (callstaticError) {
-      return Promise.reject(callstaticError.errorName ?? "Contract error")
+      return Promise.reject(
+        callstaticError.errorName ?? callstaticError.reason ?? "Contract error"
+      )
     }
 
     return guildCredentialContract.claim(...contractCallParams)
