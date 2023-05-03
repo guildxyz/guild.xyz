@@ -14,12 +14,18 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import { useMintCredentialContext } from "../MintCredentialContext"
+import { GuildAction, useMintCredentialContext } from "../MintCredentialContext"
 
 const CredentialImage = (): JSX.Element => {
-  const { credentialImage, error } = useMintCredentialContext()
+  const { credentialType, credentialImage, error } = useMintCredentialContext()
   const { name } = useGuild()
   const { textColor } = useThemeContext()
+
+  const credentialDescription: Record<GuildAction, string> = {
+    [GuildAction.JOINED_GUILD]: `This is an on-chain proof that you joined ${name} on Guild.xyz.`,
+    [GuildAction.IS_OWNER]: `This is an on-chain proof that you're the owner of ${name} on Guild.xyz.`,
+    [GuildAction.IS_ADMIN]: `This is an on-chain proof that you're an admin of ${name} on Guild.xyz.`,
+  }
 
   if (error)
     return (
@@ -81,7 +87,7 @@ const CredentialImage = (): JSX.Element => {
         </AspectRatio>
       </Box>
       <Text textAlign={"center"} p="4">
-        {`This is an on-chain proof that you joined ${name} on Guild.xyz.`}
+        {credentialDescription[credentialType]}
       </Text>
     </>
   )
