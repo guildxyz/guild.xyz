@@ -107,8 +107,7 @@ const useMintCredential = () => {
               <Button
                 as="a"
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  `Just minted my Guild Credential in the ${name} guild!
-guild.xyz/${urlName}`
+                  `Just minted my Guild Credential for joining ${name}!\nguild.xyz/${urlName}`
                 )}`}
                 target="_blank"
                 bg={tweetButtonBackground}
