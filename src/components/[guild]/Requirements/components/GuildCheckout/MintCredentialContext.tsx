@@ -9,6 +9,11 @@ import {
   useState,
 } from "react"
 import useSWRImmutable from "swr/immutable"
+import {
+  GuildCheckoutContextType,
+  GuildCheckoutProvider,
+  useGuildCheckoutContext,
+} from "./components/GuildCheckoutContex"
 
 export enum GuildAction {
   JOINED_GUILD,
@@ -16,25 +21,29 @@ export enum GuildAction {
   IS_ADMIN,
 }
 
-const MintCredentialContext = createContext<{
-  credentialChain: Chain
-  credentialType: GuildAction
-  credentialImage: string
-  error: string
-  mintedTokenId?: number
-  setMintedTokenId: Dispatch<SetStateAction<number>>
-}>(undefined)
+const MintCredentialContext = createContext<
+  {
+    credentialChain: Chain
+    credentialType: GuildAction
+    credentialImage: string
+    error: string
+    mintedTokenId?: number
+    setMintedTokenId: Dispatch<SetStateAction<number>>
+  } & GuildCheckoutContextType
+>(undefined)
 
 type Props = {
   credentialChain: Chain
   credentialType: GuildAction
 }
 
-const MintCredentialProvider = ({
+const MintCredentialProviderComponent = ({
   credentialChain,
   credentialType,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
+  const guildCheckoutContext = useGuildCheckoutContext()
+
   const { id } = useGuild()
   const { data: credentialImage, error } = useSWRImmutable(
     `/assets/credentials/image?guildId=${id}&guildAction=${credentialType}`
@@ -44,6 +53,7 @@ const MintCredentialProvider = ({
   return (
     <MintCredentialContext.Provider
       value={{
+        ...guildCheckoutContext,
         credentialChain,
         credentialType,
         credentialImage,
@@ -56,6 +66,21 @@ const MintCredentialProvider = ({
     </MintCredentialContext.Provider>
   )
 }
+
+const MintCredentialProvider = ({
+  credentialChain,
+  credentialType,
+  children,
+}: PropsWithChildren<Props>): JSX.Element => (
+  <GuildCheckoutProvider>
+    <MintCredentialProviderComponent
+      credentialChain={credentialChain}
+      credentialType={credentialType}
+    >
+      {children}
+    </MintCredentialProviderComponent>
+  </GuildCheckoutProvider>
+)
 
 const useMintCredentialContext = () => useContext(MintCredentialContext)
 

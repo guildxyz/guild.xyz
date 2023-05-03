@@ -15,6 +15,11 @@ import {
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -27,16 +32,15 @@ import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
+import {
+  GuildAction,
+  MintCredentialProvider,
+} from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import Button from "components/common/Button"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -165,6 +169,7 @@ const GuildPage = (): JSX.Element => {
       <Head>
         <meta name="theme-color" content={localThemeColor} />
       </Head>
+
       <Layout
         title={name}
         textColor={textColor}
@@ -386,9 +391,14 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       </Head>
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
-          <JoinModalProvider>
-            <GuildPage />
-          </JoinModalProvider>
+          <MintCredentialProvider
+            credentialChain="POLYGON_MUMBAI"
+            credentialType={GuildAction.JOINED_GUILD}
+          >
+            <JoinModalProvider>
+              <GuildPage />
+            </JoinModalProvider>
+          </MintCredentialProvider>
         </ThemeProvider>
       </SWRConfig>
     </>

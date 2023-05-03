@@ -11,31 +11,17 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { Chain, Chains } from "connectors"
+import { Chains } from "connectors"
 import AlphaTag from "./components/AlphaTag"
 import MintCredentialButton from "./components/buttons/MintCredentialButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import CredentialImage from "./components/CredentialImage"
-import {
-  GuildCheckoutProvider,
-  useGuildCheckoutContext,
-} from "./components/GuildCheckoutContex"
 import TransactionStatusModal from "./components/TransactionStatusModal"
 import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaLink"
-import {
-  GuildAction,
-  MintCredentialProvider,
-  useMintCredentialContext,
-} from "./MintCredentialContext"
-
-type Props = {
-  credentialChain: Chain
-  credentialType: GuildAction
-}
+import { useMintCredentialContext } from "./MintCredentialContext"
 
 const MintCredential = (): JSX.Element => {
-  const { isOpen, onOpen, onClose } = useGuildCheckoutContext()
-  const { credentialChain } = useMintCredentialContext()
+  const { credentialChain, isOpen, onOpen, onClose } = useMintCredentialContext()
 
   const { colorMode } = useColorMode()
 
@@ -95,15 +81,4 @@ const MintCredential = (): JSX.Element => {
   )
 }
 
-const MintCredentialWrapper = ({ credentialChain, credentialType }: Props) => (
-  <GuildCheckoutProvider>
-    <MintCredentialProvider
-      credentialChain={credentialChain}
-      credentialType={credentialType}
-    >
-      <MintCredential />
-    </MintCredentialProvider>
-  </GuildCheckoutProvider>
-)
-
-export default MintCredentialWrapper
+export default MintCredential
