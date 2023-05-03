@@ -12,14 +12,13 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Card from "components/common/Card"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useMintCredentialContext } from "../MintCredentialContext"
 
 const CredentialImage = (): JSX.Element => {
   const { credentialImage, error } = useMintCredentialContext()
-  const { name, theme } = useGuild()
+  const { name } = useGuild()
   const { textColor } = useThemeContext()
 
   if (error)
@@ -34,21 +33,21 @@ const CredentialImage = (): JSX.Element => {
     )
 
   return (
-    <Card mb="8">
+    <>
       <Box
         pos={"relative"}
         px="16"
         py="6"
-        _before={{
-          content: '""',
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          bg: theme?.color ?? "black",
-          opacity: "0.5",
-        }}
+        // _before={{
+        //   content: '""',
+        //   position: "absolute",
+        //   top: 0,
+        //   bottom: 0,
+        //   left: 0,
+        //   right: 0,
+        //   bg: theme?.color ?? "black",
+        //   opacity: "0.5",
+        // }}
       >
         <AspectRatio ratio={1} position={"relative"}>
           <>
@@ -59,7 +58,7 @@ const CredentialImage = (): JSX.Element => {
                 src={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${credentialImage}`}
                 alt="Guild Credential image"
                 borderRadius="full"
-                // boxShadow="10px 10px 20px #171719, -10px -10px 20px #37373b;"
+                boxShadow="10px 10px 20px #171719, -10px -10px 20px #37373b;"
               />
             )}
             <Circle
@@ -84,7 +83,7 @@ const CredentialImage = (): JSX.Element => {
       <Text textAlign={"center"} p="4">
         {`This is an on-chain proof that you joined ${name} on Guild.xyz.`}
       </Text>
-    </Card>
+    </>
   )
 }
 
