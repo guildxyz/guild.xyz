@@ -12,21 +12,20 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { Chain, Chains } from "connectors"
-import {
-  GuildAction,
-  MintCredentialProvider,
-  useMintCredentialContext,
-} from "./MintCredentialContext"
 import AlphaTag from "./components/AlphaTag"
-import CredentialFeeCurrency from "./components/CredentialFeeCurrency"
+import MintCredentialButton from "./components/buttons/MintCredentialButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import CredentialImage from "./components/CredentialImage"
 import {
   GuildCheckoutProvider,
   useGuildCheckoutContext,
 } from "./components/GuildCheckoutContex"
 import TransactionStatusModal from "./components/TransactionStatusModal"
-import MintCredentialButton from "./components/buttons/MintCredentialButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
+import {
+  GuildAction,
+  MintCredentialProvider,
+  useMintCredentialContext,
+} from "./MintCredentialContext"
 
 type Props = {
   credentialChain: Chain
@@ -73,7 +72,6 @@ const MintCredential = (): JSX.Element => {
 
           <ModalBody pb="6">
             <CredentialImage />
-            <CredentialFeeCurrency />
           </ModalBody>
 
           <ModalFooter flexDir="column">
