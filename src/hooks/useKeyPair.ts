@@ -10,17 +10,23 @@ import { AddressConnectionProvider, User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import useLocalStorage from "./useLocalStorage"
+import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
 } from "./useSubmit/useSubmit"
-import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import useToast from "./useToast"
 
 type StoredKeyPair = {
   keyPair: CryptoKeyPair
   pubKey: string
 }
+
+/**
+ * This is a generic RPC internal error code, but we are only using it for testing
+ * personal_sign errors, which should mean that the user rejected the request
+ */
+const RPC_INTERNAL_ERROR_CODE = -32603
 
 type AddressLinkParams =
   | ({
@@ -237,7 +243,7 @@ const useKeyPair = () => {
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
       onError: (error) => {
         console.error("setKeyPair error", error)
-        if (error?.code !== 4001) {
+        if (error?.code !== RPC_INTERNAL_ERROR_CODE) {
           captureEvent(`Failed to set keypair`, { error })
         }
 
