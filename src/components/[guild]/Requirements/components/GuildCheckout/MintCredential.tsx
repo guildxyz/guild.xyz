@@ -11,6 +11,8 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import AlphaTag from "./components/AlphaTag"
 import MintCredentialButton from "./components/buttons/MintCredentialButton"
 import CredentialFees from "./components/CredentialFees"
@@ -21,6 +23,9 @@ import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaL
 import { useMintCredentialContext } from "./MintCredentialContext"
 
 const MintCredential = (): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
+  const { urlName } = useGuild()
+
   const { isOpen, onOpen, onClose } = useMintCredentialContext()
 
   const { colorMode } = useColorMode()
@@ -28,7 +33,12 @@ const MintCredential = (): JSX.Element => {
   return (
     <>
       <Button
-        onClick={onOpen}
+        onClick={() => {
+          onOpen()
+          captureEvent("Click: Mint Credential (GuildCredentialRewardCard)", {
+            guild: urlName,
+          })
+        }}
         data-dd-action-name="Mint Credential"
         variant="outline"
         borderColor={colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"}

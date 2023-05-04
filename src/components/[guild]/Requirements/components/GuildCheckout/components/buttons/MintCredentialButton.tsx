@@ -1,20 +1,23 @@
 import { useWeb3React } from "@web3-react/core"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import useUsersGuildCredentials from "hooks/useUsersGuildCredentials"
 import { GUILD_CREDENTIAL_CONTRACT } from "utils/guildCheckout/constants"
-import { useMintCredentialContext } from "../../MintCredentialContext"
 import useMintCredential from "../../hooks/useMintCredential"
+import { useMintCredentialContext } from "../../MintCredentialContext"
 
 const MintCredentialButton = (): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
+  const { id, urlName } = useGuild()
+
   const { error } = useMintCredentialContext()
 
   const { chainId } = useWeb3React()
 
   const { onSubmit, isLoading, loadingText } = useMintCredential()
 
-  const { id } = useGuild()
   const { data, isValidating } = useUsersGuildCredentials()
   const alreadyMintedOnChain = data?.find(
     (credential) =>
@@ -37,7 +40,12 @@ const MintCredentialButton = (): JSX.Element => {
       loadingText={isValidating ? "Checking your NFTs" : loadingText}
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
-      onClick={onSubmit}
+      onClick={() => {
+        captureEvent("Click: MintCredentialButton (GuildCheckout)", {
+          guild: urlName,
+        })
+        onSubmit()
+      }}
       data-dd-action-name="Mint credential (GuildCheckout)"
     >
       {!GUILD_CREDENTIAL_CONTRACT[Chains[chainId]]

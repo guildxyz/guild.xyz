@@ -2,6 +2,7 @@ import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -27,13 +28,16 @@ type MintData = {
 }
 
 const useMintCredential = () => {
+  const { captureEvent } = usePostHogContext()
+  const { id, name, urlName } = useGuild()
+  const postHogOptions = { guild: urlName }
+
   const toast = useToast()
   const toastIdRef = useRef<ToastId>()
   const showErrorToast = useShowErrorToast()
   const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   const { chainId, account } = useWeb3React()
-  const { id, name, urlName } = useGuild()
   const { credentialType, setMintedTokenId } = useMintCredentialContext()
   const [loadingText, setLoadingText] = useState<string>("")
 
@@ -90,6 +94,19 @@ const useMintCredential = () => {
       onSuccess: (txReceipt) => {
         setLoadingText("")
 
+        if (txReceipt.status !== 1) {
+          showErrorToast("Transaction failed")
+          captureEvent("Mint credential error (GuildCheckout)", {
+            ...postHogOptions,
+            txReceipt,
+          })
+          captureEvent("claim error (GuildCheckout)", {
+            ...postHogOptions,
+            txReceipt,
+          })
+          return
+        }
+
         const transferEvent = txReceipt.events?.find((e) => e.event === "Transfer")
 
         if (transferEvent) {
@@ -99,6 +116,7 @@ const useMintCredential = () => {
           } catch {}
         }
 
+        captureEvent("Minted credential (GuildCheckout)", postHogOptions)
         toastIdRef.current = toast({
           status: "success",
           title: "Successfully minted credential!",
@@ -129,6 +147,12 @@ const useMintCredential = () => {
       onError: (error) => {
         showErrorToast(error)
         setLoadingText("")
+
+        captureEvent("Mint credential error (GuildCheckout)", postHogOptions)
+        captureEvent("claim pre-call error (GuildCheckout)", {
+          ...postHogOptions,
+          error,
+        })
       },
     }),
     loadingText,
