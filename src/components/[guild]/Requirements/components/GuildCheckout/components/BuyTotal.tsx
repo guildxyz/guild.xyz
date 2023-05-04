@@ -20,9 +20,21 @@ const BuyTotal = (): JSX.Element => {
     data: { decimals, symbol },
   } = useTokenData(requirement.chain, token)
 
-  const priceInSellToken = fee && decimals ? Number(formatUnits(fee, decimals)) : 0
+  const isNativeCurrency =
+    pickedCurrency === RPC[requirement.chain].nativeCurrency.symbol
 
   const { estimatedGasFee, estimateGasError, isEstimateGasLoading } = usePayFee()
+  const estimatedGasInFloat = estimatedGasFee
+    ? parseFloat(
+        formatUnits(estimatedGasFee, RPC[requirement.chain].nativeCurrency.decimals)
+      )
+    : null
+
+  const priceInSellToken =
+    fee && decimals
+      ? Number(formatUnits(fee, decimals)) +
+        (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
+      : 0
 
   const isTooSmallPrice = priceInSellToken < 0.001
 
@@ -47,6 +59,11 @@ const BuyTotal = (): JSX.Element => {
                     : "0.00 "}
                   {symbol}
                 </Text>
+                {!isNativeCurrency && (
+                  <Text as="span" colorScheme="gray">
+                    {` + Gas`}
+                  </Text>
+                )}
               </Skeleton>
             </Text>
           </PriceFallback>
