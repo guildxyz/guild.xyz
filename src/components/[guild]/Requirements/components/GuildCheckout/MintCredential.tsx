@@ -74,7 +74,7 @@ const MintCredential = (): JSX.Element => {
       <TransactionStatusModal
         title="Mint Credential"
         successTitle="Successful mint"
-        successText="Successful transaction! You'll receive your Guild Credential NFT soon!"
+        successText="Successful transaction! You've just received your Guild Credential NFT!"
         successLinkComponent={<OpenseaLink />}
         errorComponent={<Text mb={4}>Couldn't mint credential</Text>}
       />
