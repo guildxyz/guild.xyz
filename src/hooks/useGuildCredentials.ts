@@ -1,10 +1,12 @@
+import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { Chain, RPC } from "connectors"
+import { Chain, Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
+import { GuildCredentialMetadata } from "types"
 import { GUILD_CREDENTIAL_CONTRACT } from "utils/guildCheckout/constants"
 
 const fetchGuildCredentialsOnChain = async (address: string, chain: Chain) => {
@@ -15,20 +17,57 @@ const fetchGuildCredentialsOnChain = async (address: string, chain: Chain) => {
     provider
   )
 
-  let usersCredentialsOnChain = []
+  let usersCredentialIdsOnChain: BigNumber[] = []
 
   try {
-    usersCredentialsOnChain = await contract.tokensOfOwner(address)
+    usersCredentialIdsOnChain = await contract.tokensOfOwner(address)
   } catch {
     const balance = await contract.balanceOf(address)
 
     for (let i = 0; i < balance; i++) {
       const newTokenId = await contract.tokenOfOwnerByIndex(address, i)
-      if (newTokenId) usersCredentialsOnChain.push(newTokenId)
+      if (newTokenId) usersCredentialIdsOnChain.push(newTokenId)
     }
   }
 
-  return usersCredentialsOnChain
+  // TODO: maybe use multicall here?
+  const usersCredentialTokenURIsOnChain = await Promise.all<{
+    chainId: number
+    tokenId: number
+    tokenURI: string
+  }>(
+    usersCredentialIdsOnChain.map(async (tokenId) => {
+      const tokenURI: string = await contract.tokenURI(tokenId)
+      return {
+        chainId: Chains[chain],
+        tokenId: tokenId.toNumber(),
+        tokenURI,
+      }
+    })
+  )
+
+  const usersCredentialMetadataJSONs = await Promise.all(
+    usersCredentialTokenURIsOnChain.map(async ({ chainId, tokenId, tokenURI }) => {
+      const pinataURL = tokenURI.replace(
+        "ipfs://",
+        process.env.NEXT_PUBLIC_IPFS_GATEWAY
+      )
+      const res = await fetch(pinataURL)
+      const metadata: GuildCredentialMetadata = await res.json()
+
+      return {
+        ...metadata,
+        chainId,
+        tokenId,
+        image: metadata.image.replace(
+          "ipfs://",
+          process.env.NEXT_PUBLIC_IPFS_GATEWAY
+        ),
+      }
+    })
+  )
+
+  return usersCredentialMetadataJSONs
 }
 
 const fetchGuildCredentials = async (_: string, addresses: string[]) => {
@@ -39,24 +78,19 @@ const fetchGuildCredentials = async (_: string, addresses: string[]) => {
     )
   )
 
-  const tokenIds = responseArray
-    .flat()
-    .map((idAsBigNumber) => idAsBigNumber.toNumber())
-
-  return tokenIds
+  return responseArray.flat()
 }
 
-const useGuildCredentials = () => {
+const useGuildCredentials = (disabled = false) => {
   const { isActive } = useWeb3React()
   const { addresses } = useUser()
   const { id } = useGuild()
 
-  const shouldFetch = Boolean(isActive && addresses?.length && id)
+  const shouldFetch = Boolean(!disabled && isActive && addresses?.length && id)
 
-  return useSWRImmutable(
-    shouldFetch ? ["hasGuildCredentials", addresses, id] : null,
-    fetchGuildCredentials
-  )
+  return useSWRImmutable<
+    ({ chainId: number; tokenId: number } & GuildCredentialMetadata)[]
+  >(shouldFetch ? ["guildCredentials", addresses, id] : null, fetchGuildCredentials)
 }
 
 export default useGuildCredentials
