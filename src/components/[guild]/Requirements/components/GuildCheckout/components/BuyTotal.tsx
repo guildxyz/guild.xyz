@@ -31,7 +31,7 @@ const BuyTotal = (): JSX.Element => {
       buttonComponent={
         <HStack justifyContent={"space-between"} w="full">
           <Text as="span" colorScheme="gray">
-            Total with fees:
+            Total with gas fee:
           </Text>
 
           <PriceFallback {...{ error, pickedCurrency }}>
