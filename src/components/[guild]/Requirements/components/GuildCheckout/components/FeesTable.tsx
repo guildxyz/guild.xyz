@@ -25,11 +25,10 @@ const FeesTable = ({
     <Stack spacing={0}>
       <Button
         display="flex"
-        justifyContent="start"
+        w="full"
         fontWeight="normal"
         p={0}
         h="auto"
-        maxW="max-content"
         variant="unstyled"
         onClick={onToggle}
         rightIcon={
@@ -40,6 +39,7 @@ const FeesTable = ({
             transform={`rotate(${isOpen ? "-180" : "0"}deg)`}
           />
         }
+        sx={{ "> div": { width: "full" } }}
       >
         {buttonComponent}
       </Button>

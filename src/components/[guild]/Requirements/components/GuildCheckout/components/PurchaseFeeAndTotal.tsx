@@ -51,9 +51,9 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
   return (
     <FeesTable
       buttonComponent={
-        <HStack>
+        <HStack justifyContent={"space-between"} w="full">
           <Text as="span" colorScheme="gray">
-            Total:
+            Total with fees:
           </Text>
 
           <PriceFallback {...{ error, pickedCurrency }}>
