@@ -7,6 +7,7 @@ import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
+import useUsersGuildCredentials from "hooks/useUsersGuildCredentials"
 import { TwitterLogo } from "phosphor-react"
 import { useRef, useState } from "react"
 import fetcher from "utils/fetcher"
@@ -31,6 +32,8 @@ const useMintCredential = () => {
   const { captureEvent } = usePostHogContext()
   const { id, name, urlName } = useGuild()
   const postHogOptions = { guild: urlName }
+
+  const { mutate } = useUsersGuildCredentials()
 
   const toast = useToast()
   const toastIdRef = useRef<ToastId>()
@@ -117,6 +120,8 @@ const useMintCredential = () => {
         }
 
         captureEvent("Minted credential (GuildCheckout)", postHogOptions)
+
+        mutate()
         toastIdRef.current = toast({
           status: "success",
           title: "Successfully minted credential!",
