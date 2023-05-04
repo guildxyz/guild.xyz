@@ -143,7 +143,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
           <Skeleton isLoaded={!isEstimateGasLoading}>
             <Text as="span">
               {error || estimateGasError || !estimatedGasFee
-                ? "Couldn't calculate"
+                ? "Couldn't estimate"
                 : `${parseFloat(
                     formatUnits(
                       estimatedGasFee,
