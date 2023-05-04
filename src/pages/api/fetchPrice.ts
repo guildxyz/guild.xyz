@@ -25,13 +25,16 @@ export type FetchPriceResponse = {
   buyAmountInWei: BigNumber
   estimatedPriceInSellToken: number
   estimatedPriceInUSD: number
-  priceInSellToken: number // Max price
-  priceInUSD: number // Max price
-  priceToSendInWei: BigNumber // Max price (we're sending this to the contract)
-  guildBaseFeeInSellToken: number
-  guildFeeInSellToken: number
-  guildFeeInWei: BigNumber
-  guildFeeInUSD: number
+  maxPriceInSellToken: number
+  maxPriceInUSD: number
+  maxPriceInWei: BigNumber
+  guildBaseFeeInSellToken: number // Base fee (fetched from the TokenBuyer contract)
+  estimatedGuildFeeInSellToken: number // Base fee + percentage on the expected price
+  estimatedGuildFeeInWei: BigNumber
+  estimatedGuildFeeInUSD: number
+  maxGuildFeeInSellToken: number // Base fee + percentage on the max price
+  maxGuildFeeInWei: BigNumber
+  maxGuildFeeInUSD: number
   source: ZeroXSupportedSources
   tokenAddressPath: string[]
   path: string
@@ -62,13 +65,17 @@ const getGuildFee = async (
   sellToken: string,
   chainId: number,
   nativeCurrencyPriceInUSD: number,
-  priceInSellToken: number,
-  sellTokenToEthRate: number,
-  priceInUSD: number
+  estimatedPriceInSellToken: number,
+  estimatedPriceInUSD: number,
+  maxPriceInSellToken: number,
+  maxPriceInUSD: number,
+  sellTokenToEthRate: number
 ): Promise<{
   guildBaseFeeInSellToken: number
-  guildFeeInSellToken: number
-  guildFeeInUSD: number
+  estimatedGuildFeeInSellToken: number
+  estimatedGuildFeeInUSD: number
+  maxGuildFeeInSellToken: number
+  maxGuildFeeInUSD: number
 }> => {
   const tokenBuyerContractData = getTokenBuyerContractData(guildId)
 
@@ -95,12 +102,24 @@ const getGuildFee = async (
   const guildBaseFeeInUSD =
     (nativeCurrencyPriceInUSD / sellTokenToEthRate) * guildBaseFeeInSellToken
 
-  const guildFeeInSellToken =
-    priceInSellToken * GUILD_FEE_PERCENTAGE + guildBaseFeeInSellToken
+  const estimatedGuildFeeInSellToken =
+    estimatedPriceInSellToken * GUILD_FEE_PERCENTAGE + guildBaseFeeInSellToken
 
-  const guildFeeInUSD = priceInUSD * GUILD_FEE_PERCENTAGE + guildBaseFeeInUSD
+  const estimatedGuildFeeInUSD =
+    estimatedPriceInUSD * GUILD_FEE_PERCENTAGE + guildBaseFeeInUSD
 
-  return { guildBaseFeeInSellToken, guildFeeInSellToken, guildFeeInUSD }
+  const maxGuildFeeInSellToken =
+    maxPriceInSellToken * GUILD_FEE_PERCENTAGE + guildBaseFeeInSellToken
+
+  const maxGuildFeeInUSD = maxPriceInUSD * GUILD_FEE_PERCENTAGE + guildBaseFeeInUSD
+
+  return {
+    guildBaseFeeInSellToken,
+    estimatedGuildFeeInSellToken,
+    estimatedGuildFeeInUSD,
+    maxGuildFeeInSellToken,
+    maxGuildFeeInUSD,
+  }
 }
 
 const validateBody = (
@@ -248,13 +267,14 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const path = flipPath(rawPath ?? uniswapPath)
 
     const estimatedPriceInSellToken = parseFloat(responseData.price) * minAmount
-    const priceInSellToken = parseFloat(responseData.guaranteedPrice) * minAmount
+    const maxPriceInSellToken = parseFloat(responseData.guaranteedPrice) * minAmount
 
     const estimatedPriceInUSD =
       (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) *
       estimatedPriceInSellToken
-    const priceInUSD =
-      (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) * priceInSellToken
+    const maxPriceInUSD =
+      (nativeCurrencyPriceInUSD / responseData.sellTokenToEthRate) *
+      maxPriceInSellToken
 
     let guildFeeData
     try {
@@ -263,30 +283,42 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
         sellToken,
         Chains[chain],
         nativeCurrencyPriceInUSD,
-        priceInSellToken,
-        responseData.sellTokenToEthRate,
-        priceInUSD
+        estimatedPriceInSellToken,
+        estimatedPriceInUSD,
+        maxPriceInSellToken,
+        maxPriceInUSD,
+        responseData.sellTokenToEthRate
       )
     } catch (getGuildFeeError) {
       return res.status(500).json({ error: getGuildFeeError })
     }
-    const { guildBaseFeeInSellToken, guildFeeInSellToken, guildFeeInUSD } =
-      guildFeeData
+    const {
+      guildBaseFeeInSellToken,
+      estimatedGuildFeeInSellToken,
+      estimatedGuildFeeInUSD,
+      maxGuildFeeInSellToken,
+      maxGuildFeeInUSD,
+    } = guildFeeData
 
     const sellTokenDecimals = await getDecimals(chain, sellToken).catch(() =>
       res.status(500).json({ error: "Couldn't fetch sellToken decimals" })
     )
 
-    const guildFeeInWei = parseUnits(
-      guildFeeInSellToken.toFixed(sellTokenDecimals),
+    const estimatedGuildFeeInWei = parseUnits(
+      estimatedGuildFeeInSellToken.toFixed(sellTokenDecimals),
+      sellTokenDecimals
+    )
+
+    const maxGuildFeeInWei = parseUnits(
+      maxGuildFeeInSellToken.toFixed(sellTokenDecimals),
       sellTokenDecimals
     )
 
     const source = foundSource.name as ZeroXSupportedSources
 
     // We're sending this amount to the contract. The unused tokens will be sent back to the user during the transaction.
-    const priceToSendInWei = parseUnits(
-      priceInSellToken.toFixed(sellTokenDecimals),
+    const maxPriceInWei = parseUnits(
+      maxPriceInSellToken.toFixed(sellTokenDecimals),
       sellTokenDecimals
     )
       .sub(100000)
@@ -302,13 +334,16 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       buyAmountInWei,
       estimatedPriceInSellToken,
       estimatedPriceInUSD,
-      priceInSellToken,
-      priceInUSD,
-      priceToSendInWei,
+      maxPriceInSellToken,
+      maxPriceInUSD,
+      maxPriceInWei,
       guildBaseFeeInSellToken,
-      guildFeeInSellToken,
-      guildFeeInUSD,
-      guildFeeInWei,
+      estimatedGuildFeeInSellToken,
+      estimatedGuildFeeInUSD,
+      estimatedGuildFeeInWei,
+      maxGuildFeeInSellToken,
+      maxGuildFeeInUSD,
+      maxGuildFeeInWei,
       source,
       tokenAddressPath,
       path,
@@ -365,39 +400,52 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     // sellToken is always nativeCurrency here (at least for now)
     // TODO: maybe we don't need map here? And the user will be able to buy only one token at a time?
-    const priceInSellToken = responseData.tokens
+    const maxPriceInSellToken = responseData.tokens
       .map((t) => t.market.floorAsk.price.amount.native)
       .reduce((p1, p2) => p1 + p2, 0)
 
-    const priceInUSD = responseData.tokens
+    const maxPriceInUSD = responseData.tokens
       .map((t) => t.market.floorAsk.price.amount.usd)
       .reduce((p1, p2) => p1 + p2, 0)
 
-    const priceToSendInWei = parseUnits(
-      priceInSellToken.toString(),
+    const maxPriceInWei = parseUnits(
+      maxPriceInSellToken.toString(),
       RPC[chain].nativeCurrency.decimals
     )
 
     let guildFeeData
     try {
+      // TODO: fix this once we support NFT purchases
       guildFeeData = await getGuildFee(
         guildId,
         sellToken,
         Chains[chain],
         nativeCurrencyPriceInUSD,
-        priceInSellToken,
-        1,
-        priceInUSD
+        0,
+        0,
+        maxPriceInSellToken,
+        maxPriceInUSD,
+        1
       )
     } catch (getGuildFeeError) {
       return res.status(500).json({ error: getGuildFeeError })
     }
 
-    const { guildBaseFeeInSellToken, guildFeeInSellToken, guildFeeInUSD } =
-      guildFeeData
+    const {
+      guildBaseFeeInSellToken,
+      estimatedGuildFeeInSellToken,
+      estimatedGuildFeeInUSD,
+      maxGuildFeeInSellToken,
+      maxGuildFeeInUSD,
+    } = guildFeeData
 
-    const guildFeeInWei = parseUnits(
-      guildFeeInSellToken.toString(),
+    const estimatedGuildFeeInWei = parseUnits(
+      estimatedGuildFeeInSellToken.toString(),
+      RPC[chain].nativeCurrency.decimals
+    )
+
+    const maxGuildFeeInWei = parseUnits(
+      maxGuildFeeInSellToken.toString(),
       RPC[chain].nativeCurrency.decimals
     )
 
@@ -408,13 +456,16 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       buyAmountInWei: BigNumber.from(0), // TODO
       estimatedPriceInSellToken: 0, // TODO
       estimatedPriceInUSD: 0, // TODO
-      priceInSellToken,
-      priceInUSD,
-      priceToSendInWei,
+      maxPriceInSellToken,
+      maxPriceInUSD,
+      maxPriceInWei,
       guildBaseFeeInSellToken,
-      guildFeeInSellToken,
-      guildFeeInUSD,
-      guildFeeInWei,
+      estimatedGuildFeeInSellToken,
+      estimatedGuildFeeInUSD,
+      estimatedGuildFeeInWei,
+      maxGuildFeeInSellToken,
+      maxGuildFeeInUSD,
+      maxGuildFeeInWei,
       source, // TODO
       tokenAddressPath: [], // TODO
       path: "", // TODO
