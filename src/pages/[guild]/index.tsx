@@ -388,7 +388,7 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       </Head>
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
-          <MintCredentialProvider credentialChain="POLYGON_MUMBAI">
+          <MintCredentialProvider>
             <JoinModalProvider>
               <GuildPage />
             </JoinModalProvider>

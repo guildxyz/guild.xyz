@@ -11,17 +11,16 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { Chains } from "connectors"
 import AlphaTag from "./components/AlphaTag"
 import MintCredentialButton from "./components/buttons/MintCredentialButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import CredentialImage from "./components/CredentialImage"
+import MintCredentialChainPicker from "./components/MintCredentialChainPicker"
 import TransactionStatusModal from "./components/TransactionStatusModal"
 import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaLink"
 import { useMintCredentialContext } from "./MintCredentialContext"
 
 const MintCredential = (): JSX.Element => {
-  const { credentialChain, isOpen, onOpen, onClose } = useMintCredentialContext()
+  const { isOpen, onOpen, onClose } = useMintCredentialContext()
 
   const { colorMode } = useColorMode()
 
@@ -63,7 +62,7 @@ const MintCredential = (): JSX.Element => {
 
           <ModalFooter flexDir="column">
             <Stack w="full">
-              <SwitchNetworkButton targetChainId={Chains[credentialChain]} />
+              <MintCredentialChainPicker />
               <MintCredentialButton />
             </Stack>
           </ModalFooter>

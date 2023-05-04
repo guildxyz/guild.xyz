@@ -618,7 +618,7 @@ const RPC: RpcConfig = {
   },
   POLYGON_MUMBAI: {
     chainId: 80001,
-    chainName: "Polygon Mumbai",
+    chainName: "Mumbai",
     nativeCurrency: {
       name: "Matic",
       symbol: "MATIC",

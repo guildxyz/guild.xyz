@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useIsMember from "components/[guild]/hooks/useIsMember"
-import { Chain } from "connectors"
+import useUser from "components/[guild]/hooks/useUser"
 import {
   createContext,
   Dispatch,
@@ -25,7 +25,6 @@ export enum GuildAction {
 
 const MintCredentialContext = createContext<
   {
-    credentialChain: Chain
     credentialType: GuildAction
     credentialImage: string
     error: string
@@ -34,40 +33,36 @@ const MintCredentialContext = createContext<
   } & GuildCheckoutContextType
 >(undefined)
 
-type Props = {
-  credentialChain: Chain
-}
-
 const MintCredentialProviderComponent = ({
-  credentialChain,
   children,
-}: PropsWithChildren<Props>): JSX.Element => {
+}: PropsWithChildren<unknown>): JSX.Element => {
   const guildCheckoutContext = useGuildCheckoutContext()
 
   const { id } = useGuild()
   const isMember = useIsMember()
   const { isOwner, isAdmin } = useGuildPermission()
+  const { isSuperAdmin } = useUser()
 
   const credentialType = isOwner
     ? GuildAction.IS_OWNER
-    : isAdmin
+    : isAdmin && !isSuperAdmin
     ? GuildAction.IS_ADMIN
     : isMember
     ? GuildAction.JOINED_GUILD
     : null
 
   const { data: credentialImage, error } = useSWRImmutable(
-    credentialType
+    id && typeof credentialType === "number"
       ? `/assets/credentials/image?guildId=${id}&guildAction=${credentialType}`
       : null
   )
+
   const [mintedTokenId, setMintedTokenId] = useState<number>(null)
 
   return (
     <MintCredentialContext.Provider
       value={{
         ...guildCheckoutContext,
-        credentialChain,
         credentialType,
         credentialImage,
         error,
@@ -81,13 +76,10 @@ const MintCredentialProviderComponent = ({
 }
 
 const MintCredentialProvider = ({
-  credentialChain,
   children,
-}: PropsWithChildren<Props>): JSX.Element => (
+}: PropsWithChildren<unknown>): JSX.Element => (
   <GuildCheckoutProvider>
-    <MintCredentialProviderComponent credentialChain={credentialChain}>
-      {children}
-    </MintCredentialProviderComponent>
+    <MintCredentialProviderComponent>{children}</MintCredentialProviderComponent>
   </GuildCheckoutProvider>
 )
 

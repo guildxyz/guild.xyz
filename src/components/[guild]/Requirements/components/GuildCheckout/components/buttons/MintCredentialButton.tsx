@@ -1,14 +1,15 @@
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Chains } from "connectors"
-import { useMintCredentialContext } from "../../MintCredentialContext"
+import { GUILD_CREDENTIAL_CONTRACT } from "utils/guildCheckout/constants"
 import useMintCredential from "../../hooks/useMintCredential"
+import { useMintCredentialContext } from "../../MintCredentialContext"
 
 const MintCredentialButton = (): JSX.Element => {
-  const { credentialChain, error } = useMintCredentialContext()
+  const { error } = useMintCredentialContext()
 
   const { chainId } = useWeb3React()
-  const isDisabled = Chains[credentialChain] !== chainId || error
+  const isDisabled = !GUILD_CREDENTIAL_CONTRACT[Chains[chainId]] || error
 
   const { onSubmit, isLoading, loadingText } = useMintCredential()
 
@@ -23,7 +24,9 @@ const MintCredentialButton = (): JSX.Element => {
       onClick={onSubmit}
       data-dd-action-name="Mint credential (GuildCheckout)"
     >
-      Mint NFT
+      {!GUILD_CREDENTIAL_CONTRACT[Chains[chainId]]
+        ? `Unsupported chain`
+        : "Mint NFT"}
     </Button>
   )
 }
