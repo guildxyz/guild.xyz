@@ -62,7 +62,9 @@ const CredentialFees = (): JSX.Element => {
         <Td>Minting fee</Td>
         <Td>
           <Skeleton isLoaded={!!credentialFeeInFloat}>
-            {`${Number(credentialFeeInFloat.toFixed(3))} ${symbol}`}
+            {credentialFeeInFloat
+              ? `${Number(credentialFeeInFloat.toFixed(3))} ${symbol}`
+              : "Loading"}
           </Skeleton>
         </Td>
       </Tr>
