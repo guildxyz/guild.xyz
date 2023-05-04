@@ -103,7 +103,7 @@ const AccessHub = (): JSX.Element => {
             <Stack>
               <AlertTitle>No accessed reward</AlertTitle>
               <AlertDescription>
-                You're member of the guild, but your roles don't give you any
+                You're a member of the guild, but your roles don't give you any
                 auto-managed rewards. The owner might add some in the future or
                 reward you another way!
               </AlertDescription>
