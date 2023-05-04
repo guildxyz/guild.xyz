@@ -33,19 +33,36 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
 
   const {
     estimatedGasFee,
+    estimatedGasFeeInUSD,
     estimateGasError,
     isLoading: isEstimateGasLoading,
   } = usePurchaseAsset()
 
+  const estimatedGasInFloat = estimatedGasFee
+    ? parseFloat(
+        formatUnits(estimatedGasFee, RPC[requirement.chain].nativeCurrency.decimals)
+      )
+    : null
+
+  const isNativeCurrency =
+    pickedCurrency === RPC[requirement.chain].nativeCurrency.symbol
+
   // 1% + base fee on the estimated price
   const guildFee = Number((estimatedGuildFeeInSellToken ?? 0)?.toFixed(3))
+
   const estimatedPriceSum = Number(
     (
-      (estimatedPriceInSellToken ?? 0) + (estimatedGuildFeeInSellToken ?? 0)
+      (estimatedPriceInSellToken ?? 0) +
+      (estimatedGuildFeeInSellToken ?? 0) +
+      (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
     )?.toFixed(3)
   )
   const maxPriceSum = Number(
-    ((maxPriceInSellToken ?? 0) + (maxGuildFeeInSellToken ?? 0))?.toFixed(3)
+    (
+      (maxPriceInSellToken ?? 0) +
+      (maxGuildFeeInSellToken ?? 0) +
+      (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
+    )?.toFixed(3)
   )
 
   return (
@@ -61,9 +78,11 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
               <Skeleton isLoaded={!isValidating}>
                 <Text as="span" colorScheme="gray">
                   {estimatedPriceInUSD && estimatedGuildFeeInUSD
-                    ? `$${(estimatedPriceInUSD + estimatedGuildFeeInUSD)?.toFixed(
-                        2
-                      )}`
+                    ? `$${(
+                        estimatedPriceInUSD +
+                        estimatedGuildFeeInUSD +
+                        (estimatedGasFeeInUSD ?? 0)
+                      )?.toFixed(2)}`
                     : "$0.00"}
                   {" = "}
                 </Text>
@@ -77,6 +96,11 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
                     : "0.00 "}
                   {symbol}
                 </Text>
+                {!isNativeCurrency && (
+                  <Text as="span" colorScheme="gray">
+                    {` + Gas`}
+                  </Text>
+                )}
               </Skeleton>
             </Text>
           </PriceFallback>
@@ -142,14 +166,11 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
         <Td isNumeric>
           <Skeleton isLoaded={!isEstimateGasLoading}>
             <Text as="span">
-              {error || estimateGasError || !estimatedGasFee
+              {error || estimateGasError || !estimatedGasInFloat
                 ? "Couldn't estimate"
-                : `${parseFloat(
-                    formatUnits(
-                      estimatedGasFee,
-                      RPC[requirement.chain].nativeCurrency.decimals
-                    )
-                  ).toFixed(8)} ${RPC[requirement.chain].nativeCurrency.symbol}`}
+                : `${estimatedGasInFloat.toFixed(8)} ${
+                    RPC[requirement.chain].nativeCurrency.symbol
+                  }`}
             </Text>
           </Skeleton>
         </Td>
