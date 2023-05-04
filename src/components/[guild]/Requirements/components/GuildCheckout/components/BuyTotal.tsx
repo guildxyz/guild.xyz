@@ -55,7 +55,7 @@ const BuyTotal = (): JSX.Element => {
     >
       <Tr>
         <Td>Price</Td>
-        <Td color="WindowText">
+        <Td isNumeric color="WindowText">
           {priceInSellToken
             ? `${isTooSmallPrice ? "< 0.001" : Number(priceInSellToken.toFixed(3))} `
             : "0.00 "}
@@ -64,7 +64,7 @@ const BuyTotal = (): JSX.Element => {
       </Tr>
       <Tr>
         <Td>Gas fee</Td>
-        <Td>
+        <Td isNumeric>
           <Skeleton isLoaded={!isEstimateGasLoading}>
             {estimateGasError || !estimatedGasFee
               ? "Couldn't estimate"

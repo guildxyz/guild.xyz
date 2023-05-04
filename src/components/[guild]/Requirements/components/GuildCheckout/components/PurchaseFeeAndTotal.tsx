@@ -97,7 +97,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
             </Tooltip>
           </HStack>
         </Td>
-        <Td color="WindowText">
+        <Td isNumeric color="WindowText">
           <Skeleton isLoaded={!isValidating}>
             <Text as="span">{`${maxPriceSum} ${symbol}`}</Text>
           </Skeleton>
@@ -107,7 +107,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
       <Tr>
         <Td>Expected price</Td>
 
-        <Td>
+        <Td isNumeric>
           <Skeleton isLoaded={!isValidating}>
             <Text as="span">{`${estimatedPriceSum} ${symbol}`}</Text>
           </Skeleton>
@@ -131,7 +131,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
             </Tooltip>
           </HStack>
         </Td>
-        <Td>
+        <Td isNumeric>
           {guildFee < 0.001 ? "< 0.001 " : `${guildFee} `}
           {symbol}
         </Td>
@@ -139,7 +139,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
 
       <Tr>
         <Td>Gas fee</Td>
-        <Td>
+        <Td isNumeric>
           <Skeleton isLoaded={!isEstimateGasLoading}>
             <Text as="span">
               {error || estimateGasError || !estimatedGasFee
