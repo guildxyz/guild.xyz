@@ -23,7 +23,7 @@ const CredentialImage = (): JSX.Element => {
   const { textColor } = useThemeContext()
 
   const imageShadow = useColorModeValue(
-    "none",
+    "10px 10px 20px #d4d4d4, -10px -10px 20px #ffffff;",
     "10px 10px 20px #171719, -10px -10px 20px #37373b;"
   )
 
@@ -77,13 +77,12 @@ const CredentialImage = (): JSX.Element => {
               position={"absolute"}
               borderWidth={2}
               borderStyle="dashed"
-              borderColor={textColor}
               p="6"
               // needed so the image covers it entirely
               transform="scale(0.98)"
               boxShadow={imageShadow}
             >
-              <VStack color={textColor}>
+              <VStack>
                 <Spinner size="lg" />
                 <Text fontWeight="bold" textAlign={"center"} fontSize={"sm"}>
                   Generating credential
