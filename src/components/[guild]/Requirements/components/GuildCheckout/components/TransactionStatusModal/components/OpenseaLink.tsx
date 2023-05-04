@@ -1,11 +1,11 @@
-import { Icon, Text } from "@chakra-ui/react"
+import { Icon, Img, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Link from "components/common/Link"
 import { Chains } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import {
-  GuildCredentialsSupportedChain,
   GUILD_CREDENTIAL_CONTRACT,
+  GuildCredentialsSupportedChain,
 } from "utils/guildCheckout/constants"
 import { useMintCredentialContext } from "../../../MintCredentialContext"
 
@@ -27,8 +27,9 @@ const OpenseaLink = (): JSX.Element => {
           GUILD_CREDENTIAL_CONTRACT[Chains[chainId]].address
         }/${mintedTokenId}`}
       >
+        <Img src={"/requirementLogos/opensea.svg"} boxSize={"1em"} mr="1.5" />
         View on OpenSea
-        <Icon ml={1} as={ArrowSquareOut} />
+        <Icon ml={1.5} as={ArrowSquareOut} />
       </Link>
     </Text>
   )
