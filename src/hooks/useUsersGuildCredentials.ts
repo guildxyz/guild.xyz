@@ -81,7 +81,7 @@ const fetchGuildCredentials = async (_: string, addresses: string[]) => {
   return responseArray.flat()
 }
 
-const useGuildCredentials = (disabled = false) => {
+const useUsersGuildCredentials = (disabled = false) => {
   const { isActive } = useWeb3React()
   const { addresses } = useUser()
   const { id } = useGuild()
@@ -93,4 +93,4 @@ const useGuildCredentials = (disabled = false) => {
   >(shouldFetch ? ["guildCredentials", addresses, id] : null, fetchGuildCredentials)
 }
 
-export default useGuildCredentials
+export default useUsersGuildCredentials

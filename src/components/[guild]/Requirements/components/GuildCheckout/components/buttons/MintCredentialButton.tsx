@@ -1,11 +1,11 @@
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
 import { Chains } from "connectors"
-import useGuildCredentials from "hooks/useGuildCredentials"
+import useUsersGuildCredentials from "hooks/useUsersGuildCredentials"
 import { GUILD_CREDENTIAL_CONTRACT } from "utils/guildCheckout/constants"
-import useMintCredential from "../../hooks/useMintCredential"
 import { useMintCredentialContext } from "../../MintCredentialContext"
+import useMintCredential from "../../hooks/useMintCredential"
 
 const MintCredentialButton = (): JSX.Element => {
   const { error } = useMintCredentialContext()
@@ -15,7 +15,7 @@ const MintCredentialButton = (): JSX.Element => {
   const { onSubmit, isLoading, loadingText } = useMintCredential()
 
   const { id } = useGuild()
-  const { data, isValidating } = useGuildCredentials()
+  const { data, isValidating } = useUsersGuildCredentials()
   const alreadyMintedOnChain = data?.find(
     (credential) =>
       credential.chainId === chainId &&

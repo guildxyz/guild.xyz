@@ -1,7 +1,7 @@
 import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
+import MintCredential from "components/[guild]/Requirements/components/GuildCheckout/MintCredential"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import RewardCard from "components/common/RewardCard"
-import MintCredential from "components/[guild]/Requirements/components/GuildCheckout/MintCredential"
 import { CircleWavyCheck, Question } from "phosphor-react"
 
 const GuildCredentialRewardCard = () => {
@@ -24,7 +24,7 @@ const GuildCredentialRewardCard = () => {
           </>
         }
         title="Guild Credential"
-        image="/img/guild-credential-placeholder.svg"
+        image="/img/guild-credential-key-3d.svg"
         colorScheme="GUILD"
         description="On-chain proof of membership"
         bg={bgColor}
