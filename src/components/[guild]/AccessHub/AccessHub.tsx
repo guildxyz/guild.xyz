@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
+import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
 import platforms from "platforms/platforms"
 import PoapCardMenu from "platforms/Poap/PoapCardMenu"
@@ -17,8 +18,11 @@ import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
-import GuildCredentialRewardCard from "./components/GuildCredentialRewardCard"
 import PlatformCardButton from "./components/PlatformCardButton"
+
+const DynamicGuildCredentialRewardCard = dynamic(
+  () => import("./components/GuildCredentialRewardCard")
+)
 
 // prettier-ignore
 const useAccessedGuildPlatforms = () => {
@@ -40,7 +44,7 @@ const useAccessedGuildPlatforms = () => {
 }
 
 const AccessHub = (): JSX.Element => {
-  const { id: guildId, poaps } = useGuild()
+  const { id: guildId, poaps, featureFlags } = useGuild()
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
@@ -111,7 +115,9 @@ const AccessHub = (): JSX.Element => {
           </Alert>
         </Card>
       )}
-      {isMember && <GuildCredentialRewardCard />}
+      {featureFlags.includes("GUILD_CREDENTIAL") && (isMember || isAdmin) && (
+        <DynamicGuildCredentialRewardCard />
+      )}
     </SimpleGrid>
   )
 }
