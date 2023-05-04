@@ -7,62 +7,46 @@ import { Chain, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { GUILD_CREDENTIAL_CONTRACT } from "utils/guildCheckout/constants"
 
-const fetchHasGuildCredentialsOnChain = async (
-  address: string,
-  chain: Chain,
-  guildId: number
-) => {
-  const PAGE_SIZE = 1000
+const fetchGuildCredentialsOnChain = async (address: string, chain: Chain) => {
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0])
   const contract = new Contract(
     GUILD_CREDENTIAL_CONTRACT[chain].address,
     GUILD_CREDENTIAL_CONTRACT[chain].abi,
     provider
   )
-  const currentBlock = await provider.getBlockNumber()
-  let from = currentBlock - PAGE_SIZE
-  let to = currentBlock
 
-  const claimedEvents = []
+  let usersCredentialsOnChain = []
 
-  let shouldPaginate = true
-  do {
-    const newEvents = await contract.queryFilter(
-      contract.filters.Claimed(address, null, guildId),
-      from,
-      to
-    )
+  try {
+    usersCredentialsOnChain = await contract.tokensOfOwner(address)
+  } catch {
+    const balance = await contract.balanceOf(address)
 
-    if (!newEvents.length) {
-      shouldPaginate = false
-    } else {
-      claimedEvents.push(newEvents)
-      to = from
-      from -= PAGE_SIZE
+    for (let i = 0; i < balance; i++) {
+      const newTokenId = await contract.tokenOfOwnerByIndex(address, i)
+      if (newTokenId) usersCredentialsOnChain.push(newTokenId)
     }
-  } while (shouldPaginate)
+  }
 
-  return claimedEvents
+  return usersCredentialsOnChain
 }
 
-const fetchHasGuildCredentials = async (
-  _: string,
-  addresses: string[],
-  guildId: number
-) => {
+const fetchGuildCredentials = async (_: string, addresses: string[]) => {
   const guildCredentialChains = Object.keys(GUILD_CREDENTIAL_CONTRACT) as Chain[]
   const responseArray = await Promise.all(
     guildCredentialChains.flatMap((chain) =>
-      addresses.flatMap((address) =>
-        fetchHasGuildCredentialsOnChain(address, chain, guildId)
-      )
+      addresses.flatMap((address) => fetchGuildCredentialsOnChain(address, chain))
     )
   )
 
-  return responseArray.flat().length > 0
+  const tokenIds = responseArray
+    .flat()
+    .map((idAsBigNumber) => idAsBigNumber.toNumber())
+
+  return tokenIds
 }
 
-const useHasGuildCredential = () => {
+const useGuildCredentials = () => {
   const { isActive } = useWeb3React()
   const { addresses } = useUser()
   const { id } = useGuild()
@@ -71,8 +55,8 @@ const useHasGuildCredential = () => {
 
   return useSWRImmutable(
     shouldFetch ? ["hasGuildCredentials", addresses, id] : null,
-    fetchHasGuildCredentials
+    fetchGuildCredentials
   )
 }
 
-export default useHasGuildCredential
+export default useGuildCredentials

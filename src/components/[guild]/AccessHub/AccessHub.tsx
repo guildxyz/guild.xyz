@@ -15,7 +15,6 @@ import { PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
-import useHasGuildCredential from "../hooks/useHasGuildCredential"
 import useIsMember from "../hooks/useIsMember"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import GuildCredentialRewardCard from "./components/GuildCredentialRewardCard"
@@ -50,8 +49,6 @@ const AccessHub = (): JSX.Element => {
     const currentTime = Date.now() / 1000
     return poap.expiryDate > currentTime
   })
-
-  const { data: hasGuildCredentials } = useHasGuildCredential()
 
   return (
     <SimpleGrid
@@ -114,7 +111,7 @@ const AccessHub = (): JSX.Element => {
           </Alert>
         </Card>
       )}
-      {isMember && hasGuildCredentials === false && <GuildCredentialRewardCard />}
+      {isMember && <GuildCredentialRewardCard />}
     </SimpleGrid>
   )
 }
