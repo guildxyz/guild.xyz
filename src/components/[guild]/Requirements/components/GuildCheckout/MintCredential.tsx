@@ -73,7 +73,7 @@ const MintCredential = (): JSX.Element => {
           </ModalBody>
 
           <ModalFooter flexDir="column">
-            <Stack w="full" spacing={4}>
+            <Stack w="full" spacing={6}>
               <MintCredentialChainPicker />
               <CredentialFees />
               <MintCredentialButton />

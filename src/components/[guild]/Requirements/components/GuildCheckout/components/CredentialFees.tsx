@@ -22,21 +22,19 @@ const CredentialFees = (): JSX.Element => {
     <FeesTable
       buttonComponent={
         <HStack justifyContent={"space-between"} w="full">
-          <Text as="span" colorScheme="gray">
-            Minting fee:
-          </Text>
+          <Text fontWeight={"medium"}>Minting fee:</Text>
 
           <PriceFallback pickedCurrency={symbol} error={credentialFeeError}>
             <Text as="span">
               <Skeleton isLoaded={!isCredentialFeeLoading}>
-                <Text as="span" fontWeight="semibold">
+                <Text as="span">
                   {credentialFeeInFloat
                     ? `${Number(credentialFeeInFloat.toFixed(3))} `
                     : "0.00 "}
                   {symbol}
                 </Text>
                 <Text as="span" colorScheme="gray">
-                  {` + Gas`}
+                  {` + gas`}
                 </Text>
               </Skeleton>
             </Text>
@@ -45,27 +43,35 @@ const CredentialFees = (): JSX.Element => {
       }
     >
       <Tr>
-        <Td>Total</Td>
-        <Td color="WindowText">{`${
-          credentialFeeInFloat
-            ? `${Number(credentialFeeInFloat.toFixed(3))} `
-            : "0.00 "
-        } ${symbol}`}</Td>
-      </Tr>
-
-      <Tr>
         <Td>Price</Td>
-        <Td>Free</Td>
+        <Td isNumeric>Free</Td>
       </Tr>
 
       <Tr>
         <Td>Minting fee</Td>
-        <Td>
+        <Td isNumeric>
           <Skeleton isLoaded={!!credentialFeeInFloat}>
             {credentialFeeInFloat
               ? `${Number(credentialFeeInFloat.toFixed(3))} ${symbol}`
               : "Loading"}
           </Skeleton>
+        </Td>
+      </Tr>
+
+      {/* <Tr>
+        <Td>Gas fee</Td>
+        <Td isNumeric>Can't calculate in advance</Td>
+      </Tr> */}
+
+      <Tr>
+        <Td>Total</Td>
+        <Td isNumeric color="WindowText">
+          {`${
+            credentialFeeInFloat
+              ? `${Number(credentialFeeInFloat.toFixed(3))} `
+              : "0.00 "
+          } ${symbol}`}{" "}
+          + gas
         </Td>
       </Tr>
     </FeesTable>

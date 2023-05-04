@@ -1,7 +1,14 @@
-import { Img, SimpleGrid, Tooltip, useColorModeValue } from "@chakra-ui/react"
+import {
+  Img,
+  SimpleGrid,
+  Stack,
+  Text,
+  Tooltip,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import Button from "components/common/Button"
 import { Chain, Chains, RPC } from "connectors"
 import { useState } from "react"
 import { GUILD_CREDENTIAL_CONTRACT } from "utils/guildCheckout/constants"
@@ -16,11 +23,18 @@ const CHAINS: ChainButtonProps[] = [
 ]
 
 const MintCredentialChainPicker = (): JSX.Element => (
-  <SimpleGrid w="full" columns={{ base: 2, sm: Math.min(CHAINS.length, 3) }} gap={2}>
-    {CHAINS.map(({ chain, comingSoon }) => (
-      <ChainButton key={chain} chain={chain} comingSoon={comingSoon} />
-    ))}
-  </SimpleGrid>
+  <Stack>
+    <Text fontWeight={"medium"}>Chain to mint on</Text>
+    <SimpleGrid
+      w="full"
+      columns={{ base: 2, sm: Math.min(CHAINS.length, 3) }}
+      gap={2}
+    >
+      {CHAINS.map(({ chain, comingSoon }) => (
+        <ChainButton key={chain} chain={chain} comingSoon={comingSoon} />
+      ))}
+    </SimpleGrid>
+  </Stack>
 )
 
 const ChainButton = ({ chain, comingSoon }: ChainButtonProps): JSX.Element => {
