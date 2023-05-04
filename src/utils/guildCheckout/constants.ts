@@ -258,7 +258,7 @@ export const paymentSupportedChains: Chain[] = Object.keys(
 
 export const GUILD_CREDENTIAL_CONTRACT = {
   POLYGON_MUMBAI: {
-    address: "0x4205e56A69a0130a9e0828D45d0c84e45340a196",
+    address: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
     abi: GUILD_CREDENTIAL_ABI,
   },
 }
