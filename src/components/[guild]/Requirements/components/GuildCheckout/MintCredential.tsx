@@ -9,18 +9,19 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
+import { useMintCredentialContext } from "./MintCredentialContext"
 import AlphaTag from "./components/AlphaTag"
-import MintCredentialButton from "./components/buttons/MintCredentialButton"
 import CredentialFees from "./components/CredentialFees"
 import CredentialImage from "./components/CredentialImage"
+import CredentialReward from "./components/CredentialReward"
 import MintCredentialChainPicker from "./components/MintCredentialChainPicker"
 import TransactionStatusModal from "./components/TransactionStatusModal"
 import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaLink"
-import { useMintCredentialContext } from "./MintCredentialContext"
+import MintCredentialButton from "./components/buttons/MintCredentialButton"
 
 const MintCredential = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
@@ -84,9 +85,25 @@ const MintCredential = (): JSX.Element => {
       <TransactionStatusModal
         title="Mint Credential"
         successTitle="Successful mint"
-        successText="Successful transaction! You've just received your Guild Credential NFT!"
+        successText="Successful transaction! Your Guild Credential NFT is now on chain!"
         successLinkComponent={<OpenseaLink />}
         errorComponent={<Text mb={4}>Couldn't mint credential</Text>}
+        progressComponent={
+          <>
+            <Text fontWeight={"bold"} mb="2">
+              You'll get:
+            </Text>
+            <CredentialReward />
+          </>
+        }
+        successComponent={
+          <>
+            <Text fontWeight={"bold"} mb="2">
+              Your new asset:
+            </Text>
+            <CredentialReward />
+          </>
+        }
       />
     </>
   )

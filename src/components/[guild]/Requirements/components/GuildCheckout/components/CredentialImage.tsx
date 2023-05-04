@@ -14,13 +14,11 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useThemeContext } from "components/[guild]/ThemeContext"
 import { GuildAction, useMintCredentialContext } from "../MintCredentialContext"
 
 const CredentialImage = (): JSX.Element => {
   const { credentialType, credentialImage, error } = useMintCredentialContext()
   const { name } = useGuild()
-  const { textColor } = useThemeContext()
 
   const imageShadow = useColorModeValue(
     "10px 10px 20px #d4d4d4, -10px -10px 20px #ffffff;",
