@@ -13,6 +13,7 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import AlphaTag from "./components/AlphaTag"
 import MintCredentialButton from "./components/buttons/MintCredentialButton"
+import CredentialFees from "./components/CredentialFees"
 import CredentialImage from "./components/CredentialImage"
 import MintCredentialChainPicker from "./components/MintCredentialChainPicker"
 import TransactionStatusModal from "./components/TransactionStatusModal"
@@ -61,8 +62,9 @@ const MintCredential = (): JSX.Element => {
           </ModalBody>
 
           <ModalFooter flexDir="column">
-            <Stack w="full">
+            <Stack w="full" spacing={4}>
               <MintCredentialChainPicker />
+              <CredentialFees />
               <MintCredentialButton />
             </Stack>
           </ModalFooter>
