@@ -16,15 +16,6 @@ import AlchemyTxCountRelative from "./components/AlchemyTxCountRelative"
 import AlchemyTxValue from "./components/AlchemyTxValue"
 import AlchemyTxValueRelative from "./components/AlchemyTxValueRelative"
 
-const walletActivitySupportedChains: Chain[] = [
-  "ETHEREUM",
-  "POLYGON",
-  "ARBITRUM",
-  "OPTIMISM",
-  "GOERLI",
-  "POLYGON_MUMBAI",
-]
-
 const walletActivityRequirementTypes: SelectOption[] = [
   {
     label: "Wallet age",
@@ -81,6 +72,18 @@ const WalletActivityForm = ({
   const selected = walletActivityRequirementTypes.find(
     (reqType) => reqType.value === type
   )
+
+  const walletActivitySupportedChains: Chain[] = [
+    "ETHEREUM",
+    "POLYGON",
+    "ARBITRUM",
+    "OPTIMISM",
+    "GOERLI",
+    "POLYGON_MUMBAI",
+    ...(!["ALCHEMY_TX_VALUE", "ALCHEMY_TX_VALUE_RELATIVE"].includes(type)
+      ? ["BASE_GOERLI" as Chain]
+      : []),
+  ]
 
   const resetFields = () => {
     resetField(`${baseFieldPath}.address`, { defaultValue: "" })
