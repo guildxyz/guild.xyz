@@ -1,4 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useIsMember from "components/[guild]/hooks/useIsMember"
 import { Chain } from "connectors"
 import {
   createContext,
@@ -34,19 +36,30 @@ const MintCredentialContext = createContext<
 
 type Props = {
   credentialChain: Chain
-  credentialType: GuildAction
 }
 
 const MintCredentialProviderComponent = ({
   credentialChain,
-  credentialType,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const guildCheckoutContext = useGuildCheckoutContext()
 
   const { id } = useGuild()
+  const isMember = useIsMember()
+  const { isOwner, isAdmin } = useGuildPermission()
+
+  const credentialType = isOwner
+    ? GuildAction.IS_OWNER
+    : isAdmin
+    ? GuildAction.IS_ADMIN
+    : isMember
+    ? GuildAction.JOINED_GUILD
+    : null
+
   const { data: credentialImage, error } = useSWRImmutable(
-    `/assets/credentials/image?guildId=${id}&guildAction=${credentialType}`
+    credentialType
+      ? `/assets/credentials/image?guildId=${id}&guildAction=${credentialType}`
+      : null
   )
   const [mintedTokenId, setMintedTokenId] = useState<number>(null)
 
@@ -69,14 +82,10 @@ const MintCredentialProviderComponent = ({
 
 const MintCredentialProvider = ({
   credentialChain,
-  credentialType,
   children,
 }: PropsWithChildren<Props>): JSX.Element => (
   <GuildCheckoutProvider>
-    <MintCredentialProviderComponent
-      credentialChain={credentialChain}
-      credentialType={credentialType}
-    >
+    <MintCredentialProviderComponent credentialChain={credentialChain}>
       {children}
     </MintCredentialProviderComponent>
   </GuildCheckoutProvider>

@@ -32,10 +32,7 @@ import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
-import {
-  GuildAction,
-  MintCredentialProvider,
-} from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
+import { MintCredentialProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
@@ -391,10 +388,7 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       </Head>
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
-          <MintCredentialProvider
-            credentialChain="POLYGON_MUMBAI"
-            credentialType={GuildAction.JOINED_GUILD}
-          >
+          <MintCredentialProvider credentialChain="POLYGON_MUMBAI">
             <JoinModalProvider>
               <GuildPage />
             </JoinModalProvider>
