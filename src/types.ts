@@ -494,6 +494,10 @@ type GuildCredentialAttribute =
       value: string
     }
   | {
+      trait_type: "guild"
+      value: string
+    }
+  | {
       trait_type: "userId"
       value: string
     }
