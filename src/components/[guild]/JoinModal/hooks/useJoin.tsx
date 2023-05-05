@@ -102,7 +102,8 @@ const useJoin = (onSuccess?: () => void) => {
         title: `Successfully joined guild`,
         duration: 8000,
         description:
-          pathname === "/[guild]" ? (
+          pathname === "/[guild]" &&
+          guild.featureFlags.includes("GUILD_CREDENTIAL") ? (
             <>
               <Text>Let others know as well by minting it on-chain</Text>
               <Button
