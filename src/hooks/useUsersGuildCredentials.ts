@@ -2,7 +2,6 @@ import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { Chain, Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
@@ -17,17 +16,13 @@ const fetchGuildCredentialsOnChain = async (address: string, chain: Chain) => {
     provider
   )
 
-  let usersCredentialIdsOnChain: BigNumber[] = []
+  const usersCredentialIdsOnChain: BigNumber[] = []
 
-  try {
-    usersCredentialIdsOnChain = await contract.tokensOfOwner(address)
-  } catch {
-    const balance = await contract.balanceOf(address)
+  const balance = await contract.balanceOf(address)
 
-    for (let i = 0; i < balance; i++) {
-      const newTokenId = await contract.tokenOfOwnerByIndex(address, i)
-      if (newTokenId) usersCredentialIdsOnChain.push(newTokenId)
-    }
+  for (let i = 0; i < balance; i++) {
+    const newTokenId = await contract.tokenOfOwnerByIndex(address, i)
+    if (newTokenId) usersCredentialIdsOnChain.push(newTokenId)
   }
 
   // TODO: maybe use multicall here?
@@ -84,13 +79,12 @@ const fetchGuildCredentials = async (_: string, addresses: string[]) => {
 const useUsersGuildCredentials = (disabled = false) => {
   const { isActive } = useWeb3React()
   const { addresses } = useUser()
-  const { id } = useGuild()
 
-  const shouldFetch = Boolean(!disabled && isActive && addresses?.length && id)
+  const shouldFetch = Boolean(!disabled && isActive && addresses?.length)
 
   return useSWRImmutable<
     ({ chainId: number; tokenId: number } & GuildCredentialMetadata)[]
-  >(shouldFetch ? ["guildCredentials", addresses, id] : null, fetchGuildCredentials)
+  >(shouldFetch ? ["guildCredentials", addresses] : null, fetchGuildCredentials)
 }
 
 export default useUsersGuildCredentials
