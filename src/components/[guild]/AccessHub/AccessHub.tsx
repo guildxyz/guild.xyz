@@ -63,6 +63,9 @@ const AccessHub = (): JSX.Element => {
       gap={4}
       mb="10"
     >
+      {featureFlags.includes("GUILD_CREDENTIAL") && (isMember || isAdmin) && (
+        <DynamicGuildCredentialRewardCard />
+      )}
       {accessedGuildPlatforms?.length || futurePoaps?.length ? (
         <>
           {accessedGuildPlatforms.map((platform) => {
@@ -114,9 +117,6 @@ const AccessHub = (): JSX.Element => {
             </Stack>
           </Alert>
         </Card>
-      )}
-      {featureFlags.includes("GUILD_CREDENTIAL") && (isMember || isAdmin) && (
-        <DynamicGuildCredentialRewardCard />
       )}
     </SimpleGrid>
   )
