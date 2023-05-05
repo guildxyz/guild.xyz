@@ -1,11 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="256px" height="417px" viewBox="0 0 256 417" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid">
-	<g>
-		<polygon fill="#343434" points="127.9611 0 125.1661 9.5 125.1661 285.168 127.9611 287.958 255.9231 212.32"/>
-		<polygon fill="#8C8C8C" points="127.962 0 0 212.32 127.962 287.959 127.962 154.158"/>
-		<polygon fill="#3C3C3B" points="127.9611 312.1866 126.3861 314.1066 126.3861 412.3056 127.9611 416.9066 255.9991 236.5866"/>
-		<polygon fill="#8C8C8C" points="127.962 416.9052 127.962 312.1852 0 236.5852"/>
-		<polygon fill="#141414" points="127.9611 287.9577 255.9211 212.3207 127.9611 154.1587"/>
-		<polygon fill="#393939" points="0.0009 212.3208 127.9609 287.9578 127.9609 154.1588"/>
-	</g>
+<svg width="500" height="500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_12717_8206)">
+<circle cx="249.5" cy="249.5" r="250.5" fill="white"/>
+<path d="M249.968 71L247.564 79.1648V316.066L249.968 318.465L359.933 253.463L249.968 71Z" fill="#343434"/>
+<path d="M249.968 71L140 253.463L249.968 318.465V203.479V71Z" fill="#8C8C8C"/>
+<path d="M249.968 339.285L248.613 340.937V425.325L249.968 429.279L360 274.317L249.968 339.285Z" fill="#3C3C3B"/>
+<path d="M249.968 429.279V339.285L140 274.317L249.968 429.279Z" fill="#8C8C8C"/>
+<path d="M249.968 318.465L359.933 253.463L249.968 203.479V318.465Z" fill="#141414"/>
+<path d="M140 253.463L249.968 318.465V203.479L140 253.463Z" fill="#393939"/>
+</g>
+<defs>
+<clipPath id="clip0_12717_8206">
+<rect width="500" height="500" fill="white"/>
+</clipPath>
+</defs>
 </svg>

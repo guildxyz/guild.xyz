@@ -7,15 +7,21 @@ import {
   ModalFooter,
   Text,
 } from "@chakra-ui/react"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { CheckCircle } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import TransactionLink from "./TransactionLink"
 import TransactionModalCloseButton from "./TransactionModalCloseButton"
 
-const TxSuccess = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
+type Props = { successText?: string; successLinkComponent?: JSX.Element }
+
+const TxSuccess = ({
+  successText,
+  successLinkComponent,
+  children,
+}: PropsWithChildren<Props>): JSX.Element => {
   const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
 
@@ -38,16 +44,20 @@ const TxSuccess = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
         </Flex>
 
         <Text mb={2}>
-          {isMember
-            ? "Transaction successful! Your access is being rechecked."
-            : "Transaction successful! Join the Guild now to get access"}
+          {successText ??
+            (isMember
+              ? "Transaction successful! Your access is being rechecked."
+              : "Transaction successful! Join the Guild now to get access")}
         </Text>
 
-        <TransactionLink />
+        {successLinkComponent ?? <TransactionLink />}
 
-        <Divider mb="6" />
-
-        {children}
+        {children && (
+          <>
+            <Divider mb="6" />
+            {children}
+          </>
+        )}
       </ModalBody>
 
       <ModalFooter>
