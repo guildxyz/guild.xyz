@@ -4,8 +4,8 @@ import Link from "components/common/Link"
 import { Chains } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import {
-  GUILD_CREDENTIAL_CONTRACT,
   GuildCredentialsSupportedChain,
+  GUILD_CREDENTIAL_CONTRACT,
 } from "utils/guildCheckout/constants"
 import { useMintCredentialContext } from "../../../MintCredentialContext"
 
@@ -14,7 +14,8 @@ const OpenseaLink = (): JSX.Element => {
   const { mintedTokenId } = useMintCredentialContext()
 
   const openseaBaseUrl: Record<GuildCredentialsSupportedChain, string> = {
-    POLYGON_MUMBAI: "https://testnets.opensea.io/assets/mumbai",
+    // POLYGON_MUMBAI: "https://testnets.opensea.io/assets/mumbai",
+    POLYGON: "https://opensea.io/assets/matic",
   }
 
   if (!mintedTokenId) return null
