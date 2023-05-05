@@ -3,8 +3,10 @@ import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
+import useBalance from "hooks/useBalance"
 import useUsersGuildCredentials from "hooks/useUsersGuildCredentials"
 import { GUILD_CREDENTIAL_CONTRACT } from "utils/guildCheckout/constants"
+import useCredentialFee from "../../hooks/useCredentialFee"
 import useMintCredential from "../../hooks/useMintCredential"
 import { useMintCredentialContext } from "../../MintCredentialContext"
 
@@ -16,7 +18,7 @@ const MintCredentialButton = (): JSX.Element => {
 
   const { chainId } = useWeb3React()
 
-  const { onSubmit, isLoading, loadingText } = useMintCredential()
+  const { onSubmit, isLoading: isMinting, loadingText } = useMintCredential()
 
   const { data, isValidating } = useUsersGuildCredentials()
   const alreadyMintedOnChain = data?.find(
@@ -26,17 +28,26 @@ const MintCredentialButton = (): JSX.Element => {
         id
   )
 
+  const { credentialFee, isCredentialFeeLoading } = useCredentialFee()
+  const { coinBalance, isLoading: isBalanceLoading } = useBalance()
+  const isSufficientBalance =
+    credentialFee && coinBalance ? coinBalance.gt(credentialFee) : false
+
+  const isLoading =
+    isCredentialFeeLoading || isBalanceLoading || isValidating || isMinting
+
   const isDisabled =
     !GUILD_CREDENTIAL_CONTRACT[Chains[chainId]] ||
+    !isSufficientBalance ||
     error ||
-    isValidating ||
+    isLoading ||
     alreadyMintedOnChain
 
   return (
     <Button
       size="lg"
       isDisabled={isDisabled}
-      isLoading={isValidating || isLoading}
+      isLoading={isLoading}
       loadingText={isValidating ? "Checking your NFTs" : loadingText}
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
@@ -52,6 +63,8 @@ const MintCredentialButton = (): JSX.Element => {
         ? `Unsupported chain`
         : alreadyMintedOnChain
         ? "Already minted"
+        : !isSufficientBalance
+        ? "Insufficient balance"
         : "Mint NFT"}
     </Button>
   )
