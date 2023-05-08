@@ -125,7 +125,8 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
     authData: any
     reauth?: boolean
   }>(submit, {
-    onSuccess: () => {
+    onSuccess: ({ platformName, reauth }) => {
+      captureEvent("Platform connection", { platformName, isReauth: reauth })
       mutateUser()
       onSuccess?.()
     },
