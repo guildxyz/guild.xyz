@@ -53,7 +53,7 @@ const TokenPicker = ({
     },
   })
 
-  const { isValidating, tokens } = useTokens(chain)
+  const { isLoading, tokens } = useTokens(chain)
   const mappedTokens = useMemo(
     () =>
       tokens?.map((token) => ({
@@ -108,7 +108,7 @@ const TokenPicker = ({
             validate: () => !tokenDataError || "Failed to fetch token data",
           }}
           isClearable
-          isLoading={isValidating}
+          isLoading={isLoading}
           options={mappedTokens}
           filterOption={customFilterOption}
           placeholder="Search or paste address"

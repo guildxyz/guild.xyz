@@ -59,12 +59,12 @@ const fetchTokens = async (_: string, chain: string) =>
   )
 
 const useTokens = (chain: string) => {
-  const { isValidating, data } = useSWRImmutable<Array<CoingeckoToken>>(
+  const { isLoading, data } = useSWRImmutable<Array<CoingeckoToken>>(
     chain ? ["tokens", chain] : null,
     fetchTokens
   )
 
-  return { tokens: data, isValidating }
+  return { tokens: data, isLoading }
 }
 
 export default useTokens
