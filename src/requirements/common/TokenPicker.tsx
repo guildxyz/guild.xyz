@@ -1,15 +1,6 @@
-import {
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputLeftAddon,
-  InputLeftElement,
-  Spinner,
-  Text,
-} from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
+import { FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { Chain } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
@@ -79,7 +70,7 @@ const TokenPicker = ({
     <FormControl isRequired isInvalid={!!error}>
       <FormLabel>Token:</FormLabel>
 
-      <InputGroup>
+      {/* <InputGroup>
         {address &&
           (tokenImage ? (
             <InputLeftElement>
@@ -124,8 +115,26 @@ const TokenPicker = ({
             }
           }
           isDisabled={isDisabled}
-        />
-      </InputGroup>
+        /> 
+        
+      </InputGroup> */}
+
+      <ControlledCombobox
+        name={fieldName}
+        rules={{
+          required: "This field is required.",
+          pattern: {
+            value: ADDRESS_REGEX,
+            message:
+              "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+          },
+          validate: () => !tokenDataError || "Failed to fetch token data",
+        }}
+        options={mappedTokens?.slice(0, 1000)}
+        placeholder="Select a token"
+        isLoading={isLoading}
+        isDisabled={isLoading}
+      />
 
       <FormErrorMessage>{error?.message}</FormErrorMessage>
     </FormControl>

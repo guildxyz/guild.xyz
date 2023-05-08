@@ -1,4 +1,5 @@
 import { Center, Image, SkeletonCircle } from "@chakra-ui/react"
+import { memo } from "react"
 import { Rest } from "types"
 
 type Props = {
@@ -22,4 +23,4 @@ const OptionImage = ({ img, alt, ...rest }: Props): JSX.Element => (
   </Center>
 )
 
-export default OptionImage
+export default memo(OptionImage)
