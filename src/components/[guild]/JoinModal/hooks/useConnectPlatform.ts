@@ -112,7 +112,7 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
           throw [platformName, body]
         }
 
-        return body
+        return { ...body, platformName }
       })
       .catch((err) => {
         // eslint-disable-next-line @typescript-eslint/no-throw-literal
@@ -125,8 +125,8 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
     authData: any
     reauth?: boolean
   }>(submit, {
-    onSuccess: ({ platformName, reauth }) => {
-      captureEvent("Platform connection", { platformName, isReauth: reauth })
+    onSuccess: ({ platformName }) => {
+      captureEvent("Platform connection", { platformName })
       mutateUser()
       onSuccess?.()
     },
