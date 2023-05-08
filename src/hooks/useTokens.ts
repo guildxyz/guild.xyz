@@ -64,7 +64,7 @@ const useTokens = (chain: string) => {
     fetchTokens
   )
 
-  return { tokens: data, isLoading: isValidating }
+  return { tokens: data, isValidating }
 }
 
 export default useTokens

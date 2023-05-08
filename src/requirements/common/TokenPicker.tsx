@@ -14,7 +14,7 @@ import { Chain } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useMemo } from "react"
-import { useController, UseControllerProps, useFormContext } from "react-hook-form"
+import { UseControllerProps, useController, useFormContext } from "react-hook-form"
 
 type Props = {
   chain: Chain
@@ -53,7 +53,7 @@ const TokenPicker = ({
     },
   })
 
-  const { isLoading, tokens } = useTokens(chain)
+  const { isValidating, tokens } = useTokens(chain)
   const mappedTokens = useMemo(
     () =>
       tokens?.map((token) => ({
@@ -108,7 +108,7 @@ const TokenPicker = ({
             validate: () => !tokenDataError || "Failed to fetch token data",
           }}
           isClearable
-          isLoading={isLoading}
+          isLoading={isValidating}
           options={mappedTokens}
           filterOption={customFilterOption}
           placeholder="Search or paste address"
