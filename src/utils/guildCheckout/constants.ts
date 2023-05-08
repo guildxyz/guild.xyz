@@ -248,10 +248,9 @@ export const DISABLED_TOKENS: Partial<Record<Chain, string[]>> = {
 }
 
 export const FEE_COLLECTOR_CONTRACT: Partial<Record<Chain, string>> = {
-  ETHEREUM: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  POLYGON: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  GOERLI: "0x32547e6cc18651647e58f57164a0117da82f77f0",
-  POLYGON_MUMBAI: "0x0E16C5c0a2Ed11fFa67A8d7CbAF161ACa4435B70",
+  ETHEREUM: "0xe4b4c6a7c6b6396032096C12aDf46B7F14a70F4d",
+  POLYGON: "0xe4b4c6a7c6b6396032096C12aDf46B7F14a70F4d",
+  POLYGON_MUMBAI: "0xe4b4c6a7c6b6396032096C12aDf46B7F14a70F4d",
 }
 export const paymentSupportedChains: Chain[] = Object.keys(
   FEE_COLLECTOR_CONTRACT
