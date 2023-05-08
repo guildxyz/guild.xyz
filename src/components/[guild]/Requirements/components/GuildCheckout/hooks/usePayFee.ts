@@ -115,13 +115,17 @@ const usePayFee = () => {
     isSufficientBalance &&
     (ADDRESS_REGEX.test(pickedCurrency) ? allowance && fee.lte(allowance) : true)
 
-  const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
-    useEstimateGasFee(
-      requirement?.id?.toString(),
-      shouldEstimateGas ? feeCollectorContract : null,
-      "payFee",
-      [requirement.data.id, extraParam]
-    )
+  const {
+    estimatedGasFee,
+    estimatedGasFeeInUSD,
+    estimateGasError,
+    isEstimateGasLoading,
+  } = useEstimateGasFee(
+    requirement?.id?.toString(),
+    shouldEstimateGas ? feeCollectorContract : null,
+    "payFee",
+    [requirement.data.id, extraParam]
+  )
 
   const payFeeTransaction = (vaultId: number) =>
     payFee(feeCollectorContract, [vaultId, extraParam])
@@ -172,6 +176,7 @@ const usePayFee = () => {
     estimatedGasFee,
     estimatedGasFeeInUSD,
     estimateGasError,
+    isEstimateGasLoading,
   }
 }
 

@@ -50,7 +50,7 @@ const PoapReward = ({
   const { buttonProps, modalProps } = useMintPoapButton(poap?.id)
 
   const state = useMemo(() => {
-    if (availableLinks === 0)
+    if (availableLinks === 0 && !modalProps.response)
       return {
         tooltipLabel: poapLinks?.total
           ? "All available POAPs have been minted"

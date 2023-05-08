@@ -12,15 +12,21 @@ import TxSuccess from "./components/TxSuccess"
 
 type Props = {
   title: string
+  successTitle?: string
   progressComponent?: JSX.Element
   successComponent?: JSX.Element
+  successLinkComponent?: JSX.Element
+  successText?: string
   errorComponent?: JSX.Element
 }
 
 const TransactionStatusModal = ({
   title,
+  successTitle,
   progressComponent,
   successComponent,
+  successLinkComponent,
+  successText,
   errorComponent,
 }: Props): JSX.Element => {
   const { isInfoModalOpen, onInfoModalClose, txSuccess, txError, txHash } =
@@ -37,7 +43,7 @@ const TransactionStatusModal = ({
           {txError
             ? "Transaction failed"
             : txSuccess
-            ? "Successful payment"
+            ? successTitle ?? "Successful payment"
             : txHash
             ? "Transaction is processing..."
             : title}
@@ -47,7 +53,12 @@ const TransactionStatusModal = ({
         {txError ? (
           <TxError>{errorComponent}</TxError>
         ) : txSuccess ? (
-          <TxSuccess>{successComponent}</TxSuccess>
+          <TxSuccess
+            successText={successText}
+            successLinkComponent={successLinkComponent}
+          >
+            {successComponent}
+          </TxSuccess>
         ) : (
           <TxInProgress>{progressComponent}</TxInProgress>
         )}

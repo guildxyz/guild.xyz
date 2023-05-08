@@ -147,7 +147,7 @@ const BuyPass = () => {
                   },
                 }}
               >
-                <SwitchNetworkButton />
+                <SwitchNetworkButton targetChainId={Chains[requirement.chain]} />
 
                 <Collapse in={chainId === Chains[requirement.chain]}>
                   {!guildPoap && (

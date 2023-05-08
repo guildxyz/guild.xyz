@@ -1,19 +1,19 @@
 import { useDisclosure } from "@chakra-ui/react"
-import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useAccess from "components/[guild]/hooks/useAccess"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import {
+  createContext,
   Dispatch,
   PropsWithChildren,
   SetStateAction,
-  createContext,
   useContext,
   useEffect,
   useState,
 } from "react"
 import { Requirement } from "types"
 
-const GuildCheckoutContext = createContext<{
+export type GuildCheckoutContextType = {
   requirement: Requirement
   isOpen: boolean
   onOpen: () => void
@@ -31,7 +31,9 @@ const GuildCheckoutContext = createContext<{
   setTxSuccess: Dispatch<SetStateAction<boolean>>
   txError: boolean
   setTxError: Dispatch<SetStateAction<boolean>>
-}>(undefined)
+}
+
+const GuildCheckoutContext = createContext<GuildCheckoutContextType>(undefined)
 
 const GuildCheckoutProvider = ({
   children,

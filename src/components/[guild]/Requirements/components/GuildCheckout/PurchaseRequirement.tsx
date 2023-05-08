@@ -150,7 +150,9 @@ const PurchaseRequirement = (): JSX.Element => {
                 ) : (
                   !error && (
                     <>
-                      <SwitchNetworkButton />
+                      <SwitchNetworkButton
+                        targetChainId={Chains[requirement.chain]}
+                      />
 
                       <Collapse in={chainId === Chains[requirement.chain]}>
                         <TOSCheckbox>
