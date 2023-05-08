@@ -73,7 +73,7 @@ const Reward = ({
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, account, accessButtonProps])
+  }, [isMember, hasAccess, account, accessButtonProps, isLinkColorful])
 
   return (
     <RewardDisplay
@@ -95,8 +95,8 @@ const Reward = ({
                   isLoading ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
                 }
                 iconSpacing="1"
-                {...state.buttonProps}
                 maxW="full"
+                {...state.buttonProps}
               >
                 {platform.guildPlatform?.platformGuildName ||
                   platform.guildPlatform?.platformGuildId}

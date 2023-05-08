@@ -16,7 +16,6 @@ import {
   useFormContext,
 } from "react-hook-form"
 import { RequirementType } from "requirements"
-import PoapPaymentForm from "requirements/PoapPayment"
 import PoapPaymentRequirementEditable from "requirements/PoapPayment/PoapPaymentRequirementEditable"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import PoapVoiceForm from "requirements/PoapVoice/PoapVoiceForm"
@@ -28,6 +27,7 @@ import { useCreatePoapContext } from "../CreatePoapContext"
 import PoapSuccessCard from "../PoapSuccessCard"
 import AddPoapRequirement from "./components/AddPoapRequirement"
 import OriginalGuildRoleForm from "./components/OriginalGuildRoleForm"
+import PaymentFormWrapper from "./components/PaymentFormWrapper"
 
 const SetupPoapRequirements = ({
   onSuccess: onModalClose,
@@ -108,6 +108,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
           </CardMotionWrapper>
         )}
 
+        {/* For legacy POAP payment requirement */}
         {guildPoap?.poapContracts?.map((poapContract, i) => (
           <CardMotionWrapper key={poapContract.id}>
             <PoapPaymentRequirementEditable
@@ -132,6 +133,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
                 index={i}
                 removeRequirement={remove}
                 updateRequirement={update}
+                isEditDisabled={type === "PAYMENT"}
               />
               <LogicPicker />
             </CardMotionWrapper>
@@ -153,7 +155,8 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
         title="Payment"
         description="Monetize POAP with different payment methods"
         rightIcon={Coin}
-        FormComponent={PoapPaymentForm}
+        FormComponent={PaymentFormWrapper}
+        onAdd={(d) => append(d)}
         poapId={guildPoap?.poapIdentifier}
       />
       {hasDiscord && !poapEventDetails?.voiceChannelId && (
