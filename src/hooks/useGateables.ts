@@ -42,7 +42,7 @@ const useGateables = <K extends keyof Gateables>(
     platformId &&
     !platformsWithoutGateables.includes(platformId)
 
-  const { data, isValidating, mutate, error } = useSWR<Gateables[K]>(
+  const { data, isLoading, mutate, error } = useSWR<Gateables[K]>(
     shouldFetch
       ? [
           "/guild/listGateables",
@@ -65,7 +65,7 @@ const useGateables = <K extends keyof Gateables>(
 
   return {
     gateables: data,
-    isLoading: !data && !error && isValidating,
+    isLoading,
     mutate,
     error,
   }
