@@ -29,7 +29,7 @@ const useMirrorEdition = (
     address &&
     address.match(ADDRESS_REGEX) &&
     (chain === "OPTIMISM" || chain === "ETHEREUM")
-  const { data, isValidating, error } = useSWRImmutable(
+  const { data, isLoading, error } = useSWRImmutable(
     shouldFetch ? ["mirrorEdition", address, chain] : null,
     fetchMirrorEdition
   )
@@ -37,7 +37,7 @@ const useMirrorEdition = (
   return {
     name: data?.name,
     image: data?.imageURI ? `https://ipfs.fleek.co/ipfs/${data.imageURI}` : null,
-    isLoading: isValidating,
+    isLoading,
     error,
   }
 }
