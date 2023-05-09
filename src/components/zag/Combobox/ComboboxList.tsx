@@ -3,14 +3,17 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import { FixedSizeList } from "react-window"
 import { useComboboxOptions } from "./ComboboxOptionsContext"
 
+const ITEM_SIZE = 40
+const MAX_HEIGHT = 288
+
 const ComboboxList = (): JSX.Element => {
   const { options } = useComboboxOptions()
 
   return (
     <FixedSizeList
       itemCount={options.length}
-      itemSize={40}
-      height={288}
+      itemSize={ITEM_SIZE}
+      height={Math.min(MAX_HEIGHT, options.length * ITEM_SIZE)}
       className="custom-scrollbar"
     >
       {Row}

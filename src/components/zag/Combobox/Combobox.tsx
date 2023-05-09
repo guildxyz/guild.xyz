@@ -18,21 +18,6 @@ import { SelectOption } from "types"
 import ComboboxList from "./ComboboxList"
 import { ComboboxOptionsProvider } from "./ComboboxOptionsContext"
 
-// const Row = ({ index, style }) => (
-//   <div style={style}>Row {index}</div>
-// );
-
-// const Example = () => (
-//   <List
-//     height={150}
-//     itemCount={1000}
-//     itemSize={35}
-//     width={300}
-//   >
-//     {Row}
-//   </List>
-// );
-
 type Props = InputProps & {
   options?: SelectOption[]
   isLoading?: boolean
@@ -48,8 +33,6 @@ const Combobox = forwardRef(
     const dropdownBorderColor = useColorModeValue("gray.200", "gray.500")
     const dropdownShadow = useColorModeValue("lg", "dark-lg")
 
-    // const [renderedOptions, setRenderedOptions] = useState(options)
-
     const { popperRef, referenceRef } = usePopper({
       matchWidth: true,
       placement: "bottom-start",
@@ -64,15 +47,6 @@ const Combobox = forwardRef(
         autoFocus: true,
         positioning: {
           sameWidth: true,
-        },
-        onOpen: () => {
-          // setRenderedOptions(options)
-        },
-        onInputChange: ({ value }) => {
-          // const filtered = options.filter((option) =>
-          //   option.label.toLowerCase().includes(value.toLowerCase())
-          // )
-          // setRenderedOptions(filtered.length > 0 ? filtered : options)
         },
         onSelect: ({ value }) => onChangeProp?.(value),
       })
@@ -150,15 +124,13 @@ const Combobox = forwardRef(
           {options.length > 0 && (
             <Box
               ref={popperRef}
-              h={72}
+              maxH={72}
               bgColor={dropdownBgColor}
               borderColor={dropdownBorderColor}
               shadow={dropdownShadow}
               borderWidth={1}
               borderRadius="md"
               zIndex="modal"
-              // overflowY="auto"
-
               {...filteredPositionerProps}
             >
               <Box m={0} fontWeight="medium" {...contentProps}>
