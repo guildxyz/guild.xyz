@@ -7,8 +7,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chain, Chains, RPC } from "connectors"
 import { useState } from "react"
 import { GUILD_CREDENTIAL_CONTRACT } from "utils/guildCheckout/constants"
@@ -69,9 +69,9 @@ const ChainButton = ({ chain, comingSoon }: ChainButtonProps): JSX.Element => {
         }}
         isLoading={isLoading}
         loadingText={RPC[chain].chainName}
-        border={isCurrentChain && "2px"}
+        border={!comingSoon && isCurrentChain && "2px"}
         borderColor={activeBorderColor}
-        opacity={isCurrentChain && "1!important"}
+        opacity={!comingSoon && isCurrentChain && "1!important"}
       >
         {RPC[chain].chainName}
       </Button>
