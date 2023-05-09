@@ -49,8 +49,8 @@ const useGateables = <K extends keyof Gateables>(
           { method: "POST", body: { platformName: PlatformType[platformId] } },
         ]
       : null,
-    (url: string, options) =>
-      fetcherWithSign(url, options).then((body) => {
+    (props) =>
+      fetcherWithSign(props).then((body) => {
         if ("errorMsg" in body) {
           throw body
         }

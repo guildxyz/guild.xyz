@@ -4,7 +4,7 @@ import { Chain, RPC } from "connectors"
 import MIRROR_CONTRACT_ABI from "static/abis/mirrorAbi.json"
 import useSWRImmutable from "swr/immutable"
 
-const fetchMirrorEdition = async (_: string, address: string, chain: Chain) => {
+const fetchMirrorEdition = async ([_, address, chain]) => {
   const provider = new JsonRpcProvider(RPC[chain]?.rpcUrls[0])
   const contract = new Contract(address, MIRROR_CONTRACT_ABI, provider)
 

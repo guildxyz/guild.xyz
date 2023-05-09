@@ -1,7 +1,7 @@
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
-const fetchProfiles = (endpoint: string, searchQuery: string) =>
+const fetchProfiles = ([endpoint, searchQuery]) =>
   fetcher(endpoint, {
     headers: {
       Accept: "application/json",

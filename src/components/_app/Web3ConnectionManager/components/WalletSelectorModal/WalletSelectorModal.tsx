@@ -40,7 +40,7 @@ type Props = {
   onOpen: () => void
 }
 
-const fetchShouldLinkToUser = async (_: "shouldLinkToUser", userId: number) => {
+const fetchShouldLinkToUser = async ([_, userId]) => {
   try {
     const { id: userIdToConnectTo } = JSON.parse(
       window.localStorage.getItem("userId")

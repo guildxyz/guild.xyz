@@ -80,6 +80,13 @@ const fetcher = async (
   })
 }
 
+/**
+ * In case of multiple parameters, SWR passes them as a single array now, so we
+ * introduced this middleware function that spreads it for the original fetcher
+ */
+const fetcherForSWR = async (props: string | [string, Record<string, any>]) =>
+  typeof props === "string" ? fetcher(props) : fetcher(...props)
+
 const fetcherWithSign = async (
   signProps: Omit<SignProps, "payload" | "forcePrompt"> & {
     forcePrompt?: boolean
@@ -101,8 +108,9 @@ const useFetcherWithSign = () => {
   const { keyPair } = useKeyPair()
   const timeInaccuracy = useTimeInaccuracy()
 
-  return (resource: string, { signOptions, ...options }: Record<string, any> = {}) =>
-    fetcherWithSign(
+  return (props) => {
+    const [resource, { signOptions, ...options }] = props
+    return fetcherWithSign(
       {
         address: account,
         chainId: chainId.toString(),
@@ -114,7 +122,8 @@ const useFetcherWithSign = () => {
       resource,
       options
     )
+  }
 }
 
-export { fetcherWithSign, useFetcherWithSign }
+export { fetcherWithSign, useFetcherWithSign, fetcherForSWR }
 export default fetcher

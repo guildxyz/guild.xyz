@@ -80,7 +80,7 @@ const generateKeyPair = async () => {
   }
 }
 
-const getKeyPair = async (_: string, id: number) => {
+const getKeyPair = async ([_, id]) => {
   const keyPairAndPubKey = await getKeyPairFromIdb(id)
 
   if (keyPairAndPubKey === undefined) {
@@ -145,8 +145,7 @@ const setKeyPair = async ({
   return [storedKeyPair, shouldSendLink]
 }
 
-const checkKeyPair = (_: string, savedPubKey: string, pubKey: string): boolean =>
-  savedPubKey === pubKey
+const checkKeyPair = ([_, savedPubKey, pubKey]): boolean => savedPubKey === pubKey
 
 const usePublicUserData = (address?: string) => {
   const { account } = useWeb3React()
@@ -302,7 +301,7 @@ const useKeyPair = () => {
 
   const { data: mainUserKeyPair, error } = useSWRImmutable(
     mainUser?.data?.id ? ["mainUserKeyPair", mainUser?.data?.id] : null,
-    (_, id) => getKeyPairFromIdb(id)
+    ([_, id]) => getKeyPairFromIdb(id)
   )
 
   const isMainUserKeyInvalid =
