@@ -9,6 +9,13 @@ const MAX_HEIGHT = 288
 const ComboboxList = (): JSX.Element => {
   const { options } = useComboboxOptions()
 
+  if (!options.length)
+    return (
+      <Flex alignItems="center" justifyContent="center" py={2}>
+        No options
+      </Flex>
+    )
+
   return (
     <FixedSizeList
       itemCount={options.length}
