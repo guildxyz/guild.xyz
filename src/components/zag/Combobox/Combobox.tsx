@@ -5,6 +5,8 @@ import {
   InputGroup,
   InputLeftElement,
   InputProps,
+  InputRightElement,
+  Spinner,
   useColorModeValue,
   usePopper,
 } from "@chakra-ui/react"
@@ -103,6 +105,12 @@ const Combobox = forwardRef(
                   setInputValue((e.target as HTMLInputElement).value)
                 }}
               />
+              {isLoading && (
+                <InputRightElement mr={8} opacity={htmlInputProps.isDisabled && 0.4}>
+                  {/* TODO: dynamic size */}
+                  <Spinner size="sm" />
+                </InputRightElement>
+              )}
             </InputGroup>
             <IconButton
               aria-label="Open dropdown"
@@ -115,7 +123,8 @@ const Combobox = forwardRef(
               variant="unstyled"
               display="flex"
               alignItems="center"
-              {...triggerProps}
+              opacity={htmlInputProps.isDisabled && 0.4}
+              {...(htmlInputProps.isDisabled ? undefined : triggerProps)}
             />
           </Box>
         </Box>
