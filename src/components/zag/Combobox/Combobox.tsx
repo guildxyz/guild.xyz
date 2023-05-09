@@ -36,6 +36,7 @@ const Combobox = forwardRef(
     const { popperRef, referenceRef } = usePopper({
       matchWidth: true,
       placement: "bottom-start",
+      offset: [0, 8],
     })
 
     const [state, send] = useMachine(
@@ -44,7 +45,6 @@ const Combobox = forwardRef(
         name: htmlInputProps.name,
         loop: true,
         openOnClick: true,
-        autoFocus: true,
         positioning: {
           sameWidth: true,
         },
