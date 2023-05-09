@@ -34,7 +34,11 @@ const ServerSetupCard = ({ selectedServer, onSubmit }: Props): JSX.Element => {
     },
   })
 
-  useSetImageAndNameFromPlatformData(serverIcon, serverName, onUpload)
+  useSetImageAndNameFromPlatformData(
+    serverIcon ? `${serverIcon}?size=512` : undefined,
+    serverName,
+    onUpload
+  )
 
   return (
     <Card px={{ base: 5, sm: 6 }} py={7}>
