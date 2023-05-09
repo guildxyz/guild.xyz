@@ -1,6 +1,5 @@
 import {
   Box,
-  ButtonProps,
   Center,
   HStack,
   Icon,
@@ -15,53 +14,37 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
+import useClaimPoap from "components/[guild]/claim-poap/hooks/useClaimPoap"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
-import useClaimPoap from "components/[guild]/claim-poap/hooks/useClaimPoap"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
-import { forwardRef, PropsWithChildren } from "react"
 
-type Props = {
-  poapId: number
-} & ButtonProps
+const useMintPoapButton = (poapId: number) => {
+  const { account } = useWeb3React()
 
-const MintPoapButton = forwardRef(
-  ({ poapId, children, ...buttonProps }: PropsWithChildren<Props>, ref: any) => {
-    const { account } = useWeb3React()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const {
-      isOpen: isMintModalOpen,
-      onOpen: onMintModalOpen,
-      onClose: onMintModalClose,
-    } = useDisclosure()
+  const { onSubmit, response, ...rest } = useClaimPoap(poapId)
 
-    const { onSubmit, response, ...rest } = useClaimPoap(poapId)
+  const buttonProps = response
+    ? { as: "a", target: "_blank", href: `${response}?address=${account}` }
+    : {
+        onClick: () => {
+          onSubmit()
+          onOpen()
+        },
+      }
 
-    const props = response
-      ? { as: "a", target: "_blank", href: `${response}?address=${account}` }
-      : {
-          onClick: () => {
-            onSubmit()
-            onMintModalOpen()
-          },
-        }
-
-    return (
-      <>
-        <Button ref={ref} rightIcon={<ArrowSquareOut />} {...buttonProps} {...props}>
-          {children}
-        </Button>
-        <MintModal
-          isOpen={isMintModalOpen}
-          onClose={onMintModalClose}
-          response={response}
-          {...rest}
-        />
-      </>
-    )
+  return {
+    buttonProps,
+    modalProps: {
+      isOpen,
+      onClose,
+      response,
+      ...rest,
+    },
   }
-)
+}
 
 const MintModal = ({ isOpen, onClose, isLoading, response, error }) => {
   const { account } = useWeb3React()
@@ -110,4 +93,4 @@ const MintModal = ({ isOpen, onClose, isLoading, response, error }) => {
 }
 
 export { MintModal }
-export default MintPoapButton
+export default useMintPoapButton

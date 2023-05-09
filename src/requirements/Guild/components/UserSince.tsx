@@ -7,7 +7,7 @@ type Props = {
   baseFieldPath: string
 }
 
-const minDate = new Date("2022-07-11")
+const minDate = new Date("2022-07-12")
 
 const UserSince = ({ baseFieldPath }: Props): JSX.Element => {
   const { errors } = useFormState()
@@ -28,7 +28,7 @@ const UserSince = ({ baseFieldPath }: Props): JSX.Element => {
           required: "This field is required.",
           validate: (value) =>
             new Date(value).getTime() >= minDate?.getTime() ||
-            "Please select a date after 2022-07-11",
+            "Please select a date after 2022-07-12",
         }}
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <Input

@@ -300,7 +300,7 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api-optimistic.etherscan.io",
     iconUrls: ["/networkLogos/optimism.svg"],
-    rpcUrls: ["https://mainnet.optimism.io"],
+    rpcUrls: ["https://endpoints.omniatech.io/v1/op/mainnet/public"],
     multicallAddress: "0x2DC0E2aa608532Da689e89e237dF582B783E552C",
   },
   MOONBEAM: {
@@ -524,7 +524,8 @@ const RPC: RpcConfig = {
     rpcUrls: [
       process.env.GOERLI_ALCHEMY_KEY
         ? `https://eth-goerli.g.alchemy.com/v2/${process.env.GOERLI_ALCHEMY_KEY}`
-        : "https://ethereum-goerli-rpc.allthatnode.com",
+        : // : "https://ethereum-goerli-rpc.allthatnode.com",
+          "https://eth-goerli.g.alchemy.com/v2/demo	",
     ],
     blockExplorerUrls: ["https://goerli.etherscan.io"],
     blockExplorerIcons: {
@@ -537,7 +538,7 @@ const RPC: RpcConfig = {
   },
   POLYGON_MUMBAI: {
     chainId: 80001,
-    chainName: "Polygon Mumbai",
+    chainName: "Mumbai",
     nativeCurrency: {
       name: "Matic",
       symbol: "MATIC",

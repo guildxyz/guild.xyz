@@ -28,6 +28,7 @@ const TxCountFormControl = ({
         numberFormat={numberFormat}
         name={`${baseFieldPath}.data.txCount`}
         isRequired
+        min={1}
       />
 
       <FormErrorMessage>

@@ -15,11 +15,6 @@ import {
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -32,11 +27,17 @@ import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
+import { MintCredentialProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import Button from "components/common/Button"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -45,7 +46,7 @@ import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { CaretDown, Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
-import { SWRConfig } from "swr"
+import { SWRConfig, unstable_serialize } from "swr"
 import { Guild, SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
 import fetcher from "utils/fetcher"
@@ -165,6 +166,7 @@ const GuildPage = (): JSX.Element => {
       <Head>
         <meta name="theme-color" content={localThemeColor} />
       </Head>
+
       <Layout
         title={name}
         textColor={textColor}
@@ -386,9 +388,11 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       </Head>
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
-          <JoinModalProvider>
-            <GuildPage />
-          </JoinModalProvider>
+          <MintCredentialProvider>
+            <JoinModalProvider>
+              <GuildPage />
+            </JoinModalProvider>
+          </MintCredentialProvider>
         </ThemeProvider>
       </SWRConfig>
     </>
@@ -406,19 +410,22 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 60,
     }
 
-  // Removing the members list, and then we refetch them on client side. This way the members won't be included in the SSG source code.
+  /**
+   * Removing members and requirements, so they're not included in the SSG source
+   * code, we only fetch them client side. Temporary until we switch to the new API
+   * that won't return them on this endpoint anyway
+   */
   const filteredData = { ...data }
-  filteredData.roles?.forEach((role) => (role.members = []))
-
-  // Fetching requirements client-side in this case
-  if (filteredData.roles?.some((role) => role.requirements?.length > 10)) {
-    filteredData.roles?.forEach((role) => (role.requirements = []))
-  }
+  filteredData.roles?.forEach((role) => {
+    role.members = []
+    role.requirements = []
+  })
 
   return {
     props: {
       fallback: {
         [endpoint]: filteredData,
+        [unstable_serialize([endpoint, { method: "GET", body: {} }])]: filteredData,
       },
     },
     revalidate: 60,

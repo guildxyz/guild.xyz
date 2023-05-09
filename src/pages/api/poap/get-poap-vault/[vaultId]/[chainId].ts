@@ -3,7 +3,7 @@ import { JsonRpcProvider } from "@ethersproject/providers"
 import { Chains, RPC } from "connectors"
 import { FEE_COLLECTOR_ADDRESS } from "hooks/useFeeCollectorContract"
 import { NextApiRequest, NextApiResponse } from "next"
-import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
+import FEE_COLLECTOR_ABI from "static/abis/legacyPoapFeeCollectorAbi.json"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { vaultId, chainId } = req.query

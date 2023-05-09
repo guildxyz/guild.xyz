@@ -5,7 +5,14 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import useVault from "requirements/Payment/hooks/useVault"
-import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
+import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
+import LEGACY_FEE_COLLECTOR_ABI from "static/abis/legacyFeeCollectorAbi.json"
+
+const LEGACY_CONTRACTS: Partial<Record<Chain, string>> = {
+  ETHEREUM: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
+  POLYGON: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
+  GOERLI: "0x32547e6cc18651647e58f57164a0117da82f77f0",
+}
 
 const useWithdraw = (contractAddress: string, vaultId: number, chain: Chain) => {
   const showErrorToast = useShowErrorToast()
@@ -13,9 +20,11 @@ const useWithdraw = (contractAddress: string, vaultId: number, chain: Chain) => 
 
   const { chainId } = useWeb3React()
 
+  const isLegacyContract = contractAddress === LEGACY_CONTRACTS[chain]
+
   const feeCollectorContract = useContract(
     Chains[chain] === chainId ? contractAddress : null,
-    FEE_COLLECTOR_ABI,
+    isLegacyContract ? LEGACY_FEE_COLLECTOR_ABI : FEE_COLLECTOR_ABI,
     true
   )
 
@@ -26,7 +35,9 @@ const useWithdraw = (contractAddress: string, vaultId: number, chain: Chain) => 
       return Promise.reject("Couldn't find FeeCollector contract.")
 
     try {
-      await feeCollectorContract.callStatic.withdraw(vaultId)
+      await (isLegacyContract
+        ? feeCollectorContract.callStatic.withdraw(vaultId)
+        : feeCollectorContract.callStatic.withdraw(vaultId, "guild"))
     } catch (callStaticError) {
       return Promise.reject(
         callStaticError.errorName === "TransferFailed"
@@ -35,7 +46,9 @@ const useWithdraw = (contractAddress: string, vaultId: number, chain: Chain) => 
       )
     }
 
-    const withdrawRes = await feeCollectorContract.withdraw(vaultId)
+    const withdrawRes = await (isLegacyContract
+      ? feeCollectorContract.withdraw(vaultId)
+      : feeCollectorContract.withdraw(vaultId, "guild"))
     return withdrawRes.wait()
   }
 

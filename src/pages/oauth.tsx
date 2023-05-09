@@ -122,6 +122,7 @@ const OAuth = () => {
       captureEvent("OAuth - Unexpected error", {
         error:
           error?.message ?? error?.toString?.() ?? JSON.stringify(error ?? null),
+        trace: error?.stack,
       })
       errorToast(`An unexpected error happened while connecting a platform`)
       router.push("/")
