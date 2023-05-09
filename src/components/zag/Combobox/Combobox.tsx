@@ -96,7 +96,7 @@ const Combobox = forwardRef(
                 ref={ref}
                 htmlSize={size}
                 pr={10}
-                {...filteredInputProps}
+                {...(htmlInputProps.isReadOnly ? undefined : filteredInputProps)}
                 {...htmlInputProps}
                 // TODO: is this the best solution for this?... also, this won't trigger a setValue("") if we type in another letter for example
                 onKeyUp={(e) => {
@@ -106,7 +106,7 @@ const Combobox = forwardRef(
                 }}
               />
               {isLoading && (
-                <InputRightElement mr={8} opacity={htmlInputProps.isDisabled && 0.4}>
+                <InputRightElement mr={6} opacity={htmlInputProps.isDisabled && 0.4}>
                   {/* TODO: dynamic size */}
                   <Spinner size="sm" />
                 </InputRightElement>
@@ -116,15 +116,19 @@ const Combobox = forwardRef(
               aria-label="Open dropdown"
               position="absolute"
               top="50%"
-              right={1}
+              right={2}
               transform="translateY(-50%)"
               size={htmlInputProps.size}
               icon={<CaretDown />}
               variant="unstyled"
               display="flex"
               alignItems="center"
+              boxSize={6}
+              minW="none"
               opacity={htmlInputProps.isDisabled && 0.4}
-              {...(htmlInputProps.isDisabled ? undefined : triggerProps)}
+              {...(htmlInputProps.isDisabled || htmlInputProps.isReadOnly
+                ? undefined
+                : triggerProps)}
             />
           </Box>
         </Box>
