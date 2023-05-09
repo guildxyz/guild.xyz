@@ -34,9 +34,11 @@ import icons from "./icons.json"
 type Props = {
   uploader: Uploader
   isDisabled?: boolean
+  minW?: number
+  minH?: number
 }
 
-const IconSelector = ({ uploader, isDisabled }: Props) => {
+const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { control } = useFormContext<GuildFormType>()
 
@@ -98,7 +100,12 @@ const IconSelector = ({ uploader, isDisabled }: Props) => {
             <ModalHeader>Choose logo</ModalHeader>
             <ModalCloseButton />
             <ModalBody className="custom-scrollbar">
-              <PhotoUploader uploader={uploader} closeModal={onClose} />
+              <PhotoUploader
+                uploader={uploader}
+                closeModal={onClose}
+                minW={minW}
+                minH={minH}
+              />
               <LogicDivider logic="OR" px="0" my="5" />
               <FormControl>
                 <FormLabel>Choose from default icons</FormLabel>
