@@ -10,6 +10,7 @@ import useToast from "hooks/useToast"
 import useUsersGuildCredentials from "hooks/useUsersGuildCredentials"
 import { TwitterLogo } from "phosphor-react"
 import { useRef, useState } from "react"
+import { GuildCredentialMetadata } from "types"
 import fetcher from "utils/fetcher"
 import {
   GUILD_CREDENTIAL_CONTRACT,
@@ -94,7 +95,7 @@ const useMintCredential = () => {
 
   return {
     ...useSubmitTransaction<null>(mintCredential, {
-      onSuccess: (txReceipt) => {
+      onSuccess: async (txReceipt) => {
         setLoadingText("")
 
         if (txReceipt.status !== 1) {
@@ -112,16 +113,36 @@ const useMintCredential = () => {
 
         const transferEvent = txReceipt.events?.find((e) => e.event === "Transfer")
 
+        let tokenId: number, tokenURI: string
+
         if (transferEvent) {
           try {
-            const tokenId = transferEvent.args.tokenId.toNumber()
+            tokenId = transferEvent.args.tokenId.toNumber()
             setMintedTokenId(tokenId)
+            tokenURI = await guildCredentialContract.tokenURI(tokenId)
           } catch {}
         }
 
         captureEvent("Minted credential (GuildCheckout)", postHogOptions)
 
-        mutate()
+        try {
+          const metadata: GuildCredentialMetadata = await fetch(
+            `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${tokenURI.replace(
+              "ipfs://",
+              ""
+            )}`
+          ).then((res) => res.json())
+
+          mutate((prevData) => [
+            ...prevData,
+            {
+              chainId,
+              tokenId,
+              ...metadata,
+            },
+          ])
+        } catch {}
+
         toastIdRef.current = toast({
           status: "success",
           title: "Successfully minted credential!",
