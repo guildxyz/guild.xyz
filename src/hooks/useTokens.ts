@@ -40,7 +40,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   POLYGON_MUMBAI: [],
 }
 
-const fetchTokens = async (_: string, chain: string) =>
+const fetchTokens = async ([_, chain]) =>
   Promise.all(TokenApiURLs[chain].map((url) => fetcher(url))).then(
     (tokenArrays: any) => {
       const finalTokenArray = tokenArrays.reduce(

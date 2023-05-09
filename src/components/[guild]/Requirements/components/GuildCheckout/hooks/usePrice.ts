@@ -3,7 +3,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
 import { useEffect, useState } from "react"
 import useSWR, { SWRResponse } from "swr"
-import { Requirement } from "types"
 import fetcher from "utils/fetcher"
 import {
   PURCHASABLE_REQUIREMENT_TYPES,
@@ -11,13 +10,13 @@ import {
 } from "utils/guildCheckout/constants"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 
-const fetchPrice = (
-  _: string,
-  guildId: number,
-  account: string,
-  requirement: Requirement,
-  sellAddress: string
-): Promise<FetchPriceResponse> =>
+const fetchPrice = ([
+  _,
+  guildId,
+  account,
+  requirement,
+  sellAddress,
+]): Promise<FetchPriceResponse> =>
   fetcher(`/api/fetchPrice`, {
     method: "POST",
     body: {
