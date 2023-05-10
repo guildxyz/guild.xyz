@@ -66,7 +66,8 @@ const fetcher = async (
         res?.message ===
           "Invalid timestamp! The creation of timestamp too far in future!"
       ) {
-        window.dispatchEvent(new Event("INVALID_TIMESTAMP"))
+        window.localStorage.setItem("shouldFetchTimestamp", "true")
+        location?.reload()
       }
 
       if (isGuildApiCall) {
