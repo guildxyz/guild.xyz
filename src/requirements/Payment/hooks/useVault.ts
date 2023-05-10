@@ -17,12 +17,12 @@ type GetVaultResponse = {
   collected?: BigNumber
 }
 
-const fetchVault = async (
-  _: string,
-  contractAddress: string,
-  vaultId: string,
-  chain: Chain
-): Promise<GetVaultResponse> => {
+const fetchVault = async ([
+  _,
+  contractAddress,
+  vaultId,
+  chain,
+]): Promise<GetVaultResponse> => {
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0], Chains[chain])
   const feeCollectorContract = new Contract(
     contractAddress,

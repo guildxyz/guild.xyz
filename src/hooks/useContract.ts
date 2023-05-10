@@ -4,14 +4,7 @@ import type { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import useSWRImmutable from "swr/immutable"
 
-const createContract = async (
-  _: string,
-  address: string,
-  withSigner: boolean,
-  account: string,
-  provider: Web3Provider,
-  ABI: ContractInterface
-) =>
+const createContract = async ([_, address, withSigner, account, provider, ABI]) =>
   new Contract(
     address,
     ABI,

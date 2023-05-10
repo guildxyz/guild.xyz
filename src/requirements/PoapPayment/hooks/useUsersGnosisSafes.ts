@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core"
 import useSWRImmutable from "swr/immutable"
 import GnosisApiUrls from "../gnosisAPiUrls"
 
-const fetchUsersGnosisSafes = (_: string, account: string, chainId: number) =>
+const fetchUsersGnosisSafes = ([_, account, chainId]) =>
   fetch(`${GnosisApiUrls[chainId]}/owners/${account}/safes`).then(
     async (response: Response) => {
       const res = await response.json?.()

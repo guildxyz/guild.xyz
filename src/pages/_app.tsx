@@ -1,11 +1,11 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { Web3ReactProvider } from "@web3-react/core"
-import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { connectors } from "connectors"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
@@ -14,7 +14,7 @@ import { IconContext } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
-import fetcher from "utils/fetcher"
+import { fetcherForSWR } from "utils/fetcher"
 /**
  * Polyfill HTML inert property for Firefox support:
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
@@ -74,7 +74,7 @@ const App = ({
             mirrored: false,
           }}
         >
-          <SWRConfig value={{ fetcher }}>
+          <SWRConfig value={{ fetcher: fetcherForSWR }}>
             <Web3ReactProvider connectors={connectors}>
               <Web3ConnectionManager>
                 <PostHogProvider>

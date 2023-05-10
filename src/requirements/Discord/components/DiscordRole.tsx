@@ -35,7 +35,7 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
 
   const {
     data: { roles },
-    isLoading: isServerDataLoading,
+    isValidating: isServerDataValidating,
   } = useServerData(serverId)
 
   const roleOptions = (roles ?? []).map(({ id, name }) => ({
@@ -78,7 +78,7 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
           isCreatable
           isClearable
           formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
-          isLoading={isServerDataLoading}
+          isLoading={isServerDataValidating}
           options={roleOptions}
           beforeOnChange={(newValue) => {
             if (!newValue?.__isNew__) {
