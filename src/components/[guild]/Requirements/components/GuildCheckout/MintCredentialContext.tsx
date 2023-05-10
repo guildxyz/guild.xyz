@@ -29,10 +29,7 @@ const MIN_IMAGE_WH = 512
 
 type ImageWH = { width: number; height: number }
 
-const getImageWidthAndHeight = async (
-  _: string,
-  imageUrl: string
-): Promise<ImageWH> =>
+const getImageWidthAndHeight = async ([_, imageUrl]): Promise<ImageWH> =>
   new Promise((resolve) => {
     const img = new Image()
     img.onload = () => {
