@@ -64,7 +64,7 @@ const fetchGuildCredentialsOnChain = async (address: string, chain: Chain) => {
   return usersCredentialMetadataJSONs
 }
 
-const fetchGuildCredentials = async (_: string, addresses: string[]) => {
+const fetchGuildCredentials = async ([_, addresses]) => {
   const guildCredentialChains = Object.keys(GUILD_CREDENTIAL_CONTRACT) as Chain[]
   const responseArray = await Promise.all(
     guildCredentialChains.flatMap((chain) =>

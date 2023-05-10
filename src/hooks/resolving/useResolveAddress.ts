@@ -82,7 +82,7 @@ const useResolveAddress = (accountParam: string): string => {
   const { provider, chainId } = useWeb3React()
   const shouldFetch = Boolean(provider && accountParam)
 
-  const fetchDomains = async (_: string, account: string, chainIdParam: number) => {
+  const fetchDomains = async ([_, account, chainIdParam]) => {
     // test address: 0xe5358cab95014e2306815743793f16c93a8a5c70
     const nns = await fetchNNSName(provider, account, chainIdParam)
     if (nns) return nns

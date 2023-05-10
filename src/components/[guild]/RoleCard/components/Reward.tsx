@@ -46,7 +46,7 @@ const Reward = ({
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
 
-  const { hasAccess, isLoading } = useAccess(role.id)
+  const { hasAccess, isValidating } = useAccess(role.id)
   const { label, ...accessButtonProps } = usePlatformAccessButton(
     platform.guildPlatform
   )
@@ -92,7 +92,7 @@ const Reward = ({
               <Button
                 variant="link"
                 rightIcon={
-                  isLoading ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
+                  isValidating ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
                 }
                 iconSpacing="1"
                 maxW="full"

@@ -61,6 +61,15 @@ const fetcher = async (
     const res = await response.json?.()
 
     if (!response.ok) {
+      if (
+        res?.message === "Invalid or expired timestamp!" ||
+        res?.message ===
+          "Invalid timestamp! The creation of timestamp too far in future!"
+      ) {
+        window.localStorage.setItem("shouldFetchTimestamp", "true")
+        location?.reload()
+      }
+
       if (isGuildApiCall) {
         const error = res.errors?.[0]
         const errorMsg = error
@@ -79,6 +88,13 @@ const fetcher = async (
     return res
   })
 }
+
+/**
+ * In case of multiple parameters, SWR passes them as a single array now, so we
+ * introduced this middleware function that spreads it for the original fetcher
+ */
+const fetcherForSWR = async (props: string | [string, Record<string, any>]) =>
+  typeof props === "string" ? fetcher(props) : fetcher(...props)
 
 const fetcherWithSign = async (
   signProps: Omit<SignProps, "payload" | "forcePrompt"> & {
@@ -101,8 +117,9 @@ const useFetcherWithSign = () => {
   const { keyPair } = useKeyPair()
   const timeInaccuracy = useTimeInaccuracy()
 
-  return (resource: string, { signOptions, ...options }: Record<string, any> = {}) =>
-    fetcherWithSign(
+  return (props) => {
+    const [resource, { signOptions, ...options }] = props
+    return fetcherWithSign(
       {
         address: account,
         chainId: chainId.toString(),
@@ -114,7 +131,8 @@ const useFetcherWithSign = () => {
       resource,
       options
     )
+  }
 }
 
-export { fetcherWithSign, useFetcherWithSign }
+export { fetcherWithSign, useFetcherWithSign, fetcherForSWR }
 export default fetcher
