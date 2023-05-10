@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 import useLocalStorage from "./useLocalStorage"
@@ -5,7 +6,20 @@ import useLocalStorage from "./useLocalStorage"
 const INACCURACY_INTERVAL_MS = 15 * 60 * 1000
 
 const useTimeInaccuracy = () => {
-  const [shouldFetch] = useLocalStorage("shouldFetchTimestamp", false)
+  const [shouldFetch, setShouldFetch] = useLocalStorage(
+    "shouldFetchTimestamp",
+    false
+  )
+
+  useEffect(() => {
+    const listener = () => {
+      setShouldFetch(true)
+      location?.reload()
+    }
+
+    window.addEventListener("INVALID_TIMESTAMP", listener)
+    return () => window.removeEventListener("INVALID_TIMESTAMP", listener)
+  }, [setShouldFetch])
 
   const { data } = useSWRImmutable<number>(
     shouldFetch ? "/api/timestamp" : null,
