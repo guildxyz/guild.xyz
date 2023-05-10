@@ -6,7 +6,7 @@ type Props<LabelType extends string> = {
   type?: LabelType
   backgroundColor?: ChakraProps["color"]
   color?: ChakraProps["color"]
-  label?: string
+  label?: string | JSX.Element
   labelSize?: string
   fallbackColor?: ChakraProps["color"]
 } & Rest

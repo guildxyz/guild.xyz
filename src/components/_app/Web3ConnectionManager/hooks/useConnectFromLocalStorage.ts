@@ -13,7 +13,7 @@ const useConnectFromLocalStorage = () => {
   const toast = useToast()
   const { onSubmit } = useConnect(() => {
     toast({ status: "success", title: "Success", description: "Platform connected" })
-  })
+  }, true)
   const { platformUsers } = useUser()
 
   useEffect(() => {

@@ -11,11 +11,7 @@ const apiUrl: Record<SismoBadgeChain, string> = {
   GOERLI: "https://hub.testnets.sismo.io/badges/goerli",
 }
 
-const fetchSismoBadges = (
-  _: string,
-  chain: SismoBadgeChain,
-  isPlayGround?: boolean
-) =>
+const fetchSismoBadges = ([_, chain, isPlayGround]) =>
   fetcher(isPlayGround ? playgroundApiUrl : apiUrl[chain])
     .then(
       (res) =>

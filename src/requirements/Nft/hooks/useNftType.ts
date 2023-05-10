@@ -14,7 +14,7 @@ const useNftType = (
     !!contractAddress &&
     nounsAddresses[chain] === contractAddress?.toLowerCase()
 
-  const { data: nftType, isValidating: isLoading } = useSWR(
+  const { data: nftType, isLoading } = useSWR(
     contractAddress && !isNounsContract
       ? `/util/contractType/${contractAddress}/1/${chain}`
       : null,

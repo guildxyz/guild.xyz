@@ -1,5 +1,4 @@
 import { MaxUint256 } from "@ethersproject/constants"
-import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import { Chains, RPC } from "connectors"
 import useContract from "hooks/useContract"
@@ -10,12 +9,8 @@ import ERC20_ABI from "static/abis/erc20Abi.json"
 import useSWR from "swr"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 
-const fetchAllowance = (
-  _: string,
-  account: string,
-  contract: Contract,
-  contractAddress: string
-) => contract?.allowance(account, contractAddress)
+const fetchAllowance = ([_, account, contract, contractAddress]) =>
+  contract?.allowance(account, contractAddress)
 
 const useAllowance = (tokenAddress: string, contract: string) => {
   const showErrorToast = useShowErrorToast()

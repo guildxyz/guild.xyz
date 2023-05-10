@@ -2,7 +2,7 @@ import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider } from "@ethersproject/providers"
 import { Chain, Chains, RPC } from "connectors"
-import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
+import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
 import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
 
@@ -10,17 +10,19 @@ type GetVaultResponse = {
   owner: string
   token: string
   fee: BigNumber
-  collected: BigNumber
   multiplePayments: boolean
-  guildShareBps: number
+
+  // it's 'collected' in legacy contracts and 'balance' in the new one
+  balance?: BigNumber
+  collected?: BigNumber
 }
 
-const fetchVault = async (
-  _: string,
-  contractAddress: string,
-  vaultId: string,
-  chain: Chain
-): Promise<GetVaultResponse & { guildShareBps: number }> => {
+const fetchVault = async ([
+  _,
+  contractAddress,
+  vaultId,
+  chain,
+]): Promise<GetVaultResponse> => {
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0], Chains[chain])
   const feeCollectorContract = new Contract(
     contractAddress,
@@ -28,18 +30,11 @@ const fetchVault = async (
     provider
   )
 
-  const [getVaultRes, guildShareBps]: [GetVaultResponse, BigNumber] =
-    await Promise.all([
-      feeCollectorContract.getVault(vaultId),
-      feeCollectorContract.guildShareBps(),
-    ])
+  const getVaultRes: GetVaultResponse = feeCollectorContract.getVault(vaultId)
 
-  if (!getVaultRes || !guildShareBps) return undefined
+  if (!getVaultRes) return undefined
 
-  return {
-    ...getVaultRes,
-    guildShareBps: guildShareBps.toNumber(),
-  }
+  return getVaultRes
 }
 
 const useVault = (
@@ -55,13 +50,12 @@ const useVault = (
   )
   return {
     ...swrResponse,
-    data: swrResponse?.data ?? {
-      guildShareBps: undefined,
-      owner: undefined,
-      fee: undefined,
-      token: undefined,
-      collected: undefined,
-      multiplePayments: undefined,
+    data: {
+      owner: swrResponse?.data?.owner,
+      fee: swrResponse?.data?.fee,
+      token: swrResponse?.data?.token,
+      collected: swrResponse?.data?.balance ?? swrResponse?.data?.collected,
+      multiplePayments: swrResponse?.data?.multiplePayments,
     },
   }
 }

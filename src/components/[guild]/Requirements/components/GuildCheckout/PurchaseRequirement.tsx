@@ -48,7 +48,7 @@ const PurchaseRequirement = (): JSX.Element => {
   const { requirement, isOpen, onOpen, onClose, isInfoModalOpen } =
     useGuildCheckoutContext()
   const { urlName, name } = useGuild()
-  const { data: accessData, isLoading: isAccessLoading } = useAccess(
+  const { data: accessData, isValidating: isAccessValidating } = useAccess(
     requirement?.roleId
   )
   const satisfiesRequirement = accessData?.requirements?.find(
@@ -75,7 +75,7 @@ const PurchaseRequirement = (): JSX.Element => {
       DISABLED_TOKENS[requirement.chain]?.includes(
         requirement.address?.toLowerCase()
       ) ||
-      (!accessData && isAccessLoading) ||
+      (!accessData && isAccessValidating) ||
       satisfiesRequirement ||
       !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement.type) ||
       !purchaseSupportedChains[requirement.type]?.includes(requirement.chain))
@@ -150,7 +150,9 @@ const PurchaseRequirement = (): JSX.Element => {
                 ) : (
                   !error && (
                     <>
-                      <SwitchNetworkButton />
+                      <SwitchNetworkButton
+                        targetChainId={Chains[requirement.chain]}
+                      />
 
                       <Collapse in={chainId === Chains[requirement.chain]}>
                         <TOSCheckbox>

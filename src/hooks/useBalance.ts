@@ -9,13 +9,13 @@ import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 
 const FALLBACK = BigNumber.from(0)
 
-const fetchBalance = async (
-  _: string,
-  account: string,
-  chainId: number,
-  web3ReactProvider?: JsonRpcProvider,
-  tokenAddress?: string
-) => {
+const fetchBalance = async ([
+  _,
+  account,
+  chainId,
+  web3ReactProvider,
+  tokenAddress,
+]) => {
   const provider =
     web3ReactProvider ?? new JsonRpcProvider(RPC[Chains[chainId]]?.rpcUrls?.[0])
 

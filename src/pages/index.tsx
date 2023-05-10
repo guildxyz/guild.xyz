@@ -1,5 +1,6 @@
 import { Box, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CallToAction from "components/index/CallToAction"
 import ComposableRequirements from "components/index/ComposableRequirements"
@@ -12,7 +13,6 @@ import Hero from "components/index/Hero"
 import PlatformAgnosticCommunities from "components/index/PlatformAgnosticCommunities"
 import RealTimeQueryEngine from "components/index/RealTimeQueryEngine"
 import TokenBasedMembership from "components/index/TokenBasedMembership"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
@@ -43,7 +43,7 @@ const Page = (): JSX.Element => {
         <meta name="og:title" content="Guild" />
         <meta
           name="description"
-          content="Automated membership management for the platforms your community already use."
+          content="Automated membership management for the platforms your community already uses."
         />
         <link rel="shortcut icon" href="/guild-icon.png" />
       </Head>

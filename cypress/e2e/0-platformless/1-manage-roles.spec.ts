@@ -59,6 +59,10 @@ describe("roles", () => {
     if (!CONTEXT.createdRoleId)
       throw new Error("Can't run test, because couldn't create a role.")
 
+    // Workaround
+    cy.wait(5000) // Average replica lag
+    cy.reload(true) // Hard reloading, so we make sure we have a clean cache
+
     cy.intercept(
       "PATCH",
       `${Cypress.env("guildApiUrl")}/role/${CONTEXT.createdRoleId}`
