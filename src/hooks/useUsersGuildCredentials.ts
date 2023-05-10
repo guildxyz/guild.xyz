@@ -25,7 +25,6 @@ const fetchGuildCredentialsOnChain = async (address: string, chain: Chain) => {
     if (newTokenId) usersCredentialIdsOnChain.push(newTokenId)
   }
 
-  // TODO: maybe use multicall here?
   const usersCredentialTokenURIsOnChain = await Promise.all<{
     chainId: number
     tokenId: number
