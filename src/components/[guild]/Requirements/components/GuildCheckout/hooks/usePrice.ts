@@ -1,7 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
-import { useEffect, useState } from "react"
 import useSWR, { SWRResponse } from "swr"
 import fetcher from "utils/fetcher"
 import {
@@ -32,8 +31,6 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
   const { id } = useGuild()
   const { requirement, isOpen, pickedCurrency } = useGuildCheckoutContext()
 
-  const [fallbackData, setFallbackData] = useState<FetchPriceResponse>()
-
   const shouldFetch =
     purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain) &&
     isOpen &&
@@ -49,16 +46,12 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
       shouldRetryOnError: false,
       revalidateOnFocus: false,
       refreshInterval: 30000,
+      keepPreviousData: true,
     }
   )
 
-  useEffect(() => {
-    if (!data) return
-    setFallbackData(data)
-  }, [data])
-
   return {
-    data: data ?? fallbackData ?? ({} as FetchPriceResponse),
+    data: data ?? ({} as FetchPriceResponse),
     ...swrResponse,
   }
 }
