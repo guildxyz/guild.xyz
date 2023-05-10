@@ -243,8 +243,12 @@ const useKeyPair = () => {
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
       onError: (error) => {
         console.error("setKeyPair error", error)
-        if (error?.code !== RPC_INTERNAL_ERROR_CODE) {
-          captureEvent(`Failed to set keypair`, { error })
+        if (
+          error?.code !== RPC_INTERNAL_ERROR_CODE &&
+          error?.code !== "ACTION_REJECTED"
+        ) {
+          const trace = error?.stack || new Error().stack
+          captureEvent(`Failed to set keypair`, { error, trace })
         }
 
         try {
