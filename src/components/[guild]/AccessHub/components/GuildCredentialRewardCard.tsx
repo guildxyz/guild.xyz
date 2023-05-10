@@ -2,70 +2,27 @@ import { HStack, Icon, Text, Tooltip, useColorModeValue } from "@chakra-ui/react
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import RewardCard from "components/common/RewardCard"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useLocalStorage from "hooks/useLocalStorage"
+import { useMintCredentialContext } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
 import dynamic from "next/dynamic"
 import { CircleWavyCheck, Question, Warning } from "phosphor-react"
-import { useEffect } from "react"
-import useSWRImmutable from "swr/immutable"
 
 const DynamicMintCredential = dynamic(
   () =>
     import("components/[guild]/Requirements/components/GuildCheckout/MintCredential")
 )
 
-const MIN_IMAGE_WH = 512
-
-type ImageWH = { width: number; height: number }
-
-const getImageWidthAndHeight = async (
-  _: string,
-  imageUrl: string
-): Promise<ImageWH> =>
-  new Promise((resolve) => {
-    const img = new Image()
-    img.onload = () => {
-      const { width, height } = img
-      resolve({
-        width,
-        height,
-      })
-    }
-    img.src = imageUrl
-  })
-
 const GuildCredentialRewardCard = () => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-100)", "#343439")
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
 
-  const { imageUrl } = useGuild()
   const { isAdmin } = useGuildPermission()
-  const isInvalidImage = !imageUrl || imageUrl?.startsWith("/guildLogos")
 
-  const [imageWHFromLocalstorage, setImageWHFromLocalstorage] =
-    useLocalStorage<ImageWH>(imageUrl ? `guildImageWH:${imageUrl}` : null, undefined)
+  const { isImageValidating, isInvalidImage, isTooSmallImage } =
+    useMintCredentialContext()
 
-  const { data, isValidating } = useSWRImmutable(
-    !isInvalidImage && !imageWHFromLocalstorage
-      ? ["imageWidthAndHeight", imageUrl]
-      : null,
-    getImageWidthAndHeight
-  )
-
-  useEffect(() => {
-    if (!data || imageWHFromLocalstorage) return
-    setImageWHFromLocalstorage(data)
-  }, [data, imageWHFromLocalstorage])
-
-  const isTooSmallImage = imageWHFromLocalstorage
-    ? imageWHFromLocalstorage.width < MIN_IMAGE_WH ||
-      imageWHFromLocalstorage.height < MIN_IMAGE_WH
-    : !isValidating &&
-      data &&
-      (data.width < MIN_IMAGE_WH || data.height < MIN_IMAGE_WH)
-
-  if (isValidating || ((isInvalidImage || isTooSmallImage) && !isAdmin)) return null
+  if (isImageValidating || ((isInvalidImage || isTooSmallImage) && !isAdmin))
+    return null
 
   return (
     <CardMotionWrapper>
