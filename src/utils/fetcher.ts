@@ -61,6 +61,15 @@ const fetcher = async (
     const res = await response.json?.()
 
     if (!response.ok) {
+      if (
+        res?.message === "Invalid or expired timestamp!" ||
+        res?.message ===
+          "Invalid timestamp! The creation of timestamp too far in future!"
+      ) {
+        window.localStorage.setItem("shouldFetchTimestamp", "true")
+        location?.reload()
+      }
+
       if (isGuildApiCall) {
         const error = res.errors?.[0]
         const errorMsg = error
