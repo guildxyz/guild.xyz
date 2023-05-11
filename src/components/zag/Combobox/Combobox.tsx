@@ -14,7 +14,7 @@ import * as combobox from "@zag-js/combobox"
 import { normalizeProps, Portal, useMachine } from "@zag-js/react"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { CaretDown } from "phosphor-react"
-import { forwardRef, useEffect, useId } from "react"
+import { forwardRef, useId } from "react"
 import { useController, UseControllerProps } from "react-hook-form"
 import { SelectOption } from "types"
 import ComboboxList from "./ComboboxList"
@@ -67,31 +67,30 @@ const Combobox = forwardRef(
       inputValue,
       setValue,
       setInputValue,
-      isInputValueEmpty,
     } = combobox.connect(state, send, normalizeProps)
-
-    useEffect(() => {
-      if (!htmlInputProps.value || !options.length || !isInputValueEmpty) return
-      const valueToSet = options.find(
-        (option) => option.value === htmlInputProps.value
-      )
-      if (valueToSet) setValue(valueToSet)
-    }, [options, isInputValueEmpty])
 
     const { size, ...filteredInputProps } = inputProps
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { style, id, ...filteredPositionerProps } = positionerProps
 
+    const htmlInputPropValue = htmlInputProps.value?.toString() ?? ""
+
     const selectedOption =
-      inputValue?.length && options?.find((option) => option.value === selectedValue)
+      selectedValue || htmlInputPropValue
+        ? options?.find(
+            (option) => option.value === (selectedValue ?? htmlInputPropValue)
+          ) ?? {
+            label: htmlInputPropValue,
+            value: htmlInputPropValue,
+            img: undefined,
+          }
+        : undefined
 
     const filteredOptions = selectedOption
       ? options
       : options.filter((option) =>
           option.label.toLowerCase().includes(inputValue.toLowerCase())
         )
-
-    const { value, ...filteredHtmlInputProps } = htmlInputProps
 
     return (
       <>
@@ -108,7 +107,8 @@ const Combobox = forwardRef(
                 htmlSize={size}
                 pr={10}
                 {...(htmlInputProps.isReadOnly ? undefined : filteredInputProps)}
-                {...filteredHtmlInputProps}
+                {...htmlInputProps}
+                value={selectedOption?.label ?? htmlInputPropValue}
                 // TODO: is this the best solution for this?... also, this won't trigger a setValue("") if we type in another letter for example
                 onKeyUp={(e) => {
                   if (e.code !== "Backspace" || !selectedValue) return
@@ -189,6 +189,8 @@ const ControlledCombobox = ({
     defaultValue,
     control,
   })
+
+  console.log("controlled value", field.value)
 
   return <Combobox {...props} {...field} />
 }
