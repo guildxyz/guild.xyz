@@ -1,4 +1,3 @@
-import { MenuItem } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
@@ -21,7 +20,6 @@ const WithdrawButton = ({
   label,
   chainId,
   vaultId,
-  asMenuItem,
   isDisabled,
   setIsLoading,
   onComplete,
@@ -37,23 +35,6 @@ const WithdrawButton = ({
     if (!response) return
     onComplete?.()
   }, [response])
-
-  if (asMenuItem)
-    return (
-      <MenuItem
-        onClick={
-          isDisabled
-            ? undefined
-            : chainId !== usersChainId
-            ? () => requestNetworkChange(chainId)
-            : () => onSubmit(vaultId)
-        }
-        isDisabled={isDisabled}
-        fontSize="sm"
-      >
-        {label}
-      </MenuItem>
-    )
 
   return (
     <ActionButton

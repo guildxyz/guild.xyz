@@ -35,7 +35,7 @@ const PoapRequiementAccessIndicator = ({ poapIdentifier }) => {
 
   if (
     reqAccessData?.access ||
-    (type === "PAYMENT" && accessData?.hasPaid) ||
+    (type === ("POAP_PAYMENT" as RequirementType) && accessData?.hasPaid) ||
     (type === ("VOICE" as RequirementType) && accessData?.voiceEligibility)
   )
     return (

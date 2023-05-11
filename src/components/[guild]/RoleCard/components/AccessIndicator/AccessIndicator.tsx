@@ -7,12 +7,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
+import Button from "components/common/Button"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
@@ -26,7 +26,7 @@ type Props = {
 
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { roles } = useGuild()
-  const { hasAccess, isLoading, data, error } = useAccess(roleId)
+  const { hasAccess, data, error, isValidating } = useAccess(roleId)
 
   const { isActive } = useWeb3React()
   const isMember = useIsMember()
@@ -103,7 +103,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       </HStack>
     )
 
-  if (isLoading)
+  if (isValidating)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
   if (errorTextFromConfig)

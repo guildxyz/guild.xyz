@@ -34,7 +34,6 @@ module.exports = {
         stream: false,
         "crypto-addr-codec": false,
         "@ensdomains/address-encoder": false,
-        dotbit: false,
       }
     }
 
@@ -178,6 +177,11 @@ module.exports = {
   },
   async redirects() {
     return [
+      {
+        source: "/",
+        destination: "/explorer",
+        permanent: false,
+      },
       {
         source: "/community",
         destination:

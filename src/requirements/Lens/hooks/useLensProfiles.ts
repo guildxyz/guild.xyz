@@ -1,7 +1,7 @@
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
-const fetchProfiles = (endpoint: string, searchQuery: string) =>
+const fetchProfiles = ([endpoint, searchQuery]) =>
   fetcher(endpoint, {
     headers: {
       Accept: "application/json",
@@ -31,7 +31,7 @@ const fetchProfiles = (endpoint: string, searchQuery: string) =>
   }).then((res) => res?.data?.search)
 
 const useLensProfiles = (searchQuery: string) => {
-  const { data, isValidating } = useSWRImmutable(
+  const { data, isLoading } = useSWRImmutable(
     searchQuery.length > 0 ? ["https://api.lens.dev", searchQuery] : null,
     fetchProfiles
   )
@@ -39,7 +39,7 @@ const useLensProfiles = (searchQuery: string) => {
   return {
     handles: data?.items?.map((profile) => profile.handle),
     restCount: data?.pageInfo?.totalCount - 50,
-    isLoading: isValidating,
+    isLoading,
   }
 }
 

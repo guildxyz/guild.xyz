@@ -3,7 +3,7 @@ import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
-const getBlockByTime = (_: string, chain: Chain, timestamp: number) =>
+const getBlockByTime = ([_, chain, timestamp]) =>
   fetcher(
     `${RPC[chain].apiUrl}/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before`
   ).then((json) => {

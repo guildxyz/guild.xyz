@@ -122,18 +122,18 @@ const usePurchaseAsset = () => {
     pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
 
   const isSufficientBalance =
-    priceData?.priceToSendInWei &&
+    priceData?.maxPriceInWei &&
     (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gte(BigNumber.from(priceData.priceToSendInWei))
-      : tokenBalance?.gte(BigNumber.from(priceData.priceToSendInWei)))
+      ? coinBalance?.gte(BigNumber.from(priceData.maxPriceInWei))
+      : tokenBalance?.gte(BigNumber.from(priceData.maxPriceInWei)))
 
   const shouldEstimateGas =
     requirement?.chain === Chains[chainId] &&
-    priceData?.priceToSendInWei &&
+    priceData?.maxPriceInWei &&
     isSufficientBalance &&
     (ADDRESS_REGEX.test(pickedCurrency)
-      ? allowance && BigNumber.from(priceData.priceToSendInWei).lte(allowance)
+      ? allowance && BigNumber.from(priceData.maxPriceInWei).lte(allowance)
       : true)
 
   const {

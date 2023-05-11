@@ -27,9 +27,12 @@ const TxInProgress = ({ children }: PropsWithChildren<unknown>): JSX.Element => 
 
       <TransactionLink />
 
-      <Divider mb="6" />
-
-      {children}
+      {children && (
+        <>
+          <Divider mb="6" />
+          {children}
+        </>
+      )}
     </ModalBody>
 
     <ModalFooter>

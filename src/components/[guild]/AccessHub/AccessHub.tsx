@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
+import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
 import platforms from "platforms/platforms"
 import PoapCardMenu from "platforms/Poap/PoapCardMenu"
@@ -15,8 +16,13 @@ import { PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
+import useIsMember from "../hooks/useIsMember"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import PlatformCardButton from "./components/PlatformCardButton"
+
+const DynamicGuildCredentialRewardCard = dynamic(
+  () => import("./components/GuildCredentialRewardCard")
+)
 
 // prettier-ignore
 const useAccessedGuildPlatforms = () => {
@@ -38,9 +44,10 @@ const useAccessedGuildPlatforms = () => {
 }
 
 const AccessHub = (): JSX.Element => {
-  const { id: guildId, poaps } = useGuild()
+  const { id: guildId, poaps, featureFlags } = useGuild()
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
   const { isAdmin } = useGuildPermission()
+  const isMember = useIsMember()
 
   const futurePoaps = poaps?.filter((poap) => {
     const currentTime = Date.now() / 1000
@@ -56,6 +63,9 @@ const AccessHub = (): JSX.Element => {
       gap={4}
       mb="10"
     >
+      {featureFlags.includes("GUILD_CREDENTIAL") && (isMember || isAdmin) && (
+        <DynamicGuildCredentialRewardCard />
+      )}
       {accessedGuildPlatforms?.length || futurePoaps?.length ? (
         <>
           {accessedGuildPlatforms.map((platform) => {
@@ -95,12 +105,12 @@ const AccessHub = (): JSX.Element => {
         </>
       ) : (
         <Card>
-          <Alert status="info">
+          <Alert status="info" h="full">
             <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
             <Stack>
               <AlertTitle>No accessed reward</AlertTitle>
               <AlertDescription>
-                You're member of the guild, but your roles don't give you any
+                You're a member of the guild, but your roles don't give you any
                 auto-managed rewards. The owner might add some in the future or
                 reward you another way!
               </AlertDescription>

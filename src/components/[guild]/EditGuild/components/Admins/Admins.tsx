@@ -6,7 +6,6 @@ import {
   Tag,
   usePrevious,
 } from "@chakra-ui/react"
-import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -27,7 +26,7 @@ const validateAdmins = (admins: string[]) =>
   admins.every((admin) => ADDRESS_REGEX.test(admin.trim())) ||
   "Every admin should be a valid address"
 
-const fetchMemberOptions = (_: string, members: string[], provider: Web3Provider) =>
+const fetchMemberOptions = ([_, members, provider]) =>
   Promise.all(
     members.map(async (member) => ({
       label:

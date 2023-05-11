@@ -40,11 +40,7 @@ const BALANCY_SUPPORTED_CHAINS: Partial<Record<Chain, boolean>> = {
 
 const NUMBER_REGEX = /^([0-9]+\.)?[0-9]+$/
 
-const fetchHolders = async (
-  _: string,
-  logic: "OR" | "AND",
-  requirements: Record<SupportedChain, BalancyRequirement[]>
-): Promise<BalancyResponse> => {
+const fetchHolders = async ([_, logic, requirements]): Promise<BalancyResponse> => {
   const holdersArrays = await Promise.all(
     Object.keys(requirements).map((chain) =>
       fetcher(
