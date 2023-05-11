@@ -4,6 +4,7 @@ import LandingSectionText from "./LandingSectionText"
 
 const ComposableRequirements = (): JSX.Element => (
   <LandingSection
+    flipped
     title="Composable membership requirements"
     media={
       <Box position="relative" width="full">
