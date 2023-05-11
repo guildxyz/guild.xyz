@@ -1,4 +1,5 @@
 import { Box, useColorMode } from "@chakra-ui/react"
+import NavMenu from "components/common/Layout/components/NavMenu"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CallToAction from "components/index/CallToAction"
 import ComposableRequirements from "components/index/ComposableRequirements"
@@ -56,6 +57,10 @@ const Page = (): JSX.Element => {
           scrollBehavior: "smooth",
         }}
       >
+        <Box position="absolute" top="0" p="2" zIndex="1">
+          <NavMenu />
+        </Box>
+
         <Hero />
         <Box bgColor="gray.800" sx={{ transformStyle: "preserve-3d" }}>
           <PlatformAgnosticCommunities />
