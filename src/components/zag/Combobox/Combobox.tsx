@@ -13,7 +13,7 @@ import {
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, Portal, useMachine } from "@zag-js/react"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { CaretDown } from "phosphor-react"
+import { CaretDown, X } from "phosphor-react"
 import { forwardRef, useId } from "react"
 import { useController, UseControllerProps } from "react-hook-form"
 import { SelectOption } from "types"
@@ -24,11 +24,26 @@ type Props = InputProps & {
   options?: SelectOption[]
   isLoading?: boolean
   onChange?: (newValue: string) => void
+  onClear?: () => void
+  leftAddon?: JSX.Element
+  rightAddon?: JSX.Element
+  isClearable?: boolean
+  isCreatable?: boolean
 }
 
 const Combobox = forwardRef(
   (
-    { options = [], onChange: onChangeProp, isLoading, ...htmlInputProps }: Props,
+    {
+      options = [],
+      onChange: onChangeProp,
+      onClear,
+      isLoading,
+      leftAddon,
+      rightAddon,
+      isClearable,
+      isCreatable,
+      ...htmlInputProps
+    }: Props,
     ref: any
   ): JSX.Element => {
     const dropdownBgColor = useColorModeValue("white", "gray.700")
@@ -92,11 +107,16 @@ const Combobox = forwardRef(
           option.label.toLowerCase().includes(inputValue.toLowerCase())
         )
 
+    const shouldShowRightElement = Boolean(
+      isLoading || (isClearable && (inputValue?.length || htmlInputPropValue))
+    )
+
     return (
       <>
         <Box w="full" {...rootProps}>
           <Box ref={referenceRef} position="relative" {...controlProps}>
             <InputGroup>
+              {leftAddon}
               {typeof selectedOption?.img === "string" && (
                 <InputLeftElement>
                   <OptionImage img={selectedOption.img} alt={selectedOption.label} />
@@ -105,7 +125,7 @@ const Combobox = forwardRef(
               <Input
                 ref={ref}
                 htmlSize={size}
-                pr={10}
+                pr={shouldShowRightElement ? 14 : 10}
                 {...(htmlInputProps.isReadOnly ? undefined : filteredInputProps)}
                 {...htmlInputProps}
                 value={selectedOption?.label ?? htmlInputPropValue}
@@ -116,12 +136,27 @@ const Combobox = forwardRef(
                   setInputValue((e.target as HTMLInputElement).value)
                 }}
               />
-              {isLoading && (
+              {shouldShowRightElement && (
                 <InputRightElement mr={6} opacity={htmlInputProps.isDisabled && 0.4}>
                   {/* TODO: dynamic size */}
-                  <Spinner size="sm" />
+                  {isLoading ? (
+                    <Spinner size="sm" />
+                  ) : (
+                    <IconButton
+                      aria-label="Clear value"
+                      variant="ghost"
+                      icon={<X />}
+                      boxSize={6}
+                      minW="none"
+                      onClick={() => {
+                        onClear()
+                        setValue("")
+                      }}
+                    />
+                  )}
                 </InputRightElement>
               )}
+              {rightAddon}
             </InputGroup>
             <IconButton
               aria-label="Open dropdown"
@@ -190,9 +225,7 @@ const ControlledCombobox = ({
     control,
   })
 
-  console.log("controlled value", field.value)
-
-  return <Combobox {...props} {...field} />
+  return <Combobox {...props} {...field} onClear={() => field.onChange("")} />
 }
 
 export { Combobox, ControlledCombobox }

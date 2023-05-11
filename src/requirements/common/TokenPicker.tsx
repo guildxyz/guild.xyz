@@ -1,11 +1,17 @@
-import { FormControl, FormLabel } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  InputLeftAddon,
+  Spinner,
+  Text,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { ControlledCombobox } from "components/zag/Combobox"
 import { Chain } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useMemo } from "react"
-import { UseControllerProps, useController, useFormContext } from "react-hook-form"
+import { useController, UseControllerProps, useFormContext } from "react-hook-form"
 
 type Props = {
   chain: Chain
@@ -131,9 +137,25 @@ const TokenPicker = ({
           validate: () => !tokenDataError || "Failed to fetch token data",
         }}
         options={mappedTokens?.slice(0, 1000)}
-        placeholder="Select a token"
+        placeholder="Search or paste address"
         isLoading={isLoading}
         isDisabled={isLoading}
+        leftAddon={
+          !tokenImage &&
+          (isTokenSymbolValidating || tokenSymbol) && (
+            <InputLeftAddon px={2} maxW={14}>
+              {isTokenSymbolValidating ? (
+                <Spinner size="sm" />
+              ) : (
+                <Text as="span" fontSize="xs" fontWeight="bold" noOfLines={1}>
+                  {tokenSymbol}
+                </Text>
+              )}
+            </InputLeftAddon>
+          )
+        }
+        isCreatable
+        isClearable
       />
 
       <FormErrorMessage>{error?.message}</FormErrorMessage>
