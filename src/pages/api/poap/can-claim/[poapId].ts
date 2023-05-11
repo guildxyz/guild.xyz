@@ -3,7 +3,7 @@ import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider, Provider } from "@ethersproject/providers"
 import { Chain, RPC_URLS } from "connectors"
 import { NextApiRequest, NextApiResponse } from "next"
-import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
+import FEE_COLLECTOR_ABI from "static/abis/legacyPoapFeeCollectorAbi.json"
 import { PoapEventDetails } from "types"
 import fetcher from "utils/fetcher"
 

@@ -20,9 +20,16 @@ const useSavePoap = ({ onSuccess }: UseSubmitOptions = {}) => {
 
   return useSubmitWithSign<any>(fetchData, {
     onError: (error) => showErrorToast(error),
-    onSuccess: () => {
+    onSuccess: (res) => {
       // Mutating guild data, so the new POAP shows up in the POAPs list
-      mutateGuild()
+      mutateGuild(
+        (oldData) => ({
+          ...oldData,
+          poaps: [...oldData.poaps, res],
+        }),
+        // needed until replication lag is solved
+        { revalidate: false }
+      )
       onSuccess?.()
     },
   })

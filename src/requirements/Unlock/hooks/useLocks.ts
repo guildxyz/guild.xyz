@@ -61,14 +61,14 @@ const fetchLocks = async (endpoint: string) => {
 const useLocks = (chain: Chain) => {
   const chainId = Chains[chain]
 
-  const { isValidating, data } = useSWRImmutable<Data[]>(
+  const { isLoading, data } = useSWRImmutable<Data[]>(
     chainId
       ? `https://api.thegraph.com/subgraphs/name/unlock-protocol/${CHAINS_ENDPOINTS[chainId]}-v2`
       : null,
     fetchLocks
   )
 
-  return { locks: data?.filter((lock) => !!lock), isLoading: isValidating }
+  return { locks: data?.filter((lock) => !!lock), isLoading }
 }
 
 export default useLocks

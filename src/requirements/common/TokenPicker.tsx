@@ -5,7 +5,7 @@ import { Chain } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useMemo } from "react"
-import { useController, UseControllerProps, useFormContext } from "react-hook-form"
+import { UseControllerProps, useController, useFormContext } from "react-hook-form"
 
 type Props = {
   chain: Chain

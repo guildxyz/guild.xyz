@@ -46,7 +46,7 @@ const Reward = ({
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
 
-  const { hasAccess, isLoading } = useAccess(role.id)
+  const { hasAccess, isValidating } = useAccess(role.id)
   const { label, ...accessButtonProps } = usePlatformAccessButton(
     platform.guildPlatform
   )
@@ -73,7 +73,7 @@ const Reward = ({
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, account, accessButtonProps])
+  }, [isMember, hasAccess, account, accessButtonProps, isLinkColorful])
 
   return (
     <RewardDisplay
@@ -92,11 +92,11 @@ const Reward = ({
               <Button
                 variant="link"
                 rightIcon={
-                  isLoading ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
+                  isValidating ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
                 }
                 iconSpacing="1"
-                {...state.buttonProps}
                 maxW="full"
+                {...state.buttonProps}
               >
                 {platform.guildPlatform?.platformGuildName ||
                   platform.guildPlatform?.platformGuildId}

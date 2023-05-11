@@ -14,37 +14,46 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
+import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
+import Reward from "components/[guild]/RoleCard/components/Reward"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Reward from "components/[guild]/RoleCard/components/Reward"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { Chains } from "connectors"
 import { Coin } from "phosphor-react"
+import { useEffect } from "react"
+import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
-import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
-import BuyButton from "./components/buttons/BuyButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import BuyTotal from "./components/BuyTotal"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
 import NoReward from "./components/NoReward"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
 import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
+import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
+import BuyButton from "./components/buttons/BuyButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
 const BuyPass = () => {
   const { captureEvent } = usePostHogContext()
 
-  const { featureFlags } = useGuild()
-
   const { account, chainId } = useWeb3React()
-  const { requirement, isOpen, onOpen, onClose, isInfoModalOpen } =
+  const { requirement, isOpen, onOpen, onClose, setAgreeWithTOS } =
     useGuildCheckoutContext()
-  const { urlName, name, roles } = useGuild()
+  const { urlName, name, roles, poaps } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
-  const { data: accessData, isLoading: isAccessLoading } = useAccess(
+
+  // temporary until POAPs are real roles
+  const guildPoap = poaps?.find((p) => p.poapIdentifier === requirement?.poapId)
+  const { poap } = usePoap(guildPoap?.fancyId)
+  useEffect(() => {
+    if (requirement?.poapId) setAgreeWithTOS(true)
+  }, [requirement?.poapId])
+
+  const { data: accessData, isValidating: isAccessValidating } = useAccess(
     requirement?.roleId
   )
 
@@ -60,9 +69,8 @@ const BuyPass = () => {
   }
 
   if (
-    (!isInfoModalOpen && !featureFlags?.includes("PAYMENT_REQUIREMENT")) ||
     !account ||
-    (!accessData && isAccessLoading) ||
+    (!accessData && isAccessValidating) ||
     requirement?.type !== "PAYMENT" ||
     !paymentSupportedChains.includes(requirement?.chain)
   )
@@ -109,13 +117,17 @@ const BuyPass = () => {
               </Alert>
             )}
 
-            {role?.rolePlatforms?.map((platform) => (
-              <Reward
-                key={platform.guildPlatformId}
-                platform={platform}
-                role={role}
-              />
-            )) || <NoReward />}
+            {poap ? (
+              <PoapReward poap={poap} isInteractive={false} />
+            ) : (
+              role?.rolePlatforms?.map((platform) => (
+                <Reward
+                  key={platform.guildPlatformId}
+                  platform={platform}
+                  role={role}
+                />
+              )) || <NoReward />
+            )}
           </ModalBody>
 
           <ModalFooter pt={10} flexDir="column">
@@ -138,10 +150,12 @@ const BuyPass = () => {
                 <SwitchNetworkButton targetChainId={Chains[requirement.chain]} />
 
                 <Collapse in={chainId === Chains[requirement.chain]}>
-                  <TOSCheckbox>
-                    I understand that if the owner changes the requirements, I could
-                    lose access.
-                  </TOSCheckbox>
+                  {!guildPoap && (
+                    <TOSCheckbox>
+                      I understand that if the owner changes the requirements, I
+                      could lose access.
+                    </TOSCheckbox>
+                  )}
 
                   <BuyAllowanceButton />
                 </Collapse>

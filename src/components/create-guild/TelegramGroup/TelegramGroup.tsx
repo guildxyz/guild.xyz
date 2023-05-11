@@ -32,7 +32,7 @@ const TelegramGroup = ({
 
   const {
     data: { ok: isIn, message: errorMessage, groupIcon, groupName },
-    isLoading,
+    isValidating,
   } = useIsTGBotIn(platformId, { refreshInterval: 5000 })
 
   useSetImageAndNameFromPlatformData(groupIcon, groupName, onUpload)
@@ -55,7 +55,7 @@ const TelegramGroup = ({
                 href={`https://t.me/${process.env.NEXT_PUBLIC_TG_BOT_USERNAME}?startgroup=true&admin=post_messages+restrict_members+invite_users`}
                 target="_blank"
                 rightIcon={<Icon as={ArrowSquareOut} mt="-1px" />}
-                isLoading={isLoading}
+                isLoading={isValidating}
               >
                 Add Guild bot
               </Button>

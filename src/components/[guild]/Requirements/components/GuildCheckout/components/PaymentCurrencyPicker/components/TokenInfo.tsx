@@ -83,7 +83,12 @@ const TokenInfo = ({
           </Circle>
         </SkeletonCircle>
 
-        <Stack spacing={1.5} maxW="calc(100% - 3rem)" alignItems={"flex-start"}>
+        <Stack
+          spacing={1.5}
+          maxW="calc(100% - 3rem)"
+          alignItems={"flex-start"}
+          textAlign={"left"}
+        >
           <Skeleton isLoaded={!isTokenDataLoading && !isLoading} w="full" h={5}>
             <Text as="span" display="block" isTruncated>
               {tokenDataError

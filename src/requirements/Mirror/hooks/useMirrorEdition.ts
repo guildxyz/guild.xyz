@@ -4,7 +4,7 @@ import { Chain, RPC } from "connectors"
 import MIRROR_CONTRACT_ABI from "static/abis/mirrorAbi.json"
 import useSWRImmutable from "swr/immutable"
 
-const fetchMirrorEdition = async (_: string, address: string, chain: Chain) => {
+const fetchMirrorEdition = async ([_, address, chain]) => {
   const provider = new JsonRpcProvider(RPC[chain]?.rpcUrls[0])
   const contract = new Contract(address, MIRROR_CONTRACT_ABI, provider)
 
@@ -29,7 +29,7 @@ const useMirrorEdition = (
     address &&
     address.match(ADDRESS_REGEX) &&
     (chain === "OPTIMISM" || chain === "ETHEREUM")
-  const { data, isValidating, error } = useSWRImmutable(
+  const { data, isLoading, error } = useSWRImmutable(
     shouldFetch ? ["mirrorEdition", address, chain] : null,
     fetchMirrorEdition
   )
@@ -37,7 +37,7 @@ const useMirrorEdition = (
   return {
     name: data?.name,
     image: data?.imageURI ? `https://ipfs.fleek.co/ipfs/${data.imageURI}` : null,
-    isLoading: isValidating,
+    isLoading,
     error,
   }
 }

@@ -4,6 +4,7 @@ import {
   Icon,
   Img,
   Skeleton,
+  Spinner,
   Tag,
   Text,
   Tooltip,
@@ -24,20 +25,26 @@ type Props = {
   poap: Poap
   isExpired?: boolean
   isInteractive?: boolean
+  isLinkColorful?: boolean
 }
 
 /**
  * This is copy-pasted from Reward and adjusted to work with legacy POAP logic. Will
  * delete once POAP is a real reward
  */
-const PoapReward = ({ poap, isExpired, isInteractive = true }: Props) => {
+const PoapReward = ({
+  poap,
+  isExpired,
+  isInteractive = true,
+  isLinkColorful,
+}: Props) => {
   const isMember = useIsMember()
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
   const { poapLinks } = usePoapLinks(poap?.id)
   const availableLinks = poapLinks?.total - poapLinks?.claimed
 
-  const { data } = useUserPoapEligibility(poap?.id)
+  const { data, isLoading } = useUserPoapEligibility(poap?.id)
   const hasAccess = data?.access
 
   const { buttonProps, modalProps } = useMintPoapButton(poap?.id)
@@ -53,7 +60,9 @@ const PoapReward = ({ poap, isExpired, isInteractive = true }: Props) => {
     if (isMember && hasAccess)
       return {
         tooltipLabel: "Go to minting page",
-        buttonProps,
+        buttonProps: isLinkColorful
+          ? { ...buttonProps, colorScheme: "blue" }
+          : buttonProps,
       }
     if (!account || (!isMember && hasAccess))
       return {
@@ -69,7 +78,7 @@ const PoapReward = ({ poap, isExpired, isInteractive = true }: Props) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, account, availableLinks])
+  }, [isMember, hasAccess, account, availableLinks, isLinkColorful])
 
   return (
     <HStack pt="3" spacing={2} alignItems={"flex-start"}>
@@ -89,7 +98,9 @@ const PoapReward = ({ poap, isExpired, isInteractive = true }: Props) => {
             <Tooltip label={state.tooltipLabel} hasArrow>
               <Button
                 variant="link"
-                rightIcon={<ArrowSquareOut />}
+                rightIcon={
+                  isLoading ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
+                }
                 iconSpacing="1"
                 maxW="full"
                 {...state.buttonProps}

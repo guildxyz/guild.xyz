@@ -15,11 +15,6 @@ import {
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -38,6 +33,11 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import Button from "components/common/Button"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -410,14 +410,16 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 60,
     }
 
-  // Removing the members list, and then we refetch them on client side. This way the members won't be included in the SSG source code.
+  /**
+   * Removing members and requirements, so they're not included in the SSG source
+   * code, we only fetch them client side. Temporary until we switch to the new API
+   * that won't return them on this endpoint anyway
+   */
   const filteredData = { ...data }
-  filteredData.roles?.forEach((role) => (role.members = []))
-
-  // Fetching requirements client-side in this case
-  if (filteredData.roles?.some((role) => role.requirements?.length > 10)) {
-    filteredData.roles?.forEach((role) => (role.requirements = []))
-  }
+  filteredData.roles?.forEach((role) => {
+    role.members = []
+    role.requirements = []
+  })
 
   return {
     props: {

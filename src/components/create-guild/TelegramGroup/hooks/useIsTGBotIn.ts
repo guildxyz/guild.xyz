@@ -21,7 +21,7 @@ const useIsTGBotIn = (groupId: string, swrConfig?: SWRConfiguration) => {
     }
   )
 
-  return { data, isLoading: isValidating }
+  return { data, isValidating }
 }
 
 export default useIsTGBotIn

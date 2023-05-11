@@ -2,7 +2,7 @@ import useSWRImmutable from "swr/immutable"
 import { Poap } from "types"
 import fetcher from "utils/fetcher"
 
-const fetchData = async (...fancyIds: Array<string>) => {
+const fetchData = async (fancyIds: Array<string>) => {
   const promises = fancyIds.map((fancyId) => fetcher(`/assets/poap/${fancyId}`))
   return Promise.all(promises)
 }

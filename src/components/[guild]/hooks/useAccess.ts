@@ -25,7 +25,7 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
     data: roleData ?? data,
     error,
     hasAccess,
-    isLoading: isValidating,
+    isValidating,
     mutate,
   }
 }
