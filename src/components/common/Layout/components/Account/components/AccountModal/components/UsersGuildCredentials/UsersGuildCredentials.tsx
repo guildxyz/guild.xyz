@@ -20,11 +20,9 @@ const UsersGuildCredentials = () => {
               key={credential.tokenId}
               image={credential.image}
               name={credential.name}
-              guildId={
-                credential.attributes.find(
-                  (attribute) => attribute.trait_type === "guildId"
-                ).value
-              }
+              guild={credential.attributes
+                .find((attribute) => attribute.trait_type === "guild")
+                .value.toString()}
             />
           ))
         ) : (
