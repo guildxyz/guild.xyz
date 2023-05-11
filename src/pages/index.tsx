@@ -7,12 +7,9 @@ import ComposableRequirements from "components/index/ComposableRequirements"
 import Discover from "components/index/Discover"
 import ExploreTrendingGuilds from "components/index/ExploreTrendingGuilds"
 import Footer from "components/index/Footer"
-import GuardAgainstPhishingAttack from "components/index/GuardAgainstPhishingAttack"
 import GuildValues from "components/index/GuildValues"
 import Hero from "components/index/Hero"
 import PlatformAgnosticCommunities from "components/index/PlatformAgnosticCommunities"
-import RealTimeQueryEngine from "components/index/RealTimeQueryEngine"
-import TokenBasedMembership from "components/index/TokenBasedMembership"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
@@ -65,9 +62,6 @@ const Page = (): JSX.Element => {
         <Hero />
         <Box bgColor="gray.800" sx={{ transformStyle: "preserve-3d" }}>
           <PlatformAgnosticCommunities />
-          <TokenBasedMembership />
-          <GuardAgainstPhishingAttack />
-          <RealTimeQueryEngine />
           <ComposableRequirements />
           <ExploreTrendingGuilds />
           <GuildValues />
