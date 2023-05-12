@@ -170,7 +170,12 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         >
           {!account ? (
             <Card p="6">
-              <HStack justifyContent="space-between">
+              <Stack
+                direction={{ base: "column", sm: "row" }}
+                justifyContent="space-between"
+                alignItems="center"
+                spacing="5"
+              >
                 <HStack spacing="4">
                   <Img src="landing/robot.svg" boxSize={"2em"} />
                   <Text fontWeight={"semibold"}>
@@ -178,13 +183,15 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
                   </Text>
                 </HStack>
                 <Button
+                  w={{ base: "full", sm: "auto" }}
+                  flexShrink="0"
                   colorScheme="indigo"
                   leftIcon={<Wallet />}
                   onClick={openWalletSelectorModal}
                 >
                   Connect
                 </Button>
-              </HStack>
+              </Stack>
             </Card>
           ) : usersGuilds?.length || memberships?.length ? (
             <CategorySection
