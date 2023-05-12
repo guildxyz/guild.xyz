@@ -1,5 +1,6 @@
 import {
   Box,
+  BoxProps,
   Container,
   Heading,
   HStack,
@@ -32,6 +33,7 @@ type Props = {
   textColor?: string
   action?: ReactNode | undefined
   background?: string
+  backgroundProps?: BoxProps
   backgroundImage?: string
   backgroundOffset?: number
   backButton?: BackButtonProps
@@ -48,6 +50,7 @@ const Layout = ({
   textColor,
   action,
   background,
+  backgroundProps,
   backgroundImage,
   backgroundOffset = 128,
   backButton,
@@ -113,6 +116,7 @@ const Layout = ({
             h={bgHeight}
             background={backgroundImage ? "gray.900" : background}
             opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
+            {...backgroundProps}
           >
             {backgroundImage && (
               <Image

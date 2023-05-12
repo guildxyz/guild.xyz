@@ -11,6 +11,7 @@ import {
   Stack,
   Tag,
   Text,
+  useBreakpointValue,
   useColorModeValue,
   usePrevious,
 } from "@chakra-ui/react"
@@ -117,7 +118,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     setUsersGuilds(getUsersGuilds(memberships, allGuilds))
   }, [memberships, allGuilds])
 
-  const bgColor = useColorModeValue("gray.800", "whiteAlpha.200")
+  const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
+  const bgOpacity = useColorModeValue(0.06, 0.1)
+  const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
 
   return (
     <>
@@ -126,7 +129,21 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         title={"Guildhall"}
         ogDescription="Automated membership management for the platforms your community already uses."
         background={bgColor}
-        // backgroundImage="/banner.png"
+        backgroundProps={{
+          _before: {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            bg: `linear-gradient(to top right, ${bgColor} ${bgLinearPercentage}, transparent), url('/banner.png ')`,
+            bgSize: { base: "auto 100%", sm: "auto 125%" },
+            bgRepeat: "no-repeat",
+            bgPosition: "top 10px right 10px",
+            opacity: bgOpacity,
+          },
+        }}
         backgroundOffset={account ? 100 : 90}
         textColor="white"
       >
