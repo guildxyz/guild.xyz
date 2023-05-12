@@ -138,9 +138,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             left: 0,
             right: 0,
             bg: `linear-gradient(to top right, ${bgColor} ${bgLinearPercentage}, transparent), url('/banner.png ')`,
-            bgSize: { base: "auto 100%", sm: "auto 125%" },
+            bgSize: { base: "auto 100%", sm: "auto 115%" },
             bgRepeat: "no-repeat",
-            bgPosition: "top 10px right 10px",
+            bgPosition: "top 10px right 0px",
             opacity: bgOpacity,
           },
         }}
@@ -247,7 +247,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             <SimpleGrid
               templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
               gap={{ base: 2, md: "6" }}
-              pb="2"
+              pb={{ base: 1, md: 2 }}
             >
               <GridItem colSpan={{ base: 1, md: 2 }}>
                 <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
