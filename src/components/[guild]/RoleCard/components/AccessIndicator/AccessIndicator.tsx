@@ -150,9 +150,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     <AccessIndicatorUI
       colorScheme="gray"
       label={`No access${
-        role.logic !== "ANY_OF" &&
-        typeof accessedRequirementCount === "number" &&
-        role.anyOfNum
+        role.logic === "ANY_OF" && typeof accessedRequirementCount === "number"
           ? ` (${accessedRequirementCount}/${role.anyOfNum})`
           : ""
       }`}
