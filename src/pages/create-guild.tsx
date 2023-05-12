@@ -1,4 +1,4 @@
-import { Stack, useBreakpointValue } from "@chakra-ui/react"
+import { Stack, useBreakpointValue, useColorMode } from "@chakra-ui/react"
 import { Step, Steps } from "chakra-ui-steps"
 import SimpleLayout from "components/common/Layout/SimpleLayout"
 import {
@@ -6,6 +6,7 @@ import {
   useCreateGuildContext,
 } from "components/create-guild/CreateGuildContext"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 
 const CreateGuildPage = (): JSX.Element => {
@@ -19,6 +20,12 @@ const CreateGuildPage = (): JSX.Element => {
     },
     "horizontal"
   )
+
+  const { setColorMode } = useColorMode()
+
+  useEffect(() => {
+    setColorMode("dark")
+  }, [])
 
   return (
     <>

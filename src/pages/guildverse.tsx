@@ -1,4 +1,4 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import { SimpleGrid, useColorMode } from "@chakra-ui/react"
 import BrainCard from "components/brain/BrainCard"
 import FilterSelect, { FilterOption } from "components/brain/FilterSelect"
 import Layout from "components/common/Layout"
@@ -6,7 +6,7 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
 import SearchBar from "components/explorer/SearchBar"
 import { GetServerSideProps } from "next"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { BrainCardData } from "types"
 
 type Props = {
@@ -33,6 +33,12 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
       ),
     [cards, filterData, search]
   )
+
+  const { setColorMode } = useColorMode()
+
+  useEffect(() => {
+    setColorMode("dark")
+  }, [])
 
   return (
     <>
