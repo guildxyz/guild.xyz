@@ -22,9 +22,6 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Card from "components/common/Card"
-import Layout from "components/common/Layout"
-import LinkButton from "components/common/LinkButton"
 import ConnectDiscordButton from "components/[guild]/claim-poap/components/ConnectDiscordButton"
 import ConnectWalletButton from "components/[guild]/claim-poap/components/ConnectWalletButton"
 import JoinAndMintPoapButton from "components/[guild]/claim-poap/components/JoinAndMintPoapButton"
@@ -36,9 +33,12 @@ import useUser from "components/[guild]/hooks/useUser"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { RequirementSkeleton } from "components/[guild]/Requirements/components/Requirement"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import Card from "components/common/Card"
+import Layout from "components/common/Layout"
+import LinkButton from "components/common/LinkButton"
 import { useRouter } from "next/router"
 import { ArrowLeft, Clock } from "phosphor-react"
-import { useMemo } from "react"
+import React, { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import BuyPoapRequirement from "requirements/PoapPayment/components/BuyPoapRequirement"
@@ -111,53 +111,73 @@ const Page = (): JSX.Element => {
     ) : (
       <ConnectWalletButton />
     )
-  ) : (
-    <></>
-  )
+  ) : null
 
   const requirementComponents = guildPoap
     ? [
-        ...(guildPoap?.poapContracts ?? []).map((poapContract) => (
-          <PoapPaymentRequirement
-            key={poapContract.id}
-            poapContract={poapContract}
-            guildPoap={guildPoap}
-            rightElement={
-              isActive && !hasPaid ? (
-                <BuyPoapRequirement
-                  size="md"
-                  borderRadius={"xl"}
-                  h="10"
-                  {...{ guildPoap: guildPoap, poapContract }}
-                />
-              ) : (
-                requirementRightElement
-              )
-            }
-          />
-        )),
-        ...(guildPoap?.poapRequirements ?? []).map((requirement: any, i) => (
-          <RequirementDisplayComponent
-            key={requirement.id}
-            requirement={{ ...requirement, id: requirement.requirementId }}
-            rightElement={requirementRightElement}
-          />
-        )),
         ...(poapEventDetails?.voiceChannelId
           ? [
-              <PoapVoiceRequirement
-                key="voice"
-                guildPoap={guildPoap}
-                rightElement={
-                  isActive && account && !discordFromDb ? (
-                    <ConnectDiscordButton />
-                  ) : (
-                    requirementRightElement
-                  )
-                }
-              />,
+              <>
+                <PoapVoiceRequirement
+                  key="voice"
+                  guildPoap={guildPoap}
+                  rightElement={
+                    isActive && account && !discordFromDb ? (
+                      <ConnectDiscordButton />
+                    ) : (
+                      requirementRightElement
+                    )
+                  }
+                />
+                {guildPoap.poapContracts?.length ||
+                guildPoap.poapRequirements?.length ? (
+                  <LogicDivider logic="AND" />
+                ) : null}
+              </>,
             ]
           : []),
+        ...(guildPoap.poapContracts ?? []).map((poapContract, i) => (
+          <React.Fragment key={poapContract.id}>
+            <PoapPaymentRequirement
+              key={poapContract.id}
+              poapContract={poapContract}
+              guildPoap={guildPoap}
+              rightElement={
+                isActive && !hasPaid ? (
+                  <BuyPoapRequirement
+                    size="md"
+                    borderRadius={"xl"}
+                    h="10"
+                    {...{ guildPoap: guildPoap, poapContract }}
+                  />
+                ) : (
+                  requirementRightElement
+                )
+              }
+            />
+            {i < guildPoap.poapContracts?.length - 1 ? (
+              <LogicDivider logic={"OR"} />
+            ) : guildPoap.poapRequirements?.length ? (
+              <LogicDivider logic={"AND"} />
+            ) : null}
+          </React.Fragment>
+        )),
+        ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (
+          <React.Fragment key={requirement.id}>
+            <RequirementDisplayComponent
+              key={requirement.id}
+              requirement={{
+                ...requirement,
+                id: requirement.requirementId,
+                poapId: guildPoap.poapIdentifier,
+              }}
+              rightElement={requirementRightElement}
+            />
+            {i < guildPoap.poapRequirements.length - 1 && (
+              <LogicDivider logic={requirement.logic} />
+            )}
+          </React.Fragment>
+        )),
       ]
     : [...Array(2)].map((i) => <RequirementSkeleton key={i} />)
 
@@ -277,18 +297,7 @@ const Page = (): JSX.Element => {
                     <Spacer />
                   </HStack>
 
-                  <Stack
-                    spacing="0"
-                    divider={
-                      /* have to wrap in a Box, otherwise it looks broken */
-                      <Box border="0">
-                        {/* retrofit: show OR for previously made POAPs with multiple payment methods */}
-                        <LogicDivider
-                          logic={guildPoap?.poapContracts?.length > 1 ? "OR" : "AND"}
-                        />
-                      </Box>
-                    }
-                  >
+                  <Stack spacing="0">
                     {requirementComponents?.length ? (
                       requirementComponents?.map(
                         (RequirementComponent, i) => RequirementComponent

@@ -1,5 +1,5 @@
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
@@ -38,11 +38,14 @@ const useCreateGuild = () => {
       router.push(`/${response_.urlName}`)
 
       if (response_.guildPlatforms[0]?.platformId === PlatformType.DISCORD)
-        fetcherWithSign(`/statusUpdate/guildify/${response_.id}?force=true`, {
-          body: {
-            notifyUsers: false,
+        fetcherWithSign([
+          `/statusUpdate/guildify/${response_.id}?force=true`,
+          {
+            body: {
+              notifyUsers: false,
+            },
           },
-        })
+        ])
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)

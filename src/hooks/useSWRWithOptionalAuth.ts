@@ -33,6 +33,7 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
 
   return {
     data: authenticatedResponse.data ?? publicResponse.data,
+    isLoading: authenticatedResponse.isLoading ?? publicResponse.isLoading,
     isValidating: authenticatedResponse.isValidating ?? publicResponse.isValidating,
     mutate: authenticatedResponse.mutate ?? publicResponse.mutate,
     error: authenticatedResponse.error ?? publicResponse.error,

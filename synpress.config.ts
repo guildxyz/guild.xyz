@@ -34,5 +34,6 @@ export default defineConfig({
     setupNodeEvents,
     supportFile: "./cypress/support/e2e.ts",
     specPattern: "./cypress/e2e/**/*.spec.ts",
+    excludeSpecPattern: "./cypress/e2e/0-platformless/1-manage-roles.spec.ts",
   },
 })

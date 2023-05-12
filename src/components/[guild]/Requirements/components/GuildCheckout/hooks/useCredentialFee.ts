@@ -2,14 +2,14 @@ import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import { Chain, Chains, RPC } from "connectors"
+import { Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import {
   GUILD_CREDENTIAL_CONTRACT,
   NULL_ADDRESS,
 } from "utils/guildCheckout/constants"
 
-const fetchFee = async (_: string, chain: Chain): Promise<BigNumber> => {
+const fetchFee = async ([_, chain]): Promise<BigNumber> => {
   if (!GUILD_CREDENTIAL_CONTRACT[chain]) return undefined
 
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0])

@@ -40,7 +40,7 @@ type Props = {
   onOpen: () => void
 }
 
-const fetchShouldLinkToUser = async (_: "shouldLinkToUser", userId: number) => {
+const fetchShouldLinkToUser = async ([_, userId]) => {
   try {
     const { id: userIdToConnectTo } = JSON.parse(
       window.localStorage.getItem("userId")
@@ -173,7 +173,28 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Error error={error} processError={processConnectionError} />
+            <Error
+              {...(set.error
+                ? {
+                    error: set.error,
+                    processError: (err: any) => {
+                      if (err?.code === "ACTION_REJECTED") {
+                        return {
+                          title: "Rejected",
+                          description: "Signature request has been rejected",
+                        }
+                      }
+
+                      return {
+                        title: "Error",
+                        description:
+                          err?.message ??
+                          (typeof err === "string" ? err : err?.errors?.[0]?.msg),
+                      }
+                    },
+                  }
+                : { error, processError: processConnectionError })}
+            />
             {isConnected && !keyPair && (
               <Text mb="6" animation={"fadeIn .3s .1s both"}>
                 Sign message to verify that you're the owner of this account.
