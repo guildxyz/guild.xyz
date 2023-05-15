@@ -44,7 +44,7 @@ const LogicFormControl = (): JSX.Element => {
       },
       max: {
         value: Math.max(requirementCount - 1, 1),
-        message: "Must be less than requirement count",
+        message: "Must be less than the number of requirements",
       },
     },
   })
