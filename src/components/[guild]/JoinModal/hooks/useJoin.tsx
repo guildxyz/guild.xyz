@@ -1,15 +1,15 @@
 import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import { useMintCredentialContext } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { useMintCredentialContext } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { CircleWavyCheck } from "phosphor-react"
+import { CircleWavyCheck, TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
@@ -45,7 +45,7 @@ const useJoin = (onSuccess?: () => void) => {
 
   const toast = useToast()
   const toastIdRef = useRef<ToastId>()
-  const mintButtonBackground = useColorModeValue("blackAlpha.100", undefined)
+  const toastButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   const { mutate } = useMemberships()
 
@@ -111,14 +111,35 @@ const useJoin = (onSuccess?: () => void) => {
                 size="sm"
                 mt={3}
                 mb="1"
-                bg={mintButtonBackground}
+                bg={toastButtonBackground}
                 borderRadius="lg"
                 onClick={onOpen}
               >
                 Mint credential
               </Button>
             </>
-          ) : undefined,
+          ) : (
+            <>
+              <Text>Let others know as well by sharing it on Twitter</Text>
+              <Button
+                as="a"
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                  `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
+guild.xyz/${guild.urlName}`
+                )}`}
+                target="_blank"
+                bg={toastButtonBackground}
+                leftIcon={<TwitterLogo weight="fill" />}
+                size="sm"
+                onClick={() => toast.close(toastIdRef.current)}
+                mt={3}
+                mb="1"
+                borderRadius="lg"
+              >
+                Share
+              </Button>
+            </>
+          ),
         status: "success",
       })
     },
