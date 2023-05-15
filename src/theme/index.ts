@@ -4,7 +4,7 @@ import components from "./components"
 import styles from "./styles"
 
 const config: ThemeConfig = {
-  initialColorMode: "dark",
+  initialColorMode: "system",
   useSystemColorMode: false,
 }
 

@@ -1,4 +1,5 @@
 import { useState } from "react"
+import tryToParseJSON from "utils/tryToParseJSON"
 
 const getDataFromLocalstorage = <T>(
   key: string,
@@ -13,7 +14,7 @@ const getDataFromLocalstorage = <T>(
         window.localStorage.setItem(key, JSON.stringify(initialValue))
       return initialValue
     }
-    return JSON.parse(item)
+    return tryToParseJSON(item) || item
   } catch (error) {
     console.error(error)
     return initialValue
@@ -35,7 +36,10 @@ const useLocalStorage = <T>(
     if (valueToStore === undefined) {
       window.localStorage.removeItem(key)
     } else {
-      window.localStorage.setItem(key, JSON.stringify(valueToStore))
+      const stringToStore = tryToParseJSON(valueToStore)
+        ? JSON.stringify(valueToStore)
+        : (valueToStore as string)
+      window.localStorage.setItem(key, stringToStore)
     }
   }
   return [storedValue, setValue] as const
