@@ -18,7 +18,11 @@ const MintCredentialButton = (): JSX.Element => {
 
   const { chainId } = useWeb3React()
 
-  const { onSubmit, isLoading: isMinting, loadingText } = useMintCredential()
+  const {
+    onSubmit,
+    isLoading: isMinting,
+    loadingText: mintLoadingText,
+  } = useMintCredential()
 
   const { data, isValidating } = useUsersGuildCredentials()
   const alreadyMintedOnChain = data?.find(
@@ -34,7 +38,12 @@ const MintCredentialButton = (): JSX.Element => {
     credentialFee && coinBalance ? coinBalance.gt(credentialFee) : false
 
   const isLoading =
-    isCredentialFeeLoading || isBalanceLoading || isValidating || isMinting
+    isMinting || isValidating || isCredentialFeeLoading || isBalanceLoading
+  const loadingText = isMinting
+    ? mintLoadingText
+    : isValidating
+    ? "Checking your NFTs"
+    : "Checking your balance"
 
   const isDisabled =
     isInvalidImage ||
@@ -50,7 +59,7 @@ const MintCredentialButton = (): JSX.Element => {
       size="lg"
       isDisabled={isDisabled}
       isLoading={isLoading}
-      loadingText={isValidating ? "Checking your NFTs" : loadingText}
+      loadingText={loadingText}
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
       onClick={() => {

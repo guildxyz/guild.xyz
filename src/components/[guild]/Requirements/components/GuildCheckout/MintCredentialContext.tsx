@@ -97,8 +97,7 @@ const MintCredentialProviderComponent = ({
       data &&
       (data.width < MIN_IMAGE_WH || data.height < MIN_IMAGE_WH)
 
-  const shouldFetchImage =
-    id && typeof credentialType === "number" && !isInvalidImage && !isTooSmallImage
+  const shouldFetchImage = id && typeof credentialType === "number"
   const {
     data: credentialImage,
     isValidating: isImageValidating,
