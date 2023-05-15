@@ -18,7 +18,7 @@ import { useController, useFormContext, useWatch } from "react-hook-form"
 const LogicFormControl = (): JSX.Element => {
   const {
     resetField,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useFormContext()
 
   const requirements = useWatch({ name: "requirements" })
@@ -61,7 +61,7 @@ const LogicFormControl = (): JSX.Element => {
   useEffect(() => {
     if (anyOfNumFieldProps.value === requirementCount)
       anyOfNumOnChange(Math.max(requirementCount - 1, 1))
-    if (requirementCount <= 2) logicOnChange("OR")
+    if (requirementCount <= 2 && dirtyFields.requirements) logicOnChange("OR")
   }, [requirementCount])
 
   return (
