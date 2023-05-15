@@ -1,5 +1,6 @@
-import { Box, Flex, SimpleGrid, Spinner } from "@chakra-ui/react"
+import { Box, Flex, Spinner } from "@chakra-ui/react"
 import GuildCard from "components/explorer/GuildCard"
+import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
 import useSWR from "swr"
@@ -29,14 +30,11 @@ const ExploreTrendingGuilds = (): JSX.Element => {
       ) : (
         <>
           <Box maxH="70vh" overflow="hidden" position="relative">
-            <SimpleGrid
-              columns={{ base: 1, md: 2, lg: 3 }}
-              spacing={{ base: 5, md: 6 }}
-            >
+            <GuildCardsGrid>
               {renderedGuilds.map((guild) => (
                 <GuildCard key={guild.urlName} guildData={guild} />
               ))}
-            </SimpleGrid>
+            </GuildCardsGrid>
 
             <Flex
               alignItems="end"

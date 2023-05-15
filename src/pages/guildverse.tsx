@@ -3,7 +3,7 @@ import BrainCard from "components/brain/BrainCard"
 import FilterSelect, { FilterOption } from "components/brain/FilterSelect"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
-import CategorySection from "components/explorer/CategorySection"
+import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import SearchBar from "components/explorer/SearchBar"
 import { GetServerSideProps } from "next"
 import { useEffect, useMemo, useState } from "react"
@@ -52,11 +52,11 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
           <SearchBar placeholder="Search" {...{ search, setSearch }} />
           <FilterSelect setFilterData={setFilterData} />
         </SimpleGrid>
-        <CategorySection fallbackText="There are no pages">
+        <GuildCardsGrid>
           {renderedCards.map((card) => (
             <BrainCard pageData={card} key={card.id} />
           ))}
-        </CategorySection>
+        </GuildCardsGrid>
       </Layout>
     </>
   )

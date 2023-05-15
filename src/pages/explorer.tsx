@@ -24,9 +24,9 @@ import Layout from "components/common/Layout"
 import LinkButton from "components/common/LinkButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
-import CategorySection from "components/explorer/CategorySection"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
 import GuildCard from "components/explorer/GuildCard"
+import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import OrderSelect, { OrderOptions } from "components/explorer/OrderSelect"
 import SearchBar from "components/explorer/SearchBar"
 import useMemberships, {
@@ -203,13 +203,13 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               </Stack>
             </Card>
           ) : usersGuilds?.length ? (
-            <CategorySection fallbackText={`No results for ${search}`}>
+            <GuildCardsGrid>
               {usersGuilds.map((guild) => (
                 <ExplorerCardMotionWrapper key={guild.urlName}>
                   <GuildCard guildData={guild} />
                 </ExplorerCardMotionWrapper>
               ))}
-            </CategorySection>
+            </GuildCardsGrid>
           ) : (
             <Card p="6">
               <Stack
@@ -258,20 +258,23 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               <OrderSelect {...{ order, setOrder }} />
             </SimpleGrid>
 
-            <CategorySection
-              fallbackText={
-                search?.length
-                  ? `No results for ${search}`
-                  : "Can't fetch guilds from the backend right now. Check back later!"
-              }
-            >
-              {renderedGuilds.length &&
-                renderedGuilds.map((guild) => (
+            {!renderedGuilds.length ? (
+              !search?.length ? (
+                <Text>
+                  Can't fetch guilds from the backend right now. Check back later!
+                </Text>
+              ) : (
+                <Text>{`No results for ${search}`}</Text>
+              )
+            ) : (
+              <GuildCardsGrid>
+                {renderedGuilds.map((guild) => (
                   <ExplorerCardMotionWrapper key={guild.urlName}>
                     <GuildCard guildData={guild} />
                   </ExplorerCardMotionWrapper>
                 ))}
-            </CategorySection>
+              </GuildCardsGrid>
+            )}
           </Section>
 
           <Center>

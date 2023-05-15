@@ -8,7 +8,7 @@ import {
 } from "components/brain/utils/brainFetchers"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
-import CategorySection from "components/explorer/CategorySection"
+import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import { GetServerSideProps } from "next"
 import { NotionAPI } from "notion-client"
 import { NotionRenderer } from "react-notion-x"
@@ -33,11 +33,11 @@ const PageDetails = ({ blockMap, linkedPageContents, pageId, pageLogo }) => (
         }}
       />
       {linkedPageContents && (
-        <CategorySection fallbackText="There are no linked pages" mt="6">
+        <GuildCardsGrid mt="6">
           {linkedPageContents?.map((page) => (
             <PageBrainCard pageData={page} key={page.id} />
           ))}
-        </CategorySection>
+        </GuildCardsGrid>
       )}
     </Layout>
   </>
