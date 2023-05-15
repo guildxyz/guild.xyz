@@ -5,12 +5,12 @@ import GUILD_CREDENTIAL_ABI from "static/abis/guildCredential.json"
 import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import {
-  UNIVERSAL_ROUTER_COMMANDS,
   encodePermit2Permit,
   encodeUnwrapEth,
   encodeV2SwapExactOut,
   encodeV3SwapExactOut,
   encodeWrapEth,
+  UNIVERSAL_ROUTER_COMMANDS,
 } from "./encoders"
 
 export type TokenBuyerContractConfig = Partial<
@@ -257,10 +257,10 @@ export const paymentSupportedChains: Chain[] = Object.keys(
 ) as Chain[]
 
 export const GUILD_CREDENTIAL_CONTRACT = {
-  // POLYGON_MUMBAI: {
-  //   address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
-  //   abi: GUILD_CREDENTIAL_ABI,
-  // },
+  POLYGON_MUMBAI: {
+    address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
+    abi: GUILD_CREDENTIAL_ABI,
+  },
   POLYGON: {
     address: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
     abi: GUILD_CREDENTIAL_ABI,

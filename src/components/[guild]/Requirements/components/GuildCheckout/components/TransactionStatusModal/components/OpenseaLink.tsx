@@ -14,7 +14,7 @@ const OpenseaLink = (): JSX.Element => {
   const { mintedTokenId } = useMintCredentialContext()
 
   const openseaBaseUrl: Record<GuildCredentialsSupportedChain, string> = {
-    // POLYGON_MUMBAI: "https://testnets.opensea.io/assets/mumbai",
+    POLYGON_MUMBAI: "https://testnets.opensea.io/assets/mumbai",
     POLYGON: "https://opensea.io/assets/matic",
   }
 
