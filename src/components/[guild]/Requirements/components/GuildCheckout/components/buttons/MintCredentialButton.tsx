@@ -14,7 +14,7 @@ const MintCredentialButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { id, urlName } = useGuild()
 
-  const { error } = useMintCredentialContext()
+  const { error, isInvalidImage, isTooSmallImage } = useMintCredentialContext()
 
   const { chainId } = useWeb3React()
 
@@ -37,6 +37,8 @@ const MintCredentialButton = (): JSX.Element => {
     isCredentialFeeLoading || isBalanceLoading || isValidating || isMinting
 
   const isDisabled =
+    isInvalidImage ||
+    isTooSmallImage ||
     !GUILD_CREDENTIAL_CONTRACT[Chains[chainId]] ||
     !isSufficientBalance ||
     error ||
@@ -59,7 +61,9 @@ const MintCredentialButton = (): JSX.Element => {
       }}
       data-dd-action-name="Mint credential (GuildCheckout)"
     >
-      {!GUILD_CREDENTIAL_CONTRACT[Chains[chainId]]
+      {isInvalidImage || isTooSmallImage
+        ? "Setup required"
+        : !GUILD_CREDENTIAL_CONTRACT[Chains[chainId]]
         ? `Unsupported chain`
         : alreadyMintedOnChain
         ? "Already minted"
