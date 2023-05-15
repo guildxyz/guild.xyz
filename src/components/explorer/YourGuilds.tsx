@@ -5,8 +5,7 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import LinkButton from "components/common/LinkButton"
 import Section from "components/common/Section"
-import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
-import GuildCard from "components/explorer/GuildCard"
+import GuildCard, { GuildSkeletonCard } from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import useMemberships, {
   Memberships,
@@ -38,7 +37,7 @@ const YourGuilds = ({ guildsInitial }: Props) => {
    * `?order=members` is the default for the other filtered request too, so only one
    * request will be sent. There'll be a separate endpoint for it in the future
    */
-  const { data: allGuilds, isLoading: isAllLoading } = useSWR(
+  const { data: allGuilds, isLoading: isGuildsLoading } = useSWR(
     `/guild?order=members`,
     {
       fallbackData: guildsInitial,
@@ -46,7 +45,7 @@ const YourGuilds = ({ guildsInitial }: Props) => {
     }
   )
 
-  const { memberships } = useMemberships()
+  const { memberships, isLoading: isMembershipsLoading } = useMemberships()
   const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>(
     getUsersGuilds(memberships, allGuilds)
   )
@@ -103,12 +102,16 @@ const YourGuilds = ({ guildsInitial }: Props) => {
             </Button>
           </Stack>
         </Card>
+      ) : isGuildsLoading || isMembershipsLoading ? (
+        <GuildCardsGrid>
+          {[...Array(3)].map((_, i) => (
+            <GuildSkeletonCard key={i} />
+          ))}
+        </GuildCardsGrid>
       ) : usersGuilds?.length ? (
         <GuildCardsGrid>
           {usersGuilds.map((guild) => (
-            <ExplorerCardMotionWrapper key={guild.urlName}>
-              <GuildCard guildData={guild} />
-            </ExplorerCardMotionWrapper>
+            <GuildCard guildData={guild} key={guild.urlName} />
           ))}
         </GuildCardsGrid>
       ) : (
