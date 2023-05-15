@@ -5,12 +5,12 @@ import GUILD_CREDENTIAL_ABI from "static/abis/guildCredential.json"
 import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import {
-  UNIVERSAL_ROUTER_COMMANDS,
   encodePermit2Permit,
   encodeUnwrapEth,
   encodeV2SwapExactOut,
   encodeV3SwapExactOut,
   encodeWrapEth,
+  UNIVERSAL_ROUTER_COMMANDS,
 } from "./encoders"
 
 export type TokenBuyerContractConfig = Partial<
@@ -44,10 +44,10 @@ const DEFAULT_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
     address: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
     abi: OLD_TOKEN_BUYER_ABI,
   },
-  BSC: {
-    address: "0xde0d301c75779423d962c2e538d0f326004e7c83",
-    abi: TOKEN_BUYER_ABI,
-  },
+  // BSC: {
+  //   address: "0xde0d301c75779423d962c2e538d0f326004e7c83",
+  //   abi: TOKEN_BUYER_ABI,
+  // },
   GOERLI: {
     address: "0x1eeaab336061d64f1d271eed529991f7ae7cc478",
     abi: TOKEN_BUYER_ABI,
@@ -78,7 +78,7 @@ export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
   ETHEREUM: "https://api.0x.org",
   GOERLI: "https://goerli.api.0x.org",
   POLYGON: "https://polygon.api.0x.org",
-  BSC: "https://bsc.api.0x.org",
+  // BSC: "https://bsc.api.0x.org",
   // OPTIMISM: "https://optimism.api.0x.org",
   // FANTOM: "https://fantom.api.0x.org",
   // CELO: "https://celo.api.0x.org",
