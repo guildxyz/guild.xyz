@@ -27,11 +27,7 @@ import TransactionStatusModal from "./components/TransactionStatusModal"
 import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaLink"
 import { useMintCredentialContext } from "./MintCredentialContext"
 
-type Props = {
-  isSetup?: boolean
-}
-
-const MintCredential = ({ isSetup }: Props): JSX.Element => {
+const MintCredential = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
@@ -63,7 +59,7 @@ const MintCredential = ({ isSetup }: Props): JSX.Element => {
             }
           : {})}
       >
-        {isSetup ? "Setup Credential" : "Mint Credential"}
+        {isInvalidImage || isTooSmallImage ? "Setup Credential" : "Mint Credential"}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">

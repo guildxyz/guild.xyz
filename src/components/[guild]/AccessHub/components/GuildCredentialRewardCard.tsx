@@ -71,7 +71,7 @@ const GuildCredentialRewardCard = () => {
         }}
       >
         {(!(isInvalidImage || isTooSmallImage) || isAdmin) && (
-          <DynamicMintCredential isSetup={isInvalidImage || isTooSmallImage} />
+          <DynamicMintCredential />
         )}
       </RewardCard>
     </CardMotionWrapper>
