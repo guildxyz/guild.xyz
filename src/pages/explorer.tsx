@@ -72,22 +72,31 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   const guildsListEl = useRef(null)
 
-  const {
-    data: [allGuilds, filteredGuilds],
-    isValidating: isLoading,
-  } = useSWR(
+  /**
+   * Fetching all guilds without search params to filter user's guilds out of it.
+   * `?order=members` is the default for the other filtered request too, so only one
+   * request will be sent. There'll be a separate endpoint for it in the future
+   */
+  const { data: allGuilds, isLoading: isAllLoading } = useSWR(
+    `/guild?order=members`,
+    {
+      fallbackData: guildsInitial,
+      dedupingInterval: 60000, // one minute
+    }
+  )
+
+  const { data: filteredGuilds, isValidating: isFilteredValidating } = useSWR(
     `/guild?${query}`,
     (url: string) =>
-      fetcher(url).then((data) => [
-        data,
+      fetcher(url).then((data) =>
         data.filter(
           (guild) =>
             (guild.platforms?.length > 0 && guild.memberCount > 0) ||
             guild.memberCount > 1
-        ),
-      ]),
+        )
+      ),
     {
-      fallbackData: [guildsInitial, guildsInitial],
+      fallbackData: guildsInitial,
       dedupingInterval: 60000, // one minute
     }
   )
@@ -150,7 +159,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         <Section
           title="Your guilds"
           titleRightElement={
-            (usersGuilds?.length || memberships?.length) && (
+            usersGuilds?.length && (
               <Box my="-2 !important" ml="auto !important">
                 <DarkMode>
                   <LinkButton
@@ -193,19 +202,13 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
                 </Button>
               </Stack>
             </Card>
-          ) : usersGuilds?.length || memberships?.length ? (
-            <CategorySection
-              // titleRightElement={
-              //   account && (!memberships || isLoading) && <Spinner size="sm" />
-              // }
-              fallbackText={`No results for ${search}`}
-            >
-              {(usersGuilds.length || !search) &&
-                usersGuilds.map((guild) => (
-                  <ExplorerCardMotionWrapper key={guild.urlName}>
-                    <GuildCard guildData={guild} />
-                  </ExplorerCardMotionWrapper>
-                ))}
+          ) : usersGuilds?.length ? (
+            <CategorySection fallbackText={`No results for ${search}`}>
+              {usersGuilds.map((guild) => (
+                <ExplorerCardMotionWrapper key={guild.urlName}>
+                  <GuildCard guildData={guild} />
+                </ExplorerCardMotionWrapper>
+              ))}
             </CategorySection>
           ) : (
             <Card p="6">
@@ -237,7 +240,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           <Section
             title="Explore all guilds"
             titleRightElement={
-              isLoading ? (
+              isFilteredValidating ? (
                 <Spinner size="sm" />
               ) : (
                 <Tag size="sm">{filteredGuilds.length}</Tag>
@@ -252,7 +255,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               <GridItem colSpan={{ base: 1, md: 2 }}>
                 <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
               </GridItem>
-              <OrderSelect {...{ isLoading, order, setOrder }} />
+              <OrderSelect {...{ order, setOrder }} />
             </SimpleGrid>
 
             <CategorySection
