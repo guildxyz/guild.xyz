@@ -59,24 +59,10 @@ const LogicFormControl = (): JSX.Element => {
   )
 
   useEffect(() => {
-    if (logic === "AND") {
-      anyOfNumOnChange(1)
-      return
-    }
-
-    if (anyOfNumFieldProps.value >= requirementCount - 1)
+    if (anyOfNumFieldProps.value === requirementCount)
       anyOfNumOnChange(Math.max(requirementCount - 1, 1))
-
-    if (
-      anyOfNumFieldProps.value === 1 ||
-      requirementCount === anyOfNumFieldProps.value
-    ) {
-      logicOnChange("OR")
-      return
-    }
-
-    if (requirementCount > anyOfNumFieldProps.value) logicOnChange("ANY_OF")
-  }, [requirementCount, anyOfNumFieldProps.value])
+    if (requirementCount <= 2) logicOnChange("OR")
+  }, [requirementCount])
 
   return (
     <Stack alignItems="start" direction={{ base: "column", sm: "row" }}>
@@ -112,9 +98,19 @@ const LogicFormControl = (): JSX.Element => {
               position="relative"
               top={-0.5}
               {...anyOfNumFieldProps}
-              onChange={(_, valueAsNumber) =>
-                anyOfNumOnChange(!isNaN(valueAsNumber) ? valueAsNumber : "")
-              }
+              onChange={(_, valueAsNumber) => {
+                if (!isNaN(valueAsNumber)) {
+                  anyOfNumOnChange(valueAsNumber)
+
+                  logicOnChange(
+                    valueAsNumber === 1 || valueAsNumber === requirementCount
+                      ? "OR"
+                      : "ANY_OF"
+                  )
+                } else {
+                  anyOfNumOnChange("")
+                }
+              }}
               min={1}
               max={Math.max(requirementCount - 1, 1)}
             >
