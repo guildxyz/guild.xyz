@@ -1,11 +1,10 @@
-import { HStack, Icon, Text, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import RewardCard from "components/common/RewardCard"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { useMintCredentialContext } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
 import dynamic from "next/dynamic"
-import { CircleWavyCheck, Question, Warning } from "phosphor-react"
+import { CircleWavyCheck, Question } from "phosphor-react"
 
 const DynamicMintCredential = dynamic(
   () =>
@@ -43,18 +42,19 @@ const GuildCredentialRewardCard = () => {
         image="/img/guild-credential-key-3d.svg"
         colorScheme={isInvalidImage || isTooSmallImage ? "gray" : "GUILD"}
         borderStyle={(isInvalidImage || isTooSmallImage) && "dashed"}
-        description={
-          isInvalidImage || isTooSmallImage ? (
-            <HStack>
-              <Icon as={Warning} color="orange.300" weight="fill" />
-              <Text as="span">{`Please upload ${
-                isTooSmallImage ? "a bigger" : "an"
-              } image for your guild`}</Text>
-            </HStack>
-          ) : (
-            "On-chain proof of membership"
-          )
-        }
+        description="On-chain proof of membership"
+        // description={
+        //   isInvalidImage || isTooSmallImage ? (
+        //     <HStack>
+        //       <Icon as={Warning} color="orange.300" weight="fill" />
+        //       <Text as="span">{`Please upload ${
+        //         isTooSmallImage ? "a bigger" : "an"
+        //       } image for your guild`}</Text>
+        //     </HStack>
+        //   ) : (
+        //     "On-chain proof of membership"
+        //   )
+        // }
         bg={bgColor}
         _before={{
           content: '""',
@@ -70,18 +70,8 @@ const GuildCredentialRewardCard = () => {
           opacity: "0.07",
         }}
       >
-        {isInvalidImage || isTooSmallImage ? (
-          <Tooltip
-            label="Members of your community aren't able to mint this NFT"
-            placement="top"
-            hasArrow
-          >
-            <Button variant="outline" isDisabled>
-              Mint credential
-            </Button>
-          </Tooltip>
-        ) : (
-          <DynamicMintCredential />
+        {(!(isInvalidImage || isTooSmallImage) || isAdmin) && (
+          <DynamicMintCredential isSetup={isInvalidImage || isTooSmallImage} />
         )}
       </RewardCard>
     </CardMotionWrapper>

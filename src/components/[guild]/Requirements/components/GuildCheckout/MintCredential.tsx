@@ -1,4 +1,8 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -9,25 +13,30 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { useMintCredentialContext } from "./MintCredentialContext"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import AlphaTag from "./components/AlphaTag"
+import MintCredentialButton from "./components/buttons/MintCredentialButton"
 import CredentialFees from "./components/CredentialFees"
 import CredentialImage from "./components/CredentialImage"
 import CredentialReward from "./components/CredentialReward"
 import MintCredentialChainPicker from "./components/MintCredentialChainPicker"
 import TransactionStatusModal from "./components/TransactionStatusModal"
 import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaLink"
-import MintCredentialButton from "./components/buttons/MintCredentialButton"
+import { useMintCredentialContext } from "./MintCredentialContext"
 
-const MintCredential = (): JSX.Element => {
+type Props = {
+  isSetup?: boolean
+}
+
+const MintCredential = ({ isSetup }: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
-  const { isOpen, onOpen, onClose } = useMintCredentialContext()
+  const { isOpen, onOpen, onClose, isInvalidImage, isTooSmallImage } =
+    useMintCredentialContext()
 
   const { colorMode } = useColorMode()
 
@@ -54,7 +63,7 @@ const MintCredential = (): JSX.Element => {
             }
           : {})}
       >
-        Mint Credential
+        {isSetup ? "Setup Credential" : "Mint Credential"}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
@@ -69,6 +78,18 @@ const MintCredential = (): JSX.Element => {
           <ModalCloseButton />
 
           <ModalBody pb="6">
+            {(isInvalidImage || isTooSmallImage) && (
+              <Alert status="error" mb="6" pb="5">
+                <AlertIcon />
+                <Stack position="relative" top={1}>
+                  <AlertTitle>Image too small</AlertTitle>
+                  <AlertDescription>
+                    Please upload a bigger image in guild settings to activate Guild
+                    Credential
+                  </AlertDescription>
+                </Stack>
+              </Alert>
+            )}
             <CredentialImage />
           </ModalBody>
 
