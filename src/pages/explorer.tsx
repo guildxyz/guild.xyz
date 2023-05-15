@@ -1,11 +1,7 @@
 import {
-  Box,
   Center,
-  DarkMode,
   Divider,
   GridItem,
-  HStack,
-  Img,
   SimpleGrid,
   Spinner,
   Stack,
@@ -17,11 +13,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import Button from "components/common/Button"
-import Card from "components/common/Card"
 import Layout from "components/common/Layout"
-import LinkButton from "components/common/LinkButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
@@ -29,14 +21,11 @@ import GuildCard from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import OrderSelect, { OrderOptions } from "components/explorer/OrderSelect"
 import SearchBar from "components/explorer/SearchBar"
-import useMemberships, {
-  Memberships,
-} from "components/explorer/hooks/useMemberships"
+import YourGuilds from "components/explorer/YourGuilds"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
-import { Plus, Wallet } from "phosphor-react"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
@@ -45,18 +34,8 @@ type Props = {
   guilds: GuildBase[]
 }
 
-const getUsersGuilds = (memberships: Memberships, guildsData: any) => {
-  if (!memberships?.length || !guildsData?.length) return []
-  const usersGuildsIds = memberships.map((membership) => membership.guildId)
-  const newUsersGuilds = guildsData.filter((guild) =>
-    usersGuildsIds.includes(guild.id)
-  )
-  return newUsersGuilds
-}
-
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const { account } = useWeb3React()
-  const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const prevSearch = usePrevious(search)
@@ -71,19 +50,6 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   }, [search, prevSearch])
 
   const guildsListEl = useRef(null)
-
-  /**
-   * Fetching all guilds without search params to filter user's guilds out of it.
-   * `?order=members` is the default for the other filtered request too, so only one
-   * request will be sent. There'll be a separate endpoint for it in the future
-   */
-  const { data: allGuilds, isLoading: isAllLoading } = useSWR(
-    `/guild?order=members`,
-    {
-      fallbackData: guildsInitial,
-      dedupingInterval: 60000, // one minute
-    }
-  )
 
   const { data: filteredGuilds, isValidating: isFilteredValidating } = useSWR(
     `/guild?${query}`,
@@ -118,15 +84,6 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     [filteredGuilds, renderedGuildsCount]
   )
 
-  const { memberships } = useMemberships()
-  const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>(
-    getUsersGuilds(memberships, allGuilds)
-  )
-
-  useEffect(() => {
-    setUsersGuilds(getUsersGuilds(memberships, allGuilds))
-  }, [memberships, allGuilds])
-
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
   const bgOpacity = useColorModeValue(0.06, 0.1)
   const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
@@ -156,87 +113,10 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         backgroundOffset={account ? 100 : 90}
         textColor="white"
       >
-        <Section
-          title="Your guilds"
-          titleRightElement={
-            usersGuilds?.length && (
-              <Box my="-2 !important" ml="auto !important">
-                <DarkMode>
-                  <LinkButton
-                    leftIcon={<Plus />}
-                    size="sm"
-                    variant="ghost"
-                    href="/create-guild"
-                  >
-                    Create guild
-                  </LinkButton>
-                </DarkMode>
-              </Box>
-            )
-          }
-          mb={{ base: 8, md: 12, lg: 14 }}
-          sx={{ ".chakra-heading": { color: "white" } }}
-        >
-          {!account ? (
-            <Card p="6">
-              <Stack
-                direction={{ base: "column", sm: "row" }}
-                justifyContent="space-between"
-                alignItems="center"
-                spacing="5"
-              >
-                <HStack spacing="4">
-                  <Img src="landing/robot.svg" boxSize={"2em"} />
-                  <Text fontWeight={"semibold"}>
-                    Connect your wallet to view your guilds / create new ones
-                  </Text>
-                </HStack>
-                <Button
-                  w={{ base: "full", sm: "auto" }}
-                  flexShrink="0"
-                  colorScheme="indigo"
-                  leftIcon={<Wallet />}
-                  onClick={openWalletSelectorModal}
-                >
-                  Connect
-                </Button>
-              </Stack>
-            </Card>
-          ) : usersGuilds?.length ? (
-            <GuildCardsGrid>
-              {usersGuilds.map((guild) => (
-                <ExplorerCardMotionWrapper key={guild.urlName}>
-                  <GuildCard guildData={guild} />
-                </ExplorerCardMotionWrapper>
-              ))}
-            </GuildCardsGrid>
-          ) : (
-            <Card p="6">
-              <Stack
-                direction={{ base: "column", md: "row" }}
-                justifyContent="space-between"
-                spacing="6"
-              >
-                <HStack>
-                  <Text fontWeight={"semibold"}>
-                    You're not a member of any guilds yet. Explore and join some
-                    below, or create your own!
-                  </Text>
-                </HStack>
-                <LinkButton
-                  leftIcon={<Plus />}
-                  href="/create-guild"
-                  colorScheme="gray"
-                >
-                  Create guild
-                </LinkButton>
-              </Stack>
-            </Card>
-          )}
-        </Section>
+        <YourGuilds guildsInitial={guildsInitial} />
 
         <Stack ref={guildsListEl} spacing={{ base: 8, md: 10 }}>
-          {memberships?.length && <Divider />}
+          {account && <Divider />}
           <Section
             title="Explore all guilds"
             titleRightElement={
