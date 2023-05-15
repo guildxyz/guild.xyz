@@ -22,9 +22,17 @@ type Props = {
 const getUsersGuilds = (memberships: Memberships, guildsData: any) => {
   if (!memberships?.length || !guildsData?.length) return []
   const usersGuildsIds = memberships.map((membership) => membership.guildId)
-  const newUsersGuilds = guildsData.filter((guild) =>
-    usersGuildsIds.includes(guild.id)
-  )
+  const newUsersGuilds = guildsData
+    .reduce((acc, currGuild) => {
+      if (usersGuildsIds.includes(currGuild.id))
+        acc.push({
+          ...currGuild,
+          joinedAt: memberships.find(({ guildId }) => currGuild.id === guildId)
+            .joinedAt,
+        })
+      return acc
+    }, [])
+    .sort((guildA, guildB) => (guildA.joinedAt > guildB.joinedAt ? 1 : -1))
   return newUsersGuilds
 }
 
@@ -102,7 +110,9 @@ const YourGuilds = ({ guildsInitial }: Props) => {
             </Button>
           </Stack>
         </Card>
-      ) : isGuildsLoading || isMembershipsLoading ? (
+      ) : isGuildsLoading ||
+        isMembershipsLoading ||
+        (allGuilds && memberships && !usersGuilds) ? (
         <GuildCardsGrid>
           {[...Array(3)].map((_, i) => (
             <GuildSkeletonCard key={i} />

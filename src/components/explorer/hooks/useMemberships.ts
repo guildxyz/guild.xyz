@@ -5,6 +5,7 @@ export type Memberships = Array<{
   guildId: number
   roleIds: number[]
   isAdmin: boolean
+  joinedAt: string
 }>
 
 const useMemberships = () => {

@@ -1,11 +1,11 @@
 import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import { useMintCredentialContext } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { useMintCredentialContext } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -90,7 +90,12 @@ const useJoin = (onSuccess?: () => void) => {
         mutate(
           (prev) => [
             ...prev,
-            { guildId: guild.id, isAdmin: false, roleIds: response.accessedRoleIds },
+            {
+              guildId: guild.id,
+              isAdmin: false,
+              roleIds: response.accessedRoleIds,
+              joinedAt: new Date().toISOString(),
+            },
           ],
           { revalidate: false }
         )
