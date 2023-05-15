@@ -178,6 +178,11 @@ module.exports = {
   async redirects() {
     return [
       {
+        source: "/",
+        destination: "/explorer",
+        permanent: false,
+      },
+      {
         source: "/community",
         destination:
           "https://help.guild.xyz/en/collections/3826818-our-guild-the-community",
