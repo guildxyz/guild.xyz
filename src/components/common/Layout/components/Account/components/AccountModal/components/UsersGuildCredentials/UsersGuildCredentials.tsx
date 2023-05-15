@@ -1,6 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react"
-import Section from "components/common/Section"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import Section from "components/common/Section"
 import useUsersGuildCredentials from "hooks/useUsersGuildCredentials"
 import Credential from "./Credential"
 import CredentialSkeleton from "./CredentialSkeleton"
@@ -26,7 +26,9 @@ const UsersGuildCredentials = () => {
             />
           ))
         ) : (
-          <Text colorScheme="gray">You haven't minted Guild Credentials yet.</Text>
+          <Text colorScheme="gray">
+            You haven't minted any Guild Credentials yet.
+          </Text>
         )}
       </Flex>
     </Section>
