@@ -1,4 +1,5 @@
 import {
+  Divider,
   HStack,
   Icon,
   IconButton,
@@ -16,11 +17,11 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
+import useUser from "components/[guild]/hooks/useUser"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
@@ -114,6 +115,7 @@ const AccountModal = () => {
             </ModalBody>
             <ModalFooter flexDir="column" pt="10" gap={8}>
               <AccountConnections />
+              <Divider />
               <UsersGuildCredentials />
             </ModalFooter>
           </>
