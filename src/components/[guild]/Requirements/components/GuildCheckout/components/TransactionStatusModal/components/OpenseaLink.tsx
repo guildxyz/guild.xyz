@@ -15,7 +15,7 @@ const OpenseaLink = (): JSX.Element => {
 
   const openseaBaseUrl: Record<GuildCredentialsSupportedChain, string> = {
     POLYGON_MUMBAI: "https://testnets.opensea.io/assets/mumbai",
-    POLYGON: "https://opensea.io/assets/matic",
+    // POLYGON: "https://opensea.io/assets/matic",
   }
 
   if (!mintedTokenId) return null

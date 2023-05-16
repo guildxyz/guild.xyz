@@ -42,8 +42,12 @@ const fetchGuildCredentialsOnChain = async (address: string, chain: Chain) => {
 
   const usersCredentialMetadataJSONs = await Promise.all(
     usersCredentialTokenURIsOnChain.map(async ({ chainId, tokenId, tokenURI }) => {
-      const res = await fetch(tokenURI)
-      const metadata: GuildCredentialMetadata = await res.json()
+      const metadata: GuildCredentialMetadata = JSON.parse(
+        Buffer.from(
+          tokenURI.replace("data:application/json;base64,", ""),
+          "base64"
+        ).toString("utf-8")
+      )
 
       return {
         ...metadata,
