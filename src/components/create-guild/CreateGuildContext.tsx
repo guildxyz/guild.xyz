@@ -9,7 +9,7 @@ import {
   useState,
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { GuildFormType, PlatformName as BasePlatformName } from "types"
+import { PlatformName as BasePlatformName, GuildFormType } from "types"
 import capitalize from "utils/capitalize"
 import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
@@ -21,7 +21,8 @@ type PlatformName = BasePlatformName | "DEFAULT"
 type TemplateType = "BASIC" | "GROWTH"
 
 type Step = {
-  label: string
+  title: string
+  label?: string
   description?: string
   content: JSX.Element
 }
@@ -186,21 +187,23 @@ const CreateGuildProvider = ({
 
   const steps: Step[] = [
     {
-      label: "Choose platform",
-      description: `${
-        platform === "DEFAULT"
+      title: "Choose platform",
+      label: `${
+        !platform
+          ? "Your can connect more later"
+          : platform === "DEFAULT"
           ? "Without platform"
           : capitalize(platform?.toLowerCase() ?? "")
       }${platform !== "DEFAULT" && guildName ? ` - ${guildName}` : ""}`,
       content: <CreateGuildIndex />,
     },
     {
-      label: "Choose template",
-      description: capitalize(template?.toLowerCase() ?? ""),
+      title: "Choose template",
+      label: capitalize(template?.toLowerCase() ?? ""),
       content: <ChooseTemplate />,
     },
     {
-      label: "Basic information",
+      title: "Basic information",
       content: <BasicInfo />,
     },
   ]

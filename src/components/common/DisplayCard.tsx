@@ -13,8 +13,8 @@ const DisplayCard = ({
     <Card
       role="group"
       position="relative"
-      px={{ base: 5, sm: 6 }}
-      py="7"
+      px={{ base: 5, md: 6 }}
+      py={{ base: 6, md: 7 }}
       w="full"
       h="full"
       bg={colorMode === "light" ? "white" : "gray.700"}
