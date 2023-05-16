@@ -8,9 +8,9 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import DisplayCard from "components/common/DisplayCard"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import DisplayCard from "components/common/DisplayCard"
 import Image from "next/image"
 import { CaretRight } from "phosphor-react"
 
@@ -40,6 +40,7 @@ const PlatformSelectButton = ({
     <DisplayCard
       cursor="pointer"
       onClick={!account ? openWalletSelectorModal : onClick ?? selectPlatform}
+      h="auto"
       {...rest}
       data-test={`${platform}-select-button${
         isPlatformConnected ? "-connected" : ""
