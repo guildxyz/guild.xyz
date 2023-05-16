@@ -10,13 +10,10 @@ const CredentialFees = (): JSX.Element => {
   const { chainId } = useWeb3React()
   const { credentialFee, credentialFeeError, isCredentialFeeLoading } =
     useCredentialFee()
-  const credentialFeeInFloat =
-    credentialFee &&
-    parseFloat(
-      formatUnits(credentialFee, RPC[Chains[chainId]].nativeCurrency.decimals)
-    )
+  const { symbol, decimals } = RPC[Chains[chainId]]?.nativeCurrency ?? {}
 
-  const symbol = RPC[Chains[chainId]].nativeCurrency.symbol
+  const credentialFeeInFloat =
+    credentialFee && decimals && parseFloat(formatUnits(credentialFee, decimals))
 
   return (
     <FeesTable
