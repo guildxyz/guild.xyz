@@ -63,9 +63,11 @@ const AccessHub = (): JSX.Element => {
       gap={4}
       mb="10"
     >
-      {featureFlags.includes("GUILD_CREDENTIAL") && (isMember || isAdmin) && (
-        <DynamicGuildCredentialRewardCard />
-      )}
+      {
+        /*featureFlags.includes("GUILD_CREDENTIAL") &&*/ (isMember || isAdmin) && (
+          <DynamicGuildCredentialRewardCard />
+        )
+      }
       {accessedGuildPlatforms?.length || futurePoaps?.length ? (
         <>
           {accessedGuildPlatforms.map((platform) => {
