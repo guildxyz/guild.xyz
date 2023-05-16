@@ -42,11 +42,7 @@ const fetchGuildCredentialsOnChain = async (address: string, chain: Chain) => {
 
   const usersCredentialMetadataJSONs = await Promise.all(
     usersCredentialTokenURIsOnChain.map(async ({ chainId, tokenId, tokenURI }) => {
-      const pinataURL = tokenURI.replace(
-        "ipfs://",
-        process.env.NEXT_PUBLIC_IPFS_GATEWAY
-      )
-      const res = await fetch(pinataURL)
+      const res = await fetch(tokenURI)
       const metadata: GuildCredentialMetadata = await res.json()
 
       return {

@@ -23,9 +23,12 @@ import useSubmitTransaction from "./useSubmitTransaction"
 type MintData = {
   userAddress: string
   guildAction: GuildAction
+  userId: number
   guildId: number
+  guildName: string
+  createdAt: number
   timestamp: number
-  cid: string
+  credentialImageCID: string
   signature: string
 }
 
@@ -58,9 +61,12 @@ const useMintCredential = () => {
     const {
       userAddress,
       guildAction,
+      userId,
       guildId,
+      guildName,
+      createdAt,
       timestamp,
-      cid,
+      credentialImageCID,
       signature,
     }: MintData = await fetcher("/assets/credentials", {
       body: {
@@ -73,11 +79,16 @@ const useMintCredential = () => {
     setLoadingText("Check your wallet")
     const contractCallParams = [
       NULL_ADDRESS,
-      userAddress,
-      guildAction,
-      guildId,
+      {
+        receiver: userAddress,
+        guildAction,
+        userId,
+        guildId,
+        guildName,
+        createdAt,
+      },
       timestamp,
-      cid,
+      credentialImageCID,
       signature,
       { value: credentialFee },
     ]
