@@ -1,3 +1,3 @@
-import UsersGuildCredentials from "./UsersGuildCredentials"
+import UsersGuildPins from "./UsersGuildPins"
 
-export default UsersGuildCredentials
+export default UsersGuildPins

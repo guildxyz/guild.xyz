@@ -5,32 +5,32 @@ import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import { Chain, Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
-import { GuildCredentialMetadata } from "types"
-import { GUILD_CREDENTIAL_CONTRACT } from "utils/guildCheckout/constants"
+import { GuildPinMetadata } from "types"
+import { GUILD_PIN_CONTRACT } from "utils/guildCheckout/constants"
 
-const fetchGuildCredentialsOnChain = async (address: string, chain: Chain) => {
+const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0])
   const contract = new Contract(
-    GUILD_CREDENTIAL_CONTRACT[chain].address,
-    GUILD_CREDENTIAL_CONTRACT[chain].abi,
+    GUILD_PIN_CONTRACT[chain].address,
+    GUILD_PIN_CONTRACT[chain].abi,
     provider
   )
 
-  const usersCredentialIdsOnChain: BigNumber[] = []
+  const usersGuildPinIdsOnChain: BigNumber[] = []
 
   const balance = await contract.balanceOf(address)
 
   for (let i = 0; i < balance; i++) {
     const newTokenId = await contract.tokenOfOwnerByIndex(address, i)
-    if (newTokenId) usersCredentialIdsOnChain.push(newTokenId)
+    if (newTokenId) usersGuildPinIdsOnChain.push(newTokenId)
   }
 
-  const usersCredentialTokenURIsOnChain = await Promise.all<{
+  const usersGuildPinTokenURIsOnChain = await Promise.all<{
     chainId: number
     tokenId: number
     tokenURI: string
   }>(
-    usersCredentialIdsOnChain.map(async (tokenId) => {
+    usersGuildPinIdsOnChain.map(async (tokenId) => {
       const tokenURI: string = await contract.tokenURI(tokenId)
       return {
         chainId: Chains[chain],
@@ -40,9 +40,9 @@ const fetchGuildCredentialsOnChain = async (address: string, chain: Chain) => {
     })
   )
 
-  const usersCredentialMetadataJSONs = await Promise.all(
-    usersCredentialTokenURIsOnChain.map(async ({ chainId, tokenId, tokenURI }) => {
-      const metadata: GuildCredentialMetadata = JSON.parse(
+  const usersPinsMetadataJSONs = await Promise.all(
+    usersGuildPinTokenURIsOnChain.map(async ({ chainId, tokenId, tokenURI }) => {
+      const metadata: GuildPinMetadata = JSON.parse(
         Buffer.from(
           tokenURI.replace("data:application/json;base64,", ""),
           "base64"
@@ -61,29 +61,29 @@ const fetchGuildCredentialsOnChain = async (address: string, chain: Chain) => {
     })
   )
 
-  return usersCredentialMetadataJSONs
+  return usersPinsMetadataJSONs
 }
 
-const fetchGuildCredentials = async ([_, addresses]) => {
-  const guildCredentialChains = Object.keys(GUILD_CREDENTIAL_CONTRACT) as Chain[]
+const fetchGuildPins = async ([_, addresses]) => {
+  const guildPinChains = Object.keys(GUILD_PIN_CONTRACT) as Chain[]
   const responseArray = await Promise.all(
-    guildCredentialChains.flatMap((chain) =>
-      addresses.flatMap((address) => fetchGuildCredentialsOnChain(address, chain))
+    guildPinChains.flatMap((chain) =>
+      addresses.flatMap((address) => fetchGuildPinsOnChain(address, chain))
     )
   )
 
   return responseArray.flat()
 }
 
-const useUsersGuildCredentials = (disabled = false) => {
+const useUsersGuildPins = (disabled = false) => {
   const { isActive } = useWeb3React()
   const { addresses } = useUser()
 
   const shouldFetch = Boolean(!disabled && isActive && addresses?.length)
 
   return useSWRImmutable<
-    ({ chainId: number; tokenId: number } & GuildCredentialMetadata)[]
-  >(shouldFetch ? ["guildCredentials", addresses] : null, fetchGuildCredentials)
+    ({ chainId: number; tokenId: number } & GuildPinMetadata)[]
+  >(shouldFetch ? ["guildPins", addresses] : null, fetchGuildPins)
 }
 
-export default useUsersGuildCredentials
+export default useUsersGuildPins

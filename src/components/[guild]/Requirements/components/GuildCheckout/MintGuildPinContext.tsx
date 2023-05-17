@@ -42,10 +42,10 @@ const getImageWidthAndHeight = async ([_, imageUrl]): Promise<ImageWH> =>
     img.src = imageUrl
   })
 
-const MintCredentialContext = createContext<
+const MintGuildPinContext = createContext<
   {
-    credentialType: GuildAction
-    credentialImage: string
+    pinType: GuildAction
+    pinImage: string
     isImageValidating: boolean
     isInvalidImage?: boolean
     isTooSmallImage?: boolean
@@ -55,7 +55,7 @@ const MintCredentialContext = createContext<
   } & GuildCheckoutContextType
 >(undefined)
 
-const MintCredentialProviderComponent = ({
+const MintGuildPinProviderComponent = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
   const guildCheckoutContext = useGuildCheckoutContext()
@@ -67,7 +67,7 @@ const MintCredentialProviderComponent = ({
   const { isOwner, isAdmin } = useGuildPermission()
   const { isSuperAdmin } = useUser()
 
-  const credentialType = isOwner
+  const pinType = isOwner
     ? GuildAction.IS_OWNER
     : isAdmin && !isSuperAdmin
     ? GuildAction.IS_ADMIN
@@ -97,25 +97,25 @@ const MintCredentialProviderComponent = ({
       data &&
       (data.width < MIN_IMAGE_WH || data.height < MIN_IMAGE_WH)
 
-  const shouldFetchImage = id && typeof credentialType === "number"
+  const shouldFetchImage = id && typeof pinType === "number"
   const {
-    data: credentialImage,
+    data: pinImage,
     isValidating: isImageValidating,
     error,
   } = useSWRImmutable(
     shouldFetchImage
-      ? `/assets/credentials/image?guildId=${id}&guildAction=${credentialType}`
+      ? `/assets/guildPins/image?guildId=${id}&guildAction=${pinType}`
       : null
   )
 
   const [mintedTokenId, setMintedTokenId] = useState<number>(null)
 
   return (
-    <MintCredentialContext.Provider
+    <MintGuildPinContext.Provider
       value={{
         ...guildCheckoutContext,
-        credentialType,
-        credentialImage,
+        pinType,
+        pinImage,
         isImageValidating,
         isInvalidImage,
         isTooSmallImage,
@@ -125,18 +125,18 @@ const MintCredentialProviderComponent = ({
       }}
     >
       {children}
-    </MintCredentialContext.Provider>
+    </MintGuildPinContext.Provider>
   )
 }
 
-const MintCredentialProvider = ({
+const MintGuildPinProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => (
   <GuildCheckoutProvider>
-    <MintCredentialProviderComponent>{children}</MintCredentialProviderComponent>
+    <MintGuildPinProviderComponent>{children}</MintGuildPinProviderComponent>
   </GuildCheckoutProvider>
 )
 
-const useMintCredentialContext = () => useContext(MintCredentialContext)
+const useMintGuildPinContext = () => useContext(MintGuildPinContext)
 
-export { MintCredentialProvider, useMintCredentialContext }
+export { MintGuildPinProvider, useMintGuildPinContext }

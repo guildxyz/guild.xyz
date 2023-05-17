@@ -8,7 +8,7 @@ type Props = {
   guild: string
 }
 
-const Credential = ({ name, image, guild }: Props) => {
+const GuildPin = ({ name, image, guild }: Props) => {
   const borderWidth = useColorModeValue(2, 0)
   const boxShadow = useColorModeValue(
     "none",
@@ -22,11 +22,11 @@ const Credential = ({ name, image, guild }: Props) => {
       href={`/${guild}`}
       ml={-12}
       _first={{ ml: 0 }}
-      className="credential"
+      className="pin"
       transition="transform 0.2s ease"
       _hover={{
         transform: "translate(0,-0.5rem) scale(1.05)",
-        "~ .credential": {
+        "~ .pin": {
           transform: "translateX(2rem)",
         },
       }}
@@ -44,4 +44,4 @@ const Credential = ({ name, image, guild }: Props) => {
   )
 }
 
-export default Credential
+export default GuildPin

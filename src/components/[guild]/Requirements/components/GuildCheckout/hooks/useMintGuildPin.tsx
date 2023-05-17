@@ -7,17 +7,14 @@ import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
-import useUsersGuildCredentials from "hooks/useUsersGuildCredentials"
+import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { TwitterLogo } from "phosphor-react"
 import { useRef, useState } from "react"
-import { GuildCredentialMetadata } from "types"
+import { GuildPinMetadata } from "types"
 import fetcher from "utils/fetcher"
-import {
-  GUILD_CREDENTIAL_CONTRACT,
-  NULL_ADDRESS,
-} from "utils/guildCheckout/constants"
-import { GuildAction, useMintCredentialContext } from "../MintCredentialContext"
-import useCredentialFee from "./useCredentialFee"
+import { GUILD_PIN_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
+import useGuildPinFee from "./useGuildPinFee"
 import useSubmitTransaction from "./useSubmitTransaction"
 
 type MintData = {
@@ -28,16 +25,16 @@ type MintData = {
   guildName: string
   createdAt: number
   timestamp: number
-  credentialImageCID: string
+  cid: string
   signature: string
 }
 
-const useMintCredential = () => {
+const useMintGuildPin = () => {
   const { captureEvent } = usePostHogContext()
   const { id, name, urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
-  const { mutate } = useUsersGuildCredentials()
+  const { mutate } = useUsersGuildPins()
 
   const toast = useToast()
   const toastIdRef = useRef<ToastId>()
@@ -45,18 +42,18 @@ const useMintCredential = () => {
   const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   const { chainId, account } = useWeb3React()
-  const { credentialType, setMintedTokenId } = useMintCredentialContext()
+  const { pinType, setMintedTokenId } = useMintGuildPinContext()
   const [loadingText, setLoadingText] = useState<string>("")
 
-  const guildCredentialContract = useContract(
-    GUILD_CREDENTIAL_CONTRACT[Chains[chainId]]?.address,
-    GUILD_CREDENTIAL_CONTRACT[Chains[chainId]]?.abi,
+  const guildPinContract = useContract(
+    GUILD_PIN_CONTRACT[Chains[chainId]]?.address,
+    GUILD_PIN_CONTRACT[Chains[chainId]]?.abi,
     true
   )
 
-  const { credentialFee } = useCredentialFee()
+  const { guildPinFee } = useGuildPinFee()
 
-  const mintCredential = async () => {
+  const mintGuildPin = async () => {
     setLoadingText("Uploading metadata")
     const {
       userAddress,
@@ -66,13 +63,13 @@ const useMintCredential = () => {
       guildName,
       createdAt,
       timestamp,
-      credentialImageCID,
+      cid,
       signature,
-    }: MintData = await fetcher("/assets/credentials", {
+    }: MintData = await fetcher("/assets/guildPins", {
       body: {
         userAddress: account,
         guildId: id,
-        guildAction: credentialType,
+        guildAction: pinType,
       },
     })
 
@@ -88,30 +85,30 @@ const useMintCredential = () => {
         createdAt,
       },
       timestamp,
-      credentialImageCID,
+      cid,
       signature,
-      { value: credentialFee },
+      { value: guildPinFee },
     ]
 
     try {
-      await guildCredentialContract.callStatic.claim(...contractCallParams)
+      await guildPinContract.callStatic.claim(...contractCallParams)
     } catch (callstaticError) {
       return Promise.reject(
         callstaticError.errorName ?? callstaticError.reason ?? "Contract error"
       )
     }
 
-    return guildCredentialContract.claim(...contractCallParams)
+    return guildPinContract.claim(...contractCallParams)
   }
 
   return {
-    ...useSubmitTransaction<null>(mintCredential, {
+    ...useSubmitTransaction<null>(mintGuildPin, {
       onSuccess: async (txReceipt) => {
         setLoadingText("")
 
         if (txReceipt.status !== 1) {
           showErrorToast("Transaction failed")
-          captureEvent("Mint credential error (GuildCheckout)", {
+          captureEvent("Mint Guild Pin error (GuildCheckout)", {
             ...postHogOptions,
             txReceipt,
           })
@@ -130,19 +127,19 @@ const useMintCredential = () => {
           try {
             tokenId = transferEvent.args.tokenId.toNumber()
             setMintedTokenId(tokenId)
-            tokenURI = await guildCredentialContract.tokenURI(tokenId)
+            tokenURI = await guildPinContract.tokenURI(tokenId)
           } catch {}
         }
 
-        captureEvent("Minted credential (GuildCheckout)", postHogOptions)
+        captureEvent("Minted Guild Pin (GuildCheckout)", postHogOptions)
 
         try {
-          const metadata: GuildCredentialMetadata = await fetch(
-            `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${tokenURI.replace(
-              "ipfs://",
-              ""
-            )}`
-          ).then((res) => res.json())
+          const metadata: GuildPinMetadata = JSON.parse(
+            Buffer.from(
+              tokenURI.replace("data:application/json;base64,", ""),
+              "base64"
+            ).toString("utf-8")
+          )
 
           mutate((prevData) => [
             ...prevData,
@@ -156,7 +153,7 @@ const useMintCredential = () => {
 
         toastIdRef.current = toast({
           status: "success",
-          title: "Successfully minted credential!",
+          title: "Successfully minted Guild Pin!",
           duration: 8000,
           description: (
             <>
@@ -164,7 +161,7 @@ const useMintCredential = () => {
               <Button
                 as="a"
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  `Just minted my Guild Credential for joining ${name}!\nguild.xyz/${urlName}`
+                  `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`
                 )}`}
                 target="_blank"
                 bg={tweetButtonBackground}
@@ -185,7 +182,7 @@ const useMintCredential = () => {
         showErrorToast(error)
         setLoadingText("")
 
-        captureEvent("Mint credential error (GuildCheckout)", postHogOptions)
+        captureEvent("Mint Guild Pin error (GuildCheckout)", postHogOptions)
         captureEvent("claim pre-call error (GuildCheckout)", {
           ...postHogOptions,
           error,
@@ -196,4 +193,4 @@ const useMintCredential = () => {
   }
 }
 
-export default useMintCredential
+export default useMintGuildPin

@@ -4,17 +4,17 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import useBalance from "hooks/useBalance"
-import useUsersGuildCredentials from "hooks/useUsersGuildCredentials"
-import { GUILD_CREDENTIAL_CONTRACT } from "utils/guildCheckout/constants"
-import useCredentialFee from "../../hooks/useCredentialFee"
-import useMintCredential from "../../hooks/useMintCredential"
-import { useMintCredentialContext } from "../../MintCredentialContext"
+import useUsersGuildPins from "hooks/useUsersGuildPins"
+import { GUILD_PIN_CONTRACT } from "utils/guildCheckout/constants"
+import useGuildPinFee from "../../hooks/useGuildPinFee"
+import useMintGuildPin from "../../hooks/useMintGuildPin"
+import { useMintGuildPinContext } from "../../MintGuildPinContext"
 
-const MintCredentialButton = (): JSX.Element => {
+const MintGuildPinButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { id, urlName } = useGuild()
 
-  const { error, isInvalidImage, isTooSmallImage } = useMintCredentialContext()
+  const { error, isInvalidImage, isTooSmallImage } = useMintGuildPinContext()
 
   const { chainId } = useWeb3React()
 
@@ -22,23 +22,22 @@ const MintCredentialButton = (): JSX.Element => {
     onSubmit,
     isLoading: isMinting,
     loadingText: mintLoadingText,
-  } = useMintCredential()
+  } = useMintGuildPin()
 
-  const { data, isValidating } = useUsersGuildCredentials()
+  const { data, isValidating } = useUsersGuildPins()
   const alreadyMintedOnChain = data?.find(
-    (credential) =>
-      credential.chainId === chainId &&
-      +credential.attributes.find((attr) => attr.trait_type === "guildId").value ===
-        id
+    (guildPin) =>
+      guildPin.chainId === chainId &&
+      +guildPin.attributes.find((attr) => attr.trait_type === "guildId").value === id
   )
 
-  const { credentialFee, isCredentialFeeLoading } = useCredentialFee()
+  const { guildPinFee, isGuildPinFeeLoading } = useGuildPinFee()
   const { coinBalance, isLoading: isBalanceLoading } = useBalance()
   const isSufficientBalance =
-    credentialFee && coinBalance ? coinBalance.gt(credentialFee) : false
+    guildPinFee && coinBalance ? coinBalance.gt(guildPinFee) : false
 
   const isLoading =
-    isMinting || isValidating || isCredentialFeeLoading || isBalanceLoading
+    isMinting || isValidating || isGuildPinFeeLoading || isBalanceLoading
   const loadingText = isMinting
     ? mintLoadingText
     : isValidating
@@ -48,7 +47,7 @@ const MintCredentialButton = (): JSX.Element => {
   const isDisabled =
     isInvalidImage ||
     isTooSmallImage ||
-    !GUILD_CREDENTIAL_CONTRACT[Chains[chainId]] ||
+    !GUILD_PIN_CONTRACT[Chains[chainId]] ||
     !isSufficientBalance ||
     error ||
     isLoading ||
@@ -63,16 +62,16 @@ const MintCredentialButton = (): JSX.Element => {
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
       onClick={() => {
-        captureEvent("Click: MintCredentialButton (GuildCheckout)", {
+        captureEvent("Click: MintGuildPinButton (GuildCheckout)", {
           guild: urlName,
         })
         onSubmit()
       }}
-      data-dd-action-name="Mint credential (GuildCheckout)"
+      data-dd-action-name="Mint Guild Pin (GuildCheckout)"
     >
       {isInvalidImage || isTooSmallImage
         ? "Setup required"
-        : !GUILD_CREDENTIAL_CONTRACT[Chains[chainId]]
+        : !GUILD_PIN_CONTRACT[Chains[chainId]]
         ? `Unsupported chain`
         : alreadyMintedOnChain
         ? "Already minted"
@@ -83,4 +82,4 @@ const MintCredentialButton = (): JSX.Element => {
   )
 }
 
-export default MintCredentialButton
+export default MintGuildPinButton

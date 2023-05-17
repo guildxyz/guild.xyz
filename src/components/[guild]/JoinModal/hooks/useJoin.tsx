@@ -1,11 +1,11 @@
 import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
-import { useMintCredentialContext } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
+import Button from "components/common/Button"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import Button from "components/common/Button"
-import useMemberships from "components/explorer/hooks/useMemberships"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -64,9 +64,9 @@ const useJoin = (onSuccess?: () => void) => {
       return body
     })
 
-  const mintCredentialContext = useMintCredentialContext()
-  // Destructuring it separately, since we don't have a MintCredentialContext on the POAP minting page
-  const { onOpen } = mintCredentialContext ?? {}
+  const mintGuildPinContext = useMintGuildPinContext()
+  // Destructuring it separately, since we don't have a MintGuildPinContext on the POAP minting page
+  const { onOpen } = mintGuildPinContext ?? {}
   const { pathname } = useRouter()
 
   const useSubmitResponse = useSubmitWithSign<Response>(submit, {
@@ -115,7 +115,7 @@ const useJoin = (onSuccess?: () => void) => {
                 borderRadius="lg"
                 onClick={onOpen}
               >
-                Mint credential
+                Mint Guild Pin
               </Button>
             </>
           ) : (

@@ -20,8 +20,8 @@ import useIsMember from "../hooks/useIsMember"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import PlatformCardButton from "./components/PlatformCardButton"
 
-const DynamicGuildCredentialRewardCard = dynamic(
-  () => import("./components/GuildCredentialRewardCard")
+const DynamicGuildPinRewardCard = dynamic(
+  () => import("./components/GuildPinRewardCard")
 )
 
 // prettier-ignore
@@ -65,7 +65,7 @@ const AccessHub = (): JSX.Element => {
     >
       {
         /*featureFlags.includes("GUILD_CREDENTIAL") &&*/ (isMember || isAdmin) && (
-          <DynamicGuildCredentialRewardCard />
+          <DynamicGuildPinRewardCard />
         )
       }
       {accessedGuildPlatforms?.length || futurePoaps?.length ? (

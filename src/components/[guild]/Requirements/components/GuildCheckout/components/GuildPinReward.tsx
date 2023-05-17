@@ -1,13 +1,13 @@
 import { Img, Text } from "@chakra-ui/react"
-import { RewardDisplay } from "components/[guild]/RoleCard/components/Reward"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { GuildAction, useMintCredentialContext } from "../MintCredentialContext"
+import { RewardDisplay } from "components/[guild]/RoleCard/components/Reward"
+import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 
-const CredentialReward = (): JSX.Element => {
-  const { credentialType, credentialImage } = useMintCredentialContext()
+const GuildPinReward = (): JSX.Element => {
+  const { pinType, pinImage } = useMintGuildPinContext()
   const { name } = useGuild()
 
-  const credentialDescription: Record<GuildAction, string> = {
+  const guildPinDescription: Record<GuildAction, string> = {
     [GuildAction.JOINED_GUILD]: `Joined ${name} `,
     [GuildAction.IS_OWNER]: `Owner of ${name} `,
     [GuildAction.IS_ADMIN]: `Admin of ${name} `,
@@ -19,17 +19,17 @@ const CredentialReward = (): JSX.Element => {
         <Img
           w="full"
           zIndex={1}
-          src={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${credentialImage}`}
-          alt="Guild Credential image"
+          src={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`}
+          alt="Guild Pin image"
           borderRadius="full"
           boxSize="6"
         />
       }
       label={
         <>
-          {`Guild Credential: `}
+          {`Guild Pin: `}
           <Text as="span" fontWeight={"semibold"}>
-            {credentialDescription[credentialType]}
+            {guildPinDescription[pinType]}
           </Text>
         </>
       }
@@ -37,4 +37,4 @@ const CredentialReward = (): JSX.Element => {
   )
 }
 
-export default CredentialReward
+export default GuildPinReward

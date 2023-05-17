@@ -2,23 +2,23 @@ import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import RewardCard from "components/common/RewardCard"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { useMintCredentialContext } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import dynamic from "next/dynamic"
 import { CircleWavyCheck, Question } from "phosphor-react"
 
-const DynamicMintCredential = dynamic(
+const DynamicMintGuildPin = dynamic(
   () =>
-    import("components/[guild]/Requirements/components/GuildCheckout/MintCredential")
+    import("components/[guild]/Requirements/components/GuildCheckout/MintGuildPin")
 )
 
-const GuildCredentialRewardCard = () => {
+const GuildPinRewardCard = () => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-100)", "#343439")
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
 
   const { isAdmin } = useGuildPermission()
 
   const { isImageValidating, isInvalidImage, isTooSmallImage } =
-    useMintCredentialContext()
+    useMintGuildPinContext()
 
   if (isImageValidating || ((isInvalidImage || isTooSmallImage) && !isAdmin))
     return null
@@ -31,15 +31,15 @@ const GuildCredentialRewardCard = () => {
             <Icon as={CircleWavyCheck} mb="-2px" mr="1.5" />
             Guild.xyz
             <Tooltip
-              label="This is a built in reward by Guild.xyz" //The card will disappear once you mint your credential
+              label="This is a built in reward by Guild.xyz" // The card will disappear once you mint your Guild Pin
               hasArrow
             >
               <Icon as={Question} mb="-2px" ml="1.5" />
             </Tooltip>
           </>
         }
-        title="Guild Credential"
-        image="/img/guild-credential-key-3d.svg"
+        title="Guild Pin"
+        image="/img/guild-pin-key-3d.svg"
         colorScheme={isInvalidImage || isTooSmallImage ? "gray" : "GUILD"}
         borderStyle={(isInvalidImage || isTooSmallImage) && "dashed"}
         description="On-chain proof of membership"
@@ -71,11 +71,11 @@ const GuildCredentialRewardCard = () => {
         }}
       >
         {(!(isInvalidImage || isTooSmallImage) || isAdmin) && (
-          <DynamicMintCredential />
+          <DynamicMintGuildPin />
         )}
       </RewardCard>
     </CardMotionWrapper>
   )
 }
 
-export default GuildCredentialRewardCard
+export default GuildPinRewardCard

@@ -1,5 +1,5 @@
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
-import { GuildAction } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
+import { GuildAction } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import type { Chain } from "connectors"
 import { RequirementType } from "requirements"
 
@@ -484,7 +484,7 @@ type OneOf<First, Second> = First | Second extends object
   ? (Without<First, Second> & Second) | (Without<Second, First> & First)
   : First | Second
 
-type GuildCredentialAttribute =
+type GuildPinAttribute =
   | {
       trait_type: "Type"
       value: (typeof GuildAction)[number]
@@ -517,12 +517,11 @@ type GuildCredentialAttribute =
       value: number
     }
 
-// Constructed according to the Opensea metadata standards: https://docs.opensea.io/docs/metadata-standards#metadata-structure
-type GuildCredentialMetadata = {
+type GuildPinMetadata = {
   name: string
   description: string
   image: string
-  attributes: GuildCredentialAttribute[]
+  attributes: GuildPinAttribute[]
 }
 
 export type {
@@ -568,6 +567,6 @@ export type {
   VoiceRequirementParams,
   PoapEventDetails,
   AddressConnectionProvider,
-  GuildCredentialMetadata,
+  GuildPinMetadata,
 }
 export { ValidationMethod, Visibility, supportedSocialLinks }

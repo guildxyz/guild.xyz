@@ -1,6 +1,6 @@
 import { Circle, SkeletonCircle, useColorModeValue } from "@chakra-ui/react"
 
-const CredentialSkeleton = () => {
+const GuildPinSkeleton = () => {
   const bgColor = useColorModeValue("white", "gray.700")
   const borderColor = useColorModeValue("gray.50", "gray.800")
 
@@ -19,4 +19,4 @@ const CredentialSkeleton = () => {
   )
 }
 
-export default CredentialSkeleton
+export default GuildPinSkeleton

@@ -18,21 +18,21 @@ import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import AlphaTag from "./components/AlphaTag"
-import MintCredentialButton from "./components/buttons/MintCredentialButton"
-import CredentialFees from "./components/CredentialFees"
-import CredentialImage from "./components/CredentialImage"
-import CredentialReward from "./components/CredentialReward"
-import MintCredentialChainPicker from "./components/MintCredentialChainPicker"
+import MintGuildPinButton from "./components/buttons/MintGuildPinButton"
+import GuildPinFees from "./components/GuildPinFees"
+import GuildPinImage from "./components/GuildPinImage"
+import GuildPinReward from "./components/GuildPinReward"
+import MintGuildPinChainPicker from "./components/MintGuildPinChainPicker"
 import TransactionStatusModal from "./components/TransactionStatusModal"
 import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaLink"
-import { useMintCredentialContext } from "./MintCredentialContext"
+import { useMintGuildPinContext } from "./MintGuildPinContext"
 
-const MintCredential = (): JSX.Element => {
+const MintGuildPin = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
   const { isOpen, onOpen, onClose, isInvalidImage, isTooSmallImage } =
-    useMintCredentialContext()
+    useMintGuildPinContext()
 
   const { colorMode } = useColorMode()
 
@@ -41,11 +41,10 @@ const MintCredential = (): JSX.Element => {
       <Button
         onClick={() => {
           onOpen()
-          captureEvent("Click: Mint Credential (GuildCredentialRewardCard)", {
+          captureEvent("Click: Mint Guild Pin (GuildPinRewardCard)", {
             guild: urlName,
           })
         }}
-        data-dd-action-name="Mint Credential"
         variant="outline"
         borderColor={colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"}
         {...(colorMode === "light"
@@ -59,7 +58,7 @@ const MintCredential = (): JSX.Element => {
             }
           : {})}
       >
-        {isInvalidImage || isTooSmallImage ? "Setup Credential" : "Mint Credential"}
+        {isInvalidImage || isTooSmallImage ? "Setup Guild Pin" : "Mint Guild Pin"}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
@@ -67,7 +66,7 @@ const MintCredential = (): JSX.Element => {
         <ModalContent>
           <ModalHeader pb={4} pr={16}>
             <Text as="span" mr={2}>
-              Mint Credential
+              Mint Guild Pin
             </Text>
             <AlphaTag />
           </ModalHeader>
@@ -81,36 +80,36 @@ const MintCredential = (): JSX.Element => {
                   <AlertTitle>Image too small</AlertTitle>
                   <AlertDescription>
                     Please upload a bigger image in guild settings to activate Guild
-                    Credential
+                    Pin
                   </AlertDescription>
                 </Stack>
               </Alert>
             )}
-            <CredentialImage />
+            <GuildPinImage />
           </ModalBody>
 
           <ModalFooter flexDir="column">
             <Stack w="full" spacing={6}>
-              <MintCredentialChainPicker />
-              <CredentialFees />
-              <MintCredentialButton />
+              <MintGuildPinChainPicker />
+              <GuildPinFees />
+              <MintGuildPinButton />
             </Stack>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
       <TransactionStatusModal
-        title="Mint Credential"
+        title="Mint Guild Pin"
         successTitle="Successful mint"
-        successText="Successful transaction! Your Guild Credential NFT is now on chain!"
+        successText="Successful transaction! Your Guild Pin NFT is now on chain!"
         successLinkComponent={<OpenseaLink />}
-        errorComponent={<Text mb={4}>Couldn't mint credential</Text>}
+        errorComponent={<Text mb={4}>Couldn't mint Guild Pin</Text>}
         progressComponent={
           <>
             <Text fontWeight={"bold"} mb="2">
               You'll get:
             </Text>
-            <CredentialReward />
+            <GuildPinReward />
           </>
         }
         successComponent={
@@ -118,7 +117,7 @@ const MintCredential = (): JSX.Element => {
             <Text fontWeight={"bold"} mb="2">
               Your new asset:
             </Text>
-            <CredentialReward />
+            <GuildPinReward />
           </>
         }
       />
@@ -126,4 +125,4 @@ const MintCredential = (): JSX.Element => {
   )
 }
 
-export default MintCredential
+export default MintGuildPin
