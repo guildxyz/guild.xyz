@@ -262,14 +262,14 @@ export const paymentSupportedChains: Chain[] = Object.keys(
 ) as Chain[]
 
 export const GUILD_PIN_CONTRACT = {
-  POLYGON_MUMBAI: {
-    address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
-    abi: GUILD_PIN_ABI,
-  },
-  // POLYGON: {
-  //   address: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
+  // POLYGON_MUMBAI: {
+  //   address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
   //   abi: GUILD_PIN_ABI,
   // },
+  POLYGON: {
+    address: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
+    abi: GUILD_PIN_ABI,
+  },
 }
 // TODO: satisfies Partial<Record<Chain, { address: string; abi: ContractInterface }>> - we just can't use it in Next.js 12, but we should add it later.
 

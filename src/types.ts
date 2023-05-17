@@ -1,5 +1,4 @@
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
-import { GuildAction } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import type { Chain } from "connectors"
 import { RequirementType } from "requirements"
 
@@ -486,15 +485,11 @@ type OneOf<First, Second> = First | Second extends object
 
 type GuildPinAttribute =
   | {
-      trait_type: "Type"
-      value: (typeof GuildAction)[number]
-    }
-  | {
-      trait_type: "guildId"
+      trait_type: "type"
       value: string
     }
   | {
-      trait_type: "guild"
+      trait_type: "guildId"
       value: string
     }
   | {
@@ -507,14 +502,13 @@ type GuildPinAttribute =
       value: number
     }
   | {
-      trait_type: "joinDate"
+      trait_type: "actionDate"
       display_type: "date"
       value: number
     }
   | {
-      trait_type: "createDate"
-      display_type: "date"
-      value: number
+      trait_type: "rank"
+      value: string
     }
 
 type GuildPinMetadata = {
