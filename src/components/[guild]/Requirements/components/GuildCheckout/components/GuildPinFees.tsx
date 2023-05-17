@@ -2,21 +2,17 @@ import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import { Chains, RPC } from "connectors"
-import useCredentialFee from "../hooks/useCredentialFee"
+import useGuildPinFee from "../hooks/useGuildPinFee"
 import FeesTable from "./FeesTable"
 import PriceFallback from "./PriceFallback"
 
-const CredentialFees = (): JSX.Element => {
+const GuildPinFees = (): JSX.Element => {
   const { chainId } = useWeb3React()
-  const { credentialFee, credentialFeeError, isCredentialFeeLoading } =
-    useCredentialFee()
-  const credentialFeeInFloat =
-    credentialFee &&
-    parseFloat(
-      formatUnits(credentialFee, RPC[Chains[chainId]].nativeCurrency.decimals)
-    )
+  const { guildPinFee, guildPinFeeError, isGuildPinFeeLoading } = useGuildPinFee()
+  const { symbol, decimals } = RPC[Chains[chainId]]?.nativeCurrency ?? {}
 
-  const symbol = RPC[Chains[chainId]].nativeCurrency.symbol
+  const guildPinFeeInFloat =
+    guildPinFee && decimals && parseFloat(formatUnits(guildPinFee, decimals))
 
   return (
     <FeesTable
@@ -24,12 +20,12 @@ const CredentialFees = (): JSX.Element => {
         <HStack justifyContent={"space-between"} w="full">
           <Text fontWeight={"medium"}>Minting fee:</Text>
 
-          <PriceFallback pickedCurrency={symbol} error={credentialFeeError}>
+          <PriceFallback pickedCurrency={symbol} error={guildPinFeeError}>
             <Text as="span">
-              <Skeleton isLoaded={!isCredentialFeeLoading}>
+              <Skeleton isLoaded={!isGuildPinFeeLoading}>
                 <Text as="span">
-                  {credentialFeeInFloat
-                    ? `${Number(credentialFeeInFloat.toFixed(3))} `
+                  {guildPinFeeInFloat
+                    ? `${Number(guildPinFeeInFloat.toFixed(3))} `
                     : "0.00 "}
                   {symbol}
                 </Text>
@@ -50,9 +46,9 @@ const CredentialFees = (): JSX.Element => {
       <Tr>
         <Td>Minting fee</Td>
         <Td isNumeric>
-          <Skeleton isLoaded={!!credentialFeeInFloat}>
-            {credentialFeeInFloat
-              ? `${Number(credentialFeeInFloat.toFixed(3))} ${symbol}`
+          <Skeleton isLoaded={!!guildPinFeeInFloat}>
+            {guildPinFeeInFloat
+              ? `${Number(guildPinFeeInFloat.toFixed(3))} ${symbol}`
               : "Loading"}
           </Skeleton>
         </Td>
@@ -67,8 +63,8 @@ const CredentialFees = (): JSX.Element => {
         <Td>Total</Td>
         <Td isNumeric color="WindowText">
           {`${
-            credentialFeeInFloat
-              ? `${Number(credentialFeeInFloat.toFixed(3))} `
+            guildPinFeeInFloat
+              ? `${Number(guildPinFeeInFloat.toFixed(3))} `
               : "0.00 "
           } ${symbol}`}{" "}
           + gas
@@ -78,4 +74,4 @@ const CredentialFees = (): JSX.Element => {
   )
 }
 
-export default CredentialFees
+export default GuildPinFees
