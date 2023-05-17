@@ -1,4 +1,4 @@
-import { useSteps } from "chakra-ui-steps"
+import { useSteps } from "@chakra-ui/react"
 import {
   createContext,
   Dispatch,
@@ -33,7 +33,6 @@ const CreateGuildContext = createContext<{
   steps: Step[]
   prevStep: () => void
   nextStep: () => void
-  setStep: (step: number) => void
   activeStep: number
   platform?: PlatformName
   setPlatform: Dispatch<SetStateAction<PlatformName>>
@@ -91,10 +90,6 @@ const CreateGuildProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
   const [platform, setPlatform] = useState<PlatformName>(null)
-
-  const { prevStep, nextStep, setStep, activeStep } = useSteps({
-    initialStep: 0,
-  })
 
   const methods = useForm<GuildFormType>({
     mode: "all",
@@ -208,6 +203,15 @@ const CreateGuildProvider = ({
     },
   ]
 
+  const {
+    goToPrevious: prevStep,
+    goToNext: nextStep,
+    activeStep,
+  } = useSteps({
+    index: 0,
+    count: steps.length,
+  })
+
   useEffect(() => {
     if (typeof window !== "undefined")
       window.scrollTo({
@@ -225,7 +229,6 @@ const CreateGuildProvider = ({
         steps,
         prevStep,
         nextStep,
-        setStep,
         activeStep,
         platform,
         setPlatform,
