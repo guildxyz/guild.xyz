@@ -106,6 +106,7 @@ const Layout = ({
         minHeight="100vh"
         display="flex"
         flexDir={"column"}
+        color="var(--chakra-colors-chakra-body-text)"
       >
         {(background || backgroundImage) && (
           <Box

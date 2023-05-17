@@ -1,4 +1,4 @@
-import { SimpleGrid, useColorMode } from "@chakra-ui/react"
+import { DarkMode, SimpleGrid } from "@chakra-ui/react"
 import BrainCard from "components/brain/BrainCard"
 import FilterSelect, { FilterOption } from "components/brain/FilterSelect"
 import Layout from "components/common/Layout"
@@ -6,7 +6,7 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import SearchBar from "components/explorer/SearchBar"
 import { GetServerSideProps } from "next"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { BrainCardData } from "types"
 
 type Props = {
@@ -34,30 +34,26 @@ const Guildverse = ({ cards: cards }: Props): JSX.Element => {
     [cards, filterData, search]
   )
 
-  const { setColorMode } = useColorMode()
-
-  useEffect(() => {
-    setColorMode("dark")
-  }, [])
-
   return (
     <>
       <LinkPreviewHead path="" />
-      <Layout title="Guildverse">
-        <SimpleGrid
-          templateColumns={{ md: "2fr 3fr" }}
-          gap={{ base: 2, md: 6 }}
-          mb={8}
-        >
-          <SearchBar placeholder="Search" {...{ search, setSearch }} />
-          <FilterSelect setFilterData={setFilterData} />
-        </SimpleGrid>
-        <GuildCardsGrid>
-          {renderedCards.map((card) => (
-            <BrainCard pageData={card} key={card.id} />
-          ))}
-        </GuildCardsGrid>
-      </Layout>
+      <DarkMode>
+        <Layout title="Guildverse">
+          <SimpleGrid
+            templateColumns={{ md: "2fr 3fr" }}
+            gap={{ base: 2, md: 6 }}
+            mb={8}
+          >
+            <SearchBar placeholder="Search" {...{ search, setSearch }} />
+            <FilterSelect setFilterData={setFilterData} />
+          </SimpleGrid>
+          <GuildCardsGrid>
+            {renderedCards.map((card) => (
+              <BrainCard pageData={card} key={card.id} />
+            ))}
+          </GuildCardsGrid>
+        </Layout>
+      </DarkMode>
     </>
   )
 }
