@@ -42,6 +42,7 @@ const ColorPicker = ({ fieldName }: Props): JSX.Element => {
         <FormLabel>Main color</FormLabel>
         <HStack spacing={2}>
           <Flex
+            flexShrink={0}
             boxSize={10}
             alignItems="center"
             justifyContent="center"
