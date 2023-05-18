@@ -34,7 +34,7 @@ const OptionCard = ({
           src={image}
           alt={`${title} image`}
           borderRadius="full"
-          boxSize={{ base: 12 }}
+          boxSize={12}
           pos="relative"
         />
       ) : (
