@@ -185,7 +185,7 @@ const CreateGuildProvider = ({
       title: "Choose platform",
       label: `${
         !platform
-          ? "Your can connect more later"
+          ? "You can connect more later"
           : platform === "DEFAULT"
           ? "Without platform"
           : capitalize(platform?.toLowerCase() ?? "")
