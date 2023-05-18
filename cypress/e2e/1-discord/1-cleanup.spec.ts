@@ -49,7 +49,10 @@ describe("post-test cleanup", () => {
 
       await Promise.all(discordRoleDeleteRequests)
     } catch (deleteRolesError) {
-      console.log("[WARNING]: couldn't delete Discord roles", deleteRolesError)
+      cy.log(
+        "[WARNING]: couldn't delete Discord roles",
+        deleteRolesError?.toString()
+      )
     }
   })
 
