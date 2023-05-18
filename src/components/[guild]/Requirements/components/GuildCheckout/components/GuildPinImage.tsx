@@ -14,10 +14,10 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { GuildAction, useMintCredentialContext } from "../MintCredentialContext"
+import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 
-const CredentialImage = (): JSX.Element => {
-  const { credentialType, credentialImage, error } = useMintCredentialContext()
+const GuildPinImage = (): JSX.Element => {
+  const { pinType, pinImage, error } = useMintGuildPinContext()
   const { name } = useGuild()
 
   const imageShadow = useColorModeValue(
@@ -25,7 +25,7 @@ const CredentialImage = (): JSX.Element => {
     "10px 10px 20px #171719, -10px -10px 20px #37373b;"
   )
 
-  const credentialDescription: Record<GuildAction, string> = {
+  const guildPinDescription: Record<GuildAction, string> = {
     [GuildAction.JOINED_GUILD]: `This is an on-chain proof that you joined ${name} on Guild.xyz.`,
     [GuildAction.IS_OWNER]: `This is an on-chain proof that you're the owner of ${name} on Guild.xyz.`,
     [GuildAction.IS_ADMIN]: `This is an on-chain proof that you're an admin of ${name} on Guild.xyz.`,
@@ -36,7 +36,7 @@ const CredentialImage = (): JSX.Element => {
       <Alert status="error" pb="6" mb="8">
         <AlertIcon />
         <Stack top="1" position="relative" w="full">
-          <AlertTitle>Couldn't generate credential</AlertTitle>
+          <AlertTitle>Couldn't generate Guild Pin</AlertTitle>
           <AlertDescription wordBreak={"break-word"}>{error}</AlertDescription>
         </Stack>
       </Alert>
@@ -61,12 +61,12 @@ const CredentialImage = (): JSX.Element => {
       >
         <AspectRatio ratio={1} position={"relative"}>
           <>
-            {credentialImage && (
+            {pinImage && (
               <Img
                 w="full"
                 zIndex={1}
-                src={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${credentialImage}`}
-                alt="Guild Credential image"
+                src={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`}
+                alt="Guild Pin image"
                 borderRadius="full"
                 boxShadow={imageShadow}
               />
@@ -83,7 +83,7 @@ const CredentialImage = (): JSX.Element => {
               <VStack>
                 <Spinner size="lg" />
                 <Text fontWeight="bold" textAlign={"center"} fontSize={"sm"}>
-                  Generating credential
+                  Generating Guild Pin
                 </Text>
               </VStack>
             </Circle>
@@ -91,10 +91,10 @@ const CredentialImage = (): JSX.Element => {
         </AspectRatio>
       </Box>
       <Text textAlign="center" fontWeight="medium" p="4">
-        {credentialDescription[credentialType]}
+        {guildPinDescription[pinType]}
       </Text>
     </>
   )
 }
 
-export default CredentialImage
+export default GuildPinImage

@@ -4,16 +4,16 @@ import Link from "components/common/Link"
 import { Chains } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import {
-  GuildCredentialsSupportedChain,
-  GUILD_CREDENTIAL_CONTRACT,
+  GuildPinsSupportedChain,
+  GUILD_PIN_CONTRACT,
 } from "utils/guildCheckout/constants"
-import { useMintCredentialContext } from "../../../MintCredentialContext"
+import { useMintGuildPinContext } from "../../../MintGuildPinContext"
 
 const OpenseaLink = (): JSX.Element => {
   const { chainId } = useWeb3React()
-  const { mintedTokenId } = useMintCredentialContext()
+  const { mintedTokenId } = useMintGuildPinContext()
 
-  const openseaBaseUrl: Record<GuildCredentialsSupportedChain, string> = {
+  const openseaBaseUrl: Record<GuildPinsSupportedChain, string> = {
     // POLYGON_MUMBAI: "https://testnets.opensea.io/assets/mumbai",
     POLYGON: "https://opensea.io/assets/matic",
   }
@@ -25,7 +25,7 @@ const OpenseaLink = (): JSX.Element => {
       <Link
         isExternal
         href={`${openseaBaseUrl[Chains[chainId]]}/${
-          GUILD_CREDENTIAL_CONTRACT[Chains[chainId]].address
+          GUILD_PIN_CONTRACT[Chains[chainId]].address
         }/${mintedTokenId}`}
       >
         <Img src={"/requirementLogos/opensea.svg"} boxSize={"1em"} mr="1.5" />

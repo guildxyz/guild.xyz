@@ -1,4 +1,5 @@
 import {
+  Divider,
   HStack,
   Icon,
   IconButton,
@@ -26,6 +27,7 @@ import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
+import UsersGuildPins from "./components/UsersGuildCredentials"
 
 const AccountModal = () => {
   const { account, connector } = useWeb3React()
@@ -111,8 +113,10 @@ const AccountModal = () => {
                 </HStack>
               </Stack>
             </ModalBody>
-            <ModalFooter flexDir="column" pt="10">
+            <ModalFooter flexDir="column" pt="10" gap={8}>
               <AccountConnections />
+              <Divider />
+              <UsersGuildPins />
             </ModalFooter>
           </>
         ) : (

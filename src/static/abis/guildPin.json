@@ -130,7 +130,7 @@
       },
       {
         "indexed": true,
-        "internalType": "enum IGuildCredential.GuildAction",
+        "internalType": "enum IGuildPin.GuildAction",
         "name": "guildAction",
         "type": "uint8"
       },
@@ -193,6 +193,19 @@
       }
     ],
     "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "enum IGuildPin.GuildAction",
+        "name": "guildAction",
+        "type": "uint8"
+      }
+    ],
+    "name": "PinStringsSet",
     "type": "event"
   },
   {
@@ -290,6 +303,26 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+          { "internalType": "uint256", "name": "userId", "type": "uint256" },
+          { "internalType": "string", "name": "guildName", "type": "string" },
+          { "internalType": "uint256", "name": "createdAt", "type": "uint256" },
+          { "internalType": "uint256", "name": "mintDate", "type": "uint256" }
+        ],
+        "internalType": "struct IGuildPin.BackfillMetadataParams[]",
+        "name": "params",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "backfillMetadata",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
     "name": "balanceOf",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
@@ -299,7 +332,7 @@
   {
     "inputs": [
       {
-        "internalType": "enum IGuildCredential.GuildAction",
+        "internalType": "enum IGuildPin.GuildAction",
         "name": "guildAction",
         "type": "uint8"
       },
@@ -313,13 +346,23 @@
   {
     "inputs": [
       { "internalType": "address", "name": "payToken", "type": "address" },
-      { "internalType": "address", "name": "receiver", "type": "address" },
       {
-        "internalType": "enum IGuildCredential.GuildAction",
-        "name": "guildAction",
-        "type": "uint8"
+        "components": [
+          { "internalType": "address", "name": "receiver", "type": "address" },
+          {
+            "internalType": "enum IGuildPin.GuildAction",
+            "name": "guildAction",
+            "type": "uint8"
+          },
+          { "internalType": "uint256", "name": "userId", "type": "uint256" },
+          { "internalType": "uint256", "name": "guildId", "type": "uint256" },
+          { "internalType": "string", "name": "guildName", "type": "string" },
+          { "internalType": "uint256", "name": "createdAt", "type": "uint256" }
+        ],
+        "internalType": "struct IGuildPin.PinDataParams",
+        "name": "pinData",
+        "type": "tuple"
       },
-      { "internalType": "uint256", "name": "guildId", "type": "uint256" },
       { "internalType": "uint256", "name": "signedAt", "type": "uint256" },
       { "internalType": "string", "name": "cid", "type": "string" },
       { "internalType": "bytes", "name": "signature", "type": "bytes" }
@@ -330,9 +373,9 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
     "name": "fee",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [{ "internalType": "uint256", "name": "fee", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -347,7 +390,7 @@
     "inputs": [
       { "internalType": "address", "name": "account", "type": "address" },
       {
-        "internalType": "enum IGuildCredential.GuildAction",
+        "internalType": "enum IGuildPin.GuildAction",
         "name": "guildAction",
         "type": "uint8"
       },
@@ -409,6 +452,16 @@
     "type": "function"
   },
   {
+    "inputs": [
+      { "internalType": "string", "name": "name", "type": "string" },
+      { "internalType": "string", "name": "symbol", "type": "string" }
+    ],
+    "name": "reInitialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "renounceOwnership",
     "outputs": [],
@@ -454,6 +507,28 @@
       { "internalType": "uint256", "name": "newFee", "type": "uint256" }
     ],
     "name": "setFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum IGuildPin.GuildAction",
+        "name": "guildAction",
+        "type": "uint8"
+      },
+      {
+        "components": [
+          { "internalType": "string", "name": "actionName", "type": "string" },
+          { "internalType": "string", "name": "description", "type": "string" }
+        ],
+        "internalType": "struct IGuildPin.PinStrings",
+        "name": "pinStrings",
+        "type": "tuple"
+      }
+    ],
+    "name": "setPinStrings",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -552,18 +627,28 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "tokenOwner", "type": "address" },
       {
-        "internalType": "enum IGuildCredential.GuildAction",
-        "name": "guildAction",
-        "type": "uint8"
+        "components": [
+          { "internalType": "address", "name": "receiver", "type": "address" },
+          {
+            "internalType": "enum IGuildPin.GuildAction",
+            "name": "guildAction",
+            "type": "uint8"
+          },
+          { "internalType": "uint256", "name": "userId", "type": "uint256" },
+          { "internalType": "uint256", "name": "guildId", "type": "uint256" },
+          { "internalType": "string", "name": "guildName", "type": "string" },
+          { "internalType": "uint256", "name": "createdAt", "type": "uint256" }
+        ],
+        "internalType": "struct IGuildPin.PinDataParams",
+        "name": "pinData",
+        "type": "tuple"
       },
-      { "internalType": "uint256", "name": "guildId", "type": "uint256" },
       { "internalType": "uint256", "name": "signedAt", "type": "uint256" },
       { "internalType": "string", "name": "newCid", "type": "string" },
       { "internalType": "bytes", "name": "signature", "type": "bytes" }
     ],
-    "name": "updateTokenURI",
+    "name": "updateImageURI",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
