@@ -49,28 +49,14 @@ const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
         ).toString("utf-8")
       )
 
-      // Temporary solution, until we can't migrate all NFT metadata
-      const isOldFormat =
-        metadata?.attributes.find((attr) => attr.trait_type === "guildId")?.value ===
-        "0"
-
-      if (isOldFormat) {
-        metadata.attributes.find((attr) => attr.trait_type === "guildId").value =
-          "1985"
-      }
-
       return {
         ...metadata,
         chainId,
         tokenId,
-        // Temporary solution, until we can't migrate all NFT metadata
-        image:
-          tokenId < 4654
-            ? "https://guild-xyz.mypinata.cloud/ipfs/QmRCvyptFaohLnAixp6XxiqMBBKT4CbrJq6qqr4ZxGgHKM"
-            : metadata.image.replace(
-                "ipfs://",
-                process.env.NEXT_PUBLIC_IPFS_GATEWAY
-              ),
+        image: metadata.image.replace(
+          "ipfs://",
+          process.env.NEXT_PUBLIC_IPFS_GATEWAY
+        ),
       }
     })
   )
