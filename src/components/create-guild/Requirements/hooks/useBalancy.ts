@@ -207,7 +207,7 @@ const useBalancy = (
 
     if (balancyLogic === "OR") {
       const holdersList = new Set([
-        ...(data?.addresses?.map((addr) => addr.toLowerCase()) ?? []),
+        ...(data?.addresses?.map((addr) => addr?.toLowerCase()) ?? []),
         ...allowlists.filter((_) => !!_).flat(),
       ])
 
