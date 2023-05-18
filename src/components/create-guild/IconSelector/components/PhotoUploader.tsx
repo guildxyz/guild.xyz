@@ -79,7 +79,7 @@ const PhotoUploader = ({
         ? event.dataTransfer.files
         : event.target.files
 
-      if (!minW || !minH) return filesFromEvent
+      if (!minW || !minH) return Array.from(filesFromEvent)
 
       const filePromises = []
 

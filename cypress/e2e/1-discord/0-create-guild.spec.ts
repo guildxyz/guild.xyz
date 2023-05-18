@@ -75,9 +75,9 @@ describe("create-discord-guild", () => {
 
     // Select a template
     cy.findByText("Growth").click({ force: true })
-    cy.get("div[aria-current='step']").last().should("contain.text", "Growth")
+    cy.get(".chakra-step p[data-status='active']").should("contain.text", "Growth")
     cy.findByText("Start from scratch").click({ force: true })
-    cy.get("div[aria-current='step']").last().should("contain.text", "Basic")
+    cy.get(".chakra-step p[data-status='active']").should("contain.text", "Basic")
 
     cy.findByText("Next").click()
 

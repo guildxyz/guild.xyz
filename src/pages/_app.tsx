@@ -54,7 +54,7 @@ const App = ({
             initial="0.3s"
             style={{ zIndex: 10 }}
           >
-            <Box position="relative" w="100%" h="100px" zIndex={2}>
+            <Box position="relative" w="100%" h="5px" zIndex={2}>
               <Progress
                 isIndeterminate
                 w="100%"

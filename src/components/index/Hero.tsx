@@ -82,6 +82,7 @@ const Hero = (): JSX.Element => {
               marginBottom: 24,
               height: logoSize,
               width: logoSize,
+              color: "white",
             }}
           />
         </Box>

@@ -90,7 +90,12 @@ const useJoin = (onSuccess?: () => void) => {
         mutate(
           (prev) => [
             ...prev,
-            { guildId: guild.id, isAdmin: false, roleIds: response.accessedRoleIds },
+            {
+              guildId: guild.id,
+              isAdmin: false,
+              roleIds: response.accessedRoleIds,
+              joinedAt: new Date().toISOString(),
+            },
           ],
           { revalidate: false }
         )
