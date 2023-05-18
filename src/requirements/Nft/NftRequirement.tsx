@@ -2,9 +2,9 @@ import { HStack, Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
-import PurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/PurchaseRequirement"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
+import PurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/PurchaseRequirement"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -78,7 +78,7 @@ const NftRequirement = (props: RequirementProps) => {
       {requirement.data?.id
         ? "the "
         : requirement.data?.maxAmount > 0
-        ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount}`
+        ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount} `
         : requirement.data?.minAmount > 1
         ? `at least ${requirement.data?.minAmount} `
         : "a(n) "}
