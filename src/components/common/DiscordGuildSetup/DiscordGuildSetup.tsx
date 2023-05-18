@@ -1,7 +1,7 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
 import useGateables from "hooks/useGateables"

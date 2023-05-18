@@ -1,4 +1,4 @@
-import { Box, useColorMode } from "@chakra-ui/react"
+import { Box, DarkMode } from "@chakra-ui/react"
 import NavMenu from "components/common/Layout/components/NavMenu"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CallToAction from "components/index/CallToAction"
@@ -10,7 +10,6 @@ import GuildValues from "components/index/GuildValues"
 import Hero from "components/index/Hero"
 import PlatformAgnosticCommunities from "components/index/PlatformAgnosticCommunities"
 import Head from "next/head"
-import { useEffect } from "react"
 
 const Page = (): JSX.Element => {
   // const { account } = useWeb3React()
@@ -22,13 +21,6 @@ const Page = (): JSX.Element => {
   //   if (router.isReady && !hasNavigated && triedEager && account)
   //     router.push("/explorer")
   // }, [hasNavigated, account, triedEager, router])
-
-  // Setting up the dark mode, because this is a "static" page
-  const { setColorMode } = useColorMode()
-
-  useEffect(() => {
-    setColorMode("dark")
-  }, [])
 
   return (
     <>
@@ -43,35 +35,37 @@ const Page = (): JSX.Element => {
         <link rel="shortcut icon" href="/guild-icon.png" />
       </Head>
 
-      <Box
-        as="main"
-        position="relative"
-        bgColor="gray.800"
-        h="100vh"
-        justifyContent="start"
-        overflowX="hidden"
-        overflowY="scroll"
-        sx={{
-          perspective: "2px",
-          transformStyle: "preserve-3d",
-          scrollBehavior: "smooth",
-        }}
-      >
-        <Box position="absolute" top="0" p="2" zIndex="1">
-          <NavMenu />
+      <DarkMode>
+        <Box
+          color="var(--chakra-colors-chakra-body-text)"
+          as="main"
+          position="relative"
+          bgColor="gray.800"
+          h="100vh"
+          justifyContent="start"
+          overflowX="hidden"
+          overflowY="scroll"
+          sx={{
+            perspective: "2px",
+            transformStyle: "preserve-3d",
+            scrollBehavior: "smooth",
+          }}
+        >
+          <Box position="absolute" top="0" p="2" zIndex="1">
+            <NavMenu />
+          </Box>
+          <Hero />
+          <Box bgColor="gray.800" sx={{ transformStyle: "preserve-3d" }}>
+            <PlatformAgnosticCommunities />
+            <ComposableRequirements />
+            <ExploreTrendingGuilds />
+            <GuildValues />
+            <Discover />
+          </Box>
+          <CallToAction />
+          <Footer />
         </Box>
-
-        <Hero />
-        <Box bgColor="gray.800" sx={{ transformStyle: "preserve-3d" }}>
-          <PlatformAgnosticCommunities />
-          <ComposableRequirements />
-          <ExploreTrendingGuilds />
-          <GuildValues />
-          <Discover />
-        </Box>
-        <CallToAction />
-        <Footer />
-      </Box>
+      </DarkMode>
     </>
   )
 }

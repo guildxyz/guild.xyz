@@ -40,7 +40,6 @@ import useUser from "../hooks/useUser"
 import LeaveButton from "../LeaveButton"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
-import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
@@ -118,8 +117,6 @@ const EditGuildDrawer = ({
 
   const {
     localThemeColor,
-    setLocalThemeMode,
-    localThemeMode,
     setLocalThemeColor,
     localBackgroundImage,
     setLocalBackgroundImage,
@@ -139,7 +136,6 @@ const EditGuildDrawer = ({
     const themeMode = theme?.mode
     const themeColor = theme?.color
     const backgroundImage = theme?.backgroundImage
-    if (themeMode !== localThemeMode) setLocalThemeMode(themeMode)
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     if (backgroundImage !== localBackgroundImage)
       setLocalBackgroundImage(backgroundImage)
@@ -238,19 +234,9 @@ const EditGuildDrawer = ({
                 </Section>
 
                 <Section title="Appearance">
-                  <Stack
-                    direction={{ base: "column", md: "row" }}
-                    justifyContent={"space-between"}
-                    spacing="5"
-                    sx={{
-                      "> *": {
-                        flex: "1 0",
-                      },
-                    }}
-                  >
+                  <Stack direction={{ base: "column", md: "row" }} spacing="5">
                     <ColorPicker fieldName="theme.color" />
                     <BackgroundImageUploader uploader={backgroundUploader} />
-                    <ColorModePicker fieldName="theme.mode" />
                   </Stack>
                 </Section>
 

@@ -47,7 +47,7 @@ const PlatformSelectButton = ({
       }`}
     >
       <HStack spacing={4}>
-        <Circle size="14" pos="relative" overflow="hidden">
+        <Circle size="12" pos="relative" overflow="hidden">
           <Image src={imageUrl} alt="Guild logo" layout="fill" />
         </Circle>
         <VStack spacing={1} alignItems="start" w="full" maxW="full" mb="1" mt="-1">

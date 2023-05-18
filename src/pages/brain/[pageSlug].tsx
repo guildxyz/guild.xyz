@@ -1,4 +1,4 @@
-import { Image } from "@chakra-ui/react"
+import { DarkMode, Image } from "@chakra-ui/react"
 import CustomLink from "components/brain/CustomLink"
 import Header from "components/brain/Header"
 import PageBrainCard from "components/brain/PageBrainCard"
@@ -8,7 +8,7 @@ import {
 } from "components/brain/utils/brainFetchers"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
-import CategorySection from "components/explorer/CategorySection"
+import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import { GetServerSideProps } from "next"
 import { NotionAPI } from "notion-client"
 import { NotionRenderer } from "react-notion-x"
@@ -18,28 +18,31 @@ import slugify from "slugify"
 const PageDetails = ({ blockMap, linkedPageContents, pageId, pageLogo }) => (
   <>
     <LinkPreviewHead path="" />
-    <Layout
-      backButton={{ href: "/guildverse", text: "Go back to Guildverse" }}
-      title={blockMap.block[pageId]?.value.properties.title[0][0]}
-      image={
-        pageLogo && <Image src={pageLogo} boxSize="16" alt="logo" fontSize={0} />
-      }
-    >
-      <NotionRenderer
-        recordMap={blockMap}
-        components={{
-          Collection: Header,
-          PageLink: CustomLink,
-        }}
-      />
-      {linkedPageContents && (
-        <CategorySection fallbackText="There are no linked pages" mt="6">
-          {linkedPageContents?.map((page) => (
-            <PageBrainCard pageData={page} key={page.id} />
-          ))}
-        </CategorySection>
-      )}
-    </Layout>
+    <DarkMode>
+      <Layout
+        backButton={{ href: "/guildverse", text: "Go back to Guildverse" }}
+        title={blockMap.block[pageId]?.value.properties.title[0][0]}
+        image={
+          pageLogo && <Image src={pageLogo} boxSize="16" alt="logo" fontSize={0} />
+        }
+      >
+        <NotionRenderer
+          recordMap={blockMap}
+          darkMode={true}
+          components={{
+            Collection: Header,
+            PageLink: CustomLink,
+          }}
+        />
+        {linkedPageContents && (
+          <GuildCardsGrid mt="6">
+            {linkedPageContents?.map((page) => (
+              <PageBrainCard pageData={page} key={page.id} />
+            ))}
+          </GuildCardsGrid>
+        )}
+      </Layout>
+    </DarkMode>
   </>
 )
 

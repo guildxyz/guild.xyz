@@ -7,8 +7,8 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import FormErrorMessage from "components/common/FormErrorMessage"
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -42,6 +42,7 @@ const ColorPicker = ({ fieldName }: Props): JSX.Element => {
         <FormLabel>Main color</FormLabel>
         <HStack spacing={2}>
           <Flex
+            flexShrink={0}
             boxSize={10}
             alignItems="center"
             justifyContent="center"
