@@ -30,12 +30,12 @@ describe("with wallet", () => {
 
   it("can create a guild without platform", () => {
     cy.findByText("Create guild without platform").click()
-    cy.get("div[aria-current='step']").should("contain.text", "2")
+    cy.get(".chakra-step [data-status='active'] div").should("contain.text", "2")
 
     cy.findByText("Start from scratch").click({ force: true })
-    cy.get("div[aria-current='step']").last().should("contain.text", "Basic")
+    cy.get(".chakra-step p[data-status='active']").should("contain.text", "Basic")
     cy.findByText("Growth").click({ force: true })
-    cy.get("div[aria-current='step']").last().should("contain.text", "Growth")
+    cy.get(".chakra-step p[data-status='active']").should("contain.text", "Growth")
 
     cy.findByText("Next").click()
 
