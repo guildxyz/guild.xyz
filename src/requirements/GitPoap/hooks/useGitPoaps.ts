@@ -10,7 +10,15 @@ const fetchGitPoaps = (_: string) =>
 const useGitPoaps = (): { gitPoaps: Array<GitPoap>; isLoading: boolean } => {
   const { isLoading, data } = useSWRImmutable("gitpoaps", fetchGitPoaps)
 
-  return { isLoading, gitPoaps: data }
+  return {
+    isLoading,
+    gitPoaps: data
+      ? data.map((gitPoap) => ({
+          ...gitPoap,
+          imageUrl: `${gitPoap.imageUrl}?size=small`,
+        }))
+      : undefined,
+  }
 }
 
 export default useGitPoaps
