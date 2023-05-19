@@ -32,7 +32,7 @@ const LogicFormControl = (): JSX.Element => {
   })
 
   const {
-    field: { onChange: anyOfNumOnChange, ...anyOfNumFieldProps },
+    field: { onChange: anyOfNumOnChange, value, ...anyOfNumFieldProps },
   } = useController({
     name: "anyOfNum",
     defaultValue: 1,
@@ -59,7 +59,7 @@ const LogicFormControl = (): JSX.Element => {
   )
 
   useEffect(() => {
-    if (anyOfNumFieldProps.value === requirementCount)
+    if (value === requirementCount)
       anyOfNumOnChange(Math.max(requirementCount - 1, 1))
     if (requirementCount <= 2 && dirtyFields.requirements) logicOnChange("OR")
   }, [requirementCount])
@@ -72,7 +72,7 @@ const LogicFormControl = (): JSX.Element => {
         onChange={(e) => {
           const newValue = e.target.value
 
-          if (newValue === "OR" && anyOfNumFieldProps.value > 1) {
+          if (newValue === "OR" && value > 1) {
             logicOnChange("ANY_OF")
             resetField("anyOfNum", { defaultValue: 1 })
             return
@@ -111,6 +111,7 @@ const LogicFormControl = (): JSX.Element => {
                   anyOfNumOnChange("")
                 }
               }}
+              value={value ?? ""}
               min={1}
               max={Math.max(requirementCount - 1, 1)}
             >
