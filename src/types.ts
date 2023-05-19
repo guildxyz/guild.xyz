@@ -17,7 +17,7 @@ type Rest = {
   [x: string]: any
 }
 
-type Logic = "AND" | "OR"
+type Logic = "AND" | "OR" | "ANY_OF"
 
 type ThemeMode = "LIGHT" | "DARK"
 
@@ -207,6 +207,7 @@ type Role = {
   id: number
   name: string
   logic: Logic
+  anyOfNum?: number
   members: string[]
   imageUrl?: string
   description?: string

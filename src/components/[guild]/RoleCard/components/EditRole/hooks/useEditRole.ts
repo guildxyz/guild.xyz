@@ -41,6 +41,8 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     onSubmit: (data) => {
       data.requirements = preprocessRequirements(data?.requirements)
 
+      if (data.logic !== "ANY_OF") delete data.anyOfNum
+
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },
   }

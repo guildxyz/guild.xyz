@@ -7,12 +7,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
+import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
-import Button from "components/common/Button"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
@@ -26,7 +26,11 @@ type Props = {
 
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { roles } = useGuild()
+  const role = roles.find((r) => r.id === roleId)
   const { hasAccess, data, error, isValidating } = useAccess(roleId)
+  const accessedRequirementCount = data?.requirements?.filter(
+    (r) => r.access
+  )?.length
 
   const { isActive } = useWeb3React()
   const isMember = useIsMember()
@@ -142,7 +146,17 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  return <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
+  return (
+    <AccessIndicatorUI
+      colorScheme="gray"
+      label={`No access${
+        role.logic === "ANY_OF" && typeof accessedRequirementCount === "number"
+          ? ` (${accessedRequirementCount}/${role.anyOfNum})`
+          : ""
+      }`}
+      icon={X}
+    />
+  )
 }
 
 export default AccessIndicator
