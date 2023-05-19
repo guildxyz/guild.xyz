@@ -75,7 +75,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
 )
 
 const GuildSkeletonCard = () => (
-  <DisplayCard>
+  <DisplayCard h="auto">
     <SimpleGrid
       templateColumns={image ? "3rem calc(100% - 4.25rem)" : "1fr"}
       gap={4}
