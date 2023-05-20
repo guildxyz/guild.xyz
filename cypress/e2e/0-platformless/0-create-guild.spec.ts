@@ -8,7 +8,7 @@ describe("without wallet", () => {
   })
 
   it("shows connect wallet modal", () => {
-    cy.getByDataTest("platforms-grid").within(() => {
+    cy.getByDataTest("platforms-gridASD").within(() => {
       cy.get("div[role='group']").first().click()
     })
     cy.getByDataTest("wallet-selector-modal")
