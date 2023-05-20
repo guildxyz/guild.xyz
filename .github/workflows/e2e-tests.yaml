@@ -25,7 +25,7 @@ jobs:
         shell: bash
         run: |
           echo "refname ${{ github.ref_name }}"
-          ecgh
+          echo "refname $GITHUB_REF_NAME"
 
       - name: RefTest
         if: github.ref_name == 'e2e-test-artifacts'
