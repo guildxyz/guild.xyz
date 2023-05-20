@@ -46,6 +46,7 @@ jobs:
           DISPLAY: :0.0
 
       - name: Upload artifacts
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: screenshots-videos
