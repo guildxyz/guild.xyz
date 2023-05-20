@@ -24,11 +24,11 @@ jobs:
       - name: Check GH ref
         shell: bash
         run: |
-          echo "refname ${{ github.ref_name }}"
-          echo "refname $GITHUB_REF_NAME"
+          echo "refname ${{ github.ref }}"
+          echo "refname $GITHUB_REF"
 
       - name: RefTest
-        if: github.ref_name == 'e2e-test-artifacts'
+        if: github.ref == 'e2e-test-artifacts'
         shell: bash
         run: echo e2e-test-artifacts
 
