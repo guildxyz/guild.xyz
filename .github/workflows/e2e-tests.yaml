@@ -55,6 +55,7 @@ jobs:
             cypress/videos
 
       - name: Check GH ref
+        if: always()
         shell: bash
         run: echo "${{ github.ref }}"
 
