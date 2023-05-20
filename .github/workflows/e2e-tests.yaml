@@ -45,6 +45,14 @@ jobs:
           SECRET_WORDS: ${{ secrets.SYNPRESS_SECRET_WORDS }}
           DISPLAY: :0.0
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshots-videos
+          path: |
+            cypress/screenshots
+            cypress/videos
+
       - name: Send Discord notification
         if: failure() && ${{ github.ref == 'refs/heads/main' }}
         shell: bash
