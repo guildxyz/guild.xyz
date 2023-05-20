@@ -54,6 +54,10 @@ jobs:
             cypress/screenshots
             cypress/videos
 
+      - name: Check GH ref
+        shell: bash
+        run: echo "${{ github.ref }}"
+
       - name: Send Discord notification
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
         shell: bash
