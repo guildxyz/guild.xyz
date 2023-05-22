@@ -1,4 +1,4 @@
-import { Box, Flex, useColorModeValue } from "@chakra-ui/react"
+import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { FixedSizeList } from "react-window"
 import { useComboboxOptions } from "./ComboboxOptionsContext"
@@ -66,7 +66,9 @@ const Row = ({ style, index }: RowProps): JSX.Element => {
           )}
         </Box>
       )}
-      {item.label}
+      <Text as="span" isTruncated>
+        {item.label}
+      </Text>
     </Flex>
   )
 }

@@ -1,5 +1,6 @@
 import {
   Box,
+  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -13,7 +14,7 @@ import {
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, Portal, useMachine } from "@zag-js/react"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { CaretDown, X } from "phosphor-react"
+import { CaretDown, Plus, X } from "phosphor-react"
 import { forwardRef, useId } from "react"
 import { useController, UseControllerProps } from "react-hook-form"
 import { SelectOption } from "types"
@@ -34,7 +35,7 @@ type Props = InputProps & {
 const Combobox = forwardRef(
   (
     {
-      options = [],
+      options: optionsProp = [],
       onChange: onChangeProp,
       onClear,
       isLoading,
@@ -90,10 +91,33 @@ const Combobox = forwardRef(
 
     const htmlInputPropValue = htmlInputProps.value?.toString() ?? ""
 
+    const options =
+      isCreatable && inputValue?.length
+        ? [
+            ...optionsProp,
+            {
+              label: inputValue,
+              value: inputValue,
+              img: (
+                <Icon
+                  as={Plus}
+                  boxSize={5}
+                  padding={0.5}
+                  position="relative"
+                  top={1}
+                />
+              ),
+              isCreateOption: true,
+            },
+          ]
+        : optionsProp
+
     const selectedOption =
       selectedValue || htmlInputPropValue
         ? options?.find(
-            (option) => option.value === (selectedValue ?? htmlInputPropValue)
+            (option) =>
+              option.value === (selectedValue ?? htmlInputPropValue) ||
+              option.isCreateOption
           ) ?? {
             label: htmlInputPropValue,
             value: htmlInputPropValue,
