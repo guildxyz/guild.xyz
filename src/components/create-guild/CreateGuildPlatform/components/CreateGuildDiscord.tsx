@@ -11,11 +11,7 @@ const CreateGuildDiscord = (): JSX.Element => {
 
   return (
     <>
-      <Text
-        colorScheme="gray"
-        fontSize={{ base: "sm", md: "lg" }}
-        fontWeight="semibold"
-      >
+      <Text colorScheme="gray" fontWeight="semibold">
         Adding the bot and creating the Guild won't change anything on your server
       </Text>
 

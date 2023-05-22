@@ -4,12 +4,12 @@ import useMemberships from "components/explorer/hooks/useMemberships"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { useMintCredentialContext } from "components/[guild]/Requirements/components/GuildCheckout/MintCredentialContext"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { CircleWavyCheck } from "phosphor-react"
+import { CircleWavyCheck, TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
@@ -45,7 +45,7 @@ const useJoin = (onSuccess?: () => void) => {
 
   const toast = useToast()
   const toastIdRef = useRef<ToastId>()
-  const mintButtonBackground = useColorModeValue("blackAlpha.100", undefined)
+  const toastButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   const { mutate } = useMemberships()
 
@@ -64,9 +64,9 @@ const useJoin = (onSuccess?: () => void) => {
       return body
     })
 
-  const mintCredentialContext = useMintCredentialContext()
-  // Destructuring it separately, since we don't have a MintCredentialContext on the POAP minting page
-  const { onOpen } = mintCredentialContext ?? {}
+  const mintGuildPinContext = useMintGuildPinContext()
+  // Destructuring it separately, since we don't have a MintGuildPinContext on the POAP minting page
+  const { onOpen } = mintGuildPinContext ?? {}
   const { pathname } = useRouter()
 
   const useSubmitResponse = useSubmitWithSign<Response>(submit, {
@@ -90,7 +90,12 @@ const useJoin = (onSuccess?: () => void) => {
         mutate(
           (prev) => [
             ...prev,
-            { guildId: guild.id, isAdmin: false, roleIds: response.accessedRoleIds },
+            {
+              guildId: guild.id,
+              isAdmin: false,
+              roleIds: response.accessedRoleIds,
+              joinedAt: new Date().toISOString(),
+            },
           ],
           { revalidate: false }
         )
@@ -111,14 +116,35 @@ const useJoin = (onSuccess?: () => void) => {
                 size="sm"
                 mt={3}
                 mb="1"
-                bg={mintButtonBackground}
+                bg={toastButtonBackground}
                 borderRadius="lg"
                 onClick={onOpen}
               >
-                Mint credential
+                Mint Guild Pin
               </Button>
             </>
-          ) : undefined,
+          ) : (
+            <>
+              <Text>Let others know as well by sharing it on Twitter</Text>
+              <Button
+                as="a"
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                  `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
+guild.xyz/${guild.urlName}`
+                )}`}
+                target="_blank"
+                bg={toastButtonBackground}
+                leftIcon={<TwitterLogo weight="fill" />}
+                size="sm"
+                onClick={() => toast.close(toastIdRef.current)}
+                mt={3}
+                mb="1"
+                borderRadius="lg"
+              >
+                Share
+              </Button>
+            </>
+          ),
         status: "success",
       })
     },

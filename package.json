@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "lint": "next lint",
     "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx",
-    "test": "NETWORK_NAME='mainnet' dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts",
+    "test": "NETWORK_NAME='mainnet' dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --spec='cypress/e2e/0-platformless/*.spec.ts'",
     "test:mobile": "NETWORK_NAME='mainnet' dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --config viewportWidth=375,viewportHeight=667",
     "test:record": "NETWORK_NAME='mainnet' dotenv -e .env.local -e .env.development.local -- synpress run -b chrome --configFile=synpress.config.ts --record",
     "test:mobile:record": "NETWORK_NAME='mainnet' dotenv -e .env.local -- synpress run -b chrome --configFile=synpress.config.ts --config viewportWidth=375,viewportHeight=667 --record",

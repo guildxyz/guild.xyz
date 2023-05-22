@@ -1,5 +1,8 @@
 import {
+  HStack,
   SimpleGrid,
+  Skeleton,
+  SkeletonCircle,
   Tag,
   TagLabel,
   TagLeftIcon,
@@ -71,4 +74,24 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
   </Link>
 )
 
+const GuildSkeletonCard = () => (
+  <DisplayCard h="auto">
+    <SimpleGrid
+      templateColumns={image ? "3rem calc(100% - 4.25rem)" : "1fr"}
+      gap={4}
+      alignItems="center"
+    >
+      <SkeletonCircle size={"48px"} />
+      <VStack spacing={3} alignItems="start" w="full" maxW="full">
+        <Skeleton h="6" w="80%" />
+        <HStack>
+          <Skeleton h="5" w="12" />
+          <Skeleton h="5" w="16" />
+        </HStack>
+      </VStack>
+    </SimpleGrid>
+  </DisplayCard>
+)
+
 export default GuildCard
+export { GuildSkeletonCard }

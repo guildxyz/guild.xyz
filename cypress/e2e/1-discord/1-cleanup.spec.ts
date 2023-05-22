@@ -48,8 +48,11 @@ describe("post-test cleanup", () => {
       })
 
       await Promise.all(discordRoleDeleteRequests)
-    } catch {
-      // We can ignore this, it is not a problem if we can't delete the Discord roles every time
+    } catch (deleteRolesError) {
+      cy.log(
+        "[WARNING]: couldn't delete Discord roles",
+        deleteRolesError?.toString()
+      )
     }
   })
 

@@ -7,22 +7,22 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chain, Chains, RPC } from "connectors"
 import { useState } from "react"
-import { GUILD_CREDENTIAL_CONTRACT } from "utils/guildCheckout/constants"
+import { GUILD_PIN_CONTRACT } from "utils/guildCheckout/constants"
 
 type ChainButtonProps = { chain: Chain; comingSoon?: boolean }
 
 const CHAINS: ChainButtonProps[] = [
-  ...Object.keys(GUILD_CREDENTIAL_CONTRACT).map((chain) => ({
+  ...Object.keys(GUILD_PIN_CONTRACT).map((chain) => ({
     chain: chain as Chain,
   })),
   { chain: "ETHEREUM", comingSoon: true },
 ]
 
-const MintCredentialChainPicker = (): JSX.Element => (
+const MintGuildPinChainPicker = (): JSX.Element => (
   <Stack>
     <Text fontWeight={"medium"}>Chain to mint on</Text>
     <SimpleGrid
@@ -69,9 +69,9 @@ const ChainButton = ({ chain, comingSoon }: ChainButtonProps): JSX.Element => {
         }}
         isLoading={isLoading}
         loadingText={RPC[chain].chainName}
-        border={isCurrentChain && "2px"}
+        border={!comingSoon && isCurrentChain && "2px"}
         borderColor={activeBorderColor}
-        opacity={isCurrentChain && "1!important"}
+        opacity={!comingSoon && isCurrentChain && "1!important"}
       >
         {RPC[chain].chainName}
       </Button>
@@ -79,4 +79,4 @@ const ChainButton = ({ chain, comingSoon }: ChainButtonProps): JSX.Element => {
   )
 }
 
-export default MintCredentialChainPicker
+export default MintGuildPinChainPicker

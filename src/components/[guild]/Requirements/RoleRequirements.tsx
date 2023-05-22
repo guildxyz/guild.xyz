@@ -10,6 +10,7 @@ import React, { memo, useEffect, useRef, useState } from "react"
 import { VariableSizeList } from "react-window"
 import { Logic, Requirement, Role } from "types"
 import LogicDivider from "../LogicDivider"
+import AnyOfHeader from "./components/AnyOfHeader"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
 import RequirementDisplayComponent from "./components/RequirementDisplayComponent"
 
@@ -49,6 +50,7 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
      */
     <SlideFade in={isOpen} {...(!isOpen && { inert: "true" })}>
       <VStack spacing="0">
+        {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
         {!requirements?.length ? (
           <Spinner />
         ) : isVirtualList ? (

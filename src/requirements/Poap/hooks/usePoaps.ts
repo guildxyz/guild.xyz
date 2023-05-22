@@ -9,7 +9,12 @@ export const usePoaps = (
     search.length > 0 ? `/assets/poap?search=${search}` : null
   )
 
-  return { isLoading, poaps: data }
+  return {
+    isLoading,
+    poaps: data
+      ? data.map((poap) => ({ ...poap, image_url: `${poap.image_url}?size=small` }))
+      : undefined,
+  }
 }
 
 export const usePoap = (
@@ -19,5 +24,10 @@ export const usePoap = (
     fancyId ? `/assets/poap/${fancyId}` : null
   )
 
-  return { isLoading, poap: data, mutatePoap: mutate, error }
+  return {
+    isLoading,
+    poap: data ? { ...data, image_url: `${data.image_url}?size=small` } : undefined,
+    mutatePoap: mutate,
+    error,
+  }
 }

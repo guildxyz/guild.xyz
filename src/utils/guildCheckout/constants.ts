@@ -1,16 +1,16 @@
 import { BigNumberish } from "@ethersproject/bignumber"
 import { Chain, RPC } from "connectors"
 import { RequirementType } from "requirements"
-import GUILD_CREDENTIAL_ABI from "static/abis/guildCredential.json"
+import GUILD_PIN_ABI from "static/abis/guildPin.json"
 import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import {
-  UNIVERSAL_ROUTER_COMMANDS,
   encodePermit2Permit,
   encodeUnwrapEth,
   encodeV2SwapExactOut,
   encodeV3SwapExactOut,
   encodeWrapEth,
+  UNIVERSAL_ROUTER_COMMANDS,
 } from "./encoders"
 
 export type TokenBuyerContractConfig = Partial<
@@ -44,6 +44,10 @@ const DEFAULT_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
     address: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
     abi: OLD_TOKEN_BUYER_ABI,
   },
+  // BSC: {
+  //   address: "0xde0d301c75779423d962c2e538d0f326004e7c83",
+  //   abi: TOKEN_BUYER_ABI,
+  // },
   GOERLI: {
     address: "0x1eeaab336061d64f1d271eed529991f7ae7cc478",
     abi: TOKEN_BUYER_ABI,
@@ -245,6 +249,7 @@ export const DISABLED_TOKENS: Partial<Record<Chain, string[]>> = {
     "0x5a6ae1fd70d04ba4a279fc219dfabc53825cb01d",
     "0x11a83070d6f41ebe3764e4efed7df9b9d20a03fa",
   ],
+  BSC: ["0xd4888870c8686c748232719051b677791dbda26d"],
 }
 
 export const FEE_COLLECTOR_CONTRACT: Partial<Record<Chain, string>> = {
@@ -256,16 +261,16 @@ export const paymentSupportedChains: Chain[] = Object.keys(
   FEE_COLLECTOR_CONTRACT
 ) as Chain[]
 
-export const GUILD_CREDENTIAL_CONTRACT = {
+export const GUILD_PIN_CONTRACT = {
   // POLYGON_MUMBAI: {
   //   address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
-  //   abi: GUILD_CREDENTIAL_ABI,
+  //   abi: GUILD_PIN_ABI,
   // },
   POLYGON: {
     address: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
-    abi: GUILD_CREDENTIAL_ABI,
+    abi: GUILD_PIN_ABI,
   },
 }
 // TODO: satisfies Partial<Record<Chain, { address: string; abi: ContractInterface }>> - we just can't use it in Next.js 12, but we should add it later.
 
-export type GuildCredentialsSupportedChain = keyof typeof GUILD_CREDENTIAL_CONTRACT
+export type GuildPinsSupportedChain = keyof typeof GUILD_PIN_CONTRACT
