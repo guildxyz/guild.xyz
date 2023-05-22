@@ -236,7 +236,12 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     }).toString()
 
     const response = await fetch(
-      `${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`
+      `${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`,
+      {
+        headers: {
+          "0x-api-key": process.env.ZEROX_API_KEY,
+        },
+      }
     )
 
     const responseData = await response.json()
