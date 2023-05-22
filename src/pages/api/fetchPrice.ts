@@ -2,6 +2,7 @@ import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider } from "@ethersproject/providers"
 import { formatUnits, parseUnits } from "@ethersproject/units"
+import { kv } from "@vercel/kv"
 import { Chain, Chains, RPC } from "connectors"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
@@ -19,6 +20,7 @@ import {
   ZEROX_SUPPORTED_SOURCES,
 } from "utils/guildCheckout/constants"
 import { flipPath } from "utils/guildCheckout/utils"
+import { NON_PURCHASABLE_ASSETS_KV_KEY } from "./nonPurchasableAssets"
 
 export type FetchPriceResponse = {
   buyAmount: number
@@ -240,11 +242,26 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const responseData = await response.json()
 
     if (response.status !== 200) {
-      const errorMessage = responseData.validationErrors?.length
-        ? responseData.validationErrors[0].reason === "INSUFFICIENT_ASSET_LIQUIDITY"
-          ? "We are not able to find this token on the market. Contact guild admins for further help."
-          : responseData.validationErrors[0].description
-        : response.statusText
+      let errorMessage = response.statusText
+
+      if (responseData.validationErrors?.length) {
+        if (
+          responseData.validationErrors[0].reason === "INSUFFICIENT_ASSET_LIQUIDITY"
+        ) {
+          // Set error message and save the token address to the KV store, so we won't try to fetch the price for it anymore
+          errorMessage =
+            "We are not able to find this token on the market. Contact guild admins for further help."
+
+          await kv.set(
+            `${NON_PURCHASABLE_ASSETS_KV_KEY}:${
+              Chains[chain]
+            }:${address.toLowerCase()}`,
+            true
+          )
+        } else {
+          errorMessage = responseData.validationErrors[0].description
+        }
+      }
 
       return res.status(response.status).json({
         error: errorMessage,
