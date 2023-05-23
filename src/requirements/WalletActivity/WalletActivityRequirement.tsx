@@ -59,6 +59,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {"Have a wallet older than "}
                 <DataBlock>{formattedWalletAge}</DataBlock>
+                {` (on ${RPC[requirement.chain].chainName})`}
               </>
             )
           }
