@@ -12,19 +12,18 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useAccess from "components/[guild]/hooks/useAccess"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
-import useAccess from "components/[guild]/hooks/useAccess"
-import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
-import { RequirementType } from "requirements"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 
 const ConnectPolygonID = (props: ButtonProps) => {
-  const { id, roleId, type, data } = useRequirementContext()
+  const { id, roleId, type, data, chain } = useRequirementContext()
   const { onOpen, onClose, isOpen } = useDisclosure()
 
   const { data: roleAccess } = useAccess(roleId, isOpen && { refreshInterval: 5000 })
@@ -57,7 +56,7 @@ const ConnectPolygonID = (props: ButtonProps) => {
       <ConnectPolygonIDModal
         onClose={onClose}
         isOpen={isOpen}
-        type={type}
+        type={chain === "POLYGON" ? `${type}_MAIN` : type}
         data={data}
       ></ConnectPolygonIDModal>
     </>
@@ -67,7 +66,11 @@ const ConnectPolygonID = (props: ButtonProps) => {
 type ConnectPolygonIDModalProps = {
   isOpen: boolean
   onClose: () => void
-  type: Extract<RequirementType, "POLYGON_ID_QUERY" | "POLYGON_ID_BASIC">
+  type:
+    | "POLYGON_ID_QUERY"
+    | "POLYGON_ID_BASIC"
+    | "POLYGON_ID_QUERY_MAIN"
+    | "POLYGON_ID_BASIC_MAIN"
   data: {
     maxAmount?: number
     query?: Record<string, any>
