@@ -37,7 +37,7 @@ const LogicFormControl = (): JSX.Element => {
     name: "anyOfNum",
     defaultValue: 1,
     rules: {
-      required: "This field is required",
+      required: logic !== "AND" && "This field is required",
       min: {
         value: 1,
         message: "Minimum value is 1",
