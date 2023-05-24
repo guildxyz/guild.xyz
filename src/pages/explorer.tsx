@@ -47,7 +47,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const {
     data: filteredGuilds,
     setSize,
-    isValidating: isFilteredValidating,
+    isValidating,
   } = useSWRInfinite(
     (pageIndex, previousPageData) =>
       Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE
@@ -59,6 +59,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       revalidateFirstPage: false,
     }
   )
+  const renderedGuilds = filteredGuilds?.flat()
 
   useEffect(() => {
     if (prevSearch === search || prevSearch === undefined) return
@@ -70,14 +71,12 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     if (
       !guildsListEl.current ||
       guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      isFilteredValidating
+      isValidating
     )
       return
 
     setSize((prev) => prev + 1)
-  }, [filteredGuilds, isFilteredValidating])
-
-  const renderedGuilds = filteredGuilds?.flat()
+  }, [filteredGuilds, isValidating])
 
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
   const bgOpacity = useColorModeValue(0.06, 0.1)
@@ -108,7 +107,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         backgroundOffset={account ? 100 : 90}
         textColor="white"
       >
-        <YourGuilds guildsInitial={guildsInitial} />
+        <YourGuilds />
 
         <Stack ref={guildsListEl} spacing={{ base: 8, md: 10 }}>
           {account && <Divider />}
@@ -129,7 +128,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             </SimpleGrid>
 
             {!renderedGuilds.length ? (
-              isFilteredValidating ? null : !search?.length ? (
+              isValidating ? null : !search?.length ? (
                 <Text>
                   Can't fetch guilds from the backend right now. Check back later!
                 </Text>
@@ -147,7 +146,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             )}
           </Section>
 
-          <Center>{isFilteredValidating && <Spinner />}</Center>
+          <Center>{isValidating && <Spinner />}</Center>
         </Stack>
       </Layout>
     </>
@@ -155,9 +154,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetcher(`/guild?sort=members`)
-    .then((list) => list)
-    .catch((_) => [])
+  const guilds = await fetcher(`/guild?sort=members`).catch((_) => [])
 
   return {
     props: { guilds },

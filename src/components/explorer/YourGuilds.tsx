@@ -12,58 +12,49 @@ import useMemberships, {
 } from "components/explorer/hooks/useMemberships"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Plus, Wallet } from "phosphor-react"
-import { useEffect, useState } from "react"
-import { GuildBase } from "types"
+import { useMemo } from "react"
 
-type Props = {
-  guildsInitial: GuildBase[]
-}
+const sortUsersGuilds = (memberships: Memberships, guildsData: any) => {
+  if (!guildsData?.length) return []
+  if (!memberships?.length) return guildsData
 
-const getUsersGuilds = (memberships: Memberships, guildsData: any) => {
-  if (!memberships?.length || !guildsData?.length) return []
-  const usersGuildsIds = memberships.map((membership) => membership.guildId)
-  const newUsersGuilds = guildsData
+  const sortedUsersGuilds = guildsData
     .reduce((acc, currGuild) => {
-      if (usersGuildsIds.includes(currGuild.id))
-        acc.push({
-          ...currGuild,
-          joinedAt: memberships.find(({ guildId }) => currGuild.id === guildId)
-            .joinedAt,
-        })
+      acc.push({
+        ...currGuild,
+        joinedAt: memberships.find(({ guildId }) => currGuild.id === guildId)
+          .joinedAt,
+      })
       return acc
     }, [])
     .sort((guildA, guildB) => (guildA.joinedAt > guildB.joinedAt ? 1 : -1))
-  return newUsersGuilds
+  return sortedUsersGuilds
 }
 
-const YourGuilds = ({ guildsInitial }: Props) => {
+const YourGuilds = () => {
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
-  const { data: allGuilds, isLoading: isGuildsLoading } = useSWRWithOptionalAuth(
+  const { data: usersGuilds, isLoading: isGuildsLoading } = useSWRWithOptionalAuth(
     `/guild?`, // ? is included, so the request hits v2Replacer in fetcher
     {
-      fallbackData: guildsInitial,
       dedupingInterval: 60000, // one minute
       revalidateOnMount: true,
     }
   )
 
   const { memberships, isLoading: isMembershipsLoading } = useMemberships()
-  const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>(
-    getUsersGuilds(memberships, allGuilds)
-  )
 
-  useEffect(() => {
-    if (memberships && allGuilds)
-      setUsersGuilds(getUsersGuilds(memberships, allGuilds))
-  }, [memberships, allGuilds])
+  const orderedGuilds = useMemo(
+    () => sortUsersGuilds(memberships, usersGuilds),
+    [usersGuilds, memberships]
+  )
 
   return (
     <Section
       title="Your guilds"
       titleRightElement={
-        usersGuilds?.length && (
+        orderedGuilds?.length && (
           <Box my="-2 !important" ml="auto !important">
             <DarkMode>
               <LinkButton
@@ -108,15 +99,15 @@ const YourGuilds = ({ guildsInitial }: Props) => {
         </Card>
       ) : isGuildsLoading ||
         isMembershipsLoading ||
-        (allGuilds && memberships && !usersGuilds) ? (
+        (usersGuilds && memberships && !orderedGuilds) ? (
         <GuildCardsGrid>
           {[...Array(3)].map((_, i) => (
             <GuildSkeletonCard key={i} />
           ))}
         </GuildCardsGrid>
-      ) : usersGuilds?.length ? (
+      ) : orderedGuilds?.length ? (
         <GuildCardsGrid>
-          {usersGuilds.map((guild) => (
+          {orderedGuilds.map((guild) => (
             <GuildCard guildData={guild} key={guild.urlName} />
           ))}
         </GuildCardsGrid>

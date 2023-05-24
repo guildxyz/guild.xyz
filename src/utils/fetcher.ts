@@ -10,6 +10,10 @@ const SIG_HEADER_NAME = "x-guild-sig"
 const PARAMS_HEADER_NAME = "x-guild-params"
 const AUTH_FLAG_HEADER_NAME = "x-guild-auth-location"
 
+/**
+ * Temporary, so we can test out different v2 endpoints locally by just changing them
+ * here, as we're going to be using a mix of v1 and v2 endpoints for some time
+ */
 const v2Replacer = (endpoint: string, options: Record<string, any>) => {
   // if (options.method?.toLowerCase() === "post" && endpoint.includes("/v1/guild")) {
   //   return endpoint.replace("/v1/guild", "/v2/guild/with-roles")
