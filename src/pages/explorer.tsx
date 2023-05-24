@@ -12,7 +12,7 @@ import {
   usePrevious,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
+import { BATCH_SIZE } from "components/_app/ExplorerProvider"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
@@ -25,8 +25,8 @@ import YourGuilds from "components/explorer/YourGuilds"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
-import { useEffect, useMemo, useRef } from "react"
-import useSWR from "swr"
+import { useEffect, useRef } from "react"
+import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
@@ -40,19 +40,20 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const prevSearch = usePrevious(search)
   const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
-  const { renderedGuildsCount, setRenderedGuildsCount } = useExplorer()
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
-  useEffect(() => {
-    if (prevSearch === search || prevSearch === undefined) return
-    setRenderedGuildsCount(BATCH_SIZE)
-  }, [search, prevSearch])
-
   const guildsListEl = useRef(null)
 
-  const { data: filteredGuilds, isValidating: isFilteredValidating } = useSWR(
-    `/guild?${query}`,
+  const {
+    data: filteredGuilds,
+    setSize,
+    isValidating: isFilteredValidating,
+  } = useSWRInfinite(
+    (pageIndex, previousPageData) =>
+      Array.isArray(previousPageData) && previousPageData.length === 0
+        ? null
+        : `/guild?${query}&limit=${BATCH_SIZE}&offset=${pageIndex * BATCH_SIZE}`,
     (url: string) =>
       fetcher(url).then((data) =>
         data.filter(
@@ -64,25 +65,28 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     {
       fallbackData: guildsInitial,
       dedupingInterval: 60000, // one minute
+      revalidateFirstPage: false,
     }
   )
+
+  useEffect(() => {
+    if (prevSearch === search || prevSearch === undefined) return
+    setSize(0)
+  }, [search, prevSearch])
 
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   useScrollEffect(() => {
     if (
       !guildsListEl.current ||
       guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      filteredGuilds?.length <= renderedGuildsCount
+      isFilteredValidating
     )
       return
 
-    setRenderedGuildsCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [filteredGuilds, renderedGuildsCount])
+    setSize((prev) => prev + 1)
+  }, [filteredGuilds, isFilteredValidating])
 
-  const renderedGuilds = useMemo(
-    () => filteredGuilds?.slice(0, renderedGuildsCount) || [],
-    [filteredGuilds, renderedGuildsCount]
-  )
+  const renderedGuilds = filteredGuilds?.flat()
 
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
   const bgOpacity = useColorModeValue(0.06, 0.1)
@@ -161,9 +165,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             )}
           </Section>
 
-          <Center>
-            {filteredGuilds?.length > renderedGuildsCount && <Spinner />}
-          </Center>
+          <Center>{isFilteredValidating && <Spinner />}</Center>
         </Stack>
       </Layout>
     </>
