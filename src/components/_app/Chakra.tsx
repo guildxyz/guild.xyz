@@ -3,7 +3,6 @@ import {
   cookieStorageManagerSSR,
   localStorageManager,
 } from "@chakra-ui/react"
-import { GetServerSideProps } from "next"
 import { PropsWithChildren } from "react"
 import theme from "theme"
 
@@ -24,11 +23,4 @@ const Chakra = ({ cookies, children }: PropsWithChildren<Props>) => {
   )
 }
 
-const getServerSideProps: GetServerSideProps = async ({ req }) => ({
-  props: {
-    cookies: req.headers.cookie ?? "",
-  },
-})
-
 export default Chakra
-export { getServerSideProps }

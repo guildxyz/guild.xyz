@@ -52,6 +52,7 @@ const ThemeSwitcher = () => {
     if (local === undefined)
       setTimeout(() => {
         window.localStorage.removeItem("chakra-ui-color-mode")
+        document.cookie = "chakra-ui-color-mode=;"
       }, 3000)
   }, [])
 
@@ -59,6 +60,7 @@ const ThemeSwitcher = () => {
     onChange: (newValue: ColorModeWithSystem) => {
       setColorMode(newValue)
       setLocal(newValue === "system" ? undefined : newValue)
+      if (newValue === "system") document.cookie = "chakra-ui-color-mode=;"
     },
     value: local ?? "system",
   })
