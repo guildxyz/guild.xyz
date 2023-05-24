@@ -146,7 +146,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               <OrderSelect {...{ order, setOrder }} />
             </SimpleGrid>
 
-            {!renderedGuilds.length ? (
+            {isFilteredValidating ? null : !renderedGuilds.length ? (
               !search?.length ? (
                 <Text>
                   Can't fetch guilds from the backend right now. Check back later!
