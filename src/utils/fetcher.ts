@@ -18,10 +18,7 @@ const v2Replacer = (endpoint: string, options: Record<string, any>) => {
   //   return endpoint.replace("/v1/guild/", "/v2/guild/guild-page/")
   // }
 
-  if (
-    (options.method?.toLowerCase() ?? "get") === "get" &&
-    endpoint.startsWith(`${process.env.NEXT_PUBLIC_API}/guild?`)
-  ) {
+  if (endpoint.startsWith(`${process.env.NEXT_PUBLIC_API}/guild?`)) {
     return endpoint.replace("/v1/", "/v2/").replace("/guild?", "/guilds?")
   }
 
