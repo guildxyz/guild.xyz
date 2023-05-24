@@ -45,6 +45,7 @@ const YourGuilds = ({ guildsInitial }: Props) => {
     {
       fallbackData: guildsInitial,
       dedupingInterval: 60000, // one minute
+      revalidateOnMount: true,
     }
   )
 
