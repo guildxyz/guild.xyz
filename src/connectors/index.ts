@@ -30,6 +30,7 @@ enum Chains {
   EVMOS = 9001,
   ZETACHAIN_ATHENS = 7001,
   SCROLL_ALPHA = 534353,
+  ZKSYNC_ERA = 324,
   SEPOLIA = 11155111,
   GOERLI = 5,
   POLYGON_MUMBAI = 80001,
@@ -549,6 +550,25 @@ const RPC: RpcConfig = {
       dark: "/networkLogos/scroll.png",
     },
     iconUrls: ["/networkLogos/scroll.png"],
+  },
+  ZKSYNC_ERA: {
+    chainId: 324,
+    chainName: "zkSync Era",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://mainnet.era.zksync.io"],
+    blockExplorerUrls: ["https://explorer.zksync.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/zksync-era.svg",
+      dark: "/networkLogos/zksync-era.svg",
+    },
+    iconUrls: ["/networkLogos/zksync-era.svg"],
   },
   SEPOLIA: {
     chainId: 11155111,
