@@ -50,7 +50,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     isValidating: isFilteredValidating,
   } = useSWRInfinite(
     (pageIndex, previousPageData) =>
-      Array.isArray(previousPageData) && previousPageData.length === 0
+      Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE
         ? null
         : `/guild?${query}&limit=${BATCH_SIZE}&offset=${pageIndex * BATCH_SIZE}`,
     {
@@ -62,7 +62,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   useEffect(() => {
     if (prevSearch === search || prevSearch === undefined) return
-    setSize(0)
+    setSize(1)
   }, [search, prevSearch])
 
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
