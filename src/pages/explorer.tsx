@@ -53,14 +53,6 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       Array.isArray(previousPageData) && previousPageData.length === 0
         ? null
         : `/guild?${query}&limit=${BATCH_SIZE}&offset=${pageIndex * BATCH_SIZE}`,
-    (url: string) =>
-      fetcher(url).then((data) =>
-        data.filter(
-          (guild) =>
-            (guild.platforms?.length > 0 && guild.memberCount > 0) ||
-            guild.memberCount > 1
-        )
-      ),
     {
       fallbackData: guildsInitial,
       dedupingInterval: 60000, // one minute
