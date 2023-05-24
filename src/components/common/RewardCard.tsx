@@ -9,16 +9,16 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import ColorCard from "components/common/ColorCard"
-import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import SetVisibility from "components/[guild]/SetVisibility"
+import ColorCard from "components/common/ColorCard"
+import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import Image from "next/image"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
 
 type Props = {
-  label: string
+  label: string | JSX.Element
   title: string
   description: string | JSX.Element
   image: string | JSX.Element

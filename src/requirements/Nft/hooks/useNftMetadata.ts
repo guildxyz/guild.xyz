@@ -10,7 +10,7 @@ export type NftMetadata = {
   traits?: Record<string, Array<string>>
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_GUILD_API
+const baseUrl = `${process.env.NEXT_PUBLIC_API}/assets`
 
 const NOUNS_BACKGROUNDS = ["cool", "warm"]
 
@@ -20,14 +20,14 @@ const useNftMetadata = (
   tokenId: string
 ): { isLoading: boolean; metadata: Omit<NftMetadata, "traits" | "slug"> } => {
   const shouldFetch = chain && address && tokenId
-  const { isValidating, data } = useSWRImmutable(
+  const { isLoading, data } = useSWRImmutable(
     shouldFetch ? `${baseUrl}/nft/${chain}/${address}/${tokenId}` : null,
     {
       shouldRetryOnError: false,
     }
   )
 
-  return { isLoading: isValidating, metadata: data }
+  return { isLoading, metadata: data }
 }
 
 // Works for Ethereum Mainnet NFTs for now
@@ -41,7 +41,7 @@ const useNftMetadataWithTraits = (
     Object.values(nounsAddresses).includes(address?.toLowerCase())
   const shouldFetch = address && !isNounsContract
 
-  const { data, isValidating } = useSWRImmutable(
+  const { data, isLoading } = useSWRImmutable(
     chain === "ETHEREUM" && shouldFetch
       ? `${baseUrl}/nft/${slug ? slug : `address/${address}`}`
       : null
@@ -65,7 +65,7 @@ const useNftMetadataWithTraits = (
     }
   }
 
-  return { isLoading: isValidating, metadata: data }
+  return { isLoading, metadata: data }
 }
 
 export default useNftMetadata

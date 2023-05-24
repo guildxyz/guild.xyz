@@ -17,7 +17,7 @@ type Rest = {
   [x: string]: any
 }
 
-type Logic = "AND" | "OR"
+type Logic = "AND" | "OR" | "ANY_OF"
 
 type ThemeMode = "LIGHT" | "DARK"
 
@@ -114,6 +114,7 @@ type GuildBase = {
   roles: Array<string>
   platforms: Array<PlatformName>
   memberCount: number
+  rolesCount: number
 }
 
 type BrainCardData = {
@@ -207,6 +208,7 @@ type Role = {
   id: number
   name: string
   logic: Logic
+  anyOfNum?: number
   members: string[]
   imageUrl?: string
   description?: string
@@ -483,6 +485,41 @@ type OneOf<First, Second> = First | Second extends object
   ? (Without<First, Second> & Second) | (Without<Second, First> & First)
   : First | Second
 
+type GuildPinAttribute =
+  | {
+      trait_type: "type"
+      value: string
+    }
+  | {
+      trait_type: "guildId"
+      value: string
+    }
+  | {
+      trait_type: "userId"
+      value: string
+    }
+  | {
+      trait_type: "mintDate"
+      display_type: "date"
+      value: number
+    }
+  | {
+      trait_type: "actionDate"
+      display_type: "date"
+      value: number
+    }
+  | {
+      trait_type: "rank"
+      value: string
+    }
+
+type GuildPinMetadata = {
+  name: string
+  description: string
+  image: string
+  attributes: GuildPinAttribute[]
+}
+
 export type {
   OneOf,
   WalletConnectConnectionData,
@@ -526,5 +563,6 @@ export type {
   VoiceRequirementParams,
   PoapEventDetails,
   AddressConnectionProvider,
+  GuildPinMetadata,
 }
 export { ValidationMethod, Visibility, supportedSocialLinks }

@@ -1,6 +1,7 @@
 import { BigNumberish } from "@ethersproject/bignumber"
 import { Chain, RPC } from "connectors"
 import { RequirementType } from "requirements"
+import GUILD_PIN_ABI from "static/abis/guildPin.json"
 import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import {
@@ -43,6 +44,10 @@ const DEFAULT_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
     address: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
     abi: OLD_TOKEN_BUYER_ABI,
   },
+  // BSC: {
+  //   address: "0xde0d301c75779423d962c2e538d0f326004e7c83",
+  //   abi: TOKEN_BUYER_ABI,
+  // },
   GOERLI: {
     address: "0x1eeaab336061d64f1d271eed529991f7ae7cc478",
     abi: TOKEN_BUYER_ABI,
@@ -244,13 +249,28 @@ export const DISABLED_TOKENS: Partial<Record<Chain, string[]>> = {
     "0x5a6ae1fd70d04ba4a279fc219dfabc53825cb01d",
     "0x11a83070d6f41ebe3764e4efed7df9b9d20a03fa",
   ],
+  BSC: ["0xd4888870c8686c748232719051b677791dbda26d"],
 }
 
 export const FEE_COLLECTOR_CONTRACT: Partial<Record<Chain, string>> = {
-  ETHEREUM: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  POLYGON: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  GOERLI: "0x32547e6cc18651647e58f57164a0117da82f77f0",
+  ETHEREUM: "0xe4b4c6a7c6b6396032096C12aDf46B7F14a70F4d",
+  POLYGON: "0xe4b4c6a7c6b6396032096C12aDf46B7F14a70F4d",
+  POLYGON_MUMBAI: "0xe4b4c6a7c6b6396032096C12aDf46B7F14a70F4d",
 }
 export const paymentSupportedChains: Chain[] = Object.keys(
   FEE_COLLECTOR_CONTRACT
 ) as Chain[]
+
+export const GUILD_PIN_CONTRACT = {
+  // POLYGON_MUMBAI: {
+  //   address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
+  //   abi: GUILD_PIN_ABI,
+  // },
+  POLYGON: {
+    address: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
+    abi: GUILD_PIN_ABI,
+  },
+}
+// TODO: satisfies Partial<Record<Chain, { address: string; abi: ContractInterface }>> - we just can't use it in Next.js 12, but we should add it later.
+
+export type GuildPinsSupportedChain = keyof typeof GUILD_PIN_CONTRACT

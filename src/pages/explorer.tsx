@@ -1,45 +1,36 @@
 import {
   Center,
+  Divider,
   GridItem,
   SimpleGrid,
   Spinner,
   Stack,
-  Tag,
-  useColorMode,
+  Text,
+  useBreakpointValue,
+  useColorModeValue,
   usePrevious,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import AddCard from "components/common/AddCard"
+import { BATCH_SIZE } from "components/_app/ExplorerProvider"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
-import CategorySection from "components/explorer/CategorySection"
+import Section from "components/common/Section"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
 import GuildCard from "components/explorer/GuildCard"
-import useMemberships, {
-  Memberships,
-} from "components/explorer/hooks/useMemberships"
+import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import OrderSelect, { OrderOptions } from "components/explorer/OrderSelect"
 import SearchBar from "components/explorer/SearchBar"
-import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
+import YourGuilds from "components/explorer/YourGuilds"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
-import { useEffect, useMemo, useRef, useState } from "react"
-import useSWR from "swr"
+import { useEffect, useRef } from "react"
+import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
 type Props = {
   guilds: GuildBase[]
-}
-
-const getUsersGuilds = (memberships: Memberships, guildsData: any) => {
-  if (!memberships?.length || !guildsData?.length) return []
-  const usersGuildsIds = memberships.map((membership) => membership.guildId)
-  const newUsersGuilds = guildsData.filter((guild) =>
-    usersGuildsIds.includes(guild.id)
-  )
-  return newUsersGuilds
 }
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
@@ -48,147 +39,123 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const prevSearch = usePrevious(search)
   const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
-  const { renderedGuildsCount, setRenderedGuildsCount } = useExplorer()
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
-
-  useEffect(() => {
-    if (prevSearch === search || prevSearch === undefined) return
-    setRenderedGuildsCount(BATCH_SIZE)
-  }, [search, prevSearch])
 
   const guildsListEl = useRef(null)
 
   const {
-    data: [allGuilds, filteredGuilds],
-    isValidating: isLoading,
-  } = useSWR(
-    `/guild?${query}`,
+    data: filteredGuilds,
+    setSize,
+    isValidating: isFilteredValidating,
+  } = useSWRInfinite(
+    (pageIndex, previousPageData) =>
+      Array.isArray(previousPageData) && previousPageData.length === 0
+        ? null
+        : `/guild?${query}&limit=${BATCH_SIZE}&offset=${pageIndex * BATCH_SIZE}`,
     (url: string) =>
-      fetcher(url).then((data) => [
-        data,
+      fetcher(url).then((data) =>
         data.filter(
           (guild) =>
             (guild.platforms?.length > 0 && guild.memberCount > 0) ||
             guild.memberCount > 1
-        ),
-      ]),
+        )
+      ),
     {
-      fallbackData: [guildsInitial, guildsInitial],
+      fallbackData: guildsInitial,
       dedupingInterval: 60000, // one minute
+      revalidateFirstPage: false,
     }
   )
+
+  useEffect(() => {
+    if (prevSearch === search || prevSearch === undefined) return
+    setSize(0)
+  }, [search, prevSearch])
 
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   useScrollEffect(() => {
     if (
       !guildsListEl.current ||
       guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      filteredGuilds?.length <= renderedGuildsCount
+      isFilteredValidating
     )
       return
 
-    setRenderedGuildsCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [filteredGuilds, renderedGuildsCount])
+    setSize((prev) => prev + 1)
+  }, [filteredGuilds, isFilteredValidating])
 
-  const renderedGuilds = useMemo(
-    () => filteredGuilds?.slice(0, renderedGuildsCount) || [],
-    [filteredGuilds, renderedGuildsCount]
-  )
+  const renderedGuilds = filteredGuilds?.flat()
 
-  const { memberships } = useMemberships()
-  const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>(
-    getUsersGuilds(memberships, allGuilds)
-  )
-
-  useEffect(() => {
-    setUsersGuilds(getUsersGuilds(memberships, allGuilds))
-  }, [memberships, allGuilds])
-
-  // Setting up the dark mode, because this is a "static" page
-  const { setColorMode } = useColorMode()
-
-  useEffect(() => {
-    setColorMode("dark")
-  }, [])
+  const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
+  const bgOpacity = useColorModeValue(0.06, 0.1)
+  const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
 
   return (
     <>
       <LinkPreviewHead path="" />
       <Layout
-        title="Guildhall"
+        title={"Guildhall"}
         ogDescription="Automated membership management for the platforms your community already uses."
+        background={bgColor}
+        backgroundProps={{
+          _before: {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            bg: `linear-gradient(to top right, ${bgColor} ${bgLinearPercentage}, transparent), url('/banner.png ')`,
+            bgSize: { base: "auto 100%", sm: "auto 115%" },
+            bgRepeat: "no-repeat",
+            bgPosition: "top 10px right 0px",
+            opacity: bgOpacity,
+          },
+        }}
+        backgroundOffset={account ? 100 : 90}
+        textColor="white"
       >
-        <SimpleGrid
-          templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
-          gap={{ base: 2, md: "6" }}
-          mb={{ base: 8, md: 12, lg: 16 }}
-        >
-          <GridItem colSpan={{ base: 1, md: 2 }}>
-            <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
-          </GridItem>
-          <OrderSelect {...{ isLoading, order, setOrder }} />
-        </SimpleGrid>
+        <YourGuilds guildsInitial={guildsInitial} />
 
-        <Stack ref={guildsListEl} spacing={12}>
-          <CategorySection
-            title={
-              // usersGuilds will be empty in case of unmatched search query, memberships will be empty in case he's owner but not member of guilds
-              usersGuilds?.length || memberships?.length
-                ? "Your guilds"
-                : "You're not part of any guilds yet"
-            }
-            titleRightElement={
-              account && (!memberships || isLoading) && <Spinner size="sm" />
-            }
-            fallbackText={`No results for ${search}`}
-          >
-            {usersGuilds?.length || memberships?.length ? (
-              (usersGuilds.length || !search) &&
-              usersGuilds
-                .map((guild) => (
+        <Stack ref={guildsListEl} spacing={{ base: 8, md: 10 }}>
+          {account && <Divider />}
+          <Section title="Explore all guilds">
+            <SimpleGrid
+              templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
+              gap={{ base: 2, md: "6" }}
+              pb={{ md: 2 }}
+              // needed so there's no gap on the right side of the page in mobile Safari
+              overflow={"hidden"}
+              // needed so the focus outline is not cut off because of the hidden overflow
+              p={"1px"}
+            >
+              <GridItem colSpan={{ base: 1, md: 2 }}>
+                <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
+              </GridItem>
+              <OrderSelect {...{ order, setOrder }} />
+            </SimpleGrid>
+
+            {!renderedGuilds.length ? (
+              isFilteredValidating ? null : !search?.length ? (
+                <Text>
+                  Can't fetch guilds from the backend right now. Check back later!
+                </Text>
+              ) : (
+                <Text>{`No results for ${search}`}</Text>
+              )
+            ) : (
+              <GuildCardsGrid>
+                {renderedGuilds.map((guild) => (
                   <ExplorerCardMotionWrapper key={guild.urlName}>
                     <GuildCard guildData={guild} />
                   </ExplorerCardMotionWrapper>
-                ))
-                .concat(
-                  <ExplorerCardMotionWrapper key="create-guild">
-                    <AddCard title="Create guild" link="/create-guild" />
-                  </ExplorerCardMotionWrapper>
-                )
-            ) : (
-              <ExplorerCardMotionWrapper key="create-guild">
-                <AddCard title="Create guild" link="/create-guild" />
-              </ExplorerCardMotionWrapper>
+                ))}
+              </GuildCardsGrid>
             )}
-          </CategorySection>
+          </Section>
 
-          <CategorySection
-            title="All guilds"
-            titleRightElement={
-              isLoading ? (
-                <Spinner size="sm" />
-              ) : (
-                <Tag size="sm">{filteredGuilds.length}</Tag>
-              )
-            }
-            fallbackText={
-              search?.length
-                ? `No results for ${search}`
-                : "Can't fetch guilds from the backend right now. Check back later!"
-            }
-          >
-            {renderedGuilds.length &&
-              renderedGuilds.map((guild) => (
-                <ExplorerCardMotionWrapper key={guild.urlName}>
-                  <GuildCard guildData={guild} />
-                </ExplorerCardMotionWrapper>
-              ))}
-          </CategorySection>
-
-          <Center>
-            {filteredGuilds?.length > renderedGuildsCount && <Spinner />}
-          </Center>
+          <Center>{isFilteredValidating && <Spinner />}</Center>
         </Stack>
       </Layout>
     </>

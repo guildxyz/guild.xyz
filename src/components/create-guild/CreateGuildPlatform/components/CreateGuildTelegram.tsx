@@ -1,4 +1,3 @@
-import { Stack } from "@chakra-ui/react"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import Pagination from "components/create-guild/Pagination"
 import TelegramGroup from "components/create-guild/TelegramGroup"
@@ -30,14 +29,12 @@ const CreateGuildTelegram = (): JSX.Element => {
 
   return (
     <>
-      <Stack spacing={10}>
-        <TelegramGroup
-          onUpload={onUpload}
-          fieldName="guildPlatforms.0.platformGuildId"
-        />
+      <TelegramGroup
+        onUpload={onUpload}
+        fieldName="guildPlatforms.0.platformGuildId"
+      />
 
-        <Pagination nextButtonDisabled={!guildPlatformId || !ok} />
-      </Stack>
+      <Pagination nextButtonDisabled={!guildPlatformId || !ok} />
       <DynamicDevTool control={methods.control} />
     </>
   )

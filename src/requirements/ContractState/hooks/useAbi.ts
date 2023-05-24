@@ -16,7 +16,7 @@ const getContractMethods = (abi) => {
   )
 }
 
-const fetchAbi = (_: string, baseUrl: string, contract: string) =>
+const fetchAbi = ([_, baseUrl, contract]) =>
   fetcher(
     `${baseUrl}/api?module=contract&action=getsourcecode&address=${contract}`
   ).then(async (res) => {

@@ -13,10 +13,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
-import UrlName from "components/[guild]/EditGuild/components/UrlName"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -26,6 +22,10 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
+import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
+import UrlName from "components/[guild]/EditGuild/components/UrlName"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
@@ -40,7 +40,6 @@ import useUser from "../hooks/useUser"
 import LeaveButton from "../LeaveButton"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
-import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
@@ -118,8 +117,6 @@ const EditGuildDrawer = ({
 
   const {
     localThemeColor,
-    setLocalThemeMode,
-    localThemeMode,
     setLocalThemeColor,
     localBackgroundImage,
     setLocalBackgroundImage,
@@ -139,7 +136,6 @@ const EditGuildDrawer = ({
     const themeMode = theme?.mode
     const themeColor = theme?.color
     const backgroundImage = theme?.backgroundImage
-    if (themeMode !== localThemeMode) setLocalThemeMode(themeMode)
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     if (backgroundImage !== localBackgroundImage)
       setLocalBackgroundImage(backgroundImage)
@@ -219,7 +215,11 @@ const EditGuildDrawer = ({
                     <Box>
                       <FormLabel>Logo and name</FormLabel>
                       <HStack spacing={2} alignItems="start">
-                        <IconSelector uploader={iconUploader} />
+                        <IconSelector
+                          uploader={iconUploader}
+                          minW={512}
+                          minH={512}
+                        />
                         <Name />
                       </HStack>
                     </Box>
@@ -234,19 +234,9 @@ const EditGuildDrawer = ({
                 </Section>
 
                 <Section title="Appearance">
-                  <Stack
-                    direction={{ base: "column", md: "row" }}
-                    justifyContent={"space-between"}
-                    spacing="5"
-                    sx={{
-                      "> *": {
-                        flex: "1 0",
-                      },
-                    }}
-                  >
+                  <Stack direction={{ base: "column", md: "row" }} spacing="5">
                     <ColorPicker fieldName="theme.color" />
                     <BackgroundImageUploader uploader={backgroundUploader} />
-                    <ColorModePicker fieldName="theme.mode" />
                   </Stack>
                 </Section>
 

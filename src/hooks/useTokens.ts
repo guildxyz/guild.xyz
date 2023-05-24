@@ -23,6 +23,9 @@ export const TokenApiURLs: Record<Chain, string[]> = {
     "https://raw.githubusercontent.com/DefiKingdoms/community-token-list/main/src/defikingdoms-default.tokenlist.json",
     "https://raw.githubusercontent.com/DefiKingdoms/community-token-list/main/build/defikingdoms-community.tokenlist.json",
   ],
+  ZETACHAIN_ATHENS: [],
+  SCROLL_ALPHA: [],
+  SEPOLIA: [],
   GOERLI: [
     "https://raw.githubusercontent.com/Uniswap/default-token-list/main/src/tokens/goerli.json",
   ],
@@ -40,7 +43,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   POLYGON_MUMBAI: [],
 }
 
-const fetchTokens = async (_: string, chain: string) =>
+const fetchTokens = async ([_, chain]) =>
   Promise.all(TokenApiURLs[chain].map((url) => fetcher(url))).then(
     (tokenArrays: any) => {
       const finalTokenArray = tokenArrays.reduce(
@@ -59,12 +62,12 @@ const fetchTokens = async (_: string, chain: string) =>
   )
 
 const useTokens = (chain: string) => {
-  const { isValidating, data } = useSWRImmutable<Array<CoingeckoToken>>(
+  const { isLoading, data } = useSWRImmutable<Array<CoingeckoToken>>(
     chain ? ["tokens", chain] : null,
     fetchTokens
   )
 
-  return { tokens: data, isLoading: isValidating }
+  return { tokens: data, isLoading }
 }
 
 export default useTokens

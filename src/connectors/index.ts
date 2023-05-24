@@ -28,6 +28,9 @@ enum Chains {
   BASE_GOERLI = 84531,
   EXOSAMA = 2109,
   EVMOS = 9001,
+  ZETACHAIN_ATHENS = 7001,
+  SCROLL_ALPHA = 534353,
+  SEPOLIA = 11155111,
   GOERLI = 5,
   POLYGON_MUMBAI = 80001,
 }
@@ -300,7 +303,7 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api-optimistic.etherscan.io",
     iconUrls: ["/networkLogos/optimism.svg"],
-    rpcUrls: ["https://mainnet.optimism.io"],
+    rpcUrls: ["https://endpoints.omniatech.io/v1/op/mainnet/public"],
     multicallAddress: "0x2DC0E2aa608532Da689e89e237dF582B783E552C",
   },
   MOONBEAM: {
@@ -510,6 +513,63 @@ const RPC: RpcConfig = {
     rpcUrls: ["https://eth.bd.evmos.org:8545"],
     multicallAddress: "",
   },
+  ZETACHAIN_ATHENS: {
+    chainId: 7001,
+    chainName: "ZetaChain Athens",
+    nativeCurrency: {
+      name: "aZETA",
+      symbol: "aZETA",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI: "https://explorer.zetachain.com/img/logos/zeta-logo.svg",
+    },
+    rpcUrls: ["https://api.athens2.zetachain.com/evm"],
+    blockExplorerUrls: ["https://explorer.zetachain.com"],
+    blockExplorerIcons: {
+      light: "/networkLogos/zetachain.svg",
+      dark: "/networkLogos/zetachain.svg",
+    },
+    iconUrls: ["/networkLogos/zetachain.svg"],
+  },
+  SCROLL_ALPHA: {
+    chainId: 534353,
+    chainName: "Scroll Alpha",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://alpha-rpc.scroll.io/l2"],
+    blockExplorerUrls: ["https://blockscout.scroll.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/scroll.png",
+      dark: "/networkLogos/scroll.png",
+    },
+    iconUrls: ["/networkLogos/scroll.png"],
+  },
+  SEPOLIA: {
+    chainId: 11155111,
+    chainName: "Sepolia",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://rpc.sepolia.org"],
+    blockExplorerUrls: ["https://sepolia.etherscan.io"],
+    blockExplorerIcons: {
+      light: "/explorerLogos/etherscan-light.svg",
+      dark: "/explorerLogos/etherscan-dark.svg",
+    },
+    apiUrl: "https://api-sepolia.etherscan.io",
+    iconUrls: ["/networkLogos/ethereum.svg"],
+  },
   GOERLI: {
     chainId: 5,
     chainName: "Goerli",
@@ -524,7 +584,8 @@ const RPC: RpcConfig = {
     rpcUrls: [
       process.env.GOERLI_ALCHEMY_KEY
         ? `https://eth-goerli.g.alchemy.com/v2/${process.env.GOERLI_ALCHEMY_KEY}`
-        : "https://ethereum-goerli-rpc.allthatnode.com",
+        : // : "https://ethereum-goerli-rpc.allthatnode.com",
+          "https://eth-goerli.g.alchemy.com/v2/demo	",
     ],
     blockExplorerUrls: ["https://goerli.etherscan.io"],
     blockExplorerIcons: {
@@ -537,7 +598,7 @@ const RPC: RpcConfig = {
   },
   POLYGON_MUMBAI: {
     chainId: 80001,
-    chainName: "Polygon Mumbai",
+    chainName: "Mumbai",
     nativeCurrency: {
       name: "Matic",
       symbol: "MATIC",

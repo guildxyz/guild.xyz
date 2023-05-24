@@ -1,4 +1,4 @@
-import { IconButton, SimpleGrid, Stack, useColorMode } from "@chakra-ui/react"
+import { IconButton, SimpleGrid, Stack, useColorModeValue } from "@chakra-ui/react"
 import AddBalancyRequirementCard from "components/balancy/AddBalancyRequirementCard"
 import BalancyBar from "components/balancy/BalancyBar"
 import BalancyFormCard from "components/balancy/BalancyFormCard"
@@ -6,7 +6,6 @@ import BalancyLogicPicker from "components/balancy/BalancyLogicPicker"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { TwitterLogo } from "phosphor-react"
-import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { RequirementType } from "requirements"
 import AllowlistForm from "requirements/Allowlist/AllowlistForm"
@@ -46,25 +45,21 @@ const Page = (): JSX.Element => {
     })
   }
 
-  // Setting up the dark mode, because this is a "static" page
-  const { setColorMode } = useColorMode()
-
-  useEffect(() => {
-    setColorMode("dark")
-  }, [])
+  const bgColor = useColorModeValue("gray.800", "whiteAlpha.200")
 
   return (
     <Layout
       title="Balancy playground"
       // image={<Icon boxSize={12} as={Cpu} mb="-6px" />}
       ogDescription="See how many addresses satisfy requirements and make allowlists out of them"
-      background="gray.500"
+      background={bgColor}
       textColor="white"
       backgroundOffset={46}
       action={
         <IconButton
           as="a"
           target="_blank"
+          colorScheme="alpha"
           href={"https://twitter.com/balancy_io"}
           rel="noopener"
           borderRadius={"full"}

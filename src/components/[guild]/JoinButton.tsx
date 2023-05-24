@@ -5,12 +5,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import useAccess from "./hooks/useAccess"
 import { useOpenJoinModal } from "./JoinModal/JoinModalProvider"
+import useAccess from "./hooks/useAccess"
 
 const JoinButton = (): JSX.Element => {
   const openJoinModal = useOpenJoinModal()
-  const { hasAccess, isLoading } = useAccess()
+  const { hasAccess, isValidating } = useAccess()
 
   const buttonText = useBreakpointValue({
     base: "Join Guild",
@@ -19,20 +19,20 @@ const JoinButton = (): JSX.Element => {
 
   const bg = useColorModeValue("gray.300", "gray.800")
 
-  if (hasAccess === false || isLoading)
+  if (hasAccess === false || isValidating)
     return (
       <Box bg={bg} borderRadius={"xl"}>
         <Tooltip
           label="You don't satisfy the requirements to any roles"
           shouldWrapChildren
-          isDisabled={isLoading}
+          isDisabled={isValidating}
         >
           <Button
             h="10"
             flexShrink="0"
             isDisabled
             colorScheme="green"
-            isLoading={isLoading}
+            isLoading={isValidating}
             loadingText="Loading"
           >
             {buttonText}

@@ -80,14 +80,15 @@ const purchaseAsset = async (
 const usePurchaseAsset = () => {
   const { captureEvent } = usePostHogContext()
   const { id: guildId, urlName } = useGuild()
-  const postHogOptions = { guild: urlName }
+  const { requirement, pickedCurrency } = useGuildCheckoutContext()
+
+  const postHogOptions = { guild: urlName, chain: requirement.chain }
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
   const { account, chainId } = useWeb3React()
 
-  const { requirement, pickedCurrency } = useGuildCheckoutContext()
   const {
     data: { symbol },
   } = useTokenData(requirement.chain, requirement.address)
@@ -121,18 +122,18 @@ const usePurchaseAsset = () => {
     pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
 
   const isSufficientBalance =
-    priceData?.priceToSendInWei &&
+    priceData?.maxPriceInWei &&
     (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gte(BigNumber.from(priceData.priceToSendInWei))
-      : tokenBalance?.gte(BigNumber.from(priceData.priceToSendInWei)))
+      ? coinBalance?.gte(BigNumber.from(priceData.maxPriceInWei))
+      : tokenBalance?.gte(BigNumber.from(priceData.maxPriceInWei)))
 
   const shouldEstimateGas =
     requirement?.chain === Chains[chainId] &&
-    priceData?.priceToSendInWei &&
+    priceData?.maxPriceInWei &&
     isSufficientBalance &&
     (ADDRESS_REGEX.test(pickedCurrency)
-      ? allowance && BigNumber.from(priceData.priceToSendInWei).lte(allowance)
+      ? allowance && BigNumber.from(priceData.maxPriceInWei).lte(allowance)
       : true)
 
   const {

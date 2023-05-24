@@ -82,9 +82,7 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
 
   const requirementRightElement = isActive ? (
     <PoapRequiementAccessIndicator poapIdentifier={guildPoap.poapIdentifier} />
-  ) : (
-    <></>
-  )
+  ) : null
 
   const requirementComponents = guildPoap && [
     ...(poapEventDetails?.voiceChannelId

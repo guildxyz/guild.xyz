@@ -1,9 +1,13 @@
 import { Divider, Flex, HStack, useColorMode } from "@chakra-ui/react"
-import { Rest } from "types"
+import { Logic, Rest } from "types"
 
-type Props = {
-  logic: string
-} & Rest
+type Props = { logic: Logic } & Rest
+
+const formattedLogic: Record<Logic, string> = {
+  AND: "AND",
+  OR: "OR",
+  ANY_OF: "OR",
+}
 
 const LogicDivider = ({ logic, ...rest }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -20,8 +24,9 @@ const LogicDivider = ({ logic, ...rest }: Props): JSX.Element => {
         fontSize="xs"
         fontWeight="bold"
         color={colorMode === "light" ? "blackAlpha.500" : "whiteAlpha.400"}
+        flexShrink={0}
       >
-        {logic}
+        {`${formattedLogic[logic]}`}
       </Flex>
       <Divider
         width="full"

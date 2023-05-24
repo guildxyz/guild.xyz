@@ -89,6 +89,10 @@ const styles = {
     "#walletconnect-wrapper": {
       color: "black",
     },
+
+    ".intercom-lightweight-app": {
+      zIndex: "1 !important",
+    },
   }),
 }
 

@@ -5,7 +5,7 @@ import { Chains, RPC } from "connectors"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import ERC20_ABI from "static/abis/erc20Abi.json"
-import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
+import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
 import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
 
 type RegisterVaultParams = {

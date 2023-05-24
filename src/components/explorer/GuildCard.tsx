@@ -1,10 +1,12 @@
 import {
+  HStack,
   SimpleGrid,
+  Skeleton,
+  SkeletonCircle,
   Tag,
   TagLabel,
   TagLeftIcon,
   Text,
-  Tooltip,
   VStack,
   Wrap,
 } from "@chakra-ui/react"
@@ -57,13 +59,9 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
                 )}
               </TagLabel>
             </Tag>
-            <Tooltip label={guildData.roles.join(", ")}>
-              <Tag as="li">
-                <TagLabel>
-                  {pluralize(guildData.roles?.length ?? 0, "role")}
-                </TagLabel>
-              </Tag>
-            </Tooltip>
+            <Tag as="li">
+              <TagLabel>{pluralize(guildData.rolesCount ?? 0, "role")}</TagLabel>
+            </Tag>
           </Wrap>
         </VStack>
       </SimpleGrid>
@@ -71,4 +69,24 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
   </Link>
 )
 
+const GuildSkeletonCard = () => (
+  <DisplayCard h="auto">
+    <SimpleGrid
+      templateColumns={image ? "3rem calc(100% - 4.25rem)" : "1fr"}
+      gap={4}
+      alignItems="center"
+    >
+      <SkeletonCircle size={"48px"} />
+      <VStack spacing={3} alignItems="start" w="full" maxW="full">
+        <Skeleton h="6" w="80%" />
+        <HStack>
+          <Skeleton h="5" w="12" />
+          <Skeleton h="5" w="16" />
+        </HStack>
+      </VStack>
+    </SimpleGrid>
+  </DisplayCard>
+)
+
 export default GuildCard
+export { GuildSkeletonCard }

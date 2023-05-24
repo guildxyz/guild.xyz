@@ -13,7 +13,7 @@ import {
 } from "react"
 import { Requirement } from "types"
 
-const GuildCheckoutContext = createContext<{
+export type GuildCheckoutContextType = {
   requirement: Requirement
   isOpen: boolean
   onOpen: () => void
@@ -31,7 +31,9 @@ const GuildCheckoutContext = createContext<{
   setTxSuccess: Dispatch<SetStateAction<boolean>>
   txError: boolean
   setTxError: Dispatch<SetStateAction<boolean>>
-}>(undefined)
+}
+
+const GuildCheckoutContext = createContext<GuildCheckoutContextType>(undefined)
 
 const GuildCheckoutProvider = ({
   children,

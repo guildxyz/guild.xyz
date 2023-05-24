@@ -44,8 +44,12 @@ const fetchBadges = async (endpoint: string) => {
   return badges
 }
 
-const path: Record<Extract<Chain, "ETHEREUM" | "OPTIMISM" | "GOERLI">, string> = {
+const path: Record<
+  Extract<Chain, "ETHEREUM" | "POLYGON" | "OPTIMISM" | "GOERLI">,
+  string
+> = {
   ETHEREUM: "badges-mainnet",
+  POLYGON: "badges-polygon",
   OPTIMISM: "badges-optimism",
   GOERLI: "badges-goerli",
 }

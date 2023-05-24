@@ -1,4 +1,4 @@
-import { HStack, Icon, Img, Text, Tooltip } from "@chakra-ui/react"
+import { HStack, Icon, Img, Spinner, Text, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
@@ -19,6 +19,7 @@ type Props = {
   platform: RolePlatform
   withLink?: boolean
   withMotionImg?: boolean
+  isLinkColorful?: boolean
 }
 
 const getRewardLabel = (platform: RolePlatform) => {
@@ -34,12 +35,18 @@ const getRewardLabel = (platform: RolePlatform) => {
   }
 }
 
-const Reward = ({ role, platform, withLink, withMotionImg = false }: Props) => {
+const Reward = ({
+  role,
+  platform,
+  withLink,
+  withMotionImg = false,
+  isLinkColorful,
+}: Props) => {
   const isMember = useIsMember()
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
 
-  const { hasAccess } = useAccess(role.id)
+  const { hasAccess, isValidating } = useAccess(role.id)
   const { label, ...accessButtonProps } = usePlatformAccessButton(
     platform.guildPlatform
   )
@@ -48,7 +55,9 @@ const Reward = ({ role, platform, withLink, withMotionImg = false }: Props) => {
     if (isMember && hasAccess)
       return {
         tooltipLabel: label,
-        buttonProps: accessButtonProps,
+        buttonProps: isLinkColorful
+          ? { ...accessButtonProps, colorScheme: "blue" }
+          : accessButtonProps,
       }
     if (!account || (!isMember && hasAccess))
       return {
@@ -64,7 +73,7 @@ const Reward = ({ role, platform, withLink, withMotionImg = false }: Props) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, account, accessButtonProps])
+  }, [isMember, hasAccess, account, accessButtonProps, isLinkColorful])
 
   return (
     <RewardDisplay
@@ -82,10 +91,12 @@ const Reward = ({ role, platform, withLink, withMotionImg = false }: Props) => {
             <Tooltip label={state.tooltipLabel} hasArrow>
               <Button
                 variant="link"
-                rightIcon={<ArrowSquareOut />}
+                rightIcon={
+                  isValidating ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
+                }
                 iconSpacing="1"
-                {...state.buttonProps}
                 maxW="full"
+                {...state.buttonProps}
               >
                 {platform.guildPlatform?.platformGuildName ||
                   platform.guildPlatform?.platformGuildId}
@@ -166,7 +177,7 @@ const RewardIcon = ({
   return <Img {...props} />
 }
 
-const RewardWrapper = ({ role, platform, withLink }: Props) => {
+const RewardWrapper = ({ platform, ...props }: Props) => {
   const { guildPlatforms } = useGuild()
 
   const guildPlatform = guildPlatforms?.find(
@@ -177,9 +188,7 @@ const RewardWrapper = ({ role, platform, withLink }: Props) => {
 
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
-  return (
-    <Reward platform={platformWithGuildPlatform} role={role} withLink={withLink} />
-  )
+  return <Reward platform={platformWithGuildPlatform} {...props} />
 }
 
 export { RewardDisplay, RewardIcon }

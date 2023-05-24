@@ -2,6 +2,7 @@ import { Checkbox, Stack, Text, Wrap } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
+import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
 import { useEffect, useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
@@ -10,12 +11,14 @@ import FreeRequirement from "requirements/Free/FreeRequirement"
 import { Requirement } from "types"
 import AddRequirement from "./components/AddRequirement"
 import BalancyCounterWithPopover from "./components/BalancyCounter"
-import LogicPicker from "./components/LogicPicker"
+import LogicFormControl from "./components/LogicFormControl"
 import RequirementEditableCard from "./components/RequirementEditableCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
 const SetRequirements = (): JSX.Element => {
   const { control, getValues, watch, clearErrors, setValue } = useFormContext()
+
+  const logic = useWatch({ name: "logic" })
 
   const { fields, append, replace, update } = useFieldArray({
     name: "requirements",
@@ -89,6 +92,12 @@ const SetRequirements = (): JSX.Element => {
         {!freeEntry && <BalancyCounterWithPopover ml="auto !important" pl="5" />}
       </Wrap>
 
+      {!freeEntry && (
+        <CardMotionWrapper>
+          <LogicFormControl />
+        </CardMotionWrapper>
+      )}
+
       {freeEntry ? (
         <CardMotionWrapper>
           <Card px="6" py="4">
@@ -111,7 +120,7 @@ const SetRequirements = (): JSX.Element => {
                     updateRequirement={update}
                     isEditDisabled={type === "PAYMENT"}
                   />
-                  <LogicPicker />
+                  <LogicDivider logic={logic} />
                 </CardMotionWrapper>
               )
             })}

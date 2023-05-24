@@ -26,7 +26,11 @@ type Props = {
 
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { roles } = useGuild()
-  const { hasAccess, isLoading, data, error } = useAccess(roleId)
+  const role = roles.find((r) => r.id === roleId)
+  const { hasAccess, data, error, isValidating } = useAccess(roleId)
+  const accessedRequirementCount = data?.requirements?.filter(
+    (r) => r.access
+  )?.length
 
   const { isActive } = useWeb3React()
   const isMember = useIsMember()
@@ -34,16 +38,18 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const isMobile = useBreakpointValue({ base: true, md: false })
   const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")
 
-  const hasRequirementsWithErrors = data?.requirements?.some(
-    (r) => r.access === null
+  const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
+  const requirementIdsWithErrors =
+    data?.requirements?.filter((r) => r.access === null) ?? []
+  const requirementsWithErrors = requirements.filter((req) =>
+    requirementIdsWithErrors.includes(req.id)
   )
   const errors = useRequirementErrorConfig()
-  const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
-  const firstRequirementWithErrorFromConfig = requirements.find(
+  const firstRequirementWithErrorFromConfig = requirementsWithErrors.find(
     (req) => !!errors[req.type.split("_")[0]]
   )
   const errorTextFromConfig =
-    hasRequirementsWithErrors &&
+    requirementsWithErrors.length > 0 &&
     errors[firstRequirementWithErrorFromConfig?.type.split("_")[0]]
 
   if (!isActive || (hasAccess && !isMember))
@@ -101,7 +107,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       </HStack>
     )
 
-  if (isLoading)
+  if (isValidating)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
   if (errorTextFromConfig)
@@ -140,7 +146,17 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  return <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
+  return (
+    <AccessIndicatorUI
+      colorScheme="gray"
+      label={`No access${
+        role.logic === "ANY_OF" && typeof accessedRequirementCount === "number"
+          ? ` (${accessedRequirementCount}/${role.anyOfNum})`
+          : ""
+      }`}
+      icon={X}
+    />
+  )
 }
 
 export default AccessIndicator

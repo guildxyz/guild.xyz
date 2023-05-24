@@ -8,17 +8,17 @@ type JuiceboxProject = {
 }
 
 export const useJuicebox = (search = "") => {
-  const { data, isValidating } = useSWRImmutable<Array<JuiceboxProject>>(
+  const { data, isLoading } = useSWRImmutable<Array<JuiceboxProject>>(
     search.length > 0 ? `/assets/juicebox/project?search=${search}` : null
   )
 
-  return { projects: data, isLoading: isValidating }
+  return { projects: data, isLoading }
 }
 
 export const useJuiceboxProject = (id: string) => {
-  const { data, isValidating, error } = useSWRImmutable<JuiceboxProject>(
+  const { data, isLoading, error } = useSWRImmutable<JuiceboxProject>(
     id ? `/assets/juicebox/project/${id}` : null
   )
 
-  return { project: data, isLoading: isValidating, error }
+  return { project: data, isLoading, error }
 }

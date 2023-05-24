@@ -1,5 +1,6 @@
 import {
   Box,
+  BoxProps,
   Container,
   Heading,
   HStack,
@@ -32,6 +33,7 @@ type Props = {
   textColor?: string
   action?: ReactNode | undefined
   background?: string
+  backgroundProps?: BoxProps
   backgroundImage?: string
   backgroundOffset?: number
   backButton?: BackButtonProps
@@ -48,6 +50,7 @@ const Layout = ({
   textColor,
   action,
   background,
+  backgroundProps,
   backgroundImage,
   backgroundOffset = 128,
   backButton,
@@ -94,15 +97,17 @@ const Layout = ({
         position="relative"
         bgColor={colorMode === "light" ? "gray.100" : "gray.800"}
         bgGradient={
-          !background &&
-          `linear(${
-            colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
-          } 0px, var(--chakra-colors-gray-100) 700px)`
+          !background
+            ? `linear(${
+                colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
+              } 0px, var(--chakra-colors-gray-100) 700px)`
+            : undefined
         }
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
         display="flex"
         flexDir={"column"}
+        color="var(--chakra-colors-chakra-body-text)"
       >
         {(background || backgroundImage) && (
           <Box
@@ -113,6 +118,7 @@ const Layout = ({
             h={bgHeight}
             background={backgroundImage ? "gray.900" : background}
             opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
+            {...backgroundProps}
           >
             {backgroundImage && (
               <Image

@@ -16,8 +16,7 @@ const CreateGuildButton = ({ isDisabled }: Props): JSX.Element => {
   return (
     <Button
       flexShrink={0}
-      size={{ base: "sm", md: "lg" }}
-      colorScheme="indigo"
+      colorScheme="green"
       isDisabled={response || isLoading || isSigning || isDisabled}
       isLoading={isLoading || isSigning}
       loadingText={signLoadingText || "Saving data"}

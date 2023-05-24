@@ -1,7 +1,10 @@
 import capitalize from "utils/capitalize"
 
 const processConnectorError = (error: string): string | undefined => {
-  if (typeof error !== "string" || !error.includes("connector error"))
+  if (
+    typeof error !== "string" ||
+    (!error.includes("connector error") && !error.includes("runner error"))
+  )
     return undefined
 
   try {

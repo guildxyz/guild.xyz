@@ -104,8 +104,14 @@ const RequiementAccessIndicator = () => {
       {reqAccessData?.amount !== null && data?.minAmount && (
         <PopoverBody pt="0">
           {isNegated
-            ? `Expected max amount is ${data.minAmount} and you have ${reqAccessData?.amount}`
-            : `Expected amount is ${data.minAmount} but you only have ${reqAccessData?.amount}`}
+            ? `Expected max amount is ${data.minAmount}${
+                data.maxAmount ? `-${data.maxAmount}` : ""
+              } and you have ${reqAccessData?.amount}`
+            : `Expected amount is ${data.minAmount}${
+                data.maxAmount ? `-${data.maxAmount}` : ""
+              } but you ${data.maxAmount ? "" : "only"} have ${
+                reqAccessData?.amount
+              }`}
         </PopoverBody>
       )}
       <PopoverFooter {...POPOVER_FOOTER_STYLES}>

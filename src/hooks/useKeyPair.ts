@@ -10,17 +10,23 @@ import { AddressConnectionProvider, User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import useLocalStorage from "./useLocalStorage"
+import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
 } from "./useSubmit/useSubmit"
-import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import useToast from "./useToast"
 
 type StoredKeyPair = {
   keyPair: CryptoKeyPair
   pubKey: string
 }
+
+/**
+ * This is a generic RPC internal error code, but we are only using it for testing
+ * personal_sign errors, which should mean that the user rejected the request
+ */
+const RPC_INTERNAL_ERROR_CODE = -32603
 
 type AddressLinkParams =
   | ({
@@ -74,7 +80,7 @@ const generateKeyPair = async () => {
   }
 }
 
-const getKeyPair = async (_: string, id: number) => {
+const getKeyPair = async ([_, id]) => {
   const keyPairAndPubKey = await getKeyPairFromIdb(id)
 
   if (keyPairAndPubKey === undefined) {
@@ -139,8 +145,7 @@ const setKeyPair = async ({
   return [storedKeyPair, shouldSendLink]
 }
 
-const checkKeyPair = (_: string, savedPubKey: string, pubKey: string): boolean =>
-  savedPubKey === pubKey
+const checkKeyPair = ([_, savedPubKey, pubKey]): boolean => savedPubKey === pubKey
 
 const usePublicUserData = (address?: string) => {
   const { account } = useWeb3React()
@@ -237,10 +242,12 @@ const useKeyPair = () => {
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
       onError: (error) => {
         console.error("setKeyPair error", error)
-        if (error?.code !== 4001) {
-          captureEvent(`Failed to set keypair`, {
-            error: error?.message || error?.toString?.() || error,
-          })
+        if (
+          error?.code !== RPC_INTERNAL_ERROR_CODE &&
+          error?.code !== "ACTION_REJECTED"
+        ) {
+          const trace = error?.stack || new Error().stack
+          captureEvent(`Failed to set keypair`, { error, trace })
         }
 
         try {
@@ -298,7 +305,7 @@ const useKeyPair = () => {
 
   const { data: mainUserKeyPair, error } = useSWRImmutable(
     mainUser?.data?.id ? ["mainUserKeyPair", mainUser?.data?.id] : null,
-    (_, id) => getKeyPairFromIdb(id)
+    ([_, id]) => getKeyPairFromIdb(id)
   )
 
   const isMainUserKeyInvalid =

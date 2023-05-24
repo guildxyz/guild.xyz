@@ -10,7 +10,8 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
-import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
+import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
+import { mutate } from "swr"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
@@ -58,13 +59,13 @@ const payFee = async (
 
 const usePayFee = () => {
   const { captureEvent } = usePostHogContext()
-  const { urlName } = useGuild()
+  const { id, urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { chainId } = useWeb3React()
+  const { chainId, account } = useWeb3React()
 
   const { requirement, pickedCurrency } = useGuildCheckoutContext()
 
@@ -77,7 +78,7 @@ const usePayFee = () => {
   const {
     data: { token, fee, multiplePayments },
     isValidating: isVaultLoading,
-    mutate,
+    mutate: mutateVault,
   } = useVault(requirement.address, requirement.data.id, requirement.chain)
 
   const { data: hasPaid, isValidating: isHasPaidLoading } = useHasPaid(
@@ -114,13 +115,17 @@ const usePayFee = () => {
     isSufficientBalance &&
     (ADDRESS_REGEX.test(pickedCurrency) ? allowance && fee.lte(allowance) : true)
 
-  const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
-    useEstimateGasFee(
-      requirement?.id?.toString(),
-      shouldEstimateGas ? feeCollectorContract : null,
-      "payFee",
-      [requirement.data.id, extraParam]
-    )
+  const {
+    estimatedGasFee,
+    estimatedGasFeeInUSD,
+    estimateGasError,
+    isEstimateGasLoading,
+  } = useEstimateGasFee(
+    requirement?.id?.toString(),
+    shouldEstimateGas ? feeCollectorContract : null,
+    "payFee",
+    [requirement.data.id, extraParam]
+  )
 
   const payFeeTransaction = (vaultId: number) =>
     payFee(feeCollectorContract, [vaultId, extraParam])
@@ -154,7 +159,14 @@ const usePayFee = () => {
         title: "Successful payment",
       })
 
-      mutate()
+      mutateVault()
+
+      // temporary until POAPs are real roles
+      if (requirement?.poapId)
+        mutate(
+          `/assets/poap/checkUserPoapEligibility/${requirement.poapId}/${account}`
+        )
+      else mutate(`/guild/access/${id}/${account}`)
     },
   })
 
@@ -164,6 +176,7 @@ const usePayFee = () => {
     estimatedGasFee,
     estimatedGasFeeInUSD,
     estimateGasError,
+    isEstimateGasLoading,
   }
 }
 
