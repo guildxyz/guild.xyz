@@ -7,7 +7,6 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
-  Tooltip,
   VStack,
   Wrap,
 } from "@chakra-ui/react"
@@ -60,13 +59,9 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
                 )}
               </TagLabel>
             </Tag>
-            <Tooltip label={guildData.roles.join(", ")}>
-              <Tag as="li">
-                <TagLabel>
-                  {pluralize(guildData.roles?.length ?? 0, "role")}
-                </TagLabel>
-              </Tag>
-            </Tooltip>
+            <Tag as="li">
+              <TagLabel>{pluralize(guildData.rolesCount ?? 0, "role")}</TagLabel>
+            </Tag>
           </Wrap>
         </VStack>
       </SimpleGrid>

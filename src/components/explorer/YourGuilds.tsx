@@ -10,9 +10,9 @@ import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import useMemberships, {
   Memberships,
 } from "components/explorer/hooks/useMemberships"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Plus, Wallet } from "phosphor-react"
 import { useEffect, useState } from "react"
-import useSWR from "swr"
 import { GuildBase } from "types"
 
 type Props = {
@@ -40,13 +40,8 @@ const YourGuilds = ({ guildsInitial }: Props) => {
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
-  /**
-   * Fetching all guilds without search params to filter user's guilds out of it.
-   * `?order=members` is the default for the other filtered request too, so only one
-   * request will be sent. There'll be a separate endpoint for it in the future
-   */
-  const { data: allGuilds, isLoading: isGuildsLoading } = useSWR(
-    `/guild?order=members`,
+  const { data: allGuilds, isLoading: isGuildsLoading } = useSWRWithOptionalAuth(
+    `/guild?`, // ? is included, so the request hits v2Replacer in fetcher
     {
       fallbackData: guildsInitial,
       dedupingInterval: 60000, // one minute

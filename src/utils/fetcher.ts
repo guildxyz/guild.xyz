@@ -10,6 +10,21 @@ const SIG_HEADER_NAME = "x-guild-sig"
 const PARAMS_HEADER_NAME = "x-guild-params"
 const AUTH_FLAG_HEADER_NAME = "x-guild-auth-location"
 
+const v2Replacer = (endpoint: string, options: Record<string, any>) => {
+  // if (options.method?.toLowerCase() === "post" && endpoint.includes("/v1/guild")) {
+  //   return endpoint.replace("/v1/guild", "/v2/guild/with-roles")
+  // }
+  // if (options.method?.toLowerCase() === "get" && endpoint.includes("/v1/guild/")) {
+  //   return endpoint.replace("/v1/guild/", "/v2/guild/guild-page/")
+  // }
+
+  if (endpoint.startsWith(`${process.env.NEXT_PUBLIC_API}/guild?`)) {
+    return endpoint.replace("/v1/", "/v2/").replace("/guild?", "/guilds?")
+  }
+
+  return endpoint
+}
+
 const fetcher = async (
   resource: string,
   { body, validation, signedPayload, ...init }: Record<string, any> = {}
@@ -57,7 +72,11 @@ const fetcher = async (
     }
   }
 
-  return fetch(`${api}${resource}`, options).then(async (response: Response) => {
+  const endpoint = isGuildApiCall
+    ? v2Replacer(`${api}${resource}`, options)
+    : `${api}${resource}`
+
+  return fetch(endpoint, options).then(async (response: Response) => {
     const res = await response.json?.()
 
     if (!response.ok) {
