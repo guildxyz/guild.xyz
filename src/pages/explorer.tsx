@@ -5,7 +5,6 @@ import {
   SimpleGrid,
   Spinner,
   Stack,
-  Tag,
   Text,
   useBreakpointValue,
   useColorModeValue,
@@ -121,16 +120,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
         <Stack ref={guildsListEl} spacing={{ base: 8, md: 10 }}>
           {account && <Divider />}
-          <Section
-            title="Explore all guilds"
-            titleRightElement={
-              isFilteredValidating ? (
-                <Spinner size="sm" />
-              ) : (
-                <Tag size="sm">{filteredGuilds.length}</Tag>
-              )
-            }
-          >
+          <Section title="Explore all guilds">
             <SimpleGrid
               templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
               gap={{ base: 2, md: "6" }}
