@@ -1,6 +1,7 @@
 import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
@@ -57,7 +58,8 @@ const useConnectPlatform = (
   platform: PlatformName,
   onSuccess?: () => void,
   isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
-  scope?: string
+  scope?: string,
+  isRecovery?: boolean
 ) => {
   const { platformUsers } = useUser()
   const { onOpen, authData, isAuthenticating, ...rest } =
@@ -76,6 +78,7 @@ const useConnectPlatform = (
       platformName: platform,
       authData,
       reauth: isReauth || undefined,
+      disconnectFromExistingUser: isRecovery || undefined,
     })
   }, [authData, platformUsers])
 
@@ -92,6 +95,7 @@ const useConnectPlatform = (
 const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
+  const { showPlatformMergeModal } = useWeb3ConnectionManager()
 
   const { mutate: mutateUser } = useUser()
 
@@ -152,7 +156,15 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
       }
 
       captureEvent("Platform connection error", errorObject)
-      showErrorToast(toastError ?? rawError)
+
+      if (toastError?.startsWith("Before connecting your")) {
+        const [, addressOrDomain] = toastError.match(
+          /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
+        )
+        showPlatformMergeModal(addressOrDomain, platformName)
+      } else {
+        showErrorToast(toastError ?? rawError)
+      }
     },
   })
 }
