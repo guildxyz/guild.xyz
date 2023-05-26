@@ -13,6 +13,9 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
+import RolePlatforms from "components/[guild]/RolePlatforms"
+import SetVisibility from "components/[guild]/SetVisibility"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -24,16 +27,15 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
-import useGuild from "components/[guild]/hooks/useGuild"
-import RolePlatforms from "components/[guild]/RolePlatforms"
-import SetVisibility from "components/[guild]/SetVisibility"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { Logic, Requirement, RolePlatform, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
+import handleSubmitDirty from "utils/handleSubmitDirty"
 import mapRequirements from "utils/mapRequirements"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import useEditRole from "./hooks/useEditRole"
@@ -42,6 +44,17 @@ const noRequirementsErrorMessage = "Set some requirements, or make the role free
 
 type Props = {
   roleId: number
+}
+
+export type RoleEditFormData = {
+  id: number
+  name: string
+  description: string
+  imageUrl: string
+  logic: Logic
+  requirements: Requirement[]
+  rolePlatforms: RolePlatform[]
+  visibility: Visibility
 }
 
 const EditRole = ({ roleId }: Props): JSX.Element => {
@@ -98,10 +111,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     methods.reset(undefined, { keepValues: true })
   }
 
-  const { onSubmit, isLoading, isSigning, signLoadingText } = useEditRole(
-    id,
-    onSuccess
-  )
+  const { onSubmit, isLoading } = useEditRole(id, onSuccess)
 
   const isDirty = !!Object.keys(methods.formState.dirtyFields).length
   useWarnIfUnsavedChanges(isDirty && !methods.formState.isSubmitted)
@@ -152,14 +162,14 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         )
         document.getElementById("free-entry-checkbox")?.focus()
       } else {
-        return methods.handleSubmit(onSubmit)(...props)
+        return handleSubmitDirty(methods)(onSubmit)(...props)
       }
     },
 
     iconUploader.isUploading
   )
 
-  const loadingText = signLoadingText || uploadLoadingText || "Saving data"
+  const loadingText = uploadLoadingText || "Saving data"
 
   return (
     <>
@@ -230,7 +240,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              isLoading={isLoading || isSigning || isUploadingShown}
+              isLoading={isLoading || isUploadingShown}
               colorScheme="green"
               loadingText={loadingText}
               onClick={handleSubmit}
