@@ -35,8 +35,8 @@ const getTrophyColor = (position: number) => {
 
 const LeaderBoardCard = ({ userLeaderboardData, position }: Props) => {
   const resolvedAddress = useResolveAddress(userLeaderboardData.address)
-  const positionBgColor = useColorModeValue("gray.50", "blackAlpha.400")
-  const positionBorderColor = useColorModeValue("gray.200", "transparent")
+  const positionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
+  const positionBorderColor = useColorModeValue("gray.200", "gray.600")
   const guildAvatarBgColor = useColorModeValue("gray.700", "gray.600")
   const pinBorderColor = useColorModeValue("white", "gray.700")
 
@@ -104,7 +104,7 @@ const LeaderBoardCard = ({ userLeaderboardData, position }: Props) => {
             </VStack>
           </HStack>
 
-          <Flex direction="row">
+          <Flex direction="row" alignItems="center">
             {userLeaderboardData.pins.map((pin) => (
               <Circle
                 key={`${pin.chainId}-${pin.tokenId}`}
