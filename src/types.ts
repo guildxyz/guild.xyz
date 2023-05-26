@@ -1,5 +1,5 @@
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
-import type { Chain } from "connectors"
+import type { Chain, Chains } from "connectors"
 import { RequirementType } from "requirements"
 
 type Token = {
@@ -520,6 +520,19 @@ type GuildPinMetadata = {
   attributes: GuildPinAttribute[]
 }
 
+type LeaderboardPinData = {
+  tokenId: number
+  chainId: Chains
+  rank: number
+  metadata: GuildPinMetadata
+}
+
+type UserLeaderboardData = {
+  address: string
+  score: number
+  pins: LeaderboardPinData[]
+}
+
 export type {
   OneOf,
   WalletConnectConnectionData,
@@ -564,5 +577,6 @@ export type {
   PoapEventDetails,
   AddressConnectionProvider,
   GuildPinMetadata,
+  UserLeaderboardData,
 }
 export { ValidationMethod, Visibility, supportedSocialLinks }
