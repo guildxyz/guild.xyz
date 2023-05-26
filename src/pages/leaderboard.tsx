@@ -2,7 +2,7 @@ import { Stack } from "@chakra-ui/react"
 import { kv } from "@vercel/kv"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import LeaderBoardCard from "components/leaderboard/LeaderBoardCard"
+import LeaderboardCard from "components/leaderboard/LeaderboardCard"
 import { GetStaticProps } from "next"
 import { UserLeaderboardData } from "types"
 
@@ -32,7 +32,7 @@ const Page = ({ leaderboard }: Props) => {
 
         <Section title={usersLeaderboardData ? "Leaderboard" : undefined}>
           {leaderboard.map((userLeaderboardData, index) => (
-            <LeaderBoardCard
+            <LeaderboardCard
               key={index}
               userLeaderboardData={userLeaderboardData}
               position={index + 1}

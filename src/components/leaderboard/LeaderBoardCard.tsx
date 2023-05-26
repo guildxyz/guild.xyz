@@ -33,7 +33,7 @@ const getTrophyColor = (position: number) => {
   }
 }
 
-const LeaderBoardCard = ({ userLeaderboardData, position }: Props) => {
+const LeaderboardCard = ({ userLeaderboardData, position }: Props) => {
   const resolvedAddress = useResolveAddress(userLeaderboardData.address)
   const positionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const positionBorderColor = useColorModeValue("gray.200", "gray.600")
@@ -130,4 +130,4 @@ const LeaderBoardCard = ({ userLeaderboardData, position }: Props) => {
   )
 }
 
-export default LeaderBoardCard
+export default LeaderboardCard
