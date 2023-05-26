@@ -8,10 +8,10 @@ import fetcher from "utils/fetcher"
 import { useRolePlatform } from "../../RolePlatformProvider"
 
 const useRemovePlatform = ({ onSuccess }: any) => {
-  const { mutateGuild } = useGuild()
+  const { id, mutateGuild } = useGuild()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const { index, guildPlatformId, roleId, guildPlatform } = useRolePlatform()
+  const { index, roleId, guildPlatform, id: rolePlatformId } = useRolePlatform()
   const { dirtyFields } = useFormState()
   const { reset } = useFormContext()
   const { remove } = useFieldArray({
@@ -21,7 +21,7 @@ const useRemovePlatform = ({ onSuccess }: any) => {
   const { mutate: mutateGateables } = useGateables(guildPlatform?.platformId)
 
   const submit = async (signedValidation: SignedValdation) =>
-    fetcher(`/role/${roleId}/platform/${guildPlatformId}`, {
+    fetcher(`/v2/guilds/${id}/roles/${roleId}/role-platforms/${rolePlatformId}`, {
       method: "DELETE",
       ...signedValidation,
     })
@@ -37,7 +37,25 @@ const useRemovePlatform = ({ onSuccess }: any) => {
       onSuccess?.()
       if (!Object.keys(dirtyFields).length) reset(undefined, { keepValues: true })
 
-      mutateGuild()
+      // Mutation filters out deleted rolePlatforms
+      mutateGuild(
+        (prevGuild) => ({
+          ...prevGuild,
+          roles:
+            prevGuild.roles?.map((role) =>
+              role.id === roleId
+                ? {
+                    ...role,
+                    rolePlatforms:
+                      role.rolePlatforms?.filter(
+                        (rolePlatform) => rolePlatform.id !== rolePlatformId
+                      ) ?? [],
+                  }
+                : role
+            ) ?? [],
+        }),
+        { revalidate: false }
+      )
       mutateGateables()
     },
     onError: (error) => showErrorToast(error),
