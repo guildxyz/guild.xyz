@@ -52,7 +52,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     (pageIndex, previousPageData) =>
       Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE
         ? null
-        : `/guild?${query}&limit=${BATCH_SIZE}&offset=${pageIndex * BATCH_SIZE}`,
+        : `/v2/guilds?${query}&limit=${BATCH_SIZE}&offset=${pageIndex * BATCH_SIZE}`,
     {
       fallbackData: guildsInitial,
       dedupingInterval: 60000, // one minute

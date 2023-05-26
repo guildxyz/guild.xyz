@@ -1,13 +1,13 @@
 import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
-import useGuild from "components/[guild]/hooks/useGuild"
-import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useMatchMutate from "hooks/useMatchMutate"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
@@ -34,7 +34,8 @@ const useCreateRole = () => {
 
   const fetchData = async (
     signedValidation: SignedValdation
-  ): Promise<RoleOrGuild> => fetcher("/role", signedValidation)
+  ): Promise<RoleOrGuild> =>
+    fetcher(`/v2/guilds/${id}/roles/with-requirements-and-rewards`, signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {
     onError: (error_) => {

@@ -13,7 +13,7 @@ const useGuild = (guildId?: string | number) => {
   const { account } = useWeb3React()
 
   const { data, mutate, isLoading } = useSWRWithOptionalAuth<Guild>(
-    id ? `/guild/${id}` : null,
+    id ? `/v2/guilds/guild-page/${id}` : null,
     undefined,
     undefined,
     false
