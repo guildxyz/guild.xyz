@@ -1,19 +1,24 @@
 import {
-  Box,
+  Heading,
+  Icon,
+  ListItem,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Text,
+  UnorderedList,
   chakra,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import Button from "components/common/Button"
+import CopyableAddress from "components/common/CopyableAddress"
 import Link from "components/common/Link"
 import useToast from "hooks/useToast"
+import { ArrowSquareOut } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
@@ -40,10 +45,10 @@ const PlatformMergeErrorModal = ({
     () => {
       toast({
         status: "success",
-        title: "Recovered",
+        title: "Successful connect",
         description: `${capitalize(
           socialAccountName
-        )} account successfully recovered!`,
+        )} account successfully disconnected from old address, and connected to this one`,
       })
       onClose()
     },
@@ -53,45 +58,59 @@ const PlatformMergeErrorModal = ({
   )
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={"lg"}>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
           {capitalize(socialAccountName)} account already connected
         </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody display={"flex"} flexDir={"column"} gap={5}>
-          <Box>
+        <ModalBody>
+          <Text>
             This {socialAccountName} account is already connected to this address:{" "}
-            <chakra.span fontWeight={"bold"}>{addressOrDomain}</chakra.span>
-          </Box>
-          <Box>
-            If you have control over the above address, you can switch to it, and
-            link your current address ({account ? shortenHex(account) : ""}) to it by
-            following{" "}
-            <Link
-              colorScheme="primary"
-              target="_blank"
-              href={
-                "https://help.guild.xyz/en/articles/6947559-how-to-un-link-wallet-addresses"
-              }
-            >
-              this guide
-            </Link>
-          </Box>
-          In case you have lost control over the mentioned address, you can recover
-          your {socialAccountName} account by clicking the recover button below
+            {addressOrDomain.startsWith("0x") ? (
+              <CopyableAddress address={addressOrDomain} decimals={4} />
+            ) : (
+              <chakra.span fontWeight={"semibold"}>addressOrDomain</chakra.span>
+            )}
+          </Text>
+          <Heading mt="8" mb="3" size="sm">
+            You have two options to choose from:
+          </Heading>
+          <UnorderedList>
+            <ListItem mb="2">
+              <Text>
+                Switch to the address above and link your current address (
+                <chakra.span fontWeight={"semibold"}>
+                  {account ? shortenHex(account) : ""}
+                </chakra.span>
+                ) to it by following{" "}
+                <Link
+                  colorScheme="blue"
+                  target="_blank"
+                  href={
+                    "https://help.guild.xyz/en/articles/6947559-how-to-un-link-wallet-addresses"
+                  }
+                >
+                  this guide
+                  <Icon ml="1" as={ArrowSquareOut} />
+                </Link>
+              </Text>
+            </ListItem>
+            <ListItem>
+              <Text>
+                Continue connecting the account to the current address (it'll
+                disconnect it from the above one, losing any accesses you had with
+                that)
+              </Text>
+            </ListItem>
+          </UnorderedList>
         </ModalBody>
-        <ModalFooter display={"flex"} gap={4} mt="-4">
-          <Button onClick={() => onClose()} variant="outline">
-            Close
+        <ModalFooter display={"flex"} gap={2} mt="-4">
+          <Button onClick={onClose} variant="outline">
+            Cancel
           </Button>
-          <Button
-            onClick={() => onConnect()}
-            isLoading={isLoading}
-            colorScheme="primary"
-          >
-            Recover
+          <Button onClick={onConnect} isLoading={isLoading} colorScheme="red">
+            Connect anyway
           </Button>
         </ModalFooter>
       </ModalContent>

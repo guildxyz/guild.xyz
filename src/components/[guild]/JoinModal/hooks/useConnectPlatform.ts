@@ -59,7 +59,7 @@ const useConnectPlatform = (
   onSuccess?: () => void,
   isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
   scope?: string,
-  isRecovery?: boolean
+  disconnectFromExistingUser?: boolean
 ) => {
   const { platformUsers } = useUser()
   const { onOpen, authData, isAuthenticating, ...rest } =
@@ -78,7 +78,7 @@ const useConnectPlatform = (
       platformName: platform,
       authData,
       reauth: isReauth || undefined,
-      disconnectFromExistingUser: isRecovery || undefined,
+      disconnectFromExistingUser,
     })
   }, [authData, platformUsers])
 
