@@ -23,7 +23,7 @@ const sortUsersGuilds = (memberships: Memberships, guildsData: any) => {
       acc.push({
         ...currGuild,
         joinedAt: memberships.find(({ guildId }) => currGuild.id === guildId)
-          .joinedAt,
+          ?.joinedAt,
       })
       return acc
     }, [])
@@ -36,7 +36,7 @@ const YourGuilds = () => {
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
   const { data: usersGuilds, isLoading: isGuildsLoading } = useSWRWithOptionalAuth(
-    `/guild?`, // ? is included, so the request hits v2Replacer in fetcher
+    `/v2/guilds`, // ? is included, so the request hits v2Replacer in fetcher
     {
       dedupingInterval: 60000, // one minute
       revalidateOnMount: true,
