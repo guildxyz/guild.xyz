@@ -4,7 +4,15 @@ import {
   Flex,
   HStack,
   Icon,
+  IconButton,
   Img,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
   Stack,
   Text,
   useColorModeValue,
@@ -13,7 +21,7 @@ import {
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
-import { Trophy } from "phosphor-react"
+import { CaretDown, Trophy } from "phosphor-react"
 import { UserLeaderboardData } from "types"
 import shortenHex from "utils/shortenHex"
 
@@ -104,26 +112,84 @@ const LeaderboardCard = ({ userLeaderboardData, position }: Props) => {
             </VStack>
           </HStack>
 
-          <Flex direction="row" alignItems="center">
-            {userLeaderboardData.pins.map((pin) => (
-              <Circle
-                key={`${pin.chainId}-${pin.tokenId}`}
-                size={8}
-                ml={-3}
-                _first={{ ml: 0 }}
-                borderWidth={2}
-                borderColor={pinBorderColor}
-              >
-                <Img
-                  src={pin.metadata.image.replace(
-                    "ipfs://",
-                    process.env.NEXT_PUBLIC_IPFS_GATEWAY
-                  )}
-                  alt={pin.metadata.name}
+          <HStack>
+            <Flex direction="row" alignItems="center">
+              {userLeaderboardData.pins.map((pin) => (
+                <Circle
+                  key={`${pin.chainId}-${pin.tokenId}`}
+                  size={8}
+                  ml={-3}
+                  _first={{ ml: 0 }}
+                  borderWidth={2}
+                  borderColor={pinBorderColor}
+                >
+                  <Img
+                    src={pin.metadata.image.replace(
+                      "ipfs://",
+                      process.env.NEXT_PUBLIC_IPFS_GATEWAY
+                    )}
+                    alt={pin.metadata.name}
+                  />
+                </Circle>
+              ))}
+            </Flex>
+
+            <Popover>
+              <PopoverTrigger>
+                <IconButton
+                  aria-label="View pins"
+                  icon={<CaretDown />}
+                  size="xs"
+                  variant="ghost"
                 />
-              </Circle>
-            ))}
-          </Flex>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton rounded="full" />
+                <PopoverHeader fontWeight="bold" fontSize="sm">
+                  Guild Pins
+                </PopoverHeader>
+                <PopoverBody>
+                  <Stack>
+                    {userLeaderboardData.pins.map((pin) => (
+                      <HStack
+                        key={`${pin.chainId}-${pin.tokenId}`}
+                        justifyContent="space-between"
+                      >
+                        <HStack>
+                          <Img
+                            src={pin.metadata.image.replace(
+                              "ipfs://",
+                              process.env.NEXT_PUBLIC_IPFS_GATEWAY
+                            )}
+                            alt={pin.metadata.name}
+                            boxSize={6}
+                          />
+                          <Text as="span" fontWeight="medium" fontSize="sm">
+                            {pin.metadata.name}
+                          </Text>
+                        </HStack>
+
+                        <Text
+                          as="span"
+                          fontWeight="bold"
+                          fontSize="x-small"
+                          colorScheme="gray"
+                          textTransform="uppercase"
+                        >
+                          {`Rank: ${
+                            pin.metadata.attributes.find(
+                              (attr) => attr.trait_type === "rank"
+                            ).value
+                          }`}
+                        </Text>
+                      </HStack>
+                    ))}
+                  </Stack>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </HStack>
         </Stack>
       </HStack>
     </Card>
