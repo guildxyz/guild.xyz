@@ -175,9 +175,9 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         ({ createdGuildPlatform: _, ...rest }) => rest
       )
 
-      const createdGuildPlatforms = successfulRolePlatformCreations.map(
-        ({ createdGuildPlatform }) => createdGuildPlatform
-      )
+      const createdGuildPlatforms = successfulRolePlatformCreations
+        .map(({ createdGuildPlatform }) => createdGuildPlatform)
+        .filter(Boolean)
 
       mutateGuild(
         (prevGuild) => ({
