@@ -3,6 +3,7 @@ import {
   Circle,
   Flex,
   HStack,
+  Icon,
   Img,
   Stack,
   Text,
@@ -12,6 +13,7 @@ import {
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
+import { Trophy } from "phosphor-react"
 import { UserLeaderboardData } from "types"
 import shortenHex from "utils/shortenHex"
 
@@ -20,12 +22,28 @@ type Props = {
   position: number
 }
 
+const getTrophyColor = (position: number) => {
+  switch (position) {
+    case 1:
+      return "yellow.500"
+    case 2:
+      return "gray.400"
+    default:
+      return "orange.400"
+  }
+}
+
 const LeaderBoardCard = ({ userLeaderboardData, position }: Props) => {
   const resolvedAddress = useResolveAddress(userLeaderboardData.address)
   const positionBgColor = useColorModeValue("gray.50", "blackAlpha.400")
   const positionBorderColor = useColorModeValue("gray.200", "transparent")
   const guildAvatarBgColor = useColorModeValue("gray.700", "gray.600")
   const pinBorderColor = useColorModeValue("white", "gray.700")
+
+  const TrophyIcon =
+    position <= 3 ? (
+      <Icon as={Trophy} weight="fill" color={getTrophyColor(position)} />
+    ) : null
 
   return (
     <Card spacing={4}>
@@ -61,17 +79,20 @@ const LeaderBoardCard = ({ userLeaderboardData, position }: Props) => {
             </Circle>
 
             <VStack alignItems="start" spacing={0}>
-              <Text
-                as="span"
-                fontFamily="display"
-                fontSize="md"
-                fontWeight="bold"
-                letterSpacing="wide"
-                maxW="full"
-                noOfLines={1}
-              >
-                {resolvedAddress ?? shortenHex(userLeaderboardData.address)}
-              </Text>
+              <HStack>
+                <Text
+                  as="span"
+                  fontFamily="display"
+                  fontSize="md"
+                  fontWeight="bold"
+                  letterSpacing="wide"
+                  maxW="full"
+                  noOfLines={1}
+                >
+                  {resolvedAddress ?? shortenHex(userLeaderboardData.address)}
+                </Text>
+                {TrophyIcon}
+              </HStack>
 
               <Text
                 as="span"
