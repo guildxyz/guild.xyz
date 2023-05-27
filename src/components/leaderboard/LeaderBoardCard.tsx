@@ -46,11 +46,12 @@ const LeaderboardCard = ({ userLeaderboardData, position }: Props) => {
   const positionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const positionBorderColor = useColorModeValue("gray.200", "gray.600")
   const guildAvatarBgColor = useColorModeValue("gray.700", "gray.600")
-  const pinBorderColor = useColorModeValue("white", "gray.700")
+  const fakeTransparentBorderColor = useColorModeValue("white", "gray.700")
+  const solidBgColor = useColorModeValue("gray.200", "gray.800")
 
   const TrophyIcon =
     position <= 3 ? (
-      <Icon as={Trophy} weight="fill" color={getTrophyColor(position)} />
+      <Icon as={Trophy} weight="fill" color={getTrophyColor(position)} boxSize={3} />
     ) : null
 
   return (
@@ -82,25 +83,41 @@ const LeaderboardCard = ({ userLeaderboardData, position }: Props) => {
           py={{ base: 6, md: 7 }}
         >
           <HStack spacing={4}>
-            <Circle size={10} bgColor={guildAvatarBgColor} color="white">
+            <Circle
+              size={10}
+              bgColor={guildAvatarBgColor}
+              color="white"
+              position="relative"
+            >
               <GuildAvatar size={5} address={userLeaderboardData.address} />
+
+              {TrophyIcon && (
+                <Circle
+                  position="absolute"
+                  right={-1}
+                  bottom={-0.5}
+                  size={5}
+                  borderWidth={2}
+                  borderColor={fakeTransparentBorderColor}
+                  bgColor={solidBgColor}
+                >
+                  {TrophyIcon}
+                </Circle>
+              )}
             </Circle>
 
             <VStack alignItems="start" spacing={0}>
-              <HStack>
-                <Text
-                  as="span"
-                  fontFamily="display"
-                  fontSize="md"
-                  fontWeight="bold"
-                  letterSpacing="wide"
-                  maxW="full"
-                  noOfLines={1}
-                >
-                  {resolvedAddress ?? shortenHex(userLeaderboardData.address)}
-                </Text>
-                {TrophyIcon}
-              </HStack>
+              <Text
+                as="span"
+                fontFamily="display"
+                fontSize="md"
+                fontWeight="bold"
+                letterSpacing="wide"
+                maxW="full"
+                noOfLines={1}
+              >
+                {resolvedAddress ?? shortenHex(userLeaderboardData.address)}
+              </Text>
 
               <Text
                 as="span"
@@ -112,36 +129,48 @@ const LeaderboardCard = ({ userLeaderboardData, position }: Props) => {
             </VStack>
           </HStack>
 
-          <HStack>
-            <Flex direction="row" alignItems="center">
-              {userLeaderboardData.pins.map((pin) => (
-                <Circle
-                  key={`${pin.chainId}-${pin.tokenId}`}
-                  size={8}
-                  ml={-3}
-                  _first={{ ml: 0 }}
-                  borderWidth={2}
-                  borderColor={pinBorderColor}
-                >
-                  <Img
-                    src={pin.metadata.image.replace(
-                      "ipfs://",
-                      process.env.NEXT_PUBLIC_IPFS_GATEWAY
-                    )}
-                    alt={pin.metadata.name}
-                  />
-                </Circle>
-              ))}
-            </Flex>
+          <Flex direction="row" alignItems="center">
+            {userLeaderboardData.pins.map((pin) => (
+              <Circle
+                key={`${pin.chainId}-${pin.tokenId}`}
+                size={8}
+                ml={-3}
+                _first={{ ml: 0 }}
+                borderWidth={2}
+                borderColor={fakeTransparentBorderColor}
+              >
+                <Img
+                  src={pin.metadata.image.replace(
+                    "ipfs://",
+                    process.env.NEXT_PUBLIC_IPFS_GATEWAY
+                  )}
+                  alt={pin.metadata.name}
+                />
+              </Circle>
+            ))}
 
             <Popover>
               <PopoverTrigger>
-                <IconButton
-                  aria-label="View pins"
-                  icon={<CaretDown />}
-                  size="xs"
-                  variant="ghost"
-                />
+                <Circle
+                  ml={-3}
+                  size={8}
+                  bgColor={solidBgColor}
+                  borderWidth={2}
+                  borderColor={fakeTransparentBorderColor}
+                >
+                  <IconButton
+                    aria-label="View pins"
+                    icon={<CaretDown />}
+                    boxSize={7}
+                    minW="none"
+                    minH="none"
+                    rounded="full"
+                    borderWidth={2}
+                    borderColor="transparent"
+                    variant="ghost"
+                    size="xs"
+                  />
+                </Circle>
               </PopoverTrigger>
               <PopoverContent>
                 <PopoverArrow />
@@ -189,7 +218,7 @@ const LeaderboardCard = ({ userLeaderboardData, position }: Props) => {
                 </PopoverBody>
               </PopoverContent>
             </Popover>
-          </HStack>
+          </Flex>
         </Stack>
       </HStack>
     </Card>
