@@ -63,7 +63,7 @@ const TokenPicker = ({
   )
 
   const {
-    data: { name: tokenName, symbol: tokenSymbol, decimals: tokenDecimals },
+    data: { symbol: tokenSymbol },
     isValidating: isTokenSymbolValidating,
     error: tokenDataError,
   } = useTokenData(chain, address, () => trigger(fieldName))
@@ -75,55 +75,6 @@ const TokenPicker = ({
   return (
     <FormControl isRequired isInvalid={!!error}>
       <FormLabel>Token:</FormLabel>
-
-      {/* <InputGroup>
-        {address &&
-          (tokenImage ? (
-            <InputLeftElement>
-              <OptionImage img={tokenImage} alt={tokenName} />
-            </InputLeftElement>
-          ) : (
-            <InputLeftAddon px={2} maxW={14}>
-              {isTokenSymbolValidating ? (
-                <Spinner size="sm" />
-              ) : (
-                <Text as="span" fontSize="xs" fontWeight="bold" noOfLines={1}>
-                  {tokenSymbol}
-                </Text>
-              )}
-            </InputLeftAddon>
-          ))}
-        <ControlledSelect
-          name={fieldName}
-          rules={{
-            required: "This field is required.",
-            pattern: {
-              value: ADDRESS_REGEX,
-              message:
-                "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-            },
-            validate: () => !tokenDataError || "Failed to fetch token data",
-          }}
-          isClearable
-          isLoading={isLoading}
-          options={mappedTokens}
-          filterOption={customFilterOption}
-          placeholder="Search or paste address"
-          onInputChange={(text, _) => {
-            if (!ADDRESS_REGEX.test(text)) return
-            addressOnChange(text)
-          }}
-          fallbackValue={
-            address && {
-              value: address,
-              label: tokenName && tokenName !== "-" ? tokenName : address,
-              decimals: tokenDecimals,
-            }
-          }
-          isDisabled={isDisabled}
-        /> 
-        
-      </InputGroup> */}
 
       <ControlledCombobox
         name={fieldName}
