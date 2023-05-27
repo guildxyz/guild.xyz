@@ -1,6 +1,6 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { Chains, RPC } from "connectors"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -35,19 +35,13 @@ const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
       >
         <FormLabel>Course:</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.data.id`}
           rules={{ required: "This field is required." }}
           isClearable
           placeholder="Choose course"
           isLoading={!data && isValidating}
           options={options}
-          value={
-            options?.find(
-              (option) =>
-                option.value === badgeId && option.chainId === Chains[badgeChain]
-            ) ?? null
-          }
           afterOnChange={(newValue) => {
             setValue(`${baseFieldPath}.chain`, Chains[newValue?.chainId] ?? null)
             setValue(`${baseFieldPath}.address`, newValue?.contractAddress ?? null)
