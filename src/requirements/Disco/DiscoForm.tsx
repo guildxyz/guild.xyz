@@ -1,6 +1,6 @@
 import { Box, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -90,7 +90,7 @@ const DiscoForm = ({ baseFieldPath }: RequirementFormProps) => {
               parseFromObject(errors, baseFieldPath)?.data?.params?.credIssuence
             }
           >
-            <ControlledSelect
+            <ControlledCombobox
               name={`${baseFieldName}.credIssuence`}
               rules={{ required: isRequired("credIssuence") }}
               isClearable
