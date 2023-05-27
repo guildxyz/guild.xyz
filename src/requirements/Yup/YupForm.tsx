@@ -8,8 +8,8 @@ import {
   NumberInputStepper,
   Stack,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
@@ -78,11 +78,12 @@ const YupForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       >
         <FormLabel>Adapter</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.data.adapter`}
           isClearable
           isLoading={isAdatpersLoading}
           options={mappedAdapters}
+          placeholder="Select adapter"
         />
 
         <FormErrorMessage>
