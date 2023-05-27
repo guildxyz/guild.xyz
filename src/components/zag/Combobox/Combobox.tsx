@@ -25,6 +25,7 @@ type Props = InputProps & {
   options?: SelectOption[]
   isLoading?: boolean
   onChange?: (newValue: string) => void
+  beforeOnChange?: (newValue: SelectOption) => void
   onClear?: () => void
   leftAddon?: JSX.Element
   rightAddon?: JSX.Element
@@ -36,6 +37,7 @@ const Combobox = forwardRef(
   (
     {
       options: optionsProp = [],
+      beforeOnChange,
       onChange: onChangeProp,
       onClear,
       isLoading,
@@ -66,7 +68,10 @@ const Combobox = forwardRef(
         positioning: {
           sameWidth: true,
         },
-        onSelect: ({ value }) => onChangeProp?.(value),
+        onSelect: ({ value }) => {
+          beforeOnChange?.(options?.find((option) => option.value === value))
+          onChangeProp?.(value)
+        },
       })
     )
 
@@ -82,7 +87,6 @@ const Combobox = forwardRef(
       selectedValue,
       inputValue,
       setValue,
-      setInputValue,
     } = combobox.connect(state, send, normalizeProps)
 
     const { size, ...filteredInputProps } = inputProps
