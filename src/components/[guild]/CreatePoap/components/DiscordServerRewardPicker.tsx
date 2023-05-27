@@ -1,5 +1,5 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
+import { ControlledCombobox } from "components/zag/Combobox"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
@@ -27,11 +27,7 @@ const DiscordServerRewardPicker = () => {
     <FormControl isRequired>
       <FormLabel>Server</FormLabel>
 
-      <ControlledSelect
-        name={`serverId`}
-        isClearable
-        options={discordGuildPlatforms}
-      />
+      <ControlledCombobox name="serverId" options={discordGuildPlatforms} />
     </FormControl>
   )
 }
