@@ -42,7 +42,7 @@ const GuildPinRewardCard = () => {
         image="/img/guild-pin-key-3d.svg"
         colorScheme={isInvalidImage || isTooSmallImage ? "gray" : "GUILD"}
         borderStyle={(isInvalidImage || isTooSmallImage) && "dashed"}
-        description="On-chain proof of membership"
+        description="Onchain badge that shows your support and belonging to this community."
         // description={
         //   isInvalidImage || isTooSmallImage ? (
         //     <HStack>

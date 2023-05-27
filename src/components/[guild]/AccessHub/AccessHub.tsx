@@ -10,14 +10,14 @@ import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
-import platforms from "platforms/platforms"
 import PoapCardMenu from "platforms/Poap/PoapCardMenu"
+import platforms from "platforms/platforms"
 import { PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
+import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
-import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import PlatformCardButton from "./components/PlatformCardButton"
 
 const DynamicGuildPinRewardCard = dynamic(
@@ -54,6 +54,8 @@ const AccessHub = (): JSX.Element => {
     return poap.expiryDate > currentTime
   })
 
+  const shouldShowGuildPin = isMember || isAdmin
+
   return (
     <SimpleGrid
       templateColumns={{
@@ -63,9 +65,7 @@ const AccessHub = (): JSX.Element => {
       gap={4}
       mb="10"
     >
-      {featureFlags.includes("GUILD_CREDENTIAL") && (isMember || isAdmin) && (
-        <DynamicGuildPinRewardCard />
-      )}
+      {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
       {accessedGuildPlatforms?.length || futurePoaps?.length ? (
         <>
           {accessedGuildPlatforms.map((platform) => {
@@ -118,6 +118,9 @@ const AccessHub = (): JSX.Element => {
           </Alert>
         </Card>
       )}
+      {guildId !== 1985 &&
+        featureFlags.includes("GUILD_CREDENTIAL") &&
+        shouldShowGuildPin && <DynamicGuildPinRewardCard />}
     </SimpleGrid>
   )
 }

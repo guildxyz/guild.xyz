@@ -78,6 +78,7 @@ const PolygonIDRequirement = (props: RequirementProps) => {
       {...props}
     >
       {`Authenticate with PolygonID`}
+      {requirement.chain === "POLYGON_MUMBAI" && " (on Mumbai)"}
       {proofAge && (
         <>
           {` (valid until `}

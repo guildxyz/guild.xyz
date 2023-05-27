@@ -5,14 +5,13 @@ import {
   SimpleGrid,
   Spinner,
   Stack,
-  Tag,
   Text,
   useBreakpointValue,
   useColorModeValue,
   usePrevious,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
+import { BATCH_SIZE } from "components/_app/ExplorerProvider"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
@@ -25,8 +24,8 @@ import YourGuilds from "components/explorer/YourGuilds"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
-import { useEffect, useMemo, useRef } from "react"
-import useSWR from "swr"
+import { useEffect, useRef } from "react"
+import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
@@ -40,49 +39,44 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const prevSearch = usePrevious(search)
   const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
-  const { renderedGuildsCount, setRenderedGuildsCount } = useExplorer()
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
-  useEffect(() => {
-    if (prevSearch === search || prevSearch === undefined) return
-    setRenderedGuildsCount(BATCH_SIZE)
-  }, [search, prevSearch])
-
   const guildsListEl = useRef(null)
 
-  const { data: filteredGuilds, isValidating: isFilteredValidating } = useSWR(
-    `/guild?${query}`,
-    (url: string) =>
-      fetcher(url).then((data) =>
-        data.filter(
-          (guild) =>
-            (guild.platforms?.length > 0 && guild.memberCount > 0) ||
-            guild.memberCount > 1
-        )
-      ),
+  const {
+    data: filteredGuilds,
+    setSize,
+    isValidating,
+  } = useSWRInfinite(
+    (pageIndex, previousPageData) =>
+      Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE
+        ? null
+        : `/guild?${query}&limit=${BATCH_SIZE}&offset=${pageIndex * BATCH_SIZE}`,
     {
       fallbackData: guildsInitial,
       dedupingInterval: 60000, // one minute
+      revalidateFirstPage: false,
     }
   )
+  const renderedGuilds = filteredGuilds?.flat()
+
+  useEffect(() => {
+    if (prevSearch === search || prevSearch === undefined) return
+    setSize(1)
+  }, [search, prevSearch])
 
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   useScrollEffect(() => {
     if (
       !guildsListEl.current ||
       guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      filteredGuilds?.length <= renderedGuildsCount
+      isValidating
     )
       return
 
-    setRenderedGuildsCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [filteredGuilds, renderedGuildsCount])
-
-  const renderedGuilds = useMemo(
-    () => filteredGuilds?.slice(0, renderedGuildsCount) || [],
-    [filteredGuilds, renderedGuildsCount]
-  )
+    setSize((prev) => prev + 1)
+  }, [filteredGuilds, isValidating])
 
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
   const bgOpacity = useColorModeValue(0.06, 0.1)
@@ -113,20 +107,11 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         backgroundOffset={account ? 100 : 90}
         textColor="white"
       >
-        <YourGuilds guildsInitial={guildsInitial} />
+        <YourGuilds />
 
         <Stack ref={guildsListEl} spacing={{ base: 8, md: 10 }}>
           {account && <Divider />}
-          <Section
-            title="Explore all guilds"
-            titleRightElement={
-              isFilteredValidating ? (
-                <Spinner size="sm" />
-              ) : (
-                <Tag size="sm">{filteredGuilds.length}</Tag>
-              )
-            }
-          >
+          <Section title="Explore all guilds">
             <SimpleGrid
               templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
               gap={{ base: 2, md: "6" }}
@@ -143,7 +128,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             </SimpleGrid>
 
             {!renderedGuilds.length ? (
-              !search?.length ? (
+              isValidating ? null : !search?.length ? (
                 <Text>
                   Can't fetch guilds from the backend right now. Check back later!
                 </Text>
@@ -161,9 +146,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             )}
           </Section>
 
-          <Center>
-            {filteredGuilds?.length > renderedGuildsCount && <Spinner />}
-          </Center>
+          <Center>{isValidating && <Spinner />}</Center>
         </Stack>
       </Layout>
     </>
@@ -171,9 +154,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetcher(`/guild?sort=members`)
-    .then((list) => list)
-    .catch((_) => [])
+  const guilds = await fetcher(`/guild?sort=members`).catch((_) => [])
 
   return {
     props: { guilds },
