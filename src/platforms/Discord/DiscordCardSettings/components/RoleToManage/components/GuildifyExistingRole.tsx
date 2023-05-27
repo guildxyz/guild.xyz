@@ -6,7 +6,7 @@ import {
   HStack,
   Text,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
+import { ControlledCombobox } from "components/zag/Combobox"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
@@ -51,7 +51,7 @@ const GuildifyExistingRole = () => {
         </HStack>
 
         <Box maxW="sm">
-          <ControlledSelect
+          <ControlledCombobox
             name={`rolePlatforms.${index}.platformRoleId`}
             isLoading={!options}
             options={options}
@@ -59,6 +59,7 @@ const GuildifyExistingRole = () => {
               if (dirtyFields.name) return
               setValue("name", newValue?.label, { shouldDirty: false })
             }}
+            isClearable
           />
         </Box>
         <FormErrorMessage>
