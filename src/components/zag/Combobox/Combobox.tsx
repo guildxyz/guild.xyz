@@ -125,11 +125,9 @@ const Combobox = forwardRef(
           }
         : undefined
 
-    const filteredOptions = selectedOption
-      ? options
-      : options.filter((option) =>
-          option.label.toLowerCase().includes(inputValue.toLowerCase())
-        )
+    const filteredOptions = options.filter((option) =>
+      option.label.toLowerCase().includes(inputValue.toLowerCase())
+    )
 
     const shouldShowRightElement = Boolean(
       isLoading || (isClearable && (inputValue?.length || htmlInputPropValue))
@@ -153,12 +151,6 @@ const Combobox = forwardRef(
                 {...(htmlInputProps.isReadOnly ? undefined : filteredInputProps)}
                 {...htmlInputProps}
                 value={selectedOption?.label ?? htmlInputPropValue}
-                // TODO: is this the best solution for this?... also, this won't trigger a setValue("") if we type in another letter for example
-                onKeyUp={(e) => {
-                  if (e.code !== "Backspace" || !selectedValue) return
-                  setValue("")
-                  setInputValue((e.target as HTMLInputElement).value)
-                }}
               />
               {shouldShowRightElement && (
                 <InputRightElement mr={6} opacity={htmlInputProps.isDisabled && 0.4}>
@@ -173,7 +165,7 @@ const Combobox = forwardRef(
                       boxSize={6}
                       minW="none"
                       onClick={() => {
-                        onClear()
+                        onClear?.()
                         setValue("")
                       }}
                     />
