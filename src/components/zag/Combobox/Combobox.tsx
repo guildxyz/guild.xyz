@@ -24,8 +24,9 @@ import { ComboboxOptionsProvider } from "./ComboboxOptionsContext"
 type Props = InputProps & {
   options?: SelectOption[]
   isLoading?: boolean
-  onChange?: (newValue: string) => void
   beforeOnChange?: (newValue: SelectOption) => void
+  onChange?: (newValue: string) => void
+  afterOnChange?: (newValue: SelectOption) => void
   onClear?: () => void
   leftAddon?: JSX.Element
   rightAddon?: JSX.Element
@@ -39,6 +40,7 @@ const Combobox = forwardRef(
       options: optionsProp = [],
       beforeOnChange,
       onChange: onChangeProp,
+      afterOnChange,
       onClear,
       isLoading,
       leftAddon,
@@ -69,8 +71,10 @@ const Combobox = forwardRef(
           sameWidth: true,
         },
         onSelect: ({ value }) => {
-          beforeOnChange?.(options?.find((option) => option.value === value))
+          const newOption = options?.find((option) => option.value === value)
+          beforeOnChange?.(newOption)
           onChangeProp?.(value)
+          afterOnChange?.(newOption)
         },
       })
     )

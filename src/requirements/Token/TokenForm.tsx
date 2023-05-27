@@ -5,23 +5,17 @@ import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import TokenPicker from "requirements/common/TokenPicker"
-import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../common/ChainPicker"
 import MinMaxAmount from "../common/MinMaxAmount"
 
 const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
-  const {
-    setValue,
-    clearErrors,
-    formState: { touchedFields },
-  } = useFormContext()
+  const { setValue, clearErrors } = useFormContext()
 
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
   const address = useWatch({ name: `${baseFieldPath}.address` })
 
   // Reset form on chain change
   const resetForm = () => {
-    if (!parseFromObject(touchedFields, baseFieldPath)?.address) return
     setValue(`${baseFieldPath}.address`, null)
     setValue(`${baseFieldPath}.data.minAmount`, 0)
     setValue(`${baseFieldPath}.data.maxAmount`, undefined)

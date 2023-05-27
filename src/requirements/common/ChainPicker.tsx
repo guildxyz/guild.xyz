@@ -1,14 +1,7 @@
-import {
-  Divider,
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputLeftElement,
-} from "@chakra-ui/react"
+import { Divider, FormControl, FormLabel } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import ControlledSelect from "components/common/ControlledSelect"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { BALANCY_SUPPORTED_CHAINS } from "components/create-guild/Requirements/hooks/useBalancy"
+import { ControlledCombobox } from "components/zag/Combobox"
 import {
   Chain,
   Chains,
@@ -79,18 +72,13 @@ const ChainPicker = ({
     <>
       <FormControl isRequired>
         <FormLabel>Chain</FormLabel>
-        <InputGroup>
-          <InputLeftElement>
-            <OptionImage img={RPC[chain]?.iconUrls?.[0]} alt={chain} />
-          </InputLeftElement>
 
-          <ControlledSelect
-            name={controlName}
-            options={mappedSupportedChains}
-            afterOnChange={onChangeHandler}
-            isDisabled={isDisabled}
-          />
-        </InputGroup>
+        <ControlledCombobox
+          name={controlName}
+          options={mappedSupportedChains}
+          afterOnChange={onChangeHandler}
+          isDisabled={isDisabled}
+        />
       </FormControl>
       {showDivider && <Divider />}
     </>
