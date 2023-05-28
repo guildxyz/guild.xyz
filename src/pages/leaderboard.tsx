@@ -8,7 +8,6 @@ import LeaderboardUserCard, {
 } from "components/leaderboard/LeaderboardUserCard"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
-import { SWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import useSWRInfinite from "swr/infinite"
 import { UserLeaderboardData } from "types"
@@ -23,7 +22,7 @@ const getKey = (pageIndex: number, previousPageData: any[]) => {
   return `/api/leaderboard?offset=${Math.max(PAGE_SIZE * pageIndex - 1, 0)}`
 }
 
-const Page = () => {
+const Page = ({ leaderboard: initialData }: Props) => {
   // const bgColor = useColorModeValue("gray.800", "whiteAlpha.200")
 
   const { account } = useWeb3React()
@@ -37,6 +36,7 @@ const Page = () => {
     setSize,
     data: leaderboard,
   } = useSWRInfinite(getKey, {
+    fallbackData: [initialData],
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
@@ -94,20 +94,6 @@ const Page = () => {
   )
 }
 
-const LeaderboardPage = ({ leaderboard }: Props) => (
-  <SWRConfig
-    value={
-      leaderboard && {
-        fallback: {
-          "/api/leaderboard?offset=0": leaderboard,
-        },
-      }
-    }
-  >
-    <Page />
-  </SWRConfig>
-)
-
 const getStaticProps: GetStaticProps = async () => {
   const leaderboardTopAddresses: string[] = await kv.zrange(
     "guildPinsLeaderboard",
@@ -128,5 +114,5 @@ const getStaticProps: GetStaticProps = async () => {
   }
 }
 
-export default LeaderboardPage
+export default Page
 export { getStaticProps }
