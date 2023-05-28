@@ -53,13 +53,19 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
 
   const TrophyIcon =
     position <= 3 ? (
-      <Icon as={Trophy} weight="fill" color={getTrophyColor(position)} boxSize={3} />
+      <Icon
+        as={Trophy}
+        weight="fill"
+        color={getTrophyColor(position)}
+        boxSize={{ base: 8, sm: 10 }}
+      />
     ) : null
 
   return (
     <Card spacing={4}>
       <HStack spacing={0}>
         <Center
+          position="relative"
           minW={{ base: 16, sm: 24 }}
           maxW={{ base: 16, sm: 24 }}
           placeSelf="stretch"
@@ -67,15 +73,21 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
           borderRightWidth={1}
           borderRightColor={positionBorderColor}
         >
-          <Text
-            as="span"
-            fontFamily="display"
-            fontSize={{ base: "lg", sm: "2xl" }}
-            fontWeight="bold"
-            letterSpacing="wide"
-          >
-            {`#${position}`}
-          </Text>
+          {TrophyIcon}
+          <Center position={position <= 3 ? "absolute" : "relative"} inset={0}>
+            <Text
+              mt={position <= 3 ? { base: -1.5, sm: -2 } : 0}
+              as="span"
+              fontFamily="display"
+              fontSize={
+                position <= 3 ? { base: "sm", sm: "md" } : { base: "lg", sm: "xl" }
+              }
+              fontWeight="bold"
+              letterSpacing="wide"
+            >
+              {`${position <= 3 ? "" : "#"}${position}`}
+            </Text>
+          </Center>
         </Center>
         <Stack
           w="full"
@@ -85,27 +97,8 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
           py={{ base: 6, md: 7 }}
         >
           <HStack spacing={4}>
-            <Circle
-              size={10}
-              bgColor={guildAvatarBgColor}
-              color="white"
-              position="relative"
-            >
+            <Circle size={10} bgColor={guildAvatarBgColor} color="white">
               <GuildAvatar size={5} address={userLeaderboardData.address} />
-
-              {TrophyIcon && (
-                <Circle
-                  position="absolute"
-                  right={-1}
-                  bottom={-0.5}
-                  size={5}
-                  borderWidth={2}
-                  borderColor={fakeTransparentBorderColor}
-                  bgColor={solidBgColor}
-                >
-                  {TrophyIcon}
-                </Circle>
-              )}
             </Circle>
 
             <VStack alignItems="start" spacing={0}>
