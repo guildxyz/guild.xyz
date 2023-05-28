@@ -6,15 +6,24 @@ import Section from "components/common/Section"
 import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
 } from "components/leaderboard/LeaderboardUserCard"
+import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
+import { SWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
+import useSWRInfinite from "swr/infinite"
 import { UserLeaderboardData } from "types"
 
 type Props = {
   leaderboard: UserLeaderboardData[]
 }
 
-const Page = ({ leaderboard }: Props) => {
+const PAGE_SIZE = 25
+const getKey = (pageIndex: number, previousPageData: any[]) => {
+  if (previousPageData && !previousPageData.length) return null
+  return `/api/leaderboard?offset=${Math.max(PAGE_SIZE * pageIndex - 1, 0)}`
+}
+
+const Page = () => {
   // const bgColor = useColorModeValue("gray.800", "whiteAlpha.200")
 
   const { account } = useWeb3React()
@@ -22,6 +31,28 @@ const Page = ({ leaderboard }: Props) => {
     userLeaderboardData: UserLeaderboardData
     position: number
   }>(account ? `/api/leaderboard/${account}` : null)
+
+  const {
+    isValidating: isLeaderboardValidating,
+    setSize,
+    data: leaderboard,
+  } = useSWRInfinite(getKey, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateFirstPage: false,
+  })
+
+  useScrollEffect(() => {
+    if (
+      isLeaderboardValidating ||
+      window.innerHeight + document.documentElement.scrollTop !==
+        document.documentElement.offsetHeight
+    )
+      return
+
+    setSize((prevSize) => prevSize + 1)
+  }, [isLeaderboardValidating])
 
   return (
     <Layout
@@ -44,24 +75,44 @@ const Page = ({ leaderboard }: Props) => {
           ))}
 
         <Section title={account ? "Leaderboard" : undefined}>
-          {leaderboard.map((userLeaderboardData, index) => (
-            <LeaderboardUserCard
-              key={index}
-              userLeaderboardData={userLeaderboardData}
-              position={index + 1}
-            />
-          ))}
+          <>
+            {leaderboard?.flat().map((userLeaderboardData, index) => (
+              <LeaderboardUserCard
+                key={index}
+                userLeaderboardData={userLeaderboardData}
+                position={index + 1}
+              />
+            ))}
+            {isLeaderboardValidating &&
+              [...Array(25)].map((_, index) => (
+                <LeaderboardUserCardSkeleton key={index} />
+              ))}
+          </>
         </Section>
       </Stack>
     </Layout>
   )
 }
 
+const LeaderboardPage = ({ leaderboard }: Props) => (
+  <SWRConfig
+    value={
+      leaderboard && {
+        fallback: {
+          "/api/leaderboard?offset=0": leaderboard,
+        },
+      }
+    }
+  >
+    <Page />
+  </SWRConfig>
+)
+
 const getStaticProps: GetStaticProps = async () => {
   const leaderboardTopAddresses: string[] = await kv.zrange(
     "guildPinsLeaderboard",
     0,
-    24,
+    PAGE_SIZE - 1,
     {
       rev: true,
     }
@@ -77,5 +128,5 @@ const getStaticProps: GetStaticProps = async () => {
   }
 }
 
-export default Page
+export default LeaderboardPage
 export { getStaticProps }
