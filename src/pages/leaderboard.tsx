@@ -3,9 +3,9 @@ import { kv } from "@vercel/kv"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import LeaderboardCard, {
-  LeaderboardCardSkeleton,
-} from "components/leaderboard/LeaderboardCard"
+import LeaderboardUserCard, {
+  LeaderboardUserCardSkeleton,
+} from "components/leaderboard/LeaderboardUserCard"
 import { GetStaticProps } from "next"
 import useSWRImmutable from "swr/immutable"
 import { UserLeaderboardData } from "types"
@@ -35,9 +35,9 @@ const Page = ({ leaderboard }: Props) => {
       <Stack spacing={10}>
         {account &&
           (isLoading || !data ? (
-            <LeaderboardCardSkeleton />
+            <LeaderboardUserCardSkeleton />
           ) : (
-            <LeaderboardCard
+            <LeaderboardUserCard
               position={data.position}
               userLeaderboardData={data.userLeaderboardData}
             />
@@ -45,7 +45,7 @@ const Page = ({ leaderboard }: Props) => {
 
         <Section title={account ? "Leaderboard" : undefined}>
           {leaderboard.map((userLeaderboardData, index) => (
-            <LeaderboardCard
+            <LeaderboardUserCard
               key={index}
               userLeaderboardData={userLeaderboardData}
               position={index + 1}
