@@ -23,8 +23,6 @@ const getKey = (pageIndex: number, previousPageData: any[]) => {
 }
 
 const Page = ({ leaderboard: initialData }: Props) => {
-  // const bgColor = useColorModeValue("gray.800", "whiteAlpha.200")
-
   const { account } = useWeb3React()
   const { data, isLoading } = useSWRImmutable<{
     userLeaderboardData: UserLeaderboardData
@@ -58,8 +56,20 @@ const Page = ({ leaderboard: initialData }: Props) => {
     <Layout
       title="Guild Pins leaderboard"
       ogDescription="See how many addresses satisfy requirements and make allowlists out of them"
-      // background={bgColor}
-      // textColor="white"
+      background="gray.800"
+      backgroundProps={{
+        opacity: 1,
+        _before: {
+          content: "''",
+          position: "absolute",
+          inset: 0,
+          bgImage:
+            "linear-gradient(to bottom, transparent, var(--chakra-colors-gray-800)), url('/landing/bg.svg')",
+          bgPosition: "center 0.25rem",
+          opacity: 0.25,
+        },
+      }}
+      textColor="white"
       backgroundOffset={46}
       maxWidth="container.md"
     >
