@@ -66,7 +66,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
           bgImage:
             "linear-gradient(to bottom, transparent, var(--chakra-colors-gray-800)), url('/landing/bg.svg')",
           bgPosition: "center 0.25rem",
-          opacity: 0.25,
+          opacity: 0.05,
         },
       }}
       textColor="white"
