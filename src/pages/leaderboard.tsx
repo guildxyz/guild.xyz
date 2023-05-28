@@ -1,9 +1,13 @@
 import { Stack } from "@chakra-ui/react"
 import { kv } from "@vercel/kv"
+import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import LeaderboardCard from "components/leaderboard/LeaderboardCard"
+import LeaderboardCard, {
+  LeaderboardCardSkeleton,
+} from "components/leaderboard/LeaderboardCard"
 import { GetStaticProps } from "next"
+import useSWRImmutable from "swr/immutable"
 import { UserLeaderboardData } from "types"
 
 type Props = {
@@ -13,8 +17,11 @@ type Props = {
 const Page = ({ leaderboard }: Props) => {
   // const bgColor = useColorModeValue("gray.800", "whiteAlpha.200")
 
-  // const { account } = useWeb3React()
-  const usersLeaderboardData = null
+  const { account } = useWeb3React()
+  const { data, isLoading } = useSWRImmutable<{
+    userLeaderboardData: UserLeaderboardData
+    position: number
+  }>(account ? `/api/leaderboard/${account}` : null)
 
   return (
     <Layout
@@ -26,11 +33,17 @@ const Page = ({ leaderboard }: Props) => {
       maxWidth="container.md"
     >
       <Stack spacing={10}>
-        {/* {account && (
-          <LeaderBoardCard position={58} userLeaderboardData={leaderboard[3]} />
-        )} */}
+        {account &&
+          (isLoading || !data ? (
+            <LeaderboardCardSkeleton />
+          ) : (
+            <LeaderboardCard
+              position={data.position}
+              userLeaderboardData={data.userLeaderboardData}
+            />
+          ))}
 
-        <Section title={usersLeaderboardData ? "Leaderboard" : undefined}>
+        <Section title={account ? "Leaderboard" : undefined}>
           {leaderboard.map((userLeaderboardData, index) => (
             <LeaderboardCard
               key={index}

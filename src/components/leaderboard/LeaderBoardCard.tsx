@@ -13,6 +13,8 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  Skeleton,
+  SkeletonCircle,
   Stack,
   Text,
   useColorModeValue,
@@ -225,4 +227,62 @@ const LeaderboardCard = ({ userLeaderboardData, position }: Props) => {
   )
 }
 
+const LeaderboardCardSkeleton = () => {
+  const positionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
+  const positionBorderColor = useColorModeValue("gray.200", "gray.600")
+  const fakeTransparentBorderColor = useColorModeValue("white", "gray.700")
+  const solidBgColor = useColorModeValue("gray.200", "gray.800")
+
+  return (
+    <Card spacing={4}>
+      <HStack spacing={0}>
+        <Center
+          minW={{ base: 16, sm: 24 }}
+          maxW={{ base: 16, sm: 24 }}
+          placeSelf="stretch"
+          bgColor={positionBgColor}
+          borderRightWidth={1}
+          borderRightColor={positionBorderColor}
+        >
+          <Skeleton boxSize={{ base: 6, sm: 8 }} />
+        </Center>
+        <Stack
+          w="full"
+          direction={{ base: "column", md: "row" }}
+          justifyContent="space-between"
+          px={{ base: 5, md: 6 }}
+          py={{ base: 6, md: 7 }}
+        >
+          <HStack spacing={4}>
+            <SkeletonCircle boxSize={10} />
+
+            <VStack alignItems="start" spacing={0}>
+              <Skeleton w={48} />
+              <Skeleton w={24} h={4} />
+            </VStack>
+          </HStack>
+
+          <Flex direction="row" alignItems="center">
+            {[...Array(3)].map((_, index) => (
+              <Circle
+                key={index}
+                position="relative"
+                size={8}
+                ml={-3}
+                _first={{ ml: 0 }}
+                borderWidth={2}
+                borderColor={fakeTransparentBorderColor}
+                bgColor={solidBgColor}
+              >
+                <SkeletonCircle boxSize={7} />
+              </Circle>
+            ))}
+          </Flex>
+        </Stack>
+      </HStack>
+    </Card>
+  )
+}
+
 export default LeaderboardCard
+export { LeaderboardCardSkeleton }
