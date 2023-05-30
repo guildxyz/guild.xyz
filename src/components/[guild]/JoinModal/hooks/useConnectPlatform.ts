@@ -95,7 +95,7 @@ const useConnectPlatform = (
 const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
-  const { showPlatformMergeModal } = useWeb3ConnectionManager()
+  const { showPlatformMergeAlert } = useWeb3ConnectionManager()
 
   const { mutate: mutateUser } = useUser()
 
@@ -161,7 +161,7 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
         const [, addressOrDomain] = toastError.match(
           /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
         )
-        showPlatformMergeModal(addressOrDomain, platformName)
+        showPlatformMergeAlert(addressOrDomain, platformName)
       } else {
         showErrorToast(toastError ?? rawError)
       }

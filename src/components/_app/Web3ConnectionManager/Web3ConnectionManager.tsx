@@ -16,7 +16,7 @@ import {
   useState,
 } from "react"
 import { PlatformName } from "types"
-import PlatformMergeErrorModal from "./components/PlatformMergeErrorModal"
+import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
 import useEagerConnect from "./hooks/useEagerConnect"
@@ -40,7 +40,7 @@ const Web3Connection = createContext({
   isDelegateConnection: false,
   setIsDelegateConnection: (_: boolean) => {},
   isNetworkChangeInProgress: false,
-  showPlatformMergeModal: (
+  showPlatformMergeAlert: (
     _addressOrDomain: string,
     _platformName: PlatformName
   ) => {},
@@ -71,9 +71,9 @@ const Web3ConnectionManager = ({
     onClose: closeAccountModal,
   } = useDisclosure()
   const {
-    isOpen: isPlatformMergeModalOpen,
-    onOpen: openPlatformMergeModal,
-    onClose: closePlatformMergeModal,
+    isOpen: isPlatformMergeAlertOpen,
+    onOpen: openPlatformMergeAlert,
+    onClose: closePlatformMergeAlert,
   } = useDisclosure()
   const [accountMergeAddress, setAccountMergeAddress] = useState<string>("")
   const [accountMergePlatformName, setAccountMergePlatformName] =
@@ -115,19 +115,19 @@ const Web3ConnectionManager = ({
     }
   }
 
-  const showPlatformMergeModal = (
+  const showPlatformMergeAlert = (
     addressOrDomain: string,
     platformName: PlatformName
   ) => {
     setAccountMergeAddress(addressOrDomain)
     setAccountMergePlatformName(platformName)
-    openPlatformMergeModal()
+    openPlatformMergeAlert()
   }
 
   return (
     <Web3Connection.Provider
       value={{
-        showPlatformMergeModal,
+        showPlatformMergeAlert,
         isWalletSelectorModalOpen,
         openWalletSelectorModal,
         closeWalletSelectorModal,
@@ -151,9 +151,9 @@ const Web3ConnectionManager = ({
         onClose={closeWalletSelectorModal}
       />
       <NetworkModal isOpen={isNetworkModalOpen} onClose={closeNetworkModal} />
-      <PlatformMergeErrorModal
-        onClose={closePlatformMergeModal}
-        isOpen={isPlatformMergeModalOpen}
+      <PlatformMergeErrorAlert
+        onClose={closePlatformMergeAlert}
+        isOpen={isPlatformMergeAlertOpen}
         addressOrDomain={accountMergeAddress}
         platformName={accountMergePlatformName}
       />

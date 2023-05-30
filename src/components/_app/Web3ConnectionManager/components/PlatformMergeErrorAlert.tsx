@@ -1,13 +1,12 @@
 import {
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Heading,
   Icon,
   ListItem,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Text,
   UnorderedList,
   chakra,
@@ -17,9 +16,11 @@ import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPla
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import Link from "components/common/Link"
+import { Alert } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { ArrowSquareOut } from "phosphor-react"
 import platforms from "platforms/platforms"
+import { useRef } from "react"
 import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
 import shortenHex from "utils/shortenHex"
@@ -31,7 +32,7 @@ type Props = {
   platformName: PlatformName
 }
 
-const PlatformMergeErrorModal = ({
+const PlatformMergeErrorAlert = ({
   isOpen,
   onClose,
   addressOrDomain,
@@ -57,14 +58,16 @@ const PlatformMergeErrorModal = ({
     true
   )
 
+  const cancelRef = useRef(null)
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
+    <Alert isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
+      <AlertDialogOverlay />
+      <AlertDialogContent>
+        <AlertDialogHeader>
           {capitalize(socialAccountName)} account already connected
-        </ModalHeader>
-        <ModalBody>
+        </AlertDialogHeader>
+        <AlertDialogBody>
           <Text>
             This {socialAccountName} account is already connected to this address:{" "}
             {addressOrDomain.startsWith("0x") ? (
@@ -104,18 +107,18 @@ const PlatformMergeErrorModal = ({
               </Text>
             </ListItem>
           </UnorderedList>
-        </ModalBody>
-        <ModalFooter display={"flex"} gap={2} mt="-4">
-          <Button onClick={onClose} variant="outline">
+        </AlertDialogBody>
+        <AlertDialogFooter display={"flex"} gap={2} mt="-4">
+          <Button ref={cancelRef} onClick={onClose} variant="outline">
             Cancel
           </Button>
           <Button onClick={onConnect} isLoading={isLoading} colorScheme="red">
             Connect anyway
           </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </Alert>
   )
 }
 
-export default PlatformMergeErrorModal
+export default PlatformMergeErrorAlert
