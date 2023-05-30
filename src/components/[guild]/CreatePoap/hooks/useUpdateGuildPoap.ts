@@ -14,12 +14,12 @@ const useUpdateGuildPoap = (
   const showErrorToast = useShowErrorToast()
 
   const { mutateGuild, id } = useGuild()
-  const { mutatePoap, poap } = usePoap(guildPoap?.fancyId)
+  const { mutatePoap } = usePoap(guildPoap?.fancyId)
   const { mutatePoapEventDetails } = usePoapEventDetails()
 
   const updateGuildPoap = async (signedValidation: SignedValdation) =>
-    fetcher(`/v2/guilds/${id}/poaps/${poap.id}`, {
-      method: "PATCH",
+    fetcher(`/v2/guilds/${id}/poaps/${guildPoap.id}`, {
+      method: "PUT",
       ...signedValidation,
     })
 
