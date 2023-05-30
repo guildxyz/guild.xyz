@@ -97,10 +97,11 @@ const Layout = ({
         position="relative"
         bgColor={colorMode === "light" ? "gray.100" : "gray.800"}
         bgGradient={
-          !background &&
-          `linear(${
-            colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
-          } 0px, var(--chakra-colors-gray-100) 700px)`
+          !background
+            ? `linear(${
+                colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
+              } 0px, var(--chakra-colors-gray-100) 700px)`
+            : undefined
         }
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"

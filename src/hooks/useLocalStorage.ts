@@ -36,9 +36,10 @@ const useLocalStorage = <T>(
     if (valueToStore === undefined) {
       window.localStorage.removeItem(key)
     } else {
-      const stringToStore = tryToParseJSON(valueToStore)
-        ? JSON.stringify(valueToStore)
-        : (valueToStore as string)
+      const stringToStore =
+        typeof valueToStore === "object"
+          ? JSON.stringify(valueToStore)
+          : (valueToStore as string)
       window.localStorage.setItem(key, stringToStore)
     }
   }

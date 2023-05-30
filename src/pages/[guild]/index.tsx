@@ -15,11 +15,6 @@ import {
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -38,6 +33,11 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import Button from "components/common/Button"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -407,7 +407,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   if (!data?.id)
     return {
       props: {},
-      revalidate: 60,
+      revalidate: 300,
     }
 
   /**
@@ -428,20 +428,19 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
         [unstable_serialize([endpoint, { method: "GET", body: {} }])]: filteredData,
       },
     },
-    revalidate: 60,
+    revalidate: 300,
   }
 }
 
-const SSG_PAGES_COUNT = 24
 const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Guild[]) =>
     Array.isArray(_)
-      ? _.slice(0, SSG_PAGES_COUNT).map(({ urlName: guild }) => ({
+      ? _.map(({ urlName: guild }) => ({
           params: { guild },
         }))
       : []
 
-  const paths = await fetcher(`/guild`).then(mapToPaths)
+  const paths = await fetcher(`/guild?`).then(mapToPaths)
 
   return {
     paths,

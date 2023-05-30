@@ -59,10 +59,14 @@ const SetRequirements = (): JSX.Element => {
     [controlledFields]
   )
 
-  const onFreeEntryChange = (e) =>
-    e.target.checked
-      ? replace([{ type: "FREE", data: {}, chain: null, address: null }])
-      : replace([])
+  const onFreeEntryChange = (e) => {
+    if (e.target.checked) {
+      replace([{ type: "FREE", data: {}, chain: null, address: null }])
+      setValue("logic", "AND")
+    } else {
+      replace([])
+    }
+  }
 
   return (
     <Stack spacing="5" w="full">

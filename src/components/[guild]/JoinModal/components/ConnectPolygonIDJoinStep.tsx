@@ -39,7 +39,7 @@ const ConnectPolygonIDJoinStep = (): JSX.Element => {
       />
 
       <ConnectPolygonIDModal
-        type="POLYGON_ID_BASIC"
+        type="POLYGON_ID_BASIC_MAIN"
         data={{}}
         onClose={onClose}
         isOpen={isOpen}

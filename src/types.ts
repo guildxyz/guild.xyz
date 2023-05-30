@@ -114,6 +114,7 @@ type GuildBase = {
   roles: Array<string>
   platforms: Array<PlatformName>
   memberCount: number
+  rolesCount: number
 }
 
 type BrainCardData = {

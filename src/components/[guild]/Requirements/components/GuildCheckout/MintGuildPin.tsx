@@ -93,6 +93,9 @@ const MintGuildPin = (): JSX.Element => {
               <MintGuildPinChainPicker />
               <GuildPinFees />
               <MintGuildPinButton />
+              <Text colorScheme="gray" fontSize="sm">
+                This is a non-transferable token that has no financial value.
+              </Text>
             </Stack>
           </ModalFooter>
         </ModalContent>

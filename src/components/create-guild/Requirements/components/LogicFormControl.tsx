@@ -10,6 +10,7 @@ import {
   Stack,
   Text,
   useBreakpointValue,
+  usePrevious,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect } from "react"
@@ -18,11 +19,12 @@ import { useController, useFormContext, useWatch } from "react-hook-form"
 const LogicFormControl = (): JSX.Element => {
   const {
     resetField,
-    formState: { errors, dirtyFields },
+    formState: { errors },
   } = useFormContext()
 
   const requirements = useWatch({ name: "requirements" })
   const requirementCount = requirements?.length ?? 0
+  const prevRequirementCount = usePrevious(requirementCount)
 
   const {
     field: { onChange: logicOnChange, value: logic },
@@ -37,7 +39,7 @@ const LogicFormControl = (): JSX.Element => {
     name: "anyOfNum",
     defaultValue: 1,
     rules: {
-      required: "This field is required",
+      required: logic !== "AND" && "This field is required",
       min: {
         value: 1,
         message: "Minimum value is 1",
@@ -59,10 +61,13 @@ const LogicFormControl = (): JSX.Element => {
   )
 
   useEffect(() => {
+    if (logic === "AND") return
     if (value === requirementCount)
       anyOfNumOnChange(Math.max(requirementCount - 1, 1))
-    if (requirementCount <= 2 && dirtyFields.requirements) logicOnChange("OR")
-  }, [requirementCount])
+
+    if (requirementCount < prevRequirementCount && requirementCount <= 2)
+      logicOnChange("OR")
+  }, [logic, requirementCount])
 
   return (
     <Stack alignItems="start" direction={{ base: "column", sm: "row" }}>
