@@ -21,6 +21,7 @@ import { Warning } from "phosphor-react"
 import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import REQUIREMENTS from "requirements"
+import useDeletePoapRequirement from "../hooks/useDeletePoapRequirement"
 import useDeleteRequirement from "../hooks/useDeleteRequirement"
 import BalancyFooter from "./BalancyFooter"
 import ConfirmationAlert from "./ConfirmaionAlert"
@@ -48,13 +49,24 @@ const RequirementEditableCard = ({
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
   const methods = useForm({ mode: "all", defaultValues: field })
   const requirementId = useWatch({ name: `requirements.${index}.id` })
+
+  const isRole = !!formState?.defaultValues?.id
   const roleId = formState?.defaultValues?.id
 
+  const isPoap = !!formState?.defaultValues?.poapId
+  const poapId = formState?.defaultValues?.poapId
+
   const {
-    onSubmit: onDelete,
-    isLoading,
-    isSigning,
+    onSubmit: onDeleteRequirement,
+    isLoading: isRequirementDeleteLoading,
+    isSigning: isRequirementDeleteSigning,
   } = useDeleteRequirement(roleId, requirementId)
+
+  const {
+    onSubmit: onDeletePoapRequirement,
+    isLoading: isPoapRequirementDeleteLoading,
+    isSigning: isPoapRequirementDeleteSigning,
+  } = useDeletePoapRequirement(poapId, requirementId)
 
   const {
     isOpen: isAlertOpen,
@@ -83,20 +95,33 @@ const RequirementEditableCard = ({
     [index, setValue]
   )
   const onRemove = () => {
-    if (!!roleId && !!requirementId) {
+    if ((isRole || isPoap) && !!requirementId) {
       onRequirementDeleteOpen()
     } else {
       removeRequirement(index)
     }
   }
 
+  const onConfirmDelete = () => {
+    if (isPoap) {
+      onDeletePoapRequirement()
+    } else {
+      onDeleteRequirement()
+    }
+  }
+
   const requirementDeleteConfitmationAlert = (
     <ConfirmationAlert
       finalFocusRef={closeButtonRef}
-      isLoading={isLoading || isSigning}
+      isLoading={
+        isPoapRequirementDeleteLoading ||
+        isPoapRequirementDeleteSigning ||
+        isRequirementDeleteLoading ||
+        isRequirementDeleteSigning
+      }
       isOpen={isRequirementDeleteOpen}
       onClose={onRequirementDeleteClose}
-      onConfirm={() => onDelete()}
+      onConfirm={() => onConfirmDelete()}
       title="Delete requirement"
       description="Are you sure you want to delete this requirement?"
       confirmationText="Delete requirement"
