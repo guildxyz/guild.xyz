@@ -1,8 +1,8 @@
 import { Checkbox, Stack, Text, Wrap } from "@chakra-ui/react"
+import LogicDivider from "components/[guild]/LogicDivider"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
-import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
 import { useEffect, useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
@@ -46,13 +46,6 @@ const SetRequirements = (): JSX.Element => {
     ...field,
     ...watchFieldArray[index],
   }))
-
-  const removeReq = (index: number) => {
-    setValue(
-      `requirements`,
-      watchFieldArray.filter((_, i) => i !== index)
-    )
-  }
 
   const freeEntry = useMemo(
     () => !!controlledFields?.find((requirement) => requirement.type === "FREE"),
@@ -120,7 +113,6 @@ const SetRequirements = (): JSX.Element => {
                     type={type}
                     field={field}
                     index={i}
-                    removeRequirement={removeReq}
                     updateRequirement={update}
                     isEditDisabled={type === "PAYMENT"}
                   />
