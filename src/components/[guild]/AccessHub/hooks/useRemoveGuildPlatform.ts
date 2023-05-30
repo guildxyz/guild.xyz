@@ -27,22 +27,25 @@ const useRemoveGuildPlatform = (guildPlatformId: number) => {
         status: "success",
       })
 
-      mutateGuild((prevGuild) => ({
-        ...prevGuild,
-        guildPlatforms:
-          prevGuild.guildPlatforms?.filter(
-            (prevGuildPlatform) => prevGuildPlatform.id !== guildPlatformId
-          ) ?? [],
-        roles:
-          prevGuild.roles?.map((prevRole) => ({
-            ...prevRole,
-            rolePlatforms:
-              prevRole.rolePlatforms?.filter(
-                (prevRolePlatform) =>
-                  prevRolePlatform.guildPlatformId !== guildPlatformId
-              ) ?? [],
-          })) ?? [],
-      }))
+      mutateGuild(
+        (prevGuild) => ({
+          ...prevGuild,
+          guildPlatforms:
+            prevGuild.guildPlatforms?.filter(
+              (prevGuildPlatform) => prevGuildPlatform.id !== guildPlatformId
+            ) ?? [],
+          roles:
+            prevGuild.roles?.map((prevRole) => ({
+              ...prevRole,
+              rolePlatforms:
+                prevRole.rolePlatforms?.filter(
+                  (prevRolePlatform) =>
+                    prevRolePlatform.guildPlatformId !== guildPlatformId
+                ) ?? [],
+            })) ?? [],
+        }),
+        { revalidate: false }
+      )
       mutateGateables()
     },
     onError: (error) => showErrorToast(error),
