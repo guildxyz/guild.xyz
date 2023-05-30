@@ -257,11 +257,9 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
           errorMessage =
             "We are not able to find this token on the market. Contact guild admins for further help."
 
-          await kv.set(
-            `${NON_PURCHASABLE_ASSETS_KV_KEY}:${
-              Chains[chain]
-            }:${address.toLowerCase()}`,
-            true
+          await kv.lpush(
+            `${NON_PURCHASABLE_ASSETS_KV_KEY}:${Chains[chain]}`,
+            address.toLowerCase()
           )
         } else {
           errorMessage = responseData.validationErrors[0].description

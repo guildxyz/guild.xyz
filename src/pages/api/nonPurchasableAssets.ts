@@ -1,7 +1,9 @@
 import { kv } from "@vercel/kv"
+import { Chains } from "connectors"
 import { NextApiRequest, NextApiResponse } from "next"
+import { allPurchaseSupportedChains } from "utils/guildCheckout/constants"
 
-export const NON_PURCHASABLE_ASSETS_KV_KEY = "nonPurchasableTokens"
+export const NON_PURCHASABLE_ASSETS_KV_KEY = "nonPurchasableAssets"
 
 const handler = async (request: NextApiRequest, response: NextApiResponse) => {
   if (request.method !== "GET") {
@@ -10,19 +12,15 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
     return
   }
 
-  const nonPurchasableTokens = await kv.keys(`${NON_PURCHASABLE_ASSETS_KV_KEY}:*`)
+  const nonPurchasableAssets = {}
 
-  const res: Record<number, string[]> = {}
-
-  for (const row of nonPurchasableTokens) {
-    const [, chainId, address] = row.split(":")
-
-    if (!res[chainId]) res[chainId] = []
-
-    res[chainId].push(address)
+  for (const chain of allPurchaseSupportedChains) {
+    nonPurchasableAssets[Chains[chain]] = await kv
+      .lrange(`${NON_PURCHASABLE_ASSETS_KV_KEY}:${Chains[chain]}`, 0, -1)
+      .catch(() => [])
   }
 
-  response.status(200).json(res)
+  response.status(200).json(nonPurchasableAssets)
 }
 
 export default handler
