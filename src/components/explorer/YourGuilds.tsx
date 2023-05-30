@@ -31,17 +31,17 @@ const sortUsersGuilds = (memberships: Memberships, guildsData: any) => {
   return sortedUsersGuilds
 }
 
+const useYourGuilds = () =>
+  useSWRWithOptionalAuth(`/v2/guilds`, {
+    dedupingInterval: 60000, // one minute
+    revalidateOnMount: true,
+  })
+
 const YourGuilds = () => {
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
-  const { data: usersGuilds, isLoading: isGuildsLoading } = useSWRWithOptionalAuth(
-    `/v2/guilds`, // ? is included, so the request hits v2Replacer in fetcher
-    {
-      dedupingInterval: 60000, // one minute
-      revalidateOnMount: true,
-    }
-  )
+  const { data: usersGuilds, isLoading: isGuildsLoading } = useYourGuilds()
 
   const { memberships, isLoading: isMembershipsLoading } = useMemberships()
 
@@ -134,4 +134,5 @@ const YourGuilds = () => {
   )
 }
 
+export { useYourGuilds }
 export default YourGuilds
