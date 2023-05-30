@@ -6,7 +6,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import React, { memo, useEffect, useRef, useState } from "react"
+import React, { memo, useEffect, useRef } from "react"
 import { VariableSizeList } from "react-window"
 import { Logic, Requirement, Role } from "types"
 import LogicDivider from "../LogicDivider"
@@ -17,12 +17,14 @@ import RequirementDisplayComponent from "./components/RequirementDisplayComponen
 type Props = {
   role: Role
   isOpen: boolean
+  isExpanded: boolean
+  onToggleExpanded: () => void
 }
 
 const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
 const PARENT_PADDING = "var(--chakra-space-5)"
 
-const RoleRequirements = ({ role, isOpen }: Props) => {
+const RoleRequirements = ({ role, isOpen, isExpanded, onToggleExpanded }: Props) => {
   const requirements = role.hiddenRequirements
     ? [...role.requirements, { isHidden: true, type: "FREE" } as Requirement]
     : role.requirements
@@ -33,15 +35,10 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
   const hiddenRequirements =
     sliceIndex > 0 ? (requirements ?? []).slice(-sliceIndex) : []
 
-  const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
   const shadowColor = useColorModeValue(
     "var(--chakra-colors-gray-300)",
     "var(--chakra-colors-gray-900)"
   )
-
-  useEffect(() => {
-    if (!isOpen) setIsRequirementsExpanded(false)
-  }, [isOpen])
 
   return (
     /**
@@ -55,7 +52,7 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
           <Spinner />
         ) : isVirtualList ? (
           <VirtualRequirements
-            {...{ isRequirementsExpanded, requirements }}
+            {...{ isRequirementsExpanded: isExpanded, requirements }}
             logic={role.logic}
           />
         ) : (
@@ -74,7 +71,7 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
               </SlideFade>
             ))}
             <Collapse
-              in={isRequirementsExpanded}
+              in={isExpanded}
               animateOpacity={false}
               style={{ width: "100%" }}
             >
@@ -96,9 +93,9 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
             <ExpandRequirementsButton
               logic={role.logic}
               hiddenRequirements={hiddenRequirements.length}
-              isRequirementsExpanded={isRequirementsExpanded}
-              setIsRequirementsExpanded={setIsRequirementsExpanded}
-              isHidden={isVirtualList && isRequirementsExpanded}
+              isRequirementsExpanded={isExpanded}
+              onToggleExpanded={onToggleExpanded}
+              isHidden={isVirtualList && isExpanded}
             />
             <Box
               position="absolute"
@@ -108,7 +105,7 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
               height={6}
               bgGradient={`linear-gradient(to top, ${shadowColor}, transparent)`}
               pointerEvents="none"
-              opacity={!isVirtualList && isRequirementsExpanded ? 0 : 0.6}
+              opacity={!isVirtualList && isExpanded ? 0 : 0.6}
               transition="opacity 0.2s ease"
             />
           </>
