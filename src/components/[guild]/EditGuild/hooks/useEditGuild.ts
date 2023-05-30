@@ -22,8 +22,8 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
   const id = guildId ?? guild?.id
 
   const submit = (signedValidation: SignedValdation) =>
-    fetcher(`/guild/${id}`, {
-      method: "PATCH",
+    fetcher(`/v2/guilds/${id}`, {
+      method: "PUT",
       ...signedValidation,
     })
 

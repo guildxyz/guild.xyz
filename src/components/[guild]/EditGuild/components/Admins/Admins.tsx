@@ -22,8 +22,8 @@ import AdminSelect from "./components/AdminSelect"
 
 const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
 
-const validateAdmins = (admins: string[]) =>
-  admins.every((admin) => ADDRESS_REGEX.test(admin.trim())) ||
+const validateAdmins = (admins) =>
+  admins.every(({ address }) => ADDRESS_REGEX.test(address.trim())) ||
   "Every admin should be a valid address"
 
 const fetchMemberOptions = ([_, members, provider]) =>
@@ -59,7 +59,10 @@ const Admins = () => {
   )
 
   const memberOptions = useMemo(
-    () => options?.filter((option) => !admins?.includes(option.value)),
+    () =>
+      options?.filter(
+        (option) => !admins?.some(({ address }) => address === option.value)
+      ),
     [options, admins]
   )
 
@@ -79,15 +82,17 @@ const Admins = () => {
 
     return [ownerOption].concat(
       admins
-        ?.filter((admin: string) => admin !== ownerAddress)
-        ?.map((admin: string) => {
-          const option = options.find((o) => o.value === admin)
+        ?.filter((admin) => admin.address !== ownerAddress)
+        ?.map((admin) => {
+          const option = options.find((o) => o.value === admin.address)
 
           return {
             ...(option ?? {
               value: admin,
-              label: ADDRESS_REGEX.test(ownerAddress) ? shortenHex(admin) : admin,
-              img: <GuildAvatar address={admin} size={4} mr="2" />,
+              label: ADDRESS_REGEX.test(ownerAddress)
+                ? shortenHex(admin.address)
+                : admin.address,
+              img: <GuildAvatar address={admin.address} size={4} mr="2" />,
             }),
           }
         })
@@ -126,8 +131,8 @@ const Admins = () => {
 
                 if (!ADDRESS_REGEX.test(pastedData)) return
                 event.preventDefault()
-                if (admins.includes(pastedData)) return
-                onChange([...admins, pastedData])
+                if (admins.some(({ address }) => address === pastedData)) return
+                onChange([...admins, { address: pastedData }])
                 el.inputRef.focus()
               })
             }, 100)
@@ -137,7 +142,11 @@ const Admins = () => {
           options={memberOptions ?? prevMemberOptions}
           onBlur={onBlur}
           onChange={(selectedOption: SelectOption[]) => {
-            onChange(selectedOption?.map((option) => option.value.toLowerCase()))
+            onChange(
+              selectedOption?.map((option) => ({
+                address: option.value.toLowerCase(),
+              }))
+            )
           }}
           isLoading={isLoading}
           isClearable={false}

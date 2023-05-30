@@ -13,6 +13,10 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
+import UrlName from "components/[guild]/EditGuild/components/UrlName"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -22,10 +26,6 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
-import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
-import UrlName from "components/[guild]/EditGuild/components/UrlName"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
@@ -66,7 +66,6 @@ const EditGuildDrawer = ({
     showMembers,
     admins,
     urlName,
-    guildPlatforms,
     hideFromExplorer,
     socialLinks,
     contacts,
@@ -82,12 +81,11 @@ const EditGuildDrawer = ({
     description,
     theme: theme ?? {},
     showMembers,
-    admins: admins?.flatMap((admin) => admin.address) ?? [],
+    admins,
     urlName,
     hideFromExplorer,
     contacts,
     socialLinks,
-    guildPlatforms,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
   }
   const methods = useForm<GuildFormType>({
