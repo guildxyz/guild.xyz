@@ -1,5 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import useMatchMutate from "hooks/useMatchMutate"
+import { useYourGuilds } from "components/explorer/YourGuilds"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -13,15 +13,15 @@ type Data = {
 
 const useDeleteGuild = () => {
   const { reset } = useFormContext()
-  const matchMutate = useMatchMutate()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const router = useRouter()
+  const { mutate: mutateYourGuilds } = useYourGuilds()
 
   const guild = useGuild()
 
   const submit = async (signedValidation: SignedValdation) =>
-    fetcher(`/guild/${guild.id}`, {
+    fetcher(`/v2/guilds/${guild.id}`, {
       method: "DELETE",
       ...signedValidation,
     })
@@ -34,8 +34,9 @@ const useDeleteGuild = () => {
         status: "success",
       })
 
-      matchMutate(/^\/guild\/address\//)
-      matchMutate(/^\/guild\?order/)
+      mutateYourGuilds(
+        (prev) => prev?.filter((yourGuild) => yourGuild.id !== guild.id) ?? []
+      )
 
       reset()
 
