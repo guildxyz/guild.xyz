@@ -11,23 +11,22 @@ type SavePoapType = {
   guildId: number
 }
 
-const fetchData = async (signedValidation: SignedValdation) =>
-  fetcher("/assets/poap", signedValidation)
-
 const useSavePoap = ({ onSuccess }: UseSubmitOptions = {}) => {
-  const { mutateGuild } = useGuild()
+  const { mutateGuild, id } = useGuild()
   const showErrorToast = useShowErrorToast()
+
+  const fetchData = async (signedValidation: SignedValdation) =>
+    fetcher(`/v2/guilds/${id}/poaps`, signedValidation)
 
   return useSubmitWithSign<any>(fetchData, {
     onError: (error) => showErrorToast(error),
-    onSuccess: (res) => {
+    onSuccess: (newPoap) => {
       // Mutating guild data, so the new POAP shows up in the POAPs list
       mutateGuild(
         (oldData) => ({
           ...oldData,
-          poaps: [...oldData.poaps, res],
+          poaps: [...oldData.poaps, newPoap],
         }),
-        // needed until replication lag is solved
         { revalidate: false }
       )
       onSuccess?.()
