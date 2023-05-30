@@ -31,7 +31,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
     forcePrompt: true,
     onSuccess: (newGuild) => {
       if (onSuccess) onSuccess()
-      guild.mutateGuild()
+      guild.mutateGuild((prev) => ({ ...prev, ...newGuild }), { revalidate: false })
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
