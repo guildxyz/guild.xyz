@@ -30,6 +30,7 @@ const RequirementEditableCard = ({
   index,
   type,
   field,
+  removeRequirement,
   updateRequirement,
   isEditDisabled = false,
 }) => {
@@ -47,12 +48,13 @@ const RequirementEditableCard = ({
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
   const methods = useForm({ mode: "all", defaultValues: field })
   const requirementId = useWatch({ name: `requirements.${index}.id` })
+  const roleId = formState?.defaultValues?.id
 
   const {
     onSubmit: onDelete,
     isLoading,
     isSigning,
-  } = useDeleteRequirement(formState.defaultValues.id, requirementId)
+  } = useDeleteRequirement(roleId, requirementId)
 
   const {
     isOpen: isAlertOpen,
@@ -80,6 +82,13 @@ const RequirementEditableCard = ({
     },
     [index, setValue]
   )
+  const onRemove = () => {
+    if (!!roleId && !!requirementId) {
+      onRequirementDeleteOpen()
+    } else {
+      removeRequirement(index)
+    }
+  }
 
   const requirementDeleteConfitmationAlert = (
     <ConfirmationAlert
@@ -111,11 +120,11 @@ const RequirementEditableCard = ({
             color={removeButtonColor}
             borderRadius={"full"}
             size="sm"
-            onClick={() => onRequirementDeleteOpen()}
+            onClick={() => onRemove()}
             aria-label="Remove requirement"
           />
         </Card>
-        {requirementDeleteConfitmationAlert}
+        {requirementId && requirementDeleteConfitmationAlert}
       </>
     )
 
@@ -145,7 +154,7 @@ const RequirementEditableCard = ({
           color={removeButtonColor}
           borderRadius={"full"}
           size="sm"
-          onClick={() => onRequirementDeleteOpen()}
+          onClick={() => onRemove()}
           aria-label="Remove requirement"
         />
       </Card>
@@ -184,7 +193,7 @@ const RequirementEditableCard = ({
         onClose={onAlertClose}
         onDiscard={onCloseAndClear}
       />
-      {requirementDeleteConfitmationAlert}
+      {requirementId && requirementDeleteConfitmationAlert}
     </>
   )
 }

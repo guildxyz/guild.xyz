@@ -47,6 +47,13 @@ const SetRequirements = (): JSX.Element => {
     ...watchFieldArray[index],
   }))
 
+  const removeReq = (index: number) => {
+    setValue(
+      `requirements`,
+      watchFieldArray.filter((_, i) => i !== index)
+    )
+  }
+
   const freeEntry = useMemo(
     () => !!controlledFields?.find((requirement) => requirement.type === "FREE"),
     [controlledFields]
@@ -113,6 +120,7 @@ const SetRequirements = (): JSX.Element => {
                     type={type}
                     field={field}
                     index={i}
+                    removeRequirement={removeReq}
                     updateRequirement={update}
                     isEditDisabled={type === "PAYMENT"}
                   />

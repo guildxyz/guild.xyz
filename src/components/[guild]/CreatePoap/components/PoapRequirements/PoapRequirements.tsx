@@ -85,7 +85,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
 
   const methods = useFormContext()
   const { control, getValues, watch } = methods
-  const { fields, append, update } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     name: "requirements",
     control,
   })
@@ -131,6 +131,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
                 type={type}
                 field={field}
                 index={i}
+                removeRequirement={remove}
                 updateRequirement={update}
                 isEditDisabled={type === "PAYMENT"}
               />
