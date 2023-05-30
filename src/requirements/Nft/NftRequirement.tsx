@@ -5,7 +5,7 @@ import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockEx
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
-import PurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/PurchaseRequirement"
+import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -94,7 +94,7 @@ const NftRequirement = (props: RequirementProps) => {
       footer={
         <HStack spacing={4}>
           <GuildCheckoutProvider>
-            <PurchaseRequirement />
+            <DynamicPurchaseRequirement />
             <PurchaseTransactionStatusModal />
           </GuildCheckoutProvider>
           <BlockExplorerUrl />
