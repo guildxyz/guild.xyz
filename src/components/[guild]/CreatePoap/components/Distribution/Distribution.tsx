@@ -1,7 +1,7 @@
 import { Box, Flex, Stack, Text, useClipboard, VStack } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
+import Button from "components/common/Button"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { Check, CopySimple } from "phosphor-react"
@@ -88,9 +88,7 @@ const Distribution = ({
               </Button>
             ) : (
               <Button
-                onClick={() =>
-                  onActivateSubmit({ id: guildPoap.id, activate: true })
-                }
+                onClick={() => onActivateSubmit({ activated: true })}
                 isLoading={isActivateLoading}
                 colorScheme="green"
                 loadingText="Activating"
