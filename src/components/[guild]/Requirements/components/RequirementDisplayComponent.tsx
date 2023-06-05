@@ -66,12 +66,12 @@ const RequirementDisplayComponent = ({
                 leftIcon={<Icon as={Link} />}
                 iconSpacing="1"
               >
-                Connect platforms
+                Connect social accounts
               </Button>
             ) : null
           }
           rightElement={
-            <Tooltip label="Increase your chances by connecting social accounts">
+            <Tooltip label="By connecting more social accounts, you increase your chances for satisfying the hidden requirement(s)">
               <Info />
             </Tooltip>
           }
