@@ -1,26 +1,29 @@
 import { Icon, Tooltip } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
 import { Info, Link, Question } from "phosphor-react"
 import platforms from "platforms/platforms"
+import { useMemo } from "react"
+import { PlatformName } from "types"
 import Requirement from "./Requirement"
 
 const HiddenRequirement = () => {
-  const { account } = useWeb3React()
   const { platformUsers } = useUser()
   const { openAccountModal } = useWeb3ConnectionManager()
 
-  const canConnectMorePlatforms =
-    account &&
-    Object.keys(platforms).some(
-      (platform) =>
-        platform !== "POAP" &&
-        (platformUsers ?? []).every(
-          (platformUser) => platformUser.platformName !== platform
-        )
+  const canConnectMorePlatforms = useMemo(() => {
+    if (!platformUsers) return false
+
+    const connectedPlatforms = platformUsers.map(
+      (platformUser) => platformUser.platformName
     )
+
+    return Object.keys(platforms).some(
+      (platform: PlatformName) =>
+        platform !== "POAP" && !connectedPlatforms.includes(platform)
+    )
+  }, [platformUsers])
 
   return (
     <Requirement
