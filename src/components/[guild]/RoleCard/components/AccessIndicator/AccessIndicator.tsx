@@ -136,8 +136,10 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     return (
       <AccessIndicatorUI
         colorScheme="blue"
-        label="Auth needed to check access"
+        label="Connect needed to check access"
         icon={LockSimple}
+        onClick={() => openAccountModal()}
+        cursor="pointer"
       />
     )
 
