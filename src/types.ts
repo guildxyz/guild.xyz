@@ -182,9 +182,6 @@ type Requirement = {
   balancyDecimals?: number
   createdAt?: string
   updatedAt?: string
-
-  // Used for creating a dummy requirement, when there are some requirements that are invisibile to the user
-  isHidden?: boolean
 }
 
 type RolePlatform = {

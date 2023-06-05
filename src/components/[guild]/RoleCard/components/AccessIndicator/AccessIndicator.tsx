@@ -7,12 +7,13 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import Button from "components/common/Button"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
@@ -32,6 +33,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     (r) => r.access
   )?.length
 
+  const { openAccountModal } = useWeb3ConnectionManager()
   const { isActive } = useWeb3React()
   const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
@@ -125,6 +127,8 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         colorScheme="orange"
         label="Reconnect needed to check access"
         icon={Warning}
+        onClick={() => openAccountModal()}
+        cursor="pointer"
       />
     )
 
@@ -132,8 +136,10 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     return (
       <AccessIndicatorUI
         colorScheme="blue"
-        label="Auth needed to check access"
+        label="Connect needed to check access"
         icon={LockSimple}
+        onClick={() => openAccountModal()}
+        cursor="pointer"
       />
     )
 
