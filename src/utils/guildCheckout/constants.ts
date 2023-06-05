@@ -244,6 +244,13 @@ const GUILD_PIN_CONTRACTS = {
       abi: GUILD_PIN_ABI,
     },
   },
+  // Linea
+  32319: {
+    BSC: {
+      address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
+      abi: GUILD_PIN_ABI,
+    },
+  },
   // Arbitrum
   9839: {
     ARBITRUM: {
