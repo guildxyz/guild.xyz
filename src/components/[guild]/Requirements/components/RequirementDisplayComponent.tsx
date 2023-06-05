@@ -1,5 +1,12 @@
-import { Icon } from "@chakra-ui/react"
-import { Question, Warning } from "phosphor-react"
+import { Icon, Tooltip } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
+import useUser from "components/[guild]/hooks/useUser"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import Button from "components/common/Button"
+import useKeyPair from "hooks/useKeyPair"
+import { Info, Link, Question, Warning } from "phosphor-react"
+import platforms from "platforms/platforms"
+import { useEffect, useState } from "react"
 import REQUIREMENTS from "requirements"
 import { Requirement as RequirementType, Rest } from "types"
 import DataBlock from "./DataBlock"
@@ -17,11 +24,61 @@ const RequirementDisplayComponent = ({
   rightElement = <RequiementAccessIndicator />,
   ...rest
 }: Props) => {
+  const { account } = useWeb3React()
+  const { platformUsers } = useUser()
+  const { isValid } = useKeyPair()
+  const [hasClicked, setHasClicked] = useState<boolean>(false)
+  const { openAccountModal, openWalletSelectorModal } = useWeb3ConnectionManager()
+
+  useEffect(() => {
+    if (hasClicked && isValid) {
+      openAccountModal()
+      setHasClicked(false)
+    }
+  }, [hasClicked, isValid])
+
   if (requirement.isHidden) {
+    const canConnectMorePlatforms = Object.keys(platforms).some(
+      (platform) =>
+        platform !== "POAP" &&
+        (platformUsers ?? []).every(
+          (platformUser) => platformUser.platformName !== platform
+        )
+    )
+
     return (
-      <Requirement image={<Icon as={Question} boxSize={5} />}>
-        Some secret requirements
-      </Requirement>
+      <RequirementProvider requirement={requirement}>
+        <Requirement
+          image={<Icon as={Question} boxSize={5} />}
+          footer={
+            canConnectMorePlatforms ? (
+              <Button
+                size="xs"
+                onClick={
+                  account
+                    ? openAccountModal
+                    : () => {
+                        setHasClicked(true)
+                        openWalletSelectorModal()
+                      }
+                }
+                colorScheme="primary"
+                leftIcon={<Icon as={Link} />}
+                iconSpacing="1"
+              >
+                Connect platforms
+              </Button>
+            ) : null
+          }
+          rightElement={
+            <Tooltip label="Increase your chances by connecting social accounts">
+              <Info />
+            </Tooltip>
+          }
+        >
+          Some secret requirements
+        </Requirement>
+      </RequirementProvider>
     )
   }
 
