@@ -1,4 +1,5 @@
 import { usePrevious } from "@chakra-ui/react"
+import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -94,6 +95,7 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
   const showErrorToast = useShowErrorToast()
 
   const { mutate: mutateUser } = useUser()
+  const { mutate: mutateAccess } = useAccess()
 
   const submit = (signedValidation: SignedValdation) => {
     const platformName =
@@ -128,6 +130,7 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
     onSuccess: ({ platformName }) => {
       // captureEvent("Platform connection", { platformName })
       mutateUser()
+      mutateAccess()
       onSuccess?.()
     },
     onError: ([platformName, rawError]) => {
