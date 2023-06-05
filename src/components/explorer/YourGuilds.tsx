@@ -23,7 +23,7 @@ const sortUsersGuilds = (memberships: Memberships, guildsData: any) => {
       acc.push({
         ...currGuild,
         joinedAt: memberships.find(({ guildId }) => currGuild.id === guildId)
-          .joinedAt,
+          ?.joinedAt,
       })
       return acc
     }, [])
