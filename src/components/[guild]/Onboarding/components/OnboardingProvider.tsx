@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useLocalStorage from "hooks/useLocalStorage"
-import React, { createContext, PropsWithChildren, useContext } from "react"
+import { createContext, PropsWithChildren, useContext } from "react"
 
 const OnboardingContext = createContext<{
   localStep: number
@@ -12,7 +12,7 @@ const OnboardingProvider = ({ children }: PropsWithChildren<any>): JSX.Element =
   const [localStep, setLocalStep] = useLocalStorage(`${id}_onboard_step`, 0)
 
   return (
-    <OnboardingContext.Provider value={{ localStep, setLocalStep }}>
+    <OnboardingContext.Provider value={{ localStep: +localStep, setLocalStep }}>
       {children}
     </OnboardingContext.Provider>
   )
