@@ -22,7 +22,7 @@ import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import { motion } from "framer-motion"
 import useToast from "hooks/useToast"
-import { IconProps, LinkBreak, Warning } from "phosphor-react"
+import { IconProps, LinkBreak } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useRef } from "react"
 import { PlatformName } from "types"
@@ -120,10 +120,10 @@ const ConnectPlatform = ({ type, colorScheme, isReconnect }) => {
       isLoading={isLoading}
       onClick={onConnect}
       isDisabled={response}
-      colorScheme={colorScheme}
+      colorScheme={isReconnect ? "orange" : colorScheme}
+      variant={isReconnect ? "subtle" : "solid"}
       size="sm"
       ml="auto !important"
-      leftIcon={isReconnect ? <Warning /> : null}
     >
       {isReconnect ? "Reconnect" : "Connect"}
     </Button>
