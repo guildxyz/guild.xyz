@@ -101,12 +101,14 @@ const SocialAccount = ({ type, icon, name, colorScheme }: Props): JSX.Element =>
 
 const ConnectPlatform = ({ type, colorScheme, isReconnect }) => {
   const toast = useToast()
+  const { mutate: mutateAccesses } = useAccess()
 
   const onSuccess = () => {
     toast({
-      title: `Account Connected!`,
+      title: `Account successfully connected`,
       status: "success",
     })
+    mutateAccesses()
   }
 
   const { onConnect, isLoading, response } = useConnectPlatform(
