@@ -18,7 +18,7 @@ const RequirementDisplayComponent = ({
   rightElement = <RequiementAccessIndicator />,
   ...rest
 }: Props) => {
-  if (requirement.isHidden) return <HiddenRequirement />
+  if (requirement.type === "HIDDEN") return <HiddenRequirement />
 
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
 
