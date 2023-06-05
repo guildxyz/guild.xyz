@@ -115,7 +115,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             <SimpleGrid
               templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
               gap={{ base: 2, md: "6" }}
-              pb={{ md: 2 }}
+              pb={{ md: 1.5 }}
               // needed so there's no gap on the right side of the page in mobile Safari
               overflow={"hidden"}
               // needed so the focus outline is not cut off because of the hidden overflow

@@ -8,7 +8,7 @@ const GuildCardsGrid = ({
 }: PropsWithChildren<SimpleGridProps>) => (
   <SimpleGrid
     columns={{ base: 1, md: 2, lg: 3 }}
-    spacing={{ base: 4, md: 6 }}
+    spacing={{ base: 4, md: 5 }}
     {...rest}
   >
     <AnimatePresence>{children}</AnimatePresence>
