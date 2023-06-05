@@ -258,6 +258,13 @@ const GUILD_PIN_CONTRACTS = {
       abi: GUILD_PIN_ABI,
     },
   },
+  // Alpha Venture DAO
+  17326: {
+    ARBITRUM: {
+      address: "0x0e6a14106497a7de36fba446628860c062e9e302",
+      abi: GUILD_PIN_ABI,
+    },
+  },
 }
 // TODO: satisfies Partial<Record<Chain, { address: string; abi: ContractInterface }>> - we just can't use it in Next.js 12, but we should add it later.
 
