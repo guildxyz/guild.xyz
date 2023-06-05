@@ -33,7 +33,8 @@ const HiddenRequirement = () => {
           <Button
             size="xs"
             onClick={openAccountModal}
-            colorScheme="primary"
+            colorScheme="blue"
+            variant="subtle"
             leftIcon={<Icon as={Link} />}
             iconSpacing="1"
           >
