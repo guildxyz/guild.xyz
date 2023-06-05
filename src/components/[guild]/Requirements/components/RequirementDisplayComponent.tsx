@@ -47,38 +47,36 @@ const RequirementDisplayComponent = ({
     )
 
     return (
-      <RequirementProvider requirement={requirement}>
-        <Requirement
-          image={<Icon as={Question} boxSize={5} />}
-          footer={
-            canConnectMorePlatforms ? (
-              <Button
-                size="xs"
-                onClick={
-                  account
-                    ? openAccountModal
-                    : () => {
-                        setHasClicked(true)
-                        openWalletSelectorModal()
-                      }
-                }
-                colorScheme="primary"
-                leftIcon={<Icon as={Link} />}
-                iconSpacing="1"
-              >
-                Connect social accounts
-              </Button>
-            ) : null
-          }
-          rightElement={
-            <Tooltip label="By connecting more social accounts, you increase your chances for satisfying the hidden requirement(s)">
-              <Info />
-            </Tooltip>
-          }
-        >
-          Some secret requirements
-        </Requirement>
-      </RequirementProvider>
+      <Requirement
+        image={<Icon as={Question} boxSize={5} />}
+        footer={
+          canConnectMorePlatforms ? (
+            <Button
+              size="xs"
+              onClick={
+                account
+                  ? openAccountModal
+                  : () => {
+                      setHasClicked(true)
+                      openWalletSelectorModal()
+                    }
+              }
+              colorScheme="primary"
+              leftIcon={<Icon as={Link} />}
+              iconSpacing="1"
+            >
+              Connect social accounts
+            </Button>
+          ) : null
+        }
+        rightElement={
+          <Tooltip label="By connecting more social accounts, you increase your chances for satisfying the hidden requirement(s)">
+            <Info />
+          </Tooltip>
+        }
+      >
+        Some secret requirements
+      </Requirement>
     )
   }
 
