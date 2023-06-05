@@ -23,9 +23,10 @@ const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
 const PARENT_PADDING = "var(--chakra-space-5)"
 
 const RoleRequirements = ({ role, isOpen }: Props) => {
-  const requirements = role.hiddenRequirements
-    ? [...role.requirements, { isHidden: true, type: "FREE" } as Requirement]
-    : role.requirements
+  const requirements =
+    role.hiddenRequirements || (role.requirements ?? []).length === 0
+      ? [...role.requirements, { isHidden: true, type: "FREE" } as Requirement]
+      : role.requirements
 
   const isVirtualList = requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
   const sliceIndex = (requirements?.length ?? 0) - 3
