@@ -8,7 +8,7 @@ import useGuildPinContractsData from "../../../hooks/useGuildPinContractsData"
 import { useMintGuildPinContext } from "../../../MintGuildPinContext"
 
 const OpenseaLink = (): JSX.Element => {
-  const guildPinContracts = useGuildPinContractsData()
+  const guildPinContractsData = useGuildPinContractsData()
   const { chainId } = useWeb3React()
   const { mintedTokenId } = useMintGuildPinContext()
 
@@ -26,7 +26,7 @@ const OpenseaLink = (): JSX.Element => {
       <Link
         isExternal
         href={`${openseaBaseUrl[Chains[chainId]]}/${
-          guildPinContracts[Chains[chainId]].address
+          guildPinContractsData[Chains[chainId]].address
         }/${mintedTokenId}`}
       >
         <Img src={"/requirementLogos/opensea.svg"} boxSize={"1em"} mr="1.5" />
