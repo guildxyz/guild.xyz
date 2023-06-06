@@ -1,8 +1,8 @@
 import { HStack, Text } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import PurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/PurchaseRequirement"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
+import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -39,7 +39,7 @@ const TokenRequirement = ({ setValueForBalancy, ...rest }: Props) => {
         requirement?.type === "ERC20" && (
           <HStack spacing="4">
             <GuildCheckoutProvider>
-              <PurchaseRequirement />
+              <DynamicPurchaseRequirement />
               <PurchaseTransactionStatusModal />
             </GuildCheckoutProvider>
             <BlockExplorerUrl />

@@ -61,12 +61,13 @@ const LogicFormControl = (): JSX.Element => {
   )
 
   useEffect(() => {
+    if (logic === "AND") return
     if (value === requirementCount)
       anyOfNumOnChange(Math.max(requirementCount - 1, 1))
 
     if (requirementCount < prevRequirementCount && requirementCount <= 2)
       logicOnChange("OR")
-  }, [requirementCount])
+  }, [logic, requirementCount])
 
   return (
     <Stack alignItems="start" direction={{ base: "column", sm: "row" }}>

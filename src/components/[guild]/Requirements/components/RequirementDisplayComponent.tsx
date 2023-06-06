@@ -1,8 +1,9 @@
 import { Icon } from "@chakra-ui/react"
-import { Question, Warning } from "phosphor-react"
+import { Warning } from "phosphor-react"
 import REQUIREMENTS from "requirements"
 import { Requirement as RequirementType, Rest } from "types"
 import DataBlock from "./DataBlock"
+import HiddenRequirement from "./HiddenRequirement"
 import RequiementAccessIndicator from "./RequiementAccessIndicator"
 import Requirement from "./Requirement"
 import { RequirementProvider } from "./RequirementContext"
@@ -17,13 +18,8 @@ const RequirementDisplayComponent = ({
   rightElement = <RequiementAccessIndicator />,
   ...rest
 }: Props) => {
-  if (requirement.isHidden) {
-    return (
-      <Requirement image={<Icon as={Question} boxSize={5} />}>
-        Some secret requirements
-      </Requirement>
-    )
-  }
+  if (requirement.type === "HIDDEN")
+    return <HiddenRequirement roleId={requirement.roleId} />
 
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
 

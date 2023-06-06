@@ -13,6 +13,9 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
+import RolePlatforms from "components/[guild]/RolePlatforms"
+import SetVisibility from "components/[guild]/SetVisibility"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -24,9 +27,6 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
-import useGuild from "components/[guild]/hooks/useGuild"
-import RolePlatforms from "components/[guild]/RolePlatforms"
-import SetVisibility from "components/[guild]/SetVisibility"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -55,6 +55,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     description,
     imageUrl,
     logic,
+    anyOfNum,
     requirements,
     rolePlatforms,
     visibility,
@@ -66,6 +67,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     description,
     imageUrl,
     logic,
+    anyOfNum: anyOfNum ?? 1,
     requirements: mapRequirements(requirements),
     rolePlatforms: rolePlatforms ?? [],
     visibility,
@@ -84,6 +86,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       roleId: role.id,
       requirements: mapRequirements(role.requirements),
       rolePlatforms: role.rolePlatforms ?? [],
+      anyOfNum: role.anyOfNum ?? 1,
     })
   }, [roles, roleId])
 

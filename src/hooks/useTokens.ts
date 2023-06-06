@@ -25,6 +25,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   ],
   ZETACHAIN_ATHENS: [],
   SCROLL_ALPHA: [],
+  ZKSYNC_ERA: [],
   SEPOLIA: [],
   GOERLI: [
     "https://raw.githubusercontent.com/Uniswap/default-token-list/main/src/tokens/goerli.json",
