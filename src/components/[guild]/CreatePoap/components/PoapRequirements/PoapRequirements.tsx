@@ -1,10 +1,10 @@
 import { Button, Flex, Heading, Stack } from "@chakra-ui/react"
+import LogicDivider from "components/[guild]/LogicDivider"
+import useGuild from "components/[guild]/hooks/useGuild"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
 import LogicPicker from "components/create-guild/Requirements/components/LogicPicker"
 import RequirementEditableCard from "components/create-guild/Requirements/components/RequirementEditableCard"
-import useGuild from "components/[guild]/hooks/useGuild"
-import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
@@ -17,9 +17,9 @@ import {
 } from "react-hook-form"
 import { RequirementType } from "requirements"
 import PoapPaymentRequirementEditable from "requirements/PoapPayment/PoapPaymentRequirementEditable"
-import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import PoapVoiceForm from "requirements/PoapVoice/PoapVoiceForm"
 import PoapVoiceRequirementEditable from "requirements/PoapVoice/PoapVoiceRequirementEditable"
+import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import logo from "static/logo.svg"
 import { PlatformType } from "types"
 import useUpdatePoapRequirements from "../../hooks/useUpdatePoapRequirements"
@@ -94,7 +94,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
   const watchFieldArray = watch("requirements")
   const controlledFields = fields.map((field, index) => ({
     ...field,
-    ...watchFieldArray[index],
+    ...watchFieldArray?.[index],
   }))
 
   return (

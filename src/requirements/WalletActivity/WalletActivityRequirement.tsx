@@ -48,6 +48,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                 <DataBlockWithDate
                   timestamp={requirement.data.timestamps.maxAmount}
                 />
+                {` (on ${RPC[requirement.chain].chainName})`}
               </>
             )
           case "ALCHEMY_FIRST_TX_RELATIVE": {

@@ -16,7 +16,6 @@ import {
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
-import { Question } from "phosphor-react"
 import { memo, useEffect, useRef } from "react"
 import { Role, Visibility as VisibilityType } from "types"
 import useAccess from "../hooks/useAccess"
@@ -26,8 +25,9 @@ import useIsMember from "../hooks/useIsMember"
 import RoleRequirements from "../Requirements"
 import Visibility from "../Visibility"
 import AccessIndicator from "./components/AccessIndicator"
+import HiddenRewards from "./components/HiddenRewards"
 import MemberCount from "./components/MemberCount"
-import Reward, { RewardDisplay, RewardIcon } from "./components/Reward"
+import Reward, { RewardIcon } from "./components/Reward"
 import RoleDescription from "./components/RoleDescription"
 
 type Props = {
@@ -193,12 +193,7 @@ const RoleCard = memo(({ role }: Props) => {
                   <Reward platform={platform} role={role} withLink withMotionImg />
                 </SlideFade>
               ))}
-              {role.hiddenRewards && (
-                <RewardDisplay
-                  label={"Some secret rewards"}
-                  icon={<Question size={25} />}
-                />
-              )}
+              {role.hiddenRewards && <HiddenRewards />}
             </Box>
           </Flex>
           <Flex

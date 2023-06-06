@@ -9,6 +9,7 @@ import {
 import React, { memo, useEffect, useRef } from "react"
 import { VariableSizeList } from "react-window"
 import { Logic, Requirement, Role } from "types"
+import useGuild from "../hooks/useGuild"
 import LogicDivider from "../LogicDivider"
 import AnyOfHeader from "./components/AnyOfHeader"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
@@ -32,9 +33,13 @@ const RoleRequirements = ({
   onToggleExpanded,
   descriptionRef,
 }: Props) => {
-  const requirements = role.hiddenRequirements
-    ? [...role.requirements, { isHidden: true, type: "FREE" } as Requirement]
-    : role.requirements
+  const guild = useGuild()
+
+  const requirements =
+    role.hiddenRequirements ||
+    ((role.requirements ?? []).length === 0 && !(guild as any).isFallback)
+      ? [...role.requirements, { type: "HIDDEN", roleId: role.id } as Requirement]
+      : role.requirements
 
   const isVirtualList = requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
   const sliceIndex = (requirements?.length ?? 0) - 3
