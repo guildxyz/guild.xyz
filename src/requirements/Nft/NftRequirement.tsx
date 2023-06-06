@@ -43,7 +43,6 @@ const NftRequirement = (props: RequirementProps) => {
     flattenedGuildPinChainsData[requirement.chain]?.address ===
     requirement.address.toLowerCase()
 
-  // Fallback to "Our Guild"
   const guildIdAttribute =
     isGuildPin &&
     requirement.data.attributes?.find((attr) => attr.trait_type === "guildId")?.value

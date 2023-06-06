@@ -120,8 +120,9 @@ const AttributePicker = ({
 
   const changeRange = () => {
     if (isRangeValue) {
-      const latestMinValue =
-        getValues(`${baseFieldPath}.data.attributes.${index}.minValue`) ?? ""
+      const latestMinValue = getValues(
+        `${baseFieldPath}.data.attributes.${index}.minValue`
+      )
       setValue(`${baseFieldPath}.data.attributes.${index}.value`, latestMinValue)
       resetField(`${baseFieldPath}.data.attributes.${index}.minValue`, {
         defaultValue: null,
