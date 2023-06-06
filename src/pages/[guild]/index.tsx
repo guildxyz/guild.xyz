@@ -420,6 +420,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
     role.members = []
     role.requirements = []
   })
+  filteredData.isFallback = true
 
   return {
     props: {
