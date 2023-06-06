@@ -144,6 +144,10 @@ const NftRequirement = (props: RequirementProps) => {
                     }`
                   : trait.minValue && trait.maxValue
                   ? `${trait.minValue}-${trait.maxValue} ${trait.trait_type}`
+                  : trait.minValue
+                  ? `at least ${trait.minValue} ${trait.trait_type}`
+                  : trait.maxValue
+                  ? `at most ${trait.maxValue} ${trait.trait_type}`
                   : ""}
               </Fragment>
             )

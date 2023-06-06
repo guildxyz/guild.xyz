@@ -376,7 +376,13 @@ const AttributePicker = ({
                     {...register(
                       `${baseFieldPath}.data.attributes.${index}.minValue`,
                       {
-                        required: isRangeValue ? "Required" : false,
+                        required:
+                          isRangeValue &&
+                          !getValues(
+                            `${baseFieldPath}.data.attributes.${index}.maxValue`
+                          )
+                            ? "Required"
+                            : false,
                       }
                     )}
                     placeholder="From"
@@ -402,7 +408,13 @@ const AttributePicker = ({
                     {...register(
                       `${baseFieldPath}.data.attributes.${index}.maxValue`,
                       {
-                        required: isRangeValue ? "Required" : false,
+                        required:
+                          isRangeValue &&
+                          !getValues(
+                            `${baseFieldPath}.data.attributes.${index}.minValue`
+                          )
+                            ? "Required"
+                            : false,
                       }
                     )}
                     placeholder="To"
