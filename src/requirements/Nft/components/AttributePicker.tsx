@@ -143,6 +143,28 @@ const AttributePicker = ({
     setIsRangeValue(!isRangeValue)
   }
 
+  const { onChange: minValueOnChange, ...minValueProps } = register(
+    `${baseFieldPath}.data.attributes.${index}.minValue`,
+    {
+      required:
+        isRangeValue &&
+        !getValues(`${baseFieldPath}.data.attributes.${index}.maxValue`)
+          ? "Required"
+          : false,
+    }
+  )
+
+  const { onChange: maxValueOnChange, ...maxValueProps } = register(
+    `${baseFieldPath}.data.attributes.${index}.maxValue`,
+    {
+      required:
+        isRangeValue &&
+        !getValues(`${baseFieldPath}.data.attributes.${index}.minValue`)
+          ? "Required"
+          : false,
+    }
+  )
+
   return (
     <Box p={2} borderRadius="xl" bgColor={bgColor}>
       {nftCustomAttributeNames?.length ? (
@@ -374,19 +396,14 @@ const AttributePicker = ({
                   }
                 >
                   <Input
-                    {...register(
-                      `${baseFieldPath}.data.attributes.${index}.minValue`,
-                      {
-                        required:
-                          isRangeValue &&
-                          !getValues(
-                            `${baseFieldPath}.data.attributes.${index}.maxValue`
-                          )
-                            ? "Required"
-                            : false,
-                      }
-                    )}
+                    {...minValueProps}
                     placeholder="From"
+                    onChange={(e) => {
+                      minValueOnChange(e)
+                      clearErrors(
+                        `${baseFieldPath}.data.attributes.${index}.maxValue`
+                      )
+                    }}
                   />
                   <FormErrorMessage>
                     {
@@ -406,19 +423,14 @@ const AttributePicker = ({
                   }
                 >
                   <Input
-                    {...register(
-                      `${baseFieldPath}.data.attributes.${index}.maxValue`,
-                      {
-                        required:
-                          isRangeValue &&
-                          !getValues(
-                            `${baseFieldPath}.data.attributes.${index}.minValue`
-                          )
-                            ? "Required"
-                            : false,
-                      }
-                    )}
+                    {...maxValueProps}
                     placeholder="To"
+                    onChange={(e) => {
+                      maxValueOnChange(e)
+                      clearErrors(
+                        `${baseFieldPath}.data.attributes.${index}.minValue`
+                      )
+                    }}
                   />
                   <FormErrorMessage>
                     {
