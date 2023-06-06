@@ -22,17 +22,13 @@ const ConnectAccount = ({
   <JoinStep
     isDone={!isReconnect && !!isConnected}
     title={
-      isConnected && !isReconnect
+      isReconnect
+        ? `Reconnect ${account}`
+        : isConnected
         ? `${account} connected`
-        : `${isReconnect ? "Reconnect" : "Connect"} ${account}`
+        : `Connect ${account}`
     }
-    buttonLabel={
-      isConnected && !isReconnect
-        ? isConnected
-        : isReconnect
-        ? "Reconnect"
-        : "Connect"
-    }
+    buttonLabel={isReconnect ? "Reconnect" : isConnected || "Connect"}
     {...rest}
   >
     {children}

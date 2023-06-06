@@ -20,11 +20,14 @@ const ConnectPlatform = ({ platform }: Props) => {
   const { platformUsers, isLoading: isLoadingUser } = useUser()
 
   const platformsToReconnect = usePlatformsToReconnect()
-  const { mutate: mutateAccess } = useAccess()
   const isReconnect = platformsToReconnect.includes(platform)
 
+  // we have the reconnect data from the /access endoint, so we have to mutate that on reconnect success
+  const { mutate: mutateAccess } = useAccess()
+  const onSuccess = () => isReconnect && mutateAccess()
+
   const { onConnect, isLoading, loadingText, authData, response } =
-    useConnectPlatform(platform, () => mutateAccess(), isReconnect)
+    useConnectPlatform(platform, onSuccess, isReconnect)
 
   const platformFromDb = platformUsers?.find(
     (platformAccount) => platformAccount.platformName === platform
