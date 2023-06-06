@@ -287,6 +287,7 @@ type Guild = {
   onboardingComplete: boolean
   featureFlags: FeatureFlag[]
   hiddenRoles?: boolean
+  requiredPlatforms?: PlatformName[]
 }
 type GuildFormType = Partial<
   Pick<
