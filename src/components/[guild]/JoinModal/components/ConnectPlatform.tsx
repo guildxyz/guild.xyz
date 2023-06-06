@@ -1,5 +1,7 @@
 import { Icon } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import useAccess from "components/[guild]/hooks/useAccess"
+import usePlatformsToReconnect from "components/[guild]/hooks/usePlatformsToReconnect"
 import useUser from "components/[guild]/hooks/useUser"
 import Script from "next/script"
 import platforms from "platforms/platforms"
@@ -16,8 +18,13 @@ type Props = {
 const ConnectPlatform = ({ platform }: Props) => {
   const { isActive } = useWeb3React()
   const { platformUsers, isLoading: isLoadingUser } = useUser()
+
+  const platformsToReconnect = usePlatformsToReconnect()
+  const { mutate: mutateAccess } = useAccess()
+  const isReconnect = platformsToReconnect.includes(platform)
+
   const { onConnect, isLoading, loadingText, authData, response } =
-    useConnectPlatform(platform)
+    useConnectPlatform(platform, () => mutateAccess(), isReconnect)
 
   const platformFromDb = platformUsers?.find(
     (platformAccount) => platformAccount.platformName === platform
@@ -44,6 +51,7 @@ const ConnectPlatform = ({ platform }: Props) => {
         response?.platformUserId ||
         (authData && "hidden")
       }
+      isReconnect={isReconnect}
       isLoading={isLoading || (!platformUsers && isLoadingUser)}
       onClick={onConnect}
       {...{ loadingText }}

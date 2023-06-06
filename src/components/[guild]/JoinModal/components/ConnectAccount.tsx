@@ -9,18 +9,30 @@ type Props = {
   colorScheme: string
   isConnected: string
   isDisabled?: string
+  isReconnect?: boolean
 } & Omit<ButtonProps, "isDisabled">
 
 const ConnectAccount = ({
   account,
   isConnected,
   children,
+  isReconnect,
   ...rest
 }: PropsWithChildren<Props>) => (
   <JoinStep
-    isDone={!!isConnected}
-    title={isConnected ? `${account} connected` : `Connect ${account}`}
-    buttonLabel={isConnected ? isConnected : "Connect"}
+    isDone={!isReconnect && !!isConnected}
+    title={
+      isConnected && !isReconnect
+        ? `${account} connected`
+        : `${isReconnect ? "Reconnect" : "Connect"} ${account}`
+    }
+    buttonLabel={
+      isConnected && !isReconnect
+        ? isConnected
+        : isReconnect
+        ? "Reconnect"
+        : "Connect"
+    }
     {...rest}
   >
     {children}
