@@ -7,29 +7,8 @@ import LinkButton from "components/common/LinkButton"
 import Section from "components/common/Section"
 import GuildCard, { GuildSkeletonCard } from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
-import useMemberships, {
-  Memberships,
-} from "components/explorer/hooks/useMemberships"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Plus, Wallet } from "phosphor-react"
-import { useMemo } from "react"
-
-const sortUsersGuilds = (memberships: Memberships, guildsData: any) => {
-  if (!guildsData?.length) return []
-  if (!memberships?.length) return guildsData
-
-  const sortedUsersGuilds = guildsData
-    .reduce((acc, currGuild) => {
-      acc.push({
-        ...currGuild,
-        joinedAt: memberships.find(({ guildId }) => currGuild.id === guildId)
-          ?.joinedAt,
-      })
-      return acc
-    }, [])
-    .sort((guildA, guildB) => (guildA.joinedAt > guildB.joinedAt ? 1 : -1))
-  return sortedUsersGuilds
-}
 
 const YourGuilds = () => {
   const { account } = useWeb3React()
@@ -43,18 +22,11 @@ const YourGuilds = () => {
     }
   )
 
-  const { memberships, isLoading: isMembershipsLoading } = useMemberships()
-
-  const orderedGuilds = useMemo(
-    () => sortUsersGuilds(memberships, usersGuilds),
-    [usersGuilds, memberships]
-  )
-
   return (
     <Section
       title="Your guilds"
       titleRightElement={
-        orderedGuilds?.length && (
+        usersGuilds?.length && (
           <Box my="-2 !important" ml="auto !important">
             <DarkMode>
               <LinkButton
@@ -97,17 +69,15 @@ const YourGuilds = () => {
             </Button>
           </Stack>
         </Card>
-      ) : isGuildsLoading ||
-        isMembershipsLoading ||
-        (usersGuilds && memberships && !orderedGuilds) ? (
+      ) : isGuildsLoading ? (
         <GuildCardsGrid>
           {[...Array(3)].map((_, i) => (
             <GuildSkeletonCard key={i} />
           ))}
         </GuildCardsGrid>
-      ) : orderedGuilds?.length ? (
+      ) : usersGuilds?.length ? (
         <GuildCardsGrid>
-          {orderedGuilds.map((guild) => (
+          {usersGuilds.map((guild) => (
             <GuildCard guildData={guild} key={guild.urlName} />
           ))}
         </GuildCardsGrid>
