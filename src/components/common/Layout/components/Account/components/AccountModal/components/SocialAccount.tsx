@@ -50,7 +50,7 @@ const SocialAccount = ({ type, icon, name, colorScheme }: Props): JSX.Element =>
     accesses?.data?.some(({ errors }) =>
       errors?.some(
         ({ errorType, subType }) =>
-          errorType === "PLATFORM_CONNECT_INVALID" && subType === type
+          errorType === "PLATFORM_CONNECT_INVALID" && subType?.toUpperCase() === type
       )
     )
 
