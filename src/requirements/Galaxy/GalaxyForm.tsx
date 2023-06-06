@@ -1,9 +1,13 @@
 import {
+  Box,
+  Checkbox,
   FormControl,
   FormHelperText,
   FormLabel,
   InputGroup,
   InputLeftElement,
+  Stack,
+  Text,
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -22,6 +26,7 @@ const customFilterOption = (candidate, input) =>
 const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const {
     register,
+    getValues,
     setValue,
     formState: { errors },
   } = useFormContext()
@@ -73,50 +78,74 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
   }, [campaigns, campaign])
 
   return (
-    <FormControl
-      isRequired
-      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
-    >
-      <FormLabel>Campaign:</FormLabel>
+    <Stack spacing={8} alignItems="start">
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+      >
+        <FormLabel>Campaign:</FormLabel>
 
-      <InputGroup>
-        {campaign?.thumbnail && (
-          <InputLeftElement>
-            <OptionImage img={campaign.thumbnail} alt="Campaign thumbnail" />
-          </InputLeftElement>
-        )}
+        <InputGroup>
+          {campaign?.thumbnail && (
+            <InputLeftElement>
+              <OptionImage img={campaign.thumbnail} alt="Campaign thumbnail" />
+            </InputLeftElement>
+          )}
 
-        <ControlledSelect
-          name={`${baseFieldPath}.data.id`}
-          rules={{
-            required: "This field is required.",
-          }}
-          isClearable
-          isLoading={isLoading || isCampaignLoading}
-          options={mappedCampaigns}
-          placeholder="Search campaigns..."
-          afterOnChange={(newValue) =>
-            setValue(`${baseFieldPath}.data.galaxyId`, newValue?.galaxyId)
-          }
-          onInputChange={(text, _) => {
-            if (!text?.length) return
-            const regex = /^[a-zA-Z0-9]+$/i
-            if (regex.test(text)) {
-              setPastedId(text)
+          <ControlledSelect
+            name={`${baseFieldPath}.data.id`}
+            rules={{
+              required: "This field is required.",
+            }}
+            isClearable
+            isLoading={isLoading || isCampaignLoading}
+            options={mappedCampaigns}
+            placeholder="Search campaigns..."
+            afterOnChange={(newValue) =>
+              setValue(`${baseFieldPath}.data.galaxyId`, newValue?.galaxyId)
             }
-            setSearchText(text)
+            onInputChange={(text, _) => {
+              if (!text?.length) return
+              const regex = /^[a-zA-Z0-9]+$/i
+              if (regex.test(text)) {
+                setPastedId(text)
+              }
+              setSearchText(text)
+            }}
+            filterOption={customFilterOption}
+            noResultText={
+              !debouncedSearchText.length ? "Start typing..." : undefined
+            }
+          />
+        </InputGroup>
+
+        <FormHelperText>Search by name or ID</FormHelperText>
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+        </FormErrorMessage>
+      </FormControl>
+
+      <FormControl>
+        <Checkbox
+          alignItems="start"
+          onChange={(e) => {
+            const newType = e.target.checked ? "GALAXY" : "GALAXY_PARTICIPATION"
+            setValue(`${baseFieldPath}.type`, newType)
           }}
-          filterOption={customFilterOption}
-          noResultText={!debouncedSearchText.length ? "Start typing..." : undefined}
-        />
-      </InputGroup>
+          defaultChecked={getValues(`${baseFieldPath}.type`) === "GALAXY"}
+        >
+          <Box position="relative" top={-1}>
+            <Text mb="1">Include NFT holders</Text>
 
-      <FormHelperText>Search by name or ID</FormHelperText>
-
-      <FormErrorMessage>
-        {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
-      </FormErrorMessage>
-    </FormControl>
+            <Text fontSize="sm" colorScheme="gray">
+              Include people who hold the NFT, but might've not participated in the
+              campaign
+            </Text>
+          </Box>
+        </Checkbox>
+      </FormControl>
+    </Stack>
   )
 }
 
