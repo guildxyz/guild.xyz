@@ -53,7 +53,7 @@ const NftRequirement = (props: RequirementProps) => {
         `/assets/guildPins/image?guildId=${guildIdAttribute ?? 1985}&guildAction=0`
       : null
   )
-  const { name: guildPinGuildName } = useGuild(guildIdAttribute)
+  const { name: guildPinGuildName } = useGuild(guildIdAttribute ?? "")
 
   const { metadata: metadataWithTraits, isLoading: isMetadataWithTraitsLoading } =
     useNftMetadata(requirement.chain, requirement.address, requirement.data.id)
@@ -63,15 +63,14 @@ const NftRequirement = (props: RequirementProps) => {
   )
 
   const nftDataLoading = isLoading || isMetadataWithTraitsLoading
-  const nftName =
-    isGuildPin && guildPinGuildName ? (
-      <>
-        <DataBlock>{`Joined ${guildPinGuildName}`}</DataBlock>
-        {` Guild Pin`}
-      </>
-    ) : (
-      metadataWithTraits?.name || metadata?.name
-    )
+  const nftName = isGuildPin ? (
+    <>
+      {guildPinGuildName && <DataBlock>{`Joined ${guildPinGuildName} `}</DataBlock>}
+      {"Guild Pin"}
+    </>
+  ) : (
+    metadataWithTraits?.name || metadata?.name
+  )
   const nftImage = guildPinImageCID
     ? `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${guildPinImageCID}`
     : metadataWithTraits?.image || metadata?.image
