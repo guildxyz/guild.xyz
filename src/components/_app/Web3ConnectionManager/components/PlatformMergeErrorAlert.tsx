@@ -73,7 +73,7 @@ const PlatformMergeErrorAlert = ({
             {addressOrDomain.startsWith("0x") ? (
               <CopyableAddress address={addressOrDomain} decimals={4} />
             ) : (
-              <chakra.span fontWeight={"semibold"}>addressOrDomain</chakra.span>
+              <chakra.span fontWeight={"semibold"}>{addressOrDomain}</chakra.span>
             )}
           </Text>
           <Heading mt="8" mb="3" size="sm">
