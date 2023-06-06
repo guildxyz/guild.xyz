@@ -21,7 +21,7 @@ const LogicPicker = () => {
   const { field } = useController({
     control,
     name: "logic",
-    defaultValue: "AND",
+    defaultValue: "OR",
   })
 
   return (

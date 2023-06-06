@@ -1,4 +1,5 @@
 import { Divider, Flex, Icon, useColorMode } from "@chakra-ui/react"
+import { formattedLogic } from "components/[guild]/LogicDivider"
 import Button from "components/common/Button"
 import { ArrowDown, ArrowUp } from "phosphor-react"
 import { Dispatch, SetStateAction } from "react"
@@ -51,7 +52,7 @@ const ExpandRequirementsButton = ({
         >
           {isRequirementsExpanded
             ? "Collapse"
-            : `${logic} ${hiddenRequirements} more`}
+            : `${formattedLogic[logic]} ${hiddenRequirements} more`}
         </Button>
       </Flex>
       <Divider

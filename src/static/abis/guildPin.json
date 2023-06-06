@@ -303,26 +303,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "components": [
-          { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-          { "internalType": "uint256", "name": "userId", "type": "uint256" },
-          { "internalType": "string", "name": "guildName", "type": "string" },
-          { "internalType": "uint256", "name": "createdAt", "type": "uint256" },
-          { "internalType": "uint256", "name": "mintDate", "type": "uint256" }
-        ],
-        "internalType": "struct IGuildPin.BackfillMetadataParams[]",
-        "name": "params",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "backfillMetadata",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
     "name": "balanceOf",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
@@ -449,16 +429,6 @@
     "name": "proxiableUUID",
     "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "string", "name": "name", "type": "string" },
-      { "internalType": "string", "name": "symbol", "type": "string" }
-    ],
-    "name": "reInitialize",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

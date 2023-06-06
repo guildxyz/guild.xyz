@@ -12,8 +12,9 @@ import { TwitterLogo } from "phosphor-react"
 import { useRef, useState } from "react"
 import { GuildPinMetadata } from "types"
 import fetcher from "utils/fetcher"
-import { GUILD_PIN_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
+import useGuildPinContractsData from "./useGuildPinContractsData"
 import useGuildPinFee from "./useGuildPinFee"
 import useSubmitTransaction from "./useSubmitTransaction"
 
@@ -45,9 +46,10 @@ const useMintGuildPin = () => {
   const { pinType, setMintedTokenId } = useMintGuildPinContext()
   const [loadingText, setLoadingText] = useState<string>("")
 
+  const guildPinContractsData = useGuildPinContractsData()
   const guildPinContract = useContract(
-    GUILD_PIN_CONTRACT[Chains[chainId]]?.address,
-    GUILD_PIN_CONTRACT[Chains[chainId]]?.abi,
+    guildPinContractsData[Chains[chainId]]?.address,
+    guildPinContractsData[Chains[chainId]]?.abi,
     true
   )
 
@@ -70,6 +72,8 @@ const useMintGuildPin = () => {
         userAddress: account,
         guildId: id,
         guildAction: pinType,
+        chainId,
+        contractAddress: guildPinContract.address,
       },
     })
 
@@ -142,7 +146,7 @@ const useMintGuildPin = () => {
           )
 
           mutate((prevData) => [
-            ...prevData,
+            ...(prevData ?? []),
             {
               chainId,
               tokenId,

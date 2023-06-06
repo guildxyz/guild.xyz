@@ -5,7 +5,7 @@ import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockEx
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
-import PurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/PurchaseRequirement"
+import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -13,7 +13,7 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import { Fragment } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Trait } from "types"
-import { GUILD_PIN_CONTRACT } from "utils/guildCheckout/constants"
+import { flattenedGuildPinChainsData } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import useNftMetadata, {
   NOUNS_BACKGROUNDS,
@@ -41,7 +41,7 @@ const NftRequirement = (props: RequirementProps) => {
   // This is a really basic solution, and it'll only handle the "Joined Guild" NFTs. We should probably think about a better solution in the future.
   const firstAttribute = requirement.data?.attributes?.[0]
   const isGuildPin =
-    GUILD_PIN_CONTRACT[requirement.chain]?.address ===
+    flattenedGuildPinChainsData[requirement.chain]?.address ===
       requirement.address.toLowerCase() &&
     requirement.data?.attributes?.length === 1 &&
     firstAttribute.trait_type === "guildId"
@@ -94,7 +94,7 @@ const NftRequirement = (props: RequirementProps) => {
       footer={
         <HStack spacing={4}>
           <GuildCheckoutProvider>
-            <PurchaseRequirement />
+            <DynamicPurchaseRequirement />
             <PurchaseTransactionStatusModal />
           </GuildCheckoutProvider>
           <BlockExplorerUrl />
