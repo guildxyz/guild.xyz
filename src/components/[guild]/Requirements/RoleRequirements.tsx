@@ -19,12 +19,19 @@ type Props = {
   isOpen: boolean
   isExpanded: boolean
   onToggleExpanded: () => void
+  descriptionRef: any
 }
 
 const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
 const PARENT_PADDING = "var(--chakra-space-5)"
 
-const RoleRequirements = ({ role, isOpen, isExpanded, onToggleExpanded }: Props) => {
+const RoleRequirements = ({
+  role,
+  isOpen,
+  isExpanded,
+  onToggleExpanded,
+  descriptionRef,
+}: Props) => {
   const requirements = role.hiddenRequirements
     ? [...role.requirements, { isHidden: true, type: "FREE" } as Requirement]
     : role.requirements
@@ -52,7 +59,7 @@ const RoleRequirements = ({ role, isOpen, isExpanded, onToggleExpanded }: Props)
           <Spinner />
         ) : isVirtualList ? (
           <VirtualRequirements
-            {...{ isRequirementsExpanded: isExpanded, requirements }}
+            {...{ isRequirementsExpanded: isExpanded, requirements, descriptionRef }}
             logic={role.logic}
           />
         ) : (
@@ -95,7 +102,6 @@ const RoleRequirements = ({ role, isOpen, isExpanded, onToggleExpanded }: Props)
               hiddenRequirements={hiddenRequirements.length}
               isRequirementsExpanded={isExpanded}
               onToggleExpanded={onToggleExpanded}
-              isHidden={isVirtualList && isExpanded}
             />
             <Box
               position="absolute"
@@ -120,15 +126,18 @@ const VirtualRequirements = memo(
     isRequirementsExpanded,
     requirements,
     logic,
+    descriptionRef,
   }: {
     isRequirementsExpanded: boolean
     requirements: Requirement[]
     logic: Logic
+    descriptionRef: any
   }) => {
     const listWrapperRef = useRef<HTMLDivElement>(null)
 
     const listRef = useRef(null)
     const rowHeights = useRef<Record<number, number>>({})
+    const descriptionHeight = descriptionRef.current?.getBoundingClientRect().height
 
     useEffect(() => {
       if (!isRequirementsExpanded || !listWrapperRef.current) return
@@ -166,7 +175,9 @@ const VirtualRequirements = memo(
         <VariableSizeList
           ref={listRef}
           width={`calc(100% + ${PARENT_PADDING})`}
-          height={isRequirementsExpanded ? 340 : 280}
+          height={
+            isRequirementsExpanded ? Math.max(descriptionHeight + 50, 500) : 275
+          }
           itemCount={requirements.length}
           itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
           className="custom-scrollbar"

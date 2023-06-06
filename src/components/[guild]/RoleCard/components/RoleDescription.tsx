@@ -9,19 +9,23 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { ArrowDown, ArrowUp } from "phosphor-react"
-import { useRef } from "react"
 import parseDescription from "utils/parseDescription"
 
 const MAX_REQUIREMENTS_HEIGHT = 250
 
 type Props = {
   description: string
+  descriptionRef: any
   isExpanded: boolean
   onToggleExpanded: () => void
 }
 
-const RoleDescription = ({ description, isExpanded, onToggleExpanded }: Props) => {
-  const descriptionRef = useRef(null)
+const RoleDescription = ({
+  description,
+  descriptionRef,
+  isExpanded,
+  onToggleExpanded,
+}: Props) => {
   const descriptionHeight =
     descriptionRef.current?.getBoundingClientRect().height || 24
   // const [descriptionHeight, setDescriptionHeight] = useState(24)
@@ -47,12 +51,7 @@ const RoleDescription = ({ description, isExpanded, onToggleExpanded }: Props) =
       }
       style={{ position: "relative" }}
     >
-      <Box
-        ref={descriptionRef}
-        px={5}
-        pb={isExpanded ? 12 : 3}
-        wordBreak="break-word"
-      >
+      <Box ref={descriptionRef} px={5} pb={3} wordBreak="break-word">
         {parseDescription(description)}
       </Box>
       {descriptionHeight > MAX_REQUIREMENTS_HEIGHT && (
@@ -73,7 +72,7 @@ const RoleDescription = ({ description, isExpanded, onToggleExpanded }: Props) =
             >
               <Button
                 size="xs"
-                color={colorMode === "light" ? "blackAlpha.600" : "gray.400"}
+                color={colorMode === "light" ? "blackAlpha.500" : "gray.400"}
                 borderRadius="md"
                 onClick={onToggleExpanded}
                 textTransform="uppercase"

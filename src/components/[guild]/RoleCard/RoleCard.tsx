@@ -17,7 +17,7 @@ import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
 import { Question } from "phosphor-react"
-import { memo, useEffect } from "react"
+import { memo, useEffect, useRef } from "react"
 import { Role, Visibility as VisibilityType } from "types"
 import useAccess from "../hooks/useAccess"
 import useGuild from "../hooks/useGuild"
@@ -55,6 +55,7 @@ const RoleCard = memo(({ role }: Props) => {
     onToggle: onToggleExpanded,
     onClose: onCloseExpanded,
   } = useDisclosure()
+  const descriptionRef = useRef(null)
 
   useEffect(() => {
     if (!isOpen) onCloseExpanded()
@@ -172,7 +173,7 @@ const RoleCard = memo(({ role }: Props) => {
               >
                 <RoleDescription
                   description={role.description}
-                  {...{ isExpanded, onToggleExpanded }}
+                  {...{ isExpanded, onToggleExpanded, descriptionRef }}
                 />
               </SlideFade>
             )}
@@ -238,10 +239,7 @@ const RoleCard = memo(({ role }: Props) => {
               )}
             </HStack>
             <RoleRequirements
-              role={role}
-              isOpen={isOpen}
-              isExpanded={isExpanded}
-              onToggleExpanded={onToggleExpanded}
+              {...{ role, isOpen, isExpanded, onToggleExpanded, descriptionRef }}
             />
           </Flex>
         </SimpleGrid>
