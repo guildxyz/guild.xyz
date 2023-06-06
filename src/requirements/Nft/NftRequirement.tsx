@@ -64,7 +64,11 @@ const NftRequirement = (props: RequirementProps) => {
   const nftDataLoading = isLoading || isMetadataWithTraitsLoading
   const nftName = isGuildPin ? (
     <>
-      {guildPinGuildName && <DataBlock>{`Joined ${guildPinGuildName} `}</DataBlock>}
+      {guildPinGuildName && (
+        <>
+          <DataBlock>{`Joined ${guildPinGuildName}`}</DataBlock>{" "}
+        </>
+      )}
       {"Guild Pin"}
     </>
   ) : (
