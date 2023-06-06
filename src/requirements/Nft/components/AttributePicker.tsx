@@ -56,7 +56,8 @@ const AttributePicker = ({
   } = useFormContext()
 
   const [isRangeValue, setIsRangeValue] = useState(
-    !getValues(`${baseFieldPath}.data.attributes.${index}.value`)
+    getValues(`${baseFieldPath}.data.attributes.${index}.minValue`) ||
+      getValues(`${baseFieldPath}.data.attributes.${index}.maxValue`)
   )
 
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
