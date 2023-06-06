@@ -7,10 +7,15 @@ import {
 import Button from "components/common/Button"
 import { useOpenJoinModal } from "./JoinModal/JoinModalProvider"
 import useAccess from "./hooks/useAccess"
+import useGuild from "./hooks/useGuild"
+import usePlatformsToReconnect from "./hooks/usePlatformsToReconnect"
+import useUser from "./hooks/useUser"
 
 const JoinButton = (): JSX.Element => {
   const openJoinModal = useOpenJoinModal()
   const { hasAccess, isValidating } = useAccess()
+  const { requiredPlatforms } = useGuild()
+  const { platformUsers } = useUser()
 
   const buttonText = useBreakpointValue({
     base: "Join Guild",
@@ -19,7 +24,18 @@ const JoinButton = (): JSX.Element => {
 
   const bg = useColorModeValue("gray.300", "gray.800")
 
-  if (hasAccess === false || isValidating)
+  const platformsToReconnect = usePlatformsToReconnect()
+  const hasUnconnectedRequiredPlatforms = (requiredPlatforms ?? []).some(
+    (platformName) =>
+      platformUsers?.every(
+        (platformUser) => platformUser.platformName !== platformName
+      )
+  )
+
+  const shouldConnect =
+    hasUnconnectedRequiredPlatforms || platformsToReconnect?.length > 0
+
+  if (!shouldConnect && (hasAccess === false || isValidating))
     return (
       <Box bg={bg} borderRadius={"xl"}>
         <Tooltip
