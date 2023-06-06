@@ -18,8 +18,8 @@ import {
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { TrashSimple } from "phosphor-react"
-import { useEffect, useMemo } from "react"
+import { Plus, TrashSimple, X } from "phosphor-react"
+import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import capitalize from "utils/capitalize"
 import isNumber from "utils/isNumber"
@@ -51,8 +51,13 @@ const AttributePicker = ({
     getValues,
     setValue,
     clearErrors,
+    resetField,
     formState: { errors },
   } = useFormContext()
+
+  const [isRangeValue, setIsRangeValue] = useState(
+    !getValues(`${baseFieldPath}.data.attributes.${index}.value`)
+  )
 
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
   const address = useWatch({ name: `${baseFieldPath}.address` })
@@ -111,6 +116,30 @@ const AttributePicker = ({
       )
     }
   }, [nftCustomAttributeValues])
+
+  const changeRange = () => {
+    if (isRangeValue) {
+      const latestMinValue =
+        getValues(`${baseFieldPath}.data.attributes.${index}.minValue`) ?? ""
+      setValue(`${baseFieldPath}.data.attributes.${index}.value`, latestMinValue)
+      resetField(`${baseFieldPath}.data.attributes.${index}.minValue`, {
+        defaultValue: null,
+      })
+      resetField(`${baseFieldPath}.data.attributes.${index}.maxValue`, {
+        defaultValue: null,
+      })
+    } else {
+      const latestValue = getValues(
+        `${baseFieldPath}.data.attributes.${index}.value`
+      )
+      setValue(`${baseFieldPath}.data.attributes.${index}.minValue`, latestValue)
+      resetField(`${baseFieldPath}.data.attributes.${index}.value`, {
+        defaultValue: null,
+      })
+    }
+
+    setIsRangeValue(!isRangeValue)
+  }
 
   return (
     <Box p={2} borderRadius="xl" bgColor={bgColor}>
@@ -309,7 +338,7 @@ const AttributePicker = ({
         </Stack>
       ) : (
         <FormControl>
-          <HStack w="full" spacing={2} alignItems="start">
+          <Stack spacing={2}>
             <FormControl
               isRequired
               isInvalid={
@@ -331,35 +360,99 @@ const AttributePicker = ({
                 }
               </FormErrorMessage>
             </FormControl>
-            <Text as="span" h={10} lineHeight={10}>
-              :
-            </Text>
-            <FormControl
-              isRequired
-              isInvalid={
-                !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
-                  ?.value
-              }
-            >
-              <Input
-                {...register(`${baseFieldPath}.data.attributes.${index}.value`, {
-                  required: "Required",
-                })}
-                placeholder="Value"
-              />
-              <FormErrorMessage>
-                {
-                  parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
-                    ?.value?.message
+
+            {isRangeValue ? (
+              <HStack alignItems="start">
+                <FormControl
+                  isRequired
+                  isInvalid={
+                    !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
+                      index
+                    ]?.minValue
+                  }
+                >
+                  <Input
+                    {...register(
+                      `${baseFieldPath}.data.attributes.${index}.minValue`,
+                      {
+                        required: isRangeValue ? "Required" : false,
+                      }
+                    )}
+                    placeholder="From"
+                  />
+                  <FormErrorMessage>
+                    {
+                      parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
+                        index
+                      ]?.minValue?.message
+                    }
+                  </FormErrorMessage>
+                </FormControl>
+
+                <FormControl
+                  isRequired
+                  isInvalid={
+                    !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
+                      index
+                    ]?.maxValue
+                  }
+                >
+                  <Input
+                    {...register(
+                      `${baseFieldPath}.data.attributes.${index}.maxValue`,
+                      {
+                        required: isRangeValue ? "Required" : false,
+                      }
+                    )}
+                    placeholder="To"
+                  />
+                  <FormErrorMessage>
+                    {
+                      parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
+                        index
+                      ]?.maxValue?.message
+                    }
+                  </FormErrorMessage>
+                </FormControl>
+              </HStack>
+            ) : (
+              <FormControl
+                isRequired
+                isInvalid={
+                  !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
+                    ?.value
                 }
-              </FormErrorMessage>
-            </FormControl>
-          </HStack>
+              >
+                <Input
+                  {...register(`${baseFieldPath}.data.attributes.${index}.value`, {
+                    required: isRangeValue ? false : "Required",
+                  })}
+                  placeholder="Value"
+                />
+                <FormErrorMessage>
+                  {
+                    parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
+                      ?.value?.message
+                  }
+                </FormErrorMessage>
+              </FormControl>
+            )}
+          </Stack>
         </FormControl>
       )}
 
-      <Flex mt={2} justifyContent="end">
+      <Flex mt={2}>
         <Button
+          leftIcon={<Icon as={isRangeValue ? X : Plus} />}
+          size="xs"
+          borderRadius="md"
+          onClick={changeRange}
+        >
+          {isRangeValue ? "Remove range" : "Add range"}
+        </Button>
+
+        <Button
+          ml="auto"
           leftIcon={<Icon as={TrashSimple} />}
           size="xs"
           borderRadius="md"
