@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { Chain } from "connectors"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -102,11 +102,13 @@ const WalletActivityForm = ({
       >
         <FormLabel>Type</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={walletActivityRequirementTypes}
           beforeOnChange={resetFields}
+          placeholder="Select type"
+          disableOptionFiltering
         />
 
         <FormErrorMessage>
