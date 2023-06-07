@@ -6,7 +6,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import React, { memo, useEffect, useRef } from "react"
+import React, { memo, MutableRefObject, useEffect, useRef } from "react"
 import { VariableSizeList } from "react-window"
 import { Logic, Requirement, Role } from "types"
 import useGuild from "../hooks/useGuild"
@@ -20,7 +20,7 @@ type Props = {
   isOpen: boolean
   isExpanded: boolean
   onToggleExpanded: () => void
-  descriptionRef: any
+  descriptionRef: MutableRefObject<HTMLDivElement>
 }
 
 const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
@@ -136,7 +136,7 @@ const VirtualRequirements = memo(
     isRequirementsExpanded: boolean
     requirements: Requirement[]
     logic: Logic
-    descriptionRef: any
+    descriptionRef: MutableRefObject<HTMLDivElement>
   }) => {
     const listWrapperRef = useRef<HTMLDivElement>(null)
 

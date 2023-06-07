@@ -55,7 +55,7 @@ const RoleCard = memo(({ role }: Props) => {
     onToggle: onToggleExpanded,
     onClose: onCloseExpanded,
   } = useDisclosure()
-  const descriptionRef = useRef(null)
+  const descriptionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!isOpen) onCloseExpanded()

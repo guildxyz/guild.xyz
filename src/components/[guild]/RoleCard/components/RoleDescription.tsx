@@ -1,11 +1,12 @@
 import { Box, Collapse, useColorModeValue } from "@chakra-ui/react"
+import { MutableRefObject } from "react"
 import parseDescription from "utils/parseDescription"
 
 const MAX_REQUIREMENTS_HEIGHT = 250
 
 type Props = {
   description: string
-  descriptionRef: any
+  descriptionRef: MutableRefObject<HTMLDivElement>
   isExpanded: boolean
   onToggleExpanded: () => void
 }
