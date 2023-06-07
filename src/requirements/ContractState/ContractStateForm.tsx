@@ -7,8 +7,8 @@ import {
   Stack,
   Tooltip,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { Chain, RPC } from "connectors"
 import { Info } from "phosphor-react"
 import { useEffect, useMemo } from "react"
@@ -148,7 +148,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
       <FormControl isRequired isDisabled={!abi}>
         <FormLabel>Method:</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.data.id`}
           rules={{ required: "This field is required." }}
           isClearable
@@ -211,23 +211,23 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
         <FormLabel>Expected output:</FormLabel>
 
         {outputOptions?.length > 1 && (
-          <ControlledSelect
+          <ControlledCombobox
             name={`${baseFieldPath}.data.resultIndex`}
             defaultValue={0}
             rules={{ required: "This field is required." }}
             isLoading={isAbiValidating}
             options={outputOptions}
             placeholder="Choose output param"
-            chakraStyles={{ container: { mb: 2 } } as any}
+            mb={2}
           />
         )}
 
         <HStack>
-          <ControlledSelect
+          <ControlledCombobox
             name={`${baseFieldPath}.data.resultMatch`}
             defaultValue={"="}
             options={resultMatchOptions}
-            chakraStyles={{ container: { w: "105px" } } as any}
+            w="105px"
           />
           <Controller
             name={`${baseFieldPath}.data.expected` as const}

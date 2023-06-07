@@ -150,7 +150,7 @@ const Combobox = forwardRef(
 
     return (
       <>
-        <Box w="full" {...rootProps}>
+        <Box w={htmlInputProps.w ?? "full"} {...rootProps}>
           <Box ref={referenceRef} position="relative" {...controlProps}>
             <InputGroup>
               {leftAddon}
