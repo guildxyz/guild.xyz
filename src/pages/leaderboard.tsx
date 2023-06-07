@@ -17,9 +17,14 @@ type Props = {
 }
 
 const PAGE_SIZE = 25
+const MAX_SWR_INFINITE_SIZE = 4
+
 const getKey = (pageIndex: number, previousPageData: any[]) => {
   if (previousPageData && !previousPageData.length) return null
-  return `/api/leaderboard?offset=${Math.max(PAGE_SIZE * pageIndex - 1, 0)}`
+  return `/api/leaderboard?offset=${Math.min(
+    Math.max(PAGE_SIZE * pageIndex - 1, 0),
+    75
+  )}`
 }
 
 const Page = ({ leaderboard: initialData }: Props) => {
@@ -32,6 +37,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
   const {
     isValidating: isLeaderboardValidating,
     setSize,
+    size,
     data: leaderboard,
   } = useSWRInfinite(getKey, {
     fallbackData: [initialData],
@@ -45,7 +51,8 @@ const Page = ({ leaderboard: initialData }: Props) => {
     if (
       isLeaderboardValidating ||
       window.innerHeight + document.documentElement.scrollTop !==
-        document.documentElement.offsetHeight
+        document.documentElement.offsetHeight ||
+      size === MAX_SWR_INFINITE_SIZE
     )
       return
 

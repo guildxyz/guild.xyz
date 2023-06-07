@@ -522,7 +522,7 @@ type LeaderboardPinData = {
   tokenId: number
   chainId: Chains
   rank: number
-  metadata: GuildPinMetadata
+  tokenUri: string
 }
 
 type UserLeaderboardData = {

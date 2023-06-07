@@ -120,29 +120,38 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
                 textTransform="uppercase"
                 fontWeight="bold"
                 fontSize="xs"
-              >{`Score: ${Math.ceil(userLeaderboardData.score * 100)}`}</Text>
+              >{`Score: ${userLeaderboardData.score}`}</Text>
             </VStack>
           </HStack>
 
           <Flex direction="row" alignItems="center">
-            {userLeaderboardData.pins.map((pin) => (
-              <Circle
-                key={`${pin.chainId}-${pin.tokenId}`}
-                size={8}
-                ml={-3}
-                _first={{ ml: 0 }}
-                borderWidth={2}
-                borderColor={fakeTransparentBorderColor}
-              >
-                <Img
-                  src={pin.metadata.image.replace(
-                    "ipfs://",
-                    process.env.NEXT_PUBLIC_IPFS_GATEWAY
-                  )}
-                  alt={pin.metadata.name}
-                />
-              </Circle>
-            ))}
+            {userLeaderboardData.pins.map((pin) => {
+              const pinMetadata = JSON.parse(
+                Buffer.from(
+                  pin.tokenUri.replace("data:application/json;base64,", ""),
+                  "base64"
+                ).toString("utf-8")
+              )
+
+              return (
+                <Circle
+                  key={`${pin.chainId}-${pin.tokenId}`}
+                  size={8}
+                  ml={-3}
+                  _first={{ ml: 0 }}
+                  borderWidth={2}
+                  borderColor={fakeTransparentBorderColor}
+                >
+                  <Img
+                    src={pinMetadata.image.replace(
+                      "ipfs://",
+                      process.env.NEXT_PUBLIC_IPFS_GATEWAY
+                    )}
+                    alt={pinMetadata.name}
+                  />
+                </Circle>
+              )
+            })}
 
             <Popover>
               <PopoverTrigger>
@@ -175,40 +184,49 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
                 </PopoverHeader>
                 <PopoverBody>
                   <Stack>
-                    {userLeaderboardData.pins.map((pin) => (
-                      <HStack
-                        key={`${pin.chainId}-${pin.tokenId}`}
-                        justifyContent="space-between"
-                      >
-                        <HStack>
-                          <Img
-                            src={pin.metadata.image.replace(
-                              "ipfs://",
-                              process.env.NEXT_PUBLIC_IPFS_GATEWAY
-                            )}
-                            alt={pin.metadata.name}
-                            boxSize={6}
-                          />
-                          <Text as="span" fontWeight="medium" fontSize="sm">
-                            {pin.metadata.name}
+                    {userLeaderboardData.pins.map((pin) => {
+                      const pinMetadata = JSON.parse(
+                        Buffer.from(
+                          pin.tokenUri.replace("data:application/json;base64,", ""),
+                          "base64"
+                        ).toString("utf-8")
+                      )
+
+                      return (
+                        <HStack
+                          key={`${pin.chainId}-${pin.tokenId}`}
+                          justifyContent="space-between"
+                        >
+                          <HStack>
+                            <Img
+                              src={pinMetadata.image.replace(
+                                "ipfs://",
+                                process.env.NEXT_PUBLIC_IPFS_GATEWAY
+                              )}
+                              alt={pinMetadata.name}
+                              boxSize={6}
+                            />
+                            <Text as="span" fontWeight="medium" fontSize="sm">
+                              {pinMetadata.name}
+                            </Text>
+                          </HStack>
+
+                          <Text
+                            as="span"
+                            fontWeight="bold"
+                            fontSize="x-small"
+                            colorScheme="gray"
+                            textTransform="uppercase"
+                          >
+                            {`Rank: ${
+                              pinMetadata.attributes.find(
+                                (attr) => attr.trait_type === "rank"
+                              ).value
+                            }`}
                           </Text>
                         </HStack>
-
-                        <Text
-                          as="span"
-                          fontWeight="bold"
-                          fontSize="x-small"
-                          colorScheme="gray"
-                          textTransform="uppercase"
-                        >
-                          {`Rank: ${
-                            pin.metadata.attributes.find(
-                              (attr) => attr.trait_type === "rank"
-                            ).value
-                          }`}
-                        </Text>
-                      </HStack>
-                    ))}
+                      )
+                    })}
                   </Stack>
                 </PopoverBody>
               </PopoverContent>
