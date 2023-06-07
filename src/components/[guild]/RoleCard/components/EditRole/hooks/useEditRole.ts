@@ -112,6 +112,22 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
       updatedRolePlatforms,
       createdRolePlatforms,
     }) => {
+      const deletedRequirementIds = new Set(
+        createdRequirements.flatMap((req) => req.deletedRequirements)
+      )
+
+      mutateGuild((prev) => ({
+        ...prev,
+        roles:
+          prev?.roles.map((role) => ({
+            ...role,
+            requirements:
+              role?.requirements.filter(
+                (requirement) => !deletedRequirementIds.has(requirement)
+              ) ?? [],
+          })) ?? [],
+      }))
+
       const [
         failedRequirementUpdatesCount,
         failedRequirementCreationsCount,
