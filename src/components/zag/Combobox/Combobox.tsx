@@ -32,6 +32,7 @@ type Props = InputProps & {
   rightAddon?: JSX.Element
   isClearable?: boolean
   isCreatable?: boolean
+  disableOptionFiltering?: boolean
 }
 
 const Combobox = forwardRef(
@@ -47,6 +48,7 @@ const Combobox = forwardRef(
       rightAddon,
       isClearable,
       isCreatable,
+      disableOptionFiltering,
       ...htmlInputProps
     }: Props,
     ref: any
@@ -133,9 +135,11 @@ const Combobox = forwardRef(
           }
         : undefined
 
-    const filteredOptions = options.filter((option) =>
-      option.label.toLowerCase().includes(inputValue.toLowerCase())
-    )
+    const filteredOptions = disableOptionFiltering
+      ? options
+      : options.filter((option) =>
+          option.label.toLowerCase().includes(inputValue.toLowerCase())
+        )
 
     const shouldShowRightElement = Boolean(
       isLoading || (isClearable && (inputValue?.length || htmlInputPropValue))
