@@ -20,45 +20,58 @@ const MotionBox = motion(Box)
 
 const openGraphData = [
   {
-    url: "https://www.cryptonary.com/how-guild-helps-you-organize-your-dao",
-    image: "/landing/discover/guild-cryptonary.webp",
-    title: "How Guild helps you organize your DAO",
+    url: "https://guild.mirror.xyz/A_hzlKfwleK5l3zkILJ6qlF98oE_h4kz_BofksjpaaA",
+    image: "/landing/discover/guild-dd.webp",
+    title: "Leveraging Guild For Member Onboarding",
     description:
-      "Guild, a platform that allows users to create private gated communities, hopes to make managing and joining a DAO easier.",
+      "Case Study on how to build onboarding processes that actually support members w/ Luan",
   },
   {
-    url: "https://guild.mirror.xyz/HGEontumXcZaf34MJFbdQ_gdNdMD_pNnStuempCdK-g",
-    image: "/landing/discover/guild-mirror.webp",
-    title: "Our Guild is evolving",
+    url: "https://www.youtube.com/watch?v=1uy3kjhFTwI",
+    image: "/landing/discover/requirements-roles-rewards.webp",
+    title: "Requirements, Roles and Rewards",
     description:
-      "Over 10,000 web3 curious people have created or joined 600 guilds and our developer team has merged 1929 commits on Github, in response to hundreds of feature requests or bug reports.",
+      "How to create the best membership structures and access rules on multiple platforms automatically? Guild.xyz has got your back!",
   },
   {
-    url: "https://www.daomasters.xyz/tools/guild",
-    image: "/landing/discover/guild-daomasters.webp",
-    title: "DAO Masters - Guild.xyz",
-    description: "This is an easy, self-serve way to set up a gated community.",
+    url: "https://mirror.xyz/nasheq.eth/OOxQoitCP8NQ_R7y5j0RPlfbBdEINvhPsjUDPQaJvpA",
+    image: "/landing/discover/guild-evolves-platformless-memberships.webp",
+    title: "Guild evolves: platformless memberships",
+    description:
+      'Less than a year ago Guild.xyz started as a simple tool to connect Ethereum with Discord for "token gating". Working with hundreds of online communities we\'ve witnessed how painful transition costs from and between web2 walled gardens kept them from their true potential. To change this, we are excited to introduce Guild as an infrastructure for platformless memberships.',
   },
   {
-    url: "https://twitter.com/littlefortunes/status/1500516518970413067",
-    image: "/landing/discover/guild-daily-nft-show.webp",
-    title: "Caroline | Tales of Elatora ⛩ MINTING NOW! on Twitter",
-    description:
-      "Daily #NFT Show #167 ⚔️ Today's show is not about an #NFTartist but about a tool you should know if you run a Discord (or are helping to mod one). It's called: 👉 @guildxyz To be clear: I'm not affiliated in any way with this tool, I just like it! Powered by @redlion_news 🦁",
+    url: "https://guild.mirror.xyz/ibeYLZX-wRXlUL1LzZ2sW1uvHHWtfYG4RPburF2PtEA",
+    image: "/landing/discover/realize-the-earning-power-of-your-community.webp",
+    title: "Realize the earning power of your community",
+    description: "Fund ideas, membership, goods, events and perks.",
   },
   {
-    url: "https://members.delphidigital.io/media/web3-is-a-shared-experience-reka-and-raz-co-founders-of-agora",
-    image: "/landing/discover/guild-delphidigital.webp",
-    title: "Web3 is a Shared Experience: Reka and Raz, Co-Founders of Agora",
+    url: "https://twitter.com/guildxyz/status/1661346936211865600",
+    image: "/landing/discover/guild-pins.webp",
+    title: "Pins are coming to Guilds near you!",
     description:
-      "Closing out our Web3 series, we sit down with Reka and Raz, Co-Founders of Agora, a studio DAO building essentials for communities. We dive into community role management with Guild, connecting Web2 and Web3 communities, and much more! ",
+      "Your wallet is not just a wallet, it's a part of your identity on the internet, full of onchain memories of your experience, like Pins. 📌 Later in all Guilds, but for now only in special ones...",
   },
   {
-    url: "https://twitter.com/guildxyz/status/1464208495809544195",
-    image: "/landing/discover/guild-twitter.webp",
-    title: "Guild on Twitter",
+    url: "",
+    image: "/landing/discover/guild-zetachain.webp",
+    title: "Guild Joins ZetaChain as an Omnichain DAO Tooling Launch Partner",
     description:
-      "Cross-chain token gating is here 🧙‍♂️ What does it mean for @SwaprEth (@DXdao_ ) @nowdaoit @KlimaDAO and all the other communities spreading across blockchains? True multi-chain support for creating groups, read further..",
+      "Largest Guild ZetaChain expands its partnership with Guild.xyz to power cross-chain functionality across its network, including chain/token agnostic payments to DAOs. Claim your non-transferable Guild Pin (Guild's newest feature release) on ZetaChain now.",
+  },
+  {
+    url: "",
+    image: "/landing/discover/guild-lego-explorer.webp",
+    title: "Guild LEGO Explorer",
+    description: "A unique 3D experience built with Three.js",
+  },
+  {
+    url: "https://guild.mirror.xyz/BsyH1aLqdNzGz2-hFIy7ssuiJzmZ_-h8MrcjLfewTC4",
+    image: "/landing/discover/intro-to-guild.webp",
+    title: "Introduction to Guild.xyz",
+    description:
+      "Guild.xyz is the infrastructure for platformless access management. Create portable memberships, social structures around on- & off-chain requirements and build unique user journeys across apps!",
   },
 ]
 
@@ -105,7 +118,7 @@ const Discover = (): JSX.Element => {
                 }}
               >
                 {link.image && (
-                  <AspectRatio ratio={16 / 9} _groupHover={{ opacity: 0.8 }}>
+                  <AspectRatio ratio={2} _groupHover={{ opacity: 0.8 }}>
                     <Image
                       layout="fill"
                       objectFit="cover"
