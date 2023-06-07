@@ -1,13 +1,7 @@
-import {
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputLeftElement,
-} from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
+import { FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useFormState, useWatch } from "react-hook-form"
+import { ControlledCombobox } from "components/zag/Combobox"
+import { useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import useTesseraVaults from "../hooks/useTesseraVaults"
@@ -37,10 +31,6 @@ const HoldCollection = ({ baseFieldPath }: RequirementFormProps): JSX.Element =>
         }))
     : []
 
-  const collection = useWatch({ name: `${baseFieldPath}.data.collection` })
-
-  const selectedCollection = collections?.find((c) => c.value === collection)
-
   return (
     <>
       <FormControl
@@ -49,24 +39,13 @@ const HoldCollection = ({ baseFieldPath }: RequirementFormProps): JSX.Element =>
       >
         <FormLabel>Collection</FormLabel>
 
-        <InputGroup>
-          {selectedCollection && (
-            <InputLeftElement>
-              <OptionImage
-                img={selectedCollection.img}
-                alt={selectedCollection.label}
-              />
-            </InputLeftElement>
-          )}
-
-          <ControlledSelect
-            name={`${baseFieldPath}.data.collection`}
-            rules={{ required: "This field is required." }}
-            options={collections}
-            isLoading={isLoading}
-            isClearable
-          />
-        </InputGroup>
+        <ControlledCombobox
+          name={`${baseFieldPath}.data.collection`}
+          rules={{ required: "This field is required." }}
+          options={collections}
+          isLoading={isLoading}
+          isClearable
+        />
 
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.data?.collection?.message}

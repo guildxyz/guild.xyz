@@ -1,6 +1,6 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -31,7 +31,7 @@ const HoldState = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       >
         <FormLabel>Vault phase</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.data.vaultState`}
           rules={{
             required: "This field is required",

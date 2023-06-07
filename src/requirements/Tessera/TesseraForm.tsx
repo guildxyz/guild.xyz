@@ -1,6 +1,6 @@
 import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -64,10 +64,12 @@ const TesseraForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       >
         <FormLabel>Type</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={tesseraRequirementTypes}
+          placeholder="Select type"
+          disableOptionFiltering
         />
 
         <FormErrorMessage>
