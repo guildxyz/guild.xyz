@@ -5,7 +5,7 @@ import {
   FormLabel,
   Stack,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
+import { ControlledCombobox } from "components/zag/Combobox"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -102,11 +102,13 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       >
         <FormLabel>Type</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={twitterRequirementTypes}
           beforeOnChange={resetFields}
+          placeholder="Select type"
+          disableOptionFiltering
         />
 
         <FormErrorMessage>
