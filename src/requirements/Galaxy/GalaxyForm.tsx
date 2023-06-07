@@ -1,13 +1,10 @@
 import {
-  Box,
-  Checkbox,
   FormControl,
   FormHelperText,
   FormLabel,
   InputGroup,
   InputLeftElement,
   Stack,
-  Text,
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -19,6 +16,17 @@ import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import { useGalaxyCampaign, useGalaxyCampaigns } from "./hooks/useGalaxyCampaigns"
 
+const galaxyRequirementTypes = [
+  {
+    label: "Have a Galxe NFT",
+    value: "GALAXY",
+  },
+  {
+    label: "Participate in a campaign",
+    value: "GALAXY_PARTICIPATION",
+  },
+]
+
 const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.data?.galaxyId?.includes(input)
@@ -26,7 +34,6 @@ const customFilterOption = (candidate, input) =>
 const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const {
     register,
-    getValues,
     setValue,
     formState: { errors },
   } = useFormContext()
@@ -81,6 +88,23 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
     <Stack spacing={8} alignItems="start">
       <FormControl
         isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type}
+      >
+        <FormLabel>Type:</FormLabel>
+
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
+          rules={{ required: "It's required to select a type" }}
+          options={galaxyRequirementTypes}
+        />
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
+        </FormErrorMessage>
+      </FormControl>
+
+      <FormControl
+        isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
       >
         <FormLabel>Campaign:</FormLabel>
@@ -124,26 +148,6 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
-      </FormControl>
-
-      <FormControl>
-        <Checkbox
-          alignItems="start"
-          onChange={(e) => {
-            const newType = e.target.checked ? "GALAXY" : "GALAXY_PARTICIPATION"
-            setValue(`${baseFieldPath}.type`, newType)
-          }}
-          defaultChecked={getValues(`${baseFieldPath}.type`) === "GALAXY"}
-        >
-          <Box position="relative" top={-1}>
-            <Text mb="1">Include NFT holders</Text>
-
-            <Text fontSize="sm" colorScheme="gray">
-              Include people who hold the NFT, but might've not participated in the
-              campaign
-            </Text>
-          </Box>
-        </Checkbox>
       </FormControl>
     </Stack>
   )
