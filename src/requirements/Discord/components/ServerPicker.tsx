@@ -5,8 +5,8 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import useGateables from "hooks/useGateables"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
@@ -42,7 +42,7 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
       >
         <FormLabel>Server</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.data.serverId`}
           rules={{
             required: "Please select a server",
@@ -53,7 +53,6 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
           }}
           isCreatable
           isClearable
-          formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
           isLoading={isLoading}
           options={serverOptions}
           beforeOnChange={(newValue) => {

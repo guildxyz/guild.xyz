@@ -7,8 +7,8 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import ReconnectAlert from "components/common/ReconnectAlert"
+import { ControlledCombobox } from "components/zag/Combobox"
 import useGateables from "hooks/useGateables"
 import useServerData from "hooks/useServerData"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
@@ -65,7 +65,7 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
       >
         <FormLabel>Role</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.data.roleId`}
           rules={{
             required: "Please select a role",
@@ -74,10 +74,8 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
               message: "Please input a valid Discord role id",
             },
           }}
-          noOptionsMessage={() => null}
           isCreatable
           isClearable
-          formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
           isLoading={isServerDataValidating}
           options={roleOptions}
           beforeOnChange={(newValue) => {
