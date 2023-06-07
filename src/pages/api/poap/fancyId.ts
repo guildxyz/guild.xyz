@@ -1,4 +1,3 @@
-import FormData from "form-data"
 import { NextApiRequest, NextApiResponse } from "next"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

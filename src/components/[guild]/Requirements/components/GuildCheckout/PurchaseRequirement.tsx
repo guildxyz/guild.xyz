@@ -12,48 +12,33 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
-import {
-  DISABLED_TOKENS,
-  PURCHASABLE_REQUIREMENT_TYPES,
-  purchaseSupportedChains,
-} from "utils/guildCheckout/constants"
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import AlphaTag from "./components/AlphaTag"
-import ErrorCollapse from "./components/ErrorCollapse"
-import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
-import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
-import PaymentMethodButtons from "./components/PaymentMethodButtons"
-import PurchaseFeeAndTotal from "./components/PurchaseFeeAndTotal"
-import PurchasedRequirementInfo from "./components/PurchasedRequirementInfo"
-import TOSCheckbox from "./components/TOSCheckbox"
 import ConnectWalletButton from "./components/buttons/ConnectWalletButton"
 import PurchaseAllowanceButton from "./components/buttons/PurchaseAllowanceButton"
 import PurchaseButton from "./components/buttons/PurchaseButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
+import ErrorCollapse from "./components/ErrorCollapse"
+import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
+import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
+import PaymentMethodButtons from "./components/PaymentMethodButtons"
+import PurchasedRequirementInfo from "./components/PurchasedRequirementInfo"
+import PurchaseFeeAndTotal from "./components/PurchaseFeeAndTotal"
+import TOSCheckbox from "./components/TOSCheckbox"
 import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
-  const { featureFlags } = useGuild()
-
   const { account, chainId } = useWeb3React()
-  const { requirement, isOpen, onOpen, onClose, isInfoModalOpen } =
-    useGuildCheckoutContext()
+  const { requirement, isOpen, onOpen, onClose } = useGuildCheckoutContext()
   const { urlName, name } = useGuild()
-  const { data: accessData, isValidating: isAccessValidating } = useAccess(
-    requirement?.roleId
-  )
-  const satisfiesRequirement = accessData?.requirements?.find(
-    (req) => req.requirementId === requirement.id
-  )?.access
 
   const {
     data: { estimatedPriceInUSD },
@@ -67,20 +52,6 @@ const PurchaseRequirement = (): JSX.Element => {
       guild: urlName,
     })
   }
-
-  if (
-    !isOpen &&
-    !isInfoModalOpen &&
-    (!featureFlags.includes("PURCHASE_REQUIREMENT") ||
-      DISABLED_TOKENS[requirement.chain]?.includes(
-        requirement.address?.toLowerCase()
-      ) ||
-      (!accessData && isAccessValidating) ||
-      satisfiesRequirement ||
-      !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement.type) ||
-      !purchaseSupportedChains[requirement.type]?.includes(requirement.chain))
-  )
-    return null
 
   return (
     <>

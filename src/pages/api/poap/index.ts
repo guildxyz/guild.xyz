@@ -1,6 +1,5 @@
-import FormData from "form-data"
 import formidable from "formidable"
-import fs from "fs"
+import { readFile } from "fs/promises"
 import { NextApiRequest, NextApiResponse } from "next"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -42,8 +41,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const image = files?.image
         if (image && !Array.isArray(image)) {
           const fileType = image.mimetype?.replace("image/", "") ?? "png"
-          const fileInstance = fs.createReadStream(image.filepath)
-          formData.append("image", fileInstance, `image.${fileType}`)
+          const buffer = await readFile(image.filepath)
+          const blob = new Blob([buffer], {
+            type: image.mimetype,
+          })
+          formData.append("image", blob, `image.${fileType}`)
         }
 
         resolve()

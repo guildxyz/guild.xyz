@@ -1,4 +1,5 @@
 import { BigNumberish } from "@ethersproject/bignumber"
+import { ContractInterface } from "@ethersproject/contracts"
 import { Chain, RPC } from "connectors"
 import { RequirementType } from "requirements"
 import GUILD_PIN_ABI from "static/abis/guildPin.json"
@@ -212,46 +213,6 @@ export const getAssetsCallParams: Record<
   },
 }
 
-export const DISABLED_TOKENS: Partial<Record<Chain, string[]>> = {
-  ETHEREUM: [
-    "0x0e42acbd23faee03249daff896b78d7e79fbd58e",
-    "0x5b272ce3e225b019a3fbd968206824b24c674344",
-    "0x87165b659ba7746907a48763063efa3b323c2b07",
-    "0x472d0b0ddfe0bc02c27928b8bcbd67e65d07d48a",
-    "0x250316b3e46600417654b13bea68b5f64d61e609",
-    "0x59c1349bc6f28a427e78ddb6130ec669c2f39b48",
-    "0x742b70151cd3bc7ab598aaff1d54b90c3ebc6027",
-    "0x93dede06ae3b5590af1d4c111bc54c3f717e4b35",
-    "0x0ab87046fbb341d058f17cbc4c1133f25a20a52f",
-  ],
-  ARBITRUM: [
-    "0xf42ae1d54fd613c9bb14810b0588faaa09a426ca",
-    "0x1addd80e6039594ee970e5872d247bf0414c8903",
-    "0xd2D1162512F927a7e282Ef43a362659E4F2a728F",
-    "0xa7af63b5154eb5d6fb50a6d70d5c229e5f030ab2",
-    "0x59745774ed5eff903e615f5a2282cae03484985a",
-    "0xce3b19d820cb8b9ae370e423b0a329c4314335fe",
-    "0xb67c014fa700e69681a673876eb8bafaa36bff71",
-    "0x68f5d998f00bb2460511021741d098c05721d8ff",
-    "0xfbd849e6007f9bc3cc2d6eb159c045b8dc660268",
-    "0x7d1d610fe82482412842e8110aff1cb72fa66bc8",
-    "0xbabf696008ddade1e17d302b972376b8a7357698",
-  ],
-  POLYGON: [
-    "0x3ca3218d6c52b640b0857cc19b69aa9427bc842c",
-    "0x971039bf0a49c8d8a675f839739ee7a42511ec91",
-    "0x9d373d22fd091d7f9a6649eb067557cc12fb1a0a",
-    "0xbc4fb4ed825c65ff48163af7e59d49e32edb5269",
-    "0x8b7aa8f5cc9996216a88d900df8b8a0a3905939a",
-    "0x3ab2da31bbd886a7edf68a6b60d3cde657d3a15d",
-    "0x0cdf4195ed44fd661b4df304fb453096671b4099",
-    "0xe90056b377cbbb477e3950505ccbd8d00b9cdc75",
-    "0x5a6ae1fd70d04ba4a279fc219dfabc53825cb01d",
-    "0x11a83070d6f41ebe3764e4efed7df9b9d20a03fa",
-  ],
-  BSC: ["0xd4888870c8686c748232719051b677791dbda26d"],
-}
-
 export const FEE_COLLECTOR_CONTRACT: Partial<Record<Chain, string>> = {
   ETHEREUM: "0xe4b4c6a7c6b6396032096C12aDf46B7F14a70F4d",
   POLYGON: "0xe4b4c6a7c6b6396032096C12aDf46B7F14a70F4d",
@@ -261,16 +222,64 @@ export const paymentSupportedChains: Chain[] = Object.keys(
   FEE_COLLECTOR_CONTRACT
 ) as Chain[]
 
-export const GUILD_PIN_CONTRACT = {
-  // POLYGON_MUMBAI: {
-  //   address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
-  //   abi: GUILD_PIN_ABI,
-  // },
-  POLYGON: {
-    address: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
-    abi: GUILD_PIN_ABI,
+type GuildPinContracts = Partial<
+  Record<Chain, { address: string; abi: ContractInterface }>
+>
+
+const GUILD_PIN_CONTRACTS = {
+  DEFAULT: {
+    // POLYGON_MUMBAI: {
+    //   address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
+    //   abi: GUILD_PIN_ABI,
+    // },
+    POLYGON: {
+      address: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
+      abi: GUILD_PIN_ABI,
+    },
+  },
+  // Sybil-test
+  32076: {
+    BSC: {
+      address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
+      abi: GUILD_PIN_ABI,
+    },
+  },
+  // Linea
+  32319: {
+    BSC: {
+      address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
+      abi: GUILD_PIN_ABI,
+    },
+  },
+  // Arbitrum
+  9839: {
+    ARBITRUM: {
+      address: "0x0e6a14106497a7de36fba446628860c062e9e302",
+      abi: GUILD_PIN_ABI,
+    },
+  },
+  // Alpha Venture DAO
+  17326: {
+    ARBITRUM: {
+      address: "0x0e6a14106497a7de36fba446628860c062e9e302",
+      abi: GUILD_PIN_ABI,
+    },
   },
 }
 // TODO: satisfies Partial<Record<Chain, { address: string; abi: ContractInterface }>> - we just can't use it in Next.js 12, but we should add it later.
 
-export type GuildPinsSupportedChain = keyof typeof GUILD_PIN_CONTRACT
+export type GuildPinsSupportedChain =
+  keyof typeof GUILD_PIN_CONTRACTS extends infer Keys
+    ? Keys extends keyof typeof GUILD_PIN_CONTRACTS
+      ? keyof (typeof GUILD_PIN_CONTRACTS)[Keys]
+      : never
+    : never
+
+export const getGuildPinContracts = (guildId?: number): GuildPinContracts => {
+  if (!guildId) return GUILD_PIN_CONTRACTS.DEFAULT
+  return GUILD_PIN_CONTRACTS[guildId] ?? GUILD_PIN_CONTRACTS.DEFAULT
+}
+
+export const flattenedGuildPinChainsData = Object.fromEntries(
+  Object.values(GUILD_PIN_CONTRACTS).map((entry) => Object.entries(entry).flat())
+)

@@ -367,7 +367,7 @@ const GuildCard = ({ guild, baseUrl }: GuildCardProps): JSX.Element => (
             fontSize: "7px",
           }}
         >
-          <span>{`${guild.roles.length} roles`}</span>
+          <span>{`${guild.rolesCount} roles`}</span>
         </div>
       </div>
     </div>

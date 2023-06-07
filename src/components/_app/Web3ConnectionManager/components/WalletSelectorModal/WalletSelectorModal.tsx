@@ -201,11 +201,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               </Text>
             )}
             <Stack spacing="0">
-              {connectors.map(([conn, connectorHooks]) => {
+              {connectors.map(([conn, connectorHooks], i) => {
                 if (!conn || !connectorHooks) return null
 
                 return (
-                  <CardMotionWrapper key={conn.constructor.name}>
+                  <CardMotionWrapper key={i}>
                     <ConnectorButton
                       connector={conn}
                       connectorHooks={connectorHooks}
