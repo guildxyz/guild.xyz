@@ -1,5 +1,5 @@
-import { Box, ButtonProps, Button as ChakraButton, Text } from "@chakra-ui/react"
-import { LegacyRef, PropsWithChildren, forwardRef } from "react"
+import { Box, Button as ChakraButton, ButtonProps, Text } from "@chakra-ui/react"
+import { forwardRef, LegacyRef, PropsWithChildren } from "react"
 import { Rest } from "types"
 
 const Button = forwardRef(
@@ -7,7 +7,7 @@ const Button = forwardRef(
     { children, ...props }: PropsWithChildren<ButtonProps & Rest>,
     ref: LegacyRef<HTMLButtonElement>
   ): JSX.Element => {
-    const { isLoading, loadingText } = props
+    const { isLoading, loadingText, ...rest } = props
 
     if (typeof children === "string")
       return (
@@ -16,7 +16,21 @@ const Button = forwardRef(
             isLoading && loadingText ? loadingText.toString() : children.toString()
           }
           ref={ref}
-          {...props}
+          isLoading={isLoading}
+          loadingText={
+            loadingText && (
+              <Text
+                as="span"
+                noOfLines={1}
+                sx={{
+                  display: "inline",
+                }}
+              >
+                {loadingText}
+              </Text>
+            )
+          }
+          {...rest}
         >
           <Text
             as="span"
@@ -31,7 +45,7 @@ const Button = forwardRef(
       )
 
     return (
-      <ChakraButton ref={ref} {...props}>
+      <ChakraButton ref={ref} isLoading={isLoading} {...rest}>
         {isLoading && loadingText ? (
           <Text
             as="span"
