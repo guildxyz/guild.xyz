@@ -54,13 +54,6 @@ const openGraphData = [
       "Your wallet is not just a wallet, it's a part of your identity on the internet, full of onchain memories of your experience, like Pins. 📌 Later in all Guilds, but for now only in special ones...",
   },
   {
-    url: "https://blog.zetachain.com/guild-joins-zetachain-as-an-omnichain-dao-tooling-launch-partner-ed6fd766ecb4",
-    image: "/landing/discover/guild-zetachain.webp",
-    title: "Guild Joins ZetaChain as an Omnichain DAO Tooling Launch Partner",
-    description:
-      "Largest Guild ZetaChain expands its partnership with Guild.xyz to power cross-chain functionality across its network, including chain/token agnostic payments to DAOs. Claim your non-transferable Guild Pin (Guild's newest feature release) on ZetaChain now.",
-  },
-  {
     url: "https://guild-lego-explorer.vercel.app",
     image: "/landing/discover/guild-lego-explorer.webp",
     title: "Guild LEGO Explorer",
