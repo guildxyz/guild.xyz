@@ -1,14 +1,7 @@
-import {
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputLeftElement,
-  Stack,
-} from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
+import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useFormContext, useWatch } from "react-hook-form"
+import { ControlledCombobox } from "components/zag/Combobox"
+import { useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
 import parseFromObject from "utils/parseFromObject"
@@ -28,8 +21,6 @@ const NooxForm = ({ baseFieldPath }: RequirementFormProps) => {
     formState: { errors },
   } = useFormContext()
 
-  const id = useWatch({ name: `${baseFieldPath}.data.id` })
-
   const { data, error, isValidating } = useSWRImmutable<NooxBadge[]>("/api/noox")
 
   const options = data?.map((badge) => ({
@@ -39,8 +30,6 @@ const NooxForm = ({ baseFieldPath }: RequirementFormProps) => {
     // details: noox.descriptionEligibility.match(/[0-9]+. times/),
   }))
 
-  const selectedOption = options?.find((option) => option.value === id)
-
   return (
     <Stack spacing={4} alignItems="start">
       <FormControl
@@ -49,22 +38,14 @@ const NooxForm = ({ baseFieldPath }: RequirementFormProps) => {
       >
         <FormLabel>Badge:</FormLabel>
 
-        <InputGroup>
-          {selectedOption && (
-            <InputLeftElement>
-              <OptionImage img={selectedOption.img} alt={selectedOption.label} />
-            </InputLeftElement>
-          )}
-
-          <ControlledSelect
-            name={`${baseFieldPath}.data.id`}
-            rules={{ required: "This field is required." }}
-            isClearable
-            isLoading={isValidating}
-            options={options}
-            placeholder="Choose Noox badge"
-          />
-        </InputGroup>
+        <ControlledCombobox
+          name={`${baseFieldPath}.data.id`}
+          rules={{ required: "This field is required." }}
+          isClearable
+          isLoading={isValidating}
+          options={options}
+          placeholder="Choose Noox badge"
+        />
 
         <FormErrorMessage>
           {(error && "Couldn't fetch Noox badges") ||
