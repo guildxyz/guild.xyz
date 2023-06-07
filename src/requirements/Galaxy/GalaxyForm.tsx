@@ -18,7 +18,7 @@ import { useGalaxyCampaign, useGalaxyCampaigns } from "./hooks/useGalaxyCampaign
 
 const galaxyRequirementTypes = [
   {
-    label: "Have a Galxe NFT",
+    label: "Hold a Galxe NFT",
     value: "GALAXY",
   },
   {
