@@ -23,6 +23,7 @@ import { ComboboxOptionsProvider } from "./ComboboxOptionsContext"
 
 type Props = InputProps & {
   options?: SelectOption[]
+  fallbackValue?: SelectOption
   isLoading?: boolean
   beforeOnChange?: (newValue: SelectOption) => void
   onChange?: (newValue: string) => void
@@ -39,6 +40,7 @@ const Combobox = forwardRef(
   (
     {
       options: optionsProp = [],
+      fallbackValue,
       beforeOnChange,
       onChange: onChangeProp,
       afterOnChange,
@@ -123,12 +125,13 @@ const Combobox = forwardRef(
         : optionsProp
 
     const selectedOption =
-      selectedValue || htmlInputPropValue
+      selectedValue || fallbackValue || htmlInputPropValue
         ? options?.find(
             (option) =>
               option.value === (selectedValue ?? htmlInputPropValue) ||
               option.isCreateOption
-          ) ?? {
+          ) ??
+          fallbackValue ?? {
             label: htmlInputPropValue,
             value: htmlInputPropValue,
             img: undefined,
