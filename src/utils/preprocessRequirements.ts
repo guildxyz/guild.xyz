@@ -40,6 +40,19 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         }
 
         if (
+          (requirement.type === "ERC721" || requirement.type === "ERC1155") &&
+          requirement.data?.attributes?.length
+        ) {
+          processedRequirement.data.attributes = requirement.data.attributes.map(
+            (attribute) => ({
+              ...attribute,
+              minValue: attribute.minValue || undefined,
+              maxValue: attribute.maxValue || undefined,
+            })
+          )
+        }
+
+        if (
           requirement.type === "ALLOWLIST" &&
           !requirement.data.addresses &&
           !requirement.data.hideAllowlist

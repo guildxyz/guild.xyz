@@ -11,31 +11,34 @@ import Button from "components/common/Button"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chain, Chains, RPC } from "connectors"
 import { useState } from "react"
-import { GUILD_PIN_CONTRACT } from "utils/guildCheckout/constants"
+import useGuildPinContractsData from "../hooks/useGuildPinContractsData"
 
 type ChainButtonProps = { chain: Chain; comingSoon?: boolean }
 
-const CHAINS: ChainButtonProps[] = [
-  ...Object.keys(GUILD_PIN_CONTRACT).map((chain) => ({
-    chain: chain as Chain,
-  })),
-  { chain: "ETHEREUM", comingSoon: true },
-]
+const MintGuildPinChainPicker = (): JSX.Element => {
+  const guildPinContractsData = useGuildPinContractsData()
+  const CHAINS: ChainButtonProps[] = [
+    ...Object.keys(guildPinContractsData).map((chain) => ({
+      chain: chain as Chain,
+    })),
+    { chain: "ETHEREUM", comingSoon: true },
+  ]
 
-const MintGuildPinChainPicker = (): JSX.Element => (
-  <Stack>
-    <Text fontWeight={"medium"}>Chain to mint on</Text>
-    <SimpleGrid
-      w="full"
-      columns={{ base: 2, sm: Math.min(CHAINS.length, 3) }}
-      gap={2}
-    >
-      {CHAINS.map(({ chain, comingSoon }) => (
-        <ChainButton key={chain} chain={chain} comingSoon={comingSoon} />
-      ))}
-    </SimpleGrid>
-  </Stack>
-)
+  return (
+    <Stack>
+      <Text fontWeight={"medium"}>Chain to mint on</Text>
+      <SimpleGrid
+        w="full"
+        columns={{ base: 2, sm: Math.min(CHAINS.length, 3) }}
+        gap={2}
+      >
+        {CHAINS.map(({ chain, comingSoon }) => (
+          <ChainButton key={chain} chain={chain} comingSoon={comingSoon} />
+        ))}
+      </SimpleGrid>
+    </Stack>
+  )
+}
 
 const ChainButton = ({ chain, comingSoon }: ChainButtonProps): JSX.Element => {
   const { chainId } = useWeb3React()

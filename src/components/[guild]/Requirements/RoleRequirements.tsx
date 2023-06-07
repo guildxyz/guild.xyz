@@ -9,6 +9,7 @@ import {
 import React, { memo, useEffect, useRef, useState } from "react"
 import { VariableSizeList } from "react-window"
 import { Logic, Requirement, Role } from "types"
+import useGuild from "../hooks/useGuild"
 import LogicDivider from "../LogicDivider"
 import AnyOfHeader from "./components/AnyOfHeader"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
@@ -23,9 +24,13 @@ const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
 const PARENT_PADDING = "var(--chakra-space-5)"
 
 const RoleRequirements = ({ role, isOpen }: Props) => {
-  const requirements = role.hiddenRequirements
-    ? [...role.requirements, { isHidden: true, type: "FREE" } as Requirement]
-    : role.requirements
+  const guild = useGuild()
+
+  const requirements =
+    role.hiddenRequirements ||
+    ((role.requirements ?? []).length === 0 && !(guild as any).isFallback)
+      ? [...role.requirements, { type: "HIDDEN", roleId: role.id } as Requirement]
+      : role.requirements
 
   const isVirtualList = requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
   const sliceIndex = (requirements?.length ?? 0) - 3

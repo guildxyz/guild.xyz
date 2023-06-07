@@ -17,6 +17,7 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
+import { WalletConnect as WalletConnectV2 } from "@web3-react/walletconnect-v2"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
@@ -45,6 +46,8 @@ const AccountModal = () => {
         : "MetaMask"
       : c instanceof WalletConnect
       ? "WalletConnect"
+      : c instanceof WalletConnectV2
+      ? "WalletConnect V2"
       : c instanceof CoinbaseWallet
       ? "Coinbase Wallet"
       : ""

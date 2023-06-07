@@ -120,11 +120,13 @@ const variantOutline = (props: Dict) => {
 const variantSubtle = defineStyle((props) => {
   const { colorScheme: c, theme } = props
   const darkBg = transparentize(`${c}.200`, 0.16)(theme)
+  const darkBgHover = transparentize(`${c}.200`, 0.25)(theme)
 
   return {
     bg: mode(`${c}.100`, darkBg)(props),
     color: mode(`${c}.800`, `${c}.200`)(props),
     _hover: {
+      bg: mode(`${c}.200`, darkBgHover)(props),
       _disabled: {
         bg: mode(`${c}.100`, darkBg)(props),
       },
