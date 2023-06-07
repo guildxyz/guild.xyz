@@ -54,7 +54,6 @@ const RoleCard = memo(({ role }: Props) => {
     isOpen: isExpanded,
     onToggle: onToggleExpanded,
     onClose: onCloseExpanded,
-    onOpen: onOpenExpanded,
   } = useDisclosure()
   const descriptionRef = useRef<HTMLDivElement>(null)
 
@@ -174,7 +173,7 @@ const RoleCard = memo(({ role }: Props) => {
               >
                 <RoleDescription
                   description={role.description}
-                  {...{ isExpanded, onOpenExpanded, descriptionRef }}
+                  {...{ isExpanded, onToggleExpanded, descriptionRef }}
                 />
               </SlideFade>
             )}

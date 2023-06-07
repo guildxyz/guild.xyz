@@ -8,14 +8,14 @@ type Props = {
   description: string
   descriptionRef: MutableRefObject<HTMLDivElement>
   isExpanded: boolean
-  onOpenExpanded: () => void
+  onToggleExpanded: () => void
 }
 
 const RoleDescription = ({
   description,
   descriptionRef,
   isExpanded,
-  onOpenExpanded,
+  onToggleExpanded,
 }: Props) => {
   const descriptionHeight =
     descriptionRef.current?.getBoundingClientRect().height || 24
@@ -43,8 +43,8 @@ const RoleDescription = ({
         px={5}
         pb={3}
         wordBreak="break-word"
-        cursor={isExpanded ? "default" : "pointer"}
-        onClick={isExpanded ? undefined : onOpenExpanded}
+        cursor={"pointer"}
+        onClick={onToggleExpanded}
       >
         {parseDescription(description)}
       </Box>
@@ -57,7 +57,7 @@ const RoleDescription = ({
         height={6}
         bgGradient={`linear-gradient(to top, ${shadowColor}, transparent)`}
         pointerEvents="none"
-        opacity={isExpanded ? 0 : 0.5}
+        opacity={isExpanded ? 0 : 0.6}
         transition="opacity 0.2s ease"
       />
     </Collapse>
