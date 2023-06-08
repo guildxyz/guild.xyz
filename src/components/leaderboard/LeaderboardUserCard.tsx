@@ -20,12 +20,18 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
+import dynamic from "next/dynamic"
 import { CaretDown, Trophy } from "phosphor-react"
 import { DetailedUserLeaderboardData } from "types"
 import shortenHex from "utils/shortenHex"
+
+const DynamicScoreFormulaPopover = dynamic(() => import("./ScoreFormulaPopover"), {
+  ssr: false,
+})
 
 type Props = {
   userLeaderboardData: DetailedUserLeaderboardData
@@ -44,6 +50,10 @@ const getTrophyColor = (position: number) => {
 }
 
 const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
+  const { account } = useWeb3React()
+  const shouldRenderScoreTooltip =
+    userLeaderboardData.address?.toLowerCase() === account?.toLowerCase()
+
   const resolvedAddress = useResolveAddress(userLeaderboardData.address)
   const positionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const positionBorderColor = useColorModeValue("gray.200", "gray.600")
@@ -114,13 +124,17 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
                 {resolvedAddress ?? shortenHex(userLeaderboardData.address)}
               </Text>
 
-              <Text
-                as="span"
-                colorScheme="gray"
-                textTransform="uppercase"
-                fontWeight="bold"
-                fontSize="xs"
-              >{`Score: ${userLeaderboardData.score}`}</Text>
+              <HStack spacing={1}>
+                <Text
+                  as="span"
+                  colorScheme="gray"
+                  textTransform="uppercase"
+                  fontWeight="bold"
+                  fontSize="xs"
+                >{`Score: ${userLeaderboardData.score}`}</Text>
+
+                {shouldRenderScoreTooltip && <DynamicScoreFormulaPopover />}
+              </HStack>
             </VStack>
           </HStack>
 
