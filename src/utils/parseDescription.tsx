@@ -25,6 +25,7 @@ const parseDescription = (description?: string) => {
             colorScheme={"primary"}
             isExternal
             display={"unset"}
+            onClick={(e) => e.stopPropagation()}
           >
             {linkMatches[i][0]}
           </Link>

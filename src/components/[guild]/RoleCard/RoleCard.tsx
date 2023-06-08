@@ -16,9 +16,8 @@ import {
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
-import { memo, useEffect } from "react"
+import { memo, useEffect, useRef } from "react"
 import { Role, Visibility as VisibilityType } from "types"
-import parseDescription from "utils/parseDescription"
 import useAccess from "../hooks/useAccess"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -29,6 +28,7 @@ import AccessIndicator from "./components/AccessIndicator"
 import HiddenRewards from "./components/HiddenRewards"
 import MemberCount from "./components/MemberCount"
 import Reward, { RewardIcon } from "./components/Reward"
+import RoleDescription from "./components/RoleDescription"
 
 type Props = {
   role: Role
@@ -50,6 +50,17 @@ const RoleCard = memo(({ role }: Props) => {
   const { isOpen, onClose, onOpen, onToggle } = useDisclosure({
     defaultIsOpen: true,
   })
+  const {
+    isOpen: isExpanded,
+    onToggle: onToggleExpanded,
+    onClose: onCloseExpanded,
+  } = useDisclosure()
+  const descriptionRef = useRef<HTMLDivElement>(null)
+  const initialRequirementsRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!isOpen) onCloseExpanded()
+  }, [isOpen])
 
   useEffect(() => {
     if (isMember && hasAccess && !isAdmin) onClose()
@@ -86,8 +97,8 @@ const RoleCard = memo(({ role }: Props) => {
     >
       <Collapse in={isOpen} startingHeight={collapsedHeight}>
         <SimpleGrid columns={{ base: 1, md: 2 }}>
-          <Flex direction="column" p={5}>
-            <HStack spacing={3}>
+          <Flex direction="column">
+            <HStack spacing={3} p={5}>
               <HStack spacing={4} minW={0}>
                 <GuildLogo
                   imageUrl={role.imageUrl}
@@ -161,12 +172,18 @@ const RoleCard = memo(({ role }: Props) => {
                  */
                 {...(!isOpen && { inert: "true" })}
               >
-                <Box pt={6} wordBreak="break-word">
-                  {parseDescription(role.description)}
-                </Box>
+                <RoleDescription
+                  description={role.description}
+                  {...{
+                    isExpanded,
+                    onToggleExpanded,
+                    descriptionRef,
+                    initialRequirementsRef,
+                  }}
+                />
               </SlideFade>
             )}
-            <Box pt={6} mt="auto">
+            <Box p={5} pt={2} mt="auto">
               {role.rolePlatforms?.map((platform, i) => (
                 <SlideFade
                   key={platform.guildPlatformId}
@@ -222,7 +239,16 @@ const RoleCard = memo(({ role }: Props) => {
                 <AccessIndicator roleId={role.id} {...{ isOpen, onToggle }} />
               )}
             </HStack>
-            <RoleRequirements role={role} isOpen={isOpen} />
+            <RoleRequirements
+              {...{
+                role,
+                isOpen,
+                isExpanded,
+                onToggleExpanded,
+                descriptionRef,
+                initialRequirementsRef,
+              }}
+            />
           </Flex>
         </SimpleGrid>
       </Collapse>
