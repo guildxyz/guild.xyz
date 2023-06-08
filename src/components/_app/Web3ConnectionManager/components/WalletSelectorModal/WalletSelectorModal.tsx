@@ -40,32 +40,25 @@ type Props = {
   onOpen: () => void
 }
 
-const fetchShouldLinkToUser = async ([_, userId]) => {
-  try {
-    const { id: userIdToConnectTo } = JSON.parse(
-      window.localStorage.getItem("userId")
-    )
+const fetchShouldLinkToUser = async ([_, userId, connectParams]) => {
+  const { userId: userIdToConnectTo } = connectParams ?? {}
+  if (!userIdToConnectTo) return false
 
-    if (
-      typeof userId === "number" &&
-      typeof userIdToConnectTo === "number" &&
-      userIdToConnectTo !== userId
-    ) {
-      try {
-        await deleteKeyPairFromIdb(userId).then(() =>
-          mutate(unstable_serialize(["keyPair", userId]))
-        )
-      } catch {}
-    }
-
-    const keypair = await getKeyPairFromIdb(+userIdToConnectTo)
-
-    return !!keypair
-  } catch {
-    // Remove in case it exists in an invalid form
-    window.localStorage.removeItem("userId")
-    return false
+  if (
+    typeof userId === "number" &&
+    typeof userIdToConnectTo === "number" &&
+    userIdToConnectTo !== userId
+  ) {
+    try {
+      await deleteKeyPairFromIdb(userId).then(() =>
+        mutate(unstable_serialize(["keyPair", userId]))
+      )
+    } catch {}
   }
+
+  const keypair = await getKeyPairFromIdb(+userIdToConnectTo)
+
+  return !!keypair
 }
 
 // We don't open the modal on these routes
@@ -75,6 +68,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { isActive, account, connector } = useWeb3React()
   const { data: user } = useSWRImmutable<User>(account ? `/user/${account}` : null)
   const [error, setError] = useState<WalletError & Error>(null)
+  const { setAddressLinkParams, addressLinkParams } = useWeb3ConnectionManager()
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -113,8 +107,16 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   }, [keyPair, ready, router])
 
   const { data: shouldLinkToUser } = useSWR(
-    ["shouldLinkToUser", user?.id],
-    fetchShouldLinkToUser
+    addressLinkParams?.userId
+      ? ["shouldLinkToUser", user?.id, addressLinkParams]
+      : null,
+    fetchShouldLinkToUser,
+    {
+      shouldRetryOnError: false,
+      onError: () => {
+        setAddressLinkParams({ userId: null, address: null })
+      },
+    }
   )
 
   const { isDelegateConnection, setIsDelegateConnection } =
@@ -229,7 +231,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   colorScheme={"green"}
                   onClick={() => set.onSubmit(shouldLinkToUser)}
                   isLoading={set.isLoading || !ready}
-                  isDisabled={!ready || shouldLinkToUser === undefined}
+                  isDisabled={!ready}
                   loadingText={
                     !ready
                       ? "Looking for keypairs"
