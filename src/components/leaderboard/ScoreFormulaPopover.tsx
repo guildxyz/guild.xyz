@@ -30,7 +30,7 @@ const ScoreFormulaPopover = () => (
       <PopoverBody px={4}>
         <Stack spacing={2}>
           <Text fontSize="sm">
-            Your score depends on the rank and quantity of your Guild Pins. Early
+            Your score depends on the rank and amount of your Guild Pins. Early
             minting means lower rank.
           </Text>
 
