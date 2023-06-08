@@ -1,4 +1,13 @@
-import { Box, Collapse, useColorModeValue } from "@chakra-ui/react"
+import {
+  Box,
+  Center,
+  Collapse,
+  Flex,
+  Icon,
+  useColorModeValue,
+} from "@chakra-ui/react"
+import Button from "components/common/Button"
+import { ArrowDown, ArrowUp } from "phosphor-react"
 import { useEffect, useState } from "react"
 import parseDescription from "utils/parseDescription"
 import { RoleCardCollapseProps } from ".."
@@ -56,6 +65,17 @@ const CollapsableRoleDescription = ({
     "var(--chakra-colors-gray-300)",
     "var(--chakra-colors-gray-800)"
   )
+  const buttonWrapperBg = useColorModeValue("white", "gray.700")
+  const buttonColor = useColorModeValue("blackAlpha.500", "gray.400")
+
+  const BUTTON_DEFAULT_STYLES = {
+    opacity: 0,
+    transform: "translateY(10px)",
+  }
+  const BUTTON_HOVER_STYLES = {
+    opacity: 1,
+    transform: !isExpanded && "translateY(0px)",
+  }
 
   return (
     <Collapse
@@ -66,13 +86,39 @@ const CollapsableRoleDescription = ({
       <Box
         ref={descriptionRef}
         px={5}
-        pb={3}
+        pb={10}
         wordBreak="break-word"
-        cursor={"pointer"}
-        onClick={onToggleExpanded}
+        {...(!isExpanded && { cursor: "pointer", onClick: onToggleExpanded })}
+        _hover={{ "+ .expand": BUTTON_HOVER_STYLES }}
       >
         {parseDescription(description)}
       </Box>
+
+      <Center
+        className="expand"
+        pos="absolute"
+        bottom={2}
+        left={0}
+        right={0}
+        zIndex={1}
+        transition="opacity .1s, transform .1s"
+        {...(isExpanded ? BUTTON_HOVER_STYLES : BUTTON_DEFAULT_STYLES)}
+        _hover={BUTTON_HOVER_STYLES}
+      >
+        <Flex borderRadius={"md"} bg={buttonWrapperBg} p="1px" shadow="sm">
+          <Button
+            size="xs"
+            color={buttonColor}
+            borderRadius="md"
+            onClick={onToggleExpanded}
+            textTransform="uppercase"
+            fontWeight="bold"
+            rightIcon={<Icon as={isExpanded ? ArrowUp : ArrowDown} />}
+          >
+            {isExpanded ? "Collapse" : "Click to expand"}
+          </Button>
+        </Flex>
+      </Center>
 
       <Box
         position="absolute"
