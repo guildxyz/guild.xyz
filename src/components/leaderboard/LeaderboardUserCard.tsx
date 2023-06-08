@@ -25,6 +25,7 @@ import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import dynamic from "next/dynamic"
+import Link from "next/link"
 import { CaretDown, Trophy } from "phosphor-react"
 import {
   DetailedUserLeaderboardData,
@@ -163,27 +164,40 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
                   const pinMetadata = getPinMetadata(pin)
 
                   return (
-                    <Circle
+                    <Link
                       key={`${pin.chainId}-${pin.tokenId}`}
-                      size={8}
-                      ml={-3}
-                      _first={{ ml: 0 }}
-                      borderWidth={2}
-                      borderColor={fakeTransparentBorderColor}
+                      href={pinMetadata.attributes
+                        .find((attribute) => attribute.trait_type === "guildId")
+                        .value.toString()}
                     >
-                      <Img
-                        src={pinMetadata.image.replace(
-                          "ipfs://",
-                          process.env.NEXT_PUBLIC_IPFS_GATEWAY
-                        )}
-                        alt={pinMetadata.name}
-                      />
-                    </Circle>
+                      <Circle
+                        position="relative"
+                        size={8}
+                        ml={-3}
+                        _first={{ ml: 0 }}
+                        borderWidth={2}
+                        borderColor={fakeTransparentBorderColor}
+                        transition="transform 0.2s ease"
+                        _hover={{
+                          transform: "translate(0,-0.5rem) scale(1.05)",
+                        }}
+                        cursor="pointer"
+                      >
+                        <Img
+                          src={pinMetadata.image.replace(
+                            "ipfs://",
+                            process.env.NEXT_PUBLIC_IPFS_GATEWAY
+                          )}
+                          alt={pinMetadata.name}
+                        />
+                      </Circle>
+                    </Link>
                   )
                 })}
                 <Popover>
                   <PopoverTrigger>
                     <Circle
+                      position="relative"
                       ml={-3}
                       size={8}
                       bgColor={solidBgColor}
