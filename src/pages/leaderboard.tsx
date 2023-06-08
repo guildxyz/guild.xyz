@@ -92,14 +92,14 @@ const Page = ({ leaderboard: initialData }: Props) => {
     >
       <Stack spacing={10}>
         {account &&
-          (isLoading || !data ? (
+          (isLoading ? (
             <LeaderboardUserCardSkeleton />
-          ) : (
+          ) : data ? (
             <LeaderboardUserCard
               position={data.position}
               userLeaderboardData={detailedUserLeaderboardData}
             />
-          ))}
+          ) : null)}
 
         <Section title={account ? "Leaderboard" : undefined}>
           <>
