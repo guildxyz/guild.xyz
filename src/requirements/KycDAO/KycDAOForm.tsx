@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -33,7 +33,7 @@ const KycDAOForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       >
         <FormLabel>Contract:</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.address`}
           rules={{
             required: "This field is required.",
