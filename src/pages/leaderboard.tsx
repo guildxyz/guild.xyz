@@ -1,4 +1,4 @@
-import { Stack } from "@chakra-ui/react"
+import { Stack, Text } from "@chakra-ui/react"
 import { kv } from "@vercel/kv"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
@@ -19,6 +19,8 @@ type Props = {
 
 const PAGE_SIZE = 25
 const MAX_SWR_INFINITE_SIZE = 4
+const DESCRIPTION =
+  "This board represents the top Guild pin collectors. Keep your eyes open and gotta catch 'em all! The guild team is preparing something cool for the top collectors. Disclaimer: It won't be a token airdrop."
 
 const getKey = (pageIndex: number, previousPageData: any[]) => {
   if (previousPageData && !previousPageData.length) return null
@@ -68,7 +70,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
   return (
     <Layout
       title="Guild Pins leaderboard"
-      ogDescription="See how many addresses satisfy requirements and make allowlists out of them"
+      ogDescription={DESCRIPTION}
       background="gray.800"
       backgroundProps={{
         opacity: 1,
@@ -85,6 +87,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
       textColor="white"
       backgroundOffset={46}
       maxWidth="container.md"
+      description={<Text>{DESCRIPTION}</Text>}
     >
       <Stack spacing={10}>
         {account &&
