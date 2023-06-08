@@ -1,12 +1,13 @@
 import { Box, Collapse, useColorModeValue } from "@chakra-ui/react"
-import { MutableRefObject } from "react"
+import { MutableRefObject, useEffect, useState } from "react"
 import parseDescription from "utils/parseDescription"
 
-const MAX_REQUIREMENTS_HEIGHT = 250
+const MAX_INITIAL_REQS_HEIGHT = 250
 
 type Props = {
   description: string
   descriptionRef: MutableRefObject<HTMLDivElement>
+  initialRequirementsRef: MutableRefObject<HTMLDivElement>
   isExpanded: boolean
   onToggleExpanded: () => void
 }
@@ -14,18 +15,38 @@ type Props = {
 const RoleDescription = ({
   description,
   descriptionRef,
+  initialRequirementsRef,
   isExpanded,
   onToggleExpanded,
 }: Props) => {
   const descriptionHeight =
     descriptionRef.current?.getBoundingClientRect().height || 24
+  const [maxInitialReqsHeight, setMaxInitialReqsHeight] = useState(
+    MAX_INITIAL_REQS_HEIGHT
+  )
+
+  useEffect(() => {
+    if (!initialRequirementsRef.current) return
+
+    const observer = new ResizeObserver((entries) => {
+      const reqsHeight = entries[0].contentRect.height
+      if (reqsHeight > MAX_INITIAL_REQS_HEIGHT)
+        setMaxInitialReqsHeight(reqsHeight - 25)
+    })
+
+    observer.observe(initialRequirementsRef.current)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [initialRequirementsRef.current])
 
   const shadowColor = useColorModeValue(
     "var(--chakra-colors-gray-300)",
     "var(--chakra-colors-gray-800)"
   )
 
-  if (descriptionHeight <= MAX_REQUIREMENTS_HEIGHT)
+  if (descriptionHeight <= MAX_INITIAL_REQS_HEIGHT)
     return (
       <Box ref={descriptionRef} px={5} pb={3} wordBreak="break-word">
         {parseDescription(description)}
@@ -35,7 +56,7 @@ const RoleDescription = ({
   return (
     <Collapse
       in={isExpanded}
-      startingHeight={MAX_REQUIREMENTS_HEIGHT}
+      startingHeight={maxInitialReqsHeight}
       style={{ position: "relative" }}
     >
       <Box

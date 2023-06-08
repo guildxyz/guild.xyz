@@ -56,6 +56,7 @@ const RoleCard = memo(({ role }: Props) => {
     onClose: onCloseExpanded,
   } = useDisclosure()
   const descriptionRef = useRef<HTMLDivElement>(null)
+  const initialRequirementsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!isOpen) onCloseExpanded()
@@ -173,7 +174,12 @@ const RoleCard = memo(({ role }: Props) => {
               >
                 <RoleDescription
                   description={role.description}
-                  {...{ isExpanded, onToggleExpanded, descriptionRef }}
+                  {...{
+                    isExpanded,
+                    onToggleExpanded,
+                    descriptionRef,
+                    initialRequirementsRef,
+                  }}
                 />
               </SlideFade>
             )}
@@ -234,7 +240,14 @@ const RoleCard = memo(({ role }: Props) => {
               )}
             </HStack>
             <RoleRequirements
-              {...{ role, isOpen, isExpanded, onToggleExpanded, descriptionRef }}
+              {...{
+                role,
+                isOpen,
+                isExpanded,
+                onToggleExpanded,
+                descriptionRef,
+                initialRequirementsRef,
+              }}
             />
           </Flex>
         </SimpleGrid>

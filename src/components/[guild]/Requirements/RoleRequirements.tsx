@@ -21,6 +21,7 @@ type Props = {
   isExpanded: boolean
   onToggleExpanded: () => void
   descriptionRef: MutableRefObject<HTMLDivElement>
+  initialRequirementsRef: MutableRefObject<HTMLDivElement>
 }
 
 const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
@@ -32,6 +33,7 @@ const RoleRequirements = ({
   isExpanded,
   onToggleExpanded,
   descriptionRef,
+  initialRequirementsRef,
 }: Props) => {
   const guild = useGuild()
 
@@ -69,19 +71,21 @@ const RoleRequirements = ({
           />
         ) : (
           <>
-            {shownRequirements.map((requirement, i) => (
-              <SlideFade
-                key={i}
-                in={isOpen}
-                transition={{ enter: { delay: i * 0.1 } }}
-                style={{ width: "100%" }}
-              >
-                <RequirementDisplayComponent requirement={requirement} />
-                {i < shownRequirements.length - 1 && (
-                  <LogicDivider logic={role.logic} />
-                )}
-              </SlideFade>
-            ))}
+            <VStack ref={initialRequirementsRef} spacing={0} w="full">
+              {shownRequirements.map((requirement, i) => (
+                <SlideFade
+                  key={i}
+                  in={isOpen}
+                  transition={{ enter: { delay: i * 0.1 } }}
+                  style={{ width: "100%" }}
+                >
+                  <RequirementDisplayComponent requirement={requirement} />
+                  {i < shownRequirements.length - 1 && (
+                    <LogicDivider logic={role.logic} />
+                  )}
+                </SlideFade>
+              ))}
+            </VStack>
             <Collapse
               in={isExpanded}
               animateOpacity={false}
