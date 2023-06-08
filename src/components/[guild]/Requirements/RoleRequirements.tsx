@@ -11,6 +11,7 @@ import { VariableSizeList } from "react-window"
 import { Logic, Requirement, Role } from "types"
 import useGuild from "../hooks/useGuild"
 import LogicDivider from "../LogicDivider"
+import { RoleCardCollapseProps } from "../RoleCard"
 import AnyOfHeader from "./components/AnyOfHeader"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
 import RequirementDisplayComponent from "./components/RequirementDisplayComponent"
@@ -18,11 +19,7 @@ import RequirementDisplayComponent from "./components/RequirementDisplayComponen
 type Props = {
   role: Role
   isOpen: boolean
-  isExpanded: boolean
-  onToggleExpanded: () => void
-  descriptionRef: MutableRefObject<HTMLDivElement>
-  initialRequirementsRef: MutableRefObject<HTMLDivElement>
-}
+} & RoleCardCollapseProps
 
 const VIRTUAL_LIST_REQUIREMENT_LIMIT = 10
 const PARENT_PADDING = "var(--chakra-space-5)"
@@ -66,7 +63,7 @@ const RoleRequirements = ({
           <Spinner />
         ) : isVirtualList ? (
           <VirtualRequirements
-            {...{ isRequirementsExpanded: isExpanded, requirements, descriptionRef }}
+            {...{ isExpanded, requirements, descriptionRef }}
             logic={role.logic}
           />
         ) : (
@@ -132,12 +129,12 @@ const RoleRequirements = ({
 
 const VirtualRequirements = memo(
   ({
-    isRequirementsExpanded,
+    isExpanded,
     requirements,
     logic,
     descriptionRef,
   }: {
-    isRequirementsExpanded: boolean
+    isExpanded: boolean
     requirements: Requirement[]
     logic: Logic
     descriptionRef: MutableRefObject<HTMLDivElement>
@@ -149,12 +146,12 @@ const VirtualRequirements = memo(
     const descriptionHeight = descriptionRef.current?.getBoundingClientRect().height
 
     useEffect(() => {
-      if (!isRequirementsExpanded || !listWrapperRef.current) return
+      if (!isExpanded || !listWrapperRef.current) return
       listWrapperRef.current.children?.[0]?.scrollTo({
         behavior: "smooth",
         top: 30,
       })
-    }, [isRequirementsExpanded])
+    }, [isExpanded])
 
     const Row = ({ index, style }: any) => {
       const rowRef = useRef<HTMLDivElement>(null)
@@ -184,15 +181,13 @@ const VirtualRequirements = memo(
         <VariableSizeList
           ref={listRef}
           width={`calc(100% + ${PARENT_PADDING})`}
-          height={
-            isRequirementsExpanded ? Math.max(descriptionHeight + 50, 500) : 275
-          }
+          height={isExpanded ? Math.max(descriptionHeight + 50, 500) : 275}
           itemCount={requirements.length}
           itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
           className="custom-scrollbar"
           style={{
-            marginBottom: isRequirementsExpanded && `calc(${PARENT_PADDING} * -1)`,
-            overflowY: isRequirementsExpanded ? "scroll" : "hidden",
+            marginBottom: isExpanded && `calc(${PARENT_PADDING} * -1)`,
+            overflowY: isExpanded ? "scroll" : "hidden",
             WebkitMaskImage: `linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)`,
           }}
         >

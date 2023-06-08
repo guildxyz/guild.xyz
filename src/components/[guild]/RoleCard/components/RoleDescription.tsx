@@ -1,16 +1,13 @@
 import { Box, Collapse, useColorModeValue } from "@chakra-ui/react"
-import { MutableRefObject, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import parseDescription from "utils/parseDescription"
+import { RoleCardCollapseProps } from ".."
 
 const MAX_INITIAL_REQS_HEIGHT = 250
 
 type Props = {
   description: string
-  descriptionRef: MutableRefObject<HTMLDivElement>
-  initialRequirementsRef: MutableRefObject<HTMLDivElement>
-  isExpanded: boolean
-  onToggleExpanded: () => void
-}
+} & RoleCardCollapseProps
 
 const RoleDescription = ({
   description,
