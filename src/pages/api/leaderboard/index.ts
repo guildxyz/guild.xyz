@@ -23,8 +23,8 @@ const handler: NextApiHandler = async (
 
   const leaderboardTopAddressesWithOffset: string[] = await kv.zrange(
     "guildPinsLeaderboard",
-    Math.max(offsetAsNumber + 1, 0),
-    offsetAsNumber + PAGE_SIZE,
+    offsetAsNumber,
+    offsetAsNumber + PAGE_SIZE - 1,
     {
       rev: true,
     }

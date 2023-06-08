@@ -22,10 +22,7 @@ const MAX_SWR_INFINITE_SIZE = 4
 
 const getKey = (pageIndex: number, previousPageData: any[]) => {
   if (previousPageData && !previousPageData.length) return null
-  return `/api/leaderboard?offset=${Math.min(
-    Math.max(PAGE_SIZE * pageIndex - 1, 0),
-    75
-  )}`
+  return `/api/leaderboard?offset=${Math.min(PAGE_SIZE * pageIndex, 75)}`
 }
 
 const Page = ({ leaderboard: initialData }: Props) => {
@@ -124,7 +121,7 @@ const getStaticProps: GetStaticProps = async () => {
   const leaderboardTopAddresses: string[] = await kv.zrange(
     "guildPinsLeaderboard",
     0,
-    PAGE_SIZE,
+    PAGE_SIZE - 1,
     {
       rev: true,
     }
