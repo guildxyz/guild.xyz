@@ -17,10 +17,11 @@ type Props = {
   leaderboard: DetailedUserLeaderboardData[]
 }
 
-const PAGE_SIZE = 25
-const MAX_SWR_INFINITE_SIZE = 4
 const DESCRIPTION =
   "This board shows top Guild Pin collectors. Keep your eyes open for new ones launching every week. Gotta catch 'em all! There is something cool being prepared for the top collectors. (Disclaimer: It won't be a token airdrop.)"
+const PAGE_SIZE = 25
+const MAX_SWR_INFINITE_SIZE = 4
+const SCROLL_PADDING = 40
 
 const getKey = (pageIndex: number, previousPageData: any[]) => {
   if (previousPageData && !previousPageData.length) return null
@@ -58,8 +59,8 @@ const Page = ({ leaderboard: initialData }: Props) => {
   useScrollEffect(() => {
     if (
       isLeaderboardValidating ||
-      window.innerHeight + document.documentElement.scrollTop !==
-        document.documentElement.offsetHeight ||
+      window.innerHeight + document.documentElement.scrollTop <
+        document.documentElement.offsetHeight - SCROLL_PADDING ||
       size === MAX_SWR_INFINITE_SIZE
     )
       return
