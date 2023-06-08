@@ -6,7 +6,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import React, { memo, MutableRefObject, useEffect, useRef } from "react"
+import React, { memo, MutableRefObject, useEffect, useMemo, useRef } from "react"
 import { VariableSizeList } from "react-window"
 import { Logic, Requirement, Role } from "types"
 import useGuild from "../hooks/useGuild"
@@ -143,17 +143,13 @@ const VirtualRequirements = memo(
 
     const listRef = useRef(null)
     const rowHeights = useRef<Record<number, number>>({})
-    const descriptionHeight = descriptionRef.current?.getBoundingClientRect().height
+    const expandedHeight = useMemo(() => {
+      const descriptionHeight =
+        descriptionRef.current?.getBoundingClientRect().height
+      return Math.max(descriptionHeight + 50, 500)
+    }, [descriptionRef.current])
 
-    useEffect(() => {
-      if (!isExpanded || !listWrapperRef.current) return
-      listWrapperRef.current.children?.[0]?.scrollTo({
-        behavior: "smooth",
-        top: 30,
-      })
-    }, [isExpanded])
-
-    const Row = ({ index, style }: any) => {
+    const Row = memo(({ index, style }: any) => {
       const rowRef = useRef<HTMLDivElement>(null)
 
       useEffect(() => {
@@ -174,14 +170,14 @@ const VirtualRequirements = memo(
           </Box>
         </Box>
       )
-    }
+    })
 
     return (
       <Box ref={listWrapperRef} w="full" alignSelf="flex-start">
         <VariableSizeList
           ref={listRef}
           width={`calc(100% + ${PARENT_PADDING})`}
-          height={isExpanded ? Math.max(descriptionHeight + 50, 500) : 275}
+          height={isExpanded ? expandedHeight : 275}
           itemCount={requirements.length}
           itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
           className="custom-scrollbar"
