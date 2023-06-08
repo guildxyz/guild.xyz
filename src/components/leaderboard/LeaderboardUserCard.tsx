@@ -24,11 +24,11 @@ import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { CaretDown, Trophy } from "phosphor-react"
-import { UserLeaderboardData } from "types"
+import { DetailedUserLeaderboardData } from "types"
 import shortenHex from "utils/shortenHex"
 
 type Props = {
-  userLeaderboardData: UserLeaderboardData
+  userLeaderboardData: DetailedUserLeaderboardData
   position: number
 }
 
@@ -125,112 +125,124 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
           </HStack>
 
           <Flex direction="row" alignItems="center">
-            {userLeaderboardData.pins.map((pin) => {
-              const pinMetadata = JSON.parse(
-                Buffer.from(
-                  pin.tokenUri.replace("data:application/json;base64,", ""),
-                  "base64"
-                ).toString("utf-8")
-              )
-
-              return (
-                <Circle
-                  key={`${pin.chainId}-${pin.tokenId}`}
-                  size={8}
-                  ml={-3}
-                  _first={{ ml: 0 }}
-                  borderWidth={2}
-                  borderColor={fakeTransparentBorderColor}
-                >
-                  <Img
-                    src={pinMetadata.image.replace(
-                      "ipfs://",
-                      process.env.NEXT_PUBLIC_IPFS_GATEWAY
-                    )}
-                    alt={pinMetadata.name}
-                  />
-                </Circle>
-              )
-            })}
-
-            <Popover>
-              <PopoverTrigger>
-                <Circle
-                  ml={-3}
-                  size={8}
-                  bgColor={solidBgColor}
-                  borderWidth={2}
-                  borderColor={fakeTransparentBorderColor}
-                >
-                  <IconButton
-                    aria-label="View pins"
-                    icon={<CaretDown />}
-                    boxSize={7}
-                    minW="none"
-                    minH="none"
-                    rounded="full"
-                    borderWidth={2}
-                    borderColor="transparent"
-                    variant="ghost"
-                    size="xs"
-                  />
-                </Circle>
-              </PopoverTrigger>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton rounded="full" />
-                <PopoverHeader fontWeight="bold" fontSize="sm">
-                  Guild Pins
-                </PopoverHeader>
-                <PopoverBody>
-                  <Stack>
-                    {userLeaderboardData.pins.map((pin) => {
-                      const pinMetadata = JSON.parse(
+            {!userLeaderboardData?.pins?.length ? (
+              <PinsListSkeleton />
+            ) : (
+              <>
+                {userLeaderboardData.pins.map((pin) => {
+                  const pinMetadata = pin.tokenUri
+                    ? JSON.parse(
                         Buffer.from(
                           pin.tokenUri.replace("data:application/json;base64,", ""),
                           "base64"
                         ).toString("utf-8")
                       )
+                    : pin
 
-                      return (
-                        <HStack
-                          key={`${pin.chainId}-${pin.tokenId}`}
-                          justifyContent="space-between"
-                        >
-                          <HStack>
-                            <Img
-                              src={pinMetadata.image.replace(
-                                "ipfs://",
-                                process.env.NEXT_PUBLIC_IPFS_GATEWAY
-                              )}
-                              alt={pinMetadata.name}
-                              boxSize={6}
-                            />
-                            <Text as="span" fontWeight="medium" fontSize="sm">
-                              {pinMetadata.name}
-                            </Text>
-                          </HStack>
+                  return (
+                    <Circle
+                      key={`${pin.chainId}-${pin.tokenId}`}
+                      size={8}
+                      ml={-3}
+                      _first={{ ml: 0 }}
+                      borderWidth={2}
+                      borderColor={fakeTransparentBorderColor}
+                    >
+                      <Img
+                        src={pinMetadata.image.replace(
+                          "ipfs://",
+                          process.env.NEXT_PUBLIC_IPFS_GATEWAY
+                        )}
+                        alt={pinMetadata.name}
+                      />
+                    </Circle>
+                  )
+                })}
+                <Popover>
+                  <PopoverTrigger>
+                    <Circle
+                      ml={-3}
+                      size={8}
+                      bgColor={solidBgColor}
+                      borderWidth={2}
+                      borderColor={fakeTransparentBorderColor}
+                    >
+                      <IconButton
+                        aria-label="View pins"
+                        icon={<CaretDown />}
+                        boxSize={7}
+                        minW="none"
+                        minH="none"
+                        rounded="full"
+                        borderWidth={2}
+                        borderColor="transparent"
+                        variant="ghost"
+                        size="xs"
+                      />
+                    </Circle>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <PopoverArrow />
+                    <PopoverCloseButton rounded="full" />
+                    <PopoverHeader fontWeight="bold" fontSize="sm">
+                      Guild Pins
+                    </PopoverHeader>
+                    <PopoverBody>
+                      <Stack>
+                        {userLeaderboardData.pins.map((pin) => {
+                          const pinMetadata = pin.tokenUri
+                            ? JSON.parse(
+                                Buffer.from(
+                                  pin.tokenUri.replace(
+                                    "data:application/json;base64,",
+                                    ""
+                                  ),
+                                  "base64"
+                                ).toString("utf-8")
+                              )
+                            : pin
 
-                          <Text
-                            as="span"
-                            fontWeight="bold"
-                            fontSize="x-small"
-                            colorScheme="gray"
-                            textTransform="uppercase"
-                          >
-                            {`Rank: ${
-                              pinMetadata.attributes.find(
-                                (attr) => attr.trait_type === "rank"
-                              ).value
-                            }`}
-                          </Text>
-                        </HStack>
-                      )
-                    })}
-                  </Stack>
-                </PopoverBody>
-              </PopoverContent>
-            </Popover>
+                          return (
+                            <HStack
+                              key={`${pin.chainId}-${pin.tokenId}`}
+                              justifyContent="space-between"
+                            >
+                              <HStack>
+                                <Img
+                                  src={pinMetadata.image.replace(
+                                    "ipfs://",
+                                    process.env.NEXT_PUBLIC_IPFS_GATEWAY
+                                  )}
+                                  alt={pinMetadata.name}
+                                  boxSize={6}
+                                />
+                                <Text as="span" fontWeight="medium" fontSize="sm">
+                                  {pinMetadata.name}
+                                </Text>
+                              </HStack>
+
+                              <Text
+                                as="span"
+                                fontWeight="bold"
+                                fontSize="x-small"
+                                colorScheme="gray"
+                                textTransform="uppercase"
+                              >
+                                {`Rank: ${
+                                  pinMetadata.attributes.find(
+                                    (attr) => attr.trait_type === "rank"
+                                  ).value
+                                }`}
+                              </Text>
+                            </HStack>
+                          )
+                        })}
+                      </Stack>
+                    </PopoverBody>
+                  </PopoverContent>
+                </Popover>
+              </>
+            )}
           </Flex>
         </Stack>
       </HStack>
@@ -241,8 +253,6 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
 const LeaderboardUserCardSkeleton = () => {
   const positionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const positionBorderColor = useColorModeValue("gray.200", "gray.600")
-  const fakeTransparentBorderColor = useColorModeValue("white", "gray.700")
-  const solidBgColor = useColorModeValue("gray.200", "gray.800")
 
   return (
     <Card spacing={4}>
@@ -273,25 +283,34 @@ const LeaderboardUserCardSkeleton = () => {
             </VStack>
           </HStack>
 
-          <Flex direction="row" alignItems="center">
-            {[...Array(3)].map((_, index) => (
-              <Circle
-                key={index}
-                position="relative"
-                size={8}
-                ml={-3}
-                _first={{ ml: 0 }}
-                borderWidth={2}
-                borderColor={fakeTransparentBorderColor}
-                bgColor={solidBgColor}
-              >
-                <SkeletonCircle boxSize={7} />
-              </Circle>
-            ))}
-          </Flex>
+          <PinsListSkeleton />
         </Stack>
       </HStack>
     </Card>
+  )
+}
+
+const PinsListSkeleton = () => {
+  const fakeTransparentBorderColor = useColorModeValue("white", "gray.700")
+  const solidBgColor = useColorModeValue("gray.200", "gray.800")
+
+  return (
+    <Flex direction="row" alignItems="center">
+      {[...Array(3)].map((_, index) => (
+        <Circle
+          key={index}
+          position="relative"
+          size={8}
+          ml={-3}
+          _first={{ ml: 0 }}
+          borderWidth={2}
+          borderColor={fakeTransparentBorderColor}
+          bgColor={solidBgColor}
+        >
+          <SkeletonCircle boxSize={7} />
+        </Circle>
+      ))}
+    </Flex>
   )
 }
 

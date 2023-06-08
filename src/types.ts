@@ -525,10 +525,10 @@ type LeaderboardPinData = {
   tokenUri: string
 }
 
-type UserLeaderboardData = {
+type DetailedUserLeaderboardData = {
   address: string
   score: number
-  pins: LeaderboardPinData[]
+  pins: LeaderboardPinData[] | GuildPinMetadata[]
 }
 
 export type {
@@ -575,6 +575,6 @@ export type {
   PoapEventDetails,
   AddressConnectionProvider,
   GuildPinMetadata,
-  UserLeaderboardData,
+  DetailedUserLeaderboardData,
 }
 export { ValidationMethod, Visibility, supportedSocialLinks }

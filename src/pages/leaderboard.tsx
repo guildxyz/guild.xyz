@@ -7,13 +7,14 @@ import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
 } from "components/leaderboard/LeaderboardUserCard"
 import useScrollEffect from "hooks/useScrollEffect"
+import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { GetStaticProps } from "next"
 import useSWRImmutable from "swr/immutable"
 import useSWRInfinite from "swr/infinite"
-import { UserLeaderboardData } from "types"
+import { DetailedUserLeaderboardData } from "types"
 
 type Props = {
-  leaderboard: UserLeaderboardData[]
+  leaderboard: DetailedUserLeaderboardData[]
 }
 
 const PAGE_SIZE = 25
@@ -30,9 +31,17 @@ const getKey = (pageIndex: number, previousPageData: any[]) => {
 const Page = ({ leaderboard: initialData }: Props) => {
   const { account } = useWeb3React()
   const { data, isLoading } = useSWRImmutable<{
-    userLeaderboardData: UserLeaderboardData
+    score: number
     position: number
   }>(account ? `/api/leaderboard/${account}` : null)
+
+  const { data: usersGuildPins } = useUsersGuildPins(!account || !data)
+
+  const detailedUserLeaderboardData: DetailedUserLeaderboardData = {
+    ...data,
+    pins: usersGuildPins ?? [],
+    address: account,
+  }
 
   const {
     isValidating: isLeaderboardValidating,
@@ -87,7 +96,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
           ) : (
             <LeaderboardUserCard
               position={data.position}
-              userLeaderboardData={data.userLeaderboardData}
+              userLeaderboardData={detailedUserLeaderboardData}
             />
           ))}
 
@@ -115,12 +124,12 @@ const getStaticProps: GetStaticProps = async () => {
   const leaderboardTopAddresses: string[] = await kv.zrange(
     "guildPinsLeaderboard",
     0,
-    PAGE_SIZE - 1,
+    PAGE_SIZE,
     {
       rev: true,
     }
   )
-  const leaderboard: UserLeaderboardData[] = await kv.mget(
+  const leaderboard: DetailedUserLeaderboardData[] = await kv.mget(
     ...leaderboardTopAddresses.map((address) => `guildPins:${address}`)
   )
 
