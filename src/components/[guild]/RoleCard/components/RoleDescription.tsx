@@ -9,15 +9,29 @@ type Props = {
   description: string
 } & RoleCardCollapseProps
 
-const RoleDescription = ({
+const RoleDescription = (props: Props) => {
+  const { description, descriptionRef } = props
+
+  const descriptionHeight =
+    descriptionRef.current?.getBoundingClientRect().height || 24
+
+  if (descriptionHeight <= MAX_INITIAL_REQS_HEIGHT)
+    return (
+      <Box ref={descriptionRef} px={5} pb={3} wordBreak="break-word">
+        {parseDescription(description)}
+      </Box>
+    )
+
+  return <CollapsableRoleDescription {...props} />
+}
+
+const CollapsableRoleDescription = ({
   description,
   descriptionRef,
   initialRequirementsRef,
   isExpanded,
   onToggleExpanded,
 }: Props) => {
-  const descriptionHeight =
-    descriptionRef.current?.getBoundingClientRect().height || 24
   const [maxInitialReqsHeight, setMaxInitialReqsHeight] = useState(
     MAX_INITIAL_REQS_HEIGHT
   )
@@ -42,13 +56,6 @@ const RoleDescription = ({
     "var(--chakra-colors-gray-300)",
     "var(--chakra-colors-gray-800)"
   )
-
-  if (descriptionHeight <= MAX_INITIAL_REQS_HEIGHT)
-    return (
-      <Box ref={descriptionRef} px={5} pb={3} wordBreak="break-word">
-        {parseDescription(description)}
-      </Box>
-    )
 
   return (
     <Collapse
