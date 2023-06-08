@@ -20,7 +20,7 @@ type Props = {
 const DESCRIPTION =
   "This board shows top Guild Pin collectors. Keep your eyes open for new ones launching every week. Gotta catch 'em all! There is something cool being prepared for the top collectors. (Disclaimer: It won't be a token airdrop.)"
 const PAGE_SIZE = 25
-const MAX_SWR_INFINITE_SIZE = 4
+const MAX_SWR_INFINITE_SIZE = 4 // fetching at most MAX_SWR_INFINITE_SIZE * PAGE_SIZE entries
 const SCROLL_PADDING = 40
 
 const getKey = (pageIndex: number, previousPageData: any[]) => {
