@@ -20,7 +20,7 @@ type Props = {
 const PAGE_SIZE = 25
 const MAX_SWR_INFINITE_SIZE = 4
 const DESCRIPTION =
-  "This board represents the top Guild pin collectors. Keep your eyes open and gotta catch 'em all! The guild team is preparing something cool for the top collectors. Disclaimer: It won't be a token airdrop."
+  "This board shows top Guild Pin collectors. Keep your eyes open for new ones launching every week. Gotta catch 'em all! There is something cool being prepared for the top collectors. (Disclaimer: It won't be a token airdrop.)"
 
 const getKey = (pageIndex: number, previousPageData: any[]) => {
   if (previousPageData && !previousPageData.length) return null
