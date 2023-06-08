@@ -4,13 +4,10 @@ import {
   AlertIcon,
   FormControl,
   FormLabel,
-  InputGroup,
-  InputLeftElement,
   Stack,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { Chain } from "connectors"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -37,10 +34,7 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
   const address = useWatch({ name: `${baseFieldPath}.address` })
   const isPlayground = address === DEPRECATED_PLAYGROUND_ADDRESS
-  const badgeId = useWatch({ name: `${baseFieldPath}.data.id` })
   const { data, isValidating } = useSismoBadges(chain, isPlayground)
-
-  const pickedBadge = data?.find((option) => option.value === badgeId)
 
   useEffect(() => {
     if (isPlayground) return
@@ -77,22 +71,14 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       >
         <FormLabel>Badge</FormLabel>
 
-        <InputGroup>
-          {pickedBadge && (
-            <InputLeftElement>
-              <OptionImage img={pickedBadge?.img} alt={pickedBadge?.label} />
-            </InputLeftElement>
-          )}
-
-          <ControlledSelect
-            name={`${baseFieldPath}.data.id`}
-            rules={{ required: "This field is required." }}
-            isClearable
-            options={data}
-            placeholder="Choose badge"
-            isLoading={isValidating}
-          />
-        </InputGroup>
+        <ControlledCombobox
+          name={`${baseFieldPath}.data.id`}
+          rules={{ required: "This field is required." }}
+          isClearable
+          options={data}
+          placeholder="Choose badge"
+          isLoading={isValidating}
+        />
 
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
