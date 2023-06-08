@@ -26,12 +26,28 @@ import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import dynamic from "next/dynamic"
 import { CaretDown, Trophy } from "phosphor-react"
-import { DetailedUserLeaderboardData } from "types"
+import {
+  DetailedUserLeaderboardData,
+  GuildPinMetadata,
+  LeaderboardPinData,
+} from "types"
 import shortenHex from "utils/shortenHex"
 
 const DynamicScoreFormulaPopover = dynamic(() => import("./ScoreFormulaPopover"), {
   ssr: false,
 })
+
+const getPinMetadata = (
+  pin: LeaderboardPinData | GuildPinMetadata
+): GuildPinMetadata =>
+  "tokenUri" in pin
+    ? JSON.parse(
+        Buffer.from(
+          pin.tokenUri.replace("data:application/json;base64,", ""),
+          "base64"
+        ).toString("utf-8")
+      )
+    : pin
 
 type Props = {
   userLeaderboardData: DetailedUserLeaderboardData
@@ -144,14 +160,7 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
             ) : (
               <>
                 {userLeaderboardData.pins.map((pin) => {
-                  const pinMetadata = pin.tokenUri
-                    ? JSON.parse(
-                        Buffer.from(
-                          pin.tokenUri.replace("data:application/json;base64,", ""),
-                          "base64"
-                        ).toString("utf-8")
-                      )
-                    : pin
+                  const pinMetadata = getPinMetadata(pin)
 
                   return (
                     <Circle
@@ -204,17 +213,7 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
                     <PopoverBody>
                       <Stack>
                         {userLeaderboardData.pins.map((pin) => {
-                          const pinMetadata = pin.tokenUri
-                            ? JSON.parse(
-                                Buffer.from(
-                                  pin.tokenUri.replace(
-                                    "data:application/json;base64,",
-                                    ""
-                                  ),
-                                  "base64"
-                                ).toString("utf-8")
-                              )
-                            : pin
+                          const pinMetadata = getPinMetadata(pin)
 
                           return (
                             <HStack

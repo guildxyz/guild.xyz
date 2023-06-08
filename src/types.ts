@@ -575,6 +575,7 @@ export type {
   PoapEventDetails,
   AddressConnectionProvider,
   GuildPinMetadata,
+  LeaderboardPinData,
   DetailedUserLeaderboardData,
 }
 export { ValidationMethod, Visibility, supportedSocialLinks }
