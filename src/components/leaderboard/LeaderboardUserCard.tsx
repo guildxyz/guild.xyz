@@ -27,11 +27,7 @@ import Link from "components/common/Link"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import dynamic from "next/dynamic"
 import { CaretDown, Trophy } from "phosphor-react"
-import {
-  DetailedUserLeaderboardData,
-  GuildPinMetadata,
-  LeaderboardPinData,
-} from "types"
+import { GuildPinMetadata } from "types"
 import shortenHex from "utils/shortenHex"
 
 const DynamicScoreFormulaPopover = dynamic(() => import("./ScoreFormulaPopover"), {
@@ -39,27 +35,22 @@ const DynamicScoreFormulaPopover = dynamic(() => import("./ScoreFormulaPopover")
 })
 
 const getPinMetadata = (
-  pin: LeaderboardPinData | GuildPinMetadata
+  tokenUriOrMetadata: string | GuildPinMetadata
 ): GuildPinMetadata =>
-  "tokenUri" in pin
+  typeof tokenUriOrMetadata === "string"
     ? JSON.parse(
         Buffer.from(
-          pin.tokenUri.replace("data:application/json;base64,", ""),
+          tokenUriOrMetadata.replace("data:application/json;base64,", ""),
           "base64"
         ).toString("utf-8")
       )
-    : pin
-
-/**
- * - Ide jöhetne egy olyan refactor, hogy 4 dolgot várjon a komponens: address,
- *   position, score, pins: string[] | GuildPinMetadata[] és akkor egyértelműbb
- *   lenne, hogy vagy konkrét metadatat vagy tokenUri-t kapunk, semmi más proppal nem
- *   dolgozhatunk (pl. rank, tokenId, meg ilyesmi)
- */
+    : tokenUriOrMetadata
 
 type Props = {
-  userLeaderboardData: DetailedUserLeaderboardData
+  address: string
+  score: number
   position: number
+  pins: string[] | GuildPinMetadata[]
 }
 
 const getTrophyColor = (position: number) => {
@@ -73,12 +64,11 @@ const getTrophyColor = (position: number) => {
   }
 }
 
-const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
+const LeaderboardUserCard = ({ address, score, position, pins }: Props) => {
   const { account } = useWeb3React()
-  const shouldRenderScoreTooltip =
-    userLeaderboardData.address?.toLowerCase() === account?.toLowerCase()
+  const shouldRenderScoreTooltip = address?.toLowerCase() === account?.toLowerCase()
 
-  const resolvedAddress = useResolveAddress(userLeaderboardData.address)
+  const resolvedAddress = useResolveAddress(address)
   const positionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const positionBorderColor = useColorModeValue("gray.200", "gray.600")
   const guildAvatarBgColor = useColorModeValue("gray.700", "gray.600")
@@ -132,7 +122,7 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
         >
           <HStack spacing={4}>
             <Circle size={10} bgColor={guildAvatarBgColor} color="white">
-              <GuildAvatar size={5} address={userLeaderboardData.address} />
+              <GuildAvatar size={5} address={address} />
             </Circle>
 
             <VStack alignItems="start" spacing={0}>
@@ -145,7 +135,7 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
                 maxW="full"
                 noOfLines={1}
               >
-                {resolvedAddress ?? shortenHex(userLeaderboardData.address)}
+                {resolvedAddress ?? shortenHex(address)}
               </Text>
 
               <HStack spacing={1}>
@@ -155,7 +145,7 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
                   textTransform="uppercase"
                   fontWeight="bold"
                   fontSize="xs"
-                >{`Score: ${userLeaderboardData.score}`}</Text>
+                >{`Score: ${score}`}</Text>
 
                 {shouldRenderScoreTooltip && <DynamicScoreFormulaPopover />}
               </HStack>
@@ -163,11 +153,11 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
           </HStack>
 
           <Flex direction="row" alignItems="center">
-            {!userLeaderboardData?.pins?.length ? (
+            {!pins?.length ? (
               <PinsListSkeleton />
             ) : (
               <>
-                {userLeaderboardData.pins.map((pin) => {
+                {pins.map((pin) => {
                   const pinMetadata = getPinMetadata(pin)
 
                   return (
@@ -220,7 +210,7 @@ const LeaderboardUserCard = ({ userLeaderboardData, position }: Props) => {
                     </PopoverHeader>
                     <PopoverBody>
                       <Stack>
-                        {userLeaderboardData.pins.map((pin) => {
+                        {pins.map((pin) => {
                           const pinMetadata = getPinMetadata(pin)
 
                           return (

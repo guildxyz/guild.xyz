@@ -37,12 +37,6 @@ const Page = ({ leaderboard: initialData }: Props) => {
 
   const { data: usersGuildPins } = useUsersGuildPins(!account || !data)
 
-  const detailedUserLeaderboardData: DetailedUserLeaderboardData = {
-    ...data,
-    pins: usersGuildPins ?? [],
-    address: account,
-  }
-
   const {
     isValidating: isLeaderboardValidating,
     setSize,
@@ -96,8 +90,10 @@ const Page = ({ leaderboard: initialData }: Props) => {
             <LeaderboardUserCardSkeleton />
           ) : data ? (
             <LeaderboardUserCard
+              address={account}
+              score={data.score}
               position={data.position}
-              userLeaderboardData={detailedUserLeaderboardData}
+              pins={usersGuildPins}
             />
           ) : null)}
 
@@ -106,8 +102,10 @@ const Page = ({ leaderboard: initialData }: Props) => {
             {leaderboard?.flat().map((userLeaderboardData, index) => (
               <LeaderboardUserCard
                 key={index}
-                userLeaderboardData={userLeaderboardData}
+                address={userLeaderboardData.address}
+                score={userLeaderboardData.score}
                 position={index + 1}
+                pins={userLeaderboardData.pins.map((p) => p.tokenUri)}
               />
             ))}
             {isLeaderboardValidating &&

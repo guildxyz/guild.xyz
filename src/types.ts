@@ -528,7 +528,7 @@ type LeaderboardPinData = {
 type DetailedUserLeaderboardData = {
   address: string
   score: number
-  pins: LeaderboardPinData[] | GuildPinMetadata[]
+  pins: LeaderboardPinData[]
 }
 
 export type {
