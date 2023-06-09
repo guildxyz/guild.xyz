@@ -128,10 +128,11 @@ const LeaderboardUserCard = ({
           w="full"
           direction={{ base: "column", md: "row" }}
           justifyContent="space-between"
-          px={{ base: 5, md: 6 }}
-          py={{ base: 6, md: 7 }}
+          px={{ base: 4, md: 6 }}
+          py={{ base: 5, md: 7 }}
+          spacing={3}
         >
-          <HStack spacing={4}>
+          <HStack spacing={{ base: 2, md: 3 }}>
             <Circle size={10} bgColor={guildAvatarBgColor} color="white">
               <GuildAvatar size={5} address={address} />
             </Circle>
