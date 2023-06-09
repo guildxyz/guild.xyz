@@ -28,23 +28,23 @@ const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
   const usersGuildPinTokenURIsOnChain = await Promise.all<{
     chainId: number
     tokenId: number
-    tokenURI: string
+    tokenUri: string
   }>(
     usersGuildPinIdsOnChain.map(async (tokenId) => {
-      const tokenURI: string = await contract.tokenURI(tokenId)
+      const tokenUri: string = await contract.tokenURI(tokenId)
       return {
         chainId: Chains[chain],
         tokenId: tokenId.toNumber(),
-        tokenURI,
+        tokenUri,
       }
     })
   )
 
   const usersPinsMetadataJSONs = await Promise.all(
-    usersGuildPinTokenURIsOnChain.map(async ({ chainId, tokenId, tokenURI }) => {
+    usersGuildPinTokenURIsOnChain.map(async ({ chainId, tokenId, tokenUri }) => {
       const metadata: GuildPinMetadata = JSON.parse(
         Buffer.from(
-          tokenURI.replace("data:application/json;base64,", ""),
+          tokenUri.replace("data:application/json;base64,", ""),
           "base64"
         ).toString("utf-8")
       )
