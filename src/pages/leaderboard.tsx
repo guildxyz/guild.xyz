@@ -35,7 +35,8 @@ const Page = ({ leaderboard: initialData }: Props) => {
     position: number
   }>(account ? `/api/leaderboard/${account}` : null)
 
-  const { data: usersGuildPins } = useUsersGuildPins(!account || !data)
+  const shouldFetchUsersGuildPins = account && data
+  const { data: usersGuildPins } = useUsersGuildPins(!shouldFetchUsersGuildPins)
 
   const {
     isValidating: isLeaderboardValidating,
@@ -93,7 +94,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
               address={account}
               score={data.score}
               position={data.position}
-              pins={usersGuildPins}
+              pinMetadataArray={usersGuildPins}
             />
           ) : null)}
 
@@ -105,7 +106,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
                 address={userLeaderboardData.address}
                 score={userLeaderboardData.score}
                 position={index + 1}
-                pins={userLeaderboardData.pins.map((p) => p.tokenUri)}
+                pinMetadataArray={userLeaderboardData.pins.map((p) => p.tokenUri)}
               />
             ))}
             {isLeaderboardValidating &&

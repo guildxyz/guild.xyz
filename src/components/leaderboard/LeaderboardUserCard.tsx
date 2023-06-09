@@ -50,7 +50,7 @@ type Props = {
   address: string
   score: number
   position: number
-  pins: string[] | GuildPinMetadata[]
+  pinMetadataArray: string[] | GuildPinMetadata[]
 }
 
 const getTrophyColor = (position: number) => {
@@ -64,7 +64,12 @@ const getTrophyColor = (position: number) => {
   }
 }
 
-const LeaderboardUserCard = ({ address, score, position, pins }: Props) => {
+const LeaderboardUserCard = ({
+  address,
+  score,
+  position,
+  pinMetadataArray,
+}: Props) => {
   const { account } = useWeb3React()
   const shouldRenderScoreTooltip = address?.toLowerCase() === account?.toLowerCase()
 
@@ -159,11 +164,11 @@ const LeaderboardUserCard = ({ address, score, position, pins }: Props) => {
           </HStack>
 
           <Flex direction="row" alignItems="center">
-            {!pins?.length ? (
+            {!pinMetadataArray?.length ? (
               <PinsListSkeleton />
             ) : (
               <>
-                {pins.map((pin) => {
+                {pinMetadataArray.map((pin) => {
                   const pinMetadata = getPinMetadata(pin)
 
                   return (
@@ -216,7 +221,7 @@ const LeaderboardUserCard = ({ address, score, position, pins }: Props) => {
                     </PopoverHeader>
                     <PopoverBody>
                       <Stack>
-                        {pins.map((pin) => {
+                        {pinMetadataArray.map((pin) => {
                           const pinMetadata = getPinMetadata(pin)
 
                           return (
