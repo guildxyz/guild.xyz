@@ -98,7 +98,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
             />
           ) : null)}
 
-        <Section title={account ? "Leaderboard" : undefined}>
+        <Section title={account && data ? "Leaderboard" : undefined}>
           <>
             {leaderboard?.flat().map((userLeaderboardData, index) => (
               <LeaderboardUserCard
