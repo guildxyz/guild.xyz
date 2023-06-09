@@ -169,11 +169,13 @@ const LeaderboardUserCard = ({
             ) : (
               <>
                 {pinMetadataArray.map((pin) => {
+                  const key =
+                    typeof pin === "string" ? pin : `${pin.chainId}-${pin.tokenId}`
                   const pinMetadata = getPinMetadata(pin)
 
                   return (
                     <Circle
-                      key={`${pin.chainId}-${pin.tokenId}`}
+                      key={key}
                       size={8}
                       ml={-3}
                       _first={{ ml: 0 }}
@@ -222,13 +224,14 @@ const LeaderboardUserCard = ({
                     <PopoverBody>
                       <Stack>
                         {pinMetadataArray.map((pin) => {
+                          const key =
+                            typeof pin === "string"
+                              ? pin
+                              : `${pin.chainId}-${pin.tokenId}`
                           const pinMetadata = getPinMetadata(pin)
 
                           return (
-                            <HStack
-                              key={`${pin.chainId}-${pin.tokenId}`}
-                              justifyContent="space-between"
-                            >
+                            <HStack key={key} justifyContent="space-between">
                               <HStack>
                                 <Img
                                   src={pinMetadata.image.replace(
