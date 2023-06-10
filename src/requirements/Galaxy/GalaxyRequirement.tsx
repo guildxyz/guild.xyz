@@ -15,7 +15,7 @@ const GalaxyRequirement = (props: RequirementProps): JSX.Element => {
     <Requirement image={campaign?.thumbnail} isImageLoading={isLoading} {...props}>
       <Text as="span">
         {requirement.type === "GALAXY_PARTICIPATION"
-          ? `Participate in the `
+          ? "Participate in the "
           : "Hold a(n) "}
       </Text>
       {!campaign || isLoading ? (
