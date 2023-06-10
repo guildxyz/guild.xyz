@@ -4,6 +4,7 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
+  Stack,
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -14,6 +15,17 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import { useGalaxyCampaign, useGalaxyCampaigns } from "./hooks/useGalaxyCampaigns"
+
+const galaxyRequirementTypes = [
+  {
+    label: "Hold a Galxe NFT",
+    value: "GALAXY",
+  },
+  {
+    label: "Participate in a campaign",
+    value: "GALAXY_PARTICIPATION",
+  },
+]
 
 const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
@@ -73,50 +85,71 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
   }, [campaigns, campaign])
 
   return (
-    <FormControl
-      isRequired
-      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
-    >
-      <FormLabel>Campaign:</FormLabel>
-
-      <InputGroup>
-        {campaign?.thumbnail && (
-          <InputLeftElement>
-            <OptionImage img={campaign.thumbnail} alt="Campaign thumbnail" />
-          </InputLeftElement>
-        )}
+    <Stack spacing={8} alignItems="start">
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type}
+      >
+        <FormLabel>Type:</FormLabel>
 
         <ControlledSelect
-          name={`${baseFieldPath}.data.id`}
-          rules={{
-            required: "This field is required.",
-          }}
-          isClearable
-          isLoading={isLoading || isCampaignLoading}
-          options={mappedCampaigns}
-          placeholder="Search campaigns..."
-          afterOnChange={(newValue) =>
-            setValue(`${baseFieldPath}.data.galaxyId`, newValue?.galaxyId)
-          }
-          onInputChange={(text, _) => {
-            if (!text?.length) return
-            const regex = /^[a-zA-Z0-9]+$/i
-            if (regex.test(text)) {
-              setPastedId(text)
-            }
-            setSearchText(text)
-          }}
-          filterOption={customFilterOption}
-          noResultText={!debouncedSearchText.length ? "Start typing..." : undefined}
+          name={`${baseFieldPath}.type`}
+          rules={{ required: "It's required to select a type" }}
+          options={galaxyRequirementTypes}
         />
-      </InputGroup>
 
-      <FormHelperText>Search by name or ID</FormHelperText>
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
+        </FormErrorMessage>
+      </FormControl>
 
-      <FormErrorMessage>
-        {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
-      </FormErrorMessage>
-    </FormControl>
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+      >
+        <FormLabel>Campaign:</FormLabel>
+
+        <InputGroup>
+          {campaign?.thumbnail && (
+            <InputLeftElement>
+              <OptionImage img={campaign.thumbnail} alt="Campaign thumbnail" />
+            </InputLeftElement>
+          )}
+
+          <ControlledSelect
+            name={`${baseFieldPath}.data.id`}
+            rules={{
+              required: "This field is required.",
+            }}
+            isClearable
+            isLoading={isLoading || isCampaignLoading}
+            options={mappedCampaigns}
+            placeholder="Search campaigns..."
+            afterOnChange={(newValue) =>
+              setValue(`${baseFieldPath}.data.galaxyId`, newValue?.galaxyId)
+            }
+            onInputChange={(text, _) => {
+              if (!text?.length) return
+              const regex = /^[a-zA-Z0-9]+$/i
+              if (regex.test(text)) {
+                setPastedId(text)
+              }
+              setSearchText(text)
+            }}
+            filterOption={customFilterOption}
+            noResultText={
+              !debouncedSearchText.length ? "Start typing..." : undefined
+            }
+          />
+        </InputGroup>
+
+        <FormHelperText>Search by name or ID</FormHelperText>
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+        </FormErrorMessage>
+      </FormControl>
+    </Stack>
   )
 }
 
