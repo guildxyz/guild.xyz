@@ -376,15 +376,14 @@ const Page = (): JSX.Element => (
           (1) Once your wallet is connected, you can join gulids, DAOs due to our
           services. You will be able to connect several social accounts (“Social
           accounts”) while joining including but not limited to
-          <br />
-          <OrderedList type="a">
-            <ListItem>Discord</ListItem>
-            <ListItem>Telegram</ListItem>
-            <ListItem>GitHub</ListItem>
-            <ListItem>Google</ListItem>
-            <ListItem>Twitter</ListItem>
-          </OrderedList>
         </Text>
+        <OrderedList type="a" pl={4} mb={4}>
+          <ListItem>Discord</ListItem>
+          <ListItem>Telegram</ListItem>
+          <ListItem>GitHub</ListItem>
+          <ListItem>Google</ListItem>
+          <ListItem>Twitter</ListItem>
+        </OrderedList>
         <Text>
           (2) Connecting Social accounts is based on OAuth authorization protocol,
           which means that you will have to <b>authorize your Social account</b> in a
@@ -516,32 +515,30 @@ const Page = (): JSX.Element => (
           Data Controller shall make a record of it, the content of which shall also
           be considered personal data.
         </Text>
-        <Text>
-          (2) Purpose of the processing of personal data:
-          <UnorderedList>
-            <ListItem>identification of the data subject,</ListItem>
-            <ListItem>
-              the processing by the Controller of the data subject's job application
-              to the Controller,
-            </ListItem>
-            <ListItem>assessment of the applicant's application,</ListItem>
-            <ListItem>
-              the participation of the data subject in the selection procedure,
-            </ListItem>
-            <ListItem>
-              selecting the data subject with the appropriate skills and professional
-              experience for the position advertised by the Data Controller,
-            </ListItem>
-            <ListItem>
-              contacting and maintaining contact with the data subject during the
-              selection process,
-            </ListItem>
-            <ListItem>
-              offering the data subject a subsequent job offer if the data subject is
-              not selected by the Data Controller for the advertised position.
-            </ListItem>
-          </UnorderedList>
-        </Text>
+        <Text>(2) Purpose of the processing of personal data:</Text>
+        <UnorderedList pl={4} mb={4}>
+          <ListItem>identification of the data subject,</ListItem>
+          <ListItem>
+            the processing by the Controller of the data subject's job application to
+            the Controller,
+          </ListItem>
+          <ListItem>assessment of the applicant's application,</ListItem>
+          <ListItem>
+            the participation of the data subject in the selection procedure,
+          </ListItem>
+          <ListItem>
+            selecting the data subject with the appropriate skills and professional
+            experience for the position advertised by the Data Controller,
+          </ListItem>
+          <ListItem>
+            contacting and maintaining contact with the data subject during the
+            selection process,
+          </ListItem>
+          <ListItem>
+            offering the data subject a subsequent job offer if the data subject is
+            not selected by the Data Controller for the advertised position.
+          </ListItem>
+        </UnorderedList>
         <Text>
           (3) Legal basis for the processing: By submitting a job application, the
           data subject gives his/her consent (Article 6(1)(a) GDPR) to the processing
@@ -627,48 +624,48 @@ const Page = (): JSX.Element => (
           the website will be intermitted. We might use cookies to preserve your
           identification data called session cookies. We ourselves do not store
           anything in cookies, but third-party entities store cookies on the website:
-          <UnorderedList>
-            <ListItem>
-              PostHog (
-              <Link
-                href="https://posthog.com/privacy"
-                target="_blank"
-                colorScheme="blue"
-              >
-                posthog.com/privacy
-              </Link>
-              ) - If necessary, we can theoretically disable the use of cookies, but
-              it would prevent us from cross-session tracking of users and affect
-              some other functionalities, so it is not recommended.
-            </ListItem>
-            <ListItem>
-              Intercom - session, device, user identification:{" "}
-              <Link
-                href="https://www.intercom.com/help/en/articles/2361922-intercom-messenger-cookies"
-                target="_blank"
-                colorScheme="blue"
-              >
-                www.intercom.com/help/en/articles/2361922-intercom-messenger-cookies
-              </Link>
-            </ListItem>
-            <ListItem>
-              Additionally, there is a cookie associated with Datadog, but it is used
-              by Intercom, not us:{" "}
-              <Link
-                href="https://www.intercom.com/legal/cookie-policy"
-                target="_blank"
-                colorScheme="blue"
-              >
-                www.intercom.com/legal/cookie-policy
-              </Link>{" "}
-              - its name is dd_s.
-            </ListItem>
-            <ListItem>
-              In few cases .mypinata.cloud cookies on some pages where images are
-              loaded from Pinata.
-            </ListItem>
-          </UnorderedList>
         </Text>
+        <UnorderedList pl={4} mb={4}>
+          <ListItem>
+            PostHog (
+            <Link
+              href="https://posthog.com/privacy"
+              target="_blank"
+              colorScheme="blue"
+            >
+              posthog.com/privacy
+            </Link>
+            ) - If necessary, we can theoretically disable the use of cookies, but it
+            would prevent us from cross-session tracking of users and affect some
+            other functionalities, so it is not recommended.
+          </ListItem>
+          <ListItem>
+            Intercom - session, device, user identification:{" "}
+            <Link
+              href="https://www.intercom.com/help/en/articles/2361922-intercom-messenger-cookies"
+              target="_blank"
+              colorScheme="blue"
+            >
+              www.intercom.com/help/en/articles/2361922-intercom-messenger-cookies
+            </Link>
+          </ListItem>
+          <ListItem>
+            Additionally, there is a cookie associated with Datadog, but it is used
+            by Intercom, not us:{" "}
+            <Link
+              href="https://www.intercom.com/legal/cookie-policy"
+              target="_blank"
+              colorScheme="blue"
+            >
+              www.intercom.com/legal/cookie-policy
+            </Link>{" "}
+            - its name is dd_s.
+          </ListItem>
+          <ListItem>
+            In few cases .mypinata.cloud cookies on some pages where images are
+            loaded from Pinata.
+          </ListItem>
+        </UnorderedList>
         <Text>
           (2) Purpose of personal data processing: improvement in user’s internet
           experience, storage of personal adjustments
@@ -701,25 +698,25 @@ const Page = (): JSX.Element => (
             eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN
           </Link>
           )
-          <UnorderedList>
-            <ListItem>
-              Information and access to personal data (Article 13 and 14),
-            </ListItem>
-            <ListItem>Right of access by the data subject (Article 15),</ListItem>
-            <ListItem>Right to rectification (Article 16),</ListItem>
-            <ListItem>
-              Right to erasure (‘right to be forgotten’ – Article 17),
-            </ListItem>
-            <ListItem>Right to restriction of processing (Article 18),</ListItem>
-            <ListItem>Right to data portability (Article 20),</ListItem>
-            <ListItem>Right to object (Article 21),</ListItem>
-            <ListItem>
-              Right to not be subject to automated individual decision-making,
-              including profiling (Article 22),
-            </ListItem>
-            <ListItem>Right for remedies (Article 77-82).</ListItem>
-          </UnorderedList>
         </Text>
+        <UnorderedList pl={4} mb={4}>
+          <ListItem>
+            Information and access to personal data (Article 13 and 14),
+          </ListItem>
+          <ListItem>Right of access by the data subject (Article 15),</ListItem>
+          <ListItem>Right to rectification (Article 16),</ListItem>
+          <ListItem>
+            Right to erasure (‘right to be forgotten’ – Article 17),
+          </ListItem>
+          <ListItem>Right to restriction of processing (Article 18),</ListItem>
+          <ListItem>Right to data portability (Article 20),</ListItem>
+          <ListItem>Right to object (Article 21),</ListItem>
+          <ListItem>
+            Right to not be subject to automated individual decision-making,
+            including profiling (Article 22),
+          </ListItem>
+          <ListItem>Right for remedies (Article 77-82).</ListItem>
+        </UnorderedList>
 
         <Heading as="h4">
           Right to lodge a complaint with a supervisory authority:
