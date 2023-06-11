@@ -18,6 +18,7 @@ const Page = (): JSX.Element => (
         PERSONAL DATA
       </Text>
     }
+    maxWidth="container.md"
   >
     <Stack
       spacing={8}
