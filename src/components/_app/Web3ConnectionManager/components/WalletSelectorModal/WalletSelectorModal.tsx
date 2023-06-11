@@ -224,6 +224,19 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   <DelegateCashButton />
                 </CardMotionWrapper>
               )}
+              {!isConnected && (
+                <Text textAlign="center" colorScheme="gray" pt={2}>
+                  New to Ethereum wallets?{" "}
+                  <Link
+                    colorScheme="blue"
+                    href="https://ethereum.org/en/wallets/"
+                    isExternal
+                  >
+                    Learn more
+                    <Icon as={ArrowSquareOut} mx="1" />
+                  </Link>
+                </Text>
+              )}
             </Stack>
             {isConnected && !keyPair && (
               <Box animation={"fadeIn .3s .1s both"}>
@@ -247,16 +260,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           </ModalBody>
           <ModalFooter mt="-4">
             {!isConnected && (
-              <Text textAlign="center" w="full" colorScheme={"gray"}>
-                New to Ethereum wallets?{" "}
-                <Link
-                  colorScheme="blue"
-                  href="https://ethereum.org/en/wallets/"
-                  isExternal
-                >
-                  Learn more
-                  <Icon as={ArrowSquareOut} mx="1" />
-                </Link>
+              <Text w="full" textAlign="center" colorScheme="gray" fontSize="sm">
+                By connecting a wallet, you agree to{" "}
+                <Link href="/privacy-policy">Privacy Policy</Link>.
               </Text>
             )}
             {isConnected && (
