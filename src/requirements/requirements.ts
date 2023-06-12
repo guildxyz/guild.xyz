@@ -292,7 +292,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Galaxy/GalaxyForm")
     ),
-    types: ["GALAXY"],
+    types: ["GALAXY", "GALAXY_PARTICIPATION"],
   },
   {
     icon: "/requirementLogos/noox.svg",

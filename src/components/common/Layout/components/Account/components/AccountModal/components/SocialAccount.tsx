@@ -81,25 +81,26 @@ const SocialAccount = ({ type, icon, name, colorScheme }: Props): JSX.Element =>
             </AvatarBadge>
           </Avatar>
         )}
-        <Text fontWeight="semibold">
+        <Text fontWeight="semibold" flex="1" noOfLines={1}>
           {platformUser?.platformUserData?.username ??
             `${platforms[type].name} ${!!platformUser ? "connected" : ""}`}
         </Text>
-        {!platformUser || isReconnect ? (
-          <ConnectPlatform
-            type={type}
-            colorScheme={colorScheme}
-            isReconnect={isReconnect}
-          />
+        {!platformUser ? (
+          <ConnectPlatform type={type} colorScheme={colorScheme} />
         ) : (
-          <DisconnectPlatform type={type} name={name} />
+          <HStack spacing="1">
+            {isReconnect && (
+              <ConnectPlatform type={type} colorScheme={colorScheme} isReconnect />
+            )}
+            <DisconnectPlatform type={type} name={name} />
+          </HStack>
         )}
       </MotionHStack>
     </>
   )
 }
 
-const ConnectPlatform = ({ type, colorScheme, isReconnect }) => {
+const ConnectPlatform = ({ type, colorScheme, isReconnect = false }) => {
   const toast = useToast()
   const { mutate: mutateAccesses } = useAccess()
 
@@ -125,7 +126,6 @@ const ConnectPlatform = ({ type, colorScheme, isReconnect }) => {
       colorScheme={isReconnect ? "orange" : colorScheme}
       variant={isReconnect ? "subtle" : "solid"}
       size="sm"
-      ml="auto !important"
     >
       {isReconnect ? "Reconnect" : "Connect"}
     </Button>
@@ -148,7 +148,6 @@ const DisconnectPlatform = ({ type, name }) => {
           size="sm"
           icon={<Icon as={LinkBreak} />}
           colorScheme="red"
-          ml="auto !important"
           onClick={onOpen}
           aria-label="Disconnect account"
         />
