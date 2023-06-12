@@ -5,7 +5,7 @@ import {
   FormLabel,
   Stack,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -52,11 +52,13 @@ const GitcoinPassportForm = ({ baseFieldPath }: RequirementFormProps) => {
       <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.type}>
         <FormLabel>Type</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={gitcoinPassportRequirementTypes}
           afterOnChange={resetFields}
+          placeholder="Select type"
+          disableOptionFiltering
         />
 
         <FormErrorMessage>
