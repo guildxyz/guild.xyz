@@ -1,6 +1,6 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -24,7 +24,7 @@ const RabbitholeForm = ({ baseFieldPath }: RequirementFormProps) => {
       >
         <FormLabel>Skill:</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.address`}
           rules={{ required: "This field is required." }}
           isClearable
