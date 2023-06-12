@@ -34,8 +34,12 @@ type Props = InputProps & {
   isClearable?: boolean
   isCreatable?: boolean
   disableOptionFiltering?: boolean
+  customOptionsFilter?: (option: SelectOption, inputValue: string) => boolean
   noOptionsText?: string
 }
+
+const defaultOptionsFilter = (option: SelectOption, inputValue: string): boolean =>
+  option.label.toLowerCase().includes(inputValue.toLowerCase())
 
 const Combobox = forwardRef(
   (
@@ -52,6 +56,7 @@ const Combobox = forwardRef(
       isClearable,
       isCreatable,
       disableOptionFiltering,
+      customOptionsFilter,
       noOptionsText,
       ...htmlInputProps
     }: Props,
@@ -143,7 +148,9 @@ const Combobox = forwardRef(
     const filteredOptions = disableOptionFiltering
       ? options
       : options.filter((option) =>
-          option.label.toLowerCase().includes(inputValue.toLowerCase())
+          customOptionsFilter
+            ? customOptionsFilter(option, inputValue)
+            : defaultOptionsFilter(option, inputValue)
         )
 
     const shouldShowRightElement = Boolean(
