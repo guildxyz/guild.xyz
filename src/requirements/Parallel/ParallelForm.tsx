@@ -7,8 +7,8 @@ import {
   Link,
   Stack,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { ArrowSquareOut } from "phosphor-react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -45,13 +45,14 @@ const ParallelForm = ({ baseFieldPath }: RequirementFormProps) => {
       >
         <FormLabel>Type:</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.type`}
           rules={{
             required: "It's required to select a type",
           }}
           options={typeOptions}
-          placeholder="Choose type"
+          placeholder="Select type"
+          disableOptionFiltering
         />
 
         <FormErrorMessage>
