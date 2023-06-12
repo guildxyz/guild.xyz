@@ -30,8 +30,8 @@ const IMAGE_SRC =
 
 const Page = () => {
   // TEMP, for testing
-  const { theme, imageUrl, name, roles } = useGuild("johnnys-guild")
-  const role = roles?.find((r) => r.id === 56990)
+  const { theme, imageUrl, name, roles } = useGuild()
+  const role = roles?.find((r) => r.id === 56990) ?? roles?.[0] // 56990 is a role in Johnny's Guild
   const requirements = role?.requirements ?? []
 
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
@@ -101,7 +101,7 @@ const Page = () => {
                 <HStack pb={2}>
                   <Text as="span">by Role:</Text>
                   <HStack>
-                    <GuildLogo imageUrl={role.imageUrl} size={6} />
+                    <GuildLogo imageUrl={role?.imageUrl} size={6} />
                     <Text as="span" fontWeight="bold">
                       Member
                     </Text>
@@ -111,7 +111,7 @@ const Page = () => {
                     <Icon as={Users} boxSize={4} />
                     <Text as="span">
                       {new Intl.NumberFormat("en", { notation: "compact" }).format(
-                        role.memberCount ?? 0
+                        role?.memberCount ?? 0
                       )}
                     </Text>
                   </HStack>
