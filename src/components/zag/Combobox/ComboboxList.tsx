@@ -6,13 +6,17 @@ import { useComboboxOptions } from "./ComboboxOptionsContext"
 const ITEM_SIZE = 40
 const MAX_HEIGHT = 288
 
-const ComboboxList = (): JSX.Element => {
+type Props = {
+  noOptionsText?: string
+}
+
+const ComboboxList = ({ noOptionsText = "No options" }: Props): JSX.Element => {
   const { options } = useComboboxOptions()
 
   if (!options.length)
     return (
       <Flex alignItems="center" justifyContent="center" py={2}>
-        No options
+        {noOptionsText}
       </Flex>
     )
 

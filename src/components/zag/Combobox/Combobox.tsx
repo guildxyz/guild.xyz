@@ -34,6 +34,7 @@ type Props = InputProps & {
   isClearable?: boolean
   isCreatable?: boolean
   disableOptionFiltering?: boolean
+  noOptionsText?: string
 }
 
 const Combobox = forwardRef(
@@ -51,6 +52,7 @@ const Combobox = forwardRef(
       isClearable,
       isCreatable,
       disableOptionFiltering,
+      noOptionsText,
       ...htmlInputProps
     }: Props,
     ref: any
@@ -229,7 +231,7 @@ const Combobox = forwardRef(
                   getOptionProps={getOptionProps}
                   focusedOption={focusedOption}
                 >
-                  <ComboboxList />
+                  <ComboboxList noOptionsText={noOptionsText} />
                 </ComboboxOptionsProvider>
               </Box>
             </Box>
