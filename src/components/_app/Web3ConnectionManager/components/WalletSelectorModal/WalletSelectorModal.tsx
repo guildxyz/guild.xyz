@@ -19,20 +19,16 @@ import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import { connectors } from "connectors"
-import useKeyPair, {
-  deleteKeyPairFromIdb,
-  getKeyPairFromIdb,
-} from "hooks/useKeyPair"
+import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
-import useSWR, { mutate, unstable_serialize } from "swr"
-import useSWRImmutable from "swr/immutable"
-import { User, WalletError } from "types"
+import { WalletError } from "types"
 import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
+import useShouldLinkToUser from "./hooks/useShouldLinkToUser"
 import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
@@ -41,40 +37,11 @@ type Props = {
   onOpen: () => void
 }
 
-const fetchShouldLinkToUser = async ([_, userId]) => {
-  try {
-    const { id: userIdToConnectTo } = JSON.parse(
-      window.localStorage.getItem("userId")
-    )
-
-    if (
-      typeof userId === "number" &&
-      typeof userIdToConnectTo === "number" &&
-      userIdToConnectTo !== userId
-    ) {
-      try {
-        await deleteKeyPairFromIdb(userId).then(() =>
-          mutate(unstable_serialize(["keyPair", userId]))
-        )
-      } catch {}
-    }
-
-    const keypair = await getKeyPairFromIdb(+userIdToConnectTo)
-
-    return !!keypair
-  } catch {
-    // Remove in case it exists in an invalid form
-    window.localStorage.removeItem("userId")
-    return false
-  }
-}
-
 // We don't open the modal on these routes
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const { isActive, account, connector } = useWeb3React()
-  const { data: user } = useSWRImmutable<User>(account ? `/user/${account}` : null)
   const [error, setError] = useState<WalletError & Error>(null)
 
   // initialize metamask onboarding
@@ -113,10 +80,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }
   }, [keyPair, ready, router])
 
-  const { data: shouldLinkToUser } = useSWR(
-    ["shouldLinkToUser", user?.id],
-    fetchShouldLinkToUser
-  )
+  const shouldLinkToUser = useShouldLinkToUser()
 
   const { isDelegateConnection, setIsDelegateConnection } =
     useWeb3ConnectionManager()
@@ -246,7 +210,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   colorScheme={"green"}
                   onClick={() => set.onSubmit(shouldLinkToUser)}
                   isLoading={set.isLoading || !ready}
-                  isDisabled={!ready || shouldLinkToUser === undefined}
+                  isDisabled={!ready}
                   loadingText={
                     !ready
                       ? "Looking for keypairs"
