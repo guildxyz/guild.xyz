@@ -14,8 +14,8 @@ const Page = (): JSX.Element => (
     title="Privacy Policy"
     description={
       <Text>
-        THE PROTECTION OF NATURAL PERSONS RIGHTS WITH REGARD TO THE PROCESSING OF
-        PERSONAL DATA
+        The protection of natural person's rights with regard to the processing of
+        personal data
       </Text>
     }
     maxWidth="container.md"
