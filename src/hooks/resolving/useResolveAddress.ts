@@ -25,7 +25,7 @@ const fetchENSName = (
   address: string,
   chainId: number
 ): Promise<string> => {
-  if (chainId !== Chains.ETHEREUM) return null
+  if (chainId !== Chains.ETHEREUM && chainId !== Chains.GOERLI) return null
   provider.network.ensAddress = ENS_REGISTRY
   return provider.lookupAddress(address)
 }

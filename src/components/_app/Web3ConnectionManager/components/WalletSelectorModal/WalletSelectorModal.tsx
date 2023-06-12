@@ -32,6 +32,7 @@ import { User, WalletError } from "types"
 import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
+import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
 import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
@@ -122,6 +123,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   const isConnected = account && isActive && ready
 
+  const isWalletConnectModalActive = useIsWalletConnectModalActive()
+
   return (
     <>
       <Modal
@@ -129,6 +132,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         onClose={closeModalAndSendAction}
         closeOnOverlayClick={!isActive || !!keyPair}
         closeOnEsc={!isActive || !!keyPair}
+        trapFocus={!isWalletConnectModalActive}
       >
         <ModalOverlay />
         <ModalContent data-test="wallet-selector-modal">
