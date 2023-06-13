@@ -6,7 +6,6 @@ import {
   AlertDialogOverlay,
   Avatar,
   AvatarBadge,
-  ChakraProps,
   HStack,
   Icon,
   IconButton,
@@ -22,83 +21,86 @@ import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import { motion } from "framer-motion"
 import useToast from "hooks/useToast"
-import { IconProps, LinkBreak } from "phosphor-react"
+import { LinkBreak } from "phosphor-react"
 import platforms from "platforms/platforms"
-import { useRef } from "react"
+import { memo, useRef } from "react"
 import { PlatformName } from "types"
 import useDisconnect from "../hooks/useDisconnect"
 
 type Props = {
   type: PlatformName
-  icon: (props: IconProps) => JSX.Element
-  colorScheme: ChakraProps["color"]
-  name: string
+  // icon: (props: IconProps) => JSX.Element
+  // colorScheme: ChakraProps["color"]
+  // name: string
 }
 
 const MotionHStack = motion(HStack)
 
-const SocialAccount = ({ type, icon, name, colorScheme }: Props): JSX.Element => {
-  const circleBorderColor = useColorModeValue("gray.100", "gray.800")
-  const { platformUsers } = useUser()
-  const accesses = useAccess()
-  const platformUser = platformUsers?.find(
-    (platform) => platform.platformName.toString() === type
-  )
+const SocialAccount = memo(
+  ({ type /* icon, name, colorScheme */ }: Props): JSX.Element => {
+    const { icon, name, colorScheme } = platforms[type]
 
-  const isReconnect =
-    !!accesses &&
-    accesses?.data?.some(({ errors }) =>
-      errors?.some(
-        ({ errorType, subType }) =>
-          errorType === "PLATFORM_CONNECT_INVALID" && subType?.toUpperCase() === type
-      )
+    const circleBorderColor = useColorModeValue("gray.100", "gray.700")
+    const { platformUsers } = useUser()
+    const accesses = useAccess()
+    const platformUser = platformUsers?.find(
+      (platform) => platform.platformName.toString() === type
     )
 
-  return (
-    <>
-      <MotionHStack
-        layout
-        spacing={3}
-        alignItems="center"
-        w="full"
-        order={!platformUser && "1"}
-      >
-        {!platformUser ? (
-          <Avatar
-            icon={<Icon as={icon} boxSize={4} color="white" />}
-            boxSize={8}
-            bgColor={`${colorScheme}.500`}
-          />
-        ) : (
-          <Avatar src={platformUser.platformUserData?.avatar} size="sm">
-            <AvatarBadge
-              boxSize={5}
+    const isReconnect =
+      !!accesses &&
+      accesses?.data?.some(({ errors }) =>
+        errors?.some(
+          ({ errorType, subType }) =>
+            errorType === "PLATFORM_CONNECT_INVALID" &&
+            subType?.toUpperCase() === type
+        )
+      )
+
+    return (
+      <>
+        <MotionHStack layout spacing={3} alignItems="center" w="full">
+          {!platformUser ? (
+            <Avatar
+              icon={<Icon as={icon} boxSize={4} color="white" />}
+              boxSize={7}
               bgColor={`${colorScheme}.500`}
-              borderWidth={1}
-              borderColor={circleBorderColor}
+            />
+          ) : (
+            <Avatar
+              src={platformUser.platformUserData?.avatar}
+              size="sm"
+              boxSize={7}
             >
-              <Icon as={icon} boxSize={3} color="white" />
-            </AvatarBadge>
-          </Avatar>
-        )}
-        <Text fontWeight="semibold" flex="1" noOfLines={1}>
-          {platformUser?.platformUserData?.username ??
-            `${platforms[type].name} ${!!platformUser ? "connected" : ""}`}
-        </Text>
-        {!platformUser ? (
-          <ConnectPlatform type={type} colorScheme={colorScheme} />
-        ) : (
-          <HStack spacing="1">
-            {isReconnect && (
-              <ConnectPlatform type={type} colorScheme={colorScheme} isReconnect />
-            )}
-            <DisconnectPlatform type={type} name={name} />
-          </HStack>
-        )}
-      </MotionHStack>
-    </>
-  )
-}
+              <AvatarBadge
+                boxSize={5}
+                bgColor={`${colorScheme}.500`}
+                borderWidth={1}
+                borderColor={circleBorderColor}
+              >
+                <Icon as={icon} boxSize={3} color="white" />
+              </AvatarBadge>
+            </Avatar>
+          )}
+          <Text fontWeight="bold" flex="1" noOfLines={1} fontSize="sm">
+            {platformUser?.platformUserData?.username ??
+              `${platforms[type].name} ${!!platformUser ? "connected" : ""}`}
+          </Text>
+          {!platformUser ? (
+            <ConnectPlatform type={type} colorScheme={colorScheme} />
+          ) : (
+            <HStack spacing="1">
+              {isReconnect && (
+                <ConnectPlatform type={type} colorScheme={colorScheme} isReconnect />
+              )}
+              <DisconnectPlatform type={type} name={name} />
+            </HStack>
+          )}
+        </MotionHStack>
+      </>
+    )
+  }
+)
 
 const ConnectPlatform = ({ type, colorScheme, isReconnect = false }) => {
   const toast = useToast()

@@ -13,11 +13,11 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
+import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
 import Image from "next/image"
 import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
@@ -47,11 +47,16 @@ const LinkedAddress = ({ address }: Props) => {
 
   return (
     <>
-      <HStack spacing={4} alignItems="center" w="full">
-        <Circle size={8}>
-          <GuildAvatar address={address} size={6} />
+      <HStack spacing={2} alignItems="center" w="full">
+        <Circle size={7} /* bg="whiteAlpha.200" borderRadius={"full"} */>
+          <GuildAvatar address={address} size={4} mt="-1" />
         </Circle>
-        <CopyableAddress address={address} decimals={5} fontSize="md" />
+        <CopyableAddress
+          address={address}
+          decimals={5}
+          fontSize="sm"
+          fontWeight="bold"
+        />
         {provider && providerIcons[provider] && (
           <Tooltip label="Delegate.cash" placement="top">
             <Tag>

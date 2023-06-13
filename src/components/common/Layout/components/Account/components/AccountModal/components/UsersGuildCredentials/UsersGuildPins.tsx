@@ -1,7 +1,7 @@
 import { Flex, Text } from "@chakra-ui/react"
-import Section from "components/common/Section"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
+import { AccountSectionTitle } from "../AccountConnections"
 import GuildPin from "./GuildPin"
 import GuildPinSkeleton from "./GuildPinSkeleton"
 
@@ -10,7 +10,8 @@ const UsersGuildPins = () => {
   const { data, isValidating } = useUsersGuildPins(!isAccountModalOpen)
 
   return (
-    <Section title="Guild Pins">
+    <>
+      <AccountSectionTitle title="Guild Pins" />
       <Flex direction="row">
         {isValidating ? (
           [...Array(3)].map((_, i) => <GuildPinSkeleton key={i} />)
@@ -26,10 +27,10 @@ const UsersGuildPins = () => {
             />
           ))
         ) : (
-          <Text colorScheme="gray">You haven't minted any Guild Pins yet.</Text>
+          <Text fontSize="sm">You haven't minted any Guild Pins yet</Text>
         )}
       </Flex>
-    </Section>
+    </>
   )
 }
 
