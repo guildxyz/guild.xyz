@@ -5,6 +5,7 @@ import {
   Icon,
   IconButton,
   SimpleGrid,
+  Skeleton,
   Stack,
   Text,
   Tooltip,
@@ -27,7 +28,7 @@ const NftDetails = ({ chain, address }: Props) => {
   const { isOpen, onToggle } = useDisclosure()
 
   const chainName = RPC[chain].chainName
-  const { data: nftDetails } = useNftDetails(chain, address)
+  const { data: nftDetails, isValidating, error } = useNftDetails(chain, address)
   const uniqueMintersPercentage =
     nftDetails?.totalMinters && nftDetails?.uniqueMinters
       ? (nftDetails.uniqueMinters / nftDetails.totalMinters) * 100
@@ -93,11 +94,15 @@ const NftDetails = ({ chain, address }: Props) => {
                 >
                   Total minters
                 </Text>
-                <Text as="span" fontSize="md" colorScheme="gray">
-                  {new Intl.NumberFormat("en", {
-                    notation: "standard",
-                  }).format(nftDetails?.totalMinters ?? 0)}
-                </Text>
+                <Skeleton isLoaded={!isValidating}>
+                  <Text as="span" fontSize="md" colorScheme="gray">
+                    {error
+                      ? "Couldn't fetch"
+                      : new Intl.NumberFormat("en", {
+                          notation: "standard",
+                        }).format(nftDetails?.totalMinters ?? 0)}
+                  </Text>
+                </Skeleton>
               </Stack>
 
               <Stack spacing={0}>
@@ -110,29 +115,47 @@ const NftDetails = ({ chain, address }: Props) => {
                 >
                   Unique minters
                 </Text>
-                <Text as="span" fontSize="md" colorScheme="gray">
-                  {`${new Intl.NumberFormat("en", {
-                    notation: "standard",
-                  }).format(295990)} (${uniqueMintersPercentage})%`}
-                </Text>
+                <Skeleton isLoaded={!isValidating}>
+                  <Text as="span" fontSize="md" colorScheme="gray">
+                    {error
+                      ? "Couldn't fetch"
+                      : `${new Intl.NumberFormat("en", {
+                          notation: "standard",
+                        }).format(
+                          nftDetails?.uniqueMinters
+                        )} (${uniqueMintersPercentage})%`}
+                  </Text>
+                </Skeleton>
               </Stack>
             </SimpleGrid>
           </Wrap>
 
           <CopyableNftDetailsAddress label="Contract" address={address} />
 
-          <CopyableNftDetailsAddress label="Creator" address={nftDetails?.creator} />
+          <CopyableNftDetailsAddress
+            label="Creator"
+            address={nftDetails?.creator}
+            isValidating={isValidating}
+            error={error}
+          />
         </Stack>
       </Collapse>
     </Stack>
   )
 }
 
-type CopyableNftDetailsAddressProps = { label: string; address: string }
+type CopyableNftDetailsAddressProps = {
+  label: string
+  address: string
+  isValidating?: boolean
+  error?: any
+}
 
 const CopyableNftDetailsAddress = ({
   label,
   address,
+  isValidating,
+  error,
 }: CopyableNftDetailsAddressProps) => {
   const displayedAddress = useBreakpointValue({
     base: address ? shortenHex(address) : "",
@@ -151,27 +174,36 @@ const CopyableNftDetailsAddress = ({
       >
         {label}
       </Text>
-      <HStack>
-        <Text as="span" fontSize="md" colorScheme="gray">
-          {displayedAddress}
-        </Text>
-        <Tooltip
-          placement="top"
-          label={hasCopied ? "Copied" : "Click to copy address"}
-          closeOnClick={false}
-          hasArrow
-        >
-          <IconButton
-            aria-label="Copy contract address"
-            variant="ghost"
-            icon={<Copy />}
-            color="gray"
-            size="sm"
-            rounded="full"
-            onClick={onCopy}
-          />
-        </Tooltip>
-      </HStack>
+
+      <Skeleton isLoaded={!isValidating} maxW="max-content" minW="80%">
+        {error ? (
+          <Text as="span" fontSize="md" colorScheme="gray">
+            Couldn't fetch
+          </Text>
+        ) : (
+          <HStack>
+            <Text as="span" fontSize="md" colorScheme="gray">
+              {displayedAddress}
+            </Text>
+            <Tooltip
+              placement="top"
+              label={hasCopied ? "Copied" : "Click to copy address"}
+              closeOnClick={false}
+              hasArrow
+            >
+              <IconButton
+                aria-label="Copy contract address"
+                variant="ghost"
+                icon={<Copy />}
+                color="gray"
+                size="sm"
+                rounded="full"
+                onClick={onCopy}
+              />
+            </Tooltip>
+          </HStack>
+        )}
+      </Skeleton>
     </Stack>
   )
 }
