@@ -13,10 +13,10 @@ import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import { Reorder } from "framer-motion"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import useSubmit from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useMemo, useState } from "react"
-import fetcher from "utils/fetcher"
+import { useFetcherWithSign } from "utils/fetcher"
 import DraggableRoleCard from "./DraggableRoleCard"
 
 const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
@@ -47,15 +47,20 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const [roleIdsOrder, setRoleIdsOrder] = useState(defaultRoleIdsOrder)
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
+  const fetcherWithSign = useFetcherWithSign()
 
-  const submit = (signedValidation: SignedValdation) =>
-    fetcher(`/guild/${id}/roles`, {
-      method: "PATCH",
-      ...signedValidation,
-    })
+  const submit = (roleOrdering: Array<{ id: number; position: number }>) =>
+    Promise.all(
+      roleOrdering.map(({ id: roleId, position }) =>
+        fetcherWithSign([
+          `/v2/guilds/${id}/roles/${roleId}`,
+          { method: "PUT", body: { position } },
+        ])
+      )
+    )
 
-  const { onSubmit, isLoading } = useSubmitWithSign(submit, {
-    onSuccess: (res) => {
+  const { onSubmit, isLoading } = useSubmit(submit, {
+    onSuccess: (newRoles) => {
       toast({
         status: "success",
         title: "Successfully edited role order",
@@ -64,18 +69,16 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
       mutateGuild(
         (oldData) => ({
           ...oldData,
-          /**
-           * Can't do just `roles: res`, because the requirements aren't included in
-           * the role objects in the response. After the API refactor (when they
-           * won't be in the original guild state anyway) we'll be able to switch to
-           * that
-           */
-          roles: oldData.roles.map((role) => ({
-            ...role,
-            position: res.find((resRole) => resRole.id === role.id)?.position,
+          // requirements, and rolePlatforms are not returned, so we need to spread older data too
+          // Plus, we don't update all the roles, only the ones that changed, so this also retains thost that weren't updated
+          roles: (oldData?.roles ?? []).map((prevRole) => ({
+            ...prevRole,
+            ...(newRoles ?? []).find((newRole) => newRole.id === prevRole.id),
           })),
         }),
-        { revalidate: false }
+        {
+          revalidate: false,
+        }
       )
     },
     onError: (err) => showErrorToast(err),
@@ -88,8 +91,20 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const isDirty =
     JSON.stringify(defaultRoleIdsOrder) !== JSON.stringify(roleIdsOrder)
 
-  const handleSubmit = () =>
-    onSubmit(roleIdsOrder.map((roleId, i) => ({ id: roleId, position: i })))
+  const handleSubmit = () => {
+    const changedRoles = roleIdsOrder
+      .map((roleId, i) => ({
+        id: roleId,
+        position: i,
+      }))
+      .filter(({ id: roleId, position }) =>
+        (roles ?? []).some(
+          (prevRole) => prevRole.id === roleId && prevRole.position !== position
+        )
+      )
+
+    return onSubmit(changedRoles)
+  }
 
   const onCloseAndClear = () => {
     setRoleIdsOrder(defaultRoleIdsOrder)
