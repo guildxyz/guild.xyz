@@ -52,7 +52,7 @@ const Page = () => {
             md: "1fr 1fr",
             xl: "7fr 5fr",
           }}
-          gap={{ base: 4, md: 5 }}
+          gap={{ base: 6, lg: 8 }}
         >
           <Stack w="full" spacing={12}>
             <Card
