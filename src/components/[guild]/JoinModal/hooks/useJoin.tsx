@@ -1,11 +1,11 @@
 import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -79,9 +79,11 @@ const useJoin = (onSuccess?: () => void) => {
 
       if (!response.success) {
         toast({
-          status: "error",
+          status: "info",
           title: "No access",
-          description: "Seems like you don't have access to any roles in this guild",
+          description:
+            "Seems like you're not eligible for any roles in this guild. Check requirements below for more info!",
+          duration: 8000,
         })
         return
       }
