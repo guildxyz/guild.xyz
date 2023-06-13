@@ -36,7 +36,7 @@ export type JoinData = {
   oauthData: any
 }
 
-const useJoin = (onSuccess?: () => void) => {
+const useJoin = (onSuccess?: (response: Response) => void) => {
   const { captureEvent } = usePostHogContext()
 
   const access = useAccess()
@@ -75,18 +75,9 @@ const useJoin = (onSuccess?: () => void) => {
       // mutate user in case they connected new platforms during the join flow
       user?.mutate?.()
 
-      onSuccess?.()
+      onSuccess?.(response)
 
-      if (!response.success) {
-        toast({
-          status: "info",
-          title: "No access",
-          description:
-            "Seems like you're not eligible for any roles in this guild. Check requirements below for more info!",
-          duration: 8000,
-        })
-        return
-      }
+      if (!response.success) return
 
       setTimeout(() => {
         mutate(

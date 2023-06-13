@@ -18,6 +18,7 @@ import { PlatformName, RequirementType } from "types"
 import CompleteCaptchaJoinStep from "./components/CompleteCaptchaJoinStep"
 import ConnectPlatform from "./components/ConnectPlatform"
 import ConnectPolygonIDJoinStep from "./components/ConnectPolygonIDJoinStep"
+import SatisfyRequirementsJoinStep from "./components/SatisfyRequirementsJoinStep"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
@@ -61,15 +62,17 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     error: joinError,
     isSigning,
     signLoadingText,
-  } = useJoin(() => {
+    response,
+  } = useJoin((res) => {
     methods.setValue("platforms", {})
-    onClose()
+    if (res.success) onClose()
   })
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
+      {/* maxW set so the no access description fits to 3 lines on desktop */}
+      <ModalContent maxW="468px">
         <FormProvider {...methods}>
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
@@ -78,6 +81,10 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <VStack spacing="3" alignItems="stretch" w="full" divider={<Divider />}>
               <WalletAuthButton />
               {renderedSteps}
+              <SatisfyRequirementsJoinStep
+                isLoading={isLoading}
+                hasNoAccessResponse={response?.success === false}
+              />
             </VStack>
             <ModalButton
               mt="8"
@@ -87,7 +94,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               loadingText={signLoadingText || "Checking access"}
               isDisabled={!isActive}
             >
-              Check access to join
+              Check access to join
             </ModalButton>
           </ModalBody>
         </FormProvider>
