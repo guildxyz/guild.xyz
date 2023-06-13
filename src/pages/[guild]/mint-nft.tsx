@@ -15,6 +15,7 @@ import Layout from "components/common/Layout"
 import useGuild from "components/[guild]/hooks/useGuild"
 import NftDetails from "components/[guild]/mint-nft/components/NftDetails"
 import RequirementsCard from "components/[guild]/mint-nft/components/RequirementsCard"
+import TopMinters from "components/[guild]/mint-nft/components/TopMinters"
 import { Users } from "phosphor-react"
 
 const IMAGE_SRC =
@@ -139,6 +140,8 @@ const Page = () => {
                 chain="POLYGON"
                 address="0xff04820c36759c9f5203021fe051239ad2dcca8a"
               />
+
+              <TopMinters />
             </Stack>
           </Stack>
 
