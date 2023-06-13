@@ -31,9 +31,8 @@ const AccountConnections = () => {
   const { platformUsers } = useUser()
 
   const orderedSocials = useMemo(() => {
-    const connectedPlatforms = platformUsers?.map(
-      (platformUser) => platformUser.platformName as string
-    )
+    const connectedPlatforms =
+      platformUsers?.map((platformUser) => platformUser.platformName as string) ?? []
     const notConnectedPlatforms = Object.keys(platforms).filter(
       (platform) => platform !== "POAP" && !connectedPlatforms?.includes(platform)
     )
