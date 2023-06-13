@@ -1,4 +1,5 @@
-import { Heading, SimpleGrid, Stack } from "@chakra-ui/react"
+import { Heading, Icon, SimpleGrid, Stack, Text } from "@chakra-ui/react"
+import { DotsThreeVertical } from "phosphor-react"
 import Minter from "./components/Minter"
 
 const TopMinters = () => {
@@ -6,12 +7,12 @@ const TopMinters = () => {
   const restMinters = SAMPLE_ADDRESSES.slice(3)
 
   return (
-    <Stack spacing={8}>
-      <Heading as="h3" fontFamily="display" fontSize="2xl">
+    <Stack spacing={4} alignItems="center">
+      <Heading w="full" as="h3" fontFamily="display" fontSize="2xl">
         Top minters
       </Heading>
 
-      <SimpleGrid columns={{ base: 3, sm: 5, md: 3, xl: 5 }} gap={8}>
+      <SimpleGrid pt={8} w="full" columns={{ base: 3, sm: 5, md: 3, xl: 5 }} gap={8}>
         {top3Minters.map((address, index) => (
           <Minter key={address} address={address} index={index} />
         ))}
@@ -19,6 +20,12 @@ const TopMinters = () => {
           <Minter key={address} address={address} />
         ))}
       </SimpleGrid>
+
+      <Icon as={DotsThreeVertical} color="gray" boxSize={8} />
+
+      <Text colorScheme="gray" fontSize="xl" fontWeight="bold" fontFamily="display">
+        228.345 more
+      </Text>
     </Stack>
   )
 }
