@@ -1,22 +1,18 @@
 import {
   Collapse,
-  HStack,
   Icon,
-  IconButton,
   SimpleGrid,
   Skeleton,
   Stack,
   Text,
-  Tooltip,
-  useBreakpointValue,
-  useClipboard,
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Chain, RPC } from "connectors"
-import { CaretDown, Copy } from "phosphor-react"
-import shortenHex from "utils/shortenHex"
+import { CaretDown } from "phosphor-react"
+import CopyableNftDetailsAddress from "./components/CopyableNftDetailsAddress"
+import InfoBlock from "./components/InfoBlock"
 import useNftDetails from "./hooks/useNftDetails"
 
 type Props = {
@@ -61,49 +57,14 @@ const NftDetails = ({ chain, address }: Props) => {
         <Stack spacing={4}>
           <Wrap>
             <SimpleGrid maxW="max-content" columns={2} gap={8} pr={8}>
-              <Stack spacing={0}>
-                <Text
-                  as="span"
-                  fontSize="sm"
-                  fontWeight="bold"
-                  colorScheme="gray"
-                  textTransform="uppercase"
-                >
-                  Standard
-                </Text>
-                {/* TODO */}
-                <Text as="span" fontSize="md" colorScheme="gray">
-                  ERC-721
-                </Text>
-              </Stack>
+              {/* TODO */}
+              <InfoBlock label="Standard">ERC-721</InfoBlock>
 
-              <Stack spacing={0}>
-                <Text
-                  as="span"
-                  fontSize="sm"
-                  fontWeight="bold"
-                  colorScheme="gray"
-                  textTransform="uppercase"
-                >
-                  Network
-                </Text>
-                <Text as="span" fontSize="md" colorScheme="gray">
-                  {chainName}
-                </Text>
-              </Stack>
+              <InfoBlock label="Network">{chainName}</InfoBlock>
             </SimpleGrid>
 
             <SimpleGrid maxW="max-content" columns={2} gap={8}>
-              <Stack spacing={0}>
-                <Text
-                  as="span"
-                  fontSize="sm"
-                  fontWeight="bold"
-                  colorScheme="gray"
-                  textTransform="uppercase"
-                >
-                  Total minters
-                </Text>
+              <InfoBlock label="Total minters">
                 <Skeleton isLoaded={!isValidating}>
                   <Text as="span" fontSize="md" colorScheme="gray">
                     {error
@@ -113,18 +74,9 @@ const NftDetails = ({ chain, address }: Props) => {
                         }).format(nftDetails?.totalMinters ?? 0)}
                   </Text>
                 </Skeleton>
-              </Stack>
+              </InfoBlock>
 
-              <Stack spacing={0}>
-                <Text
-                  as="span"
-                  fontSize="sm"
-                  fontWeight="bold"
-                  colorScheme="gray"
-                  textTransform="uppercase"
-                >
-                  Unique minters
-                </Text>
+              <InfoBlock label="Unique minters">
                 <Skeleton isLoaded={!isValidating}>
                   <Text as="span" fontSize="md" colorScheme="gray">
                     {error
@@ -136,7 +88,7 @@ const NftDetails = ({ chain, address }: Props) => {
                         )} (${uniqueMintersPercentage})%`}
                   </Text>
                 </Skeleton>
-              </Stack>
+              </InfoBlock>
             </SimpleGrid>
           </Wrap>
 
@@ -150,70 +102,6 @@ const NftDetails = ({ chain, address }: Props) => {
           />
         </Stack>
       </Collapse>
-    </Stack>
-  )
-}
-
-type CopyableNftDetailsAddressProps = {
-  label: string
-  address: string
-  isValidating?: boolean
-  error?: any
-}
-
-const CopyableNftDetailsAddress = ({
-  label,
-  address,
-  isValidating,
-  error,
-}: CopyableNftDetailsAddressProps) => {
-  const displayedAddress = useBreakpointValue({
-    base: address ? shortenHex(address) : "",
-    lg: address,
-  })
-  const { hasCopied, onCopy } = useClipboard(address)
-
-  return (
-    <Stack spacing={0}>
-      <Text
-        as="span"
-        fontSize="sm"
-        fontWeight="bold"
-        colorScheme="gray"
-        textTransform="uppercase"
-      >
-        {label}
-      </Text>
-
-      <Skeleton isLoaded={!isValidating} maxW="max-content" minW="80%">
-        {error ? (
-          <Text as="span" fontSize="md" colorScheme="gray">
-            Couldn't fetch
-          </Text>
-        ) : (
-          <HStack>
-            <Text as="span" fontSize="md" colorScheme="gray">
-              {displayedAddress}
-            </Text>
-            <Tooltip
-              placement="top"
-              label={hasCopied ? "Copied" : "Click to copy address"}
-              closeOnClick={false}
-              hasArrow
-            >
-              <IconButton
-                aria-label="Copy contract address"
-                variant="ghost"
-                icon={<Copy />}
-                color="gray"
-                size="sm"
-                rounded="full"
-                onClick={onCopy}
-              />
-            </Tooltip>
-          </HStack>
-        )}
-      </Skeleton>
     </Stack>
   )
 }
