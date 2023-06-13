@@ -39,33 +39,14 @@ const AccountConnections = () => {
     return [...connectedPlatforms, ...notConnectedPlatforms] as PlatformName[]
   }, [platformUsers])
 
-  const bg = useColorModeValue("gray.50", "blackAlpha.200")
-
   return (
     <>
       <AccountSectionTitle title="Social accounts" />
-      <Stack
-        bg={bg}
-        w="full"
-        borderWidth="1px"
-        borderRadius={"xl"}
-        px="4"
-        py="3.5"
-        spacing={3}
-        mb="6"
-        divider={<Divider />}
-      >
-        {}
+      <AccountSection mb="6" divider={<Divider />}>
         {orderedSocials.map((platform) => (
-          <SocialAccount
-            key={platform}
-            type={platform}
-            // icon={value.icon}
-            // colorScheme={value.colorScheme}
-            // name={value.name}
-          />
+          <SocialAccount key={platform} type={platform} />
         ))}
-      </Stack>
+      </AccountSection>
       <AccountSectionTitle
         title="Linked addresses"
         titleRightElement={
@@ -90,41 +71,42 @@ const AccountConnections = () => {
         spacing={3}
         pt="4"
       />
-      <Stack
-        bg={bg}
-        w="full"
-        borderWidth="1px"
-        borderRadius={"xl"}
-        px="4"
-        py="3.5"
-        spacing={3}
-      >
+      <AccountSection divider={<Divider />}>
         {isLoading ? (
           <Spinner />
         ) : addresses?.length === 1 && addresses?.[0] === account.toLowerCase() ? (
           <HStack justifyContent={"space-between"} w="full">
-            <Text /* colorScheme={"gray"} */ fontSize={"sm"} fontWeight={"medium"}>
+            <Text fontSize={"sm"} fontWeight={"medium"}>
               No linked addresses yet
             </Text>
             <LinkAddressButton />
           </HStack>
         ) : (
-          <Stack
-            spacing={3}
-            pt="2"
-            alignItems="start"
-            w="full"
-            divider={<Divider />}
-          >
-            {addresses
-              ?.filter((address) => address?.toLowerCase() !== account.toLowerCase())
-              .map((address) => (
-                <LinkedAddress key={address} address={address} />
-              ))}
-          </Stack>
+          addresses
+            ?.filter((address) => address?.toLowerCase() !== account.toLowerCase())
+            .map((address) => <LinkedAddress key={address} address={address} />)
         )}
-      </Stack>
+      </AccountSection>
     </>
+  )
+}
+
+const AccountSection = ({ children, ...rest }) => {
+  const bg = useColorModeValue("gray.50", "blackAlpha.200")
+
+  return (
+    <Stack
+      bg={bg}
+      w="full"
+      borderWidth="1px"
+      borderRadius={"xl"}
+      px="4"
+      py="3.5"
+      spacing={3}
+      {...rest}
+    >
+      {children}
+    </Stack>
   )
 }
 
