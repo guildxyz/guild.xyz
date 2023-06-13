@@ -1,6 +1,5 @@
 import {
   Collapse,
-  Heading,
   HStack,
   Icon,
   IconButton,
@@ -14,6 +13,7 @@ import {
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { Chain, RPC } from "connectors"
 import { CaretDown, Copy } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
@@ -36,16 +36,26 @@ const NftDetails = ({ chain, address }: Props) => {
 
   return (
     <Stack spacing={4}>
-      <HStack tabIndex={0} onClick={onToggle} cursor="pointer">
-        <Heading as="h3" fontFamily="display" fontSize="2xl">
-          NFT details
-        </Heading>
-        <Icon
-          as={CaretDown}
-          transform={isOpen && "rotate(-180deg)"}
-          transition="transform .3s"
-        />
-      </HStack>
+      <Button
+        maxW="max-content"
+        variant="unstyled"
+        fontFamily="display"
+        fontSize="2xl"
+        fontWeight="bold"
+        onClick={onToggle}
+        rightIcon={
+          <Icon
+            as={CaretDown}
+            boxSize={5}
+            position="relative"
+            top={0.5}
+            transform={isOpen && "rotate(-180deg)"}
+            transition="transform .3s"
+          />
+        }
+      >
+        NFT details
+      </Button>
 
       <Collapse in={isOpen} animateOpacity>
         <Stack spacing={4}>
