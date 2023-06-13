@@ -1,7 +1,7 @@
 import { Divider, Flex, HStack, useColorMode } from "@chakra-ui/react"
 import { Logic, Rest } from "types"
 
-type Props = { logic: Logic } & Rest
+type Props = { logic: string } & Rest
 
 export const formattedLogic: Record<Logic, string> = {
   AND: "AND",
@@ -25,8 +25,9 @@ const LogicDivider = ({ logic, ...rest }: Props): JSX.Element => {
         fontWeight="bold"
         color={colorMode === "light" ? "blackAlpha.500" : "whiteAlpha.400"}
         flexShrink={0}
+        textTransform="uppercase"
       >
-        {formattedLogic[logic]}
+        {formattedLogic[logic] ?? logic}
       </Flex>
       <Divider
         width="full"

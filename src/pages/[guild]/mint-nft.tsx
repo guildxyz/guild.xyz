@@ -1,5 +1,6 @@
 import {
   Box,
+  Circle,
   Heading,
   HStack,
   Icon,
@@ -16,8 +17,9 @@ import Layout from "components/common/Layout"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
 import NftDetails from "components/[guild]/mint-nft/components/NftDetails"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import { Users } from "phosphor-react"
+import { Coins, Users } from "phosphor-react"
 import { Fragment } from "react"
 
 const IMAGE_SRC =
@@ -30,6 +32,8 @@ const Page = () => {
   const requirements = role?.requirements ?? []
 
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
+
+  const paymentImageBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   return (
     <Layout
@@ -164,6 +168,18 @@ const Page = () => {
                     )}
                   </Fragment>
                 ))}
+
+                <LogicDivider logic="+ minting fee" />
+                <HStack spacing={4}>
+                  <Circle bgColor={paymentImageBg} size={"var(--chakra-space-11)"}>
+                    <Icon as={Coins} boxSize={6} />
+                  </Circle>
+
+                  <Text wordBreak="break-word">
+                    <DataBlock>1 MATIC</DataBlock>
+                    {" + gas"}
+                  </Text>
+                </HStack>
               </Stack>
 
               <Button colorScheme="green">Mint</Button>
