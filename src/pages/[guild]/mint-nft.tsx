@@ -1,6 +1,5 @@
 import {
   Box,
-  Circle,
   Heading,
   HStack,
   Icon,
@@ -8,19 +7,15 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  useColorModeValue,
+  useBreakpointValue,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import useGuild from "components/[guild]/hooks/useGuild"
-import LogicDivider from "components/[guild]/LogicDivider"
 import NftDetails from "components/[guild]/mint-nft/components/NftDetails"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
-import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import { Coins, Users } from "phosphor-react"
-import { Fragment } from "react"
+import RequirementsCard from "components/[guild]/mint-nft/components/RequirementsCard"
+import { Users } from "phosphor-react"
 
 const IMAGE_SRC =
   "https://guild-xyz.mypinata.cloud/ipfs/QmRMiu8iiVNi6FCZS3QnHamzp6QVpXJp3a2JDFv98LPxME"
@@ -31,9 +26,7 @@ const Page = () => {
   const role = roles?.find((r) => r.id === 56990) ?? roles?.[0] // 56990 is a role in Johnny's Guild
   const requirements = role?.requirements ?? []
 
-  const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
-
-  const paymentImageBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
   return (
     <Layout
@@ -110,6 +103,13 @@ const Page = () => {
                   </HStack>
                 </HStack>
 
+                {isMobile && (
+                  <RequirementsCard
+                    requirements={requirements}
+                    logic={role?.logic}
+                  />
+                )}
+
                 <Text
                   lineHeight={1.75}
                 >{`This is an on-chain proof that you joined ${name} on Guild.xyz.`}</Text>
@@ -142,49 +142,13 @@ const Page = () => {
             </Stack>
           </Stack>
 
-          <Card w="full" h="max-content" position="sticky" top={{ base: 4, md: 5 }}>
-            <Stack
-              p={{ base: 5, md: 8 }}
-              bgColor={requirementsSectionBgColor}
-              spacing={{ base: 4, md: 8 }}
-            >
-              <Text
-                as="span"
-                fontSize="xs"
-                fontWeight="bold"
-                color="gray"
-                textTransform="uppercase"
-                noOfLines={1}
-              >
-                Requirements to qualify
-              </Text>
-
-              <Stack spacing={0}>
-                {requirements.map((requirement, i) => (
-                  <Fragment key={requirement.id}>
-                    <RequirementDisplayComponent requirement={requirement} />
-                    {i < requirements.length - 1 && (
-                      <LogicDivider logic={role.logic} />
-                    )}
-                  </Fragment>
-                ))}
-
-                <LogicDivider logic="+ minting fee" />
-                <HStack spacing={4}>
-                  <Circle bgColor={paymentImageBg} size={"var(--chakra-space-11)"}>
-                    <Icon as={Coins} boxSize={6} />
-                  </Circle>
-
-                  <Text wordBreak="break-word">
-                    <DataBlock>1 MATIC</DataBlock>
-                    {" + gas"}
-                  </Text>
-                </HStack>
-              </Stack>
-
-              <Button colorScheme="green">Mint</Button>
-            </Stack>
-          </Card>
+          {!isMobile && (
+            <RequirementsCard
+              requirements={requirements}
+              logic={role?.logic}
+              isSticky
+            />
+          )}
         </SimpleGrid>
       </Stack>
     </Layout>
