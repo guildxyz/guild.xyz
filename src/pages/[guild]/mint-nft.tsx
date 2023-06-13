@@ -3,14 +3,10 @@ import {
   Heading,
   HStack,
   Icon,
-  IconButton,
   Img,
   SimpleGrid,
   Stack,
   Text,
-  Tooltip,
-  useBreakpointValue,
-  useClipboard,
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -19,12 +15,11 @@ import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
+import NftDetails from "components/[guild]/mint-nft/components/NftDetails"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import { Copy, Users } from "phosphor-react"
+import { Users } from "phosphor-react"
 import { Fragment } from "react"
-import shortenHex from "utils/shortenHex"
 
-const ADDRESS = "0xff04820c36759c9f5203021fe051239ad2dcca8a"
 const IMAGE_SRC =
   "https://guild-xyz.mypinata.cloud/ipfs/QmRMiu8iiVNi6FCZS3QnHamzp6QVpXJp3a2JDFv98LPxME"
 
@@ -35,12 +30,6 @@ const Page = () => {
   const requirements = role?.requirements ?? []
 
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
-
-  const displayedAddress = useBreakpointValue({
-    base: shortenHex(ADDRESS),
-    lg: ADDRESS,
-  })
-  const { hasCopied, onCopy } = useClipboard("address... (todo)")
 
   return (
     <Layout
@@ -142,95 +131,10 @@ const Page = () => {
                 </Text>
               </Stack>
 
-              <Stack spacing={4}>
-                <Heading as="h3" fontFamily="display" fontSize="2xl">
-                  NFT details
-                </Heading>
-
-                <Stack spacing={4}>
-                  <SimpleGrid maxW="max-content" columns={3} gap={8}>
-                    <Stack spacing={0}>
-                      <Text
-                        as="span"
-                        fontSize="sm"
-                        fontWeight="bold"
-                        colorScheme="gray"
-                        textTransform="uppercase"
-                      >
-                        Standard
-                      </Text>
-                      <Text as="span" fontSize="md" colorScheme="gray">
-                        ERC-721
-                      </Text>
-                    </Stack>
-
-                    <Stack spacing={0}>
-                      <Text
-                        as="span"
-                        fontSize="sm"
-                        fontWeight="bold"
-                        colorScheme="gray"
-                        textTransform="uppercase"
-                      >
-                        Network
-                      </Text>
-                      <Text as="span" fontSize="md" colorScheme="gray">
-                        Polygon
-                      </Text>
-                    </Stack>
-
-                    <Stack spacing={0}>
-                      <Text
-                        as="span"
-                        fontSize="sm"
-                        fontWeight="bold"
-                        colorScheme="gray"
-                        textTransform="uppercase"
-                      >
-                        Minted
-                      </Text>
-                      <Text as="span" fontSize="md" colorScheme="gray">
-                        {new Intl.NumberFormat("en", {
-                          notation: "standard",
-                        }).format(295990)}
-                      </Text>
-                    </Stack>
-                  </SimpleGrid>
-
-                  <Stack spacing={0}>
-                    <Text
-                      as="span"
-                      fontSize="sm"
-                      fontWeight="bold"
-                      colorScheme="gray"
-                      textTransform="uppercase"
-                    >
-                      Contract
-                    </Text>
-                    <HStack>
-                      <Text as="span" fontSize="md" colorScheme="gray">
-                        {displayedAddress}
-                      </Text>
-                      <Tooltip
-                        placement="top"
-                        label={hasCopied ? "Copied" : "Click to copy address"}
-                        closeOnClick={false}
-                        hasArrow
-                      >
-                        <IconButton
-                          aria-label="Copy contract address"
-                          variant="ghost"
-                          icon={<Copy />}
-                          color="gray"
-                          size="sm"
-                          rounded="full"
-                          onClick={onCopy}
-                        />
-                      </Tooltip>
-                    </HStack>
-                  </Stack>
-                </Stack>
-              </Stack>
+              <NftDetails
+                chain="POLYGON"
+                address="0xff04820c36759c9f5203021fe051239ad2dcca8a"
+              />
             </Stack>
           </Stack>
 
