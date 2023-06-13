@@ -84,10 +84,10 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               onClick={handleSubmit(onSubmit)}
               colorScheme="green"
               isLoading={isSigning || isLoading}
-              loadingText={signLoadingText || "Joining Guild"}
+              loadingText={signLoadingText || "Checking access"}
               isDisabled={!isActive}
             >
-              Join guild
+              Check access to join
             </ModalButton>
           </ModalBody>
         </FormProvider>
