@@ -71,8 +71,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      {/* maxW set so the no access description fits to 3 lines on desktop */}
-      <ModalContent maxW="468px">
+      <ModalContent>
         <FormProvider {...methods}>
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
@@ -84,6 +83,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               <SatisfyRequirementsJoinStep
                 isLoading={isLoading}
                 hasNoAccessResponse={response?.success === false}
+                onClose={onClose}
               />
             </VStack>
             <ModalButton
