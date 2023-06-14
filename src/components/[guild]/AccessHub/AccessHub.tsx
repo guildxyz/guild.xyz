@@ -103,7 +103,7 @@ const AccessHub = (): JSX.Element => {
               />
             ))}
         </>
-      ) : (
+      ) : !featureFlags.includes("GUILD_CREDENTIAL") || !shouldShowGuildPin ? (
         <Card>
           <Alert status="info" h="full">
             <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
@@ -117,7 +117,7 @@ const AccessHub = (): JSX.Element => {
             </Stack>
           </Alert>
         </Card>
-      )}
+      ) : null}
       {guildId !== 1985 &&
         featureFlags.includes("GUILD_CREDENTIAL") &&
         shouldShowGuildPin && <DynamicGuildPinRewardCard />}
