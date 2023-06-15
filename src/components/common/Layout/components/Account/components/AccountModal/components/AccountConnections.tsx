@@ -1,4 +1,5 @@
 import {
+  ButtonGroup,
   Divider,
   HStack,
   Heading,
@@ -21,7 +22,9 @@ import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformName } from "types"
+import useDelegateVaults from "../../delegate/useDelegateVaults"
 import LinkAddressButton from "./LinkAddressButton"
+import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
 import LinkedAddress from "./LinkedAddress"
 import SocialAccount from "./SocialAccount"
 
@@ -29,6 +32,7 @@ const AccountConnections = () => {
   const { isLoading, addresses } = useUser()
   const { account } = useWeb3React()
   const { platformUsers } = useUser()
+  const vaults = useDelegateVaults()
 
   const orderedSocials = useMemo(() => {
     const connectedPlatforms =
@@ -75,16 +79,32 @@ const AccountConnections = () => {
         {isLoading ? (
           <Spinner />
         ) : addresses?.length === 1 && addresses?.[0] === account.toLowerCase() ? (
-          <HStack justifyContent={"space-between"} w="full">
+          <Stack
+            {...(!vaults?.length && {
+              direction: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            })}
+          >
             <Text fontSize={"sm"} fontWeight={"medium"}>
               No linked addresses yet
             </Text>
-            <LinkAddressButton />
-          </HStack>
+            {vaults?.length ? (
+              <ButtonGroup w="full">
+                <LinkAddressButton />
+                <LinkDelegateVaultButton vaults={vaults} />
+              </ButtonGroup>
+            ) : (
+              <LinkAddressButton />
+            )}
+          </Stack>
         ) : (
           addresses
             ?.filter((address) => address?.toLowerCase() !== account.toLowerCase())
             .map((address) => <LinkedAddress key={address} address={address} />)
+            .concat(
+              vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null
+            )
         )}
       </AccountSection>
     </>
