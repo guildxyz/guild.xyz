@@ -5,10 +5,10 @@ const GuildPinSkeleton = () => {
   return (
     <Circle
       position="relative"
-      ml={-12}
+      ml={-10}
       _first={{ ml: 0 }}
       bgColor={borderAndBgColor}
-      size={24}
+      size={20}
       borderWidth={2}
       borderColor={borderAndBgColor}
     >
