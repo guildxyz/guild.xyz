@@ -48,7 +48,7 @@ const LinkedAddress = ({ address }: Props) => {
   return (
     <>
       <HStack spacing={2} alignItems="center" w="full">
-        <Circle size={7} /* bg="whiteAlpha.200" borderRadius={"full"} */>
+        <Circle size={7}>
           <GuildAvatar address={address} size={4} mt="-1" />
         </Circle>
         <CopyableAddress

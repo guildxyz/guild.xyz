@@ -98,7 +98,6 @@ const AccountModal = () => {
                     domain={domain}
                     decimals={5}
                     fontWeight="bold"
-                    // fontSize="lg"
                   />
                   <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
                     {`Connected with ${connectorName(connector)}`}
@@ -118,15 +117,11 @@ const AccountModal = () => {
                   />
                 </Tooltip>
               </HStack>
-              {/* <Divider my="7" /> */}
 
               <AccountConnections />
               <Divider my="7" />
               <UsersGuildPins />
             </ModalBody>
-            {/* <ModalFooter flexDir="column" pt="10" gap={8}>
-
-            </ModalFooter> */}
           </>
         ) : (
           <ModalBody>
