@@ -10,7 +10,6 @@ import {
   PopoverContent,
   PopoverTrigger,
   Spacer,
-  Spinner,
   Stack,
   Text,
   useColorModeValue,
@@ -25,7 +24,7 @@ import { PlatformName } from "types"
 import useDelegateVaults from "../../delegate/useDelegateVaults"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
-import LinkedAddress from "./LinkedAddress"
+import LinkedAddress, { LinkedAddressSkeleton } from "./LinkedAddress"
 import SocialAccount from "./SocialAccount"
 
 const AccountConnections = () => {
@@ -42,6 +41,10 @@ const AccountConnections = () => {
     )
     return [...connectedPlatforms, ...notConnectedPlatforms] as PlatformName[]
   }, [platformUsers])
+
+  const linkedAddresses = addresses?.filter(
+    (address) => address?.toLowerCase() !== account.toLowerCase()
+  )
 
   return (
     <>
@@ -77,8 +80,8 @@ const AccountConnections = () => {
       />
       <AccountSection divider={<Divider />}>
         {isLoading ? (
-          <Spinner />
-        ) : addresses?.length === 1 && addresses?.[0] === account.toLowerCase() ? (
+          <LinkedAddressSkeleton />
+        ) : !linkedAddresses?.length ? (
           <Stack
             {...(!vaults?.length && {
               direction: "row",
@@ -99,8 +102,7 @@ const AccountConnections = () => {
             )}
           </Stack>
         ) : (
-          addresses
-            ?.filter((address) => address?.toLowerCase() !== account.toLowerCase())
+          linkedAddresses
             .map((address) => <LinkedAddress key={address} address={address} />)
             .concat(
               vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null

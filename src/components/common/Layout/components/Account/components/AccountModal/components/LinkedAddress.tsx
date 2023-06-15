@@ -8,6 +8,8 @@ import {
   HStack,
   Icon,
   IconButton,
+  Skeleton,
+  SkeletonCircle,
   Tag,
   Text,
   Tooltip,
@@ -117,5 +119,12 @@ const LinkedAddress = ({ address }: Props) => {
     </>
   )
 }
+
+export const LinkedAddressSkeleton = () => (
+  <HStack spacing={2} alignItems="center" w="full" py="0.5">
+    <SkeletonCircle boxSize={7} />
+    <Skeleton h="5" w="36" />
+  </HStack>
+)
 
 export default LinkedAddress
