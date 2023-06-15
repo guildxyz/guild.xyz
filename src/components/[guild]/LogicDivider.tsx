@@ -6,7 +6,7 @@ type Props = { logic: Logic } & Rest
 export const formattedLogic: Record<Logic, string> = {
   AND: "AND",
   OR: "OR",
-  ANY_OF: "OR",
+  ANY_OF: "AND / OR",
 }
 
 const LogicDivider = ({ logic, ...rest }: Props): JSX.Element => {
