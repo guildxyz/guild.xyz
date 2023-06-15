@@ -72,7 +72,7 @@ const AccountModal = () => {
 
   const domain = useResolveAddress(account)
 
-  const avatarBg = useColorModeValue("blackAlpha.100", "blackAlpha.200")
+  const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
 
   return (
     <Modal
