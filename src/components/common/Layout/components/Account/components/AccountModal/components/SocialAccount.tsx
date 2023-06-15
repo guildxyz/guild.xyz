@@ -6,7 +6,6 @@ import {
   AlertDialogOverlay,
   Avatar,
   AvatarBadge,
-  ChakraProps,
   HStack,
   Icon,
   IconButton,
@@ -22,23 +21,22 @@ import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import { motion } from "framer-motion"
 import useToast from "hooks/useToast"
-import { IconProps, LinkBreak } from "phosphor-react"
+import { LinkBreak } from "phosphor-react"
 import platforms from "platforms/platforms"
-import { useRef } from "react"
+import { memo, useRef } from "react"
 import { PlatformName } from "types"
 import useDisconnect from "../hooks/useDisconnect"
 
 type Props = {
   type: PlatformName
-  icon: (props: IconProps) => JSX.Element
-  colorScheme: ChakraProps["color"]
-  name: string
 }
 
 const MotionHStack = motion(HStack)
 
-const SocialAccount = ({ type, icon, name, colorScheme }: Props): JSX.Element => {
-  const circleBorderColor = useColorModeValue("gray.100", "gray.800")
+const SocialAccount = memo(({ type }: Props): JSX.Element => {
+  const { icon, name, colorScheme } = platforms[type]
+
+  const circleBorderColor = useColorModeValue("gray.100", "gray.700")
   const { platformUsers } = useUser()
   const accesses = useAccess()
   const platformUser = platformUsers?.find(
@@ -56,21 +54,15 @@ const SocialAccount = ({ type, icon, name, colorScheme }: Props): JSX.Element =>
 
   return (
     <>
-      <MotionHStack
-        layout
-        spacing={3}
-        alignItems="center"
-        w="full"
-        order={!platformUser && "1"}
-      >
+      <MotionHStack layout spacing={3} alignItems="center" w="full">
         {!platformUser ? (
           <Avatar
             icon={<Icon as={icon} boxSize={4} color="white" />}
-            boxSize={8}
+            boxSize={7}
             bgColor={`${colorScheme}.500`}
           />
         ) : (
-          <Avatar src={platformUser.platformUserData?.avatar} size="sm">
+          <Avatar src={platformUser.platformUserData?.avatar} size="sm" boxSize={7}>
             <AvatarBadge
               boxSize={5}
               bgColor={`${colorScheme}.500`}
@@ -81,7 +73,7 @@ const SocialAccount = ({ type, icon, name, colorScheme }: Props): JSX.Element =>
             </AvatarBadge>
           </Avatar>
         )}
-        <Text fontWeight="semibold" flex="1" noOfLines={1}>
+        <Text fontWeight="bold" flex="1" noOfLines={1} fontSize="sm">
           {platformUser?.platformUserData?.username ??
             `${platforms[type].name} ${!!platformUser ? "connected" : ""}`}
         </Text>
@@ -98,7 +90,7 @@ const SocialAccount = ({ type, icon, name, colorScheme }: Props): JSX.Element =>
       </MotionHStack>
     </>
   )
-}
+})
 
 const ConnectPlatform = ({ type, colorScheme, isReconnect = false }) => {
   const toast = useToast()

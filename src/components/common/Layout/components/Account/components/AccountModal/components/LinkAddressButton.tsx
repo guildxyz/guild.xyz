@@ -1,12 +1,10 @@
 import {
   Box,
-  Collapse,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -16,23 +14,17 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
-import useDelegateVaults from "components/common/Layout/components/Account/components/delegate/useDelegateVaults"
 import { Modal } from "components/common/Modal"
-import useKeyPair from "hooks/useKeyPair"
-import Image from "next/image"
 import { Plus, SignOut } from "phosphor-react"
 import { useState } from "react"
 
-const LinkAddressButton = ({}) => {
+const LinkAddressButton = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const { id } = useUser()
   const { provider, connector, account } = useWeb3React<Web3Provider>()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { openWalletSelectorModal, setAddressLinkParams } =
     useWeb3ConnectionManager()
-
-  const vaults = useDelegateVaults()
-  const { set } = useKeyPair()
 
   if (!id) return null
 
@@ -64,34 +56,14 @@ const LinkAddressButton = ({}) => {
   }
 
   return (
-    <Stack w="full">
-      <Collapse in={vaults.length > 0} unmountOnExit style={{ width: "100%" }}>
-        <Button
-          leftIcon={
-            <Image
-              width={15}
-              height={15}
-              alt={"Delegate.cash logo"}
-              src={`/walletLogos/delegatecash.png`}
-            />
-          }
-          w="full"
-          onClick={() => {
-            set.onSubmit(false, "DELEGATE")
-          }}
-          isLoading={set.isLoading || set.isSigning}
-          loadingText="Check your wallet"
-        >
-          Link {vaults.length > 1 ? vaults.length : ""} unlinked vault
-          {vaults.length > 1 ? "s" : ""}
-        </Button>
-      </Collapse>
+    <>
       <Button
         leftIcon={<Plus />}
-        w="full"
+        size="sm"
         onClick={onClick}
         isLoading={isLoading}
         loadingText="Check your wallet"
+        {...props}
       >
         Link address
       </Button>
@@ -117,7 +89,7 @@ const LinkAddressButton = ({}) => {
           </ModalBody>
         </ModalContent>
       </Modal>
-    </Stack>
+    </>
   )
 }
 
