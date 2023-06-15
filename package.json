@@ -40,6 +40,7 @@
     "@notionhq/client": "^2.2.2",
     "@nouns/assets": "^0.4.2",
     "@snyk/protect": "latest",
+    "@tanstack/react-table": "^8.9.2",
     "@vercel/kv": "^0.2.1",
     "@vercel/og": "^0.5.0",
     "@web3-react/coinbase-wallet": "^8.2.0",

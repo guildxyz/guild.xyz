@@ -7,8 +7,9 @@ import {
 } from "@chakra-ui/react"
 import useIsStuck from "hooks/useIsStuck"
 import { PropsWithChildren } from "react"
-import useGuild from "../hooks/useGuild"
 import { useThemeContext } from "../ThemeContext"
+import useGuild from "../hooks/useGuild"
+import useGuildPermission from "../hooks/useGuildPermission"
 import TabButton from "./components/TabButton"
 
 type Props = {
@@ -22,6 +23,7 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
   const tabButtonColor = isStuck && colorMode === "light" ? "black" : textColor
 
   const { urlName } = useGuild()
+  const { isAdmin } = useGuildPermission()
   const bgColor = useColorModeValue("white", "gray.800")
 
   return (
@@ -73,9 +75,7 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
           }}
         >
           <TabButton href={`${urlName}`}>{tabTitle}</TabButton>
-          {/* <TabButton href="#" disabled tooltipText="Stay tuned!">
-            More tabs soon
-          </TabButton> */}
+          {isAdmin && <TabButton href={`${urlName}/members`}>Members</TabButton>}
         </HStack>
       </Box>
 
