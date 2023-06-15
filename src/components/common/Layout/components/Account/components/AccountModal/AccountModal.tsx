@@ -93,20 +93,22 @@ const AccountModal = () => {
                   <GuildAvatar address={account} size={5} />
                 </Circle>
                 <Stack w="full" alignItems={"flex-start"} spacing="1">
-                  <CopyableAddress
-                    address={account}
-                    domain={domain}
-                    decimals={5}
-                    fontWeight="bold"
-                  />
+                  <HStack>
+                    <CopyableAddress
+                      address={account}
+                      domain={domain}
+                      decimals={5}
+                      fontWeight="bold"
+                    />
+                    {addresses?.indexOf(account.toLowerCase()) === 0 &&
+                    addresses.length > 1 ? (
+                      <PrimaryAddressTag size="sm" />
+                    ) : null}
+                  </HStack>
                   <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
                     {`Connected with ${connectorName(connector)}`}
                   </Text>
                 </Stack>
-                {addresses?.indexOf(account.toLowerCase()) === 0 &&
-                addresses.length > 1 ? (
-                  <PrimaryAddressTag />
-                ) : null}
                 <Tooltip label="Disconnect">
                   <IconButton
                     size="sm"
