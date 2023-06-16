@@ -18,21 +18,15 @@ import { Logic, Requirement } from "types"
 type Props = {
   requirements: Requirement[]
   logic: Logic
-  isSticky?: boolean
 }
 
-const RequirementsCard = ({ requirements, logic, isSticky }: Props) => {
+const RequirementsCard = ({ requirements, logic }: Props) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
 
   const paymentImageBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   return (
-    <Card
-      w="full"
-      h="max-content"
-      position={isSticky ? "sticky" : "relative"}
-      top={isSticky ? { base: 4, md: 5 } : undefined}
-    >
+    <Card layout w="full" h="max-content">
       <Stack
         p={{ base: 5, md: 8 }}
         bgColor={requirementsSectionBgColor}

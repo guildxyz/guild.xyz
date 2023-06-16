@@ -1,25 +1,27 @@
 import {
-  Box,
   Heading,
   HStack,
-  Icon,
-  Img,
   SimpleGrid,
   Stack,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import useGuild from "components/[guild]/hooks/useGuild"
+import NftByRole from "components/[guild]/mint-nft/components/NftByRole"
 import NftDetails from "components/[guild]/mint-nft/components/NftDetails"
+import NftImage from "components/[guild]/mint-nft/components/NftImage"
 import RequirementsCard from "components/[guild]/mint-nft/components/RequirementsCard"
 import TopMinters from "components/[guild]/mint-nft/components/TopMinters"
-import { Users } from "phosphor-react"
+import { motion } from "framer-motion"
+import useScrollEffect from "hooks/useScrollEffect"
+import { useRef, useState } from "react"
 
 const IMAGE_SRC =
   "https://guild-xyz.mypinata.cloud/ipfs/QmRMiu8iiVNi6FCZS3QnHamzp6QVpXJp3a2JDFv98LPxME"
+
+const MotionHeading = motion(Heading)
 
 const Page = () => {
   // TEMP, for testing
@@ -28,6 +30,13 @@ const Page = () => {
   const requirements = role?.requirements ?? []
 
   const isMobile = useBreakpointValue({ base: true, md: false })
+
+  const nftDescriptionRef = useRef<HTMLDivElement>(null)
+  const [shouldShowSmallNftImage, setShouldShowSmallNftImage] = useState(false)
+  useScrollEffect(() => {
+    const nftDescription = nftDescriptionRef.current
+    setShouldShowSmallNftImage(nftDescription.getBoundingClientRect().top < 40)
+  }, [])
 
   return (
     <Layout
@@ -53,56 +62,21 @@ const Page = () => {
           gap={{ base: 6, lg: 8 }}
         >
           <Stack w="full" spacing={12}>
-            <Card
-              aspectRatio={1}
-              bgColor="black"
-              position="relative"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Box
-                position="absolute"
-                inset={0}
-                bgImage={IMAGE_SRC}
-                transform="scale(1.5)"
-                filter="blur(20px)"
-                opacity={0.75}
-              />
-              <Img
-                position="relative"
-                maxW="80%"
-                maxH="80%"
-                src={IMAGE_SRC}
-                alt="NFT image"
-                filter="drop-shadow(0px 1rem 2rem black)"
-              />
-            </Card>
+            <NftImage src={IMAGE_SRC} />
 
             <Stack spacing={8}>
               <Stack spacing={4}>
-                <Heading as="h2" fontFamily="display" fontSize="4xl">
+                <MotionHeading
+                  layout="position"
+                  layoutId="nft-name"
+                  as="h2"
+                  fontFamily="display"
+                  fontSize="4xl"
+                >
                   {`Joined ${name}`}
-                </Heading>
+                </MotionHeading>
 
-                <HStack pb={2}>
-                  <Text as="span">by Role:</Text>
-                  <HStack>
-                    <GuildLogo imageUrl={role?.imageUrl} size={6} />
-                    <Text as="span" fontWeight="bold">
-                      Member
-                    </Text>
-                  </HStack>
-
-                  <HStack spacing={1} color="gray">
-                    <Icon as={Users} boxSize={4} />
-                    <Text as="span">
-                      {new Intl.NumberFormat("en", { notation: "compact" }).format(
-                        role?.memberCount ?? 0
-                      )}
-                    </Text>
-                  </HStack>
-                </HStack>
+                <NftByRole role={role} />
 
                 {isMobile && (
                   <RequirementsCard
@@ -112,6 +86,7 @@ const Page = () => {
                 )}
 
                 <Text
+                  ref={nftDescriptionRef}
                   lineHeight={1.75}
                 >{`This is an on-chain proof that you joined ${name} on Guild.xyz.`}</Text>
                 <Text lineHeight={1.75}>
@@ -146,11 +121,39 @@ const Page = () => {
           </Stack>
 
           {!isMobile && (
-            <RequirementsCard
-              requirements={requirements}
-              logic={role?.logic}
-              isSticky
-            />
+            <Stack
+              position="sticky"
+              top={{ base: 4, md: 5 }}
+              spacing={8}
+              h="max-content"
+            >
+              {shouldShowSmallNftImage && (
+                <SimpleGrid
+                  gridTemplateColumns="var(--chakra-sizes-24) auto"
+                  gap={4}
+                >
+                  <NftImage src={IMAGE_SRC} />
+
+                  <Stack spacing={4}>
+                    <MotionHeading
+                      layout="position"
+                      layoutId="nft-name"
+                      as="h2"
+                      fontFamily="display"
+                      fontSize="2xl"
+                    >
+                      {`Joined ${name}`}
+                    </MotionHeading>
+
+                    <NftByRole role={role} />
+                  </Stack>
+                </SimpleGrid>
+              )}
+
+              <motion.div layout="position">
+                <RequirementsCard requirements={requirements} logic={role?.logic} />
+              </motion.div>
+            </Stack>
           )}
         </SimpleGrid>
       </Stack>
