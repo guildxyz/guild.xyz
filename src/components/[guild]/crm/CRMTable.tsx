@@ -1,4 +1,4 @@
-import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
+import { Table, Tbody, Td, Th, Thead, Tr, useColorModeValue } from "@chakra-ui/react"
 import {
   createColumnHelper,
   flexRender,
@@ -46,41 +46,56 @@ const CRMTable = () => {
     getCoreRowModel: getCoreRowModel(),
   })
 
+  const cardBg = useColorModeValue("white", "gray.700")
+
   if (!data) return null
 
   return (
-    <Card>
-      <TableContainer>
-        <Table borderColor="whiteAlpha.300">
-          <Thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <Tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <Th key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </Th>
-                ))}
-              </Tr>
-            ))}
-          </Thead>
-          <Tbody>
-            {table.getRowModel().rows.map((row) => (
-              <Tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <Td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Td>
-                ))}
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
+    <Card overflow="visible">
+      <Table borderColor="whiteAlpha.300">
+        <Thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <Tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <Th
+                  key={header.id}
+                  position="sticky"
+                  top="16"
+                  bg={cardBg}
+                  overflow="hidden"
+                  sx={{
+                    "&:first-of-type": {
+                      borderTopLeftRadius: "xl",
+                    },
+                    "&:last-of-type": {
+                      borderTopRightRadius: "xl",
+                      borderRightWidth: 0,
+                    },
+                  }}
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </Th>
+              ))}
+            </Tr>
+          ))}
+        </Thead>
+        <Tbody>
+          {table.getRowModel().rows.map((row) => (
+            <Tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <Td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </Td>
+              ))}
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
     </Card>
   )
 }
