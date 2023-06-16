@@ -5,7 +5,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import useBalance from "hooks/useBalance"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
-import { GUILD_PIN_CONTRACT } from "utils/guildCheckout/constants"
+import useGuildPinContractsData from "../../hooks/useGuildPinContractsData"
 import useGuildPinFee from "../../hooks/useGuildPinFee"
 import useMintGuildPin from "../../hooks/useMintGuildPin"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
@@ -13,6 +13,8 @@ import { useMintGuildPinContext } from "../../MintGuildPinContext"
 const MintGuildPinButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { id, urlName } = useGuild()
+
+  const guildPinContractsData = useGuildPinContractsData()
 
   const { error, isInvalidImage, isTooSmallImage } = useMintGuildPinContext()
 
@@ -47,7 +49,7 @@ const MintGuildPinButton = (): JSX.Element => {
   const isDisabled =
     isInvalidImage ||
     isTooSmallImage ||
-    !GUILD_PIN_CONTRACT[Chains[chainId]] ||
+    !guildPinContractsData[Chains[chainId]] ||
     !isSufficientBalance ||
     error ||
     isLoading ||
@@ -71,7 +73,7 @@ const MintGuildPinButton = (): JSX.Element => {
     >
       {isInvalidImage || isTooSmallImage
         ? "Setup required"
-        : !GUILD_PIN_CONTRACT[Chains[chainId]]
+        : !guildPinContractsData[Chains[chainId]]
         ? `Unsupported chain`
         : alreadyMintedOnChain
         ? "Already minted"

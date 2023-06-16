@@ -5,7 +5,7 @@ import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockEx
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
-import PurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/PurchaseRequirement"
+import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -13,7 +13,7 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import { Fragment } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Trait } from "types"
-import { GUILD_PIN_CONTRACT } from "utils/guildCheckout/constants"
+import { flattenedGuildPinChainsData } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import useNftMetadata, {
   NOUNS_BACKGROUNDS,
@@ -39,19 +39,20 @@ const NftRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   // This is a really basic solution, and it'll only handle the "Joined Guild" NFTs. We should probably think about a better solution in the future.
-  const firstAttribute = requirement.data?.attributes?.[0]
   const isGuildPin =
-    GUILD_PIN_CONTRACT[requirement.chain]?.address ===
-      requirement.address.toLowerCase() &&
-    requirement.data?.attributes?.length === 1 &&
-    firstAttribute.trait_type === "guildId"
+    flattenedGuildPinChainsData[requirement.chain]?.address ===
+    requirement.address.toLowerCase()
 
+  const guildIdAttribute =
+    isGuildPin &&
+    requirement.data.attributes?.find((attr) => attr.trait_type === "guildId")?.value
   const { data: guildPinImageCID } = useSWRImmutable(
     isGuildPin
-      ? `/assets/guildPins/image?guildId=${firstAttribute.value}&guildAction=0`
+      ? // Fallback to "Our Guild" pin image
+        `/assets/guildPins/image?guildId=${guildIdAttribute ?? 1985}&guildAction=0`
       : null
   )
-  const { name: guildPinGuildName } = useGuild(firstAttribute?.value)
+  const { name: guildPinGuildName } = useGuild(guildIdAttribute ?? "")
 
   const { metadata: metadataWithTraits, isLoading: isMetadataWithTraitsLoading } =
     useNftMetadata(requirement.chain, requirement.address, requirement.data.id)
@@ -61,15 +62,18 @@ const NftRequirement = (props: RequirementProps) => {
   )
 
   const nftDataLoading = isLoading || isMetadataWithTraitsLoading
-  const nftName =
-    isGuildPin && guildPinGuildName ? (
-      <>
-        <DataBlock>{`Joined ${guildPinGuildName}`}</DataBlock>
-        {` Guild Pin`}
-      </>
-    ) : (
-      metadataWithTraits?.name || metadata?.name
-    )
+  const nftName = isGuildPin ? (
+    <>
+      {guildPinGuildName && (
+        <>
+          <DataBlock>{`Joined ${guildPinGuildName}`}</DataBlock>{" "}
+        </>
+      )}
+      {"Guild Pin"}
+    </>
+  ) : (
+    metadataWithTraits?.name || metadata?.name
+  )
   const nftImage = guildPinImageCID
     ? `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${guildPinImageCID}`
     : metadataWithTraits?.image || metadata?.image
@@ -94,7 +98,7 @@ const NftRequirement = (props: RequirementProps) => {
       footer={
         <HStack spacing={4}>
           <GuildCheckoutProvider>
-            <PurchaseRequirement />
+            <DynamicPurchaseRequirement />
             <PurchaseTransactionStatusModal />
           </GuildCheckoutProvider>
           <BlockExplorerUrl />
@@ -118,10 +122,15 @@ const NftRequirement = (props: RequirementProps) => {
             )
           : requirement.name !== "-" && requirement.name)}
 
-      {isGuildPin ? null : requirement.data?.attributes?.length ? (
+      {requirement.data?.attributes?.length ? (
         <>
-          {" with "}
+          {isGuildPin &&
+          requirement.data.attributes.length <= 1 &&
+          requirement.data.attributes.find((attr) => attr.trait_type === "guildId")
+            ? ""
+            : " with "}
           {requirement.data.attributes.map((trait, index) => {
+            if (isGuildPin && trait.trait_type === "guildId") return null
             const attributeValue =
               requirement.type === "NOUNS"
                 ? getNounsRequirementType(trait)
@@ -136,6 +145,12 @@ const NftRequirement = (props: RequirementProps) => {
                     } ${trait.trait_type}${
                       index < requirement.data.attributes.length - 1 ? ", " : ""
                     }`
+                  : trait.minValue && trait.maxValue
+                  ? `${trait.minValue}-${trait.maxValue} ${trait.trait_type}`
+                  : trait.minValue
+                  ? `at least ${trait.minValue} ${trait.trait_type}`
+                  : trait.maxValue
+                  ? `at most ${trait.maxValue} ${trait.trait_type}`
                   : ""}
               </Fragment>
             )

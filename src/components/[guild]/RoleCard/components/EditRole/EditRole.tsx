@@ -68,6 +68,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     description,
     imageUrl,
     logic,
+    anyOfNum,
     requirements,
     rolePlatforms,
     visibility,
@@ -79,6 +80,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     description,
     imageUrl,
     logic,
+    anyOfNum: anyOfNum ?? 1,
     requirements: mapRequirements(requirements),
     rolePlatforms: rolePlatforms ?? [],
     visibility,
@@ -97,6 +99,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       roleId: role.id,
       requirements: mapRequirements(role.requirements),
       rolePlatforms: role.rolePlatforms ?? [],
+      anyOfNum: role.anyOfNum ?? 1,
     })
   }, [roles, roleId])
 

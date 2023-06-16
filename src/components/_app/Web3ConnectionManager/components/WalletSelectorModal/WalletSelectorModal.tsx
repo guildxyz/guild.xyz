@@ -19,19 +19,16 @@ import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import { connectors } from "connectors"
-import useKeyPair, {
-  deleteKeyPairFromIdb,
-  getKeyPairFromIdb,
-} from "hooks/useKeyPair"
+import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
-import useSWR, { mutate, unstable_serialize } from "swr"
-import useSWRImmutable from "swr/immutable"
-import { User, WalletError } from "types"
+import { WalletError } from "types"
 import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
+import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
+import useShouldLinkToUser from "./hooks/useShouldLinkToUser"
 import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
@@ -40,40 +37,11 @@ type Props = {
   onOpen: () => void
 }
 
-const fetchShouldLinkToUser = async ([_, userId]) => {
-  try {
-    const { id: userIdToConnectTo } = JSON.parse(
-      window.localStorage.getItem("userId")
-    )
-
-    if (
-      typeof userId === "number" &&
-      typeof userIdToConnectTo === "number" &&
-      userIdToConnectTo !== userId
-    ) {
-      try {
-        await deleteKeyPairFromIdb(userId).then(() =>
-          mutate(unstable_serialize(["keyPair", userId]))
-        )
-      } catch {}
-    }
-
-    const keypair = await getKeyPairFromIdb(+userIdToConnectTo)
-
-    return !!keypair
-  } catch {
-    // Remove in case it exists in an invalid form
-    window.localStorage.removeItem("userId")
-    return false
-  }
-}
-
 // We don't open the modal on these routes
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const { isActive, account, connector } = useWeb3React()
-  const { data: user } = useSWRImmutable<User>(account ? `/user/${account}` : null)
   const [error, setError] = useState<WalletError & Error>(null)
 
   // initialize metamask onboarding
@@ -112,15 +80,14 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }
   }, [keyPair, ready, router])
 
-  const { data: shouldLinkToUser } = useSWR(
-    ["shouldLinkToUser", user?.id],
-    fetchShouldLinkToUser
-  )
+  const shouldLinkToUser = useShouldLinkToUser()
 
   const { isDelegateConnection, setIsDelegateConnection } =
     useWeb3ConnectionManager()
 
   const isConnected = account && isActive && ready
+
+  const isWalletConnectModalActive = useIsWalletConnectModalActive()
 
   return (
     <>
@@ -129,6 +96,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         onClose={closeModalAndSendAction}
         closeOnOverlayClick={!isActive || !!keyPair}
         closeOnEsc={!isActive || !!keyPair}
+        trapFocus={!isWalletConnectModalActive}
       >
         <ModalOverlay />
         <ModalContent data-test="wallet-selector-modal">
@@ -201,11 +169,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               </Text>
             )}
             <Stack spacing="0">
-              {connectors.map(([conn, connectorHooks]) => {
+              {connectors.map(([conn, connectorHooks], i) => {
                 if (!conn || !connectorHooks) return null
 
                 return (
-                  <CardMotionWrapper key={conn.constructor.name}>
+                  <CardMotionWrapper key={i}>
                     <ConnectorButton
                       connector={conn}
                       connectorHooks={connectorHooks}
@@ -220,6 +188,19 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   <DelegateCashButton />
                 </CardMotionWrapper>
               )}
+              {!isConnected && (
+                <Text textAlign="center" colorScheme="gray" pt={2}>
+                  New to Ethereum wallets?{" "}
+                  <Link
+                    colorScheme="blue"
+                    href="https://ethereum.org/en/wallets/"
+                    isExternal
+                  >
+                    Learn more
+                    <Icon as={ArrowSquareOut} mx="1" />
+                  </Link>
+                </Text>
+              )}
             </Stack>
             {isConnected && !keyPair && (
               <Box animation={"fadeIn .3s .1s both"}>
@@ -229,7 +210,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   colorScheme={"green"}
                   onClick={() => set.onSubmit(shouldLinkToUser)}
                   isLoading={set.isLoading || !ready}
-                  isDisabled={!ready || shouldLinkToUser === undefined}
+                  isDisabled={!ready}
                   loadingText={
                     !ready
                       ? "Looking for keypairs"
@@ -243,16 +224,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           </ModalBody>
           <ModalFooter mt="-4">
             {!isConnected && (
-              <Text textAlign="center" w="full" colorScheme={"gray"}>
-                New to Ethereum wallets?{" "}
-                <Link
-                  colorScheme="blue"
-                  href="https://ethereum.org/en/wallets/"
-                  isExternal
-                >
-                  Learn more
-                  <Icon as={ArrowSquareOut} mx="1" />
-                </Link>
+              <Text w="full" textAlign="center" colorScheme="gray" fontSize="sm">
+                By connecting a wallet, you agree to{" "}
+                <Link href="/privacy-policy">Privacy Policy</Link>.
               </Text>
             )}
             {isConnected && (

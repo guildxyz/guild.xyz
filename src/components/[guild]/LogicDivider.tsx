@@ -3,10 +3,10 @@ import { Logic, Rest } from "types"
 
 type Props = { logic: Logic } & Rest
 
-const formattedLogic: Record<Logic, string> = {
+export const formattedLogic: Record<Logic, string> = {
   AND: "AND",
   OR: "OR",
-  ANY_OF: "OR",
+  ANY_OF: "AND / OR",
 }
 
 const LogicDivider = ({ logic, ...rest }: Props): JSX.Element => {
@@ -26,7 +26,7 @@ const LogicDivider = ({ logic, ...rest }: Props): JSX.Element => {
         color={colorMode === "light" ? "blackAlpha.500" : "whiteAlpha.400"}
         flexShrink={0}
       >
-        {`${formattedLogic[logic]}`}
+        {formattedLogic[logic]}
       </Flex>
       <Divider
         width="full"

@@ -94,7 +94,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
   const watchFieldArray = watch("requirements")
   const controlledFields = fields.map((field, index) => ({
     ...field,
-    ...watchFieldArray[index],
+    ...watchFieldArray?.[index],
   }))
 
   return (

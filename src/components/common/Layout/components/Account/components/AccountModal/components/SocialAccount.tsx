@@ -6,7 +6,6 @@ import {
   AlertDialogOverlay,
   Avatar,
   AvatarBadge,
-  ChakraProps,
   HStack,
   Icon,
   IconButton,
@@ -15,51 +14,55 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { motion } from "framer-motion"
 import useToast from "hooks/useToast"
-import { IconProps, LinkBreak } from "phosphor-react"
+import { LinkBreak } from "phosphor-react"
 import platforms from "platforms/platforms"
-import { useRef } from "react"
+import { memo, useRef } from "react"
 import { PlatformName } from "types"
 import useDisconnect from "../hooks/useDisconnect"
 
 type Props = {
   type: PlatformName
-  icon: (props: IconProps) => JSX.Element
-  colorScheme: ChakraProps["color"]
-  name: string
 }
 
 const MotionHStack = motion(HStack)
 
-const SocialAccount = ({ type, icon, name, colorScheme }: Props): JSX.Element => {
-  const circleBorderColor = useColorModeValue("gray.100", "gray.800")
+const SocialAccount = memo(({ type }: Props): JSX.Element => {
+  const { icon, name, colorScheme } = platforms[type]
+
+  const circleBorderColor = useColorModeValue("gray.100", "gray.700")
   const { platformUsers } = useUser()
+  const accesses = useAccess()
   const platformUser = platformUsers?.find(
     (platform) => platform.platformName.toString() === type
   )
 
+  const isReconnect =
+    !!accesses &&
+    accesses?.data?.some(({ errors }) =>
+      errors?.some(
+        ({ errorType, subType }) =>
+          errorType === "PLATFORM_CONNECT_INVALID" && subType?.toUpperCase() === type
+      )
+    )
+
   return (
     <>
-      <MotionHStack
-        layout
-        spacing={3}
-        alignItems="center"
-        w="full"
-        order={!platformUser && "1"}
-      >
+      <MotionHStack layout spacing={3} alignItems="center" w="full">
         {!platformUser ? (
           <Avatar
             icon={<Icon as={icon} boxSize={4} color="white" />}
-            boxSize={8}
+            boxSize={7}
             bgColor={`${colorScheme}.500`}
           />
         ) : (
-          <Avatar src={platformUser.platformUserData?.avatar} size="sm">
+          <Avatar src={platformUser.platformUserData?.avatar} size="sm" boxSize={7}>
             <AvatarBadge
               boxSize={5}
               bgColor={`${colorScheme}.500`}
@@ -70,33 +73,41 @@ const SocialAccount = ({ type, icon, name, colorScheme }: Props): JSX.Element =>
             </AvatarBadge>
           </Avatar>
         )}
-        <Text fontWeight="semibold">
+        <Text fontWeight="bold" flex="1" noOfLines={1} fontSize="sm">
           {platformUser?.platformUserData?.username ??
             `${platforms[type].name} ${!!platformUser ? "connected" : ""}`}
         </Text>
         {!platformUser ? (
           <ConnectPlatform type={type} colorScheme={colorScheme} />
         ) : (
-          <DisconnectPlatform type={type} name={name} />
+          <HStack spacing="1">
+            {isReconnect && (
+              <ConnectPlatform type={type} colorScheme={colorScheme} isReconnect />
+            )}
+            <DisconnectPlatform type={type} name={name} />
+          </HStack>
         )}
       </MotionHStack>
     </>
   )
-}
+})
 
-const ConnectPlatform = ({ type, colorScheme }) => {
+const ConnectPlatform = ({ type, colorScheme, isReconnect = false }) => {
   const toast = useToast()
+  const { mutate: mutateAccesses } = useAccess()
 
   const onSuccess = () => {
     toast({
-      title: `Account Connected!`,
+      title: `Account successfully connected`,
       status: "success",
     })
+    mutateAccesses()
   }
 
   const { onConnect, isLoading, response } = useConnectPlatform(
     type as PlatformName,
-    onSuccess
+    onSuccess,
+    isReconnect
   )
 
   return (
@@ -104,11 +115,11 @@ const ConnectPlatform = ({ type, colorScheme }) => {
       isLoading={isLoading}
       onClick={onConnect}
       isDisabled={response}
-      colorScheme={colorScheme}
+      colorScheme={isReconnect ? "orange" : colorScheme}
+      variant={isReconnect ? "subtle" : "solid"}
       size="sm"
-      ml="auto !important"
     >
-      {"Connect"}
+      {isReconnect ? "Reconnect" : "Connect"}
     </Button>
   )
 }
@@ -129,7 +140,6 @@ const DisconnectPlatform = ({ type, name }) => {
           size="sm"
           icon={<Icon as={LinkBreak} />}
           colorScheme="red"
-          ml="auto !important"
           onClick={onOpen}
           aria-label="Disconnect account"
         />

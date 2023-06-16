@@ -15,6 +15,7 @@ import Button from "components/common/Button"
 import dynamic from "next/dynamic"
 import {
   Brain,
+  CircleWavyCheck,
   Code,
   Cpu,
   DiscordLogo,
@@ -76,6 +77,9 @@ const NavMenu = (): JSX.Element => {
               </NavButton>
               <NavButton leftIcon={<Brain />} href="/guildverse">
                 Guildverse
+              </NavButton>
+              <NavButton leftIcon={<CircleWavyCheck />} href="/leaderboard">
+                Guild Pins leaderboard
               </NavButton>
             </NavGroup>
             <NavGroup title="Other">

@@ -1,11 +1,11 @@
 import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -36,7 +36,7 @@ export type JoinData = {
   oauthData: any
 }
 
-const useJoin = (onSuccess?: () => void) => {
+const useJoin = (onSuccess?: (response: Response) => void) => {
   const { captureEvent } = usePostHogContext()
 
   const access = useAccess()
@@ -75,16 +75,9 @@ const useJoin = (onSuccess?: () => void) => {
       // mutate user in case they connected new platforms during the join flow
       user?.mutate?.()
 
-      onSuccess?.()
+      onSuccess?.(response)
 
-      if (!response.success) {
-        toast({
-          status: "error",
-          title: "No access",
-          description: "Seems like you don't have access to any roles in this guild",
-        })
-        return
-      }
+      if (!response.success) return
 
       setTimeout(() => {
         mutate(

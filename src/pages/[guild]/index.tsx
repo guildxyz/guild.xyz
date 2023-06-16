@@ -407,7 +407,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   if (!data?.id)
     return {
       props: {},
-      revalidate: 60,
+      revalidate: 300,
     }
 
   /**
@@ -420,6 +420,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
     role.members = []
     role.requirements = []
   })
+  filteredData.isFallback = true
 
   return {
     props: {
@@ -428,7 +429,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
         [unstable_serialize([endpoint, { method: "GET", body: {} }])]: filteredData,
       },
     },
-    revalidate: 60,
+    revalidate: 300,
   }
 }
 

@@ -1,5 +1,5 @@
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
-import type { Chain } from "connectors"
+import type { Chain, Chains } from "connectors"
 import { RequirementType } from "requirements"
 
 type Token = {
@@ -182,9 +182,6 @@ type Requirement = {
   balancyDecimals?: number
   createdAt?: string
   updatedAt?: string
-
-  // Used for creating a dummy requirement, when there are some requirements that are invisibile to the user
-  isHidden?: boolean
 }
 
 type RolePlatform = {
@@ -290,6 +287,7 @@ type Guild = {
   onboardingComplete: boolean
   featureFlags: FeatureFlag[]
   hiddenRoles?: boolean
+  requiredPlatforms?: PlatformName[]
 }
 type GuildFormType = Partial<
   Pick<
@@ -520,6 +518,19 @@ type GuildPinMetadata = {
   attributes: GuildPinAttribute[]
 }
 
+type LeaderboardPinData = {
+  tokenId: number
+  chainId: Chains
+  rank: number
+  tokenUri: string
+}
+
+type DetailedUserLeaderboardData = {
+  address: string
+  score: number
+  pins: LeaderboardPinData[]
+}
+
 export type {
   OneOf,
   WalletConnectConnectionData,
@@ -564,5 +575,7 @@ export type {
   PoapEventDetails,
   AddressConnectionProvider,
   GuildPinMetadata,
+  LeaderboardPinData,
+  DetailedUserLeaderboardData,
 }
 export { ValidationMethod, Visibility, supportedSocialLinks }

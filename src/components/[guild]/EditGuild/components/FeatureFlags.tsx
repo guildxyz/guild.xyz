@@ -5,7 +5,6 @@ import { SelectOption } from "types"
 import capitalize from "utils/capitalize"
 
 const FEATURE_FLAGS = [
-  "PURCHASE_REQUIREMENT",
   "PAYMENT_REQUIREMENT",
   "TWITTER_EXTRA_REQUIREMENT",
   "VISIBILITY",

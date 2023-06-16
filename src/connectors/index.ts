@@ -2,9 +2,11 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { Web3ReactHooks } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
+import { WalletConnect as WalletConnectV2 } from "@web3-react/walletconnect-v2"
 import initializeCoinbaseWalletConnector from "./coinbaseWallet"
 import initializeMetaMaskConnector from "./metaMask"
 import initializeWalletConnectConnector from "./walletConnect"
+import initializeWalletConnectV2Connector from "./walletConnectV2"
 
 enum Chains {
   ETHEREUM = 1,
@@ -30,6 +32,7 @@ enum Chains {
   EVMOS = 9001,
   ZETACHAIN_ATHENS = 7001,
   SCROLL_ALPHA = 534353,
+  ZKSYNC_ERA = 324,
   SEPOLIA = 11155111,
   GOERLI = 5,
   POLYGON_MUMBAI = 80001,
@@ -550,6 +553,25 @@ const RPC: RpcConfig = {
     },
     iconUrls: ["/networkLogos/scroll.png"],
   },
+  ZKSYNC_ERA: {
+    chainId: 324,
+    chainName: "zkSync Era",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://mainnet.era.zksync.io"],
+    blockExplorerUrls: ["https://explorer.zksync.io"],
+    blockExplorerIcons: {
+      light: "/networkLogos/zksync-era.svg",
+      dark: "/networkLogos/zksync-era.svg",
+    },
+    iconUrls: ["/networkLogos/zksync-era.svg"],
+  },
   SEPOLIA: {
     chainId: 11155111,
     chainName: "Sepolia",
@@ -628,11 +650,16 @@ supportedChains.forEach(
 
 const [metaMask, metaMaskHooks] = initializeMetaMaskConnector()
 const [walletConnect, walletConnectHooks] = initializeWalletConnectConnector()
+const [walletConnectV2, walletConnectV2Hooks] = initializeWalletConnectV2Connector()
 const [coinbaseWallet, coinbaseWalletHooks] = initializeCoinbaseWalletConnector()
 
-const connectors: [MetaMask | WalletConnect | CoinbaseWallet, Web3ReactHooks][] = [
+const connectors: [
+  MetaMask | WalletConnect | WalletConnectV2 | CoinbaseWallet,
+  Web3ReactHooks
+][] = [
   [metaMask, metaMaskHooks],
   [walletConnect, walletConnectHooks],
+  [walletConnectV2, walletConnectV2Hooks],
   [coinbaseWallet, coinbaseWalletHooks],
 ]
 

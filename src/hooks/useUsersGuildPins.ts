@@ -6,13 +6,13 @@ import useUser from "components/[guild]/hooks/useUser"
 import { Chain, Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata } from "types"
-import { GUILD_PIN_CONTRACT } from "utils/guildCheckout/constants"
+import { flattenedGuildPinChainsData } from "utils/guildCheckout/constants"
 
 const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0])
   const contract = new Contract(
-    GUILD_PIN_CONTRACT[chain].address,
-    GUILD_PIN_CONTRACT[chain].abi,
+    flattenedGuildPinChainsData[chain].address,
+    flattenedGuildPinChainsData[chain].abi,
     provider
   )
 
@@ -28,23 +28,23 @@ const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
   const usersGuildPinTokenURIsOnChain = await Promise.all<{
     chainId: number
     tokenId: number
-    tokenURI: string
+    tokenUri: string
   }>(
     usersGuildPinIdsOnChain.map(async (tokenId) => {
-      const tokenURI: string = await contract.tokenURI(tokenId)
+      const tokenUri: string = await contract.tokenURI(tokenId)
       return {
         chainId: Chains[chain],
         tokenId: tokenId.toNumber(),
-        tokenURI,
+        tokenUri,
       }
     })
   )
 
   const usersPinsMetadataJSONs = await Promise.all(
-    usersGuildPinTokenURIsOnChain.map(async ({ chainId, tokenId, tokenURI }) => {
+    usersGuildPinTokenURIsOnChain.map(async ({ chainId, tokenId, tokenUri }) => {
       const metadata: GuildPinMetadata = JSON.parse(
         Buffer.from(
-          tokenURI.replace("data:application/json;base64,", ""),
+          tokenUri.replace("data:application/json;base64,", ""),
           "base64"
         ).toString("utf-8")
       )
@@ -65,7 +65,7 @@ const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
 }
 
 const fetchGuildPins = async ([_, addresses]) => {
-  const guildPinChains = Object.keys(GUILD_PIN_CONTRACT) as Chain[]
+  const guildPinChains = Object.keys(flattenedGuildPinChainsData) as Chain[]
   const responseArray = await Promise.all(
     guildPinChains.flatMap((chain) =>
       addresses.flatMap((address) => fetchGuildPinsOnChain(address, chain))
