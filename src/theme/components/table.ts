@@ -13,14 +13,30 @@ const variantSimple = definePartsStyle((props) => {
     th: {
       color: mode("gray.600", "gray.400")(props),
       borderBottom: "1px",
-      borderColor: mode(`${c}.100`, `${c}.600`)(props),
+      borderRightWidth: "1px",
+      borderColor: mode(`${c}.200`, `${c}.600`)(props),
+      "&:last-of-type": {
+        borderRightWidth: 0,
+      },
     },
     td: {
       borderBottom: "1px",
-      borderColor: mode(`${c}.100`, `${c}.600`)(props),
+      borderRightWidth: "1px !important",
+      borderColor: mode(`${c}.200`, `${c}.600`)(props),
+      bg: mode(`gray.50`, "blackAlpha.200")(props),
+      "&:last-of-type": {
+        borderRightWidth: "0 !important",
+      },
     },
     caption: {
       color: mode("gray.600", "gray.100")(props),
+    },
+    tbody: {
+      tr: {
+        "&:last-of-type": {
+          td: { border: "inherit" },
+        },
+      },
     },
     tfoot: {
       tr: {

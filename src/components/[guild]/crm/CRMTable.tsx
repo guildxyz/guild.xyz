@@ -6,84 +6,47 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import Card from "components/common/Card"
-import React from "react"
+import { PlatformAccountDetails } from "types"
+import Identities from "./Identities"
+import RoleTags from "./RoleTags"
+import useMembers from "./useMembers"
 
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
+export type Member = {
+  id: number
+  addresses: string[]
+  platformUsers: PlatformAccountDetails[]
+  joinedAt: string
+  roleIds: number[]
 }
 
-const defaultData: Person[] = [
-  {
-    firstName: "tanner",
-    lastName: "linsley",
-    age: 24,
-    visits: 100,
-    status: "In Relationship",
-    progress: 50,
-  },
-  {
-    firstName: "tandy",
-    lastName: "miller",
-    age: 40,
-    visits: 40,
-    status: "Single",
-    progress: 80,
-  },
-  {
-    firstName: "joe",
-    lastName: "dirte",
-    age: 45,
-    visits: 20,
-    status: "Complicated",
-    progress: 10,
-  },
-]
-
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<Member>()
 
 const columns = [
-  columnHelper.accessor("firstName", {
-    cell: (info) => info.getValue(),
-    footer: (info) => info.column.id,
+  columnHelper.accessor((row) => row, {
+    id: "identity",
+    cell: (info) => <Identities member={info.getValue()} />,
+    header: () => <span>Identity</span>,
   }),
-  columnHelper.accessor((row) => row.lastName, {
-    id: "lastName",
-    cell: (info) => <i>{info.getValue()}</i>,
-    header: () => <span>Last Name</span>,
-    footer: (info) => info.column.id,
+  columnHelper.accessor("roleIds", {
+    header: () => "Roles",
+    cell: (info) => <RoleTags roleIds={info.getValue()} />,
   }),
-  columnHelper.accessor("age", {
-    header: () => "Age",
-    cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("visits", {
-    header: () => <span>Visits</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("status", {
-    header: "Status",
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("progress", {
-    header: "Profile Progress",
-    footer: (info) => info.column.id,
+  columnHelper.accessor("joinedAt", {
+    header: () => "Joined at",
+    cell: (info) => new Date(info.getValue()).toLocaleDateString(),
   }),
 ]
 
 const CRMTable = () => {
-  const [data, setData] = React.useState(() => [...defaultData])
+  const { data } = useMembers()
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
+
+  if (!data) return null
 
   return (
     <Card>

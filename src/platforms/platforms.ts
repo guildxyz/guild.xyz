@@ -75,6 +75,12 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "purple",
     gatedEntity: "POAP",
   },
+  // WALLET: {
+  //   icon: Wallet,
+  //   name: "Wallet",
+  //   colorScheme: "gray",
+  //   gatedEntity: "address",
+  // },
   GOOGLE: {
     icon: GoogleLogo,
     name: "Google Workspace",
