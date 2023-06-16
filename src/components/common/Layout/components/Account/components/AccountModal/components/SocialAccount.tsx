@@ -14,11 +14,11 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useUser from "components/[guild]/hooks/useUser"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { motion } from "framer-motion"
 import useToast from "hooks/useToast"
 import { LinkBreak } from "phosphor-react"
@@ -133,14 +133,19 @@ const DisconnectPlatform = ({ type, name }) => {
 
   return (
     <>
-      <Tooltip label="Disconnect account" placement="top" hasArrow>
+      <Tooltip
+        label="Disconnect account - temporarily disabled"
+        placement="top"
+        hasArrow
+      >
         <IconButton
           rounded="full"
           variant="ghost"
           size="sm"
           icon={<Icon as={LinkBreak} />}
           colorScheme="red"
-          onClick={onOpen}
+          // onClick={onOpen}
+          isDisabled
           aria-label="Disconnect account"
         />
       </Tooltip>
