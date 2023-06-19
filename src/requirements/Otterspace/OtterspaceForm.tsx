@@ -31,7 +31,7 @@ const OtterspaceForm = ({ baseFieldPath }: RequirementFormProps) => {
     <Stack spacing={4} alignItems="start">
       <ChainPicker
         controlName={`${baseFieldPath}.chain` as const}
-        supportedChains={["ETHEREUM", "POLYGON", "OPTIMISM", "GOERLI"]}
+        supportedChains={["ETHEREUM", "POLYGON", "OPTIMISM", "GOERLI", "SEPOLIA"]}
         onChange={() => resetField(`${baseFieldPath}.data.id`)}
       />
 
