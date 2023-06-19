@@ -63,6 +63,7 @@ const CRMTable = () => {
                   top="16"
                   bg={cardBg}
                   overflow="hidden"
+                  px="4"
                   sx={{
                     "&:first-of-type": {
                       borderTopLeftRadius: "xl",
@@ -88,7 +89,7 @@ const CRMTable = () => {
           {table.getRowModel().rows.map((row) => (
             <Tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>
+                <Td key={cell.id} fontSize={"sm"} px="4">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </Td>
               ))}
