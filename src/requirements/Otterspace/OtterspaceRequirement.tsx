@@ -3,6 +3,7 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import { RPC } from "connectors"
 import useOtterspaceBadges from "./hooks/useOtterspaceBadges"
 
 const OtterspaceRequirement = (props: RequirementProps) => {
@@ -24,7 +25,7 @@ const OtterspaceRequirement = (props: RequirementProps) => {
       ) : (
         badge.label
       )}
-      {` Otterspace badge`}
+      {` Otterspace badge on ${RPC[requirement.chain].chainName}`}
     </Requirement>
   )
 }

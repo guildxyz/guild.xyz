@@ -28,7 +28,7 @@ const JoinAndMintPoapButton = forwardRef(
     const { onSubmit, response, ...rest } = useClaimPoap(poapId)
 
     const handleSubmit = (res) => {
-      if (!res.success) {
+      if (res && !res.success) {
         toast({
           status: "warning",
           title: "No access",
