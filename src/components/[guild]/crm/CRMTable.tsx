@@ -1,8 +1,10 @@
 import {
   Checkbox,
+  HStack,
   Table,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -12,12 +14,14 @@ import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
 import Card from "components/common/Card"
 import { PlatformAccountDetails } from "types"
 import Identities from "./Identities"
 import IdentitiesSearch from "./IdentitiesSearch"
+import OrderByColumn from "./OrderByColumn"
 import RoleTags from "./RoleTags"
 import useMembers from "./useMembers"
 
@@ -63,11 +67,21 @@ const columns = [
     header: () => <IdentitiesSearch />,
   }),
   columnHelper.accessor("roleIds", {
-    header: () => "Roles",
+    header: ({ column }) => (
+      <HStack w="full" justifyContent={"space-between"}>
+        <Text>Roles</Text>
+        <OrderByColumn label="Number of roles" column={column} />
+      </HStack>
+    ),
     cell: (info) => <RoleTags roleIds={info.getValue()} />,
   }),
   columnHelper.accessor("joinedAt", {
-    header: () => "Joined at",
+    header: ({ column }) => (
+      <HStack w="full" justifyContent={"space-between"}>
+        <Text>Joined at</Text>
+        <OrderByColumn label="Join date" column={column} />
+      </HStack>
+    ),
     cell: (info) => new Date(info.getValue()).toLocaleDateString(),
   }),
 ]
@@ -79,6 +93,7 @@ const CRMTable = () => {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     enableRowSelection: true,
   })
 
