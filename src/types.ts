@@ -99,11 +99,21 @@ type AddressConnectionProvider = "DELEGATE"
 
 type User = {
   id: number
-  addresses: Array<string>
-  addressProviders: Record<string, AddressConnectionProvider>
+  addresses: Array<{
+    address: string
+    userId: number
+    isPrimary: boolean
+    provider: AddressConnectionProvider
+    createdAt: string
+  }>
   platformUsers: PlatformAccountDetails[]
-  signingKey?: string
+  publicKey?: string
   isSuperAdmin: boolean
+}
+
+type BaseUser = {
+  id: number
+  createdAt: Date
 }
 
 type GuildBase = {
@@ -577,5 +587,6 @@ export type {
   GuildPinMetadata,
   LeaderboardPinData,
   DetailedUserLeaderboardData,
+  BaseUser,
 }
 export { ValidationMethod, Visibility, supportedSocialLinks }

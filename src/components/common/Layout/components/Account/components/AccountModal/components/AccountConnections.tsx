@@ -28,9 +28,8 @@ import LinkedAddress, { LinkedAddressSkeleton } from "./LinkedAddress"
 import SocialAccount from "./SocialAccount"
 
 const AccountConnections = () => {
-  const { isLoading, addresses } = useUser()
+  const { isLoading, addresses, platformUsers } = useUser()
   const { account } = useWeb3React()
-  const { platformUsers } = useUser()
   const vaults = useDelegateVaults()
 
   const orderedSocials = useMemo(() => {
@@ -43,7 +42,7 @@ const AccountConnections = () => {
   }, [platformUsers])
 
   const linkedAddresses = addresses?.filter(
-    (address) => address?.toLowerCase() !== account.toLowerCase()
+    ({ address }) => address?.toLowerCase() !== account.toLowerCase()
   )
 
   return (
@@ -103,7 +102,9 @@ const AccountConnections = () => {
           </Stack>
         ) : (
           linkedAddresses
-            .map((address) => <LinkedAddress key={address} address={address} />)
+            .map((address) => (
+              <LinkedAddress key={address?.address} address={address} />
+            ))
             .concat(
               vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null
             )

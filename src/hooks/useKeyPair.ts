@@ -1,4 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { randomBytes } from "crypto"
@@ -9,7 +10,6 @@ import useSWRImmutable from "swr/immutable"
 import { AddressConnectionProvider, User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
-import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
@@ -46,7 +46,8 @@ type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> & Partial<AddressLinkPar
 const getStore = () => createStore("guild.xyz", "signingKeyPairs")
 
 const getKeyPairFromIdb = (userId: number) => get<StoredKeyPair>(userId, getStore())
-const deleteKeyPairFromIdb = (userId: number) => del(userId, getStore())
+const deleteKeyPairFromIdb = (userId: number) =>
+  userId ? del(userId, getStore()) : null
 const setKeyPairToIdb = (userId: number, keys: StoredKeyPair) =>
   set(userId, keys, getStore())
 
@@ -97,11 +98,13 @@ const setKeyPair = async ({
   mutateKeyPair,
   generatedKeyPair,
   signedValidation,
+  id,
 }: {
   account: string
   mutateKeyPair: KeyedMutator<StoredKeyPair>
   generatedKeyPair: StoredKeyPair
   signedValidation: SignedValdation
+  id: number
 }): Promise<[StoredKeyPair, boolean]> => {
   const {
     userId: signedUserId,
@@ -115,14 +118,14 @@ const setKeyPair = async ({
     typeof signature === "string" &&
     typeof nonce === "string"
 
-  const { userId } = await fetcher("/user/pubKey", {
+  const newUser: User = await fetcher(`/v2/users/${id ?? account}/public-key`, {
     method: "POST",
     ...signedValidation,
   })
 
   let storedKeyPair: StoredKeyPair
 
-  const prevKeyPair = await getKeyPairFromIdb(userId).catch(() => null)
+  const prevKeyPair = await getKeyPairFromIdb(newUser.id).catch(() => null)
 
   if (!shouldSendLink && (!addressConnectionProvider || !prevKeyPair)) {
     storedKeyPair = generatedKeyPair
@@ -132,26 +135,58 @@ const setKeyPair = async ({
      * Ignoring this error is fine, since we are falling back to just storing it in
      * memory.
      */
-    await setKeyPairToIdb(userId, storedKeyPair).catch(() => {})
+    await setKeyPairToIdb(newUser.id, storedKeyPair).catch(() => {})
   }
 
-  await mutate(`/user/${account}`)
+  await mutate(
+    [`/v2/users/${newUser.id}/profile`, { method: "GET", body: {} }],
+    newUser,
+    {
+      revalidate: false,
+    }
+  )
+
+  await mutate(
+    `/v2/users/${account}/profile`,
+    {
+      ...newUser,
+      addresses: newUser?.addresses,
+      platformUsers: (newUser?.platformUsers ?? []).map((platformUser) => ({
+        platformName: platformUser.platformName,
+        platformId: platformUser.platformId,
+      })),
+    },
+    {
+      revalidate: false,
+    }
+  )
+
   if (shouldSendLink) {
-    await mutateOptionalAuthSWRKey(`/user/${account}`)
+    await mutate([`/v2/users/${id}/profile`, { method: "GET", body: {} }], newUser, {
+      revalidate: false,
+    })
+    await mutate(
+      `/v2/users/${account}/profile`,
+      {
+        ...newUser,
+        addresses: newUser?.addresses,
+        platformUsers: (newUser?.platformUsers ?? []).map((platformUser) => ({
+          platformName: platformUser.platformName,
+          platformId: platformUser.platformId,
+        })),
+      },
+      {
+        revalidate: false,
+      }
+    )
   }
+
   await mutateKeyPair()
 
   return [storedKeyPair, shouldSendLink]
 }
 
 const checkKeyPair = ([_, savedPubKey, pubKey]): boolean => savedPubKey === pubKey
-
-const usePublicUserData = (address?: string) => {
-  const { account } = useWeb3React()
-  return useSWRImmutable<User>(
-    address || account ? `/user/${address ?? account}` : null
-  )
-}
 
 const useKeyPair = () => {
   const { captureEvent } = usePostHogContext()
@@ -165,13 +200,13 @@ const useKeyPair = () => {
     setAddressLinkParams,
   } = useWeb3ConnectionManager()
 
-  const { data: user, error: userError } = usePublicUserData()
+  const { id, publicKey, error: publicUserError } = useUserPublic()
 
   const {
     data: { keyPair, pubKey },
     mutate: mutateKeyPair,
     error: keyPairError,
-  } = useSWR(!!user?.id ? ["keyPair", user?.id] : null, getKeyPair, {
+  } = useSWR(!!id || !!publicUserError ? ["keyPair", id] : null, getKeyPair, {
     revalidateOnMount: true,
     revalidateIfStale: true,
     revalidateOnFocus: true,
@@ -192,13 +227,13 @@ const useKeyPair = () => {
   const toast = useToast()
 
   const { data: isValid } = useSWRImmutable(
-    user?.signingKey && pubKey ? ["isKeyPairValid", user?.signingKey, pubKey] : null,
+    (id || publicUserError) && pubKey ? ["isKeyPairValid", publicKey, pubKey] : null,
     checkKeyPair,
     {
       onSuccess: (isKeyPairValid) => {
         if (!isKeyPairValid) {
           captureEvent("Invalid keypair", {
-            userId: user?.id,
+            userId: id,
             pubKey: keyPair.publicKey,
           })
 
@@ -210,16 +245,13 @@ const useKeyPair = () => {
             duration: 5000,
           })
 
-          deleteKeyPairFromIdb(user?.id).then(() => {
+          deleteKeyPairFromIdb(id).then(() => {
             mutateKeyPair({ pubKey: undefined, keyPair: undefined }).then(() => {
-              mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
+              mutate(unstable_serialize(["shouldLinkToUser", id]))
             })
           })
-        } else if (
-          !!addressLinkParams?.userId &&
-          addressLinkParams?.userId !== user?.id
-        ) {
-          deleteKeyPairFromIdb(user?.id).then(() => {
+        } else if (!!addressLinkParams?.userId && addressLinkParams?.userId !== id) {
+          deleteKeyPairFromIdb(id).then(() => {
             mutateKeyPair({ pubKey: undefined, keyPair: undefined })
           })
         }
@@ -237,6 +269,7 @@ const useKeyPair = () => {
         mutateKeyPair,
         generatedKeyPair,
         signedValidation,
+        id,
       }),
     {
       keyPair,
@@ -255,7 +288,7 @@ const useKeyPair = () => {
 
         try {
           setAddressLinkParams({ userId: null, address: null })
-          mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
+          mutate(unstable_serialize(["shouldLinkToUser", id]))
         } catch (err) {
           captureEvent(
             `Failed to remove userId from localStorage after unsuccessful account link`,
@@ -266,17 +299,9 @@ const useKeyPair = () => {
         }
       },
       onSuccess: ([newKeyPair, shouldDeleteUserId]) => {
-        setTimeout(() => {
-          mutateOptionalAuthSWRKey(`/user/${account}`).then(() =>
-            setTimeout(() => {
-              mutate(unstable_serialize(["delegateCashVaults", user?.id])).then(
-                () => {
-                  window.localStorage.removeItem(`isDelegateDismissed_${user?.id}`)
-                }
-              )
-            }, 500)
-          )
-        }, 500)
+        mutate(unstable_serialize(["delegateCashVaults", id])).then(() => {
+          window.localStorage.removeItem(`isDelegateDismissed_${id}`)
+        })
 
         setIsDelegateConnection(false)
         if (shouldDeleteUserId) {
@@ -297,28 +322,31 @@ const useKeyPair = () => {
     }
   )
 
-  const ready = !(keyPair === undefined && keyPairError === undefined) || !!userError
+  const ready =
+    !(keyPair === undefined && keyPairError === undefined) || !!publicUserError
 
-  const mainUser = usePublicUserData(addressLinkParams?.address)
+  const { id: mainUserId, publicKey: mainUserPublicKey } = useUserPublic(
+    addressLinkParams?.address
+  )
 
   const { data: mainUserKeyPair, error } = useSWRImmutable(
-    mainUser?.data?.id ? ["mainUserKeyPair", mainUser?.data?.id] : null,
-    ([_, id]) => getKeyPairFromIdb(id)
+    mainUserId ? ["mainUserKeyPair", mainUserId] : null,
+    ([_, mainUserIdToGet]) => getKeyPairFromIdb(mainUserIdToGet)
   )
 
   const isMainUserKeyInvalid =
     !!error ||
-    (!!mainUser?.data?.id &&
+    (!!mainUserId &&
       !!addressLinkParams?.userId &&
-      mainUser.data.id !== user?.id &&
+      mainUserId !== id &&
       mainUserKeyPair &&
-      mainUser.data.signingKey !== mainUserKeyPair.pubKey)
+      mainUserPublicKey !== mainUserKeyPair.pubKey)
 
   useEffect(() => {
     if (isMainUserKeyInvalid) {
       setAddressLinkParams({ userId: null, address: null })
-      deleteKeyPairFromIdb(mainUser?.data?.id).then(() =>
-        mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
+      deleteKeyPairFromIdb(mainUserId).then(() =>
+        mutate(unstable_serialize(["shouldLinkToUser", id]))
       )
     }
   }, [isMainUserKeyInvalid])
@@ -376,7 +404,7 @@ const useKeyPair = () => {
         }
 
         if (isDelegateConnection || provider === "DELEGATE") {
-          const prevKeyPair = await getKeyPairFromIdb(user?.id)
+          const prevKeyPair = await getKeyPairFromIdb(id)
           body.addressConnectionProvider = "DELEGATE"
           body.pubKey = prevKeyPair?.pubKey ?? body.pubKey
         }

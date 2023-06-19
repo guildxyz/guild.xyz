@@ -5,7 +5,7 @@ import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
-import { PlatformName } from "types"
+import { PlatformName, User } from "types"
 import fetcher from "utils/fetcher"
 import useDCAuth from "./useDCAuth"
 import useGHAuth from "./useGHAuth"
@@ -97,14 +97,17 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
   const showErrorToast = useShowErrorToast()
   const { showPlatformMergeAlert } = useWeb3ConnectionManager()
 
-  const { mutate: mutateUser } = useUser()
+  const { mutate: mutateUser, id } = useUser()
 
   const submit = (signedValidation: SignedValdation) => {
     const platformName =
       JSON.parse(signedValidation?.signedPayload ?? "{}")?.platformName ??
       "UNKNOWN_PLATFORM"
 
-    return fetcher("/user/connect", signedValidation)
+    return fetcher(`/v2/users/${id}/platform-users`, {
+      method: "POST",
+      ...signedValidation,
+    })
       .then((body) => {
         if (body === "rejected") {
           // eslint-disable-next-line @typescript-eslint/no-throw-literal
@@ -124,14 +127,16 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
       })
   }
 
-  return useSubmitWithSign<{
-    platformName: PlatformName
-    authData: any
-    reauth?: boolean
-  }>(submit, {
-    onSuccess: ({ platformName }) => {
+  return useSubmitWithSign<User["platformUsers"][number]>(submit, {
+    onSuccess: (newPlatformUser) => {
       // captureEvent("Platform connection", { platformName })
-      mutateUser()
+      mutateUser(
+        (prev) => ({
+          ...prev,
+          platformUsers: [...(prev?.platformUsers ?? []), newPlatformUser],
+        }),
+        { revalidate: false }
+      )
       onSuccess?.()
     },
     onError: ([platformName, rawError]) => {

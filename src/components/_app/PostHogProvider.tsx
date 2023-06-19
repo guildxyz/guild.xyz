@@ -4,7 +4,7 @@ import {
   PostHogProvider as DefaultPostHogProvider,
   usePostHog,
 } from "posthog-js/react"
-import { createContext, PropsWithChildren, useContext } from "react"
+import { PropsWithChildren, createContext, useContext } from "react"
 
 if (typeof window !== "undefined") {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
@@ -41,7 +41,11 @@ const CustomPostHogProvider = ({
     <PostHogContext.Provider
       value={{
         captureEvent: (event, options) =>
-          ph.capture(event, { userId: id, userAddress: addresses?.[0], ...options }),
+          ph.capture(event, {
+            userId: id,
+            userAddress: addresses?.[0]?.address,
+            ...options,
+          }),
       }}
     >
       {children}

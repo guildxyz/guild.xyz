@@ -34,7 +34,7 @@ type Props = {
 const MotionHStack = motion(HStack)
 
 const SocialAccount = memo(({ type }: Props): JSX.Element => {
-  const { icon, name, colorScheme } = platforms[type]
+  const { icon, name, colorScheme } = platforms[type] ?? {}
 
   const circleBorderColor = useColorModeValue("gray.100", "gray.700")
   const { platformUsers } = useUser()
