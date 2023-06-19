@@ -8,6 +8,7 @@ import {
 import Card from "components/common/Card"
 import { PlatformAccountDetails } from "types"
 import Identities from "./Identities"
+import IdentitiesSearch from "./IdentitiesSearch"
 import RoleTags from "./RoleTags"
 import useMembers from "./useMembers"
 
@@ -25,7 +26,7 @@ const columns = [
   columnHelper.accessor((row) => row, {
     id: "identity",
     cell: (info) => <Identities member={info.getValue()} />,
-    header: () => <span>Identity</span>,
+    header: () => <IdentitiesSearch />,
   }),
   columnHelper.accessor("roleIds", {
     header: () => "Roles",
