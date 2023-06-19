@@ -1,4 +1,13 @@
-import { Table, Tbody, Td, Th, Thead, Tr, useColorModeValue } from "@chakra-ui/react"
+import {
+  Checkbox,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import {
   createColumnHelper,
   flexRender,
@@ -23,6 +32,31 @@ export type Member = {
 const columnHelper = createColumnHelper<Member>()
 
 const columns = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        {...{
+          isChecked: table.getIsAllRowsSelected(),
+          isIndeterminate: table.getIsSomeRowsSelected(),
+          onChange: table.getToggleAllRowsSelectedHandler(),
+        }}
+        colorScheme="primary"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        {...{
+          isChecked: row.getIsSelected(),
+          isDisabled: !row.getCanSelect(),
+          isIndeterminate: row.getIsSomeSelected(),
+          onChange: row.getToggleSelectedHandler(),
+        }}
+        colorScheme="primary"
+        mt="2px"
+      />
+    ),
+  },
   columnHelper.accessor((row) => row, {
     id: "identity",
     cell: (info) => <Identities member={info.getValue()} />,
@@ -45,6 +79,7 @@ const CRMTable = () => {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    enableRowSelection: true,
   })
 
   const cardBg = useColorModeValue("white", "gray.700")
@@ -64,7 +99,7 @@ const CRMTable = () => {
                   top="16"
                   bg={cardBg}
                   overflow="hidden"
-                  px="4"
+                  px="3.5"
                   sx={{
                     "&:first-of-type": {
                       borderTopLeftRadius: "xl",
@@ -74,6 +109,7 @@ const CRMTable = () => {
                       borderRightWidth: 0,
                     },
                   }}
+                  zIndex="1"
                 >
                   {header.isPlaceholder
                     ? null
@@ -90,7 +126,7 @@ const CRMTable = () => {
           {table.getRowModel().rows.map((row) => (
             <Tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id} fontSize={"sm"} px="4">
+                <Td key={cell.id} fontSize={"sm"} px="3.5">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </Td>
               ))}
