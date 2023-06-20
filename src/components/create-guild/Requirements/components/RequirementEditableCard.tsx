@@ -179,7 +179,7 @@ const RequirementEditableCard = ({
           color={removeButtonColor}
           borderRadius={"full"}
           size="sm"
-          onClick={() => onRemove()}
+          onClick={onRemove}
           aria-label="Remove requirement"
         />
       </Card>
