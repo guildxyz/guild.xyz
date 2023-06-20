@@ -12,13 +12,31 @@ type Props = {
   roleIds: number[]
 }
 
-const RoleTags = ({ roleIds }: Props) => (
-  <HStack>
-    {roleIds.map((roleId) => (
-      <RoleTag key={roleId} roleId={roleId} />
-    ))}
-  </HStack>
-)
+const RoleTags = ({ roleIds }: Props) => {
+  const renderedRoleIds = roleIds.slice(0, 3)
+  const moreRolesCount = roleIds?.length - 3
+
+  const moreRolesTagBorderColor = useColorModeValue("gray-300", "whiteAlpha-300")
+
+  return (
+    <HStack>
+      {renderedRoleIds.map((roleId) => (
+        <RoleTag key={roleId} roleId={roleId} />
+      ))}
+      {moreRolesCount && (
+        <Tag
+          variant={"outline"}
+          color="initial"
+          sx={{
+            "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColor}) !important`,
+          }}
+        >
+          <TagLabel>{`${moreRolesCount} more roles`}</TagLabel>
+        </Tag>
+      )}
+    </HStack>
+  )
+}
 const RoleTag = ({ roleId }: { roleId: number }) => {
   const { roles } = useGuild()
   const role = roles.find((r) => r.id === roleId)
