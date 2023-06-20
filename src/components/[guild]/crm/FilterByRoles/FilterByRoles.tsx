@@ -41,7 +41,7 @@ const FilterByRoles = ({ column }: Props) => {
   if (!roles) return null
 
   return (
-    <Popover>
+    <Popover placement="bottom-end">
       <PopoverTrigger>
         <Button
           size="sm"

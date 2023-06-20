@@ -26,7 +26,7 @@ const OrderByColumn = ({ label, column }: Props) => {
   const sortDirection = column.getIsSorted()
 
   return (
-    <Popover>
+    <Popover placement="bottom-end">
       {({ onClose }) => (
         <>
           <PopoverTrigger>
