@@ -6,7 +6,7 @@ type Props = {
 }
 
 const InfoBlock = ({ label, children }: PropsWithChildren<Props>) => (
-  <Stack spacing={0}>
+  <Stack spacing={0} pr={8}>
     <Text
       as="span"
       fontSize="sm"

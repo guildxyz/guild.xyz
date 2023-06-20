@@ -1,18 +1,42 @@
+import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcBatchProvider } from "@ethersproject/providers"
 import { Chain, Chains, RPC } from "connectors"
+import { getBlockByTime } from "requirements/WalletActivity/hooks/useBlockNumberByTimestamp"
 import ERC721_ABI from "static/abis/erc721Abi.json"
 import useSWRImmutable from "swr/immutable"
 
 type NFTDetails = {
   creator: string
   totalMinters: number
+  totalMintersToday?: number
   uniqueMinters: number
 }
 
 const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
+  const currentDate = new Date()
+  currentDate.setUTCHours(0, 0, 0, 0)
+  const noonUnixTimestamp = currentDate.getTime() / 1000
+
+  let firstBlockNumberToday
+
+  try {
+    firstBlockNumberToday = await getBlockByTime([
+      undefined,
+      chain,
+      noonUnixTimestamp,
+    ])
+  } catch {}
+
   const provider = new JsonRpcBatchProvider(RPC[chain].rpcUrls[0], Chains[chain])
   const contract = new Contract(address, ERC721_ABI, provider)
+
+  let firstTotalSupplyToday
+  if (!isNaN(Number(firstBlockNumberToday?.result))) {
+    firstTotalSupplyToday = await contract.totalSupply({
+      blockTag: Number(firstBlockNumberToday.result),
+    })
+  }
 
   try {
     const [owner, totalSupply] = await Promise.all([
@@ -20,11 +44,21 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       contract.totalSupply(),
     ])
 
-    const totalSupplyAsNumber = totalSupply ? totalSupply.toNumber() : 0
+    const totalSupplyAsNumber = BigNumber.isBigNumber(totalSupply)
+      ? totalSupply.toNumber()
+      : 0
+    const firstTotalSupplyTodayAsNumber = BigNumber.isBigNumber(
+      firstTotalSupplyToday
+    )
+      ? firstTotalSupplyToday.toNumber()
+      : undefined
 
     return {
       creator: owner?.toLowerCase(),
       totalMinters: totalSupplyAsNumber,
+      totalMintersToday: firstTotalSupplyTodayAsNumber
+        ? totalSupplyAsNumber - firstTotalSupplyToday
+        : undefined,
       // TODO
       uniqueMinters: totalSupplyAsNumber,
     }
@@ -32,6 +66,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
     return {
       creator: undefined,
       totalMinters: undefined,
+      totalMintersToday: undefined,
       uniqueMinters: undefined,
     }
   }

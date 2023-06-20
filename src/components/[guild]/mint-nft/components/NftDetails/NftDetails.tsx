@@ -1,7 +1,6 @@
 import {
   Collapse,
   Icon,
-  SimpleGrid,
   Skeleton,
   Stack,
   Text,
@@ -55,15 +54,15 @@ const NftDetails = ({ chain, address }: Props) => {
 
       <Collapse in={isOpen} animateOpacity>
         <Stack spacing={4}>
-          <Wrap>
-            <SimpleGrid maxW="max-content" columns={2} gap={8} pr={8}>
+          <Wrap spacingY={4}>
+            <Wrap maxW="max-content" spacingY={4}>
               {/* TODO */}
               <InfoBlock label="Standard">ERC-721</InfoBlock>
 
               <InfoBlock label="Network">{chainName}</InfoBlock>
-            </SimpleGrid>
+            </Wrap>
 
-            <SimpleGrid maxW="max-content" columns={2} gap={8}>
+            <Wrap maxW="max-content" spacingY={4}>
               <InfoBlock label="Total minters">
                 <Skeleton isLoaded={!isValidating}>
                   <Text as="span" fontSize="md" colorScheme="gray">
@@ -89,7 +88,19 @@ const NftDetails = ({ chain, address }: Props) => {
                   </Text>
                 </Skeleton>
               </InfoBlock>
-            </SimpleGrid>
+
+              <InfoBlock label="Minted today">
+                <Skeleton isLoaded={!isValidating}>
+                  <Text as="span" fontSize="md" colorScheme="gray">
+                    {error || !nftDetails?.totalMintersToday
+                      ? "Couldn't fetch"
+                      : new Intl.NumberFormat("en", {
+                          notation: "standard",
+                        }).format(nftDetails.totalMintersToday)}
+                  </Text>
+                </Skeleton>
+              </InfoBlock>
+            </Wrap>
           </Wrap>
 
           <CopyableNftDetailsAddress label="Contract" address={address} />
