@@ -116,18 +116,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         createdRequirements.flatMap((req) => req.deletedRequirements)
       )
 
-      mutateGuild((prev) => ({
-        ...prev,
-        roles:
-          prev?.roles.map((role) => ({
-            ...role,
-            requirements:
-              role?.requirements.filter(
-                (requirement) => !deletedRequirementIds.has(requirement)
-              ) ?? [],
-          })) ?? [],
-      }))
-
       const [
         failedRequirementUpdatesCount,
         failedRequirementCreationsCount,
@@ -206,10 +194,14 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
                     ...prevRole,
                     ...(updatedRole ?? {}),
                     requirements: [
-                      ...(prevRole.requirements?.map((prevReq) => ({
-                        ...prevReq,
-                        ...(updatedRequirementsById[prevReq.id] ?? {}),
-                      })) ?? []),
+                      ...(prevRole.requirements
+                        ?.filter(
+                          (requirement) => !deletedRequirementIds.has(requirement)
+                        )
+                        ?.map((prevReq) => ({
+                          ...prevReq,
+                          ...(updatedRequirementsById[prevReq.id] ?? {}),
+                        })) ?? []),
                       ...successfulRequirementCreations,
                     ],
                     rolePlatforms: [
