@@ -10,7 +10,6 @@ type NFTDetails = {
   creator: string
   totalMinters: number
   totalMintersToday?: number
-  uniqueMinters: number
 }
 
 const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
@@ -59,15 +58,12 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       totalMintersToday: firstTotalSupplyTodayAsNumber
         ? totalSupplyAsNumber - firstTotalSupplyToday
         : undefined,
-      // TODO
-      uniqueMinters: totalSupplyAsNumber,
     }
   } catch (err) {
     return {
       creator: undefined,
       totalMinters: undefined,
       totalMintersToday: undefined,
-      uniqueMinters: undefined,
     }
   }
 }

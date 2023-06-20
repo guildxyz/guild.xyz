@@ -24,10 +24,6 @@ const NftDetails = ({ chain, address }: Props) => {
 
   const chainName = RPC[chain].chainName
   const { data: nftDetails, isValidating, error } = useNftDetails(chain, address)
-  const uniqueMintersPercentage =
-    nftDetails?.totalMinters && nftDetails?.uniqueMinters
-      ? (nftDetails.uniqueMinters / nftDetails.totalMinters) * 100
-      : 0
 
   return (
     <Stack spacing={4}>
@@ -71,20 +67,6 @@ const NftDetails = ({ chain, address }: Props) => {
                       : new Intl.NumberFormat("en", {
                           notation: "standard",
                         }).format(nftDetails?.totalMinters ?? 0)}
-                  </Text>
-                </Skeleton>
-              </InfoBlock>
-
-              <InfoBlock label="Unique minters">
-                <Skeleton isLoaded={!isValidating}>
-                  <Text as="span" fontSize="md" colorScheme="gray">
-                    {error
-                      ? "Couldn't fetch"
-                      : `${new Intl.NumberFormat("en", {
-                          notation: "standard",
-                        }).format(
-                          nftDetails?.uniqueMinters
-                        )} (${uniqueMintersPercentage})%`}
                   </Text>
                 </Skeleton>
               </InfoBlock>
