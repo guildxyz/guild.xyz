@@ -28,15 +28,15 @@ import { useDisconnectAddress } from "../hooks/useDisconnect"
 import PrimaryAddressTag from "./PrimaryAddressTag"
 
 type Props = {
-  address: User["addresses"][number]
+  addressData: User["addresses"][number]
 }
 
 const providerIcons: Record<AddressConnectionProvider, string> = {
   DELEGATE: "delegatecash.png",
 }
 
-const LinkedAddress = ({ address: paramAddress }: Props) => {
-  const { address, provider, isPrimary } = paramAddress ?? {}
+const LinkedAddress = ({ addressData }: Props) => {
+  const { address, provider, isPrimary } = addressData ?? {}
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { onSubmit, isLoading, signLoadingText } = useDisconnectAddress(onClose)

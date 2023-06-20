@@ -102,8 +102,8 @@ const AccountConnections = () => {
           </Stack>
         ) : (
           linkedAddresses
-            .map((address) => (
-              <LinkedAddress key={address?.address} address={address} />
+            .map((addressData) => (
+              <LinkedAddress key={addressData?.address} addressData={addressData} />
             ))
             .concat(
               vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null
