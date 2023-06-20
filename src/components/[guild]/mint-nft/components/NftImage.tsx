@@ -10,7 +10,7 @@ type Props = {
 
 const NftImage = ({ src }: Props) => (
   <MotionCard
-    layout
+    layout="position"
     layoutId="nft-image"
     aspectRatio={1}
     bgColor="black"

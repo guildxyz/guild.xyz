@@ -35,7 +35,7 @@ const Page = () => {
   const [shouldShowSmallNftImage, setShouldShowSmallNftImage] = useState(false)
   useScrollEffect(() => {
     const nftDescription = nftDescriptionRef.current
-    setShouldShowSmallNftImage(nftDescription.getBoundingClientRect().top < 40)
+    setShouldShowSmallNftImage(nftDescription.getBoundingClientRect().top < 100)
   }, [])
 
   return (
