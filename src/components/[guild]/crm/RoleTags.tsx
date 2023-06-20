@@ -47,7 +47,16 @@ const RoleTag = ({ roleId }: { roleId: number }) => {
 
   return (
     <Tag bg={bg} color="white">
-      <TagLeftIcon as={Img} src={role.imageUrl} />
+      {role.imageUrl.startsWith("/guildLogos") ? (
+        <TagLeftIcon as={Img} src={role.imageUrl} />
+      ) : (
+        <TagLeftIcon
+          as={Img}
+          src={role.imageUrl}
+          borderRadius={"full"}
+          boxSize="4"
+        />
+      )}
       <TagLabel>{role.name}</TagLabel>
     </Tag>
   )
