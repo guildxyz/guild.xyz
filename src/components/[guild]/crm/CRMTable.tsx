@@ -14,11 +14,13 @@ import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
 import Card from "components/common/Card"
 import { PlatformAccountDetails } from "types"
+import FilterByRoles, { roleFilter } from "./FilterByRoles"
 import Identities from "./Identities"
 import IdentitiesSearch from "./IdentitiesSearch"
 import OrderByColumn from "./OrderByColumn"
@@ -70,9 +72,13 @@ const columns = [
     header: ({ column }) => (
       <HStack w="full" justifyContent={"space-between"}>
         <Text>Roles</Text>
-        <OrderByColumn label="Number of roles" column={column} />
+        <HStack spacing="0">
+          <FilterByRoles column={column} />
+          <OrderByColumn label="Number of roles" column={column} />
+        </HStack>
       </HStack>
     ),
+    filterFn: roleFilter,
     cell: (info) => <RoleTags roleIds={info.getValue()} />,
   }),
   columnHelper.accessor("joinedAt", {
@@ -94,6 +100,7 @@ const CRMTable = () => {
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     enableRowSelection: true,
   })
 
