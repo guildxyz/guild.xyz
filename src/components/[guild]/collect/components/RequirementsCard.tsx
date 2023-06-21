@@ -64,7 +64,7 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
           </HStack>
         </Stack>
 
-        <Button colorScheme="green">Mint</Button>
+        <Button colorScheme="green">Collect now</Button>
       </Stack>
     </Card>
   )
