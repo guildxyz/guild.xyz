@@ -61,13 +61,12 @@ const Page = () => {
           }}
           gap={{ base: 6, lg: 8 }}
         >
-          <Stack w="full" spacing={12}>
+          <Stack overflow="hidden" w="full" spacing={12}>
             <NftImage src={IMAGE_SRC} />
 
             <Stack spacing={8}>
               <Stack spacing={4}>
                 <MotionHeading
-                  layout="position"
                   layoutId="nft-name"
                   as="h2"
                   fontFamily="display"
@@ -136,7 +135,6 @@ const Page = () => {
 
                   <Stack spacing={4}>
                     <MotionHeading
-                      layout="position"
                       layoutId="nft-name"
                       as="h2"
                       fontFamily="display"
