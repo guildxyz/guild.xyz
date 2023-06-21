@@ -45,7 +45,6 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
     })
   }
 
-  console.log("")
   try {
     const [owner, totalSupply, isERC721, isERC1155] = await Promise.all([
       contract.owner(),
@@ -53,8 +52,6 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       contract.supportsInterface(ContractInterface.ERC721),
       contract.supportsInterface(ContractInterface.ERC1155),
     ])
-
-    console.log(owner, totalSupply, isERC721, isERC1155)
 
     const totalSupplyAsNumber = BigNumber.isBigNumber(totalSupply)
       ? totalSupply.toNumber()
