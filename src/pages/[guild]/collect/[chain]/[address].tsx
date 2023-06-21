@@ -98,6 +98,8 @@ const Page = ({ chain, address }: Props) => {
 
                 {isMobile && (
                   <RequirementsCard
+                    chain={chain}
+                    address={address}
                     requirements={requirements}
                     logic={role?.logic}
                   />
@@ -165,7 +167,12 @@ const Page = ({ chain, address }: Props) => {
               )}
 
               <motion.div layout="position">
-                <RequirementsCard requirements={requirements} logic={role?.logic} />
+                <RequirementsCard
+                  chain={chain}
+                  address={address}
+                  requirements={requirements}
+                  logic={role?.logic}
+                />
               </motion.div>
             </Stack>
           )}

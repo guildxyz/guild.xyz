@@ -2,6 +2,7 @@ import {
   Circle,
   HStack,
   Icon,
+  Skeleton,
   Stack,
   Text,
   useColorModeValue,
@@ -11,19 +12,25 @@ import Card from "components/common/Card"
 import LogicDivider from "components/[guild]/LogicDivider"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import { Chain } from "connectors"
 import { Coins } from "phosphor-react"
 import { Fragment } from "react"
 import { Logic, Requirement } from "types"
+import useNftDetails from "./NftDetails/hooks/useNftDetails"
 
 type Props = {
+  chain: Chain
+  address: string
   requirements: Requirement[]
   logic: Logic
 }
 
-const RequirementsCard = ({ requirements, logic }: Props) => {
+const RequirementsCard = ({ chain, address, requirements, logic }: Props) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
 
   const paymentImageBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
+
+  const { data, isValidating } = useNftDetails(chain, address)
 
   return (
     <Card layout="position" w="full" h="max-content">
@@ -31,9 +38,12 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
         p={{ base: 5, md: 8 }}
         bgColor={requirementsSectionBgColor}
         spacing={{ base: 4, md: 8 }}
+        w="full"
+        alignItems="center"
       >
         <Text
           as="span"
+          w="full"
           fontSize="xs"
           fontWeight="bold"
           color="gray"
@@ -64,7 +74,27 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
           </HStack>
         </Stack>
 
-        <Button colorScheme="green">Collect now</Button>
+        <Stack w="full" alignItems="center" spacing={4}>
+          <Button colorScheme="green" w="full">
+            Collect now
+          </Button>
+
+          {(data || isValidating) && (
+            <Skeleton maxW="max-content" isLoaded={!isValidating && !!data}>
+              <Text fontSize="sm" colorScheme="gray" fontWeight="medium">
+                {`${
+                  new Intl.NumberFormat("en", {
+                    notation: "standard",
+                  }).format(data?.totalCollectors) ?? 0
+                } collected - ${
+                  new Intl.NumberFormat("en", {
+                    notation: "standard",
+                  }).format(data?.totalCollectorsToday) ?? 0
+                } collected today`}
+              </Text>
+            </Skeleton>
+          )}
+        </Stack>
       </Stack>
     </Card>
   )
