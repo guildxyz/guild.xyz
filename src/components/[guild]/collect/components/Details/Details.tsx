@@ -1,14 +1,12 @@
 import {
   Divider,
   Flex,
-  Heading,
+  HStack,
   Icon,
   Img,
   Skeleton,
-  Stack,
   Text,
   useColorMode,
-  Wrap,
 } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import { openseaBaseUrl } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal/components/OpenseaLink"
@@ -16,6 +14,7 @@ import { Chain, RPC } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import useNftDetails from "../../hooks/useNftDetails"
 import useTopCollectors from "../../hooks/useTopCollectors"
+import Section from "../Section"
 import CopyableNftDetailsAddress from "./components/CopyableNftDetailsAddress"
 import InfoBlock from "./components/InfoBlock"
 
@@ -40,62 +39,18 @@ const Details = ({ chain, address }: Props) => {
   } = useTopCollectors()
 
   return (
-    <Stack spacing={4}>
-      <Heading w="full" as="h3" fontFamily="display" fontSize="2xl">
-        Details
-      </Heading>
+    <Section title="Details">
+      <HStack spacing={8}>
+        <InfoBlock label="Standard">
+          <Skeleton isLoaded={!isNftDetailsValidating}>
+            <Text as="span" fontSize="md" colorScheme="gray">
+              {nftDetailsError ? "Couldn't fetch" : nftDetails?.standard}
+            </Text>
+          </Skeleton>
+        </InfoBlock>
 
-      <Wrap spacingY={4}>
-        <Wrap maxW="max-content" spacingY={4}>
-          <InfoBlock label="Standard">
-            <Skeleton isLoaded={!isNftDetailsValidating}>
-              <Text as="span" fontSize="md" colorScheme="gray">
-                {nftDetailsError ? "Couldn't fetch" : nftDetails?.standard}
-              </Text>
-            </Skeleton>
-          </InfoBlock>
-
-          <InfoBlock label="Network">{chainName}</InfoBlock>
-        </Wrap>
-
-        <Wrap maxW="max-content" spacingY={4}>
-          <InfoBlock label="Total collectors">
-            <Skeleton isLoaded={!isNftDetailsValidating}>
-              <Text as="span" fontSize="md" colorScheme="gray">
-                {nftDetailsError
-                  ? "Couldn't fetch"
-                  : new Intl.NumberFormat("en", {
-                      notation: "standard",
-                    }).format(nftDetails?.totalCollectors ?? 0)}
-              </Text>
-            </Skeleton>
-          </InfoBlock>
-
-          <InfoBlock label="Unique collectors">
-            <Skeleton isLoaded={!isTopCollectorsValidatin}>
-              <Text as="span" fontSize="md" colorScheme="gray">
-                {topCollectorsError || !topCollectors?.uniqueCollectors
-                  ? "Couldn't fetch"
-                  : new Intl.NumberFormat("en", {
-                      notation: "standard",
-                    }).format(topCollectors.uniqueCollectors)}
-              </Text>
-            </Skeleton>
-          </InfoBlock>
-
-          <InfoBlock label="Collected today">
-            <Skeleton isLoaded={!isNftDetailsValidating}>
-              <Text as="span" fontSize="md" colorScheme="gray">
-                {nftDetailsError || !nftDetails?.totalCollectorsToday
-                  ? "Couldn't fetch"
-                  : new Intl.NumberFormat("en", {
-                      notation: "standard",
-                    }).format(nftDetails.totalCollectorsToday)}
-              </Text>
-            </Skeleton>
-          </InfoBlock>
-        </Wrap>
-      </Wrap>
+        <InfoBlock label="Network">{chainName}</InfoBlock>
+      </HStack>
 
       <CopyableNftDetailsAddress label="Contract" address={address} />
 
@@ -136,7 +91,7 @@ const Details = ({ chain, address }: Props) => {
           <Icon ml={1.5} as={ArrowSquareOut} />
         </Link>
       </Flex>
-    </Stack>
+    </Section>
   )
 }
 

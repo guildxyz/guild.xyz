@@ -1,6 +1,7 @@
-import { Heading, Icon, SimpleGrid, Stack, Text } from "@chakra-ui/react"
+import { Icon, SimpleGrid, Tag, Text } from "@chakra-ui/react"
 import { DotsThreeVertical } from "phosphor-react"
 import useTopCollectors from "../../hooks/useTopCollectors"
+import Section from "../Section"
 import Collector, { CollectorSkeleton } from "./components/Collector"
 
 const TopCollectors = () => {
@@ -9,11 +10,18 @@ const TopCollectors = () => {
   const restCollectors = data?.topCollectors?.slice(3)
 
   return (
-    <Stack spacing={4} alignItems="center">
-      <Heading w="full" as="h3" fontFamily="display" fontSize="2xl">
-        Top collectors
-      </Heading>
-
+    <Section
+      title="Top collectors"
+      titleRightElement={
+        data && (
+          <Tag minW="max-content" position="relative" top={1}>
+            {new Intl.NumberFormat("en", {
+              notation: "standard",
+            }).format(data.uniqueCollectors)}
+          </Tag>
+        )
+      }
+    >
       {error ? (
         <Text w="full" colorScheme="gray">
           Couldn't fetch top collectors
@@ -59,7 +67,7 @@ const TopCollectors = () => {
           </Text>
         </>
       )}
-    </Stack>
+    </Section>
   )
 }
 
