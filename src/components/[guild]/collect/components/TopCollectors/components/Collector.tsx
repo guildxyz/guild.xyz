@@ -18,19 +18,19 @@ const Collector = ({ address, index }: Props): JSX.Element => {
 
   return (
     <VStack
-      spacing={2}
+      spacing={1}
       pos="relative"
       opacity="0.5"
       transition="opacity .1s"
       _hover={{ opacity: 1 }}
+      mb={4}
     >
-      <GuildAvatar address={address} size={{ base: 6, md: 8 }} />
+      <GuildAvatar address={address} size={{ base: 3, md: 4 }} />
       <Text
-        fontFamily="display"
+        wordBreak="revert"
         fontWeight="semibold"
-        fontSize="sm"
-        noOfLines={1}
-        maxW="full"
+        letterSpacing={-0.5}
+        fontSize="x-small"
         title={domain || address}
       >
         {domain || `${shortenHex(address, 3)}`}
@@ -45,6 +45,7 @@ const Collector = ({ address, index }: Props): JSX.Element => {
           color={topColors[index]}
           as={Crown}
           weight="fill"
+          boxSize={3}
         />
       )}
     </VStack>

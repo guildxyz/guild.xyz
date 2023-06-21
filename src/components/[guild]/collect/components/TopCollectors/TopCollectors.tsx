@@ -1,4 +1,4 @@
-import { Icon, SimpleGrid, Tag, Text } from "@chakra-ui/react"
+import { Flex, Icon, SimpleGrid, Tag, Text } from "@chakra-ui/react"
 import { DotsThreeVertical } from "phosphor-react"
 import useTopCollectors from "../../hooks/useTopCollectors"
 import Section from "../Section"
@@ -39,12 +39,7 @@ const TopCollectors = () => {
         </SimpleGrid>
       ) : (
         <>
-          <SimpleGrid
-            pt={8}
-            w="full"
-            columns={{ base: 3, sm: 5, md: 3, xl: 5 }}
-            gap={8}
-          >
+          <SimpleGrid pt={8} w="full" columns={{ base: 4, sm: 5, xl: 10 }}>
             {top3Collectors.map((address, index) => (
               <Collector key={address} address={address} index={index} />
             ))}
@@ -53,13 +48,16 @@ const TopCollectors = () => {
             ))}
           </SimpleGrid>
 
-          <Icon as={DotsThreeVertical} color="gray" boxSize={8} />
+          <Flex justifyContent="center">
+            <Icon as={DotsThreeVertical} color="gray" boxSize={6} />
+          </Flex>
 
           <Text
             colorScheme="gray"
-            fontSize="xl"
+            fontSize="md"
             fontWeight="bold"
             fontFamily="display"
+            textAlign="center"
           >
             {`${new Intl.NumberFormat("en", {
               notation: "standard",
