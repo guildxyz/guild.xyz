@@ -1,15 +1,21 @@
 import {
   Collapse,
+  Divider,
+  Flex,
   Icon,
+  Img,
   Skeleton,
   Stack,
   Text,
+  useColorMode,
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import Link from "components/common/Link"
+import { openseaBaseUrl } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal/components/OpenseaLink"
 import { Chain, RPC } from "connectors"
-import { CaretDown } from "phosphor-react"
+import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import useTopMinters from "../../hooks/useTopMinters"
 import CopyableNftDetailsAddress from "./components/CopyableNftDetailsAddress"
 import InfoBlock from "./components/InfoBlock"
@@ -21,6 +27,7 @@ type Props = {
 }
 
 const NftDetails = ({ chain, address }: Props) => {
+  const { colorMode } = useColorMode()
   const { isOpen, onToggle } = useDisclosure()
 
   const chainName = RPC[chain].chainName
@@ -120,6 +127,41 @@ const NftDetails = ({ chain, address }: Props) => {
             isValidating={isNftDetailsValidating}
             error={nftDetailsError}
           />
+
+          <Divider />
+
+          <Flex flexWrap="wrap">
+            {openseaBaseUrl[chain] && (
+              <Link
+                href={`${openseaBaseUrl[chain]}/${address}`}
+                isExternal
+                colorScheme="gray"
+                mr={4}
+              >
+                <Img
+                  src={"/requirementLogos/opensea.svg"}
+                  boxSize={"1em"}
+                  mr="1.5"
+                />
+                View on OpenSea
+                <Icon ml={1.5} as={ArrowSquareOut} />
+              </Link>
+            )}
+
+            <Link
+              href={`${RPC[chain].blockExplorerUrls[0]}/token/${address}`}
+              isExternal
+              colorScheme="gray"
+            >
+              <Img
+                src={RPC[chain]?.blockExplorerIcons[colorMode]}
+                boxSize={"1em"}
+                mr="1.5"
+              />
+              View on explorer
+              <Icon ml={1.5} as={ArrowSquareOut} />
+            </Link>
+          </Flex>
         </Stack>
       </Collapse>
     </Stack>

@@ -21,12 +21,12 @@ const alchemyApiUrl: Partial<Record<Chain, string>> = {
   POLYGON: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.POLYGON_ALCHEMY_KEY}/getOwnersForContract`,
 }
 
-const validateChain = (value: string | string[]): Chain => {
+export const validateNftChain = (value: string | string[]): Chain => {
   const valueAsString = value?.toString()?.toUpperCase()
   if (!value || !Object.keys(alchemyApiUrl).includes(valueAsString)) return null
   return valueAsString as Chain
 }
-const validateAddress = (value: string | string[]): string => {
+export const validateNftAddress = (value: string | string[]): string => {
   const valueAsString = value?.toString()
   if (!ADDRESS_REGEX.test(valueAsString)) return null
   return valueAsString
@@ -40,8 +40,8 @@ const handler: NextApiHandler<TopMintersResponse> = async (req, res) => {
 
   const { chain: chainFromQuery, address: addressFromQuery } = req.query
 
-  const chain = validateChain(chainFromQuery)
-  const address = validateAddress(addressFromQuery)
+  const chain = validateNftChain(chainFromQuery)
+  const address = validateNftAddress(addressFromQuery)
 
   if (!chain || !address)
     return res.status(400).json({ error: "Invalid chain or address" })

@@ -15,16 +15,27 @@ import NftImage from "components/[guild]/mint-nft/components/NftImage"
 import RequirementsCard from "components/[guild]/mint-nft/components/RequirementsCard"
 import TopMinters from "components/[guild]/mint-nft/components/TopMinters"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import { Chain } from "connectors"
 import { motion } from "framer-motion"
 import useScrollEffect from "hooks/useScrollEffect"
+import { GetServerSideProps } from "next"
+import {
+  validateNftAddress,
+  validateNftChain,
+} from "pages/api/nft/minters/[chain]/[address]"
 import { useRef, useState } from "react"
+
+type Props = {
+  chain: Chain
+  address: string
+}
 
 const IMAGE_SRC =
   "https://guild-xyz.mypinata.cloud/ipfs/QmRMiu8iiVNi6FCZS3QnHamzp6QVpXJp3a2JDFv98LPxME"
 
 const MotionHeading = motion(Heading)
 
-const Page = () => {
+const Page = ({ chain, address }: Props) => {
   // TEMP, for testing
   const { theme, imageUrl, name, roles } = useGuild()
   const { textColor } = useThemeContext()
@@ -112,10 +123,7 @@ const Page = () => {
                 </Text>
               </Stack>
 
-              <NftDetails
-                chain="POLYGON"
-                address="0xff04820c36759c9f5203021fe051239ad2dcca8a"
-              />
+              <NftDetails chain={chain} address={address} />
 
               <TopMinters />
             </Stack>
@@ -161,10 +169,24 @@ const Page = () => {
   )
 }
 
-const MintNftPage = () => (
+const MintNftPage = (props: Props) => (
   <ThemeProvider>
-    <Page />
+    <Page {...props} />
   </ThemeProvider>
 )
 
+const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
+  const { chain: chainFromQuery, address: addressFromQuery } = query
+  const chain = validateNftChain(chainFromQuery)
+  const address = validateNftAddress(addressFromQuery)
+
+  if (!chain || !address)
+    return {
+      notFound: true,
+    }
+
+  return { props: { chain, address } }
+}
+
 export default MintNftPage
+export { getServerSideProps }

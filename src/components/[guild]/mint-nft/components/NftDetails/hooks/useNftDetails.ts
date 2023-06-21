@@ -70,8 +70,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
         : undefined,
       standard: isERC1155 ? "ERC-1155" : isERC721 ? "ERC-721" : "Unknown",
     }
-  } catch (err) {
-    console.log("ARRGH", err)
+  } catch {
     return {
       creator: undefined,
       totalMinters: undefined,
