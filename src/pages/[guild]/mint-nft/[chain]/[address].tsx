@@ -14,6 +14,7 @@ import NftDetails from "components/[guild]/mint-nft/components/NftDetails"
 import NftImage from "components/[guild]/mint-nft/components/NftImage"
 import RequirementsCard from "components/[guild]/mint-nft/components/RequirementsCard"
 import TopMinters from "components/[guild]/mint-nft/components/TopMinters"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { motion } from "framer-motion"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useRef, useState } from "react"
@@ -26,6 +27,7 @@ const MotionHeading = motion(Heading)
 const Page = () => {
   // TEMP, for testing
   const { theme, imageUrl, name, roles } = useGuild()
+  const { textColor } = useThemeContext()
   const role = roles?.find((r) => r.id === 56990) ?? roles?.[0] // 56990 is a role in Johnny's Guild
   const requirements = role?.requirements ?? []
 
@@ -48,7 +50,7 @@ const Page = () => {
       <Stack spacing={8}>
         <HStack>
           <GuildLogo imageUrl={imageUrl} size={8} />
-          <Text as="span" fontFamily="display" fontWeight="bold">
+          <Text as="span" fontFamily="display" fontWeight="bold" color={textColor}>
             {name}
           </Text>
         </HStack>
@@ -159,4 +161,10 @@ const Page = () => {
   )
 }
 
-export default Page
+const MintNftPage = () => (
+  <ThemeProvider>
+    <Page />
+  </ThemeProvider>
+)
+
+export default MintNftPage
