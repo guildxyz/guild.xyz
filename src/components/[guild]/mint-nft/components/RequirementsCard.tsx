@@ -26,7 +26,7 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
   const paymentImageBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   return (
-    <Card layout w="full" h="max-content">
+    <Card layout="position" w="full" h="max-content">
       <Stack
         p={{ base: 5, md: 8 }}
         bgColor={requirementsSectionBgColor}
