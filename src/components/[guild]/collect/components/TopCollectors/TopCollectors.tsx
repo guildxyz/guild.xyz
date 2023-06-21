@@ -1,22 +1,22 @@
 import { Heading, Icon, SimpleGrid, Stack, Text } from "@chakra-ui/react"
 import { DotsThreeVertical } from "phosphor-react"
-import useTopMinters from "../../hooks/useTopMinters"
-import Minter, { MinterSkeleton } from "./components/Minter"
+import useTopCollectors from "../../hooks/useTopCollectors"
+import Collector, { CollectorSkeleton } from "./components/Collector"
 
-const TopMinters = () => {
-  const { data, isValidating, error } = useTopMinters()
-  const top3Minters = data?.topMinters?.slice(0, 3)
-  const restMinters = data?.topMinters?.slice(3)
+const TopCollectors = () => {
+  const { data, isValidating, error } = useTopCollectors()
+  const top3Collectors = data?.topCollectors?.slice(0, 3)
+  const restCollectors = data?.topCollectors?.slice(3)
 
   return (
     <Stack spacing={4} alignItems="center">
       <Heading w="full" as="h3" fontFamily="display" fontSize="2xl">
-        Top minters
+        Top collectors
       </Heading>
 
       {error ? (
         <Text w="full" colorScheme="gray">
-          Couldn't fetch top minters
+          Couldn't fetch top collectors
         </Text>
       ) : !data || isValidating ? (
         <SimpleGrid
@@ -26,7 +26,7 @@ const TopMinters = () => {
           gap={8}
         >
           {[...Array(100)].map((_, i) => (
-            <MinterSkeleton key={i} />
+            <CollectorSkeleton key={i} />
           ))}
         </SimpleGrid>
       ) : (
@@ -37,11 +37,11 @@ const TopMinters = () => {
             columns={{ base: 3, sm: 5, md: 3, xl: 5 }}
             gap={8}
           >
-            {top3Minters.map((address, index) => (
-              <Minter key={address} address={address} index={index} />
+            {top3Collectors.map((address, index) => (
+              <Collector key={address} address={address} index={index} />
             ))}
-            {restMinters.map((address) => (
-              <Minter key={address} address={address} />
+            {restCollectors.map((address) => (
+              <Collector key={address} address={address} />
             ))}
           </SimpleGrid>
 
@@ -55,7 +55,7 @@ const TopMinters = () => {
           >
             {`${new Intl.NumberFormat("en", {
               notation: "standard",
-            }).format(data.uniqueMinters - 100)} more`}
+            }).format(data.uniqueCollectors - 100)} more`}
           </Text>
         </>
       )}
@@ -63,4 +63,4 @@ const TopMinters = () => {
   )
 }
 
-export default TopMinters
+export default TopCollectors

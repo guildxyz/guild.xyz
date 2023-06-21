@@ -15,8 +15,8 @@ enum ContractInterface {
 
 type NFTDetails = {
   creator: string
-  totalMinters: number
-  totalMintersToday?: number
+  totalCollectors: number
+  totalCollectorsToday?: number
   standard: NftStandard
 }
 
@@ -64,8 +64,8 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
 
     return {
       creator: owner?.toLowerCase(),
-      totalMinters: totalSupplyAsNumber,
-      totalMintersToday: firstTotalSupplyTodayAsNumber
+      totalCollectors: totalSupplyAsNumber,
+      totalCollectorsToday: firstTotalSupplyTodayAsNumber
         ? totalSupplyAsNumber - firstTotalSupplyToday
         : undefined,
       standard: isERC1155 ? "ERC-1155" : isERC721 ? "ERC-721" : "Unknown",
@@ -73,8 +73,8 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
   } catch {
     return {
       creator: undefined,
-      totalMinters: undefined,
-      totalMintersToday: undefined,
+      totalCollectors: undefined,
+      totalCollectorsToday: undefined,
       standard: undefined,
     }
   }

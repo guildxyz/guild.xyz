@@ -11,7 +11,7 @@ type Props = {
 
 const topColors: [string, string, string] = ["yellow.500", "gray.400", "orange.400"]
 
-const Minter = ({ address, index }: Props): JSX.Element => {
+const Collector = ({ address, index }: Props): JSX.Element => {
   const domain = useResolveAddress(address)
 
   if (!address) return null
@@ -51,12 +51,12 @@ const Minter = ({ address, index }: Props): JSX.Element => {
   )
 }
 
-const MinterSkeleton = () => (
+const CollectorSkeleton = () => (
   <VStack spacing={2} pos="relative">
     <SkeletonCircle boxSize={{ base: 8, md: 10 }} />
     <Skeleton w="full" h={4} />
   </VStack>
 )
 
-export default Minter
-export { MinterSkeleton }
+export default Collector
+export { CollectorSkeleton }

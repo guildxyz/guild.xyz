@@ -16,7 +16,7 @@ import Link from "components/common/Link"
 import { openseaBaseUrl } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal/components/OpenseaLink"
 import { Chain, RPC } from "connectors"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
-import useTopMinters from "../../hooks/useTopMinters"
+import useTopCollectors from "../../hooks/useTopCollectors"
 import CopyableNftDetailsAddress from "./components/CopyableNftDetailsAddress"
 import InfoBlock from "./components/InfoBlock"
 import useNftDetails from "./hooks/useNftDetails"
@@ -37,10 +37,10 @@ const NftDetails = ({ chain, address }: Props) => {
     error: nftDetailsError,
   } = useNftDetails(chain, address)
   const {
-    data: topMinters,
-    isValidating: isTopMintersValidatin,
-    error: topMintersError,
-  } = useTopMinters()
+    data: topCollectors,
+    isValidating: isTopCollectorsValidatin,
+    error: topCollectorsError,
+  } = useTopCollectors()
 
   return (
     <Stack spacing={4}>
@@ -81,38 +81,38 @@ const NftDetails = ({ chain, address }: Props) => {
             </Wrap>
 
             <Wrap maxW="max-content" spacingY={4}>
-              <InfoBlock label="Total minters">
+              <InfoBlock label="Total collectors">
                 <Skeleton isLoaded={!isNftDetailsValidating}>
                   <Text as="span" fontSize="md" colorScheme="gray">
                     {nftDetailsError
                       ? "Couldn't fetch"
                       : new Intl.NumberFormat("en", {
                           notation: "standard",
-                        }).format(nftDetails?.totalMinters ?? 0)}
+                        }).format(nftDetails?.totalCollectors ?? 0)}
                   </Text>
                 </Skeleton>
               </InfoBlock>
 
-              <InfoBlock label="Unique minters">
-                <Skeleton isLoaded={!isTopMintersValidatin}>
+              <InfoBlock label="Unique collectors">
+                <Skeleton isLoaded={!isTopCollectorsValidatin}>
                   <Text as="span" fontSize="md" colorScheme="gray">
-                    {topMintersError || !topMinters?.uniqueMinters
+                    {topCollectorsError || !topCollectors?.uniqueCollectors
                       ? "Couldn't fetch"
                       : new Intl.NumberFormat("en", {
                           notation: "standard",
-                        }).format(topMinters.uniqueMinters)}
+                        }).format(topCollectors.uniqueCollectors)}
                   </Text>
                 </Skeleton>
               </InfoBlock>
 
-              <InfoBlock label="Minted today">
+              <InfoBlock label="Collected today">
                 <Skeleton isLoaded={!isNftDetailsValidating}>
                   <Text as="span" fontSize="md" colorScheme="gray">
-                    {nftDetailsError || !nftDetails?.totalMintersToday
+                    {nftDetailsError || !nftDetails?.totalCollectorsToday
                       ? "Couldn't fetch"
                       : new Intl.NumberFormat("en", {
                           notation: "standard",
-                        }).format(nftDetails.totalMintersToday)}
+                        }).format(nftDetails.totalCollectorsToday)}
                   </Text>
                 </Skeleton>
               </InfoBlock>

@@ -8,12 +8,13 @@ import {
 } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import Link from "components/common/Link"
+import NftByRole from "components/[guild]/collect/components/NftByRole"
+import NftDetails from "components/[guild]/collect/components/NftDetails"
+import NftImage from "components/[guild]/collect/components/NftImage"
+import RequirementsCard from "components/[guild]/collect/components/RequirementsCard"
+import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useGuild from "components/[guild]/hooks/useGuild"
-import NftByRole from "components/[guild]/mint-nft/components/NftByRole"
-import NftDetails from "components/[guild]/mint-nft/components/NftDetails"
-import NftImage from "components/[guild]/mint-nft/components/NftImage"
-import RequirementsCard from "components/[guild]/mint-nft/components/RequirementsCard"
-import TopMinters from "components/[guild]/mint-nft/components/TopMinters"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { Chain } from "connectors"
 import { motion } from "framer-motion"
@@ -22,7 +23,7 @@ import { GetServerSideProps } from "next"
 import {
   validateNftAddress,
   validateNftChain,
-} from "pages/api/nft/minters/[chain]/[address]"
+} from "pages/api/nft/collectors/[chain]/[address]"
 import { useRef, useState } from "react"
 
 type Props = {
@@ -37,7 +38,7 @@ const MotionHeading = motion(Heading)
 
 const Page = ({ chain, address }: Props) => {
   // TEMP, for testing
-  const { theme, imageUrl, name, roles } = useGuild()
+  const { theme, imageUrl, name, urlName, roles } = useGuild()
   const { textColor } = useThemeContext()
   const role = roles?.find((r) => r.id === 56990) ?? roles?.[0] // 56990 is a role in Johnny's Guild
   const requirements = role?.requirements ?? []
@@ -53,7 +54,7 @@ const Page = ({ chain, address }: Props) => {
 
   return (
     <Layout
-      ogTitle="Mint NFT"
+      ogTitle="Collect NFT"
       background={theme?.color ?? "gray.900"}
       backgroundImage={theme?.backgroundImage}
       maxWidth="container.xl"
@@ -61,9 +62,14 @@ const Page = ({ chain, address }: Props) => {
       <Stack spacing={8}>
         <HStack>
           <GuildLogo imageUrl={imageUrl} size={8} />
-          <Text as="span" fontFamily="display" fontWeight="bold" color={textColor}>
+          <Link
+            href={`/${urlName}`}
+            fontFamily="display"
+            fontWeight="bold"
+            color={textColor}
+          >
             {name}
-          </Text>
+          </Link>
         </HStack>
 
         <SimpleGrid
@@ -125,7 +131,7 @@ const Page = ({ chain, address }: Props) => {
 
               <NftDetails chain={chain} address={address} />
 
-              <TopMinters />
+              <TopCollectors />
             </Stack>
           </Stack>
 
@@ -169,7 +175,7 @@ const Page = ({ chain, address }: Props) => {
   )
 }
 
-const MintNftPage = (props: Props) => (
+const CollectNftPage = (props: Props) => (
   <ThemeProvider>
     <Page {...props} />
   </ThemeProvider>
@@ -188,5 +194,5 @@ const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
   return { props: { chain, address } }
 }
 
-export default MintNftPage
+export default CollectNftPage
 export { getServerSideProps }

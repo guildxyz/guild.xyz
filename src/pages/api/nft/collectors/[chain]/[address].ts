@@ -9,13 +9,13 @@ type Owner = {
   tokenBalances: { tokenId: string; balance: string }[]
 }
 
-export type TopMintersResponse =
+export type TopCollectorsResponse =
   | {
-      uniqueMinters: number
-      topMinters: string[]
+      uniqueCollectors: number
+      topCollectors: string[]
       error?: never
     }
-  | { uniqueMinters?: never; topMinters?: never; error: string }
+  | { uniqueCollectors?: never; topCollectors?: never; error: string }
 
 const alchemyApiUrl: Partial<Record<Chain, string>> = {
   POLYGON: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.POLYGON_ALCHEMY_KEY}/getOwnersForContract`,
@@ -32,7 +32,7 @@ export const validateNftAddress = (value: string | string[]): string => {
   return valueAsString
 }
 
-const handler: NextApiHandler<TopMintersResponse> = async (req, res) => {
+const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET")
     return res.status(405).json({ error: `Method ${req.method} is not allowed` })
@@ -46,8 +46,8 @@ const handler: NextApiHandler<TopMintersResponse> = async (req, res) => {
   if (!chain || !address)
     return res.status(400).json({ error: "Invalid chain or address" })
 
-  const kvKey = `nftMinters:${chain}:${address.toLowerCase()}`
-  const cachedResponse: TopMintersResponse = await kv.get(kvKey)
+  const kvKey = `nftCollectors:${chain}:${address.toLowerCase()}`
+  const cachedResponse: TopCollectorsResponse = await kv.get(kvKey)
 
   if (cachedResponse) {
     // Cache the response for 5 minutes, so if the user refreshes the page, we don't need to fetch it from KV again, just send back the latest response
@@ -95,9 +95,11 @@ const handler: NextApiHandler<TopMintersResponse> = async (req, res) => {
     (ownerA, ownerB) => ownerB.tokenBalance - ownerA.tokenBalance
   )
 
-  const response: TopMintersResponse = {
-    topMinters: sortedOwners.slice(0, 100).map(({ ownerAddress }) => ownerAddress),
-    uniqueMinters: owners.length,
+  const response: TopCollectorsResponse = {
+    topCollectors: sortedOwners
+      .slice(0, 100)
+      .map(({ ownerAddress }) => ownerAddress),
+    uniqueCollectors: owners.length,
   }
 
   // Store in cache for 30 minutes
