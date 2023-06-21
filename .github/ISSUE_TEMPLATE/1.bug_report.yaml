@@ -17,7 +17,7 @@ body:
   - type: textarea
     attributes:
       label: Expected Behavior
-      description: What would you expected to happen when you perform the steps describet in the previous section?
+      description: What would you expected to happen when you perform the steps described in the previous section?
     validations:
       required: true
   - type: input
