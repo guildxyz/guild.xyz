@@ -9,9 +9,9 @@ import {
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import Link from "components/common/Link"
+import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
+import Details from "components/[guild]/collect/components/Details"
 import NftByRole from "components/[guild]/collect/components/NftByRole"
-import NftDetails from "components/[guild]/collect/components/NftDetails"
-import NftImage from "components/[guild]/collect/components/NftImage"
 import RequirementsCard from "components/[guild]/collect/components/RequirementsCard"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -46,10 +46,10 @@ const Page = ({ chain, address }: Props) => {
   const isMobile = useBreakpointValue({ base: true, md: false })
 
   const nftDescriptionRef = useRef<HTMLDivElement>(null)
-  const [shouldShowSmallNftImage, setShouldShowSmallNftImage] = useState(false)
+  const [shouldShowSmallImage, setShouldShowSmallImage] = useState(false)
   useScrollEffect(() => {
     const nftDescription = nftDescriptionRef.current
-    setShouldShowSmallNftImage(nftDescription.getBoundingClientRect().top < 100)
+    setShouldShowSmallImage(nftDescription.getBoundingClientRect().top < 100)
   }, [])
 
   return (
@@ -81,7 +81,7 @@ const Page = ({ chain, address }: Props) => {
           gap={{ base: 6, lg: 8 }}
         >
           <Stack overflow="hidden" w="full" spacing={12}>
-            <NftImage src={IMAGE_SRC} />
+            <CollectibleImage src={IMAGE_SRC} />
 
             <Stack spacing={8}>
               <Stack spacing={4}>
@@ -131,7 +131,7 @@ const Page = ({ chain, address }: Props) => {
                 </Text>
               </Stack>
 
-              <NftDetails chain={chain} address={address} />
+              <Details chain={chain} address={address} />
 
               <TopCollectors />
             </Stack>
@@ -144,12 +144,12 @@ const Page = ({ chain, address }: Props) => {
               spacing={8}
               h="max-content"
             >
-              {shouldShowSmallNftImage && (
+              {shouldShowSmallImage && (
                 <SimpleGrid
                   gridTemplateColumns="var(--chakra-sizes-24) auto"
                   gap={4}
                 >
-                  <NftImage src={IMAGE_SRC} />
+                  <CollectibleImage src={IMAGE_SRC} />
 
                   <Stack spacing={4}>
                     <MotionHeading

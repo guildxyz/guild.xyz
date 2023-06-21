@@ -16,17 +16,17 @@ import Link from "components/common/Link"
 import { openseaBaseUrl } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal/components/OpenseaLink"
 import { Chain, RPC } from "connectors"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
+import useNftDetails from "../../hooks/useNftDetails"
 import useTopCollectors from "../../hooks/useTopCollectors"
 import CopyableNftDetailsAddress from "./components/CopyableNftDetailsAddress"
 import InfoBlock from "./components/InfoBlock"
-import useNftDetails from "./hooks/useNftDetails"
 
 type Props = {
   chain: Chain
   address: string
 }
 
-const NftDetails = ({ chain, address }: Props) => {
+const Details = ({ chain, address }: Props) => {
   const { colorMode } = useColorMode()
   const { isOpen, onToggle } = useDisclosure()
 
@@ -62,7 +62,7 @@ const NftDetails = ({ chain, address }: Props) => {
           />
         }
       >
-        NFT details
+        Details
       </Button>
 
       <Collapse in={isOpen} animateOpacity>
@@ -168,4 +168,4 @@ const NftDetails = ({ chain, address }: Props) => {
   )
 }
 
-export default NftDetails
+export default Details

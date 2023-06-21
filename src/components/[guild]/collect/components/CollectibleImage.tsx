@@ -8,7 +8,7 @@ type Props = {
   src: string
 }
 
-const NftImage = ({ src }: Props) => (
+const CollectibleImage = ({ src }: Props) => (
   <MotionCard
     layoutId="nft-image"
     aspectRatio={1}
@@ -37,4 +37,4 @@ const NftImage = ({ src }: Props) => (
   </MotionCard>
 )
 
-export default NftImage
+export default CollectibleImage

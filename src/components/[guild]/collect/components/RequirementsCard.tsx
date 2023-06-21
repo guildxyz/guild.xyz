@@ -16,7 +16,7 @@ import { Chain } from "connectors"
 import { Coins } from "phosphor-react"
 import { Fragment } from "react"
 import { Logic, Requirement } from "types"
-import useNftDetails from "./NftDetails/hooks/useNftDetails"
+import useNftDetails from "../hooks/useNftDetails"
 
 type Props = {
   chain: Chain
