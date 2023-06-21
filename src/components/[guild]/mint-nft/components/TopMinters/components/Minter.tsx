@@ -1,4 +1,4 @@
-import { Icon, Text, VStack } from "@chakra-ui/react"
+import { Icon, Skeleton, SkeletonCircle, Text, VStack } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { Crown } from "phosphor-react"
@@ -51,4 +51,12 @@ const Minter = ({ address, index }: Props): JSX.Element => {
   )
 }
 
+const MinterSkeleton = () => (
+  <VStack spacing={2} pos="relative">
+    <SkeletonCircle boxSize={{ base: 8, md: 10 }} />
+    <Skeleton w="full" h={4} />
+  </VStack>
+)
+
 export default Minter
+export { MinterSkeleton }
