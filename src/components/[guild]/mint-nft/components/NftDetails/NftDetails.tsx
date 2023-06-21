@@ -62,8 +62,13 @@ const NftDetails = ({ chain, address }: Props) => {
         <Stack spacing={4}>
           <Wrap spacingY={4}>
             <Wrap maxW="max-content" spacingY={4}>
-              {/* TODO */}
-              <InfoBlock label="Standard">ERC-721</InfoBlock>
+              <InfoBlock label="Standard">
+                <Skeleton isLoaded={!isNftDetailsValidating}>
+                  <Text as="span" fontSize="md" colorScheme="gray">
+                    {nftDetailsError ? "Couldn't fetch" : nftDetails?.standard}
+                  </Text>
+                </Skeleton>
+              </InfoBlock>
 
               <InfoBlock label="Network">{chainName}</InfoBlock>
             </Wrap>

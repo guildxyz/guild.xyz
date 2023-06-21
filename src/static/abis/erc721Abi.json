@@ -327,5 +327,12 @@
     "stateMutability": "view",
     "inputs": [],
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }]
+  },
+  {
+    "type": "function",
+    "name": "supportsInterface",
+    "stateMutability": "view",
+    "inputs": [{ "name": "interfaceId", "type": "bytes4" }],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
   }
 ]

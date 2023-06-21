@@ -6,10 +6,18 @@ import { getBlockByTime } from "requirements/WalletActivity/hooks/useBlockNumber
 import ERC721_ABI from "static/abis/erc721Abi.json"
 import useSWRImmutable from "swr/immutable"
 
+type NftStandard = "ERC-721" | "ERC-1155" | "Unknown"
+
+enum ContractInterface {
+  "ERC721" = "0x80ac58cd",
+  "ERC1155" = "0xd9b67a26",
+}
+
 type NFTDetails = {
   creator: string
   totalMinters: number
   totalMintersToday?: number
+  standard: NftStandard
 }
 
 const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
@@ -37,11 +45,16 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
     })
   }
 
+  console.log("")
   try {
-    const [owner, totalSupply] = await Promise.all([
+    const [owner, totalSupply, isERC721, isERC1155] = await Promise.all([
       contract.owner(),
       contract.totalSupply(),
+      contract.supportsInterface(ContractInterface.ERC721),
+      contract.supportsInterface(ContractInterface.ERC1155),
     ])
+
+    console.log(owner, totalSupply, isERC721, isERC1155)
 
     const totalSupplyAsNumber = BigNumber.isBigNumber(totalSupply)
       ? totalSupply.toNumber()
@@ -58,12 +71,15 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       totalMintersToday: firstTotalSupplyTodayAsNumber
         ? totalSupplyAsNumber - firstTotalSupplyToday
         : undefined,
+      standard: isERC1155 ? "ERC-1155" : isERC721 ? "ERC-721" : "Unknown",
     }
   } catch (err) {
+    console.log("ARRGH", err)
     return {
       creator: undefined,
       totalMinters: undefined,
       totalMintersToday: undefined,
+      standard: undefined,
     }
   }
 }
