@@ -14,6 +14,7 @@ import Details from "components/[guild]/collect/components/Details"
 import NftByRole from "components/[guild]/collect/components/NftByRole"
 import RequirementsCard from "components/[guild]/collect/components/RequirementsCard"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
+import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { Chain } from "connectors"
@@ -30,9 +31,6 @@ type Props = {
   chain: Chain
   address: string
 }
-
-const IMAGE_SRC =
-  "https://guild-xyz.mypinata.cloud/ipfs/QmRMiu8iiVNi6FCZS3QnHamzp6QVpXJp3a2JDFv98LPxME"
 
 const MotionHeading = motion(Heading)
 
@@ -51,6 +49,8 @@ const Page = ({ chain, address }: Props) => {
     const nftDescription = nftDescriptionRef.current
     setShouldShowSmallImage(nftDescription.getBoundingClientRect().top < 100)
   }, [])
+
+  const { data, isValidating } = useNftDetails(chain, address)
 
   return (
     <Layout
@@ -81,7 +81,7 @@ const Page = ({ chain, address }: Props) => {
           gap={{ base: 6, lg: 8 }}
         >
           <Stack overflow="hidden" w="full" spacing={12}>
-            <CollectibleImage src={IMAGE_SRC} />
+            <CollectibleImage src={data?.image} isLoading={isValidating} />
 
             <Stack spacing={8}>
               <Stack spacing={4}>
@@ -149,7 +149,7 @@ const Page = ({ chain, address }: Props) => {
                   gridTemplateColumns="var(--chakra-sizes-24) auto"
                   gap={4}
                 >
-                  <CollectibleImage src={IMAGE_SRC} />
+                  <CollectibleImage src={data?.image} isLoading={isValidating} />
 
                   <Stack spacing={4}>
                     <MotionHeading

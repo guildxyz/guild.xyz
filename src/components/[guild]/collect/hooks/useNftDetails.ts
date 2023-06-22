@@ -5,6 +5,7 @@ import { Chain, Chains, RPC } from "connectors"
 import { getBlockByTime } from "requirements/WalletActivity/hooks/useBlockNumberByTimestamp"
 import ERC721_ABI from "static/abis/erc721Abi.json"
 import useSWRImmutable from "swr/immutable"
+import base64ToObject from "utils/base64ToObject"
 
 type NftStandard = "ERC-721" | "ERC-1155" | "Unknown"
 
@@ -18,6 +19,7 @@ type NFTDetails = {
   totalCollectors: number
   totalCollectorsToday?: number
   standard: NftStandard
+  image: string
 }
 
 const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
@@ -46,11 +48,12 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
   }
 
   try {
-    const [owner, totalSupply, isERC721, isERC1155] = await Promise.all([
+    const [owner, totalSupply, isERC721, isERC1155, tokenURI] = await Promise.all([
       contract.owner(),
       contract.totalSupply(),
       contract.supportsInterface(ContractInterface.ERC721),
       contract.supportsInterface(ContractInterface.ERC1155),
+      contract.tokenURI(1),
     ])
 
     const totalSupplyAsNumber = BigNumber.isBigNumber(totalSupply)
@@ -62,6 +65,16 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       ? firstTotalSupplyToday.toNumber()
       : undefined
 
+    let image: string
+
+    if (tokenURI) {
+      const metadata = base64ToObject(tokenURI)
+      image = metadata.image?.replace(
+        "ipfs://",
+        process.env.NEXT_PUBLIC_IPFS_GATEWAY
+      )
+    }
+
     return {
       creator: owner?.toLowerCase(),
       totalCollectors: totalSupplyAsNumber,
@@ -69,6 +82,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
         ? totalSupplyAsNumber - firstTotalSupplyToday
         : undefined,
       standard: isERC1155 ? "ERC-1155" : isERC721 ? "ERC-721" : "Unknown",
+      image,
     }
   } catch {
     return {
@@ -76,6 +90,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       totalCollectors: undefined,
       totalCollectorsToday: undefined,
       standard: undefined,
+      image: undefined,
     }
   }
 }
