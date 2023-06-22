@@ -30,8 +30,8 @@ const TopCollectors = () => {
         <SimpleGrid
           pt={8}
           w="full"
-          columns={{ base: 3, sm: 5, md: 3, xl: 5 }}
-          gap={8}
+          columns={{ base: 4, sm: 10, md: 5, xl: 10 }}
+          gap={4}
         >
           {[...Array(100)].map((_, i) => (
             <CollectorSkeleton key={i} />
@@ -39,7 +39,7 @@ const TopCollectors = () => {
         </SimpleGrid>
       ) : (
         <>
-          <SimpleGrid pt={8} w="full" columns={{ base: 4, sm: 5, xl: 10 }}>
+          <SimpleGrid pt={8} w="full" columns={{ base: 4, sm: 10, md: 5, xl: 10 }}>
             {top3Collectors.map((address, index) => (
               <Collector key={address} address={address} index={index} />
             ))}
