@@ -14,9 +14,19 @@ const options = [
 const FilterByRolesLogicSelector = ({ column }) => {
   const { getRootProps, getRadioProps } = useRadioGroup({
     onChange: (newValue) => {
-      column.setFilterValue((prevValue) => ({ ...prevValue, logic: newValue }))
+      /**
+       * We have the general "roles" parent column here, but have to set the filter
+       * on the actual accessor leaf columns
+       */
+      column.getLeafColumns().map((leafColumn) =>
+        leafColumn.setFilterValue((prevValue) => ({
+          ...prevValue,
+          logic: newValue,
+        }))
+      )
     },
-    value: (column.getFilterValue() as any)?.logic,
+    // the value will always be the same, so just getting the first leaf column's value
+    value: (column.getLeafColumns()[0].getFilterValue() as any)?.logic,
     defaultValue: "some",
   })
 

@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Center,
   Checkbox,
@@ -21,8 +22,10 @@ import {
 import { Column } from "@tanstack/react-table"
 import { Funnel } from "phosphor-react"
 import { useState } from "react"
+import { Visibility } from "types"
 import useGuild from "../../hooks/useGuild"
 import FilterByRolesLogicSelector from "./FilterByRolesLogicSelector"
+import AddHiddenRoles from "./components/AddHiddenRoles"
 import FilterByRolesSearch from "./components/FilterByRolesSearch"
 
 type Props = {
@@ -33,7 +36,18 @@ const FilterByRoles = ({ column }: Props) => {
   const { roles } = useGuild()
   const [searchValue, setSearchValue] = useState("")
 
-  const selectedRoleIds = (column.getFilterValue() as any)?.roleIds ?? []
+  const publicRoles = roles.filter((role) => role.visibility !== Visibility.HIDDEN)
+  const hiddenRoles = roles.filter((role) => role.visibility === Visibility.HIDDEN)
+
+  const selectedRoleIds = column.getLeafColumns().reduce(
+    (acc, curr) => {
+      acc[curr.id] = (curr.getFilterValue() as any)?.roleIds ?? []
+      return acc
+    },
+    { publicRoleIds: [], hiddenRoleIds: [] }
+  )
+  const selectedAggregated =
+    selectedRoleIds.publicRoleIds?.length + selectedRoleIds.hiddenRoleIds?.length
 
   const headerBg = useColorModeValue(null, "whiteAlpha.50")
   const bodyBg = useColorModeValue("gray.50", null)
@@ -48,11 +62,11 @@ const FilterByRoles = ({ column }: Props) => {
           variant="ghost"
           px="2"
           right="-2"
-          colorScheme={selectedRoleIds.length ? "blue" : "gray"}
+          colorScheme={selectedAggregated ? "blue" : "gray"}
         >
-          {!!selectedRoleIds.length && (
+          {!!selectedAggregated && (
             <Text colorScheme="blue" pl="0.5" pr="1" mb="-1px" fontSize="xs">
-              {`${selectedRoleIds.length} filtered roles`}
+              {`${selectedAggregated} filtered roles`}
             </Text>
           )}
           <Icon as={Funnel} />
@@ -71,18 +85,42 @@ const FilterByRoles = ({ column }: Props) => {
             <FilterByRolesSearch {...{ searchValue, setSearchValue }} />
           </PopoverHeader>
           <PopoverBody py="4" bg={bodyBg} borderBottomRadius={"xl"}>
-            <RoleCheckboxGroup
-              label="Public roles"
-              selectedRoleIds={selectedRoleIds}
-              setSelectedRoleIds={(newValue) =>
-                column.setFilterValue((prevValue) => ({
-                  ...prevValue,
-                  roleIds: newValue,
-                }))
-              }
-              roles={roles}
-              searchValue={searchValue}
-            />
+            <Stack spacing={5}>
+              {hiddenRoles?.length ? (
+                <RoleCheckboxGroup
+                  label="Private roles"
+                  selectedRoleIds={selectedRoleIds.hiddenRoleIds}
+                  setSelectedRoleIds={(newValue) => {
+                    column
+                      .getLeafColumns()
+                      .find(({ id }) => id === "hiddenRoleIds")
+                      .setFilterValue((prevValue) => ({
+                        ...prevValue,
+                        roleIds: newValue,
+                      }))
+                  }}
+                  roles={hiddenRoles}
+                  searchValue={searchValue}
+                />
+              ) : (
+                <AddHiddenRoles />
+              )}
+              <RoleCheckboxGroup
+                label="Public roles"
+                selectedRoleIds={selectedRoleIds.publicRoleIds}
+                setSelectedRoleIds={(newValue) => {
+                  column
+                    .getLeafColumns()
+                    .find(({ id }) => id === "publicRoleIds")
+                    .setFilterValue((prevValue) => ({
+                      ...prevValue,
+                      roleIds: newValue,
+                    }))
+                }}
+                roles={publicRoles}
+                searchValue={searchValue}
+              />
+            </Stack>
           </PopoverBody>
         </PopoverContent>
       </Portal>
@@ -100,14 +138,14 @@ const RoleCheckboxGroup = ({
   const roleIds = roles.map((role) => role.id)
   const shownRoles = roles.filter((role) => role.name.includes(searchValue))
 
-  const allChecked = roleIds.every((a) => selectedRoleIds.includes(a))
+  const allChecked = roleIds.every((id) => selectedRoleIds.includes(id))
   const isIndeterminate =
     roleIds.some((a) => selectedRoleIds.includes(a)) && !allChecked
 
   const { colorMode } = useColorMode()
 
   return (
-    <>
+    <Box>
       <Checkbox
         isChecked={allChecked}
         isIndeterminate={isIndeterminate}
@@ -152,7 +190,7 @@ const RoleCheckboxGroup = ({
           <Text>{`No results for "${searchValue}"`}</Text>
         )}
       </Stack>
-    </>
+    </Box>
   )
 }
 
