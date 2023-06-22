@@ -26,7 +26,7 @@ const RoleTags = ({ roleIds }: Props) => {
       {renderedRoleIds.map((roleId) => (
         <RoleTag key={roleId} roleId={roleId} />
       ))}
-      {moreRolesCount && (
+      {moreRolesCount > 0 && (
         <Tag
           variant={"outline"}
           color="initial"
