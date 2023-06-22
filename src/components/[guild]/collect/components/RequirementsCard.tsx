@@ -1,19 +1,18 @@
 import {
-  Circle,
   HStack,
-  Icon,
   Skeleton,
   Stack,
+  Td,
   Text,
+  Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import LogicDivider from "components/[guild]/LogicDivider"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { Chain } from "connectors"
-import { Coins } from "phosphor-react"
 import { Fragment } from "react"
 import { Logic, Requirement } from "types"
 import useNftDetails from "../hooks/useNftDetails"
@@ -27,8 +26,6 @@ type Props = {
 
 const RequirementsCard = ({ chain, address, requirements, logic }: Props) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
-
-  const paymentImageBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   const { data, isValidating } = useNftDetails(chain, address)
 
@@ -53,28 +50,52 @@ const RequirementsCard = ({ chain, address, requirements, logic }: Props) => {
           Requirements to qualify
         </Text>
 
-        <Stack spacing={0}>
+        <Stack spacing={0} w="full">
           {requirements.map((requirement, i) => (
             <Fragment key={requirement.id}>
               <RequirementDisplayComponent requirement={requirement} />
               {i < requirements.length - 1 && <LogicDivider logic={logic} />}
             </Fragment>
           ))}
-
-          <LogicDivider logic="+ minting fee" />
-          <HStack spacing={4}>
-            <Circle bgColor={paymentImageBg} size={"var(--chakra-space-11)"}>
-              <Icon as={Coins} boxSize={6} />
-            </Circle>
-
-            <Text wordBreak="break-word">
-              <DataBlock>1 MATIC</DataBlock>
-              {" + gas"}
-            </Text>
-          </HStack>
         </Stack>
 
         <Stack w="full" alignItems="center" spacing={4}>
+          <FeesTable
+            buttonComponent={
+              <HStack justifyContent={"space-between"} w="full">
+                <Text fontWeight={"medium"}>Minting fee:</Text>
+
+                <Text as="span">
+                  {/* TODO: Dynamic price */}
+                  <Text as="span">1 MATIC</Text>
+                  <Text as="span" colorScheme="gray">
+                    {" + gas"}
+                  </Text>
+                </Text>
+              </HStack>
+            }
+          >
+            <Tr>
+              <Td>Price</Td>
+              <Td isNumeric>Free</Td>
+            </Tr>
+
+            <Tr>
+              <Td>Minting fee</Td>
+              <Td isNumeric>
+                {/* TODO: real data */}
+                <Skeleton isLoaded={true}>1 MATIC</Skeleton>
+              </Td>
+            </Tr>
+
+            <Tr>
+              <Td>Total</Td>
+              <Td isNumeric color="WindowText">
+                1 MATIC + gas
+              </Td>
+            </Tr>
+          </FeesTable>
+
           <Button colorScheme="green" w="full">
             Collect now
           </Button>
