@@ -39,15 +39,6 @@ const useDisconnect = (onSuccess?: () => void) => {
         }),
         { revalidate: false }
       )
-      mutatePublicUser(
-        (prev) => ({
-          ...prev,
-          platformUsers: (prev?.platformUsers ?? []).filter(
-            (prevPlatformUser) => prevPlatformUser.platformId !== platformId
-          ),
-        }),
-        { revalidate: false }
-      )
       mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
 
       toast({
