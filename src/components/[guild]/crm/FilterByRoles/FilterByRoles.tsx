@@ -136,7 +136,9 @@ const RoleCheckboxGroup = ({
   searchValue,
 }) => {
   const roleIds = roles.map((role) => role.id)
-  const shownRoles = roles.filter((role) => role.name.includes(searchValue))
+  const shownRoles = roles.filter((role) =>
+    role.name.toLowerCase().includes(searchValue.toLowerCase())
+  )
 
   const allChecked = roleIds.every((id) => selectedRoleIds.includes(id))
   const isIndeterminate =
