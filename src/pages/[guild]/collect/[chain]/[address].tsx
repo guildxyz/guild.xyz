@@ -11,6 +11,7 @@ import Layout from "components/common/Layout"
 import Link from "components/common/Link"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import Details from "components/[guild]/collect/components/Details"
+import Links from "components/[guild]/collect/components/Links"
 import NftByRole from "components/[guild]/collect/components/NftByRole"
 import RequirementsCard from "components/[guild]/collect/components/RequirementsCard"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
@@ -131,6 +132,7 @@ const Page = ({ chain, address }: Props) => {
                 </Text>
               </Stack>
 
+              <Links chain={chain} address={address} />
               <Details chain={chain} address={address} />
 
               <TopCollectors />
