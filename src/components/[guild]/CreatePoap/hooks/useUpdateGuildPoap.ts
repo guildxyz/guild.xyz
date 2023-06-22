@@ -1,4 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import useIsV2 from "hooks/useIsV2"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
@@ -16,10 +17,11 @@ const useUpdateGuildPoap = (
   const { mutateGuild, id } = useGuild()
   const { mutatePoap } = usePoap(guildPoap?.fancyId)
   const { mutatePoapEventDetails } = usePoapEventDetails()
+  const isV2 = useIsV2()
 
   const updateGuildPoap = async (signedValidation: SignedValdation) =>
-    fetcher(`/v2/guilds/${id}/poaps/${guildPoap.id}`, {
-      method: "PUT",
+    fetcher(isV2 ? `/v2/guilds/${id}/poaps/${guildPoap.id}` : `/assets/poap`, {
+      method: isV2 ? "PUT" : "PATCH",
       ...signedValidation,
     })
 
@@ -46,7 +48,6 @@ const useUpdateGuildPoap = (
        * both updates (one for POAP API, one for our API) has been completed
        */
       mutatePoap()
-
       onSuccess?.()
     },
   })

@@ -4,6 +4,7 @@ import processConnectorError from "components/[guild]/JoinModal/utils/processCon
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useIsV2 from "hooks/useIsV2"
 import useMatchMutate from "hooks/useMatchMutate"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -31,11 +32,15 @@ const useCreateRole = () => {
   const triggerConfetti = useJsConfetti()
   const { id, urlName, mutateGuild } = useGuild()
   const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
+  const isV2 = useIsV2()
 
   const fetchData = async (
     signedValidation: SignedValdation
   ): Promise<RoleOrGuild> =>
-    fetcher(`/v2/guilds/${id}/roles/with-requirements-and-rewards`, signedValidation)
+    fetcher(
+      isV2 ? `/v2/guilds/${id}/roles/with-requirements-and-rewards` : "/role",
+      signedValidation
+    )
 
   const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {
     onError: (error_) => {

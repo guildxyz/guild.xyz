@@ -9,7 +9,7 @@ const fetchGuilds = ([_, search]): Promise<SelectOption<number>[]> => {
     search: search ?? "",
   }).toString()
 
-  return fetcher(`/guild?${searchParams}`)
+  return fetcher(`/v2/guilds?${searchParams}`)
     .then((list) =>
       list.map((guild) => ({
         img: guild.imageUrl,

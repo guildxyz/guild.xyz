@@ -17,6 +17,7 @@ import { RequirementProvider } from "components/[guild]/Requirements/components/
 import Card from "components/common/Card"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
+import useIsV2 from "hooks/useIsV2"
 import { Warning } from "phosphor-react"
 import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
@@ -49,6 +50,7 @@ const RequirementEditableCard = ({
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
   const methods = useForm({ mode: "all", defaultValues: field })
   const requirementId = useWatch({ name: `requirements.${index}.id` })
+  const isV2 = useIsV2()
 
   const isRole = !!formState?.defaultValues?.id
   const roleId = formState?.defaultValues?.id
@@ -95,7 +97,7 @@ const RequirementEditableCard = ({
     [index, setValue]
   )
   const onRemove = () => {
-    if ((isRole || isPoap) && !!requirementId) {
+    if (isV2 && (isRole || isPoap) && !!requirementId) {
       onRequirementDeleteOpen()
     } else {
       removeRequirement(index)
@@ -149,7 +151,7 @@ const RequirementEditableCard = ({
             aria-label="Remove requirement"
           />
         </Card>
-        {requirementId && requirementDeleteConfitmationAlert}
+        {isV2 && requirementId && requirementDeleteConfitmationAlert}
       </>
     )
 
@@ -179,7 +181,7 @@ const RequirementEditableCard = ({
           color={removeButtonColor}
           borderRadius={"full"}
           size="sm"
-          onClick={() => onRemove()}
+          onClick={onRemove}
           aria-label="Remove requirement"
         />
       </Card>
@@ -218,7 +220,7 @@ const RequirementEditableCard = ({
         onClose={onAlertClose}
         onDiscard={onCloseAndClear}
       />
-      {requirementId && requirementDeleteConfitmationAlert}
+      {isV2 && requirementId && requirementDeleteConfitmationAlert}
     </>
   )
 }

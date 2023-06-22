@@ -7,14 +7,18 @@ import LinkButton from "components/common/LinkButton"
 import Section from "components/common/Section"
 import GuildCard, { GuildSkeletonCard } from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
+import useIsV2 from "hooks/useIsV2"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Plus, Wallet } from "phosphor-react"
 
-const useYourGuilds = () =>
-  useSWRWithOptionalAuth(`/v2/guilds`, {
+const useYourGuilds = () => {
+  const isV2 = useIsV2()
+
+  return useSWRWithOptionalAuth(isV2 ? `/v2/guilds` : `/v2/guilds?`, {
     dedupingInterval: 60000, // one minute
     revalidateOnMount: true,
   })
+}
 
 const YourGuilds = () => {
   const { account } = useWeb3React()

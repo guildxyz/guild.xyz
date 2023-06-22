@@ -27,6 +27,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
+import useIsV2 from "hooks/useIsV2"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -114,7 +115,12 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     methods.reset(undefined, { keepValues: true })
   }
 
-  const { onSubmit, isLoading } = useEditRole(id, onSuccess)
+  const isV2 = useIsV2()
+
+  const { onSubmit, isLoading, isSigning, signLoadingText } = useEditRole(
+    id,
+    onSuccess
+  )
 
   const isDirty = !!Object.keys(methods.formState.dirtyFields).length
   useWarnIfUnsavedChanges(isDirty && !methods.formState.isSubmitted)
@@ -165,14 +171,18 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         )
         document.getElementById("free-entry-checkbox")?.focus()
       } else {
-        return handleSubmitDirty(methods)(onSubmit)(...props)
+        if (isV2) {
+          return handleSubmitDirty(methods)(onSubmit)(...props)
+        } else {
+          return methods.handleSubmit(onSubmit)(...props)
+        }
       }
     },
 
     iconUploader.isUploading
   )
 
-  const loadingText = uploadLoadingText || "Saving data"
+  const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
   return (
     <>
@@ -243,7 +253,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              isLoading={isLoading || isUploadingShown}
+              isLoading={isLoading || isSigning || isUploadingShown}
               colorScheme="green"
               loadingText={loadingText}
               onClick={handleSubmit}

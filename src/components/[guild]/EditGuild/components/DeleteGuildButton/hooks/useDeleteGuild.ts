@@ -1,5 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useYourGuilds } from "components/explorer/YourGuilds"
+import useIsV2 from "hooks/useIsV2"
+import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -13,6 +15,7 @@ type Data = {
 
 const useDeleteGuild = () => {
   const { reset } = useFormContext()
+  const matchMutate = useMatchMutate()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const router = useRouter()
@@ -20,8 +23,10 @@ const useDeleteGuild = () => {
 
   const guild = useGuild()
 
+  const isV2 = useIsV2()
+
   const submit = async (signedValidation: SignedValdation) =>
-    fetcher(`/v2/guilds/${guild.id}`, {
+    fetcher(isV2 ? `/v2/guilds/${guild.id}` : `/guild/${guild.id}`, {
       method: "DELETE",
       ...signedValidation,
     })
@@ -34,9 +39,14 @@ const useDeleteGuild = () => {
         status: "success",
       })
 
-      mutateYourGuilds(
-        (prev) => prev?.filter((yourGuild) => yourGuild.id !== guild.id) ?? []
-      )
+      if (isV2) {
+        mutateYourGuilds(
+          (prev) => prev?.filter((yourGuild) => yourGuild.id !== guild.id) ?? []
+        )
+      } else {
+        matchMutate(/^\/guild\/address\//)
+        matchMutate(/^\/guild\?order/)
+      }
 
       reset()
 

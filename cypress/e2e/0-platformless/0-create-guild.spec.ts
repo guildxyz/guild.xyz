@@ -66,9 +66,13 @@ describe("with wallet", () => {
 
     cy.getByDataTest("create-guild-button").click()
 
-    cy.intercept("POST", `${Cypress.env("guildApiUrl")}/guild`).as(
-      "createGuildRequest"
-    )
+    cy.intercept(
+      "POST",
+      `${(Cypress.env("guildApiUrl") as string).replace(
+        "/v1",
+        "/v2"
+      )}/guilds/with-roles`
+    ).as("createGuildRequest")
     cy.wait("@createGuildRequest").its("response.statusCode").should("eq", 201)
   })
 })
