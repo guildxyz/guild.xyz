@@ -2,7 +2,7 @@ import { HStack, Skeleton, Text } from "@chakra-ui/react"
 import { Chain, RPC } from "connectors"
 import useNftDetails from "../../hooks/useNftDetails"
 import Section from "../Section"
-import CopyableNftDetailsAddress from "./components/CopyableNftDetailsAddress"
+import BlockExplorerLink from "./components/BlockExplorerLink"
 import InfoBlock from "./components/InfoBlock"
 
 type Props = {
@@ -32,10 +32,11 @@ const Details = ({ chain, address }: Props) => {
         <InfoBlock label="Network">{chainName}</InfoBlock>
       </HStack>
 
-      <CopyableNftDetailsAddress label="Contract" address={address} />
+      <BlockExplorerLink label="Contract" chain={chain} address={address} />
 
-      <CopyableNftDetailsAddress
+      <BlockExplorerLink
         label="Creator"
+        chain={chain}
         address={nftDetails?.creator}
         isValidating={isNftDetailsValidating}
         error={nftDetailsError}
