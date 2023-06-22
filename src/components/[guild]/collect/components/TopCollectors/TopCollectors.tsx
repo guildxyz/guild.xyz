@@ -45,8 +45,8 @@ const TopCollectors = () => {
             columns={{ base: 4, sm: 10, md: 5, xl: 10 }}
             gap={4}
           >
-            {top3Collectors.map((address, index) => (
-              <Collector key={address} address={address} index={index} />
+            {top3Collectors.map((address) => (
+              <Collector key={address} address={address} />
             ))}
             {restCollectors.map((address) => (
               <Collector key={address} address={address} />
