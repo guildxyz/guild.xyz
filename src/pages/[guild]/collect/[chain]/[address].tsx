@@ -28,16 +28,19 @@ import {
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
 import { useRef, useState } from "react"
+import { SWRConfig, unstable_serialize } from "swr"
+import { Guild } from "types"
+import fetcher from "utils/fetcher"
 
 type Props = {
   chain: Chain
   address: string
+  fallback: { [x: string]: Guild }
 }
-const Page = ({ chain, address }: Props) => {
-  // TEMP, for testing
+const Page = ({ chain, address }: Omit<Props, "fallback">) => {
   const { theme, imageUrl, name, urlName, roles } = useGuild()
   const { textColor } = useThemeContext()
-  const role = roles?.find((r) => r.id === 56990) ?? roles?.[0] // 56990 is a role in Johnny's Guild
+  const role = roles?.find((r) => r.id === 56990) ?? roles?.[0] // TODO: 56990 is a role in Johnny's Guild, we should change this to a dynamic value
   const requirements = role?.requirements ?? []
 
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -176,14 +179,17 @@ const Page = ({ chain, address }: Props) => {
   )
 }
 
-const CollectNftPage = (props: Props) => (
-  <ThemeProvider>
-    <Page {...props} />
-  </ThemeProvider>
+const CollectNftPage = ({ fallback, ...rest }: Props) => (
+  <SWRConfig value={fallback && { fallback }}>
+    <ThemeProvider>
+      <Page {...rest} />
+    </ThemeProvider>
+  </SWRConfig>
 )
 
+// TODO: we'll probably be able to switch to ISR at some point
 const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
-  const { chain: chainFromQuery, address: addressFromQuery } = query
+  const { chain: chainFromQuery, address: addressFromQuery, guild: urlName } = query
   const chain = validateNftChain(chainFromQuery)
   const address = validateNftAddress(addressFromQuery)
 
@@ -192,7 +198,25 @@ const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
       notFound: true,
     }
 
-  return { props: { chain, address } }
+  // TODO: call the v2 endpoint
+  const endpoint = `/guild/${urlName}`
+  const guild = await fetcher(endpoint).catch((_) => ({}))
+
+  if (!guild?.id)
+    return {
+      notFound: true,
+    }
+
+  return {
+    props: {
+      chain,
+      address,
+      fallback: {
+        [endpoint]: guild,
+        [unstable_serialize([endpoint, { method: "GET", body: {} }])]: guild,
+      },
+    },
+  }
 }
 
 export default CollectNftPage
