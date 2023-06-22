@@ -39,7 +39,12 @@ const TopCollectors = () => {
         </SimpleGrid>
       ) : (
         <>
-          <SimpleGrid pt={8} w="full" columns={{ base: 4, sm: 10, md: 5, xl: 10 }}>
+          <SimpleGrid
+            pt={8}
+            w="full"
+            columns={{ base: 4, sm: 10, md: 5, xl: 10 }}
+            gap={4}
+          >
             {top3Collectors.map((address, index) => (
               <Collector key={address} address={address} index={index} />
             ))}
@@ -54,7 +59,7 @@ const TopCollectors = () => {
 
           <Text
             colorScheme="gray"
-            fontSize="md"
+            fontSize="lg"
             fontWeight="bold"
             fontFamily="display"
             textAlign="center"
