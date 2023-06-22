@@ -12,20 +12,19 @@ import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import { Reorder } from "framer-motion"
-import useShowErrorToast from "hooks/useShowErrorToast"
-import useSubmit from "hooks/useSubmit/useSubmit"
-import useToast from "hooks/useToast"
+import useIsV2 from "hooks/useIsV2"
 import { useMemo, useState } from "react"
-import { useFetcherWithSign } from "utils/fetcher"
+import useReorderRoles from "../hooks/useReorderRoles"
 import DraggableRoleCard from "./DraggableRoleCard"
 
 const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
-  const { id, roles, mutateGuild } = useGuild()
+  const { roles } = useGuild()
   const {
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
     onClose: onAlertClose,
   } = useDisclosure()
+  const isV2 = useIsV2()
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
@@ -45,44 +44,6 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
 
   const defaultRoleIdsOrder = sortedRoles?.map((role) => role.id)
   const [roleIdsOrder, setRoleIdsOrder] = useState(defaultRoleIdsOrder)
-  const toast = useToast()
-  const showErrorToast = useShowErrorToast()
-  const fetcherWithSign = useFetcherWithSign()
-
-  const submit = (roleOrdering: Array<{ id: number; position: number }>) =>
-    Promise.all(
-      roleOrdering.map(({ id: roleId, position }) =>
-        fetcherWithSign([
-          `/v2/guilds/${id}/roles/${roleId}`,
-          { method: "PUT", body: { position } },
-        ])
-      )
-    )
-
-  const { onSubmit, isLoading } = useSubmit(submit, {
-    onSuccess: (newRoles) => {
-      toast({
-        status: "success",
-        title: "Successfully edited role order",
-      })
-      onClose()
-      mutateGuild(
-        (oldData) => ({
-          ...oldData,
-          // requirements, and rolePlatforms are not returned, so we need to spread older data too
-          // Plus, we don't update all the roles, only the ones that changed, so this also retains thost that weren't updated
-          roles: (oldData?.roles ?? []).map((prevRole) => ({
-            ...prevRole,
-            ...(newRoles ?? []).find((newRole) => newRole.id === prevRole.id),
-          })),
-        }),
-        {
-          revalidate: false,
-        }
-      )
-    },
-    onError: (err) => showErrorToast(err),
-  })
 
   /**
    * Using JSON.stringify to compare the values, not the object identity (so it works
@@ -91,19 +52,25 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const isDirty =
     JSON.stringify(defaultRoleIdsOrder) !== JSON.stringify(roleIdsOrder)
 
-  const handleSubmit = () => {
-    const changedRoles = roleIdsOrder
-      .map((roleId, i) => ({
-        id: roleId,
-        position: i,
-      }))
-      .filter(({ id: roleId, position }) =>
-        (roles ?? []).some(
-          (prevRole) => prevRole.id === roleId && prevRole.position !== position
-        )
-      )
+  const { isLoading, onSubmit } = useReorderRoles(onClose)
 
-    return onSubmit(changedRoles)
+  const handleSubmit = () => {
+    if (isV2) {
+      const changedRoles = roleIdsOrder
+        .map((roleId, i) => ({
+          id: roleId,
+          position: i,
+        }))
+        .filter(({ id: roleId, position }) =>
+          (roles ?? []).some(
+            (prevRole) => prevRole.id === roleId && prevRole.position !== position
+          )
+        )
+
+      return onSubmit(changedRoles)
+    } else {
+      onSubmit(roleIdsOrder.map((roleId, i) => ({ id: roleId, position: i })))
+    }
   }
 
   const onCloseAndClear = () => {

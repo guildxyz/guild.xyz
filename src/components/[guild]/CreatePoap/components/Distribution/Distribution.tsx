@@ -2,6 +2,7 @@ import { Box, Flex, Stack, Text, useClipboard, VStack } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Button from "components/common/Button"
+import useIsV2 from "hooks/useIsV2"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { Check, CopySimple } from "phosphor-react"
@@ -46,6 +47,8 @@ const Distribution = ({
     (platform) => platform.platformId === PlatformType.DISCORD
   )
 
+  const isV2 = useIsV2()
+
   return (
     <Box>
       {success ? (
@@ -88,7 +91,11 @@ const Distribution = ({
               </Button>
             ) : (
               <Button
-                onClick={() => onActivateSubmit({ activated: true })}
+                onClick={() =>
+                  onActivateSubmit(
+                    isV2 ? { activated: true } : { id: guildPoap.id, activate: true }
+                  )
+                }
                 isLoading={isActivateLoading}
                 colorScheme="green"
                 loadingText="Activating"

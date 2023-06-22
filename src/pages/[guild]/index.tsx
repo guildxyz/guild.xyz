@@ -425,6 +425,11 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       fallback: {
+        [`/guild/${params.guild?.toString()}`]: filteredData,
+        [unstable_serialize([
+          `/guild/${params.guild?.toString()}`,
+          { method: "GET", body: {} },
+        ])]: filteredData,
         [endpoint]: filteredData,
         [unstable_serialize([endpoint, { method: "GET", body: {} }])]: filteredData,
       },

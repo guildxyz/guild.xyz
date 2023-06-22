@@ -69,7 +69,7 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
   useEffect(() => {
     if (!cache || !account || !user || !memberships) return
 
-    const guilds: GuildBase[] = cache.get("/guild?")?.[0] ?? []
+    const guilds: GuildBase[] = cache.get("/v2/guilds?")?.[0] ?? []
 
     const connectedPlatforms = user.platformUsers
       ?.map((pu) => pu.platformName)

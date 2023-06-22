@@ -1,4 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import useIsV2 from "hooks/useIsV2"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
@@ -21,9 +22,11 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
 
   const id = guildId ?? guild?.id
 
+  const isV2 = useIsV2()
+
   const submit = (signedValidation: SignedValdation) =>
-    fetcher(`/v2/guilds/${id}`, {
-      method: "PUT",
+    fetcher(isV2 ? `/v2/guilds/${id}` : `/guild/${id}`, {
+      method: isV2 ? "PUT" : "PATCH",
       ...signedValidation,
     })
 
@@ -31,7 +34,13 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
     forcePrompt: true,
     onSuccess: (newGuild) => {
       if (onSuccess) onSuccess()
-      guild.mutateGuild((prev) => ({ ...prev, ...newGuild }), { revalidate: false })
+      if (isV2) {
+        guild.mutateGuild((prev) => ({ ...prev, ...newGuild }), {
+          revalidate: false,
+        })
+      } else {
+        guild.mutateGuild()
+      }
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)

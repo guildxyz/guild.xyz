@@ -1,5 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useIsV2 from "hooks/useIsV2"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
@@ -21,8 +22,19 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const errorToast = useShowErrorToast()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
+  const isV2 = useIsV2()
 
   const submit = async (data: RoleEditFormData) => {
+    if (!isV2) {
+      return fetcherWithSign([
+        `/role/${roleId}`,
+        {
+          method: "PATCH",
+          body: data,
+        },
+      ])
+    }
+
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { requirements, rolePlatforms, id: _id, ...baseRoleData } = data
 
@@ -105,13 +117,27 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   }
 
   const useSubmitResponse = useSubmit(submit, {
-    onSuccess: ({
-      updatedRole,
-      updatedRequirements,
-      createdRequirements,
-      updatedRolePlatforms,
-      createdRolePlatforms,
-    }) => {
+    onSuccess: (result) => {
+      if (!isV2) {
+        toast({
+          title: `Role successfully updated!`,
+          status: "success",
+        })
+        if (onSuccess) onSuccess()
+        mutateGuild()
+        mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
+        mutate(`/statusUpdate/guild/${id}`)
+        return
+      }
+
+      const {
+        updatedRole,
+        updatedRequirements,
+        createdRequirements,
+        updatedRolePlatforms,
+        createdRolePlatforms,
+      } = result
+
       const deletedRequirementIds = new Set(
         createdRequirements.flatMap((req) => req.deletedRequirements)
       )
@@ -232,6 +258,8 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },
+    isSigning: null,
+    signLoadingText: null,
   }
 }
 
