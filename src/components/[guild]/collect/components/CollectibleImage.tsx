@@ -11,8 +11,11 @@ type Props = {
 
 const CollectibleImage = ({ src, isLoading }: Props) => (
   <MotionCard
+    layout="position"
     layoutId="nft-image"
-    aspectRatio={1}
+    w="full"
+    p="15%"
+    aspectRatio={isLoading ? 1 : "auto"}
     position="relative"
     display="flex"
     alignItems="center"
@@ -34,8 +37,6 @@ const CollectibleImage = ({ src, isLoading }: Props) => (
         />
         <Img
           position="relative"
-          maxW="80%"
-          maxH="80%"
           src={src}
           alt="NFT image"
           filter="drop-shadow(0px 1rem 2rem black)"
