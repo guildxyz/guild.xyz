@@ -31,7 +31,7 @@ const RequirementsCard = ({ chain, address, requirements, logic }: Props) => {
   const { data, isValidating } = useNftDetails(chain, address)
 
   return (
-    <Card layout="position" w="full" h="max-content">
+    <Card w="full" h="max-content">
       <Stack
         p={{ base: 5, md: 8 }}
         bgColor={requirementsSectionBgColor}

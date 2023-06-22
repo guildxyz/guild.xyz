@@ -6,6 +6,7 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import Link from "components/common/Link"
@@ -19,7 +20,7 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { Chain } from "connectors"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetServerSideProps } from "next"
 import {
@@ -32,9 +33,6 @@ type Props = {
   chain: Chain
   address: string
 }
-
-const MotionHeading = motion(Heading)
-
 const Page = ({ chain, address }: Props) => {
   // TEMP, for testing
   const { theme, imageUrl, name, urlName, roles } = useGuild()
@@ -86,14 +84,9 @@ const Page = ({ chain, address }: Props) => {
 
             <Stack spacing={8}>
               <Stack spacing={4}>
-                <MotionHeading
-                  layoutId="nft-name"
-                  as="h2"
-                  fontFamily="display"
-                  fontSize="4xl"
-                >
+                <Heading as="h2" fontFamily="display" fontSize="4xl">
                   {`Joined ${name}`}
-                </MotionHeading>
+                </Heading>
 
                 <NftByRole role={role} />
 
@@ -140,43 +133,42 @@ const Page = ({ chain, address }: Props) => {
           </Stack>
 
           {!isMobile && (
-            <Stack
-              position="sticky"
-              top={{ base: 4, md: 5 }}
-              spacing={8}
-              h="max-content"
-            >
-              {shouldShowSmallImage && (
-                <SimpleGrid
-                  gridTemplateColumns="var(--chakra-sizes-24) auto"
-                  gap={4}
-                >
-                  <CollectibleImage src={data?.image} isLoading={isValidating} />
-
-                  <Stack spacing={4}>
-                    <MotionHeading
-                      layoutId="nft-name"
-                      as="h2"
-                      fontFamily="display"
-                      fontSize="2xl"
+            <AnimatePresence>
+              <Stack
+                position="sticky"
+                top={{ base: 4, md: 5 }}
+                spacing={8}
+                h="max-content"
+              >
+                {shouldShowSmallImage && (
+                  <CardMotionWrapper animateOnMount>
+                    <SimpleGrid
+                      gridTemplateColumns="var(--chakra-sizes-24) auto"
+                      gap={4}
                     >
-                      {`Joined ${name}`}
-                    </MotionHeading>
+                      <CollectibleImage src={data?.image} isLoading={isValidating} />
 
-                    <NftByRole role={role} />
-                  </Stack>
-                </SimpleGrid>
-              )}
+                      <Stack spacing={4}>
+                        <Heading as="h2" fontFamily="display" fontSize="2xl">
+                          {`Joined ${name}`}
+                        </Heading>
 
-              <motion.div layout="position">
-                <RequirementsCard
-                  chain={chain}
-                  address={address}
-                  requirements={requirements}
-                  logic={role?.logic}
-                />
-              </motion.div>
-            </Stack>
+                        <NftByRole role={role} />
+                      </Stack>
+                    </SimpleGrid>
+                  </CardMotionWrapper>
+                )}
+
+                <motion.div layout="position">
+                  <RequirementsCard
+                    chain={chain}
+                    address={address}
+                    requirements={requirements}
+                    logic={role?.logic}
+                  />
+                </motion.div>
+              </Stack>
+            </AnimatePresence>
           )}
         </SimpleGrid>
       </Stack>

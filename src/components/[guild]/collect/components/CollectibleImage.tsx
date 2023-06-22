@@ -1,8 +1,5 @@
 import { Box, Flex, Img, Spinner } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import { motion } from "framer-motion"
-
-const MotionCard = motion(Card)
 
 type Props = {
   src: string
@@ -10,9 +7,7 @@ type Props = {
 }
 
 const CollectibleImage = ({ src, isLoading }: Props) => (
-  <MotionCard
-    layout="position"
-    layoutId="nft-image"
+  <Card
     w="full"
     p="15%"
     aspectRatio={isLoading ? 1 : "auto"}
@@ -43,7 +38,7 @@ const CollectibleImage = ({ src, isLoading }: Props) => (
         />
       </>
     )}
-  </MotionCard>
+  </Card>
 )
 
 export default CollectibleImage

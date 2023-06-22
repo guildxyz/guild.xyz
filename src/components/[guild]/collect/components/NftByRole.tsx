@@ -1,6 +1,5 @@
 import { HStack, Icon, Text } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
-import { motion } from "framer-motion"
 import { Users } from "phosphor-react"
 import { Role } from "types"
 
@@ -8,10 +7,8 @@ type Props = {
   role: Role
 }
 
-const MotionHStack = motion(HStack)
-
 const NftByRole = ({ role }: Props) => (
-  <MotionHStack layout="position" layoutId="nft-by-role" pb={2}>
+  <HStack pb={2}>
     <Text as="span">by Role:</Text>
     <HStack>
       <GuildLogo imageUrl={role?.imageUrl} size={6} />
@@ -28,7 +25,7 @@ const NftByRole = ({ role }: Props) => (
         )}
       </Text>
     </HStack>
-  </MotionHStack>
+  </HStack>
 )
 
 export default NftByRole
