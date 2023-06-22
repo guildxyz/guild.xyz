@@ -138,37 +138,31 @@ const setKeyPair = async ({
     await setKeyPairToIdb(newUser.id, storedKeyPair).catch(() => {})
   }
 
-  await Promise.all(
-    [
-      mutate(
-        [`/v2/users/${newUser.id}/profile`, { method: "GET", body: {} }],
-        newUser,
-        {
-          revalidate: false,
-        }
-      ),
-      mutate(
-        `/v2/users/${account}/profile`,
-        {
-          id: newUser?.id,
-          publicKey: newUser?.publicKey,
-        },
-        {
-          revalidate: false,
-        }
-      ),
-      shouldSendLink
-        ? mutate(
-            [`/v2/users/${signedUserId}/profile`, { method: "GET", body: {} }],
-            newUser,
-            {
-              revalidate: false,
-            }
-          )
-        : null,
-      mutateKeyPair(),
-    ].filter(Boolean)
+  mutate([`/v2/users/${newUser.id}/profile`, { method: "GET", body: {} }], newUser, {
+    revalidate: false,
+  })
+  mutate(
+    `/v2/users/${account}/profile`,
+    {
+      id: newUser?.id,
+      publicKey: newUser?.publicKey,
+    },
+    {
+      revalidate: false,
+    }
   )
+
+  if (shouldSendLink) {
+    mutate(
+      [`/v2/users/${signedUserId}/profile`, { method: "GET", body: {} }],
+      newUser,
+      {
+        revalidate: false,
+      }
+    )
+  }
+
+  await mutateKeyPair()
 
   return [storedKeyPair, shouldSendLink]
 }
