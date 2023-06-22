@@ -138,50 +138,37 @@ const setKeyPair = async ({
     await setKeyPairToIdb(newUser.id, storedKeyPair).catch(() => {})
   }
 
-  await mutate(
-    [`/v2/users/${newUser.id}/profile`, { method: "GET", body: {} }],
-    newUser,
-    {
-      revalidate: false,
-    }
+  await Promise.all(
+    [
+      mutate(
+        [`/v2/users/${newUser.id}/profile`, { method: "GET", body: {} }],
+        newUser,
+        {
+          revalidate: false,
+        }
+      ),
+      mutate(
+        `/v2/users/${account}/profile`,
+        {
+          id: newUser?.id,
+          publicKey: newUser?.publicKey,
+        },
+        {
+          revalidate: false,
+        }
+      ),
+      shouldSendLink
+        ? mutate(
+            [`/v2/users/${signedUserId}/profile`, { method: "GET", body: {} }],
+            newUser,
+            {
+              revalidate: false,
+            }
+          )
+        : null,
+      mutateKeyPair(),
+    ].filter(Boolean)
   )
-
-  await mutate(
-    `/v2/users/${account}/profile`,
-    {
-      ...newUser,
-      addresses: newUser?.addresses,
-      platformUsers: (newUser?.platformUsers ?? []).map((platformUser) => ({
-        platformName: platformUser.platformName,
-        platformId: platformUser.platformId,
-      })),
-    },
-    {
-      revalidate: false,
-    }
-  )
-
-  if (shouldSendLink) {
-    await mutate([`/v2/users/${id}/profile`, { method: "GET", body: {} }], newUser, {
-      revalidate: false,
-    })
-    await mutate(
-      `/v2/users/${account}/profile`,
-      {
-        ...newUser,
-        addresses: newUser?.addresses,
-        platformUsers: (newUser?.platformUsers ?? []).map((platformUser) => ({
-          platformName: platformUser.platformName,
-          platformId: platformUser.platformId,
-        })),
-      },
-      {
-        revalidate: false,
-      }
-    )
-  }
-
-  await mutateKeyPair()
 
   return [storedKeyPair, shouldSendLink]
 }
