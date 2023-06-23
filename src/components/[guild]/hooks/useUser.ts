@@ -5,24 +5,6 @@ import useSWRImmutable from "swr/immutable"
 import { User } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 
-const usePublicKey = (userId?: number) => {
-  const { id } = useUserPublic()
-
-  const idToUse = userId ?? id
-
-  const { data, mutate, error, isLoading, isValidating } = useSWRImmutable<string>(
-    idToUse ? `/v2/users/${idToUse}/public-key` : null,
-    { shouldRetryOnError: false }
-  )
-  return {
-    publicKey: data,
-    mutate,
-    error,
-    isLoading,
-    isValidating,
-  }
-}
-
 const useUser = (
   userIdOrAddress?: number | string
 ): User & { isLoading: boolean; mutate: KeyedMutator<User>; error: any } => {
@@ -67,5 +49,5 @@ const useUserPublic = (
   }
 }
 
-export { usePublicKey, useUserPublic }
+export { useUserPublic }
 export default useUser
