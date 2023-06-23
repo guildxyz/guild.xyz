@@ -10,6 +10,8 @@ import useSWRImmutable from "swr/immutable"
 import { AddressConnectionProvider, User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
+import useIsV2 from "./useIsV2"
+import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
@@ -99,12 +101,14 @@ const setKeyPair = async ({
   generatedKeyPair,
   signedValidation,
   id,
+  isV2,
 }: {
   account: string
   mutateKeyPair: KeyedMutator<StoredKeyPair>
   generatedKeyPair: StoredKeyPair
   signedValidation: SignedValdation
   id: number
+  isV2: boolean
 }): Promise<[StoredKeyPair, boolean]> => {
   const {
     userId: signedUserId,
@@ -118,14 +122,19 @@ const setKeyPair = async ({
     typeof signature === "string" &&
     typeof nonce === "string"
 
-  const newUser: User = await fetcher(`/v2/users/${id ?? account}/public-key`, {
-    method: "POST",
-    ...signedValidation,
-  })
+  const newUser: User = await fetcher(
+    isV2 ? `/v2/users/${id ?? account}/public-key` : "/user/pubKey",
+    {
+      method: "POST",
+      ...signedValidation,
+    }
+  )
 
   let storedKeyPair: StoredKeyPair
 
-  const prevKeyPair = await getKeyPairFromIdb(newUser.id).catch(() => null)
+  const prevKeyPair = await getKeyPairFromIdb(
+    (newUser as any)?.userId ?? newUser.id
+  ).catch(() => null)
 
   if (!shouldSendLink && (!addressConnectionProvider || !prevKeyPair)) {
     storedKeyPair = generatedKeyPair
@@ -135,31 +144,46 @@ const setKeyPair = async ({
      * Ignoring this error is fine, since we are falling back to just storing it in
      * memory.
      */
-    await setKeyPairToIdb(newUser.id, storedKeyPair).catch(() => {})
+    await setKeyPairToIdb(
+      (newUser as any)?.userId ?? newUser.id,
+      storedKeyPair
+    ).catch(() => {})
   }
 
-  mutate([`/v2/users/${newUser.id}/profile`, { method: "GET", body: {} }], newUser, {
-    revalidate: false,
-  })
-  mutate(
-    `/v2/users/${account}/profile`,
-    {
-      id: newUser?.id,
-      publicKey: newUser?.publicKey,
-    },
-    {
-      revalidate: false,
-    }
-  )
-
-  if (shouldSendLink) {
+  if (isV2) {
     mutate(
-      [`/v2/users/${signedUserId}/profile`, { method: "GET", body: {} }],
+      [`/v2/users/${newUser.id}/profile`, { method: "GET", body: {} }],
       newUser,
       {
         revalidate: false,
       }
     )
+    mutate(
+      `/v2/users/${account}/profile`,
+      {
+        id: newUser?.id,
+        publicKey: newUser?.publicKey,
+      },
+      {
+        revalidate: false,
+      }
+    )
+  } else {
+    await mutate(`/user/${account}`)
+  }
+
+  if (shouldSendLink) {
+    if (isV2) {
+      mutate(
+        [`/v2/users/${signedUserId}/profile`, { method: "GET", body: {} }],
+        newUser,
+        {
+          revalidate: false,
+        }
+      )
+    } else {
+      await mutateOptionalAuthSWRKey(`/user/${account}`)
+    }
   }
 
   await mutateKeyPair()
@@ -170,6 +194,7 @@ const setKeyPair = async ({
 const checkKeyPair = ([_, savedPubKey, pubKey]): boolean => savedPubKey === pubKey
 
 const useKeyPair = () => {
+  const isV2 = useIsV2()
   const { captureEvent } = usePostHogContext()
 
   const { account } = useWeb3React()
@@ -181,7 +206,7 @@ const useKeyPair = () => {
     setAddressLinkParams,
   } = useWeb3ConnectionManager()
 
-  const { id, publicKey, error: publicUserError } = useUserPublic()
+  const { id, publicKey, error: publicUserError, ...user } = useUserPublic()
 
   const {
     data: { keyPair, pubKey },
@@ -208,7 +233,9 @@ const useKeyPair = () => {
   const toast = useToast()
 
   const { data: isValid } = useSWRImmutable(
-    (id || publicUserError) && pubKey ? ["isKeyPairValid", publicKey, pubKey] : null,
+    (id || publicUserError) && pubKey
+      ? ["isKeyPairValid", publicKey ?? (user as any)?.signingKey, pubKey]
+      : null,
     checkKeyPair,
     {
       onSuccess: (isKeyPairValid) => {
@@ -251,6 +278,7 @@ const useKeyPair = () => {
         generatedKeyPair,
         signedValidation,
         id,
+        isV2,
       }),
     {
       keyPair,
@@ -280,9 +308,21 @@ const useKeyPair = () => {
         }
       },
       onSuccess: ([newKeyPair, shouldDeleteUserId]) => {
-        mutate(unstable_serialize(["delegateCashVaults", id])).then(() => {
-          window.localStorage.removeItem(`isDelegateDismissed_${id}`)
-        })
+        if (isV2) {
+          mutate(unstable_serialize(["delegateCashVaults", id])).then(() => {
+            window.localStorage.removeItem(`isDelegateDismissed_${id}`)
+          })
+        } else {
+          setTimeout(() => {
+            mutateOptionalAuthSWRKey(`/user/${account}`).then(() =>
+              setTimeout(() => {
+                mutate(unstable_serialize(["delegateCashVaults", id])).then(() => {
+                  window.localStorage.removeItem(`isDelegateDismissed_${id}`)
+                })
+              }, 500)
+            )
+          }, 500)
+        }
 
         setIsDelegateConnection(false)
         if (shouldDeleteUserId) {
@@ -306,9 +346,11 @@ const useKeyPair = () => {
   const ready =
     !(keyPair === undefined && keyPairError === undefined) || !!publicUserError
 
-  const { id: mainUserId, publicKey: mainUserPublicKey } = useUserPublic(
-    addressLinkParams?.address
-  )
+  const {
+    id: mainUserId,
+    publicKey: mainUserPublicKey,
+    ...mainUser
+  } = useUserPublic(addressLinkParams?.address)
 
   const { data: mainUserKeyPair, error } = useSWRImmutable(
     mainUserId ? ["mainUserKeyPair", mainUserId] : null,
@@ -321,7 +363,8 @@ const useKeyPair = () => {
       !!addressLinkParams?.userId &&
       mainUserId !== id &&
       mainUserKeyPair &&
-      mainUserPublicKey !== mainUserKeyPair.pubKey)
+      (mainUserPublicKey ?? (mainUser as any)?.signingKey) !==
+        mainUserKeyPair.pubKey)
 
   useEffect(() => {
     if (isMainUserKeyInvalid) {

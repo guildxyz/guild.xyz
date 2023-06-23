@@ -10,7 +10,11 @@ const useDelegateVaults = () => {
   const { data } = useSWRImmutable(
     shouldFetch ? ["delegateCashVaults", id] : null,
     () =>
-      getDelegateVaults(addresses?.map(({ address }) => address)).then((vaults) => {
+      getDelegateVaults(
+        typeof addresses?.[0] === "string"
+          ? (addresses as unknown as string[])
+          : addresses?.map(({ address }) => address)
+      ).then((vaults) => {
         const alreadyLinkedAddresses = new Set(addresses)
 
         const unlinked = vaults.filter((vault) => !alreadyLinkedAddresses.has(vault))

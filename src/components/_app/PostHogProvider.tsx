@@ -43,7 +43,10 @@ const CustomPostHogProvider = ({
         captureEvent: (event, options) =>
           ph.capture(event, {
             userId: id,
-            userAddress: addresses?.[0]?.address,
+            userAddress:
+              typeof addresses?.[0] === "string"
+                ? addresses?.[0]
+                : addresses?.[0]?.address,
             ...options,
           }),
       }}

@@ -109,6 +109,9 @@ type User = {
   platformUsers: PlatformAccountDetails[]
   publicKey?: string
   isSuperAdmin: boolean
+
+  // Should be removed once we use only v2 API
+  addressProviders?: Record<string, AddressConnectionProvider>
 }
 
 type BaseUser = {

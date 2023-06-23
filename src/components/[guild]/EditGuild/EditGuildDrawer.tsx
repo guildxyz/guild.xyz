@@ -82,7 +82,14 @@ const EditGuildDrawer = ({
     name,
     imageUrl,
     description,
-    theme: theme ?? {},
+    theme: theme
+      ? {
+          backgroundCss: theme?.backgroundCss,
+          backgroundImage: theme?.backgroundImage,
+          color: theme?.color,
+          mode: theme?.mode,
+        }
+      : {},
     showMembers,
     admins: (isV2 ? admins : admins?.flatMap((admin) => admin.address)) ?? [],
     urlName,

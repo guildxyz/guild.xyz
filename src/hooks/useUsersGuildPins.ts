@@ -68,7 +68,12 @@ const fetchGuildPins = async ([_, addresses]: [string, User["addresses"]]) => {
   const guildPinChains = Object.keys(flattenedGuildPinChainsData) as Chain[]
   const responseArray = await Promise.all(
     guildPinChains.flatMap((chain) =>
-      addresses.flatMap(({ address }) => fetchGuildPinsOnChain(address, chain))
+      addresses.flatMap((addressData) =>
+        fetchGuildPinsOnChain(
+          typeof addressData === "string" ? addressData : addressData?.address,
+          chain
+        )
+      )
     )
   )
 
