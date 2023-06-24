@@ -15,7 +15,7 @@ type Props = {
 }
 
 const Links = ({ chain, address }: Props) => {
-  const { socialLinks } = useGuild("our-guild")
+  const { socialLinks } = useGuild()
 
   return (
     <Section title="Links">
