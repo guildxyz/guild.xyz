@@ -26,8 +26,10 @@ const initializeWalletConnectV2Connector = (): [WalletConnectV2, Web3ReactHooks]
             showQrModal: true,
             qrModalOptions: {
               themeVariables: {
-                "--w3m-z-index": "10001",
+                "--wcm-z-index": "10001",
               },
+              chainImages: undefined,
+              tokenImages: undefined,
             },
           },
         })
