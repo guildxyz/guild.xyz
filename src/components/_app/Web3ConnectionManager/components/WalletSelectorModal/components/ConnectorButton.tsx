@@ -1,9 +1,8 @@
 import { Center, Img } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
-import { useWeb3React, Web3ReactHooks } from "@web3-react/core"
+import { Web3ReactHooks, useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
-import { WalletConnect } from "@web3-react/walletconnect"
 import { WalletConnect as WalletConnectV2 } from "@web3-react/walletconnect-v2"
 import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
@@ -14,7 +13,7 @@ import { WalletError } from "types"
 import shortenHex from "utils/shortenHex"
 
 type Props = {
-  connector: MetaMask | WalletConnect | WalletConnectV2 | CoinbaseWallet
+  connector: MetaMask | WalletConnectV2 | CoinbaseWallet
   connectorHooks: Web3ReactHooks
   error: WalletError & Error
   setError: Dispatch<SetStateAction<WalletError & Error>>
@@ -66,7 +65,7 @@ const ConnectorButton = ({
       ? isBraveWallet
         ? "brave.png"
         : "metamask.png"
-      : connector instanceof WalletConnect || connector instanceof WalletConnectV2
+      : connector instanceof WalletConnectV2
       ? "walletconnect.svg"
       : "coinbasewallet.png"
 
@@ -77,10 +76,8 @@ const ConnectorButton = ({
         : isMetaMaskInstalled
         ? "MetaMask"
         : "Install MetaMask"
-      : connector instanceof WalletConnect
-      ? "WalletConnect"
       : connector instanceof WalletConnectV2
-      ? "WalletConnect V2"
+      ? "WalletConnect"
       : "Coinbase Wallet"
 
   if (connector instanceof MetaMask && isMobile && !isMetaMaskInstalled) return null

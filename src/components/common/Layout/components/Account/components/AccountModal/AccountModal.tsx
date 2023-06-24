@@ -17,7 +17,6 @@ import {
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
-import { WalletConnect } from "@web3-react/walletconnect"
 import { WalletConnect as WalletConnectV2 } from "@web3-react/walletconnect-v2"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
@@ -47,10 +46,8 @@ const AccountModal = () => {
       ? typeof window !== "undefined" && (window.ethereum as any)?.isBraveWallet
         ? "Brave Wallet"
         : "MetaMask"
-      : c instanceof WalletConnect
-      ? "WalletConnect"
       : c instanceof WalletConnectV2
-      ? "WalletConnect V2"
+      ? "WalletConnect"
       : c instanceof CoinbaseWallet
       ? "Coinbase Wallet"
       : ""
