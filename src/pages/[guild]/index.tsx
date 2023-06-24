@@ -15,6 +15,11 @@ import {
   useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -33,11 +38,6 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import Button from "components/common/Button"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -47,7 +47,7 @@ import ErrorPage from "pages/_error"
 import { CaretDown, Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig, unstable_serialize } from "swr"
-import { Guild, SocialLinkKey } from "types"
+import { Guild, PlatformType, SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
@@ -87,6 +87,7 @@ const GuildPage = (): JSX.Element => {
     onboardingComplete,
     socialLinks,
     poaps,
+    guildPlatforms,
   } = useGuild()
   useAutoStatusUpdate()
 
@@ -140,7 +141,13 @@ const GuildPage = (): JSX.Element => {
     isAdmin && !onboardingComplete ? OnboardingProvider : React.Fragment
 
   const showOnboarding = isAdmin && !onboardingComplete
-  const showAccessHub = (isMember || isAdmin) && !showOnboarding
+  const showAccessHub =
+    (guildPlatforms.some(
+      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
+    ) ||
+      isMember ||
+      isAdmin) &&
+    !showOnboarding
 
   const { isOpen: isExpiredRolesOpen, onToggle: onExpiredRolesToggle } =
     useDisclosure()

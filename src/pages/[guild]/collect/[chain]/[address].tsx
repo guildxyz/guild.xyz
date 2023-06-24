@@ -38,9 +38,16 @@ type Props = {
   fallback: { [x: string]: Guild }
 }
 const Page = ({ chain, address }: Omit<Props, "fallback">) => {
-  const { theme, imageUrl, name, urlName, roles } = useGuild()
+  const { theme, imageUrl, name, urlName, roles, guildPlatforms } = useGuild()
   const { textColor } = useThemeContext()
-  const role = roles?.find((r) => r.id === 56990) ?? roles?.[0] // TODO: 56990 is a role in Johnny's Guild, we should change this to a dynamic value
+  const guildPlatform = guildPlatforms.find(
+    (gp) =>
+      gp.platformGuildData?.chain === chain &&
+      gp.platformGuildData?.contractAddress?.toLowerCase() === address
+  )
+  const role = roles?.find((r) =>
+    r.rolePlatforms?.find((rp) => rp.guildPlatformId === guildPlatform.id)
+  )
   const requirements = role?.requirements ?? []
 
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -88,7 +95,7 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
             <Stack spacing={8}>
               <Stack spacing={4}>
                 <Heading as="h2" fontFamily="display" fontSize="4xl">
-                  {`Joined ${name}`}
+                  {data?.name}
                 </Heading>
 
                 <NftByRole role={role} />
@@ -102,29 +109,8 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
                   />
                 )}
 
-                <Text
-                  ref={nftDescriptionRef}
-                  lineHeight={1.75}
-                >{`This is an on-chain proof that you joined ${name} on Guild.xyz.`}</Text>
-                <Text lineHeight={1.75}>
-                  Contrary to popular belief, Lorem Ipsum is not simply random text.
-                  It has roots in a piece of classical Latin literature from 45 BC,
-                  making it over 2000 years old. Richard McClintock, a Latin
-                  professor at Hampden-Sydney College in Virginia, looked up one of
-                  the more obscure Latin words, consectetur, from a Lorem Ipsum
-                  passage, and going through the cites of the word in classical
-                  literature, discovered the undoubtable source.
-                </Text>
-                <Text lineHeight={1.75}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-                  a tincidunt nisi, eu cursus neque. Suspendisse bibendum sapien at
-                  eleifend viverra. Vestibulum porttitor eget nunc eget gravida. In
-                  hac habitasse platea dictumst. Etiam ut luctus urna, in rutrum
-                  libero. Vestibulum et diam elementum, blandit ipsum quis, consequat
-                  lacus. Mauris sed varius metus. In viverra risus turpis, a placerat
-                  justo vehicula dictum. Vestibulum eu mollis justo, at semper orci.
-                  Cras dapibus, tortor non ultricies commodo, nibh massa semper
-                  lorem, ac facilisis eros dui et lacus.
+                <Text ref={nftDescriptionRef} lineHeight={1.75}>
+                  {guildPlatform.platformGuildData?.description}
                 </Text>
               </Stack>
 
@@ -153,7 +139,7 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
 
                       <Stack spacing={4}>
                         <Heading as="h2" fontFamily="display" fontSize="2xl">
-                          {`Joined ${name}`}
+                          {data?.name}
                         </Heading>
 
                         <NftByRole role={role} />

@@ -20,12 +20,16 @@ const SelectExistingPlatform = ({ onClose }) => {
 
   const roleVisibility: Visibility = useWatch({ name: ".visibility" })
 
-  const filteredPlatforms = guildPlatforms.filter(
-    (guildPlatform) =>
-      !fields.find(
-        (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
-      )
-  )
+  const filteredPlatforms = guildPlatforms
+    .filter(
+      (guildPlatform) => guildPlatform.platformId !== PlatformType.CONTRACT_CALL
+    )
+    .filter(
+      (guildPlatform) =>
+        !fields.find(
+          (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
+        )
+    )
 
   if (!filteredPlatforms.length) return null
 

@@ -1,18 +1,28 @@
-import { HStack, Icon, Img, Spinner, Text, Tooltip } from "@chakra-ui/react"
+import {
+  HStack,
+  Icon,
+  Img,
+  SkeletonCircle,
+  Spinner,
+  Text,
+  Tooltip,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import Visibility from "components/[guild]/Visibility"
+import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
-import Button from "components/common/Button"
-import { Transition, motion } from "framer-motion"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import Visibility from "components/[guild]/Visibility"
+import { motion, Transition } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import { ReactNode, useMemo } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
+import ContractCallReward from "./components/ContractCallReward"
 
 type Props = {
   role: Role // should change to just roleId when we won't need memberCount anymore
@@ -74,6 +84,12 @@ const Reward = ({
       buttonProps: { isDisabled: true },
     }
   }, [isMember, hasAccess, account, accessButtonProps, isLinkColorful])
+
+  const isContractCallReward =
+    platform.guildPlatform.platformId === PlatformType.CONTRACT_CALL
+
+  if (isContractCallReward)
+    return <ContractCallReward platform={platform} withMotionImg={withMotionImg} />
 
   return (
     <RewardDisplay
@@ -146,27 +162,39 @@ const RewardDisplay = ({
   </HStack>
 )
 
+const MotionSkeletonCircle = motion(SkeletonCircle)
 const MotionImg = motion(Img)
 
 const RewardIcon = ({
   rolePlatformId,
   guildPlatform,
+  isLoading,
   withMotionImg = true,
   transition,
 }: {
   rolePlatformId: number
   guildPlatform?: GuildPlatform
+  isLoading?: boolean
   withMotionImg?: boolean
   transition?: Transition
 }) => {
+  const { data: nftData } = useNftDetails(
+    guildPlatform?.platformGuildData?.chain,
+    guildPlatform?.platformGuildData?.contractAddress
+  )
+
   const props = {
-    src: `/platforms/${PlatformType[guildPlatform?.platformId]?.toLowerCase()}.png`,
+    src:
+      nftData?.image ??
+      `/platforms/${PlatformType[guildPlatform?.platformId]?.toLowerCase()}.png`,
     alt: guildPlatform?.platformGuildName,
     boxSize: 6,
   }
 
   if (withMotionImg)
-    return (
+    return isLoading ? (
+      <MotionSkeletonCircle boxSize={6} />
+    ) : (
       <MotionImg
         layoutId={`${rolePlatformId}_reward_img`}
         transition={{ type: "spring", duration: 0.5, ...transition }}

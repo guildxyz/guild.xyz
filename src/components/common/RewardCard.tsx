@@ -82,7 +82,7 @@ const RewardCard = ({
           <Stack spacing={0}>
             <HStack>
               <Skeleton isLoaded={!!title}>
-                <Text fontWeight={"bold"}>{title || "Loading platform..."}</Text>
+                <Text fontWeight={"bold"}>{title || "Loading reward..."}</Text>
               </Skeleton>
               {rolePlatform && (
                 <SetVisibility
