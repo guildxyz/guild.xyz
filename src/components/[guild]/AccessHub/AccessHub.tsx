@@ -30,15 +30,18 @@ const useAccessedGuildPlatforms = () => {
   const { isAdmin } = useGuildPermission()
   const { memberships } = useMemberships()
 
+  // Displaying CONTRACT_CALL rewards for everyone, even for users who aren't members
+  const contractCallGuildPlatforms = guildPlatforms.filter(guildPlatform => guildPlatform.platformId === PlatformType.CONTRACT_CALL)
+
   if (isAdmin) return guildPlatforms
   
   const accessedRoleIds = memberships?.find((membership) => membership.guildId === id)?.roleIds
-  if (!accessedRoleIds) return []
+  if (!accessedRoleIds) return contractCallGuildPlatforms
 
   const accessedRoles = roles.filter(role => accessedRoleIds.includes(role.id))
   const accessedRolePlatforms = accessedRoles.map(role => role.rolePlatforms).flat().filter(rolePlatform => !!rolePlatform)
   const accessedGuildPlatformIds = [...new Set(accessedRolePlatforms.map(rolePlatform => rolePlatform.guildPlatformId))]
-  const accessedGuildPlatforms = guildPlatforms.filter(guildPlatform => accessedGuildPlatformIds.includes(guildPlatform.id) || guildPlatform.platformId === PlatformType.CONTRACT_CALL) // Displaying CONTRACT_CALL rewards for everyone
+  const accessedGuildPlatforms = guildPlatforms.filter(guildPlatform => accessedGuildPlatformIds.includes(guildPlatform.id) || guildPlatform.platformId === PlatformType.CONTRACT_CALL)
 
   return accessedGuildPlatforms
 }
