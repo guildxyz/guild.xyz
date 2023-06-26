@@ -11,17 +11,16 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
+import CollectNftFeesTable from "components/[guild]/collect/components/CollectNftFeesTable"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
-import { Chain } from "connectors"
+import { Chains } from "connectors"
 import AlphaTag from "./components/AlphaTag"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
+import { useCollectNftContext } from "./components/CollectNftContext"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
 
-type Props = {
-  chain: Chain
-  address: string
-}
-
-const CollectNft = ({ chain, address }: Props) => {
+const CollectNft = () => {
+  const { chain, address } = useCollectNftContext()
   const { isOpen, onOpen, onClose } = useGuildCheckoutContext()
   const { data, isValidating } = useNftDetails(chain, address)
 
@@ -59,9 +58,10 @@ const CollectNft = ({ chain, address }: Props) => {
           </ModalBody>
 
           <ModalFooter flexDir="column">
-            <Stack w="full" spacing={6}>
-              {/* TODO: generalized <CollectNFTFees /> */}
-              {/* <MintGuildPinButton /> */}
+            <Stack w="full" spacing={2}>
+              <CollectNftFeesTable chain={chain} address={address} />
+              <SwitchNetworkButton targetChainId={Chains[chain]} />
+              {/* <CollectNftButton /> */}
             </Stack>
           </ModalFooter>
         </ModalContent>
