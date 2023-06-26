@@ -15,6 +15,7 @@ import CollectNftFeesTable from "components/[guild]/collect/components/CollectNf
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import { Chains } from "connectors"
 import AlphaTag from "./components/AlphaTag"
+import CollectNftButton from "./components/buttons/CollectNftButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import { useCollectNftContext } from "./components/CollectNftContext"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
@@ -61,7 +62,7 @@ const CollectNft = () => {
             <Stack w="full" spacing={2}>
               <CollectNftFeesTable />
               <SwitchNetworkButton targetChainId={Chains[chain]} />
-              {/* <CollectNftButton /> */}
+              <CollectNftButton />
             </Stack>
           </ModalFooter>
         </ModalContent>
