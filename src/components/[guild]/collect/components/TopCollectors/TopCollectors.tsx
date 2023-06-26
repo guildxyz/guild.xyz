@@ -7,7 +7,7 @@ import Collector, { CollectorSkeleton } from "./components/Collector"
 const TopCollectors = () => {
   const { data, isValidating, error } = useTopCollectors()
   const top3Collectors = data?.topCollectors?.slice(0, 3)
-  const restCollectors = data?.topCollectors?.slice(3)
+  const restCollectors = data?.topCollectors?.slice(0, 24).slice(3)
 
   return (
     <Section
@@ -28,10 +28,11 @@ const TopCollectors = () => {
         </Text>
       ) : !data || isValidating ? (
         <SimpleGrid
-          pt={8}
+          pt={2}
           w="full"
-          columns={{ base: 4, sm: 10, md: 5, xl: 10 }}
-          gap={4}
+          columns={{ base: 3, sm: 4, lg: 6, xl: 8 }}
+          columnGap={2}
+          rowGap={4}
         >
           {[...Array(100)].map((_, i) => (
             <CollectorSkeleton key={i} />
@@ -40,10 +41,11 @@ const TopCollectors = () => {
       ) : (
         <>
           <SimpleGrid
-            pt={8}
+            pt={2}
             w="full"
-            columns={{ base: 4, sm: 10, md: 5, xl: 10 }}
-            gap={4}
+            columns={{ base: 3, sm: 4, lg: 6, xl: 8 }}
+            columnGap={2}
+            rowGap={4}
           >
             {top3Collectors.map((address) => (
               <Collector key={address} address={address} />
@@ -59,14 +61,13 @@ const TopCollectors = () => {
 
           <Text
             colorScheme="gray"
-            fontSize="lg"
             fontWeight="bold"
             fontFamily="display"
             textAlign="center"
           >
             {`${new Intl.NumberFormat("en", {
               notation: "standard",
-            }).format(data.uniqueCollectors - 100)} more`}
+            }).format(data.uniqueCollectors - 50)} more`}
           </Text>
         </>
       )}
