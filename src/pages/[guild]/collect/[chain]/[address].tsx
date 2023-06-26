@@ -23,7 +23,7 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { Chain } from "connectors"
 import { AnimatePresence, motion } from "framer-motion"
 import useScrollEffect from "hooks/useScrollEffect"
-import { GetServerSideProps } from "next"
+import { GetStaticPaths, GetStaticProps } from "next"
 import {
   validateNftAddress,
   validateNftChain,
@@ -176,8 +176,8 @@ const CollectNftPage = ({ fallback, ...rest }: Props) => (
 )
 
 // TODO: we'll probably be able to switch to ISR at some point
-const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
-  const { chain: chainFromQuery, address: addressFromQuery, guild: urlName } = query
+const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+  const { chain: chainFromQuery, address: addressFromQuery, guild: urlName } = params
   const chain = validateNftChain(chainFromQuery)
   const address = validateNftAddress(addressFromQuery)
 
@@ -207,5 +207,15 @@ const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
   }
 }
 
+const getStaticPaths: GetStaticPaths = () => ({
+  /**
+   * We don't know the paths in advance, but since we're using fallback: blocking,
+   * the pages will be generated on-the-fly, and from that point we'll serve them
+   * from cache
+   */
+  paths: [],
+  fallback: "blocking",
+})
+
 export default CollectNftPage
-export { getServerSideProps }
+export { getStaticProps, getStaticPaths }
