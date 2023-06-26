@@ -1,21 +1,13 @@
-import {
-  HStack,
-  Skeleton,
-  Stack,
-  Td,
-  Text,
-  Tr,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import LogicDivider from "components/[guild]/LogicDivider"
-import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { Chain } from "connectors"
 import { Fragment } from "react"
 import { Logic, Requirement } from "types"
 import useNftDetails from "../hooks/useNftDetails"
+import CollectNftFeesTable from "./CollectNftFeesTable"
 
 type Props = {
   chain: Chain
@@ -64,42 +56,11 @@ const RequirementsCard = ({ chain, address, requirements, logic }: Props) => {
       </Stack>
 
       <Stack p={{ base: 5, md: 8 }} w="full" alignItems="center" spacing={4}>
-        <FeesTable
-          buttonComponent={
-            <HStack justifyContent={"space-between"} w="full">
-              <Text fontWeight={"medium"}>Minting fee:</Text>
-
-              <Text as="span">
-                {/* TODO: Dynamic price */}
-                <Text as="span">1 MATIC</Text>
-                <Text as="span" colorScheme="gray">
-                  {" + gas"}
-                </Text>
-              </Text>
-            </HStack>
-          }
+        <CollectNftFeesTable
+          chain={chain}
+          address={address}
           bgColor={requirementsSectionBgColor}
-        >
-          <Tr>
-            <Td>Price</Td>
-            <Td isNumeric>Free</Td>
-          </Tr>
-
-          <Tr>
-            <Td>Minting fee</Td>
-            <Td isNumeric>
-              {/* TODO: real data */}
-              <Skeleton isLoaded={true}>1 MATIC</Skeleton>
-            </Td>
-          </Tr>
-
-          <Tr>
-            <Td>Total</Td>
-            <Td isNumeric color="WindowText">
-              1 MATIC + gas
-            </Td>
-          </Tr>
-        </FeesTable>
+        />
 
         <Button colorScheme="green" w="full">
           Collect now
