@@ -1,12 +1,13 @@
-import { Box, Flex, Img, Spinner } from "@chakra-ui/react"
+import { BorderProps, Box, Flex, Img, Spinner } from "@chakra-ui/react"
 import Card from "components/common/Card"
 
 type Props = {
   src: string
   isLoading: boolean
+  borderRadius?: BorderProps["borderRadius"]
 }
 
-const CollectibleImage = ({ src, isLoading }: Props) => (
+const CollectibleImage = ({ src, isLoading, borderRadius = "2xl" }: Props) => (
   <Card
     w="full"
     p="15%"
@@ -15,6 +16,7 @@ const CollectibleImage = ({ src, isLoading }: Props) => (
     display="flex"
     alignItems="center"
     justifyContent="center"
+    borderRadius={borderRadius}
   >
     {isLoading ? (
       <Flex alignItems="center" justifyContent="center">
