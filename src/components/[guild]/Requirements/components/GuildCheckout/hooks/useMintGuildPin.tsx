@@ -1,15 +1,12 @@
-import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useToast from "hooks/useToast"
+import useTweetToast from "hooks/useTweetToast"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
-import { TwitterLogo } from "phosphor-react"
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import fetcher from "utils/fetcher"
@@ -38,10 +35,8 @@ const useMintGuildPin = () => {
 
   const { mutate } = useUsersGuildPins()
 
-  const toast = useToast()
-  const toastIdRef = useRef<ToastId>()
+  const tweetToast = useTweetToast()
   const showErrorToast = useShowErrorToast()
-  const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   const { chainId, account } = useWeb3React()
   const { pinType, setMintedTokenId } = useMintGuildPinContext()
@@ -152,32 +147,10 @@ const useMintGuildPin = () => {
           ])
         } catch {}
 
-        toastIdRef.current = toast({
-          status: "success",
-          title: "Successfully minted Guild Pin!",
-          duration: 8000,
-          description: (
-            <>
-              <Text>Let others know as well by sharing it on Twitter</Text>
-              <Button
-                as="a"
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`
-                )}`}
-                target="_blank"
-                bg={tweetButtonBackground}
-                leftIcon={<TwitterLogo weight="fill" />}
-                size="sm"
-                onClick={() => toast.close(toastIdRef.current)}
-                mt={3}
-                mb="1"
-                borderRadius="lg"
-              >
-                Share
-              </Button>
-            </>
-          ),
-        })
+        tweetToast(
+          "Successfully minted Guild Pin!",
+          `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`
+        )
       },
       onError: (error) => {
         showErrorToast(error)
