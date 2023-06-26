@@ -8,11 +8,11 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
 import CompleteCaptchaJoinStep from "./components/CompleteCaptchaJoinStep"
@@ -53,6 +53,10 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
       const ConnectComponent = customJoinStep[platform]
       return <ConnectComponent key={platform} />
     }
+
+    // Temporary solution, we'll handle this automatically after the rewards/platforms refactor
+    if (platform === "CONTRACT_CALL") return null
+
     return <ConnectPlatform key={platform} platform={platform as PlatformName} />
   })
 
