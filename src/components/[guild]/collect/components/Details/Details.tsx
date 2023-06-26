@@ -1,16 +1,13 @@
 import { HStack, Skeleton, Text } from "@chakra-ui/react"
-import { Chain, RPC } from "connectors"
+import { useCollectNftContext } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
+import { RPC } from "connectors"
 import useNftDetails from "../../hooks/useNftDetails"
 import Section from "../Section"
 import BlockExplorerLink from "./components/BlockExplorerLink"
 import InfoBlock from "./components/InfoBlock"
 
-type Props = {
-  chain: Chain
-  address: string
-}
-
-const Details = ({ chain, address }: Props) => {
+const Details = () => {
+  const { chain, address } = useCollectNftContext()
   const chainName = RPC[chain].chainName
   const {
     data: nftDetails,

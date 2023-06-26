@@ -59,7 +59,7 @@ const CollectNft = () => {
 
           <ModalFooter flexDir="column">
             <Stack w="full" spacing={2}>
-              <CollectNftFeesTable chain={chain} address={address} />
+              <CollectNftFeesTable />
               <SwitchNetworkButton targetChainId={Chains[chain]} />
               {/* <CollectNftButton /> */}
             </Stack>

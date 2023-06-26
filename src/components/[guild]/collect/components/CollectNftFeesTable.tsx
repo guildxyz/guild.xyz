@@ -1,16 +1,16 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
+import { useCollectNftContext } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
-import { Chain, RPC } from "connectors"
+import { RPC } from "connectors"
 import useNftDetails from "../hooks/useNftDetails"
 
 type Props = {
-  chain: Chain
-  address: string
   bgColor?: string
 }
 
-const CollectNftFeesTable = ({ chain, address, bgColor }: Props) => {
+const CollectNftFeesTable = ({ bgColor }: Props) => {
+  const { chain, address } = useCollectNftContext()
   const { data } = useNftDetails(chain, address)
   const formattedFee = data?.fee
     ? Number(formatUnits(data.fee, RPC[chain].nativeCurrency.decimals))
