@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form"
 
 const Name = ({
   isDisabled = false,
-  width = { base: "full", md: "sm" },
+  width = { base: "full", md: "sm" } as any,
 }): JSX.Element => {
   const {
     register,

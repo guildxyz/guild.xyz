@@ -25,6 +25,7 @@ import { useState } from "react"
 import { Visibility } from "types"
 import useGuild from "../../hooks/useGuild"
 import FilterByRolesLogicSelector from "./FilterByRolesLogicSelector"
+import AddHiddenRoleButton from "./components/AddHiddenRoleButton"
 import AddHiddenRoles from "./components/AddHiddenRoles"
 import FilterByRolesSearch from "./components/FilterByRolesSearch"
 
@@ -89,6 +90,14 @@ const FilterByRoles = ({ column }: Props) => {
               {hiddenRoles?.length ? (
                 <RoleCheckboxGroup
                   label="Private roles"
+                  labelRightElement={
+                    <AddHiddenRoleButton
+                      variant="ghost"
+                      opacity=".6"
+                      size="xs"
+                      borderRadius="lg"
+                    />
+                  }
                   selectedRoleIds={selectedRoleIds.hiddenRoleIds}
                   setSelectedRoleIds={(newValue) => {
                     column
@@ -130,6 +139,7 @@ const FilterByRoles = ({ column }: Props) => {
 
 const RoleCheckboxGroup = ({
   label,
+  labelRightElement = null,
   roles,
   selectedRoleIds,
   setSelectedRoleIds,
@@ -148,16 +158,19 @@ const RoleCheckboxGroup = ({
 
   return (
     <Box>
-      <Checkbox
-        isChecked={allChecked}
-        isIndeterminate={isIndeterminate}
-        onChange={(e) => setSelectedRoleIds(e.target.checked ? roleIds : [])}
-        isDisabled={!!searchValue}
-      >
-        <Text fontSize="sm" fontWeight={"semibold"}>
-          {label}
-        </Text>
-      </Checkbox>
+      <HStack justifyContent={"space-between"}>
+        <Checkbox
+          isChecked={allChecked}
+          isIndeterminate={isIndeterminate}
+          onChange={(e) => setSelectedRoleIds(e.target.checked ? roleIds : [])}
+          isDisabled={!!searchValue}
+        >
+          <Text fontSize="sm" fontWeight={"semibold"}>
+            {label}
+          </Text>
+        </Checkbox>
+        {labelRightElement}
+      </HStack>
       <Stack pl={6} mt={3} divider={<Divider />}>
         {shownRoles?.length ? (
           shownRoles?.map((role) => (
