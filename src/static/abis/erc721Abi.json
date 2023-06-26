@@ -334,5 +334,12 @@
     "stateMutability": "view",
     "inputs": [{ "name": "interfaceId", "type": "bytes4" }],
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
+    "name": "fee",
+    "outputs": [{ "internalType": "uint256", "name": "fee", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
   }
 ]

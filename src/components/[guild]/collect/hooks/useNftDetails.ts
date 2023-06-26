@@ -6,6 +6,7 @@ import { getBlockByTime } from "requirements/WalletActivity/hooks/useBlockNumber
 import ERC721_ABI from "static/abis/erc721Abi.json"
 import useSWRImmutable from "swr/immutable"
 import base64ToObject from "utils/base64ToObject"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 
 type NftStandard = "ERC-721" | "ERC-1155" | "Unknown"
 
@@ -21,6 +22,7 @@ type NFTDetails = {
   totalCollectorsToday?: number
   standard: NftStandard
   image: string
+  fee: BigNumber
 }
 
 const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
@@ -49,7 +51,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
   }
 
   try {
-    const [owner, name, totalSupply, isERC721, isERC1155, tokenURI] =
+    const [owner, name, totalSupply, isERC721, isERC1155, tokenURI, fee] =
       await Promise.all([
         contract.owner(),
         contract.name(),
@@ -57,6 +59,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
         contract.supportsInterface(ContractInterface.ERC721),
         contract.supportsInterface(ContractInterface.ERC1155),
         contract.tokenURI(1),
+        contract.fee(NULL_ADDRESS),
       ])
 
     const totalSupplyAsNumber = BigNumber.isBigNumber(totalSupply)
@@ -87,6 +90,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
         : undefined,
       standard: isERC1155 ? "ERC-1155" : isERC721 ? "ERC-721" : "Unknown",
       image,
+      fee,
     }
   } catch {
     return {
@@ -96,6 +100,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       totalCollectorsToday: undefined,
       standard: undefined,
       image: undefined,
+      fee: undefined,
     }
   }
 }
