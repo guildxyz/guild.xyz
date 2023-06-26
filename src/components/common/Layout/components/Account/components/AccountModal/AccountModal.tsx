@@ -1,4 +1,5 @@
 import {
+  Circle,
   Divider,
   HStack,
   Icon,
@@ -6,24 +7,25 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Stack,
   Text,
   Tooltip,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import { WalletConnect as WalletConnectV2 } from "@web3-react/walletconnect-v2"
+import useUser from "components/[guild]/hooks/useUser"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
+import useIsV2 from "hooks/useIsV2"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
@@ -38,6 +40,7 @@ const AccountModal = () => {
     closeAccountModal: onClose,
   } = useWeb3ConnectionManager()
   const { id, addresses } = useUser()
+  useIsV2()
 
   const connectorName = (c) =>
     c instanceof MetaMask
@@ -71,56 +74,58 @@ const AccountModal = () => {
 
   const domain = useResolveAddress(account)
 
+  const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} colorScheme="duotone">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      colorScheme="duotone"
+      scrollBehavior="inside"
+    >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Account</ModalHeader>
+        <ModalHeader pb="6">Account</ModalHeader>
         <ModalCloseButton />
         {account ? (
           <>
             <ModalBody>
-              <Stack mb={9} direction="row" spacing="4" alignItems="center">
-                <GuildAvatar address={account} />
-                <CopyableAddress
-                  address={account}
-                  domain={domain}
-                  decimals={5}
-                  fontSize="2xl"
-                />
-                {addresses?.indexOf(account.toLowerCase()) === 0 &&
-                addresses.length > 1 ? (
-                  <PrimaryAddressTag />
-                ) : null}
-              </Stack>
-
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="space-between"
-                mb="-1"
-              >
-                <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
-                  {`Connected with ${connectorName(connector)}`}
-                </Text>
-                <HStack>
-                  <Tooltip label="Disconnect">
-                    <IconButton
-                      size="sm"
-                      variant="outline"
-                      onClick={handleLogout}
-                      icon={<Icon as={SignOut} p="1px" />}
-                      aria-label="Disconnect"
+              <HStack spacing="3" alignItems="center" mb="8">
+                <Circle size={12} bg={avatarBg}>
+                  <GuildAvatar address={account} size={5} />
+                </Circle>
+                <Stack w="full" alignItems={"flex-start"} spacing="1">
+                  <HStack>
+                    <CopyableAddress
+                      address={account}
+                      domain={domain}
+                      decimals={5}
+                      fontWeight="bold"
                     />
-                  </Tooltip>
-                </HStack>
-              </Stack>
-            </ModalBody>
-            <ModalFooter flexDir="column" pt="10" gap={8}>
+                    {addresses?.indexOf(account.toLowerCase()) === 0 &&
+                    addresses.length > 1 ? (
+                      <PrimaryAddressTag size="sm" />
+                    ) : null}
+                  </HStack>
+                  <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
+                    {`Connected with ${connectorName(connector)}`}
+                  </Text>
+                </Stack>
+                <Tooltip label="Disconnect">
+                  <IconButton
+                    size="sm"
+                    variant="outline"
+                    onClick={handleLogout}
+                    icon={<Icon as={SignOut} p="1px" />}
+                    aria-label="Disconnect"
+                  />
+                </Tooltip>
+              </HStack>
+
               <AccountConnections />
-              <Divider />
+              <Divider my="7" />
               <UsersGuildPins />
-            </ModalFooter>
+            </ModalBody>
           </>
         ) : (
           <ModalBody>

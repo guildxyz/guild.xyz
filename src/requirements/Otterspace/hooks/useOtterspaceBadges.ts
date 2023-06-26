@@ -44,22 +44,18 @@ const fetchBadges = async (endpoint: string) => {
   return badges
 }
 
-const path: Record<
-  Extract<Chain, "ETHEREUM" | "POLYGON" | "OPTIMISM" | "GOERLI">,
-  string
-> = {
-  ETHEREUM: "badges-mainnet",
-  POLYGON: "badges-polygon",
-  OPTIMISM: "badges-optimism",
-  GOERLI: "badges-goerli",
+const theGraphBasePath = "https://api.thegraph.com/subgraphs/name/otterspace-xyz"
+
+const url: Partial<Record<Chain, string>> = {
+  ETHEREUM: `${theGraphBasePath}/badges-mainnet`,
+  POLYGON: `${theGraphBasePath}/badges-polygon`,
+  OPTIMISM: `${theGraphBasePath}/badges-optimism`,
+  GOERLI: `${theGraphBasePath}/badges-goerli`,
+  SEPOLIA:
+    "https://api.studio.thegraph.com/query/44988/badges-sepolia/version/latest",
 }
 
 const useOtterspaceBadges = (chain: Chain) =>
-  useSWRImmutable<SelectOption[]>(
-    chain && path[chain]
-      ? `https://api.thegraph.com/subgraphs/name/otterspace-xyz/${path[chain]}`
-      : null,
-    fetchBadges
-  )
+  useSWRImmutable<SelectOption[]>(chain ? url[chain] : null, fetchBadges)
 
 export default useOtterspaceBadges

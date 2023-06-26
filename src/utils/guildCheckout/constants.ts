@@ -6,12 +6,12 @@ import GUILD_PIN_ABI from "static/abis/guildPin.json"
 import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import {
+  UNIVERSAL_ROUTER_COMMANDS,
   encodePermit2Permit,
   encodeUnwrapEth,
   encodeV2SwapExactOut,
   encodeV3SwapExactOut,
   encodeWrapEth,
-  UNIVERSAL_ROUTER_COMMANDS,
 } from "./encoders"
 
 export type TokenBuyerContractConfig = Partial<
@@ -260,6 +260,13 @@ const GUILD_PIN_CONTRACTS = {
   },
   // Alpha Venture DAO
   17326: {
+    ARBITRUM: {
+      address: "0x0e6a14106497a7de36fba446628860c062e9e302",
+      abi: GUILD_PIN_ABI,
+    },
+  },
+  // Livepeer
+  13713: {
     ARBITRUM: {
       address: "0x0e6a14106497a7de36fba446628860c062e9e302",
       abi: GUILD_PIN_ABI,
