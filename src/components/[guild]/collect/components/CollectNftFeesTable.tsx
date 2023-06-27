@@ -23,7 +23,11 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
           <Text fontWeight={"medium"}>Minting fee:</Text>
 
           <Text as="span">
-            <Text as="span">{`${formattedFee} ${RPC[chain].nativeCurrency.symbol}`}</Text>
+            <Skeleton display="inline" isLoaded={!!formattedFee}>
+              {formattedFee
+                ? `${formattedFee} ${RPC[chain].nativeCurrency.symbol}`
+                : "Loading"}
+            </Skeleton>
             <Text as="span" colorScheme="gray">
               {" + gas"}
             </Text>
@@ -40,16 +44,25 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
       <Tr>
         <Td>Minting fee</Td>
         <Td isNumeric>
-          <Skeleton
-            isLoaded={true}
-          >{`${formattedFee} ${RPC[chain].nativeCurrency.symbol}`}</Skeleton>
+          <Skeleton display="inline" isLoaded={!!formattedFee}>
+            {formattedFee
+              ? `${formattedFee} ${RPC[chain].nativeCurrency.symbol}`
+              : "Loading"}
+          </Skeleton>
         </Td>
       </Tr>
 
       <Tr>
         <Td>Total</Td>
         <Td isNumeric color="WindowText">
-          {`${formattedFee} ${RPC[chain].nativeCurrency.symbol} + gas`}
+          <Text as="span">
+            <Skeleton display="inline" isLoaded={!!formattedFee}>
+              {formattedFee
+                ? `${formattedFee} ${RPC[chain].nativeCurrency.symbol}`
+                : "Loading"}
+            </Skeleton>
+            <Text as="span">{" + gas"}</Text>
+          </Text>
         </Td>
       </Tr>
     </FeesTable>
