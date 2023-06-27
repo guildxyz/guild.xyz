@@ -145,7 +145,7 @@ const VirtualRequirements = memo(
     const rowHeights = useRef<Record<number, number>>({})
     const expandedHeight = useMemo(() => {
       const descriptionHeight =
-        descriptionRef.current?.getBoundingClientRect().height
+        descriptionRef.current?.getBoundingClientRect().height ?? 0
       return Math.max(descriptionHeight + 50, 500)
     }, [descriptionRef.current])
 

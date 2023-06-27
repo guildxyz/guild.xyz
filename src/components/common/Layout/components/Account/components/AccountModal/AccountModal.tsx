@@ -25,6 +25,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
+import useIsV2 from "hooks/useIsV2"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
@@ -39,6 +40,7 @@ const AccountModal = () => {
     closeAccountModal: onClose,
   } = useWeb3ConnectionManager()
   const { id, addresses } = useUser()
+  useIsV2()
 
   const connectorName = (c) =>
     c instanceof MetaMask
