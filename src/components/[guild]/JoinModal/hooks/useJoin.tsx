@@ -5,7 +5,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import { useActionToast, useTweetToast } from "hooks/useToast"
+import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { useRouter } from "next/router"
 import { CircleWavyCheck } from "phosphor-react"
 import { PlatformName } from "types"
@@ -40,8 +40,8 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
   const guild = useGuild()
   const user = useUser()
 
-  const tweetToast = useTweetToast()
-  const actionToast = useActionToast()
+  const toastWithTweetButton = useToastWithTweetButton()
+  const toastWithButton = useToastWithButton()
 
   const { mutate } = useMemberships()
 
@@ -96,7 +96,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
         pathname === "/[guild]" &&
         guild.featureFlags.includes("GUILD_CREDENTIAL")
       ) {
-        actionToast({
+        toastWithButton({
           title: "Successfully joined guild",
           description: "Let others know as well by minting it on-chain",
           buttonProps: {
@@ -106,7 +106,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
           },
         })
       } else {
-        tweetToast({
+        toastWithTweetButton({
           title: "Successfully joined guild",
           tweetText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
           guild.xyz/${guild.urlName}`,

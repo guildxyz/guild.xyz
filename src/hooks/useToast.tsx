@@ -27,17 +27,12 @@ type ActionToastOptions = UseToastOptions & {
   buttonProps: ButtonProps & LinkProps
 }
 
-const useActionToast = () => {
+const useToastWithButton = () => {
   const toast = useToast()
   const toastIdRef = useRef<ToastId>()
   const actionButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
-  const actionToast = ({
-    title,
-    description,
-    buttonProps,
-    ...rest
-  }: ActionToastOptions) => {
+  return ({ title, description, buttonProps, ...rest }: ActionToastOptions) => {
     const { onClick, ...restButtonProps } = buttonProps
 
     toastIdRef.current = toast({
@@ -64,8 +59,6 @@ const useActionToast = () => {
       ...rest,
     })
   }
-
-  return actionToast
 }
 
 type TweetToastOptions = {
@@ -73,10 +66,10 @@ type TweetToastOptions = {
   tweetText: string
 }
 
-const useTweetToast = () => {
-  const toast = useActionToast()
+const useToastWithTweetButton = () => {
+  const toast = useToastWithButton()
 
-  const tweetToast = ({ title, tweetText }: TweetToastOptions) =>
+  return ({ title, tweetText }: TweetToastOptions) =>
     toast({
       title,
       description: "Let others know as well by sharing it on Twitter",
@@ -90,9 +83,7 @@ const useTweetToast = () => {
         target: "_blank",
       },
     })
-
-  return tweetToast
 }
 
 export default useToast
-export { useActionToast, useTweetToast }
+export { useToastWithButton, useToastWithTweetButton }

@@ -5,7 +5,7 @@ import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 
-import { useTweetToast } from "hooks/useToast"
+import { useToastWithTweetButton } from "hooks/useToast"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useState } from "react"
 import { GuildPinMetadata } from "types"
@@ -35,7 +35,7 @@ const useMintGuildPin = () => {
 
   const { mutate } = useUsersGuildPins()
 
-  const tweetToast = useTweetToast()
+  const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
   const { chainId, account } = useWeb3React()
@@ -151,7 +151,7 @@ const useMintGuildPin = () => {
           ])
         } catch {}
 
-        tweetToast({
+        toastWithTweetButton({
           title: "Successfully minted Guild Pin!",
           tweetText: `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`,
         })
