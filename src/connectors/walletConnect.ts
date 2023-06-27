@@ -27,8 +27,6 @@ const initializeWalletConnectConnector = (): [WalletConnect, Web3ReactHooks] => 
             themeVariables: {
               "--wcm-z-index": "10001",
             },
-            chainImages: undefined,
-            tokenImages: undefined,
           },
         },
       })
