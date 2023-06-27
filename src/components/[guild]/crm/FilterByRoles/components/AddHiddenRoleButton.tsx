@@ -103,7 +103,7 @@ const AddHiddenRoleButton = (buttonProps) => {
         <ModalOverlay />
         <ModalContent>
           <FormProvider {...methods}>
-            <ModalHeader>Create private role</ModalHeader>
+            <ModalHeader>Create hidden role</ModalHeader>
             <ModalBody>
               <SetHiddenRoleRequirements />
 

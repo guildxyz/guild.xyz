@@ -89,7 +89,7 @@ const FilterByRoles = ({ column }: Props) => {
             <Stack spacing={5}>
               {hiddenRoles?.length ? (
                 <RoleCheckboxGroup
-                  label="Private roles"
+                  label="Hidden roles"
                   labelRightElement={
                     <AddHiddenRoleButton
                       variant="ghost"

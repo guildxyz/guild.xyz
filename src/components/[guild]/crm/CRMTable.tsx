@@ -82,7 +82,7 @@ const CRMTable = () => {
         id: "roles",
         header: ({ column }) => (
           <HStack w="full" justifyContent={"space-between"}>
-            <Text>{`Roles ${hasHiddenRoles ? "(private, public)" : ""}`}</Text>
+            <Text>{`Roles ${hasHiddenRoles ? "(hidden, public)" : ""}`}</Text>
             <HStack spacing="0">
               <FilterByRoles column={column} />
               <OrderByColumn label="Number of roles" column={column} />

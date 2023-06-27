@@ -6,10 +6,10 @@ const AddHiddenRoles = () => (
     <Checkbox isDisabled mt="0.5" />
     <Box>
       <Text fontSize="sm" fontWeight={"semibold"} mb="1">
-        Private roles
+        Hidden roles
       </Text>
       <Text colorScheme="gray" fontSize="sm" mb="2.5">
-        Get to know your community by segmenting members with private roles
+        Get to know your community by segmenting members with hidden roles
       </Text>
       <AddHiddenRoleButton w="full" />
     </Box>
