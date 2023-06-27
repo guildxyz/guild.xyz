@@ -6,7 +6,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chain, Chains } from "connectors"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useTweetToast from "hooks/useTweetToast"
+import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
 import ERC_721_ABI from "static/abis/erc721Abi.json"
 import { useCollectNftContext } from "../components/CollectNftContext"
@@ -49,7 +49,7 @@ const useCollectNft = () => {
   const { urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
-  const tweetToast = useTweetToast()
+  const tweetToast = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
   const { chainId, account, provider } = useWeb3React()

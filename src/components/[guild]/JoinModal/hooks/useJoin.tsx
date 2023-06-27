@@ -4,9 +4,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useActionToast from "hooks/useActionToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import useTweetToast from "hooks/useTweetToast"
+import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { useRouter } from "next/router"
 import { CircleWavyCheck } from "phosphor-react"
 import { PlatformName } from "types"
@@ -41,8 +40,8 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
   const guild = useGuild()
   const user = useUser()
 
-  const tweetToast = useTweetToast()
-  const actionToast = useActionToast()
+  const toastWithTweetButton = useToastWithTweetButton()
+  const toastWithButton = useToastWithButton()
 
   const { mutate } = useMemberships()
 
@@ -97,15 +96,17 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
         pathname === "/[guild]" &&
         guild.featureFlags.includes("GUILD_CREDENTIAL")
       ) {
-        actionToast({
+        toastWithButton({
           title: "Successfully joined guild",
           description: "Let others know as well by minting it on-chain",
-          actionIcon: <CircleWavyCheck weight="fill" />,
-          actionText: "Mint Guild Pin",
-          actionOnClick: onOpen,
+          buttonProps: {
+            leftIcon: <CircleWavyCheck weight="fill" />,
+            children: "Mint Guild Pin",
+            onClick: onOpen,
+          },
         })
       } else {
-        tweetToast({
+        toastWithTweetButton({
           title: "Successfully joined guild",
           tweetText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
           guild.xyz/${guild.urlName}`,
