@@ -93,7 +93,7 @@ const AccessHub = (): JSX.Element => {
                 }
               >
                 {CustomPlatformCardButton ? (
-                  <CustomPlatformCardButton reward={platform} />
+                  <CustomPlatformCardButton platform={platform} />
                 ) : (
                   <PlatformCardButton platform={platform} />
                 )}

@@ -8,15 +8,15 @@ import { GuildCheckoutProvider } from "components/[guild]/Requirements/component
 import { GuildPlatform } from "types"
 
 type Props = {
-  reward: GuildPlatform
+  platform: GuildPlatform
 }
 
-const ContractCallRewardCardButton = ({ reward }: Props) => {
+const ContractCallRewardCardButton = ({ platform }: Props) => {
   const { id, urlName, roles } = useGuild()
-  const { chain, contractAddress } = reward.platformGuildData
+  const { chain, contractAddress } = platform.platformGuildData
 
   const rewardsRoleId = roles.find((role) =>
-    role.rolePlatforms?.find((rp) => rp.guildPlatformId === reward.id)
+    role.rolePlatforms?.find((rp) => rp.guildPlatformId === platform.id)
   )?.id
 
   const { data: roleAccess } = useAccess(rewardsRoleId)
@@ -42,8 +42,8 @@ const ContractCallRewardCardButton = ({ reward }: Props) => {
   return (
     <GuildCheckoutProvider>
       <CollectNftProvider
-        chain={reward.platformGuildData.chain}
-        address={reward.platformGuildData.contractAddress}
+        chain={platform.platformGuildData.chain}
+        address={platform.platformGuildData.contractAddress}
       >
         <CollectNft />
       </CollectNftProvider>
