@@ -13,6 +13,8 @@ import { Modal } from "components/common/Modal"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import CollectNftFeesTable from "components/[guild]/collect/components/CollectNftFeesTable"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import AlphaTag from "./components/AlphaTag"
 import CollectNftButton from "./components/buttons/CollectNftButton"
@@ -24,6 +26,9 @@ import TransactionStatusModal from "./components/TransactionStatusModal"
 import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaLink"
 
 const CollectNft = () => {
+  const { captureEvent } = usePostHogContext()
+  const { urlName } = useGuild()
+
   const { chain, address } = useCollectNftContext()
   const { isOpen, onOpen, onClose } = useGuildCheckoutContext()
   const { data, isValidating } = useNftDetails(chain, address)
@@ -36,9 +41,9 @@ const CollectNft = () => {
         colorScheme="cyan"
         onClick={() => {
           onOpen()
-          // captureEvent("Click: Mint Guild Pin (GuildPinRewardCard)", {
-          //   guild: urlName,
-          // })
+          captureEvent("Click: Collect NFT (ContractCallReward)", {
+            guild: urlName,
+          })
         }}
       >
         Collect NFT

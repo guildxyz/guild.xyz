@@ -2,12 +2,14 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import useBalance from "hooks/useBalance"
 import useCollectNft from "../../hooks/useCollectNft"
 import { useCollectNftContext } from "../CollectNftContext"
 
 const CollectNftButton = (): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
   const { chain, address } = useCollectNftContext()
@@ -45,9 +47,9 @@ const CollectNftButton = (): JSX.Element => {
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
       onClick={() => {
-        // captureEvent("Click: CollectNftButton (GuildCheckout)", {
-        //   guild: urlName,
-        // })
+        captureEvent("Click: CollectNftButton (GuildCheckout)", {
+          guild: urlName,
+        })
         onSubmit()
       }}
     >

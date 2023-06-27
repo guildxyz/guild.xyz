@@ -3,6 +3,7 @@ import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chain, Chains } from "connectors"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useTweetToast from "hooks/useTweetToast"
@@ -44,13 +45,16 @@ const mint = async (
 }
 
 const useCollectNft = () => {
+  const { captureEvent } = usePostHogContext()
+  const { urlName } = useGuild()
+  const postHogOptions = { guild: urlName }
+
   const tweetToast = useTweetToast()
   const showErrorToast = useShowErrorToast()
 
   const { chainId, account, provider } = useWeb3React()
   const { chain, address } = useCollectNftContext()
   const { data } = useNftDetails(chain, address)
-  const { urlName } = useGuild()
   const shouldSwitchChain = chainId !== Chains[chain]
 
   const [loadingText, setLoadingText] = useState("")
@@ -62,16 +66,18 @@ const useCollectNft = () => {
 
         if (txReceipt.status !== 1) {
           showErrorToast("Transaction failed")
-          // captureEvent("Mint Guild Pin error (GuildCheckout)", {
-          //   ...postHogOptions,
-          //   txReceipt,
-          // })
-          // captureEvent("claim error (GuildCheckout)", {
-          //   ...postHogOptions,
-          //   txReceipt,
-          // })
+          captureEvent("Mint NFT error (GuildCheckout)", {
+            ...postHogOptions,
+            txReceipt,
+          })
+          captureEvent("claim error (GuildCheckout)", {
+            ...postHogOptions,
+            txReceipt,
+          })
           return
         }
+
+        captureEvent("Minted NFT (GuildCheckout)", postHogOptions)
 
         tweetToast({
           title: "Successfully collected NFT!",
@@ -84,11 +90,11 @@ const useCollectNft = () => {
         showErrorToast(error)
         setLoadingText("")
 
-        // captureEvent("Mint Guild Pin error (GuildCheckout)", postHogOptions)
-        // captureEvent("claim pre-call error (GuildCheckout)", {
-        //   ...postHogOptions,
-        //   error,
-        // })
+        captureEvent("Mint NFT error (GuildCheckout)", postHogOptions)
+        captureEvent("mint nft pre-call error (GuildCheckout)", {
+          ...postHogOptions,
+          error,
+        })
       },
     }),
     loadingText,
