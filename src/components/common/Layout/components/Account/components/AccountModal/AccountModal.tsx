@@ -17,12 +17,12 @@ import {
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
-import { WalletConnect as WalletConnectV2 } from "@web3-react/walletconnect-v2"
-import useUser from "components/[guild]/hooks/useUser"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import { WalletConnect } from "@web3-react/walletconnect-v2"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
+import useUser from "components/[guild]/hooks/useUser"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import useIsV2 from "hooks/useIsV2"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
@@ -46,7 +46,7 @@ const AccountModal = () => {
       ? typeof window !== "undefined" && (window.ethereum as any)?.isBraveWallet
         ? "Brave Wallet"
         : "MetaMask"
-      : c instanceof WalletConnectV2
+      : c instanceof WalletConnect
       ? "WalletConnect"
       : c instanceof CoinbaseWallet
       ? "Coinbase Wallet"

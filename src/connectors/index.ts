@@ -1,10 +1,10 @@
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { Web3ReactHooks } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
-import { WalletConnect as WalletConnectV2 } from "@web3-react/walletconnect-v2"
+import { WalletConnect } from "@web3-react/walletconnect-v2"
 import initializeCoinbaseWalletConnector from "./coinbaseWallet"
 import initializeMetaMaskConnector from "./metaMask"
-import initializeWalletConnectV2Connector from "./walletConnectV2"
+import initializeWalletConnectConnector from "./walletConnect"
 
 enum Chains {
   ETHEREUM = 1,
@@ -647,12 +647,12 @@ supportedChains.forEach(
 )
 
 const [metaMask, metaMaskHooks] = initializeMetaMaskConnector()
-const [walletConnectV2, walletConnectV2Hooks] = initializeWalletConnectV2Connector()
+const [walletConnect, walletConnectHooks] = initializeWalletConnectConnector()
 const [coinbaseWallet, coinbaseWalletHooks] = initializeCoinbaseWalletConnector()
 
-const connectors: [MetaMask | WalletConnectV2 | CoinbaseWallet, Web3ReactHooks][] = [
+const connectors: [MetaMask | WalletConnect | CoinbaseWallet, Web3ReactHooks][] = [
   [metaMask, metaMaskHooks],
-  [walletConnectV2, walletConnectV2Hooks],
+  [walletConnect, walletConnectHooks],
   [coinbaseWallet, coinbaseWalletHooks],
 ]
 
