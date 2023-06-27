@@ -147,10 +147,10 @@ const useMintGuildPin = () => {
           ])
         } catch {}
 
-        tweetToast(
-          "Successfully minted Guild Pin!",
-          `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`
-        )
+        tweetToast({
+          title: "Successfully minted Guild Pin!",
+          tweetText: `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`,
+        })
       },
       onError: (error) => {
         showErrorToast(error)

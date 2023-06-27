@@ -73,12 +73,12 @@ const useCollectNft = () => {
           return
         }
 
-        tweetToast(
-          "Successfully collected NFT!",
-          `Just collected my ${
+        tweetToast({
+          title: "Successfully collected NFT!",
+          tweetText: `Just collected my ${
             data?.name
-          } NFT!\nguild.xyz/${urlName}/collect/${chain.toLowerCase()}/${address.toLowerCase()}`
-        )
+          } NFT!\nguild.xyz/${urlName}/collect/${chain.toLowerCase()}/${address.toLowerCase()}`,
+        })
       },
       onError: (error) => {
         showErrorToast(error)
