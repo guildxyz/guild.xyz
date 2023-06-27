@@ -26,7 +26,6 @@ module.exports = {
         "@web3-react/coinbase-wallet": false,
         "@web3-react/core": false,
         "@web3-react/metamask": false,
-        "@web3-react/walletconnect": false,
         "@web3-react/walletconnect-v2": false,
         "@ethersproject/keccak256": false,
         "chakra-react-select": false,
