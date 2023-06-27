@@ -18,12 +18,17 @@ import AlphaTag from "./components/AlphaTag"
 import CollectNftButton from "./components/buttons/CollectNftButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import { useCollectNftContext } from "./components/CollectNftContext"
+import CollectNftReward from "./components/CollectNftReward"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
+import TransactionStatusModal from "./components/TransactionStatusModal"
+import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaLink"
 
 const CollectNft = () => {
   const { chain, address } = useCollectNftContext()
   const { isOpen, onOpen, onClose } = useGuildCheckoutContext()
   const { data, isValidating } = useNftDetails(chain, address)
+
+  const modalTitle = `Collect ${data?.name ?? "NFT"}`
 
   return (
     <>
@@ -44,7 +49,7 @@ const CollectNft = () => {
         <ModalContent>
           <ModalHeader pb={4} pr={16}>
             <Text as="span" mr={2}>
-              {`Collect ${data?.name ?? "NFT"}`}
+              {modalTitle}
             </Text>
             <AlphaTag />
           </ModalHeader>
@@ -67,6 +72,30 @@ const CollectNft = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <TransactionStatusModal
+        title={modalTitle}
+        successTitle="Successful mint"
+        successText="Successful transaction!"
+        successLinkComponent={<OpenseaLink />}
+        errorComponent={<Text mb={4}>Couldn't mint NFT</Text>}
+        progressComponent={
+          <>
+            <Text fontWeight={"bold"} mb="2">
+              You'll get:
+            </Text>
+            <CollectNftReward />
+          </>
+        }
+        successComponent={
+          <>
+            <Text fontWeight={"bold"} mb="2">
+              Your new asset:
+            </Text>
+            <CollectNftReward />
+          </>
+        }
+      />
     </>
   )
 }
