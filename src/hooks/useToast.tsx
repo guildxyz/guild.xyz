@@ -3,12 +3,25 @@ import {
   LinkProps,
   Text,
   ToastId,
-  useColorModeValue,
   UseToastOptions,
+  useToast as chakraUseToast,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
-import useToast from "./useToast"
+
+const useToast = (toastOptions?: UseToastOptions) => {
+  const useToastWithDefaults = chakraUseToast({
+    position: "top-right",
+    variant: "toastSubtle",
+    isClosable: true,
+    duration: 4000,
+    ...toastOptions,
+  })
+
+  return useToastWithDefaults
+}
 
 type ActionToastOptions = UseToastOptions & {
   buttonProps: ButtonProps & LinkProps
@@ -55,4 +68,31 @@ const useActionToast = () => {
   return actionToast
 }
 
-export default useActionToast
+type TweetToastOptions = {
+  title: string
+  tweetText: string
+}
+
+const useTweetToast = () => {
+  const toast = useActionToast()
+
+  const tweetToast = ({ title, tweetText }: TweetToastOptions) =>
+    toast({
+      title,
+      description: "Let others know as well by sharing it on Twitter",
+      buttonProps: {
+        leftIcon: <TwitterLogo weight="fill" />,
+        children: "Tweet",
+        as: "a",
+        href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          tweetText
+        )}`,
+        target: "_blank",
+      },
+    })
+
+  return tweetToast
+}
+
+export default useToast
+export { useActionToast, useTweetToast }
