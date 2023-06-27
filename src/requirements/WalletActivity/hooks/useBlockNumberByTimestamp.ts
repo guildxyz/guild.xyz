@@ -1,18 +1,7 @@
-import { Chain, RPC } from "connectors"
+import { Chain } from "connectors"
 import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
-import fetcher from "utils/fetcher"
-
-export const getBlockByTime = ([_, chain, timestamp]) =>
-  fetcher(
-    `${RPC[chain].apiUrl}/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before`
-  ).then((json) => {
-    if (json.status !== "1")
-      throw new Error("Rate limited, will try again in 5 seconds")
-    if (json.message.includes("NOTOK")) throw new Error(json.result)
-
-    return json
-  })
+import { getBlockByTime } from "utils/getBlockByTime"
 
 const useBlockNumberByTimestamp = (
   chain: Chain,
