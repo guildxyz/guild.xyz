@@ -13,7 +13,7 @@ const CollapsibleRoleSection = ({
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen })
 
   return (
-    <Box>
+    <Box id="hiddenRoles">
       <Button
         variant="link"
         size="sm"

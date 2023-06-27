@@ -25,7 +25,7 @@ import { useState } from "react"
 import { Visibility } from "types"
 import useGuild from "../../hooks/useGuild"
 import FilterByRolesLogicSelector from "./FilterByRolesLogicSelector"
-import AddHiddenRoleButton from "./components/AddHiddenRoleButton"
+import AddAndEditHiddenRoles from "./components/AddAndEditHiddenRoles"
 import AddHiddenRoles from "./components/AddHiddenRoles"
 import FilterByRolesSearch from "./components/FilterByRolesSearch"
 
@@ -90,14 +90,7 @@ const FilterByRoles = ({ column }: Props) => {
               {hiddenRoles?.length ? (
                 <RoleCheckboxGroup
                   label="Hidden roles"
-                  labelRightElement={
-                    <AddHiddenRoleButton
-                      variant="ghost"
-                      opacity=".6"
-                      size="xs"
-                      borderRadius="lg"
-                    />
-                  }
+                  labelRightElement={<AddAndEditHiddenRoles />}
                   selectedRoleIds={selectedRoleIds.hiddenRoleIds}
                   setSelectedRoleIds={(newValue) => {
                     column
