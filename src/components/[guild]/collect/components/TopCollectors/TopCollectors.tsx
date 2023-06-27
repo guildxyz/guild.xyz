@@ -34,7 +34,7 @@ const TopCollectors = () => {
           columnGap={2}
           rowGap={4}
         >
-          {[...Array(100)].map((_, i) => (
+          {[...Array(24)].map((_, i) => (
             <CollectorSkeleton key={i} />
           ))}
         </SimpleGrid>

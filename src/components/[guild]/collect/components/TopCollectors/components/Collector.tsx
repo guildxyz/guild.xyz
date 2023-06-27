@@ -1,4 +1,4 @@
-import { Flex, SkeletonCircle, Text, VStack } from "@chakra-ui/react"
+import { Flex, Skeleton, SkeletonCircle, Text, VStack } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import shortenHex from "utils/shortenHex"
@@ -29,7 +29,12 @@ const Collector = ({ address }: Props): JSX.Element => {
   )
 }
 
-const CollectorSkeleton = () => <SkeletonCircle boxSize={{ base: 8, md: 10 }} />
+const CollectorSkeleton = () => (
+  <VStack spacing={1}>
+    <SkeletonCircle boxSize={{ base: 5, md: 7 }} />
+    <Skeleton w="full" h={3} />
+  </VStack>
+)
 
 export default Collector
 export { CollectorSkeleton }
