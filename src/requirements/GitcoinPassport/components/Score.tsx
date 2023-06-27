@@ -1,13 +1,11 @@
 import {
   FormControl,
   FormLabel,
-  Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useController, useFormContext } from "react-hook-form"
@@ -16,7 +14,6 @@ import parseFromObject from "utils/parseFromObject"
 
 const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
-    register,
     formState: { errors },
   } = useFormContext()
 
@@ -50,45 +47,29 @@ const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   }
 
   return (
-    <Stack spacing={4} alignItems="start" w="full">
-      <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
-        <FormLabel>Community ID</FormLabel>
+    <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.score}>
+      <FormLabel>Score</FormLabel>
 
-        <Input
-          {...register(`${baseFieldPath}.data.id`, {
-            required: "This field is required",
-          })}
-        />
+      <NumberInput
+        ref={scoreFieldRef}
+        name={scoreFieldName}
+        value={scoreFieldValue ?? undefined}
+        onChange={handleChange}
+        onBlur={scoreFieldOnBlur}
+        min={-1000000000}
+        max={1000000000}
+      >
+        <NumberInputField />
+        <NumberInputStepper>
+          <NumberIncrementStepper />
+          <NumberDecrementStepper />
+        </NumberInputStepper>
+      </NumberInput>
 
-        <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
-        </FormErrorMessage>
-      </FormControl>
-
-      <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.score}>
-        <FormLabel>Score</FormLabel>
-
-        <NumberInput
-          ref={scoreFieldRef}
-          name={scoreFieldName}
-          value={scoreFieldValue ?? undefined}
-          onChange={handleChange}
-          onBlur={scoreFieldOnBlur}
-          min={-1000000000}
-          max={1000000000}
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-
-        <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.score?.message}
-        </FormErrorMessage>
-      </FormControl>
-    </Stack>
+      <FormErrorMessage>
+        {parseFromObject(errors, baseFieldPath)?.data?.score?.message}
+      </FormErrorMessage>
+    </FormControl>
   )
 }
 
