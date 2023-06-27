@@ -175,7 +175,6 @@ const CollectNftPage = ({ fallback, ...rest }: Props) => (
   </SWRConfig>
 )
 
-// TODO: we'll probably be able to switch to ISR at some point
 const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const { chain: chainFromQuery, address: addressFromQuery, guild: urlName } = params
   const chain = validateNftChain(chainFromQuery)
