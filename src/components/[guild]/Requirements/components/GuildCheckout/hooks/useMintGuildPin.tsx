@@ -1,4 +1,3 @@
-import { useColorModeValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -37,7 +36,6 @@ const useMintGuildPin = () => {
 
   const tweetToast = useTweetToast()
   const showErrorToast = useShowErrorToast()
-  const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   const { chainId, account } = useWeb3React()
   const { pinType, setMintedTokenId } = useMintGuildPinContext()
