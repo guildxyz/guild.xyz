@@ -13,11 +13,15 @@ const useTweetToast = (): ((options: TweetToastOptions) => void) => {
     toast({
       title,
       description: "Let others know as well by sharing it on Twitter",
-      actionHref: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        tweetText
-      )}`,
-      actionText: "Tweet",
-      actionIcon: <TwitterLogo weight="fill" />,
+      buttonProps: {
+        leftIcon: <TwitterLogo weight="fill" />,
+        children: "Tweet",
+        as: "a",
+        href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          tweetText
+        )}`,
+        target: "_blank",
+      },
     })
 
   return tweetToast

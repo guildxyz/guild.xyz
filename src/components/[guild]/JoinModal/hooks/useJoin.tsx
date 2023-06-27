@@ -1,9 +1,9 @@
-import useMemberships from "components/explorer/hooks/useMemberships"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import useActionToast from "hooks/useActionToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useTweetToast from "hooks/useTweetToast"
@@ -100,9 +100,11 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
         actionToast({
           title: "Successfully joined guild",
           description: "Let others know as well by minting it on-chain",
-          actionIcon: <CircleWavyCheck weight="fill" />,
-          actionText: "Mint Guild Pin",
-          actionOnClick: onOpen,
+          buttonProps: {
+            leftIcon: <CircleWavyCheck weight="fill" />,
+            children: "Mint Guild Pin",
+            onClick: onOpen,
+          },
         })
       } else {
         tweetToast({

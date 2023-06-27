@@ -1,36 +1,31 @@
-import { Text, ToastId, useColorModeValue, UseToastOptions } from "@chakra-ui/react"
+import {
+  ButtonProps,
+  LinkProps,
+  Text,
+  ToastId,
+  useColorModeValue,
+  UseToastOptions,
+} from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { useRef } from "react"
 import useToast from "./useToast"
 
 type ActionToastOptions = UseToastOptions & {
-  actionIcon: JSX.Element
-  actionHref?: string
-  actionOnClick?: () => void
-  actionText: string
+  buttonProps: ButtonProps & LinkProps
 }
 
-const useActionToast = (): ((options: ActionToastOptions) => void) => {
+const useActionToast = () => {
   const toast = useToast()
   const toastIdRef = useRef<ToastId>()
   const actionButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   const actionToast = ({
     title,
-    actionOnClick,
-    actionHref,
-    actionIcon,
-    actionText,
     description,
+    buttonProps,
     ...rest
   }: ActionToastOptions) => {
-    const aProps = actionHref
-      ? {
-          as: "a",
-          href: actionHref,
-          target: "_blank",
-        }
-      : {}
+    const { onClick, ...restButtonProps } = buttonProps
 
     toastIdRef.current = toast({
       status: "success",
@@ -40,20 +35,17 @@ const useActionToast = (): ((options: ActionToastOptions) => void) => {
         <>
           {description && <Text>{description}</Text>}
           <Button
-            {...aProps}
             bg={actionButtonBackground}
-            leftIcon={actionIcon}
             size="sm"
             onClick={() => {
-              actionOnClick?.()
+              onClick?.(null)
               toast.close(toastIdRef.current)
             }}
             mt={3}
             mb="1"
             borderRadius="lg"
-          >
-            {actionText}
-          </Button>
+            {...restButtonProps}
+          />
         </>
       ),
       ...rest,
