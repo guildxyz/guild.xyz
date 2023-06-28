@@ -2,6 +2,8 @@ import { Chain } from "connectors"
 import { createContext, PropsWithChildren, useContext } from "react"
 
 type Props = {
+  roleId: number
+  rolePlatformId: number
   chain: Chain
   address: string
 }
@@ -9,11 +11,13 @@ type Props = {
 const CollectNftContext = createContext<Props>(undefined)
 
 const CollectNftProvider = ({
+  roleId,
+  rolePlatformId,
   chain,
   address,
   children,
 }: PropsWithChildren<Props>) => (
-  <CollectNftContext.Provider value={{ chain, address }}>
+  <CollectNftContext.Provider value={{ roleId, rolePlatformId, chain, address }}>
     {children}
   </CollectNftContext.Provider>
 )

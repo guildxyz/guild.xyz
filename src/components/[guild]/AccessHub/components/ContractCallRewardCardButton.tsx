@@ -18,6 +18,9 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
   const rewardsRoleId = roles.find((role) =>
     role.rolePlatforms?.find((rp) => rp.guildPlatformId === platform.id)
   )?.id
+  const rolePlatformId = roles
+    .find((role) => role.id === rewardsRoleId)
+    ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform.id)?.id
 
   const { data: roleAccess } = useAccess(rewardsRoleId)
   const hasAccessToRole = roleAccess?.access
@@ -42,6 +45,8 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
   return (
     <GuildCheckoutProvider>
       <CollectNftProvider
+        roleId={rewardsRoleId}
+        rolePlatformId={rolePlatformId}
         chain={platform.platformGuildData.chain}
         address={platform.platformGuildData.contractAddress}
       >

@@ -53,6 +53,9 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
   const role = roles?.find((r) =>
     r.rolePlatforms?.find((rp) => rp.guildPlatformId === guildPlatform.id)
   )
+  const rolePlatformId = role?.rolePlatforms?.find(
+    (rp) => rp.guildPlatformId === guildPlatform.id
+  )?.id
   const requirements = role?.requirements ?? []
 
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -67,7 +70,12 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
   const { data, isValidating } = useNftDetails(chain, address)
 
   return (
-    <CollectNftProvider chain={chain} address={address}>
+    <CollectNftProvider
+      roleId={role.id}
+      rolePlatformId={rolePlatformId}
+      chain={chain}
+      address={address}
+    >
       <Layout
         ogTitle="Collect NFT"
         background={theme?.color ?? "gray.900"}
