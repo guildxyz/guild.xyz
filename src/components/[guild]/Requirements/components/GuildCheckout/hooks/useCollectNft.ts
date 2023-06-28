@@ -1,14 +1,14 @@
-import { Contract } from "@ethersproject/contracts"
-import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { Chain, Chains } from "connectors"
+import { Chains } from "connectors"
+import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
 import ERC_721_ABI from "static/abis/erc721Abi.json"
+import { useFetcherWithSign } from "utils/fetcher"
 import { useCollectNftContext } from "../components/CollectNftContext"
 import useSubmitTransaction from "./useSubmitTransaction"
 
@@ -17,50 +17,54 @@ type ClaimData = {
   uniqueValue: string
 }
 
-const mint = async (
-  chain: Chain,
-  contractAddress: string,
-  userAddress: string,
-  provider: Web3Provider
-) => {
-  return Promise.resolve({ status: 1 })
-  if (Chains[chain] !== provider.network.chainId)
-    return Promise.reject("Please switch network before minting")
-
-  const contract = new Contract(
-    contractAddress,
-    ERC_721_ABI,
-    provider.getSigner(userAddress).connectUnchecked()
-  )
-
-  try {
-    await contract.callStatic.claim()
-  } catch (callstaticError) {
-    return Promise.reject(
-      callstaticError.errorName ?? callstaticError.reason ?? "Contract error"
-    )
-  }
-
-  return contract.claim()
-}
-
 const useCollectNft = () => {
   const { captureEvent } = usePostHogContext()
-  const { urlName } = useGuild()
+  const { id: guildId, urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
   const tweetToast = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { chainId, account, provider } = useWeb3React()
-  const { chain, address } = useCollectNftContext()
+  const { chainId } = useWeb3React()
+  const { chain, address, roleId, rolePlatformId } = useCollectNftContext()
   const { data } = useNftDetails(chain, address)
   const shouldSwitchChain = chainId !== Chains[chain]
 
   const [loadingText, setLoadingText] = useState("")
+  const fetcherWithSign = useFetcherWithSign()
+
+  const contract = useContract(address, ERC_721_ABI, true)
+
+  // Still WIP, no need to review
+  const mint = async () => {
+    if (shouldSwitchChain)
+      return Promise.reject("Please switch network before minting")
+
+    setLoadingText("Claiming NFT")
+
+    const { uniqueValue }: ClaimData = await fetcherWithSign([
+      `/FORCE_V2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`,
+      {
+        body: {
+          // TODO
+          args: [],
+        },
+      },
+    ])
+
+    try {
+      await contract.callStatic.claim()
+    } catch (callstaticError) {
+      return Promise.reject(
+        callstaticError.errorName ?? callstaticError.reason ?? "Contract error"
+      )
+    }
+
+    return contract.claim()
+  }
 
   return {
-    ...useSubmitTransaction<null>(() => mint(chain, address, account, provider), {
+    ...useSubmitTransaction<null>(mint, {
       onSuccess: (txReceipt) => {
         setLoadingText("")
 
