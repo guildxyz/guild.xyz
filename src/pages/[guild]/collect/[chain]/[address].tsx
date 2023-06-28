@@ -16,6 +16,7 @@ import Links from "components/[guild]/collect/components/Links"
 import NftByRole from "components/[guild]/collect/components/NftByRole"
 import RequirementsCard from "components/[guild]/collect/components/RequirementsCard"
 import RichTextDescription from "components/[guild]/collect/components/RichTextDescription"
+import ShareButton from "components/[guild]/collect/components/ShareButton"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -72,17 +73,21 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
         backgroundImage={theme?.backgroundImage}
         maxWidth="container.xl"
       >
-        <Stack spacing={8}>
-          <HStack>
-            <GuildLogo imageUrl={imageUrl} size={8} />
-            <Link
-              href={`/${urlName}`}
-              fontFamily="display"
-              fontWeight="bold"
-              color={textColor}
-            >
-              {name}
-            </Link>
+        <Stack spacing={4}>
+          <HStack justifyContent="space-between">
+            <HStack>
+              <GuildLogo imageUrl={imageUrl} size={8} />
+              <Link
+                href={`/${urlName}`}
+                fontFamily="display"
+                fontWeight="bold"
+                color={textColor}
+              >
+                {name}
+              </Link>
+            </HStack>
+
+            <ShareButton />
           </HStack>
 
           <SimpleGrid
