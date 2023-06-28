@@ -25,7 +25,6 @@ const LogicDivider = ({ logic, ...rest }: Props): JSX.Element => {
         fontWeight="bold"
         color={colorMode === "light" ? "blackAlpha.500" : "whiteAlpha.400"}
         flexShrink={0}
-        textTransform="uppercase"
       >
         {formattedLogic[logic]}
       </Flex>
