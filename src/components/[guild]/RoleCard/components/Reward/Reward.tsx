@@ -85,10 +85,7 @@ const Reward = ({
     }
   }, [isMember, hasAccess, account, accessButtonProps, isLinkColorful])
 
-  const isContractCallReward =
-    platform.guildPlatform.platformId === PlatformType.CONTRACT_CALL
-
-  if (isContractCallReward)
+  if (platform.guildPlatform.platformId === PlatformType.CONTRACT_CALL)
     return <ContractCallReward platform={platform} withMotionImg={withMotionImg} />
 
   return (
