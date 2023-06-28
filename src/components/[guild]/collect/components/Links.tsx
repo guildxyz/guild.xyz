@@ -2,11 +2,11 @@ import { Flex, Icon, Img } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useCollectNftContext } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
-import { openseaBaseUrl } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal/components/OpenseaLink"
 import SocialIcon from "components/[guild]/SocialIcon"
 import { ArrowSquareOut } from "phosphor-react"
 import { SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
+import { openseaBaseUrl } from "utils/guildCheckout/constants"
 import Section from "./Section"
 
 const Links = () => {
