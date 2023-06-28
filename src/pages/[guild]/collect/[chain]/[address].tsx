@@ -1,9 +1,9 @@
 import {
+  Box,
   Heading,
   HStack,
   SimpleGrid,
   Stack,
-  Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -15,6 +15,7 @@ import Details from "components/[guild]/collect/components/Details"
 import Links from "components/[guild]/collect/components/Links"
 import NftByRole from "components/[guild]/collect/components/NftByRole"
 import RequirementsCard from "components/[guild]/collect/components/RequirementsCard"
+import RichTextDescription from "components/[guild]/collect/components/RichTextDescription"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -29,6 +30,7 @@ import {
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
 import { useRef, useState } from "react"
+
 import { SWRConfig, unstable_serialize } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -109,9 +111,11 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
                     />
                   )}
 
-                  <Text ref={nftDescriptionRef} lineHeight={1.75}>
-                    {guildPlatform.platformGuildData?.description}
-                  </Text>
+                  <Box ref={nftDescriptionRef} lineHeight={1.75}>
+                    <RichTextDescription
+                      text={guildPlatform.platformGuildData?.description}
+                    />
+                  </Box>
                 </Stack>
 
                 <Links />
