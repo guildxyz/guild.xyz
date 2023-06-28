@@ -10,6 +10,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import Link from "components/common/Link"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import Details from "components/[guild]/collect/components/Details"
 import Links from "components/[guild]/collect/components/Links"
@@ -178,6 +179,7 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
 
 const CollectNftPage = ({ fallback, ...rest }: Props) => (
   <SWRConfig value={fallback && { fallback }}>
+    <LinkPreviewHead path={Object.values(fallback ?? {})[0]?.urlName ?? ""} />
     <ThemeProvider>
       <Page {...rest} />
     </ThemeProvider>
