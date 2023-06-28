@@ -25,7 +25,7 @@ const GuildPinFees = (): JSX.Element => {
               <Skeleton isLoaded={!isGuildPinFeeLoading}>
                 <Text as="span">
                   {guildPinFeeInFloat
-                    ? `${Number(guildPinFeeInFloat.toFixed(3))} `
+                    ? `${Number(guildPinFeeInFloat.toFixed(5))} `
                     : "0.00 "}
                   {symbol}
                 </Text>
@@ -48,7 +48,7 @@ const GuildPinFees = (): JSX.Element => {
         <Td isNumeric>
           <Skeleton isLoaded={!!guildPinFeeInFloat}>
             {guildPinFeeInFloat
-              ? `${Number(guildPinFeeInFloat.toFixed(3))} ${symbol}`
+              ? `${Number(guildPinFeeInFloat.toFixed(10))} ${symbol}`
               : "Loading"}
           </Skeleton>
         </Td>
@@ -64,7 +64,7 @@ const GuildPinFees = (): JSX.Element => {
         <Td isNumeric color="WindowText">
           {`${
             guildPinFeeInFloat
-              ? `${Number(guildPinFeeInFloat.toFixed(3))} `
+              ? `${Number(guildPinFeeInFloat.toFixed(5))} `
               : "0.00 "
           } ${symbol}`}{" "}
           + gas
