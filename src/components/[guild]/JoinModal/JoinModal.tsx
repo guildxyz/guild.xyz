@@ -54,7 +54,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
       return <ConnectComponent key={platform} />
     }
 
-    // Temporary solution, we'll handle this automatically after the rewards/platforms refactor
+    // TODO: Temporary solution, we'll handle this automatically after the rewards/platforms refactor
     if (platform === "CONTRACT_CALL") return null
 
     return <ConnectPlatform key={platform} platform={platform as PlatformName} />

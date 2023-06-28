@@ -20,6 +20,7 @@ const SelectExistingPlatform = ({ onClose }) => {
 
   const roleVisibility: Visibility = useWatch({ name: ".visibility" })
 
+  // TODO: Temporary solution, we'll handle this automatically after the rewards/platforms refactor
   const filteredPlatforms = guildPlatforms
     .filter(
       (guildPlatform) => guildPlatform.platformId !== PlatformType.CONTRACT_CALL
