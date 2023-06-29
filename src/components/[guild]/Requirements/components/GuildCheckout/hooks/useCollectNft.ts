@@ -9,6 +9,7 @@ import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
 import GUILD_REWARD_NFT_ABI from "static/abis/guildRewardNft.json"
 import { useFetcherWithSign } from "utils/fetcher"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useCollectNftContext } from "../components/CollectNftContext"
 import useSubmitTransaction from "./useSubmitTransaction"
 
@@ -25,7 +26,7 @@ const useCollectNft = () => {
   const tweetToast = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { chainId } = useWeb3React()
+  const { chainId, account } = useWeb3React()
   const { chain, address, roleId, rolePlatformId } = useCollectNftContext()
   const { data } = useNftDetails(chain, address)
   const shouldSwitchChain = chainId !== Chains[chain]
@@ -46,21 +47,29 @@ const useCollectNft = () => {
       `/FORCE_V2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`,
       {
         body: {
-          // TODO
           args: [],
         },
       },
     ])
 
+    const claimParams = [
+      NULL_ADDRESS,
+      account,
+      uniqueValue,
+      {
+        value: data.fee,
+      },
+    ]
+
     try {
-      await contract.callStatic.claim()
+      await contract.callStatic.claim(...claimParams)
     } catch (callstaticError) {
       return Promise.reject(
         callstaticError.errorName ?? callstaticError.reason ?? "Contract error"
       )
     }
 
-    return contract.claim()
+    return contract.claim(...claimParams)
   }
 
   return {
