@@ -20,7 +20,7 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
 
-  const { chain, address } = useCollectNftContext()
+  const { chain, address, alreadyCollected } = useCollectNftContext()
   const { data, isValidating } = useNftDetails(chain, address)
 
   const padding = { base: 5, sm: 6, lg: 7, xl: 8 }
@@ -62,7 +62,9 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
         <CollectNftFeesTable bgColor={requirementsSectionBgColor} />
 
         <Stack w="full" spacing={2}>
-          <SwitchNetworkButton targetChainId={Chains[chain]} />
+          {typeof alreadyCollected !== "undefined" && !alreadyCollected && (
+            <SwitchNetworkButton targetChainId={Chains[chain]} />
+          )}
           <CollectNftButton label="Collect now" colorScheme="green" />
         </Stack>
 

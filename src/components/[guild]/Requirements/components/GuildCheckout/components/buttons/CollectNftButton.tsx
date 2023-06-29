@@ -1,5 +1,4 @@
 import { ButtonProps } from "@chakra-ui/react"
-import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useMemberships from "components/explorer/hooks/useMemberships"
@@ -28,7 +27,7 @@ const CollectNftButton = ({
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
 
-  const { roleId, chain, address } = useCollectNftContext()
+  const { roleId, chain, address, alreadyCollected } = useCollectNftContext()
   const { id, urlName } = useGuild()
 
   const {
@@ -64,11 +63,7 @@ const CollectNftButton = ({
     chain,
     address
   )
-  const { tokenBalance: nftBalance, isLoading: isNftBalanceLoading } = useBalance(
-    address,
-    Chains[chain]
-  )
-  const alreadyCollected = nftBalance?.gt(BigNumber.from(0))
+  const { isLoading: isNftBalanceLoading } = useBalance(address, Chains[chain])
   const { coinBalance, isLoading: isBalanceLoading } = useBalance(
     undefined,
     Chains[chain]

@@ -29,7 +29,7 @@ const CollectNft = () => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
-  const { chain, address } = useCollectNftContext()
+  const { chain, address, alreadyCollected } = useCollectNftContext()
   const { isOpen, onOpen, onClose } = useGuildCheckoutContext()
   const { data, isValidating } = useNftDetails(chain, address)
 
@@ -76,7 +76,9 @@ const CollectNft = () => {
           <ModalFooter flexDir="column">
             <Stack w="full" spacing={2}>
               <CollectNftFeesTable />
-              <SwitchNetworkButton targetChainId={Chains[chain]} />
+              {typeof alreadyCollected !== "undefined" && !alreadyCollected && (
+                <SwitchNetworkButton targetChainId={Chains[chain]} />
+              )}
               <CollectNftButton />
             </Stack>
           </ModalFooter>
