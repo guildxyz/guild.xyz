@@ -31,7 +31,7 @@ const gitcoinPassportRequirementTypes = [
 
 const GitcoinPassportForm = ({ baseFieldPath }: RequirementFormProps) => {
   const {
-    setValue,
+    resetField,
     formState: { errors },
   } = useFormContext()
 
@@ -42,9 +42,13 @@ const GitcoinPassportForm = ({ baseFieldPath }: RequirementFormProps) => {
   )
 
   const resetFields = () => {
-    setValue(`${baseFieldPath}.data.id`, null)
-    setValue(`${baseFieldPath}.data.stamp`, null)
-    setValue(`${baseFieldPath}.data.score`, null)
+    resetField(`${baseFieldPath}.data.id`, { defaultValue: null })
+    resetField(`${baseFieldPath}.data.stamp`, { defaultValue: null })
+    resetField(`${baseFieldPath}.data.score`, { defaultValue: null })
+    resetField(`${baseFieldPath}.data.credType`, { defaultValue: null })
+    resetField(`${baseFieldPath}.data.issuer`, { defaultValue: null })
+    resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: null })
+    resetField(`${baseFieldPath}.data.maxAmount`, { defaultValue: null })
   }
 
   return (
