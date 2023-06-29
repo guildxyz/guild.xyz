@@ -21,7 +21,8 @@ type NFTDetails = {
   totalCollectors: number
   totalCollectorsToday?: number
   standard: NftStandard
-  image: string
+  image?: string
+  description?: string
   fee: BigNumber
 }
 
@@ -76,12 +77,14 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       : undefined
 
     let image = ""
+    let description = ""
 
     if (tokenURI) {
       const metadata = await fetcher(
         tokenURI.replace("ipfs://", process.env.NEXT_PUBLIC_IPFS_GATEWAY)
-      )
-      image = metadata.image?.replace(
+      ).catch(() => null)
+      description = metadata?.description
+      image = metadata?.image?.replace(
         "ipfs://",
         process.env.NEXT_PUBLIC_IPFS_GATEWAY
       )
@@ -96,6 +99,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
         : 0,
       standard: isERC1155 ? "ERC-1155" : isERC721 ? "ERC-721" : "Unknown",
       image,
+      description,
       fee,
     }
   } catch {
@@ -106,6 +110,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       totalCollectorsToday: undefined,
       standard: undefined,
       image: undefined,
+      description: undefined,
       fee: undefined,
     }
   }

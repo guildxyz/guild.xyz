@@ -66,6 +66,11 @@ const CollectNft = () => {
               isLoading={isValidating}
               borderRadius="xl"
             />
+            {data?.description && (
+              <Text textAlign="center" fontWeight="medium" p="4">
+                {data.description}
+              </Text>
+            )}
           </ModalBody>
 
           <ModalFooter flexDir="column">
