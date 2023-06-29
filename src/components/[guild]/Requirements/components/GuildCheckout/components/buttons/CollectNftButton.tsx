@@ -1,3 +1,4 @@
+import { ButtonProps } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useMemberships from "components/explorer/hooks/useMemberships"
@@ -15,7 +16,14 @@ import { useCollectNftContext } from "../CollectNftContext"
 const rejoin = (signedValidation: SignedValdation) =>
   fetcher(`/user/join`, signedValidation)
 
-const CollectNftButton = (): JSX.Element => {
+type Props = {
+  label?: string
+} & ButtonProps
+
+const CollectNftButton = ({
+  label = "Collect NFT",
+  ...rest
+}: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
 
@@ -95,10 +103,11 @@ const CollectNftButton = (): JSX.Element => {
           onMintSubmit()
         }
       }}
+      {...rest}
     >
       {typeof isSufficientBalance === "boolean" && !isSufficientBalance
         ? "Insufficient balance"
-        : "Collect NFT"}
+        : label}
     </Button>
   )
 }
