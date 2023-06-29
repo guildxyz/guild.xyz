@@ -1,4 +1,5 @@
 import { ButtonProps } from "@chakra-ui/react"
+import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useMemberships from "components/explorer/hooks/useMemberships"
@@ -63,6 +64,11 @@ const CollectNftButton = ({
     chain,
     address
   )
+  const { tokenBalance: nftBalance, isLoading: isNftBalanceLoading } = useBalance(
+    address,
+    Chains[chain]
+  )
+  const alreadyCollected = nftBalance?.gt(BigNumber.from(0))
   const { coinBalance, isLoading: isBalanceLoading } = useBalance(
     undefined,
     Chains[chain]
@@ -77,13 +83,14 @@ const CollectNftButton = ({
     isNftDetailsValidating ||
     isBalanceLoading
   const loadingText =
-    isJoinLoading || isMembershipsLoading
+    isNftBalanceLoading || isJoinLoading || isMembershipsLoading
       ? "Checking eligibility"
       : isMinting
       ? mintLoadingText
       : "Checking your balance"
 
-  const isDisabled = shouldSwitchNetwork || !isSufficientBalance || isLoading
+  const isDisabled =
+    shouldSwitchNetwork || alreadyCollected || !isSufficientBalance || isLoading
 
   return (
     <Button
@@ -105,7 +112,9 @@ const CollectNftButton = ({
       }}
       {...rest}
     >
-      {typeof isSufficientBalance === "boolean" && !isSufficientBalance
+      {alreadyCollected
+        ? "Already collected"
+        : typeof isSufficientBalance === "boolean" && !isSufficientBalance
         ? "Insufficient balance"
         : label}
     </Button>
