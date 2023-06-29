@@ -1,16 +1,12 @@
 import {
   Box,
+  Divider,
   Heading,
   HStack,
   SimpleGrid,
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import Link from "components/common/Link"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import Details from "components/[guild]/collect/components/Details"
 import Links from "components/[guild]/collect/components/Links"
@@ -23,6 +19,11 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { CollectNftProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import Link from "components/common/Link"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { Chain } from "connectors"
 import { AnimatePresence, motion } from "framer-motion"
 import useScrollEffect from "hooks/useScrollEffect"
@@ -102,41 +103,42 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
           <SimpleGrid
             templateColumns={{
               base: "1fr",
-              md: "1fr 1fr",
-              xl: "7fr 5fr",
+              md: "7fr 5fr",
             }}
             gap={{ base: 6, lg: 8 }}
           >
-            <Stack overflow="hidden" w="full" spacing={12}>
+            <Stack overflow="hidden" w="full" spacing={{ base: 6, lg: 8 }}>
               <CollectibleImage src={data?.image} isLoading={isValidating} />
 
-              <Stack spacing={8}>
-                <Stack spacing={4}>
-                  <Heading as="h2" fontFamily="display" fontSize="4xl">
-                    {data?.name}
-                  </Heading>
+              <Stack spacing={6}>
+                <Heading
+                  as="h2"
+                  fontFamily="display"
+                  fontSize={{ base: "3xl", lg: "4xl" }}
+                >
+                  {data?.name}
+                </Heading>
+                {isMobile && (
+                  <RequirementsCard
+                    requirements={requirements}
+                    logic={role?.logic}
+                  />
+                )}
 
-                  <NftByRole role={role} />
+                {/* <NftByRole role={role} /> */}
 
-                  {isMobile && (
-                    <RequirementsCard
-                      requirements={requirements}
-                      logic={role?.logic}
-                    />
-                  )}
-
-                  <Box ref={nftDescriptionRef} lineHeight={1.75}>
-                    <RichTextDescription
-                      text={guildPlatform.platformGuildData?.description}
-                    />
-                  </Box>
-                </Stack>
-
-                <Links />
-                <Details />
-
-                <TopCollectors />
+                <Box ref={nftDescriptionRef} lineHeight={1.75}>
+                  <RichTextDescription
+                    text={guildPlatform.platformGuildData?.description}
+                  />
+                </Box>
               </Stack>
+              <Divider />
+              <Links />
+              <Divider />
+              <Details />
+              <Divider />
+              <TopCollectors />
             </Stack>
 
             {!isMobile && (
@@ -158,7 +160,7 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
                           isLoading={isValidating}
                         />
 
-                        <Stack spacing={4}>
+                        <Stack spacing={3} justifyContent={"center"}>
                           <Heading as="h2" fontFamily="display" fontSize="2xl">
                             {data?.name}
                           </Heading>
@@ -236,4 +238,4 @@ const getStaticPaths: GetStaticPaths = () => ({
 })
 
 export default CollectNftPage
-export { getStaticProps, getStaticPaths }
+export { getStaticPaths, getStaticProps }

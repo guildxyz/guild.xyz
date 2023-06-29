@@ -1,8 +1,8 @@
-import { HStack, Skeleton, Text } from "@chakra-ui/react"
+import { SimpleGrid, Skeleton, Text } from "@chakra-ui/react"
 import { useCollectNftContext } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
+import Section from "components/common/Section"
 import { RPC } from "connectors"
 import useNftDetails from "../../hooks/useNftDetails"
-import Section from "../Section"
 import BlockExplorerLink from "./components/BlockExplorerLink"
 import InfoBlock from "./components/InfoBlock"
 
@@ -16,8 +16,8 @@ const Details = () => {
   } = useNftDetails(chain, address)
 
   return (
-    <Section title="Details">
-      <HStack spacing={8}>
+    <Section title="Details" spacing={3}>
+      <SimpleGrid spacing={3} columns={{ base: 2, sm: 4, md: 2, lg: 4 }}>
         <InfoBlock label="Standard">
           <Skeleton isLoaded={!isNftDetailsValidating}>
             <Text as="span" fontSize="md" colorScheme="gray">
@@ -27,17 +27,19 @@ const Details = () => {
         </InfoBlock>
 
         <InfoBlock label="Network">{chainName}</InfoBlock>
-      </HStack>
+        <InfoBlock label="Contract">
+          <BlockExplorerLink chain={chain} address={address} />
+        </InfoBlock>
 
-      <BlockExplorerLink label="Contract" chain={chain} address={address} />
-
-      <BlockExplorerLink
-        label="Creator"
-        chain={chain}
-        address={nftDetails?.creator}
-        isValidating={isNftDetailsValidating}
-        error={nftDetailsError}
-      />
+        <InfoBlock label="Creator">
+          <BlockExplorerLink
+            chain={chain}
+            address={nftDetails?.creator}
+            isValidating={isNftDetailsValidating}
+            error={nftDetailsError}
+          />
+        </InfoBlock>
+      </SimpleGrid>
     </Section>
   )
 }

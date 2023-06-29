@@ -1,4 +1,4 @@
-import { Flex, Skeleton, SkeletonCircle, Text, VStack } from "@chakra-ui/react"
+import { Skeleton, SkeletonCircle, Text, VStack } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import shortenHex from "utils/shortenHex"
@@ -13,16 +13,9 @@ const Collector = ({ address }: Props): JSX.Element => {
   if (!address) return null
 
   return (
-    <VStack spacing={1}>
-      <Flex
-        justifyContent="center"
-        opacity="0.5"
-        transition="opacity .1s"
-        _hover={{ opacity: 1 }}
-      >
-        <GuildAvatar address={address} size={{ base: 4, md: 6 }} />
-      </Flex>
-      <Text as="span" fontWeight="semibold" fontSize="xs" maxW="full" noOfLines={1}>
+    <VStack spacing={1} opacity="0.5">
+      <GuildAvatar address={address} size={{ base: 6, sm: 7, md: 8 }} />
+      <Text as="span" fontWeight="semibold" fontSize="sm" maxW="full" noOfLines={1}>
         {domain ?? shortenHex(address, 3)}
       </Text>
     </VStack>

@@ -155,34 +155,36 @@ const Layout = ({
               {backButton.text}
             </LinkButton>
           )}
-          <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
-            <HStack justify="space-between" w="full" spacing={3}>
-              <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
-                {image}
-                <Heading
-                  as="h1"
-                  fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
-                  fontFamily="display"
-                  color={textColor}
-                  wordBreak={"break-word"}
-                >
-                  {title}
-                </Heading>
+          {(image || title || description) && (
+            <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
+              <HStack justify="space-between" w="full" spacing={3}>
+                <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
+                  {image}
+                  <Heading
+                    as="h1"
+                    fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+                    fontFamily="display"
+                    color={textColor}
+                    wordBreak={"break-word"}
+                  >
+                    {title}
+                  </Heading>
+                </HStack>
+                {action}
               </HStack>
 
-              {action}
-            </HStack>
-            {description && (
-              <Box
-                w="full"
-                fontWeight="semibold"
-                color={textColor}
-                mb="-2 !important"
-              >
-                {description}
-              </Box>
-            )}
-          </VStack>
+              {description && (
+                <Box
+                  w="full"
+                  fontWeight="semibold"
+                  color={textColor}
+                  mb="-2 !important"
+                >
+                  {description}
+                </Box>
+              )}
+            </VStack>
+          )}
           <Box ref={childrenWrapper}>{children}</Box>
         </Container>
 

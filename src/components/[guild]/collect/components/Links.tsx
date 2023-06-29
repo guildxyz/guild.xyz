@@ -1,28 +1,26 @@
-import { Flex, Icon, Img } from "@chakra-ui/react"
-import Link from "components/common/Link"
-import useGuild from "components/[guild]/hooks/useGuild"
+import { Icon, Img, Wrap } from "@chakra-ui/react"
 import { useCollectNftContext } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
 import SocialIcon from "components/[guild]/SocialIcon"
+import useGuild from "components/[guild]/hooks/useGuild"
+import Link from "components/common/Link"
+import Section from "components/common/Section"
 import { ArrowSquareOut } from "phosphor-react"
 import { SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
 import { openseaBaseUrl } from "utils/guildCheckout/constants"
-import Section from "./Section"
 
 const Links = () => {
   const { chain, address } = useCollectNftContext()
   const { socialLinks } = useGuild()
 
   return (
-    <Section title="Links">
-      <Flex flexWrap="wrap">
+    <Section title="Links" spacing={3}>
+      <Wrap spacingX={6} spacingY={3}>
         {openseaBaseUrl[chain] && (
           <Link
             href={`${openseaBaseUrl[chain]}/${address}`}
             isExternal
             colorScheme="gray"
-            mr={4}
-            mb={2}
             fontWeight="medium"
           >
             <Img src={"/requirementLogos/opensea.svg"} boxSize={5} mr="1.5" />
@@ -38,8 +36,6 @@ const Links = () => {
               href={link}
               isExternal
               colorScheme="gray"
-              mr={4}
-              mb={2}
               fontWeight="medium"
             >
               <SocialIcon type={type as SocialLinkKey} size="sm" mr="1.5" />
@@ -47,7 +43,7 @@ const Links = () => {
               <Icon ml={1.5} as={ArrowSquareOut} />
             </Link>
           ))}
-      </Flex>
+      </Wrap>
     </Section>
   )
 }
