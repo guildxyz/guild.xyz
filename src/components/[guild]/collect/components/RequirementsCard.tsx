@@ -1,9 +1,11 @@
 import { Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react"
-import LogicDivider from "components/[guild]/LogicDivider"
-import { useCollectNftContext } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
-import CollectNftButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/CollectNftButton"
-import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import Card from "components/common/Card"
+import LogicDivider from "components/[guild]/LogicDivider"
+import CollectNftButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/CollectNftButton"
+import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
+import { useCollectNftContext } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
+import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import { Chains } from "connectors"
 import { Fragment } from "react"
 import { Logic, Requirement } from "types"
 import useNftDetails from "../hooks/useNftDetails"
@@ -59,7 +61,10 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
       <Stack p={padding} w="full" alignItems="center" spacing={4}>
         <CollectNftFeesTable bgColor={requirementsSectionBgColor} />
 
-        <CollectNftButton label="Collect now" colorScheme="green" />
+        <Stack w="full" spacing={2}>
+          <SwitchNetworkButton targetChainId={Chains[chain]} />
+          <CollectNftButton label="Collect now" colorScheme="green" />
+        </Stack>
 
         {(data || isValidating) && (
           <Skeleton maxW="max-content" isLoaded={!isValidating && !!data}>
