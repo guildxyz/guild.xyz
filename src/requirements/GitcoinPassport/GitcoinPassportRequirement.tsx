@@ -25,6 +25,7 @@ import Requirement, {
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
+import { scorers } from "./components/Score"
 
 type Keys = "stamp" | "issuer" | "credType" | "minAmount" | "maxAmount"
 const nameByKey: Record<Keys, string> = {
@@ -145,9 +146,8 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
               <>
                 {"Have a Gitcoin Passport with "}
                 <DataBlock>{requirement.data.score}</DataBlock>
-                {" score in the "}
-                <DataBlock>{`#${requirement.data.id}`}</DataBlock>
-                {" community"}
+                {" score in "}
+                <DataBlock>{`${scorers[requirement.data.id]}`}</DataBlock>
               </>
             )
           default:

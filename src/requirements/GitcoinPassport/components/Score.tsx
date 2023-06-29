@@ -14,12 +14,16 @@ import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
-const scorerOptions: SelectOption[] = [
-  {
-    label: "Unique humanity score",
-    value: "1351",
-  },
-]
+export const scorers: Record<number, string> = {
+  1351: "Unique Humanity Score",
+}
+
+const scorerOptions: SelectOption[] = Object.entries(scorers).map(
+  ([scorerId, scorerName]) => ({
+    label: scorerName,
+    value: scorerId.toString(),
+  })
+)
 
 const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
