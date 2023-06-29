@@ -16,6 +16,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useMemo, useState } from "react"
+import { Visibility } from "types"
 import fetcher from "utils/fetcher"
 import DraggableRoleCard from "./DraggableRoleCard"
 
@@ -43,7 +44,11 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     })
   }, [roles])
 
-  const defaultRoleIdsOrder = sortedRoles?.map((role) => role.id)
+  const publicRoles = sortedRoles.filter(
+    (role) => role.visibility !== Visibility.HIDDEN
+  )
+
+  const defaultRoleIdsOrder = publicRoles?.map((role) => role.id)
   const [roleIdsOrder, setRoleIdsOrder] = useState(defaultRoleIdsOrder)
   const toast = useToast()
   const showErrorToast = useShowErrorToast()

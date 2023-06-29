@@ -9,6 +9,7 @@ import { useToastWithTweetButton } from "hooks/useToast"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useState } from "react"
 import { GuildPinMetadata } from "types"
+import base64ToObject from "utils/base64ToObject"
 import fetcher from "utils/fetcher"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
@@ -134,12 +135,8 @@ const useMintGuildPin = () => {
         captureEvent("Minted Guild Pin (GuildCheckout)", postHogOptions)
 
         try {
-          const metadata: GuildPinMetadata = JSON.parse(
-            Buffer.from(
-              tokenURI.replace("data:application/json;base64,", ""),
-              "base64"
-            ).toString("utf-8")
-          )
+          const metadata: GuildPinMetadata =
+            base64ToObject<GuildPinMetadata>(tokenURI)
 
           mutate((prevData) => [
             ...(prevData ?? []),
