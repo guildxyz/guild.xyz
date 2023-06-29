@@ -19,6 +19,7 @@ export type TopCollectorsResponse =
 
 const alchemyApiUrl: Partial<Record<Chain, string>> = {
   POLYGON: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.POLYGON_ALCHEMY_KEY}/getOwnersForContract`,
+  POLYGON_MUMBAI: `https://polygon-mumbai.g.alchemy.com/nft/v3/${process.env.POLYGON_MUMBAI_ALCHEMY_KEY}/getOwnersForContract`,
 }
 
 export const validateNftChain = (value: string | string[]): Chain => {
