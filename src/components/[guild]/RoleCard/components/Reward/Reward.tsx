@@ -1,8 +1,10 @@
 import {
+  Circle,
   HStack,
   Icon,
   Img,
   SkeletonCircle,
+  SkeletonProps,
   Spinner,
   Text,
   Tooltip,
@@ -19,7 +21,7 @@ import Visibility from "components/[guild]/Visibility"
 import { motion, Transition } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
-import { ReactNode, useMemo } from "react"
+import { forwardRef, ReactNode, useMemo } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 import ContractCallReward from "./components/ContractCallReward"
@@ -159,7 +161,13 @@ const RewardDisplay = ({
   </HStack>
 )
 
-const MotionSkeletonCircle = motion(SkeletonCircle)
+const MotionSkeletonCircle = motion(
+  forwardRef((props: SkeletonProps, ref: any) => (
+    <Circle ref={ref} size={props.boxSize}>
+      <SkeletonCircle {...props} />
+    </Circle>
+  ))
+)
 const MotionImg = motion(Img)
 
 const RewardIcon = ({
