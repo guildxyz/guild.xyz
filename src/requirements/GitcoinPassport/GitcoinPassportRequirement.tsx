@@ -1,7 +1,6 @@
 import {
   HStack,
   Icon,
-  Img,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -64,13 +63,6 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
               <Button
                 size="xs"
                 colorScheme="teal"
-                leftIcon={
-                  <Img
-                    src="/requirementLogos/gitcoin-passport.svg"
-                    alt="GitCoin Passport logo"
-                    boxSize={3}
-                  />
-                }
                 rightIcon={<ArrowSquareOut />}
                 iconSpacing="1"
               >
