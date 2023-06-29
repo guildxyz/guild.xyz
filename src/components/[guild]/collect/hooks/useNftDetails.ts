@@ -4,7 +4,7 @@ import { JsonRpcBatchProvider } from "@ethersproject/providers"
 import { Chain, Chains, RPC } from "connectors"
 import GUILD_REWARD_NFT_ABI from "static/abis/guildRewardNft.json"
 import useSWRImmutable from "swr/immutable"
-import base64ToObject from "utils/base64ToObject"
+import fetcher from "utils/fetcher"
 import { getBlockByTime } from "utils/getBlockByTime"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 
@@ -62,7 +62,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
         contract.totalSupply(),
         contract.supportsInterface(ContractInterface.ERC721),
         contract.supportsInterface(ContractInterface.ERC1155),
-        contract.tokenURI(1).catch(() => ""),
+        contract.tokenURI(0).catch(() => ""),
         contract.fee(NULL_ADDRESS),
       ])
 
@@ -78,7 +78,9 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
     let image = ""
 
     if (tokenURI) {
-      const metadata = base64ToObject(tokenURI)
+      const metadata = await fetcher(
+        tokenURI.replace("ipfs://", process.env.NEXT_PUBLIC_IPFS_GATEWAY)
+      )
       image = metadata.image?.replace(
         "ipfs://",
         process.env.NEXT_PUBLIC_IPFS_GATEWAY
