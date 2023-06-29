@@ -86,7 +86,7 @@ const TopCollectors = () => {
             >
               {`and ${new Intl.NumberFormat("en", {
                 notation: "standard",
-              }).format(data.uniqueCollectors - 50)} more`}
+              }).format(Math.max(data.uniqueCollectors - 50, 0))} more`}
             </Text>
             <Divider borderStyle={"dotted"} borderBottomWidth={4} />
             <Text

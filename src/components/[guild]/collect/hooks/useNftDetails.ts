@@ -91,7 +91,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       totalCollectors: totalSupplyAsNumber,
       totalCollectorsToday: firstTotalSupplyTodayAsNumber
         ? totalSupplyAsNumber - firstTotalSupplyToday
-        : undefined,
+        : 0,
       standard: isERC1155 ? "ERC-1155" : isERC721 ? "ERC-721" : "Unknown",
       image,
       fee,
