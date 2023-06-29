@@ -13,8 +13,7 @@ import Collector, { CollectorSkeleton } from "./components/Collector"
 
 const TopCollectors = () => {
   const { data, isValidating, error } = useTopCollectors()
-  const top3Collectors = data?.topCollectors?.slice(0, 3)
-  const restCollectors = data?.topCollectors?.slice(0, 36).slice(3)
+  const shownCollectors = data?.topCollectors?.slice(0, 39)
   const bgColor = useColorModeValue(
     "var(--chakra-colors-gray-100)",
     "var(--chakra-colors-gray-800)"
@@ -43,7 +42,7 @@ const TopCollectors = () => {
         <SimpleGrid
           pt={2}
           w="full"
-          columns={{ base: 3, sm: 4, lg: 6, xl: 8 }}
+          columns={{ base: 3, sm: 4, lg: 6 }}
           columnGap={2}
           rowGap={4}
         >
@@ -60,10 +59,7 @@ const TopCollectors = () => {
             columnGap={2}
             rowGap={4}
           >
-            {top3Collectors.map((address) => (
-              <Collector key={address} address={address} />
-            ))}
-            {restCollectors.map((address) => (
+            {shownCollectors.map((address) => (
               <Collector key={address} address={address} />
             ))}
           </SimpleGrid>
