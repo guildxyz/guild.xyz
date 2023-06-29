@@ -1,5 +1,14 @@
-import { BorderProps, Box, Flex, Img, Spinner } from "@chakra-ui/react"
+import {
+  AspectRatio,
+  BorderProps,
+  Box,
+  Flex,
+  Icon,
+  Img,
+  Spinner,
+} from "@chakra-ui/react"
 import Card from "components/common/Card"
+import { Image } from "phosphor-react"
 
 type Props = {
   src: string
@@ -22,7 +31,7 @@ const CollectibleImage = ({ src, isLoading, borderRadius = "2xl" }: Props) => (
       <Flex alignItems="center" justifyContent="center">
         <Spinner thickness="4px" size="xl" color="gray" />
       </Flex>
-    ) : (
+    ) : src?.length ? (
       <>
         <Box
           position="absolute"
@@ -39,6 +48,10 @@ const CollectibleImage = ({ src, isLoading, borderRadius = "2xl" }: Props) => (
           filter="drop-shadow(0px 1rem 2rem black)"
         />
       </>
+    ) : (
+      <AspectRatio w="full" ratio={1} justifyContent="center">
+        <Icon mx="auto" as={Image} weight="light" maxW="50%" color="gray.500" />
+      </AspectRatio>
     )}
   </Card>
 )
