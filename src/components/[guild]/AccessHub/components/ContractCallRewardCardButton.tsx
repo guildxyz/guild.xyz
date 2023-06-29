@@ -1,10 +1,10 @@
-import LinkButton from "components/common/LinkButton"
-import useMemberships from "components/explorer/hooks/useMemberships"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useGuild from "components/[guild]/hooks/useGuild"
 import CollectNft from "components/[guild]/Requirements/components/GuildCheckout/CollectNft"
 import { CollectNftProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useGuild from "components/[guild]/hooks/useGuild"
+import LinkButton from "components/common/LinkButton"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { GuildPlatform } from "types"
 
 type Props = {

@@ -33,6 +33,7 @@ const TopCollectors = () => {
         )
       }
       pos="relative"
+      spacing={4}
     >
       {error ? (
         <Text w="full" colorScheme="gray">
