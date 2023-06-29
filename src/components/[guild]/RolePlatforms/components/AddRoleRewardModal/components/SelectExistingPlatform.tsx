@@ -1,7 +1,7 @@
 import { SimpleGrid, Text, Tooltip } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
+import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
 import platforms from "platforms/platforms"
 import { useFieldArray, useWatch } from "react-hook-form"
 import { PlatformType, Visibility } from "types"
@@ -20,17 +20,14 @@ const SelectExistingPlatform = ({ onClose }) => {
 
   const roleVisibility: Visibility = useWatch({ name: ".visibility" })
 
-  // TODO: Temporary solution, we'll handle this automatically after the rewards/platforms refactor
-  const filteredPlatforms = guildPlatforms
-    .filter(
-      (guildPlatform) => guildPlatform.platformId !== PlatformType.CONTRACT_CALL
-    )
-    .filter(
-      (guildPlatform) =>
-        !fields.find(
-          (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
-        )
-    )
+  const filteredPlatforms = guildPlatforms.filter(
+    (guildPlatform) =>
+      // TODO: Temporary solution, we'll handle this automatically after the rewards/platforms refactor
+      guildPlatform.platformId !== PlatformType.CONTRACT_CALL &&
+      !fields.find(
+        (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
+      )
+  )
 
   if (!filteredPlatforms.length) return null
 
