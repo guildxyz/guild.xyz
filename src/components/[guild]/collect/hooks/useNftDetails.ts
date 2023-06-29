@@ -2,7 +2,7 @@ import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcBatchProvider } from "@ethersproject/providers"
 import { Chain, Chains, RPC } from "connectors"
-import ERC721_ABI from "static/abis/erc721Abi.json"
+import GUILD_REWARD_NFT_ABI from "static/abis/guildRewardNft.json"
 import useSWRImmutable from "swr/immutable"
 import base64ToObject from "utils/base64ToObject"
 import { getBlockByTime } from "utils/getBlockByTime"
@@ -41,13 +41,17 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
   } catch {}
 
   const provider = new JsonRpcBatchProvider(RPC[chain].rpcUrls[0], Chains[chain])
-  const contract = new Contract(address, ERC721_ABI, provider)
+  const contract = new Contract(address, GUILD_REWARD_NFT_ABI, provider)
 
   let firstTotalSupplyToday
   if (!isNaN(Number(firstBlockNumberToday?.result))) {
-    firstTotalSupplyToday = await contract.totalSupply({
-      blockTag: Number(firstBlockNumberToday.result),
-    })
+    try {
+      firstTotalSupplyToday = await contract.totalSupply({
+        blockTag: Number(firstBlockNumberToday.result),
+      })
+    } catch {
+      firstTotalSupplyToday = BigNumber.from(0)
+    }
   }
 
   try {
@@ -58,7 +62,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
         contract.totalSupply(),
         contract.supportsInterface(ContractInterface.ERC721),
         contract.supportsInterface(ContractInterface.ERC1155),
-        contract.tokenURI(1),
+        contract.tokenURI(1).catch(() => ""),
         contract.fee(NULL_ADDRESS),
       ])
 
@@ -71,7 +75,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       ? firstTotalSupplyToday.toNumber()
       : undefined
 
-    let image: string
+    let image = ""
 
     if (tokenURI) {
       const metadata = base64ToObject(tokenURI)

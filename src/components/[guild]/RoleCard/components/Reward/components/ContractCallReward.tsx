@@ -30,7 +30,7 @@ const ContractCallReward = ({ platform, withMotionImg }: Props) => {
             href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}
             fontWeight="semibold"
           >
-            {`Collect${nftData ? ` ${nftData.name} ` : " "}NFT`}
+            {`Collect ${nftData?.name ?? "NFT"}`}
           </Link>
         </>
       }

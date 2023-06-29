@@ -7,7 +7,7 @@ import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
-import ERC_721_ABI from "static/abis/erc721Abi.json"
+import GUILD_REWARD_NFT_ABI from "static/abis/guildRewardNft.json"
 import { useFetcherWithSign } from "utils/fetcher"
 import { useCollectNftContext } from "../components/CollectNftContext"
 import useSubmitTransaction from "./useSubmitTransaction"
@@ -33,7 +33,7 @@ const useCollectNft = () => {
   const [loadingText, setLoadingText] = useState("")
   const fetcherWithSign = useFetcherWithSign()
 
-  const contract = useContract(address, ERC_721_ABI, true)
+  const contract = useContract(address, GUILD_REWARD_NFT_ABI, true)
 
   // Still WIP, no need to review
   const mint = async () => {

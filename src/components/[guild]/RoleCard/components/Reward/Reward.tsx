@@ -197,7 +197,7 @@ const RewardIcon = ({
   }
 
   if (withMotionImg)
-    return isLoading ? (
+    return isLoading || !props.src ? (
       <MotionSkeletonCircle boxSize={6} />
     ) : (
       <MotionImg
