@@ -1,9 +1,9 @@
 import { Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react"
-import Card from "components/common/Card"
 import LogicDivider from "components/[guild]/LogicDivider"
-import CollectNftButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/CollectNftButton"
 import { useCollectNftContext } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
+import CollectNftButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/CollectNftButton"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import Card from "components/common/Card"
 import { Fragment } from "react"
 import { Logic, Requirement } from "types"
 import useNftDetails from "../hooks/useNftDetails"
@@ -21,10 +21,12 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
   const { chain, address } = useCollectNftContext()
   const { data, isValidating } = useNftDetails(chain, address)
 
+  const padding = { base: 5, sm: 6, lg: 7, xl: 8 }
+
   return (
     <Card w="full" h="max-content">
       <Stack
-        p={{ base: 5, md: 8 }}
+        p={padding}
         bgColor={requirementsSectionBgColor}
         spacing={{ base: 4, md: 8 }}
         w="full"
@@ -54,7 +56,7 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
         </Stack>
       </Stack>
 
-      <Stack p={{ base: 5, md: 8 }} w="full" alignItems="center" spacing={4}>
+      <Stack p={padding} w="full" alignItems="center" spacing={4}>
         <CollectNftFeesTable bgColor={requirementsSectionBgColor} />
 
         <CollectNftButton label="Collect now" colorScheme="green" />
