@@ -7,10 +7,19 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
+
+const scorerOptions: SelectOption[] = [
+  {
+    label: "Unique humanity score",
+    value: "1351",
+  },
+]
 
 const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
@@ -47,29 +56,55 @@ const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   }
 
   return (
-    <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.score}>
-      <FormLabel>Score</FormLabel>
-
-      <NumberInput
-        ref={scoreFieldRef}
-        name={scoreFieldName}
-        value={scoreFieldValue ?? undefined}
-        onChange={handleChange}
-        onBlur={scoreFieldOnBlur}
-        min={-1000000000}
-        max={1000000000}
+    <>
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+        isRequired
       >
-        <NumberInputField />
-        <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
-        </NumberInputStepper>
-      </NumberInput>
+        <FormLabel>Scorer</FormLabel>
 
-      <FormErrorMessage>
-        {parseFromObject(errors, baseFieldPath)?.data?.score?.message}
-      </FormErrorMessage>
-    </FormControl>
+        <ControlledSelect
+          name={`${baseFieldPath}.data.id`}
+          rules={{
+            required: "This field is required.",
+          }}
+          isClearable
+          isRequired
+          options={scorerOptions}
+        />
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+        </FormErrorMessage>
+      </FormControl>
+
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.score}
+        isRequired
+      >
+        <FormLabel>Minimum score</FormLabel>
+
+        <NumberInput
+          ref={scoreFieldRef}
+          name={scoreFieldName}
+          value={scoreFieldValue ?? undefined}
+          onChange={handleChange}
+          onBlur={scoreFieldOnBlur}
+          min={-1000000000}
+          max={1000000000}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.data?.score?.message}
+        </FormErrorMessage>
+      </FormControl>
+    </>
   )
 }
 
