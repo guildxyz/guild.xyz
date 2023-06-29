@@ -3,6 +3,7 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
+import useBalance from "hooks/useBalance"
 import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useToastWithTweetButton } from "hooks/useToast"
@@ -35,6 +36,8 @@ const useCollectNft = () => {
   const fetcherWithSign = useFetcherWithSign()
 
   const contract = useContract(address, GUILD_REWARD_NFT_ABI, true)
+
+  const { mutateTokenBalance } = useBalance(address, Chains[chain])
 
   // Still WIP, no need to review
   const mint = async () => {
@@ -89,6 +92,8 @@ const useCollectNft = () => {
           })
           return
         }
+
+        mutateTokenBalance()
 
         captureEvent("Minted NFT (GuildCheckout)", postHogOptions)
 
