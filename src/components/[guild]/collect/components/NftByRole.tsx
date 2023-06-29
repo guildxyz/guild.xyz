@@ -22,15 +22,6 @@ const NftByRole = ({ role }: Props) => {
         <Link href={`/${urlName}#role-${role.id}`} fontWeight="bold" noOfLines={1}>
           {role.name}
         </Link>
-
-        {/* <HStack spacing={1} color="gray" pl="1.5" mb="-1.5px">
-          <Icon as={Users} boxSize={4} />
-          <Text as="span">
-            {new Intl.NumberFormat("en", { notation: "compact" }).format(
-              role.memberCount
-            )}
-          </Text>
-        </HStack> */}
       </HStack>
     </HStack>
   )
