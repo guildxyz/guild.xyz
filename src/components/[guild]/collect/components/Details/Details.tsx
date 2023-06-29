@@ -27,6 +27,7 @@ const Details = () => {
         </InfoBlock>
 
         <InfoBlock label="Network">{chainName}</InfoBlock>
+
         <InfoBlock label="Contract">
           <BlockExplorerLink chain={chain} address={address} />
         </InfoBlock>
