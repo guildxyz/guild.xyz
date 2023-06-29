@@ -7,6 +7,11 @@ import {
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import Link from "components/common/Link"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import Details from "components/[guild]/collect/components/Details"
 import Links from "components/[guild]/collect/components/Links"
@@ -19,11 +24,6 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { CollectNftProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import Link from "components/common/Link"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { Chain } from "connectors"
 import { AnimatePresence, motion } from "framer-motion"
 import useScrollEffect from "hooks/useScrollEffect"
@@ -208,9 +208,17 @@ const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
 
   // TODO: call the v2 endpoint
   const endpoint = `/guild/${urlName}`
-  const guild = await fetcher(endpoint).catch((_) => ({}))
+  const guild: Guild = await fetcher(endpoint).catch((_) => ({}))
 
-  if (!guild?.id)
+  if (
+    !guild?.id ||
+    !guild.guildPlatforms.find(
+      (gp) =>
+        gp.platformGuildData?.chain === chain.toUpperCase() &&
+        gp.platformGuildData?.contractAddress?.toLowerCase() ===
+          address.toLowerCase()
+    )
+  )
     return {
       notFound: true,
     }
