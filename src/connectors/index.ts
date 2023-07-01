@@ -34,6 +34,7 @@ enum Chains {
   SEPOLIA = 11155111,
   GOERLI = 5,
   POLYGON_MUMBAI = 80001,
+  EDGEWARE = 2021,
 }
 
 export type Chain = keyof typeof Chains
@@ -635,6 +636,27 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api-testnet.polygonscan.com",
     iconUrls: ["/networkLogos/polygon.svg"],
+  },
+  EDGEWARE: {
+    chainId: 2021,
+    chainName: "Edgeware EdgeEVM",
+    nativeCurrency: {
+      name: "Edgeware",
+      symbol: "EDG",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/8452/small/logo-edgeware.png?1678947608",
+    },
+    rpcUrls: ["https://edgeware-evm.jelliedowl.net"],
+    blockExplorerUrls: ["https://edgscan.live"],
+    blockExplorerIcons: {
+      light: "/networkLogos/edgeware.svg",
+      dark: "/networkLogos/edgeware.svg",
+    },
+    apiUrl: "http://edgscan.live/api",
+    iconUrls: ["/networkLogos/edgeware.svg"],
+    multicallAddress: "0xDDF47eEB4e5FF4AA60e063E0Ec4f7C35B47Ed445",
   },
 }
 
