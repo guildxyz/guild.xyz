@@ -1,6 +1,6 @@
 import { Icon, Img, Wrap } from "@chakra-ui/react"
-import { useCollectNftContext } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
 import SocialIcon from "components/[guild]/SocialIcon"
+import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Link from "components/common/Link"
 import Section from "components/common/Section"

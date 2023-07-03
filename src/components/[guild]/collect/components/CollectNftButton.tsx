@@ -1,17 +1,17 @@
 import { ButtonProps } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import useMemberships from "components/explorer/hooks/useMemberships"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { Chains } from "connectors"
 import useBalance from "hooks/useBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
-import useCollectNft from "../../hooks/useCollectNft"
-import { useCollectNftContext } from "../CollectNftContext"
+import useCollectNft from "../hooks/useCollectNft"
+import { useCollectNftContext } from "./CollectNftContext"
 
 const rejoin = (signedValidation: SignedValdation) =>
   fetcher(`/user/join`, signedValidation)

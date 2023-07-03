@@ -1,7 +1,7 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
-import { useCollectNftContext } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
+import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import { RPC } from "connectors"
 import useNftDetails from "../hooks/useNftDetails"
 

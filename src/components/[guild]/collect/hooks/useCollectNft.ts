@@ -11,8 +11,8 @@ import { useState } from "react"
 import GUILD_REWARD_NFT_ABI from "static/abis/guildRewardNft.json"
 import { useFetcherWithSign } from "utils/fetcher"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import useSubmitTransaction from "../../Requirements/components/GuildCheckout/hooks/useSubmitTransaction"
 import { useCollectNftContext } from "../components/CollectNftContext"
-import useSubmitTransaction from "./useSubmitTransaction"
 
 type ClaimData = {
   // signed value which we need to send in the contract call

@@ -1,10 +1,10 @@
-import CollectNftModalButton from "components/[guild]/Requirements/components/GuildCheckout/CollectNftModalButton"
-import { CollectNftProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
+import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LinkButton from "components/common/LinkButton"
 import useMemberships from "components/explorer/hooks/useMemberships"
+import CollectNftModalButton from "platforms/ContractCall/CollectNftModalButton"
 import { GuildPlatform } from "types"
 
 type Props = {

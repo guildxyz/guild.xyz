@@ -1,5 +1,5 @@
 import { SimpleGrid, Skeleton, Text } from "@chakra-ui/react"
-import { useCollectNftContext } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
+import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import Section from "components/common/Section"
 import { RPC } from "connectors"
 import useNftDetails from "../../hooks/useNftDetails"
