@@ -1,32 +1,21 @@
-import {
-  Circle,
-  HStack,
-  Icon,
-  Img,
-  SkeletonCircle,
-  SkeletonProps,
-  Spinner,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react"
+import { HStack, Icon, Img, Spinner, Text, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
-import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import Visibility from "components/[guild]/Visibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import Visibility from "components/[guild]/Visibility"
-import { motion, Transition } from "framer-motion"
+import Button from "components/common/Button"
+import { Transition, motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
-import { forwardRef, ReactNode, useMemo } from "react"
+import { ReactNode, useMemo } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 import ContractCallReward from "./components/ContractCallReward"
 
-type Props = {
+export type RewardProps = {
   role: Role // should change to just roleId when we won't need memberCount anymore
   platform: RolePlatform
   withLink?: boolean
@@ -53,7 +42,7 @@ const Reward = ({
   withLink,
   withMotionImg = false,
   isLinkColorful,
-}: Props) => {
+}: RewardProps) => {
   const isMember = useIsMember()
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
@@ -86,9 +75,6 @@ const Reward = ({
       buttonProps: { isDisabled: true },
     }
   }, [isMember, hasAccess, account, accessButtonProps, isLinkColorful])
-
-  if (platform.guildPlatform.platformId === PlatformType.CONTRACT_CALL)
-    return <ContractCallReward platform={platform} withMotionImg={withMotionImg} />
 
   return (
     <RewardDisplay
@@ -161,45 +147,29 @@ const RewardDisplay = ({
   </HStack>
 )
 
-const MotionSkeletonCircle = motion(
-  forwardRef((props: SkeletonProps, ref: any) => (
-    <Circle ref={ref} size={props.boxSize}>
-      <SkeletonCircle {...props} />
-    </Circle>
-  ))
-)
+export type RewardIconProps = {
+  rolePlatformId: number
+  guildPlatform?: GuildPlatform
+  withMotionImg?: boolean
+  transition?: Transition
+}
+
 const MotionImg = motion(Img)
 
 const RewardIcon = ({
   rolePlatformId,
   guildPlatform,
-  isLoading,
   withMotionImg = true,
   transition,
-}: {
-  rolePlatformId: number
-  guildPlatform?: GuildPlatform
-  isLoading?: boolean
-  withMotionImg?: boolean
-  transition?: Transition
-}) => {
-  const { data: nftData } = useNftDetails(
-    guildPlatform?.platformGuildData?.chain,
-    guildPlatform?.platformGuildData?.contractAddress
-  )
-
+}: RewardIconProps) => {
   const props = {
-    src:
-      nftData?.image ??
-      `/platforms/${PlatformType[guildPlatform?.platformId]?.toLowerCase()}.png`,
+    src: `/platforms/${PlatformType[guildPlatform?.platformId]?.toLowerCase()}.png`,
     alt: guildPlatform?.platformGuildName,
     boxSize: 6,
   }
 
   if (withMotionImg)
-    return isLoading || !props.src ? (
-      <MotionSkeletonCircle boxSize={6} />
-    ) : (
+    return (
       <MotionImg
         layoutId={`${rolePlatformId}_reward_img`}
         transition={{ type: "spring", duration: 0.5, ...transition }}
@@ -210,7 +180,7 @@ const RewardIcon = ({
   return <Img {...props} />
 }
 
-const RewardWrapper = ({ platform, ...props }: Props) => {
+const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   const { guildPlatforms } = useGuild()
 
   const guildPlatform = guildPlatforms?.find(
@@ -221,7 +191,12 @@ const RewardWrapper = ({ platform, ...props }: Props) => {
 
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
-  return <Reward platform={platformWithGuildPlatform} {...props} />
+  const Component =
+    guildPlatform.platformId === PlatformType.CONTRACT_CALL
+      ? ContractCallReward
+      : Reward
+
+  return <Component platform={platformWithGuildPlatform} {...props} />
 }
 
 export { RewardDisplay, RewardIcon }
