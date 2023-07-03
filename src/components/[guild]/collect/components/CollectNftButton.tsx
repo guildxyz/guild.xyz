@@ -13,7 +13,7 @@ import fetcher from "utils/fetcher"
 import useCollectNft from "../hooks/useCollectNft"
 import { useCollectNftContext } from "./CollectNftContext"
 
-const rejoin = (signedValidation: SignedValdation) =>
+const join = (signedValidation: SignedValdation) =>
   fetcher(`/user/join`, signedValidation)
 
 type Props = {
@@ -49,7 +49,7 @@ const CollectNftButton = ({
   } = useCollectNft()
 
   const { onSubmit: onJoinSubmit, isLoading: isJoinLoading } = useSubmitWithSign(
-    rejoin,
+    join,
     {
       onSuccess: async () => {
         await mutateMemberships()

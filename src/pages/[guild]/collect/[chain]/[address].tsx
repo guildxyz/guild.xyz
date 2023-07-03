@@ -33,7 +33,6 @@ import {
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
 import { useRef, useState } from "react"
-
 import { SWRConfig, unstable_serialize } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -125,8 +124,6 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
                     logic={role?.logic}
                   />
                 )}
-
-                {/* <NftByRole role={role} /> */}
 
                 <Box ref={nftDescriptionRef} lineHeight={1.75}>
                   <RichTextDescription
