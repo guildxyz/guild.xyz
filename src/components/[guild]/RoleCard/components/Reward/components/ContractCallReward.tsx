@@ -1,6 +1,7 @@
-import Link from "components/common/Link"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
+import LinkButton from "components/common/LinkButton"
+import { ArrowSquareOut } from "phosphor-react"
 import { RolePlatform } from "types"
 import { RewardDisplay, RewardIcon } from "../Reward"
 
@@ -26,12 +27,17 @@ const ContractCallReward = ({ platform, withMotionImg }: Props) => {
       }
       label={
         <>
-          <Link
+          {`Collect: `}
+          <LinkButton
+            variant={"link"}
+            rightIcon={<ArrowSquareOut />}
+            iconSpacing="1"
+            maxW="full"
             href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}
-            fontWeight="semibold"
+            colorScheme="gray"
           >
-            {`Collect ${nftData?.name ?? "NFT"}`}
-          </Link>
+            {nftData?.name ?? "NFT"}
+          </LinkButton>
         </>
       }
     />
