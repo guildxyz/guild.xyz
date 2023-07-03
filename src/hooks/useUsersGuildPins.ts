@@ -6,6 +6,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import { Chain, Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata, User } from "types"
+import base64ToObject from "utils/base64ToObject"
 import { flattenedGuildPinChainsData } from "utils/guildCheckout/constants"
 
 const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
@@ -42,12 +43,7 @@ const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
 
   const usersPinsMetadataJSONs = await Promise.all(
     usersGuildPinTokenURIsOnChain.map(async ({ chainId, tokenId, tokenUri }) => {
-      const metadata: GuildPinMetadata = JSON.parse(
-        Buffer.from(
-          tokenUri.replace("data:application/json;base64,", ""),
-          "base64"
-        ).toString("utf-8")
-      )
+      const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(tokenUri)
 
       return {
         ...metadata,

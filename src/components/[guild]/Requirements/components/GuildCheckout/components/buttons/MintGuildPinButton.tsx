@@ -69,7 +69,6 @@ const MintGuildPinButton = (): JSX.Element => {
         })
         onSubmit()
       }}
-      data-dd-action-name="Mint Guild Pin (GuildCheckout)"
     >
       {isInvalidImage || isTooSmallImage
         ? "Setup required"
