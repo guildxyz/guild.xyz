@@ -1,5 +1,4 @@
 import { ChakraProps } from "@chakra-ui/react"
-import ContractCallRewardCardButton from "components/[guild]/AccessHub/components/ContractCallRewardCardButton"
 import {
   DiscordLogo,
   GithubLogo,
@@ -9,6 +8,7 @@ import {
   TwitterLogo,
 } from "phosphor-react"
 import { GuildPlatform, PlatformName } from "types"
+import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
 import DiscordCardMenu from "./Discord/DiscordCardMenu"
 import DiscordCardSettings from "./Discord/DiscordCardSettings"
