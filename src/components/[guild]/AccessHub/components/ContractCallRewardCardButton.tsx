@@ -15,20 +15,20 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
   const { id, urlName, roles } = useGuild()
   const { chain, contractAddress } = platform.platformGuildData
 
-  const rewardsRoleId = roles.find((role) =>
-    role.rolePlatforms?.find((rp) => rp.guildPlatformId === platform.id)
+  const role = roles.find((r) =>
+    r.rolePlatforms?.find((rp) => rp.guildPlatformId === platform.id)
+  )
+  const rolePlatformId = role?.rolePlatforms?.find(
+    (rp) => rp.guildPlatformId === platform.id
   )?.id
-  const rolePlatformId = roles
-    .find((role) => role.id === rewardsRoleId)
-    ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform.id)?.id
 
-  const { data: roleAccess } = useAccess(rewardsRoleId)
+  const { data: roleAccess } = useAccess(role?.id)
   const hasAccessToRole = roleAccess?.access
 
   const { memberships } = useMemberships()
   const isMemberOfRole = !!memberships
     ?.find((membership) => membership.guildId === id)
-    ?.roleIds.find((roleId) => roleId === rewardsRoleId)
+    ?.roleIds.find((roleId) => roleId === role?.id)
 
   const isEligible = hasAccessToRole || isMemberOfRole
 
@@ -45,7 +45,7 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
   return (
     <GuildCheckoutProvider>
       <CollectNftProvider
-        roleId={rewardsRoleId}
+        roleId={role?.id}
         rolePlatformId={rolePlatformId}
         guildPlatform={platform}
         chain={platform.platformGuildData.chain}
