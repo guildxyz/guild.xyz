@@ -14,6 +14,7 @@ import { Modal } from "components/common/Modal"
 import { Reorder } from "framer-motion"
 import useIsV2 from "hooks/useIsV2"
 import { useMemo, useState } from "react"
+import { Visibility } from "types"
 import useReorderRoles from "../hooks/useReorderRoles"
 import DraggableRoleCard from "./DraggableRoleCard"
 
@@ -42,7 +43,11 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     })
   }, [roles])
 
-  const defaultRoleIdsOrder = sortedRoles?.map((role) => role.id)
+  const publicRoles = sortedRoles.filter(
+    (role) => role.visibility !== Visibility.HIDDEN
+  )
+
+  const defaultRoleIdsOrder = publicRoles?.map((role) => role.id)
   const [roleIdsOrder, setRoleIdsOrder] = useState(defaultRoleIdsOrder)
 
   /**

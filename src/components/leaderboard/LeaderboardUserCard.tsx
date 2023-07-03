@@ -28,6 +28,7 @@ import useResolveAddress from "hooks/resolving/useResolveAddress"
 import dynamic from "next/dynamic"
 import { CaretDown, Trophy } from "phosphor-react"
 import { GuildPinMetadata } from "types"
+import base64ToObject from "utils/base64ToObject"
 import shortenHex from "utils/shortenHex"
 
 const DynamicScoreFormulaPopover = dynamic(() => import("./ScoreFormulaPopover"), {
@@ -38,12 +39,7 @@ const getPinMetadata = (
   tokenUriOrMetadata: string | GuildPinMetadata
 ): GuildPinMetadata =>
   typeof tokenUriOrMetadata === "string"
-    ? JSON.parse(
-        Buffer.from(
-          tokenUriOrMetadata.replace("data:application/json;base64,", ""),
-          "base64"
-        ).toString("utf-8")
-      )
+    ? base64ToObject<GuildPinMetadata>(tokenUriOrMetadata)
     : tokenUriOrMetadata
 
 type Props = {

@@ -1,17 +1,13 @@
-import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useIsV2 from "hooks/useIsV2"
 import useMatchMutate from "hooks/useMatchMutate"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import useToast from "hooks/useToast"
-import { TwitterLogo } from "phosphor-react"
-import { useRef } from "react"
+import { useToastWithTweetButton } from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
@@ -21,17 +17,15 @@ import preprocessRequirements from "utils/preprocessRequirements"
 type RoleOrGuild = Role & { guildId: number }
 
 const useCreateRole = () => {
-  const toastIdRef = useRef<ToastId>()
   const { account } = useWeb3React()
 
   const { mutate } = useSWRConfig()
   const matchMutate = useMatchMutate()
 
-  const toast = useToast()
+  const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const { id, urlName, mutateGuild } = useGuild()
-  const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
   const isV2 = useIsV2()
 
   const fetchData = async (
@@ -50,30 +44,10 @@ const useCreateRole = () => {
     onSuccess: async (response_) => {
       triggerConfetti()
 
-      toastIdRef.current = toast({
-        duration: 8000,
+      toastWithTweetButton({
         title: "Role successfully created",
-        description: (
-          <>
-            <Text>Let your guild know by sharing it on Twitter</Text>
-            <Button
-              as="a"
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I've just added a new role to my guild. Check it out, maybe you have access 😉
-guild.xyz/${urlName}`)}`}
-              target="_blank"
-              bg={tweetButtonBackground}
-              leftIcon={<TwitterLogo weight="fill" />}
-              size="sm"
-              onClick={() => toast.close(toastIdRef.current)}
-              mt={3}
-              mb="1"
-              borderRadius="lg"
-            >
-              Share
-            </Button>
-          </>
-        ),
-        status: "success",
+        tweetText: `I've just added a new role to my guild. Check it out, maybe you have access 😉
+guild.xyz/${urlName}`,
       })
 
       mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
