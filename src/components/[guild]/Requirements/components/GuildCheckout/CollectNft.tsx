@@ -8,28 +8,29 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
-import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
+import { ContractCallRewardIcon } from "components/[guild]/RoleCard/components/Reward/components/ContractCallReward"
 import CollectNftFeesTable from "components/[guild]/collect/components/CollectNftFeesTable"
+import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { Chains } from "connectors"
 import AlphaTag from "./components/AlphaTag"
-import CollectNftButton from "./components/buttons/CollectNftButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import { useCollectNftContext } from "./components/CollectNftContext"
-import CollectNftReward from "./components/CollectNftReward"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
 import TransactionStatusModal from "./components/TransactionStatusModal"
 import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaLink"
+import CollectNftButton from "./components/buttons/CollectNftButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
 const CollectNft = () => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
-  const { chain, address, alreadyCollected } = useCollectNftContext()
+  const { chain, address, alreadyCollected, guildPlatform, rolePlatformId } =
+    useCollectNftContext()
   const { isOpen, onOpen, onClose } = useGuildCheckoutContext()
   const { data, isValidating } = useNftDetails(chain, address)
 
@@ -96,7 +97,7 @@ const CollectNft = () => {
             <Text fontWeight={"bold"} mb="2">
               You'll get:
             </Text>
-            <CollectNftReward />
+            <ContractCallRewardIcon {...{ guildPlatform, rolePlatformId }} />
           </>
         }
         successComponent={
@@ -104,7 +105,7 @@ const CollectNft = () => {
             <Text fontWeight={"bold"} mb="2">
               Your new asset:
             </Text>
-            <CollectNftReward />
+            <ContractCallRewardIcon {...{ guildPlatform, rolePlatformId }} />
           </>
         }
       />

@@ -47,6 +47,7 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
       <CollectNftProvider
         roleId={rewardsRoleId}
         rolePlatformId={rolePlatformId}
+        guildPlatform={platform}
         chain={platform.platformGuildData.chain}
         address={platform.platformGuildData.contractAddress}
       >

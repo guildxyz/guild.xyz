@@ -1,11 +1,13 @@
 import { BigNumber } from "@ethersproject/bignumber"
 import { Chain, Chains } from "connectors"
 import useBalance from "hooks/useBalance"
-import { createContext, PropsWithChildren, useContext } from "react"
+import { PropsWithChildren, createContext, useContext } from "react"
+import { GuildPlatform } from "types"
 
 type Props = {
   roleId: number
   rolePlatformId: number
+  guildPlatform: GuildPlatform
   chain: Chain
   address: string
   alreadyCollected: boolean
@@ -16,6 +18,7 @@ const CollectNftContext = createContext<Props>(undefined)
 const CollectNftProvider = ({
   roleId,
   rolePlatformId,
+  guildPlatform,
   chain,
   address,
   children,
@@ -25,7 +28,14 @@ const CollectNftProvider = ({
 
   return (
     <CollectNftContext.Provider
-      value={{ roleId, rolePlatformId, chain, address, alreadyCollected }}
+      value={{
+        roleId,
+        rolePlatformId,
+        guildPlatform,
+        chain,
+        address,
+        alreadyCollected,
+      }}
     >
       {children}
     </CollectNftContext.Provider>
