@@ -1,4 +1,4 @@
-import CollectNft from "components/[guild]/Requirements/components/GuildCheckout/CollectNft"
+import CollectNftModalButton from "components/[guild]/Requirements/components/GuildCheckout/CollectNftModalButton"
 import { CollectNftProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/CollectNftContext"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -51,7 +51,7 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
         chain={platform.platformGuildData.chain}
         address={platform.platformGuildData.contractAddress}
       >
-        <CollectNft />
+        <CollectNftModalButton />
       </CollectNftProvider>
     </GuildCheckoutProvider>
   )

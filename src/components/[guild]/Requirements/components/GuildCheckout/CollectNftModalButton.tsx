@@ -25,7 +25,7 @@ import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaL
 import CollectNftButton from "./components/buttons/CollectNftButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
-const CollectNft = () => {
+const CollectNftModalButton = () => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
@@ -113,4 +113,4 @@ const CollectNft = () => {
   )
 }
 
-export default CollectNft
+export default CollectNftModalButton
