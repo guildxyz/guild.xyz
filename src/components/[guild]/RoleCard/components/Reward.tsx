@@ -9,11 +9,11 @@ import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
 import { Transition, motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
+import ContractCallReward from "platforms/ContractCall/ContractCallReward"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import { ReactNode, useMemo } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
-import ContractCallReward from "./components/ContractCallReward"
 
 export type RewardProps = {
   role: Role // should change to just roleId when we won't need memberCount anymore

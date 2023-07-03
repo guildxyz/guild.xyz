@@ -8,7 +8,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { ContractCallRewardIcon } from "components/[guild]/RoleCard/components/Reward/components/ContractCallReward"
 import CollectNftFeesTable from "components/[guild]/collect/components/CollectNftFeesTable"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
@@ -17,6 +16,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { Chains } from "connectors"
+import { ContractCallRewardIcon } from "platforms/ContractCall/ContractCallReward"
 import AlphaTag from "../../components/[guild]/Requirements/components/GuildCheckout/components/AlphaTag"
 import { useGuildCheckoutContext } from "../../components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import TransactionStatusModal from "../../components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal"

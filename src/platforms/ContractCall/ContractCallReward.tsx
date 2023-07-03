@@ -4,7 +4,11 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import LinkButton from "components/common/LinkButton"
 import { motion } from "framer-motion"
 import { ArrowSquareOut } from "phosphor-react"
-import { RewardDisplay, RewardIconProps, RewardProps } from "../Reward"
+import {
+  RewardDisplay,
+  RewardIconProps,
+  RewardProps,
+} from "../../components/[guild]/RoleCard/components/Reward"
 
 import { forwardRef } from "react"
 
