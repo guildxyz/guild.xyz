@@ -23,6 +23,7 @@ const CollectNftProvider = ({
   address,
   children,
 }: PropsWithChildren<Omit<Props, "alreadyCollected">>) => {
+  // TODO: use `hasTheUserIdClaimed` instead of `balanceOf`, so it shows `Already claimed` for other addresses of the user too
   const { tokenBalance: nftBalance } = useBalance(address, Chains[chain])
   const alreadyCollected = nftBalance?.gt(BigNumber.from(0))
 

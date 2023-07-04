@@ -86,6 +86,11 @@ const CollectNftModalButton = () => {
         </ModalContent>
       </Modal>
 
+      {/**
+       * TODO: it doesn't appear now because we don't set states for the
+       * GuildCheckoutContext. Should make it work and also it would be great to add it to
+       * the collect page too
+       */}
       <TransactionStatusModal
         title={modalTitle}
         successTitle="Successful mint"
