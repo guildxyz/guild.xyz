@@ -64,15 +64,12 @@ describe("with wallet", () => {
     cy.get("input[name='socialLinks.TWITTER']").clear().type("twitter.com/guildxyz")
     cy.getByDataTest("create-guild-button").should("be.enabled")
 
+    cy.intercept("POST", `${Cypress.env("guildApiUrl")}/guilds/with-roles`).as(
+      "createGuildRequest"
+    )
+
     cy.getByDataTest("create-guild-button").click()
 
-    cy.intercept(
-      "POST",
-      `${(Cypress.env("guildApiUrl") as string).replace(
-        "/v1",
-        "/v2"
-      )}/guilds/with-roles`
-    ).as("createGuildRequest")
     cy.wait("@createGuildRequest").its("response.statusCode").should("eq", 201)
   })
 })

@@ -40,6 +40,7 @@ const ConfirmationAlert = ({
               Cancel
             </Button>
             <Button
+              data-test="delete-requirement-button"
               colorScheme="red"
               ml={3}
               onClick={onConfirm || onClose}
