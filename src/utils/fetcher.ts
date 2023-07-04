@@ -5,10 +5,12 @@ import useKeyPair from "hooks/useKeyPair"
 import { sign } from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
+import { posthog } from "posthog-js"
 
 const SIG_HEADER_NAME = "x-guild-sig"
 const PARAMS_HEADER_NAME = "x-guild-params"
 const AUTH_FLAG_HEADER_NAME = "x-guild-auth-location"
+const V2_FLAG_HEADER_NAME = "x-guild-v2-api"
 
 const fetcher = async (
   resource: string,
@@ -36,6 +38,7 @@ const fetcher = async (
     headers: {
       ...(body || signedPayload ? { "Content-Type": "application/json" } : {}),
       ...init.headers,
+      ...(posthog.isFeatureEnabled("api-v2") ? { [V2_FLAG_HEADER_NAME]: 1 } : {}),
     },
   }
 
@@ -136,5 +139,5 @@ const useFetcherWithSign = () => {
   }
 }
 
-export { fetcherWithSign, useFetcherWithSign, fetcherForSWR }
+export { fetcherForSWR, fetcherWithSign, useFetcherWithSign }
 export default fetcher
