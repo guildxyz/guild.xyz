@@ -271,7 +271,11 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
+    "inputs": [
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+      { "internalType": "uint256", "name": "userId", "type": "uint256" },
+      { "internalType": "bytes", "name": "signature", "type": "bytes" }
+    ],
     "name": "burn",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -281,6 +285,7 @@
     "inputs": [
       { "internalType": "address", "name": "payToken", "type": "address" },
       { "internalType": "address", "name": "receiver", "type": "address" },
+      { "internalType": "uint256", "name": "userId", "type": "uint256" },
       { "internalType": "bytes", "name": "signature", "type": "bytes" }
     ],
     "name": "claim",
@@ -305,6 +310,13 @@
   {
     "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "hasClaimed",
+    "outputs": [{ "internalType": "bool", "name": "claimed", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "userId", "type": "uint256" }],
+    "name": "hasTheUserIdClaimed",
     "outputs": [{ "internalType": "bool", "name": "claimed", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"

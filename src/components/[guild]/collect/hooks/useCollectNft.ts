@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import useBalance from "hooks/useBalance"
@@ -22,6 +23,7 @@ type ClaimData = {
 const useCollectNft = () => {
   const { captureEvent } = usePostHogContext()
   const { id: guildId, urlName } = useGuild()
+  const { id: userId } = useUser()
   const postHogOptions = { guild: urlName }
 
   const tweetToast = useToastWithTweetButton()
@@ -58,6 +60,7 @@ const useCollectNft = () => {
     const claimParams = [
       NULL_ADDRESS,
       account,
+      userId,
       uniqueValue,
       {
         value: data.fee,
