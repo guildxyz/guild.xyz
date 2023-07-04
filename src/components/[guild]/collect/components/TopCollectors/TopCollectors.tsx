@@ -63,40 +63,44 @@ const TopCollectors = () => {
               <Collector key={address} address={address} />
             ))}
           </SimpleGrid>
-          <Box
-            position="absolute"
-            bottom={0}
-            left={0}
-            right={0}
-            height={60}
-            bgGradient={`linear-gradient(to top, ${bgColor}, transparent)`}
-            pointerEvents="none"
-          />
+          {shownCollectors?.length > 39 && (
+            <>
+              <Box
+                position="absolute"
+                bottom={0}
+                left={0}
+                right={0}
+                height={60}
+                bgGradient={`linear-gradient(to top, ${bgColor}, transparent)`}
+                pointerEvents="none"
+              />
 
-          <HStack alignItems="center" spacing={4} zIndex="1">
-            <Text
-              flex="1 0 auto"
-              colorScheme="gray"
-              fontWeight="semibold"
-              fontSize={"sm"}
-              textAlign="center"
-            >
-              {`and ${new Intl.NumberFormat("en", {
-                notation: "standard",
-              }).format(Math.max(data.uniqueCollectors - 50, 0))} more`}
-            </Text>
-            <Divider borderStyle={"dotted"} borderBottomWidth={4} />
-            <Text
-              flex="1 0 auto"
-              ml="auto"
-              colorScheme="gray"
-              fontWeight="semibold"
-              fontSize={"sm"}
-              textAlign="center"
-            >
-              be the next one!
-            </Text>
-          </HStack>
+              <HStack alignItems="center" spacing={4} zIndex="1">
+                <Text
+                  flex="1 0 auto"
+                  colorScheme="gray"
+                  fontWeight="semibold"
+                  fontSize={"sm"}
+                  textAlign="center"
+                >
+                  {`and ${new Intl.NumberFormat("en", {
+                    notation: "standard",
+                  }).format(Math.max(data.uniqueCollectors - 50, 0))} more`}
+                </Text>
+                <Divider borderStyle={"dotted"} borderBottomWidth={4} />
+                <Text
+                  flex="1 0 auto"
+                  ml="auto"
+                  colorScheme="gray"
+                  fontWeight="semibold"
+                  fontSize={"sm"}
+                  textAlign="center"
+                >
+                  be the next one!
+                </Text>
+              </HStack>
+            </>
+          )}
         </>
       )}
     </Section>
