@@ -1,32 +1,28 @@
-import { Box, HStack, Stack, useColorModeValue } from "@chakra-ui/react"
+import { Box, HStack, useColorModeValue } from "@chakra-ui/react"
 import useIsStuck from "hooks/useIsStuck"
 import { PropsWithChildren, createContext, useContext } from "react"
-import useGuild from "../hooks/useGuild"
-import TabButton from "./components/TabButton"
 
 type Props = {
-  tabTitle: string
+  rightElement?: JSX.Element
 }
 
 const TabsContext = createContext<{
   isStuck: boolean
 }>(null)
 
-const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => {
+const Tabs = ({ rightElement, children }: PropsWithChildren<Props>): JSX.Element => {
   const { ref, isStuck } = useIsStuck()
 
-  const { urlName } = useGuild()
   const bgColor = useColorModeValue("white", "gray.800")
 
   return (
     <TabsContext.Provider value={{ isStuck }}>
-      <Stack
+      <HStack
         ref={ref}
-        direction="row"
         justifyContent="space-between"
         alignItems={"center"}
         position="sticky"
-        top={0}
+        top={"-1px"}
         py={3}
         mt={-3}
         mb={2}
@@ -66,15 +62,11 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
               scrollbarWidth: "none",
             }}
           >
-            <TabButton href={`${urlName}`}>{tabTitle}</TabButton>
-            {/* <TabButton href="#" disabled tooltipText="Stay tuned!">
-              More tabs soon
-            </TabButton> */}
+            {children}
           </HStack>
         </Box>
-
-        {children}
-      </Stack>
+        {rightElement}
+      </HStack>
     </TabsContext.Provider>
   )
 }

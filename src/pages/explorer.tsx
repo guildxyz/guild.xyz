@@ -16,12 +16,15 @@ import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
+import ExplorerTabs from "components/explorer/ExplorerTabs"
+import GoToCreateGuildButton from "components/explorer/GoToCreateGuildButton"
 import GuildCard from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import OrderSelect, { OrderOptions } from "components/explorer/OrderSelect"
 import SearchBar from "components/explorer/SearchBar"
 import YourGuilds from "components/explorer/YourGuilds"
 import { useQueryState } from "hooks/useQueryState"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
 import { useEffect, useRef } from "react"
@@ -42,7 +45,8 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
-  const guildsListEl = useRef(null)
+  const yourGuildsRef = useRef(null)
+  const allGuildsRef = useRef(null)
 
   const {
     data: filteredGuilds,
@@ -61,6 +65,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   )
   const renderedGuilds = filteredGuilds?.flat()
 
+  // ? is included, so the request hits v2Replacer in fetcher
+  const { data: usersGuilds } = useSWRWithOptionalAuth(`/guild?`)
+
   useEffect(() => {
     if (prevSearch === search || prevSearch === undefined) return
     setSize(1)
@@ -69,8 +76,8 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   useScrollEffect(() => {
     if (
-      !guildsListEl.current ||
-      guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
+      !allGuildsRef.current ||
+      allGuildsRef.current.getBoundingClientRect().bottom > window.innerHeight ||
       isValidating
     )
       return
@@ -104,14 +111,24 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             opacity: bgOpacity,
           },
         }}
-        backgroundOffset={account ? 100 : 90}
+        backgroundOffset={usersGuilds?.length ? 135 : 120}
         textColor="white"
       >
-        <YourGuilds />
+        <ExplorerTabs
+          {...{ yourGuildsRef, allGuildsRef }}
+          rightElement={usersGuilds?.length && <GoToCreateGuildButton />}
+        />
 
-        <Stack ref={guildsListEl} spacing={{ base: 8, md: 10 }}>
+        <YourGuilds ref={yourGuildsRef} />
+
+        <Stack spacing={{ base: 8, md: 10 }}>
           {account && <Divider />}
-          <Section title="Explore all guilds">
+          <Section
+            title="Explore all guilds"
+            ref={allGuildsRef}
+            id="allGuilds"
+            scrollMarginTop={20}
+          >
             <SimpleGrid
               templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
               gap={{ base: 2, md: "6" }}

@@ -35,6 +35,7 @@ import { MintGuildPinProvider } from "components/[guild]/Requirements/components
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useScrollEffect from "hooks/useScrollEffect"
@@ -74,6 +75,7 @@ const DynamicResendRewardButton = dynamic(
 const GuildPage = (): JSX.Element => {
   const {
     id: guildId,
+    urlName,
     name,
     description,
     imageUrl,
@@ -226,19 +228,25 @@ const GuildPage = (): JSX.Element => {
         {showOnboarding ? (
           <DynamicOnboarding />
         ) : (
-          <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            <HStack>
-              {isMember && !isAdmin && <DynamicResendRewardButton />}
-              {!isMember && (isAdmin ? hasAccess : true) ? (
-                <JoinButton />
-              ) : !isAdmin ? (
-                <LeaveButton />
-              ) : isAddRoleStuck ? (
-                <DynamicAddAndOrderRoles />
-              ) : (
-                <DynamicAddRewardButton />
-              )}
-            </HStack>
+          <Tabs
+            rightElement={
+              <HStack>
+                {isMember && !isAdmin && <DynamicResendRewardButton />}
+                {!isMember && (isAdmin ? hasAccess : true) ? (
+                  <JoinButton />
+                ) : !isAdmin ? (
+                  <LeaveButton />
+                ) : isAddRoleStuck ? (
+                  <DynamicAddAndOrderRoles />
+                ) : (
+                  <DynamicAddRewardButton />
+                )}
+              </HStack>
+            }
+          >
+            <TabButton href={urlName} isActive>
+              {showAccessHub ? "Home" : "Roles"}
+            </TabButton>
           </Tabs>
         )}
 
