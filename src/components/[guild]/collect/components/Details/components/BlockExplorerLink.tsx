@@ -7,11 +7,18 @@ import shortenHex from "utils/shortenHex"
 type Props = {
   chain: Chain
   address: string
+  path?: string
   isValidating?: boolean
   error?: any
 }
 
-const BlockExplorerLink = ({ chain, address, isValidating, error }: Props) => {
+const BlockExplorerLink = ({
+  chain,
+  address,
+  path = "address",
+  isValidating,
+  error,
+}: Props) => {
   const displayedAddress = address && shortenHex(address)
   const url = RPC[chain]?.blockExplorerUrls?.[0]
 
@@ -22,7 +29,7 @@ const BlockExplorerLink = ({ chain, address, isValidating, error }: Props) => {
           Couldn't fetch
         </Text>
       ) : (
-        <Link href={`${url}/address/${address}`} isExternal>
+        <Link href={`${url}/${path}/${address}`} isExternal>
           <Text as="span" fontSize="md" mr={1.5} colorScheme="gray">
             {displayedAddress}
           </Text>
