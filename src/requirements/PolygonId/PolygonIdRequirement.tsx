@@ -57,15 +57,14 @@ const PolygonIDRequirement = (props: RequirementProps) => {
         <Portal>
           <PopoverContent>
             <PopoverArrow />
-            <PopoverBody p={0}>
-              <Box
-                overflow="auto"
-                as="pre"
-                p={2}
-                bgColor={bg}
-                borderRadius="sm"
-                fontSize="sm"
-              >
+            <PopoverBody
+              p={2}
+              bgColor={bg}
+              borderRadius={"xl"}
+              maxH={"md"}
+              overflow={"auto"}
+            >
+              <Box as="pre" fontSize="sm">
                 {JSON.stringify(requirement.data.query, null, 2)}
               </Box>
             </PopoverBody>
