@@ -21,12 +21,14 @@ import { useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName } from "types"
 import AddPoapPanel from "../CreatePoap"
-import useGuild from "../hooks/useGuild"
 import RoleOptionCard from "../RoleOptionCard"
 import AddDiscordPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
 import AddGithubPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
 import AddGooglePanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
 import AddTelegramPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
+import { useIsTabsStuck } from "../Tabs/Tabs"
+import { useThemeContext } from "../ThemeContext"
+import useGuild from "../hooks/useGuild"
 import useAddReward from "./hooks/useAddReward"
 
 const addPlatformComponents: Record<
@@ -72,9 +74,21 @@ const AddRewardButton = () => {
   }
   const { onSubmit, isLoading } = useAddReward(onSuccess)
 
+  const { isStuck } = useIsTabsStuck()
+  const { textColor, buttonColorScheme } = useThemeContext()
+
   return (
     <>
-      <Button leftIcon={<Plus />} onClick={onOpen} variant="ghost" size="sm">
+      <Button
+        leftIcon={<Plus />}
+        onClick={onOpen}
+        variant="ghost"
+        size="sm"
+        {...(!isStuck && {
+          color: textColor,
+          colorScheme: buttonColorScheme,
+        })}
+      >
         Add reward
       </Button>
       <FormProvider {...methods}>

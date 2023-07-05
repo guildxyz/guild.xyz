@@ -8,15 +8,17 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { SignOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
+import { useIsTabsStuck } from "../Tabs/Tabs"
+import { useThemeContext } from "../ThemeContext"
 import useIsMember from "../hooks/useIsMember"
 import useLeaveGuild from "./hooks/useLeaveGuild"
 
-const LeaveButton = () => {
+const LeaveButton = ({ disableColoring = false }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
 
@@ -27,6 +29,9 @@ const LeaveButton = () => {
   useEffect(() => {
     if (response) onClose()
   }, [response])
+
+  const { isStuck } = useIsTabsStuck() ?? {}
+  const { textColor, buttonColorScheme } = useThemeContext()
 
   if (!isMember) return null
 
@@ -40,6 +45,11 @@ const LeaveButton = () => {
           minW={"44px"}
           variant="ghost"
           rounded="full"
+          {...(!isStuck &&
+            !disableColoring && {
+              color: textColor,
+              colorScheme: buttonColorScheme,
+            })}
         />
       </Tooltip>
 
