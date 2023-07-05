@@ -44,7 +44,10 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
   const textColor = useMemo(() => {
     if (colorMode === "dark" || localBackgroundImage) return "whiteAlpha.900"
     const color = Color(localThemeColor || "white")
-    return color.luminosity() > 0.6 ? "primary.800" : "whiteAlpha.900"
+    const saturation = color.hsl().array()[1]
+    return color.luminosity() > 0.6 && saturation < 70
+      ? "primary.800"
+      : "whiteAlpha.900"
   }, [colorMode, localThemeColor])
 
   const buttonColorScheme =
