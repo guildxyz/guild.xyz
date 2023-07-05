@@ -35,7 +35,9 @@ const PolygonIDRequirement = (props: RequirementProps) => {
           footer={<ConnectPolygonID />}
           {...props}
         >
-          {`Satisfy a PolygonID `}
+          {`Satisfy the `}
+          <DataBlock>{requirement.data.query[0].query?.type}</DataBlock>
+          {` PolygonID `}
           <PopoverTrigger>
             <Button
               variant="link"
@@ -45,14 +47,6 @@ const PolygonIDRequirement = (props: RequirementProps) => {
               query
             </Button>
           </PopoverTrigger>
-
-          {proofAge && (
-            <>
-              {` (valid until `}
-              <DataBlock>{proofAge}</DataBlock>
-              {`)`}
-            </>
-          )}
         </Requirement>
         <Portal>
           <PopoverContent>
