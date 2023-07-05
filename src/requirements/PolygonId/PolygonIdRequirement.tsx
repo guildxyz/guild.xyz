@@ -7,6 +7,7 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Portal,
   useColorModeValue,
 } from "@chakra-ui/react"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -28,7 +29,7 @@ const PolygonIDRequirement = (props: RequirementProps) => {
 
   if (requirement?.data?.query)
     return (
-      <Popover placement="bottom" strategy="fixed">
+      <Popover placement="bottom">
         <Requirement
           image={`/requirementLogos/polygonId.svg`}
           footer={<ConnectPolygonID />}
@@ -53,21 +54,23 @@ const PolygonIDRequirement = (props: RequirementProps) => {
             </>
           )}
         </Requirement>
-        <PopoverContent>
-          <PopoverArrow />
-          <PopoverBody p={0}>
-            <Box
-              overflow="auto"
-              as="pre"
-              p={2}
-              bgColor={bg}
-              borderRadius="sm"
-              fontSize="sm"
-            >
-              {JSON.stringify(requirement.data.query, null, 2)}
-            </Box>
-          </PopoverBody>
-        </PopoverContent>
+        <Portal>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverBody p={0}>
+              <Box
+                overflow="auto"
+                as="pre"
+                p={2}
+                bgColor={bg}
+                borderRadius="sm"
+                fontSize="sm"
+              >
+                {JSON.stringify(requirement.data.query, null, 2)}
+              </Box>
+            </PopoverBody>
+          </PopoverContent>
+        </Portal>
       </Popover>
     )
 
