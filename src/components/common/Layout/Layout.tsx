@@ -117,11 +117,9 @@ const Layout = ({
             left={0}
             w="full"
             h={bgHeight}
-            background={backgroundImage ? "gray.900" : background}
-            opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
-            {...backgroundProps}
+            background={"gray.900"}
           >
-            {backgroundImage && (
+            {backgroundImage ? (
               <Image
                 src={backgroundImage}
                 alt="Guild background image"
@@ -129,6 +127,14 @@ const Layout = ({
                 objectFit="cover"
                 priority
                 style={{ filter: "brightness(30%)" }}
+              />
+            ) : (
+              <Box
+                w="full"
+                h="full"
+                background={background}
+                opacity={colorContext?.textColor === "primary.800" ? 1 : ".5"}
+                {...backgroundProps}
               />
             )}
           </Box>

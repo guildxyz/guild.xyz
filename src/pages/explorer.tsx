@@ -34,6 +34,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         ogDescription="Automated membership management for the platforms your community already uses."
         background={bgColor}
         backgroundProps={{
+          opacity: 1,
           _before: {
             content: '""',
             position: "absolute",

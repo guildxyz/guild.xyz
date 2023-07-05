@@ -51,6 +51,7 @@ const CreateGuildPage = (): JSX.Element => {
       <Layout
         title="Create Guild"
         background={bannerColor}
+        backgroundProps={{ opacity: 1 }}
         backgroundOffset={47}
         textColor="white"
       >
