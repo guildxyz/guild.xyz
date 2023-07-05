@@ -22,8 +22,15 @@ const v2Replacer = (endpoint: string, options: Record<string, any>) => {
   //   return endpoint.replace("/v1/guild/", "/v2/guild/guild-page/")
   // }
 
-  if (endpoint.startsWith(`${process.env.NEXT_PUBLIC_API}/guild?`)) {
-    return endpoint.replace("/v1/", "/v2/").replace("/guild?", "/guilds?")
+  // This `FORCE_V2` is a pretty ugly solution, but we'll remove this soon (https://github.com/agoraxyz/guild.xyz/pull/808)
+  if (
+    endpoint.startsWith(`${process.env.NEXT_PUBLIC_API}/guild?`) ||
+    endpoint.startsWith(`${process.env.NEXT_PUBLIC_API}/FORCE_V2`)
+  ) {
+    return endpoint
+      .replace("/FORCE_V2", "")
+      .replace("/v1/", "/v2/")
+      .replace("/guild?", "/guilds?")
   }
 
   return endpoint

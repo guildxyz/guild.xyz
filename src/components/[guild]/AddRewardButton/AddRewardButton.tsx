@@ -21,16 +21,16 @@ import { useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName } from "types"
 import AddPoapPanel from "../CreatePoap"
+import useGuild from "../hooks/useGuild"
 import RoleOptionCard from "../RoleOptionCard"
 import AddDiscordPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
 import AddGithubPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
 import AddGooglePanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
 import AddTelegramPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
-import useGuild from "../hooks/useGuild"
 import useAddReward from "./hooks/useAddReward"
 
 const addPlatformComponents: Record<
-  Exclude<PlatformName, "" | "TWITTER">,
+  Exclude<PlatformName, "" | "TWITTER" | "CONTRACT_CALL">,
   (props) => JSX.Element
 > = {
   DISCORD: AddDiscordPanel,
