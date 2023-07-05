@@ -10,14 +10,15 @@ import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
-import platforms from "platforms/platforms"
 import PoapCardMenu from "platforms/Poap/PoapCardMenu"
+import platforms from "platforms/platforms"
 import { PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
+import { useMintGuildPinContext } from "../Requirements/components/GuildCheckout/MintGuildPinContext"
+import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
-import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import PlatformCardButton from "./components/PlatformCardButton"
 
 const DynamicGuildPinRewardCard = dynamic(
@@ -51,13 +52,15 @@ const AccessHub = (): JSX.Element => {
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
+  const { isInvalidImage, isTooSmallImage } = useMintGuildPinContext()
 
   const futurePoaps = poaps?.filter((poap) => {
     const currentTime = Date.now() / 1000
     return poap.expiryDate > currentTime
   })
 
-  const shouldShowGuildPin = isMember || isAdmin
+  const shouldShowGuildPin =
+    (isMember && !isInvalidImage && !isTooSmallImage) || isAdmin
 
   return (
     <SimpleGrid
