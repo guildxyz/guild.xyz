@@ -76,6 +76,7 @@ const Layout = ({
     backgroundImage,
     childrenWrapper?.current,
     action,
+    backgroundOffset,
   ])
 
   const { colorMode } = useColorMode()
