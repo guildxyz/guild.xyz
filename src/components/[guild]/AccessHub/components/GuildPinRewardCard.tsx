@@ -1,8 +1,8 @@
 import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import RewardCard from "components/common/RewardCard"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import dynamic from "next/dynamic"
 import { CircleWavyCheck, Question } from "phosphor-react"
 
@@ -17,11 +17,7 @@ const GuildPinRewardCard = () => {
 
   const { isAdmin } = useGuildPermission()
 
-  const { isImageValidating, isInvalidImage, isTooSmallImage } =
-    useMintGuildPinContext()
-
-  if (isImageValidating || ((isInvalidImage || isTooSmallImage) && !isAdmin))
-    return null
+  const { isInvalidImage, isTooSmallImage } = useMintGuildPinContext()
 
   return (
     <CardMotionWrapper>

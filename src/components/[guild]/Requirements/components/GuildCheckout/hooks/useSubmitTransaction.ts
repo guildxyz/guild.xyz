@@ -7,11 +7,12 @@ const useSubmitTransaction = <DataType>(
   sendTransaction: (data?: DataType) => Promise<TransactionResponse>,
   { onSuccess, onError }: UseSubmitOptions<TransactionReceipt & Rest> = {}
 ) => {
-  const { setTxHash, txHash, setTxError, setTxSuccess } = useGuildCheckoutContext()
+  const { setTxHash, txHash, setTxError, setTxSuccess } =
+    useGuildCheckoutContext() ?? {}
 
   const fetch = async (data?: DataType) => {
     const transaction = await sendTransaction(data)
-    setTxHash(transaction.hash)
+    setTxHash?.(transaction.hash)
     return transaction.wait()
   }
 
@@ -19,17 +20,17 @@ const useSubmitTransaction = <DataType>(
     onError: (error) => {
       const prettyError =
         error?.code === "ACTION_REJECTED" ? "User rejected the transaction" : error
-      if (txHash) setTxError(true)
+      if (txHash) setTxError?.(true)
       onError?.(prettyError)
     },
     onSuccess: (receipt) => {
       if (receipt.status !== 1) {
-        setTxError(true)
+        setTxError?.(true)
         console.log("TX RECEIPT", receipt)
         return
       }
       onSuccess?.(receipt)
-      setTxSuccess(true)
+      setTxSuccess?.(true)
     },
   })
 }

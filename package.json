@@ -69,6 +69,7 @@
     "react-dropzone": "^14.2.3",
     "react-hook-form": "7.43.9",
     "react-intersection-observer": "^9.4.3",
+    "react-markdown": "^8.0.7",
     "react-notion-x": "^6.15.6",
     "react-window": "^1.8.8",
     "slugify": "^1.6.5",

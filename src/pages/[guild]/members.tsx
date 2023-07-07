@@ -1,17 +1,16 @@
 import { Center, Heading, HStack, Link, Spinner, Wrap } from "@chakra-ui/react"
 import CRMTable from "components/[guild]/crm/CRMTable"
+import ExportMembers from "components/[guild]/crm/ExportMembers"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import SocialIcon from "components/[guild]/SocialIcon"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { Export } from "phosphor-react"
 import { SocialLinkKey } from "types"
 import parseDescription from "utils/parseDescription"
 
@@ -20,7 +19,14 @@ const DynamicActiveStatusUpdates = dynamic(
 )
 
 const GuildPage = (): JSX.Element => {
-  const { id: guildId, name, description, imageUrl, socialLinks } = useGuild()
+  const {
+    id: guildId,
+    name,
+    urlName,
+    description,
+    imageUrl,
+    socialLinks,
+  } = useGuild()
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
@@ -76,12 +82,11 @@ const GuildPage = (): JSX.Element => {
         backgroundImage={localBackgroundImage}
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
       >
-        <Tabs tabTitle={"Home"}>
-          <HStack>
-            <Button leftIcon={<Export />} variant="ghost" size="sm">
-              Export members
-            </Button>
-          </HStack>
+        <Tabs rightElement={<ExportMembers />}>
+          <TabButton href={urlName}>Home</TabButton>
+          <TabButton href={`${urlName}/members`} isActive>
+            Members
+          </TabButton>
         </Tabs>
         <CRMTable />
       </Layout>
@@ -91,7 +96,6 @@ const GuildPage = (): JSX.Element => {
 
 const GuildPageWrapper = (): JSX.Element => {
   const guild = useGuild()
-  const { isAdmin } = useGuildPermission()
 
   if (guild.isLoading)
     return (

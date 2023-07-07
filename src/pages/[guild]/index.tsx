@@ -31,6 +31,7 @@ import { MintGuildPinProvider } from "components/[guild]/Requirements/components
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildLogo from "components/common/GuildLogo"
@@ -46,7 +47,7 @@ import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig, unstable_serialize } from "swr"
-import { Guild, SocialLinkKey, Visibility } from "types"
+import { Guild, PlatformType, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
 
@@ -74,6 +75,7 @@ const DynamicResendRewardButton = dynamic(
 const GuildPage = (): JSX.Element => {
   const {
     id: guildId,
+    urlName,
     name,
     description,
     imageUrl,
@@ -85,6 +87,7 @@ const GuildPage = (): JSX.Element => {
     onboardingComplete,
     socialLinks,
     poaps,
+    guildPlatforms,
   } = useGuild()
   useAutoStatusUpdate()
 
@@ -145,7 +148,13 @@ const GuildPage = (): JSX.Element => {
     isAdmin && !onboardingComplete ? OnboardingProvider : React.Fragment
 
   const showOnboarding = isAdmin && !onboardingComplete
-  const showAccessHub = (isMember || isAdmin) && !showOnboarding
+  const showAccessHub =
+    (guildPlatforms.some(
+      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
+    ) ||
+      isMember ||
+      isAdmin) &&
+    !showOnboarding
 
   const currentTime = Date.now() / 1000
   const { activePoaps, expiredPoaps } =
@@ -219,19 +228,26 @@ const GuildPage = (): JSX.Element => {
         {showOnboarding ? (
           <DynamicOnboarding />
         ) : (
-          <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            <HStack>
-              {isMember && !isAdmin && <DynamicResendRewardButton />}
-              {!isMember && (isAdmin ? hasAccess : true) ? (
-                <JoinButton />
-              ) : !isAdmin ? (
-                <LeaveButton />
-              ) : isAddRoleStuck ? (
-                <DynamicAddAndOrderRoles />
-              ) : (
-                <DynamicAddRewardButton />
-              )}
-            </HStack>
+          <Tabs
+            rightElement={
+              <HStack>
+                {isMember && !isAdmin && <DynamicResendRewardButton />}
+                {!isMember && (isAdmin ? hasAccess : true) ? (
+                  <JoinButton />
+                ) : !isAdmin ? (
+                  <LeaveButton />
+                ) : isAddRoleStuck ? (
+                  <DynamicAddAndOrderRoles />
+                ) : (
+                  <DynamicAddRewardButton />
+                )}
+              </HStack>
+            }
+          >
+            <TabButton href={urlName} isActive>
+              {showAccessHub ? "Home" : "Roles"}
+            </TabButton>
+            {isAdmin && <TabButton href={`${urlName}/members`}>Members</TabButton>}
           </Tabs>
         )}
 
