@@ -38,9 +38,14 @@ const fetcher = async (
     headers: {
       ...(body || signedPayload ? { "Content-Type": "application/json" } : {}),
       ...init.headers,
-      ...(posthog.isFeatureEnabled("api-v2") ? { [V2_FLAG_HEADER_NAME]: 1 } : {}),
     },
   }
+
+  try {
+    if (posthog.isFeatureEnabled("api-v2")) {
+      options.headers[V2_FLAG_HEADER_NAME] = 1
+    }
+  } catch {}
 
   if (!!validation) {
     if (!options.method || options.method?.toUpperCase() === "GET") {
