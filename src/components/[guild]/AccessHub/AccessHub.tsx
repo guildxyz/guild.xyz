@@ -14,6 +14,7 @@ import PoapCardMenu from "platforms/Poap/PoapCardMenu"
 import platforms from "platforms/platforms"
 import { PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
+import { useMintGuildPinContext } from "../Requirements/components/GuildCheckout/MintGuildPinContext"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -30,15 +31,18 @@ const useAccessedGuildPlatforms = () => {
   const { isAdmin } = useGuildPermission()
   const { memberships } = useMemberships()
 
+  // Displaying CONTRACT_CALL rewards for everyone, even for users who aren't members
+  const contractCallGuildPlatforms = guildPlatforms.filter(guildPlatform => guildPlatform.platformId === PlatformType.CONTRACT_CALL)
+
   if (isAdmin) return guildPlatforms
   
   const accessedRoleIds = memberships?.find((membership) => membership.guildId === id)?.roleIds
-  if (!accessedRoleIds) return []
+  if (!accessedRoleIds) return contractCallGuildPlatforms
 
   const accessedRoles = roles.filter(role => accessedRoleIds.includes(role.id))
   const accessedRolePlatforms = accessedRoles.map(role => role.rolePlatforms).flat().filter(rolePlatform => !!rolePlatform)
   const accessedGuildPlatformIds = [...new Set(accessedRolePlatforms.map(rolePlatform => rolePlatform.guildPlatformId))]
-  const accessedGuildPlatforms = guildPlatforms.filter(guildPlatform => accessedGuildPlatformIds.includes(guildPlatform.id))
+  const accessedGuildPlatforms = guildPlatforms.filter(guildPlatform => accessedGuildPlatformIds.includes(guildPlatform.id) || guildPlatform.platformId === PlatformType.CONTRACT_CALL)
 
   return accessedGuildPlatforms
 }
@@ -48,13 +52,15 @@ const AccessHub = (): JSX.Element => {
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
+  const { isInvalidImage, isTooSmallImage } = useMintGuildPinContext()
 
   const futurePoaps = poaps?.filter((poap) => {
     const currentTime = Date.now() / 1000
     return poap.expiryDate > currentTime
   })
 
-  const shouldShowGuildPin = isMember || isAdmin
+  const shouldShowGuildPin =
+    (isMember && !isInvalidImage && !isTooSmallImage) || isAdmin
 
   return (
     <SimpleGrid
@@ -73,6 +79,7 @@ const AccessHub = (): JSX.Element => {
               cardPropsHook: useCardProps,
               cardMenuComponent: PlatformCardMenu,
               cardWarningComponent: PlatformCardWarning,
+              cardButton: CustomPlatformCardButton,
             } = platforms[PlatformType[platform.platformId]]
 
             return (
@@ -88,7 +95,11 @@ const AccessHub = (): JSX.Element => {
                   ) : null
                 }
               >
-                <PlatformCardButton platform={platform} />
+                {CustomPlatformCardButton ? (
+                  <CustomPlatformCardButton platform={platform} />
+                ) : (
+                  <PlatformCardButton platform={platform} />
+                )}
               </PlatformCard>
             )
           })}

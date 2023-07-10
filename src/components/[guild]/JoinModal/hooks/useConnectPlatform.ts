@@ -44,7 +44,7 @@ const parseConnectError = (
 }
 
 const platformAuthHooks: Record<
-  Exclude<PlatformName, "POAP">,
+  Exclude<PlatformName, "POAP" | "CONTRACT_CALL">,
   (scope?: string) => any
 > = {
   DISCORD: useDCAuth,

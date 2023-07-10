@@ -8,7 +8,7 @@ const getContractMethods = (abi) => {
     parsedAbi = JSON.parse(abi)
   } catch (_) {
     // For some reason, "Contract source code not verified" message comes in the ABI property in this case
-    throw new Error(abi)
+    throw new Error(abi ?? "Couldn't fetch contract methods")
   }
 
   return parsedAbi?.filter(
