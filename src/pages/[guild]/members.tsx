@@ -83,7 +83,7 @@ const GuildPage = (): JSX.Element => {
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
       >
         <Tabs rightElement={<ExportMembers />}>
-          <TabButton href={urlName}>Home</TabButton>
+          <TabButton href={`/${urlName}`}>Home</TabButton>
           <TabButton href={`${urlName}/members`} isActive>
             Members
           </TabButton>
