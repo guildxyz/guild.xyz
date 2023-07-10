@@ -10,18 +10,17 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import Score from "./components/Score"
-import Stamp from "./components/Stamp"
 
 const gitcoinPassportRequirementTypes = [
   {
     label: "Have a Gitcoin Passport",
     value: "GITCOIN_PASS",
   },
-  {
-    label: "Have a stamp",
-    value: "GITCOIN_STAMP",
-    GitcoinPassportRequirement: Stamp,
-  },
+  // {
+  //   label: "Have a stamp",
+  //   value: "GITCOIN_STAMP",
+  //   GitcoinPassportRequirement: Stamp,
+  // },
   {
     label: "Weighted Scorer",
     value: "GITCOIN_SCORE",
