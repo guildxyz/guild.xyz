@@ -1,8 +1,6 @@
 import { Box, HStack, useColorModeValue } from "@chakra-ui/react"
 import useIsStuck from "hooks/useIsStuck"
 import { PropsWithChildren, createContext, useContext } from "react"
-import useGuild from "../hooks/useGuild"
-import useGuildPermission from "../hooks/useGuildPermission"
 
 type Props = {
   rightElement?: JSX.Element
@@ -15,8 +13,6 @@ const TabsContext = createContext<{
 const Tabs = ({ rightElement, children }: PropsWithChildren<Props>): JSX.Element => {
   const { ref, isStuck } = useIsStuck()
 
-  const { urlName } = useGuild()
-  const { isAdmin } = useGuildPermission()
   const bgColor = useColorModeValue("white", "gray.800")
 
   return (
@@ -27,7 +23,7 @@ const Tabs = ({ rightElement, children }: PropsWithChildren<Props>): JSX.Element
         alignItems={"center"}
         position="sticky"
         top={"-1px"}
-        py={3}
+        py={2.5}
         mt={-3}
         mb={2}
         width="full"
@@ -39,7 +35,7 @@ const Tabs = ({ rightElement, children }: PropsWithChildren<Props>): JSX.Element
           left: 0,
           width: "full",
           // button height + padding
-          height: "calc(var(--chakra-space-11) + (2 * var(--chakra-space-3)))",
+          height: "calc(var(--chakra-space-11) + (2 * var(--chakra-space-2-5)))",
           bgColor: bgColor,
           boxShadow: "md",
           transition: "opacity 0.2s ease, visibility 0.1s ease",
