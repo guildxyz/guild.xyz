@@ -8,6 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import Footer from "components/index/Footer"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
@@ -15,7 +16,6 @@ import { useRouter } from "next/router"
 import { ArrowLeft } from "phosphor-react"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import LinkButton from "../LinkButton"
-import Footer from "./components/Footer"
 import Header from "./components/Header"
 
 type BackButtonProps = {
@@ -38,6 +38,7 @@ type Props = {
   backgroundOffset?: number
   backButton?: BackButtonProps
   maxWidth?: string
+  showFooter?: boolean
 }
 
 const Layout = ({
@@ -55,6 +56,7 @@ const Layout = ({
   backgroundOffset = 128,
   backButton,
   maxWidth = "container.lg",
+  showFooter = true,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
@@ -145,7 +147,7 @@ const Layout = ({
           position="relative"
           maxW={maxWidth}
           pt={{ base: 6, md: 9 }}
-          pb={24}
+          pb={showFooter && 24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
           {backButton && hasNavigated && (
@@ -195,7 +197,7 @@ const Layout = ({
           <Box ref={childrenWrapper}>{children}</Box>
         </Container>
 
-        <Footer />
+        {showFooter && <Footer />}
       </Box>
     </>
   )

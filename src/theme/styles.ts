@@ -91,7 +91,7 @@ const styles = {
     },
 
     ".intercom-lightweight-app": {
-      zIndex: "1 !important",
+      zIndex: "banner !important",
     },
   }),
 }

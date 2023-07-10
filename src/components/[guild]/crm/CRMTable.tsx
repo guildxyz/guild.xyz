@@ -1,5 +1,6 @@
 import {
   Checkbox,
+  Flex,
   HStack,
   Table,
   Tbody,
@@ -19,7 +20,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import Card from "components/common/Card"
-import { useMemo } from "react"
+import useScrollEffect from "hooks/useScrollEffect"
+import { useMemo, useState } from "react"
 import { PlatformAccountDetails, Visibility } from "types"
 import useGuild from "../hooks/useGuild"
 import FilterByRoles, { roleFilter } from "./FilterByRoles"
@@ -130,53 +132,113 @@ const CRMTable = () => {
   })
 
   const cardBg = useColorModeValue("white", "gray.700")
+  const theadBoxShadow = useColorModeValue("md", "2xl")
+
+  const [isStuck, setIsStuck] = useState(false)
+  useScrollEffect(() => {
+    /**
+     * Observing if we've scrolled to the bottom of the page. The table has to be the
+     * last element anyway so we can't scroll past it, and it works more reliable
+     * than useIsStucked
+     */
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      setIsStuck(true)
+    } else setIsStuck(false)
+  }, [])
 
   if (!data) return null
 
   return (
-    <Card overflow="visible">
-      <Table borderColor="whiteAlpha.300">
-        <Thead>
-          <Tr>
-            {/* We don't support multiple header groups right now. Should rewrite it based on the example if we'll need it */}
-            {table.getHeaderGroups()[0].headers.map((header) => (
-              <Th
-                key={header.id}
-                position="sticky"
-                top="16"
-                bg={cardBg}
-                overflow="hidden"
-                px="3.5"
-                sx={{
-                  "&:first-of-type": {
-                    borderTopLeftRadius: "xl",
-                  },
-                  "&:last-of-type": {
-                    borderTopRightRadius: "xl",
-                    borderRightWidth: 0,
-                  },
-                }}
-                zIndex="1"
-                colSpan={header.colSpan}
-              >
-                {flexRender(header.column.columnDef.header, header.getContext())}
-              </Th>
-            ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {table.getRowModel().rows.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id} fontSize={"sm"} px="3.5">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Td>
+    <Flex justifyContent={"center"} position="relative" zIndex="banner">
+      <style>
+        {/* not using overflow-y: hidden just hiding the scrollbar, so it's possible
+        to scroll back at the top and get out of the stucked state */}
+        {isStuck &&
+          `body::-webkit-scrollbar {display: none !important; scrollbar-width: none; -webkit-appearance: none;}`}
+        {/* the table is elevated to be above the headers shadow, and the popovers need to be elevated above that */}
+        {`body {overflow-x: hidden !important}
+          .chakra-popover__popper { z-index: var(--chakra-zIndices-banner) !important };`}
+      </style>
+      <Flex
+        w="100vw"
+        flex="1 0 auto"
+        // 100vh - Tabs height (button height + padding)
+        h="calc(100vh - calc(var(--chakra-space-11) + (2 * var(--chakra-space-2-5))))"
+        overflowY={isStuck ? "auto" : "hidden"}
+      >
+        <Card overflow="visible" h="fit-content" mx="auto" mb="2">
+          <Table
+            borderColor="whiteAlpha.300"
+            minWidth="calc(var(--chakra-sizes-container-lg) - calc(var(--chakra-space-10) * 2))"
+            // needed so the Th elements can have boxShadow
+            sx={{ borderCollapse: "separate", borderSpacing: 0 }}
+          >
+            <Thead
+            // _before={{
+            //   content: `""`,
+            //   position: "fixed",
+            //   top: "calc(var(--chakra-space-11) + (2 * var(--chakra-space-2-5)))",
+            //   left: 0,
+            //   right: 0,
+            //   width: "full",
+            //   // button height + padding
+            //   height: "61px",
+            //   bgColor: "white",
+            //   boxShadow: "md",
+            //   transition: "opacity 0.2s ease, visibility 0.1s ease",
+            //   visibility: isStuck ? "visible" : "hidden",
+            //   opacity: isStuck ? 1 : 0,
+            //   borderTopWidth: "1px",
+            //   borderTopStyle: "solid",
+            // }}
+            >
+              <Tr>
+                {/* We don't support multiple header groups right now. Should rewrite it based on the example if we'll need it */}
+                {table.getHeaderGroups()[0].headers.map((header) => (
+                  <Th
+                    key={header.id}
+                    position="sticky"
+                    top="0"
+                    bg={cardBg}
+                    overflow="hidden"
+                    p="3.5"
+                    sx={
+                      !isStuck && {
+                        "&:first-of-type": {
+                          borderTopLeftRadius: "xl",
+                        },
+                        "&:last-of-type": {
+                          borderTopRightRadius: "xl",
+                          borderRightWidth: 0,
+                        },
+                      }
+                    }
+                    zIndex="1"
+                    colSpan={header.colSpan}
+                    boxShadow={isStuck && theadBoxShadow}
+                    transition="box-shadow .2s"
+                    borderTopWidth="1px"
+                  >
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  </Th>
+                ))}
+              </Tr>
+            </Thead>
+            <Tbody>
+              {table.getRowModel().rows.map((row) => (
+                <Tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <Td key={cell.id} fontSize={"sm"} px="3.5">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </Td>
+                  ))}
+                </Tr>
               ))}
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </Card>
+            </Tbody>
+          </Table>
+        </Card>
+      </Flex>
+    </Flex>
   )
 }
 

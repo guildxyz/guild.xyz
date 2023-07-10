@@ -81,6 +81,9 @@ const GuildPage = (): JSX.Element => {
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
+        backgroundOffset={112}
+        showFooter={false}
+        // maxWidth="container.xl"
       >
         <Tabs rightElement={<ExportMembers />}>
           <TabButton href={`/${urlName}`}>Home</TabButton>
