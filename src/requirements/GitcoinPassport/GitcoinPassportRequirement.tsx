@@ -147,7 +147,9 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
                 {"Have a Gitcoin Passport with "}
                 <DataBlock>{requirement.data.score}</DataBlock>
                 {" score in "}
-                <DataBlock>{`${scorers[requirement.data.id]}`}</DataBlock>
+                <DataBlock>{`${
+                  scorers[requirement.data.id] ?? "unknown scorer"
+                }`}</DataBlock>
               </>
             )
           default:
