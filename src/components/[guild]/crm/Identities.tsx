@@ -32,7 +32,8 @@ const IdentityTag = ({
   platformAccount: PlatformAccountDetails
 } & Rest) => {
   const platform = platforms[platformAccount.platformName]
-  const isOpen = platform.name === "Discord"
+  const isOpen =
+    platform.name === "Discord" && platformAccount.platformUserData?.username
 
   return (
     <Tag
