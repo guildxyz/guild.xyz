@@ -21,18 +21,19 @@ import { useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName } from "types"
 import AddPoapPanel from "../CreatePoap"
+import useGuild from "../hooks/useGuild"
 import RoleOptionCard from "../RoleOptionCard"
+import AddContractCallPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel"
 import AddDiscordPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
 import AddGithubPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
 import AddGooglePanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
 import AddTelegramPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
-import useGuild from "../hooks/useGuild"
 import useAddReward from "./hooks/useAddReward"
 
 const addPlatformComponents: Record<
-  Exclude<PlatformName, "" | "TWITTER" | "CONTRACT_CALL">,
+  Exclude<PlatformName, "" | "TWITTER">,
   (props) => JSX.Element
 > = {
   DISCORD: AddDiscordPanel,
@@ -40,6 +41,7 @@ const addPlatformComponents: Record<
   GITHUB: AddGithubPanel,
   GOOGLE: AddGooglePanel,
   POAP: AddPoapPanel,
+  CONTRACT_CALL: AddContractCallPanel,
 }
 
 const AddRewardButton = () => {

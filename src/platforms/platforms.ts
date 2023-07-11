@@ -4,6 +4,7 @@ import {
   GithubLogo,
   GoogleLogo,
   IconProps,
+  Image,
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
@@ -89,7 +90,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "POAP",
   },
   CONTRACT_CALL: {
-    icon: null,
+    icon: Image,
     name: "NFT",
     colorScheme: "cyan",
     gatedEntity: "",
