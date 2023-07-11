@@ -1,4 +1,4 @@
-import { Center, Img } from "@chakra-ui/react"
+import { Center, Img, useColorMode } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { Web3ReactHooks, useWeb3React } from "@web3-react/core"
@@ -60,6 +60,7 @@ const ConnectorButton = ({
     () => typeof window !== "undefined" && (window.ethereum as any)?.isBraveWallet,
     [window?.ethereum]
   )
+  const { colorMode } = useColorMode()
 
   const iconUrl =
     connector instanceof MetaMask
@@ -69,7 +70,9 @@ const ConnectorButton = ({
       : connector instanceof WalletConnect
       ? "walletconnect.svg"
       : connector instanceof GnosisSafe
-      ? "walletconnect.svg"
+      ? colorMode === "dark"
+        ? "gnosis-safe-white.svg"
+        : "gnosis-safe-black.svg"
       : "coinbasewallet.png"
 
   const connectorName =
