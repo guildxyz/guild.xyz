@@ -1,7 +1,8 @@
 import { Center, Img } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
-import { useWeb3React, Web3ReactHooks } from "@web3-react/core"
+import { Web3ReactHooks, useWeb3React } from "@web3-react/core"
+import { GnosisSafe } from "@web3-react/gnosis-safe"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect-v2"
 import Button from "components/common/Button"
@@ -13,7 +14,7 @@ import { WalletError } from "types"
 import shortenHex from "utils/shortenHex"
 
 type Props = {
-  connector: MetaMask | WalletConnect | CoinbaseWallet
+  connector: MetaMask | WalletConnect | CoinbaseWallet | GnosisSafe
   connectorHooks: Web3ReactHooks
   error: WalletError & Error
   setError: Dispatch<SetStateAction<WalletError & Error>>
@@ -67,6 +68,8 @@ const ConnectorButton = ({
         : "metamask.png"
       : connector instanceof WalletConnect
       ? "walletconnect.svg"
+      : connector instanceof GnosisSafe
+      ? "walletconnect.svg"
       : "coinbasewallet.png"
 
   const connectorName =
@@ -78,6 +81,8 @@ const ConnectorButton = ({
         : "Install MetaMask"
       : connector instanceof WalletConnect
       ? "WalletConnect"
+      : connector instanceof GnosisSafe
+      ? "Gnosis Safe"
       : "Coinbase Wallet"
 
   if (connector instanceof MetaMask && isMobile && !isMetaMaskInstalled) return null

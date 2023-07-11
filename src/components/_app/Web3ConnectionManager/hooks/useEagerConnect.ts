@@ -6,7 +6,7 @@ const useEagerConnect = (): boolean => {
   const { isActive } = useWeb3React()
 
   const [tried, setTried] = useState(false)
-  const [[metaMask], , [walletConnect]] = connectors
+  const [[metaMask], , [walletConnect], [gnosisSafe]] = connectors
 
   useEffect(() => {
     metaMask
@@ -14,6 +14,13 @@ const useEagerConnect = (): boolean => {
       .catch(() => setTried(true))
       .finally(() => setTried(true))
   }, [metaMask])
+
+  useEffect(() => {
+    gnosisSafe
+      .connectEagerly()
+      .catch(() => setTried(true))
+      .finally(() => setTried(true))
+  }, [gnosisSafe])
 
   useEffect(() => {
     walletConnect

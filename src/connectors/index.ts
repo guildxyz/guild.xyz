@@ -1,8 +1,10 @@
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { Web3ReactHooks } from "@web3-react/core"
+import { GnosisSafe } from "@web3-react/gnosis-safe"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect-v2"
 import initializeCoinbaseWalletConnector from "./coinbaseWallet"
+import initializeGnosisConnector from "./gnosis"
 import initializeMetaMaskConnector from "./metaMask"
 import initializeWalletConnectConnector from "./walletConnect"
 
@@ -649,11 +651,16 @@ supportedChains.forEach(
 const [metaMask, metaMaskHooks] = initializeMetaMaskConnector()
 const [walletConnect, walletConnectHooks] = initializeWalletConnectConnector()
 const [coinbaseWallet, coinbaseWalletHooks] = initializeCoinbaseWalletConnector()
+const [gnosisWallet, gnosisWalletHooks] = initializeGnosisConnector()
 
-const connectors: [MetaMask | WalletConnect | CoinbaseWallet, Web3ReactHooks][] = [
+const connectors: [
+  MetaMask | WalletConnect | CoinbaseWallet | GnosisSafe,
+  Web3ReactHooks
+][] = [
   [metaMask, metaMaskHooks],
   [walletConnect, walletConnectHooks],
   [coinbaseWallet, coinbaseWalletHooks],
+  [gnosisWallet, gnosisWalletHooks],
 ]
 
 export { Chains, RPC, RPC_URLS, connectors, supportedChains }
