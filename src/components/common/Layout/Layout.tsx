@@ -8,7 +8,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import Footer from "components/index/Footer"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
@@ -16,6 +15,7 @@ import { useRouter } from "next/router"
 import { ArrowLeft } from "phosphor-react"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import LinkButton from "../LinkButton"
+import Footer from "./components/Footer"
 import Header from "./components/Header"
 
 type BackButtonProps = {
