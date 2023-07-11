@@ -306,7 +306,7 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api-optimistic.etherscan.io",
     iconUrls: ["/networkLogos/optimism.svg"],
-    rpcUrls: ["https://endpoints.omniatech.io/v1/op/mainnet/public"],
+    rpcUrls: ["https://optimism.publicnode.com"],
     multicallAddress: "0x2DC0E2aa608532Da689e89e237dF582B783E552C",
   },
   MOONBEAM: {
