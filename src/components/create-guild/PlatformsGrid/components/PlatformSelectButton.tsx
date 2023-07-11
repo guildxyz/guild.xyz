@@ -8,11 +8,36 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import DisplayCard from "components/common/DisplayCard"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import DisplayCard from "components/common/DisplayCard"
 import Image from "next/image"
-import { CaretRight } from "phosphor-react"
+import { CaretRight, IconProps } from "phosphor-react"
+import { ComponentType, RefAttributes } from "react"
+import { PlatformName, Rest } from "types"
+
+export type PlatformHookType = ({
+  platform,
+  onSelection,
+}: {
+  platform: PlatformName
+  onSelection: (platform: PlatformName) => void
+}) => {
+  onClick: () => void
+  isLoading: boolean
+  loadingText: string
+  rightIcon: ComponentType<IconProps & RefAttributes<SVGSVGElement>>
+}
+
+type Props = {
+  platform: PlatformName
+  hook?: PlatformHookType
+  title: string
+  description?: string
+  imageUrl?: string
+  icon?: ComponentType<IconProps & RefAttributes<SVGSVGElement>>
+  onSelection: (platform: PlatformName) => void
+} & Rest
 
 const PlatformSelectButton = ({
   platform,
@@ -20,9 +45,10 @@ const PlatformSelectButton = ({
   title,
   description,
   imageUrl,
+  icon,
   onSelection,
   ...rest
-}) => {
+}: Props) => {
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
   const { onClick, isLoading, loadingText, rightIcon } =
@@ -47,10 +73,20 @@ const PlatformSelectButton = ({
       }`}
     >
       <HStack spacing={4}>
-        <Circle size="12" pos="relative" overflow="hidden">
-          <Image src={imageUrl} alt="Guild logo" layout="fill" />
-        </Circle>
-        <VStack spacing={1} alignItems="start" w="full" maxW="full" mb="1" mt="-1">
+        {icon ? (
+          <Icon as={icon} boxSize={8} weight="regular" />
+        ) : (
+          <Circle size="12" pos="relative" overflow="hidden">
+            <Image src={imageUrl} alt="Guild logo" layout="fill" />
+          </Circle>
+        )}
+        <VStack
+          spacing={1}
+          alignItems="start"
+          w="full"
+          maxW="full"
+          mt={description ? -1 : 0}
+        >
           <Heading
             fontSize="lg"
             fontWeight="bold"
@@ -60,9 +96,11 @@ const PlatformSelectButton = ({
           >
             {title}
           </Heading>
-          <Text letterSpacing="wide" colorScheme="gray">
-            {(isLoading && `${loadingText}...`) || description}
-          </Text>
+          {description && (
+            <Text letterSpacing="wide" colorScheme="gray">
+              {(isLoading && `${loadingText}...`) || description}
+            </Text>
+          )}
         </VStack>
         <Icon as={isLoading ? Spinner : (account && rightIcon) ?? CaretRight} />
       </HStack>
