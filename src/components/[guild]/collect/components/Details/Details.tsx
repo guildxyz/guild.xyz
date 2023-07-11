@@ -1,6 +1,6 @@
 import { SimpleGrid, Skeleton, Text } from "@chakra-ui/react"
-import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import Section from "components/common/Section"
+import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import { RPC } from "connectors"
 import useNftDetails from "../../hooks/useNftDetails"
 import BlockExplorerLink from "./components/BlockExplorerLink"
@@ -21,7 +21,9 @@ const Details = () => {
         <InfoBlock label="Standard">
           <Skeleton isLoaded={!isNftDetailsValidating}>
             <Text as="span" fontSize="md" colorScheme="gray">
-              {nftDetailsError ? "Couldn't fetch" : nftDetails?.standard}
+              {nftDetailsError
+                ? "Couldn't fetch"
+                : nftDetails?.standard ?? "Loading..."}
             </Text>
           </Skeleton>
         </InfoBlock>
