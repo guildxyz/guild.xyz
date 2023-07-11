@@ -22,6 +22,7 @@ const gnosisSafeSignCallback: MethodSignCallback = async (
   chainId: number
 ) => {
   try {
+    console.log({ message, address, chainId })
     const rpcProvider = new JsonRpcProvider(RPC[Chains[chainId]].rpcUrls[0])
     /**
      * Calling using sign lib abi here instead of the safe's, because the call gets
@@ -35,8 +36,12 @@ const gnosisSafeSignCallback: MethodSignCallback = async (
     )
     const safeContract = new Contract(address, GNOSIS_SAFE_L2_ABI, rpcProvider)
     const msgHash = await signLibContract.getMessageHash(hashMessage(message))
+    console.log({ msgHash })
 
-    /** This message gets emitted when the sign transaction is finalized, we must await it here */
+    /**
+     * This message gets emitted when the sign transaction is finalized, we must
+     * await it here
+     */
     await new Promise<void>((resolve) =>
       safeContract.once(safeContract.filters.SignMsg(msgHash), resolve)
     )
