@@ -1,11 +1,14 @@
 import {
   AspectRatio,
+  Box,
   Flex,
   FormControl,
   FormLabel,
   Grid,
   GridItem,
+  HStack,
   Icon,
+  IconButton,
   Input,
   Stack,
   Text,
@@ -21,9 +24,17 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { Chain, Chains } from "connectors"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
-import { Image } from "phosphor-react"
-import { useForm } from "react-hook-form"
+import { Image, Plus, TrashSimple } from "phosphor-react"
+import { useFieldArray, useForm } from "react-hook-form"
 import ChainButton from "./components/ChainButton"
+
+/**
+ * - Step state: "DEPLOY_CONTRACT" or "SETUP_ROLE" (or something like that)
+ * - If step === "DEPLOY_CONTRACT", show this simple form
+ * - On success, save the contract address (the new CONTRACT_CALL reward) to our DB
+ * - On success, setStep to "SETUP_ROLE"
+ * - If step === "SETUP_ROLE", show the 2 tabs (create role or select an existing role)
+ */
 
 const CONTRACT_CALL_SUPPORTED_CHAINS: Chain[] = ["POLYGON", "POLYGON_MUMBAI"]
 
@@ -31,7 +42,13 @@ type Props = {
   onSuccess: () => void
 }
 
-const defaultValues = {}
+type CreateNftForm = {
+  name: string
+  symbol: string
+  description: string
+  imageUrl: string
+  attributes: { name: string; value: string }[]
+}
 
 const AddContractCallPanel = ({ onSuccess }: Props) => {
   const { chainId } = useWeb3React()
@@ -45,12 +62,17 @@ const AddContractCallPanel = ({ onSuccess }: Props) => {
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ name: string; description: string; imageUrl: string }>({
+  } = useForm<CreateNftForm>({
     mode: "all",
-    defaultValues,
   })
 
-  const iconUploader = usePinata({
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "attributes",
+  })
+
+  // TODO: upload metadata too!
+  const fileUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
       setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`, {
         shouldTouch: true,
@@ -68,7 +90,7 @@ const AddContractCallPanel = ({ onSuccess }: Props) => {
     onSuccess()
   }
 
-  const {} = useSubmitWithUpload(handleSubmit(onSubmit), iconUploader.isUploading)
+  const {} = useSubmitWithUpload(handleSubmit(onSubmit), fileUploader.isUploading)
 
   return (
     <>
@@ -117,15 +139,27 @@ const AddContractCallPanel = ({ onSuccess }: Props) => {
 
           <GridItem colSpan={{ base: 3, sm: 2 }}>
             <Stack spacing={4}>
-              <FormControl isInvalid={!!errors?.name}>
-                <FormLabel>Name</FormLabel>
+              <HStack spacing={4} alignItems="start">
+                <FormControl isInvalid={!!errors?.name}>
+                  <FormLabel>Name</FormLabel>
 
-                <Input
-                  {...register("name", { required: "This field is required" })}
-                />
+                  <Input
+                    {...register("name", { required: "This field is required" })}
+                  />
 
-                <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
-              </FormControl>
+                  <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
+                </FormControl>
+
+                <FormControl isInvalid={!!errors?.symbol} maxW={48}>
+                  <FormLabel>Symbol</FormLabel>
+
+                  <Input
+                    {...register("symbol", { required: "This field is required" })}
+                  />
+
+                  <FormErrorMessage>{errors?.symbol?.message}</FormErrorMessage>
+                </FormControl>
+              </HStack>
 
               <FormControl isInvalid={!!errors?.description}>
                 <FormLabel>Description</FormLabel>
@@ -137,6 +171,80 @@ const AddContractCallPanel = ({ onSuccess }: Props) => {
                 />
 
                 <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Metadata</FormLabel>
+
+                <Stack spacing={2}>
+                  {fields?.map((field, index) => (
+                    <Box
+                      key={field.id}
+                      p={2}
+                      bgColor="blackAlpha.300"
+                      borderRadius="xl"
+                    >
+                      <Grid templateColumns="1fr 0.5rem 1fr 2.5rem" gap={1}>
+                        <FormControl isInvalid={!!errors?.attributes?.[index]?.name}>
+                          <Input
+                            placeholder="Name"
+                            {...register(`attributes.${index}.name`, {
+                              required: "This field is required",
+                            })}
+                          />
+                          <FormErrorMessage>
+                            {errors?.attributes?.[index]?.name?.message}
+                          </FormErrorMessage>
+                        </FormControl>
+
+                        <Flex justifyContent="center">
+                          <Text as="span" mt={2}>
+                            :
+                          </Text>
+                        </Flex>
+
+                        <FormControl
+                          isInvalid={!!errors?.attributes?.[index]?.value}
+                        >
+                          <Input
+                            placeholder="Value"
+                            {...register(`attributes.${index}.value`, {
+                              required: "This field is required",
+                            })}
+                          />
+                          <FormErrorMessage>
+                            {errors?.attributes?.[index]?.value?.message}
+                          </FormErrorMessage>
+                        </FormControl>
+
+                        <Flex justifyContent="end">
+                          <IconButton
+                            aria-label="Remove attribute"
+                            icon={<TrashSimple />}
+                            colorScheme="red"
+                            size="sm"
+                            rounded="full"
+                            variant="ghost"
+                            onClick={() => remove(index)}
+                            mt={1}
+                          />
+                        </Flex>
+                      </Grid>
+                    </Box>
+                  ))}
+
+                  <Button
+                    leftIcon={<Icon as={Plus} />}
+                    onClick={() =>
+                      append({
+                        name: "",
+                        value: "",
+                      })
+                    }
+                  >
+                    Add attribute
+                  </Button>
+                </Stack>
               </FormControl>
             </Stack>
           </GridItem>
