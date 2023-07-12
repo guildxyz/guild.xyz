@@ -2,6 +2,7 @@ import {
   Checkbox,
   Flex,
   HStack,
+  Skeleton,
   Table,
   Tbody,
   Td,
@@ -130,7 +131,7 @@ const CRMTable = () => {
   )
 
   const table = useReactTable({
-    data,
+    data: data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -152,8 +153,6 @@ const CRMTable = () => {
       setIsStuck(true)
     } else setIsStuck(false)
   }, [])
-
-  if (!data) return null
 
   return (
     <Flex justifyContent={"center"} position="relative" zIndex="banner">
@@ -232,15 +231,31 @@ const CRMTable = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {table.getRowModel().rows.map((row) => (
-                <Tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <Td key={cell.id} fontSize={"sm"} px="3.5">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </Td>
+              {data
+                ? table.getRowModel().rows.map((row) => (
+                    <Tr key={row.id}>
+                      {row.getVisibleCells().map((cell) => (
+                        <Td key={cell.id} fontSize={"sm"} px="3.5">
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </Td>
+                      ))}
+                    </Tr>
+                  ))
+                : [...Array(20)].map((i) => (
+                    <Tr key={i}>
+                      <Td fontSize={"sm"} px="3.5" w="12">
+                        <Checkbox mt="2px" />
+                      </Td>
+                      {table
+                        .getAllLeafColumns()
+                        .slice(1)
+                        .map((column) => (
+                          <Td key={column.id} fontSize={"sm"} px="3.5">
+                            <Skeleton w="20" h="5" />
+                          </Td>
+                        ))}
+                    </Tr>
                   ))}
-                </Tr>
-              ))}
             </Tbody>
           </Table>
         </Card>
