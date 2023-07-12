@@ -107,14 +107,13 @@ const SetRequirements = (): JSX.Element => {
           </Card>
         </CardMotionWrapper>
       ) : (
-        <Stack spacing={0} flexDirection="column-reverse">
+        <Stack spacing={0}>
           <AnimatePresence>
             {controlledFields.map((field: Requirement, i) => {
               const type: RequirementType = getValues(`requirements.${i}.type`)
 
               return (
                 <CardMotionWrapper key={field.formFieldId}>
-                  <LogicDivider logic={logic} />
                   <RequirementEditableCard
                     type={type}
                     field={field}
@@ -123,6 +122,7 @@ const SetRequirements = (): JSX.Element => {
                     updateRequirement={update}
                     isEditDisabled={type === "PAYMENT"}
                   />
+                  <LogicDivider logic={logic} />
                 </CardMotionWrapper>
               )
             })}
