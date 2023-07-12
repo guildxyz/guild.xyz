@@ -1,9 +1,9 @@
-import useMemberships from "components/explorer/hooks/useMemberships"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -45,8 +45,19 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
 
   const { mutate } = useMemberships()
 
-  const submit = (signedValidation: SignedValdation): Promise<Response> =>
-    fetcher(`/user/join`, signedValidation).then((body) => {
+  const submit = (signedValidation: SignedValdation): Promise<Response> => {
+    // Try catch just to make sure we don't run into an unexpected runtime error
+    try {
+      const payload = JSON.parse(signedValidation.signedPayload)
+
+      if (Array.isArray(payload.platforms)) {
+        payload.platforms.forEach(({ name }) => {
+          captureEvent("Sending OAuth data in join request", { platformName: name })
+        })
+      }
+    } catch {}
+
+    return fetcher(`/user/join`, signedValidation).then((body) => {
       if (body === "rejected") {
         // eslint-disable-next-line @typescript-eslint/no-throw-literal
         throw "Something went wrong, join request rejected."
@@ -59,6 +70,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
 
       return body
     })
+  }
 
   const mintGuildPinContext = useMintGuildPinContext()
   // Destructuring it separately, since we don't have a MintGuildPinContext on the POAP minting page
