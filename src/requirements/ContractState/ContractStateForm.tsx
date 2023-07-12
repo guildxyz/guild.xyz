@@ -228,6 +228,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
             defaultValue={"="}
             options={resultMatchOptions}
             w="105px"
+            disableOptionFiltering
           />
           <Controller
             name={`${baseFieldPath}.data.expected` as const}
