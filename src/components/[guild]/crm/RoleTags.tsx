@@ -50,9 +50,9 @@ const RoleTag = ({ roleId }: { roleId: number }) => {
 
   return (
     <Tag
-      {...(role.visibility === Visibility.PUBLIC
-        ? { bg: publicRoleBg, color: "white" }
-        : { variant: "solid", colorScheme: "gray" })}
+      {...(role.visibility === Visibility.HIDDEN
+        ? { variant: "solid", colorScheme: "gray" }
+        : { bg: publicRoleBg, color: "white" })}
     >
       {role.imageUrl.startsWith("/guildLogos") ? (
         <TagLeftIcon as={Img} src={role.imageUrl} />
