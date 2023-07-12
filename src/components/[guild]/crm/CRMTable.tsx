@@ -231,8 +231,9 @@ const CRMTable = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {data
-                ? table.getRowModel().rows.map((row) => (
+              {data ? (
+                table.getRowModel().rows.length ? (
+                  table.getRowModel().rows.map((row) => (
                     <Tr key={row.id}>
                       {row.getVisibleCells().map((cell) => (
                         <Td key={cell.id} fontSize={"sm"} px="3.5">
@@ -241,21 +242,36 @@ const CRMTable = () => {
                       ))}
                     </Tr>
                   ))
-                : [...Array(20)].map((i) => (
-                    <Tr key={i}>
-                      <Td fontSize={"sm"} px="3.5" w="12">
-                        <Checkbox mt="2px" />
-                      </Td>
-                      {table
-                        .getAllLeafColumns()
-                        .slice(1)
-                        .map((column) => (
-                          <Td key={column.id} fontSize={"sm"} px="3.5">
-                            <Skeleton w="20" h="5" />
-                          </Td>
-                        ))}
-                    </Tr>
-                  ))}
+                ) : (
+                  <Tr>
+                    <Td
+                      px="3.5"
+                      py="6"
+                      textAlign={"center"}
+                      colSpan={"100%" as any}
+                      borderBottomRadius={"2xl"}
+                    >
+                      No members satisfy the filters you've set
+                    </Td>
+                  </Tr>
+                )
+              ) : (
+                [...Array(20)].map((i) => (
+                  <Tr key={i}>
+                    <Td fontSize={"sm"} px="3.5" w="12">
+                      <Checkbox mt="2px" />
+                    </Td>
+                    {table
+                      .getAllLeafColumns()
+                      .slice(1)
+                      .map((column) => (
+                        <Td key={column.id} fontSize={"sm"} px="3.5">
+                          <Skeleton w="20" h="5" />
+                        </Td>
+                      ))}
+                  </Tr>
+                ))
+              )}
             </Tbody>
           </Table>
         </Card>
