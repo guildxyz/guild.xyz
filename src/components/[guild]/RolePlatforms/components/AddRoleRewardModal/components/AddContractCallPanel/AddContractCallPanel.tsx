@@ -10,6 +10,13 @@ import {
   Icon,
   IconButton,
   Input,
+  InputGroup,
+  InputRightAddon,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Stack,
   Text,
   Textarea,
@@ -21,11 +28,11 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { Chain, Chains } from "connectors"
+import { Chain, Chains, RPC } from "connectors"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { Image, Plus, TrashSimple } from "phosphor-react"
-import { useFieldArray, useForm } from "react-hook-form"
+import { useController, useFieldArray, useForm } from "react-hook-form"
 import ChainButton from "./components/ChainButton"
 
 /**
@@ -45,6 +52,7 @@ type Props = {
 type CreateNftForm = {
   name: string
   symbol: string
+  price: number
   description: string
   imageUrl: string
   attributes: { name: string; value: string }[]
@@ -64,6 +72,24 @@ const AddContractCallPanel = ({ onSuccess }: Props) => {
     formState: { errors },
   } = useForm<CreateNftForm>({
     mode: "all",
+  })
+
+  const {
+    field: {
+      ref: priceFieldRef,
+      value: priceFieldValue,
+      onChange: priceFieldOnChange,
+      onBlur: priceFieldOnBlur,
+    },
+  } = useController({
+    name: "price",
+    defaultValue: 0,
+    rules: {
+      min: {
+        value: 0,
+        message: "Amount must be positive",
+      },
+    },
   })
 
   const { fields, append, remove } = useFieldArray({
@@ -160,6 +186,51 @@ const AddContractCallPanel = ({ onSuccess }: Props) => {
                   <FormErrorMessage>{errors?.symbol?.message}</FormErrorMessage>
                 </FormControl>
               </HStack>
+
+              <FormControl isInvalid={!!errors?.price} maxW={48}>
+                <FormLabel>Price</FormLabel>
+
+                <InputGroup>
+                  <NumberInput
+                    ref={priceFieldRef}
+                    value={priceFieldValue}
+                    onChange={(newValue) => {
+                      if (/^[0-9]*\.0*$/i.test(newValue))
+                        return priceFieldOnChange(newValue)
+
+                      const valueAsNumber = parseFloat(newValue)
+
+                      priceFieldOnChange(!isNaN(valueAsNumber) ? valueAsNumber : "")
+                    }}
+                    onBlur={priceFieldOnBlur}
+                    min={0}
+                    step={0.001}
+                    sx={{
+                      "> input": {
+                        borderRightRadius: 0,
+                      },
+                      "div div:first-of-type": {
+                        borderTopRightRadius: 0,
+                      },
+                      "div div:last-of-type": {
+                        borderBottomRightRadius: 0,
+                      },
+                    }}
+                  >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+
+                  <InputRightAddon>
+                    {RPC[Chains[chainId]].nativeCurrency.symbol}
+                  </InputRightAddon>
+                </InputGroup>
+
+                <FormErrorMessage>{errors?.price?.message}</FormErrorMessage>
+              </FormControl>
 
               <FormControl isInvalid={!!errors?.description}>
                 <FormLabel>Description</FormLabel>
