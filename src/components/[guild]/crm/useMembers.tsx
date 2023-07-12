@@ -1,31 +1,36 @@
-import useSWR from "swr"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { useMemo } from "react"
 import { Visibility } from "types"
 import useGuild from "../hooks/useGuild"
-import useUser from "../hooks/useUser"
 
 const useMembers = () => {
-  const { addresses, platformUsers } = useUser()
-  const { roles } = useGuild()
+  const { roles, id } = useGuild()
 
-  const userData = {
-    id: 0,
-    addresses,
-    platformUsers,
-    joinedAt: "2022-08-11T13:11:09.546Z",
-    publicRoleIds: roles
-      ?.filter((role) => role.visibility === Visibility.PUBLIC)
-      .map((role) => role.id),
-    hiddenRoleIds: roles
-      ?.filter((role) => role.visibility === Visibility.HIDDEN)
-      .map((role) => role.id),
+  const { data, ...rest } = useSWRWithOptionalAuth(`/guild/${id}/crm/members`)
+
+  const transformedData = useMemo(() => {
+    if (!data) return null
+
+    const hiddenRoleIds = roles
+      .filter((role) => role.visibility === Visibility.HIDDEN)
+      .map((role) => role.id)
+
+    if (!hiddenRoleIds.length)
+      return data.map((user) => ({ ...user, publicRoleIds: user.roleIds }))
+
+    return data.map((user) => ({
+      ...user,
+      hiddenRoleIds: user.roleIds.filter((roleId) => hiddenRoleIds.includes(roleId)),
+      publicRoleIds: user.roleIds.filter(
+        (roleId) => !hiddenRoleIds.includes(roleId)
+      ),
+    }))
+  }, [data, roles])
+
+  return {
+    data: transformedData,
+    ...rest,
   }
-
-  const shouldFetch = !!platformUsers
-
-  return useSWR(
-    "members",
-    shouldFetch ? () => [...Array(20)].map((_, i) => userData) : null
-  )
 }
 
 export default useMembers

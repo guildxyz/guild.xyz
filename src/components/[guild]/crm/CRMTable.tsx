@@ -32,7 +32,7 @@ import RoleTags from "./RoleTags"
 import useMembers from "./useMembers"
 
 export type Member = {
-  id: number
+  userId: number
   addresses: string[]
   platformUsers: PlatformAccountDetails[]
   joinedAt: string

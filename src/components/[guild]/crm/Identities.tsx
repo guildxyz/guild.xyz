@@ -1,7 +1,7 @@
 import { HStack, Tag, TagLeftIcon, Text } from "@chakra-ui/react"
 import { Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
-import { PlatformAccountDetails, Rest } from "types"
+import { PlatformAccountDetails, PlatformType, Rest } from "types"
 import { Member } from "./CRMTable"
 
 type Props = {
@@ -31,7 +31,7 @@ const IdentityTag = ({
 }: {
   platformAccount: PlatformAccountDetails
 } & Rest) => {
-  const platform = platforms[platformAccount.platformName]
+  const platform = platforms[PlatformType[platformAccount.platformId]]
   const isOpen =
     platform.name === "Discord" && platformAccount.platformUserData?.username
 
