@@ -85,7 +85,13 @@ const FilterByRoles = ({ column }: Props) => {
             <FilterByRolesLogicSelector column={column} />
             <FilterByRolesSearch {...{ searchValue, setSearchValue }} />
           </PopoverHeader>
-          <PopoverBody py="4" bg={bodyBg} borderBottomRadius={"xl"}>
+          <PopoverBody
+            py="4"
+            bg={bodyBg}
+            borderBottomRadius={"xl"}
+            overflowY={"auto"}
+            maxH="md"
+          >
             <Stack spacing={5}>
               {hiddenRoles?.length ? (
                 <RoleCheckboxGroup
