@@ -56,7 +56,7 @@ const imageDimensionsValidator = (
 }
 
 const getDimensionErrorMessage = (minW?: number, minH?: number): string => {
-  if (minW && minH) return `Image should be at lest ${minW}x${minH}px`
+  if (minW && minH) return `Image should be at least ${minW}x${minH}px`
   return `Image ${minW ? "width" : "height"} should be at least ${minW || minH}px`
 }
 

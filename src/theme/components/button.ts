@@ -58,6 +58,37 @@ function variantSolid(props: Dict) {
       _active: { bg: mode(`blackAlpha.600`, `whiteAlpha.400`)(props) },
     }
   }
+  if (c === "blackAlpha") {
+    const bg = `${c}.100`
+
+    return {
+      bg,
+      color: "white",
+      _hover: {
+        bg: `${c}.200`,
+        _disabled: {
+          bg,
+        },
+      },
+      _active: { bg: `${c}.300` },
+    }
+  }
+  if (c === "whiteAlpha") {
+    const bg = `${c}.300`
+
+    return {
+      bg,
+      color: "white",
+      _hover: {
+        bg: `${c}.400`,
+        _disabled: {
+          bg,
+        },
+      },
+      _active: { bg: `${c}.500` },
+    }
+  }
+
   if (c === "white") {
     const bg = mode("gray.50", "white")(props)
 
@@ -153,6 +184,19 @@ const variantGhost = (props) => {
 
   const darkHoverBg = transparentize(`${c}.200`, 0.12)(theme)
   const darkActiveBg = transparentize(`${c}.200`, 0.24)(theme)
+
+  if (c === "whiteAlpha") {
+    return {
+      color: "whiteAlpha.900",
+      bg: "transparent",
+      _hover: {
+        bg: mode(`${c}.200`, `${c}.200`)(props),
+      },
+      _active: {
+        bg: mode(`${c}.300`, `${c}.300`)(props),
+      },
+    }
+  }
 
   return {
     color: mode(`${c}.600`, `${c}.200`)(props),

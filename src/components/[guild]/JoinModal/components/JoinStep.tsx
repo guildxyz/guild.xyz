@@ -48,7 +48,7 @@ const JoinStep = ({
             }
           : { bg: "blackAlpha.100", borderColor: "whiteAlpha.100" })}
       >
-        {isDone && <Icon as={Check} weight="bold" color={"white"} />}
+        {isDone && <Icon as={Check} weight="bold" color={"white"} boxSize="0.8em" />}
       </Circle>
       <Text w="full" fontWeight={"bold"} noOfLines={1}>
         {title}

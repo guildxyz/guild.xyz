@@ -9,7 +9,6 @@ import useSWRImmutable from "swr/immutable"
 import { AddressConnectionProvider, User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
-import useLocalStorage from "./useLocalStorage"
 import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import {
   SignedValdation,
@@ -159,8 +158,12 @@ const useKeyPair = () => {
 
   const { account } = useWeb3React()
 
-  const { isDelegateConnection, setIsDelegateConnection } =
-    useWeb3ConnectionManager()
+  const {
+    isDelegateConnection,
+    setIsDelegateConnection,
+    addressLinkParams,
+    setAddressLinkParams,
+  } = useWeb3ConnectionManager()
 
   const { data: user, error: userError } = usePublicUserData()
 
@@ -213,8 +216,8 @@ const useKeyPair = () => {
             })
           })
         } else if (
-          !!window.localStorage.getItem("userId") &&
-          JSON.parse(window.localStorage.getItem("userId")).id !== user?.id
+          !!addressLinkParams?.userId &&
+          addressLinkParams?.userId !== user?.id
         ) {
           deleteKeyPairFromIdb(user?.id).then(() => {
             mutateKeyPair({ pubKey: undefined, keyPair: undefined })
@@ -251,7 +254,7 @@ const useKeyPair = () => {
         }
 
         try {
-          window.localStorage.removeItem("userId")
+          setAddressLinkParams({ userId: null, address: null })
           mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
         } catch (err) {
           captureEvent(
@@ -278,7 +281,7 @@ const useKeyPair = () => {
         setIsDelegateConnection(false)
         if (shouldDeleteUserId) {
           try {
-            window.localStorage.removeItem("userId")
+            setAddressLinkParams({ userId: null, address: null })
           } catch (error) {
             captureEvent(
               `Failed to remove userId from localStorage after account link`,
@@ -296,12 +299,7 @@ const useKeyPair = () => {
 
   const ready = !(keyPair === undefined && keyPairError === undefined) || !!userError
 
-  const [localStorageUser, setLocalStorageUser] = useLocalStorage(
-    "userId",
-    undefined
-  )
-
-  const mainUser = usePublicUserData(localStorageUser?.address)
+  const mainUser = usePublicUserData(addressLinkParams?.address)
 
   const { data: mainUserKeyPair, error } = useSWRImmutable(
     mainUser?.data?.id ? ["mainUserKeyPair", mainUser?.data?.id] : null,
@@ -311,14 +309,14 @@ const useKeyPair = () => {
   const isMainUserKeyInvalid =
     !!error ||
     (!!mainUser?.data?.id &&
-      !!localStorageUser?.id &&
+      !!addressLinkParams?.userId &&
       mainUser.data.id !== user?.id &&
       mainUserKeyPair &&
       mainUser.data.signingKey !== mainUserKeyPair.pubKey)
 
   useEffect(() => {
     if (isMainUserKeyInvalid) {
-      setLocalStorageUser(undefined)
+      setAddressLinkParams({ userId: null, address: null })
       deleteKeyPairFromIdb(mainUser?.data?.id).then(() =>
         mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
       )
@@ -350,7 +348,7 @@ const useKeyPair = () => {
         }
 
         if (shouldLinkToUser) {
-          const userId = JSON.parse(window.localStorage.getItem("userId"))?.id
+          const userId = addressLinkParams?.userId
 
           const { keyPair: mainKeyPair } = await getKeyPairFromIdb(userId)
 

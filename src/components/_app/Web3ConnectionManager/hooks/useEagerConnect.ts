@@ -6,7 +6,7 @@ const useEagerConnect = (): boolean => {
   const { isActive } = useWeb3React()
 
   const [tried, setTried] = useState(false)
-  const [[metaMask], , [walletConnectV2]] = connectors
+  const [[metaMask], , [walletConnect]] = connectors
 
   useEffect(() => {
     metaMask
@@ -16,11 +16,11 @@ const useEagerConnect = (): boolean => {
   }, [metaMask])
 
   useEffect(() => {
-    walletConnectV2
+    walletConnect
       .connectEagerly()
       .catch(() => setTried(true))
       .finally(() => setTried(true))
-  }, [walletConnectV2])
+  }, [walletConnect])
 
   // if the connection worked, wait until we get confirmation of that to flip the flag
   useEffect(() => {

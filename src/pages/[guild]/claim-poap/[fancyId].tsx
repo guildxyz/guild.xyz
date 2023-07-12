@@ -22,6 +22,9 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Card from "components/common/Card"
+import Layout from "components/common/Layout"
+import LinkButton from "components/common/LinkButton"
 import ConnectDiscordButton from "components/[guild]/claim-poap/components/ConnectDiscordButton"
 import ConnectWalletButton from "components/[guild]/claim-poap/components/ConnectWalletButton"
 import JoinAndMintPoapButton from "components/[guild]/claim-poap/components/JoinAndMintPoapButton"
@@ -33,9 +36,6 @@ import useUser from "components/[guild]/hooks/useUser"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { RequirementSkeleton } from "components/[guild]/Requirements/components/Requirement"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import Card from "components/common/Card"
-import Layout from "components/common/Layout"
-import LinkButton from "components/common/LinkButton"
 import { useRouter } from "next/router"
 import { ArrowLeft, Clock } from "phosphor-react"
 import React, { useMemo } from "react"
@@ -179,7 +179,7 @@ const Page = (): JSX.Element => {
           </React.Fragment>
         )),
       ]
-    : [...Array(2)].map((i) => <RequirementSkeleton key={i} />)
+    : [...Array(2)].map((_, i) => <RequirementSkeleton key={i} />)
 
   return (
     <>

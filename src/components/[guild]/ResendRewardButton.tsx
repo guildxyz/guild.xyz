@@ -7,6 +7,8 @@ import useToast from "hooks/useToast"
 import { ArrowsClockwise, Check } from "phosphor-react"
 import { useEffect, useState } from "react"
 import fetcher from "utils/fetcher"
+import { useIsTabsStuck } from "./Tabs/Tabs"
+import { useThemeContext } from "./ThemeContext"
 import useGuild from "./hooks/useGuild"
 
 const TIMEOUT = 60_000
@@ -52,6 +54,9 @@ const ResendRewardButton = (): JSX.Element => {
     })
   }
 
+  const { isStuck } = useIsTabsStuck()
+  const { textColor, buttonColorScheme } = useThemeContext()
+
   return (
     <Tooltip
       label={
@@ -91,6 +96,10 @@ const ResendRewardButton = (): JSX.Element => {
         onClick={!response && canResend ? onClick : undefined}
         animation={isLoading ? "rotate 1s infinite linear" : undefined}
         isDisabled={isLoading || response || !canResend}
+        {...(!isStuck && {
+          color: textColor,
+          colorScheme: buttonColorScheme,
+        })}
       />
     </Tooltip>
   )

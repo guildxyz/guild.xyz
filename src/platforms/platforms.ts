@@ -8,6 +8,8 @@ import {
   TwitterLogo,
 } from "phosphor-react"
 import { GuildPlatform, PlatformName } from "types"
+import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
+import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
 import DiscordCardMenu from "./Discord/DiscordCardMenu"
 import DiscordCardSettings from "./Discord/DiscordCardSettings"
 import useDiscordCardProps from "./Discord/useDiscordCardProps"
@@ -35,6 +37,7 @@ type PlatformData = {
   cardSettingsComponent?: () => JSX.Element
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
+  cardButton?: (props) => JSX.Element
 }
 
 const platforms: Record<PlatformName, PlatformData> = {
@@ -69,12 +72,6 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "TWITTER",
     gatedEntity: "account",
   },
-  POAP: {
-    icon: null,
-    name: "POAP",
-    colorScheme: "purple",
-    gatedEntity: "POAP",
-  },
   GOOGLE: {
     icon: GoogleLogo,
     name: "Google Workspace",
@@ -84,6 +81,20 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardSettingsComponent: GoogleCardSettings,
     cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
+  },
+  POAP: {
+    icon: null,
+    name: "POAP",
+    colorScheme: "purple",
+    gatedEntity: "POAP",
+  },
+  CONTRACT_CALL: {
+    icon: null,
+    name: "NFT",
+    colorScheme: "cyan",
+    gatedEntity: "",
+    cardPropsHook: useContractCallCardProps,
+    cardButton: ContractCallRewardCardButton,
   },
 }
 

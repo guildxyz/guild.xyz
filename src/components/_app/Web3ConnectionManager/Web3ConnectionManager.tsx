@@ -1,8 +1,7 @@
 import { useDisclosure } from "@chakra-ui/react"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
-import { WalletConnect } from "@web3-react/walletconnect"
-import { WalletConnect as WalletConnectV2 } from "@web3-react/walletconnect-v2"
+import { WalletConnect } from "@web3-react/walletconnect-v2"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import requestNetworkChangeHandler from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import { Chains, RPC } from "connectors"
@@ -10,8 +9,8 @@ import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import {
-  PropsWithChildren,
   createContext,
+  PropsWithChildren,
   useContext,
   useEffect,
   useState,
@@ -45,6 +44,8 @@ const Web3Connection = createContext({
     _addressOrDomain: string,
     _platformName: PlatformName
   ) => {},
+  addressLinkParams: { userId: null as number, address: "" },
+  setAddressLinkParams: (_: { userId: number; address: string }) => {},
 })
 
 const Web3ConnectionManager = ({
@@ -79,6 +80,10 @@ const Web3ConnectionManager = ({
   const [accountMergeAddress, setAccountMergeAddress] = useState<string>("")
   const [accountMergePlatformName, setAccountMergePlatformName] =
     useState<PlatformName>()
+  const [addressLinkParams, setAddressLinkParams] = useState<{
+    userId: number
+    address: string
+  }>()
 
   const [isDelegateConnection, setIsDelegateConnection] = useState<boolean>(false)
 
@@ -104,11 +109,7 @@ const Web3ConnectionManager = ({
     callback?: () => void,
     errorHandler?: (err: unknown) => void
   ) => {
-    if (
-      connector instanceof WalletConnect ||
-      connector instanceof WalletConnectV2 ||
-      connector instanceof CoinbaseWallet
-    )
+    if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet)
       requestManualNetworkChange(Chains[newChainId])()
     else {
       setNetworkChangeInProgress(true)
@@ -147,6 +148,8 @@ const Web3ConnectionManager = ({
         isDelegateConnection,
         setIsDelegateConnection,
         isNetworkChangeInProgress,
+        addressLinkParams,
+        setAddressLinkParams,
       }}
     >
       {children}

@@ -8,16 +8,17 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
 import CompleteCaptchaJoinStep from "./components/CompleteCaptchaJoinStep"
 import ConnectPlatform from "./components/ConnectPlatform"
 import ConnectPolygonIDJoinStep from "./components/ConnectPolygonIDJoinStep"
+import SatisfyRequirementsJoinStep from "./components/SatisfyRequirementsJoinStep"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
@@ -52,6 +53,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
       const ConnectComponent = customJoinStep[platform]
       return <ConnectComponent key={platform} />
     }
+
     return <ConnectPlatform key={platform} platform={platform as PlatformName} />
   })
 
@@ -61,9 +63,10 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     error: joinError,
     isSigning,
     signLoadingText,
-  } = useJoin(() => {
+    response,
+  } = useJoin((res) => {
     methods.setValue("platforms", {})
-    onClose()
+    if (res.success) onClose()
   })
 
   return (
@@ -78,16 +81,21 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <VStack spacing="3" alignItems="stretch" w="full" divider={<Divider />}>
               <WalletAuthButton />
               {renderedSteps}
+              <SatisfyRequirementsJoinStep
+                isLoading={isLoading}
+                hasNoAccessResponse={response?.success === false}
+                onClose={onClose}
+              />
             </VStack>
             <ModalButton
               mt="8"
               onClick={handleSubmit(onSubmit)}
               colorScheme="green"
               isLoading={isSigning || isLoading}
-              loadingText={signLoadingText || "Joining Guild"}
+              loadingText={signLoadingText || "Checking access"}
               isDisabled={!isActive}
             >
-              Join guild
+              Check access to join
             </ModalButton>
           </ModalBody>
         </FormProvider>

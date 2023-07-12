@@ -5,9 +5,9 @@ import {
   PopoverHeader,
   Text,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import Button from "components/common/Button"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import REQUIREMENTS from "requirements"
 import CompleteCaptcha from "requirements/Captcha/components/CompleteCaptcha"
@@ -127,13 +127,13 @@ const RequiementAccessIndicator = () => {
   )
 }
 
-const POPOVER_HEADER_STYLES = {
+export const POPOVER_HEADER_STYLES = {
   fontWeight: "semibold",
   border: "0",
   px: "3",
 }
 
-const POPOVER_FOOTER_STYLES = {
+export const POPOVER_FOOTER_STYLES = {
   display: "flex",
   justifyContent: "flex-end",
   border: "0",

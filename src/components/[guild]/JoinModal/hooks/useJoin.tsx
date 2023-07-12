@@ -1,5 +1,3 @@
-import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -7,10 +5,9 @@ import useUser from "components/[guild]/hooks/useUser"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import useToast from "hooks/useToast"
+import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { useRouter } from "next/router"
-import { CircleWavyCheck, TwitterLogo } from "phosphor-react"
-import { useRef } from "react"
+import { CircleWavyCheck } from "phosphor-react"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 
@@ -36,16 +33,15 @@ export type JoinData = {
   oauthData: any
 }
 
-const useJoin = (onSuccess?: () => void) => {
+const useJoin = (onSuccess?: (response: Response) => void) => {
   const { captureEvent } = usePostHogContext()
 
   const access = useAccess()
   const guild = useGuild()
   const user = useUser()
 
-  const toast = useToast()
-  const toastIdRef = useRef<ToastId>()
-  const toastButtonBackground = useColorModeValue("blackAlpha.100", undefined)
+  const toastWithTweetButton = useToastWithTweetButton()
+  const toastWithButton = useToastWithButton()
 
   const { mutate } = useMemberships()
 
@@ -75,16 +71,9 @@ const useJoin = (onSuccess?: () => void) => {
       // mutate user in case they connected new platforms during the join flow
       user?.mutate?.()
 
-      onSuccess?.()
+      onSuccess?.(response)
 
-      if (!response.success) {
-        toast({
-          status: "error",
-          title: "No access",
-          description: "Seems like you don't have access to any roles in this guild",
-        })
-        return
-      }
+      if (!response.success) return
 
       setTimeout(() => {
         mutate(
@@ -103,50 +92,26 @@ const useJoin = (onSuccess?: () => void) => {
         guild.mutateGuild()
       }, 800)
 
-      toastIdRef.current = toast({
-        title: `Successfully joined guild`,
-        duration: 8000,
-        description:
-          pathname === "/[guild]" &&
-          guild.featureFlags.includes("GUILD_CREDENTIAL") ? (
-            <>
-              <Text>Let others know as well by minting it on-chain</Text>
-              <Button
-                leftIcon={<CircleWavyCheck weight="fill" />}
-                size="sm"
-                mt={3}
-                mb="1"
-                bg={toastButtonBackground}
-                borderRadius="lg"
-                onClick={onOpen}
-              >
-                Mint Guild Pin
-              </Button>
-            </>
-          ) : (
-            <>
-              <Text>Let others know as well by sharing it on Twitter</Text>
-              <Button
-                as="a"
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
-guild.xyz/${guild.urlName}`
-                )}`}
-                target="_blank"
-                bg={toastButtonBackground}
-                leftIcon={<TwitterLogo weight="fill" />}
-                size="sm"
-                onClick={() => toast.close(toastIdRef.current)}
-                mt={3}
-                mb="1"
-                borderRadius="lg"
-              >
-                Share
-              </Button>
-            </>
-          ),
-        status: "success",
-      })
+      if (
+        pathname === "/[guild]" &&
+        guild.featureFlags.includes("GUILD_CREDENTIAL")
+      ) {
+        toastWithButton({
+          title: "Successfully joined guild",
+          description: "Let others know as well by minting it on-chain",
+          buttonProps: {
+            leftIcon: <CircleWavyCheck weight="fill" />,
+            children: "Mint Guild Pin",
+            onClick: onOpen,
+          },
+        })
+      } else {
+        toastWithTweetButton({
+          title: "Successfully joined guild",
+          tweetText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
+          guild.xyz/${guild.urlName}`,
+        })
+      }
     },
     onError: (error) => {
       captureEvent(`Guild join error`, { error })

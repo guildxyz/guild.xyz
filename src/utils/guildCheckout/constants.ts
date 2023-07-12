@@ -6,12 +6,12 @@ import GUILD_PIN_ABI from "static/abis/guildPin.json"
 import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import {
+  UNIVERSAL_ROUTER_COMMANDS,
   encodePermit2Permit,
   encodeUnwrapEth,
   encodeV2SwapExactOut,
   encodeV3SwapExactOut,
   encodeWrapEth,
-  UNIVERSAL_ROUTER_COMMANDS,
 } from "./encoders"
 
 export type TokenBuyerContractConfig = Partial<
@@ -265,6 +265,13 @@ const GUILD_PIN_CONTRACTS = {
       abi: GUILD_PIN_ABI,
     },
   },
+  // Livepeer
+  13713: {
+    ARBITRUM: {
+      address: "0x0e6a14106497a7de36fba446628860c062e9e302",
+      abi: GUILD_PIN_ABI,
+    },
+  },
 }
 // TODO: satisfies Partial<Record<Chain, { address: string; abi: ContractInterface }>> - we just can't use it in Next.js 12, but we should add it later.
 
@@ -283,3 +290,13 @@ export const getGuildPinContracts = (guildId?: number): GuildPinContracts => {
 export const flattenedGuildPinChainsData = Object.fromEntries(
   Object.values(GUILD_PIN_CONTRACTS).map((entry) => Object.entries(entry).flat())
 )
+
+export const openseaBaseUrl: Partial<Record<Chain, string>> = {
+  POLYGON_MUMBAI: "https://testnets.opensea.io/assets/mumbai",
+  ETHEREUM: "https://opensea.io/assets/ethereum",
+  POLYGON: "https://opensea.io/assets/matic",
+  BSC: "https://opensea.io/assets/bsc",
+  ARBITRUM: "https://opensea.io/assets/arbitrum",
+  OPTIMISM: "https://opensea.io/assets/optimism",
+  AVALANCHE: "https://opensea.io/assets/avalanche",
+}

@@ -8,6 +8,8 @@ import {
   HStack,
   Icon,
   IconButton,
+  Skeleton,
+  SkeletonCircle,
   Tag,
   Text,
   Tooltip,
@@ -47,11 +49,16 @@ const LinkedAddress = ({ address }: Props) => {
 
   return (
     <>
-      <HStack spacing={4} alignItems="center" w="full">
-        <Circle size={8}>
-          <GuildAvatar address={address} size={6} />
+      <HStack spacing={2} alignItems="center" w="full">
+        <Circle size={7}>
+          <GuildAvatar address={address} size={4} mt="-1" />
         </Circle>
-        <CopyableAddress address={address} decimals={5} fontSize="md" />
+        <CopyableAddress
+          address={address}
+          decimals={5}
+          fontSize="sm"
+          fontWeight="bold"
+        />
         {provider && providerIcons[provider] && (
           <Tooltip label="Delegate.cash" placement="top">
             <Tag>
@@ -65,7 +72,11 @@ const LinkedAddress = ({ address }: Props) => {
           </Tooltip>
         )}
         {addresses.indexOf(address) === 0 ? <PrimaryAddressTag size="sm" /> : null}
-        <Tooltip label="Disconnect address" placement="top" hasArrow>
+        <Tooltip
+          label="Disconnect address - temporarily disabled"
+          placement="top"
+          hasArrow
+        >
           <IconButton
             rounded="full"
             variant="ghost"
@@ -73,7 +84,8 @@ const LinkedAddress = ({ address }: Props) => {
             icon={<Icon as={LinkBreak} />}
             colorScheme="red"
             ml="auto !important"
-            onClick={onOpen}
+            isDisabled
+            // onClick={onOpen}
             aria-label="Disconnect address"
           />
         </Tooltip>
@@ -112,5 +124,12 @@ const LinkedAddress = ({ address }: Props) => {
     </>
   )
 }
+
+export const LinkedAddressSkeleton = () => (
+  <HStack spacing={2} alignItems="center" w="full" py="0.5">
+    <SkeletonCircle boxSize={7} />
+    <Skeleton h="5" w="36" />
+  </HStack>
+)
 
 export default LinkedAddress

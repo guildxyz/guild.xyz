@@ -9,12 +9,13 @@ import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
 import { Transition, motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
+import ContractCallReward from "platforms/ContractCall/ContractCallReward"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import { ReactNode, useMemo } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 
-type Props = {
+export type RewardProps = {
   role: Role // should change to just roleId when we won't need memberCount anymore
   platform: RolePlatform
   withLink?: boolean
@@ -41,7 +42,7 @@ const Reward = ({
   withLink,
   withMotionImg = false,
   isLinkColorful,
-}: Props) => {
+}: RewardProps) => {
   const isMember = useIsMember()
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
@@ -146,6 +147,13 @@ const RewardDisplay = ({
   </HStack>
 )
 
+export type RewardIconProps = {
+  rolePlatformId: number
+  guildPlatform?: GuildPlatform
+  withMotionImg?: boolean
+  transition?: Transition
+}
+
 const MotionImg = motion(Img)
 
 const RewardIcon = ({
@@ -153,12 +161,7 @@ const RewardIcon = ({
   guildPlatform,
   withMotionImg = true,
   transition,
-}: {
-  rolePlatformId: number
-  guildPlatform?: GuildPlatform
-  withMotionImg?: boolean
-  transition?: Transition
-}) => {
+}: RewardIconProps) => {
   const props = {
     src: `/platforms/${PlatformType[guildPlatform?.platformId]?.toLowerCase()}.png`,
     alt: guildPlatform?.platformGuildName,
@@ -177,7 +180,7 @@ const RewardIcon = ({
   return <Img {...props} />
 }
 
-const RewardWrapper = ({ platform, ...props }: Props) => {
+const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   const { guildPlatforms } = useGuild()
 
   const guildPlatform = guildPlatforms?.find(
@@ -188,7 +191,12 @@ const RewardWrapper = ({ platform, ...props }: Props) => {
 
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
-  return <Reward platform={platformWithGuildPlatform} {...props} />
+  const Component =
+    guildPlatform.platformId === PlatformType.CONTRACT_CALL
+      ? ContractCallReward
+      : Reward
+
+  return <Component platform={platformWithGuildPlatform} {...props} />
 }
 
 export { RewardDisplay, RewardIcon }

@@ -12,10 +12,14 @@ import {
   Tag,
   TagLeftIcon,
   Text,
-  useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
+import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
@@ -31,24 +35,19 @@ import { MintGuildPinProvider } from "components/[guild]/Requirements/components
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import Button from "components/common/Button"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { CaretDown, Info, Users } from "phosphor-react"
+import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig, unstable_serialize } from "swr"
-import { Guild, SocialLinkKey } from "types"
-import capitalize from "utils/capitalize"
+import { Guild, PlatformType, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
 
@@ -76,6 +75,7 @@ const DynamicResendRewardButton = dynamic(
 const GuildPage = (): JSX.Element => {
   const {
     id: guildId,
+    urlName,
     name,
     description,
     imageUrl,
@@ -87,6 +87,7 @@ const GuildPage = (): JSX.Element => {
     onboardingComplete,
     socialLinks,
     poaps,
+    guildPlatforms,
   } = useGuild()
   useAutoStatusUpdate()
 
@@ -106,6 +107,13 @@ const GuildPage = (): JSX.Element => {
     })
   }, [roles])
 
+  const publicRoles = sortedRoles.filter(
+    (role) => role.visibility !== Visibility.HIDDEN
+  )
+  const hiddenRoles = sortedRoles.filter(
+    (role) => role.visibility === Visibility.HIDDEN
+  )
+
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
   const rolesEl = useRef(null)
@@ -120,7 +128,7 @@ const GuildPage = (): JSX.Element => {
     setRenderedRolesCount((prevValue) => prevValue + BATCH_SIZE)
   }, [roles, renderedRolesCount])
 
-  const renderedRoles = sortedRoles?.slice(0, renderedRolesCount) || []
+  const renderedRoles = publicRoles?.slice(0, renderedRolesCount) || []
 
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
@@ -140,10 +148,13 @@ const GuildPage = (): JSX.Element => {
     isAdmin && !onboardingComplete ? OnboardingProvider : React.Fragment
 
   const showOnboarding = isAdmin && !onboardingComplete
-  const showAccessHub = (isMember || isAdmin) && !showOnboarding
-
-  const { isOpen: isExpiredRolesOpen, onToggle: onExpiredRolesToggle } =
-    useDisclosure()
+  const showAccessHub =
+    (guildPlatforms.some(
+      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
+    ) ||
+      isMember ||
+      isAdmin) &&
+    !showOnboarding
 
   const currentTime = Date.now() / 1000
   const { activePoaps, expiredPoaps } =
@@ -217,19 +228,25 @@ const GuildPage = (): JSX.Element => {
         {showOnboarding ? (
           <DynamicOnboarding />
         ) : (
-          <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            <HStack>
-              {isMember && !isAdmin && <DynamicResendRewardButton />}
-              {!isMember && (isAdmin ? hasAccess : true) ? (
-                <JoinButton />
-              ) : !isAdmin ? (
-                <LeaveButton />
-              ) : isAddRoleStuck ? (
-                <DynamicAddAndOrderRoles />
-              ) : (
-                <DynamicAddRewardButton />
-              )}
-            </HStack>
+          <Tabs
+            rightElement={
+              <HStack>
+                {isMember && !isAdmin && <DynamicResendRewardButton />}
+                {!isMember && (isAdmin ? hasAccess : true) ? (
+                  <JoinButton />
+                ) : !isAdmin ? (
+                  <LeaveButton />
+                ) : isAddRoleStuck ? (
+                  <DynamicAddAndOrderRoles />
+                ) : (
+                  <DynamicAddRewardButton />
+                )}
+              </HStack>
+            }
+          >
+            <TabButton href={urlName} isActive>
+              {showAccessHub ? "Home" : "Roles"}
+            </TabButton>
           </Tabs>
         )}
 
@@ -272,40 +289,27 @@ const GuildPage = (): JSX.Element => {
             </Center>
           )}
 
+          {!!hiddenRoles?.length && (
+            <CollapsibleRoleSection
+              roleCount={hiddenRoles.length}
+              label="hidden"
+              defaultIsOpen
+            >
+              {hiddenRoles.map((role) => (
+                <RoleCard key={role.id} role={role} />
+              ))}
+            </CollapsibleRoleSection>
+          )}
           {!!expiredPoaps?.length && (
-            <Box>
-              <Button
-                variant="link"
-                size="sm"
-                fontWeight="bold"
-                color="gray"
-                rightIcon={
-                  <Icon
-                    as={CaretDown}
-                    transform={isExpiredRolesOpen && "rotate(-180deg)"}
-                    transition="transform .3s"
-                  />
-                }
-                onClick={onExpiredRolesToggle}
-              >
-                {capitalize(
-                  `${isExpiredRolesOpen ? "" : "view "} ${
-                    expiredPoaps?.length
-                  } expired role${expiredPoaps?.length > 1 ? "s" : ""}`
-                )}
-              </Button>
-              <Collapse
-                in={isExpiredRolesOpen}
-                style={{ padding: "6px", margin: "-6px" }}
-                unmountOnExit
-              >
-                <Stack spacing={4} pt="3">
-                  {expiredPoaps.map((poap) => (
-                    <PoapRoleCard key={poap?.id} guildPoap={poap} />
-                  ))}
-                </Stack>
-              </Collapse>
-            </Box>
+            <CollapsibleRoleSection
+              roleCount={expiredPoaps.length}
+              label="expired"
+              unmountOnExit
+            >
+              {expiredPoaps.map((poap) => (
+                <PoapRoleCard key={poap?.id} guildPoap={poap} />
+              ))}
+            </CollapsibleRoleSection>
           )}
         </Section>
 
