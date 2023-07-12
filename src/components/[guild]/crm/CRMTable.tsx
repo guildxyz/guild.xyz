@@ -24,7 +24,7 @@ import useScrollEffect from "hooks/useScrollEffect"
 import { useMemo, useState } from "react"
 import { PlatformAccountDetails, Visibility } from "types"
 import useGuild from "../hooks/useGuild"
-import FilterByRoles, { roleFilter } from "./FilterByRoles"
+import FilterByRoles, { roleFilter, roleSort } from "./FilterByRoles"
 import Identities from "./Identities"
 import IdentitiesSearch from "./IdentitiesSearch"
 import OrderByColumn from "./OrderByColumn"
@@ -87,7 +87,12 @@ const CRMTable = () => {
             <Text>{`Roles ${hasHiddenRoles ? "(hidden, public)" : ""}`}</Text>
             <HStack spacing="0">
               <FilterByRoles column={column} />
-              <OrderByColumn label="Number of roles" column={column} />
+              <OrderByColumn
+                label="Number of roles"
+                column={column
+                  .getLeafColumns()
+                  .find(({ id }) => id === "publicRoleIds")}
+              />
             </HStack>
           </HStack>
         ),
@@ -99,12 +104,14 @@ const CRMTable = () => {
               }),
               columnHelper.accessor("publicRoleIds", {
                 filterFn: roleFilter,
+                sortingFn: roleSort,
                 cell: (info) => <RoleTags roleIds={info.getValue()} />,
               }),
             ]
           : [
               columnHelper.accessor("publicRoleIds", {
                 filterFn: roleFilter,
+                sortingFn: roleSort,
                 cell: (info) => <RoleTags roleIds={info.getValue()} />,
               }),
             ],
