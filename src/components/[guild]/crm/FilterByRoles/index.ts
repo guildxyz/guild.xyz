@@ -7,7 +7,7 @@ export const roleFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 
   const usersRoleIds = row.getValue(columnId) as string[]
 
-  if (value.logic === "and") {
+  if (value.logic === "all") {
     return filteredRoleIds.every((roleId) => usersRoleIds.includes(roleId))
   }
 
