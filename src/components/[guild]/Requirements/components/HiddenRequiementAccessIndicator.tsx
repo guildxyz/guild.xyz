@@ -198,7 +198,7 @@ const HiddenRequiementAccessIndicatorPopover = ({
             count={count.platformErrored}
             colorScheme="blue"
             icon={LockSimple}
-            label="(re)connect needed"
+            label="connect / reconnect needed"
             errorMessages={errorMessages}
           />
           <CountAccessIndicatorUI
