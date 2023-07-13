@@ -44,7 +44,7 @@ export type Member = {
 const columnHelper = createColumnHelper<Member>()
 
 const CRMTable = () => {
-  const { data } = useMembers()
+  const { data, isLoading, error } = useMembers()
   const { roles } = useGuild()
 
   const hasHiddenRoles = roles.some((role) => role.visibility === Visibility.HIDDEN)
@@ -231,31 +231,7 @@ const CRMTable = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {data ? (
-                table.getRowModel().rows.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <Tr key={row.id}>
-                      {row.getVisibleCells().map((cell) => (
-                        <Td key={cell.id} fontSize={"sm"} px="3.5">
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </Td>
-                      ))}
-                    </Tr>
-                  ))
-                ) : (
-                  <Tr>
-                    <Td
-                      px="3.5"
-                      py="6"
-                      textAlign={"center"}
-                      colSpan={"100%" as any}
-                      borderBottomRadius={"2xl"}
-                    >
-                      No members satisfy the filters you've set
-                    </Td>
-                  </Tr>
-                )
-              ) : (
+              {isLoading ? (
                 [...Array(20)].map((i) => (
                   <Tr key={i}>
                     <Td fontSize={"sm"} px="3.5" w="12">
@@ -271,6 +247,40 @@ const CRMTable = () => {
                       ))}
                   </Tr>
                 ))
+              ) : error ? (
+                <Tr>
+                  <Td
+                    px="3.5"
+                    py="10"
+                    textAlign={"center"}
+                    colSpan={"100%" as any}
+                    borderBottomRadius={"2xl"}
+                  >
+                    Couldn't fetch members
+                  </Td>
+                </Tr>
+              ) : table.getRowModel().rows.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <Tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <Td key={cell.id} fontSize={"sm"} px="3.5">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </Td>
+                    ))}
+                  </Tr>
+                ))
+              ) : (
+                <Tr>
+                  <Td
+                    px="3.5"
+                    py="10"
+                    textAlign={"center"}
+                    colSpan={"100%" as any}
+                    borderBottomRadius={"2xl"}
+                  >
+                    No members satisfy the filters you've set
+                  </Td>
+                </Tr>
               )}
             </Tbody>
           </Table>
