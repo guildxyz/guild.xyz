@@ -70,6 +70,9 @@ const useCreateNft = () => {
 
     // TODO: contract call => get the contract address, and then call the POST /guild/:id/platform endpoint
 
+    // TODO
+    const createdContractAddress = NULL_ADDRESS
+
     return fetcherWithSign([
       // TODO: change this to the v2 endpoint once we merge the v2 api related changes
       `/FORCE_V2/guilds/${guildId}/guild-platforms`,
@@ -77,9 +80,10 @@ const useCreateNft = () => {
         body: {
           platformId: PlatformType.CONTRACT_CALL,
           platformName: "CONTRACT_CALL",
+          platformGuildId: `${guildId}-${createdContractAddress}-${Date.now()}`,
           platformGuildData: {
             chain: data.chain,
-            contractAddress: NULL_ADDRESS,
+            contractAddress: createdContractAddress,
             function: ContractCallFunction.SIMPLE_CLAIM,
             argsToSign: contractCallArgsToSign[ContractCallFunction.SIMPLE_CLAIM],
             description: data.description,
