@@ -10,6 +10,7 @@ import fetcher from "utils/fetcher"
 import useDCAuth from "./useDCAuth"
 import useGHAuth from "./useGHAuth"
 import useGoogleAuth from "./useGoogleAuth"
+import useLegacyTwitterAuth from "./useLegacyTwitterAuth"
 import useTGAuth from "./useTGAuth"
 import useTwitterAuth from "./useTwitterAuth"
 
@@ -50,6 +51,7 @@ const platformAuthHooks: Record<
   DISCORD: useDCAuth,
   GITHUB: useGHAuth,
   TWITTER: useTwitterAuth,
+  TWITTER_V1: useLegacyTwitterAuth,
   TELEGRAM: useTGAuth,
   GOOGLE: useGoogleAuth,
 }
