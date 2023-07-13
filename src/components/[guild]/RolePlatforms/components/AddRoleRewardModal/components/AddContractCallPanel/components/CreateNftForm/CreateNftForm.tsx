@@ -31,7 +31,6 @@ import { Chain, Chains, RPC } from "connectors"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
-import { Dispatch, SetStateAction } from "react"
 import {
   FormProvider,
   useController,
@@ -43,7 +42,7 @@ import ChainPicker from "requirements/common/ChainPicker"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import ImagePicker from "./components/ImagePicker"
 
-type Props = { onSuccess: Dispatch<SetStateAction<string>> }
+type Props = { onSuccess: (deployedContractAddress: string) => void }
 
 export type CreateNftFormType = {
   chain: Chain
