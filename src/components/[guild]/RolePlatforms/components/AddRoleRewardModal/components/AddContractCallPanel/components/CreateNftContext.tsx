@@ -7,10 +7,7 @@ import {
   useContext,
   useState,
 } from "react"
-
-enum ContractCallFunction {
-  SIMPLE_CLAIM = "function claim(address payToken, address receiver, bytes calldata signature) payable",
-}
+import { ContractCallFunction } from "./CreateNftForm/hooks/useCreateNft"
 
 export type CreateNftContextType = {
   data: {

@@ -1,4 +1,5 @@
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
+import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import type { Chain, Chains } from "connectors"
 import { RequirementType } from "requirements"
 
@@ -171,7 +172,7 @@ type PlatformGuildData = {
   CONTRACT_CALL: {
     chain: Chain
     contractAddress: string
-    function: string
+    function: ContractCallFunction
     argsToSign: string[]
     description: string
     inviteChannel?: never

@@ -27,9 +27,8 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chain, Chains, RPC } from "connectors"
-import usePinata from "hooks/usePinata"
-import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import {
   FormProvider,
@@ -41,6 +40,7 @@ import {
 import ChainPicker from "requirements/common/ChainPicker"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import ImagePicker from "./components/ImagePicker"
+import useCreateNft from "./hooks/useCreateNft"
 
 type Props = { onSuccess: (deployedContractAddress: string) => void }
 
@@ -51,7 +51,7 @@ export type CreateNftFormType = {
   symbol: string
   price: number
   description: string
-  imageUrl: string
+  image: File
   attributes: { name: string; value: string }[]
 }
 
@@ -59,9 +59,8 @@ const CONTRACT_CALL_SUPPORTED_CHAINS: Chain[] = ["POLYGON", "POLYGON_MUMBAI"]
 
 const CreateNftForm = ({ onSuccess }: Props) => {
   const { chainId, account } = useWeb3React()
-  const userIsOnUnsupportedChain = !CONTRACT_CALL_SUPPORTED_CHAINS.includes(
-    Chains[chainId] as Chain
-  )
+  const { requestNetworkChange, isNetworkChangeInProgress } =
+    useWeb3ConnectionManager()
 
   const methods = useForm<CreateNftFormType>({
     mode: "all",
@@ -69,7 +68,6 @@ const CreateNftForm = ({ onSuccess }: Props) => {
   const {
     control,
     register,
-    setValue,
     handleSubmit,
     formState: { errors },
   } = methods
@@ -78,6 +76,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
     control,
     name: "chain",
   })
+  const shouldSwitchChain = Chains[chainId] !== chain
 
   const {
     field: {
@@ -103,37 +102,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
     name: "attributes",
   })
 
-  // TODO: maybe we could simply use the pinFileToIPFS function inside onSubmit, that feels like a much cleaner solution for me...
-  const fileUploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`, {
-        shouldTouch: true,
-      })
-    },
-    onError: () => {
-      setValue("imageUrl", "", {
-        shouldTouch: true,
-      })
-    },
-  })
-
-  const onSubmit = (data) => {
-    console.log("CreateNftForm:onSubmit:", data)
-    /**
-     * TODO
-     *
-     * - Generate metadata (get name, description, attributes, and imageUrl from the
-     *   form)
-     * - Upload metadata
-     * - Contract call (useCreateNft)
-     * - Confetti
-     */
-  }
-
-  const { handleSubmit: handleCreateNftSubmit } = useSubmitWithUpload(
-    handleSubmit(onSubmit),
-    fileUploader.isUploading
-  )
+  const { onSubmit, isLoading, loadingText } = useCreateNft()
 
   return (
     <FormProvider {...methods}>
@@ -152,7 +121,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
             <Stack spacing={6}>
               <ChainPicker
                 controlName="chain"
-                supportedChains={["POLYGON", "POLYGON_MUMBAI"]}
+                supportedChains={CONTRACT_CALL_SUPPORTED_CHAINS}
                 showDivider={false}
               />
 
@@ -357,20 +326,29 @@ const CreateNftForm = ({ onSuccess }: Props) => {
           </GridItem>
         </Grid>
 
-        <Flex justifyContent="end">
+        <HStack justifyContent="end">
+          {Chains[chainId] !== chain && (
+            <Button
+              isLoading={isNetworkChangeInProgress}
+              loadingText="Check your wallet"
+              onClick={() => requestNetworkChange(Chains[chain])}
+            >{`Switch to ${RPC[chain]?.chainName}`}</Button>
+          )}
           <Tooltip
             label="Please switch to a supported chain"
-            isDisabled={!userIsOnUnsupportedChain}
+            isDisabled={!shouldSwitchChain}
           >
             <Button
               colorScheme="indigo"
-              isDisabled={userIsOnUnsupportedChain}
-              onClick={handleCreateNftSubmit}
+              isDisabled={shouldSwitchChain || isLoading}
+              isLoading={isLoading}
+              loadingText={loadingText}
+              onClick={handleSubmit(onSubmit)}
             >
               Create NFT
             </Button>
           </Tooltip>
-        </Flex>
+        </HStack>
       </Stack>
 
       <DynamicDevTool control={control} />
