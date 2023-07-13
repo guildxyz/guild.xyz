@@ -12,8 +12,22 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone from "hooks/useDropzone"
 import { Image } from "phosphor-react"
 import { useState } from "react"
+import { useController, useFormContext } from "react-hook-form"
+import { CreateNftFormType } from "../CreateNftForm"
 
 const ImagePicker = () => {
+  const {
+    setValue,
+    formState: { errors },
+  } = useFormContext<CreateNftFormType>()
+
+  useController({
+    name: "image",
+    rules: {
+      required: "It is required to upload an image",
+    },
+  })
+
   const [preview, setPreview] = useState<string>()
 
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
@@ -21,12 +35,14 @@ const ImagePicker = () => {
     noClick: false,
     onDrop: (acceptedFiles) => {
       setPreview(URL.createObjectURL(acceptedFiles[0]))
-      console.log("accepted files:", acceptedFiles)
+      setValue("image", acceptedFiles[0], {
+        shouldValidate: true,
+      })
     },
   })
 
   return (
-    <FormControl isInvalid={!!fileRejections?.[0]}>
+    <FormControl isInvalid={!!fileRejections?.[0] || !!errors?.image}>
       <FormLabel>Media</FormLabel>
 
       <AspectRatio ratio={1}>
@@ -51,7 +67,7 @@ const ImagePicker = () => {
       </AspectRatio>
 
       <FormErrorMessage>
-        {fileRejections?.[0]?.errors?.[0]?.message}
+        {fileRejections?.[0]?.errors?.[0]?.message || errors?.image?.message}
       </FormErrorMessage>
     </FormControl>
   )
