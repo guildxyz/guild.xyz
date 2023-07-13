@@ -9,17 +9,19 @@ import {
 import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
+import { Rest } from "types"
 
 type Props = {
   placeholder?: string
   search: string
   setSearch: (value: string) => void
-}
+} & Rest
 
 const SearchBar = ({
   placeholder = "Search...",
   search,
   setSearch,
+  ...rest
 }: Props): JSX.Element => {
   const inputRef = useRef<HTMLInputElement>()
 
@@ -58,6 +60,7 @@ const SearchBar = ({
         id="searchBar"
         value={localValue}
         onChange={handleOnChange}
+        {...rest}
       />
       {localValue?.length > 0 && (
         <InputRightElement>

@@ -1,5 +1,8 @@
 import {
+  Box,
+  Circle,
   HStack,
+  Icon,
   SimpleGrid,
   Skeleton,
   SkeletonCircle,
@@ -7,14 +10,16 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
+  Tooltip,
   VStack,
   Wrap,
 } from "@chakra-ui/react"
+import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import DisplayCard from "components/common/DisplayCard"
 import GuildLogo from "components/common/GuildLogo"
 import Link from "components/common/Link"
 import image from "next/image"
-import { Users } from "phosphor-react"
+import { CircleWavyCheck, StarFour, Users } from "phosphor-react"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
 
@@ -33,23 +38,38 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
   >
     <DisplayCard>
       <SimpleGrid
-        templateColumns={image ? "3rem calc(100% - 4.25rem)" : "1fr"}
+        templateColumns={image ? "3rem calc(100% - 5.25rem)" : "1fr"}
         gap={4}
         alignItems="center"
       >
         {image && <GuildLogo imageUrl={guildData.imageUrl} />}
         <VStack spacing={2} alignItems="start" w="full" maxW="full" mb="1" mt="-1">
-          <Text
-            as="span"
-            fontFamily="display"
-            fontSize="xl"
-            fontWeight="bold"
-            letterSpacing="wide"
-            maxW="full"
-            noOfLines={1}
-          >
-            {guildData.name}
-          </Text>
+          <Box position="relative">
+            <Text
+              as="span"
+              fontFamily="display"
+              fontSize="xl"
+              fontWeight="bold"
+              letterSpacing="wide"
+              maxW="full"
+              noOfLines={1}
+            >
+              {guildData.name}
+              {guildData.tags?.includes("verified") && (
+                <Tooltip label="Verified" hasArrow>
+                  <Circle
+                    background={"blue.700"}
+                    position="absolute"
+                    top={2}
+                    right={-5}
+                  >
+                    <Icon as={CircleWavyCheck} boxSize={4} />
+                  </Circle>
+                </Tooltip>
+              )}
+            </Text>
+          </Box>
+
           <Wrap zIndex="1">
             <Tag as="li">
               <TagLeftIcon as={Users} />
@@ -64,6 +84,22 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
             </Tag>
           </Wrap>
         </VStack>
+        {guildData.tags?.includes("featured") && (
+          <ColorCardLabel
+            fallbackColor="white"
+            backgroundColor={"purple.500"}
+            label={
+              <Tooltip label="Featured" hasArrow>
+                <Icon as={StarFour} />
+              </Tooltip>
+            }
+            top="0"
+            left="0"
+            borderBottomRightRadius="xl"
+            borderTopLeftRadius="2xl"
+            labelSize="xs"
+          />
+        )}
       </SimpleGrid>
     </DisplayCard>
   </Link>

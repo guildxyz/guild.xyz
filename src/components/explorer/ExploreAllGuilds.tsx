@@ -1,7 +1,12 @@
 import {
+  Box,
+  Button,
   Center,
   Divider,
   GridItem,
+  Icon,
+  InputGroup,
+  InputRightAddon,
   SimpleGrid,
   Spinner,
   Stack,
@@ -14,10 +19,10 @@ import Section from "components/common/Section"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
 import GuildCard from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
-import OrderSelect, { OrderOptions } from "components/explorer/OrderSelect"
 import SearchBar from "components/explorer/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
+import { StarFour } from "phosphor-react"
 import { forwardRef, useEffect } from "react"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
@@ -26,11 +31,13 @@ type Props = {
   guildsInitial: GuildBase[]
 }
 
+export type OrderOptions = "featured" | "newest" | "verified"
+
 const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   const { account } = useWeb3React()
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const prevSearch = usePrevious(search)
-  const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
+  const [order, setOrder] = useQueryState<OrderOptions>("order", "newest")
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
@@ -78,18 +85,53 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
         scrollMarginTop={20}
       >
         <SimpleGrid
-          templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
-          gap={{ base: 2, md: "6" }}
-          pb={{ md: 1.5 }}
+          templateColumns={{ base: "1fr", md: "4fr 2fr" }}
+          gap={{ base: 2, md: 0 }}
           // needed so there's no gap on the right side of the page in mobile Safari
           overflow={"hidden"}
           // needed so the focus outline is not cut off because of the hidden overflow
           p={"1px"}
         >
-          <GridItem colSpan={{ base: 1, md: 2 }}>
-            <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
+          <GridItem>
+            <SearchBar
+              placeholder="Search guilds"
+              {...{ search, setSearch }}
+              borderRightRadius={0}
+            />
           </GridItem>
-          <OrderSelect {...{ order, setOrder }} />
+          <GridItem>
+            <InputGroup size="lg">
+              <InputRightAddon
+                bgColor={{ base: "transparent", md: "gray.700" }}
+                borderColor={{ base: "transparent", md: "whiteAlpha.70" }}
+                paddingLeft={{ base: 0, md: 4 }}
+              >
+                <Box display="flex" justifyContent="flex-end" gap={1}>
+                  {["Featured", "Newest", "Verified"].map((option: string) => {
+                    const optionAsOrder = option.toLowerCase() as OrderOptions
+
+                    return (
+                      <Button
+                        leftIcon={<Icon as={StarFour} />}
+                        as="label"
+                        boxShadow="none !important"
+                        cursor="pointer"
+                        borderRadius="lg"
+                        alignSelf="center"
+                        size="sm"
+                        bgColor={
+                          order === optionAsOrder ? "whiteAlpha.300" : "transparent"
+                        }
+                        onClick={() => setOrder(optionAsOrder)}
+                      >
+                        {option}
+                      </Button>
+                    )
+                  })}
+                </Box>
+              </InputRightAddon>
+            </InputGroup>
+          </GridItem>
         </SimpleGrid>
 
         {!renderedGuilds.length ? (
