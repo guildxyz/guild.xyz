@@ -1,12 +1,16 @@
 import { HStack, Icon, Text, Tooltip, useClipboard } from "@chakra-ui/react"
 import { Check } from "phosphor-react"
+import { PropsWithChildren } from "react"
 import DataBlock from "./DataBlock"
 
 type Props = {
   text: string
 }
 
-const DataBlockWithCopy = ({ text }: Props): JSX.Element => {
+const DataBlockWithCopy = ({
+  text,
+  children,
+}: PropsWithChildren<Props>): JSX.Element => {
   const { onCopy, hasCopied } = useClipboard(text)
 
   return (
@@ -24,7 +28,7 @@ const DataBlockWithCopy = ({ text }: Props): JSX.Element => {
     >
       <DataBlock>
         <Text as="span" cursor="pointer" onClick={onCopy}>
-          {text}
+          {children ?? text}
         </Text>
       </DataBlock>
     </Tooltip>
