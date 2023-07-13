@@ -14,10 +14,6 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
@@ -38,6 +34,10 @@ import SocialIcon from "components/[guild]/SocialIcon"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -88,6 +88,7 @@ const GuildPage = (): JSX.Element => {
     socialLinks,
     poaps,
     guildPlatforms,
+    tags,
   } = useGuild()
   useAutoStatusUpdate()
 
@@ -224,6 +225,7 @@ const GuildPage = (): JSX.Element => {
         backgroundImage={localBackgroundImage}
         action={isAdmin && <DynamicEditGuildButton />}
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
+        verified={tags && tags.includes("verified")}
       >
         {showOnboarding ? (
           <DynamicOnboarding />

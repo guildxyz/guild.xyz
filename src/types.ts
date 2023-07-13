@@ -321,6 +321,7 @@ type Guild = {
   featureFlags: FeatureFlag[]
   hiddenRoles?: boolean
   requiredPlatforms?: PlatformName[]
+  tags: Array<string>
 }
 type GuildFormType = Partial<
   Pick<

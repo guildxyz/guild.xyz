@@ -1,18 +1,21 @@
 import {
   Box,
   BoxProps,
+  Circle,
   Container,
-  Heading,
   HStack,
-  useColorMode,
+  Heading,
+  Icon,
+  Tooltip,
   VStack,
+  useColorMode,
 } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { ArrowLeft } from "phosphor-react"
+import { ArrowLeft, CircleWavyCheck } from "phosphor-react"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import LinkButton from "../LinkButton"
 import Footer from "./components/Footer"
@@ -38,6 +41,7 @@ type Props = {
   backgroundOffset?: number
   backButton?: BackButtonProps
   maxWidth?: string
+  verified?: boolean
 }
 
 const Layout = ({
@@ -56,6 +60,7 @@ const Layout = ({
   backButton,
   maxWidth = "container.lg",
   children,
+  verified,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
@@ -174,7 +179,16 @@ const Layout = ({
                     color={textColor}
                     wordBreak={"break-word"}
                   >
-                    {title}
+                    <Box display="flex" alignItems="flex-start" gap={2}>
+                      {title}
+                      {verified && (
+                        <Tooltip label="Verified" hasArrow>
+                          <Circle background={"blue.700"}>
+                            <Icon as={CircleWavyCheck} boxSize={6} />
+                          </Circle>
+                        </Tooltip>
+                      )}
+                    </Box>
                   </Heading>
                 </HStack>
                 {action}
