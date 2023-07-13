@@ -3,6 +3,7 @@ import {
   HStack,
   Icon,
   List,
+  ListIcon,
   ListItem,
   PopoverBody,
   PopoverFooter,
@@ -284,13 +285,21 @@ const CountAccessIndicatorUI = ({
               textTransform="uppercase"
               colorScheme="gray"
             >
-              Errors:
+              {count > 1 ? "Errors:" : "Error:"}
             </Text>
             <List fontSize="sm">
               {errorMessages.map((msg, i) => (
                 <ListItem key={i}>
+                  <ListIcon
+                    as={Warning}
+                    weight="fill"
+                    color="gray.500"
+                    position="relative"
+                    top={-0.5}
+                    mr={1}
+                  />
                   <Text as="span" colorScheme="gray">
-                    {`- ${capitalize(msg)}`}
+                    {capitalize(msg)}
                   </Text>
                 </ListItem>
               ))}
