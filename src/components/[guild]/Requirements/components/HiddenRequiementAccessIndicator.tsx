@@ -1,32 +1,44 @@
 import {
+  Collapse,
   HStack,
   Icon,
+  List,
+  ListIcon,
+  ListItem,
   PopoverBody,
   PopoverFooter,
   PopoverHeader,
   Stack,
   Tag,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import Button from "components/common/Button"
 import {
   ArrowSquareIn,
+  CaretDown,
   Check,
   DotsThree,
+  IconProps,
   LockSimple,
   Warning,
   X,
 } from "phosphor-react"
+import capitalize from "utils/capitalize"
 import {
   POPOVER_FOOTER_STYLES,
   POPOVER_HEADER_STYLES,
 } from "./RequiementAccessIndicator"
 import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
 
-const HiddenRequiementAccessIndicator = ({ roleId }) => {
+type Props = {
+  roleId: number
+}
+
+const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
   const { roles } = useGuild()
   const { data: accessData } = useAccess(roleId)
   if (!accessData) return null
@@ -38,6 +50,20 @@ const HiddenRequiementAccessIndicator = ({ roleId }) => {
   const hiddenReqsAccessData = accessData?.requirements?.filter(
     (reqAccessData) => !publicReqIds.includes(reqAccessData.requirementId)
   )
+
+  const hiddenReqsErrorMessages = [
+    ...new Set<string>(
+      accessData?.errors
+        ?.filter(
+          (error) =>
+            !publicReqIds.includes(error.requirementId) &&
+            !["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(
+              error.errorType
+            )
+        )
+        ?.map((error) => error.msg)
+    ),
+  ]
 
   const count = hiddenReqsAccessData.reduce(
     (acc, curr) => {
@@ -81,7 +107,10 @@ const HiddenRequiementAccessIndicator = ({ roleId }) => {
         circleBgSwatch={{ light: 400, dark: 300 }}
         icon={Check}
       >
-        <HiddenRequiementAccessIndicatorPopover count={count} />
+        <HiddenRequiementAccessIndicatorPopover
+          count={count}
+          errorMessages={hiddenReqsErrorMessages}
+        />
       </RequiementAccessIndicatorUI>
     )
 
@@ -93,7 +122,10 @@ const HiddenRequiementAccessIndicator = ({ roleId }) => {
         icon={LockSimple}
         isAlwaysOpen={!accessData?.access}
       >
-        <HiddenRequiementAccessIndicatorPopover count={count} />
+        <HiddenRequiementAccessIndicatorPopover
+          count={count}
+          errorMessages={hiddenReqsErrorMessages}
+        />
       </RequiementAccessIndicatorUI>
     )
 
@@ -105,7 +137,10 @@ const HiddenRequiementAccessIndicator = ({ roleId }) => {
         icon={Warning}
         isAlwaysOpen={!accessData?.access}
       >
-        <HiddenRequiementAccessIndicatorPopover count={count} />
+        <HiddenRequiementAccessIndicatorPopover
+          count={count}
+          errorMessages={hiddenReqsErrorMessages}
+        />
       </RequiementAccessIndicatorUI>
     )
 
@@ -116,12 +151,28 @@ const HiddenRequiementAccessIndicator = ({ roleId }) => {
       icon={count.notAccessed === hiddenReqsAccessData?.length ? X : DotsThree}
       isAlwaysOpen={!accessData?.access}
     >
-      <HiddenRequiementAccessIndicatorPopover count={count} />
+      <HiddenRequiementAccessIndicatorPopover
+        count={count}
+        errorMessages={hiddenReqsErrorMessages}
+      />
     </RequiementAccessIndicatorUI>
   )
 }
 
-const HiddenRequiementAccessIndicatorPopover = ({ count }) => {
+type HiddenRequiementAccessIndicatorPopoverProps = {
+  count: {
+    accessed: number
+    notAccessed: number
+    platformErrored: number
+    errored: number
+  }
+  errorMessages: string[]
+}
+
+const HiddenRequiementAccessIndicatorPopover = ({
+  count,
+  errorMessages,
+}: HiddenRequiementAccessIndicatorPopoverProps) => {
   const { openAccountModal } = useWeb3ConnectionManager()
 
   return (
@@ -148,12 +199,14 @@ const HiddenRequiementAccessIndicatorPopover = ({ count }) => {
             colorScheme="blue"
             icon={LockSimple}
             label="connect / reconnect needed"
+            errorMessages={errorMessages}
           />
           <CountAccessIndicatorUI
             count={count.errored}
             colorScheme="orange"
             icon={Warning}
             label="couldn't check access"
+            errorMessages={errorMessages}
           />
         </Stack>
       </PopoverBody>
@@ -170,8 +223,91 @@ const HiddenRequiementAccessIndicatorPopover = ({ count }) => {
   )
 }
 
-const CountAccessIndicatorUI = ({ count, colorScheme, icon, label }) => {
+type CountAccessIndicatorUIProps = {
+  count: number
+  colorScheme: string
+  icon: React.ForwardRefExoticComponent<
+    IconProps & React.RefAttributes<SVGSVGElement>
+  >
+  label: string
+  errorMessages?: string[]
+}
+
+const CountAccessIndicatorUI = ({
+  count,
+  colorScheme,
+  icon,
+  label,
+  errorMessages,
+}: CountAccessIndicatorUIProps) => {
+  const { isOpen, onToggle } = useDisclosure()
+
   if (!count) return
+
+  if (errorMessages?.length)
+    return (
+      <Stack w="full" spacing={0}>
+        <Button
+          display="flex"
+          justifyContent="start"
+          w="max-content"
+          h="auto"
+          p={0}
+          variant="unstyled"
+          fontWeight="normal"
+          onClick={onToggle}
+          leftIcon={
+            <Tag colorScheme={colorScheme} px="2" py="2" flexShrink={0}>
+              <Icon as={icon} boxSize="3" />
+            </Tag>
+          }
+          rightIcon={
+            <Icon
+              as={CaretDown}
+              boxSize={3}
+              transition="transform 0.2s ease"
+              transform={`rotate(${isOpen ? "-180" : "0"}deg)`}
+            />
+          }
+        >
+          <Text as="span" fontWeight={"semibold"}>
+            {count}
+          </Text>
+          {` ${label}`}
+        </Button>
+
+        <Collapse in={isOpen} animateOpacity>
+          <Stack pt={1.5} pl={9} spacing={0.5}>
+            <Text
+              as="span"
+              fontWeight="bold"
+              fontSize="xs"
+              textTransform="uppercase"
+              colorScheme="gray"
+            >
+              {count > 1 ? "Errors:" : "Error:"}
+            </Text>
+            <List fontSize="sm">
+              {errorMessages.map((msg, i) => (
+                <ListItem key={i}>
+                  <ListIcon
+                    as={Warning}
+                    weight="fill"
+                    color="gray.500"
+                    position="relative"
+                    top={-0.5}
+                    mr={1}
+                  />
+                  <Text as="span" colorScheme="gray">
+                    {capitalize(msg)}
+                  </Text>
+                </ListItem>
+              ))}
+            </List>
+          </Stack>
+        </Collapse>
+      </Stack>
+    )
 
   return (
     <HStack>
