@@ -44,6 +44,7 @@ import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
 import SocialLinks from "./components/SocialLinks"
+import TagManager from "./components/TagManager"
 import useEditGuild from "./hooks/useEditGuild"
 
 type Props = {
@@ -258,7 +259,9 @@ const EditGuildDrawer = ({
                 {isSuperAdmin && (
                   <>
                     <Divider />
-
+                    <Section title="Tag manager" spacing="4">
+                      <TagManager />
+                    </Section>
                     <Section title="Enabled features" spacing="4">
                       <DynamicFeatureFlags />
                     </Section>
