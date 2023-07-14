@@ -45,7 +45,8 @@ const OAuth = () => {
     let params: OAuthResponse
     if (
       typeof router.query?.state !== "string" &&
-      typeof router.query?.oauth_token !== "string"
+      typeof router.query?.oauth_token !== "string" &&
+      typeof router.query?.denied !== "string"
     ) {
       const fragment = new URLSearchParams(window.location.hash.slice(1))
       const { state, ...rest } = Object.fromEntries(fragment.entries())
@@ -55,7 +56,11 @@ const OAuth = () => {
       params = { ...getDataFromState(state?.toString()), ...rest }
     }
 
-    if (!params.oauth_token && (!params.csrfToken || !params.platformName)) {
+    if (
+      !params.oauth_token &&
+      !params.denied &&
+      (!params.csrfToken || !params.platformName)
+    ) {
       captureEvent("OAuth - No params found, or it is in invalid form", {
         params,
       })
@@ -71,6 +76,7 @@ const OAuth = () => {
 
     if (
       !params.oauth_token &&
+      !params.denied &&
       !!localStorageInfo.csrfToken &&
       localStorageInfo.csrfToken !== params.csrfToken
     ) {
@@ -97,9 +103,23 @@ const OAuth = () => {
       .catch(() => false)
 
     let response: Message
-    if (params.error) {
+    if (params.denied) {
+      response = {
+        type: "OAUTH_ERROR",
+        data: {
+          error: "Rejected",
+          errorDescription: "Authorization request has been rejected",
+        },
+      }
+    } else if (params.error) {
       const { error, error_description: errorDescription } = params
-      response = { type: "OAUTH_ERROR", data: { error, errorDescription } }
+      response = {
+        type: "OAUTH_ERROR",
+        data: {
+          error: error ?? "Unknown error",
+          errorDescription: errorDescription ?? "Unknown error",
+        },
+      }
     } else {
       const { error, error_description, csrfToken, platformName, ...data } = params
       const { csrfToken: _csrfToken, from, ...infoRest } = localStorageInfo
