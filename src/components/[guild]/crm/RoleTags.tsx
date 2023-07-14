@@ -1,9 +1,15 @@
 import {
   HStack,
   Img,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   Tag,
   TagLabel,
   TagLeftIcon,
+  Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Visibility } from "types"
@@ -16,6 +22,7 @@ type Props = {
 const RoleTags = ({ roleIds }: Props) => {
   const renderedRoleIds = roleIds?.slice(0, 3)
   const moreRolesCount = roleIds?.length - 3
+  const moreRoleIds = moreRolesCount > 0 && roleIds?.slice(-moreRolesCount)
 
   const moreRolesTagBorderColor = useColorModeValue("gray-300", "whiteAlpha-300")
 
@@ -27,15 +34,30 @@ const RoleTags = ({ roleIds }: Props) => {
         <RoleTag key={roleId} roleId={roleId} />
       ))}
       {moreRolesCount > 0 && (
-        <Tag
-          variant={"outline"}
-          color="initial"
-          sx={{
-            "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColor}) !important`,
-          }}
-        >
-          <TagLabel>{`${moreRolesCount} more roles`}</TagLabel>
-        </Tag>
+        <Popover trigger="hover" openDelay={0}>
+          <PopoverTrigger>
+            <Tag
+              variant={"outline"}
+              color="initial"
+              sx={{
+                "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColor}) !important`,
+              }}
+              cursor="default"
+            >
+              <TagLabel>{`${moreRolesCount} more roles`}</TagLabel>
+            </Tag>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverBody>
+              <Wrap>
+                {moreRoleIds.map((roleId) => (
+                  <RoleTag key={roleId} roleId={roleId} />
+                ))}
+              </Wrap>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
       )}
     </HStack>
   )
