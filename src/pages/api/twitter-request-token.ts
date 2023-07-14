@@ -28,10 +28,9 @@ const parseV1Response = (response: string) => {
 }
 
 const handler: NextApiHandler = async (req, res) => {
-  if (req.method?.toLowerCase() !== "get") {
-    res
-      .status(400)
-      .json({ message: "Only GET requests are served by this endpoints" })
+  if (req.method !== "GET") {
+    res.setHeader("Allow", "GET")
+    res.status(405).json({ error: `Method ${req.method} is not allowed` })
     return
   }
 
