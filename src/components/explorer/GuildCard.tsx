@@ -43,12 +43,12 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
         alignItems="center"
       >
         {image && <GuildLogo imageUrl={guildData.imageUrl} />}
-        <VStack spacing={2} alignItems="start" w="full" maxW="full" mb="1" mt="-1">
+        <VStack spacing={2} alignItems="start" w="full" maxW="full" mb="0.5" mt="-1">
           <Box position="relative">
             <Text
               as="span"
               fontFamily="display"
-              fontSize="xl"
+              fontSize="lg"
               fontWeight="bold"
               letterSpacing="wide"
               maxW="full"
