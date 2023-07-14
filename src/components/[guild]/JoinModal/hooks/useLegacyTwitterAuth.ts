@@ -1,3 +1,4 @@
+import fetcher from "utils/fetcher"
 import useOauthPopupWindow from "./useOauthPopupWindow"
 
 const useLegacyTwitterAuth = () =>
@@ -9,9 +10,9 @@ const useLegacyTwitterAuth = () =>
       x_auth_access_type: "read",
     } as any,
     (callbackUrl) =>
-      fetch(
+      fetcher(
         `/api/twitter-request-token?callbackUrl=${encodeURIComponent(callbackUrl)}`
-      ).then((res) => res.json().then((oauth_token) => ({ oauth_token } as any)))
+      ).then((oauth_token) => ({ oauth_token } as any))
   )
 
 export default useLegacyTwitterAuth

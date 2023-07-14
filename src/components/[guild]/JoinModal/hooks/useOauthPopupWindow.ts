@@ -65,7 +65,19 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     let finalOauthOptions = oauthOptions
 
     if (oauthOptionsInitializer) {
-      finalOauthOptions = await oauthOptionsInitializer(redirectUri)
+      try {
+        finalOauthOptions = await oauthOptionsInitializer(redirectUri)
+      } catch (error) {
+        setOauthState({
+          error: {
+            error: "Error",
+            errorDescription: error.message,
+          },
+          isAuthenticating: false,
+          authData: null,
+        })
+        return
+      }
     }
 
     const csrfToken = randomBytes(32).toString("hex")
