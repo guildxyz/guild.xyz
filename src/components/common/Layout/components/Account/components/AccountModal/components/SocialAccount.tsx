@@ -14,14 +14,14 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { Alert } from "components/common/Modal"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import Button from "components/common/Button"
+import { Alert } from "components/common/Modal"
 import { motion } from "framer-motion"
 import useToast from "hooks/useToast"
-import { LinkBreak } from "phosphor-react"
+import { LinkBreak, Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { memo, useRef } from "react"
 import { PlatformName } from "types"
@@ -83,6 +83,14 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
             </Text>
           ) : null}
         </Text>
+        {type === "TWITTER_V1" && !platformUser ? (
+          <Tooltip
+            hasArrow
+            label="Some of our Twitter requirements can only be checked if your Twitter account is connected this way as well"
+          >
+            <Question color="gray" />
+          </Tooltip>
+        ) : null}
         {!platformUser ? (
           <ConnectPlatform type={type} colorScheme={colorScheme} />
         ) : (

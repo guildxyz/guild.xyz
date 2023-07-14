@@ -74,7 +74,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
   TWITTER_V1: {
     icon: TwitterLogo,
-    name: "Twitter 1.0",
+    name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
   },
