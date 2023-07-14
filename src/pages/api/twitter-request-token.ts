@@ -10,12 +10,12 @@ const BASE_URL = "https://api.twitter.com/oauth/request_token"
 const KEY = `${encodeURIComponent(CONSUMER_SECRET)}&`
 const PARSE_FAIL_ERROR_MSG = "Unexpected data received from Twitter"
 
-// /oauth_token=(.*?)&oauth_token_secret=(.*?)&oauth_callback_confirmed=true/
 const parseV1Response = (response: string) => {
   try {
-    const [, tokenStripped] = response.split("oauth_token=")
-    const [oauthToken, secretStripped] = tokenStripped.split("&oauth_token_secret=")
-    const [oauthTokenSecret] = secretStripped.split("&oauth_callback_confirmed=true")
+    const searchParams = new URLSearchParams(response)
+
+    const oauthToken = searchParams.get("oauth_token")
+    const oauthTokenSecret = searchParams.get("oauth_token_secret")
 
     if (!!oauthToken && !!oauthTokenSecret) {
       return { oauthToken, oauthTokenSecret }
