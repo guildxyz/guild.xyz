@@ -1,20 +1,37 @@
-import { useBreakpointValue } from "@chakra-ui/react"
+import { Table } from "@tanstack/react-table"
 import Button from "components/common/Button"
 import { Export } from "phosphor-react"
 import { useIsTabsStuck } from "../Tabs/Tabs"
+import { Member } from "./CRMTable"
 
-const ExportMembers = () => {
+type Props = {
+  table: Table<Member>
+}
+
+const ExportMembers = ({ table }: Props) => {
   const { isStuck } = useIsTabsStuck()
-  const label = useBreakpointValue({ base: "Export", md: "Export members" })
+
+  const value = table
+    .getFilteredSelectedRowModel()
+    .rows.map((row) => row.original.addresses[0])
+
+  const csvContent = encodeURI("data:text/csv;charset=utf-8," + value)
+
+  const isDisabled = !(table.getIsSomeRowsSelected() || table.getIsAllRowsSelected())
 
   return (
     <Button
+      flexShrink={0}
+      as="a"
+      download="members"
+      href={!isDisabled && csvContent}
       leftIcon={<Export />}
       variant="ghost"
       colorScheme={isStuck ? "gray" : "whiteAlpha"}
+      isDisabled={isDisabled}
       size="sm"
     >
-      {label}
+      Export selected
     </Button>
   )
 }

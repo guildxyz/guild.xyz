@@ -1,34 +1,147 @@
-import { Center, Heading, HStack, Link, Spinner, Wrap } from "@chakra-ui/react"
-import CRMTable from "components/[guild]/crm/CRMTable"
-import ExportMembers from "components/[guild]/crm/ExportMembers"
-import useGuild from "components/[guild]/hooks/useGuild"
+import {
+  Center,
+  Checkbox,
+  HStack,
+  Heading,
+  Link,
+  Spinner,
+  Text,
+  Wrap,
+} from "@chakra-ui/react"
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table"
 import SocialIcon from "components/[guild]/SocialIcon"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
 import Tabs from "components/[guild]/Tabs/Tabs"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import CRMTable, { Member } from "components/[guild]/crm/CRMTable"
+import ExportMembers from "components/[guild]/crm/ExportMembers"
+import FilterByRoles, {
+  roleFilter,
+  roleSort,
+} from "components/[guild]/crm/FilterByRoles"
+import Identities from "components/[guild]/crm/Identities"
+import IdentitiesSearch from "components/[guild]/crm/IdentitiesSearch"
+import OrderByColumn from "components/[guild]/crm/OrderByColumn"
+import RoleTags from "components/[guild]/crm/RoleTags"
+import useMembers from "components/[guild]/crm/useMembers"
+import useGuild from "components/[guild]/hooks/useGuild"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { SocialLinkKey } from "types"
+import { useMemo } from "react"
+import { SocialLinkKey, Visibility } from "types"
 import parseDescription from "utils/parseDescription"
 
 const DynamicActiveStatusUpdates = dynamic(
   () => import("components/[guild]/ActiveStatusUpdates")
 )
 
-const GuildPage = (): JSX.Element => {
-  const {
-    id: guildId,
-    name,
-    urlName,
-    description,
-    imageUrl,
-    socialLinks,
-  } = useGuild()
+const columnHelper = createColumnHelper<Member>()
 
+const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+  const { name, roles, urlName, description, imageUrl, socialLinks } = useGuild()
+  const hasHiddenRoles = roles.some((role) => role.visibility === Visibility.HIDDEN)
+
+  const { data } = useMembers()
+
+  const columns = useMemo(
+    () => [
+      {
+        id: "select",
+        header: ({ table }) => (
+          <Checkbox
+            {...{
+              isChecked: table.getIsAllRowsSelected(),
+              isIndeterminate: table.getIsSomeRowsSelected(),
+              onChange: table.getToggleAllRowsSelectedHandler(),
+            }}
+            colorScheme="primary"
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            {...{
+              isChecked: row.getIsSelected(),
+              isDisabled: !row.getCanSelect(),
+              isIndeterminate: row.getIsSomeSelected(),
+              onChange: row.getToggleSelectedHandler(),
+            }}
+            colorScheme="primary"
+            mt="2px"
+          />
+        ),
+      },
+      columnHelper.accessor((row) => row, {
+        id: "identity",
+        cell: (info) => <Identities member={info.getValue()} />,
+        header: () => <IdentitiesSearch />,
+      }),
+      {
+        id: "roles",
+        header: ({ column }) => (
+          <HStack w="full" justifyContent={"space-between"}>
+            <Text>{`Roles ${hasHiddenRoles ? "(hidden, public)" : ""}`}</Text>
+            <HStack spacing="0">
+              <FilterByRoles column={column} />
+              <OrderByColumn
+                label="Number of roles"
+                column={column
+                  .getLeafColumns()
+                  .find(({ id }) => id === "publicRoleIds")}
+              />
+            </HStack>
+          </HStack>
+        ),
+        columns: hasHiddenRoles
+          ? [
+              columnHelper.accessor("hiddenRoleIds", {
+                filterFn: roleFilter,
+                cell: (info) => <RoleTags roleIds={info.getValue()} />,
+              }),
+              columnHelper.accessor("publicRoleIds", {
+                filterFn: roleFilter,
+                sortingFn: roleSort,
+                cell: (info) => <RoleTags roleIds={info.getValue()} />,
+              }),
+            ]
+          : [
+              columnHelper.accessor("publicRoleIds", {
+                filterFn: roleFilter,
+                sortingFn: roleSort,
+                cell: (info) => <RoleTags roleIds={info.getValue()} />,
+              }),
+            ],
+      },
+      columnHelper.accessor("joinedAt", {
+        header: ({ column }) => (
+          <HStack w="full" justifyContent={"space-between"}>
+            <Text>Joined at</Text>
+            <OrderByColumn label="Join date" column={column} />
+          </HStack>
+        ),
+        cell: (info) => new Date(info.getValue()).toLocaleDateString(),
+      }),
+    ],
+    [hasHiddenRoles]
+  )
+
+  const table = useReactTable({
+    data: data ?? [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    enableRowSelection: true,
+  })
 
   return (
     <>
@@ -83,15 +196,14 @@ const GuildPage = (): JSX.Element => {
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
         backgroundOffset={112}
         showFooter={false}
-        // maxWidth="container.xl"
       >
-        <Tabs rightElement={<ExportMembers />}>
+        <Tabs rightElement={<ExportMembers table={table} />}>
           <TabButton href={`/${urlName}`}>Home</TabButton>
           <TabButton href={`${urlName}/members`} isActive>
             Members
           </TabButton>
         </Tabs>
-        <CRMTable />
+        <CRMTable table={table} />
       </Layout>
     </>
   )
