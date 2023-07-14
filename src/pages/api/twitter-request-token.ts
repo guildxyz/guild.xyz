@@ -8,8 +8,24 @@ const OAUTH_VERSION = "1.0"
 const DEFAULT_CALLBACK_URL = "https://guild.xyz/oauth"
 const BASE_URL = "https://api.twitter.com/oauth/request_token"
 const KEY = `${encodeURIComponent(CONSUMER_SECRET)}&`
-const RESPONSE_REGEX =
-  /oauth_token=(.*?)&oauth_token_secret=(.*?)&oauth_callback_confirmed=true/
+const PARSE_FAIL_ERROR_MSG = "Unexpected data received from Twitter"
+
+// /oauth_token=(.*?)&oauth_token_secret=(.*?)&oauth_callback_confirmed=true/
+const parseV1Response = (response: string) => {
+  try {
+    const [, tokenStripped] = response.split("oauth_token=")
+    const [oauthToken, secretStripped] = tokenStripped.split("&oauth_token_secret=")
+    const [oauthTokenSecret] = secretStripped.split("&oauth_callback_confirmed=true")
+
+    if (!!oauthToken && !!oauthTokenSecret) {
+      return { oauthToken, oauthTokenSecret }
+    }
+  } catch (error) {
+    throw Error(PARSE_FAIL_ERROR_MSG)
+  }
+
+  throw Error(PARSE_FAIL_ERROR_MSG)
+}
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method?.toLowerCase() !== "get") {
@@ -67,14 +83,12 @@ const handler: NextApiHandler = async (req, res) => {
 
   const responseText = await response.text()
 
-  if (RESPONSE_REGEX.test(responseText)) {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [, token, _secret] = responseText.match(RESPONSE_REGEX)
-    res.status(200).json(token)
-    return
+  try {
+    const { oauthToken } = parseV1Response(responseText)
+    res.status(200).json(oauthToken)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
   }
-
-  res.status(400).json({ message: "Failed to generate Twitter request token" })
 }
 
 export default handler
