@@ -76,6 +76,12 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
         <Text fontWeight="bold" flex="1" noOfLines={1} fontSize="sm">
           {platformUser?.platformUserData?.username ??
             `${platforms[type].name} ${!!platformUser ? "connected" : ""}`}
+          {type === "TWITTER_V1" ? (
+            <Text color={"gray"} display={"inline"}>
+              {" "}
+              (v1)
+            </Text>
+          ) : null}
         </Text>
         {!platformUser ? (
           <ConnectPlatform type={type} colorScheme={colorScheme} />
