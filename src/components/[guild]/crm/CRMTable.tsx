@@ -13,7 +13,7 @@ import {
 import { Table as TableType, flexRender } from "@tanstack/react-table"
 import Card from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { PlatformAccountDetails } from "types"
 import useMembers from "./useMembers"
 
@@ -36,16 +36,30 @@ const CRMTable = ({ table }: Props) => {
   const cardBg = useColorModeValue("white", "gray.700")
   const theadBoxShadow = useColorModeValue("md", "2xl")
 
+  /**
+   * Observing if we've scrolled to the bottom of the page. The table has to be the
+   * last element anyway so we can't scroll past it, and it works more reliable than
+   * useIsStucked
+   */
   const [isStuck, setIsStuck] = useState(false)
   useScrollEffect(() => {
-    /**
-     * Observing if we've scrolled to the bottom of the page. The table has to be the
-     * last element anyway so we can't scroll past it, and it works more reliable
-     * than useIsStucked
-     */
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
       setIsStuck(true)
     } else setIsStuck(false)
+  }, [])
+
+  /** "100vw without scrollbar" solution, so the tables sides doesn't get cut off */
+  useEffect(() => {
+    const setVw = () => {
+      const vw = document.documentElement.clientWidth / 100
+      document.documentElement.style.setProperty("--vw", `${vw}px`)
+    }
+    setVw()
+    window.addEventListener("resize", setVw)
+
+    return () => {
+      window.removeEventListener("resize", setVw)
+    }
   }, [])
 
   return (
@@ -60,7 +74,7 @@ const CRMTable = ({ table }: Props) => {
           .chakra-popover__popper { z-index: var(--chakra-zIndices-banner) !important };`}
       </style>
       <Flex
-        w="100vw"
+        w={isStuck ? "100vw" : "calc(var(--vw, 1vw) * 100)"}
         flex="1 0 auto"
         // 100vh - Tabs height (button height + padding)
         h="calc(100vh - calc(var(--chakra-space-11) + (2 * var(--chakra-space-2-5))))"
