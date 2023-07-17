@@ -4,6 +4,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightAddon,
   InputRightElement,
 } from "@chakra-ui/react"
 import useDebouncedState from "hooks/useDebouncedState"
@@ -15,12 +16,14 @@ type Props = {
   placeholder?: string
   search: string
   setSearch: (value: string) => void
+  rightAddon?: JSX.Element
 } & Rest
 
 const SearchBar = ({
   placeholder = "Search...",
   search,
   setSearch,
+  rightAddon,
   ...rest
 }: Props): JSX.Element => {
   const inputRef = useRef<HTMLInputElement>()
@@ -67,6 +70,7 @@ const SearchBar = ({
           <CloseButton size="sm" rounded="full" onClick={reset} />
         </InputRightElement>
       )}
+      {!!rightAddon && <InputRightAddon>{rightAddon}</InputRightAddon>}
     </InputGroup>
   )
 }

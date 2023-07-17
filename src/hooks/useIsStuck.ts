@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react"
  * but returns true for elements that're not yet stuck, just below the viewport yet.
  * Have to set `top: -1px` on the sticky elements
  */
-const useIsStuck = () => {
+const useIsStuck = (rootMargin?: string) => {
   const ref = useRef(null)
   const [isStuck, setIsStuck] = useState(false)
   const { isReady } = useRouter()
@@ -16,7 +16,7 @@ const useIsStuck = () => {
 
     const observer = new IntersectionObserver(
       ([e]) => setIsStuck(e.intersectionRatio < 1),
-      { threshold: [1] }
+      { threshold: [1], rootMargin }
     )
     observer.observe(cachedRef)
     return () => observer.unobserve(cachedRef)

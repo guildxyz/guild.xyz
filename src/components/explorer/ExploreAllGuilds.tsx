@@ -1,16 +1,14 @@
 import {
   Box,
-  Button,
   Center,
   Divider,
-  GridItem,
-  Icon,
-  InputGroup,
-  InputRightAddon,
-  SimpleGrid,
+  HStack,
   Spinner,
   Stack,
   Text,
+  VStack,
+  useBreakpointValue,
+  useColorModeValue,
   usePrevious,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -20,24 +18,26 @@ import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWra
 import GuildCard from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import SearchBar from "components/explorer/SearchBar"
+import useIsStuck from "hooks/useIsStuck"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
-import { StarFour } from "phosphor-react"
 import { forwardRef, useEffect } from "react"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
+import SearchBarFilters, { Filters } from "./SearchBarFilters"
 
 type Props = {
   guildsInitial: GuildBase[]
 }
 
-export type OrderOptions = "featured" | "newest" | "verified"
-
 const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   const { account } = useWeb3React()
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const prevSearch = usePrevious(search)
-  const [order, setOrder] = useQueryState<OrderOptions>("order", "newest")
+  const [order, setOrder] = useQueryState<Filters>("order", "NEWEST")
+  const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
+  const { ref: searchAreaRef, isStuck } = useIsStuck("-66px 0px 0px 0px")
+  const bgColor = useColorModeValue("white", "gray.800")
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
@@ -84,57 +84,59 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
         id="allGuilds"
         scrollMarginTop={20}
       >
-        <SimpleGrid
-          templateColumns={{ base: "1fr", md: "4fr 2fr" }}
-          gap={{ base: 2, md: 0 }}
-          // needed so there's no gap on the right side of the page in mobile Safari
-          overflow={"hidden"}
-          // needed so the focus outline is not cut off because of the hidden overflow
-          p={"1px"}
+        <Box
+          ref={searchAreaRef}
+          position="sticky"
+          top={65}
+          width="full"
+          zIndex={isStuck ? "banner" : "auto"}
+          _before={{
+            content: `""`,
+            position: "fixed",
+            top: "65px",
+            left: 0,
+            width: "full",
+            // button height + padding
+            height: isStuck
+              ? isMobile
+                ? "calc(var(--chakra-space-12) + (5 * var(--chakra-space-3)))"
+                : "calc(var(--chakra-space-11) + (2 * var(--chakra-space-3)))"
+              : 0,
+            bgColor: bgColor,
+            boxShadow: "md",
+            transition:
+              "opacity 0.2s ease, visibility 0.1s ease, height 0.2s ease  ",
+            visibility: isStuck ? "visible" : "hidden",
+            opacity: isStuck ? 1 : 0,
+          }}
         >
-          <GridItem>
+          <VStack
+            align="flex-start"
+            bg={bgColor}
+            transition={"all 0.2s ease"}
+            py={isStuck ? "10px" : 0}
+            position="relative"
+          >
             <SearchBar
               placeholder="Search guilds"
               {...{ search, setSearch }}
-              borderRightRadius={0}
+              rightAddon={
+                isMobile ? null : (
+                  <SearchBarFilters selected={order} onSelect={setOrder} />
+                )
+              }
             />
-          </GridItem>
-          <GridItem>
-            <InputGroup size="lg">
-              <InputRightAddon
-                bgColor={{ base: "transparent", md: "gray.700" }}
-                borderColor={{ base: "transparent", md: "whiteAlpha.70" }}
-                paddingLeft={{ base: 0, md: 4 }}
-              >
-                <Box display="flex" justifyContent="flex-end" gap={1}>
-                  {["Featured", "Newest", "Verified"].map((option: string) => {
-                    const optionAsOrder = option.toLowerCase() as OrderOptions
 
-                    return (
-                      <Button
-                        key={option}
-                        leftIcon={<Icon as={StarFour} />}
-                        as="label"
-                        boxShadow="none !important"
-                        cursor="pointer"
-                        borderRadius="lg"
-                        alignSelf="center"
-                        size="sm"
-                        bgColor={
-                          order === optionAsOrder ? "whiteAlpha.300" : "transparent"
-                        }
-                        onClick={() => setOrder(optionAsOrder)}
-                      >
-                        {option}
-                      </Button>
-                    )
-                  })}
-                </Box>
-              </InputRightAddon>
-            </InputGroup>
-          </GridItem>
-        </SimpleGrid>
-
+            {isMobile && (
+              <HStack gap={1}>
+                <SearchBarFilters
+                  selected={order}
+                  onSelect={setOrder}
+                ></SearchBarFilters>
+              </HStack>
+            )}
+          </VStack>
+        </Box>
         {!renderedGuilds.length ? (
           isValidating ? null : !search?.length ? (
             <Text>
