@@ -13,7 +13,7 @@ import {
 import { Table as TableType, flexRender } from "@tanstack/react-table"
 import Card from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { PlatformAccountDetails } from "types"
 import useMembers from "./useMembers"
 
@@ -33,7 +33,8 @@ type Props = {
 const CRMTable = ({ table }: Props) => {
   const { isLoading, error } = useMembers()
 
-  const cardBg = useColorModeValue("white", "gray.700")
+  const cardBg = useColorModeValue("white", "var(--chakra-colors-gray-700)") // css variable form so it works in boxShadow literal for identityTags
+  const tdBg = useColorModeValue(`gray.50`, "#3A3A40") // dark color is from blackAlpha.200, but without opacity so it can overlay when sticky
   const theadBoxShadow = useColorModeValue("md", "2xl")
 
   /**
@@ -62,6 +63,20 @@ const CRMTable = ({ table }: Props) => {
     }
   }, [])
 
+  const CHECKBOX_COLUMN_WIDTH = 45
+  const scrollContainerRef = useRef(null)
+  const [isIdentityStuck, setIsIdentityStuck] = useState(false)
+  useScrollEffect(
+    () => {
+      if (scrollContainerRef.current.scrollLeft > CHECKBOX_COLUMN_WIDTH)
+        setIsIdentityStuck(true)
+      else setIsIdentityStuck(false)
+    },
+    [scrollContainerRef.current],
+    null,
+    scrollContainerRef.current
+  )
+
   return (
     <Flex justifyContent={"center"} position="relative" zIndex="banner">
       <style>
@@ -74,6 +89,7 @@ const CRMTable = ({ table }: Props) => {
           .chakra-popover__popper { z-index: var(--chakra-zIndices-banner) !important };`}
       </style>
       <Flex
+        ref={scrollContainerRef}
         w={isStuck ? "100vw" : "calc(var(--vw, 1vw) * 100)"}
         flex="1 0 auto"
         // 100vh - Tabs height (button height + padding)
@@ -132,6 +148,10 @@ const CRMTable = ({ table }: Props) => {
                     boxShadow={isStuck && theadBoxShadow}
                     transition="box-shadow .2s"
                     borderTopWidth="1px"
+                    {...(header.column.id === "identity" && {
+                      left: "0",
+                      zIndex: 2,
+                    })}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </Th>
@@ -142,14 +162,14 @@ const CRMTable = ({ table }: Props) => {
               {isLoading ? (
                 [...Array(20)].map((i) => (
                   <Tr key={i}>
-                    <Td fontSize={"sm"} px="3.5" w="12">
+                    <Td fontSize={"sm"} px="3.5" w="12" bg={tdBg}>
                       <Checkbox mt="2px" />
                     </Td>
                     {table
                       .getAllLeafColumns()
                       .slice(1)
                       .map((column) => (
-                        <Td key={column.id} fontSize={"sm"} px="3.5">
+                        <Td key={column.id} fontSize={"sm"} px="3.5" bg={tdBg}>
                           <Skeleton w="20" h="5" />
                         </Td>
                       ))}
@@ -163,6 +183,7 @@ const CRMTable = ({ table }: Props) => {
                     textAlign={"center"}
                     colSpan={"100%" as any}
                     borderBottomRadius={"2xl"}
+                    bg={tdBg}
                   >
                     Couldn't fetch members
                   </Td>
@@ -171,7 +192,30 @@ const CRMTable = ({ table }: Props) => {
                 table.getRowModel().rows.map((row) => (
                   <Tr key={row.id}>
                     {row.getVisibleCells().map((cell) => (
-                      <Td key={cell.id} fontSize={"sm"} px="3.5">
+                      <Td
+                        key={cell.id}
+                        fontSize={"sm"}
+                        px="3.5"
+                        bg={tdBg}
+                        transition="background .2s"
+                        {...(cell.column.id === "identity" && {
+                          position: "sticky",
+                          left: "0",
+                          width: "0px",
+                          ...(isIdentityStuck && {
+                            bg: cardBg,
+                            zIndex: 1,
+                            sx: {
+                              ".identityTag": {
+                                boxShadow: `0 0 0 1px ${cardBg}`,
+                              },
+                              ".identityTag:not(:first-of-type)": {
+                                marginLeft: "var(--stacked-margin-left)",
+                              },
+                            },
+                          }),
+                        })}
+                      >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </Td>
                     ))}
@@ -185,6 +229,7 @@ const CRMTable = ({ table }: Props) => {
                     textAlign={"center"}
                     colSpan={"100%" as any}
                     borderBottomRadius={"2xl"}
+                    bg={tdBg}
                   >
                     No members satisfy the filters you've set
                   </Td>

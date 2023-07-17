@@ -23,7 +23,6 @@ const variantSimple = definePartsStyle((props) => {
       borderBottom: "1px",
       borderRightWidth: "1px !important",
       borderColor: mode(`${c}.200`, `${c}.600`)(props),
-      bg: mode(`gray.50`, "blackAlpha.200")(props),
       "&:last-of-type": {
         borderRightWidth: "0 !important",
       },

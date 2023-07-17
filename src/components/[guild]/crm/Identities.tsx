@@ -18,6 +18,7 @@ const Identities = ({ member }: Props) => {
           key={platformAccount.platformUserId}
           platformAccount={platformAccount}
           order={i}
+          zIndex={-1 * i}
         />
       ))}
       <WalletTag addresses={addresses} />
@@ -32,8 +33,8 @@ const IdentityTag = ({
   platformAccount: PlatformAccountDetails
 } & Rest) => {
   const platform = platforms[PlatformType[platformAccount.platformId]]
-  const isOpen =
-    platform.name === "Discord" && platformAccount.platformUserData?.username
+  const username = platformAccount.platformUserData?.username ?? "Unknown"
+  const isOpen = platform.name === "Discord" && username
 
   return (
     <Tag
@@ -41,16 +42,28 @@ const IdentityTag = ({
       bg={`${platform.colorScheme}.500`}
       variant="solid"
       px={!isOpen ? "1" : null}
+      className="identityTag"
+      sx={{ "--stacked-margin-left": "-24px" }}
+      transition={"margin .2s"}
       {...rest}
     >
       <TagLeftIcon as={platform.icon} /* size=".6em" */ mr="0" />
-      {isOpen && <Text ml="1">{platformAccount.platformUserData.username}</Text>}
+      {isOpen && <Text ml="1">{username}</Text>}
     </Tag>
   )
 }
 
 const WalletTag = ({ addresses }: { addresses: string[] }) => (
-  <Tag colorScheme={"gray"} bg={`gray.500`} variant="solid" px="1.5" order="0">
+  <Tag
+    colorScheme={"gray"}
+    bg={`gray.500`}
+    variant="solid"
+    px="1.5"
+    order="0"
+    className="identityTag"
+    sx={{ "--stacked-margin-left": "-39px" }}
+    transition={"margin .2s"}
+  >
     <TagLeftIcon as={Wallet} mr="0" />
     <Text ml="1">{addresses?.length}</Text>
   </Tag>
