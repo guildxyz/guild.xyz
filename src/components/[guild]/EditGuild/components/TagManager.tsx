@@ -1,13 +1,21 @@
-import { HStack, Text } from "@chakra-ui/react"
+import { HStack } from "@chakra-ui/react"
 import Switch from "components/common/Switch"
 import { useEffect } from "react"
 import { useForm, useFormContext } from "react-hook-form"
 import { GuildFormType, GuildTags } from "types"
 
 const TagManager = (): JSX.Element => {
-  const { setValue: setTags, register: registerOuterForm } =
-    useFormContext<GuildFormType>()
-  const { register, watch } = useForm()
+  const {
+    setValue: setTags,
+    register: registerOuterForm,
+    getValues: getSavedData,
+  } = useFormContext<GuildFormType>()
+  const { register, watch } = useForm<{ [k in GuildTags]: boolean }>({
+    defaultValues: {
+      VERIFIED: getSavedData().tags.includes("VERIFIED"),
+      FEATURED: getSavedData().tags.includes("FEATURED"),
+    },
+  })
 
   useEffect(() => {
     registerOuterForm("tags")
@@ -16,8 +24,8 @@ const TagManager = (): JSX.Element => {
   useEffect(() => {
     const subscription = watch((data) => {
       const tags: GuildTags[] = Object.keys(data)
-        .filter((key) => watch(key))
-        .map((key) => key.toUpperCase() as GuildTags)
+        .filter((key) => watch(key as GuildTags))
+        .map((key) => key as GuildTags)
 
       setTags("tags", tags)
     })
@@ -25,15 +33,10 @@ const TagManager = (): JSX.Element => {
   }, [watch])
 
   return (
-    <>
-      <Text colorScheme="gray" pb={4}>
-        You can manage the guild tags here
-      </Text>
-      <HStack gap={7}>
-        <Switch title="Featured" {...register("featured")} />
-        <Switch title="Verified" {...register("verified")} />
-      </HStack>
-    </>
+    <HStack gap={7}>
+      <Switch title="Featured" {...register("FEATURED")} />
+      <Switch title="Verified" {...register("VERIFIED")} />
+    </HStack>
   )
 }
 

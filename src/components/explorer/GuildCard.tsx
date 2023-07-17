@@ -55,7 +55,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
               noOfLines={1}
             >
               {guildData.name}
-              {guildData.tags?.includes("verified") && (
+              {guildData.tags?.includes("VERIFIED") && (
                 <Tooltip label="Verified" hasArrow>
                   <Circle
                     background={"blue.700"}
@@ -84,7 +84,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
             </Tag>
           </Wrap>
         </VStack>
-        {guildData.tags?.includes("featured") && (
+        {guildData.tags?.includes("FEATURED") && (
           <ColorCardLabel
             fallbackColor="white"
             backgroundColor={"purple.500"}

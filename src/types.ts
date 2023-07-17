@@ -122,7 +122,7 @@ type GuildBase = {
   platforms: Array<PlatformName>
   memberCount: number
   rolesCount: number
-  tags: Array<string>
+  tags: Array<GuildTags>
 }
 
 type BrainCardData = {
