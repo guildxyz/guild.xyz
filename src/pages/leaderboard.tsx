@@ -1,15 +1,14 @@
 import { Stack, Text } from "@chakra-ui/react"
 import { kv } from "@vercel/kv"
-import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
+import useUsersLeaderboardPosition from "components/leaderboard/hooks/useUsersLeaderboardPosition"
 import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
 } from "components/leaderboard/LeaderboardUserCard"
+import UsersLeaderboardPositionCard from "components/leaderboard/UsersLeaderboardPositionCard"
 import useScrollEffect from "hooks/useScrollEffect"
-import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { GetStaticProps } from "next"
-import useSWRImmutable from "swr/immutable"
 import useSWRInfinite from "swr/infinite"
 import { DetailedUserLeaderboardData } from "types"
 
@@ -29,14 +28,7 @@ const getKey = (pageIndex: number, previousPageData: any[]) => {
 }
 
 const Page = ({ leaderboard: initialData }: Props) => {
-  const { account } = useWeb3React()
-  const { data, isLoading } = useSWRImmutable<{
-    score: number
-    position: number
-  }>(account ? `/api/leaderboard/${account}` : null)
-
-  const shouldFetchUsersGuildPins = account && data
-  const { data: usersGuildPins } = useUsersGuildPins(!shouldFetchUsersGuildPins)
+  const { data } = useUsersLeaderboardPosition()
 
   const {
     isValidating: isLeaderboardValidating,
@@ -86,19 +78,9 @@ const Page = ({ leaderboard: initialData }: Props) => {
       description={<Text>{DESCRIPTION}</Text>}
     >
       <Stack spacing={10}>
-        {account &&
-          (isLoading ? (
-            <LeaderboardUserCardSkeleton />
-          ) : data ? (
-            <LeaderboardUserCard
-              address={account}
-              score={data.score}
-              position={data.position}
-              pinMetadataArray={usersGuildPins}
-            />
-          ) : null)}
+        <UsersLeaderboardPositionCard />
 
-        <Section title={account && data ? "Leaderboard" : undefined}>
+        <Section title={data ? "Leaderboard" : undefined}>
           <>
             {leaderboard?.flat().map((userLeaderboardData, index) => (
               <LeaderboardUserCard
