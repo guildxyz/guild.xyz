@@ -31,7 +31,7 @@ const ExportMembers = ({ table }: Props) => {
       isDisabled={isDisabled}
       size="sm"
     >
-      Export selected
+      {`Export ${value.length || ""} selected`}
     </Button>
   )
 }
