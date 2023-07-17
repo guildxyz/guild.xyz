@@ -24,7 +24,7 @@ const ExportMembers = ({ table }: Props) => {
       flexShrink={0}
       as="a"
       download="members"
-      href={!isDisabled && csvContent}
+      href={!isDisabled ? csvContent : undefined}
       leftIcon={<Export />}
       variant="ghost"
       colorScheme={isStuck ? "gray" : "whiteAlpha"}
