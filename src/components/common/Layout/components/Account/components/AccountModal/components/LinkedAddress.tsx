@@ -72,11 +72,7 @@ const LinkedAddress = ({ address }: Props) => {
           </Tooltip>
         )}
         {addresses.indexOf(address) === 0 ? <PrimaryAddressTag size="sm" /> : null}
-        <Tooltip
-          label="Disconnect address - temporarily disabled"
-          placement="top"
-          hasArrow
-        >
+        <Tooltip label="Disconnect address" placement="top" hasArrow>
           <IconButton
             rounded="full"
             variant="ghost"
@@ -84,8 +80,7 @@ const LinkedAddress = ({ address }: Props) => {
             icon={<Icon as={LinkBreak} />}
             colorScheme="red"
             ml="auto !important"
-            isDisabled
-            // onClick={onOpen}
+            onClick={onOpen}
             aria-label="Disconnect address"
           />
         </Tooltip>

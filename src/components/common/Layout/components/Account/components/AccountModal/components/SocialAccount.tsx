@@ -133,19 +133,14 @@ const DisconnectPlatform = ({ type, name }) => {
 
   return (
     <>
-      <Tooltip
-        label="Disconnect account - temporarily disabled"
-        placement="top"
-        hasArrow
-      >
+      <Tooltip label="Disconnect account" placement="top" hasArrow>
         <IconButton
           rounded="full"
           variant="ghost"
           size="sm"
           icon={<Icon as={LinkBreak} />}
           colorScheme="red"
-          // onClick={onOpen}
-          isDisabled
+          onClick={onOpen}
           aria-label="Disconnect account"
         />
       </Tooltip>
