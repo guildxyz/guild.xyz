@@ -157,14 +157,14 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
 
       captureEvent("Platform connection error", errorObject)
 
-      // if (toastError?.startsWith("Before connecting your")) {
-      //   const [, addressOrDomain] = toastError.match(
-      //     /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
-      //   )
-      //   showPlatformMergeAlert(addressOrDomain, platformName)
-      // } else {
-      //   showErrorToast(toastError ?? rawError)
-      // }
+      if (toastError?.startsWith("Before connecting your")) {
+        const [, addressOrDomain] = toastError.match(
+          /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
+        )
+        showPlatformMergeAlert(addressOrDomain, platformName)
+      } else {
+        showErrorToast(toastError ?? rawError)
+      }
       showErrorToast(toastError ?? rawError)
     },
   })

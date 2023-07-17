@@ -103,10 +103,12 @@ const Page = ({ leaderboard: initialData }: Props) => {
             {leaderboard?.flat().map((userLeaderboardData, index) => (
               <LeaderboardUserCard
                 key={index}
-                address={userLeaderboardData.address}
-                score={userLeaderboardData.score}
+                address={userLeaderboardData?.address}
+                score={userLeaderboardData?.score}
                 position={index + 1}
-                pinMetadataArray={userLeaderboardData.pins.map((p) => p.tokenUri)}
+                pinMetadataArray={
+                  userLeaderboardData?.pins.map((p) => p.tokenUri) ?? []
+                }
               />
             ))}
             {isLeaderboardValidating &&
