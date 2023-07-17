@@ -294,6 +294,9 @@ const supportedSocialLinks = [
 type SocialLinkKey = (typeof supportedSocialLinks)[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
 
+const guildTags = ["VERIFIED", "FEATURED"] as const
+export type GuildTags = (typeof guildTags)[number]
+
 type GuildContact = {
   type: "EMAIL" | "TELEGRAM"
   contact: string
@@ -321,7 +324,7 @@ type Guild = {
   featureFlags: FeatureFlag[]
   hiddenRoles?: boolean
   requiredPlatforms?: PlatformName[]
-  tags: Array<string>
+  tags: GuildTags[]
 }
 type GuildFormType = Partial<
   Pick<
@@ -335,6 +338,7 @@ type GuildFormType = Partial<
     | "theme"
     | "contacts"
     | "featureFlags"
+    | "tags"
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]

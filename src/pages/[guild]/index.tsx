@@ -225,7 +225,7 @@ const GuildPage = (): JSX.Element => {
         backgroundImage={localBackgroundImage}
         action={isAdmin && <DynamicEditGuildButton />}
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
-        verified={tags && tags.includes("verified")}
+        verified={tags && tags.includes("VERIFIED")}
       >
         {showOnboarding ? (
           <DynamicOnboarding />
