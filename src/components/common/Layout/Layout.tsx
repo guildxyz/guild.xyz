@@ -1,12 +1,9 @@
 import {
   Box,
   BoxProps,
-  Circle,
   Container,
   HStack,
   Heading,
-  Icon,
-  Tooltip,
   VStack,
   useColorMode,
 } from "@chakra-ui/react"
@@ -15,7 +12,7 @@ import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { ArrowLeft, CircleWavyCheck } from "phosphor-react"
+import { ArrowLeft } from "phosphor-react"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import LinkButton from "../LinkButton"
 import Footer from "./components/Footer"
@@ -31,6 +28,7 @@ type Props = {
   imageUrl?: string
   ogTitle?: string
   title?: string
+  titlePostfix?: JSX.Element
   ogDescription?: string
   description?: JSX.Element
   textColor?: string
@@ -41,7 +39,6 @@ type Props = {
   backgroundOffset?: number
   backButton?: BackButtonProps
   maxWidth?: string
-  verified?: boolean
 }
 
 const Layout = ({
@@ -60,7 +57,7 @@ const Layout = ({
   backButton,
   maxWidth = "container.lg",
   children,
-  verified,
+  titlePostfix,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
@@ -172,24 +169,18 @@ const Layout = ({
               <HStack justify="space-between" w="full" spacing={3}>
                 <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
                   {image}
-                  <Heading
-                    as="h1"
-                    fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
-                    fontFamily="display"
-                    color={textColor}
-                    wordBreak={"break-word"}
-                  >
-                    <Box display="flex" alignItems="flex-start" gap={2}>
+                  <HStack gap={2}>
+                    <Heading
+                      as="h1"
+                      fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+                      fontFamily="display"
+                      color={textColor}
+                      wordBreak={"break-word"}
+                    >
                       {title}
-                      {verified && (
-                        <Tooltip label="Verified" hasArrow>
-                          <Circle background={"blue.700"}>
-                            <Icon as={CircleWavyCheck} boxSize={6} />
-                          </Circle>
-                        </Tooltip>
-                      )}
-                    </Box>
-                  </Heading>
+                    </Heading>
+                    {titlePostfix}
+                  </HStack>
                 </HStack>
                 {action}
               </HStack>

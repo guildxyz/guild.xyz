@@ -1,6 +1,7 @@
 import {
   Box,
   Center,
+  Circle,
   Collapse,
   Divider,
   Heading,
@@ -12,6 +13,7 @@ import {
   Tag,
   TagLeftIcon,
   Text,
+  Tooltip,
   Wrap,
 } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
@@ -44,7 +46,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { Info, Users } from "phosphor-react"
+import { CircleWavyCheck, Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig, unstable_serialize } from "swr"
 import { Guild, PlatformType, SocialLinkKey, Visibility } from "types"
@@ -225,7 +227,16 @@ const GuildPage = (): JSX.Element => {
         backgroundImage={localBackgroundImage}
         action={isAdmin && <DynamicEditGuildButton />}
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
-        verified={tags && tags.includes("VERIFIED")}
+        titlePostfix={
+          tags &&
+          tags.includes("VERIFIED") && (
+            <Tooltip label="Verified" hasArrow>
+              <Circle background={"blue.700"} mt={-2}>
+                <Icon as={CircleWavyCheck} boxSize={6} />
+              </Circle>
+            </Tooltip>
+          )
+        }
       >
         {showOnboarding ? (
           <DynamicOnboarding />
