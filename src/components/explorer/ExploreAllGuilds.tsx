@@ -112,6 +112,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
 
                     return (
                       <Button
+                        key={option}
                         leftIcon={<Icon as={StarFour} />}
                         as="label"
                         boxShadow="none !important"
