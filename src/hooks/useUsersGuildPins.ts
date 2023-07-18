@@ -5,7 +5,7 @@ import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import { Chain, Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
-import { GuildPinMetadata } from "types"
+import { GuildPinMetadata, User } from "types"
 import base64ToObject from "utils/base64ToObject"
 import { flattenedGuildPinChainsData } from "utils/guildCheckout/constants"
 
@@ -60,11 +60,16 @@ const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
   return usersPinsMetadataJSONs
 }
 
-const fetchGuildPins = async ([_, addresses]) => {
+const fetchGuildPins = async ([_, addresses]: [string, User["addresses"]]) => {
   const guildPinChains = Object.keys(flattenedGuildPinChainsData) as Chain[]
   const responseArray = await Promise.all(
     guildPinChains.flatMap((chain) =>
-      addresses.flatMap((address) => fetchGuildPinsOnChain(address, chain))
+      addresses.flatMap((addressData) =>
+        fetchGuildPinsOnChain(
+          typeof addressData === "string" ? addressData : addressData?.address,
+          chain
+        )
+      )
     )
   )
 

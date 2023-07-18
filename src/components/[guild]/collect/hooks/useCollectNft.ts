@@ -49,7 +49,7 @@ const useCollectNft = () => {
     setLoadingText("Claiming NFT")
 
     const { uniqueValue }: ClaimData = await fetcherWithSign([
-      `/FORCE_V2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`,
+      `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`,
       {
         body: {
           args: [],
