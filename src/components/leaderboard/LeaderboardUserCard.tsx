@@ -115,6 +115,7 @@ const LeaderboardUserCard = ({
               }
               fontWeight="bold"
               letterSpacing="wide"
+              color={position <= 3 ? "white" : undefined}
             >
               {`${position <= 3 ? "" : "#"}${position}`}
             </Text>
