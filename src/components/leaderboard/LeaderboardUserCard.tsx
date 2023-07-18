@@ -4,7 +4,6 @@ import {
   Flex,
   HStack,
   Icon,
-  IconButton,
   Img,
   Popover,
   PopoverArrow,
@@ -21,6 +20,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
 import Link from "components/common/Link"
@@ -34,6 +34,8 @@ import shortenHex from "utils/shortenHex"
 const DynamicScoreFormulaPopover = dynamic(() => import("./ScoreFormulaPopover"), {
   ssr: false,
 })
+
+const PINS_SLICE_LENGTH = 9
 
 const getPinMetadata = (
   tokenUriOrMetadata: string | GuildPinMetadata
@@ -166,7 +168,7 @@ const LeaderboardUserCard = ({
               <PinsListSkeleton />
             ) : (
               <>
-                {pinMetadataArray.map((pin) => {
+                {pinMetadataArray.slice(0, PINS_SLICE_LENGTH).map((pin) => {
                   const key =
                     typeof pin === "string" ? pin : `${pin.chainId}-${pin.tokenId}`
                   const pinMetadata = getPinMetadata(pin)
@@ -199,9 +201,10 @@ const LeaderboardUserCard = ({
                       borderWidth={2}
                       borderColor={fakeTransparentBorderColor}
                     >
-                      <IconButton
+                      <Button
                         aria-label="View pins"
-                        icon={<CaretDown />}
+                        p={0}
+                        overflow="visible"
                         boxSize={7}
                         minW="none"
                         minH="none"
@@ -210,7 +213,13 @@ const LeaderboardUserCard = ({
                         borderColor="transparent"
                         variant="ghost"
                         size="xs"
-                      />
+                      >
+                        {pinMetadataArray.length - PINS_SLICE_LENGTH > 0 ? (
+                          `+${pinMetadataArray.length - PINS_SLICE_LENGTH}`
+                        ) : (
+                          <CaretDown />
+                        )}
+                      </Button>
                     </Circle>
                   </PopoverTrigger>
                   <PopoverContent>
