@@ -26,6 +26,10 @@ const validateAdmins = (admins: string[]) =>
   admins.every((admin) => ADDRESS_REGEX.test(admin.trim())) ||
   "Every admin should be a valid address"
 
+const validateAdminsV2 = (admins) =>
+  admins.every(({ address }) => ADDRESS_REGEX.test(address.trim())) ||
+  "Every admin should be a valid address"
+
 const fetchMemberOptions = ([_, members, provider]) =>
   Promise.all(
     members.map(async (member) => ({
@@ -49,9 +53,14 @@ const Admins = () => {
   const { provider } = useWeb3React()
   const members = useUniqueMembers(roles)
 
+  const isV2 = !!guildAdmins && typeof guildAdmins[0] !== "string"
+
   const {
     field: { onChange, ref, value: admins, onBlur },
-  } = useController({ name: "admins", rules: { validate: validateAdmins } })
+  } = useController({
+    name: "admins",
+    rules: { validate: isV2 ? validateAdminsV2 : validateAdmins },
+  })
 
   const { data: options } = useSWR(
     !!members && !!admins && !!ownerAddress ? ["options", members, provider] : null,
@@ -59,8 +68,13 @@ const Admins = () => {
   )
 
   const memberOptions = useMemo(
-    () => options?.filter((option) => !admins?.includes(option.value)),
-    [options, admins]
+    () =>
+      isV2
+        ? options?.filter(
+            (option) => !admins?.some(({ address }) => address === option.value)
+          )
+        : options?.filter((option) => !admins?.includes(option.value)),
+    [options, admins, isV2]
   )
 
   const adminOptions = useMemo(() => {
@@ -77,22 +91,38 @@ const Admins = () => {
       isFixed: true,
     }
 
-    return [ownerOption].concat(
-      admins
-        ?.filter((admin: string) => admin !== ownerAddress)
-        ?.map((admin: string) => {
-          const option = options.find((o) => o.value === admin)
+    const toConcat = isV2
+      ? admins
+          ?.filter((admin) => admin.address !== ownerAddress)
+          ?.map((admin) => {
+            const option = options.find((o) => o.value === admin.address)
 
-          return {
-            ...(option ?? {
-              value: admin,
-              label: ADDRESS_REGEX.test(ownerAddress) ? shortenHex(admin) : admin,
-              img: <GuildAvatar address={admin} size={4} mr="2" />,
-            }),
-          }
-        })
-    )
-  }, [options, admins, ownerAddress])
+            return {
+              ...(option ?? {
+                value: admin.address,
+                label: ADDRESS_REGEX.test(ownerAddress)
+                  ? shortenHex(admin.address)
+                  : admin.address,
+                img: <GuildAvatar address={admin.address} size={4} mr="2" />,
+              }),
+            }
+          })
+      : admins
+          ?.filter((admin: string) => admin !== ownerAddress)
+          ?.map((admin: string) => {
+            const option = options.find((o) => o.value === admin)
+
+            return {
+              ...(option ?? {
+                value: admin,
+                label: ADDRESS_REGEX.test(admin) ? shortenHex(admin) : admin,
+                img: <GuildAvatar address={admin} size={4} mr="2" />,
+              }),
+            }
+          })
+
+    return [ownerOption].concat(toConcat ?? [])
+  }, [options, admins, ownerAddress, isV2])
 
   const prevMemberOptions = usePrevious(memberOptions)
 
@@ -126,8 +156,13 @@ const Admins = () => {
 
                 if (!ADDRESS_REGEX.test(pastedData)) return
                 event.preventDefault()
-                if (admins.includes(pastedData)) return
-                onChange([...admins, pastedData])
+                if (
+                  isV2
+                    ? admins.some(({ address }) => address === pastedData)
+                    : admins.includes(pastedData)
+                )
+                  return
+                onChange([...admins, isV2 ? { address: pastedData } : pastedData])
                 el.inputRef.focus()
               })
             }, 100)
@@ -137,7 +172,13 @@ const Admins = () => {
           options={memberOptions ?? prevMemberOptions}
           onBlur={onBlur}
           onChange={(selectedOption: SelectOption[]) => {
-            onChange(selectedOption?.map((option) => option.value.toLowerCase()))
+            onChange(
+              isV2
+                ? selectedOption?.map((option) => ({
+                    address: option.value.toLowerCase(),
+                  }))
+                : selectedOption?.map((option) => option.value.toLowerCase())
+            )
           }}
           isLoading={isLoading}
           isClearable={false}

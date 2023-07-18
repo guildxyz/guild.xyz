@@ -66,7 +66,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetcher(`/guild?sort=members`).catch((_) => [])
+  const guilds = await fetcher(`/v2/guilds?sort=members`).catch((_) => [])
 
   return {
     props: { guilds },
