@@ -11,6 +11,7 @@ import {
 import {
   createColumnHelper,
   getCoreRowModel,
+  getExpandedRowModel,
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
@@ -140,6 +141,8 @@ const GuildPage = (): JSX.Element => {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
+    getRowCanExpand: () => true,
     enableRowSelection: true,
   })
 
@@ -203,6 +206,7 @@ const GuildPage = (): JSX.Element => {
             Members
           </TabButton>
         </Tabs>
+        {/* {JSON.stringify(table.getState(), null, 2)} */}
         <CRMTable table={table} />
       </Layout>
     </>

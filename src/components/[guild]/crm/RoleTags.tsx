@@ -34,7 +34,7 @@ const RoleTags = ({ roleIds }: Props) => {
         <RoleTag key={roleId} roleId={roleId} />
       ))}
       {moreRolesCount > 0 && (
-        <Popover trigger="hover" openDelay={0}>
+        <Popover trigger="hover" openDelay={0} closeDelay={0}>
           <PopoverTrigger>
             <Tag
               variant={"outline"}
@@ -42,7 +42,6 @@ const RoleTags = ({ roleIds }: Props) => {
               sx={{
                 "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColor}) !important`,
               }}
-              cursor="default"
             >
               <TagLabel>{`${moreRolesCount} more roles`}</TagLabel>
             </Tag>
@@ -62,7 +61,7 @@ const RoleTags = ({ roleIds }: Props) => {
     </HStack>
   )
 }
-const RoleTag = ({ roleId }: { roleId: number }) => {
+export const RoleTag = ({ roleId }: { roleId: number }) => {
   const { roles } = useGuild()
   const role = roles.find((r) => r.id === roleId)
 

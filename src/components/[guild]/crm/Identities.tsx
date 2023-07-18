@@ -1,4 +1,4 @@
-import { HStack, Tag, TagLeftIcon, Text } from "@chakra-ui/react"
+import { HStack, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
 import { Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
@@ -19,22 +19,25 @@ const Identities = ({ member }: Props) => {
           platformAccount={platformAccount}
           order={i}
           zIndex={-1 * i}
+          isOpen={i === 0}
         />
       ))}
-      <WalletTag addresses={addresses} />
+      <WalletTag>{addresses?.length}</WalletTag>
     </HStack>
   )
 }
 
-const IdentityTag = ({
+export const IdentityTag = ({
   platformAccount,
+  isOpen,
   ...rest
 }: {
   platformAccount: PlatformAccountDetails
+  isOpen: boolean
 } & Rest) => {
   const platform = platforms[PlatformType[platformAccount.platformId]]
-  const username = platformAccount.platformUserData?.username ?? "Unknown"
-  const isOpen = platform.name === "Discord" && username
+  const username =
+    platformAccount.platformUserData?.username ?? platformAccount.platformUserId
 
   return (
     <Tag
@@ -48,12 +51,12 @@ const IdentityTag = ({
       {...rest}
     >
       <TagLeftIcon as={platform.icon} /* size=".6em" */ mr="0" />
-      {isOpen && <Text ml="1">{username}</Text>}
+      {isOpen && <TagLabel ml="1">{username}</TagLabel>}
     </Tag>
   )
 }
 
-const WalletTag = ({ addresses }: { addresses: string[] }) => (
+export const WalletTag = ({ children }) => (
   <Tag
     colorScheme={"gray"}
     bg={`gray.500`}
@@ -65,7 +68,7 @@ const WalletTag = ({ addresses }: { addresses: string[] }) => (
     transition={"margin .2s"}
   >
     <TagLeftIcon as={Wallet} mr="0" />
-    <Text ml="1">{addresses?.length}</Text>
+    <TagLabel ml="1">{children}</TagLabel>
   </Tag>
 )
 

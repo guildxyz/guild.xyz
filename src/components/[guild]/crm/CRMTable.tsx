@@ -15,6 +15,7 @@ import Card from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useEffect, useRef, useState } from "react"
 import { PlatformAccountDetails } from "types"
+import MemberModal from "./MemberModal"
 import useMembers from "./useMembers"
 
 export type Member = {
@@ -22,6 +23,7 @@ export type Member = {
   addresses: string[]
   platformUsers: PlatformAccountDetails[]
   joinedAt: string
+  roleIds: number[]
   publicRoleIds: number[]
   hiddenRoleIds: number[]
 }
@@ -35,6 +37,7 @@ const CRMTable = ({ table }: Props) => {
 
   const cardBg = useColorModeValue("white", "var(--chakra-colors-gray-700)") // css variable form so it works in boxShadow literal for identityTags
   const tdBg = useColorModeValue(`gray.50`, "#3A3A40") // dark color is from blackAlpha.200, but without opacity so it can overlay when sticky
+  const tdHoverBg = useColorModeValue(`blackAlpha.50`, "whiteAlpha.50")
   const theadBoxShadow = useColorModeValue("md", "2xl")
 
   /**
@@ -190,21 +193,38 @@ const CRMTable = ({ table }: Props) => {
                 </Tr>
               ) : table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <Tr key={row.id}>
+                  <Tr key={row.id} role="group">
                     {row.getVisibleCells().map((cell) => (
                       <Td
+                        position={"relative"}
                         key={cell.id}
                         fontSize={"sm"}
                         px="3.5"
+                        onClick={
+                          cell.column.id !== "select"
+                            ? row.getToggleExpandedHandler()
+                            : undefined
+                        }
+                        cursor="pointer"
                         bg={tdBg}
+                        _before={{
+                          content: `""`,
+                          position: "absolute",
+                          inset: 0,
+                          bg: tdHoverBg,
+                          opacity: 0,
+                          transition: "opacity 0.1s",
+                          pointerEvents: "none",
+                        }}
+                        _groupHover={{ _before: { opacity: 1 } }}
                         transition="background .2s"
                         {...(cell.column.id === "identity" && {
                           position: "sticky",
                           left: "0",
                           width: "0px",
+                          zIndex: 1,
                           ...(isIdentityStuck && {
                             bg: cardBg,
-                            zIndex: 1,
                             sx: {
                               ".identityTag": {
                                 boxShadow: `0 0 0 1px ${cardBg}`,
@@ -219,6 +239,7 @@ const CRMTable = ({ table }: Props) => {
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </Td>
                     ))}
+                    <MemberModal row={row} />
                   </Tr>
                 ))
               ) : (
