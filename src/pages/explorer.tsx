@@ -20,7 +20,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const allGuildsRef = useRef(null)
 
   // ? is included, so the request hits v2Replacer in fetcher
-  const { data: usersGuilds } = useSWRWithOptionalAuth(`/guild?`)
+  const { data: usersGuilds } = useSWRWithOptionalAuth(`/v2/guilds`)
 
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
   const bgOpacity = useColorModeValue(0.06, 0.1)

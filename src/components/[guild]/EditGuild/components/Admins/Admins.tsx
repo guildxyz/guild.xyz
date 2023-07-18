@@ -23,11 +23,9 @@ import AdminSelect from "./components/AdminSelect"
 const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
 
 const validateAdmins = (admins: string[]) =>
-  admins.every((admin) => ADDRESS_REGEX.test(admin.trim())) ||
-  "Every admin should be a valid address"
-
-const validateAdminsV2 = (admins) =>
-  admins.every(({ address }) => ADDRESS_REGEX.test(address.trim())) ||
+  (typeof admins?.[0] === "string"
+    ? admins.every((admin) => ADDRESS_REGEX.test(admin.trim()))
+    : admins.every((addr: any) => ADDRESS_REGEX.test(addr?.address.trim()))) ||
   "Every admin should be a valid address"
 
 const fetchMemberOptions = ([_, members, provider]) =>
@@ -53,14 +51,14 @@ const Admins = () => {
   const { provider } = useWeb3React()
   const members = useUniqueMembers(roles)
 
-  const isV2 = !!guildAdmins && typeof guildAdmins[0] !== "string"
-
   const {
     field: { onChange, ref, value: admins, onBlur },
   } = useController({
     name: "admins",
-    rules: { validate: isV2 ? validateAdminsV2 : validateAdmins },
+    rules: { validate: validateAdmins },
   })
+
+  const isV2 = !!admins && typeof admins[0] !== "string"
 
   const { data: options } = useSWR(
     !!members && !!admins && !!ownerAddress ? ["options", members, provider] : null,

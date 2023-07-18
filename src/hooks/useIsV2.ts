@@ -1,24 +1,24 @@
-import useUser from "components/[guild]/hooks/useUser"
+import { useWeb3React } from "@web3-react/core"
 import { posthog } from "posthog-js"
 import { useFeatureFlagEnabled } from "posthog-js/react"
 import { useEffect } from "react"
+import useV2Addresses from "./useV2Addresses"
 
 const V2_FEATURE_FLAG_KEY = "api-v2"
 
-// Edge config?
-const userIdsToOptIn = new Set([1774738])
-
 const useIsV2 = () => {
-  const { id } = useUser()
+  const { account } = useWeb3React()
+  const v2Addresses = useV2Addresses()
   const isFlagEnabled = useFeatureFlagEnabled(V2_FEATURE_FLAG_KEY)
+  const shouldHaveV2 = !!account && v2Addresses.has(account.toLowerCase())
 
   useEffect(() => {
-    if (userIdsToOptIn.has(id)) {
+    if (shouldHaveV2) {
       posthog.updateEarlyAccessFeatureEnrollment("api-v2", true)
     }
-  }, [id])
+  }, [shouldHaveV2])
 
-  return isFlagEnabled
+  return shouldHaveV2 || isFlagEnabled
 }
 
 export default useIsV2
