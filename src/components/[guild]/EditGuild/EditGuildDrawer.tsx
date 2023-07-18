@@ -216,7 +216,7 @@ const EditGuildDrawer = ({
                     beforeDelete={() => methods.reset(defaultValues)}
                   />
                 ) : (
-                  <LeaveButton />
+                  <LeaveButton disableColoring />
                 )}
               </DrawerHeader>
               <VStack spacing={10} alignItems="start">

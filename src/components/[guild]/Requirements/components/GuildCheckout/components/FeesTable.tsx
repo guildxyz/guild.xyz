@@ -13,16 +13,18 @@ import { PropsWithChildren } from "react"
 
 type Props = {
   buttonComponent: JSX.Element
+  bgColor?: string
 }
 
 const FeesTable = ({
   buttonComponent,
+  bgColor,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
-    <Stack spacing={0}>
+    <Stack w="full" spacing={0}>
       <Button
         display="flex"
         w="full"
@@ -45,7 +47,7 @@ const FeesTable = ({
       </Button>
 
       <Collapse in={isOpen} animateOpacity>
-        <TableContainer borderWidth={1} borderRadius="xl" mt={2}>
+        <TableContainer borderWidth={1} borderRadius="xl" mt={2} bgColor={bgColor}>
           <Table variant="simple" size="sm" color="gray">
             <Tbody>{children}</Tbody>
           </Table>

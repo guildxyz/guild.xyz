@@ -10,14 +10,14 @@ import {
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import MirrorLogo from "static/socialIcons/mirror.svg"
 import SubstackLogo from "static/socialIcons/substack.svg"
-import { SocialLinkKey } from "types"
+import { Rest, SocialLinkKey } from "types"
 
 type Size = "sm" | "md"
 
 type Props = {
   type: SocialLinkKey
   size?: Size
-}
+} & Rest
 
 const icons: Record<
   SocialLinkKey,
@@ -58,8 +58,13 @@ const sizes: Record<Size, { bg: number; icon: number }> = {
   },
 }
 
-const SocialIcon = ({ type, size = "md" }: Props): JSX.Element => (
-  <Circle bgColor={colors[type].bg} color={colors[type].icon} size={sizes[size].bg}>
+const SocialIcon = ({ type, size = "md", ...rest }: Props): JSX.Element => (
+  <Circle
+    bgColor={colors[type].bg}
+    color={colors[type].icon}
+    size={sizes[size].bg}
+    {...rest}
+  >
     {typeof icons[type] === "string" ? (
       <Img boxSize={sizes[size].bg} src={icons[type] as string} />
     ) : (

@@ -752,7 +752,7 @@ const Page = (): JSX.Element => (
         </Text>
       </section>
 
-      <Text>Place and date: Szeged, 3th February 2023</Text>
+      <Text>Place and date: Szeged, 3rd February 2023</Text>
       <Text>
         <b>Z Gen Kibernetika Kft.</b>
       </Text>

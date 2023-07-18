@@ -13,7 +13,7 @@ type Props = {
 const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
   const platformsData: Record<
-    Exclude<PlatformName, "" | "TWITTER" | "POAP">,
+    Exclude<PlatformName, "" | "TWITTER" | "POAP" | "CONTRACT_CALL">,
     {
       description: string
       hook?: any

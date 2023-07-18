@@ -76,7 +76,14 @@ type NFT = {
   slug: string
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE" | "POAP"
+type PlatformName =
+  | "TELEGRAM"
+  | "DISCORD"
+  | "GITHUB"
+  | "TWITTER"
+  | "GOOGLE"
+  | "POAP"
+  | "CONTRACT_CALL"
 
 type PlatformUserData = {
   acessToken?: string
@@ -153,6 +160,12 @@ type PlatformGuildData = {
     needCaptcha?: boolean
     mimeType?: never
     iconLink?: never
+    type?: never
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    description?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -161,6 +174,25 @@ type PlatformGuildData = {
     needCaptcha?: never
     mimeType?: string
     iconLink?: string
+    type?: never
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    description?: never
+  }
+  CONTRACT_CALL: {
+    chain: Chain
+    contractAddress: string
+    function: string
+    argsToSign: string[]
+    description: string
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    role?: never
+    mimeType?: never
+    iconLink?: never
   }
 }
 
@@ -392,6 +424,8 @@ export enum PlatformType {
   "GITHUB" = 3,
   "GOOGLE" = 4,
   "TWITTER" = 5,
+  // "STEAM" = 6,
+  "CONTRACT_CALL" = 7,
 }
 
 type WalletConnectConnectionData = {

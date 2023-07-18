@@ -1,11 +1,10 @@
-import { IconButton, SimpleGrid, Stack, useColorModeValue } from "@chakra-ui/react"
+import { SimpleGrid, Stack, useColorModeValue } from "@chakra-ui/react"
 import AddBalancyRequirementCard from "components/balancy/AddBalancyRequirementCard"
 import BalancyBar from "components/balancy/BalancyBar"
 import BalancyFormCard from "components/balancy/BalancyFormCard"
 import BalancyLogicPicker from "components/balancy/BalancyLogicPicker"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { TwitterLogo } from "phosphor-react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { RequirementType } from "requirements"
 import AllowlistForm from "requirements/Allowlist/AllowlistForm"
@@ -55,19 +54,19 @@ const Page = (): JSX.Element => {
       background={bgColor}
       textColor="white"
       backgroundOffset={46}
-      action={
-        <IconButton
-          as="a"
-          target="_blank"
-          colorScheme="alpha"
-          href={"https://twitter.com/balancy_io"}
-          rel="noopener"
-          borderRadius={"full"}
-          h="10"
-          aria-label="Balancy twitter"
-          icon={<TwitterLogo />}
-        />
-      }
+      // action={
+      //   <IconButton
+      //     as="a"
+      //     target="_blank"
+      //     colorScheme="alpha"
+      //     href={"https://twitter.com/balancy_io"}
+      //     rel="noopener"
+      //     borderRadius={"full"}
+      //     h="10"
+      //     aria-label="Balancy twitter"
+      //     icon={<TwitterLogo />}
+      //   />
+      // }
     >
       <FormProvider {...methods}>
         <BalancyBar />
