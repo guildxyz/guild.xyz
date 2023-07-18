@@ -3,6 +3,7 @@ import {
   FormLabel,
   Heading,
   HStack,
+  Img,
   Input,
   ModalBody,
   ModalContent,
@@ -51,26 +52,46 @@ const MysteryBoxCard = () => {
     <>
       <CardMotionWrapper>
         <Card px={{ base: 4, md: 6 }} py={{ base: 5, md: 7 }}>
-          <HStack justifyContent="space-between" spacing={4}>
-            <Stack>
-              <Heading as="h2" fontSize="xl" fontFamily="display">
-                Congratulations!
-              </Heading>
-              <Text>
-                You're among the top 100 Guild Pin minters in Season 1, <br />
-                so now you can claim your Guild Mystery Box! 👀
-              </Text>
-            </Stack>
+          <Stack
+            w="full"
+            direction={{ base: "column", md: "row" }}
+            alignItems={{ base: "start", md: "center" }}
+            justifyContent={{ base: "start", md: "space-between" }}
+            spacing={4}
+          >
+            <HStack spacing={4}>
+              <Img
+                display={{ base: "none", md: "block" }}
+                src="/img/mystery-box.gif"
+                alt="Guild Pin Mystery Box"
+                position="relative"
+                left={1}
+                top={2}
+                w={24}
+                ml={-4}
+              />
+              <Stack>
+                <Heading as="h2" fontSize="xl" fontFamily="display">
+                  Congratulations!
+                </Heading>
+                <Text>
+                  You're in the top 100 Guild Pin minters in Season 1, so now you can
+                  claim your Guild Mystery Box! 👀
+                </Text>
+              </Stack>
+            </HStack>
 
             <Button
               colorScheme="indigo"
               onClick={onOpen}
               leftIcon={alreadyClaimed ? <Check /> : <Gift />}
               isDisabled={alreadyClaimed}
+              w={{ base: "full", md: "max-content" }}
+              minW="max-content"
             >
               {alreadyClaimed ? "Claimed" : "Claim now!"}
             </Button>
-          </HStack>
+          </Stack>
         </Card>
       </CardMotionWrapper>
 
