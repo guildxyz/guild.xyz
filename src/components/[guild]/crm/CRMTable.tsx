@@ -5,6 +5,7 @@ import {
   Table,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -192,56 +193,78 @@ const CRMTable = ({ table }: Props) => {
                   </Td>
                 </Tr>
               ) : table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <Tr key={row.id} role="group">
-                    {row.getVisibleCells().map((cell) => (
+                table
+                  .getRowModel()
+                  .rows.map((row) => (
+                    <Tr key={row.id} role="group">
+                      {row.getVisibleCells().map((cell) => (
+                        <Td
+                          position={"relative"}
+                          key={cell.id}
+                          fontSize={"sm"}
+                          px="3.5"
+                          onClick={
+                            cell.column.id !== "select"
+                              ? row.getToggleExpandedHandler()
+                              : undefined
+                          }
+                          cursor="pointer"
+                          bg={tdBg}
+                          _before={{
+                            content: `""`,
+                            position: "absolute",
+                            inset: 0,
+                            bg: tdHoverBg,
+                            opacity: 0,
+                            transition: "opacity 0.1s",
+                            pointerEvents: "none",
+                          }}
+                          _groupHover={{ _before: { opacity: 1 } }}
+                          transition="background .2s"
+                          {...(cell.column.id === "identity" && {
+                            position: "sticky",
+                            left: "0",
+                            width: "0px",
+                            zIndex: 1,
+                            ...(isIdentityStuck && {
+                              bg: cardBg,
+                              sx: {
+                                ".identityTag": {
+                                  boxShadow: `0 0 0 1px ${cardBg}`,
+                                },
+                                ".identityTag:not(:first-of-type)": {
+                                  marginLeft: "var(--stacked-margin-left)",
+                                },
+                              },
+                            }),
+                          })}
+                        >
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </Td>
+                      ))}
+                      <MemberModal row={row} />
+                    </Tr>
+                  ))
+                  .concat(
+                    <Tr>
                       <Td
-                        position={"relative"}
-                        key={cell.id}
-                        fontSize={"sm"}
                         px="3.5"
-                        onClick={
-                          cell.column.id !== "select"
-                            ? row.getToggleExpandedHandler()
-                            : undefined
-                        }
-                        cursor="pointer"
+                        textAlign={"center"}
+                        colSpan={"100%" as any}
+                        borderBottomRadius={"2xl"}
                         bg={tdBg}
-                        _before={{
-                          content: `""`,
-                          position: "absolute",
-                          inset: 0,
-                          bg: tdHoverBg,
-                          opacity: 0,
-                          transition: "opacity 0.1s",
-                          pointerEvents: "none",
-                        }}
-                        _groupHover={{ _before: { opacity: 1 } }}
-                        transition="background .2s"
-                        {...(cell.column.id === "identity" && {
-                          position: "sticky",
-                          left: "0",
-                          width: "0px",
-                          zIndex: 1,
-                          ...(isIdentityStuck && {
-                            bg: cardBg,
-                            sx: {
-                              ".identityTag": {
-                                boxShadow: `0 0 0 1px ${cardBg}`,
-                              },
-                              ".identityTag:not(:first-of-type)": {
-                                marginLeft: "var(--stacked-margin-left)",
-                              },
-                            },
-                          }),
-                        })}
                       >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        <Text
+                          colorScheme="gray"
+                          fontSize={"xs"}
+                          fontWeight={"bold"}
+                          textTransform={"uppercase"}
+                        >
+                          End of results
+                        </Text>
                       </Td>
-                    ))}
-                    <MemberModal row={row} />
-                  </Tr>
-                ))
+                    </Tr>
+                  )
               ) : (
                 <Tr>
                   <Td
