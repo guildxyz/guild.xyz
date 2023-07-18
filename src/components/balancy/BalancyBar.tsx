@@ -34,7 +34,7 @@ const BalancyBar = ({ ...rest }) => {
   }
 
   return (
-    <Box ref={ref} position="sticky" top={0} zIndex="9">
+    <Box ref={ref} position="sticky" top={"-1px"} zIndex="9">
       <Card
         p="6"
         isFullWidthOnMobile

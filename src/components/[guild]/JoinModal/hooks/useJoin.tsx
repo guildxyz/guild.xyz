@@ -45,8 +45,19 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
 
   const { mutate } = useMemberships()
 
-  const submit = (signedValidation: SignedValdation): Promise<Response> =>
-    fetcher(`/user/join`, signedValidation).then((body) => {
+  const submit = (signedValidation: SignedValdation): Promise<Response> => {
+    // Try catch just to make sure we don't run into an unexpected runtime error
+    try {
+      const payload = JSON.parse(signedValidation.signedPayload)
+
+      if (Array.isArray(payload.platforms)) {
+        payload.platforms.forEach(({ name }) => {
+          captureEvent("Sending OAuth data in join request", { platformName: name })
+        })
+      }
+    } catch {}
+
+    return fetcher(`/user/join`, signedValidation).then((body) => {
       if (body === "rejected") {
         // eslint-disable-next-line @typescript-eslint/no-throw-literal
         throw "Something went wrong, join request rejected."
@@ -59,6 +70,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
 
       return body
     })
+  }
 
   const mintGuildPinContext = useMintGuildPinContext()
   // Destructuring it separately, since we don't have a MintGuildPinContext on the POAP minting page

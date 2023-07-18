@@ -51,7 +51,10 @@ const TimestampInput = forwardRef(
           setValue(newValue)
           props.onChange?.(newValue)
         }}
-        max={new Date().toISOString().split("T")[0]}
+        min={props.min ? new Date(props.min).toISOString().split("T")[0] : undefined}
+        max={
+          (props.max ? new Date(props.max) : new Date()).toISOString().split("T")[0]
+        }
       />
     )
   }

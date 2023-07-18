@@ -20,6 +20,7 @@ const ThemeContext = createContext<{
   localBackgroundImage: string
   setLocalBackgroundImage: Dispatch<SetStateAction<string>>
   textColor: string
+  buttonColorScheme: string
 } | null>(null)
 
 const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element => {
@@ -43,8 +44,14 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
   const textColor = useMemo(() => {
     if (colorMode === "dark" || localBackgroundImage) return "whiteAlpha.900"
     const color = Color(localThemeColor || "white")
-    return color.luminosity() > 0.5 ? "primary.800" : "whiteAlpha.900"
+    const saturation = color.hsl().array()[1]
+    return color.luminosity() > 0.6 && saturation < 70
+      ? "primary.800"
+      : "whiteAlpha.900"
   }, [colorMode, localThemeColor])
+
+  const buttonColorScheme =
+    textColor === "whiteAlpha.900" ? "whiteAlpha" : "blackAlpha"
 
   return (
     <ThemeContext.Provider
@@ -54,10 +61,11 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
         localBackgroundImage,
         setLocalBackgroundImage,
         textColor,
+        buttonColorScheme,
       }}
     >
       <style>
-        {`:root {${Object.entries(generatedColors ?? {})
+        {`:root, [data-theme] {${Object.entries(generatedColors ?? {})
           .map(([key, value]) => `${key}: ${value};`)
           .join("")}}`}
       </style>
@@ -68,4 +76,4 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
 
 const useThemeContext = () => useContext(ThemeContext)
 
-export { useThemeContext, ThemeProvider }
+export { ThemeProvider, useThemeContext }
