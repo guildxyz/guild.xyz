@@ -20,12 +20,13 @@ import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import { motion } from "framer-motion"
+import useIsV2 from "hooks/useIsV2"
 import useToast from "hooks/useToast"
 import { LinkBreak, Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { memo, useRef } from "react"
 import { PlatformName } from "types"
-import useDisconnect from "../hooks/useDisconnect"
+import useDisconnect, { useDisconnectV1 } from "../hooks/useDisconnect"
 
 type Props = {
   type: PlatformName
@@ -142,24 +143,27 @@ const DisconnectPlatform = ({ type, name }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const alertCancelRef = useRef()
 
-  const { onSubmit, isLoading, signLoadingText } = useDisconnect(onClose)
-  const disconnectAccount = () => onSubmit({ platformName: type })
+  const isV2 = useIsV2()
+
+  const { onSubmit, isLoading, signLoadingText } = useDisconnectV1(onClose)
+  const {
+    onSubmit: onSubmitV2,
+    isLoading: isLoadingV2,
+    signLoadingText: signLoadingTextV2,
+  } = useDisconnect(onClose)
+  const disconnectAccount = () =>
+    (isV2 ? onSubmitV2 : onSubmit)({ platformName: type })
 
   return (
     <>
-      <Tooltip
-        label="Disconnect account - temporarily disabled"
-        placement="top"
-        hasArrow
-      >
+      <Tooltip label="Disconnect account" placement="top" hasArrow>
         <IconButton
           rounded="full"
           variant="ghost"
           size="sm"
           icon={<Icon as={LinkBreak} />}
           colorScheme="red"
-          // onClick={onOpen}
-          isDisabled
+          onClick={onOpen}
           aria-label="Disconnect account"
         />
       </Tooltip>
@@ -179,8 +183,8 @@ const DisconnectPlatform = ({ type, name }) => {
               <Button
                 colorScheme="red"
                 onClick={disconnectAccount}
-                isLoading={isLoading}
-                loadingText={signLoadingText || "Removing"}
+                isLoading={isLoading || isLoadingV2}
+                loadingText={signLoadingText || signLoadingTextV2 || "Removing"}
                 ml={3}
               >
                 Disconnect

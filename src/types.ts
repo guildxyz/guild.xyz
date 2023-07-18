@@ -107,11 +107,24 @@ type AddressConnectionProvider = "DELEGATE"
 
 type User = {
   id: number
-  addresses: Array<string>
-  addressProviders: Record<string, AddressConnectionProvider>
+  addresses: Array<{
+    address: string
+    userId: number
+    isPrimary: boolean
+    provider: AddressConnectionProvider
+    createdAt: string
+  }>
   platformUsers: PlatformAccountDetails[]
-  signingKey?: string
+  publicKey?: string
   isSuperAdmin: boolean
+
+  // Should be removed once we use only v2 API
+  addressProviders?: Record<string, AddressConnectionProvider>
+}
+
+type BaseUser = {
+  id: number
+  createdAt: Date
 }
 
 type GuildBase = {
@@ -569,6 +582,7 @@ type DetailedUserLeaderboardData = {
 export { ValidationMethod, Visibility, supportedSocialLinks }
 export type {
   AddressConnectionProvider,
+  BaseUser,
   BrainCardData,
   CoingeckoToken,
   CreatePoapForm,
