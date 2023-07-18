@@ -13,7 +13,7 @@ import { useRequirementContext } from "./RequirementContext"
 export const TWITTER_V1_REQUIREMENTS = new Set<string>([
   "TWITTER_FOLLOW",
   "TWITTER_FOLLOWED_BY",
-  "TWITTER_FOLLOWER_COUNT",
+  "TWITTER_LIST_FOLLOW",
 ])
 
 const mapTwitterV1 = (
