@@ -11,8 +11,6 @@ const UsersLeaderboardPositionCard = () => {
 
   const { data: usersGuildPins } = useUsersGuildPins()
 
-  if (!account) return null
-
   return isLoading ? (
     <LeaderboardUserCardSkeleton />
   ) : data ? (

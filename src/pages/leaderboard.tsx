@@ -1,16 +1,25 @@
 import { Stack, Text } from "@chakra-ui/react"
 import { kv } from "@vercel/kv"
+import { useWeb3React } from "@web3-react/core"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
+import useHasAlreadyClaimedMysteryBox from "components/leaderboard/hooks/useHasAlreadyClaimedMysteryBox"
+import useIsEligibleForMysteryBox from "components/leaderboard/hooks/useIsEligibleForMysteryBox"
 import useUsersLeaderboardPosition from "components/leaderboard/hooks/useUsersLeaderboardPosition"
 import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
 } from "components/leaderboard/LeaderboardUserCard"
+import MysteryBoxCard from "components/leaderboard/MysteryBoxCard"
 import UsersLeaderboardPositionCard from "components/leaderboard/UsersLeaderboardPositionCard"
+import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
+import { useEffect, useState } from "react"
 import useSWRInfinite from "swr/infinite"
 import { DetailedUserLeaderboardData } from "types"
+
+const MotionSection = motion(Section)
 
 type Props = {
   leaderboard: DetailedUserLeaderboardData[]
@@ -28,7 +37,22 @@ const getKey = (pageIndex: number, previousPageData: any[]) => {
 }
 
 const Page = ({ leaderboard: initialData }: Props) => {
+  const { account } = useWeb3React()
+  const { data: isEligibleForMysteryBox } = useIsEligibleForMysteryBox()
+  const {
+    data: { alreadyClaimed },
+  } = useHasAlreadyClaimedMysteryBox()
+  const [initialAlreadyClaimed, setInitialAlreadyClaimed] = useState<boolean>()
   const { data } = useUsersLeaderboardPosition()
+
+  useEffect(() => {
+    if (
+      typeof alreadyClaimed === "undefined" ||
+      typeof initialAlreadyClaimed !== "undefined"
+    )
+      return
+    setInitialAlreadyClaimed(alreadyClaimed)
+  }, [alreadyClaimed])
 
   const {
     isValidating: isLeaderboardValidating,
@@ -78,27 +102,43 @@ const Page = ({ leaderboard: initialData }: Props) => {
       description={<Text>{DESCRIPTION}</Text>}
     >
       <Stack spacing={10}>
-        <UsersLeaderboardPositionCard />
+        <AnimateSharedLayout>
+          <AnimatePresence>
+            {isEligibleForMysteryBox && !initialAlreadyClaimed && (
+              <CardMotionWrapper>
+                <MysteryBoxCard />
+              </CardMotionWrapper>
+            )}
+          </AnimatePresence>
 
-        <Section title={data ? "Leaderboard" : undefined}>
-          <>
-            {leaderboard?.flat().map((userLeaderboardData, index) => (
-              <LeaderboardUserCard
-                key={index}
-                address={userLeaderboardData?.address}
-                score={userLeaderboardData?.score}
-                position={index + 1}
-                pinMetadataArray={
-                  userLeaderboardData?.pins.map((p) => p.tokenUri) ?? []
-                }
-              />
-            ))}
-            {isLeaderboardValidating &&
-              [...Array(25)].map((_, index) => (
-                <LeaderboardUserCardSkeleton key={index} />
+          <AnimatePresence>
+            {account && (
+              <CardMotionWrapper>
+                <UsersLeaderboardPositionCard />
+              </CardMotionWrapper>
+            )}
+          </AnimatePresence>
+
+          <MotionSection layout title={data ? "Leaderboard" : undefined}>
+            <>
+              {leaderboard?.flat().map((userLeaderboardData, index) => (
+                <LeaderboardUserCard
+                  key={index}
+                  address={userLeaderboardData?.address}
+                  score={userLeaderboardData?.score}
+                  position={index + 1}
+                  pinMetadataArray={
+                    userLeaderboardData?.pins.map((p) => p.tokenUri) ?? []
+                  }
+                />
               ))}
-          </>
-        </Section>
+              {isLeaderboardValidating &&
+                [...Array(25)].map((_, index) => (
+                  <LeaderboardUserCardSkeleton key={index} />
+                ))}
+            </>
+          </MotionSection>
+        </AnimateSharedLayout>
       </Stack>
     </Layout>
   )

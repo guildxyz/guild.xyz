@@ -87,7 +87,7 @@ const LeaderboardUserCard = ({
     ) : null
 
   return (
-    <Card spacing={4}>
+    <Card>
       <HStack spacing={0}>
         <Center
           position="relative"
@@ -286,7 +286,7 @@ const LeaderboardUserCardSkeleton = () => {
   const positionBorderColor = useColorModeValue("gray.200", "gray.600")
 
   return (
-    <Card spacing={4}>
+    <Card>
       <HStack spacing={0}>
         <Center
           minW={{ base: 16, sm: 24 }}
