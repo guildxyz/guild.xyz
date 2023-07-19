@@ -79,8 +79,8 @@ const MysteryBoxCard = () => {
                   Congratulations!
                 </Heading>
                 <Text>
-                  You're among the top 100 Guild Pin minters in Season 1, so now you
-                  can claim your Guild Mystery Box! 👀
+                  You're among the top 100 Guild Pin collectors in Season 1. Claim
+                  your Guild Mystery Box as a gift of our appreciation! 👀
                 </Text>
               </Stack>
             </HStack>
