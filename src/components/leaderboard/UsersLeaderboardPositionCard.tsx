@@ -1,9 +1,10 @@
 import { useWeb3React } from "@web3-react/core"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
-import useUsersLeaderboardPosition from "./hooks/useUsersLeaderboardPosition"
 import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
 } from "./LeaderboardUserCard"
+import useUsersLeaderboardPosition from "./hooks/useUsersLeaderboardPosition"
 
 const UsersLeaderboardPositionCard = () => {
   const { account } = useWeb3React()
@@ -14,12 +15,14 @@ const UsersLeaderboardPositionCard = () => {
   return isLoading ? (
     <LeaderboardUserCardSkeleton />
   ) : data ? (
-    <LeaderboardUserCard
-      address={account}
-      score={data.score}
-      position={data.position}
-      pinMetadataArray={usersGuildPins}
-    />
+    <CardMotionWrapper>
+      <LeaderboardUserCard
+        address={account}
+        score={data.score}
+        position={data.position}
+        pinMetadataArray={usersGuildPins}
+      />
+    </CardMotionWrapper>
   ) : null
 }
 

@@ -112,11 +112,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
           </AnimatePresence>
 
           <AnimatePresence>
-            {account && (
-              <CardMotionWrapper>
-                <UsersLeaderboardPositionCard />
-              </CardMotionWrapper>
-            )}
+            {account && <UsersLeaderboardPositionCard />}
           </AnimatePresence>
 
           <MotionSection layout title={data ? "Leaderboard" : undefined}>
