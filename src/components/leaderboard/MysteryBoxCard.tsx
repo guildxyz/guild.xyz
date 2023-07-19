@@ -107,8 +107,10 @@ const MysteryBoxCard = () => {
           <ModalBody>
             <Stack spacing={4}>
               <Text>
-                All you need to do is to provide us your address where we can send
-                the package, and then wait for the exclusive Guild goodies!
+                For us to be able to ship this gift box to you, all you need to do is
+                fill out these details below, then wait for the Guild goodies to
+                arrive! Make sure to double check that everything is accurate so the
+                package can arrive to the right place.
               </Text>
 
               <FormControl isInvalid={!!errors.country}>
