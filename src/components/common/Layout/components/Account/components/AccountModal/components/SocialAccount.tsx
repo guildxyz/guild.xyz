@@ -84,7 +84,7 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
             </Text>
           ) : null}
         </Text>
-        {type === "TWITTER_V1" && !platformUser ? (
+        {type === "TWITTER_V1" ? (
           <Tooltip
             hasArrow
             label="Some of our Twitter requirements can only be checked if your Twitter account is connected this way as well"
