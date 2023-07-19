@@ -63,21 +63,18 @@ const MysteryBoxCard = () => {
             <HStack spacing={4}>
               <Img
                 display={{ base: "none", md: "block" }}
-                src="/img/mystery-box.gif"
+                src="/img/mystery-box.webp"
                 alt="Guild Pin Mystery Box"
-                position="relative"
-                left={1}
-                top={2}
                 w={24}
-                ml={-4}
+                ml={-2}
               />
               <Stack>
                 <Heading as="h2" fontSize="xl" fontFamily="display">
                   Congratulations!
                 </Heading>
                 <Text>
-                  You're in the top 100 Guild Pin minters in Season 1, so now you can
-                  claim your Guild Mystery Box! 👀
+                  You're among the top 100 Guild Pin minters in Season 1, so now you
+                  can claim your Guild Mystery Box! 👀
                 </Text>
               </Stack>
             </HStack>
