@@ -30,7 +30,8 @@ export type ClaimMysteryBoxForm = {
   city: string
   street: string
   houseNumber: string
-  email: string
+  name: string
+  phone?: string
 }
 
 const MysteryBoxCard = () => {
@@ -152,11 +153,18 @@ const MysteryBoxCard = () => {
                 </FormControl>
               </HStack>
 
+              <FormControl isInvalid={!!errors.name}>
+                <Input
+                  placeholder="Your name"
+                  {...register("name", { required: "Required" })}
+                />
+                <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+              </FormControl>
+
               <FormControl>
                 <Input
-                  type="email"
-                  placeholder="E-mail (optional)"
-                  {...register("email")}
+                  placeholder="Phone number (optional)"
+                  {...register("phone")}
                 />
               </FormControl>
             </Stack>
