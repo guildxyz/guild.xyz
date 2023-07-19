@@ -29,7 +29,8 @@ export type Message = OneOf<
 const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   platformName: PlatformName,
   url: string,
-  oauthOptions: OAuthOptions
+  oauthOptions: OAuthOptions,
+  oauthOptionsInitializer?: (redirectUri: string) => Promise<OAuthOptions>
 ) => {
   const { account } = useWeb3React()
   const { captureEvent } = usePostHogContext()
@@ -61,6 +62,25 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       error: null,
     })
 
+    let finalOauthOptions = oauthOptions
+
+    if (oauthOptionsInitializer) {
+      try {
+        finalOauthOptions = await oauthOptionsInitializer(redirectUri)
+      } catch (error) {
+        captureEvent("Failed to generate Twitter 1.0 request token", { error })
+        setOauthState({
+          error: {
+            error: "Error",
+            errorDescription: error.message,
+          },
+          isAuthenticating: false,
+          authData: null,
+        })
+        return
+      }
+    }
+
     const csrfToken = randomBytes(32).toString("hex")
     const localStorageKey = `${platformName}_oauthinfo`
 
@@ -69,7 +89,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       from: window.location.toString(),
       platformName,
       redirect_url: redirectUri,
-      scope: oauthOptions.scope,
+      scope: finalOauthOptions.scope ?? "",
     }
 
     window.localStorage.setItem(
@@ -77,7 +97,9 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       JSON.stringify(infoToPassInLocalStorage)
     )
 
-    const channel = new BroadcastChannel(csrfToken)
+    const channel = new BroadcastChannel(
+      platformName === "TWITTER_V1" ? "TWITTER_V1" : csrfToken
+    )
 
     const hasReceivedResponse = new Promise<void>((resolve) => {
       channel.onmessage = (event: MessageEvent<Message>) => {
@@ -105,7 +127,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     })
 
     const searchParams = new URLSearchParams({
-      ...oauthOptions,
+      ...finalOauthOptions,
       redirect_uri: redirectUri,
       state: `${platformName}-${csrfToken}`,
     }).toString()

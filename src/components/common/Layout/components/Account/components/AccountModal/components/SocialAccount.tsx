@@ -22,7 +22,7 @@ import { Alert } from "components/common/Modal"
 import { motion } from "framer-motion"
 import useIsV2 from "hooks/useIsV2"
 import useToast from "hooks/useToast"
-import { LinkBreak } from "phosphor-react"
+import { LinkBreak, Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { memo, useRef } from "react"
 import { PlatformName } from "types"
@@ -77,7 +77,21 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
         <Text fontWeight="bold" flex="1" noOfLines={1} fontSize="sm">
           {platformUser?.platformUserData?.username ??
             `${platforms[type].name} ${!!platformUser ? "connected" : ""}`}
+          {type === "TWITTER_V1" ? (
+            <Text color={"gray"} display={"inline"}>
+              {" "}
+              (v1)
+            </Text>
+          ) : null}
         </Text>
+        {type === "TWITTER_V1" && !platformUser ? (
+          <Tooltip
+            hasArrow
+            label="Some of our Twitter requirements can only be checked if your Twitter account is connected this way as well"
+          >
+            <Question color="gray" />
+          </Tooltip>
+        ) : null}
         {!platformUser ? (
           <ConnectPlatform type={type} colorScheme={colorScheme} />
         ) : (
