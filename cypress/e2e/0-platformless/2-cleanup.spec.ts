@@ -2,18 +2,15 @@ before(() => {
   cy.disconnectMetamaskWalletFromAllDapps()
 })
 
+const URL_NAME = `${Cypress.env("platformlessGuildUrlName")}-${Cypress.env(
+  "DEPLOYMENT_ID"
+)}`
+
 describe("post-test cleanup", () => {
   before(() => {
-    cy.visit(
-      Cypress.env("DEPLOYMENT_ID")
-        ? `/${Cypress.env("platformlessGuildUrlName")}-${Cypress.env(
-            "DEPLOYMENT_ID"
-          )}`
-        : `/${Cypress.env("platformlessGuildUrlName")}`,
-      {
-        failOnStatusCode: false,
-      }
-    )
+    cy.visit(URL_NAME, {
+      failOnStatusCode: false,
+    })
   })
 
   it("cleans up test guild", () => {

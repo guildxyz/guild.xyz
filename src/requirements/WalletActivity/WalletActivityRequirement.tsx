@@ -1,6 +1,7 @@
 import { Icon } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
@@ -132,9 +133,18 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {`Have ${
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } transaction${requirement.data.txCount > 1 ? "s" : ""} on ${
-                  RPC[requirement.chain].chainName
-                }`}
+                } transaction${requirement.data.txCount > 1 ? "s" : ""}`}
+
+                {requirement.address && (
+                  <>
+                    {" to/from "}
+                    <DataBlockWithCopy text={requirement.address}>
+                      {shortenHex(requirement.address, 3)}
+                    </DataBlockWithCopy>
+                  </>
+                )}
+
+                {` on ${RPC[requirement.chain].chainName}`}
                 {requirement.data.timestamps.maxAmount &&
                 requirement.data.timestamps.minAmount ? (
                   <>

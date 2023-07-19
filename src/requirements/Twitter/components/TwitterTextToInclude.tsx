@@ -16,6 +16,11 @@ const TwitterTextToInclude = ({ baseFieldPath }: RequirementFormProps) => {
         <Input
           {...register(`${baseFieldPath}.data.id`, {
             required: "This field if required",
+            validate: (value) => {
+              if (value.startsWith(" ")) return "Should not start with a space"
+              if (value.endsWith(" ")) return "Should not end with a space"
+              return true
+            },
           })}
         />
         <FormErrorMessage>

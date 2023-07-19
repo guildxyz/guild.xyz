@@ -99,8 +99,11 @@ const AccountModal = () => {
                       decimals={5}
                       fontWeight="bold"
                     />
-                    {addresses?.indexOf(account.toLowerCase()) === 0 &&
-                    addresses.length > 1 ? (
+                    {(typeof addresses?.[0] === "string"
+                      ? (addresses as any)?.indexOf(account.toLowerCase())
+                      : addresses?.findIndex(
+                          ({ address }) => address === account.toLowerCase()
+                        )) === 0 && addresses.length > 1 ? (
                       <PrimaryAddressTag size="sm" />
                     ) : null}
                   </HStack>
