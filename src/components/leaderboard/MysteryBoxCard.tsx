@@ -52,7 +52,13 @@ const MysteryBoxCard = () => {
   return (
     <>
       <CardMotionWrapper>
-        <Card px={{ base: 4, md: 6 }} py={{ base: 5, md: 7 }}>
+        <Card
+          px={{ base: 4, md: 6 }}
+          py={{ base: 5, md: 7 }}
+          bg="indigo.500"
+          color="white"
+          mb="4"
+        >
           <Stack
             w="full"
             direction={{ base: "column", md: "row" }}
@@ -80,7 +86,7 @@ const MysteryBoxCard = () => {
             </HStack>
 
             <Button
-              colorScheme="indigo"
+              colorScheme="white"
               onClick={onOpen}
               leftIcon={alreadyClaimed ? <Check /> : <Gift />}
               isDisabled={alreadyClaimed}

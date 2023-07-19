@@ -54,6 +54,8 @@ const Page = ({ leaderboard: initialData }: Props) => {
     setInitialAlreadyClaimed(alreadyClaimed)
   }, [alreadyClaimed])
 
+  const showMysteryBox = isEligibleForMysteryBox && !initialAlreadyClaimed
+
   const {
     isValidating: isLeaderboardValidating,
     setSize,
@@ -97,20 +99,19 @@ const Page = ({ leaderboard: initialData }: Props) => {
         },
       }}
       textColor="white"
-      backgroundOffset={46}
+      backgroundOffset={showMysteryBox ? 70 : 46}
       maxWidth="container.md"
       description={<Text>{DESCRIPTION}</Text>}
     >
-      <Stack spacing={10}>
-        <AnimateSharedLayout>
-          <AnimatePresence>
-            {isEligibleForMysteryBox && !initialAlreadyClaimed && (
-              <CardMotionWrapper>
-                <MysteryBoxCard />
-              </CardMotionWrapper>
-            )}
-          </AnimatePresence>
-
+      <AnimateSharedLayout>
+        <AnimatePresence>
+          {showMysteryBox && (
+            <CardMotionWrapper>
+              <MysteryBoxCard />
+            </CardMotionWrapper>
+          )}
+        </AnimatePresence>
+        <Stack spacing={10}>
           <AnimatePresence>
             {account && <UsersLeaderboardPositionCard />}
           </AnimatePresence>
@@ -134,8 +135,8 @@ const Page = ({ leaderboard: initialData }: Props) => {
                 ))}
             </>
           </MotionSection>
-        </AnimateSharedLayout>
-      </Stack>
+        </Stack>
+      </AnimateSharedLayout>
     </Layout>
   )
 }
