@@ -1,3 +1,5 @@
+import platforms from "platforms/platforms"
+import { PlatformType } from "types"
 import capitalize from "utils/capitalize"
 
 const processConnectorError = (error: string): string | undefined => {
@@ -8,9 +10,25 @@ const processConnectorError = (error: string): string | undefined => {
     return undefined
 
   try {
-    const matchedError = error.replaceAll("\\", "").match(/{"msg":"(.*)"}/gm)
-    const parsedError = JSON.parse(matchedError?.[0])
-    return capitalize(parsedError?.msg ?? "")
+    const matchedPlatformId = error.match(/^"\d" /g)
+    const platformName = matchedPlatformId?.length
+      ? platforms[
+          PlatformType[parseInt(matchedPlatformId[0].replace('"', "").trim())]
+        ].name
+      : null
+    const cleanError = error.replaceAll("\\", "")
+    const matchedMsg = cleanError.match(/{"msg":"(.*)"}/gm)
+    const matchedError = cleanError.match(/error: "(.*)"/gm)
+
+    const parsedError = JSON.parse(
+      matchedMsg?.[0] ??
+        (matchedError?.[0]
+          ? `{${matchedError[0].replace("error", '"msg"').trim()}}`
+          : "")
+    )
+    return capitalize(
+      parsedError?.msg ? `${parsedError.msg} (${platformName} error)` : ""
+    )
   } catch {
     console.error("Unknown error:", error)
     return "Unknown error. Please check the console for more details."
