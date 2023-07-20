@@ -1,8 +1,8 @@
 import {
   ButtonGroup,
   Divider,
-  HStack,
   Heading,
+  HStack,
   Icon,
   Popover,
   PopoverArrow,
@@ -15,8 +15,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useUser from "components/[guild]/hooks/useUser"
 import { SectionProps } from "components/common/Section"
+import useUser from "components/[guild]/hooks/useUser"
 import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
@@ -112,7 +112,7 @@ const AccountConnections = () => {
           </Stack>
         ) : (
           linkedAddresses
-            .map((addressData, index) =>
+            .map((addressData) =>
               typeof addressData === "string" ? (
                 <LinkedAddress
                   key={addressData}
@@ -120,7 +120,7 @@ const AccountConnections = () => {
                     address: addressData,
                     userId,
                     createdAt: null,
-                    isPrimary: index === 0,
+                    isPrimary: addresses.findIndex((a) => a === addressData) === 0,
                     provider: addressProviders?.[addressData],
                   }}
                 />

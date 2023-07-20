@@ -43,16 +43,24 @@ const OAuth = () => {
     if (!router.isReady || typeof window === "undefined") return null
 
     let params: OAuthResponse
-    if (typeof router.query?.state !== "string") {
+    if (
+      typeof router.query?.state !== "string" &&
+      typeof router.query?.oauth_token !== "string" &&
+      typeof router.query?.denied !== "string"
+    ) {
       const fragment = new URLSearchParams(window.location.hash.slice(1))
       const { state, ...rest } = Object.fromEntries(fragment.entries())
       params = { ...getDataFromState(state), ...rest }
     } else {
       const { state, ...rest } = router.query
-      params = { ...getDataFromState(state), ...rest }
+      params = { ...getDataFromState(state?.toString()), ...rest }
     }
 
-    if (!params.csrfToken || !params.platformName) {
+    if (
+      !params.oauth_token &&
+      !params.denied &&
+      (!params.csrfToken || !params.platformName)
+    ) {
       captureEvent("OAuth - No params found, or it is in invalid form", {
         params,
       })
@@ -60,13 +68,15 @@ const OAuth = () => {
       return
     }
 
-    const localStorageInfoKey = `${params.platformName}_oauthinfo`
+    const localStorageInfoKey = `${params.platformName ?? "TWITTER_V1"}_oauthinfo`
     const localStorageInfo: OAuthLocalStorageInfo = JSON.parse(
       window.localStorage.getItem(localStorageInfoKey) ?? "{}"
     )
     window.localStorage.removeItem(localStorageInfoKey)
 
     if (
+      !params.oauth_token &&
+      !params.denied &&
       !!localStorageInfo.csrfToken &&
       localStorageInfo.csrfToken !== params.csrfToken
     ) {
@@ -79,7 +89,9 @@ const OAuth = () => {
       return
     }
 
-    const channel = new BroadcastChannel(params.csrfToken)
+    const channel = new BroadcastChannel(
+      !params.platformName ? "TWITTER_V1" : params.csrfToken
+    )
 
     const isMessageConfirmed = timeoutPromise(
       new Promise<void>((resolve) => {
@@ -91,9 +103,23 @@ const OAuth = () => {
       .catch(() => false)
 
     let response: Message
-    if (params.error) {
+    if (params.denied) {
+      response = {
+        type: "OAUTH_ERROR",
+        data: {
+          error: "Rejected",
+          errorDescription: "Authorization request has been rejected",
+        },
+      }
+    } else if (params.error) {
       const { error, error_description: errorDescription } = params
-      response = { type: "OAUTH_ERROR", data: { error, errorDescription } }
+      response = {
+        type: "OAUTH_ERROR",
+        data: {
+          error: error ?? "Unknown error",
+          errorDescription: errorDescription ?? "Unknown error",
+        },
+      }
     } else {
       const { error, error_description, csrfToken, platformName, ...data } = params
       const { csrfToken: _csrfToken, from, ...infoRest } = localStorageInfo
@@ -109,7 +135,7 @@ const OAuth = () => {
       window.close()
     } else {
       localStorage.setItem(
-        `${params.platformName}_shouldConnect`,
+        `${params.platformName ?? "TWITTER_V1"}_shouldConnect`,
         JSON.stringify(response)
       )
       router.push(localStorageInfo.from)
