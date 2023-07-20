@@ -10,21 +10,19 @@ const processConnectorError = (error: string): string | undefined => {
     return undefined
 
   try {
-    const matchedPlatformId = error.match(/^"\d" /g)
-    const platformName = matchedPlatformId?.length
-      ? platforms[
-          PlatformType[parseInt(matchedPlatformId[0].replace('"', "").trim())]
-        ].name
+    const [matchedPlatformId] = error.match(/^"\d" /) ?? []
+    const platformName = matchedPlatformId
+      ? platforms[PlatformType[parseInt(matchedPlatformId.replace('"', "").trim())]]
+          .name
       : null
     const cleanError = error.replaceAll("\\", "")
-    const matchedMsg = cleanError.match(/{"msg":"(.*?)"}/gm)
-    const matchedError = cleanError.match(/error: "(.*?)"/gm)
+
+    const [matchedMsg] = cleanError.match(/{"msg":"(.*?)"}/m) ?? []
+    const [matchedError] = cleanError.match(/error: "(.*?)"/m) ?? []
 
     const parsedError = JSON.parse(
-      matchedMsg?.[0] ??
-        (matchedError?.[0]
-          ? `{${matchedError[0].replace("error", '"msg"').trim()}}`
-          : "")
+      matchedMsg ??
+        (matchedError ? `{${matchedError.replace("error", '"msg"').trim()}}` : "")
     )
     return capitalize(
       parsedError?.msg ? `${parsedError.msg} (${platformName} error)` : ""
