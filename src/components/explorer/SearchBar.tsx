@@ -6,6 +6,7 @@ import {
   InputLeftElement,
   InputRightAddon,
   InputRightElement,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
@@ -48,8 +49,11 @@ const SearchBar = ({
     inputRef.current.focus()
   }
 
+  // needed so there's no transparent state in dark mode when the input is becoming stuck
+  const bgColor = useColorModeValue("white", "gray.800")
+
   return (
-    <InputGroup size="lg" w="full">
+    <InputGroup size="lg" w="full" bg={bgColor}>
       <InputLeftElement>
         <Icon color="#858585" size={20} as={MagnifyingGlass} />
       </InputLeftElement>

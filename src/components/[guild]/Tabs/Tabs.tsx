@@ -6,6 +6,10 @@ type Props = {
   rightElement?: JSX.Element
 }
 
+// button height + padding
+export const TABS_HEIGHT =
+  "calc(var(--chakra-space-11) + (2 * var(--chakra-space-3)))"
+
 const TabsContext = createContext<{
   isStuck: boolean
 }>(null)
@@ -18,6 +22,7 @@ const Tabs = ({ rightElement, children }: PropsWithChildren<Props>): JSX.Element
   return (
     <TabsContext.Provider value={{ isStuck }}>
       <HStack
+        id="tabs"
         ref={ref}
         justifyContent="space-between"
         alignItems={"center"}
@@ -34,13 +39,10 @@ const Tabs = ({ rightElement, children }: PropsWithChildren<Props>): JSX.Element
           top: 0,
           left: 0,
           width: "full",
-          // button height + padding
-          height: "calc(var(--chakra-space-11) + (2 * var(--chakra-space-3)))",
+          height: isStuck ? TABS_HEIGHT : 0,
           bgColor: bgColor,
           boxShadow: "md",
-          transition: "opacity 0.2s ease, visibility 0.1s ease",
-          visibility: isStuck ? "visible" : "hidden",
-          opacity: isStuck ? 1 : 0,
+          transition: "opacity 0.2s ease, visibility 0.1s ease, height .2s",
         }}
       >
         <Box

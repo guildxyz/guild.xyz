@@ -1,4 +1,4 @@
-import { Button, Icon } from "@chakra-ui/react"
+import { Button, HStack, Icon } from "@chakra-ui/react"
 import { CircleWavyCheck, Sparkle, StarFour } from "phosphor-react"
 
 const ExplorerFilters = ["FEATURED", "NEWEST", "VERIFIED"] as const
@@ -16,7 +16,7 @@ const icons: { [K in Filters]: any } = {
 }
 
 const SearchBarFilters = ({ selected, onSelect }: Props): JSX.Element => (
-  <>
+  <HStack as="ul" gap={1}>
     {ExplorerFilters.map((filter) => (
       <Button
         key={filter}
@@ -29,12 +29,11 @@ const SearchBarFilters = ({ selected, onSelect }: Props): JSX.Element => (
         size="sm"
         bgColor={selected === filter ? "whiteAlpha.300" : "transparent"}
         onClick={() => onSelect(filter)}
-        mr={1}
       >
         {filter.toLowerCase()}
       </Button>
     ))}
-  </>
+  </HStack>
 )
 
 export default SearchBarFilters
