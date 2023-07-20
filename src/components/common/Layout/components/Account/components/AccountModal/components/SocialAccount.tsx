@@ -14,11 +14,11 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useUser from "components/[guild]/hooks/useUser"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { motion } from "framer-motion"
 import useIsV2 from "hooks/useIsV2"
 import useToast from "hooks/useToast"
@@ -84,14 +84,7 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
             </Text>
           ) : null}
         </Text>
-        {type === "TWITTER_V1" ? (
-          <Tooltip
-            hasArrow
-            label="Some of our Twitter requirements can only be checked if your Twitter account is connected this way as well"
-          >
-            <Question color="gray" />
-          </Tooltip>
-        ) : null}
+        {type === "TWITTER_V1" ? <TwitterV1Tooltip /> : null}
         {!platformUser ? (
           <ConnectPlatform type={type} colorScheme={colorScheme} />
         ) : (
@@ -106,6 +99,16 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
     </>
   )
 })
+
+export const TwitterV1Tooltip = () => (
+  <Tooltip
+    hasArrow
+    placement="top"
+    label="Some of our Twitter requirements can only be checked if your Twitter account is connected this way as well"
+  >
+    <Icon color="gray" as={Question} />
+  </Tooltip>
+)
 
 const ConnectPlatform = ({ type, colorScheme, isReconnect = false }) => {
   const toast = useToast()
