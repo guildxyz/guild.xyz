@@ -17,8 +17,8 @@ const processConnectorError = (error: string): string | undefined => {
         ].name
       : null
     const cleanError = error.replaceAll("\\", "")
-    const matchedMsg = cleanError.match(/{"msg":"(.*)"}/gm)
-    const matchedError = cleanError.match(/error: "(.*)"/gm)
+    const matchedMsg = cleanError.match(/{"msg":"(.*?)"}/gm)
+    const matchedError = cleanError.match(/error: "(.*?)"/gm)
 
     const parsedError = JSON.parse(
       matchedMsg?.[0] ??
