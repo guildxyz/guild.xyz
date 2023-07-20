@@ -53,7 +53,7 @@ const SearchBar = ({
   const bgColor = useColorModeValue("white", "gray.800")
 
   return (
-    <InputGroup size="lg" w="full" bg={bgColor}>
+    <InputGroup size="lg" w="full" bg={bgColor} borderRadius={"xl"}>
       <InputLeftElement>
         <Icon color="#858585" size={20} as={MagnifyingGlass} />
       </InputLeftElement>
