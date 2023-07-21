@@ -8,7 +8,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -16,19 +15,19 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft, Plus } from "phosphor-react"
-import platforms from "platforms/platforms"
+import platforms, { PlatformUsageRestrictions } from "platforms/platforms"
 import { useRef, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 import AddPoapPanel from "../CreatePoap"
-import RoleOptionCard from "../RoleOptionCard"
+import useGuild from "../hooks/useGuild"
 import AddDiscordPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
 import AddGithubPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
 import AddGooglePanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
 import AddTelegramPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
+import RoleSelector from "../RoleSelector"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
-import useGuild from "../hooks/useGuild"
 import useAddReward from "./hooks/useAddReward"
 
 const addPlatformComponents: Record<
@@ -76,6 +75,10 @@ const AddRewardButton = () => {
 
   const { isStuck } = useIsTabsStuck()
   const { textColor, buttonColorScheme } = useThemeContext()
+
+  const roleIds = useWatch({ control: methods.control, name: "roleIds" })
+
+  console.log("roleIds", roleIds)
 
   return (
     <>
@@ -125,17 +128,23 @@ const AddRewardButton = () => {
                 <PlatformsGrid onSelection={setSelection} showPoap />
               ) : showRoleSelect ? (
                 <>
-                  <FormLabel mb="4">Select role(s) to add reward to</FormLabel>
-                  <Stack>
-                    {roles.map((role, index) => (
-                      <RoleOptionCard
-                        key={role.id}
-                        role={role}
-                        size="lg"
-                        {...methods.register(`roleIds.${index}`)}
-                      />
-                    ))}
-                  </Stack>
+                  <FormLabel mb="4">{`Select ${
+                    platforms[selection].usageRestriction ===
+                    PlatformUsageRestrictions.SINGLE_ROLE
+                      ? "a role"
+                      : "role(s)"
+                  } to add reward to`}</FormLabel>
+                  <RoleSelector
+                    allowMultiple={
+                      platforms[selection].usageRestriction !==
+                      PlatformUsageRestrictions.SINGLE_ROLE
+                    }
+                    roles={roles}
+                    onChange={(selectedRoleIds) =>
+                      methods.setValue("roleIds", selectedRoleIds)
+                    }
+                    size="lg"
+                  />
                 </>
               ) : (
                 <AddPlatformPanel
