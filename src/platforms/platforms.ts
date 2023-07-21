@@ -22,6 +22,25 @@ import useGoogleCardProps from "./Google/useGoogleCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
 
+export enum PlatformUsageRestrictions {
+  NOT_APPLICABLE, // e.g. Twitter
+  SINGLE_ROLE, // e.g. Telegram
+  MULTIPLE_ROLES, // e.g. Discord
+}
+
+type PaltformUsageRestrictionsParameters =
+  | {
+      usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE
+      usageUniqueParam?: never
+    }
+  | {
+      usageRestriction: Exclude<
+        PlatformUsageRestrictions,
+        PlatformUsageRestrictions.SINGLE_ROLE
+      >
+      usageUniqueParam?: string // If we define this, we can check the uniqueness of a field inside `rolePlatform`
+    }
+
 type PlatformData = {
   icon: (props: IconProps) => JSX.Element
   name: string
@@ -38,7 +57,7 @@ type PlatformData = {
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
-}
+} & PaltformUsageRestrictionsParameters
 
 const platforms: Record<PlatformName, PlatformData> = {
   TELEGRAM: {
@@ -48,6 +67,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "group",
     cardPropsHook: useTelegramCardProps,
     cardMenuComponent: TelegramCardMenu,
+    usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
   },
   DISCORD: {
     icon: DiscordLogo,
@@ -57,6 +77,8 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useDiscordCardProps,
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
+    usageRestriction: PlatformUsageRestrictions.MULTIPLE_ROLES,
+    usageUniqueParam: "platformRoleId",
   },
   GITHUB: {
     icon: GithubLogo,
@@ -65,18 +87,21 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "repo",
     cardPropsHook: useGithubCardProps,
     cardMenuComponent: GithubCardMenu,
+    usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
   },
   TWITTER: {
     icon: TwitterLogo,
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
+    usageRestriction: PlatformUsageRestrictions.NOT_APPLICABLE,
   },
   TWITTER_V1: {
     icon: TwitterLogo,
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
+    usageRestriction: PlatformUsageRestrictions.NOT_APPLICABLE,
   },
   GOOGLE: {
     icon: GoogleLogo,
@@ -87,12 +112,15 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardSettingsComponent: GoogleCardSettings,
     cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
+    usageRestriction: PlatformUsageRestrictions.MULTIPLE_ROLES,
+    usageUniqueParam: "platformRoleData.role",
   },
   POAP: {
     icon: null,
     name: "POAP",
     colorScheme: "purple",
     gatedEntity: "POAP",
+    usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
   },
   CONTRACT_CALL: {
     icon: null,
@@ -101,6 +129,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "",
     cardPropsHook: useContractCallCardProps,
     cardButton: ContractCallRewardCardButton,
+    usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
   },
 }
 
