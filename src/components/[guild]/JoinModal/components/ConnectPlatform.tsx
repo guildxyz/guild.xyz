@@ -1,9 +1,9 @@
 import { Icon } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { TwitterV1Tooltip } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount"
 import useAccess from "components/[guild]/hooks/useAccess"
 import usePlatformsToReconnect from "components/[guild]/hooks/usePlatformsToReconnect"
 import useUser from "components/[guild]/hooks/useUser"
+import { TwitterV1Tooltip } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount"
 import Script from "next/script"
 import platforms from "platforms/platforms"
 import { useEffect } from "react"
@@ -64,7 +64,9 @@ const ConnectPlatform = ({ platform }: Props) => {
       onClick={onConnect}
       {...{ loadingText }}
       isDisabled={
-        (platform === "TWITTER" || platform === "TWITTER_V1") &&
+        (platform === "TWITTER" ||
+          platform === "TWITTER_V1" ||
+          platform === "DISCORD") &&
         !isActive &&
         "Connect wallet first"
       }
