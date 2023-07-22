@@ -17,7 +17,7 @@ import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft, Plus } from "phosphor-react"
 import platforms, { PlatformUsageRestrictions } from "platforms/platforms"
 import { useRef, useState } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName } from "types"
 import AddPoapPanel from "../CreatePoap"
 import useGuild from "../hooks/useGuild"
@@ -76,10 +76,6 @@ const AddRewardButton = () => {
   const { isStuck } = useIsTabsStuck()
   const { textColor, buttonColorScheme } = useThemeContext()
 
-  const roleIds = useWatch({ control: methods.control, name: "roleIds" })
-
-  console.log("roleIds", roleIds)
-
   return (
     <>
       <Button
@@ -100,7 +96,7 @@ const AddRewardButton = () => {
           onClose={onClose}
           size="4xl"
           scrollBehavior="inside"
-          colorScheme={"dark"}
+          colorScheme="dark"
         >
           <ModalOverlay />
           <ModalContent minH="550px">
@@ -109,7 +105,7 @@ const AddRewardButton = () => {
               <HStack>
                 {selection !== null && (
                   <IconButton
-                    rounded={"full"}
+                    rounded="full"
                     aria-label="Back"
                     size="sm"
                     mb="-3px"

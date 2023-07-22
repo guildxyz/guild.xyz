@@ -51,7 +51,7 @@ const AddRoleRewardModal = ({ isOpen, onClose }) => {
       onClose={closeModal}
       size="4xl"
       scrollBehavior="inside"
-      colorScheme={"dark"}
+      colorScheme="dark"
     >
       <ModalOverlay />
       <ModalContent minH="550px">
@@ -59,7 +59,7 @@ const AddRoleRewardModal = ({ isOpen, onClose }) => {
           <HStack>
             {selection !== null && (
               <IconButton
-                rounded={"full"}
+                rounded="full"
                 aria-label="Back"
                 size="sm"
                 mb="-3px"
@@ -77,7 +77,7 @@ const AddRoleRewardModal = ({ isOpen, onClose }) => {
           {(selection === null && (
             <>
               <SelectExistingPlatform onClose={onClose} />
-              <Text fontWeight={"bold"} mb="3">
+              <Text fontWeight="bold" mb="3">
                 Add new platform
               </Text>
               <PlatformsGrid onSelection={setSelection} />
