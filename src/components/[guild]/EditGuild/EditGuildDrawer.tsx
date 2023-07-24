@@ -73,6 +73,7 @@ const EditGuildDrawer = ({
     contacts,
     isDetailed,
     featureFlags,
+    tags,
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
@@ -90,6 +91,7 @@ const EditGuildDrawer = ({
     socialLinks,
     guildPlatforms,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
+    tags: tags,
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
