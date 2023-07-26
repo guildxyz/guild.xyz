@@ -36,6 +36,7 @@ enum Chains {
   SEPOLIA = 11155111,
   GOERLI = 5,
   POLYGON_MUMBAI = 80001,
+  BASE_MAINNET = 8453,
 }
 
 export type Chain = keyof typeof Chains
@@ -637,6 +638,27 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api-testnet.polygonscan.com",
     iconUrls: ["/networkLogos/polygon.svg"],
+  },
+  BASE_MAINNET: {
+    chainId: 8453,
+    chainName: "Base",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    blockExplorerUrls: ["https://basescan.org"],
+    blockExplorerIcons: {
+      light: "/networkLogos/base.svg",
+      dark: "/networkLogos/base.svg",
+    },
+    apiUrl: "https://developer-access-mainnet.base.org",
+    iconUrls: ["/networkLogos/base.svg"],
+    rpcUrls: ["https://goerli.base.org"],
+    multicallAddress: "",
   },
 }
 
