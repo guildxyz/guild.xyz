@@ -6,7 +6,7 @@ import {
 } from "react-hook-form"
 
 const TO_FILTER_FLAG = "TO_FILTER"
-const IGNORED_KEYS = new Set(["validAddresses"])
+const IGNORED_KEYS = new Set(["validAddresses", "balancyDecimals"])
 
 /**
  * Takes formData, and its dirtyFields flags, and returns a new object, that is a new
