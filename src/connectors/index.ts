@@ -2,6 +2,7 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { Web3ReactHooks } from "@web3-react/core"
 import { GnosisSafe } from "@web3-react/gnosis-safe"
 import { MetaMask } from "@web3-react/metamask"
+import { Connector } from "@web3-react/types"
 import { WalletConnect } from "@web3-react/walletconnect-v2"
 import initializeCoinbaseWalletConnector from "./coinbaseWallet"
 import initializeGnosisConnector from "./gnosis"
@@ -648,10 +649,12 @@ supportedChains.forEach(
   (chain) => (RPC_URLS[RPC[chain].chainId] = RPC[chain].rpcUrls)
 )
 
-const [metaMask, metaMaskHooks] = initializeMetaMaskConnector()
-const [walletConnect, walletConnectHooks] = initializeWalletConnectConnector()
-const [coinbaseWallet, coinbaseWalletHooks] = initializeCoinbaseWalletConnector()
-const [gnosisWallet, gnosisWalletHooks] = initializeGnosisConnector()
+const [metaMask, metaMaskHooks, metaMaskName] = initializeMetaMaskConnector()
+const [walletConnect, walletConnectHooks, walletConnectName] =
+  initializeWalletConnectConnector()
+const [coinbaseWallet, coinbaseWalletHooks, coinbaseName] =
+  initializeCoinbaseWalletConnector()
+const [gnosisWallet, gnosisWalletHooks, gnosisName] = initializeGnosisConnector()
 
 const connectors: [
   MetaMask | WalletConnect | CoinbaseWallet | GnosisSafe,
@@ -663,4 +666,26 @@ const connectors: [
   [gnosisWallet, gnosisWalletHooks],
 ]
 
-export { Chains, RPC, RPC_URLS, connectors, supportedChains }
+const connectorsByName = {
+  [metaMaskName]: metaMask,
+  [walletConnectName]: walletConnect,
+  [coinbaseName]: coinbaseWallet,
+  [gnosisName]: gnosisWallet,
+}
+
+type ConnectorName = keyof typeof connectorsByName
+
+const getConnectorName = (connector: Connector): ConnectorName =>
+  (Object.entries(connectorsByName) as [ConnectorName, Connector][]).find(
+    ([, conn]) => conn === connector
+  )[0]
+
+export {
+  Chains,
+  RPC,
+  RPC_URLS,
+  connectors,
+  connectorsByName,
+  getConnectorName,
+  supportedChains,
+}
