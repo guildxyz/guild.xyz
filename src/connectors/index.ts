@@ -456,27 +456,6 @@ const RPC: RpcConfig = {
     rpcUrls: ["https://palm-mainnet.infura.io/v3/3a961d6501e54add9a41aa53f15de99b"],
     multicallAddress: "0xfFE2FF36c5b8D948f788a34f867784828aa7415D",
   },
-  BASE_GOERLI: {
-    chainId: 84531,
-    chainName: "Base Testnet",
-    nativeCurrency: {
-      name: "Ether",
-      symbol: "ETH",
-      decimals: 18,
-      address: "0x0000000000000000000000000000000000000000",
-      logoURI:
-        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-    },
-    blockExplorerUrls: ["https://goerli.basescan.org"],
-    blockExplorerIcons: {
-      light: "/networkLogos/base.svg",
-      dark: "/networkLogos/base.svg",
-    },
-    apiUrl: "https://api-goerli.basescan.org",
-    iconUrls: ["/networkLogos/base.svg"],
-    rpcUrls: ["https://goerli.base.org"],
-    multicallAddress: "",
-  },
   EXOSAMA: {
     chainId: 2109,
     chainName: "Exosama Network",
@@ -515,6 +494,48 @@ const RPC: RpcConfig = {
     },
     iconUrls: ["/networkLogos/evmos.svg"],
     rpcUrls: ["https://eth.bd.evmos.org:8545"],
+    multicallAddress: "",
+  },
+  BASE_MAINNET: {
+    chainId: 8453,
+    chainName: "Base",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    blockExplorerUrls: ["https://basescan.org"],
+    blockExplorerIcons: {
+      light: "/networkLogos/base.svg",
+      dark: "/networkLogos/base.svg",
+    },
+    apiUrl: "https://api.basescan.org",
+    iconUrls: ["/networkLogos/base.svg"],
+    rpcUrls: ["https://developer-access-mainnet.base.org"],
+    multicallAddress: "",
+  },
+  BASE_GOERLI: {
+    chainId: 84531,
+    chainName: "Base Testnet",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    blockExplorerUrls: ["https://goerli.basescan.org"],
+    blockExplorerIcons: {
+      light: "/networkLogos/base.svg",
+      dark: "/networkLogos/base.svg",
+    },
+    apiUrl: "https://api-goerli.basescan.org",
+    iconUrls: ["/networkLogos/base.svg"],
+    rpcUrls: ["https://goerli.base.org"],
     multicallAddress: "",
   },
   ZETACHAIN_ATHENS: {
@@ -638,27 +659,6 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api-testnet.polygonscan.com",
     iconUrls: ["/networkLogos/polygon.svg"],
-  },
-  BASE_MAINNET: {
-    chainId: 8453,
-    chainName: "Base",
-    nativeCurrency: {
-      name: "Ether",
-      symbol: "ETH",
-      decimals: 18,
-      address: "0x0000000000000000000000000000000000000000",
-      logoURI:
-        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-    },
-    blockExplorerUrls: ["https://basescan.org"],
-    blockExplorerIcons: {
-      light: "/networkLogos/base.svg",
-      dark: "/networkLogos/base.svg",
-    },
-    apiUrl: "https://api.basescan.org",
-    iconUrls: ["/networkLogos/base.svg"],
-    rpcUrls: ["https://developer-access-mainnet.base.org"],
-    multicallAddress: "",
   },
 }
 
