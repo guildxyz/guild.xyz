@@ -655,9 +655,9 @@ const RPC: RpcConfig = {
       light: "/networkLogos/base.svg",
       dark: "/networkLogos/base.svg",
     },
-    apiUrl: "https://developer-access-mainnet.base.org",
+    apiUrl: "https://api.basescan.org",
     iconUrls: ["/networkLogos/base.svg"],
-    rpcUrls: ["https://goerli.base.org"],
+    rpcUrls: ["https://developer-access-mainnet.base.org"],
     multicallAddress: "",
   },
 }
