@@ -15,7 +15,11 @@ const useDelegateVaults = () => {
           ? (addresses as unknown as string[])
           : addresses?.map(({ address }) => address)
       ).then((vaults) => {
-        const alreadyLinkedAddresses = new Set(addresses)
+        const alreadyLinkedAddresses = new Set(
+          typeof addresses?.[0] === "string"
+            ? (addresses as unknown as string[])
+            : addresses?.map(({ address }) => address)
+        )
 
         const unlinked = vaults.filter((vault) => !alreadyLinkedAddresses.has(vault))
 
