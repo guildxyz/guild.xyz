@@ -608,7 +608,7 @@ const RPC: RpcConfig = {
       process.env.GOERLI_ALCHEMY_KEY
         ? `https://eth-goerli.g.alchemy.com/v2/${process.env.GOERLI_ALCHEMY_KEY}`
         : // : "https://ethereum-goerli-rpc.allthatnode.com",
-          "https://eth-goerli.g.alchemy.com/v2/demo	",
+          "https://ethereum-goerli.publicnode.com",
     ],
     blockExplorerUrls: ["https://goerli.etherscan.io"],
     blockExplorerIcons: {
