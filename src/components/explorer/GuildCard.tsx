@@ -60,7 +60,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
                   <Circle
                     background={"blue.700"}
                     position="absolute"
-                    top={2}
+                    top={1}
                     right={-5}
                   >
                     <Icon as={CircleWavyCheck} boxSize={4} />
