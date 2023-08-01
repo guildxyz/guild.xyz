@@ -46,6 +46,7 @@ import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
 import SocialLinks from "./components/SocialLinks"
 import TagManager from "./components/TagManager"
 import useEditGuild from "./hooks/useEditGuild"
+import useEditTags from "./hooks/useEditTags"
 
 type Props = {
   isOpen: boolean
@@ -60,6 +61,7 @@ const EditGuildDrawer = ({
   onClose,
 }: Omit<DrawerProps & Props, "children">): JSX.Element => {
   const {
+    id,
     name,
     imageUrl,
     description,
@@ -73,10 +75,15 @@ const EditGuildDrawer = ({
     contacts,
     isDetailed,
     featureFlags,
-    tags,
+    tags: savedTags,
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
+  const {
+    tags,
+    setTags,
+    onSubmit: onTagsSubmit,
+  } = useEditTags({ defaultTags: savedTags, guildId: id })
 
   const defaultValues = {
     name,
@@ -91,7 +98,6 @@ const EditGuildDrawer = ({
     socialLinks,
     guildPlatforms,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
-    tags: tags,
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
@@ -175,7 +181,10 @@ const EditGuildDrawer = ({
   })
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    methods.handleSubmit(onSubmit),
+    () => {
+      methods.handleSubmit(onSubmit)()
+      onTagsSubmit()
+    },
     backgroundUploader.isUploading || iconUploader.isUploading
   )
 
@@ -262,7 +271,7 @@ const EditGuildDrawer = ({
                   <>
                     <Divider />
                     <Section title="Tag manager" spacing="4">
-                      <TagManager />
+                      <TagManager tags={tags} setTags={setTags} />
                     </Section>
                     <Section title="Enabled features" spacing="4">
                       <DynamicFeatureFlags />
