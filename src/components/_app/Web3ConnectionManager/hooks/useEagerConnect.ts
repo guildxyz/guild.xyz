@@ -13,7 +13,10 @@ const useEagerConnect = (): boolean => {
       return
     }
 
-    const connector = localStorage.getItem("connector")
+    const connector = (gnosisSafe as any)?.inIframe
+      ? "gnosis"
+      : localStorage.getItem("connector")
+
     if (!connector) {
       setTried(true)
       return
