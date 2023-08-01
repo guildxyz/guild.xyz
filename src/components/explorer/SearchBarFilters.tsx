@@ -16,11 +16,11 @@ const icons: { [K in Filters]: any } = {
 }
 
 const SearchBarFilters = ({ selected, onSelect }: Props): JSX.Element => {
-  const selectedBg = useColorModeValue("white", "blackAlpha.400")
-  const selectedShadow = useColorModeValue("sm", "md")
+  const selectedBg = useColorModeValue("white", "gray.600")
+  const selectedShadow = "0 0.5px 2px 0 rgba(0, 0, 0, 0.2)"
 
   return (
-    <HStack as="ul" gap={1}>
+    <HStack as="ul" gap={1.5}>
       {ExplorerFilters.map((filter) => (
         <Button
           key={filter}
