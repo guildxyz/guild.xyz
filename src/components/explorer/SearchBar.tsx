@@ -70,13 +70,14 @@ const SearchBar = ({
         onChange={handleOnChange}
         {...rest}
       />
-      {localValue?.length > 0 && (
-        <InputRightElement>
-          <CloseButton size="sm" rounded="full" onClick={reset} />
-        </InputRightElement>
-      )}
-      {!!rightAddon && (
+      {!!rightAddon ? (
         <InputRightAddon bg={rightAddonBgColor}>{rightAddon}</InputRightAddon>
+      ) : (
+        localValue?.length > 0 && (
+          <InputRightElement>
+            <CloseButton size="sm" rounded="full" onClick={reset} />
+          </InputRightElement>
+        )
       )}
     </InputGroup>
   )
