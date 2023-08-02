@@ -46,12 +46,6 @@ const BlockNumberFormControl = ({
     formState: { errors },
   } = useFormContext()
 
-  useEffect(() => {
-    register(`${baseFieldPath}.data.${dataFieldName}`, {
-      required: isRequired && "This field is required.",
-    })
-  }, [])
-
   const timestamp = useWatch({
     name: `${baseFieldPath}.data.timestamps.${dataFieldName}`,
   })
@@ -72,6 +66,13 @@ const BlockNumberFormControl = ({
       "ALCHEMY_TX_COUNT_RELATIVE",
       "ALCHEMY_TX_VALUE_RELATIVE",
     ].includes(requirementType) && !COVALENT_CHAINS.has(chain)
+
+  useEffect(() => {
+    register(`${baseFieldPath}.data.${dataFieldName}`, {
+      required:
+        !!isRequired && !!shouldFetchBlockNumber && "This field is required.",
+    })
+  }, [])
 
   const { data: currentBlock, isValidating } = useCurrentBlock(
     shouldFetchBlockNumber ? chain : null
