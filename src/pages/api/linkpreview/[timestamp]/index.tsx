@@ -28,7 +28,7 @@ const handler = async (req, _) => {
   try {
     const [guilds, interFontData, interBoldFontData, dystopianFontData] =
       await Promise.all([
-        fetcher(`/guild?order=members`).catch((_) => []),
+        fetcher(`/v2/guilds?order=members`).catch((_) => []),
         interFont,
         interBoldFont,
         dystopianFont,
@@ -118,23 +118,6 @@ const handler = async (req, _) => {
               >
                 Guild
               </h1>
-            </div>
-
-            <div style={{ display: "flex" }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "16px",
-                  paddingRight: "16px",
-                  height: "32px",
-                  backgroundColor: "#52525b",
-                  color: "white",
-                  fontWeight: "bold",
-                  borderRadius: "6px",
-                  fontSize: "18px",
-                }}
-              >{`${guilds?.length || 0} guilds`}</div>
             </div>
 
             <div

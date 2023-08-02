@@ -1,8 +1,11 @@
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { Web3ReactHooks } from "@web3-react/core"
+import { GnosisSafe } from "@web3-react/gnosis-safe"
 import { MetaMask } from "@web3-react/metamask"
+import { Connector } from "@web3-react/types"
 import { WalletConnect } from "@web3-react/walletconnect-v2"
 import initializeCoinbaseWalletConnector from "./coinbaseWallet"
+import initializeGnosisConnector from "./gnosis"
 import initializeMetaMaskConnector from "./metaMask"
 import initializeWalletConnectConnector from "./walletConnect"
 
@@ -34,6 +37,7 @@ enum Chains {
   SEPOLIA = 11155111,
   GOERLI = 5,
   POLYGON_MUMBAI = 80001,
+  BASE_MAINNET = 8453,
   EDGEWARE = 2021,
 }
 
@@ -305,7 +309,7 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api-optimistic.etherscan.io",
     iconUrls: ["/networkLogos/optimism.svg"],
-    rpcUrls: ["https://endpoints.omniatech.io/v1/op/mainnet/public"],
+    rpcUrls: ["https://optimism.publicnode.com"],
     multicallAddress: "0x2DC0E2aa608532Da689e89e237dF582B783E552C",
   },
   MOONBEAM: {
@@ -454,27 +458,6 @@ const RPC: RpcConfig = {
     rpcUrls: ["https://palm-mainnet.infura.io/v3/3a961d6501e54add9a41aa53f15de99b"],
     multicallAddress: "0xfFE2FF36c5b8D948f788a34f867784828aa7415D",
   },
-  BASE_GOERLI: {
-    chainId: 84531,
-    chainName: "Base Testnet",
-    nativeCurrency: {
-      name: "Ether",
-      symbol: "ETH",
-      decimals: 18,
-      address: "0x0000000000000000000000000000000000000000",
-      logoURI:
-        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-    },
-    blockExplorerUrls: ["https://goerli.basescan.org"],
-    blockExplorerIcons: {
-      light: "/networkLogos/base.svg",
-      dark: "/networkLogos/base.svg",
-    },
-    apiUrl: "https://api-goerli.basescan.org",
-    iconUrls: ["/networkLogos/base.svg"],
-    rpcUrls: ["https://goerli.base.org"],
-    multicallAddress: "",
-  },
   EXOSAMA: {
     chainId: 2109,
     chainName: "Exosama Network",
@@ -513,6 +496,48 @@ const RPC: RpcConfig = {
     },
     iconUrls: ["/networkLogos/evmos.svg"],
     rpcUrls: ["https://eth.bd.evmos.org:8545"],
+    multicallAddress: "",
+  },
+  BASE_MAINNET: {
+    chainId: 8453,
+    chainName: "Base",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    blockExplorerUrls: ["https://basescan.org"],
+    blockExplorerIcons: {
+      light: "/networkLogos/base.svg",
+      dark: "/networkLogos/base.svg",
+    },
+    apiUrl: "https://api.basescan.org",
+    iconUrls: ["/networkLogos/base.svg"],
+    rpcUrls: ["https://developer-access-mainnet.base.org"],
+    multicallAddress: "",
+  },
+  BASE_GOERLI: {
+    chainId: 84531,
+    chainName: "Base Testnet",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    blockExplorerUrls: ["https://goerli.basescan.org"],
+    blockExplorerIcons: {
+      light: "/networkLogos/base.svg",
+      dark: "/networkLogos/base.svg",
+    },
+    apiUrl: "https://api-goerli.basescan.org",
+    iconUrls: ["/networkLogos/base.svg"],
+    rpcUrls: ["https://goerli.base.org"],
     multicallAddress: "",
   },
   ZETACHAIN_ATHENS: {
@@ -606,7 +631,7 @@ const RPC: RpcConfig = {
       process.env.GOERLI_ALCHEMY_KEY
         ? `https://eth-goerli.g.alchemy.com/v2/${process.env.GOERLI_ALCHEMY_KEY}`
         : // : "https://ethereum-goerli-rpc.allthatnode.com",
-          "https://eth-goerli.g.alchemy.com/v2/demo	",
+          "https://ethereum-goerli.publicnode.com",
     ],
     blockExplorerUrls: ["https://goerli.etherscan.io"],
     blockExplorerIcons: {
@@ -668,14 +693,43 @@ supportedChains.forEach(
   (chain) => (RPC_URLS[RPC[chain].chainId] = RPC[chain].rpcUrls)
 )
 
-const [metaMask, metaMaskHooks] = initializeMetaMaskConnector()
-const [walletConnect, walletConnectHooks] = initializeWalletConnectConnector()
-const [coinbaseWallet, coinbaseWalletHooks] = initializeCoinbaseWalletConnector()
+const [metaMask, metaMaskHooks, metaMaskName] = initializeMetaMaskConnector()
+const [walletConnect, walletConnectHooks, walletConnectName] =
+  initializeWalletConnectConnector()
+const [coinbaseWallet, coinbaseWalletHooks, coinbaseName] =
+  initializeCoinbaseWalletConnector()
+const [gnosisWallet, gnosisWalletHooks, gnosisName] = initializeGnosisConnector()
 
-const connectors: [MetaMask | WalletConnect | CoinbaseWallet, Web3ReactHooks][] = [
+const connectors: [
+  MetaMask | WalletConnect | CoinbaseWallet | GnosisSafe,
+  Web3ReactHooks
+][] = [
   [metaMask, metaMaskHooks],
   [walletConnect, walletConnectHooks],
   [coinbaseWallet, coinbaseWalletHooks],
+  [gnosisWallet, gnosisWalletHooks],
 ]
 
-export { Chains, RPC, RPC_URLS, connectors, supportedChains }
+const connectorsByName = {
+  [metaMaskName]: metaMask,
+  [walletConnectName]: walletConnect,
+  [coinbaseName]: coinbaseWallet,
+  [gnosisName]: gnosisWallet,
+}
+
+type ConnectorName = keyof typeof connectorsByName
+
+const getConnectorName = (connector: Connector): ConnectorName =>
+  (Object.entries(connectorsByName) as [ConnectorName, Connector][]).find(
+    ([, conn]) => conn === connector
+  )[0]
+
+export {
+  Chains,
+  RPC,
+  RPC_URLS,
+  connectors,
+  connectorsByName,
+  getConnectorName,
+  supportedChains,
+}

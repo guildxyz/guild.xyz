@@ -10,6 +10,7 @@ import {
   ModalOverlay,
   Spinner,
   Text,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
@@ -19,6 +20,7 @@ import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
+import { useEffect } from "react"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 
@@ -32,11 +34,12 @@ const ConnectPolygonID = (props: ButtonProps) => {
     (err) => err.requirementId === id
   )?.errorType
 
-  if (
-    (type !== "POLYGON_ID_QUERY" && type !== "POLYGON_ID_BASIC") ||
-    !["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(errorType)
-  )
-    return null
+  // close modal (and stop revalidating access) on successful connect
+  useEffect(() => {
+    if (!errorType) onClose()
+  }, [errorType])
+
+  if (!errorType) return null
 
   return (
     <>
@@ -56,7 +59,7 @@ const ConnectPolygonID = (props: ButtonProps) => {
       <ConnectPolygonIDModal
         onClose={onClose}
         isOpen={isOpen}
-        type={chain === "POLYGON" ? `${type}_MAIN` : type}
+        type={(chain === "POLYGON" ? `${type}_MAIN` : type) as any}
         data={data}
       ></ConnectPolygonIDModal>
     </>
@@ -96,8 +99,11 @@ const ConnectPolygonIDModal = ({
     fetcherWithSign
   )
 
+  const qrSize = useBreakpointValue({ base: 300, md: 400 })
+
   return (
     <Modal
+      size={"lg"}
       {...{
         isOpen,
         onClose,
@@ -121,7 +127,7 @@ const ConnectPolygonIDModal = ({
             ) : (
               <>
                 <Box borderRadius={"md"} borderWidth={3} overflow={"hidden"}>
-                  <QRCodeSVG value={JSON.stringify(response)} size={300} />
+                  <QRCodeSVG value={JSON.stringify(response)} size={qrSize} />
                 </Box>
                 <Button
                   size="xs"

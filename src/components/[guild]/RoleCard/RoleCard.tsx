@@ -17,7 +17,8 @@ import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
 import { memo, useEffect, useRef } from "react"
-import { Role, Visibility as VisibilityType } from "types"
+import { PlatformType, Role, Visibility as VisibilityType } from "types"
+import { ContractCallRewardIcon } from "../../../platforms/ContractCall/ContractCallReward"
 import useAccess from "../hooks/useAccess"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -128,8 +129,13 @@ const RoleCard = memo(({ role }: Props) => {
                     const guildPlatform = guildPlatforms?.find(
                       (p) => p.id === platform.guildPlatformId
                     )
+                    const Component =
+                      guildPlatform.platformId === PlatformType.CONTRACT_CALL
+                        ? ContractCallRewardIcon
+                        : RewardIcon
+
                     return (
-                      <RewardIcon
+                      <Component
                         rolePlatformId={platform.id}
                         guildPlatform={guildPlatform}
                         transition={{

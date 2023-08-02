@@ -2,14 +2,16 @@ import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useIsV2 from "hooks/useIsV2"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
-import { PlatformName } from "types"
+import { PlatformName, User } from "types"
 import fetcher from "utils/fetcher"
 import useDCAuth from "./useDCAuth"
 import useGHAuth from "./useGHAuth"
 import useGoogleAuth from "./useGoogleAuth"
+import useLegacyTwitterAuth from "./useLegacyTwitterAuth"
 import useTGAuth from "./useTGAuth"
 import useTwitterAuth from "./useTwitterAuth"
 
@@ -44,12 +46,13 @@ const parseConnectError = (
 }
 
 const platformAuthHooks: Record<
-  Exclude<PlatformName, "POAP">,
+  Exclude<PlatformName, "POAP" | "CONTRACT_CALL">,
   (scope?: string) => any
 > = {
   DISCORD: useDCAuth,
   GITHUB: useGHAuth,
   TWITTER: useTwitterAuth,
+  TWITTER_V1: useLegacyTwitterAuth,
   TELEGRAM: useTGAuth,
   GOOGLE: useGoogleAuth,
 }
@@ -97,14 +100,19 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
   const showErrorToast = useShowErrorToast()
   const { showPlatformMergeAlert } = useWeb3ConnectionManager()
 
-  const { mutate: mutateUser } = useUser()
+  const { mutate: mutateUser, id } = useUser()
+
+  const isV2 = useIsV2()
 
   const submit = (signedValidation: SignedValdation) => {
     const platformName =
       JSON.parse(signedValidation?.signedPayload ?? "{}")?.platformName ??
       "UNKNOWN_PLATFORM"
 
-    return fetcher("/user/connect", signedValidation)
+    return fetcher(isV2 ? `/v2/users/${id}/platform-users` : "/user/connect", {
+      method: "POST",
+      ...signedValidation,
+    })
       .then((body) => {
         if (body === "rejected") {
           // eslint-disable-next-line @typescript-eslint/no-throw-literal
@@ -124,14 +132,21 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
       })
   }
 
-  return useSubmitWithSign<{
-    platformName: PlatformName
-    authData: any
-    reauth?: boolean
-  }>(submit, {
-    onSuccess: ({ platformName }) => {
+  return useSubmitWithSign<User["platformUsers"][number]>(submit, {
+    onSuccess: (newPlatformUser) => {
       // captureEvent("Platform connection", { platformName })
-      mutateUser()
+      if (isV2) {
+        mutateUser(
+          (prev) => ({
+            ...prev,
+            platformUsers: [...(prev?.platformUsers ?? []), newPlatformUser],
+          }),
+          { revalidate: false }
+        )
+      } else {
+        mutateUser()
+      }
+
       onSuccess?.()
     },
     onError: ([platformName, rawError]) => {
@@ -157,15 +172,14 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
 
       captureEvent("Platform connection error", errorObject)
 
-      // if (toastError?.startsWith("Before connecting your")) {
-      //   const [, addressOrDomain] = toastError.match(
-      //     /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
-      //   )
-      //   showPlatformMergeAlert(addressOrDomain, platformName)
-      // } else {
-      //   showErrorToast(toastError ?? rawError)
-      // }
-      showErrorToast(toastError ?? rawError)
+      if (toastError?.startsWith("Before connecting your")) {
+        const [, addressOrDomain] = toastError.match(
+          /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
+        )
+        showPlatformMergeAlert(addressOrDomain, platformName)
+      } else {
+        showErrorToast(toastError ?? rawError)
+      }
     },
   })
 }

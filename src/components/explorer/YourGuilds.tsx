@@ -1,48 +1,38 @@
-import { Box, DarkMode, HStack, Img, Stack, Text } from "@chakra-ui/react"
+import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import LinkButton from "components/common/LinkButton"
-import Section from "components/common/Section"
 import GuildCard, { GuildSkeletonCard } from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
+import useIsV2 from "hooks/useIsV2"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Plus, Wallet } from "phosphor-react"
+import { forwardRef } from "react"
 
-const YourGuilds = () => {
+const useYourGuilds = () => {
+  const isV2 = useIsV2()
+
+  return useSWRWithOptionalAuth(isV2 ? `/v2/guilds` : `/v2/guilds?`, {
+    dedupingInterval: 60000, // one minute
+    revalidateOnMount: true,
+  })
+}
+
+const YourGuilds = forwardRef((_, ref: any) => {
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
-  const { data: usersGuilds, isLoading: isGuildsLoading } = useSWRWithOptionalAuth(
-    `/guild?`, // ? is included, so the request hits v2Replacer in fetcher
-    {
-      dedupingInterval: 60000, // one minute
-      revalidateOnMount: true,
-    }
-  )
+  const { data: usersGuilds, isLoading: isGuildsLoading } = useYourGuilds()
 
   return (
-    <Section
-      title="Your guilds"
-      titleRightElement={
-        usersGuilds?.length && (
-          <Box my="-2 !important" ml="auto !important">
-            <DarkMode>
-              <LinkButton
-                leftIcon={<Plus />}
-                size="sm"
-                variant="ghost"
-                href="/create-guild"
-              >
-                Create guild
-              </LinkButton>
-            </DarkMode>
-          </Box>
-        )
-      }
+    <Box
+      ref={ref}
+      id="yourGuilds"
       mb={{ base: 8, md: 12, lg: 14 }}
       sx={{ ".chakra-heading": { color: "white" } }}
+      scrollMarginTop={20}
     >
       {!account ? (
         <Card p="6">
@@ -100,8 +90,9 @@ const YourGuilds = () => {
           </Stack>
         </Card>
       )}
-    </Section>
+    </Box>
   )
-}
+})
 
+export { useYourGuilds }
 export default YourGuilds

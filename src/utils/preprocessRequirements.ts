@@ -22,11 +22,14 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
           nftRequirementType: undefined,
         }
 
-        if (
+        if (requirement.type === "COIN") {
+          processedRequirement.address = "0x0000000000000000000000000000000000000000"
+        } else if (
           !requirement.address ||
           requirement.address === "0x0000000000000000000000000000000000000000"
-        )
+        ) {
           processedRequirement.address = undefined
+        }
 
         if (
           (requirement.type === "ERC721" ||

@@ -1,14 +1,15 @@
-import { Checkbox, Stack, Text, Wrap } from "@chakra-ui/react"
+import { Checkbox, Collapse, Stack, Text, Wrap } from "@chakra-ui/react"
+import LogicDivider from "components/[guild]/LogicDivider"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
+import ErrorAlert from "components/common/ErrorAlert"
 import { SectionTitle } from "components/common/Section"
-import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { RequirementType } from "requirements"
 import FreeRequirement from "requirements/Free/FreeRequirement"
-import { Requirement } from "types"
+import { GuildFormType, Requirement } from "types"
 import AddRequirement from "./components/AddRequirement"
 import BalancyCounterWithPopover from "./components/BalancyCounter"
 import LogicFormControl from "./components/LogicFormControl"
@@ -16,7 +17,13 @@ import RequirementEditableCard from "./components/RequirementEditableCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
 const SetRequirements = (): JSX.Element => {
-  const { control, getValues, watch, clearErrors, setValue } = useFormContext()
+  const {
+    control,
+    getValues,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useFormContext<GuildFormType["roles"][number]>()
 
   const logic = useWatch({ name: "logic" })
 
@@ -24,19 +31,10 @@ const SetRequirements = (): JSX.Element => {
     name: "requirements",
     control,
     keyName: "formFieldId",
+    rules: {
+      required: "Set some requirements, or make the role free",
+    },
   })
-
-  const requirements = useWatch({ name: "requirements" })
-
-  useEffect(() => {
-    if (!requirements || requirements?.length === 0) {
-      // setError("requirements", {
-      //   message: "Set some requirements, or make the role free",
-      // })
-    } else {
-      clearErrors("requirements")
-    }
-  }, [requirements])
 
   useAddRequirementsFromQuery(append)
 
@@ -128,14 +126,20 @@ const SetRequirements = (): JSX.Element => {
                 </CardMotionWrapper>
               )
             })}
+
             <AddRequirement onAdd={append} />
           </AnimatePresence>
         </Stack>
       )}
 
-      {/* <FormErrorMessage id="requirements-error-message">
-        {errors.requirements?.message as string}
-      </FormErrorMessage> */}
+      <Collapse
+        in={!!errors.requirements?.root}
+        style={{
+          width: "100%",
+        }}
+      >
+        <ErrorAlert label={errors.requirements?.root?.message} />
+      </Collapse>
     </Stack>
   )
 }

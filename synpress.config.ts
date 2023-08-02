@@ -20,7 +20,7 @@ export default defineConfig({
   requestTimeout: 30000,
   projectId: "kbncm6",
   env: {
-    guildApiUrl: "https://api.guild.xyz/v1",
+    guildApiUrl: "https://api.guild.xyz/v2",
     userAddress: "0x304Def656Babc745c53782639D3CaB00aCe8C843",
     platformlessGuildName: "Platformless Cypress Gang",
     platformlessGuildUrlName: "platformless-cypress-gang",
@@ -34,6 +34,5 @@ export default defineConfig({
     setupNodeEvents,
     supportFile: "./cypress/support/e2e.ts",
     specPattern: "./cypress/e2e/**/*.spec.ts",
-    excludeSpecPattern: "./cypress/e2e/0-platformless/1-manage-roles.spec.ts",
   },
 })

@@ -1,19 +1,35 @@
 import { ButtonProps, Icon } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import Button from "components/common/Button"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import REQUIREMENTS from "requirements"
 import { PlatformName } from "types"
 import { useRequirementContext } from "./RequirementContext"
 
+export const TWITTER_V1_REQUIREMENTS = new Set<string>([
+  "TWITTER_FOLLOW",
+  "TWITTER_FOLLOWED_BY",
+  "TWITTER_LIST_FOLLOW",
+])
+
+const mapTwitterV1 = (
+  requirementType: string,
+  platformName: PlatformName
+): PlatformName => {
+  if (TWITTER_V1_REQUIREMENTS.has(requirementType)) {
+    return "TWITTER_V1"
+  }
+  return platformName
+}
+
 const ConnectRequirementPlatformButton = (props: ButtonProps) => {
   const { id, roleId, poapId, type } = useRequirementContext()
 
-  const platform = REQUIREMENTS[type].types[0] as PlatformName
+  const platform = mapTwitterV1(type, REQUIREMENTS[type].types[0] as PlatformName)
 
   const { platformUsers } = useUser()
 
@@ -60,7 +76,7 @@ const ConnectRequirementPlatformButton = (props: ButtonProps) => {
       onClick={onConnect}
       isLoading={isLoading}
       loadingText={loadingText}
-      colorScheme={platform}
+      colorScheme={platforms[platform]?.colorScheme}
       leftIcon={<Icon as={platforms[platform]?.icon} />}
       iconSpacing="1"
       {...props}

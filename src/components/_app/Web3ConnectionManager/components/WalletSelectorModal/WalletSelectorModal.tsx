@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useWeb3React } from "@web3-react/core"
+import { GnosisSafe } from "@web3-react/gnosis-safe"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
@@ -171,6 +172,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             <Stack spacing="0">
               {connectors.map(([conn, connectorHooks], i) => {
                 if (!conn || !connectorHooks) return null
+                if (conn instanceof GnosisSafe && !conn?.sdk) return null
 
                 return (
                   <CardMotionWrapper key={i}>

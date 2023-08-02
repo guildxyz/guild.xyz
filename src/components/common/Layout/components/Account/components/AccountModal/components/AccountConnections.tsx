@@ -1,8 +1,8 @@
 import {
   ButtonGroup,
   Divider,
-  HStack,
   Heading,
+  HStack,
   Icon,
   Popover,
   PopoverArrow,
@@ -15,8 +15,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useUser from "components/[guild]/hooks/useUser"
 import { SectionProps } from "components/common/Section"
+import useUser from "components/[guild]/hooks/useUser"
 import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
@@ -28,22 +28,31 @@ import LinkedAddress, { LinkedAddressSkeleton } from "./LinkedAddress"
 import SocialAccount from "./SocialAccount"
 
 const AccountConnections = () => {
-  const { isLoading, addresses } = useUser()
+  const {
+    isLoading,
+    addresses,
+    platformUsers,
+    id: userId,
+    addressProviders,
+  } = useUser()
   const { account } = useWeb3React()
-  const { platformUsers } = useUser()
   const vaults = useDelegateVaults()
 
   const orderedSocials = useMemo(() => {
     const connectedPlatforms =
       platformUsers?.map((platformUser) => platformUser.platformName as string) ?? []
     const notConnectedPlatforms = Object.keys(platforms).filter(
-      (platform) => platform !== "POAP" && !connectedPlatforms?.includes(platform)
+      (platform) =>
+        !["POAP", "CONTRACT_CALL"].includes(platform) &&
+        !connectedPlatforms?.includes(platform)
     )
     return [...connectedPlatforms, ...notConnectedPlatforms] as PlatformName[]
   }, [platformUsers])
 
   const linkedAddresses = addresses?.filter(
-    (address) => address?.toLowerCase() !== account.toLowerCase()
+    (addr) =>
+      (typeof addr === "string" ? addr : addr?.address)?.toLowerCase() !==
+      account.toLowerCase()
   )
 
   return (
@@ -103,7 +112,25 @@ const AccountConnections = () => {
           </Stack>
         ) : (
           linkedAddresses
-            .map((address) => <LinkedAddress key={address} address={address} />)
+            .map((addressData) =>
+              typeof addressData === "string" ? (
+                <LinkedAddress
+                  key={addressData}
+                  addressData={{
+                    address: addressData,
+                    userId,
+                    createdAt: null,
+                    isPrimary: addresses.findIndex((a) => a === addressData) === 0,
+                    provider: addressProviders?.[addressData],
+                  }}
+                />
+              ) : (
+                <LinkedAddress
+                  key={addressData?.address}
+                  addressData={addressData}
+                />
+              )
+            )
             .concat(
               vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null
             )

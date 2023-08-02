@@ -254,7 +254,7 @@ const PoapDataForm = ({ isCreate = false }): JSX.Element => {
         </FormControl>
         {isCreate ? (
           <FormControl isInvalid={!!errors?.email} isRequired>
-            <FormLabel>Your e-mail address to recieve links to:</FormLabel>
+            <FormLabel>Your e-mail address to receive links to:</FormLabel>
             <Input
               isDisabled={!isCreate}
               {...register("email", {
