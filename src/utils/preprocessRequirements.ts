@@ -1,4 +1,5 @@
-import { Requirement } from "types"
+import { COVALENT_CHAINS } from "requirements/WalletActivity/WalletActivityForm"
+import { Requirement, RequirementType } from "types"
 
 const preprocessRequirements = (requirements: Array<Requirement>) => {
   if (!requirements || !Array.isArray(requirements)) return undefined
@@ -20,6 +21,24 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
             validAddresses: undefined,
           },
           nftRequirementType: undefined,
+        }
+
+        if (
+          processedRequirement.type?.startsWith("ALCHEMY_") &&
+          COVALENT_CHAINS.has(processedRequirement.chain)
+        ) {
+          processedRequirement.type = processedRequirement.type.replace(
+            "ALCHEMY_",
+            "COVALENT_"
+          ) as RequirementType
+
+          if (processedRequirement?.data?.timestamps?.minAmount) {
+            processedRequirement.data.timestamps.minAmount *= 1000
+          }
+
+          if (processedRequirement?.data?.timestamps?.maxAmount) {
+            processedRequirement.data.timestamps.maxAmount *= 1000
+          }
         }
 
         if (requirement.type === "COIN") {
