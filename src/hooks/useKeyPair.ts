@@ -43,7 +43,12 @@ type AddressLinkParams =
       nonce: never
     })
 
-type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> & Partial<AddressLinkParams>
+type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> &
+  Partial<AddressLinkParams> & {
+    verificationParams?: {
+      hCaptcha: string
+    }
+  }
 
 const getStore = () => createStore("guild.xyz", "signingKeyPairs")
 
@@ -384,9 +389,16 @@ const useKeyPair = () => {
       ...setSubmitResponse,
       onSubmit: async (
         shouldLinkToUser: boolean,
-        provider?: AddressConnectionProvider
+        provider?: AddressConnectionProvider,
+        hCaptchaToken?: string
       ) => {
         const body: SetKeypairPayload = { pubKey: undefined }
+
+        if (hCaptchaToken) {
+          body.verificationParams = {
+            hCaptcha: hCaptchaToken,
+          }
+        }
 
         try {
           body.pubKey = generatedKeyPair.pubKey
@@ -439,5 +451,5 @@ const useKeyPair = () => {
   }
 }
 
-export { getKeyPairFromIdb, setKeyPairToIdb, deleteKeyPairFromIdb }
+export { deleteKeyPairFromIdb, getKeyPairFromIdb, setKeyPairToIdb }
 export default useKeyPair

@@ -11,9 +11,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import HCaptcha from "@hcaptcha/react-hcaptcha"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useWeb3React } from "@web3-react/core"
 import { GnosisSafe } from "@web3-react/gnosis-safe"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
@@ -44,6 +46,10 @@ const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const { isActive, account, connector } = useWeb3React()
   const [error, setError] = useState<WalletError & Error>(null)
+  const { captchaVerifiedSince } = useUserPublic()
+  const [solvedCaptcha, setSolvedCaptcha] = useState<string>()
+
+  const hasSolvedCaptcha = !!captchaVerifiedSince || !!solvedCaptcha
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -164,7 +170,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   }
                 : { error, processError: processConnectionError })}
             />
-            {isConnected && !keyPair && (
+            {isConnected && !keyPair && hasSolvedCaptcha && (
               <Text mb="6" animation={"fadeIn .3s .1s both"}>
                 Sign message to verify that you're the owner of this account.
               </Text>
@@ -191,13 +197,15 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 </CardMotionWrapper>
               )}
             </Stack>
-            {isConnected && !keyPair && (
+            {isConnected && !keyPair && hasSolvedCaptcha && (
               <Box animation={"fadeIn .3s .1s both"}>
                 <ModalButton
                   size="xl"
                   mb="4"
                   colorScheme={"green"}
-                  onClick={() => set.onSubmit(shouldLinkToUser)}
+                  onClick={() =>
+                    set.onSubmit(shouldLinkToUser, undefined, solvedCaptcha)
+                  }
                   isLoading={set.isLoading || !ready}
                   isDisabled={!ready}
                   loadingText={
@@ -209,6 +217,12 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   {shouldLinkToUser ? "Link address" : "Verify account"}
                 </ModalButton>
               </Box>
+            )}
+            {isConnected && !hasSolvedCaptcha && (
+              <HCaptcha
+                sitekey="05bdce9d-3de2-4457-8318-85633ffd281c"
+                onVerify={(token) => setSolvedCaptcha(token)}
+              />
             )}
           </ModalBody>
           <ModalFooter mt="-4">

@@ -118,6 +118,8 @@ type User = {
   publicKey?: string
   isSuperAdmin: boolean
 
+  captchaVerifiedSince: Date
+
   // Should be removed once we use only v2 API
   addressProviders?: Record<string, AddressConnectionProvider>
 }
