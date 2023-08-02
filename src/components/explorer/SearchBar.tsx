@@ -49,6 +49,7 @@ const SearchBar = ({
     inputRef.current.focus()
   }
 
+  const rightAddonBgColor = useColorModeValue("gray.50", undefined)
   // needed so there's no transparent state in dark mode when the input is becoming stuck
   const bgColor = useColorModeValue("white", "gray.800")
 
@@ -69,12 +70,15 @@ const SearchBar = ({
         onChange={handleOnChange}
         {...rest}
       />
-      {localValue?.length > 0 && (
-        <InputRightElement>
-          <CloseButton size="sm" rounded="full" onClick={reset} />
-        </InputRightElement>
+      {!!rightAddon ? (
+        <InputRightAddon bg={rightAddonBgColor}>{rightAddon}</InputRightAddon>
+      ) : (
+        localValue?.length > 0 && (
+          <InputRightElement>
+            <CloseButton size="sm" rounded="full" onClick={reset} />
+          </InputRightElement>
+        )
       )}
-      {!!rightAddon && <InputRightAddon>{rightAddon}</InputRightAddon>}
     </InputGroup>
   )
 }

@@ -6,10 +6,11 @@ import {
   Text,
   VStack,
   useBreakpointValue,
+  useColorModeValue,
   usePrevious,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { TABS_HEIGHT } from "components/[guild]/Tabs/Tabs"
+import { TABS_HEIGHT_SM } from "components/[guild]/Tabs/Tabs"
 import { BATCH_SIZE } from "components/_app/ExplorerProvider"
 import Section from "components/common/Section"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
@@ -28,7 +29,7 @@ type Props = {
   guildsInitial: GuildBase[]
 }
 
-const TABS_HEIGHT_PX = 68
+const TABS_HEIGHT_PX = 55
 
 const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   const { account } = useWeb3React()
@@ -37,12 +38,16 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   const [order, setOrder] = useQueryState<Filters>("order", "NEWEST")
   const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
   const { ref: searchAreaRef, isStuck } = useIsStuck(
-    `-${TABS_HEIGHT_PX + 1}px 0px 0px 0px`
+    `-${TABS_HEIGHT_PX + 12}px 0px 0px 0px`
   )
   const searchAreaHeight = useBreakpointValue({
-    base: "calc(var(--chakra-space-12) + (5 * var(--chakra-space-3)))",
+    base: "calc(var(--chakra-space-11) + (5 * var(--chakra-space-3)))",
     md: "calc(var(--chakra-space-12) + var(--chakra-space-3))",
   })
+  const tabsBg = useColorModeValue(
+    "linear-gradient(white 0px, var(--chakra-colors-gray-50) 100%)",
+    "linear-gradient(var(--chakra-colors-gray-800) 0px, #323237 100%)"
+  )
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
@@ -97,10 +102,11 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
           zIndex={"banner"}
           alignItems="flex-start"
           transition={"all 0.2s ease"}
-          spacing={3}
+          spacing={2.5}
         >
           {isStuck && (
-            <style>{`#tabs::before {height: calc(${TABS_HEIGHT} + ${searchAreaHeight});}`}</style>
+            <style>{`#tabs::before {height: calc(${TABS_HEIGHT_SM} + ${searchAreaHeight}); background-image: ${tabsBg}}
+            #tabs button {height: var(--chakra-space-8); font-size: var(--chakra-fontSizes-sm); border-radius: var(--chakra-radii-lg); padding: 0 var(--chakra-space-3)}`}</style>
           )}
           <SearchBar
             placeholder="Search guilds"
