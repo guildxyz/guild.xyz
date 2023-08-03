@@ -1,6 +1,5 @@
 import {
   Box,
-  Center,
   Icon,
   IconButton,
   ModalBody,
@@ -97,6 +96,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
 
+  const recaptchaRef = useRef<ReCAPTCHA>()
+
   return (
     <>
       <Modal
@@ -171,7 +172,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   }
                 : { error, processError: processConnectionError })}
             />
-            {isConnected && !keyPair && hasSolvedCaptcha && (
+            {isConnected && !keyPair && (
               <Text mb="6" animation={"fadeIn .3s .1s both"}>
                 Sign message to verify that you're the owner of this account.
               </Text>
@@ -198,34 +199,39 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 </CardMotionWrapper>
               )}
             </Stack>
-            {isConnected && !keyPair && hasSolvedCaptcha && (
-              <Box animation={"fadeIn .3s .1s both"}>
-                <ModalButton
-                  size="xl"
-                  mb="4"
-                  colorScheme={"green"}
-                  onClick={() =>
-                    set.onSubmit(shouldLinkToUser, undefined, solvedCaptcha)
-                  }
-                  isLoading={set.isLoading || !ready}
-                  isDisabled={!ready}
-                  loadingText={
-                    !ready
-                      ? "Looking for keypairs"
-                      : set.signLoadingText || "Check your wallet"
-                  }
-                >
-                  {shouldLinkToUser ? "Link address" : "Verify account"}
-                </ModalButton>
-              </Box>
-            )}
-            {isConnected && !hasSolvedCaptcha && (
-              <Center>
-                <ReCAPTCHA
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-                  onChange={(token) => setSolvedCaptcha(token)}
-                />
-              </Center>
+            {isConnected && !keyPair && (
+              <>
+                {!hasSolvedCaptcha && (
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    size="invisible"
+                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                    onChange={(token) => setSolvedCaptcha(token)}
+                  />
+                )}
+                <Box animation={"fadeIn .3s .1s both"}>
+                  <ModalButton
+                    size="xl"
+                    mb="4"
+                    colorScheme={"green"}
+                    onClick={async () => {
+                      const token = !recaptchaRef.current
+                        ? undefined
+                        : await recaptchaRef.current.executeAsync()
+                      return set.onSubmit(shouldLinkToUser, undefined, token)
+                    }}
+                    isLoading={set.isLoading || !ready}
+                    isDisabled={!ready}
+                    loadingText={
+                      !ready
+                        ? "Looking for keypairs"
+                        : set.signLoadingText || "Check your wallet"
+                    }
+                  >
+                    {shouldLinkToUser ? "Link address" : "Verify account"}
+                  </ModalButton>
+                </Box>
+              </>
             )}
           </ModalBody>
           <ModalFooter mt="-4">
@@ -251,11 +257,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 </Link>
               </Text>
             ) : (
-              hasSolvedCaptcha && (
-                <Text textAlign="center" w="full" colorScheme={"gray"}>
-                  Signing the message doesn't cost any gas
-                </Text>
-              )
+              <Text textAlign="center" w="full" colorScheme={"gray"}>
+                Signing the message doesn't cost any gas
+              </Text>
             )}
           </ModalFooter>
         </ModalContent>
