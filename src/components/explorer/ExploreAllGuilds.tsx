@@ -37,9 +37,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   const prevSearch = usePrevious(search)
   const [order, setOrder] = useQueryState<Filters>("order", "NEWEST")
   const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
-  const { ref: searchAreaRef, isStuck } = useIsStuck(
-    `-${TABS_HEIGHT_PX + 12}px 0px 0px 0px`
-  )
+  const { ref: searchAreaRef, isStuck } = useIsStuck()
   const searchAreaHeight = useBreakpointValue({
     base: "calc(var(--chakra-space-11) + (5 * var(--chakra-space-3)))",
     md: "calc(var(--chakra-space-12) + var(--chakra-space-3))",
@@ -59,7 +57,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
     (pageIndex, previousPageData) =>
       Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE
         ? null
-        : `/guild?${query}&limit=${BATCH_SIZE}&offset=${pageIndex * BATCH_SIZE}`,
+        : `/v2/guilds?${query}&limit=${BATCH_SIZE}&offset=${pageIndex * BATCH_SIZE}`,
     {
       fallbackData: guildsInitial,
       dedupingInterval: 60000, // one minute
@@ -97,7 +95,8 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
         <VStack
           ref={searchAreaRef}
           position="sticky"
-          top={TABS_HEIGHT_PX}
+          top={TABS_HEIGHT_PX + 12}
+          transform={isStuck && "translateY(-12px)"}
           width="full"
           zIndex={"banner"}
           alignItems="flex-start"

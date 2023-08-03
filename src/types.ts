@@ -84,6 +84,7 @@ type PlatformName =
   | "GOOGLE"
   | "POAP"
   | "CONTRACT_CALL"
+  | "TWITTER_V1"
 
 type PlatformUserData = {
   acessToken?: string
@@ -106,11 +107,24 @@ type AddressConnectionProvider = "DELEGATE"
 
 type User = {
   id: number
-  addresses: Array<string>
-  addressProviders: Record<string, AddressConnectionProvider>
+  addresses: Array<{
+    address: string
+    userId: number
+    isPrimary: boolean
+    provider: AddressConnectionProvider
+    createdAt: string
+  }>
   platformUsers: PlatformAccountDetails[]
-  signingKey?: string
+  publicKey?: string
   isSuperAdmin: boolean
+
+  // Should be removed once we use only v2 API
+  addressProviders?: Record<string, AddressConnectionProvider>
+}
+
+type BaseUser = {
+  id: number
+  createdAt: Date
 }
 
 type GuildBase = {
@@ -419,6 +433,7 @@ export enum PlatformType {
   "TWITTER" = 5,
   // "STEAM" = 6,
   "CONTRACT_CALL" = 7,
+  "TWITTER_V1" = 8,
 }
 
 type WalletConnectConnectionData = {
@@ -574,6 +589,7 @@ type DetailedUserLeaderboardData = {
 export { ValidationMethod, Visibility, supportedSocialLinks }
 export type {
   AddressConnectionProvider,
+  BaseUser,
   BrainCardData,
   CoingeckoToken,
   CreatePoapForm,

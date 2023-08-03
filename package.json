@@ -47,6 +47,7 @@
     "@web3-react/gnosis-safe": "^8.2.1",
     "@web3-react/metamask": "^8.2.1",
     "@web3-react/walletconnect-v2": "^8.3.6",
+    "@web3-react/types": "^8.2.0",
     "chakra-react-select": "^4.5.0",
     "chakra-ui-steps": "2.1.0",
     "color": "^4.2.3",
