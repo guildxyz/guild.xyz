@@ -1,4 +1,5 @@
-import { Button, HStack, Icon, useColorModeValue } from "@chakra-ui/react"
+import { Button, Card, HStack, Icon, useColorModeValue } from "@chakra-ui/react"
+import { motion } from "framer-motion"
 import { CircleWavyCheck, Sparkle, StarFour } from "phosphor-react"
 
 const ExplorerFilters = ["FEATURED", "NEWEST", "VERIFIED"] as const
@@ -30,11 +31,31 @@ const SearchBarFilters = ({ selected, onSelect }: Props): JSX.Element => {
           borderRadius="lg"
           alignSelf="center"
           size="sm"
-          bgColor={selected === filter ? `${selectedBg} !important` : "transparent"}
-          boxShadow={selected === filter ? selectedShadow : "none"}
+          bgColor={"transparent"}
           onClick={() => onSelect(filter)}
+          position={"relative"}
+          zIndex={1}
+          {...(selected === filter && { _hover: { bg: "transparent" } })}
         >
           {filter.toLowerCase()}
+          {selected === filter ? (
+            <motion.div
+              className="underline"
+              style={{
+                position: "absolute",
+                zIndex: "-1",
+                width: "100%",
+              }}
+              layoutId="slide-bg"
+              transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
+            >
+              <Card
+                boxShadow={selectedShadow}
+                bgColor={`${selectedBg} !important`}
+                height="var(--chakra-sizes-8)"
+              ></Card>
+            </motion.div>
+          ) : null}
         </Button>
       ))}
     </HStack>
