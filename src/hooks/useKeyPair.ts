@@ -46,7 +46,7 @@ type AddressLinkParams =
 type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> &
   Partial<AddressLinkParams> & {
     verificationParams?: {
-      hCaptcha: string
+      reCaptcha: string
     }
   }
 
@@ -390,13 +390,13 @@ const useKeyPair = () => {
       onSubmit: async (
         shouldLinkToUser: boolean,
         provider?: AddressConnectionProvider,
-        hCaptchaToken?: string
+        reCaptchaToken?: string
       ) => {
         const body: SetKeypairPayload = { pubKey: undefined }
 
-        if (hCaptchaToken) {
+        if (reCaptchaToken) {
           body.verificationParams = {
-            hCaptcha: hCaptchaToken,
+            reCaptcha: reCaptchaToken,
           }
         }
 

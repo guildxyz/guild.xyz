@@ -12,7 +12,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import HCaptcha from "@hcaptcha/react-hcaptcha"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useWeb3React } from "@web3-react/core"
 import { GnosisSafe } from "@web3-react/gnosis-safe"
@@ -27,6 +26,7 @@ import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
+import ReCAPTCHA from "react-google-recaptcha"
 import { WalletError } from "types"
 import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
@@ -221,9 +221,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             )}
             {isConnected && !hasSolvedCaptcha && (
               <Center>
-                <HCaptcha
-                  sitekey="05bdce9d-3de2-4457-8318-85633ffd281c"
-                  onVerify={(token) => setSolvedCaptcha(token)}
+                <ReCAPTCHA
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                  onChange={(token) => setSolvedCaptcha(token)}
                 />
               </Center>
             )}
