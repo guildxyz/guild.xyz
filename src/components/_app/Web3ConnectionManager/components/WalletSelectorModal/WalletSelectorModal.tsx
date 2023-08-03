@@ -258,7 +258,29 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               </Text>
             ) : (
               <Text textAlign="center" w="full" colorScheme={"gray"}>
-                Signing the message doesn't cost any gas
+                {!captchaVerifiedSince ? (
+                  <>
+                    This site is protected by reCAPTCHA and the Google{" "}
+                    <Link
+                      href="https://policies.google.com/privacy"
+                      isExternal
+                      colorScheme="blue"
+                    >
+                      Privacy Policy
+                    </Link>{" "}
+                    and{" "}
+                    <Link
+                      href="https://policies.google.com/terms"
+                      isExternal
+                      colorScheme="blue"
+                    >
+                      Terms of Service
+                    </Link>{" "}
+                    apply.
+                  </>
+                ) : (
+                  "Signing the message doesn't cost any gas"
+                )}
               </Text>
             )}
           </ModalFooter>
