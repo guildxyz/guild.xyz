@@ -43,6 +43,16 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
           }
         }
 
+        if (processedRequirement.type?.startsWith("COVALENT_")) {
+          if (!processedRequirement?.data?.timestamps?.minAmount) {
+            delete processedRequirement.data.timestamps.minAmount
+          }
+
+          if (!processedRequirement?.data?.timestamps?.maxAmount) {
+            delete processedRequirement.data.timestamps.maxAmount
+          }
+        }
+
         if (requirement.type === "COIN") {
           processedRequirement.address = "0x0000000000000000000000000000000000000000"
         } else if (
