@@ -14,6 +14,7 @@ import { IconContext } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
+import "theme/hide-default-recaptcha-badge.css"
 import { fetcherForSWR } from "utils/fetcher"
 /**
  * Polyfill HTML inert property for Firefox support:
