@@ -1,5 +1,6 @@
 import {
   Box,
+  Center,
   Icon,
   IconButton,
   ModalBody,
@@ -219,10 +220,12 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               </Box>
             )}
             {isConnected && !hasSolvedCaptcha && (
-              <HCaptcha
-                sitekey="05bdce9d-3de2-4457-8318-85633ffd281c"
-                onVerify={(token) => setSolvedCaptcha(token)}
-              />
+              <Center>
+                <HCaptcha
+                  sitekey="05bdce9d-3de2-4457-8318-85633ffd281c"
+                  onVerify={(token) => setSolvedCaptcha(token)}
+                />
+              </Center>
             )}
           </ModalBody>
           <ModalFooter mt="-4">
@@ -248,9 +251,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 </Link>
               </Text>
             ) : (
-              <Text textAlign="center" w="full" colorScheme={"gray"}>
-                Signing the message doesn't cost any gas
-              </Text>
+              hasSolvedCaptcha && (
+                <Text textAlign="center" w="full" colorScheme={"gray"}>
+                  Signing the message doesn't cost any gas
+                </Text>
+              )
             )}
           </ModalFooter>
         </ModalContent>
