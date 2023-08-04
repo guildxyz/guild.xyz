@@ -257,7 +257,12 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 </Link>
               </Text>
             ) : (
-              <Text textAlign="center" w="full" colorScheme={"gray"}>
+              <Text
+                textAlign="center"
+                w="full"
+                colorScheme={"gray"}
+                fontSize={!captchaVerifiedSince ? "sm" : undefined}
+              >
                 {!captchaVerifiedSince ? (
                   <>
                     This site is protected by reCAPTCHA and the Google{" "}
