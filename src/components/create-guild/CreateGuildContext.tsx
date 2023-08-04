@@ -172,7 +172,7 @@ const CreateGuildProvider = ({
               },
             },
           ],
-          rolePlatforms,
+          rolePlatforms: platform === "TELEGRAM" ? undefined : rolePlatforms,
         },
       ] as any[],
     },
