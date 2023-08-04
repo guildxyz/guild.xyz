@@ -260,7 +260,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 <Link
                   href="https://policies.google.com/privacy"
                   isExternal
-                  colorScheme="blue"
+                  fontWeight={"semibold"}
                 >
                   Privacy Policy
                 </Link>{" "}
@@ -268,7 +268,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 <Link
                   href="https://policies.google.com/terms"
                   isExternal
-                  colorScheme="blue"
+                  fontWeight={"semibold"}
                 >
                   Terms of Service
                 </Link>{" "}
