@@ -276,7 +276,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               </Text>
             ) : (
               <Text textAlign="center" w="full" colorScheme={"gray"}>
-                Signing the message doesn't cost any gas"
+                Signing the message doesn't cost any gas
               </Text>
             )}
           </ModalFooter>
