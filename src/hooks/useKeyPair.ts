@@ -168,6 +168,7 @@ const setKeyPair = async ({
       {
         id: newUser?.id,
         publicKey: newUser?.publicKey,
+        captchaVerifiedSince: newUser?.captchaVerifiedSince,
       },
       {
         revalidate: false,
@@ -211,7 +212,19 @@ const useKeyPair = () => {
     setAddressLinkParams,
   } = useWeb3ConnectionManager()
 
-  const { id, publicKey, error: publicUserError, ...user } = useUserPublic()
+  const {
+    id,
+    publicKey,
+    error: publicUserError,
+    captchaVerifiedSince,
+    ...user
+  } = useUserPublic()
+
+  useEffect(() => {
+    if (!!id && !captchaVerifiedSince) {
+      deleteKeyPairFromIdb(id).then(() => mutateKeyPair())
+    }
+  }, [id, captchaVerifiedSince])
 
   const {
     data: { keyPair, pubKey },
