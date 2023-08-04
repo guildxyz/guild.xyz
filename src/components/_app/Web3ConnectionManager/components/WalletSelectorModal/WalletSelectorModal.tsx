@@ -255,37 +255,28 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 >
                   Privacy Policy
                 </Link>
+                <br />
+                This site is protected by reCAPTCHA and the Google{" "}
+                <Link
+                  href="https://policies.google.com/privacy"
+                  isExternal
+                  colorScheme="blue"
+                >
+                  Privacy Policy
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="https://policies.google.com/terms"
+                  isExternal
+                  colorScheme="blue"
+                >
+                  Terms of Service
+                </Link>{" "}
+                apply.
               </Text>
             ) : (
-              <Text
-                textAlign="center"
-                w="full"
-                colorScheme={"gray"}
-                fontSize={!captchaVerifiedSince ? "sm" : undefined}
-              >
-                {!captchaVerifiedSince ? (
-                  <>
-                    This site is protected by reCAPTCHA and the Google{" "}
-                    <Link
-                      href="https://policies.google.com/privacy"
-                      isExternal
-                      colorScheme="blue"
-                    >
-                      Privacy Policy
-                    </Link>{" "}
-                    and{" "}
-                    <Link
-                      href="https://policies.google.com/terms"
-                      isExternal
-                      colorScheme="blue"
-                    >
-                      Terms of Service
-                    </Link>{" "}
-                    apply.
-                  </>
-                ) : (
-                  "Signing the message doesn't cost any gas"
-                )}
+              <Text textAlign="center" w="full" colorScheme={"gray"}>
+                Signing the message doesn't cost any gas"
               </Text>
             )}
           </ModalFooter>
