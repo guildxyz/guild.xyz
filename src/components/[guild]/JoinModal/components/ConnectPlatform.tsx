@@ -3,6 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import useAccess from "components/[guild]/hooks/useAccess"
 import usePlatformsToReconnect from "components/[guild]/hooks/usePlatformsToReconnect"
 import useUser from "components/[guild]/hooks/useUser"
+import { TwitterV1Tooltip } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount"
 import Script from "next/script"
 import platforms from "platforms/platforms"
 import { useEffect } from "react"
@@ -43,9 +44,13 @@ const ConnectPlatform = ({ platform }: Props) => {
     if (platformFromDb?.platformUserId) setValue(`platforms.${platform}`, null)
   }, [platformFromDb])
 
+  const accountName = `${platforms[platform].name}${
+    platform === "TWITTER_V1" ? " (v1)" : ""
+  }`
+
   return (
     <ConnectAccount
-      account={platforms[platform].name}
+      account={accountName}
       icon={<Icon as={platforms[platform].icon} />}
       colorScheme={platforms[platform].colorScheme as string}
       isConnected={
@@ -58,7 +63,14 @@ const ConnectPlatform = ({ platform }: Props) => {
       isLoading={isLoading || (!platformUsers && isLoadingUser)}
       onClick={onConnect}
       {...{ loadingText }}
-      isDisabled={platform === "TWITTER" && !isActive && "Connect wallet first"}
+      isDisabled={
+        (platform === "TWITTER" ||
+          platform === "TWITTER_V1" ||
+          platform === "DISCORD") &&
+        !isActive &&
+        "Connect wallet first"
+      }
+      titleRightElement={platform === "TWITTER_V1" && <TwitterV1Tooltip />}
     >
       {platform === "TELEGRAM" && (
         <Script

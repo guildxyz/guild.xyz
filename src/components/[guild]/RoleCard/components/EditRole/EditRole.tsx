@@ -12,6 +12,9 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
+import RolePlatforms from "components/[guild]/RolePlatforms"
+import SetVisibility from "components/[guild]/SetVisibility"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -22,22 +25,33 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
-import useGuild from "components/[guild]/hooks/useGuild"
-import RolePlatforms from "components/[guild]/RolePlatforms"
-import SetVisibility from "components/[guild]/SetVisibility"
+import useIsV2 from "hooks/useIsV2"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { Logic, Requirement, RolePlatform, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
+import handleSubmitDirty from "utils/handleSubmitDirty"
 import mapRequirements from "utils/mapRequirements"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import useEditRole from "./hooks/useEditRole"
 
 type Props = {
   roleId: number
+}
+
+export type RoleEditFormData = {
+  id: number
+  name: string
+  description: string
+  imageUrl: string
+  logic: Logic
+  requirements: Requirement[]
+  rolePlatforms: RolePlatform[]
+  visibility: Visibility
 }
 
 const EditRole = ({ roleId }: Props): JSX.Element => {
@@ -97,6 +111,8 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     methods.reset(undefined, { keepValues: true })
   }
 
+  const isV2 = useIsV2()
+
   const { onSubmit, isLoading, isSigning, signLoadingText } = useEditRole(
     id,
     onSuccess
@@ -124,6 +140,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
         {
           shouldTouch: true,
+          shouldDirty: true,
         }
       )
     },
@@ -136,14 +153,17 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const drawerBodyRef = useRef<HTMLDivElement>()
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    methods.handleSubmit(onSubmit, (formErrors) => {
-      if (formErrors.requirements && drawerBodyRef.current) {
-        drawerBodyRef.current.scrollBy({
-          top: drawerBodyRef.current.scrollHeight,
-          behavior: "smooth",
-        })
+    (isV2 ? handleSubmitDirty(methods) : methods.handleSubmit)(
+      onSubmit,
+      (formErrors) => {
+        if (formErrors.requirements && drawerBodyRef.current) {
+          drawerBodyRef.current.scrollBy({
+            top: drawerBodyRef.current.scrollHeight,
+            behavior: "smooth",
+          })
+        }
       }
-    }),
+    ),
 
     iconUploader.isUploading
   )

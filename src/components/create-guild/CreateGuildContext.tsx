@@ -172,7 +172,7 @@ const CreateGuildProvider = ({
               },
             },
           ],
-          rolePlatforms,
+          rolePlatforms: platform === "DISCORD" ? rolePlatforms : undefined,
         },
       ] as any[],
     },

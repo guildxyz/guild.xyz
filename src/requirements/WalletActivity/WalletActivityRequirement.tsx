@@ -18,13 +18,21 @@ const requirementIcons: Record<
   ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
 > = {
   ALCHEMY_FIRST_TX: Wallet,
+  COVALENT_FIRST_TX: Wallet,
   ALCHEMY_FIRST_TX_RELATIVE: Wallet,
+  COVALENT_FIRST_TX_RELATIVE: Wallet,
   ALCHEMY_CONTRACT_DEPLOY: FileText,
+  COVALENT_CONTRACT_DEPLOY: FileText,
   ALCHEMY_CONTRACT_DEPLOY_RELATIVE: FileText,
+  COVALENT_CONTRACT_DEPLOY_RELATIVE: FileText,
   ALCHEMY_TX_COUNT: ArrowsLeftRight,
+  COVALENT_TX_COUNT: ArrowsLeftRight,
   ALCHEMY_TX_COUNT_RELATIVE: ArrowsLeftRight,
+  COVALENT_TX_COUNT_RELATIVE: ArrowsLeftRight,
   ALCHEMY_TX_VALUE: Coins,
+  COVALENT_TX_VALUE: Coins,
   ALCHEMY_TX_VALUE_RELATIVE: Coins,
+  COVALENT_TX_VALUE_RELATIVE: Coins,
 }
 
 const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
@@ -43,6 +51,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
       {(() => {
         switch (requirement.type) {
           case "ALCHEMY_FIRST_TX":
+          case "COVALENT_FIRST_TX":
             return (
               <>
                 {"Have a wallet since at least "}
@@ -52,7 +61,8 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                 {` (on ${RPC[requirement.chain].chainName})`}
               </>
             )
-          case "ALCHEMY_FIRST_TX_RELATIVE": {
+          case "ALCHEMY_FIRST_TX_RELATIVE":
+          case "COVALENT_FIRST_TX_RELATIVE": {
             const formattedWalletAge = formatRelativeTimeFromNow(
               requirement.data.timestamps.maxAmount
             )
@@ -67,6 +77,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
           }
 
           case "ALCHEMY_CONTRACT_DEPLOY":
+          case "COVALENT_CONTRACT_DEPLOY":
             return (
               <>
                 {`Deployed ${
@@ -96,7 +107,8 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                 ) : null}
               </>
             )
-          case "ALCHEMY_CONTRACT_DEPLOY_RELATIVE": {
+          case "ALCHEMY_CONTRACT_DEPLOY_RELATIVE":
+          case "COVALENT_CONTRACT_DEPLOY_RELATIVE": {
             const formattedMinAmount = formatRelativeTimeFromNow(
               requirement.data.timestamps.minAmount
             )
@@ -129,6 +141,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
             )
           }
           case "ALCHEMY_TX_COUNT":
+          case "COVALENT_TX_COUNT":
             return (
               <>
                 {`Have ${
@@ -167,7 +180,8 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                 ) : null}
               </>
             )
-          case "ALCHEMY_TX_COUNT_RELATIVE": {
+          case "ALCHEMY_TX_COUNT_RELATIVE":
+          case "COVALENT_TX_COUNT_RELATIVE": {
             const formattedMinAmount = formatRelativeTimeFromNow(
               requirement.data.timestamps.minAmount
             )

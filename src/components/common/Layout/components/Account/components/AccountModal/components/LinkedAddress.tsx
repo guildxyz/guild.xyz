@@ -19,33 +19,37 @@ import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
+import useIsV2 from "hooks/useIsV2"
 import Image from "next/image"
 import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
-import { AddressConnectionProvider } from "types"
+import { AddressConnectionProvider, User } from "types"
 import shortenHex from "utils/shortenHex"
-import useDisconnect from "../hooks/useDisconnect"
+import { useDisconnectAddress, useDisconnectV1 } from "../hooks/useDisconnect"
 import PrimaryAddressTag from "./PrimaryAddressTag"
 
 type Props = {
-  address: string
+  addressData: User["addresses"][number]
 }
 
 const providerIcons: Record<AddressConnectionProvider, string> = {
   DELEGATE: "delegatecash.png",
 }
 
-const LinkedAddress = ({ address }: Props) => {
-  const { addressProviders, addresses } = useUser()
+const LinkedAddress = ({ addressData }: Props) => {
+  const { address, provider, isPrimary } = addressData ?? {}
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const isV2 = useIsV2()
 
-  const { onSubmit, isLoading, signLoadingText } = useDisconnect(onClose)
+  const { onSubmit, isLoading, signLoadingText } = useDisconnectV1(onClose)
+  const {
+    onSubmit: onSubmitV2,
+    isLoading: isLoadingV2,
+    signLoadingText: signLoadingTextV2,
+  } = useDisconnectAddress(onClose)
   const alertCancelRef = useRef()
 
-  const removeAddress = () => onSubmit({ address })
-
-  const provider = addressProviders?.[address]
+  const removeAddress = () => (isV2 ? onSubmitV2 : onSubmit)({ address })
 
   return (
     <>
@@ -71,7 +75,7 @@ const LinkedAddress = ({ address }: Props) => {
             </Tag>
           </Tooltip>
         )}
-        {addresses.indexOf(address) === 0 ? <PrimaryAddressTag size="sm" /> : null}
+        {isPrimary ? <PrimaryAddressTag size="sm" /> : null}
         <Tooltip label="Disconnect address" placement="top" hasArrow>
           <IconButton
             rounded="full"
@@ -106,8 +110,8 @@ const LinkedAddress = ({ address }: Props) => {
               <Button
                 colorScheme="red"
                 onClick={removeAddress}
-                isLoading={isLoading}
-                loadingText={signLoadingText || "Removing"}
+                isLoading={isLoading || isLoadingV2}
+                loadingText={signLoadingText || signLoadingTextV2 || "Removing"}
                 ml={3}
               >
                 Disconnect

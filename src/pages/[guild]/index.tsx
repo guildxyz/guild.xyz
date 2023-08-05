@@ -405,7 +405,7 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
 }
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
-  const endpoint = `/guild/${params.guild?.toString()}`
+  const endpoint = `/v2/guilds/guild-page/${params.guild?.toString()}`
 
   const data = await fetcher(endpoint).catch((_) => ({}))
 
@@ -430,6 +430,11 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       fallback: {
+        [`/guild/${params.guild?.toString()}`]: filteredData,
+        [unstable_serialize([
+          `/guild/${params.guild?.toString()}`,
+          { method: "GET", body: {} },
+        ])]: filteredData,
         [endpoint]: filteredData,
         [unstable_serialize([endpoint, { method: "GET", body: {} }])]: filteredData,
       },
@@ -446,7 +451,7 @@ const getStaticPaths: GetStaticPaths = async () => {
         }))
       : []
 
-  const paths = await fetcher(`/guild?`).then(mapToPaths)
+  const paths = await fetcher(`/v2/guilds`).then(mapToPaths)
 
   return {
     paths,

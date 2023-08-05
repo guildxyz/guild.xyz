@@ -84,6 +84,7 @@ type PlatformName =
   | "GOOGLE"
   | "POAP"
   | "CONTRACT_CALL"
+  | "TWITTER_V1"
 
 type PlatformUserData = {
   acessToken?: string
@@ -106,11 +107,24 @@ type AddressConnectionProvider = "DELEGATE"
 
 type User = {
   id: number
-  addresses: Array<string>
-  addressProviders: Record<string, AddressConnectionProvider>
+  addresses: Array<{
+    address: string
+    userId: number
+    isPrimary: boolean
+    provider: AddressConnectionProvider
+    createdAt: string
+  }>
   platformUsers: PlatformAccountDetails[]
-  signingKey?: string
+  publicKey?: string
   isSuperAdmin: boolean
+
+  // Should be removed once we use only v2 API
+  addressProviders?: Record<string, AddressConnectionProvider>
+}
+
+type BaseUser = {
+  id: number
+  createdAt: Date
 }
 
 type GuildBase = {
@@ -413,6 +427,7 @@ export enum PlatformType {
   "TWITTER" = 5,
   // "STEAM" = 6,
   "CONTRACT_CALL" = 7,
+  "TWITTER_V1" = 8,
 }
 
 type WalletConnectConnectionData = {
@@ -565,51 +580,52 @@ type DetailedUserLeaderboardData = {
   pins: LeaderboardPinData[]
 }
 
+export { ValidationMethod, Visibility, supportedSocialLinks }
 export type {
-  OneOf,
-  WalletConnectConnectionData,
-  DiscordServerData,
-  GuildAdmin,
-  Token,
-  DiscordError,
-  WalletError,
-  Rest,
-  CoingeckoToken,
-  Poap,
-  GitPoap,
-  PoapContract,
-  GuildPoap,
-  User,
-  NFT,
-  Role,
-  GuildPlatform,
-  GuildBase,
+  AddressConnectionProvider,
+  BaseUser,
   BrainCardData,
-  Guild,
-  SocialLinkKey,
-  SocialLinks,
-  Trait,
-  Requirement,
-  RequirementType,
-  RolePlatform,
-  ThemeMode,
-  Logic,
-  PlatformAccountDetails,
-  SelectOption,
-  GuildFormType,
+  CoingeckoToken,
   CreatePoapForm,
   CreatedPoapData,
-  PlatformName,
-  MonetizePoapForm,
-  RequestMintLinksForm,
-  GoogleFile,
-  VoiceRequirement,
-  VoiceParticipationForm,
-  VoiceRequirementParams,
-  PoapEventDetails,
-  AddressConnectionProvider,
-  GuildPinMetadata,
-  LeaderboardPinData,
   DetailedUserLeaderboardData,
+  DiscordError,
+  DiscordServerData,
+  GitPoap,
+  GoogleFile,
+  Guild,
+  GuildAdmin,
+  GuildBase,
+  GuildFormType,
+  GuildPinMetadata,
+  GuildPlatform,
+  GuildPoap,
+  LeaderboardPinData,
+  Logic,
+  MonetizePoapForm,
+  NFT,
+  OneOf,
+  PlatformAccountDetails,
+  PlatformName,
+  Poap,
+  PoapContract,
+  PoapEventDetails,
+  RequestMintLinksForm,
+  Requirement,
+  RequirementType,
+  Rest,
+  Role,
+  RolePlatform,
+  SelectOption,
+  SocialLinkKey,
+  SocialLinks,
+  ThemeMode,
+  Token,
+  Trait,
+  User,
+  VoiceParticipationForm,
+  VoiceRequirement,
+  VoiceRequirementParams,
+  WalletConnectConnectionData,
+  WalletError,
 }
-export { ValidationMethod, Visibility, supportedSocialLinks }

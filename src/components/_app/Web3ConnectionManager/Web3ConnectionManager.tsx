@@ -4,13 +4,13 @@ import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect-v2"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import requestNetworkChangeHandler from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
-import { Chains, RPC } from "connectors"
+import { Chains, RPC, getConnectorName } from "connectors"
 import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import {
-  createContext,
   PropsWithChildren,
+  createContext,
   useContext,
   useEffect,
   useState,
@@ -53,6 +53,12 @@ const Web3ConnectionManager = ({
 }: PropsWithChildren<any>): JSX.Element => {
   const { isActive, connector } = useWeb3React()
   const router = useRouter()
+
+  useEffect(() => {
+    if (!connector || !isActive) return
+    const connectorName = getConnectorName(connector)
+    window.localStorage.setItem("connector", connectorName)
+  }, [connector, isActive])
 
   useContractWalletInfoToast()
   useConnectFromLocalStorage()

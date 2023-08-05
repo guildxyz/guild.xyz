@@ -2,7 +2,11 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { initializeConnector, Web3ReactHooks } from "@web3-react/core"
 import { RPC } from "connectors"
 
-const initializeCoinbaseWalletConnector = (): [CoinbaseWallet, Web3ReactHooks] => {
+const initializeCoinbaseWalletConnector = (): [
+  CoinbaseWallet,
+  Web3ReactHooks,
+  "coinbase"
+] => {
   /**
    * In edge runtime, the initializeConnector won't work, so as a workaround we're
    * using a try-catch here and returning an array with undefined values. This won't
@@ -21,9 +25,9 @@ const initializeCoinbaseWalletConnector = (): [CoinbaseWallet, Web3ReactHooks] =
         })
     )
 
-    return [coinbaseWallet, hooks]
+    return [coinbaseWallet, hooks, "coinbase"]
   } catch (_) {
-    return [undefined, undefined]
+    return [undefined, undefined, undefined]
   }
 }
 
