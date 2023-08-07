@@ -35,12 +35,29 @@ const handler: NextApiHandler<MysteryBoxResponse> = async (
   if (timestamp > claimEnd)
     return res.status(400).json({ error: "Claim period ended" })
 
-  const { signedMessage, country, zipCode, city, street, houseNumber, email } =
-    req.body
+  const {
+    signedMessage,
+    country,
+    stateProvinceRegion,
+    zipCode,
+    city,
+    street,
+    houseNumber,
+    name,
+    phone,
+  } = req.body
 
   if (!signedMessage) return res.status(403).json({ error: "Unauthenticated" })
 
-  if (!country || !zipCode || !city || !street || !houseNumber)
+  if (
+    !country ||
+    !stateProvinceRegion ||
+    !zipCode ||
+    !city ||
+    !street ||
+    !houseNumber ||
+    !name
+  )
     return res.status(400).json({ error: "Invalid shipping address" })
 
   const walletAddress = verifyMessage(
@@ -67,7 +84,15 @@ const handler: NextApiHandler<MysteryBoxResponse> = async (
       .status(403)
       .json({ error: "You are not eligible to claim a Guild Pin Mystery Box" })
 
-  const shippingDetails = { country, zipCode, city, street, houseNumber, email }
+  const shippingDetails = {
+    country,
+    zipCode,
+    city,
+    street,
+    houseNumber,
+    name,
+    phone,
+  }
   try {
     await sql`INSERT INTO mystery_box_claims (wallet_address, shipping_details) VALUES (${walletAddress}, ${JSON.stringify(
       shippingDetails
