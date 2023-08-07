@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { randomBytes } from "crypto"
 import usePopupWindow from "hooks/usePopupWindow"
@@ -32,7 +31,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   oauthOptions: OAuthOptions,
   oauthOptionsInitializer?: (redirectUri: string) => Promise<OAuthOptions>
 ) => {
-  const { account } = useWeb3React()
   const { captureEvent } = usePostHogContext()
 
   const toast = useToast()
@@ -112,9 +110,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
             authData: null,
           })
         } else {
-          if (!account) {
-            captureEvent("OAuth without wallet connection", { platformName })
-          }
           setOauthState({
             isAuthenticating: false,
             error: null,

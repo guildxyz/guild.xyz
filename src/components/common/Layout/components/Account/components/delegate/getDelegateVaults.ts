@@ -12,6 +12,12 @@ const delegateAddresses = {
   [Chains.OPTIMISM]: "0x00000000000076a84fef008cdabe6409d2fe638b",
   [Chains.AVALANCHE]: "0x00000000000076a84fef008cdabe6409d2fe638b",
   [Chains.GOERLI]: "0x00000000000076a84fef008cdabe6409d2fe638b",
+  [Chains.ARBITRUM]: "0x00000000000076a84fef008cdabe6409d2fe638b",
+  [Chains.NOVA]: "0x00000000000076a84fef008cdabe6409d2fe638b",
+  [Chains.BASE_MAINNET]: "0x00000000000076a84fef008cdabe6409d2fe638b",
+  [Chains.BSC]: "0x00000000000076a84fef008cdabe6409d2fe638b",
+  [Chains.FANTOM]: "0x00000000000076a84fef008cdabe6409d2fe638b",
+  [Chains.GNOSIS]: "0x00000000000076a84fef008cdabe6409d2fe638b",
 }
 
 enum DelegationType {
