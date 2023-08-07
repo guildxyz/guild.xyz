@@ -100,17 +100,20 @@ const Page = ({ leaderboard: initialData }: Props) => {
 
         <Section title={account && data ? "Leaderboard" : undefined}>
           <>
-            {leaderboard?.flat().map((userLeaderboardData, index) => (
-              <LeaderboardUserCard
-                key={index}
-                address={userLeaderboardData?.address}
-                score={userLeaderboardData?.score}
-                position={index + 1}
-                pinMetadataArray={
-                  userLeaderboardData?.pins.map((p) => p.tokenUri) ?? []
-                }
-              />
-            ))}
+            {leaderboard
+              ?.flat()
+              .filter(Boolean)
+              .map((userLeaderboardData, index) => (
+                <LeaderboardUserCard
+                  key={index}
+                  address={userLeaderboardData?.address}
+                  score={userLeaderboardData?.score}
+                  position={index + 1}
+                  pinMetadataArray={
+                    userLeaderboardData?.pins.map((p) => p.tokenUri) ?? []
+                  }
+                />
+              ))}
             {isLeaderboardValidating &&
               [...Array(25)].map((_, index) => (
                 <LeaderboardUserCardSkeleton key={index} />
