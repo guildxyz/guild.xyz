@@ -19,6 +19,7 @@ const icons: { [K in Filters]: any } = {
 const SearchBarFilters = ({ selected, onSelect }: Props): JSX.Element => {
   const selectedBg = useColorModeValue("white", "gray.600")
   const selectedShadow = "0 0.5px 2px 0 rgba(0, 0, 0, 0.2)"
+  const MotionCard = motion(Card)
 
   return (
     <HStack as="ul" gap={1.5}>
@@ -39,8 +40,7 @@ const SearchBarFilters = ({ selected, onSelect }: Props): JSX.Element => {
         >
           {filter.toLowerCase()}
           {selected === filter ? (
-            <motion.div
-              className="underline"
+            <MotionCard
               style={{
                 position: "absolute",
                 zIndex: "-1",
@@ -48,13 +48,10 @@ const SearchBarFilters = ({ selected, onSelect }: Props): JSX.Element => {
               }}
               layoutId="slide-bg"
               transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
-            >
-              <Card
-                boxShadow={selectedShadow}
-                bgColor={`${selectedBg} !important`}
-                height="var(--chakra-sizes-8)"
-              ></Card>
-            </motion.div>
+              boxShadow={selectedShadow}
+              bgColor={`${selectedBg} !important`}
+              height="var(--chakra-sizes-8)"
+            />
           ) : null}
         </Button>
       ))}
