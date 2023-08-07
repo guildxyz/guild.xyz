@@ -25,7 +25,7 @@ describe("without wallet", () => {
 describe("with wallet", () => {
   before(() => {
     cy.visit("/create-guild")
-    cy.connectWallet()
+    cy.connectWalletAndVerifyAccount()
   })
 
   it("can create a guild without platform", () => {
