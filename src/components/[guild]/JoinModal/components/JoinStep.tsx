@@ -13,6 +13,7 @@ import React, { PropsWithChildren } from "react"
 
 type Props = {
   title: string
+  titleRightElement?: JSX.Element
   buttonLabel: string | JSX.Element
   isRequired?: boolean
   isDisabled?: string
@@ -24,6 +25,7 @@ type Props = {
 
 const JoinStep = ({
   title,
+  titleRightElement,
   buttonLabel,
   isRequired,
   icon,
@@ -50,14 +52,17 @@ const JoinStep = ({
       >
         {isDone && <Icon as={Check} weight="bold" color={"white"} boxSize="0.8em" />}
       </Circle>
-      <Text w="full" fontWeight={"bold"} noOfLines={1}>
-        {title}
-        {isRequired && (
-          <Text as="span" color={"red.300"}>
-            {` *`}
-          </Text>
-        )}
-      </Text>
+      <HStack w="full">
+        <Text fontWeight="bold" noOfLines={1}>
+          {title}
+          {isRequired && (
+            <Text as="span" color="red.300">
+              {` *`}
+            </Text>
+          )}
+        </Text>
+        {titleRightElement}
+      </HStack>
       <ButtonWrapper {...buttonWrapperProps}>
         <Tooltip
           isDisabled={!buttonProps.isDisabled}

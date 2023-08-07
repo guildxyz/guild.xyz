@@ -72,6 +72,12 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "TWITTER",
     gatedEntity: "account",
   },
+  TWITTER_V1: {
+    icon: TwitterLogo,
+    name: "Twitter",
+    colorScheme: "TWITTER",
+    gatedEntity: "account",
+  },
   GOOGLE: {
     icon: GoogleLogo,
     name: "Google Workspace",

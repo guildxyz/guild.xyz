@@ -10,6 +10,7 @@ type Props = {
   isConnected: string
   isDisabled?: string
   isReconnect?: boolean
+  titleRightElement?: JSX.Element
 } & Omit<ButtonProps, "isDisabled">
 
 const ConnectAccount = ({
@@ -17,6 +18,7 @@ const ConnectAccount = ({
   isConnected,
   children,
   isReconnect,
+  titleRightElement,
   ...rest
 }: PropsWithChildren<Props>) => (
   <JoinStep
@@ -28,6 +30,7 @@ const ConnectAccount = ({
         ? `${account} connected`
         : `Connect ${account}`
     }
+    titleRightElement={titleRightElement}
     buttonLabel={isReconnect ? "Reconnect" : isConnected || "Connect"}
     {...rest}
   >

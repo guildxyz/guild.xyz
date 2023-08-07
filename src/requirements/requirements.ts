@@ -102,6 +102,14 @@ export const REQUIREMENTS_DATA = [
       "ALCHEMY_TX_COUNT_RELATIVE",
       "ALCHEMY_TX_VALUE",
       "ALCHEMY_TX_VALUE_RELATIVE",
+
+      // Same types for covalent, except tx_value types
+      "COVALENT_FIRST_TX",
+      "COVALENT_FIRST_TX_RELATIVE",
+      "COVALENT_CONTRACT_DEPLOY",
+      "COVALENT_CONTRACT_DEPLOY_RELATIVE",
+      "COVALENT_TX_COUNT",
+      "COVALENT_TX_COUNT_RELATIVE",
     ],
   },
   {
