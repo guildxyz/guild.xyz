@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import OnboardingMarker from "components/common/OnboardingMarker"
-import { useIsStuckLegacy } from "hooks/useIsStuck"
+import useIsStuck from "hooks/useIsStuck"
 import { CaretDown, ListNumbers, Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import AddRoleDrawer from "./components/AddRoleDrawer"
@@ -30,7 +30,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
   } = useDisclosure()
 
   const orderButtonRef = useRef(null)
-  const { ref: addRoleButtonRef, isStuck } = useIsStuckLegacy()
+  const { ref: addRoleButtonRef, isStuck } = useIsStuck()
   useEffect(() => {
     setIsStuck?.(isStuck)
   }, [isStuck])
