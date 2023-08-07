@@ -14,12 +14,12 @@ import {
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useWeb3React } from "@web3-react/core"
 import { GnosisSafe } from "@web3-react/gnosis-safe"
-import { useUserPublic } from "components/[guild]/hooks/useUser"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { connectors } from "connectors"
 import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
@@ -236,44 +236,50 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           </ModalBody>
           <ModalFooter mt="-4">
             {!isConnected ? (
-              <Text textAlign="center" colorScheme="gray" fontSize="sm" w="full">
-                New to Ethereum wallets?{" "}
-                <Link
-                  colorScheme="blue"
-                  href="https://ethereum.org/en/wallets/"
-                  isExternal
-                >
-                  Learn more
-                  <Icon as={ArrowSquareOut} mx="1" />
-                </Link>
-                <br />
-                By continuing, you agree to our{" "}
-                <Link
-                  href="/privacy-policy"
-                  fontWeight={"semibold"}
-                  onClick={onClose}
-                >
-                  Privacy Policy
-                </Link>
-                <br />
-                This site is protected by reCAPTCHA and the Google{" "}
-                <Link
-                  href="https://policies.google.com/privacy"
-                  isExternal
-                  fontWeight={"semibold"}
-                >
-                  Privacy Policy
-                </Link>{" "}
-                and{" "}
-                <Link
-                  href="https://policies.google.com/terms"
-                  isExternal
-                  fontWeight={"semibold"}
-                >
-                  Terms of Service
-                </Link>{" "}
-                apply.
-              </Text>
+              <Stack textAlign="center" fontSize="sm" w="full" spacing={2}>
+                <Text colorScheme="gray">
+                  New to Ethereum wallets?{" "}
+                  <Link
+                    colorScheme="blue"
+                    href="https://ethereum.org/en/wallets/"
+                    isExternal
+                  >
+                    Learn more
+                    <Icon as={ArrowSquareOut} mx="1" />
+                  </Link>
+                </Text>
+
+                <Text colorScheme="gray">
+                  By continuing, you agree to our{" "}
+                  <Link
+                    href="/privacy-policy"
+                    fontWeight={"semibold"}
+                    onClick={onClose}
+                  >
+                    Privacy Policy
+                  </Link>
+                </Text>
+
+                <Text colorScheme="gray">
+                  This site is protected by reCAPTCHA and the Google{" "}
+                  <Link
+                    href="https://policies.google.com/privacy"
+                    isExternal
+                    fontWeight={"semibold"}
+                  >
+                    Privacy Policy
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="https://policies.google.com/terms"
+                    isExternal
+                    fontWeight={"semibold"}
+                  >
+                    Terms of Service
+                  </Link>{" "}
+                  apply.
+                </Text>
+              </Stack>
             ) : (
               <Text textAlign="center" w="full" colorScheme={"gray"}>
                 Signing the message doesn't cost any gas
