@@ -32,7 +32,7 @@ import useGuild from "../hooks/useGuild"
 import useAddReward from "./hooks/useAddReward"
 
 const addPlatformComponents: Record<
-  Exclude<PlatformName, "" | "TWITTER" | "CONTRACT_CALL">,
+  Exclude<PlatformName, "" | "TWITTER" | "CONTRACT_CALL" | "TWITTER_V1">,
   (props) => JSX.Element
 > = {
   DISCORD: AddDiscordPanel,

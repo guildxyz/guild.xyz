@@ -1,5 +1,6 @@
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useIsV2 from "hooks/useIsV2"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
@@ -18,9 +19,10 @@ const useCreateGuild = () => {
   const router = useRouter()
 
   const fetcherWithSign = useFetcherWithSign()
+  const isV2 = useIsV2()
 
   const fetchData = async (signedValidation: SignedValdation): Promise<Guild> =>
-    fetcher("/guild", signedValidation)
+    fetcher(isV2 ? "/v2/guilds/with-roles" : "/guild", signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<Guild>(fetchData, {
     onError: (error_) => {
