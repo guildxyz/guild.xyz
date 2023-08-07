@@ -1,6 +1,5 @@
 import {
   Box,
-  Circle,
   HStack,
   Icon,
   SimpleGrid,
@@ -18,8 +17,9 @@ import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import DisplayCard from "components/common/DisplayCard"
 import GuildLogo from "components/common/GuildLogo"
 import Link from "components/common/Link"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import image from "next/image"
-import { CircleWavyCheck, StarFour, Users } from "phosphor-react"
+import { StarFour, Users } from "phosphor-react"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
 
@@ -56,16 +56,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
             >
               {guildData.name}
               {guildData.tags?.includes("VERIFIED") && (
-                <Tooltip label="Verified" hasArrow>
-                  <Circle
-                    background={"blue.700"}
-                    position="absolute"
-                    top={1}
-                    right={-5}
-                  >
-                    <Icon as={CircleWavyCheck} boxSize={4} />
-                  </Circle>
-                </Tooltip>
+                <VerifiedIcon iconSize={4} position="absolute" top={1} right={-5} />
               )}
             </Text>
           </Box>

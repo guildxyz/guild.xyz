@@ -1,7 +1,6 @@
 import {
   Box,
   Center,
-  Circle,
   Collapse,
   Divider,
   Heading,
@@ -13,7 +12,6 @@ import {
   Tag,
   TagLeftIcon,
   Text,
-  Tooltip,
   Wrap,
 } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
@@ -40,13 +38,14 @@ import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { CircleWavyCheck, Info, Users } from "phosphor-react"
+import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig, unstable_serialize } from "swr"
 import { Guild, PlatformType, SocialLinkKey, Visibility } from "types"
@@ -228,14 +227,7 @@ const GuildPage = (): JSX.Element => {
         action={isAdmin && <DynamicEditGuildButton />}
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
         titlePostfix={
-          tags &&
-          tags.includes("VERIFIED") && (
-            <Tooltip label="Verified" hasArrow>
-              <Circle background={"blue.700"} mt={-2}>
-                <Icon as={CircleWavyCheck} boxSize={6} />
-              </Circle>
-            </Tooltip>
-          )
+          tags && tags.includes("VERIFIED") && <VerifiedIcon iconSize={6} mt={-2} />
         }
       >
         {showOnboarding ? (
