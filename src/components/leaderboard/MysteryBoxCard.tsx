@@ -116,8 +116,9 @@ const MysteryBoxCard = () => {
               <Text>
                 For us to be able to ship this gift box to you, all you need to do is
                 fill out these details below, then wait for the Guild goodies to
-                arrive! Make sure to double check that everything is accurate so the
-                package can arrive to the right place.
+                arrive! With the Mystery Box NFT only one submission is possible,
+                please double check that everything is accurate so the package can
+                arrive to the right place! Submissions close on October 1st.
               </Text>
 
               <FormControl isInvalid={!!errors.country}>
