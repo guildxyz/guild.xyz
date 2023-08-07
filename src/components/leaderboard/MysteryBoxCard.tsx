@@ -26,6 +26,7 @@ import useHasAlreadyClaimedMysteryBox from "./hooks/useHasAlreadyClaimedMysteryB
 
 export type ClaimMysteryBoxForm = {
   country: string
+  stateProvinceRegion: string
   zipCode: string
   city: string
   street: string
@@ -106,6 +107,12 @@ const MysteryBoxCard = () => {
 
           <ModalBody>
             <Stack spacing={4}>
+              <Img
+                src="/img/guild-mystery-box.jpg"
+                alt="Guild Mystery Box"
+                borderRadius="xl"
+              />
+
               <Text>
                 For us to be able to ship this gift box to you, all you need to do is
                 fill out these details below, then wait for the Guild goodies to
@@ -120,6 +127,16 @@ const MysteryBoxCard = () => {
                   {...register("country", { required: "Required" })}
                 />
                 <FormErrorMessage>{errors.country?.message}</FormErrorMessage>
+              </FormControl>
+
+              <FormControl isInvalid={!!errors.stateProvinceRegion}>
+                <Input
+                  placeholder="State/Province/Region"
+                  {...register("stateProvinceRegion", { required: "Required" })}
+                />
+                <FormErrorMessage>
+                  {errors.stateProvinceRegion?.message}
+                </FormErrorMessage>
               </FormControl>
 
               <HStack alignItems="start">
