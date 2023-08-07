@@ -14,8 +14,8 @@ export type MysteryBoxResponse =
 export const MYSTERY_BOX_MESSAGE_TO_SIGN =
   "Please sign this message in order to claim your prize"
 export const MYSTERY_BOX_NFT: { address: string; chain: Chain } = {
-  address: "0x3C65D35A8190294d39013287B246117eBf6615Bd",
-  chain: "GOERLI",
+  address: "0x295f799Be8ba015Ca9BE5EfFbC5CaeC985cCA11a",
+  chain: "POLYGON",
 }
 const DUPLICATE_KEY_ERROR = "23505"
 export const MYSTERY_BOX_CLAIMERS_KV_KEY = "mysteryBoxClaimers"
