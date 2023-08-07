@@ -31,7 +31,7 @@ const handler: NextApiHandler<MysteryBoxResponse> = async (
   }
 
   const timestamp = Date.now()
-  const claimEnd = new Date("2023-09-01").getTime()
+  const claimEnd = new Date("2023-10-01").getTime()
   if (timestamp > claimEnd)
     return res.status(400).json({ error: "Claim period ended" })
 
