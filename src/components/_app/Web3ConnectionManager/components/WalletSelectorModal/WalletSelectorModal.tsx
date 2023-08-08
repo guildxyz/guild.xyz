@@ -68,6 +68,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { ready, set, keyPair } = useKeyPair()
 
   useEffect(() => {
+    if (!set.response) return
+    recaptchaRef.current?.reset()
+  }, [set.response, set.error])
+
+  useEffect(() => {
     if (keyPair) onClose()
   }, [keyPair])
 
@@ -201,7 +206,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             </Stack>
             {isConnected && !keyPair && (
               <>
-                test
                 {!hasSolvedCaptcha && (
                   <ReCAPTCHA
                     ref={recaptchaRef}
@@ -219,7 +223,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                       const token = !recaptchaRef.current
                         ? undefined
                         : await recaptchaRef.current.executeAsync()
-                      console.log("token", token)
 
                       return set.onSubmit(
                         shouldLinkToUser,
