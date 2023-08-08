@@ -21,7 +21,7 @@ describe("post-test cleanup", () => {
             $h1.text().toString() !== "404" &&
             $h1.text().toString() !== "Client-side error"
           ) {
-            cy.connectWallet()
+            cy.connectWalletAndVerifyAccount()
 
             cy.get(".chakra-button[aria-label='Edit Guild']").click()
             cy.get(".chakra-slide h2").should("contain.text", "Edit guild")

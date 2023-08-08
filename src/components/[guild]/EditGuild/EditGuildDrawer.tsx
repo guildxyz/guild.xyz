@@ -172,7 +172,7 @@ const EditGuildDrawer = ({
       methods.setValue(
         "imageUrl",
         `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        { shouldTouch: true }
+        { shouldTouch: true, shouldDirty: true }
       )
     },
     onError: () => {
@@ -186,7 +186,8 @@ const EditGuildDrawer = ({
     onSuccess: ({ IpfsHash }) => {
       methods.setValue(
         "theme.backgroundImage",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        { shouldDirty: true }
       )
     },
     onError: () => {

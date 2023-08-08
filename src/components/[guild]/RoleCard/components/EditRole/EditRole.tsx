@@ -140,6 +140,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
         {
           shouldTouch: true,
+          shouldDirty: true,
         }
       )
     },
