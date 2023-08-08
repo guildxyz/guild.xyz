@@ -220,11 +220,11 @@ const useKeyPair = () => {
     ...user
   } = useUserPublic()
 
-  // useEffect(() => {
-  //   if (!!id && !captchaVerifiedSince) {
-  //     deleteKeyPairFromIdb(id).then(() => mutateKeyPair())
-  //   }
-  // }, [id, captchaVerifiedSince])
+  useEffect(() => {
+    if (!!id && !captchaVerifiedSince) {
+      deleteKeyPairFromIdb(id).then(() => mutateKeyPair())
+    }
+  }, [id, captchaVerifiedSince])
 
   const {
     data: { keyPair, pubKey },
