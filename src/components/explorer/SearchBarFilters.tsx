@@ -1,6 +1,6 @@
 import { Button, Card, HStack, Icon, useColorModeValue } from "@chakra-ui/react"
 import { motion } from "framer-motion"
-import { CircleWavyCheck, Sparkle, StarFour } from "phosphor-react"
+import { CircleWavyCheck, PushPin, Sparkle } from "phosphor-react"
 
 const ExplorerFilters = ["FEATURED", "NEWEST", "VERIFIED"] as const
 export type Filters = (typeof ExplorerFilters)[number]
@@ -11,7 +11,7 @@ type Props = {
 }
 
 const icons: { [K in Filters]: any } = {
-  FEATURED: StarFour,
+  FEATURED: PushPin,
   VERIFIED: CircleWavyCheck,
   NEWEST: Sparkle,
 }

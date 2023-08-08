@@ -19,7 +19,7 @@ import GuildLogo from "components/common/GuildLogo"
 import Link from "components/common/Link"
 import VerifiedIcon from "components/common/VerifiedIcon"
 import image from "next/image"
-import { StarFour, Users } from "phosphor-react"
+import { PushPin, Users } from "phosphor-react"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
 
@@ -56,7 +56,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
             >
               {guildData.name}
               {guildData.tags?.includes("VERIFIED") && (
-                <VerifiedIcon iconSize={4} position="absolute" top={1} right={-5} />
+                <VerifiedIcon iconSize={5} position="absolute" top={1} right={-6} />
               )}
             </Text>
           </Box>
@@ -81,7 +81,12 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
             backgroundColor={"purple.500"}
             label={
               <Tooltip label="Featured" hasArrow>
-                <Icon as={StarFour} />
+                <Icon
+                  as={PushPin}
+                  display={"flex"}
+                  alignItems={"center"}
+                  m={"2px"}
+                />
               </Tooltip>
             }
             top="0"

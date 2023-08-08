@@ -1,3 +1,4 @@
+import useIsV2 from "hooks/useIsV2"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
 import { useState } from "react"
@@ -13,26 +14,31 @@ const useEditTags = ({ defaultTags = [], guildId }: Props) => {
   const showErrorToast = useShowErrorToast()
   const [tags, setTags] = useState<GuildTags[]>(defaultTags)
   const fetcher = useFetcherWithSign()
+  const isV2 = useIsV2()
 
-  const addTag = (tag: GuildTags) =>
-    fetcher([
-      `/FORCE_V2/guilds/${guildId}/tags`,
-      {
-        method: "POST",
-        body: {
-          tag,
-        },
-      },
-    ])
+  const addTag = isV2
+    ? (tag: GuildTags) =>
+        fetcher([
+          `/v2/guilds/${guildId}/tags`,
+          {
+            method: "POST",
+            body: {
+              tag,
+            },
+          },
+        ])
+    : () => {}
 
-  const deleteTag = (tag: GuildTags) =>
-    fetcher([
-      `/FORCE_V2/guilds/${guildId}/tags/${tag}`,
-      {
-        method: "DELETE",
-        body: {},
-      },
-    ])
+  const deleteTag = isV2
+    ? (tag: GuildTags) =>
+        fetcher([
+          `/v2/guilds/${guildId}/tags/${tag}`,
+          {
+            method: "DELETE",
+            body: {},
+          },
+        ])
+    : () => {}
 
   const submit = async () => {
     const tagPromises = []
