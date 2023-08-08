@@ -201,6 +201,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             </Stack>
             {isConnected && !keyPair && (
               <>
+                test
                 {!hasSolvedCaptcha && (
                   <ReCAPTCHA
                     ref={recaptchaRef}
