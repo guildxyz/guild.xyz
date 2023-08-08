@@ -47,9 +47,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { isActive, account, connector } = useWeb3React()
   const [error, setError] = useState<WalletError & Error>(null)
   const { captchaVerifiedSince } = useUserPublic()
-  const [solvedCaptcha, setSolvedCaptcha] = useState<string>()
-
-  const hasSolvedCaptcha = !!captchaVerifiedSince || !!solvedCaptcha
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -66,11 +63,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   }
 
   const { ready, set, keyPair } = useKeyPair()
-
-  useEffect(() => {
-    if (!set.response) return
-    recaptchaRef.current?.reset()
-  }, [set.response, set.error])
 
   useEffect(() => {
     if (keyPair) onClose()
@@ -206,29 +198,27 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             </Stack>
             {isConnected && !keyPair && (
               <>
-                {!hasSolvedCaptcha && (
-                  <ReCAPTCHA
-                    ref={recaptchaRef}
-                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-                    onChange={(token) => setSolvedCaptcha(token)}
-                    size="invisible"
-                  />
-                )}
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                  size="invisible"
+                />
                 <Box animation={"fadeIn .3s .1s both"}>
                   <ModalButton
                     size="xl"
                     mb="4"
                     colorScheme={"green"}
                     onClick={async () => {
-                      const token = !recaptchaRef.current
-                        ? undefined
-                        : await recaptchaRef.current.executeAsync()
+                      const token =
+                        !recaptchaRef.current || !!captchaVerifiedSince
+                          ? undefined
+                          : await recaptchaRef.current.executeAsync()
 
-                      return set.onSubmit(
-                        shouldLinkToUser,
-                        undefined,
-                        token ?? solvedCaptcha
-                      )
+                      if (token) {
+                        recaptchaRef.current.reset()
+                      }
+
+                      return set.onSubmit(shouldLinkToUser, undefined, token)
                     }}
                     isLoading={set.isLoading || !ready}
                     isDisabled={!ready}
