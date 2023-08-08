@@ -219,6 +219,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                       const token = !recaptchaRef.current
                         ? undefined
                         : await recaptchaRef.current.executeAsync()
+                      console.log("token", token)
 
                       return set.onSubmit(
                         shouldLinkToUser,
