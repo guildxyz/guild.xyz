@@ -1,4 +1,5 @@
 import { ChakraProps } from "@chakra-ui/react"
+import dynamic from "next/dynamic"
 import {
   DiscordLogo,
   GithubLogo,
@@ -7,6 +8,7 @@ import {
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
+import { ComponentType } from "react"
 import { GuildPlatform, PlatformName } from "types"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
@@ -41,6 +43,21 @@ type PaltformUsageRestrictionsParameters =
       usageUniqueParam?: string // If we define this, we can check the uniqueness of a field inside `rolePlatform`
     }
 
+// If we define an AddPlatformPanel, we'll use the `DefaultAddPlatformModalContent` component in the add reward modal, but if we need a custom solution for that modal (e.g. for the add POAP flow, we can define an AddPlatformModalContent instead)
+type AddPlatformComponentsParameters =
+  | {
+      AddPlatformModalContent: ComponentType<Record<string, never>>
+      AddPlatformPanel?: never
+    }
+  | {
+      AddPlatformModalContent?: never
+      AddPlatformPanel: ComponentType<{
+        onSuccess: () => void
+        scrollToTop?: () => void
+        skipSettings?: boolean
+      }>
+    }
+
 type PlatformData = {
   icon: (props: IconProps) => JSX.Element
   name: string
@@ -57,7 +74,8 @@ type PlatformData = {
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
-} & PaltformUsageRestrictionsParameters
+} & AddPlatformComponentsParameters &
+  PaltformUsageRestrictionsParameters
 
 const platforms: Record<PlatformName, PlatformData> = {
   TELEGRAM: {
@@ -68,6 +86,12 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useTelegramCardProps,
     cardMenuComponent: TelegramCardMenu,
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
+        )
+    ),
   },
   DISCORD: {
     icon: DiscordLogo,
@@ -79,6 +103,12 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardMenuComponent: DiscordCardMenu,
     usageRestriction: PlatformUsageRestrictions.MULTIPLE_ROLES,
     usageUniqueParam: "platformRoleId",
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
+        )
+    ),
   },
   GITHUB: {
     icon: GithubLogo,
@@ -88,6 +118,12 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useGithubCardProps,
     cardMenuComponent: GithubCardMenu,
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
+        )
+    ),
   },
   TWITTER: {
     icon: TwitterLogo,
@@ -95,6 +131,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "TWITTER",
     gatedEntity: "account",
     usageRestriction: PlatformUsageRestrictions.NOT_APPLICABLE,
+    AddPlatformPanel: null,
   },
   TWITTER_V1: {
     icon: TwitterLogo,
@@ -102,6 +139,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "TWITTER",
     gatedEntity: "account",
     usageRestriction: PlatformUsageRestrictions.NOT_APPLICABLE,
+    AddPlatformPanel: null,
   },
   GOOGLE: {
     icon: GoogleLogo,
@@ -114,6 +152,12 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardWarningComponent: GoogleCardWarning,
     usageRestriction: PlatformUsageRestrictions.MULTIPLE_ROLES,
     usageUniqueParam: "platformRoleData.role",
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
+        )
+    ),
   },
   POAP: {
     icon: null,
@@ -121,6 +165,8 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "purple",
     gatedEntity: "POAP",
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    AddPlatformPanel: dynamic(() => import("components/[guild]/CreatePoap")),
+    // AddPlatformModalContent: null, // TODO: create a custom component for this
   },
   CONTRACT_CALL: {
     icon: null,
@@ -130,6 +176,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useContractCallCardProps,
     cardButton: ContractCallRewardCardButton,
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    AddPlatformPanel: null, // TODO: will add in another PR
   },
 }
 
