@@ -203,10 +203,10 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               <>
                 {!hasSolvedCaptcha && (
                   <ReCAPTCHA
-                    style={{ marginBottom: "var(--chakra-space-4)" }}
                     ref={recaptchaRef}
                     sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
                     onChange={(token) => setSolvedCaptcha(token)}
+                    size="invisible"
                   />
                 )}
                 <Box animation={"fadeIn .3s .1s both"}>
@@ -218,6 +218,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                       const token = !recaptchaRef.current
                         ? undefined
                         : await recaptchaRef.current.executeAsync()
+
                       return set.onSubmit(
                         shouldLinkToUser,
                         undefined,
