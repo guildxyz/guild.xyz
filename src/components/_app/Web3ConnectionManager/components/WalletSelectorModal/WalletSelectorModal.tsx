@@ -201,29 +201,24 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             </Stack>
             {isConnected && !keyPair && (
               <>
-                {!hasSolvedCaptcha && (
+                {/* {!hasSolvedCaptcha && (
                   <ReCAPTCHA
                     ref={recaptchaRef}
                     sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
                     onChange={(token) => setSolvedCaptcha(token)}
                     size="invisible"
                   />
-                )}
+                )} */}
                 <Box animation={"fadeIn .3s .1s both"}>
                   <ModalButton
                     size="xl"
                     mb="4"
                     colorScheme={"green"}
                     onClick={async () => {
-                      const token = !recaptchaRef.current
-                        ? undefined
-                        : await recaptchaRef.current.executeAsync()
-
-                      return set.onSubmit(
-                        shouldLinkToUser,
-                        undefined,
-                        token ?? solvedCaptcha
-                      )
+                      // const token = !recaptchaRef.current
+                      //   ? undefined
+                      //   : await recaptchaRef.current.executeAsync()
+                      return set.onSubmit(shouldLinkToUser, undefined, undefined)
                     }}
                     isLoading={set.isLoading || !ready}
                     isDisabled={!ready}

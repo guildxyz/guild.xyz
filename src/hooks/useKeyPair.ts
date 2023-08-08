@@ -11,11 +11,11 @@ import { AddressConnectionProvider, User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import useIsV2 from "./useIsV2"
-import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
 } from "./useSubmit/useSubmit"
+import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import useToast from "./useToast"
 
 type StoredKeyPair = {
@@ -220,11 +220,11 @@ const useKeyPair = () => {
     ...user
   } = useUserPublic()
 
-  useEffect(() => {
-    if (!!id && !captchaVerifiedSince) {
-      deleteKeyPairFromIdb(id).then(() => mutateKeyPair())
-    }
-  }, [id, captchaVerifiedSince])
+  // useEffect(() => {
+  //   if (!!id && !captchaVerifiedSince) {
+  //     deleteKeyPairFromIdb(id).then(() => mutateKeyPair())
+  //   }
+  // }, [id, captchaVerifiedSince])
 
   const {
     data: { keyPair, pubKey },
