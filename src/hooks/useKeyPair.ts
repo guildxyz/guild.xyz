@@ -11,11 +11,11 @@ import { AddressConnectionProvider, User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import useIsV2 from "./useIsV2"
-import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
 } from "./useSubmit/useSubmit"
+import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import useToast from "./useToast"
 
 type StoredKeyPair = {
