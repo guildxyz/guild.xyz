@@ -25,7 +25,7 @@ const useAddReward = (onSuccess?) => {
     onSubmit: (data) =>
       onSubmit({
         ...data.rolePlatforms[0].guildPlatform,
-        roleIds: data.roleIds.filter((roleId) => !!roleId),
+        roleIds: data.roleIds?.filter((roleId) => !!roleId),
       }),
     ...rest,
   }

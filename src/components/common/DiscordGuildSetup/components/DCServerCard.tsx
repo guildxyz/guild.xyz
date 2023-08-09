@@ -1,11 +1,11 @@
 import { usePrevious } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import OptionCard from "components/common/OptionCard"
-import useGuildByPlatformId from "hooks/useGuildByPlatformId"
 import usePopupWindow from "hooks/usePopupWindow"
 import useServerData from "hooks/useServerData"
 import Link from "next/link"
 import { ArrowSquareIn } from "phosphor-react"
+import usePlatformUsageInfo from "platforms/hooks/usePlatformUsageInfo"
 import { useEffect } from "react"
 
 type Props = {
@@ -48,7 +48,10 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     }
   }, [channels, activeAddBotPopup])
 
-  const { id, urlName } = useGuildByPlatformId("DISCORD", serverData.id)
+  const { isAlreadyInUse, guildUrlName, isValidating } = usePlatformUsageInfo(
+    "DISCORD",
+    serverData.id
+  )
 
   return (
     <OptionCard
@@ -60,7 +63,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
         <Button h={10} onClick={onCancel}>
           Cancel
         </Button>
-      ) : isAdmin === undefined ? (
+      ) : isAdmin === undefined || isValidating ? (
         <Button h={10} isLoading />
       ) : !isAdmin ? (
         <Button
@@ -72,7 +75,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
         >
           Add bot
         </Button>
-      ) : !id ? (
+      ) : !isAlreadyInUse ? (
         <Button
           h={10}
           colorScheme="green"
@@ -81,10 +84,10 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
         >
           Select
         </Button>
-      ) : id ? (
-        <Link href={`/${urlName}`} passHref>
+      ) : isAlreadyInUse ? (
+        <Link href={`/${guildUrlName}`} passHref>
           <Button as="a" h={10} colorScheme="gray">
-            Already guilded
+            Go to guild
           </Button>
         </Link>
       ) : null}

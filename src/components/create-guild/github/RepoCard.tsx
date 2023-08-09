@@ -2,8 +2,8 @@ import { HStack, Skeleton, Text, VStack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
-import useGuildByPlatformId from "hooks/useGuildByPlatformId"
 import NextLink from "next/link"
+import usePlatformUsageInfo from "platforms/hooks/usePlatformUsageInfo"
 
 const RepoCard = ({
   onSelection,
@@ -15,7 +15,7 @@ const RepoCard = ({
   repositoryName: string
   description?: string
 }) => {
-  const { id, isLoading, urlName } = useGuildByPlatformId(
+  const { isAlreadyInUse, guildUrlName, isValidating } = usePlatformUsageInfo(
     "GITHUB",
     encodeURIComponent(platformGuildId)
   )
@@ -49,11 +49,11 @@ const RepoCard = ({
           <RepoName />
         )}
 
-        {isLoading ? (
+        {isValidating ? (
           <Button isLoading />
-        ) : id ? (
-          <NextLink href={`/${urlName}`} passHref>
-            <Button as="a" colorScheme="gray">
+        ) : isAlreadyInUse ? (
+          <NextLink href={`/${guildUrlName}`} passHref>
+            <Button as="a" colorScheme="gray" minW="max-content">
               Go to guild
             </Button>
           </NextLink>

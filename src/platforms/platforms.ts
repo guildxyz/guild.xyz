@@ -30,19 +30,6 @@ export enum PlatformUsageRestrictions {
   MULTIPLE_ROLES, // e.g. Discord
 }
 
-type PaltformUsageRestrictionsParameters =
-  | {
-      usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE
-      usageUniqueParam?: never
-    }
-  | {
-      usageRestriction: Exclude<
-        PlatformUsageRestrictions,
-        PlatformUsageRestrictions.SINGLE_ROLE
-      >
-      usageUniqueParam?: string // If we define this, we can check the uniqueness of a field inside `rolePlatform`
-    }
-
 // If we define an AddPlatformPanel, we'll use the `DefaultAddPlatformModalContent` component in the add reward modal, but if we need a custom solution for that modal (e.g. for the add POAP flow, we can define an AddPlatformModalContent instead)
 type AddPlatformComponentsParameters =
   | {
@@ -77,8 +64,8 @@ type PlatformData = {
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
-} & AddPlatformComponentsParameters &
-  PaltformUsageRestrictionsParameters
+  usageRestriction: PlatformUsageRestrictions
+} & AddPlatformComponentsParameters
 
 const platforms: Record<PlatformName, PlatformData> = {
   TELEGRAM: {
@@ -105,7 +92,6 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
     usageRestriction: PlatformUsageRestrictions.MULTIPLE_ROLES,
-    usageUniqueParam: "platformRoleId",
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -154,7 +140,6 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
     usageRestriction: PlatformUsageRestrictions.MULTIPLE_ROLES,
-    usageUniqueParam: "platformRoleData.role",
     AddPlatformPanel: dynamic(
       () =>
         import(
