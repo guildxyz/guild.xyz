@@ -53,7 +53,7 @@ const RepoCard = ({
           <Button isLoading />
         ) : id ? (
           <NextLink href={`/${urlName}`} passHref>
-            <Button as="a" colorScheme="gray">
+            <Button as="a" colorScheme="gray" minW="max-content">
               Go to guild
             </Button>
           </NextLink>
