@@ -86,6 +86,7 @@ const handler: NextApiHandler<MysteryBoxResponse> = async (
 
   const shippingDetails = {
     country,
+    stateProvinceRegion,
     zipCode,
     city,
     street,
