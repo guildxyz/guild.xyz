@@ -11,11 +11,11 @@ import { AddressConnectionProvider, User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import useIsV2 from "./useIsV2"
-import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
 } from "./useSubmit/useSubmit"
+import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import useToast from "./useToast"
 
 type StoredKeyPair = {
@@ -43,7 +43,12 @@ type AddressLinkParams =
       nonce: never
     })
 
-type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> & Partial<AddressLinkParams>
+type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> &
+  Partial<AddressLinkParams> & {
+    verificationParams?: {
+      reCaptcha: string
+    }
+  }
 
 const getStore = () => createStore("guild.xyz", "signingKeyPairs")
 
@@ -163,6 +168,7 @@ const setKeyPair = async ({
       {
         id: newUser?.id,
         publicKey: newUser?.publicKey,
+        captchaVerifiedSince: newUser?.captchaVerifiedSince,
       },
       {
         revalidate: false,
@@ -206,7 +212,19 @@ const useKeyPair = () => {
     setAddressLinkParams,
   } = useWeb3ConnectionManager()
 
-  const { id, publicKey, error: publicUserError, ...user } = useUserPublic()
+  const {
+    id,
+    publicKey,
+    error: publicUserError,
+    captchaVerifiedSince,
+    ...user
+  } = useUserPublic()
+
+  useEffect(() => {
+    if (!!id && !captchaVerifiedSince) {
+      deleteKeyPairFromIdb(id).then(() => mutateKeyPair())
+    }
+  }, [id, captchaVerifiedSince])
 
   const {
     data: { keyPair, pubKey },
@@ -384,9 +402,16 @@ const useKeyPair = () => {
       ...setSubmitResponse,
       onSubmit: async (
         shouldLinkToUser: boolean,
-        provider?: AddressConnectionProvider
+        provider?: AddressConnectionProvider,
+        reCaptchaToken?: string
       ) => {
         const body: SetKeypairPayload = { pubKey: undefined }
+
+        if (reCaptchaToken) {
+          body.verificationParams = {
+            reCaptcha: reCaptchaToken,
+          }
+        }
 
         try {
           body.pubKey = generatedKeyPair.pubKey
@@ -439,5 +464,5 @@ const useKeyPair = () => {
   }
 }
 
-export { getKeyPairFromIdb, setKeyPairToIdb, deleteKeyPairFromIdb }
+export { deleteKeyPairFromIdb, getKeyPairFromIdb, setKeyPairToIdb }
 export default useKeyPair

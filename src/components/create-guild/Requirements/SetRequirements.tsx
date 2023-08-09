@@ -1,9 +1,9 @@
 import { Checkbox, Collapse, Stack, Text, Wrap } from "@chakra-ui/react"
-import LogicDivider from "components/[guild]/LogicDivider"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import { SectionTitle } from "components/common/Section"
+import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
 import { useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
@@ -22,6 +22,7 @@ const SetRequirements = (): JSX.Element => {
     getValues,
     watch,
     setValue,
+    resetField,
     formState: { errors },
   } = useFormContext<GuildFormType["roles"][number]>()
 
@@ -58,11 +59,13 @@ const SetRequirements = (): JSX.Element => {
   )
 
   const onFreeEntryChange = (e) => {
+    resetField("requirements", {
+      defaultValue: [],
+    })
+
     if (e.target.checked) {
       replace([{ type: "FREE", data: {}, chain: null, address: null }])
       setValue("logic", "AND")
-    } else {
-      replace([])
     }
   }
 
