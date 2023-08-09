@@ -46,7 +46,10 @@ type PaltformUsageRestrictionsParameters =
 // If we define an AddPlatformPanel, we'll use the `DefaultAddPlatformModalContent` component in the add reward modal, but if we need a custom solution for that modal (e.g. for the add POAP flow, we can define an AddPlatformModalContent instead)
 type AddPlatformComponentsParameters =
   | {
-      AddPlatformModalContent: ComponentType<Record<string, never>>
+      AddPlatformModalContent: ComponentType<{
+        goBack: () => void
+        onSuccess: () => void
+      }>
       AddPlatformPanel?: never
     }
   | {
@@ -165,8 +168,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "purple",
     gatedEntity: "POAP",
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
-    AddPlatformPanel: dynamic(() => import("components/[guild]/CreatePoap")),
-    // AddPlatformModalContent: null, // TODO: create a custom component for this
+    AddPlatformModalContent: dynamic(() => import("components/[guild]/CreatePoap")),
   },
   CONTRACT_CALL: {
     icon: null,

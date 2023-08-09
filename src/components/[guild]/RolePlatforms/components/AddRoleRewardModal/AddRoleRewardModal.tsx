@@ -31,6 +31,8 @@ const AddRoleRewardModal = ({ isOpen, onClose }) => {
     onClose()
   }
 
+  const goBack = () => setSelection(null)
+
   const { AddPlatformModalContent } = platforms[selection] ?? {}
 
   return (
@@ -45,12 +47,13 @@ const AddRoleRewardModal = ({ isOpen, onClose }) => {
       <ModalContent minH="550px">
         {selection ? (
           AddPlatformModalContent ? (
-            <AddPlatformModalContent />
+            <AddPlatformModalContent onSuccess={closeModal} goBack={goBack} />
           ) : (
             <DynamicDefaultAddPlatformModalContent
               modalRef={modalRef}
               selection={selection}
               setSelection={setSelection}
+              goBack={goBack}
               closeModal={closeModal}
               isForExistingRole
             />

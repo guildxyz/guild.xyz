@@ -20,6 +20,7 @@ import platforms, { PlatformUsageRestrictions } from "./platforms"
 
 type Props = {
   modalRef: MutableRefObject<any>
+  goBack: () => void
   selection: PlatformName
   setSelection: (platform: PlatformName) => void
   closeModal: () => void
@@ -28,6 +29,7 @@ type Props = {
 
 const DefaultAddPlatformModalContent = ({
   modalRef,
+  goBack: goBackOg,
   selection,
   setSelection,
   closeModal,
@@ -39,9 +41,8 @@ const DefaultAddPlatformModalContent = ({
   const { roles } = useGuild()
 
   const goBack = () => {
-    reset()
     if (showRoleSelect) setShowRoleSelect(false)
-    else setSelection(null)
+    else goBackOg()
   }
 
   const { AddPlatformPanel } = platforms[selection]
@@ -60,17 +61,15 @@ const DefaultAddPlatformModalContent = ({
     <>
       <ModalHeader>
         <HStack>
-          {selection !== null && (
-            <IconButton
-              rounded="full"
-              aria-label="Back"
-              size="sm"
-              mb="-3px"
-              icon={<ArrowLeft size={20} />}
-              variant="ghost"
-              onClick={goBack}
-            />
-          )}
+          <IconButton
+            rounded="full"
+            aria-label="Back"
+            size="sm"
+            mb="-3px"
+            icon={<ArrowLeft size={20} />}
+            variant="ghost"
+            onClick={goBack}
+          />
           <Text>{`Add ${platforms[selection].name}`}</Text>
         </HStack>
       </ModalHeader>

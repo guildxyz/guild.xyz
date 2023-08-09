@@ -31,8 +31,11 @@ const AddRewardButton = () => {
 
   const closeModal = () => {
     setSelection(null)
+    methods.reset()
     onClose()
   }
+
+  const goBack = () => setSelection(null)
 
   const scrollToTop = () => modalRef.current?.scrollTo({ top: 0 })
 
@@ -73,10 +76,11 @@ const AddRewardButton = () => {
           <ModalContent minH="550px">
             {selection ? (
               AddPlatformModalContent ? (
-                <AddPlatformModalContent />
+                <AddPlatformModalContent goBack={goBack} onSuccess={closeModal} />
               ) : (
                 <DynamicDefaultAddPlatformModalContent
                   modalRef={modalRef}
+                  goBack={goBack}
                   selection={selection}
                   setSelection={setSelection}
                   closeModal={closeModal}
