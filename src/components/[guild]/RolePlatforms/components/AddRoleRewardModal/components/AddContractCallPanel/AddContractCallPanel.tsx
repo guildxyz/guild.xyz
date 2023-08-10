@@ -1,7 +1,6 @@
-import { Text } from "@chakra-ui/react"
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
 import {
   CreateNftContextType,
-  CreateNftProvider,
   useCreateNftContext,
 } from "./components/CreateNftContext"
 import CreateNftForm from "./components/CreateNftForm"
@@ -17,8 +16,6 @@ const AddContractCallPanel = ({ onSuccess }: Omit<Props, "platformGuildData">) =
     setData,
   } = useCreateNftContext()
 
-  // TODO: we should automatically create the contract call reward inside the CreateNftForm, save that data in a context, and use it from there (just like we did with the POAP rewards). This way we could use this same component both for adding an existing nft reward to a role and also for creating new nft rewards
-
   if (!contractAddress)
     return (
       <CreateNftForm
@@ -31,13 +28,18 @@ const AddContractCallPanel = ({ onSuccess }: Omit<Props, "platformGuildData">) =
       />
     )
 
-  return <Text>TODO: select role / create new role using the new reward</Text>
+  return (
+    <Tabs size="sm" isFitted variant="solid" colorScheme="indigo">
+      <TabList mb="8">
+        <Tab>Add to existing role(s)</Tab>
+        <Tab>Create new role (add requirements)</Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>Add to existing role(s) - TODO</TabPanel>
+        <TabPanel>Create new role (add requirements) - TODO</TabPanel>
+      </TabPanels>
+    </Tabs>
+  )
 }
 
-const AddContractCallPanelWrapper = ({ onSuccess, platformGuildData }: Props) => (
-  <CreateNftProvider initialData={platformGuildData}>
-    <AddContractCallPanel onSuccess={onSuccess} />
-  </CreateNftProvider>
-)
-
-export default AddContractCallPanelWrapper
+export default AddContractCallPanel
