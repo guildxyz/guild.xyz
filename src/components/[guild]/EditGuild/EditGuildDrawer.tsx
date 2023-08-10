@@ -33,7 +33,7 @@ import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import dynamic from "next/dynamic"
 import { useEffect } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -107,11 +107,9 @@ const EditGuildDrawer = ({
     defaultValues,
   })
 
-  const { onSubmit: onTagsSubmit } = useEditTags({
-    defaultTags: savedTags,
-    guildId: id,
-    currentTags: () => methods.getValues("tags"),
-  })
+  const { onSubmit: onTagsSubmit } = useEditTags(
+    useWatch({ control: methods.control, name: "tags" })
+  )
 
   useEffect(() => {
     if (typeof isV2 === "boolean") {
