@@ -80,7 +80,8 @@ const platforms: Record<PlatformName, PlatformData> = {
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
-        )
+        ),
+      { ssr: false }
     ),
   },
   DISCORD: {
@@ -96,7 +97,8 @@ const platforms: Record<PlatformName, PlatformData> = {
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
-        )
+        ),
+      { ssr: false }
     ),
   },
   GITHUB: {
@@ -111,7 +113,8 @@ const platforms: Record<PlatformName, PlatformData> = {
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
-        )
+        ),
+      { ssr: false }
     ),
   },
   TWITTER: {
@@ -144,7 +147,8 @@ const platforms: Record<PlatformName, PlatformData> = {
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
-        )
+        ),
+      { ssr: false }
     ),
   },
   POAP: {
@@ -153,7 +157,9 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "purple",
     gatedEntity: "POAP",
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
-    AddPlatformModalContent: dynamic(() => import("components/[guild]/CreatePoap")),
+    AddPlatformModalContent: dynamic(() => import("components/[guild]/CreatePoap"), {
+      ssr: false,
+    }),
   },
   CONTRACT_CALL: {
     icon: null,
