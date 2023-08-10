@@ -33,7 +33,7 @@ import { useThemeContext } from "../ThemeContext"
 import useAddReward from "./hooks/useAddReward"
 
 const addPlatformComponents: Record<
-  Exclude<PlatformName, "" | "TWITTER">,
+  Exclude<PlatformName, "" | "TWITTER" | "TWITTER_V1">,
   (props) => JSX.Element
 > = {
   DISCORD: AddDiscordPanel,

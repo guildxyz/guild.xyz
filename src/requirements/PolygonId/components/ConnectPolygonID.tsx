@@ -10,6 +10,7 @@ import {
   ModalOverlay,
   Spinner,
   Text,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
@@ -98,8 +99,11 @@ const ConnectPolygonIDModal = ({
     fetcherWithSign
   )
 
+  const qrSize = useBreakpointValue({ base: 300, md: 400 })
+
   return (
     <Modal
+      size={"lg"}
       {...{
         isOpen,
         onClose,
@@ -123,7 +127,7 @@ const ConnectPolygonIDModal = ({
             ) : (
               <>
                 <Box borderRadius={"md"} borderWidth={3} overflow={"hidden"}>
-                  <QRCodeSVG value={JSON.stringify(response)} size={300} />
+                  <QRCodeSVG value={JSON.stringify(response)} size={qrSize} />
                 </Box>
                 <Button
                   size="xs"

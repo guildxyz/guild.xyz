@@ -6,7 +6,11 @@ import {
 } from "react-hook-form"
 
 const TO_FILTER_FLAG = "TO_FILTER"
-const IGNORED_KEYS = new Set(["validAddresses"])
+const KEYS_TO_FILTER = new Set(["validAddresses", "balancyDecimals", "formFieldId"])
+const KEYS_TO_KEEP = [
+  // data (of a requirement) is kept, because if we send partial data, that will overwrite the whole data field
+  "data",
+]
 
 /**
  * Takes formData, and its dirtyFields flags, and returns a new object, that is a new
@@ -36,7 +40,9 @@ const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
           key,
           formDataFilterForDirtyHelper(value, formData[key]),
         ])
-        .filter(([key, value]) => value !== TO_FILTER_FLAG && !IGNORED_KEYS.has(key))
+        .filter(
+          ([key, value]) => value !== TO_FILTER_FLAG && !KEYS_TO_FILTER.has(key)
+        )
     )
 
     const isEmpty = Object.keys(newObj).length <= 0
@@ -45,6 +51,12 @@ const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
     if (!isEmpty && "id" in formData) {
       newObj.id = formData.id
     }
+
+    KEYS_TO_KEEP.forEach((keyToKeep) => {
+      if (keyToKeep in newObj) {
+        newObj[keyToKeep] = formData[keyToKeep]
+      }
+    })
 
     return !isEmpty ? newObj : TO_FILTER_FLAG
   }

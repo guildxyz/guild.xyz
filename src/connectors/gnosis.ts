@@ -1,7 +1,7 @@
 import { initializeConnector, Web3ReactHooks } from "@web3-react/core"
 import { GnosisSafe } from "@web3-react/gnosis-safe"
 
-const initializeGnosisConnector = (): [GnosisSafe, Web3ReactHooks] => {
+const initializeGnosisConnector = (): [GnosisSafe, Web3ReactHooks, "gnosis"] => {
   /**
    * In edge runtime, the initializeConnector won't work, so as a workaround we're
    * using a try-catch here and returning an array with undefined values. This won't
@@ -16,9 +16,9 @@ const initializeGnosisConnector = (): [GnosisSafe, Web3ReactHooks] => {
         })
     )
 
-    return [gnosis, hooks]
+    return [gnosis, hooks, "gnosis"]
   } catch (_) {
-    return [undefined, undefined]
+    return [undefined, undefined, undefined]
   }
 }
 

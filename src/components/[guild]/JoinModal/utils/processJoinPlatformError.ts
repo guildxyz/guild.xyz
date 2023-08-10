@@ -1,6 +1,7 @@
 import { ErrorInfo } from "components/common/Error"
 import { DiscordError, WalletError } from "types"
 import processWalletError from "utils/processWalletError"
+import processConnectorError from "./processConnectorError"
 import processDiscordError from "./processDiscordError"
 
 type JoinError = WalletError | Response | Error | DiscordError | string
@@ -31,9 +32,11 @@ const processJoinPlatformError = (error: JoinError): ErrorInfo => {
     }
   }
   if (typeof error === "string") {
+    const connectorError = processConnectorError(error)
+
     return {
       title: "Error",
-      description: error,
+      description: connectorError ?? error,
     }
   }
 
