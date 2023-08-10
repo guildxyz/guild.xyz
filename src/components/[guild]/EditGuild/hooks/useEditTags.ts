@@ -1,18 +1,17 @@
 import useIsV2 from "hooks/useIsV2"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
-import { useState } from "react"
 import { useFetcherWithSign } from "utils/fetcher"
 import { GuildTags } from "./../../../../types"
 
 type Props = {
   defaultTags: GuildTags[]
   guildId: number
+  currentTags: () => GuildTags[]
 }
 
-const useEditTags = ({ defaultTags = [], guildId }: Props) => {
+const useEditTags = ({ defaultTags = [], guildId, currentTags }: Props) => {
   const showErrorToast = useShowErrorToast()
-  const [tags, setTags] = useState<GuildTags[]>(defaultTags)
   const fetcher = useFetcherWithSign()
   const isV2 = useIsV2()
 
@@ -44,12 +43,12 @@ const useEditTags = ({ defaultTags = [], guildId }: Props) => {
     const tagPromises = []
 
     defaultTags.forEach((defaultTag) => {
-      if (!tags.includes(defaultTag)) {
+      if (!currentTags().includes(defaultTag)) {
         tagPromises.push(deleteTag(defaultTag))
       }
     })
 
-    tags.forEach((tag) => {
+    currentTags().forEach((tag) => {
       if (!defaultTags.includes(tag)) {
         tagPromises.push(addTag(tag))
       }
@@ -63,8 +62,6 @@ const useEditTags = ({ defaultTags = [], guildId }: Props) => {
   })
 
   return {
-    tags,
-    setTags,
     onSubmit: useSubmitResponse.onSubmit,
   }
 }

@@ -311,7 +311,7 @@ type SocialLinkKey = (typeof supportedSocialLinks)[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
 
 const guildTags = ["VERIFIED", "FEATURED"] as const
-export type GuildTags = (typeof guildTags)[number]
+type GuildTags = (typeof guildTags)[number]
 
 type GuildContact = {
   type: "EMAIL" | "TELEGRAM"
@@ -608,6 +608,7 @@ export type {
   GuildPinMetadata,
   GuildPlatform,
   GuildPoap,
+  GuildTags,
   LeaderboardPinData,
   Logic,
   MonetizePoapForm,

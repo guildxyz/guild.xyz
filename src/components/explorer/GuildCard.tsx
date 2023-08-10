@@ -1,5 +1,4 @@
 import {
-  Box,
   HStack,
   Icon,
   SimpleGrid,
@@ -44,7 +43,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
       >
         {image && <GuildLogo imageUrl={guildData.imageUrl} />}
         <VStack spacing={2} alignItems="start" w="full" maxW="full" mb="0.5" mt="-1">
-          <Box position="relative">
+          <HStack>
             <Text
               as="span"
               fontFamily="display"
@@ -55,11 +54,9 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
               noOfLines={1}
             >
               {guildData.name}
-              {guildData.tags?.includes("VERIFIED") && (
-                <VerifiedIcon iconSize={5} position="absolute" top={1} right={-6} />
-              )}
             </Text>
-          </Box>
+            {guildData.tags?.includes("VERIFIED") && <VerifiedIcon iconSize={5} />}
+          </HStack>
 
           <Wrap zIndex="1">
             <Tag as="li">

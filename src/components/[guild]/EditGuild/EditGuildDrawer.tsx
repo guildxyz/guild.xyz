@@ -79,12 +79,6 @@ const EditGuildDrawer = ({
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
-  const {
-    tags,
-    setTags,
-    onSubmit: onTagsSubmit,
-  } = useEditTags({ defaultTags: savedTags, guildId: id })
-
   const isV2 = useIsV2()
 
   const defaultValues = {
@@ -106,10 +100,17 @@ const EditGuildDrawer = ({
     contacts,
     socialLinks,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
+    tags: savedTags,
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
     defaultValues,
+  })
+
+  const { onSubmit: onTagsSubmit } = useEditTags({
+    defaultTags: savedTags,
+    guildId: id,
+    currentTags: () => methods.getValues("tags"),
   })
 
   useEffect(() => {
@@ -286,7 +287,7 @@ const EditGuildDrawer = ({
                   <>
                     <Divider />
                     <Section title="Tag manager" spacing="4">
-                      <TagManager tags={tags} setTags={setTags} />
+                      <TagManager />
                     </Section>
                     <Section title="Enabled features" spacing="4">
                       <DynamicFeatureFlags />

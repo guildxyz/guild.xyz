@@ -1,19 +1,15 @@
 import { HStack } from "@chakra-ui/react"
 import Switch from "components/common/Switch"
 import { useEffect } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, useFormContext } from "react-hook-form"
 import { GuildTags } from "types"
 
-type Props = {
-  tags: GuildTags[]
-  setTags: (tags: GuildTags[]) => void
-}
-
-const TagManager = ({ tags, setTags }: Props): JSX.Element => {
+const TagManager = (): JSX.Element => {
+  const { setValue, getValues } = useFormContext()
   const { register, watch } = useForm<{ [k in GuildTags]: boolean }>({
     defaultValues: {
-      VERIFIED: tags.includes("VERIFIED"),
-      FEATURED: tags.includes("FEATURED"),
+      VERIFIED: getValues("tags").includes("VERIFIED"),
+      FEATURED: getValues("tags").includes("FEATURED"),
     },
   })
 
@@ -23,7 +19,7 @@ const TagManager = ({ tags, setTags }: Props): JSX.Element => {
         .filter((key) => watch(key as GuildTags))
         .map((key) => key as GuildTags)
 
-      setTags(newTags)
+      setValue("tags", newTags)
     })
     return () => subscription.unsubscribe()
   }, [watch])
