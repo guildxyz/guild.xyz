@@ -30,6 +30,19 @@ export enum PlatformUsageRestrictions {
   MULTIPLE_ROLES, // e.g. Discord
 }
 
+type UsageRestrictionAndShowKeepAccessesModalParams =
+  | {
+      usageRestriction: PlatformUsageRestrictions.NOT_APPLICABLE
+      shouldShowKeepAccessesModal?: never
+    }
+  | {
+      usageRestriction: Exclude<
+        PlatformUsageRestrictions,
+        PlatformUsageRestrictions.NOT_APPLICABLE
+      >
+      shouldShowKeepAccessesModal: boolean
+    }
+
 // If we define an AddPlatformPanel, we'll use the `DefaultAddPlatformModalContent` component in the add reward modal, but if we need a custom solution for that modal (e.g. for the add POAP flow), we can define an AddPlatformModalContent instead
 type AddPlatformComponentsParameters =
   | {
@@ -64,8 +77,8 @@ type PlatformData = {
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
-  usageRestriction: PlatformUsageRestrictions
-} & AddPlatformComponentsParameters
+} & UsageRestrictionAndShowKeepAccessesModalParams &
+  AddPlatformComponentsParameters
 
 const platforms: Record<PlatformName, PlatformData> = {
   TELEGRAM: {
@@ -76,6 +89,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useTelegramCardProps,
     cardMenuComponent: TelegramCardMenu,
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: true,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -93,6 +107,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
     usageRestriction: PlatformUsageRestrictions.MULTIPLE_ROLES,
+    shouldShowKeepAccessesModal: true,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -109,6 +124,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useGithubCardProps,
     cardMenuComponent: GithubCardMenu,
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: true,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -143,6 +159,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
     usageRestriction: PlatformUsageRestrictions.MULTIPLE_ROLES,
+    shouldShowKeepAccessesModal: true,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -157,6 +174,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "purple",
     gatedEntity: "POAP",
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: false,
     AddPlatformModalContent: dynamic(() => import("components/[guild]/CreatePoap"), {
       ssr: false,
     }),
@@ -169,6 +187,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useContractCallCardProps,
     cardButton: ContractCallRewardCardButton,
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: false,
     AddPlatformPanel: null, // TODO: will add in another PR
   },
 }
