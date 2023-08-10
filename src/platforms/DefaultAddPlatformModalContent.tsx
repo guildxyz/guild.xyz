@@ -87,8 +87,8 @@ const DefaultAddPlatformModalContent = ({
             } to add reward to`}</FormLabel>
             <RoleSelector
               allowMultiple={
-                platforms[selection].usageRestriction !==
-                PlatformUsageRestrictions.SINGLE_ROLE
+                platforms[selection].usageRestriction ===
+                PlatformUsageRestrictions.MULTIPLE_ROLES
               }
               roles={roles}
               onChange={(selectedRoleIds) => setValue("roleIds", selectedRoleIds)}
