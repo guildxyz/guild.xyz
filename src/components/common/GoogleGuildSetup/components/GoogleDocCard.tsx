@@ -10,7 +10,9 @@ import {
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import OptionCard from "components/common/OptionCard"
+import NextLink from "next/link"
 import { fileTypeNames } from "platforms/Google/useGoogleCardProps"
+import usePlatformUsageInfo from "platforms/hooks/usePlatformUsageInfo"
 import { GoogleFile } from "types"
 
 type Props = {
@@ -21,6 +23,11 @@ type Props = {
 
 const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
   const imageBgColor = useColorModeValue("gray.100", "gray.600")
+
+  const { isAlreadyInUse, guildUrlName, isValidating } = usePlatformUsageInfo(
+    "GOOGLE",
+    file.platformGuildId
+  )
 
   return (
     <OptionCard
@@ -33,7 +40,15 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
       }
     >
       <Stack w="full" spacing={4} justifyContent="space-between" h="full">
-        {onSelect && (
+        {isValidating ? (
+          <Button isLoading />
+        ) : isAlreadyInUse ? (
+          <NextLink href={`/${guildUrlName}`} passHref>
+            <Button as="a" colorScheme="gray" minW="max-content">
+              Go to guild
+            </Button>
+          </NextLink>
+        ) : onSelect ? (
           <Button
             colorScheme="blue"
             h={10}
@@ -41,13 +56,11 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
           >
             Gate file
           </Button>
-        )}
-
-        {onCancel && (
+        ) : onCancel ? (
           <Button h={10} onClick={onCancel}>
             Cancel
           </Button>
-        )}
+        ) : null}
       </Stack>
     </OptionCard>
   )
