@@ -100,7 +100,7 @@ const EditGuildDrawer = ({
     contacts,
     socialLinks,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
-    tags: savedTags,
+    tags: savedTags, // we send tags to the /guild endpoint but these values are handled by the /tags endpoint (useEditTags hook)
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
