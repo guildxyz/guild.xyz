@@ -33,17 +33,10 @@ const defaultValue: CreateNftContextType = {
 
 const CreateNftContext = createContext<CreateNftContextType>(defaultValue)
 
-type Props = {
-  initialData?: CreateNftContextType["data"]
-}
-
 const CreateNftProvider = ({
-  initialData,
   children,
-}: PropsWithChildren<Props>): JSX.Element => {
-  const [data, setData] = useState<CreateNftContextType["data"]>(
-    initialData ?? defaultValue.data
-  )
+}: PropsWithChildren<unknown>): JSX.Element => {
+  const [data, setData] = useState<CreateNftContextType["data"]>(defaultValue.data)
 
   return (
     <CreateNftContext.Provider value={{ data, setData }}>
