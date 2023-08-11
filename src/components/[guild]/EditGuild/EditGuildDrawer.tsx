@@ -13,10 +13,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
-import UrlName from "components/[guild]/EditGuild/components/UrlName"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -26,6 +22,10 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
+import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
+import UrlName from "components/[guild]/EditGuild/components/UrlName"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import useIsV2 from "hooks/useIsV2"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
@@ -33,7 +33,7 @@ import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import dynamic from "next/dynamic"
 import { useEffect } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -62,7 +62,6 @@ const EditGuildDrawer = ({
   onClose,
 }: Omit<DrawerProps & Props, "children">): JSX.Element => {
   const {
-    id,
     name,
     imageUrl,
     description,
@@ -100,16 +99,14 @@ const EditGuildDrawer = ({
     contacts,
     socialLinks,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
-    tags: savedTags, // we send tags to the /guild endpoint but these values are handled by the /tags endpoint (useEditTags hook)
+    tags: savedTags,
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
     defaultValues,
   })
 
-  const { onSubmit: onTagsSubmit } = useEditTags(
-    useWatch({ control: methods.control, name: "tags" })
-  )
+  const { onSubmit: onTagsSubmit } = useEditTags()
 
   useEffect(() => {
     if (typeof isV2 === "boolean") {
@@ -155,7 +152,6 @@ const EditGuildDrawer = ({
   } = useDisclosure()
 
   const onCloseAndClear = () => {
-    const themeMode = theme?.mode
     const themeColor = theme?.color
     const backgroundImage = theme?.backgroundImage
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
@@ -196,8 +192,10 @@ const EditGuildDrawer = ({
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     () => {
-      methods.handleSubmit(onSubmit)()
-      onTagsSubmit()
+      methods.handleSubmit((data) => {
+        onSubmit({ ...data, tags: undefined })
+        onTagsSubmit(data.tags)
+      })()
     },
     backgroundUploader.isUploading || iconUploader.isUploading
   )

@@ -1,50 +1,44 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsV2 from "hooks/useIsV2"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
 import { useFetcherWithSign } from "utils/fetcher"
 import { GuildTags } from "./../../../../types"
 
-const useEditTags = (currentTags: GuildTags[]) => {
+const useEditTags = () => {
   const { tags: defaultTags, id: guildId } = useGuild()
   const showErrorToast = useShowErrorToast()
-  const fetcher = useFetcherWithSign()
-  const isV2 = useIsV2()
+  const fetcherWithSign = useFetcherWithSign()
 
-  const addTag = isV2
-    ? (tag: GuildTags) =>
-        fetcher([
-          `/v2/guilds/${guildId}/tags`,
-          {
-            method: "POST",
-            body: {
-              tag,
-            },
-          },
-        ])
-    : () => {}
+  const addTag = (tag: GuildTags) =>
+    fetcherWithSign([
+      `/v2/guilds/${guildId}/tags`,
+      {
+        method: "POST",
+        body: {
+          tag,
+        },
+      },
+    ])
 
-  const deleteTag = isV2
-    ? (tag: GuildTags) =>
-        fetcher([
-          `/v2/guilds/${guildId}/tags/${tag}`,
-          {
-            method: "DELETE",
-            body: {},
-          },
-        ])
-    : () => {}
+  const deleteTag = (tag: GuildTags) =>
+    fetcherWithSign([
+      `/v2/guilds/${guildId}/tags/${tag}`,
+      {
+        method: "DELETE",
+        body: {},
+      },
+    ])
 
-  const submit = async () => {
+  const submit = async (tags: GuildTags[]) => {
     const tagPromises = []
 
-    defaultTags.forEach((defaultTag) => {
-      if (!currentTags.includes(defaultTag)) {
-        tagPromises.push(deleteTag(defaultTag))
+    defaultTags.forEach((tag) => {
+      if (!tags.includes(tag)) {
+        tagPromises.push(deleteTag(tag))
       }
     })
 
-    currentTags.forEach((tag) => {
+    tags.forEach((tag) => {
       if (!defaultTags.includes(tag)) {
         tagPromises.push(addTag(tag))
       }
@@ -53,13 +47,9 @@ const useEditTags = (currentTags: GuildTags[]) => {
     return Promise.all(tagPromises)
   }
 
-  const useSubmitResponse = useSubmit(submit, {
+  return useSubmit(submit, {
     onError: (err) => showErrorToast(err),
   })
-
-  return {
-    onSubmit: useSubmitResponse.onSubmit,
-  }
 }
 
 export default useEditTags
