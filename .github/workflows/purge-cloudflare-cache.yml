@@ -6,8 +6,7 @@ on:
 
 jobs:
   purge-cache:
-    if: github.event.deployment_status.state == 'success'
-    # && github.event.deployment_status.environment == 'production'
+    if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'Production – guild-xyz'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,5 +15,5 @@ jobs:
       - name: Log environment
         run: echo ${{ github.event.deployment_status.environment }}
 
-      # - name: Clear Cloudflare cache
-      #   run: curl --request POST --url https://api.cloudflare.com/client/v4/zones/${{secrets.CLOUDFLARE_ZONE_ID}}/purge_cache --header 'Content-Type:application/json' --header 'X-Auth-Email:${{secrets.CLOUDFLARE_X_AUTH_EMAIL}}' --header 'X-Auth-Key:${{secrets.CLOUDFLARE_X_AUTH_KEY}}' --data '{"purge_everything":true}'
+      - name: Clear Cloudflare cache
+        run: curl --request POST --url https://api.cloudflare.com/client/v4/zones/${{secrets.CLOUDFLARE_ZONE_ID}}/purge_cache --header 'Content-Type:application/json' --header 'X-Auth-Email:${{secrets.CLOUDFLARE_X_AUTH_EMAIL}}' --header 'X-Auth-Key:${{secrets.CLOUDFLARE_X_AUTH_KEY}}' --data '{"purge_everything":true}'
