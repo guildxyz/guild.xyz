@@ -1,0 +1,20 @@
+name: Purge Cloudflare cache
+
+on:
+  deployment_status:
+  workflow_dispatch:
+
+jobs:
+  purge-cache:
+    if: github.event.deployment_status.state == 'success'
+    # && github.event.deployment_status.environment == 'production'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Log environment
+        run: echo ${{ github.event.deployment_status.environment }}
+
+      # - name: Clear Cloudflare cache
+      #   run: curl --request POST --url https://api.cloudflare.com/client/v4/zones/${{secrets.CLOUDFLARE_ZONE_ID}}/purge_cache --header 'Content-Type:application/json' --header 'X-Auth-Email:${{secrets.CLOUDFLARE_X_AUTH_EMAIL}}' --header 'X-Auth-Key:${{secrets.CLOUDFLARE_X_AUTH_KEY}}' --data '{"purge_everything":true}'
