@@ -9,7 +9,7 @@ import {
   TwitterLogo,
 } from "phosphor-react"
 import { ComponentType } from "react"
-import { GuildPlatform, PlatformName } from "types"
+import { GuildPlatform, OneOf, PlatformName } from "types"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
 import DiscordCardMenu from "./Discord/DiscordCardMenu"
@@ -31,22 +31,21 @@ export enum PlatformUsageRestrictions {
 }
 
 // If we define an AddPlatformPanel, we'll use the `DefaultAddPlatformModalContent` component in the add reward modal, but if we need a custom solution for that modal (e.g. for the add POAP flow), we can define an AddPlatformModalContent instead
-type AddPlatformComponentsParameters =
-  | {
-      AddPlatformModalContent: ComponentType<{
-        goBack: () => void
-        onSuccess: () => void
-      }>
-      AddPlatformPanel?: never
-    }
-  | {
-      AddPlatformModalContent?: never
-      AddPlatformPanel: ComponentType<{
-        onSuccess: () => void
-        scrollToTop?: () => void
-        skipSettings?: boolean
-      }>
-    }
+type AddPlatformComponentsParameters = OneOf<
+  {
+    AddPlatformModalContent: ComponentType<{
+      goBack: () => void
+      onSuccess: () => void
+    }>
+  },
+  {
+    AddPlatformPanel: ComponentType<{
+      onSuccess: () => void
+      scrollToTop?: () => void
+      skipSettings?: boolean
+    }>
+  }
+>
 
 type PlatformData = {
   icon: (props: IconProps) => JSX.Element
