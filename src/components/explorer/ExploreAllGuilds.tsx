@@ -40,10 +40,12 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
     base: "calc(var(--chakra-space-11) + (5 * var(--chakra-space-3)))",
     md: "calc(var(--chakra-space-12) + var(--chakra-space-3))",
   })
-  const tabsBg = useColorModeValue(
+  const stuckTabsBg = useColorModeValue(
     "linear-gradient(white 0px, var(--chakra-colors-gray-50) 100%)",
     "linear-gradient(var(--chakra-colors-gray-800) 0px, #323237 100%)"
   )
+  // needed so there's no transparent state in dark mode when the input is becoming stuck
+  const searchBg = useColorModeValue("white", "gray.800")
 
   const onSetOrder = (value) => {
     setOrder(value)
@@ -110,7 +112,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
           spacing={2.5}
         >
           {isStuck && (
-            <style>{`#tabs::before {height: calc(${TABS_HEIGHT_SM} + ${searchAreaHeight}); background-image: ${tabsBg}}
+            <style>{`#tabs::before {height: calc(${TABS_HEIGHT_SM} + ${searchAreaHeight}); background-image: ${stuckTabsBg}}
             #tabs button {height: var(--chakra-space-8); font-size: var(--chakra-fontSizes-sm); border-radius: var(--chakra-radii-lg); padding: 0 var(--chakra-space-3)}`}</style>
           )}
           <SearchBar
@@ -121,6 +123,8 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
                 <SearchBarFilters selected={order} onSelect={onSetOrder} />
               )
             }
+            bg={searchBg}
+            borderRadius={"xl"}
           />
           {isMobile && <SearchBarFilters selected={order} onSelect={onSetOrder} />}
         </VStack>

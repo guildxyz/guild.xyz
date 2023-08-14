@@ -3,6 +3,7 @@ import {
   Icon,
   Input,
   InputGroup,
+  InputGroupProps,
   InputLeftElement,
   InputRightAddon,
   InputRightElement,
@@ -11,14 +12,13 @@ import {
 import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
-import { Rest } from "types"
 
 type Props = {
   placeholder?: string
   search: string
   setSearch: (value: string) => void
   rightAddon?: JSX.Element
-} & Rest
+} & InputGroupProps
 
 const SearchBar = ({
   placeholder = "Search...",
@@ -50,11 +50,9 @@ const SearchBar = ({
   }
 
   const rightAddonBgColor = useColorModeValue("gray.50", undefined)
-  // needed so there's no transparent state in dark mode when the input is becoming stuck
-  const bgColor = useColorModeValue("white", "gray.800")
 
   return (
-    <InputGroup size="lg" w="full" bg={bgColor} borderRadius={"xl"}>
+    <InputGroup size="lg" w="full" {...rest}>
       <InputLeftElement>
         <Icon color="#858585" size={20} as={MagnifyingGlass} />
       </InputLeftElement>
@@ -64,11 +62,9 @@ const SearchBar = ({
         overflow="hidden"
         whiteSpace="nowrap"
         textOverflow="ellipsis"
-        colorScheme="primary"
         id="searchBar"
         value={localValue}
         onChange={handleOnChange}
-        {...rest}
       />
       {!!rightAddon ? (
         <InputRightAddon bg={rightAddonBgColor}>{rightAddon}</InputRightAddon>
