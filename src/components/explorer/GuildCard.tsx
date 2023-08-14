@@ -43,7 +43,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
       >
         {image && <GuildLogo imageUrl={guildData.imageUrl} />}
         <VStack spacing={2} alignItems="start" w="full" maxW="full" mb="0.5" mt="-1">
-          <HStack>
+          <HStack spacing={1}>
             <Text
               as="span"
               fontFamily="display"
@@ -55,7 +55,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
             >
               {guildData.name}
             </Text>
-            {guildData.tags?.includes("VERIFIED") && <VerifiedIcon iconSize={5} />}
+            {guildData.tags?.includes("VERIFIED") && <VerifiedIcon size={5} />}
           </HStack>
 
           <Wrap zIndex="1">

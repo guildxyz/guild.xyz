@@ -169,7 +169,7 @@ const Layout = ({
               <HStack justify="space-between" w="full" spacing={3}>
                 <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
                   {image}
-                  <HStack gap={2}>
+                  <HStack gap={1}>
                     <Heading
                       as="h1"
                       fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}

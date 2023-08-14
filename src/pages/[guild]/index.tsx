@@ -227,7 +227,9 @@ const GuildPage = (): JSX.Element => {
         action={isAdmin && <DynamicEditGuildButton />}
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
         titlePostfix={
-          tags?.includes("VERIFIED") && <VerifiedIcon iconSize={6} mt={-2} />
+          tags?.includes("VERIFIED") && (
+            <VerifiedIcon size={{ base: 5, lg: 6 }} mt={-1} />
+          )
         }
       >
         {showOnboarding ? (
