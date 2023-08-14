@@ -15,11 +15,10 @@ const usePlatformUsageInfo = (
   const shouldFetch = platformId?.length > 0
   const { data: guildByPlatform, isValidating } = useSWRWithOptionalAuth<
     Partial<Guild>
-  >(
-    shouldFetch ? `/platform/guild/${platform}/${platformId}` : null,
-    { fallbackData: { id: null } },
-    true
-  )
+  >(shouldFetch ? `/platform/guild/${platform}/${platformId}` : null, {
+    fallbackData: { id: null },
+    shouldRetryOnError: false,
+  })
 
   const isOnGuildsPage = id === guildByPlatform?.id
   const isAlreadyUsedInGuild = !isValidating && !!guildByPlatform?.id
