@@ -73,25 +73,26 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
           </Wrap>
         </VStack>
         {guildData.tags?.includes("FEATURED") && (
-          <ColorCardLabel
-            fallbackColor="white"
-            backgroundColor={"purple.500"}
-            label={
-              <Tooltip label="This guild is featured by Guild.xyz" hasArrow>
+          <Tooltip label="This guild is featured by Guild.xyz" hasArrow>
+            <ColorCardLabel
+              fallbackColor="white"
+              backgroundColor={"purple.500"}
+              label={
                 <Icon
                   as={PushPin}
                   display={"flex"}
                   alignItems={"center"}
                   m={"2px"}
                 />
-              </Tooltip>
-            }
-            top="0"
-            left="0"
-            borderBottomRightRadius="xl"
-            borderTopLeftRadius="2xl"
-            labelSize="xs"
-          />
+              }
+              top="0"
+              left="0"
+              borderBottomRightRadius="xl"
+              borderTopLeftRadius="2xl"
+              labelSize="xs"
+              px="3"
+            />
+          </Tooltip>
         )}
       </SimpleGrid>
     </DisplayCard>
