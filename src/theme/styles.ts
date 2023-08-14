@@ -93,6 +93,13 @@ const styles = {
     ".intercom-lightweight-app": {
       zIndex: "banner !important",
     },
+    /*
+      Hides the default reCaptcha badge. We do indicate reCaptcha usage in the WalletSelectorModal
+      https://stackoverflow.com/questions/44543157/how-to-hide-the-google-invisible-recaptcha-badge#answer-44543771
+    */
+    ".grecaptcha-badge": {
+      visibility: "hidden",
+    },
   }),
 }
 

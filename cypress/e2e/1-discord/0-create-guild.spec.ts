@@ -17,7 +17,7 @@ describe("create-discord-guild", () => {
         cy.stub(win, "open").as("winOpen")
       },
     })
-    cy.connectWallet()
+    cy.connectWalletAndVerifyAccount()
   })
 
   it("can authenticate with Discord and create a guild", () => {

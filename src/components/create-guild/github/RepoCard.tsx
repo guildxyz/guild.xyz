@@ -22,12 +22,14 @@ const RepoCard = ({
 
   const RepoName = () => (
     <Link href={`https://github.com/${platformGuildId}`} isExternal>
-      <Text fontWeight={"bold"}>{platformGuildId}</Text>
+      <Text fontWeight="bold" noOfLines={1}>
+        {platformGuildId}
+      </Text>
     </Link>
   )
 
   return (
-    <Card padding={4}>
+    <Card padding={4} h="full">
       <HStack justifyContent={"space-between"} w="full" h="full">
         {description?.length > 0 ? (
           <VStack spacing={0} alignItems="start">
@@ -51,7 +53,7 @@ const RepoCard = ({
           <Button isLoading />
         ) : id ? (
           <NextLink href={`/${urlName}`} passHref>
-            <Button as="a" colorScheme="gray">
+            <Button as="a" colorScheme="gray" minW="max-content">
               Go to guild
             </Button>
           </NextLink>

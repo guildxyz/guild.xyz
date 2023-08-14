@@ -11,7 +11,7 @@ import CompleteCaptcha from "./components/CompleteCaptcha"
 const CaptchaRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
   const captchaAge =
-    requirement.data.maxAmount > 0 &&
+    requirement.data?.maxAmount > 0 &&
     formatRelativeTimeFromNow(requirement.data.maxAmount)
 
   return (

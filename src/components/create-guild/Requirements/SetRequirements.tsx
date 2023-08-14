@@ -22,6 +22,7 @@ const SetRequirements = (): JSX.Element => {
     getValues,
     watch,
     setValue,
+    resetField,
     formState: { errors },
   } = useFormContext<GuildFormType["roles"][number]>()
 
@@ -58,11 +59,13 @@ const SetRequirements = (): JSX.Element => {
   )
 
   const onFreeEntryChange = (e) => {
+    resetField("requirements", {
+      defaultValue: [],
+    })
+
     if (e.target.checked) {
       replace([{ type: "FREE", data: {}, chain: null, address: null }])
       setValue("logic", "AND")
-    } else {
-      replace([])
     }
   }
 
