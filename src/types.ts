@@ -101,6 +101,7 @@ type PlatformAccountDetails = {
   platformName: PlatformName
   platformUserId: string
   platformUserData?: PlatformUserData
+  username?: string
 }
 
 type AddressConnectionProvider = "DELEGATE"

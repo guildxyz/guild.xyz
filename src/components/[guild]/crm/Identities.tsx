@@ -36,8 +36,7 @@ export const IdentityTag = ({
   isOpen: boolean
 } & Rest) => {
   const platform = platforms[PlatformType[platformAccount.platformId]]
-  const username =
-    platformAccount.platformUserData?.username ?? platformAccount.platformUserId
+  const username = platformAccount.username ?? platformAccount.platformUserId
 
   return (
     <Tag
