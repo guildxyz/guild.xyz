@@ -3,10 +3,10 @@ import {
   DiscordLogo,
   GithubLogo,
   GoogleLogo,
+  IconProps,
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
-import { ReactNode } from "react"
 import { GuildPlatform, PlatformName } from "types"
 import fetcher from "utils/fetcher"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
@@ -32,7 +32,7 @@ type PlatformData<
     scope?: string | { membership: string; creation: string }
   } & Record<string, any>
 > = {
-  icon: typeof DiscordLogo
+  icon: (props: IconProps) => JSX.Element
   name: string
   colorScheme: ChakraProps["color"]
   gatedEntity: string
@@ -45,7 +45,7 @@ type PlatformData<
   }
   cardSettingsComponent?: () => JSX.Element
   cardMenuComponent?: (props) => JSX.Element
-  cardWarningComponent?: (props) => ReactNode
+  cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
 
   oauth?: {
