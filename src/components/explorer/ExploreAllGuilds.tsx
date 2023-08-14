@@ -47,6 +47,14 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
     "linear-gradient(var(--chakra-colors-gray-800) 0px, #323237 100%)"
   )
 
+  const onSetOrder = (value) => {
+    setOrder(value)
+    window.scrollTo({
+      top: window.scrollY + ref.current.getBoundingClientRect().top - 25,
+      behavior: "smooth",
+    })
+  }
+
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
   const {
@@ -111,10 +119,12 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
             placeholder="Search guilds"
             {...{ search, setSearch }}
             rightAddon={
-              !isMobile && <SearchBarFilters selected={order} onSelect={setOrder} />
+              !isMobile && (
+                <SearchBarFilters selected={order} onSelect={onSetOrder} />
+              )
             }
           />
-          {isMobile && <SearchBarFilters selected={order} onSelect={setOrder} />}
+          {isMobile && <SearchBarFilters selected={order} onSelect={onSetOrder} />}
         </VStack>
         {!renderedGuilds.length ? (
           isValidating ? null : !search?.length ? (
