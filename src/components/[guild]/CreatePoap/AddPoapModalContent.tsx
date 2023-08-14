@@ -24,16 +24,18 @@ type Props = {
   onSuccess: () => void
 }
 
+export type AddPoapStep = "home" | "requirements"
+
 const AddPoapModalContent = ({
   modalRef,
   goBack,
   onSuccess,
 }: Props): JSX.Element => {
-  const [step, setStep] = useState("home")
+  const [step, setStep] = useState<AddPoapStep>("home")
 
   const scrollToTop = () => modalRef.current?.scrollTo({ top: 0 })
 
-  const handleSetStep = (newStep) => {
+  const handleSetStep = (newStep: AddPoapStep) => {
     setStep(newStep)
     scrollToTop()
   }

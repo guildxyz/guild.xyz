@@ -17,11 +17,16 @@ import useToast from "hooks/useToast"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
 import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
+import { AddPoapStep } from "../AddPoapModalContent"
 import useSavePoap from "../hooks/useSavePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
 import UploadMintLinks from "./UploadMintLinks"
 
-const ImportPoap = ({ setStep }): JSX.Element => {
+type Props = {
+  setStep: (step: AddPoapStep) => void
+}
+
+const ImportPoap = ({ setStep }: Props): JSX.Element => {
   const { id } = useGuild()
   const toast = useToast()
 

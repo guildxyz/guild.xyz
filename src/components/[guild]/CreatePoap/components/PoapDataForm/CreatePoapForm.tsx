@@ -1,17 +1,22 @@
 import { Stack } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useToast from "hooks/useToast"
 import { FormProvider, useForm } from "react-hook-form"
 import { CreatePoapForm as CreatePoapFormType } from "types"
 import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
+import { AddPoapStep } from "../../AddPoapModalContent"
 import useCreatePoap from "../../hooks/useCreatePoap"
 import useSavePoap from "../../hooks/useSavePoap"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import PoapDataForm from "./PoapDataForm"
 
-const CreatePoapForm = ({ setStep }): JSX.Element => {
+type Props = {
+  setStep: (step: AddPoapStep) => void
+}
+
+const CreatePoapForm = ({ setStep }: Props): JSX.Element => {
   const { setPoapData } = useCreatePoapContext()
   const { id } = useGuild()
   const toast = useToast()
