@@ -13,7 +13,7 @@ type Props = {
 } & ChakraProps
 
 const VerifiedIcon = ({ size, ...chakraProps }: Props): JSX.Element => (
-  <Tooltip label="Verified" hasArrow>
+  <Tooltip label="This guild is verified by Guild.xyz" hasArrow>
     <Center position="relative" {...chakraProps}>
       <Icon
         as={CircleWavyCheck}

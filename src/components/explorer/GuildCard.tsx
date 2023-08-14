@@ -77,7 +77,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
             fallbackColor="white"
             backgroundColor={"purple.500"}
             label={
-              <Tooltip label="Featured" hasArrow>
+              <Tooltip label="This guild is featured by Guild.xyz" hasArrow>
                 <Icon
                   as={PushPin}
                   display={"flex"}
