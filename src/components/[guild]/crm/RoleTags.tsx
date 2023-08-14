@@ -9,6 +9,7 @@ import {
   Tag,
   TagLabel,
   TagLeftIcon,
+  Text,
   Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
@@ -26,7 +27,7 @@ const RoleTags = ({ roleIds }: Props) => {
 
   const moreRolesTagBorderColor = useColorModeValue("gray-300", "whiteAlpha-300")
 
-  if (!renderedRoleIds) return null
+  if (!renderedRoleIds?.length) return <Text>-</Text>
 
   return (
     <HStack>
