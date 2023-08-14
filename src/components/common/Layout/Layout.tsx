@@ -46,6 +46,7 @@ const Layout = ({
   imageUrl,
   ogTitle,
   title,
+  titlePostfix,
   ogDescription,
   description,
   textColor,
@@ -57,7 +58,6 @@ const Layout = ({
   backButton,
   maxWidth = "container.lg",
   children,
-  titlePostfix,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")

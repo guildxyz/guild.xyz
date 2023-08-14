@@ -10,7 +10,7 @@ import {
   usePrevious,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { TABS_HEIGHT_SM } from "components/[guild]/Tabs/Tabs"
+import { TABS_HEIGHT, TABS_HEIGHT_SM } from "components/[guild]/Tabs/Tabs"
 import { BATCH_SIZE } from "components/_app/ExplorerProvider"
 import Section from "components/common/Section"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
@@ -28,8 +28,6 @@ import SearchBarFilters, { Filters } from "./SearchBarFilters"
 type Props = {
   guildsInitial: GuildBase[]
 }
-
-const TABS_HEIGHT_PX = 55
 
 const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   const { account } = useWeb3React()
@@ -103,7 +101,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
         <VStack
           ref={searchAreaRef}
           position="sticky"
-          top={TABS_HEIGHT_PX + 12}
+          top={TABS_HEIGHT}
           transform={isStuck && "translateY(-12px)"}
           width="full"
           zIndex={"banner"}
