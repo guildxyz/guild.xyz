@@ -51,7 +51,7 @@ const useConnectPlatform = (
 
   const { onOpen, authData, isAuthenticating, ...rest } = useOauthPopupWindow(
     platform,
-    authLevel
+    isReauth ? "creation" : authLevel
   )
 
   const prevAuthData = usePrevious(authData)
