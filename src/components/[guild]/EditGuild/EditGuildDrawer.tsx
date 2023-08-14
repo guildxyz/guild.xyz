@@ -13,10 +13,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
-import UrlName from "components/[guild]/EditGuild/components/UrlName"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -26,7 +22,10 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
-import useIsV2 from "hooks/useIsV2"
+import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
+import UrlName from "components/[guild]/EditGuild/components/UrlName"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
@@ -76,8 +75,6 @@ const EditGuildDrawer = ({
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
 
-  const isV2 = useIsV2()
-
   const defaultValues = {
     name,
     imageUrl,
@@ -91,7 +88,7 @@ const EditGuildDrawer = ({
         }
       : {},
     showMembers,
-    admins: (isV2 ? admins : admins?.flatMap((admin) => admin.address)) ?? [],
+    admins: admins ?? [],
     urlName,
     hideFromExplorer,
     contacts,
@@ -102,12 +99,6 @@ const EditGuildDrawer = ({
     mode: "all",
     defaultValues,
   })
-
-  useEffect(() => {
-    if (typeof isV2 === "boolean") {
-      methods.reset(defaultValues)
-    }
-  }, [isV2])
 
   // We'll only receive this info on client-side, so we're setting the default value of this field in a useEffect
   useEffect(() => {

@@ -7,12 +7,11 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Reorder } from "framer-motion"
-import useIsV2 from "hooks/useIsV2"
 import { useMemo, useState } from "react"
 import { Visibility } from "types"
 import useReorderRoles from "../hooks/useReorderRoles"
@@ -25,7 +24,6 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     onOpen: onAlertOpen,
     onClose: onAlertClose,
   } = useDisclosure()
-  const isV2 = useIsV2()
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
@@ -60,22 +58,18 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { isLoading, onSubmit } = useReorderRoles(onClose)
 
   const handleSubmit = () => {
-    if (isV2) {
-      const changedRoles = roleIdsOrder
-        .map((roleId, i) => ({
-          id: roleId,
-          position: i,
-        }))
-        .filter(({ id: roleId, position }) =>
-          (roles ?? []).some(
-            (prevRole) => prevRole.id === roleId && prevRole.position !== position
-          )
+    const changedRoles = roleIdsOrder
+      .map((roleId, i) => ({
+        id: roleId,
+        position: i,
+      }))
+      .filter(({ id: roleId, position }) =>
+        (roles ?? []).some(
+          (prevRole) => prevRole.id === roleId && prevRole.position !== position
         )
+      )
 
-      return onSubmit(changedRoles)
-    } else {
-      onSubmit(roleIdsOrder.map((roleId, i) => ({ id: roleId, position: i })))
-    }
+    return onSubmit(changedRoles)
   }
 
   const onCloseAndClear = () => {
