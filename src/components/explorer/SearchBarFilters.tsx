@@ -1,4 +1,5 @@
-import { Box, Button, HStack, Icon, useColorModeValue } from "@chakra-ui/react"
+import { Box, HStack, Icon, useColorModeValue } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { motion } from "framer-motion"
 import { CircleWavyCheck, PushPin, Sparkle } from "phosphor-react"
 
@@ -27,12 +28,9 @@ const SearchBarFilters = ({ selected, onSelect }: Props): JSX.Element => {
         <Box key={filter} position={"relative"}>
           <Button
             leftIcon={<Icon as={icons[filter]} />}
-            as="label"
-            cursor="pointer"
-            borderRadius="lg"
-            alignSelf="center"
             size="sm"
-            bgColor={"transparent"}
+            variant="ghost"
+            borderRadius="lg"
             onClick={() => onSelect(filter)}
             zIndex={1}
             {...(selected === filter && { _hover: { bg: "transparent" } })}
