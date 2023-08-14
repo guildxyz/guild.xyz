@@ -33,7 +33,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   const { account } = useWeb3React()
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const prevSearch = usePrevious(search)
-  const [order, setOrder] = useQueryState<Filters>("order", "NEWEST")
+  const [order, setOrder] = useQueryState<Filters>("order", "FEATURED")
   const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
   const { ref: searchAreaRef, isStuck } = useIsStuck()
   const searchAreaHeight = useBreakpointValue({
