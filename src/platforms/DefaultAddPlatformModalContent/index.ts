@@ -1,3 +1,0 @@
-import DefaultAddPlatformModalContent from "./DefaultAddPlatformModalContent"
-
-export default DefaultAddPlatformModalContent

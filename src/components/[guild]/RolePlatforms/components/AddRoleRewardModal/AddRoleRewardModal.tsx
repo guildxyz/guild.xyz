@@ -1,5 +1,8 @@
 import {
+  HStack,
+  IconButton,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
@@ -8,19 +11,27 @@ import {
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
-import dynamic from "next/dynamic"
+import { ArrowLeft } from "phosphor-react"
+import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import platforms from "platforms/platforms"
+import { useFormContext } from "react-hook-form"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
-const DynamicDefaultAddPlatformModalContent = dynamic(
-  () => import("platforms/DefaultAddPlatformModalContent")
-)
-
 const AddRoleRewardModal = () => {
-  const { modalRef, selection, setSelection, isOpen, onClose } =
+  const { modalRef, selection, setSelection, step, setStep, isOpen, onClose } =
     useAddRewardContext()
 
-  const { AddPlatformModalContent } = platforms[selection] ?? {}
+  const { reset } = useFormContext()
+
+  const goBack = () => {
+    if (step === "ROLES_REQUIREMENTS") {
+      setStep("HOME")
+    } else {
+      setSelection(null)
+    }
+  }
+
+  const { AddPlatformPanel } = platforms[selection] ?? {}
 
   return (
     <Modal
@@ -32,24 +43,39 @@ const AddRoleRewardModal = () => {
     >
       <ModalOverlay />
       <ModalContent minH="550px">
-        {selection ? (
-          AddPlatformModalContent ? (
-            <AddPlatformModalContent />
+        <ModalCloseButton />
+        <ModalHeader>
+          <HStack>
+            <IconButton
+              rounded="full"
+              aria-label="Back"
+              size="sm"
+              mb="-3px"
+              icon={<ArrowLeft size={20} />}
+              variant="ghost"
+              onClick={goBack}
+            />
+            <Text>
+              {selection ? `Add ${platforms[selection].name} reward` : "Add reward"}
+            </Text>
+          </HStack>
+        </ModalHeader>
+
+        <ModalBody ref={modalRef}>
+          {selection && step === "ROLES_REQUIREMENTS" ? (
+            <SelectRoleOrSetRequirements selectedPlatform={selection} />
+          ) : AddPlatformPanel ? (
+            <AddPlatformPanel onSuccess={onClose} skipSettings />
           ) : (
-            <DynamicDefaultAddPlatformModalContent isForExistingRole />
-          )
-        ) : (
-          <>
-            <ModalHeader>Add reward</ModalHeader>
-            <ModalBody ref={modalRef}>
+            <>
               <SelectExistingPlatform onClose={onClose} />
               <Text fontWeight="bold" mb="3">
                 Add new platform
               </Text>
               <PlatformsGrid onSelection={setSelection} />
-            </ModalBody>
-          </>
-        )}
+            </>
+          )}
+        </ModalBody>
       </ModalContent>
     </Modal>
   )

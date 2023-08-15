@@ -19,7 +19,7 @@ import ImportPoap from "./components/ImportPoap"
 import CreatePoapForm from "./components/PoapDataForm/CreatePoapForm"
 import { SetupPoapRequirements } from "./components/PoapRequirements/PoapRequirements"
 
-const AddPoapModalContent = (): JSX.Element => {
+const AddPoapPanel = (): JSX.Element => {
   const { modalRef, setSelection, step, onClose } = useAddRewardContext()
   const { reset } = useFormContext()
 
@@ -71,10 +71,10 @@ const AddPoapModalContent = (): JSX.Element => {
   )
 }
 
-const AddPoapModalContentWrapper = (): JSX.Element => (
+const AddPoapPanelWrapper = (): JSX.Element => (
   <CreatePoapProvider>
-    <AddPoapModalContent />
+    <AddPoapPanel />
   </CreatePoapProvider>
 )
 
-export default AddPoapModalContentWrapper
+export default AddPoapPanelWrapper

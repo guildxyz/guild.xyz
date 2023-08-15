@@ -9,7 +9,7 @@ import {
   TwitterLogo,
 } from "phosphor-react"
 import { ComponentType } from "react"
-import { GuildPlatform, OneOf, PlatformName } from "types"
+import { GuildPlatform, PlatformName } from "types"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
 import DiscordCardMenu from "./Discord/DiscordCardMenu"
@@ -30,19 +30,6 @@ export enum PlatformUsageRestrictions {
   MULTIPLE_ROLES, // e.g. Discord
 }
 
-// If we define an AddPlatformPanel, we'll use the `DefaultAddPlatformModalContent` component in the add reward modal, but if we need a custom solution for that modal (e.g. for the add POAP flow), we can define an AddPlatformModalContent instead
-type AddPlatformComponentsParameters = OneOf<
-  {
-    AddPlatformModalContent: ComponentType<Record<string, never>>
-  },
-  {
-    AddPlatformPanel: ComponentType<{
-      onSuccess: () => void
-      skipSettings?: boolean
-    }>
-  }
->
-
 type PlatformData = {
   icon: (props: IconProps) => JSX.Element
   name: string
@@ -60,7 +47,11 @@ type PlatformData = {
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
   usageRestriction: PlatformUsageRestrictions
-} & AddPlatformComponentsParameters
+  AddPlatformPanel?: ComponentType<{
+    onSuccess: () => void
+    skipSettings?: boolean
+  }>
+}
 
 const platforms: Record<PlatformName, PlatformData> = {
   TELEGRAM: {
@@ -152,9 +143,6 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "purple",
     gatedEntity: "POAP",
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
-    AddPlatformModalContent: dynamic(() => import("components/[guild]/CreatePoap"), {
-      ssr: false,
-    }),
   },
   CONTRACT_CALL: {
     icon: null,

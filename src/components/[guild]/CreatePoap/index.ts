@@ -1,3 +1,3 @@
-import AddPoapModalContent from "./AddPoapModalContent"
+import AddPoapPanel from "./AddPoapPanel"
 
-export default AddPoapModalContent
+export default AddPoapPanel
