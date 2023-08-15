@@ -100,6 +100,45 @@ const styles = {
     ".grecaptcha-badge": {
       visibility: "hidden",
     },
+    ".lexical-content-editable": {
+      resize: "vertical",
+      overflow: "auto",
+      padding: "0.5rem",
+      minHeight: "4rem",
+      backgroundColor: "var(--chakra-colors-blackAlpha-300)",
+      border: "1px solid transparent",
+      ":focus-visible": {
+        borderRadius: "inherit",
+        borderTopRadius: "none",
+        outline: "none",
+        border: "1px solid var(--chakra-colors-gray-500)",
+        boxShadow: "0 0 0 1px var(--chakra-colors-gray-500)",
+      },
+      h1: {
+        fontWeight: "bold",
+        fontSize: "var(--chakra-fontSizes-2xl)",
+      },
+      h2: {
+        fontWeight: "bold",
+        fontSize: "var(--chakra-fontSizes-xl)",
+      },
+      ul: {
+        marginLeft: "1rem",
+        listStyle: "disc",
+      },
+      ol: {
+        marginLeft: "1rem",
+        listStyle: "decimal",
+      },
+      blockquote: {
+        borderLeft: "2px",
+        paddingLeft: "1rem",
+        borderColor: "var(--chakra-colors-gray-500)",
+      },
+      a: {
+        color: "var(--chakra-colors-blue-500)",
+      },
+    },
   }),
 }
 

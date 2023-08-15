@@ -19,7 +19,6 @@ import {
   NumberInputStepper,
   Stack,
   Text,
-  Textarea,
   Tooltip,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -40,6 +39,7 @@ import {
 import ChainPicker from "requirements/common/ChainPicker"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import ImagePicker from "./components/ImagePicker"
+import RichTextDescriptionEditor from "./components/RichTextDescriptionEditor"
 import useCreateNft from "./hooks/useCreateNft"
 
 type Props = { onSuccess: (deployedContractAddress: string) => void }
@@ -65,6 +65,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
   const methods = useForm<CreateNftFormType>({
     mode: "all",
   })
+
   const {
     control,
     register,
@@ -101,6 +102,10 @@ const CreateNftForm = ({ onSuccess }: Props) => {
     control,
     name: "attributes",
   })
+
+  const {
+    field: { onChange: onDescriptionChange },
+  } = useController({ control, name: "description" })
 
   const { onSubmit, isLoading, loadingText } = useCreateNft()
 
@@ -217,11 +222,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
               <FormControl isInvalid={!!errors?.description}>
                 <FormLabel>NFT description</FormLabel>
 
-                <Textarea
-                  {...register("description", {
-                    required: "This field is required",
-                  })}
-                />
+                <RichTextDescriptionEditor onChange={onDescriptionChange} />
 
                 <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
 
@@ -343,7 +344,8 @@ const CreateNftForm = ({ onSuccess }: Props) => {
               isDisabled={shouldSwitchChain || isLoading}
               isLoading={isLoading}
               loadingText={loadingText}
-              onClick={handleSubmit(onSubmit)}
+              // onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmit(console.log)}
             >
               Create NFT
             </Button>
