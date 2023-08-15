@@ -5,8 +5,6 @@ import useToast from "hooks/useToast"
 import { GuildPlatform } from "types"
 import fetcher from "utils/fetcher"
 
-// TODO: add types
-
 const useAddReward = (onSuccess?) => {
   const { id, mutateGuild } = useGuild()
   const showErrorToast = useShowErrorToast()
