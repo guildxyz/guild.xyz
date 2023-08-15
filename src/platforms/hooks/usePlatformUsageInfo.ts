@@ -16,12 +16,12 @@ const usePlatformUsageInfo = (
   const { data: guildByPlatform, isValidating } = useSWRWithOptionalAuth<
     Partial<Guild>
   >(shouldFetch ? `/platform/guild/${platform}/${platformId}` : null, {
-    fallbackData: { id: null },
     shouldRetryOnError: false,
   })
 
   const isOnGuildsPage = id === guildByPlatform?.id
   const isAlreadyUsedInGuild = !isValidating && !!guildByPlatform?.id
+
   const isAlreadyInUse = !isOnGuildsPage
     ? isAlreadyUsedInGuild
     : !isAlreadyUsedInGuild
