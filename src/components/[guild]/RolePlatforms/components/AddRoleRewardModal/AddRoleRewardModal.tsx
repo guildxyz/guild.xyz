@@ -42,15 +42,17 @@ const AddRoleRewardModal = () => {
         <ModalCloseButton />
         <ModalHeader>
           <HStack>
-            <IconButton
-              rounded="full"
-              aria-label="Back"
-              size="sm"
-              mb="-3px"
-              icon={<ArrowLeft size={20} />}
-              variant="ghost"
-              onClick={goBack}
-            />
+            {selection && (
+              <IconButton
+                rounded="full"
+                aria-label="Back"
+                size="sm"
+                mb="-3px"
+                icon={<ArrowLeft size={20} />}
+                variant="ghost"
+                onClick={goBack}
+              />
+            )}
             <Text>
               {selection ? `Add ${platforms[selection].name} reward` : "Add reward"}
             </Text>
