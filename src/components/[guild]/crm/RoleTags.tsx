@@ -76,7 +76,7 @@ export const RoleTag = ({ roleId }: { roleId: number }) => {
         ? { variant: "solid", colorScheme: "gray" }
         : { bg: publicRoleBg, color: "white" })}
     >
-      {role.imageUrl.startsWith("/guildLogos") ? (
+      {role.imageUrl?.startsWith("/guildLogos") ? (
         <TagLeftIcon as={Img} src={role.imageUrl} />
       ) : (
         <TagLeftIcon

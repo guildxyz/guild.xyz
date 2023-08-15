@@ -186,7 +186,7 @@ const RoleCheckboxGroup = ({
               spacing={3}
             >
               <HStack spacing={1.5}>
-                {role.imageUrl.startsWith("/guildLogos") ? (
+                {role.imageUrl?.startsWith("/guildLogos") ? (
                   <Center boxSize="5">
                     <Img
                       src={role.imageUrl}
