@@ -51,6 +51,7 @@ type PlatformData = {
     onSuccess: () => void
     skipSettings?: boolean
   }>
+  PlatformPreview?: ComponentType<Record<string, never>>
 }
 
 const platforms: Record<PlatformName, PlatformData> = {
@@ -69,6 +70,9 @@ const platforms: Record<PlatformName, PlatformData> = {
         ),
       { ssr: false }
     ),
+    PlatformPreview: dynamic(() => import("platforms/components/TelegramPreview"), {
+      ssr: false,
+    }),
   },
   DISCORD: {
     icon: DiscordLogo,
@@ -86,6 +90,9 @@ const platforms: Record<PlatformName, PlatformData> = {
         ),
       { ssr: false }
     ),
+    PlatformPreview: dynamic(() => import("platforms/components/DiscordPreview"), {
+      ssr: false,
+    }),
   },
   GITHUB: {
     icon: GithubLogo,
@@ -102,6 +109,9 @@ const platforms: Record<PlatformName, PlatformData> = {
         ),
       { ssr: false }
     ),
+    PlatformPreview: dynamic(() => import("platforms/components/GitHubPreview"), {
+      ssr: false,
+    }),
   },
   TWITTER: {
     icon: TwitterLogo,
@@ -136,6 +146,9 @@ const platforms: Record<PlatformName, PlatformData> = {
         ),
       { ssr: false }
     ),
+    PlatformPreview: dynamic(() => import("platforms/components/GooglePreview"), {
+      ssr: false,
+    }),
   },
   POAP: {
     icon: null,
@@ -143,6 +156,9 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "purple",
     gatedEntity: "POAP",
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    PlatformPreview: dynamic(() => import("platforms/components/PoapPreview"), {
+      ssr: false,
+    }),
   },
   CONTRACT_CALL: {
     icon: null,
@@ -153,6 +169,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardButton: ContractCallRewardCardButton,
     usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
     AddPlatformPanel: null, // TODO: will add in another PR
+    PlatformPreview: null, // TODO: will add in another PR
   },
 }
 

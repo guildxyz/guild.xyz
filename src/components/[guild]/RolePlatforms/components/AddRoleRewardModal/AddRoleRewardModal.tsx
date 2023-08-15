@@ -14,15 +14,11 @@ import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { ArrowLeft } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import platforms from "platforms/platforms"
-import { useFormContext } from "react-hook-form"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
 const AddRoleRewardModal = () => {
   const { modalRef, selection, setSelection, step, setStep, isOpen, onClose } =
     useAddRewardContext()
-
-  const { reset } = useFormContext()
-
   const goBack = () => {
     if (step === "ROLES_REQUIREMENTS") {
       setStep("HOME")
@@ -61,7 +57,7 @@ const AddRoleRewardModal = () => {
           </HStack>
         </ModalHeader>
 
-        <ModalBody ref={modalRef}>
+        <ModalBody ref={modalRef} className="custom-scrollbar">
           {selection && step === "ROLES_REQUIREMENTS" ? (
             <SelectRoleOrSetRequirements selectedPlatform={selection} />
           ) : AddPlatformPanel ? (

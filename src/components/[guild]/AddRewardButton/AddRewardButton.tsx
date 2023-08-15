@@ -7,7 +7,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
@@ -86,7 +88,10 @@ const AddRewardButton = (): JSX.Element => {
     }
   }
 
-  const { AddPlatformPanel } = platforms[selection] ?? {}
+  const { AddPlatformPanel, PlatformPreview } = platforms[selection] ?? {}
+  const shouldShowRewardPreview = step === "ROLES_REQUIREMENTS" && PlatformPreview
+
+  const lightModalBgColor = useColorModeValue("white", "gray.700")
 
   return (
     <>
@@ -117,26 +122,36 @@ const AddRewardButton = (): JSX.Element => {
           <ModalOverlay />
           <ModalContent minH="550px">
             <ModalCloseButton />
-            <ModalHeader>
-              <HStack>
-                <IconButton
-                  rounded="full"
-                  aria-label="Back"
-                  size="sm"
-                  mb="-3px"
-                  icon={<ArrowLeft size={20} />}
-                  variant="ghost"
-                  onClick={goBack}
-                />
-                <Text>
-                  {selection
-                    ? `Add ${platforms[selection].name} reward`
-                    : "Add reward"}
-                </Text>
-              </HStack>
+            <ModalHeader
+              bgColor={shouldShowRewardPreview ? lightModalBgColor : undefined}
+            >
+              <Stack spacing={8}>
+                <HStack>
+                  <IconButton
+                    rounded="full"
+                    aria-label="Back"
+                    size="sm"
+                    mb="-3px"
+                    icon={<ArrowLeft size={20} />}
+                    variant="ghost"
+                    onClick={goBack}
+                  />
+                  <Text>
+                    {selection
+                      ? `Add ${platforms[selection].name} reward`
+                      : "Add reward"}
+                  </Text>
+                </HStack>
+
+                {shouldShowRewardPreview && <PlatformPreview />}
+              </Stack>
             </ModalHeader>
 
-            <ModalBody ref={modalRef}>
+            <ModalBody
+              pt={shouldShowRewardPreview ? 8 : undefined}
+              ref={modalRef}
+              className="custom-scrollbar"
+            >
               {selection === "POAP" ? (
                 <DynamicAddPoapPanel />
               ) : selection && step === "ROLES_REQUIREMENTS" ? (

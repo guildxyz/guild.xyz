@@ -7,10 +7,17 @@ const fallbackData = {
   groupIcon: null,
 }
 
+type IsTGBotInResponse = {
+  ok: boolean
+  message?: string
+  groupIcon?: string
+  groupName?: string
+}
+
 const useIsTGBotIn = (groupId: string, swrConfig?: SWRConfiguration) => {
   const shouldFetch = groupId?.length >= 9
 
-  const { data, isValidating } = useSWR(
+  const { data, isValidating } = useSWR<IsTGBotInResponse>(
     shouldFetch
       ? `/telegram/group/${groupId?.startsWith("-") ? groupId : `-${groupId}`}`
       : null,
