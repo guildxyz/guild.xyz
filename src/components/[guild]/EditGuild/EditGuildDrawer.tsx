@@ -13,10 +13,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
-import UrlName from "components/[guild]/EditGuild/components/UrlName"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -26,6 +22,10 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
+import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
+import UrlName from "components/[guild]/EditGuild/components/UrlName"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import useIsV2 from "hooks/useIsV2"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
@@ -45,7 +45,9 @@ import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
 import SocialLinks from "./components/SocialLinks"
+import TagManager from "./components/TagManager"
 import useEditGuild from "./hooks/useEditGuild"
+import useEditTags from "./hooks/useEditTags"
 
 type Props = {
   isOpen: boolean
@@ -72,10 +74,10 @@ const EditGuildDrawer = ({
     contacts,
     isDetailed,
     featureFlags,
+    tags: savedTags,
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
-
   const isV2 = useIsV2()
 
   const defaultValues = {
@@ -97,11 +99,14 @@ const EditGuildDrawer = ({
     contacts,
     socialLinks,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
+    tags: savedTags,
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
     defaultValues,
   })
+
+  const { onSubmit: onTagsSubmit } = useEditTags()
 
   useEffect(() => {
     if (typeof isV2 === "boolean") {
@@ -147,7 +152,6 @@ const EditGuildDrawer = ({
   } = useDisclosure()
 
   const onCloseAndClear = () => {
-    const themeMode = theme?.mode
     const themeColor = theme?.color
     const backgroundImage = theme?.backgroundImage
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
@@ -187,7 +191,12 @@ const EditGuildDrawer = ({
   })
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    methods.handleSubmit(onSubmit),
+    () => {
+      methods.handleSubmit((data) => {
+        onSubmit({ ...data, tags: undefined })
+        onTagsSubmit(data.tags)
+      })()
+    },
     backgroundUploader.isUploading || iconUploader.isUploading
   )
 
@@ -273,7 +282,9 @@ const EditGuildDrawer = ({
                 {isSuperAdmin && (
                   <>
                     <Divider />
-
+                    <Section title="Tag manager" spacing="4">
+                      <TagManager />
+                    </Section>
                     <Section title="Enabled features" spacing="4">
                       <DynamicFeatureFlags />
                     </Section>
