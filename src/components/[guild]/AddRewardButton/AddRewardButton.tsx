@@ -176,7 +176,7 @@ const AddRewardButton = (): JSX.Element => {
                   onClick={methods.handleSubmit(onSubmit)}
                   isLoading={isLoading}
                 >
-                  Add reward
+                  Done
                 </Button>
               </ModalFooter>
             )}
