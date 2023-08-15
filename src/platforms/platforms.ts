@@ -33,15 +33,11 @@ export enum PlatformUsageRestrictions {
 // If we define an AddPlatformPanel, we'll use the `DefaultAddPlatformModalContent` component in the add reward modal, but if we need a custom solution for that modal (e.g. for the add POAP flow), we can define an AddPlatformModalContent instead
 type AddPlatformComponentsParameters = OneOf<
   {
-    AddPlatformModalContent: ComponentType<{
-      goBack: () => void
-      onSuccess: () => void
-    }>
+    AddPlatformModalContent: ComponentType<Record<string, never>>
   },
   {
     AddPlatformPanel: ComponentType<{
       onSuccess: () => void
-      scrollToTop?: () => void
       skipSettings?: boolean
     }>
   }

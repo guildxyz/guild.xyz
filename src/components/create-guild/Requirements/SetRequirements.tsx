@@ -16,7 +16,11 @@ import LogicFormControl from "./components/LogicFormControl"
 import RequirementEditableCard from "./components/RequirementEditableCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
-const SetRequirements = (): JSX.Element => {
+type Props = {
+  isOptional?: boolean
+}
+
+const SetRequirements = ({ isOptional }: Props): JSX.Element => {
   const {
     control,
     getValues,
@@ -33,7 +37,7 @@ const SetRequirements = (): JSX.Element => {
     control,
     keyName: "formFieldId",
     rules: {
-      required: "Set some requirements, or make the role free",
+      required: !isOptional ? "Set some requirements, or make the role free" : false,
     },
   })
 

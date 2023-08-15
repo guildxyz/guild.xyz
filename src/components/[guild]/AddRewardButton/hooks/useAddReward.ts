@@ -2,7 +2,10 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { GuildPlatform } from "types"
 import fetcher from "utils/fetcher"
+
+// TODO: add types
 
 const useAddReward = (onSuccess?) => {
   const { id, mutateGuild } = useGuild()
@@ -12,7 +15,7 @@ const useAddReward = (onSuccess?) => {
   const fetchData = async (signedValdation: SignedValdation) =>
     fetcher(`/guild/${id}/platform`, signedValdation)
 
-  const { onSubmit, ...rest } = useSubmitWithSign(fetchData, {
+  return useSubmitWithSign<GuildPlatform & { roleIds?: number[] }>(fetchData, {
     onError: (err) => showErrorToast(err),
     onSuccess: () => {
       toast({ status: "success", title: "Reward successfully added" })
@@ -20,15 +23,6 @@ const useAddReward = (onSuccess?) => {
       onSuccess?.()
     },
   })
-
-  return {
-    onSubmit: (data) =>
-      onSubmit({
-        ...data.rolePlatforms[0].guildPlatform,
-        roleIds: data.roleIds?.filter((roleId) => !!roleId),
-      }),
-    ...rest,
-  }
 }
 
 export default useAddReward

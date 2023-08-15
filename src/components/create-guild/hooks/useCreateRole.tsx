@@ -1,12 +1,12 @@
 import { useWeb3React } from "@web3-react/core"
-import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useGuild from "components/[guild]/hooks/useGuild"
+import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useIsV2 from "hooks/useIsV2"
 import useMatchMutate from "hooks/useMatchMutate"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { Role } from "types"
@@ -14,9 +14,9 @@ import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
-type RoleOrGuild = Role & { guildId: number }
+export type RoleToCreate = Role & { guildId: number; roleType?: "NEW" }
 
-const useCreateRole = () => {
+const useCreateRole = (onSuccess?: () => void) => {
   const { account } = useWeb3React()
 
   const { mutate } = useSWRConfig()
@@ -30,13 +30,13 @@ const useCreateRole = () => {
 
   const fetchData = async (
     signedValidation: SignedValdation
-  ): Promise<RoleOrGuild> =>
+  ): Promise<RoleToCreate> =>
     fetcher(
       isV2 ? `/v2/guilds/${id}/roles/with-requirements-and-rewards` : "/role",
       signedValidation
     )
 
-  const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {
+  const useSubmitResponse = useSubmitWithSign<RoleToCreate>(fetchData, {
     onError: (error_) => {
       const processedError = processConnectorError(error_)
       showErrorToast(processedError || error_)
@@ -61,12 +61,14 @@ guild.xyz/${urlName}`,
         roles: [...curr.roles, response_],
       }))
       window.location.hash = `role-${response_.id}`
+
+      onSuccess?.()
     },
   })
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) => {
+    onSubmit: (data: RoleToCreate) => {
       data.requirements = preprocessRequirements(data?.requirements)
 
       delete data.roleType

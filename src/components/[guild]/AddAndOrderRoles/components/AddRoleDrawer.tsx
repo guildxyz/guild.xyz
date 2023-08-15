@@ -16,7 +16,9 @@ import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useCreateRole from "components/create-guild/hooks/useCreateRole"
+import useCreateRole, {
+  RoleToCreate,
+} from "components/create-guild/hooks/useCreateRole"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
@@ -40,8 +42,12 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
     useCreateRole()
 
-  const defaultValues = {
+  const defaultValues: RoleToCreate = {
     guildId: id,
+    id: undefined,
+    members: undefined,
+    memberCount: undefined,
+    position: undefined,
     name: "",
     description: "",
     logic: "AND",
@@ -52,9 +58,10 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     rolePlatforms: discordPlatform
       ? [
           {
+            id: undefined,
             guildPlatformId: discordPlatform.id,
-            platformRoleData: {},
             platformRoleId: null,
+            platformRoleData: {},
             isNew: true,
             visibility: Visibility.PUBLIC,
           },

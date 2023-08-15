@@ -12,33 +12,16 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { ArrowLeft } from "phosphor-react"
-import { MutableRefObject, useState } from "react"
+import { useFormContext } from "react-hook-form"
+import { useAddRewardContext } from "../AddRewardContext"
 import { CreatePoapProvider } from "./components/CreatePoapContext"
 import ImportPoap from "./components/ImportPoap"
 import CreatePoapForm from "./components/PoapDataForm/CreatePoapForm"
 import { SetupPoapRequirements } from "./components/PoapRequirements/PoapRequirements"
 
-type Props = {
-  modalRef: MutableRefObject<any>
-  goBack: () => void
-  onSuccess: () => void
-}
-
-export type AddPoapStep = "home" | "requirements"
-
-const AddPoapModalContent = ({
-  modalRef,
-  goBack,
-  onSuccess,
-}: Props): JSX.Element => {
-  const [step, setStep] = useState<AddPoapStep>("home")
-
-  const scrollToTop = () => modalRef.current?.scrollTo({ top: 0 })
-
-  const handleSetStep = (newStep: AddPoapStep) => {
-    setStep(newStep)
-    scrollToTop()
-  }
+const AddPoapModalContent = (): JSX.Element => {
+  const { modalRef, setSelection, step, onClose } = useAddRewardContext()
+  const { reset } = useFormContext()
 
   return (
     <>
@@ -51,15 +34,20 @@ const AddPoapModalContent = ({
             mb="-3px"
             icon={<ArrowLeft size={20} />}
             variant="ghost"
-            onClick={goBack}
+            onClick={() => setSelection(null)}
           />
           <Text>Add POAP</Text>
         </HStack>
       </ModalHeader>
 
       <ModalBody ref={modalRef}>
-        {step === "requirements" ? (
-          <SetupPoapRequirements onSuccess={onSuccess} />
+        {step === "ROLES_REQUIREMENTS" ? (
+          <SetupPoapRequirements
+            onSuccess={() => {
+              reset()
+              onClose()
+            }}
+          />
         ) : (
           <Box>
             <Tabs size="sm" isFitted variant="solid" colorScheme="indigo">
@@ -69,10 +57,10 @@ const AddPoapModalContent = ({
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <CreatePoapForm setStep={handleSetStep} />
+                  <CreatePoapForm />
                 </TabPanel>
                 <TabPanel>
-                  <ImportPoap setStep={handleSetStep} />
+                  <ImportPoap />
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -83,9 +71,9 @@ const AddPoapModalContent = ({
   )
 }
 
-const AddPoapModalContentWrapper = (props: Props): JSX.Element => (
+const AddPoapModalContentWrapper = (): JSX.Element => (
   <CreatePoapProvider>
-    <AddPoapModalContent {...props} />
+    <AddPoapModalContent />
   </CreatePoapProvider>
 )
 

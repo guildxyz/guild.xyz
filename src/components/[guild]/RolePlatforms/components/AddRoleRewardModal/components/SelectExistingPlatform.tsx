@@ -73,7 +73,6 @@ const SelectExistingPlatform = ({ onClose }) => {
                     append({
                       guildPlatformId: platform.id,
                       isNew: true,
-                      platformRoleData: {},
                       platformRoleId: isGoogleReward
                         ? isForm
                           ? "writer"

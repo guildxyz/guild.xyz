@@ -237,6 +237,7 @@ type RolePlatform = {
   platformRoleId?: string
   guildPlatformId?: number
   guildPlatform?: GuildPlatform
+  platformRoleData?: Record<string, string | boolean>
   index?: number
   isNew?: boolean
   roleId?: number

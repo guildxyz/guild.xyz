@@ -7,38 +7,25 @@ import {
 } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import dynamic from "next/dynamic"
 import platforms from "platforms/platforms"
-import { useRef, useState } from "react"
-import { PlatformName } from "types"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
 const DynamicDefaultAddPlatformModalContent = dynamic(
   () => import("platforms/DefaultAddPlatformModalContent")
 )
 
-const AddRoleRewardModal = ({ isOpen, onClose }) => {
-  const [selection, setSelectionOg] = useState<PlatformName>(null)
-  const modalRef = useRef(null)
-
-  const setSelection = (platform: PlatformName) => {
-    setSelectionOg(platform)
-    modalRef.current?.scrollTo({ top: 0 })
-  }
-
-  const closeModal = () => {
-    setSelection(null)
-    onClose()
-  }
-
-  const goBack = () => setSelection(null)
+const AddRoleRewardModal = () => {
+  const { modalRef, selection, setSelection, isOpen, onClose } =
+    useAddRewardContext()
 
   const { AddPlatformModalContent } = platforms[selection] ?? {}
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={closeModal}
+      onClose={onClose}
       size="4xl"
       scrollBehavior="inside"
       colorScheme="dark"
@@ -47,16 +34,9 @@ const AddRoleRewardModal = ({ isOpen, onClose }) => {
       <ModalContent minH="550px">
         {selection ? (
           AddPlatformModalContent ? (
-            <AddPlatformModalContent onSuccess={closeModal} goBack={goBack} />
+            <AddPlatformModalContent />
           ) : (
-            <DynamicDefaultAddPlatformModalContent
-              modalRef={modalRef}
-              selection={selection}
-              setSelection={setSelection}
-              goBack={goBack}
-              closeModal={closeModal}
-              isForExistingRole
-            />
+            <DynamicDefaultAddPlatformModalContent isForExistingRole />
           )
         ) : (
           <>

@@ -1,22 +1,19 @@
 import { Stack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useToast from "hooks/useToast"
 import { FormProvider, useForm } from "react-hook-form"
 import { CreatePoapForm as CreatePoapFormType } from "types"
 import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
-import { AddPoapStep } from "../../AddPoapModalContent"
 import useCreatePoap from "../../hooks/useCreatePoap"
 import useSavePoap from "../../hooks/useSavePoap"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import PoapDataForm from "./PoapDataForm"
 
-type Props = {
-  setStep: (step: AddPoapStep) => void
-}
-
-const CreatePoapForm = ({ setStep }: Props): JSX.Element => {
+const CreatePoapForm = (): JSX.Element => {
+  const { setStep } = useAddRewardContext()
   const { setPoapData } = useCreatePoapContext()
   const { id } = useGuild()
   const toast = useToast()
@@ -38,7 +35,7 @@ const CreatePoapForm = ({ setStep }: Props): JSX.Element => {
   const { control, handleSubmit } = methods
 
   const { onSubmit: onSavePoapSubmit, isLoading: isSavePoapLoading } = useSavePoap({
-    onSuccess: () => setStep("requirements"),
+    onSuccess: () => setStep("ROLES_REQUIREMENTS"),
   })
 
   const { onSubmit: onCreatePoapSubmit, isLoading: isCreatePoapLoading } =
