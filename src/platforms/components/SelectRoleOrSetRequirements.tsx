@@ -22,6 +22,8 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
 
   return (
     <Tabs
+      isLazy
+      lazyBehavior="keepMounted"
       size="sm"
       isFitted
       variant="solid"
