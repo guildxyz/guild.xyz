@@ -6,17 +6,44 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react"
+import { Column, FilterFn } from "@tanstack/react-table"
+import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { Member } from "./CRMTable"
 
-const IdentitiesSearch = () => {
+export const identitiesFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  const { addresses, platformUsers } = row.getValue(columnId) as Member
+
+  if (
+    platformUsers.some((platformAccount) =>
+      platformAccount.username?.toLowerCase().includes(value)
+    ) ||
+    addresses.some((address) => address.toLowerCase().includes(value))
+  )
+    return true
+
+  return false
+}
+
+type Props = {
+  column: Column<any>
+}
+
+const IdentitiesSearch = ({ column }: Props) => {
   const inputRef = useRef<HTMLInputElement>()
-  const [value, setValue] = useState("")
+  const [localValue, setLocalValue] = useState("")
+  const debouncedValue = useDebouncedState(localValue)
 
-  const handleOnChange = async (e) => setValue(e.target.value)
+  const handleOnChange = async (e) => setLocalValue(e.target.value)
+
+  useEffect(() => {
+    if (debouncedValue === undefined) return
+    column.setFilterValue(debouncedValue.toLowerCase())
+  }, [debouncedValue])
 
   const reset = () => {
-    setValue("")
+    setLocalValue("")
     inputRef.current.focus()
   }
 
@@ -30,7 +57,7 @@ const IdentitiesSearch = () => {
         placeholder={"Search members"}
         // whiteSpace="nowrap"
         // textOverflow="ellipsis"
-        value={value}
+        value={localValue}
         variant={"unstyled"}
         onChange={handleOnChange}
         h="8"
@@ -38,7 +65,7 @@ const IdentitiesSearch = () => {
         pr="6"
         color="initial"
       />
-      {value?.length > 0 && (
+      {localValue?.length > 0 && (
         <InputRightElement h="8" w="auto">
           <CloseButton size="sm" rounded="full" onClick={reset} />
         </InputRightElement>

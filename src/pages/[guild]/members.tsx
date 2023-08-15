@@ -27,7 +27,9 @@ import FilterByRoles, {
   roleSort,
 } from "components/[guild]/crm/FilterByRoles"
 import Identities from "components/[guild]/crm/Identities"
-import IdentitiesSearch from "components/[guild]/crm/IdentitiesSearch"
+import IdentitiesSearch, {
+  identitiesFilter,
+} from "components/[guild]/crm/IdentitiesSearch"
 import OrderByColumn from "components/[guild]/crm/OrderByColumn"
 import RoleTags from "components/[guild]/crm/RoleTags"
 import useMembers from "components/[guild]/crm/useMembers"
@@ -83,8 +85,9 @@ const GuildPage = (): JSX.Element => {
       },
       columnHelper.accessor((row) => row, {
         id: "identity",
+        filterFn: identitiesFilter,
         cell: (info) => <Identities member={info.getValue()} />,
-        header: () => <IdentitiesSearch />,
+        header: ({ column }) => <IdentitiesSearch column={column} />,
       }),
       {
         id: "roles",
