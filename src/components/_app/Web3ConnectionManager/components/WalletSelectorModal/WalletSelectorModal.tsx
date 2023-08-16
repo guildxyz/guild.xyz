@@ -14,12 +14,12 @@ import {
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useWeb3React } from "@web3-react/core"
 import { GnosisSafe } from "@web3-react/gnosis-safe"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
-import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { connectors } from "connectors"
 import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
@@ -236,7 +236,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           </ModalBody>
           <ModalFooter mt="-4">
             {!isConnected ? (
-              <Stack textAlign="center" fontSize="sm" w="full" spacing={2}>
+              <Stack textAlign="center" fontSize="sm" w="full">
                 <Text colorScheme="gray">
                   New to Ethereum wallets?{" "}
                   <Link
@@ -259,9 +259,14 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     Privacy Policy
                   </Link>
                 </Text>
-
+              </Stack>
+            ) : (
+              <Stack textAlign="center" fontSize="sm" w="full">
+                <Text colorScheme={"gray"}>
+                  Signing the message doesn't cost any gas
+                </Text>
                 <Text colorScheme="gray">
-                  This site is protected by reCAPTCHA and the Google{" "}
+                  This site is protected by reCAPTCHA, so the Google{" "}
                   <Link
                     href="https://policies.google.com/privacy"
                     isExternal
@@ -277,13 +282,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   >
                     Terms of Service
                   </Link>{" "}
-                  apply.
+                  apply
                 </Text>
               </Stack>
-            ) : (
-              <Text textAlign="center" w="full" colorScheme={"gray"}>
-                Signing the message doesn't cost any gas
-              </Text>
             )}
           </ModalFooter>
         </ModalContent>
