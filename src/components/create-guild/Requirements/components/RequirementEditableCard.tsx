@@ -11,13 +11,12 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
-import Requirement from "components/[guild]/Requirements/components/Requirement"
-import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import Card from "components/common/Card"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
-import useIsV2 from "hooks/useIsV2"
+import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import Requirement from "components/[guild]/Requirements/components/Requirement"
+import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import { Warning } from "phosphor-react"
 import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
@@ -50,7 +49,6 @@ const RequirementEditableCard = ({
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
   const methods = useForm({ mode: "all", defaultValues: field })
   const requirementId = useWatch({ name: `requirements.${index}.id` })
-  const isV2 = useIsV2()
 
   const isRole = !!formState?.defaultValues?.id
   const roleId = formState?.defaultValues?.id
@@ -97,7 +95,7 @@ const RequirementEditableCard = ({
     [index, setValue]
   )
   const onRemove = () => {
-    if (isV2 && (isRole || isPoap) && !!requirementId) {
+    if ((isRole || isPoap) && !!requirementId) {
       onRequirementDeleteOpen()
     } else {
       removeRequirement(index)
@@ -151,7 +149,7 @@ const RequirementEditableCard = ({
             aria-label="Remove requirement"
           />
         </Card>
-        {isV2 && requirementId && requirementDeleteConfitmationAlert}
+        {requirementId && requirementDeleteConfitmationAlert}
       </>
     )
 
@@ -220,7 +218,7 @@ const RequirementEditableCard = ({
         onClose={onAlertClose}
         onDiscard={onCloseAndClear}
       />
-      {isV2 && requirementId && requirementDeleteConfitmationAlert}
+      {requirementId && requirementDeleteConfitmationAlert}
     </>
   )
 }
