@@ -45,7 +45,6 @@ const useCollectNft = () => {
 
   const { mutateTokenBalance } = useBalance(address, Chains[chain])
 
-  // Still WIP, no need to review
   const mint = async () => {
     if (shouldSwitchChain)
       return Promise.reject("Please switch network before minting")
