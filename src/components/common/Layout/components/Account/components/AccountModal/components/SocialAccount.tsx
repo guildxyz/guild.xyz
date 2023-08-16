@@ -145,11 +145,7 @@ const DisconnectPlatform = ({ type, name }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const alertCancelRef = useRef()
 
-  const {
-    onSubmit: onSubmit,
-    isLoading: isLoading,
-    signLoadingText: signLoadingText,
-  } = useDisconnect(onClose)
+  const { onSubmit, isLoading, signLoadingText } = useDisconnect(onClose)
   const disconnectAccount = () => onSubmit({ platformName: type })
 
   return (
