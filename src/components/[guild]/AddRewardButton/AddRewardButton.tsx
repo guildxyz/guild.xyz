@@ -89,7 +89,6 @@ const AddRewardButton = (): JSX.Element => {
   }
 
   const { AddPlatformPanel, PlatformPreview } = platforms[selection] ?? {}
-  const shouldShowRewardPreview = step === "ROLES_REQUIREMENTS" && PlatformPreview
 
   const lightModalBgColor = useColorModeValue("white", "gray.700")
 
@@ -123,7 +122,13 @@ const AddRewardButton = (): JSX.Element => {
           <ModalContent minH="550px">
             <ModalCloseButton />
             <ModalHeader
-              bgColor={shouldShowRewardPreview ? lightModalBgColor : undefined}
+              {...(step === "ROLES_REQUIREMENTS"
+                ? {
+                    bgColor: lightModalBgColor,
+                    boxShadow: "sm",
+                    zIndex: 1,
+                  }
+                : {})}
             >
               <Stack spacing={8}>
                 <HStack>
@@ -145,12 +150,12 @@ const AddRewardButton = (): JSX.Element => {
                   </Text>
                 </HStack>
 
-                {shouldShowRewardPreview && <PlatformPreview />}
+                {step === "ROLES_REQUIREMENTS" && <PlatformPreview />}
               </Stack>
             </ModalHeader>
 
             <ModalBody
-              pt={shouldShowRewardPreview ? 8 : undefined}
+              pt={step === "ROLES_REQUIREMENTS" ? 8 : undefined}
               ref={modalRef}
               className="custom-scrollbar"
             >
