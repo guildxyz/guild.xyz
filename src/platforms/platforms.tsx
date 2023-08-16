@@ -23,6 +23,7 @@ import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
+import PlatformPreview from "./components/PlatformPreview"
 
 export enum PlatformAsRewardRestrictions {
   NOT_APPLICABLE, // e.g. Twitter
@@ -72,6 +73,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
     PlatformPreview: dynamic(() => import("platforms/components/TelegramPreview"), {
       ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
     }),
   },
   DISCORD: {
@@ -92,6 +94,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
     PlatformPreview: dynamic(() => import("platforms/components/DiscordPreview"), {
       ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
     }),
   },
   GITHUB: {
@@ -111,6 +114,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
     PlatformPreview: dynamic(() => import("platforms/components/GitHubPreview"), {
       ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
     }),
   },
   TWITTER: {
@@ -146,6 +150,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
     PlatformPreview: dynamic(() => import("platforms/components/GooglePreview"), {
       ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
     }),
   },
   POAP: {
@@ -156,6 +161,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     PlatformPreview: dynamic(() => import("platforms/components/PoapPreview"), {
       ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
     }),
   },
   CONTRACT_CALL: {

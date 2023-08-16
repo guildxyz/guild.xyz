@@ -14,7 +14,7 @@ import { PlatformName } from "types"
 
 type Props = {
   isLoading?: boolean
-  type: PlatformName
+  type?: PlatformName
   image?: JSX.Element | string
   name?: string
 }
