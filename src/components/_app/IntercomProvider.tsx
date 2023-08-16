@@ -1,7 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
-import useUser from "components/[guild]/hooks/useUser"
 import useMemberships from "components/explorer/hooks/useMemberships"
-import useIsV2 from "hooks/useIsV2"
+import useUser from "components/[guild]/hooks/useUser"
 import { createContext, PropsWithChildren, useContext, useEffect } from "react"
 import { useSWRConfig } from "swr"
 import { GuildBase } from "types"
@@ -64,8 +63,6 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
 
   const { memberships } = useMemberships()
 
-  const isV2 = useIsV2()
-
   useEffect(() => {
     if (!cache || !account || !user || !memberships) return
 
@@ -90,7 +87,6 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
       address: account.toLowerCase(),
       connectedPlatforms,
       managedGuilds,
-      isV2,
     })
   }, [cache, account, user, memberships])
 

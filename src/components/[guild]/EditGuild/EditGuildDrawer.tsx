@@ -26,7 +26,6 @@ import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle
 import UrlName from "components/[guild]/EditGuild/components/UrlName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import useIsV2 from "hooks/useIsV2"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
@@ -78,7 +77,6 @@ const EditGuildDrawer = ({
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
-  const isV2 = useIsV2()
 
   const defaultValues = {
     name,
@@ -93,7 +91,7 @@ const EditGuildDrawer = ({
         }
       : {},
     showMembers,
-    admins: (isV2 ? admins : admins?.flatMap((admin) => admin.address)) ?? [],
+    admins: admins ?? [],
     urlName,
     hideFromExplorer,
     contacts,
@@ -107,12 +105,6 @@ const EditGuildDrawer = ({
   })
 
   const { onSubmit: onTagsSubmit } = useEditTags()
-
-  useEffect(() => {
-    if (typeof isV2 === "boolean") {
-      methods.reset(defaultValues)
-    }
-  }, [isV2])
 
   // We'll only receive this info on client-side, so we're setting the default value of this field in a useEffect
   useEffect(() => {

@@ -2,7 +2,6 @@ import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import useIsV2 from "hooks/useIsV2"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
@@ -102,14 +101,12 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
 
   const { mutate: mutateUser, id } = useUser()
 
-  const isV2 = useIsV2()
-
   const submit = (signedValidation: SignedValdation) => {
     const platformName =
       JSON.parse(signedValidation?.signedPayload ?? "{}")?.platformName ??
       "UNKNOWN_PLATFORM"
 
-    return fetcher(isV2 ? `/v2/users/${id}/platform-users` : "/user/connect", {
+    return fetcher(`/v2/users/${id}/platform-users`, {
       method: "POST",
       ...signedValidation,
     })
@@ -135,17 +132,13 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
   return useSubmitWithSign<User["platformUsers"][number]>(submit, {
     onSuccess: (newPlatformUser) => {
       // captureEvent("Platform connection", { platformName })
-      if (isV2) {
-        mutateUser(
-          (prev) => ({
-            ...prev,
-            platformUsers: [...(prev?.platformUsers ?? []), newPlatformUser],
-          }),
-          { revalidate: false }
-        )
-      } else {
-        mutateUser()
-      }
+      mutateUser(
+        (prev) => ({
+          ...prev,
+          platformUsers: [...(prev?.platformUsers ?? []), newPlatformUser],
+        }),
+        { revalidate: false }
+      )
 
       onSuccess?.()
     },
