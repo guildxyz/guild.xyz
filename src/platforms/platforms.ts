@@ -9,6 +9,7 @@ import {
   TwitterLogo,
 } from "phosphor-react"
 import { GuildPlatform, PlatformName } from "types"
+import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
 import DiscordCardMenu from "./Discord/DiscordCardMenu"
@@ -102,6 +103,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "",
     cardPropsHook: useContractCallCardProps,
     cardButton: ContractCallRewardCardButton,
+    cardMenuComponent: ContractCallCardMenu,
   },
 }
 
