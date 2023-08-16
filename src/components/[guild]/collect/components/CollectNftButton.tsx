@@ -1,10 +1,9 @@
 import { ButtonProps } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import Button from "components/common/Button"
-import useMemberships from "components/explorer/hooks/useMemberships"
 import { Chains } from "connectors"
 import useBalance from "hooks/useBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -27,17 +26,8 @@ const CollectNftButton = ({
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
 
-  const { roleId, chain, address, alreadyCollected } = useCollectNftContext()
-  const { id, urlName } = useGuild()
-
-  const {
-    memberships,
-    isLoading: isMembershipsLoading,
-    mutate: mutateMemberships,
-  } = useMemberships()
-  const isMemberOfRole = !!memberships
-    ?.find((membership) => membership.guildId === id)
-    ?.roleIds.find((rId) => rId === roleId)
+  const { chain, address, alreadyCollected } = useCollectNftContext()
+  const { urlName } = useGuild()
 
   const { chainId } = useWeb3React()
   const shouldSwitchNetwork = chainId !== Chains[chain]
@@ -48,16 +38,11 @@ const CollectNftButton = ({
     loadingText: mintLoadingText,
   } = useCollectNft()
 
-  const { onSubmit: onJoinSubmit, isLoading: isJoinLoading } = useSubmitWithSign(
-    join,
-    {
-      onSuccess: async () => {
-        await mutateMemberships()
-        onMintSubmit()
-      },
+  const { onSubmit: onJoinAndMintSubmit, isLoading: isJoinLoading } =
+    useSubmitWithSign(join, {
+      onSuccess: onMintSubmit,
       onError: () => showErrorToast("Couldn't check eligibility"),
-    }
-  )
+    })
 
   const { data: nftDetails, isValidating: isNftDetailsValidating } = useNftDetails(
     chain,
@@ -72,13 +57,9 @@ const CollectNftButton = ({
     nftDetails?.fee && coinBalance ? coinBalance.gt(nftDetails.fee) : undefined
 
   const isLoading =
-    isMembershipsLoading ||
-    isJoinLoading ||
-    isMinting ||
-    isNftDetailsValidating ||
-    isBalanceLoading
+    isJoinLoading || isMinting || isNftDetailsValidating || isBalanceLoading
   const loadingText =
-    isNftBalanceLoading || isJoinLoading || isMembershipsLoading
+    isNftBalanceLoading || isJoinLoading
       ? "Checking eligibility"
       : isMinting
       ? mintLoadingText
@@ -96,14 +77,16 @@ const CollectNftButton = ({
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
       onClick={() => {
-        if (!isMemberOfRole) {
-          onJoinSubmit({ guildId: id })
-        } else {
-          captureEvent("Click: CollectNftButton (GuildCheckout)", {
-            guild: urlName,
-          })
-          onMintSubmit()
-        }
+        captureEvent("Click: CollectNftButton (GuildCheckout)", {
+          guild: urlName,
+        })
+        /**
+         * We're always sending a join request here, because if the user joined the
+         * role before the admins added the reward to it, they won't have the
+         * UserReward in our backend and then they wouldn't be able to claim the NFT.
+         * This way, we can make sure that this won't happen
+         */
+        onJoinAndMintSubmit()
       }}
       {...rest}
     >
