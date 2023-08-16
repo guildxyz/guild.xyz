@@ -1,6 +1,7 @@
+import { parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { Chains } from "connectors"
+import { Chains, RPC } from "connectors"
 import useContract from "hooks/useContract"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -100,12 +101,15 @@ const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) 
     // guildId, name, symbol, cid, tokenOwner, tokenTreasury, tokenFee
     const contractCallParams = [
       guildId,
-      name,
-      symbol,
+      name.trim(),
+      symbol.trim(),
       metadataCID,
       account,
       tokenTreasury,
-      price,
+      parseUnits(
+        price?.toString() ?? "0",
+        RPC[Chains[chainId]]?.nativeCurrency?.decimals ?? 18
+      ),
     ]
 
     try {
