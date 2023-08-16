@@ -139,7 +139,7 @@ const useNftDetails = (chain: Chain, address: string) => {
     data: data
       ? {
           ...data,
-          image: data.image ?? guildPlatformData?.image,
+          image: data.image || guildPlatformData?.image,
         }
       : undefined,
     ...rest,
