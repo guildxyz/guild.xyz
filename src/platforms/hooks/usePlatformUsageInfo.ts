@@ -1,13 +1,13 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
-import platforms, { PlatformUsageRestrictions } from "platforms/platforms"
+import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import { Guild, PlatformName } from "types"
 
 const usePlatformUsageInfo = (
   platform: PlatformName,
   platformId: string
 ): { isAlreadyInUse: boolean; guildUrlName?: string; isValidating: boolean } => {
-  const { usageRestriction } = platforms[platform]
+  const { asRewardRestriction } = platforms[platform]
 
   const { id } = useGuild()
 
@@ -26,7 +26,7 @@ const usePlatformUsageInfo = (
     ? isAlreadyUsedInGuild
     : !isAlreadyUsedInGuild
     ? false
-    : usageRestriction === PlatformUsageRestrictions.SINGLE_ROLE &&
+    : asRewardRestriction === PlatformAsRewardRestrictions.SINGLE_ROLE &&
       guildByPlatform?.guildPlatforms?.some(
         (gp) => gp.platformGuildId === platformId
       )

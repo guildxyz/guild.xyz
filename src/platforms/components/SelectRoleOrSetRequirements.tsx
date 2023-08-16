@@ -1,12 +1,12 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
-import SetRequirements from "components/create-guild/Requirements"
 import {
   RolesOrRequirementsTabs,
   useAddRewardContext,
 } from "components/[guild]/AddRewardContext"
-import useGuild from "components/[guild]/hooks/useGuild"
 import RoleSelector from "components/[guild]/RoleSelector"
-import platforms, { PlatformUsageRestrictions } from "platforms/platforms"
+import useGuild from "components/[guild]/hooks/useGuild"
+import SetRequirements from "components/create-guild/Requirements"
+import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
 
@@ -33,8 +33,8 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
     >
       <TabList mb="8">
         <Tab isDisabled={isRoleSelectorDisabled}>{`Add to existing role${
-          platforms[selection].usageRestriction ===
-          PlatformUsageRestrictions.MULTIPLE_ROLES
+          platforms[selection].asRewardRestriction ===
+          PlatformAsRewardRestrictions.MULTIPLE_ROLES
             ? "s"
             : ""
         }`}</Tab>
@@ -44,8 +44,8 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
         <TabPanel>
           <RoleSelector
             allowMultiple={
-              platforms[selection].usageRestriction ===
-              PlatformUsageRestrictions.MULTIPLE_ROLES
+              platforms[selection].asRewardRestriction ===
+              PlatformAsRewardRestrictions.MULTIPLE_ROLES
             }
             roles={roles}
             onChange={(selectedRoleIds) => setValue("roleIds", selectedRoleIds)}

@@ -24,7 +24,7 @@ import useGoogleCardProps from "./Google/useGoogleCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
 
-export enum PlatformUsageRestrictions {
+export enum PlatformAsRewardRestrictions {
   NOT_APPLICABLE, // e.g. Twitter
   SINGLE_ROLE, // e.g. Telegram
   MULTIPLE_ROLES, // e.g. Discord
@@ -46,7 +46,7 @@ type PlatformData = {
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
-  usageRestriction: PlatformUsageRestrictions
+  asRewardRestriction: PlatformAsRewardRestrictions
   AddPlatformPanel?: ComponentType<{
     onSuccess: () => void
     skipSettings?: boolean
@@ -62,7 +62,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "group",
     cardPropsHook: useTelegramCardProps,
     cardMenuComponent: TelegramCardMenu,
-    usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -82,7 +82,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useDiscordCardProps,
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
-    usageRestriction: PlatformUsageRestrictions.MULTIPLE_ROLES,
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -101,7 +101,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "repo",
     cardPropsHook: useGithubCardProps,
     cardMenuComponent: GithubCardMenu,
-    usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -118,16 +118,14 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
-    usageRestriction: PlatformUsageRestrictions.NOT_APPLICABLE,
-    AddPlatformPanel: null,
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
   },
   TWITTER_V1: {
     icon: TwitterLogo,
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
-    usageRestriction: PlatformUsageRestrictions.NOT_APPLICABLE,
-    AddPlatformPanel: null,
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
   },
   GOOGLE: {
     icon: GoogleLogo,
@@ -138,7 +136,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardSettingsComponent: GoogleCardSettings,
     cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
-    usageRestriction: PlatformUsageRestrictions.MULTIPLE_ROLES,
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -155,7 +153,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "POAP",
     colorScheme: "purple",
     gatedEntity: "POAP",
-    usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     PlatformPreview: dynamic(() => import("platforms/components/PoapPreview"), {
       ssr: false,
     }),
@@ -167,7 +165,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "",
     cardPropsHook: useContractCallCardProps,
     cardButton: ContractCallRewardCardButton,
-    usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     AddPlatformPanel: null, // TODO: will add in another PR
     PlatformPreview: null, // TODO: will add in another PR
   },

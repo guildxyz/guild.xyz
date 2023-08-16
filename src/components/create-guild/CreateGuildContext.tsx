@@ -1,5 +1,5 @@
 import { useSteps } from "@chakra-ui/react"
-import platforms, { PlatformUsageRestrictions } from "platforms/platforms"
+import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import {
   createContext,
   Dispatch,
@@ -10,7 +10,7 @@ import {
   useState,
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { GuildFormType, PlatformName as BasePlatformName } from "types"
+import { PlatformName as BasePlatformName, GuildFormType } from "types"
 import capitalize from "utils/capitalize"
 import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
@@ -175,7 +175,7 @@ const CreateGuildProvider = ({
           ],
           rolePlatforms:
             platforms[platform]?.usageRestriction ===
-            PlatformUsageRestrictions.MULTIPLE_ROLES
+            PlatformAsRewardRestrictions.MULTIPLE_ROLES
               ? rolePlatforms
               : undefined,
         },
