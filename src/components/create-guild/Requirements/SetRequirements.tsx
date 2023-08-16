@@ -16,7 +16,7 @@ import LogicFormControl from "./components/LogicFormControl"
 import RequirementEditableCard from "./components/RequirementEditableCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
-const SetRequirements = (): JSX.Element => {
+const SetRequirements = ({ titleSize = undefined }): JSX.Element => {
   const {
     control,
     getValues,
@@ -93,6 +93,7 @@ const SetRequirements = (): JSX.Element => {
               </Checkbox>
             </>
           }
+          {...(titleSize && { fontSize: titleSize })}
         />
         {!freeEntry && <BalancyCounterWithPopover ml="auto !important" pl="5" />}
       </Wrap>

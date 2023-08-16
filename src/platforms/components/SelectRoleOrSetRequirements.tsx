@@ -65,7 +65,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
           />
         </TabPanel>
         <TabPanel>
-          <SetRequirements />
+          <SetRequirements titleSize={"md"} />
         </TabPanel>
       </TabPanels>
     </Tabs>
