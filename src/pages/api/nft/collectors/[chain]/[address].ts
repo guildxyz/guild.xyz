@@ -1,6 +1,7 @@
 import { kv } from "@vercel/kv"
 import { Chain } from "connectors"
 import { NextApiHandler } from "next"
+import { OneOf } from "types"
 import fetcher from "utils/fetcher"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 
@@ -9,13 +10,13 @@ type Owner = {
   tokenBalances: { tokenId: string; balance: string }[]
 }
 
-export type TopCollectorsResponse =
-  | {
-      uniqueCollectors: number
-      topCollectors: string[]
-      error?: never
-    }
-  | { uniqueCollectors?: never; topCollectors?: never; error: string }
+export type TopCollectorsResponse = OneOf<
+  {
+    uniqueCollectors: number
+    topCollectors: string[]
+  },
+  { error: string }
+>
 
 const alchemyApiUrl: Partial<Record<Chain, string>> = {
   POLYGON: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.POLYGON_ALCHEMY_KEY}/getOwnersForContract`,

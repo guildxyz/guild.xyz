@@ -11,7 +11,7 @@ const useAddReward = (onSuccess?) => {
   const toast = useToast()
 
   const fetchData = async (signedValdation: SignedValdation) =>
-    fetcher(`/guild/${id}/platform`, signedValdation)
+    fetcher(`/v2/guilds/${id}/guild-platforms`, signedValdation)
 
   return useSubmitWithSign<GuildPlatform & { roleIds?: number[] }>(fetchData, {
     onError: (err) => showErrorToast(err),

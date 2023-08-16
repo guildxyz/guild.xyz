@@ -24,7 +24,6 @@ import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
-import useIsV2 from "hooks/useIsV2"
 import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
@@ -39,7 +38,6 @@ const AccountModal = () => {
     closeAccountModal: onClose,
   } = useWeb3ConnectionManager()
   const { id, addresses } = useUser()
-  useIsV2()
 
   const connectorName = (c) =>
     c instanceof MetaMask

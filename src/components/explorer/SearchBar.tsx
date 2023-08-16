@@ -3,8 +3,11 @@ import {
   Icon,
   Input,
   InputGroup,
+  InputGroupProps,
   InputLeftElement,
+  InputRightAddon,
   InputRightElement,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
@@ -14,12 +17,15 @@ type Props = {
   placeholder?: string
   search: string
   setSearch: (value: string) => void
-}
+  rightAddon?: JSX.Element
+} & InputGroupProps
 
 const SearchBar = ({
   placeholder = "Search...",
   search,
   setSearch,
+  rightAddon,
+  ...rest
 }: Props): JSX.Element => {
   const inputRef = useRef<HTMLInputElement>()
 
@@ -43,8 +49,10 @@ const SearchBar = ({
     inputRef.current.focus()
   }
 
+  const rightAddonBgColor = useColorModeValue("gray.50", undefined)
+
   return (
-    <InputGroup size="lg" w="full">
+    <InputGroup size="lg" w="full" {...rest}>
       <InputLeftElement>
         <Icon color="#858585" size={20} as={MagnifyingGlass} />
       </InputLeftElement>
@@ -54,15 +62,18 @@ const SearchBar = ({
         overflow="hidden"
         whiteSpace="nowrap"
         textOverflow="ellipsis"
-        colorScheme="primary"
         id="searchBar"
         value={localValue}
         onChange={handleOnChange}
       />
-      {localValue?.length > 0 && (
-        <InputRightElement>
-          <CloseButton size="sm" rounded="full" onClick={reset} />
-        </InputRightElement>
+      {!!rightAddon ? (
+        <InputRightAddon bg={rightAddonBgColor}>{rightAddon}</InputRightAddon>
+      ) : (
+        localValue?.length > 0 && (
+          <InputRightElement>
+            <CloseButton size="sm" rounded="full" onClick={reset} />
+          </InputRightElement>
+        )
       )}
     </InputGroup>
   )

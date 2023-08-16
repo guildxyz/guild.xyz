@@ -6,6 +6,8 @@ const $popperBg = cssVar("popper-bg")
 const $arrowBg = cssVar("popper-arrow-bg")
 const $arrowShadowColor = cssVar("popper-arrow-shadow-color")
 
+const baseStylePopper = { zIndex: "popover" }
+
 const baseStyleContent: SystemStyleFunction = (props) => {
   const bg = mode("white", "gray.700")(props)
   const shadowColor = mode("gray.200", "whiteAlpha.300")(props)
@@ -49,6 +51,7 @@ const baseStyleCloseButton: SystemStyleObject = {
 }
 
 const baseStyle = (props) => ({
+  popper: baseStylePopper,
   content: baseStyleContent(props),
   header: baseStyleHeader,
   closeButton: baseStyleCloseButton,

@@ -1,5 +1,4 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsV2 from "hooks/useIsV2"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
@@ -10,19 +9,9 @@ const useReorderRoles = (onClose) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
-  const isV2 = useIsV2()
 
-  const submit = (roleOrdering: Array<{ id: number; position: number }>) => {
-    if (!isV2) {
-      return fetcherWithSign([
-        `/guild/${id}/roles`,
-        {
-          method: "PATCH",
-          body: roleOrdering,
-        },
-      ])
-    }
-    return Promise.all(
+  const submit = (roleOrdering: Array<{ id: number; position: number }>) =>
+    Promise.all(
       roleOrdering.map(({ id: roleId, position }) =>
         fetcherWithSign([
           `/v2/guilds/${id}/roles/${roleId}`,
@@ -30,7 +19,6 @@ const useReorderRoles = (onClose) => {
         ])
       )
     )
-  }
 
   const { onSubmit, isLoading } = useSubmit(submit, {
     onSuccess: (newRoles) => {

@@ -1,12 +1,11 @@
 import { useWeb3React } from "@web3-react/core"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
-import useGuild from "components/[guild]/hooks/useGuild"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
-import useIsV2 from "hooks/useIsV2"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useMatchMutate from "hooks/useMatchMutate"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { Role } from "types"
@@ -26,15 +25,11 @@ const useCreateRole = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const { id, urlName, mutateGuild } = useGuild()
-  const isV2 = useIsV2()
 
   const fetchData = async (
     signedValidation: SignedValdation
   ): Promise<RoleToCreate> =>
-    fetcher(
-      isV2 ? `/v2/guilds/${id}/roles/with-requirements-and-rewards` : "/role",
-      signedValidation
-    )
+    fetcher(`/v2/guilds/${id}/roles/with-requirements-and-rewards`, signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<RoleToCreate>(fetchData, {
     onError: (error_) => {
