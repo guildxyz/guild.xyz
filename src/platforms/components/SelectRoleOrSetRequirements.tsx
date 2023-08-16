@@ -23,19 +23,23 @@ const TAB_STYLE_PROPS: TabProps = {
 
 const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
   const { roles } = useGuild()
-  const { setValue } = useFormContext()
+  const { setValue, unregister } = useFormContext()
   const { selection, activeTab, setActiveTab } = useAddRewardContext()
+
+  const handleChange = (value) => {
+    unregister("requirements")
+    setActiveTab(value)
+  }
 
   return (
     <Tabs
       isLazy
-      lazyBehavior="keepMounted"
       size="sm"
       isFitted
       variant="solid"
       colorScheme="indigo"
       index={isRoleSelectorDisabled ? RolesOrRequirementsTabs.NEW_ROLE : activeTab}
-      onChange={setActiveTab}
+      onChange={handleChange}
     >
       <TabList mt="6" mb="7">
         <Tab
@@ -61,9 +65,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
           />
         </TabPanel>
         <TabPanel>
-          <SetRequirements
-            isOptional={activeTab === RolesOrRequirementsTabs.EXISTING_ROLE}
-          />
+          <SetRequirements />
         </TabPanel>
       </TabPanels>
     </Tabs>

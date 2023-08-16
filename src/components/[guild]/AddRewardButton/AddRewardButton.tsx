@@ -78,7 +78,6 @@ const AddRewardButton = (): JSX.Element => {
         ...data,
         name: `New ${platforms[selection].name} role`,
         imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-        roleIds: undefined,
       })
     } else {
       onAddRewardSubmit({

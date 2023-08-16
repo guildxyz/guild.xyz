@@ -1,9 +1,9 @@
 import { Checkbox, Collapse, Stack, Text, Wrap } from "@chakra-ui/react"
+import LogicDivider from "components/[guild]/LogicDivider"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import { SectionTitle } from "components/common/Section"
-import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
 import { useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
@@ -16,11 +16,7 @@ import LogicFormControl from "./components/LogicFormControl"
 import RequirementEditableCard from "./components/RequirementEditableCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
-type Props = {
-  isOptional?: boolean
-}
-
-const SetRequirements = ({ isOptional }: Props): JSX.Element => {
+const SetRequirements = (): JSX.Element => {
   const {
     control,
     getValues,
@@ -37,7 +33,7 @@ const SetRequirements = ({ isOptional }: Props): JSX.Element => {
     control,
     keyName: "formFieldId",
     rules: {
-      required: !isOptional ? "Set some requirements, or make the role free" : false,
+      required: "Set some requirements, or make the role free",
     },
   })
 
