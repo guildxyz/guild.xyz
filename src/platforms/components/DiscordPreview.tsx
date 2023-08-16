@@ -11,7 +11,7 @@ const DiscordPreview = (): JSX.Element => {
   return (
     <PlatformPreview
       type="DISCORD"
-      isValidating={isValidating}
+      isLoading={isValidating}
       name={data?.serverName}
       image={data?.serverIcon}
     />

@@ -18,7 +18,7 @@ const GooglePreview = (): JSX.Element => {
   return (
     <PlatformPreview
       type="GOOGLE"
-      isValidating={isLoading}
+      isLoading={isLoading}
       name={doc?.name}
       image={
         doc?.iconLink && (

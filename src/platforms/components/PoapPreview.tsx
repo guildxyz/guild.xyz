@@ -7,7 +7,7 @@ const PoapPreview = (): JSX.Element => {
   return (
     <PlatformPreview
       type="POAP"
-      isValidating={!poapData}
+      isLoading={!poapData}
       name={poapData?.name}
       image={poapData?.image_url ? `${poapData.image_url}?size=small` : undefined}
     />

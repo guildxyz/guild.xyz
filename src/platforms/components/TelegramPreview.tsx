@@ -11,7 +11,7 @@ const TelegramPreview = (): JSX.Element => {
   return (
     <PlatformPreview
       type="TELEGRAM"
-      isValidating={isValidating}
+      isLoading={isValidating}
       name={data?.groupName}
       image={data?.groupIcon}
     />

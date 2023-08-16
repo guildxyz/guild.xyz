@@ -16,7 +16,7 @@ const GitHubPreview = (): JSX.Element => {
   return (
     <PlatformPreview
       type="GITHUB"
-      isValidating={isLoading}
+      isLoading={isLoading}
       name={repo?.repositoryName}
       image={repo?.avatarUrl}
     />

@@ -13,18 +13,18 @@ import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 
 type Props = {
-  isValidating?: boolean
+  isLoading?: boolean
   type: PlatformName
   image?: JSX.Element | string
   name?: string
 }
 
-const PlatformPreview = ({ isValidating, type, image, name }: Props) => {
+const PlatformPreview = ({ isLoading, type, image, name }: Props) => {
   const circleBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   return (
     <HStack spacing={4}>
-      <SkeletonCircle boxSize={12} isLoaded={!isValidating}>
+      <SkeletonCircle boxSize={12} isLoaded={!isLoading}>
         {image ? (
           typeof image === "string" ? (
             <Img boxSize={12} src={image} alt="Reward image" borderRadius="full" />
@@ -43,7 +43,7 @@ const PlatformPreview = ({ isValidating, type, image, name }: Props) => {
         )}
       </SkeletonCircle>
 
-      <Skeleton isLoaded={!isValidating}>
+      <Skeleton isLoaded={!isLoading}>
         <Text as="span" fontSize="lg" fontFamily="body">
           {name ?? `${platforms[type]?.name ?? "Unknown"} reward`}
         </Text>
