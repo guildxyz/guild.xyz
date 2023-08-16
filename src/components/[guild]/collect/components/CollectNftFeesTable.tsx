@@ -1,8 +1,9 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
-import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
+import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import { RPC } from "connectors"
+import useGuildFee from "../hooks/useGuildFee"
 import useNftDetails from "../hooks/useNftDetails"
 
 type Props = {
@@ -11,6 +12,12 @@ type Props = {
 
 const CollectNftFeesTable = ({ bgColor }: Props) => {
   const { chain, address } = useCollectNftContext()
+
+  const { guildFee } = useGuildFee()
+  const formattedGuildFee = guildFee
+    ? Number(formatUnits(guildFee, RPC[chain].nativeCurrency.decimals))
+    : undefined
+
   const { data } = useNftDetails(chain, address)
   const formattedFee = data?.fee
     ? Number(formatUnits(data.fee, RPC[chain].nativeCurrency.decimals))
@@ -23,9 +30,14 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
           <Text fontWeight={"medium"}>Minting fee:</Text>
 
           <Text as="span">
-            <Skeleton display="inline" isLoaded={!!formattedFee}>
-              {formattedFee
-                ? `${formattedFee} ${RPC[chain].nativeCurrency.symbol}`
+            <Skeleton
+              display="inline"
+              isLoaded={!!formattedGuildFee && !!formattedFee}
+            >
+              {formattedGuildFee && formattedFee
+                ? `${formattedGuildFee + formattedFee} ${
+                    RPC[chain].nativeCurrency.symbol
+                  }`
                 : "Loading"}
             </Skeleton>
             <Text as="span" colorScheme="gray">
@@ -38,11 +50,6 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
     >
       <Tr>
         <Td>Price</Td>
-        <Td isNumeric>Free</Td>
-      </Tr>
-
-      <Tr>
-        <Td>Minting fee</Td>
         <Td isNumeric>
           <Skeleton display="inline" isLoaded={!!formattedFee}>
             {formattedFee
@@ -53,12 +60,25 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
       </Tr>
 
       <Tr>
+        <Td>Minting fee</Td>
+        <Td isNumeric>
+          <Skeleton display="inline" isLoaded={!!formattedGuildFee}>
+            {formattedGuildFee
+              ? `${formattedGuildFee} ${RPC[chain].nativeCurrency.symbol}`
+              : "Loading"}
+          </Skeleton>
+        </Td>
+      </Tr>
+
+      <Tr>
         <Td>Total</Td>
         <Td isNumeric color="WindowText">
           <Text as="span">
             <Skeleton display="inline" isLoaded={!!formattedFee}>
-              {formattedFee
-                ? `${formattedFee} ${RPC[chain].nativeCurrency.symbol}`
+              {formattedGuildFee && formattedFee
+                ? `${formattedGuildFee + formattedFee} ${
+                    RPC[chain].nativeCurrency.symbol
+                  }`
                 : "Loading"}
             </Skeleton>
             <Text as="span">{" + gas"}</Text>
