@@ -19,6 +19,7 @@ import {
   NumberInputStepper,
   Stack,
   Text,
+  Textarea,
   Tooltip,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -40,22 +41,28 @@ import ChainPicker from "requirements/common/ChainPicker"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import ImagePicker from "./components/ImagePicker"
 import RichTextDescriptionEditor from "./components/RichTextDescriptionEditor"
-import useCreateNft from "./hooks/useCreateNft"
+import useCreateNft, { CreateNFTResponse } from "./hooks/useCreateNft"
 
-type Props = { onSuccess: (deployedContractAddress: string) => void }
+type Props = {
+  onSuccess: (newGuildPlatform: CreateNFTResponse) => void
+}
 
 export type CreateNftFormType = {
   chain: Chain
-  owner: string
+  tokenTreasury: string
   name: string
   symbol: string
   price: number
-  description: string
+  description?: string
+  richTextDescription?: string
   image: File
   attributes: { name: string; value: string }[]
 }
 
-const CONTRACT_CALL_SUPPORTED_CHAINS: Chain[] = ["POLYGON", "POLYGON_MUMBAI"]
+const CONTRACT_CALL_SUPPORTED_CHAINS = [/*"POLYGON", */ "POLYGON_MUMBAI"] as const
+
+export type ContractCallSupportedChain =
+  (typeof CONTRACT_CALL_SUPPORTED_CHAINS)[number]
 
 const CreateNftForm = ({ onSuccess }: Props) => {
   const { chainId, account } = useWeb3React()
@@ -105,9 +112,9 @@ const CreateNftForm = ({ onSuccess }: Props) => {
 
   const {
     field: { onChange: onDescriptionChange },
-  } = useController({ control, name: "description" })
+  } = useController({ control, name: "richTextDescription" })
 
-  const { onSubmit, isLoading, loadingText } = useCreateNft()
+  const { onSubmit, isLoading, loadingText } = useCreateNft(onSuccess)
 
   return (
     <FormProvider {...methods}>
@@ -126,7 +133,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
             <Stack spacing={6}>
               <ChainPicker
                 controlName="chain"
-                supportedChains={CONTRACT_CALL_SUPPORTED_CHAINS}
+                supportedChains={[...CONTRACT_CALL_SUPPORTED_CHAINS]}
                 showDivider={false}
               />
 
@@ -222,9 +229,23 @@ const CreateNftForm = ({ onSuccess }: Props) => {
               <FormControl isInvalid={!!errors?.description}>
                 <FormLabel>NFT description</FormLabel>
 
-                <RichTextDescriptionEditor onChange={onDescriptionChange} />
+                <Textarea {...register("description")} />
 
                 <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
+
+                <FormHelperText>
+                  This description will be included in the NFT metadat JSON.
+                </FormHelperText>
+              </FormControl>
+
+              <FormControl isInvalid={!!errors?.richTextDescription}>
+                <FormLabel>NFT description</FormLabel>
+
+                <RichTextDescriptionEditor onChange={onDescriptionChange} />
+
+                <FormErrorMessage>
+                  {errors?.richTextDescription?.message}
+                </FormErrorMessage>
 
                 <FormHelperText>
                   This description will be shown on the collect NFT page. You can use
@@ -306,11 +327,11 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 </Stack>
               </FormControl>
 
-              <FormControl isInvalid={!!errors?.owner}>
+              <FormControl isInvalid={!!errors?.tokenTreasury}>
                 <FormLabel>Payout address</FormLabel>
 
                 <Input
-                  {...register("owner", {
+                  {...register("tokenTreasury", {
                     required: "This field is required.",
                     pattern: {
                       value: ADDRESS_REGEX,
@@ -321,7 +342,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                   placeholder={`e.g. ${account}`}
                 />
 
-                <FormErrorMessage>{errors?.owner?.message}</FormErrorMessage>
+                <FormErrorMessage>{errors?.tokenTreasury?.message}</FormErrorMessage>
               </FormControl>
             </Stack>
           </GridItem>
@@ -344,8 +365,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
               isDisabled={shouldSwitchChain || isLoading}
               isLoading={isLoading}
               loadingText={loadingText}
-              // onClick={handleSubmit(onSubmit)}
-              onClick={handleSubmit(console.log)}
+              onClick={handleSubmit(onSubmit)}
             >
               Create NFT
             </Button>

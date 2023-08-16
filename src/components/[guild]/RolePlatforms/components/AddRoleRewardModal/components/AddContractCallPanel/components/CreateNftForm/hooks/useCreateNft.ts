@@ -1,19 +1,20 @@
-/**
- * - Upload image => get its cid
- * - Generate metadata & upload it => get its cid
- * - Contract call => get the new contract's address
- * - Guild api call => save the created reward to the CreateNftContext
- */
-
+import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { Chains } from "connectors"
+import useContract from "hooks/useContract"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
+import useToast from "hooks/useToast"
 import { useState } from "react"
+import GUILD_REWARD_NFT_FACTORY_ABI from "static/abis/guildRewardNFTFactory.json"
 import { GuildPlatform, PlatformType } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
-import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { CreateNftContextType, useCreateNftContext } from "../../CreateNftContext"
-import { CreateNftFormType } from "../CreateNftForm"
+import processWalletError from "utils/processWalletError"
+import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
+
+const guildRewardBFTFactoryAddresses: Record<ContractCallSupportedChain, string> = {
+  POLYGON_MUMBAI: "0xf14249947c6de788c61f8ac5db0495ee2663ec1b",
+}
 
 type NftMetadata = {
   name: string
@@ -30,14 +31,40 @@ const contractCallArgsToSign: Record<ContractCallFunction, string[]> = {
   [ContractCallFunction.SIMPLE_CLAIM]: [],
 }
 
-const useCreateNft = () => {
+export type CreateNFTResponse = Omit<GuildPlatform, "id" | "platformGuildName">
+
+const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) => {
+  const { chainId, account } = useWeb3React()
+
   const { id: guildId } = useGuild()
-  const { setData } = useCreateNftContext()
+
   const [loadingText, setLoadingText] = useState<string>()
 
-  const fetcherWithSign = useFetcherWithSign()
+  const toast = useToast()
+  const showErrorToast = useShowErrorToast()
 
-  const createNft = async (data: CreateNftFormType): Promise<GuildPlatform> => {
+  const guildRewardNFTFactoryContract = useContract(
+    guildRewardBFTFactoryAddresses[Chains[chainId]],
+    GUILD_REWARD_NFT_FACTORY_ABI,
+    true
+  )
+
+  const createNft = async (data: CreateNftFormType): Promise<CreateNFTResponse> => {
+    // For testing
+    // const tempCreatedContractAddress = "0xf597e31fdf9e5cf2082db863f0845bf6a1c8a817"
+    // return {
+    //   platformId: PlatformType.CONTRACT_CALL,
+    //   platformName: "CONTRACT_CALL",
+    //   platformGuildId: `${guildId}-${tempCreatedContractAddress}-${Date.now()}`,
+    //   platformGuildData: {
+    //     chain: data.chain,
+    //     contractAddress: tempCreatedContractAddress,
+    //     function: ContractCallFunction.SIMPLE_CLAIM,
+    //     argsToSign: contractCallArgsToSign[ContractCallFunction.SIMPLE_CLAIM],
+    //     description: data.richTextDescription,
+    //   },
+    // }
+
     setLoadingText("Uploading image")
 
     const { IpfsHash: imageCID } = await pinFileToIPFS({
@@ -68,43 +95,63 @@ const useCreateNft = () => {
 
     setLoadingText("Deploying contract")
 
-    // TODO: contract call => get the contract address, and then call the POST /guild/:id/platform endpoint
+    const { name, symbol, tokenTreasury, price } = data
+    // guildId, name, symbol, cid, tokenOwner, tokenTreasury, tokenFee
+    const contractCallParams = [
+      guildId,
+      name,
+      symbol,
+      metadataCID,
+      account,
+      tokenTreasury,
+      price,
+    ]
 
-    // TODO
-    const createdContractAddress = NULL_ADDRESS
+    try {
+      await guildRewardNFTFactoryContract?.callStatic.deployBasicNFT(
+        ...contractCallParams
+      )
+    } catch (callStaticError) {
+      let processedCallStaticError: string
 
-    return fetcherWithSign([
-      // TODO: change this to the v2 endpoint once we merge the v2 api related changes
-      `/FORCE_V2/guilds/${guildId}/guild-platforms`,
-      {
-        body: {
-          platformId: PlatformType.CONTRACT_CALL,
-          platformName: "CONTRACT_CALL",
-          platformGuildId: `${guildId}-${createdContractAddress}-${Date.now()}`,
-          platformGuildData: {
-            chain: data.chain,
-            contractAddress: createdContractAddress,
-            function: ContractCallFunction.SIMPLE_CLAIM,
-            argsToSign: contractCallArgsToSign[ContractCallFunction.SIMPLE_CLAIM],
-            description: data.description,
-          },
-        },
-      },
-    ])
+      if (callStaticError.error) {
+        const walletError = processWalletError(callStaticError.error)
+        processedCallStaticError = walletError.title
+      }
 
-    // test data
+      if (!processedCallStaticError) {
+        // TODO: switch-case for custom errors here?
+        return Promise.reject(callStaticError.errorName)
+      }
+
+      return Promise.reject(processedCallStaticError)
+    }
+
+    const tx = await guildRewardNFTFactoryContract.deployBasicNFT(
+      ...contractCallParams
+    )
+    const txResponse = await tx.wait()
+
+    const rewardNFTDeployedEvent = txResponse?.events.find(
+      (event) => event.event === "RewardNFTDeployed"
+    )
+
+    if (!rewardNFTDeployedEvent)
+      return Promise.reject("Couldn't find RewardNFTDeployed event")
+
+    const createdContractAddress =
+      rewardNFTDeployedEvent.args.tokenAddress.toLowerCase()
+
     return {
-      id: 0,
-      platformGuildId: "randomuuid",
-      platformGuildName: "",
       platformId: PlatformType.CONTRACT_CALL,
       platformName: "CONTRACT_CALL",
+      platformGuildId: `${guildId}-${createdContractAddress}-${Date.now()}`,
       platformGuildData: {
         chain: data.chain,
-        contractAddress: NULL_ADDRESS,
+        contractAddress: createdContractAddress,
         function: ContractCallFunction.SIMPLE_CLAIM,
-        argsToSign: [],
-        description: data.description,
+        argsToSign: contractCallArgsToSign[ContractCallFunction.SIMPLE_CLAIM],
+        description: data.richTextDescription,
       },
     }
   }
@@ -112,17 +159,19 @@ const useCreateNft = () => {
   return {
     ...useSubmit(createNft, {
       onSuccess: (createdContractCallReward) => {
-        // TODO: mutate guildPlatforms
         setLoadingText(null)
-        setData(
-          createdContractCallReward.platformGuildData as CreateNftContextType["data"]
-        )
-        console.log("createdContractCallReward", createdContractCallReward)
-        // TODO: toast
+
+        toast({
+          status: "info",
+          title: "Deployed NFT contract",
+        })
+
+        onSuccess(createdContractCallReward)
       },
-      onError: () => {
+      onError: (error) => {
         setLoadingText(null)
-        // TODO: error toast
+        console.log("useCreateNft error", error)
+        showErrorToast(error?.message ?? error)
       },
     }),
     loadingText,
