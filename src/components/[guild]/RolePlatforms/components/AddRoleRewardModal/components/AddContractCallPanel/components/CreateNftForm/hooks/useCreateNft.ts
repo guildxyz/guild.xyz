@@ -13,7 +13,10 @@ import { GuildPlatform, PlatformType } from "types"
 import processWalletError from "utils/processWalletError"
 import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
 
-const guildRewardBFTFactoryAddresses: Record<ContractCallSupportedChain, string> = {
+export const GUILD_REWARD_NFT_FACTORY_ADDRESSES: Record<
+  ContractCallSupportedChain,
+  string
+> = {
   POLYGON_MUMBAI: "0xf14249947c6de788c61f8ac5db0495ee2663ec1b",
 }
 
@@ -28,7 +31,7 @@ export enum ContractCallFunction {
   SIMPLE_CLAIM = "function claim(address payToken, address receiver, bytes calldata signature) payable",
 }
 
-const contractCallArgsToSign: Record<ContractCallFunction, string[]> = {
+export const CONTRACT_CALL_ARGS_TO_SIGN: Record<ContractCallFunction, string[]> = {
   [ContractCallFunction.SIMPLE_CLAIM]: [],
 }
 
@@ -45,7 +48,7 @@ const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) 
   const showErrorToast = useShowErrorToast()
 
   const guildRewardNFTFactoryContract = useContract(
-    guildRewardBFTFactoryAddresses[Chains[chainId]],
+    GUILD_REWARD_NFT_FACTORY_ADDRESSES[Chains[chainId]],
     GUILD_REWARD_NFT_FACTORY_ABI,
     true
   )
@@ -139,7 +142,7 @@ const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) 
         chain: data.chain,
         contractAddress: createdContractAddress,
         function: ContractCallFunction.SIMPLE_CLAIM,
-        argsToSign: contractCallArgsToSign[ContractCallFunction.SIMPLE_CLAIM],
+        argsToSign: CONTRACT_CALL_ARGS_TO_SIGN[ContractCallFunction.SIMPLE_CLAIM],
         image: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${imageCID}`,
         description: data.richTextDescription,
       },
