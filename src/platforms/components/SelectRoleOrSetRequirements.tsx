@@ -1,4 +1,4 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
+import { Tab, TabList, TabPanel, TabPanels, TabProps, Tabs } from "@chakra-ui/react"
 import {
   RolesOrRequirementsTabs,
   useAddRewardContext,
@@ -13,6 +13,12 @@ import { PlatformName } from "types"
 type Props = {
   selectedPlatform: PlatformName
   isRoleSelectorDisabled?: boolean
+}
+
+const TAB_STYLE_PROPS: TabProps = {
+  noOfLines: 1,
+  whiteSpace: "nowrap",
+  display: "block",
 }
 
 const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
@@ -32,13 +38,16 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
       onChange={setActiveTab}
     >
       <TabList mb="8">
-        <Tab isDisabled={isRoleSelectorDisabled}>{`Add to existing role${
+        <Tab
+          {...TAB_STYLE_PROPS}
+          isDisabled={isRoleSelectorDisabled}
+        >{`Add to existing role${
           platforms[selection].asRewardRestriction ===
           PlatformAsRewardRestrictions.MULTIPLE_ROLES
             ? "s"
             : ""
         }`}</Tab>
-        <Tab>Create new role (set requirements)</Tab>
+        <Tab {...TAB_STYLE_PROPS}>Create new role (set requirements)</Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
