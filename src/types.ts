@@ -191,6 +191,7 @@ type PlatformGuildData = {
     contractAddress: string
     function: ContractCallFunction
     argsToSign: string[]
+    image: string
     description: string
     inviteChannel?: never
     joinButton?: never
@@ -607,6 +608,7 @@ export type {
   GuildBase,
   GuildFormType,
   GuildPinMetadata,
+  PlatformGuildData,
   GuildPlatform,
   GuildPoap,
   GuildTags,

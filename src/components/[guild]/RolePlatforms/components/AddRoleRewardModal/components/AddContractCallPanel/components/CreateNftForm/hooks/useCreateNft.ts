@@ -61,6 +61,7 @@ const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) 
     //     contractAddress: tempCreatedContractAddress,
     //     function: ContractCallFunction.SIMPLE_CLAIM,
     //     argsToSign: contractCallArgsToSign[ContractCallFunction.SIMPLE_CLAIM],
+    // image: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}Qmd2dqm1EbcpbgQEknqNxQihXYw69yJs4PntnhwVaw5QF1`
     //     description: data.richTextDescription,
     //   },
     // }
@@ -151,6 +152,7 @@ const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) 
         contractAddress: createdContractAddress,
         function: ContractCallFunction.SIMPLE_CLAIM,
         argsToSign: contractCallArgsToSign[ContractCallFunction.SIMPLE_CLAIM],
+        image: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${imageCID}`,
         description: data.richTextDescription,
       },
     }
@@ -170,8 +172,14 @@ const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) 
       },
       onError: (error) => {
         setLoadingText(null)
-        console.log("useCreateNft error", error)
-        showErrorToast(error?.message ?? error)
+
+        console.error("useCreateNft error", error)
+
+        const prettyError =
+          error?.code === "ACTION_REJECTED"
+            ? "User rejected the transaction"
+            : error?.message ?? error
+        showErrorToast(prettyError)
       },
     }),
     loadingText,
