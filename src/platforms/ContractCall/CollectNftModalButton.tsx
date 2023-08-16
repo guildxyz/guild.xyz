@@ -1,4 +1,5 @@
 import {
+  HStack,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -8,22 +9,22 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import CollectNftFeesTable from "components/[guild]/collect/components/CollectNftFeesTable"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
+import CollectNftFeesTable from "components/[guild]/collect/components/CollectNftFeesTable"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import { Chains } from "connectors"
 import { ContractCallRewardIcon } from "platforms/ContractCall/ContractCallReward"
+import CollectNftButton from "../../components/[guild]/collect/components/CollectNftButton"
+import { useCollectNftContext } from "../../components/[guild]/collect/components/CollectNftContext"
 import AlphaTag from "../../components/[guild]/Requirements/components/GuildCheckout/components/AlphaTag"
+import SwitchNetworkButton from "../../components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import { useGuildCheckoutContext } from "../../components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import TransactionStatusModal from "../../components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal"
 import OpenseaLink from "../../components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal/components/OpenseaLink"
-import SwitchNetworkButton from "../../components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
-import CollectNftButton from "../../components/[guild]/collect/components/CollectNftButton"
-import { useCollectNftContext } from "../../components/[guild]/collect/components/CollectNftContext"
 
 const CollectNftModalButton = () => {
   const { captureEvent } = usePostHogContext()
@@ -99,18 +100,28 @@ const CollectNftModalButton = () => {
         errorComponent={<Text mb={4}>Couldn't mint NFT</Text>}
         progressComponent={
           <>
-            <Text fontWeight={"bold"} mb="2">
+            <Text fontWeight="bold" mb={2}>
               You'll get:
             </Text>
-            <ContractCallRewardIcon {...{ guildPlatform, rolePlatformId }} />
+            <HStack>
+              <ContractCallRewardIcon {...{ guildPlatform, rolePlatformId }} />
+              <Text as="span" fontWeight="medium">
+                {`${data?.name ?? "Unknown"} NFT`}
+              </Text>
+            </HStack>
           </>
         }
         successComponent={
           <>
-            <Text fontWeight={"bold"} mb="2">
+            <Text fontWeight="bold" mb={2}>
               Your new asset:
             </Text>
-            <ContractCallRewardIcon {...{ guildPlatform, rolePlatformId }} />
+            <HStack>
+              <ContractCallRewardIcon {...{ guildPlatform, rolePlatformId }} />
+              <Text as="span" fontWeight="medium">
+                {`${data?.name ?? "Unknown"} NFT`}
+              </Text>
+            </HStack>
           </>
         }
       />
