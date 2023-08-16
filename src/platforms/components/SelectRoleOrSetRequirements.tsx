@@ -37,7 +37,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
       index={isRoleSelectorDisabled ? RolesOrRequirementsTabs.NEW_ROLE : activeTab}
       onChange={setActiveTab}
     >
-      <TabList mb="8">
+      <TabList mt="6" mb="7">
         <Tab
           {...TAB_STYLE_PROPS}
           isDisabled={isRoleSelectorDisabled}
@@ -58,7 +58,6 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
             }
             roles={roles}
             onChange={(selectedRoleIds) => setValue("roleIds", selectedRoleIds)}
-            size="lg"
           />
         </TabPanel>
         <TabPanel>

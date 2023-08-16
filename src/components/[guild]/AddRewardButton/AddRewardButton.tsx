@@ -13,8 +13,8 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
+import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import dynamic from "next/dynamic"
 import { ArrowLeft, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
@@ -114,7 +114,7 @@ const AddRewardButton = (): JSX.Element => {
             methods.reset()
             onClose()
           }}
-          size="4xl"
+          size={step === "HOME" ? "4xl" : "2xl"}
           scrollBehavior="inside"
           colorScheme="dark"
         >
@@ -154,11 +154,7 @@ const AddRewardButton = (): JSX.Element => {
               </Stack>
             </ModalHeader>
 
-            <ModalBody
-              pt={step === "ROLES_REQUIREMENTS" ? 8 : undefined}
-              ref={modalRef}
-              className="custom-scrollbar"
-            >
+            <ModalBody ref={modalRef} className="custom-scrollbar">
               {selection === "POAP" ? (
                 <DynamicAddPoapPanel />
               ) : selection && step === "ROLES_REQUIREMENTS" ? (
@@ -174,7 +170,7 @@ const AddRewardButton = (): JSX.Element => {
             </ModalBody>
 
             {selection !== "POAP" && step === "ROLES_REQUIREMENTS" && (
-              <ModalFooter pt={8}>
+              <ModalFooter pt="6" pb="8">
                 <Button
                   isDisabled={isAddRewardButtonDisabled}
                   colorScheme="green"

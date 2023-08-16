@@ -26,7 +26,7 @@ const OptionCard = ({
   children,
   ...rest
 }: PropsWithChildren<Props>): JSX.Element => (
-  <Card p="6" {...rest}>
+  <Card py="6" px="5" {...rest}>
     <HStack spacing={4}>
       {typeof image === "string" ? (
         <Img
