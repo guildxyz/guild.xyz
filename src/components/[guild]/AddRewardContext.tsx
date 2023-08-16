@@ -11,7 +11,7 @@ import {
 } from "react"
 import { PlatformName } from "types"
 
-type AddPlatformModalStep = "HOME" | "ROLES_REQUIREMENTS"
+type AddPlatformModalStep = "HOME" | "SELECT_ROLE"
 
 export enum RolesOrRequirementsTabs {
   EXISTING_ROLE,

@@ -8,9 +8,9 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
-import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { ArrowLeft } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import platforms from "platforms/platforms"
@@ -20,7 +20,7 @@ const AddRoleRewardModal = () => {
   const { modalRef, selection, setSelection, step, setStep, isOpen, onClose } =
     useAddRewardContext()
   const goBack = () => {
-    if (step === "ROLES_REQUIREMENTS") {
+    if (step === "SELECT_ROLE") {
       setStep("HOME")
     } else {
       setSelection(null)
@@ -60,7 +60,7 @@ const AddRoleRewardModal = () => {
         </ModalHeader>
 
         <ModalBody ref={modalRef} className="custom-scrollbar">
-          {selection && step === "ROLES_REQUIREMENTS" ? (
+          {selection && step === "SELECT_ROLE" ? (
             <SelectRoleOrSetRequirements selectedPlatform={selection} />
           ) : AddPlatformPanel ? (
             <AddPlatformPanel onSuccess={onClose} skipSettings />

@@ -53,7 +53,7 @@ const AddRewardButton = (): JSX.Element => {
   const { textColor, buttonColorScheme } = useThemeContext()
 
   const goBack = () => {
-    if (step === "ROLES_REQUIREMENTS") {
+    if (step === "SELECT_ROLE") {
       setStep("HOME")
       methods.reset()
     } else {
@@ -122,7 +122,7 @@ const AddRewardButton = (): JSX.Element => {
           <ModalContent minH="550px">
             <ModalCloseButton />
             <ModalHeader
-              {...(step === "ROLES_REQUIREMENTS"
+              {...(step === "SELECT_ROLE"
                 ? {
                     bgColor: lightModalBgColor,
                     boxShadow: "sm",
@@ -150,18 +150,18 @@ const AddRewardButton = (): JSX.Element => {
                   </Text>
                 </HStack>
 
-                {step === "ROLES_REQUIREMENTS" && <PlatformPreview />}
+                {step === "SELECT_ROLE" && <PlatformPreview />}
               </Stack>
             </ModalHeader>
 
             <ModalBody ref={modalRef} className="custom-scrollbar">
               {selection === "POAP" ? (
                 <DynamicAddPoapPanel />
-              ) : selection && step === "ROLES_REQUIREMENTS" ? (
+              ) : selection && step === "SELECT_ROLE" ? (
                 <SelectRoleOrSetRequirements selectedPlatform={selection} />
               ) : AddPlatformPanel ? (
                 <AddPlatformPanel
-                  onSuccess={() => setStep("ROLES_REQUIREMENTS")}
+                  onSuccess={() => setStep("SELECT_ROLE")}
                   skipSettings
                 />
               ) : (
@@ -169,7 +169,7 @@ const AddRewardButton = (): JSX.Element => {
               )}
             </ModalBody>
 
-            {selection !== "POAP" && step === "ROLES_REQUIREMENTS" && (
+            {selection !== "POAP" && step === "SELECT_ROLE" && (
               <ModalFooter pt="6" pb="8">
                 <Button
                   isDisabled={isAddRewardButtonDisabled}

@@ -12,7 +12,7 @@ const AddPoapPanel = (): JSX.Element => {
 
   return (
     <>
-      {step === "ROLES_REQUIREMENTS" ? (
+      {step === "SELECT_ROLE" ? (
         <SetupPoapRequirements
           onSuccess={() => {
             reset()
