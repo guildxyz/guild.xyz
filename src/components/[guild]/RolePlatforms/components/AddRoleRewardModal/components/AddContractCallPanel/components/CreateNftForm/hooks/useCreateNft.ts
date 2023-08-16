@@ -111,12 +111,9 @@ const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) 
         processedCallStaticError = walletError.title
       }
 
-      if (!processedCallStaticError) {
-        // TODO: switch-case for custom errors here?
-        return Promise.reject(callStaticError.errorName)
-      }
-
-      return Promise.reject(processedCallStaticError)
+      return Promise.reject(
+        processedCallStaticError ?? callStaticError.errorName ?? callStaticError
+      )
     }
 
     const tx = await guildRewardNFTFactoryContract.deployBasicNFT(
