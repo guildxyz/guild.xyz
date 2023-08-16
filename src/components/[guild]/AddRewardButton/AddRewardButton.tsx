@@ -23,7 +23,7 @@ import { FormProvider, useForm, useWatch } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import {
   AddRewardProvider,
-  RolesOrRequirementsTabs,
+  RoleTypeToAddTo,
   useAddRewardContext,
 } from "../AddRewardContext"
 import { useIsTabsStuck } from "../Tabs/Tabs"
@@ -63,7 +63,7 @@ const AddRewardButton = (): JSX.Element => {
 
   const requirements = useWatch({ name: "requirements", control: methods.control })
   const isAddRewardButtonDisabled =
-    activeTab === RolesOrRequirementsTabs.NEW_ROLE && !requirements?.length
+    activeTab === RoleTypeToAddTo.NEW_ROLE && !requirements?.length
 
   const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
     useAddReward(onClose)

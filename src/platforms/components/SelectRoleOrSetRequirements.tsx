@@ -1,6 +1,6 @@
 import { Tab, TabList, TabPanel, TabPanels, TabProps, Tabs } from "@chakra-ui/react"
 import {
-  RolesOrRequirementsTabs,
+  RoleTypeToAddTo,
   useAddRewardContext,
 } from "components/[guild]/AddRewardContext"
 import RoleSelector from "components/[guild]/RoleSelector"
@@ -38,7 +38,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
       isFitted
       variant="solid"
       colorScheme="indigo"
-      index={isRoleSelectorDisabled ? RolesOrRequirementsTabs.NEW_ROLE : activeTab}
+      index={isRoleSelectorDisabled ? RoleTypeToAddTo.NEW_ROLE : activeTab}
       onChange={handleChange}
     >
       <TabList mt="6" mb="7">
