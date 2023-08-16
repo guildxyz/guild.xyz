@@ -11,7 +11,7 @@ import {
 } from "react"
 import { PlatformName } from "types"
 
-type AddPlatformModalStep = "HOME" | "SELECT_ROLE"
+type AddPlatformStep = "HOME" | "SELECT_ROLE"
 
 export enum RoleTypeToAddTo {
   EXISTING_ROLE,
@@ -26,8 +26,8 @@ const AddRewardContext = createContext<{
   scrollToTop: () => void
   selection: PlatformName
   setSelection: (newSelection: PlatformName) => void
-  step: AddPlatformModalStep
-  setStep: (newStep: AddPlatformModalStep) => void
+  step: AddPlatformStep
+  setStep: (newStep: AddPlatformStep) => void
   activeTab: RoleTypeToAddTo
   setActiveTab: Dispatch<SetStateAction<RoleTypeToAddTo>>
 }>(undefined)
@@ -44,9 +44,9 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
     scrollToTop()
   }
 
-  const [step, setStepOg] = useState<AddPlatformModalStep>()
+  const [step, setStepOg] = useState<AddPlatformStep>()
 
-  const setStep = (newStep: AddPlatformModalStep) => {
+  const setStep = (newStep: AddPlatformStep) => {
     setStepOg(newStep)
     scrollToTop()
   }

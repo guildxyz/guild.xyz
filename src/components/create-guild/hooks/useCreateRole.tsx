@@ -13,7 +13,13 @@ import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
-export type RoleToCreate = Role & { guildId: number; roleType?: "NEW" }
+export type RoleToCreate = Omit<
+  Role,
+  "id" | "members" | "memberCount" | "position"
+> & {
+  guildId: number
+  roleType?: "NEW"
+}
 
 const useCreateRole = (onSuccess?: () => void) => {
   const { account } = useWeb3React()
@@ -26,12 +32,10 @@ const useCreateRole = (onSuccess?: () => void) => {
   const triggerConfetti = useJsConfetti()
   const { id, urlName, mutateGuild } = useGuild()
 
-  const fetchData = async (
-    signedValidation: SignedValdation
-  ): Promise<RoleToCreate> =>
+  const fetchData = async (signedValidation: SignedValdation): Promise<Role> =>
     fetcher(`/v2/guilds/${id}/roles/with-requirements-and-rewards`, signedValidation)
 
-  const useSubmitResponse = useSubmitWithSign<RoleToCreate>(fetchData, {
+  const useSubmitResponse = useSubmitWithSign<Role>(fetchData, {
     onError: (error_) => {
       const processedError = processConnectorError(error_)
       showErrorToast(processedError || error_)

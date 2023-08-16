@@ -30,6 +30,7 @@ import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useAddReward from "./hooks/useAddReward"
 
+// temporary until POAPs are real rewards
 const DynamicAddPoapPanel = dynamic(() => import("components/[guild]/CreatePoap"), {
   ssr: false,
 })
