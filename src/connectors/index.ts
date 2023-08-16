@@ -606,7 +606,7 @@ const RPC: RpcConfig = {
       logoURI:
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
-    rpcUrls: ["https://rpc.sepolia.org"],
+    rpcUrls: ["https://endpoints.omniatech.io/v1/eth/sepolia/public"],
     blockExplorerUrls: ["https://sepolia.etherscan.io"],
     blockExplorerIcons: {
       light: "/explorerLogos/etherscan-light.svg",
