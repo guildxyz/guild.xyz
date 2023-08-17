@@ -191,8 +191,20 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardMenuComponent: ContractCallCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,
-    AddPlatformPanel: null, // TODO: will add in another PR
-    PlatformPreview: null, // TODO: will add in another PR
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(
+      () => import("platforms/components/ContractCallPreview"),
+      {
+        ssr: false,
+        loading: () => <PlatformPreview isLoading={true} />,
+      }
+    ),
   },
 }
 
