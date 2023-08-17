@@ -1,7 +1,7 @@
 import { SimpleGrid, Text, Tooltip } from "@chakra-ui/react"
-import LogicDivider from "components/[guild]/LogicDivider"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
+import LogicDivider from "components/[guild]/LogicDivider"
 import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import { useFieldArray, useWatch } from "react-hook-form"
 import { PlatformType, Visibility } from "types"
@@ -46,7 +46,7 @@ const SelectExistingPlatform = ({ onClose }) => {
             "application/vnd.google-apps.form"
 
           const isAddButtonDisabled =
-            platforms[PlatformType[platform.platformId]].usageRestriction ===
+            platforms[PlatformType[platform.platformId]].asRewardRestriction ===
               PlatformAsRewardRestrictions.SINGLE_ROLE &&
             alreadyUsedRolePlatforms?.includes(platform.id)
 
