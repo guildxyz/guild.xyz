@@ -27,7 +27,7 @@ const CollectNftButton = ({
   const showErrorToast = useShowErrorToast()
 
   const { chain, address, alreadyCollected } = useCollectNftContext()
-  const { urlName } = useGuild()
+  const { id: guildId, urlName } = useGuild()
 
   const { chainId } = useWeb3React()
   const shouldSwitchNetwork = chainId !== Chains[chain]
@@ -86,7 +86,9 @@ const CollectNftButton = ({
          * UserReward in our backend and then they wouldn't be able to claim the NFT.
          * This way, we can make sure that this won't happen
          */
-        onJoinAndMintSubmit()
+        onJoinAndMintSubmit({
+          guildId,
+        })
       }}
       {...rest}
     >
