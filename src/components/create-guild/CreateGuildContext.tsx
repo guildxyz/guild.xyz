@@ -10,7 +10,7 @@ import {
   useState,
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { PlatformName as BasePlatformName, GuildFormType } from "types"
+import { GuildFormType, PlatformName as BasePlatformName } from "types"
 import capitalize from "utils/capitalize"
 import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
@@ -174,7 +174,7 @@ const CreateGuildProvider = ({
             },
           ],
           rolePlatforms:
-            platforms[platform]?.usageRestriction ===
+            platforms[platform]?.asRewardRestriction ===
             PlatformAsRewardRestrictions.MULTIPLE_ROLES
               ? rolePlatforms
               : undefined,
@@ -193,7 +193,7 @@ const CreateGuildProvider = ({
           ? "You can connect more later"
           : platform === "DEFAULT"
           ? "Without platform"
-          : capitalize(platform?.toLowerCase() ?? "")
+          : platforms[platform]?.name ?? ""
       }${platform !== "DEFAULT" && guildName ? ` - ${guildName}` : ""}`,
       content: <CreateGuildIndex />,
     },
