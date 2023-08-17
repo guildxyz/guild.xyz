@@ -230,6 +230,25 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 <FormErrorMessage>{errors?.price?.message}</FormErrorMessage>
               </FormControl>
 
+              <FormControl isInvalid={!!errors?.tokenTreasury}>
+                <FormLabel>Payout address</FormLabel>
+
+                <Input
+                  {...register("tokenTreasury", {
+                    required: "This field is required.",
+                    pattern: {
+                      value: ADDRESS_REGEX,
+                      message:
+                        "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+                    },
+                  })}
+                  defaultValue={account}
+                  placeholder={`e.g. ${account}`}
+                />
+
+                <FormErrorMessage>{errors?.tokenTreasury?.message}</FormErrorMessage>
+              </FormControl>
+
               <FormControl>
                 <FormLabel>Supply</FormLabel>
 
@@ -245,7 +264,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
               </FormControl>
 
               <FormControl isInvalid={!!errors?.description}>
-                <FormLabel>NFT description</FormLabel>
+                <FormLabel>Metadata description</FormLabel>
 
                 <Textarea {...register("description")} />
 
@@ -257,7 +276,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
               </FormControl>
 
               <FormControl isInvalid={!!errors?.richTextDescription}>
-                <FormLabel>NFT description</FormLabel>
+                <FormLabel>Reward description</FormLabel>
 
                 <RichTextDescriptionEditor onChange={onDescriptionChange} />
 
@@ -343,24 +362,6 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                     Add attribute
                   </Button>
                 </Stack>
-              </FormControl>
-
-              <FormControl isInvalid={!!errors?.tokenTreasury}>
-                <FormLabel>Payout address</FormLabel>
-
-                <Input
-                  {...register("tokenTreasury", {
-                    required: "This field is required.",
-                    pattern: {
-                      value: ADDRESS_REGEX,
-                      message:
-                        "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-                    },
-                  })}
-                  placeholder={`e.g. ${account}`}
-                />
-
-                <FormErrorMessage>{errors?.tokenTreasury?.message}</FormErrorMessage>
               </FormControl>
             </Stack>
           </GridItem>
