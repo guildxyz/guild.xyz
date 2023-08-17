@@ -1,5 +1,6 @@
 import { SimpleGrid, Stack } from "@chakra-ui/react"
 import Section from "components/common/Section"
+import useGuild from "components/[guild]/hooks/useGuild"
 import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 import PlatformSelectButton, {
@@ -18,7 +19,7 @@ type PlatformsGridData = {
   hook?: PlatformHookType
 }
 
-const generalPlatformsData: PlatformName[] = ["CONTRACT_CALL"]
+const generalPlatforms: PlatformName[] = ["CONTRACT_CALL"]
 
 const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
@@ -50,6 +51,12 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
       : {}),
   }
 
+  const { featureFlags } = useGuild()
+
+  const filteredGeneralPlatforms = generalPlatforms.filter((p) =>
+    p === "CONTRACT_CALL" ? featureFlags?.includes("CONTRACT_CALL") : true
+  )
+
   return (
     <Stack spacing={8}>
       <SimpleGrid
@@ -75,19 +82,22 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
           )
         )}
       </SimpleGrid>
-      <Section title="General">
-        <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
-          {generalPlatformsData.map((platformName) => (
-            <PlatformSelectButton
-              key={platformName}
-              platform={platformName}
-              title={platforms[platformName].name}
-              icon={platforms[platformName].icon}
-              onSelection={onSelection}
-            />
-          ))}
-        </SimpleGrid>
-      </Section>
+
+      {filteredGeneralPlatforms.length > 0 && (
+        <Section title="General">
+          <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
+            {filteredGeneralPlatforms.map((platformName) => (
+              <PlatformSelectButton
+                key={platformName}
+                platform={platformName}
+                title={platforms[platformName].name}
+                icon={platforms[platformName].icon}
+                onSelection={onSelection}
+              />
+            ))}
+          </SimpleGrid>
+        </Section>
+      )}
     </Stack>
   )
 }
