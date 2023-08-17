@@ -53,9 +53,12 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
 
   const { featureFlags } = useGuild()
 
-  const filteredGeneralPlatforms = generalPlatforms.filter((p) =>
-    p === "CONTRACT_CALL" ? featureFlags?.includes("CONTRACT_CALL") : true
-  )
+  // TODO: re-enable feature flag!
+  // const filteredGeneralPlatforms = generalPlatforms.filter((p) =>
+  //   p === "CONTRACT_CALL" ? featureFlags?.includes("CONTRACT_CALL") : true
+  // )
+
+  const filteredGeneralPlatforms = generalPlatforms
 
   return (
     <Stack spacing={8}>
