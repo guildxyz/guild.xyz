@@ -1,4 +1,13 @@
-import { Box, Code, Heading, Img, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Code,
+  Heading,
+  Img,
+  ListItem,
+  OrderedList,
+  Text,
+  UnorderedList,
+} from "@chakra-ui/react"
 import Link from "components/common/Link"
 import { forwardRef } from "react"
 import ReactMarkdown from "react-markdown"
@@ -57,6 +66,19 @@ const reactMarkdownComponents: Partial<
     <Img borderRadius={"lg"} mb={8} {...props}>
       {children}
     </Img>
+  ),
+  ul: ({ children, node: _node, ...props }) => (
+    <UnorderedList pl={2} mb={4} {...props}>
+      {children}
+    </UnorderedList>
+  ),
+  ol: ({ children, node: _node, ...props }) => (
+    <OrderedList pl={2} mb={4} {...props}>
+      {children}
+    </OrderedList>
+  ),
+  li: ({ children, node: _node, ...props }) => (
+    <ListItem {...props}>{children}</ListItem>
   ),
 }
 
