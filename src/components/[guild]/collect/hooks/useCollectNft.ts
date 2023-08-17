@@ -34,7 +34,7 @@ const useCollectNft = () => {
   const { chainId, account } = useWeb3React()
   const { chain, address, roleId, rolePlatformId, guildPlatform } =
     useCollectNftContext()
-  const { guildFee } = useGuildFee()
+  const { guildFee } = useGuildFee(chain)
   const { data } = useNftDetails(chain, address)
   const shouldSwitchChain = chainId !== Chains[chain]
 

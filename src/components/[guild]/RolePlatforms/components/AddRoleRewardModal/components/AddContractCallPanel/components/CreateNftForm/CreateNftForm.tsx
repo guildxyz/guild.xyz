@@ -17,17 +17,20 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Skeleton,
   Stack,
   Text,
   Textarea,
   Tooltip,
 } from "@chakra-ui/react"
+import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chain, Chains, RPC } from "connectors"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
@@ -105,6 +108,12 @@ const CreateNftForm = ({ onSuccess }: Props) => {
       },
     },
   })
+
+  const { guildFee } = useGuildFee(chain)
+  const formattedGuildFee =
+    guildFee && chain
+      ? Number(formatUnits(guildFee, RPC[chain].nativeCurrency.decimals))
+      : undefined
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -207,7 +216,11 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 </InputGroup>
 
                 <FormHelperText>
-                  {`Collectors will pay an additional 0.1 ${RPC[chain]?.nativeCurrency?.symbol} Guild minting fee. `}
+                  {`Collectors will pay an additional `}
+                  <Skeleton display="inline" h={3} isLoaded={!!formattedGuildFee}>
+                    {formattedGuildFee ?? "..."}
+                  </Skeleton>
+                  {` ${RPC[chain]?.nativeCurrency?.symbol} Guild minting fee. `}
                   <Link href="#" isExternal textDecoration="underline">
                     Learn more
                     <Icon as={ArrowSquareOut} ml={0.5} />
@@ -239,7 +252,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
 
                 <FormHelperText>
-                  This description will be included in the NFT metadat JSON.
+                  This description will be included in the NFT metadata JSON.
                 </FormHelperText>
               </FormControl>
 

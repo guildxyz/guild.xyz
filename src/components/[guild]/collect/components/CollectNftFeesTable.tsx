@@ -13,7 +13,7 @@ type Props = {
 const CollectNftFeesTable = ({ bgColor }: Props) => {
   const { chain, address } = useCollectNftContext()
 
-  const { guildFee } = useGuildFee()
+  const { guildFee } = useGuildFee(chain)
   const formattedGuildFee = guildFee
     ? Number(formatUnits(guildFee, RPC[chain].nativeCurrency.decimals))
     : undefined
