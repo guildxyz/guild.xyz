@@ -28,7 +28,7 @@ const handler = async (req, _) => {
   try {
     const [guilds, interFontData, interBoldFontData, dystopianFontData] =
       await Promise.all([
-        fetcher(`/v2/guilds?order=members`).catch((_) => []),
+        fetcher(`/v2/guilds`).catch((_) => []),
         interFont,
         interBoldFont,
         dystopianFont,
