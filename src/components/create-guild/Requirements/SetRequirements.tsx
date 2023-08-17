@@ -47,7 +47,7 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
   const watchFieldArray = watch("requirements")
   const controlledFields = fields.map((field, index) => ({
     ...field,
-    ...watchFieldArray[index],
+    ...watchFieldArray?.[index],
   }))
 
   const removeReq = (index: number) => {
@@ -130,7 +130,7 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
                     updateRequirement={update}
                     isEditDisabled={type === "PAYMENT"}
                   />
-                  <LogicDivider logic={logic} />
+                  <LogicDivider logic={logic ?? "AND"} />
                 </CardMotionWrapper>
               )
             })}
