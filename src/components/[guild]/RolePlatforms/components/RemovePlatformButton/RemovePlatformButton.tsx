@@ -1,5 +1,6 @@
 import { CloseButton, Tooltip, useDisclosure } from "@chakra-ui/react"
 import RemovePlatformAlert from "components/[guild]/RemovePlatformAlert"
+import platforms from "platforms/platforms"
 import { GuildPlatform, PlatformType } from "types"
 import useRemovePlatform from "./hooks/useRemovePlatform"
 
@@ -24,7 +25,12 @@ const RemovePlatformButton = ({
           rounded="full"
           aria-label="Remove reward"
           zIndex="1"
-          onClick={onOpen}
+          onClick={
+            platforms[PlatformType[guildPlatform.platformId]]
+              .shouldShowKeepAccessesModal
+              ? onOpen
+              : onSubmit
+          }
           // TODO: Disabled until we don't decide how should we handle it
           isDisabled={guildPlatform.platformId === PlatformType.CONTRACT_CALL}
         />
