@@ -139,6 +139,9 @@ const styles = {
         color: "var(--chakra-colors-blue-500)",
       },
     },
+    ".chakra-ui-light .lexical-content-editable": {
+      backgroundColor: "var(--chakra-colors-white)",
+    },
   }),
 }
 

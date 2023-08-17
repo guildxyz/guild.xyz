@@ -15,6 +15,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link"
@@ -374,6 +375,8 @@ const BlockOptionsMenuList = ({
 }
 
 const ToolbarPlugin = () => {
+  const bgColor = useColorModeValue("gray.50", "gray.700")
+
   const [editor] = useLexicalComposerContext()
   const toolbarRef = useRef(null)
   const [canUndo, setCanUndo] = useState(false)
@@ -487,7 +490,7 @@ const ToolbarPlugin = () => {
       w="full"
       borderTopRadius="lg"
       borderBottomRadius={0}
-      bgColor="gray.700"
+      bgColor={bgColor}
       sx={{
         "> button": {
           borderRadius: 0,
