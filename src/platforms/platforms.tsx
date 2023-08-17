@@ -9,7 +9,7 @@ import {
   TwitterLogo,
 } from "phosphor-react"
 import { ComponentType } from "react"
-import { GuildPlatform, PlatformName } from "types"
+import { GuildPlatform, OneOf, PlatformName } from "types"
 import PlatformPreview from "./components/PlatformPreview"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
@@ -47,13 +47,23 @@ type PlatformData = {
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
-  asRewardRestriction: PlatformAsRewardRestrictions
   AddPlatformPanel?: ComponentType<{
     onSuccess: () => void
     skipSettings?: boolean
   }>
   PlatformPreview?: ComponentType<Record<string, never>>
-}
+} & OneOf<
+  {
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE
+  },
+  {
+    asRewardRestriction: Exclude<
+      PlatformAsRewardRestrictions,
+      PlatformAsRewardRestrictions.NOT_APPLICABLE
+    >
+    shouldShowKeepAccessesModal: boolean
+  }
+>
 
 const platforms: Record<PlatformName, PlatformData> = {
   TELEGRAM: {
@@ -64,6 +74,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useTelegramCardProps,
     cardMenuComponent: TelegramCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: true,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -85,6 +96,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    shouldShowKeepAccessesModal: true,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -105,6 +117,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useGithubCardProps,
     cardMenuComponent: GithubCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: true,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -141,6 +154,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    shouldShowKeepAccessesModal: true,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -159,6 +173,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "purple",
     gatedEntity: "POAP",
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: false,
     PlatformPreview: dynamic(() => import("platforms/components/PoapPreview"), {
       ssr: false,
       loading: () => <PlatformPreview isLoading={true} />,
@@ -172,6 +187,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useContractCallCardProps,
     cardButton: ContractCallRewardCardButton,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: false,
     AddPlatformPanel: null, // TODO: will add in another PR
     PlatformPreview: null, // TODO: will add in another PR
   },
