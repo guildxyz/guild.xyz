@@ -33,6 +33,7 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
   return (
     <CardMotionWrapper>
       <OptionCard
+        h="max-content"
         title={file.name}
         description={fileTypeNames[file.mimeType]}
         image={

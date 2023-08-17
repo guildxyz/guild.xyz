@@ -57,6 +57,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
   return (
     <CardMotionWrapper>
       <OptionCard
+        h="max-content"
         title={serverData.name}
         description={serverData.owner ? "Owner" : "Admin"}
         image={serverData.img || "/default_discord_icon.png"}
