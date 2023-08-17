@@ -3,7 +3,7 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import { useWatch } from "react-hook-form"
 import PlatformPreview from "./PlatformPreview"
 
-const DiscordPreview = (): JSX.Element => {
+const ContractCallPreview = (): JSX.Element => {
   const chain = useWatch({
     name: "rolePlatforms.0.guildPlatform.platformGuildData.chain",
   })
@@ -16,7 +16,7 @@ const DiscordPreview = (): JSX.Element => {
 
   return (
     <PlatformPreview
-      type="DISCORD"
+      type="CONTRACT_CALL"
       isLoading={isValidating}
       name={data?.name}
       image={data?.image}
@@ -24,4 +24,4 @@ const DiscordPreview = (): JSX.Element => {
   )
 }
 
-export default DiscordPreview
+export default ContractCallPreview
