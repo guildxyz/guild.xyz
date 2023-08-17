@@ -77,8 +77,8 @@ const AddRewardButton = (): JSX.Element => {
     if (data.requirements?.length > 0) {
       onCreateRoleSubmit({
         ...data,
-        name: data.name ?? `New ${platforms[selection].name} role`,
-        imageUrl: data.imageUrl ?? `/guildLogos/${getRandomInt(286)}.svg`,
+        name: data.name || `New ${platforms[selection].name} role`,
+        imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
       })
     } else {
       onAddRewardSubmit({
