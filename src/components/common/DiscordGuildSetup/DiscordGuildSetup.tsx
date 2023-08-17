@@ -1,7 +1,6 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
 import useGateables from "hooks/useGateables"
@@ -88,21 +87,18 @@ const DiscordGuildSetup = ({
               : () => true
           )
           .map((serverData) => (
-            <CardMotionWrapper key={serverData.id}>
-              <GridItem>
-                <DCServerCard
-                  serverData={serverData}
-                  onSelect={
-                    selectedServer
-                      ? undefined
-                      : (newServerId) => setValue(fieldName, newServerId)
-                  }
-                  onCancel={
-                    selectedServer !== serverData.id ? undefined : () => resetForm()
-                  }
-                />
-              </GridItem>
-            </CardMotionWrapper>
+            <DCServerCard
+              key={serverData.id}
+              serverData={serverData}
+              onSelect={
+                selectedServer
+                  ? undefined
+                  : (newServerId) => setValue(fieldName, newServerId)
+              }
+              onCancel={
+                selectedServer !== serverData.id ? undefined : () => resetForm()
+              }
+            />
           ))}
       </AnimatePresence>
       {debounceSelectedServer && (
