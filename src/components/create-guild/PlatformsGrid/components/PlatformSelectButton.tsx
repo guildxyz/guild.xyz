@@ -88,7 +88,7 @@ const PlatformSelectButton = ({
           mt={description ? -1 : 0}
         >
           <Heading
-            fontSize="lg"
+            fontSize={{ lg: "lg" }}
             fontWeight="bold"
             letterSpacing="wide"
             maxW="full"
