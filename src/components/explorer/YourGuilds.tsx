@@ -1,24 +1,20 @@
 import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import LinkButton from "components/common/LinkButton"
 import GuildCard, { GuildSkeletonCard } from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
-import useIsV2 from "hooks/useIsV2"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Plus, Wallet } from "phosphor-react"
 import { forwardRef } from "react"
 
-const useYourGuilds = () => {
-  const isV2 = useIsV2()
-
-  return useSWRWithOptionalAuth(isV2 ? `/v2/guilds` : `/v2/guilds?`, {
+const useYourGuilds = () =>
+  useSWRWithOptionalAuth(`/v2/guilds`, {
     dedupingInterval: 60000, // one minute
     revalidateOnMount: true,
   })
-}
 
 const YourGuilds = forwardRef((_, ref: any) => {
   const { account } = useWeb3React()

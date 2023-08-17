@@ -1,11 +1,13 @@
 import { kv } from "@vercel/kv"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
+import { OneOf } from "types"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import { MYSTERY_BOX_CLAIMERS_KV_KEY } from "."
 
-export type MysteryBoxGetResponse =
-  | { alreadyClaimed: boolean; error?: never }
-  | { error: string; alreadyClaimed?: never }
+export type MysteryBoxGetResponse = OneOf<
+  { alreadyClaimed: boolean },
+  { error: string }
+>
 
 const handler: NextApiHandler<MysteryBoxGetResponse> = async (
   req: NextApiRequest,

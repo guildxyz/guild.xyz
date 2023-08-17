@@ -7,12 +7,11 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Reorder } from "framer-motion"
-import useIsV2 from "hooks/useIsV2"
 import { useMemo, useState } from "react"
 import { Visibility } from "types"
 import useReorderRoles from "../hooks/useReorderRoles"
@@ -25,22 +24,23 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     onOpen: onAlertOpen,
     onClose: onAlertClose,
   } = useDisclosure()
-  const isV2 = useIsV2()
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
-    if (roles.every((role) => role.position === null)) {
+    if (roles?.every((role) => role.position === null)) {
       const byMembers = roles?.sort(
         (role1, role2) => role2.memberCount - role1.memberCount
       )
       return byMembers
     }
 
-    return roles?.sort((role1, role2) => {
-      if (role1.position === null) return 1
-      if (role2.position === null) return -1
-      return role1.position - role2.position
-    })
+    return (
+      roles?.sort((role1, role2) => {
+        if (role1.position === null) return 1
+        if (role2.position === null) return -1
+        return role1.position - role2.position
+      }) ?? []
+    )
   }, [roles])
 
   const publicRoles = sortedRoles.filter(
@@ -60,22 +60,18 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { isLoading, onSubmit } = useReorderRoles(onClose)
 
   const handleSubmit = () => {
-    if (isV2) {
-      const changedRoles = roleIdsOrder
-        .map((roleId, i) => ({
-          id: roleId,
-          position: i,
-        }))
-        .filter(({ id: roleId, position }) =>
-          (roles ?? []).some(
-            (prevRole) => prevRole.id === roleId && prevRole.position !== position
-          )
+    const changedRoles = roleIdsOrder
+      .map((roleId, i) => ({
+        id: roleId,
+        position: i,
+      }))
+      .filter(({ id: roleId, position }) =>
+        (roles ?? []).some(
+          (prevRole) => prevRole.id === roleId && prevRole.position !== position
         )
+      )
 
-      return onSubmit(changedRoles)
-    } else {
-      onSubmit(roleIdsOrder.map((roleId, i) => ({ id: roleId, position: i })))
-    }
+    return onSubmit(changedRoles)
   }
 
   const onCloseAndClear = () => {
@@ -106,7 +102,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
               {roleIdsOrder?.map((roleId) => (
                 <Reorder.Item key={roleId} value={roleId}>
                   <DraggableRoleCard
-                    role={roles.find((role) => role.id === roleId)}
+                    role={roles?.find((role) => role.id === roleId)}
                   />
                 </Reorder.Item>
               ))}

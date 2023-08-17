@@ -138,6 +138,7 @@ type GuildBase = {
   platforms: Array<PlatformName>
   memberCount: number
   rolesCount: number
+  tags: Array<GuildTags>
 }
 
 type BrainCardData = {
@@ -237,6 +238,7 @@ type RolePlatform = {
   platformRoleId?: string
   guildPlatformId?: number
   guildPlatform?: GuildPlatform
+  platformRoleData?: Record<string, string | boolean>
   index?: number
   isNew?: boolean
   roleId?: number
@@ -309,6 +311,9 @@ const supportedSocialLinks = [
 type SocialLinkKey = (typeof supportedSocialLinks)[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
 
+const guildTags = ["VERIFIED", "FEATURED"] as const
+type GuildTags = (typeof guildTags)[number]
+
 type GuildContact = {
   type: "EMAIL" | "TELEGRAM"
   contact: string
@@ -336,6 +341,7 @@ type Guild = {
   featureFlags: FeatureFlag[]
   hiddenRoles?: boolean
   requiredPlatforms?: PlatformName[]
+  tags: GuildTags[]
 }
 type GuildFormType = Partial<
   Pick<
@@ -349,6 +355,7 @@ type GuildFormType = Partial<
     | "theme"
     | "contacts"
     | "featureFlags"
+    | "tags"
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
@@ -602,6 +609,7 @@ export type {
   GuildPinMetadata,
   GuildPlatform,
   GuildPoap,
+  GuildTags,
   LeaderboardPinData,
   Logic,
   MonetizePoapForm,

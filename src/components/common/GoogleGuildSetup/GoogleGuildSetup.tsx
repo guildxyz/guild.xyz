@@ -112,35 +112,32 @@ const GoogleGuildSetup = ({
       >
         <AnimatePresence>
           {(selectedFile ? [selectedFile] : gateables)?.map((file) => (
-            <CardMotionWrapper key={file.platformGuildId}>
-              <GridItem>
-                <GoogleDocCard
-                  file={file}
-                  onSelect={
-                    selectedFile
-                      ? undefined
-                      : (newPlatformGuildId: string) => {
-                          setValue(fieldName, newPlatformGuildId)
-                          if (!fieldNameBase?.length)
-                            setValue(`platformGuildName`, file.name)
-                          if (shouldSetName) setValue("name", file.name)
+            <GoogleDocCard
+              key={file.platformGuildId}
+              file={file}
+              onSelect={
+                selectedFile
+                  ? undefined
+                  : (newPlatformGuildId: string) => {
+                      setValue(fieldName, newPlatformGuildId)
+                      if (!fieldNameBase?.length)
+                        setValue(`platformGuildName`, file.name)
+                      if (shouldSetName) setValue("name", file.name)
 
-                          setValue(`${fieldNameBase}platformGuildData`, {
-                            mimeType: file.mimeType,
-                            iconLink: file.iconLink,
-                          })
+                      setValue(`${fieldNameBase}platformGuildData`, {
+                        mimeType: file.mimeType,
+                        iconLink: file.iconLink,
+                      })
 
-                          if (skipSettings) handleSelect()
-                        }
-                  }
-                  onCancel={
-                    selectedFile?.platformGuildId !== file.platformGuildId
-                      ? undefined
-                      : resetForm
-                  }
-                />
-              </GridItem>
-            </CardMotionWrapper>
+                      if (skipSettings) handleSelect()
+                    }
+              }
+              onCancel={
+                selectedFile?.platformGuildId !== file.platformGuildId
+                  ? undefined
+                  : resetForm
+              }
+            />
           ))}
 
           {!selectedFile && (

@@ -1,4 +1,4 @@
-import { Checkbox, Collapse, Stack, Text, Wrap } from "@chakra-ui/react"
+import { ChakraProps, Checkbox, Collapse, Stack, Text, Wrap } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
@@ -16,7 +16,11 @@ import LogicFormControl from "./components/LogicFormControl"
 import RequirementEditableCard from "./components/RequirementEditableCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
-const SetRequirements = (): JSX.Element => {
+type Props = {
+  titleSize?: ChakraProps["fontSize"]
+}
+
+const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
   const {
     control,
     getValues,
@@ -93,6 +97,7 @@ const SetRequirements = (): JSX.Element => {
               </Checkbox>
             </>
           }
+          {...(titleSize && { fontSize: titleSize })}
         />
         {!freeEntry && <BalancyCounterWithPopover ml="auto !important" pl="5" />}
       </Wrap>

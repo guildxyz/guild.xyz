@@ -50,9 +50,14 @@ const PlatformSelectButton = ({
         <Circle size="12" pos="relative" overflow="hidden">
           <Image src={imageUrl} alt="Guild logo" layout="fill" />
         </Circle>
-        <VStack spacing={1} alignItems="start" w="full" maxW="full" mb="1" mt="-1">
+        <VStack
+          spacing={{ base: 0.5, lg: 1 }}
+          alignItems="start"
+          w="full"
+          maxW="full"
+        >
           <Heading
-            fontSize="lg"
+            fontSize={{ lg: "lg" }}
             fontWeight="bold"
             letterSpacing="wide"
             maxW="full"

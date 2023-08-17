@@ -10,6 +10,7 @@ import {
 } from "phosphor-react"
 import { ComponentType } from "react"
 import { GuildPlatform, PlatformName } from "types"
+import PlatformPreview from "./components/PlatformPreview"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
 import DiscordCardMenu from "./Discord/DiscordCardMenu"
@@ -24,42 +25,11 @@ import useGoogleCardProps from "./Google/useGoogleCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
 
-export enum PlatformUsageRestrictions {
+export enum PlatformAsRewardRestrictions {
   NOT_APPLICABLE, // e.g. Twitter
   SINGLE_ROLE, // e.g. Telegram
   MULTIPLE_ROLES, // e.g. Discord
 }
-
-type UsageRestrictionAndShowKeepAccessesModalParams =
-  | {
-      usageRestriction: PlatformUsageRestrictions.NOT_APPLICABLE
-      shouldShowKeepAccessesModal?: never
-    }
-  | {
-      usageRestriction: Exclude<
-        PlatformUsageRestrictions,
-        PlatformUsageRestrictions.NOT_APPLICABLE
-      >
-      shouldShowKeepAccessesModal: boolean
-    }
-
-// If we define an AddPlatformPanel, we'll use the `DefaultAddPlatformModalContent` component in the add reward modal, but if we need a custom solution for that modal (e.g. for the add POAP flow), we can define an AddPlatformModalContent instead
-type AddPlatformComponentsParameters =
-  | {
-      AddPlatformModalContent: ComponentType<{
-        goBack: () => void
-        onSuccess: () => void
-      }>
-      AddPlatformPanel?: never
-    }
-  | {
-      AddPlatformModalContent?: never
-      AddPlatformPanel: ComponentType<{
-        onSuccess: () => void
-        scrollToTop?: () => void
-        skipSettings?: boolean
-      }>
-    }
 
 type PlatformData = {
   icon: (props: IconProps) => JSX.Element
@@ -77,8 +47,13 @@ type PlatformData = {
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
-} & UsageRestrictionAndShowKeepAccessesModalParams &
-  AddPlatformComponentsParameters
+  asRewardRestriction: PlatformAsRewardRestrictions
+  AddPlatformPanel?: ComponentType<{
+    onSuccess: () => void
+    skipSettings?: boolean
+  }>
+  PlatformPreview?: ComponentType<Record<string, never>>
+}
 
 const platforms: Record<PlatformName, PlatformData> = {
   TELEGRAM: {
@@ -88,8 +63,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "group",
     cardPropsHook: useTelegramCardProps,
     cardMenuComponent: TelegramCardMenu,
-    usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
-    shouldShowKeepAccessesModal: true,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -97,6 +71,10 @@ const platforms: Record<PlatformName, PlatformData> = {
         ),
       { ssr: false }
     ),
+    PlatformPreview: dynamic(() => import("platforms/components/TelegramPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
   },
   DISCORD: {
     icon: DiscordLogo,
@@ -106,8 +84,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useDiscordCardProps,
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
-    usageRestriction: PlatformUsageRestrictions.MULTIPLE_ROLES,
-    shouldShowKeepAccessesModal: true,
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -115,6 +92,10 @@ const platforms: Record<PlatformName, PlatformData> = {
         ),
       { ssr: false }
     ),
+    PlatformPreview: dynamic(() => import("platforms/components/DiscordPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
   },
   GITHUB: {
     icon: GithubLogo,
@@ -123,8 +104,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "repo",
     cardPropsHook: useGithubCardProps,
     cardMenuComponent: GithubCardMenu,
-    usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
-    shouldShowKeepAccessesModal: true,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -132,22 +112,24 @@ const platforms: Record<PlatformName, PlatformData> = {
         ),
       { ssr: false }
     ),
+    PlatformPreview: dynamic(() => import("platforms/components/GitHubPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
   },
   TWITTER: {
     icon: TwitterLogo,
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
-    usageRestriction: PlatformUsageRestrictions.NOT_APPLICABLE,
-    AddPlatformPanel: null,
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
   },
   TWITTER_V1: {
     icon: TwitterLogo,
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
-    usageRestriction: PlatformUsageRestrictions.NOT_APPLICABLE,
-    AddPlatformPanel: null,
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
   },
   GOOGLE: {
     icon: GoogleLogo,
@@ -158,8 +140,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardSettingsComponent: GoogleCardSettings,
     cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
-    usageRestriction: PlatformUsageRestrictions.MULTIPLE_ROLES,
-    shouldShowKeepAccessesModal: true,
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     AddPlatformPanel: dynamic(
       () =>
         import(
@@ -167,16 +148,20 @@ const platforms: Record<PlatformName, PlatformData> = {
         ),
       { ssr: false }
     ),
+    PlatformPreview: dynamic(() => import("platforms/components/GooglePreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
   },
   POAP: {
     icon: null,
     name: "POAP",
     colorScheme: "purple",
     gatedEntity: "POAP",
-    usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
-    shouldShowKeepAccessesModal: false,
-    AddPlatformModalContent: dynamic(() => import("components/[guild]/CreatePoap"), {
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    PlatformPreview: dynamic(() => import("platforms/components/PoapPreview"), {
       ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
     }),
   },
   CONTRACT_CALL: {
@@ -186,9 +171,9 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "",
     cardPropsHook: useContractCallCardProps,
     cardButton: ContractCallRewardCardButton,
-    usageRestriction: PlatformUsageRestrictions.SINGLE_ROLE,
-    shouldShowKeepAccessesModal: false,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     AddPlatformPanel: null, // TODO: will add in another PR
+    PlatformPreview: null, // TODO: will add in another PR
   },
 }
 

@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import OptionCard from "components/common/OptionCard"
 import NextLink from "next/link"
 import { fileTypeNames } from "platforms/Google/useGoogleCardProps"
@@ -24,45 +25,47 @@ type Props = {
 const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
   const imageBgColor = useColorModeValue("gray.100", "gray.600")
 
-  const { isAlreadyInUse, guildUrlName, isValidating } = usePlatformUsageInfo(
-    "GOOGLE",
-    file.platformGuildId
-  )
+  const { isAlreadyInUse, isUsedInCurrentGuild, guildUrlName, isValidating } =
+    usePlatformUsageInfo("GOOGLE", file.platformGuildId)
+
+  if (isUsedInCurrentGuild) return null
 
   return (
-    <OptionCard
-      title={file.name}
-      description={fileTypeNames[file.mimeType]}
-      image={
-        <Circle size={14} bgColor={imageBgColor}>
-          <Img src={file.iconLink} alt={file.mimeType} />
-        </Circle>
-      }
-    >
-      <Stack w="full" spacing={4} justifyContent="space-between" h="full">
-        {isValidating ? (
-          <Button isLoading />
-        ) : isAlreadyInUse ? (
-          <NextLink href={`/${guildUrlName}`} passHref>
-            <Button as="a" colorScheme="gray" minW="max-content">
-              Go to guild
+    <CardMotionWrapper>
+      <OptionCard
+        title={file.name}
+        description={fileTypeNames[file.mimeType]}
+        image={
+          <Circle size={14} bgColor={imageBgColor}>
+            <Img src={file.iconLink} alt={file.mimeType} />
+          </Circle>
+        }
+      >
+        <Stack w="full" spacing={4} justifyContent="space-between" h="full">
+          {isValidating ? (
+            <Button isLoading />
+          ) : isAlreadyInUse ? (
+            <NextLink href={`/${guildUrlName}`} passHref>
+              <Button as="a" colorScheme="gray" minW="max-content">
+                Go to guild
+              </Button>
+            </NextLink>
+          ) : onSelect ? (
+            <Button
+              colorScheme="blue"
+              h={10}
+              onClick={() => onSelect(file.platformGuildId)}
+            >
+              Gate file
             </Button>
-          </NextLink>
-        ) : onSelect ? (
-          <Button
-            colorScheme="blue"
-            h={10}
-            onClick={() => onSelect(file.platformGuildId)}
-          >
-            Gate file
-          </Button>
-        ) : onCancel ? (
-          <Button h={10} onClick={onCancel}>
-            Cancel
-          </Button>
-        ) : null}
-      </Stack>
-    </OptionCard>
+          ) : onCancel ? (
+            <Button h={10} onClick={onCancel}>
+              Cancel
+            </Button>
+          ) : null}
+        </Stack>
+      </OptionCard>
+    </CardMotionWrapper>
   )
 }
 

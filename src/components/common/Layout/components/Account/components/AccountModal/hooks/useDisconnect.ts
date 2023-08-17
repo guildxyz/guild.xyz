@@ -90,34 +90,5 @@ const useDisconnectAddress = (onSuccess?: () => void) => {
   })
 }
 
-const useDisconnectV1 = (onSuccess?: () => void) => {
-  const showErrorToast = useShowErrorToast()
-  const { mutate: mutateUser } = useUser()
-  const { account } = useWeb3React()
-  const { id } = useGuild()
-  const toast = useToast()
-
-  const submit = async (signedValidation: SignedValdation) =>
-    fetcher("/user/disconnect", {
-      method: "POST",
-      ...signedValidation,
-    })
-
-  return useSubmitWithSign<any>(submit, {
-    onSuccess: () => {
-      mutateUser()
-      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
-
-      toast({
-        title: `Account disconnected!`,
-        status: "success",
-      })
-
-      onSuccess?.()
-    },
-    onError: (error) => showErrorToast(error),
-  })
-}
-
-export { useDisconnectAddress, useDisconnectV1 }
+export { useDisconnectAddress }
 export default useDisconnect
