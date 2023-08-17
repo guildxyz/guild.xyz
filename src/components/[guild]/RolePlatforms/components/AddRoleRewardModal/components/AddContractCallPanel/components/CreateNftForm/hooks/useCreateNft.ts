@@ -1,6 +1,5 @@
 import { parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import useContract from "hooks/useContract"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
@@ -39,8 +38,6 @@ export type CreateNFTResponse = Omit<GuildPlatform, "id" | "platformGuildName">
 
 const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) => {
   const { chainId, account } = useWeb3React()
-
-  const { id: guildId } = useGuild()
 
   const [loadingText, setLoadingText] = useState<string>()
 
@@ -85,9 +82,8 @@ const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) 
     setLoadingText("Deploying contract")
 
     const { name, symbol, tokenTreasury, price } = data
-    // guildId, name, symbol, cid, tokenOwner, tokenTreasury, tokenFee
+    // name, symbol, cid, tokenOwner, tokenTreasury, tokenFee
     const contractCallParams = [
-      guildId,
       name.trim(),
       symbol.trim(),
       metadataCID,
@@ -134,7 +130,7 @@ const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) 
     return {
       platformId: PlatformType.CONTRACT_CALL,
       platformName: "CONTRACT_CALL",
-      platformGuildId: `${guildId}-${createdContractAddress}-${Date.now()}`,
+      platformGuildId: `${data.chain}-${createdContractAddress}-${Date.now()}`,
       platformGuildData: {
         chain: data.chain,
         contractAddress: createdContractAddress,

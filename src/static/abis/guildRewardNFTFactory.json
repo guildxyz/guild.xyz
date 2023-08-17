@@ -100,9 +100,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "guildId",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "deployer",
+        "type": "address"
       },
       {
         "indexed": false,
@@ -155,7 +155,6 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "guildId", "type": "uint256" },
       { "internalType": "string", "name": "name", "type": "string" },
       { "internalType": "string", "name": "symbol", "type": "string" },
       { "internalType": "string", "name": "cid", "type": "string" },
@@ -180,7 +179,7 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "guildId", "type": "uint256" }],
+    "inputs": [{ "internalType": "address", "name": "deployer", "type": "address" }],
     "name": "getDeployedTokenContracts",
     "outputs": [
       {
