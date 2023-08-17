@@ -27,6 +27,7 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chain, Chains, RPC } from "connectors"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
@@ -114,6 +115,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
     field: { onChange: onDescriptionChange },
   } = useController({ control, name: "richTextDescription" })
 
+  const { setShouldShowCloseAlert, setIsBackButtonDisabled } = useAddRewardContext()
   const { onSubmit, isLoading, loadingText } = useCreateNft(onSuccess)
 
   return (
@@ -365,7 +367,11 @@ const CreateNftForm = ({ onSuccess }: Props) => {
               isDisabled={shouldSwitchChain || isLoading}
               isLoading={isLoading}
               loadingText={loadingText}
-              onClick={handleSubmit(onSubmit)}
+              onClick={(e) => {
+                setShouldShowCloseAlert(true)
+                setIsBackButtonDisabled(true)
+                return handleSubmit(onSubmit)(e)
+              }}
             >
               Create NFT
             </Button>
