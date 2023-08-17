@@ -1,4 +1,5 @@
 import { useSteps } from "@chakra-ui/react"
+import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import {
   createContext,
   Dispatch,
@@ -172,7 +173,11 @@ const CreateGuildProvider = ({
               },
             },
           ],
-          rolePlatforms: platform === "DISCORD" ? rolePlatforms : undefined,
+          rolePlatforms:
+            platforms[platform]?.usageRestriction ===
+            PlatformAsRewardRestrictions.MULTIPLE_ROLES
+              ? rolePlatforms
+              : undefined,
         },
       ] as any[],
     },

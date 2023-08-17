@@ -10,17 +10,19 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useCreateRole from "components/create-guild/hooks/useCreateRole"
+import useCreateRole, {
+  RoleToCreate,
+} from "components/create-guild/hooks/useCreateRole"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
-import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -40,7 +42,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
     useCreateRole()
 
-  const defaultValues = {
+  const defaultValues: RoleToCreate = {
     guildId: id,
     name: "",
     description: "",
@@ -52,9 +54,10 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     rolePlatforms: discordPlatform
       ? [
           {
+            id: undefined,
             guildPlatformId: discordPlatform.id,
-            platformRoleData: {},
             platformRoleId: null,
+            platformRoleData: {},
             isNew: true,
             visibility: Visibility.PUBLIC,
           },

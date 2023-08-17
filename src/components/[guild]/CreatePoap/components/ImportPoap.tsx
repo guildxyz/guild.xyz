@@ -11,8 +11,9 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
 import useToast from "hooks/useToast"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
@@ -21,8 +22,10 @@ import useSavePoap from "../hooks/useSavePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
 import UploadMintLinks from "./UploadMintLinks"
 
-const ImportPoap = ({ setStep }): JSX.Element => {
+const ImportPoap = (): JSX.Element => {
   const { id } = useGuild()
+  const { setStep } = useAddRewardContext()
+
   const toast = useToast()
 
   const methods = useForm()
@@ -88,7 +91,7 @@ const ImportPoap = ({ setStep }): JSX.Element => {
       <Flex justifyContent={"right"} pt="2" mt="auto">
         <Button
           colorScheme="indigo"
-          onClick={() => setStep("requirements")}
+          onClick={() => setStep("SELECT_ROLE")}
           isDisabled={!response}
         >
           Next

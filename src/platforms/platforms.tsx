@@ -1,4 +1,5 @@
 import { ChakraProps } from "@chakra-ui/react"
+import dynamic from "next/dynamic"
 import {
   DiscordLogo,
   GithubLogo,
@@ -7,6 +8,7 @@ import {
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
+import { ComponentType } from "react"
 import { GuildPlatform, PlatformName } from "types"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
@@ -21,6 +23,13 @@ import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
+import PlatformPreview from "./components/PlatformPreview"
+
+export enum PlatformAsRewardRestrictions {
+  NOT_APPLICABLE, // e.g. Twitter
+  SINGLE_ROLE, // e.g. Telegram
+  MULTIPLE_ROLES, // e.g. Discord
+}
 
 type PlatformData = {
   icon: (props: IconProps) => JSX.Element
@@ -38,6 +47,12 @@ type PlatformData = {
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
+  asRewardRestriction: PlatformAsRewardRestrictions
+  AddPlatformPanel?: ComponentType<{
+    onSuccess: () => void
+    skipSettings?: boolean
+  }>
+  PlatformPreview?: ComponentType<Record<string, never>>
 }
 
 const platforms: Record<PlatformName, PlatformData> = {
@@ -48,6 +63,18 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "group",
     cardPropsHook: useTelegramCardProps,
     cardMenuComponent: TelegramCardMenu,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(() => import("platforms/components/TelegramPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
   },
   DISCORD: {
     icon: DiscordLogo,
@@ -57,6 +84,18 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useDiscordCardProps,
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(() => import("platforms/components/DiscordPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
   },
   GITHUB: {
     icon: GithubLogo,
@@ -65,18 +104,32 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "repo",
     cardPropsHook: useGithubCardProps,
     cardMenuComponent: GithubCardMenu,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(() => import("platforms/components/GitHubPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
   },
   TWITTER: {
     icon: TwitterLogo,
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
   },
   TWITTER_V1: {
     icon: TwitterLogo,
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
   },
   GOOGLE: {
     icon: GoogleLogo,
@@ -87,12 +140,29 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardSettingsComponent: GoogleCardSettings,
     cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(() => import("platforms/components/GooglePreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
   },
   POAP: {
     icon: null,
     name: "POAP",
     colorScheme: "purple",
     gatedEntity: "POAP",
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    PlatformPreview: dynamic(() => import("platforms/components/PoapPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
   },
   CONTRACT_CALL: {
     icon: null,
@@ -101,6 +171,9 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "",
     cardPropsHook: useContractCallCardProps,
     cardButton: ContractCallRewardCardButton,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    AddPlatformPanel: null, // TODO: will add in another PR
+    PlatformPreview: null, // TODO: will add in another PR
   },
 }
 

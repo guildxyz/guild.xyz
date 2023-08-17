@@ -23,7 +23,7 @@ const Section = forwardRef(
   )
 )
 
-const SectionTitle = ({ title, titleRightElement }: Props) => (
+const SectionTitle = ({ title, titleRightElement, ...rest }: Props) => (
   <HStack spacing={2} alignItems="center">
     <Heading
       fontSize={{
@@ -32,6 +32,7 @@ const SectionTitle = ({ title, titleRightElement }: Props) => (
       }}
       as="h3"
       flexShrink="0"
+      {...rest}
     >
       {title}
     </Heading>
