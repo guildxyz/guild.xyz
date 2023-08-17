@@ -13,8 +13,8 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
+import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import dynamic from "next/dynamic"
 import { ArrowLeft, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
@@ -77,8 +77,8 @@ const AddRewardButton = (): JSX.Element => {
     if (data.requirements?.length > 0) {
       onCreateRoleSubmit({
         ...data,
-        name: `New ${platforms[selection].name} role`,
-        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+        name: data.name ?? `New ${platforms[selection].name} role`,
+        imageUrl: data.imageUrl ?? `/guildLogos/${getRandomInt(286)}.svg`,
       })
     } else {
       onAddRewardSubmit({

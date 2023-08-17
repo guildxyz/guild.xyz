@@ -1,4 +1,5 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
+import useSetRoleImageAndNameFromPlatformData from "components/[guild]/AddRewardButton/hooks/useSetRoleImageAndNameFromPlatformData"
 import useGateables from "hooks/useGateables"
 import { useWatch } from "react-hook-form"
 import { PlatformType } from "types"
@@ -14,6 +15,8 @@ const GooglePreview = (): JSX.Element => {
   const { gateables, isLoading } = useGateables(PlatformType.GOOGLE)
 
   const doc = gateables?.find((r) => r.platformGuildId === documentId)
+
+  useSetRoleImageAndNameFromPlatformData("/platforms/google.png", doc?.name)
 
   return (
     <PlatformPreview
