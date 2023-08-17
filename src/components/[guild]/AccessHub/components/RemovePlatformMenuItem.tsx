@@ -40,7 +40,7 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
           platforms[PlatformType[guildPlatform.platformId]]
             .shouldShowKeepAccessesModal
             ? onOpen
-            : onSubmit
+            : () => onSubmit()
         }
         color={color}
       >
