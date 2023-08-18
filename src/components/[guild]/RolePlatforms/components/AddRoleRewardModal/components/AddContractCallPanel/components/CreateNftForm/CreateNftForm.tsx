@@ -124,9 +124,10 @@ const CreateNftForm = ({ onSuccess }: Props) => {
     field: { onChange: onDescriptionChange },
   } = useController({ control, name: "richTextDescription" })
 
-  const { setShouldShowCloseAlert, setIsBackButtonDisabled } = useAddRewardContext()
+  const { setShouldShowCloseAlert, setIsBackButtonDisabled } =
+    useAddRewardContext() ?? {}
   const { onSubmit, isLoading, loadingText } = useCreateNft((newGuildPlatform) => {
-    setShouldShowCloseAlert(false)
+    setShouldShowCloseAlert?.(false)
     onSuccess(newGuildPlatform)
   })
 
@@ -385,8 +386,8 @@ const CreateNftForm = ({ onSuccess }: Props) => {
               isLoading={isLoading}
               loadingText={loadingText}
               onClick={(e) => {
-                setShouldShowCloseAlert(true)
-                setIsBackButtonDisabled(true)
+                setShouldShowCloseAlert?.(true)
+                setIsBackButtonDisabled?.(true)
                 return handleSubmit(onSubmit)(e)
               }}
             >

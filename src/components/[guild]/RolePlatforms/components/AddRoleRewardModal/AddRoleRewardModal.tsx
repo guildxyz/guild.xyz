@@ -70,7 +70,7 @@ const AddRoleRewardModal = () => {
               <Text fontWeight="bold" mb="3">
                 Add new platform
               </Text>
-              <PlatformsGrid onSelection={setSelection} showGeneral />
+              <PlatformsGrid onSelection={setSelection} />
             </>
           )}
         </ModalBody>

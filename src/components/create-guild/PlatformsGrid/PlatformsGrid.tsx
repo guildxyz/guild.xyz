@@ -12,8 +12,6 @@ import useOAuthButtonProps from "./hooks/useOAuthButtonProps"
 type Props = {
   onSelection: (platform: PlatformName) => void
   showPoap?: boolean
-  // TODO: temporary solution, we might need a better solution if we'll need to show some general rewards on the create guild page
-  showGeneral?: boolean
 }
 
 type PlatformsGridData = {
@@ -23,11 +21,7 @@ type PlatformsGridData = {
 
 const generalPlatforms: PlatformName[] = ["CONTRACT_CALL"]
 
-const PlatformsGrid = ({
-  onSelection,
-  showPoap = false,
-  showGeneral = false,
-}: Props) => {
+const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
   const platformsData: Record<
     Exclude<PlatformName, "" | "TWITTER" | "TWITTER_V1" | "POAP" | "CONTRACT_CALL">,
@@ -92,7 +86,7 @@ const PlatformsGrid = ({
         )}
       </SimpleGrid>
 
-      {showGeneral && filteredGeneralPlatforms.length > 0 && (
+      {filteredGeneralPlatforms.length > 0 && (
         <Section title="General">
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
             {filteredGeneralPlatforms.map((platformName) => (
