@@ -21,6 +21,7 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "BASE_GOERLI",
   "BASE_MAINNET",
   "SCROLL_ALPHA",
+  "ZORA",
 ])
 
 const COVALENT_EXCLUDED_TYPES = new Set([
@@ -108,6 +109,7 @@ const WalletActivityForm = ({
     "SCROLL_ALPHA",
     "BASE_MAINNET",
     "BASE_GOERLI",
+    "ZORA",
   ]
 
   const resetFields = () => {
