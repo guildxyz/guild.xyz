@@ -204,8 +204,7 @@ const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       notFound: true,
     }
 
-  // TODO: call the v2 endpoint
-  const endpoint = `/guild/${urlName}`
+  const endpoint = `/v2/guilds/guild-page/${urlName}`
   const guild: Guild = await fetcher(endpoint).catch((_) => ({}))
 
   if (
