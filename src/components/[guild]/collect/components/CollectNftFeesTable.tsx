@@ -35,7 +35,7 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
               isLoaded={!!formattedGuildFee && !!formattedFee}
             >
               {formattedGuildFee && formattedFee
-                ? `${formattedGuildFee + formattedFee} ${
+                ? `${Number((formattedGuildFee + formattedFee).toFixed(5))} ${
                     RPC[chain].nativeCurrency.symbol
                   }`
                 : "Loading"}
@@ -76,7 +76,7 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
           <Text as="span">
             <Skeleton display="inline" isLoaded={!!formattedFee}>
               {formattedGuildFee && formattedFee
-                ? `${formattedGuildFee + formattedFee} ${
+                ? `${Number((formattedGuildFee + formattedFee).toFixed(5))} ${
                     RPC[chain].nativeCurrency.symbol
                   }`
                 : "Loading"}
