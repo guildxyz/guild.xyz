@@ -30,7 +30,7 @@ const BlockExplorerLink = ({
         </Text>
       ) : (
         <Link href={`${url}/${path}/${address}`} isExternal>
-          <Text as="span" fontSize="md" mr={1.5} colorScheme="gray">
+          <Text as="span" fontSize="md" mr={1.5} colorScheme="gray" noOfLines={1}>
             {displayedAddress}
           </Text>
           <Icon as={ArrowSquareOut} color="gray" size="sm" />
