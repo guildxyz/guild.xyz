@@ -80,6 +80,11 @@ const reactMarkdownComponents: Partial<
   li: ({ children, node: _node, ...props }) => (
     <ListItem {...props}>{children}</ListItem>
   ),
+  blockquote: ({ children, node: _node, ...props }) => (
+    <Box as="blockquote" fontStyle="italic" {...props}>
+      {children}
+    </Box>
+  ),
 }
 
 type Props = {
