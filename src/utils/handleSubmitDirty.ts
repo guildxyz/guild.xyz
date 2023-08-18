@@ -7,9 +7,14 @@ import {
 
 const TO_FILTER_FLAG = "TO_FILTER"
 const KEYS_TO_FILTER = new Set(["validAddresses", "balancyDecimals", "formFieldId"])
-const KEYS_TO_KEEP = [
+const DIRTY_KEYS_TO_KEEP = [
   // data (of a requirement) is kept, because if we send partial data, that will overwrite the whole data field
   "data",
+]
+// Keys to keep even if they aren't dirty
+const KEYS_TO_KEEP = [
+  // There's a chance that we send empty arrays intentionally e.g. inside a contract call's guildPlatformData
+  "argsToSign",
 ]
 
 /**
@@ -53,6 +58,12 @@ const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
     }
 
     KEYS_TO_KEEP.forEach((keyToKeep) => {
+      if (keyToKeep in formData) {
+        newObj[keyToKeep] = formData[keyToKeep]
+      }
+    })
+
+    DIRTY_KEYS_TO_KEEP.forEach((keyToKeep) => {
       if (keyToKeep in newObj) {
         newObj[keyToKeep] = formData[keyToKeep]
       }
@@ -78,13 +89,11 @@ const handleSubmitDirty =
     onValid: SubmitHandler<Partial<TFieldValues>>,
     onInvalid?: SubmitErrorHandler<TFieldValues>
   ) =>
-    methods.handleSubmit(
-      (formValues) =>
-        onValid(
-          (formDataFilterForDirty(methods.formState.dirtyFields, formValues) ??
-            {}) as Partial<TFieldValues>
-        ),
-      onInvalid
-    )
+    methods.handleSubmit((formValues) => {
+      onValid(
+        (formDataFilterForDirty(methods.formState.dirtyFields, formValues) ??
+          {}) as Partial<TFieldValues>
+      )
+    }, onInvalid)
 
 export default handleSubmitDirty
