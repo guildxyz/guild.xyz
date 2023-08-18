@@ -19,7 +19,7 @@ const BlockExplorerLink = ({
   isValidating,
   error,
 }: Props) => {
-  const displayedAddress = address && shortenHex(address)
+  const displayedAddress = address && shortenHex(address, 3)
   const url = RPC[chain]?.blockExplorerUrls?.[0]
 
   return (
