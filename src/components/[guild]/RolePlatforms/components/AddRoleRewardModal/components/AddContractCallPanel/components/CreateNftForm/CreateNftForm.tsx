@@ -22,7 +22,6 @@ import {
   Text,
   Textarea,
   Tooltip,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
@@ -133,14 +132,13 @@ const CreateNftForm = ({ onSuccess }: Props) => {
     onSuccess(newGuildPlatform)
   })
 
-  const activeSupplyButtonColor = useColorModeValue(`gray.200`, `whiteAlpha.300`)
-
   return (
     <FormProvider {...methods}>
       <Stack spacing={8}>
         <Text>
-          Create an NFT that users will be able to mint through your guild page or
-          its own mint page, if they satisfy the requirements you'll set to it.
+          Create an NFT that members will be able to mint after they satisfy the set
+          requirements. Claiming can take place through Your Guild page or a separate
+          minting page.
         </Text>
 
         <Grid w="full" templateColumns="repeat(3, 1fr)" gap={8}>
