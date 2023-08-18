@@ -1,5 +1,6 @@
 import {
   Box,
+  ButtonGroup,
   Flex,
   FormControl,
   FormHelperText,
@@ -22,6 +23,7 @@ import {
   Text,
   Textarea,
   Tooltip,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
@@ -130,6 +132,8 @@ const CreateNftForm = ({ onSuccess }: Props) => {
     setShouldShowCloseAlert?.(false)
     onSuccess(newGuildPlatform)
   })
+
+  const activeSupplyButtonColor = useColorModeValue(`gray.200`, `whiteAlpha.300`)
 
   return (
     <FormProvider {...methods}>
@@ -253,15 +257,19 @@ const CreateNftForm = ({ onSuccess }: Props) => {
               <FormControl>
                 <FormLabel>Supply</FormLabel>
 
-                <Tooltip label="Coming soon" placement="top" hasArrow>
-                  <NumberInput isDisabled>
-                    <NumberInputField placeholder="Unlimited" />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                </Tooltip>
+                <ButtonGroup
+                  isAttached
+                  borderWidth={1}
+                  borderRadius="2xl"
+                  variant="solid"
+                >
+                  <Button bgColor={activeSupplyButtonColor}>Unlimited</Button>
+                  <Tooltip label="Coming soon" placement="top" hasArrow>
+                    <Button borderLeftWidth={1} isDisabled>
+                      Fixed
+                    </Button>
+                  </Tooltip>
+                </ButtonGroup>
               </FormControl>
 
               <FormControl isInvalid={!!errors?.description}>
