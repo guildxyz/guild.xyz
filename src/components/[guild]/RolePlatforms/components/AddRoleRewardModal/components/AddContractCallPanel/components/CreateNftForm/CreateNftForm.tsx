@@ -1,6 +1,5 @@
 import {
   Box,
-  ButtonGroup,
   Flex,
   FormControl,
   FormHelperText,
@@ -30,6 +29,7 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
+import StyledSelect from "components/common/StyledSelect"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
@@ -254,35 +254,28 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 <FormErrorMessage>{errors?.tokenTreasury?.message}</FormErrorMessage>
               </FormControl>
 
-              <FormControl>
+              <FormControl w={{ base: "full", md: "50%" }}>
                 <FormLabel>Supply</FormLabel>
 
-                <ButtonGroup
-                  isAttached
-                  borderWidth={1}
-                  borderRadius="lg"
-                  h={10}
-                  variant="solid"
-                  overflow="hidden"
-                >
-                  <Button
-                    bgColor={activeSupplyButtonColor}
-                    borderRadius="none"
-                    h={10}
-                  >
-                    Unlimited
-                  </Button>
-                  <Tooltip label="Coming soon" placement="top" hasArrow>
-                    <Button
-                      borderLeftWidth={1}
-                      borderRadius="none"
-                      h={10}
-                      isDisabled
-                    >
-                      Fixed
-                    </Button>
-                  </Tooltip>
-                </ButtonGroup>
+                <StyledSelect
+                  value={{
+                    label: "Unlimited",
+                    value: "UNLIMITED",
+                  }}
+                  options={[
+                    {
+                      label: "Unlimited",
+                      value: "UNLIMITED",
+                    },
+                    {
+                      label: "Fixed",
+                      value: "FIXED",
+                      isDisabled: true,
+                      details: "Coming soon",
+                    },
+                  ]}
+                  filterOption={() => true}
+                />
               </FormControl>
 
               <FormControl isInvalid={!!errors?.description}>
