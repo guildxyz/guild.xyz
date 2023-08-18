@@ -23,6 +23,9 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
     ? Number(formatUnits(data.fee, RPC[chain].nativeCurrency.decimals))
     : undefined
 
+  const isFormattedGuildFeeLoaded = typeof formattedGuildFee === "number"
+  const isFormattedFeeLoaded = typeof formattedFee === "number"
+
   return (
     <FeesTable
       buttonComponent={
@@ -32,9 +35,9 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
           <Text as="span">
             <Skeleton
               display="inline"
-              isLoaded={!!formattedGuildFee && !!formattedFee}
+              isLoaded={isFormattedGuildFeeLoaded && isFormattedFeeLoaded}
             >
-              {formattedGuildFee && formattedFee
+              {isFormattedGuildFeeLoaded && isFormattedFeeLoaded
                 ? `${Number((formattedGuildFee + formattedFee).toFixed(5))} ${
                     RPC[chain].nativeCurrency.symbol
                   }`
@@ -51,8 +54,8 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
       <Tr>
         <Td>Price</Td>
         <Td isNumeric>
-          <Skeleton display="inline" isLoaded={!!formattedFee}>
-            {formattedFee
+          <Skeleton display="inline" isLoaded={isFormattedFeeLoaded}>
+            {isFormattedFeeLoaded
               ? `${formattedFee} ${RPC[chain].nativeCurrency.symbol}`
               : "Loading"}
           </Skeleton>
@@ -62,8 +65,8 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
       <Tr>
         <Td>Minting fee</Td>
         <Td isNumeric>
-          <Skeleton display="inline" isLoaded={!!formattedGuildFee}>
-            {formattedGuildFee
+          <Skeleton display="inline" isLoaded={isFormattedGuildFeeLoaded}>
+            {isFormattedGuildFeeLoaded
               ? `${formattedGuildFee} ${RPC[chain].nativeCurrency.symbol}`
               : "Loading"}
           </Skeleton>
@@ -74,8 +77,11 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
         <Td>Total</Td>
         <Td isNumeric color="WindowText">
           <Text as="span">
-            <Skeleton display="inline" isLoaded={!!formattedFee}>
-              {formattedGuildFee && formattedFee
+            <Skeleton
+              display="inline"
+              isLoaded={isFormattedGuildFeeLoaded && isFormattedFeeLoaded}
+            >
+              {isFormattedGuildFeeLoaded && isFormattedFeeLoaded
                 ? `${Number((formattedGuildFee + formattedFee).toFixed(5))} ${
                     RPC[chain].nativeCurrency.symbol
                   }`
