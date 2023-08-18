@@ -16,6 +16,7 @@ import { useFetcherWithSign } from "utils/fetcher"
 import useSubmitTransaction from "../../Requirements/components/GuildCheckout/hooks/useSubmitTransaction"
 import { useCollectNftContext } from "../components/CollectNftContext"
 import useGuildFee from "./useGuildFee"
+import useTopCollectors from "./useTopCollectors"
 
 type ClaimData = {
   // signed value which we need to send in the contract call
@@ -35,7 +36,9 @@ const useCollectNft = () => {
   const { chain, address, roleId, rolePlatformId, guildPlatform } =
     useCollectNftContext()
   const { guildFee } = useGuildFee(chain)
-  const { data } = useNftDetails(chain, address)
+  const { data, mutate: mutateNftDetails } = useNftDetails(chain, address)
+  const { mutate: mutateTopCollectors } = useTopCollectors()
+
   const shouldSwitchChain = chainId !== Chains[chain]
 
   const [loadingText, setLoadingText] = useState("")
@@ -104,6 +107,27 @@ const useCollectNft = () => {
         }
 
         mutateTokenBalance()
+
+        mutateNftDetails(
+          (prevValue) => ({
+            ...prevValue,
+            totalCollectors: (prevValue?.totalCollectors ?? 0) + 1,
+            totalCollectorsToday: (prevValue?.totalCollectorsToday ?? 0) + 1,
+          }),
+          {
+            revalidate: false,
+          }
+        )
+
+        mutateTopCollectors(
+          (prevValue) => ({
+            topCollectors: [...prevValue?.topCollectors, account?.toLowerCase()],
+            uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
+          }),
+          {
+            revalidate: false,
+          }
+        )
 
         captureEvent("Minted NFT (GuildCheckout)", postHogOptions)
 

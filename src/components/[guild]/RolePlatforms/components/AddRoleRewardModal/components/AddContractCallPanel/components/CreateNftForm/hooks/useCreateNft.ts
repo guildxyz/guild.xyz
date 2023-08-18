@@ -169,19 +169,25 @@ const useCreateNft = (
         const { chain, contractAddress, name, image } = response.guildPlatform
           .platformGuildData as PlatformGuildData["CONTRACT_CALL"]
 
-        mutate<NFTDetails>(["nftDetails", chain, contractAddress], {
-          creator: account.toLowerCase(),
-          name,
-          totalCollectors: 0,
-          totalCollectorsToday: 0,
-          standard: "ERC-721", // TODO: we should use a dynamic value here
-          image,
-          description: response.formData.description,
-          fee: parseUnits(
-            response.formData.price.toString() ?? "0",
-            RPC[response.formData.chain]?.nativeCurrency?.decimals ?? 18
-          ),
-        })
+        mutate<NFTDetails>(
+          ["nftDetails", chain, contractAddress],
+          {
+            creator: account.toLowerCase(),
+            name,
+            totalCollectors: 0,
+            totalCollectorsToday: 0,
+            standard: "ERC-721", // TODO: we should use a dynamic value here
+            image,
+            description: response.formData.description,
+            fee: parseUnits(
+              response.formData.price.toString() ?? "0",
+              RPC[response.formData.chain]?.nativeCurrency?.decimals ?? 18
+            ),
+          },
+          {
+            revalidate: false,
+          }
+        )
 
         onSuccess(response.guildPlatform)
       },
