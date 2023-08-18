@@ -610,8 +610,8 @@ const RPC: RpcConfig = {
     rpcUrls: ["https://rpc.zora.energy"],
     blockExplorerUrls: ["https://explorer.zora.energy"],
     blockExplorerIcons: {
-      light: "/explorerLogos/zora.svg",
-      dark: "/explorerLogos/zora.svg",
+      light: "/networkLogos/zora.svg",
+      dark: "/networkLogos/zora.svg",
     },
     iconUrls: ["/networkLogos/zora.svg"],
   },
