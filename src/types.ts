@@ -170,6 +170,8 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
+    name?: never
+    symbol?: never
     description?: never
   }
   GOOGLE: {
@@ -184,6 +186,8 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
+    name?: never
+    symbol?: never
     description?: never
   }
   CONTRACT_CALL: {
@@ -191,6 +195,8 @@ type PlatformGuildData = {
     contractAddress: string
     function: ContractCallFunction
     argsToSign: string[]
+    name: string
+    symbol: string
     image: string
     description: string
     inviteChannel?: never

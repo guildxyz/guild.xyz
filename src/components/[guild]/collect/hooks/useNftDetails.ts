@@ -16,7 +16,7 @@ enum ContractInterface {
   "ERC1155" = "0xd9b67a26",
 }
 
-type NFTDetails = {
+export type NFTDetails = {
   creator: string
   name: string
   totalCollectors: number
@@ -131,7 +131,7 @@ const useNftDetails = (chain: Chain, address: string) => {
   const shouldFetch = Boolean(chain && address)
 
   const { data, ...rest } = useSWRImmutable<NFTDetails>(
-    shouldFetch ? ["nftDetails", chain, address] : null,
+    shouldFetch ? ["nftDetails", chain, address.toLowerCase()] : null,
     fetchNFTDetails
   )
 

@@ -1,5 +1,6 @@
 import { parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
+import { NFTDetails } from "components/[guild]/collect/hooks/useNftDetails"
 import { Chains, RPC } from "connectors"
 import useContract from "hooks/useContract"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
@@ -8,7 +9,8 @@ import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useState } from "react"
 import GUILD_REWARD_NFT_FACTORY_ABI from "static/abis/guildRewardNFTFactory.json"
-import { GuildPlatform, PlatformType } from "types"
+import { mutate } from "swr"
+import { GuildPlatform, PlatformGuildData, PlatformType } from "types"
 import processWalletError from "utils/processWalletError"
 import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
 
@@ -34,9 +36,14 @@ export const CONTRACT_CALL_ARGS_TO_SIGN: Record<ContractCallFunction, string[]> 
   [ContractCallFunction.SIMPLE_CLAIM]: [],
 }
 
-export type CreateNFTResponse = Omit<GuildPlatform, "id" | "platformGuildName">
+export type CreateNFTResponse = {
+  formData: CreateNftFormType
+  guildPlatform: Omit<GuildPlatform, "id" | "platformGuildName">
+}
 
-const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) => {
+const useCreateNft = (
+  onSuccess: (newGuildPlatform: CreateNFTResponse["guildPlatform"]) => void
+) => {
   const { chainId, account } = useWeb3React()
 
   const [loadingText, setLoadingText] = useState<string>()
@@ -82,10 +89,12 @@ const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) 
     setLoadingText("Deploying contract")
 
     const { name, symbol, tokenTreasury, price } = data
+    const trimmedName = name.trim()
+    const trimmedSymbol = symbol.trim()
     // name, symbol, cid, tokenOwner, tokenTreasury, tokenFee
     const contractCallParams = [
-      name.trim(),
-      symbol.trim(),
+      trimmedName,
+      trimmedSymbol,
       metadataCID,
       account,
       tokenTreasury,
@@ -128,23 +137,28 @@ const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) 
       rewardNFTDeployedEvent.args.tokenAddress.toLowerCase()
 
     return {
-      platformId: PlatformType.CONTRACT_CALL,
-      platformName: "CONTRACT_CALL",
-      platformGuildId: `${data.chain}-${createdContractAddress}-${Date.now()}`,
-      platformGuildData: {
-        chain: data.chain,
-        contractAddress: createdContractAddress,
-        function: ContractCallFunction.SIMPLE_CLAIM,
-        argsToSign: CONTRACT_CALL_ARGS_TO_SIGN[ContractCallFunction.SIMPLE_CLAIM],
-        image: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${imageCID}`,
-        description: data.richTextDescription,
+      formData: data,
+      guildPlatform: {
+        platformId: PlatformType.CONTRACT_CALL,
+        platformName: "CONTRACT_CALL",
+        platformGuildId: `${data.chain}-${createdContractAddress}-${Date.now()}`,
+        platformGuildData: {
+          chain: data.chain,
+          contractAddress: createdContractAddress,
+          function: ContractCallFunction.SIMPLE_CLAIM,
+          argsToSign: CONTRACT_CALL_ARGS_TO_SIGN[ContractCallFunction.SIMPLE_CLAIM],
+          name: trimmedName,
+          symbol: trimmedSymbol,
+          image: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${imageCID}`,
+          description: data.richTextDescription,
+        },
       },
     }
   }
 
   return {
     ...useSubmit(createNft, {
-      onSuccess: (createdContractCallReward) => {
+      onSuccess: (response) => {
         setLoadingText(null)
 
         toast({
@@ -152,7 +166,24 @@ const useCreateNft = (onSuccess: (newGuildPlatform: CreateNFTResponse) => void) 
           title: "Deployed NFT contract",
         })
 
-        onSuccess(createdContractCallReward)
+        const { chain, contractAddress, name, image } = response.guildPlatform
+          .platformGuildData as PlatformGuildData["CONTRACT_CALL"]
+
+        mutate<NFTDetails>(["nftDetails", chain, contractAddress], {
+          creator: account.toLowerCase(),
+          name,
+          totalCollectors: 0,
+          totalCollectorsToday: 0,
+          standard: "ERC-721", // TODO: we should use a dynamic value here
+          image,
+          description: response.formData.description,
+          fee: parseUnits(
+            response.formData.price.toString() ?? "0",
+            RPC[response.formData.chain]?.nativeCurrency?.decimals ?? 18
+          ),
+        })
+
+        onSuccess(response.guildPlatform)
       },
       onError: (error) => {
         setLoadingText(null)

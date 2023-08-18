@@ -48,7 +48,7 @@ import RichTextDescriptionEditor from "./components/RichTextDescriptionEditor"
 import useCreateNft, { CreateNFTResponse } from "./hooks/useCreateNft"
 
 type Props = {
-  onSuccess: (newGuildPlatform: CreateNFTResponse) => void
+  onSuccess: (newGuildPlatform: CreateNFTResponse["guildPlatform"]) => void
 }
 
 export type CreateNftFormType = {
