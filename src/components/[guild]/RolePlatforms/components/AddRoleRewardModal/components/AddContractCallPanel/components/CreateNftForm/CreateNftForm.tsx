@@ -260,12 +260,25 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 <ButtonGroup
                   isAttached
                   borderWidth={1}
-                  borderRadius="2xl"
+                  borderRadius="lg"
+                  h={10}
                   variant="solid"
+                  overflow="hidden"
                 >
-                  <Button bgColor={activeSupplyButtonColor}>Unlimited</Button>
+                  <Button
+                    bgColor={activeSupplyButtonColor}
+                    borderRadius="none"
+                    h={10}
+                  >
+                    Unlimited
+                  </Button>
                   <Tooltip label="Coming soon" placement="top" hasArrow>
-                    <Button borderLeftWidth={1} isDisabled>
+                    <Button
+                      borderLeftWidth={1}
+                      borderRadius="none"
+                      h={10}
+                      isDisabled
+                    >
                       Fixed
                     </Button>
                   </Tooltip>
