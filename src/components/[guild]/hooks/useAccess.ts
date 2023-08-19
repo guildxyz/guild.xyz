@@ -66,16 +66,12 @@ const useAccess = <RoleId extends number | "UNSET" = "UNSET">(
 
   const setjobId = (data: string) => mutatejobId(data, { revalidate: false })
 
-  const shouldFetch = userId && guildId && roleId !== 0
-
-  const pollKey = shouldFetch
-    ? ([`/v2/actions/access-check?${pollParams}`, { method: "GET" }] as const)
-    : null
-
-  const poll = useSWRImmutable<Job>(
-    pollKey,
-    (props: typeof pollKey) =>
-      fetcherWithSign([...props]).then(async (result: Job[]) => {
+  const poll = useSWRImmutable(
+    userId && guildId && roleId !== 0
+      ? [`/v2/actions/access-check?${pollParams}`, { method: "GET" }]
+      : null,
+    (props) =>
+      fetcherWithSign(props).then(async (result: Job[]) => {
         if (!Array.isArray(result) || result.length <= 0) {
           await setjobId(null)
           return null
@@ -103,10 +99,9 @@ const useAccess = <RoleId extends number | "UNSET" = "UNSET">(
     }
   )
 
-  // Explicit null check to differenciate from initial undefined
-  const shouldFechJobCreation = jobId === null
   const jobCreation = useSWRImmutable(
-    shouldFechJobCreation
+    // Explicit null check to differenciate from initial undefined
+    jobId === null
       ? [`/v2/actions/access-check`, { method: "POST", body: { guildId } }]
       : null,
     (props) =>
