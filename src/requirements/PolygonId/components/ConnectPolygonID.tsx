@@ -13,11 +13,11 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
+import useAccess from "components/[guild]/hooks/useAccess"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
 import { useEffect } from "react"
@@ -28,7 +28,7 @@ const ConnectPolygonID = (props: ButtonProps) => {
   const { id, roleId, type, data, chain } = useRequirementContext()
   const { onOpen, onClose, isOpen } = useDisclosure()
 
-  const { data: roleAccess } = useAccess(roleId, isOpen && { refreshInterval: 5000 })
+  const { data: roleAccess } = useAccess(roleId, isOpen ? 5000 : null)
 
   const errorType = roleAccess?.errors?.find(
     (err) => err.requirementId === id
