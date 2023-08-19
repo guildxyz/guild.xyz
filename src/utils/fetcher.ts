@@ -103,7 +103,7 @@ const fetcherWithSign = async (
     forcePrompt?: boolean
   },
   resource: string,
-  { body, ...rest }: Record<string, any> = {}
+  { body = {}, ...rest }: Record<string, any> = {}
 ) => {
   const [signedPayload, validation] = await sign({
     forcePrompt: false,
@@ -119,7 +119,12 @@ const useFetcherWithSign = () => {
   const { keyPair } = useKeyPair()
   const timeInaccuracy = useTimeInaccuracy()
 
-  return (props) => {
+  return (
+    props: [
+      string,
+      Omit<RequestInit, "body"> & { signOptions?: SignProps; body?: any }
+    ]
+  ) => {
     const [resource, { signOptions, ...options }] = props
     return fetcherWithSign(
       {
