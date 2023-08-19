@@ -7,13 +7,13 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
+import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import Button from "components/common/Button"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
@@ -28,7 +28,7 @@ type Props = {
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { roles } = useGuild()
   const role = roles.find((r) => r.id === roleId)
-  const { hasAccess, data, error, isValidating } = useAccess(roleId)
+  const { hasAccess, data, error, isLoading: isValidating } = useAccess(roleId)
   const accessedRequirementCount = data?.requirements?.filter(
     (r) => r.access
   )?.length
@@ -44,7 +44,8 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const requirementIdsWithErrors =
     data?.requirements?.filter((r) => r.access === null) ?? []
   const requirementsWithErrors = requirements.filter((req) =>
-    requirementIdsWithErrors.includes(req.id)
+    // TODO: Ask @BrickheadJohnny about this change
+    requirementIdsWithErrors.some(({ requirementId }) => requirementId === req.id)
   )
   const errors = useRequirementErrorConfig()
   const firstRequirementWithErrorFromConfig = requirementsWithErrors.find(

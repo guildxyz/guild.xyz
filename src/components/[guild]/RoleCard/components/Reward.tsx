@@ -1,13 +1,13 @@
 import { HStack, Icon, Img, Spinner, Text, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import Visibility from "components/[guild]/Visibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
-import Button from "components/common/Button"
-import { Transition, motion } from "framer-motion"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import Visibility from "components/[guild]/Visibility"
+import { motion, Transition } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import ContractCallReward from "platforms/ContractCall/ContractCallReward"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
@@ -47,7 +47,7 @@ const Reward = ({
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
 
-  const { hasAccess, isValidating } = useAccess(role.id)
+  const { hasAccess, isLoading } = useAccess(role.id)
   const { label, ...accessButtonProps } = usePlatformAccessButton(
     platform.guildPlatform
   )
@@ -93,7 +93,7 @@ const Reward = ({
               <Button
                 variant="link"
                 rightIcon={
-                  isValidating ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
+                  isLoading ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
                 }
                 iconSpacing="1"
                 maxW="full"

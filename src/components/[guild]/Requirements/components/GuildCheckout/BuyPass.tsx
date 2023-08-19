@@ -14,28 +14,28 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
-import Reward from "components/[guild]/RoleCard/components/Reward"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useGuild from "components/[guild]/hooks/useGuild"
+import Reward from "components/[guild]/RoleCard/components/Reward"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import { Coin } from "phosphor-react"
 import { useEffect } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import AlphaTag from "./components/AlphaTag"
+import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
+import BuyButton from "./components/buttons/BuyButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import BuyTotal from "./components/BuyTotal"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
 import NoReward from "./components/NoReward"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
 import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
-import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
-import BuyButton from "./components/buttons/BuyButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
 const BuyPass = () => {
   const { captureEvent } = usePostHogContext()
@@ -53,7 +53,7 @@ const BuyPass = () => {
     if (requirement?.poapId) setAgreeWithTOS(true)
   }, [requirement?.poapId])
 
-  const { data: accessData, isValidating: isAccessValidating } = useAccess(
+  const { data: accessData, isLoading: isAccessValidating } = useAccess(
     requirement?.roleId
   )
 

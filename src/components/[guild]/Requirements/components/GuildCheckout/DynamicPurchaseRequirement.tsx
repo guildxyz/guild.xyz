@@ -20,7 +20,7 @@ const DynamicPurchaseRequirement = () => {
 
   const { requirement, isOpen, isInfoModalOpen } = useGuildCheckoutContext()
 
-  const { data: accessData, isValidating: isAccessValidating } = useAccess(
+  const { data: accessData, isLoading: isAccessValidating } = useAccess(
     requirement?.roleId
   )
   const satisfiesRequirement = accessData?.requirements?.find(
