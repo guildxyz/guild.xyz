@@ -46,9 +46,9 @@ type BaseAccessReturnType<Data> = {
 const useAccess = <RoleId extends number | "UNSET" = "UNSET">(
   roleId: RoleId = undefined,
   swrOptions?: SWRConfiguration
-): RoleId extends number
-  ? BaseAccessReturnType<AccessCheckResult>
-  : BaseAccessReturnType<AccessCheckResult[]> => {
+): BaseAccessReturnType<
+  RoleId extends number ? AccessCheckResult : AccessCheckResult[]
+> => {
   const { id: guildId } = useGuild()
   const { id: userId } = useUser()
 
