@@ -66,6 +66,16 @@ const useAccess = <RoleId extends number | "UNSET" = "UNSET">(
 
   const setjobId = (data: string) => mutatejobId(data, { revalidate: false })
 
+  const createJob = async () => {
+    const { jobId: createdJobId }: JobCreationResponse = await fetcherWithSign([
+      `/v2/actions/access-check`,
+      { method: "POST", body: { guildId } },
+    ])
+    await setjobId(createdJobId)
+    console.log("CREATED", createdJobId)
+    return createdJobId
+  }
+
   const poll = useSWRImmutable(
     userId && guildId && roleId !== 0
       ? [`/v2/actions/access-check?${pollParams}`, { method: "GET" }]
@@ -75,8 +85,10 @@ const useAccess = <RoleId extends number | "UNSET" = "UNSET">(
         if (Array.isArray(result) && result.length > 0) {
           if (jobId?.length > 0) {
             const foundJob = result.find(({ id }) => id === jobId)
-            // If the tracked job has been finished, we mark the jobId as undefined, so no polling will happen (refreshInterval will be undefined), and we don't start a new flow (explicit null-check)
-            await setjobId(foundJob.done ? undefined : foundJob.id)
+            if (foundJob.done) {
+              // TODO: check errors
+              await setjobId(undefined) // To stop polling
+            }
             if (foundJob) return foundJob
           }
           const nonDoneJob = result.find(({ done }) => !done)
@@ -86,32 +98,13 @@ const useAccess = <RoleId extends number | "UNSET" = "UNSET">(
           }
         }
 
-        await setjobId(null)
+        await createJob()
         return null
       }),
     {
       ...swrOptions,
       onSuccess: (val) => console.log("POLL", val),
       refreshInterval: !!jobId ? ACCESS_JOB_POLL_MS : undefined,
-    }
-  )
-
-  const jobCreation = useSWRImmutable(
-    // Explicit null check to differenciate from initial undefined
-    jobId === null
-      ? [`/v2/actions/access-check`, { method: "POST", body: { guildId } }]
-      : null,
-    (props) =>
-      setjobId(null)
-        .then(() => poll.mutate(undefined, { revalidate: false }))
-        .then(() =>
-          fetcherWithSign(props).then(
-            ({ jobId: createdJobId }: JobCreationResponse) => setjobId(createdJobId)
-          )
-        ),
-    {
-      ...swrOptions,
-      onSuccess: (createdjobId) => console.log("CREATED", createdjobId),
     }
   )
 
@@ -126,10 +119,10 @@ const useAccess = <RoleId extends number | "UNSET" = "UNSET">(
 
   return {
     data: (roleData ?? accessCheckResult) as any,
-    error: poll.error ?? jobCreation.error,
+    error: poll.error,
     hasAccess,
     isLoading: !accessCheckResult,
-    mutate: () => jobCreation.mutate(),
+    mutate: () => createJob(),
   }
 }
 
