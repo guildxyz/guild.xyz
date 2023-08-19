@@ -72,21 +72,18 @@ const useAccess = <RoleId extends number | "UNSET" = "UNSET">(
       : null,
     (props) =>
       fetcherWithSign(props).then(async (result: Job[]) => {
-        if (!Array.isArray(result) || result.length <= 0) {
-          await setjobId(null)
-          return null
-        }
-
-        if (jobId?.length > 0) {
-          const foundJob = result.find(({ id }) => id === jobId)
-          // If the tracked job has been finished, we mark the jobId as undefined, so no polling will happen (refreshInterval will be undefined), and we don't start a new flow (explicit null-check)
-          await setjobId(foundJob.done ? undefined : foundJob.id)
-          if (foundJob) return foundJob
-        }
-        const nonDoneJob = result.find(({ done }) => !done)
-        if (nonDoneJob) {
-          await setjobId(nonDoneJob.id)
-          return nonDoneJob
+        if (Array.isArray(result) && result.length > 0) {
+          if (jobId?.length > 0) {
+            const foundJob = result.find(({ id }) => id === jobId)
+            // If the tracked job has been finished, we mark the jobId as undefined, so no polling will happen (refreshInterval will be undefined), and we don't start a new flow (explicit null-check)
+            await setjobId(foundJob.done ? undefined : foundJob.id)
+            if (foundJob) return foundJob
+          }
+          const nonDoneJob = result.find(({ done }) => !done)
+          if (nonDoneJob) {
+            await setjobId(nonDoneJob.id)
+            return nonDoneJob
+          }
         }
 
         await setjobId(null)
