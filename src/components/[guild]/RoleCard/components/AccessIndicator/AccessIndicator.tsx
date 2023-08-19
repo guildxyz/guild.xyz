@@ -44,7 +44,6 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const requirementIdsWithErrors =
     data?.requirements?.filter((r) => r.access === null) ?? []
   const requirementsWithErrors = requirements.filter((req) =>
-    // TODO: Ask @BrickheadJohnny about this change
     requirementIdsWithErrors.some(({ requirementId }) => requirementId === req.id)
   )
   const errors = useRequirementErrorConfig()

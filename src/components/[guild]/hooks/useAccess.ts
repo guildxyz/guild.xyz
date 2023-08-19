@@ -43,25 +43,6 @@ type BaseAccessReturnType<Data> = {
   mutate: () => Promise<string>
 }
 
-// string    => A flowId, which we are polling, no need to start a new flow, we know what to poll
-// null      => No ongoing (!done) flow exists, we should start a new flow
-// undefined => The result of a flow is known, no need to poll nor to start a flow
-
-/*
-  Main changes:
-    - Tried to improve type-safety. The return type of data was previously any, which I guess was because it either could be an array, or a single result object
-      - The typing workaround is a bit hacky, but sadly typeof undefined is any (:cannot_be_undone:), so I couldn't find another way, but to bind a specific "UNSET" type by default
-      - The only case it doesn't work is a call like this: useAccess(undefined, { ... }), because in this case typeof undefined is being bound to the type parameter whic is any. But this can be easyli woked around with a separate hook like this: `const useGuildAccess = (swrOptions) => useAccess<"UNSET">(undefined, swrOptions)`
-    - Queue logic:
-      1) Polling starts with one single request (not really polling yet at this point)
-        - If the poll returns an ongoing access check, we use It's id to remember this fact
-        - If it doesn't return an ongoing access check, we use null to signal that a new one should be created
-      2) If the flowId is null, we create a new one, and set the resulting flowId (it is important to set this inside the fetcher, to ensure that in the next execution of the hook the id is set, and no more creation requests are made)
-      3) If we have a flowId, we start polling by setting the refreshInterval parameter
-    - The `setFlowId` calls insige the poll fetcher is also important to be there and not in onSuccess, to make sure it only runs once per request, and stays consistent
-
-*/
-
 const useAccess = <RoleId extends number | "UNSET" = "UNSET">(
   roleId: RoleId = undefined,
   swrOptions?: SWRConfiguration
