@@ -52,7 +52,7 @@ const useFlow = <
         if (Array.isArray(result) && result.length > 0) {
           if (jobId?.length > 0) {
             const foundJob = result.find(({ id }) => id === jobId)
-            if (foundJob.done) {
+            if (foundJob?.done) {
               // TODO: check errors
               await setjobId(undefined) // To stop polling
             }
