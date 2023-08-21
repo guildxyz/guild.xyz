@@ -23,6 +23,7 @@ import {
   Text,
   Textarea,
   Tooltip,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
@@ -133,6 +134,8 @@ const CreateNftForm = ({ onSuccess }: Props) => {
     onSuccess(newGuildPlatform)
   })
 
+  const metadataBgColor = useColorModeValue("white", "blackAlpha.300")
+
   return (
     <FormProvider {...methods}>
       <Stack spacing={8}>
@@ -209,13 +212,15 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                     <Box
                       key={field.id}
                       p={2}
-                      bgColor="blackAlpha.300"
+                      bgColor={metadataBgColor}
                       borderRadius="xl"
+                      borderWidth={"1px"}
                     >
                       <Grid templateColumns="1fr 0.5rem 1fr 2.5rem" gap={1}>
                         <FormControl isInvalid={!!errors?.attributes?.[index]?.name}>
                           <Input
                             placeholder="Name"
+                            variant={"filled"}
                             {...register(`attributes.${index}.name`, {
                               required: "This field is required",
                             })}
@@ -236,6 +241,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                         >
                           <Input
                             placeholder="Value"
+                            variant={"filled"}
                             {...register(`attributes.${index}.value`, {
                               required: "This field is required",
                             })}
