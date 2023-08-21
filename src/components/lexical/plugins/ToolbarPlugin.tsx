@@ -553,6 +553,7 @@ const ToolbarPlugin = () => {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")
         }}
         isActive={isBold}
+        isDisabled={isItalic}
         aria-label="Format Bold"
         icon={<TextBolder />}
       />
@@ -561,6 +562,7 @@ const ToolbarPlugin = () => {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")
         }}
         isActive={isItalic}
+        isDisabled={isBold}
         aria-label="Format Italics"
         icon={<TextItalic />}
       />
