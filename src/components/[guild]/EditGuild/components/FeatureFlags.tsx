@@ -9,6 +9,7 @@ const FEATURE_FLAGS = [
   "TWITTER_EXTRA_REQUIREMENT",
   "VISIBILITY",
   "GUILD_CREDENTIAL",
+  "CONTRACT_CALL",
 ] as const
 export type FeatureFlag = (typeof FEATURE_FLAGS)[number]
 

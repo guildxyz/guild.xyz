@@ -9,9 +9,11 @@ import {
   TwitterLogo,
 } from "phosphor-react"
 import { ComponentType } from "react"
+import Photo from "static/icons/photo.svg"
 import { GuildPlatform, OneOf, PlatformName } from "types"
 import fetcher from "utils/fetcher"
 import PlatformPreview from "./components/PlatformPreview"
+import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
 import DiscordCardMenu from "./Discord/DiscordCardMenu"
@@ -266,16 +268,29 @@ const platforms: Record<PlatformName, PlatformData> = {
     }),
   },
   CONTRACT_CALL: {
-    icon: null,
+    icon: Photo,
     name: "NFT",
     colorScheme: "cyan",
     gatedEntity: "",
     cardPropsHook: useContractCallCardProps,
     cardButton: ContractCallRewardCardButton,
+    cardMenuComponent: ContractCallCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,
-    AddPlatformPanel: null, // TODO: will add in another PR
-    PlatformPreview: null, // TODO: will add in another PR
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(
+      () => import("platforms/components/ContractCallPreview"),
+      {
+        ssr: false,
+        loading: () => <PlatformPreview isLoading={true} />,
+      }
+    ),
   },
 }
 

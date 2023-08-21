@@ -19,7 +19,7 @@ const BlockExplorerLink = ({
   isValidating,
   error,
 }: Props) => {
-  const displayedAddress = address && shortenHex(address)
+  const displayedAddress = address && shortenHex(address, 3)
   const url = RPC[chain]?.blockExplorerUrls?.[0]
 
   return (
@@ -30,7 +30,7 @@ const BlockExplorerLink = ({
         </Text>
       ) : (
         <Link href={`${url}/${path}/${address}`} isExternal>
-          <Text as="span" fontSize="md" mr={1.5} colorScheme="gray">
+          <Text as="span" fontSize="md" mr={1.5} colorScheme="gray" noOfLines={1}>
             {displayedAddress}
           </Text>
           <Icon as={ArrowSquareOut} color="gray" size="sm" />

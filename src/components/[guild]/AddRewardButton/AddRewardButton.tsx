@@ -92,6 +92,8 @@ const AddRewardButton = (): JSX.Element => {
 
   const lightModalBgColor = useColorModeValue("white", "gray.700")
 
+  const { isBackButtonDisabled } = useAddRewardContext()
+
   return (
     <>
       <Button
@@ -134,6 +136,7 @@ const AddRewardButton = (): JSX.Element => {
                 <HStack>
                   {selection && (
                     <IconButton
+                      isDisabled={isBackButtonDisabled}
                       rounded="full"
                       aria-label="Back"
                       size="sm"

@@ -15,11 +15,6 @@
     "name": "IncorrectFee",
     "type": "error"
   },
-  {
-    "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
-    "name": "IncorrectPayToken",
-    "type": "error"
-  },
   { "inputs": [], "name": "IncorrectSender", "type": "error" },
   { "inputs": [], "name": "IncorrectSignature", "type": "error" },
   {
@@ -28,33 +23,6 @@
     "type": "error"
   },
   { "inputs": [], "name": "Soulbound", "type": "error" },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "from", "type": "address" },
-      { "internalType": "address", "name": "to", "type": "address" }
-    ],
-    "name": "TransferFailed",
-    "type": "error"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "previousAdmin",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "newAdmin",
-        "type": "address"
-      }
-    ],
-    "name": "AdminChanged",
-    "type": "event"
-  },
   {
     "anonymous": false,
     "inputs": [
@@ -111,19 +79,6 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "beacon",
-        "type": "address"
-      }
-    ],
-    "name": "BeaconUpgraded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "receiver",
         "type": "address"
       },
@@ -140,12 +95,6 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
       {
         "indexed": false,
         "internalType": "uint256",
@@ -228,32 +177,6 @@
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "implementation",
-        "type": "address"
-      }
-    ],
-    "name": "Upgraded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "newValidSigner",
-        "type": "address"
-      }
-    ],
-    "name": "ValidSignerChanged",
-    "type": "event"
-  },
-  {
     "inputs": [
       { "internalType": "address", "name": "", "type": "address" },
       { "internalType": "uint256", "name": "", "type": "uint256" }
@@ -283,7 +206,6 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "payToken", "type": "address" },
       { "internalType": "address", "name": "receiver", "type": "address" },
       { "internalType": "uint256", "name": "userId", "type": "uint256" },
       { "internalType": "bytes", "name": "signature", "type": "bytes" }
@@ -294,9 +216,16 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
+    "inputs": [],
+    "name": "factoryProxy",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "fee",
-    "outputs": [{ "internalType": "uint256", "name": "fee", "type": "uint256" }],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -304,6 +233,20 @@
     "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
     "name": "getApproved",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFeeData",
+    "outputs": [
+      { "internalType": "uint256", "name": "tokenFee", "type": "uint256" },
+      {
+        "internalType": "address payable",
+        "name": "treasuryAddress",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -325,13 +268,11 @@
     "inputs": [
       { "internalType": "string", "name": "name", "type": "string" },
       { "internalType": "string", "name": "symbol", "type": "string" },
+      { "internalType": "string", "name": "_cid", "type": "string" },
+      { "internalType": "address", "name": "tokenOwner", "type": "address" },
       { "internalType": "address payable", "name": "treasury", "type": "address" },
-      {
-        "internalType": "address payable",
-        "name": "_validSigner",
-        "type": "address"
-      },
-      { "internalType": "string", "name": "_cid", "type": "string" }
+      { "internalType": "uint256", "name": "tokenFee", "type": "uint256" },
+      { "internalType": "address", "name": "factoryProxyAddress", "type": "address" }
     ],
     "name": "initialize",
     "outputs": [],
@@ -366,13 +307,6 @@
     "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
     "name": "ownerOf",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "proxiableUUID",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -417,10 +351,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "token", "type": "address" },
-      { "internalType": "uint256", "name": "newFee", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "newFee", "type": "uint256" }],
     "name": "setFee",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -431,15 +362,6 @@
       { "internalType": "address payable", "name": "newTreasury", "type": "address" }
     ],
     "name": "setTreasury",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "newValidSigner", "type": "address" }
-    ],
-    "name": "setValidSigner",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -523,32 +445,6 @@
     "name": "updateTokenURI",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "newImplementation", "type": "address" }
-    ],
-    "name": "upgradeTo",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "newImplementation", "type": "address" },
-      { "internalType": "bytes", "name": "data", "type": "bytes" }
-    ],
-    "name": "upgradeToAndCall",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "validSigner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
     "type": "function"
   }
 ]

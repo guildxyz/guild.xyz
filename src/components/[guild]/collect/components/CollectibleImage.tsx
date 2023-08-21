@@ -37,6 +37,7 @@ const CollectibleImage = ({ src, isLoading, borderRadius = "2xl" }: Props) => (
           position="absolute"
           inset={0}
           bgImage={src}
+          bgSize="cover"
           transform="scale(1.5)"
           filter="blur(20px)"
           opacity={0.75}

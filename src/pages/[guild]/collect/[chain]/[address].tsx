@@ -7,6 +7,11 @@ import {
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import Link from "components/common/Link"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
 import Details from "components/[guild]/collect/components/Details"
@@ -19,11 +24,6 @@ import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import Link from "components/common/Link"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { Chain } from "connectors"
 import { AnimatePresence, motion } from "framer-motion"
 import useScrollEffect from "hooks/useScrollEffect"
@@ -45,7 +45,7 @@ type Props = {
 const Page = ({ chain, address }: Omit<Props, "fallback">) => {
   const { theme, imageUrl, name, urlName, roles, guildPlatforms } = useGuild()
   const { textColor } = useThemeContext()
-  const guildPlatform = guildPlatforms.find(
+  const guildPlatform = guildPlatforms?.find(
     (gp) =>
       gp.platformGuildData?.chain === chain &&
       gp.platformGuildData?.contractAddress?.toLowerCase() === address
@@ -71,7 +71,7 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
 
   return (
     <CollectNftProvider
-      roleId={role.id}
+      roleId={role?.id}
       rolePlatformId={rolePlatformId}
       guildPlatform={guildPlatform}
       chain={chain}
@@ -127,7 +127,7 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
 
                 <Box ref={nftDescriptionRef} lineHeight={1.75}>
                   <RichTextDescription
-                    text={guildPlatform.platformGuildData?.description}
+                    text={guildPlatform?.platformGuildData?.description}
                   />
                 </Box>
               </Stack>
@@ -204,8 +204,7 @@ const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       notFound: true,
     }
 
-  // TODO: call the v2 endpoint
-  const endpoint = `/guild/${urlName}`
+  const endpoint = `/v2/guilds/guild-page/${urlName}`
   const guild: Guild = await fetcher(endpoint).catch((_) => ({}))
 
   if (

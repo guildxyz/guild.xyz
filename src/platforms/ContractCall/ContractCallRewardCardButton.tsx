@@ -1,9 +1,11 @@
-import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
+import { Tooltip } from "@chakra-ui/react"
+import Button from "components/common/Button"
+import LinkButton from "components/common/LinkButton"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import LinkButton from "components/common/LinkButton"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import CollectNftModalButton from "platforms/ContractCall/CollectNftModalButton"
 import { GuildPlatform } from "types"
 
@@ -31,6 +33,15 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
     ?.roleIds.find((roleId) => roleId === role?.id)
 
   const isEligible = hasAccessToRole || isMemberOfRole
+
+  if (!role)
+    return (
+      <Tooltip label="You need to add this reward to a role first">
+        <Button isDisabled colorScheme="cyan">
+          Collect NFT
+        </Button>
+      </Tooltip>
+    )
 
   if (!isEligible)
     return (
