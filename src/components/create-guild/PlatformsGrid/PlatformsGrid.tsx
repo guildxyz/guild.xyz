@@ -1,5 +1,4 @@
 import { SimpleGrid, Stack } from "@chakra-ui/react"
-import Section from "components/common/Section"
 import useGuild from "components/[guild]/hooks/useGuild"
 import platforms from "platforms/platforms"
 import { PlatformName } from "types"
@@ -80,27 +79,17 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
               description={description}
               imageUrl={`/platforms/${platform.toLowerCase()}.png`}
               onSelection={onSelection}
-              size="md"
             />
           )
         )}
+        <PlatformSelectButton
+          platform={"CONTRACT_CALL"}
+          title={platforms.CONTRACT_CALL.name}
+          description={"Create a gated NFT"}
+          icon={platforms.CONTRACT_CALL.icon}
+          onSelection={onSelection}
+        />
       </SimpleGrid>
-
-      {filteredGeneralPlatforms.length > 0 && (
-        <Section title="General">
-          <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
-            {filteredGeneralPlatforms.map((platformName) => (
-              <PlatformSelectButton
-                key={platformName}
-                platform={platformName}
-                title={platforms[platformName].name}
-                icon={platforms[platformName].icon}
-                onSelection={onSelection}
-              />
-            ))}
-          </SimpleGrid>
-        </Section>
-      )}
     </Stack>
   )
 }

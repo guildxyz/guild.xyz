@@ -25,14 +25,14 @@ import {
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
 import StyledSelect from "components/common/StyledSelect"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { useAddRewardContext } from "components/[guild]/AddRewardContext"
-import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chain, Chains, RPC } from "connectors"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import {
@@ -135,10 +135,10 @@ const CreateNftForm = ({ onSuccess }: Props) => {
   return (
     <FormProvider {...methods}>
       <Stack spacing={8}>
-        <Text>
-          Create an NFT that members will be able to mint after they satisfy the set
-          requirements. Claiming can take place through Your Guild page or a separate
-          minting page.
+        <Text colorScheme="gray" fontWeight="semibold">
+          Create an NFT that members will be able to mint if they satisfy the
+          requirements you'll set. Claiming can take place through your Guild page or
+          a fancy auto-generated minting page!
         </Text>
 
         <Grid w="full" templateColumns="repeat(3, 1fr)" gap={8}>
