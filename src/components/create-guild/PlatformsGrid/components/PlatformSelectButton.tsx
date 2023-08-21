@@ -1,17 +1,17 @@
 import {
   Circle,
-  HStack,
   Heading,
+  HStack,
   Icon,
   Spinner,
   Text,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import useUser from "components/[guild]/hooks/useUser"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
+import useUser from "components/[guild]/hooks/useUser"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
@@ -51,7 +51,13 @@ const PlatformSelectButton = ({
   return (
     <DisplayCard
       cursor="pointer"
-      onClick={!account ? openWalletSelectorModal : onConnect ?? selectPlatform}
+      onClick={
+        !account
+          ? openWalletSelectorModal
+          : isPlatformConnected
+          ? selectPlatform
+          : onConnect
+      }
       h="auto"
       {...rest}
       data-test={`${platform}-select-button${
