@@ -163,8 +163,8 @@ const useCreateNft = (
         setLoadingText(null)
 
         toast({
-          status: "info",
-          title: "Deployed NFT contract",
+          status: "success",
+          title: "Successfully deployed NFT contract",
         })
 
         const { chain, contractAddress, name, image } = response.guildPlatform
