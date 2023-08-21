@@ -1,6 +1,7 @@
 import {
   AspectRatio,
   FormControl,
+  FormHelperText,
   FormLabel,
   Icon,
   Img,
@@ -65,6 +66,8 @@ const ImagePicker = () => {
           <input {...getInputProps()} hidden />
         </Button>
       </AspectRatio>
+
+      <FormHelperText>Maximum file size is 5MB</FormHelperText>
 
       <FormErrorMessage>
         {fileRejections?.[0]?.errors?.[0]?.message || errors?.image?.message}
