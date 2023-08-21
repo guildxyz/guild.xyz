@@ -189,10 +189,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       ...finalOauthParams,
       redirect_uri: redirectUri,
       state: `${platformName}-${csrfToken}`,
-      scope:
-        typeof finalOauthParams.scope === "string"
+      scope: finalOauthParams.scope
+        ? typeof finalOauthParams.scope === "string"
           ? finalOauthParams.scope
-          : finalOauthParams.scope[authLevel],
+          : finalOauthParams.scope[authLevel]
+        : undefined,
     }).toString()
 
     onOpen(`${url}?${searchParams}`)

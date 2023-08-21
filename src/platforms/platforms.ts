@@ -73,7 +73,6 @@ const platforms: Record<PlatformName, PlatformData> = {
         origin: typeof window === "undefined" ? "https://guild.xyz" : window.origin,
         request_access: "write", // TODO
         lang: "en",
-        scope: "",
 
         // Used on our /tgAuth route to know where to postMessage the result (window.opener.origin is unavailable due to opener and the popup having different origins)
         openerOrigin:
