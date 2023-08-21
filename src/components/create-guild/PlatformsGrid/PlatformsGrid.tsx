@@ -2,8 +2,6 @@ import { SimpleGrid } from "@chakra-ui/react"
 import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 import PlatformSelectButton from "./components/PlatformSelectButton"
-import useGoogleButtonProps from "./hooks/useGoogleButtonProps"
-import useOAuthButtonProps from "./hooks/useOAuthButtonProps"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
@@ -16,23 +14,19 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
     Exclude<PlatformName, "" | "TWITTER" | "POAP" | "CONTRACT_CALL" | "TWITTER_V1">,
     {
       description: string
-      hook?: any
     }
   > = {
     DISCORD: {
       description: "Manage roles",
-      hook: useOAuthButtonProps,
     },
     TELEGRAM: {
       description: "Manage groups",
     },
     GOOGLE: {
       description: "Manage documents",
-      hook: useGoogleButtonProps,
     },
     GITHUB: {
       description: "Manage repositories",
-      hook: useOAuthButtonProps,
     },
     ...(showPoap
       ? {
@@ -49,11 +43,10 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
       columns={{ base: 1, md: 2 }}
       gap={{ base: 3, md: 5 }}
     >
-      {Object.entries(platformsData).map(([platform, { description, hook }]) => (
+      {Object.entries(platformsData).map(([platform, { description }]) => (
         <PlatformSelectButton
           key={platform}
           platform={platform}
-          hook={hook}
           title={platforms[platform].name}
           description={description}
           imageUrl={`/platforms/${platform.toLowerCase()}.png`}

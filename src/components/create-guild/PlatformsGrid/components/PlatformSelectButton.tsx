@@ -8,15 +8,17 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useUser from "components/[guild]/hooks/useUser"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
+import useUser from "components/[guild]/hooks/useUser"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import dynamic from "next/dynamic"
 import Image from "next/image"
-import { CaretRight } from "phosphor-react"
+import { ArrowSquareIn, CaretRight } from "phosphor-react"
+import { useMemo } from "react"
 
 const PlatformSelectButton = ({
   platform,
-  hook,
   title,
   description,
   imageUrl,
@@ -25,8 +27,13 @@ const PlatformSelectButton = ({
 }) => {
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
-  const { onClick, isLoading, loadingText, rightIcon } =
-    hook?.({ platform, onSelection }) ?? {}
+
+  const { onConnect, isLoading, loadingText } = useConnectPlatform(
+    platform,
+    () => onSelection(platform),
+    false,
+    "creation"
+  )
 
   const selectPlatform = () => onSelection(platform)
 
@@ -36,10 +43,21 @@ const PlatformSelectButton = ({
       platformName === platform && !platformUserData?.readonly
   )
 
+  const DynamicCtaIcon = useMemo(
+    () => dynamic(async () => (!isPlatformConnected ? ArrowSquareIn : CaretRight)),
+    [isPlatformConnected]
+  )
+
   return (
     <DisplayCard
       cursor="pointer"
-      onClick={!account ? openWalletSelectorModal : onClick ?? selectPlatform}
+      onClick={
+        !account
+          ? openWalletSelectorModal
+          : isPlatformConnected
+          ? selectPlatform
+          : onConnect
+      }
       h="auto"
       {...rest}
       data-test={`${platform}-select-button${
@@ -69,7 +87,7 @@ const PlatformSelectButton = ({
             {(isLoading && `${loadingText}...`) || description}
           </Text>
         </VStack>
-        <Icon as={isLoading ? Spinner : (account && rightIcon) ?? CaretRight} />
+        <Icon as={isLoading ? Spinner : (account && DynamicCtaIcon) ?? CaretRight} />
       </HStack>
     </DisplayCard>
   )
