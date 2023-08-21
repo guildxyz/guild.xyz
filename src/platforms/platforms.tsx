@@ -5,11 +5,11 @@ import {
   GithubLogo,
   GoogleLogo,
   IconProps,
-  Image,
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
 import { ComponentType } from "react"
+import Photo from "static/icons/photo.svg"
 import { GuildPlatform, OneOf, PlatformName } from "types"
 import PlatformPreview from "./components/PlatformPreview"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
@@ -182,7 +182,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     }),
   },
   CONTRACT_CALL: {
-    icon: Image,
+    icon: Photo,
     name: "NFT",
     colorScheme: "cyan",
     gatedEntity: "",

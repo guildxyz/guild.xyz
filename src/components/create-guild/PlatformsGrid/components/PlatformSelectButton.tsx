@@ -5,12 +5,13 @@ import {
   Icon,
   Spinner,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import DisplayCard from "components/common/DisplayCard"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import DisplayCard from "components/common/DisplayCard"
 import Image from "next/image"
 import { CaretRight, IconProps } from "phosphor-react"
 import { ComponentType, RefAttributes } from "react"
@@ -62,6 +63,8 @@ const PlatformSelectButton = ({
       platformName === platform && !platformUserData?.readonly
   )
 
+  const circleBgColor = useColorModeValue("gray.700", "gray.600")
+
   return (
     <DisplayCard
       cursor="pointer"
@@ -74,8 +77,8 @@ const PlatformSelectButton = ({
     >
       <HStack spacing={4}>
         {icon ? (
-          <Circle size="12" pos="relative" overflow="hidden">
-            <Icon as={icon} boxSize={8} weight="regular" />
+          <Circle bgColor={circleBgColor} size="12" pos="relative" overflow="hidden">
+            <Icon as={icon} boxSize={6} weight="regular" />
           </Circle>
         ) : (
           <Circle size="12" pos="relative" overflow="hidden">
