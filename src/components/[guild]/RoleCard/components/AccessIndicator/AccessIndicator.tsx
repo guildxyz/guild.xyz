@@ -28,7 +28,7 @@ type Props = {
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { roles } = useGuild()
   const role = roles.find((r) => r.id === roleId)
-  const { hasAccess, data, error, isLoading: isValidating } = useAccess(roleId)
+  const { hasAccess, data, error, isLoading } = useAccess(roleId)
   const accessedRequirementCount = data?.requirements?.filter(
     (r) => r.access
   )?.length
@@ -109,7 +109,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       </HStack>
     )
 
-  if (isValidating)
+  if (isLoading)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
   if (errorTextFromConfig)

@@ -53,7 +53,7 @@ const BuyPass = () => {
     if (requirement?.poapId) setAgreeWithTOS(true)
   }, [requirement?.poapId])
 
-  const { data: accessData, isLoading: isAccessValidating } = useAccess(
+  const { data: accessData, isLoading: isAccessLoading } = useAccess(
     requirement?.roleId
   )
 
@@ -70,7 +70,7 @@ const BuyPass = () => {
 
   if (
     !account ||
-    (!accessData && isAccessValidating) ||
+    (!accessData && isAccessLoading) ||
     requirement?.type !== "PAYMENT" ||
     !paymentSupportedChains.includes(requirement?.chain)
   )
