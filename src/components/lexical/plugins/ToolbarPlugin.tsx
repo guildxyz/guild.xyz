@@ -50,6 +50,7 @@ import {
 import {
   ArrowClockwise,
   ArrowCounterClockwise,
+  Check,
   Code,
   IconProps,
   Link,
@@ -331,42 +332,60 @@ const BlockOptionsMenuList = ({
       <MenuItem
         icon={<blockTypeToBlockIcon.paragraph />}
         onClick={formatParagraph}
-        isDisabled={blockType === "paragraph"}
+        {...(blockType === "paragraph" && {
+          isDisabled: true,
+          command: (<Check />) as any,
+        })}
       >
         {blockTypeToBlockName.paragraph}
       </MenuItem>
       <MenuItem
         icon={<blockTypeToBlockIcon.h1 />}
         onClick={formatLargeHeading}
-        isDisabled={blockType === "h1"}
+        {...(blockType === "h1" && {
+          isDisabled: true,
+          command: (<Check />) as any,
+        })}
       >
         {blockTypeToBlockName.h1}
       </MenuItem>
       <MenuItem
         icon={<blockTypeToBlockIcon.h2 />}
         onClick={formatSmallHeading}
-        isDisabled={blockType === "h2"}
+        {...(blockType === "h2" && {
+          isDisabled: true,
+          command: (<Check />) as any,
+        })}
       >
         {blockTypeToBlockName.h2}
       </MenuItem>
       <MenuItem
         icon={<blockTypeToBlockIcon.ul />}
         onClick={formatBulletList}
-        isDisabled={blockType === "ul"}
+        {...(blockType === "ul" && {
+          isDisabled: true,
+          command: (<Check />) as any,
+        })}
       >
         {blockTypeToBlockName.ul}
       </MenuItem>
       <MenuItem
         icon={<blockTypeToBlockIcon.ol />}
         onClick={formatNumberedList}
-        isDisabled={blockType === "ol"}
+        {...(blockType === "ol" && {
+          isDisabled: true,
+          command: (<Check />) as any,
+        })}
       >
         {blockTypeToBlockName.ol}
       </MenuItem>
       <MenuItem
         icon={<blockTypeToBlockIcon.quote />}
         onClick={formatQuote}
-        isDisabled={blockType === "quote"}
+        {...(blockType === "quote" && {
+          isDisabled: true,
+          command: (<Check />) as any,
+        })}
       >
         {blockTypeToBlockName.quote}
       </MenuItem>
@@ -517,7 +536,7 @@ const ToolbarPlugin = () => {
       />
 
       {supportedBlockTypes.includes(blockType) && (
-        <Menu size="sm">
+        <Menu size="sm" autoSelect={false}>
           <MenuButton
             as={Button}
             leftIcon={<Icon as={blockTypeToBlockIcon[blockType]} />}
