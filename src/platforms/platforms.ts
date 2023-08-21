@@ -67,21 +67,19 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardMenuComponent: TelegramCardMenu,
 
     oauth: {
-      url: "https://oauth.telegram.org/auth",
+      url: process.env.NEXT_PUBLIC_TELEGRAM_POPUP_URL,
       params: {
         bot_id: process.env.NEXT_PUBLIC_TG_BOT_ID,
         origin: typeof window === "undefined" ? "https://guild.xyz" : window.origin,
         request_access: "write", // TODO
         lang: "en",
-        return_to:
-          typeof window === "undefined"
-            ? "https://guild.xyz/oauth"
-            : `${window.origin}/oauth`,
+        scope: "",
+
+        // Used on our /tgAuth route to know where to postMessage the result (window.opener.origin is unavailable due to opener and the popup having different origins)
         openerOrigin:
           typeof window !== "undefined"
             ? window.location.origin
             : "https://guild.xyz",
-        scope: "",
       },
     },
   },

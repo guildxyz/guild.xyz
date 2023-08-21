@@ -126,17 +126,34 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     const getTgListener =
       (resolve: (value: void | PromiseLike<void>) => void) =>
       (event: MessageEvent<any>) => {
-        if (event.origin === TG_OAUTH_ORIGIN) {
+        if (
+          event.origin ===
+            process.env.NEXT_PUBLIC_TELEGRAM_POPUP_URL.replace("/tgauth", "") &&
+          "type" in event.data &&
+          ["TG_AUTH_SUCCESS", "TG_AUTH_ERROR"].includes(event.data.type)
+        ) {
           try {
-            const { origin, result } = JSON.parse(event.data) as TGAuthResult
-            if (origin === window.origin) {
-              setOauthState({
-                isAuthenticating: false,
-                error: null,
-                authData: result as any,
-              })
-              resolve()
-            }
+            const { type, data } = event.data as
+              | { type: "TG_AUTH_SUCCESS"; data: TGAuthResult["result"] }
+              | {
+                  type: "TG_AUTH_ERROR"
+                  data: { error: string; errorDescription: string }
+                }
+
+            setOauthState(
+              type === "TG_AUTH_SUCCESS"
+                ? {
+                    isAuthenticating: false,
+                    error: null,
+                    authData: data as any,
+                  }
+                : {
+                    isAuthenticating: false,
+                    error: data,
+                    authData: null,
+                  }
+            )
+            resolve()
           } catch {}
         }
       }
