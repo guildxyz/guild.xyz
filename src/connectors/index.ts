@@ -38,6 +38,7 @@ enum Chains {
   GOERLI = 5,
   POLYGON_MUMBAI = 80001,
   BASE_MAINNET = 8453,
+  ZORA = 7777777,
 }
 
 export type Chain = keyof typeof Chains
@@ -594,6 +595,25 @@ const RPC: RpcConfig = {
       dark: "/networkLogos/zksync-era.svg",
     },
     iconUrls: ["/networkLogos/zksync-era.svg"],
+  },
+  ZORA: {
+    chainId: 7777777,
+    chainName: "Zora",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://rpc.zora.energy"],
+    blockExplorerUrls: ["https://explorer.zora.energy"],
+    blockExplorerIcons: {
+      light: "/networkLogos/zora.svg",
+      dark: "/networkLogos/zora.svg",
+    },
+    iconUrls: ["/networkLogos/zora.svg"],
   },
   SEPOLIA: {
     chainId: 11155111,
