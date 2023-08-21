@@ -1,11 +1,9 @@
 import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcBatchProvider } from "@ethersproject/providers"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Chain, Chains, RPC } from "connectors"
 import GUILD_REWARD_NFT_ABI from "static/abis/guildRewardNft.json"
 import useSWRImmutable from "swr/immutable"
-import { PlatformGuildData, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 import { getBlockByTime } from "utils/getBlockByTime"
 
@@ -118,32 +116,12 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
 }
 
 const useNftDetails = (chain: Chain, address: string) => {
-  const { guildPlatforms } = useGuild()
-  const relevantGuildPlatform = guildPlatforms?.find(
-    (gp) =>
-      gp.platformId === PlatformType.CONTRACT_CALL &&
-      gp.platformGuildData.chain === chain &&
-      gp.platformGuildData.contractAddress.toLowerCase() === address.toLowerCase()
-  )
-  const guildPlatformData =
-    relevantGuildPlatform?.platformGuildData as PlatformGuildData["CONTRACT_CALL"]
-
   const shouldFetch = Boolean(chain && address)
 
-  const { data, ...rest } = useSWRImmutable<NFTDetails>(
+  return useSWRImmutable<NFTDetails>(
     shouldFetch ? ["nftDetails", chain, address.toLowerCase()] : null,
     fetchNFTDetails
   )
-
-  return {
-    data: data
-      ? {
-          ...data,
-          image: data.image || guildPlatformData?.image,
-        }
-      : undefined,
-    ...rest,
-  }
 }
 
 export default useNftDetails
