@@ -23,32 +23,12 @@ const reactMarkdownComponents: Partial<
     </Link>
   ),
   h1: ({ children, node: _node, ...props }) => (
-    <Heading as="h1" fontSize="3xl" mb={3} mt={4} {...props}>
+    <Heading as="h1" fontSize="2xl" mb={3} mt={4} {...props}>
       {children}
     </Heading>
   ),
   h2: ({ children, node: _node, ...props }) => (
-    <Heading as="h2" fontSize="2xl" mb={3} mt={4} {...props}>
-      {children}
-    </Heading>
-  ),
-  h3: ({ children, node: _node, ...props }) => (
-    <Heading as="h3" fontSize="xl" mb={3} mt={4} {...props}>
-      {children}
-    </Heading>
-  ),
-  h4: ({ children, node: _node, ...props }) => (
-    <Heading as="h4" fontSize="lg" mb={3} mt={4} {...props}>
-      {children}
-    </Heading>
-  ),
-  h5: ({ children, node: _node, ...props }) => (
-    <Heading as="h5" fontSize="md" mb={3} mt={4} {...props}>
-      {children}
-    </Heading>
-  ),
-  h6: ({ children, node: _node, ...props }) => (
-    <Heading as="h6" fontSize="sm" mb={3} mt={4} {...props}>
+    <Heading as="h2" fontSize="lg" mb={3} mt={4} {...props}>
       {children}
     </Heading>
   ),

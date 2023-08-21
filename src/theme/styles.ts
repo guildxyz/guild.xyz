@@ -120,7 +120,7 @@ const styles = {
       },
       h2: {
         fontWeight: "bold",
-        fontSize: "var(--chakra-fontSizes-xl)",
+        fontSize: "var(--chakra-fontSizes-lg)",
       },
       ul: {
         marginLeft: "1rem",
