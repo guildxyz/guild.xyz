@@ -55,13 +55,10 @@ const ConnectRequirementPlatformButton = (props: ButtonProps) => {
     (err) => err.requirementId === id && err.errorType === "PLATFORM_CONNECT_INVALID"
   )
 
-  const scope = platform === "GITHUB" ? "repo,read:user" : undefined
-
   const { onConnect, isLoading, loadingText, response } = useConnectPlatform(
     platform,
     onSuccess,
-    isReconnection,
-    scope
+    isReconnection
   )
 
   const platformFromDb = platformUsers?.some(

@@ -11,10 +11,12 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import DisplayCard from "components/common/DisplayCard"
 import useUser from "components/[guild]/hooks/useUser"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import dynamic from "next/dynamic"
 import Image from "next/image"
-import { CaretRight, IconProps } from "phosphor-react"
-import { ComponentType, RefAttributes } from "react"
+import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
+import { ComponentType, RefAttributes, useMemo } from "react"
 import { PlatformName, Rest } from "types"
 
 export type PlatformHookType = ({
@@ -42,7 +44,6 @@ type Props = {
 
 const PlatformSelectButton = ({
   platform,
-  hook,
   title,
   description,
   imageUrl,
@@ -52,8 +53,13 @@ const PlatformSelectButton = ({
 }: Props) => {
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
-  const { onClick, isLoading, loadingText, rightIcon } =
-    hook?.({ platform, onSelection }) ?? {}
+
+  const { onConnect, isLoading, loadingText } = useConnectPlatform(
+    platform,
+    () => onSelection(platform),
+    false,
+    "creation"
+  )
 
   const selectPlatform = () => onSelection(platform)
 
@@ -64,11 +70,21 @@ const PlatformSelectButton = ({
   )
 
   const circleBgColor = useColorModeValue("gray.700", "gray.600")
+  const DynamicCtaIcon = useMemo(
+    () => dynamic(async () => (!isPlatformConnected ? ArrowSquareIn : CaretRight)),
+    [isPlatformConnected]
+  )
 
   return (
     <DisplayCard
       cursor="pointer"
-      onClick={!account ? openWalletSelectorModal : onClick ?? selectPlatform}
+      onClick={
+        !account
+          ? openWalletSelectorModal
+          : isPlatformConnected
+          ? selectPlatform
+          : onConnect
+      }
       h="auto"
       {...rest}
       data-test={`${platform}-select-button${
@@ -106,7 +122,7 @@ const PlatformSelectButton = ({
             </Text>
           )}
         </VStack>
-        <Icon as={isLoading ? Spinner : (account && rightIcon) ?? CaretRight} />
+        <Icon as={isLoading ? Spinner : (account && DynamicCtaIcon) ?? CaretRight} />
       </HStack>
     </DisplayCard>
   )

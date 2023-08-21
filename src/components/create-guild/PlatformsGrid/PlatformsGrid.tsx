@@ -2,11 +2,7 @@ import { SimpleGrid, Stack } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import platforms from "platforms/platforms"
 import { PlatformName } from "types"
-import PlatformSelectButton, {
-  PlatformHookType,
-} from "./components/PlatformSelectButton"
-import useGoogleButtonProps from "./hooks/useGoogleButtonProps"
-import useOAuthButtonProps from "./hooks/useOAuthButtonProps"
+import PlatformSelectButton from "./components/PlatformSelectButton"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
@@ -15,7 +11,6 @@ type Props = {
 
 type PlatformsGridData = {
   description?: string
-  hook?: PlatformHookType
 }
 
 const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
@@ -26,18 +21,15 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   > = {
     DISCORD: {
       description: "Manage roles",
-      hook: useOAuthButtonProps,
     },
     TELEGRAM: {
       description: "Manage groups",
     },
     GOOGLE: {
       description: "Manage documents",
-      hook: useGoogleButtonProps,
     },
     GITHUB: {
       description: "Manage repositories",
-      hook: useOAuthButtonProps,
     },
     ...(showPoap
       ? {
@@ -58,14 +50,10 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
         gap={{ base: 4, md: 5 }}
       >
         {Object.entries(platformsData).map(
-          ([platform, { description, hook }]: [
-            PlatformName,
-            { description: string; hook?: PlatformHookType }
-          ]) => (
+          ([platform, { description }]: [PlatformName, { description: string }]) => (
             <PlatformSelectButton
               key={platform}
               platform={platform}
-              hook={hook}
               title={platforms[platform].name}
               description={description}
               imageUrl={`/platforms/${platform.toLowerCase()}.png`}
