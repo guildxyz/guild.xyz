@@ -50,11 +50,6 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
 
   const { featureFlags } = useGuild()
 
-  // TODO: re-enable feature flag!
-  // const filteredGeneralPlatforms = generalPlatforms.filter((p) =>
-  //   p === "CONTRACT_CALL" ? featureFlags?.includes("CONTRACT_CALL") : true
-  // )
-
   return (
     <Stack spacing={8}>
       <SimpleGrid
@@ -78,13 +73,15 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
             />
           )
         )}
-        <PlatformSelectButton
-          platform={"CONTRACT_CALL"}
-          title={platforms.CONTRACT_CALL.name}
-          description={"Create a gated NFT"}
-          icon={platforms.CONTRACT_CALL.icon}
-          onSelection={onSelection}
-        />
+        {featureFlags?.includes("CONTRACT_CALL") && (
+          <PlatformSelectButton
+            platform={"CONTRACT_CALL"}
+            title={platforms.CONTRACT_CALL.name}
+            description={"Create a gated NFT"}
+            icon={platforms.CONTRACT_CALL.icon}
+            onSelection={onSelection}
+          />
+        )}
       </SimpleGrid>
     </Stack>
   )
