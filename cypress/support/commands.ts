@@ -2,7 +2,7 @@ Cypress.Commands.add("getByDataTest", (selector: string) =>
   cy.get(`[data-test='${selector}']`)
 )
 
-Cypress.Commands.add("connectWallet", () => {
+Cypress.Commands.add("connectWalletAndVerifyAccount", () => {
   let userId: number
   cy.intercept(
     "GET",
@@ -11,7 +11,7 @@ Cypress.Commands.add("connectWallet", () => {
 
   cy.findByText("Connect to a wallet").click()
   cy.findByText("MetaMask").click()
-  // Sometimes the MetaMask popup doesn't open/close in time in CI, so waiting a bit here
+
   cy.acceptMetamaskAccess()
   cy.wait("@fetchUserId")
     .then((intercept) => {
@@ -31,6 +31,18 @@ Cypress.Commands.add("connectWallet", () => {
 
       cy.wait("@pubKeyResponse").its("response.statusCode").should("eq", 200)
     })
+})
+
+Cypress.Commands.add("connectWallet", () => {
+  cy.intercept(
+    "GET",
+    `${Cypress.env("guildApiUrl")}/users/${Cypress.env("userAddress")}/profile`
+  ).as("fetchUserId")
+
+  cy.findByText("Connect to a wallet").click()
+  cy.findByText("MetaMask").click()
+  cy.acceptMetamaskAccess()
+  cy.wait("@fetchUserId").its("response.statusCode").should("eq", 200)
 })
 
 export {}

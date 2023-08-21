@@ -1,9 +1,9 @@
-import { Checkbox, Collapse, Stack, Text, Wrap } from "@chakra-ui/react"
-import LogicDivider from "components/[guild]/LogicDivider"
+import { ChakraProps, Checkbox, Collapse, Stack, Text, Wrap } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import { SectionTitle } from "components/common/Section"
+import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
 import { useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
@@ -16,12 +16,17 @@ import LogicFormControl from "./components/LogicFormControl"
 import RequirementEditableCard from "./components/RequirementEditableCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
-const SetRequirements = (): JSX.Element => {
+type Props = {
+  titleSize?: ChakraProps["fontSize"]
+}
+
+const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
   const {
     control,
     getValues,
     watch,
     setValue,
+    resetField,
     formState: { errors },
   } = useFormContext<GuildFormType["roles"][number]>()
 
@@ -42,7 +47,7 @@ const SetRequirements = (): JSX.Element => {
   const watchFieldArray = watch("requirements")
   const controlledFields = fields.map((field, index) => ({
     ...field,
-    ...watchFieldArray[index],
+    ...watchFieldArray?.[index],
   }))
 
   const removeReq = (index: number) => {
@@ -58,11 +63,13 @@ const SetRequirements = (): JSX.Element => {
   )
 
   const onFreeEntryChange = (e) => {
+    resetField("requirements", {
+      defaultValue: [],
+    })
+
     if (e.target.checked) {
       replace([{ type: "FREE", data: {}, chain: null, address: null }])
       setValue("logic", "AND")
-    } else {
-      replace([])
     }
   }
 
@@ -90,6 +97,7 @@ const SetRequirements = (): JSX.Element => {
               </Checkbox>
             </>
           }
+          {...(titleSize && { fontSize: titleSize })}
         />
         {!freeEntry && <BalancyCounterWithPopover ml="auto !important" pl="5" />}
       </Wrap>
@@ -122,7 +130,7 @@ const SetRequirements = (): JSX.Element => {
                     updateRequirement={update}
                     isEditDisabled={type === "PAYMENT"}
                   />
-                  <LogicDivider logic={logic} />
+                  <LogicDivider logic={logic ?? "AND"} />
                 </CardMotionWrapper>
               )
             })}

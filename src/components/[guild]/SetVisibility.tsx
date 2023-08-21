@@ -230,14 +230,18 @@ const SetVisibilityModal = ({
   const mapToAtLeastPrivate = (entities, base) =>
     entities.forEach(({ visibility }, index) => {
       if (visibility === Visibility.PUBLIC) {
-        setValue(`${base}.${index}.visibility`, Visibility.PRIVATE)
+        setValue(`${base}.${index}.visibility`, Visibility.PRIVATE, {
+          shouldDirty: true,
+        })
       }
     })
 
   const mapToHidden = (entities, base) =>
     entities.forEach(({ visibility }, index) => {
       if (visibility !== Visibility.HIDDEN) {
-        setValue(`${base}.${index}.visibility`, Visibility.HIDDEN)
+        setValue(`${base}.${index}.visibility`, Visibility.HIDDEN, {
+          shouldDirty: true,
+        })
       }
     })
 
@@ -252,7 +256,7 @@ const SetVisibilityModal = ({
       }
     }
 
-    setValue(visibilityField, newValue)
+    setValue(visibilityField, newValue, { shouldDirty: true })
   }
 
   return (

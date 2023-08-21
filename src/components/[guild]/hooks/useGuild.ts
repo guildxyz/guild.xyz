@@ -1,5 +1,4 @@
 import { useWeb3React } from "@web3-react/core"
-import useIsV2 from "hooks/useIsV2"
 import useKeyPair from "hooks/useKeyPair"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useRouter } from "next/router"
@@ -12,11 +11,9 @@ const useGuild = (guildId?: string | number) => {
 
   const { keyPair } = useKeyPair()
   const { account } = useWeb3React()
-  const isV2 = useIsV2()
-  const endpoint = isV2 ? `/v2/guilds/guild-page/${id}` : `/guild/${id}`
 
   const { data, mutate, isLoading } = useSWRWithOptionalAuth<Guild>(
-    id ? endpoint : null,
+    id ? `/v2/guilds/guild-page/${id}` : null,
     undefined,
     undefined,
     false

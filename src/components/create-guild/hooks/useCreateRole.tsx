@@ -2,7 +2,6 @@ import { useWeb3React } from "@web3-react/core"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
-import useIsV2 from "hooks/useIsV2"
 import useMatchMutate from "hooks/useMatchMutate"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -14,9 +13,15 @@ import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
-type RoleOrGuild = Role & { guildId: number }
+export type RoleToCreate = Omit<
+  Role,
+  "id" | "members" | "memberCount" | "position"
+> & {
+  guildId: number
+  roleType?: "NEW"
+}
 
-const useCreateRole = () => {
+const useCreateRole = (onSuccess?: () => void) => {
   const { account } = useWeb3React()
 
   const { mutate } = useSWRConfig()
@@ -26,17 +31,11 @@ const useCreateRole = () => {
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const { id, urlName, mutateGuild } = useGuild()
-  const isV2 = useIsV2()
 
-  const fetchData = async (
-    signedValidation: SignedValdation
-  ): Promise<RoleOrGuild> =>
-    fetcher(
-      isV2 ? `/v2/guilds/${id}/roles/with-requirements-and-rewards` : "/role",
-      signedValidation
-    )
+  const fetchData = async (signedValidation: SignedValdation): Promise<Role> =>
+    fetcher(`/v2/guilds/${id}/roles/with-requirements-and-rewards`, signedValidation)
 
-  const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {
+  const useSubmitResponse = useSubmitWithSign<Role>(fetchData, {
     onError: (error_) => {
       const processedError = processConnectorError(error_)
       showErrorToast(processedError || error_)
@@ -61,12 +60,14 @@ guild.xyz/${urlName}`,
         roles: [...curr.roles, response_],
       }))
       window.location.hash = `role-${response_.id}`
+
+      onSuccess?.()
     },
   })
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) => {
+    onSubmit: (data: RoleToCreate) => {
       data.requirements = preprocessRequirements(data?.requirements)
 
       delete data.roleType

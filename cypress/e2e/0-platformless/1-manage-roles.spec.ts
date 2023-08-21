@@ -1,7 +1,3 @@
-before(() => {
-  cy.disconnectMetamaskWalletFromAllDapps()
-})
-
 const CONTEXT = {
   createdRoleId: undefined,
   guild: undefined,
@@ -16,10 +12,13 @@ describe("roles", () => {
   beforeEach(() => {
     // Using a pre-made test guild here, since it isn't guaranteed that the 0-create-guild spec will run successfully
     cy.visit(URL_NAME)
+
+    // Cypress clears localStorage between tests, so we won't connect eagerly inside the `useEagerConnect` hook, that's why we need to connect manually before each tests
+    cy.disconnectMetamaskWalletFromAllDapps()
   })
 
   it("can fetch guild id", () => {
-    cy.connectWallet()
+    cy.connectWalletAndVerifyAccount()
 
     // http://localhost:8989/v1/guild/platformless-cypress-gang
     cy.intercept(
@@ -37,6 +36,8 @@ describe("roles", () => {
   })
 
   it("can create a role without rewards", () => {
+    cy.connectWallet()
+
     cy.intercept(
       "POST",
       `${Cypress.env("guildApiUrl")}/guilds/${
@@ -78,6 +79,8 @@ describe("roles", () => {
   })
 
   it("can edit general role data", () => {
+    cy.connectWallet()
+
     if (!CONTEXT.createdRoleId)
       throw new Error("Can't run test, because couldn't create a role.")
 
@@ -101,6 +104,8 @@ describe("roles", () => {
   })
 
   it("can add requirements", () => {
+    cy.connectWallet()
+
     if (!CONTEXT.createdRoleId)
       throw new Error("Can't run test, because couldn't create a role.")
 
@@ -142,6 +147,8 @@ describe("roles", () => {
   })
 
   it("can edit requirements list", () => {
+    cy.connectWallet()
+
     if (!CONTEXT.createdRoleId)
       throw new Error("Can't run test, because couldn't create a role.")
 
@@ -167,6 +174,8 @@ describe("roles", () => {
   })
 
   it("can delete a role", () => {
+    cy.connectWallet()
+
     if (!CONTEXT.createdRoleId)
       throw new Error("Can't run test, because couldn't create a role.")
 

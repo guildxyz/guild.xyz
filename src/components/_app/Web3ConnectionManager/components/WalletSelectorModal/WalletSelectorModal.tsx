@@ -14,6 +14,7 @@ import {
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useWeb3React } from "@web3-react/core"
 import { GnosisSafe } from "@web3-react/gnosis-safe"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
@@ -24,6 +25,7 @@ import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
+import ReCAPTCHA from "react-google-recaptcha"
 import { WalletError } from "types"
 import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
@@ -44,6 +46,7 @@ const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const { isActive, account, connector } = useWeb3React()
   const [error, setError] = useState<WalletError & Error>(null)
+  const { captchaVerifiedSince } = useUserPublic()
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -89,6 +92,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const isConnected = account && isActive && ready
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
+
+  const recaptchaRef = useRef<ReCAPTCHA>()
 
   return (
     <>
@@ -192,51 +197,94 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               )}
             </Stack>
             {isConnected && !keyPair && (
-              <Box animation={"fadeIn .3s .1s both"}>
-                <ModalButton
-                  size="xl"
-                  mb="4"
-                  colorScheme={"green"}
-                  onClick={() => set.onSubmit(shouldLinkToUser)}
-                  isLoading={set.isLoading || !ready}
-                  isDisabled={!ready}
-                  loadingText={
-                    !ready
-                      ? "Looking for keypairs"
-                      : set.signLoadingText || "Check your wallet"
-                  }
-                >
-                  {shouldLinkToUser ? "Link address" : "Verify account"}
-                </ModalButton>
-              </Box>
+              <>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                  size="invisible"
+                />
+                <Box animation={"fadeIn .3s .1s both"}>
+                  <ModalButton
+                    size="xl"
+                    mb="4"
+                    colorScheme={"green"}
+                    onClick={async () => {
+                      const token =
+                        !recaptchaRef.current || !!captchaVerifiedSince
+                          ? undefined
+                          : await recaptchaRef.current.executeAsync()
+
+                      if (token) {
+                        recaptchaRef.current.reset()
+                      }
+
+                      return set.onSubmit(shouldLinkToUser, undefined, token)
+                    }}
+                    isLoading={set.isLoading || !ready}
+                    isDisabled={!ready}
+                    loadingText={
+                      !ready
+                        ? "Looking for keypairs"
+                        : set.signLoadingText || "Check your wallet"
+                    }
+                  >
+                    {shouldLinkToUser ? "Link address" : "Verify account"}
+                  </ModalButton>
+                </Box>
+              </>
             )}
           </ModalBody>
           <ModalFooter mt="-4">
             {!isConnected ? (
-              <Text textAlign="center" colorScheme="gray" fontSize="sm" w="full">
-                New to Ethereum wallets?{" "}
-                <Link
-                  colorScheme="blue"
-                  href="https://ethereum.org/en/wallets/"
-                  isExternal
-                >
-                  Learn more
-                  <Icon as={ArrowSquareOut} mx="1" />
-                </Link>
-                <br />
-                By continuing, you agree to our{" "}
-                <Link
-                  href="/privacy-policy"
-                  fontWeight={"semibold"}
-                  onClick={onClose}
-                >
-                  Privacy Policy
-                </Link>
-              </Text>
+              <Stack textAlign="center" fontSize="sm" w="full">
+                <Text colorScheme="gray">
+                  New to Ethereum wallets?{" "}
+                  <Link
+                    colorScheme="blue"
+                    href="https://ethereum.org/en/wallets/"
+                    isExternal
+                  >
+                    Learn more
+                    <Icon as={ArrowSquareOut} mx="1" />
+                  </Link>
+                </Text>
+
+                <Text colorScheme="gray">
+                  By continuing, you agree to our{" "}
+                  <Link
+                    href="/privacy-policy"
+                    fontWeight={"semibold"}
+                    onClick={onClose}
+                  >
+                    Privacy Policy
+                  </Link>
+                </Text>
+              </Stack>
             ) : (
-              <Text textAlign="center" w="full" colorScheme={"gray"}>
-                Signing the message doesn't cost any gas
-              </Text>
+              <Stack textAlign="center" fontSize="sm" w="full">
+                <Text colorScheme={"gray"}>
+                  Signing the message doesn't cost any gas
+                </Text>
+                <Text colorScheme="gray">
+                  This site is protected by reCAPTCHA, so the Google{" "}
+                  <Link
+                    href="https://policies.google.com/privacy"
+                    isExternal
+                    fontWeight={"semibold"}
+                  >
+                    Privacy Policy
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="https://policies.google.com/terms"
+                    isExternal
+                    fontWeight={"semibold"}
+                  >
+                    Terms of Service
+                  </Link>{" "}
+                  apply
+                </Text>
+              </Stack>
             )}
           </ModalFooter>
         </ModalContent>

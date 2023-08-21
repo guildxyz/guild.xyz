@@ -10,8 +10,6 @@ import useSWRImmutable from "swr/immutable"
 import { AddressConnectionProvider, User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
-import useIsV2 from "./useIsV2"
-import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
@@ -43,7 +41,12 @@ type AddressLinkParams =
       nonce: never
     })
 
-type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> & Partial<AddressLinkParams>
+type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> &
+  Partial<AddressLinkParams> & {
+    verificationParams?: {
+      reCaptcha: string
+    }
+  }
 
 const getStore = () => createStore("guild.xyz", "signingKeyPairs")
 
@@ -101,14 +104,12 @@ const setKeyPair = async ({
   generatedKeyPair,
   signedValidation,
   id,
-  isV2,
 }: {
   account: string
   mutateKeyPair: KeyedMutator<StoredKeyPair>
   generatedKeyPair: StoredKeyPair
   signedValidation: SignedValdation
   id: number
-  isV2: boolean
 }): Promise<[StoredKeyPair, boolean]> => {
   const {
     userId: signedUserId,
@@ -122,13 +123,10 @@ const setKeyPair = async ({
     typeof signature === "string" &&
     typeof nonce === "string"
 
-  const newUser: User = await fetcher(
-    isV2 ? `/v2/users/${id ?? account}/public-key` : "/user/pubKey",
-    {
-      method: "POST",
-      ...signedValidation,
-    }
-  )
+  const newUser: User = await fetcher(`/v2/users/${id ?? account}/public-key`, {
+    method: "POST",
+    ...signedValidation,
+  })
 
   let storedKeyPair: StoredKeyPair
 
@@ -150,40 +148,29 @@ const setKeyPair = async ({
     ).catch(() => {})
   }
 
-  if (isV2) {
+  mutate([`/v2/users/${newUser.id}/profile`, { method: "GET", body: {} }], newUser, {
+    revalidate: false,
+  })
+  mutate(
+    `/v2/users/${account}/profile`,
+    {
+      id: newUser?.id,
+      publicKey: newUser?.publicKey,
+      captchaVerifiedSince: newUser?.captchaVerifiedSince,
+    },
+    {
+      revalidate: false,
+    }
+  )
+
+  if (shouldSendLink) {
     mutate(
-      [`/v2/users/${newUser.id}/profile`, { method: "GET", body: {} }],
+      [`/v2/users/${signedUserId}/profile`, { method: "GET", body: {} }],
       newUser,
       {
         revalidate: false,
       }
     )
-    mutate(
-      `/v2/users/${account}/profile`,
-      {
-        id: newUser?.id,
-        publicKey: newUser?.publicKey,
-      },
-      {
-        revalidate: false,
-      }
-    )
-  } else {
-    await mutate(`/user/${account}`)
-  }
-
-  if (shouldSendLink) {
-    if (isV2) {
-      mutate(
-        [`/v2/users/${signedUserId}/profile`, { method: "GET", body: {} }],
-        newUser,
-        {
-          revalidate: false,
-        }
-      )
-    } else {
-      await mutateOptionalAuthSWRKey(`/user/${account}`)
-    }
   }
 
   await mutateKeyPair()
@@ -194,7 +181,6 @@ const setKeyPair = async ({
 const checkKeyPair = ([_, savedPubKey, pubKey]): boolean => savedPubKey === pubKey
 
 const useKeyPair = () => {
-  const isV2 = useIsV2()
   const { captureEvent } = usePostHogContext()
 
   const { account } = useWeb3React()
@@ -206,7 +192,19 @@ const useKeyPair = () => {
     setAddressLinkParams,
   } = useWeb3ConnectionManager()
 
-  const { id, publicKey, error: publicUserError, ...user } = useUserPublic()
+  const {
+    id,
+    publicKey,
+    error: publicUserError,
+    captchaVerifiedSince,
+    ...user
+  } = useUserPublic()
+
+  useEffect(() => {
+    if (!!id && !captchaVerifiedSince) {
+      deleteKeyPairFromIdb(id).then(() => mutateKeyPair())
+    }
+  }, [id, captchaVerifiedSince])
 
   const {
     data: { keyPair, pubKey },
@@ -278,7 +276,6 @@ const useKeyPair = () => {
         generatedKeyPair,
         signedValidation,
         id,
-        isV2,
       }),
     {
       keyPair,
@@ -308,21 +305,9 @@ const useKeyPair = () => {
         }
       },
       onSuccess: ([newKeyPair, shouldDeleteUserId]) => {
-        if (isV2) {
-          mutate(unstable_serialize(["delegateCashVaults", id])).then(() => {
-            window.localStorage.removeItem(`isDelegateDismissed_${id}`)
-          })
-        } else {
-          setTimeout(() => {
-            mutateOptionalAuthSWRKey(`/user/${account}`).then(() =>
-              setTimeout(() => {
-                mutate(unstable_serialize(["delegateCashVaults", id])).then(() => {
-                  window.localStorage.removeItem(`isDelegateDismissed_${id}`)
-                })
-              }, 500)
-            )
-          }, 500)
-        }
+        mutate(unstable_serialize(["delegateCashVaults", id])).then(() => {
+          window.localStorage.removeItem(`isDelegateDismissed_${id}`)
+        })
 
         setIsDelegateConnection(false)
         if (shouldDeleteUserId) {
@@ -384,9 +369,16 @@ const useKeyPair = () => {
       ...setSubmitResponse,
       onSubmit: async (
         shouldLinkToUser: boolean,
-        provider?: AddressConnectionProvider
+        provider?: AddressConnectionProvider,
+        reCaptchaToken?: string
       ) => {
         const body: SetKeypairPayload = { pubKey: undefined }
+
+        if (reCaptchaToken) {
+          body.verificationParams = {
+            reCaptcha: reCaptchaToken,
+          }
+        }
 
         try {
           body.pubKey = generatedKeyPair.pubKey
@@ -439,5 +431,5 @@ const useKeyPair = () => {
   }
 }
 
-export { getKeyPairFromIdb, setKeyPairToIdb, deleteKeyPairFromIdb }
+export { deleteKeyPairFromIdb, getKeyPairFromIdb, setKeyPairToIdb }
 export default useKeyPair

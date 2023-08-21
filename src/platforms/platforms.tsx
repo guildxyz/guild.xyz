@@ -1,4 +1,5 @@
 import { ChakraProps } from "@chakra-ui/react"
+import dynamic from "next/dynamic"
 import {
   DiscordLogo,
   GithubLogo,
@@ -7,8 +8,10 @@ import {
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
-import { GuildPlatform, PlatformName } from "types"
+import { ComponentType } from "react"
+import { GuildPlatform, OneOf, PlatformName } from "types"
 import fetcher from "utils/fetcher"
+import PlatformPreview from "./components/PlatformPreview"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
 import DiscordCardMenu from "./Discord/DiscordCardMenu"
@@ -22,6 +25,12 @@ import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
+
+export enum PlatformAsRewardRestrictions {
+  NOT_APPLICABLE, // e.g. Twitter
+  SINGLE_ROLE, // e.g. Telegram
+  MULTIPLE_ROLES, // e.g. Discord
+}
 
 type PlatformData<
   OAuthParams extends {
@@ -47,6 +56,11 @@ type PlatformData<
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
+  AddPlatformPanel?: ComponentType<{
+    onSuccess: () => void
+    skipSettings?: boolean
+  }>
+  PlatformPreview?: ComponentType<Record<string, never>>
 
   oauth?: {
     url: string
@@ -55,7 +69,18 @@ type PlatformData<
     // Probably only will be needed for Twitter v1. Once Twitter shuts it down, we will remove it, and this field can be removed as well
     oauthOptionsInitializer?: (redirectUri: string) => Promise<OAuthParams>
   }
-}
+} & OneOf<
+  {
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE
+  },
+  {
+    asRewardRestriction: Exclude<
+      PlatformAsRewardRestrictions,
+      PlatformAsRewardRestrictions.NOT_APPLICABLE
+    >
+    shouldShowKeepAccessesModal: boolean
+  }
+>
 
 const platforms: Record<PlatformName, PlatformData> = {
   TELEGRAM: {
@@ -65,6 +90,19 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "group",
     cardPropsHook: useTelegramCardProps,
     cardMenuComponent: TelegramCardMenu,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: true,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(() => import("platforms/components/TelegramPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
 
     oauth: {
       url: process.env.NEXT_PUBLIC_TELEGRAM_POPUP_URL,
@@ -90,6 +128,19 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useDiscordCardProps,
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    shouldShowKeepAccessesModal: true,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(() => import("platforms/components/DiscordPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
 
     oauth: {
       url: "https://discord.com/api/oauth2/authorize",
@@ -106,6 +157,19 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "repo",
     cardPropsHook: useGithubCardProps,
     cardMenuComponent: GithubCardMenu,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: true,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(() => import("platforms/components/GitHubPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
 
     oauth: {
       url: "https://github.com/login/oauth/authorize",
@@ -123,6 +187,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
 
     oauth: {
       url: "https://twitter.com/i/oauth2/authorize",
@@ -140,6 +205,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
 
     oauth: {
       url: "https://api.twitter.com/oauth/authorize",
@@ -165,6 +231,19 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardSettingsComponent: GoogleCardSettings,
     cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    shouldShowKeepAccessesModal: true,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(() => import("platforms/components/GooglePreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
 
     oauth: {
       url: "https://accounts.google.com/o/oauth2/v2/auth",
@@ -179,6 +258,12 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "POAP",
     colorScheme: "purple",
     gatedEntity: "POAP",
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: false,
+    PlatformPreview: dynamic(() => import("platforms/components/PoapPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
   },
   CONTRACT_CALL: {
     icon: null,
@@ -187,6 +272,10 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "",
     cardPropsHook: useContractCallCardProps,
     cardButton: ContractCallRewardCardButton,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: false,
+    AddPlatformPanel: null, // TODO: will add in another PR
+    PlatformPreview: null, // TODO: will add in another PR
   },
 }
 
