@@ -78,7 +78,7 @@ const PlatformSelectButton = ({
       <HStack spacing={4}>
         {icon ? (
           <Circle bgColor={circleBgColor} size="12" pos="relative" overflow="hidden">
-            <Icon as={icon} boxSize={6} weight="regular" />
+            <Icon as={icon} boxSize={6} weight="regular" color="white" />
           </Circle>
         ) : (
           <Circle size="12" pos="relative" overflow="hidden">
