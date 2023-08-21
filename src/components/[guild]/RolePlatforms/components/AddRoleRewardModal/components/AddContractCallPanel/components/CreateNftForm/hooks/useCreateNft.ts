@@ -37,6 +37,7 @@ export const CONTRACT_CALL_ARGS_TO_SIGN: Record<ContractCallFunction, string[]> 
 }
 
 export type CreateNFTResponse = {
+  // returning the submitted form too, so we can easily populate the SWR cache with the NFT details (e.g. image, name, etc.)
   formData: CreateNftFormType
   guildPlatform: Omit<GuildPlatform, "id" | "platformGuildName">
 }
