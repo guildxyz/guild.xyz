@@ -9,7 +9,7 @@ type Props = {
   platform: GuildPlatform
 }
 
-const PlatformCardButton = ({ platform }: Props) => {
+const PlatformAccessButton = ({ platform }: Props) => {
   const { label, ...buttonProps } = usePlatformAccessButton(platform)
   const { colorScheme, icon } = platforms[PlatformType[platform.platformId]]
 
@@ -25,4 +25,4 @@ const PlatformCardButton = ({ platform }: Props) => {
   )
 }
 
-export default PlatformCardButton
+export default PlatformAccessButton
