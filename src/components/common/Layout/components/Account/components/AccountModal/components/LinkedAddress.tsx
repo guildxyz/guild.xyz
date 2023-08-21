@@ -19,13 +19,12 @@ import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
-import useIsV2 from "hooks/useIsV2"
 import Image from "next/image"
 import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
 import { AddressConnectionProvider, User } from "types"
 import shortenHex from "utils/shortenHex"
-import { useDisconnectAddress, useDisconnectV1 } from "../hooks/useDisconnect"
+import { useDisconnectAddress } from "../hooks/useDisconnect"
 import PrimaryAddressTag from "./PrimaryAddressTag"
 
 type Props = {
@@ -39,17 +38,11 @@ const providerIcons: Record<AddressConnectionProvider, string> = {
 const LinkedAddress = ({ addressData }: Props) => {
   const { address, provider, isPrimary } = addressData ?? {}
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const isV2 = useIsV2()
 
-  const { onSubmit, isLoading, signLoadingText } = useDisconnectV1(onClose)
-  const {
-    onSubmit: onSubmitV2,
-    isLoading: isLoadingV2,
-    signLoadingText: signLoadingTextV2,
-  } = useDisconnectAddress(onClose)
+  const { onSubmit, isLoading, signLoadingText } = useDisconnectAddress(onClose)
   const alertCancelRef = useRef()
 
-  const removeAddress = () => (isV2 ? onSubmitV2 : onSubmit)({ address })
+  const removeAddress = () => onSubmit({ address })
 
   return (
     <>
@@ -110,8 +103,8 @@ const LinkedAddress = ({ addressData }: Props) => {
               <Button
                 colorScheme="red"
                 onClick={removeAddress}
-                isLoading={isLoading || isLoadingV2}
-                loadingText={signLoadingText || signLoadingTextV2 || "Removing"}
+                isLoading={isLoading}
+                loadingText={signLoadingText || "Removing"}
                 ml={3}
               >
                 Disconnect

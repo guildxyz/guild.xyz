@@ -2,10 +2,10 @@ import {
   Box,
   BoxProps,
   Container,
-  Heading,
   HStack,
-  useColorMode,
+  Heading,
   VStack,
+  useColorMode,
 } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
@@ -28,6 +28,7 @@ type Props = {
   imageUrl?: string
   ogTitle?: string
   title?: string
+  titlePostfix?: JSX.Element
   ogDescription?: string
   description?: JSX.Element
   textColor?: string
@@ -46,6 +47,7 @@ const Layout = ({
   imageUrl,
   ogTitle,
   title,
+  titlePostfix,
   ogDescription,
   description,
   textColor,
@@ -169,15 +171,18 @@ const Layout = ({
               <HStack justify="space-between" w="full" spacing={3}>
                 <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
                   {image}
-                  <Heading
-                    as="h1"
-                    fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
-                    fontFamily="display"
-                    color={textColor}
-                    wordBreak={"break-word"}
-                  >
-                    {title}
-                  </Heading>
+                  <HStack gap={1}>
+                    <Heading
+                      as="h1"
+                      fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+                      fontFamily="display"
+                      color={textColor}
+                      wordBreak={"break-word"}
+                    >
+                      {title}
+                    </Heading>
+                    {titlePostfix}
+                  </HStack>
                 </HStack>
                 {action}
               </HStack>

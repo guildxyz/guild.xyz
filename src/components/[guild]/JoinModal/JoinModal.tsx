@@ -20,6 +20,7 @@ import ConnectPlatform from "./components/ConnectPlatform"
 import ConnectPolygonIDJoinStep from "./components/ConnectPolygonIDJoinStep"
 import SatisfyRequirementsJoinStep from "./components/SatisfyRequirementsJoinStep"
 import ShareConnectionsCheckbox from "./components/ShareConnectionsCheckbox"
+import TwitterRequirementsVerificationIssuesAlert from "./components/TwitterRequirementsVerificationIssuesAlert"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
@@ -96,6 +97,9 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               />
             </VStack>
             {/* featureFlags.includes("CRM") && */ <ShareConnectionsCheckbox />}
+
+            <TwitterRequirementsVerificationIssuesAlert />
+
             <ModalButton
               mt="2"
               onClick={handleSubmit(onSubmit)}

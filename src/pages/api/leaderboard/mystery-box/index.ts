@@ -6,10 +6,9 @@ import { kv } from "@vercel/kv"
 import { sql } from "@vercel/postgres"
 import { Chain, RPC } from "connectors"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
+import { OneOf } from "types"
 
-export type MysteryBoxResponse =
-  | { message: string; error?: never }
-  | { error: string; message?: never }
+export type MysteryBoxResponse = OneOf<{ message: string }, { error: string }>
 
 export const MYSTERY_BOX_MESSAGE_TO_SIGN =
   "Please sign this message in order to claim your prize"

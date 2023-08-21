@@ -1,4 +1,5 @@
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
+import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import type { Chain, Chains } from "connectors"
 import { RequirementType } from "requirements"
 
@@ -139,6 +140,7 @@ type GuildBase = {
   platforms: Array<PlatformName>
   memberCount: number
   rolesCount: number
+  tags: Array<GuildTags>
 }
 
 type BrainCardData = {
@@ -169,6 +171,8 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
+    name?: never
+    symbol?: never
     description?: never
   }
   GOOGLE: {
@@ -183,13 +187,18 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
+    name?: never
+    symbol?: never
     description?: never
   }
   CONTRACT_CALL: {
     chain: Chain
     contractAddress: string
-    function: string
+    function: ContractCallFunction
     argsToSign: string[]
+    name: string
+    symbol: string
+    image: string
     description: string
     inviteChannel?: never
     joinButton?: never
@@ -238,6 +247,7 @@ type RolePlatform = {
   platformRoleId?: string
   guildPlatformId?: number
   guildPlatform?: GuildPlatform
+  platformRoleData?: Record<string, string | boolean>
   index?: number
   isNew?: boolean
   roleId?: number
@@ -310,6 +320,9 @@ const supportedSocialLinks = [
 type SocialLinkKey = (typeof supportedSocialLinks)[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
 
+const guildTags = ["VERIFIED", "FEATURED"] as const
+type GuildTags = (typeof guildTags)[number]
+
 type GuildContact = {
   type: "EMAIL" | "TELEGRAM"
   contact: string
@@ -337,6 +350,7 @@ type Guild = {
   featureFlags: FeatureFlag[]
   hiddenRoles?: boolean
   requiredPlatforms?: PlatformName[]
+  tags: GuildTags[]
 }
 type GuildFormType = Partial<
   Pick<
@@ -350,6 +364,7 @@ type GuildFormType = Partial<
     | "theme"
     | "contacts"
     | "featureFlags"
+    | "tags"
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
@@ -601,8 +616,10 @@ export type {
   GuildBase,
   GuildFormType,
   GuildPinMetadata,
+  PlatformGuildData,
   GuildPlatform,
   GuildPoap,
+  GuildTags,
   LeaderboardPinData,
   Logic,
   MonetizePoapForm,

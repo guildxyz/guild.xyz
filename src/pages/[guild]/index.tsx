@@ -38,6 +38,7 @@ import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -88,23 +89,26 @@ const GuildPage = (): JSX.Element => {
     socialLinks,
     poaps,
     guildPlatforms,
+    tags,
   } = useGuild()
   useAutoStatusUpdate()
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
-    if (roles.every((role) => role.position === null)) {
+    if (roles?.every((role) => role.position === null)) {
       const byMembers = roles?.sort(
         (role1, role2) => role2.memberCount - role1.memberCount
       )
       return byMembers
     }
 
-    return roles?.sort((role1, role2) => {
-      if (role1.position === null) return 1
-      if (role2.position === null) return -1
-      return role1.position - role2.position
-    })
+    return (
+      roles?.sort((role1, role2) => {
+        if (role1.position === null) return 1
+        if (role2.position === null) return -1
+        return role1.position - role2.position
+      }) ?? []
+    )
   }, [roles])
 
   const publicRoles = sortedRoles.filter(
@@ -149,7 +153,7 @@ const GuildPage = (): JSX.Element => {
 
   const showOnboarding = isAdmin && !onboardingComplete
   const showAccessHub =
-    (guildPlatforms.some(
+    (guildPlatforms?.some(
       (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
     ) ||
       isMember ||
@@ -224,6 +228,11 @@ const GuildPage = (): JSX.Element => {
         backgroundImage={localBackgroundImage}
         action={isAdmin && <DynamicEditGuildButton />}
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
+        titlePostfix={
+          tags?.includes("VERIFIED") && (
+            <VerifiedIcon size={{ base: 5, lg: 6 }} mt={-1} />
+          )
+        }
       >
         {showOnboarding ? (
           <DynamicOnboarding />

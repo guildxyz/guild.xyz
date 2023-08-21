@@ -1,5 +1,4 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsV2 from "hooks/useIsV2"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
@@ -8,10 +7,9 @@ import fetcher from "utils/fetcher"
 const useSavePoap = ({ onSuccess }: UseSubmitOptions = {}) => {
   const { mutateGuild, id } = useGuild()
   const showErrorToast = useShowErrorToast()
-  const isV2 = useIsV2()
 
   const fetchData = async (signedValidation: SignedValdation) =>
-    fetcher(isV2 ? `/v2/guilds/${id}/poaps` : "/assets/poap", signedValidation)
+    fetcher(`/v2/guilds/${id}/poaps`, signedValidation)
 
   return useSubmitWithSign<any>(fetchData, {
     onError: (error) => showErrorToast(error),

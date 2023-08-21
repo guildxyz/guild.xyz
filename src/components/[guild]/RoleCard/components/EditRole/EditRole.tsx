@@ -12,9 +12,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
-import RolePlatforms from "components/[guild]/RolePlatforms"
-import SetVisibility from "components/[guild]/SetVisibility"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -25,7 +22,9 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
-import useIsV2 from "hooks/useIsV2"
+import useGuild from "components/[guild]/hooks/useGuild"
+import RolePlatforms from "components/[guild]/RolePlatforms"
+import SetVisibility from "components/[guild]/SetVisibility"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -111,8 +110,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     methods.reset(undefined, { keepValues: true })
   }
 
-  const isV2 = useIsV2()
-
   const { onSubmit, isLoading, isSigning, signLoadingText } = useEditRole(
     id,
     onSuccess
@@ -153,17 +150,14 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const drawerBodyRef = useRef<HTMLDivElement>()
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    (isV2 ? handleSubmitDirty(methods) : methods.handleSubmit)(
-      onSubmit,
-      (formErrors) => {
-        if (formErrors.requirements && drawerBodyRef.current) {
-          drawerBodyRef.current.scrollBy({
-            top: drawerBodyRef.current.scrollHeight,
-            behavior: "smooth",
-          })
-        }
+    handleSubmitDirty(methods)(onSubmit, (formErrors) => {
+      if (formErrors.requirements && drawerBodyRef.current) {
+        drawerBodyRef.current.scrollBy({
+          top: drawerBodyRef.current.scrollHeight,
+          behavior: "smooth",
+        })
       }
-    ),
+    }),
 
     iconUploader.isUploading
   )

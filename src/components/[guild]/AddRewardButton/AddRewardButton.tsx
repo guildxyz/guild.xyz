@@ -1,5 +1,4 @@
 import {
-  FormLabel,
   HStack,
   IconButton,
   ModalBody,
@@ -10,72 +9,90 @@ import {
   ModalOverlay,
   Stack,
   Text,
-  useDisclosure,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
+import dynamic from "next/dynamic"
 import { ArrowLeft, Plus } from "phosphor-react"
+import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import platforms from "platforms/platforms"
-import { useRef, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
-import { PlatformName } from "types"
-import AddPoapPanel from "../CreatePoap"
-import RoleOptionCard from "../RoleOptionCard"
-import AddDiscordPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
-import AddGithubPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
-import AddGooglePanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
-import AddTelegramPanel from "../RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
+import getRandomInt from "utils/getRandomInt"
+import {
+  AddRewardProvider,
+  RoleTypeToAddTo,
+  useAddRewardContext,
+} from "../AddRewardContext"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
-import useGuild from "../hooks/useGuild"
 import useAddReward from "./hooks/useAddReward"
 
-const addPlatformComponents: Record<
-  Exclude<PlatformName, "" | "TWITTER" | "CONTRACT_CALL" | "TWITTER_V1">,
-  (props) => JSX.Element
-> = {
-  DISCORD: AddDiscordPanel,
-  TELEGRAM: AddTelegramPanel,
-  GITHUB: AddGithubPanel,
-  GOOGLE: AddGooglePanel,
-  POAP: AddPoapPanel,
-}
+// temporary until POAPs are real rewards
+const DynamicAddPoapPanel = dynamic(() => import("components/[guild]/CreatePoap"), {
+  ssr: false,
+})
 
-const AddRewardButton = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+const AddRewardButton = (): JSX.Element => {
+  const {
+    modalRef,
+    selection,
+    setSelection,
+    step,
+    setStep,
+    activeTab,
+    isOpen,
+    onOpen,
+    onClose,
+  } = useAddRewardContext()
+
   const methods = useForm()
-  const { roles } = useGuild()
-  const modalRef = useRef(null)
-
-  const [selection, setSelectionOg] = useState<PlatformName>(null)
-  const [showRoleSelect, setShowRoleSelect] = useState(false)
-
-  const AddPlatformPanel = addPlatformComponents[selection]
-
-  const scrollToTop = () => modalRef.current?.scrollTo({ top: 0 })
-
-  const setSelection = (platform: PlatformName) => {
-    setSelectionOg(platform)
-    scrollToTop()
-  }
-
-  const goBack = () => {
-    methods.reset()
-    if (showRoleSelect) setShowRoleSelect(false)
-    else setSelection(null)
-  }
-
-  const onSuccess = () => {
-    onClose()
-    setShowRoleSelect(false)
-    setSelection(null)
-    methods.reset()
-  }
-  const { onSubmit, isLoading } = useAddReward(onSuccess)
 
   const { isStuck } = useIsTabsStuck()
   const { textColor, buttonColorScheme } = useThemeContext()
+
+  const goBack = () => {
+    if (step === "SELECT_ROLE") {
+      setStep("HOME")
+      methods.reset()
+    } else {
+      setSelection(null)
+    }
+  }
+
+  const requirements = useWatch({ name: "requirements", control: methods.control })
+  const isAddRewardButtonDisabled =
+    activeTab === RoleTypeToAddTo.NEW_ROLE && !requirements?.length
+
+  const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
+    useAddReward(onClose)
+  const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
+    useCreateRole(onClose)
+
+  const isLoading = isAddRewardLoading || isCreateRoleLoading
+
+  const onSubmit = (data: any) => {
+    if (data.requirements?.length > 0) {
+      onCreateRoleSubmit({
+        ...data,
+        name: data.name || `New ${platforms[selection].name} role`,
+        imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
+      })
+    } else {
+      onAddRewardSubmit({
+        ...data.rolePlatforms[0].guildPlatform,
+        roleIds: data.roleIds?.filter((roleId) => !!roleId),
+      })
+    }
+  }
+
+  const { AddPlatformPanel, PlatformPreview } = platforms[selection] ?? {}
+
+  const lightModalBgColor = useColorModeValue("white", "gray.700")
+
+  const { isBackButtonDisabled } = useAddRewardContext()
 
   return (
     <>
@@ -91,70 +108,79 @@ const AddRewardButton = () => {
       >
         Add reward
       </Button>
+
       <FormProvider {...methods}>
         <Modal
           isOpen={isOpen}
-          onClose={onClose}
-          size="4xl"
+          onClose={() => {
+            methods.reset()
+            onClose()
+          }}
+          size={step === "HOME" ? "4xl" : "2xl"}
           scrollBehavior="inside"
-          colorScheme={"dark"}
+          colorScheme="dark"
         >
           <ModalOverlay />
           <ModalContent minH="550px">
-            {!selection && <ModalCloseButton />}
-            <ModalHeader>
-              <HStack>
-                {selection !== null && (
-                  <IconButton
-                    rounded={"full"}
-                    aria-label="Back"
-                    size="sm"
-                    mb="-3px"
-                    icon={<ArrowLeft size={20} />}
-                    variant="ghost"
-                    onClick={goBack}
-                  />
-                )}
-                <Text>
-                  Add {(selection === null && "reward") || platforms[selection].name}
-                </Text>
-              </HStack>
-            </ModalHeader>
-            <ModalBody ref={modalRef}>
-              {selection === null ? (
-                <PlatformsGrid onSelection={setSelection} showPoap />
-              ) : showRoleSelect ? (
-                <>
-                  <FormLabel mb="4">Select role(s) to add reward to</FormLabel>
-                  <Stack>
-                    {roles.map((role, index) => (
-                      <RoleOptionCard
-                        key={role.id}
-                        role={role}
-                        size="lg"
-                        {...methods.register(`roleIds.${index}`)}
-                      />
-                    ))}
-                  </Stack>
-                </>
-              ) : (
-                <AddPlatformPanel
-                  onSuccess={
-                    selection === "POAP" ? onSuccess : () => setShowRoleSelect(true)
+            <ModalCloseButton />
+            <ModalHeader
+              {...(step === "SELECT_ROLE"
+                ? {
+                    bgColor: lightModalBgColor,
+                    boxShadow: "sm",
+                    zIndex: 1,
                   }
-                  scrollToTop={scrollToTop}
+                : {})}
+            >
+              <Stack spacing={8}>
+                <HStack>
+                  {selection && (
+                    <IconButton
+                      isDisabled={isBackButtonDisabled}
+                      rounded="full"
+                      aria-label="Back"
+                      size="sm"
+                      mb="-3px"
+                      icon={<ArrowLeft size={20} />}
+                      variant="ghost"
+                      onClick={goBack}
+                    />
+                  )}
+                  <Text>
+                    {selection
+                      ? `Add ${platforms[selection].name} reward`
+                      : "Add reward"}
+                  </Text>
+                </HStack>
+
+                {step === "SELECT_ROLE" && <PlatformPreview />}
+              </Stack>
+            </ModalHeader>
+
+            <ModalBody ref={modalRef} className="custom-scrollbar">
+              {selection === "POAP" ? (
+                <DynamicAddPoapPanel />
+              ) : selection && step === "SELECT_ROLE" ? (
+                <SelectRoleOrSetRequirements selectedPlatform={selection} />
+              ) : AddPlatformPanel ? (
+                <AddPlatformPanel
+                  onSuccess={() => setStep("SELECT_ROLE")}
                   skipSettings
                 />
+              ) : (
+                <PlatformsGrid onSelection={setSelection} showPoap />
               )}
             </ModalBody>
-            {showRoleSelect && (
-              <ModalFooter>
+
+            {selection !== "POAP" && step === "SELECT_ROLE" && (
+              <ModalFooter pt="6" pb="8">
                 <Button
+                  isDisabled={isAddRewardButtonDisabled}
                   colorScheme="green"
                   onClick={methods.handleSubmit(onSubmit)}
                   isLoading={isLoading}
                 >
-                  Add reward
+                  Done
                 </Button>
               </ModalFooter>
             )}
@@ -165,4 +191,10 @@ const AddRewardButton = () => {
   )
 }
 
-export default AddRewardButton
+const AddRewardButtonWrapper = (): JSX.Element => (
+  <AddRewardProvider>
+    <AddRewardButton />
+  </AddRewardProvider>
+)
+
+export default AddRewardButtonWrapper

@@ -2,18 +2,12 @@ import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import useIsV2 from "hooks/useIsV2"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
 import { PlatformName, User } from "types"
 import fetcher from "utils/fetcher"
-import useDCAuth from "./useDCAuth"
-import useGHAuth from "./useGHAuth"
-import useGoogleAuth from "./useGoogleAuth"
-import useLegacyTwitterAuth from "./useLegacyTwitterAuth"
-import useTGAuth from "./useTGAuth"
-import useTwitterAuth from "./useTwitterAuth"
+import useOauthPopupWindow, { AuthLevel } from "./useOauthPopupWindow"
 
 const parseConnectError = (
   error: string
@@ -45,28 +39,20 @@ const parseConnectError = (
   }
 }
 
-const platformAuthHooks: Record<
-  Exclude<PlatformName, "POAP" | "CONTRACT_CALL">,
-  (scope?: string) => any
-> = {
-  DISCORD: useDCAuth,
-  GITHUB: useGHAuth,
-  TWITTER: useTwitterAuth,
-  TWITTER_V1: useLegacyTwitterAuth,
-  TELEGRAM: useTGAuth,
-  GOOGLE: useGoogleAuth,
-}
-
 const useConnectPlatform = (
   platform: PlatformName,
   onSuccess?: () => void,
   isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
-  scope?: string,
+  authLevel: AuthLevel = "membership",
   disconnectFromExistingUser?: boolean
 ) => {
   const { platformUsers } = useUser()
-  const { onOpen, authData, isAuthenticating, ...rest } =
-    platformAuthHooks[platform]?.(scope) ?? {}
+
+  const { onOpen, authData, isAuthenticating, ...rest } = useOauthPopupWindow(
+    platform,
+    isReauth ? "creation" : authLevel
+  )
+
   const prevAuthData = usePrevious(authData)
 
   const { onSubmit, isLoading, response } = useConnect(() => {
@@ -102,14 +88,12 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
 
   const { mutate: mutateUser, id } = useUser()
 
-  const isV2 = useIsV2()
-
   const submit = (signedValidation: SignedValdation) => {
     const platformName =
       JSON.parse(signedValidation?.signedPayload ?? "{}")?.platformName ??
       "UNKNOWN_PLATFORM"
 
-    return fetcher(isV2 ? `/v2/users/${id}/platform-users` : "/user/connect", {
+    return fetcher(`/v2/users/${id}/platform-users`, {
       method: "POST",
       ...signedValidation,
     })
@@ -135,17 +119,13 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
   return useSubmitWithSign<User["platformUsers"][number]>(submit, {
     onSuccess: (newPlatformUser) => {
       // captureEvent("Platform connection", { platformName })
-      if (isV2) {
-        mutateUser(
-          (prev) => ({
-            ...prev,
-            platformUsers: [...(prev?.platformUsers ?? []), newPlatformUser],
-          }),
-          { revalidate: false }
-        )
-      } else {
-        mutateUser()
-      }
+      mutateUser(
+        (prev) => ({
+          ...prev,
+          platformUsers: [...(prev?.platformUsers ?? []), newPlatformUser],
+        }),
+        { revalidate: false }
+      )
 
       onSuccess?.()
     },
@@ -185,4 +165,4 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
 }
 
 export default useConnectPlatform
-export { platformAuthHooks, useConnect }
+export { useConnect }
