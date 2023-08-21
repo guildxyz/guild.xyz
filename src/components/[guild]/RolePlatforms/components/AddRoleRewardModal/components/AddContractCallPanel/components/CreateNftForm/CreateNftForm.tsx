@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   Flex,
   FormControl,
   FormHelperText,
@@ -148,13 +149,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
 
           <GridItem colSpan={{ base: 3, sm: 2 }}>
             <Stack spacing={6}>
-              <ChainPicker
-                controlName="chain"
-                supportedChains={[...CONTRACT_CALL_SUPPORTED_CHAINS]}
-                showDivider={false}
-              />
-
-              <HStack spacing={4} alignItems="start">
+              <HStack alignItems="start">
                 <FormControl isInvalid={!!errors?.name}>
                   <FormLabel>Name</FormLabel>
 
@@ -165,7 +160,10 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                   <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
                 </FormControl>
 
-                <FormControl isInvalid={!!errors?.symbol} maxW={48}>
+                <FormControl
+                  isInvalid={!!errors?.symbol}
+                  maxW={{ base: 24, md: 36 }}
+                >
                   <FormLabel>Symbol</FormLabel>
 
                   <Input
@@ -173,6 +171,139 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                   />
 
                   <FormErrorMessage>{errors?.symbol?.message}</FormErrorMessage>
+                </FormControl>
+              </HStack>
+
+              <FormControl isInvalid={!!errors?.richTextDescription}>
+                <FormLabel>Reward description</FormLabel>
+
+                <RichTextDescriptionEditor onChange={onDescriptionChange} />
+
+                <FormErrorMessage>
+                  {errors?.richTextDescription?.message}
+                </FormErrorMessage>
+
+                <FormHelperText>
+                  This description will be shown on the minting page. You can use
+                  markdown syntax here.
+                </FormHelperText>
+              </FormControl>
+
+              <FormControl isInvalid={!!errors?.description}>
+                <FormLabel>Metadata description</FormLabel>
+
+                <Textarea {...register("description")} />
+
+                <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
+
+                <FormHelperText>
+                  This description will be included in the NFT metadata JSON.
+                </FormHelperText>
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Metadata</FormLabel>
+
+                <Stack spacing={2}>
+                  {fields?.map((field, index) => (
+                    <Box
+                      key={field.id}
+                      p={2}
+                      bgColor="blackAlpha.300"
+                      borderRadius="xl"
+                    >
+                      <Grid templateColumns="1fr 0.5rem 1fr 2.5rem" gap={1}>
+                        <FormControl isInvalid={!!errors?.attributes?.[index]?.name}>
+                          <Input
+                            placeholder="Name"
+                            {...register(`attributes.${index}.name`, {
+                              required: "This field is required",
+                            })}
+                          />
+                          <FormErrorMessage>
+                            {errors?.attributes?.[index]?.name?.message}
+                          </FormErrorMessage>
+                        </FormControl>
+
+                        <Flex justifyContent="center">
+                          <Text as="span" mt={2}>
+                            :
+                          </Text>
+                        </Flex>
+
+                        <FormControl
+                          isInvalid={!!errors?.attributes?.[index]?.value}
+                        >
+                          <Input
+                            placeholder="Value"
+                            {...register(`attributes.${index}.value`, {
+                              required: "This field is required",
+                            })}
+                          />
+                          <FormErrorMessage>
+                            {errors?.attributes?.[index]?.value?.message}
+                          </FormErrorMessage>
+                        </FormControl>
+
+                        <Flex justifyContent="end">
+                          <IconButton
+                            aria-label="Remove attribute"
+                            icon={<TrashSimple />}
+                            colorScheme="red"
+                            size="sm"
+                            rounded="full"
+                            variant="ghost"
+                            onClick={() => remove(index)}
+                            mt={1}
+                          />
+                        </Flex>
+                      </Grid>
+                    </Box>
+                  ))}
+
+                  <Button
+                    leftIcon={<Icon as={Plus} />}
+                    onClick={() =>
+                      append({
+                        name: "",
+                        value: "",
+                      })
+                    }
+                  >
+                    Add attribute
+                  </Button>
+                </Stack>
+              </FormControl>
+
+              <Divider />
+
+              <HStack>
+                <ChainPicker
+                  controlName="chain"
+                  supportedChains={[...CONTRACT_CALL_SUPPORTED_CHAINS]}
+                  showDivider={false}
+                />
+                <FormControl>
+                  <FormLabel>Supply</FormLabel>
+                  <StyledSelect
+                    value={{
+                      label: "Unlimited",
+                      value: "UNLIMITED",
+                    }}
+                    options={[
+                      {
+                        label: "Unlimited",
+                        value: "UNLIMITED",
+                      },
+                      {
+                        label: "Fixed",
+                        value: "FIXED",
+                        isDisabled: true,
+                        details: "Coming soon",
+                      },
+                    ]}
+                    filterOption={() => true}
+                  />
                 </FormControl>
               </HStack>
 
@@ -250,131 +381,6 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 />
 
                 <FormErrorMessage>{errors?.tokenTreasury?.message}</FormErrorMessage>
-              </FormControl>
-
-              <FormControl w={{ base: "full", md: "50%" }}>
-                <FormLabel>Supply</FormLabel>
-
-                <StyledSelect
-                  value={{
-                    label: "Unlimited",
-                    value: "UNLIMITED",
-                  }}
-                  options={[
-                    {
-                      label: "Unlimited",
-                      value: "UNLIMITED",
-                    },
-                    {
-                      label: "Fixed",
-                      value: "FIXED",
-                      isDisabled: true,
-                      details: "Coming soon",
-                    },
-                  ]}
-                  filterOption={() => true}
-                />
-              </FormControl>
-
-              <FormControl isInvalid={!!errors?.description}>
-                <FormLabel>Metadata description</FormLabel>
-
-                <Textarea {...register("description")} />
-
-                <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
-
-                <FormHelperText>
-                  This description will be included in the NFT metadata JSON.
-                </FormHelperText>
-              </FormControl>
-
-              <FormControl isInvalid={!!errors?.richTextDescription}>
-                <FormLabel>Reward description</FormLabel>
-
-                <RichTextDescriptionEditor onChange={onDescriptionChange} />
-
-                <FormErrorMessage>
-                  {errors?.richTextDescription?.message}
-                </FormErrorMessage>
-
-                <FormHelperText>
-                  This description will be shown on the collect NFT page. You can use
-                  markdown syntax here.
-                </FormHelperText>
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>Metadata</FormLabel>
-
-                <Stack spacing={2}>
-                  {fields?.map((field, index) => (
-                    <Box
-                      key={field.id}
-                      p={2}
-                      bgColor="blackAlpha.300"
-                      borderRadius="xl"
-                    >
-                      <Grid templateColumns="1fr 0.5rem 1fr 2.5rem" gap={1}>
-                        <FormControl isInvalid={!!errors?.attributes?.[index]?.name}>
-                          <Input
-                            placeholder="Name"
-                            {...register(`attributes.${index}.name`, {
-                              required: "This field is required",
-                            })}
-                          />
-                          <FormErrorMessage>
-                            {errors?.attributes?.[index]?.name?.message}
-                          </FormErrorMessage>
-                        </FormControl>
-
-                        <Flex justifyContent="center">
-                          <Text as="span" mt={2}>
-                            :
-                          </Text>
-                        </Flex>
-
-                        <FormControl
-                          isInvalid={!!errors?.attributes?.[index]?.value}
-                        >
-                          <Input
-                            placeholder="Value"
-                            {...register(`attributes.${index}.value`, {
-                              required: "This field is required",
-                            })}
-                          />
-                          <FormErrorMessage>
-                            {errors?.attributes?.[index]?.value?.message}
-                          </FormErrorMessage>
-                        </FormControl>
-
-                        <Flex justifyContent="end">
-                          <IconButton
-                            aria-label="Remove attribute"
-                            icon={<TrashSimple />}
-                            colorScheme="red"
-                            size="sm"
-                            rounded="full"
-                            variant="ghost"
-                            onClick={() => remove(index)}
-                            mt={1}
-                          />
-                        </Flex>
-                      </Grid>
-                    </Box>
-                  ))}
-
-                  <Button
-                    leftIcon={<Icon as={Plus} />}
-                    onClick={() =>
-                      append({
-                        name: "",
-                        value: "",
-                      })
-                    }
-                  >
-                    Add attribute
-                  </Button>
-                </Stack>
               </FormControl>
             </Stack>
           </GridItem>
