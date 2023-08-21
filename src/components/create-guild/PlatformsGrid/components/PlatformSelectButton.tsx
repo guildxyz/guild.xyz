@@ -83,11 +83,10 @@ const PlatformSelectButton = ({
           </Circle>
         )}
         <VStack
-          spacing={1}
+          spacing={{ base: 0.5, lg: 1 }}
           alignItems="start"
           w="full"
           maxW="full"
-          mt={description ? -1 : 0}
         >
           <Heading
             fontSize={{ lg: "lg" }}

@@ -10,7 +10,7 @@ import {
   useState,
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { GuildFormType, PlatformName as BasePlatformName } from "types"
+import { PlatformName as BasePlatformName, GuildFormType } from "types"
 import capitalize from "utils/capitalize"
 import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
@@ -198,7 +198,7 @@ const CreateGuildProvider = ({
       content: <CreateGuildIndex />,
     },
     {
-      title: "Choose role templates",
+      title: "Choose role template",
       label: capitalize(template?.toLowerCase() ?? ""),
       content: <ChooseTemplate />,
     },

@@ -18,8 +18,6 @@ type PlatformsGridData = {
   hook?: PlatformHookType
 }
 
-const generalPlatforms: PlatformName[] = ["CONTRACT_CALL"]
-
 const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
   const platformsData: Record<
@@ -56,8 +54,6 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   // const filteredGeneralPlatforms = generalPlatforms.filter((p) =>
   //   p === "CONTRACT_CALL" ? featureFlags?.includes("CONTRACT_CALL") : true
   // )
-
-  const filteredGeneralPlatforms = generalPlatforms
 
   return (
     <Stack spacing={8}>
