@@ -30,8 +30,6 @@ const AuditLog = (): JSX.Element => {
     )
       return
 
-    console.log("setting size")
-
     setSize((prevSize) => prevSize + 1)
   }, [isValidating])
 
