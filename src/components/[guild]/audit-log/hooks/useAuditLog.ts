@@ -57,8 +57,9 @@ const useAuditLog = (): Omit<
 
   const { query } = useRouter()
 
-  const getKey = (pageIndex: number, previousPageData: any) => {
-    if (!id) return null
+  const getKey = (pageIndex: number, previousPageData: AuditLogActionResponse) => {
+    if (!id || (previousPageData?.entries && !previousPageData.entries.length))
+      return null
 
     const queryWithRelevantParams: Partial<Record<SupportedQueryParam, string>> = {
       guildId: id.toString(),
