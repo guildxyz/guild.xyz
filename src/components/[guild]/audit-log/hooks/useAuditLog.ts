@@ -63,7 +63,7 @@ const useAuditLog = (): Omit<
     const queryWithRelevantParams: Partial<Record<SupportedQueryParam, string>> = {
       guildId: id.toString(),
       limit: LIMIT.toString(),
-      offset: pageIndex.toString(),
+      offset: (pageIndex * LIMIT).toString(),
       tree: "true",
     }
 
