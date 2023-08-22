@@ -31,10 +31,12 @@ const AuditLogAction = (): JSX.Element => {
 
   const { isOpen, onToggle } = useDisclosure()
 
-  const { timestamp, children, before } = useAuditLogActionContext()
+  const { timestamp, children, before, data } = useAuditLogActionContext()
 
   const shouldRenderCollapse =
-    children?.length > 0 || Object.keys(before ?? {}).length > 0
+    children?.length > 0 ||
+    (Object.keys(before ?? {}).length > 0 &&
+      Object.entries(before).some(([key, value]) => data[key] !== value))
 
   return (
     <Card>
