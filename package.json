@@ -86,7 +86,7 @@
     "react-notion-x": "^6.15.6",
     "react-window": "^1.8.8",
     "slugify": "^1.6.5",
-    "swr": "^2.1.5",
+    "swr": "2.2.0",
     "wicg-inert": "^3.1.2"
   },
   "peerDependencies": {
