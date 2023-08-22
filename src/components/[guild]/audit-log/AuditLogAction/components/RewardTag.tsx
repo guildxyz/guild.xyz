@@ -14,7 +14,7 @@ const RewardTag = ({ rolePlatformId }: Props): JSX.Element => {
   const router = useRouter()
 
   return (
-    <Tooltip label="Filter by reward">
+    <Tooltip label="Filter by reward" placement="top" hasArrow>
       <Tag
         as="button"
         bgColor={`${platforms[reward?.platformName]?.colorScheme}.500` ?? "gray.500"}

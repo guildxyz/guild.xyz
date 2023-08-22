@@ -24,7 +24,7 @@ const UserTag = ({ id }: Props): JSX.Element => {
   const router = useRouter()
 
   return (
-    <Tooltip label="Filter by user">
+    <Tooltip label="Filter by user" placement="top" hasArrow>
       <Tag
         as="button"
         variant={variant}

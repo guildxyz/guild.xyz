@@ -28,7 +28,7 @@ const RoleTag = ({ data, id }: Props): JSX.Element => {
   const router = useRouter()
 
   return (
-    <Tooltip label="Filter by role" isDisabled={!id}>
+    <Tooltip label="Filter by role" isDisabled={!id} placement="top" hasArrow>
       <Tag
         as="button"
         colorScheme={colorScheme}
