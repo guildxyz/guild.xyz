@@ -38,7 +38,7 @@ const AuditLog = (): JSX.Element => {
   return (
     <Layout
       title={name}
-      ogTitle={`Audig Log - ${name}`}
+      ogTitle={`Audig Log${name ? ` - ${name}` : ""}`}
       textColor={textColor}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
