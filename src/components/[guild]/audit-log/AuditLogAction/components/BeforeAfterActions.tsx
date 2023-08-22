@@ -9,8 +9,10 @@ import {
   Text,
 } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
+import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import useColorPalette from "hooks/useColorPalette"
 import { ArrowRight } from "phosphor-react"
+import { Requirement } from "types"
 import { AUDITLOG } from "../../constants"
 import { useAuditLogActionContext } from "../AuditLogActionContext"
 import ActionIcon from "./ActionIcon"
@@ -18,7 +20,7 @@ import { AuditLogChildActionLayout } from "./AuditLogChildAction"
 import UpdatedDataGrid from "./UpdatedDataGrid"
 
 const BeforeAfterActions = (): JSX.Element => {
-  const { before, data } = useAuditLogActionContext()
+  const { before, data, action } = useAuditLogActionContext()
 
   const previousThemeProps = {
     color: before?.color,
@@ -40,6 +42,24 @@ const BeforeAfterActions = (): JSX.Element => {
     "chakra-colors-primary",
     currentThemeProps.color
   )
+
+  if (action === AUDITLOG.UpdateRequirement)
+    return (
+      <UpdatedDataGrid
+        before={
+          <RequirementDisplayComponent
+            requirement={before as Requirement}
+            rightElement={null}
+          />
+        }
+        after={
+          <RequirementDisplayComponent
+            requirement={data as Requirement}
+            rightElement={null}
+          />
+        }
+      />
+    )
 
   if (
     !before ||
