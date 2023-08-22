@@ -16,6 +16,7 @@ import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
+import platforms from "platforms/platforms"
 import { ComponentType, RefAttributes, useMemo } from "react"
 import { PlatformName, Rest } from "types"
 
@@ -64,10 +65,12 @@ const PlatformSelectButton = ({
   const selectPlatform = () => onSelection(platform)
 
   const user = useUser()
-  const isPlatformConnected = user.platformUsers?.some(
-    ({ platformName, platformUserData }) =>
-      platformName === platform && !platformUserData?.readonly
-  )
+  const isPlatformConnected =
+    !platforms[platform].oauth ||
+    user.platformUsers?.some(
+      ({ platformName, platformUserData }) =>
+        platformName === platform && !platformUserData?.readonly
+    )
 
   const circleBgColor = useColorModeValue("gray.700", "gray.600")
   const DynamicCtaIcon = useMemo(
