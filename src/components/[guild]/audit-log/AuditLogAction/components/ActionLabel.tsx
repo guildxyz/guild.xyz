@@ -58,12 +58,20 @@ const ActionLabel = (): JSX.Element => {
               </>
             )
           case AUDITLOG.ClickJoinOnWeb:
-            return <Text as="span">Join Guild through website</Text>
+            return (
+              <>
+                <Text as="span">Join Guild through website</Text>
+                <UserTag id={ids.user} />
+              </>
+            )
           case AUDITLOG.ClickJoinOnPlatform:
             return (
-              <Text as="span">{`Join Guild through ${
-                platforms[data.platformName].name
-              }`}</Text>
+              <>
+                <Text as="span">{`Join Guild through ${
+                  platforms[data.platformName].name
+                }`}</Text>
+                <UserTag id={ids.user} />
+              </>
             )
           case AUDITLOG.GetRole:
           case AUDITLOG.LoseRole:
