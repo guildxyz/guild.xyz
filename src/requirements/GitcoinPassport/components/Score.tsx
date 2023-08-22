@@ -1,22 +1,32 @@
 import {
   FormControl,
   FormLabel,
-  Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Stack,
 } from "@chakra-ui/react"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
+
+export const scorers: Record<number, string> = {
+  1351: "Unique Humanity Score",
+}
+
+const scorerOptions: SelectOption[] = Object.entries(scorers).map(
+  ([scorerId, scorerName]) => ({
+    label: scorerName,
+    value: scorerId.toString(),
+  })
+)
 
 const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
-    register,
     formState: { errors },
   } = useFormContext()
 
@@ -50,14 +60,21 @@ const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   }
 
   return (
-    <Stack spacing={4} alignItems="start" w="full">
-      <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
-        <FormLabel>Community ID</FormLabel>
+    <>
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+        isRequired
+      >
+        <FormLabel>Scorer</FormLabel>
 
-        <Input
-          {...register(`${baseFieldPath}.data.id`, {
-            required: "This field is required",
-          })}
+        <ControlledSelect
+          name={`${baseFieldPath}.data.id`}
+          rules={{
+            required: "This field is required.",
+          }}
+          isClearable
+          isRequired
+          options={scorerOptions}
         />
 
         <FormErrorMessage>
@@ -65,8 +82,11 @@ const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.score}>
-        <FormLabel>Score</FormLabel>
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.score}
+        isRequired
+      >
+        <FormLabel>Minimum score</FormLabel>
 
         <NumberInput
           ref={scoreFieldRef}
@@ -88,7 +108,7 @@ const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
           {parseFromObject(errors, baseFieldPath)?.data?.score?.message}
         </FormErrorMessage>
       </FormControl>
-    </Stack>
+    </>
   )
 }
 

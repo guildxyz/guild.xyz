@@ -1,5 +1,6 @@
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
-import type { Chain } from "connectors"
+import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
+import type { Chain, Chains } from "connectors"
 import { RequirementType } from "requirements"
 
 type Token = {
@@ -17,7 +18,7 @@ type Rest = {
   [x: string]: any
 }
 
-type Logic = "AND" | "OR"
+type Logic = "AND" | "OR" | "ANY_OF"
 
 type ThemeMode = "LIGHT" | "DARK"
 
@@ -76,7 +77,15 @@ type NFT = {
   slug: string
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE" | "POAP"
+type PlatformName =
+  | "TELEGRAM"
+  | "DISCORD"
+  | "GITHUB"
+  | "TWITTER"
+  | "GOOGLE"
+  | "POAP"
+  | "CONTRACT_CALL"
+  | "TWITTER_V1"
 
 type PlatformUserData = {
   acessToken?: string
@@ -99,11 +108,26 @@ type AddressConnectionProvider = "DELEGATE"
 
 type User = {
   id: number
-  addresses: Array<string>
-  addressProviders: Record<string, AddressConnectionProvider>
+  addresses: Array<{
+    address: string
+    userId: number
+    isPrimary: boolean
+    provider: AddressConnectionProvider
+    createdAt: string
+  }>
   platformUsers: PlatformAccountDetails[]
-  signingKey?: string
+  publicKey?: string
   isSuperAdmin: boolean
+
+  captchaVerifiedSince: Date
+
+  // Should be removed once we use only v2 API
+  addressProviders?: Record<string, AddressConnectionProvider>
+}
+
+type BaseUser = {
+  id: number
+  createdAt: Date
 }
 
 type GuildBase = {
@@ -114,6 +138,8 @@ type GuildBase = {
   roles: Array<string>
   platforms: Array<PlatformName>
   memberCount: number
+  rolesCount: number
+  tags: Array<GuildTags>
 }
 
 type BrainCardData = {
@@ -139,6 +165,14 @@ type PlatformGuildData = {
     needCaptcha?: boolean
     mimeType?: never
     iconLink?: never
+    type?: never
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    name?: never
+    symbol?: never
+    description?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -147,6 +181,30 @@ type PlatformGuildData = {
     needCaptcha?: never
     mimeType?: string
     iconLink?: string
+    type?: never
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    name?: never
+    symbol?: never
+    description?: never
+  }
+  CONTRACT_CALL: {
+    chain: Chain
+    contractAddress: string
+    function: ContractCallFunction
+    argsToSign: string[]
+    name: string
+    symbol: string
+    image: string
+    description: string
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    role?: never
+    mimeType?: never
+    iconLink?: never
   }
 }
 
@@ -181,9 +239,6 @@ type Requirement = {
   balancyDecimals?: number
   createdAt?: string
   updatedAt?: string
-
-  // Used for creating a dummy requirement, when there are some requirements that are invisibile to the user
-  isHidden?: boolean
 }
 
 type RolePlatform = {
@@ -191,6 +246,7 @@ type RolePlatform = {
   platformRoleId?: string
   guildPlatformId?: number
   guildPlatform?: GuildPlatform
+  platformRoleData?: Record<string, string | boolean>
   index?: number
   isNew?: boolean
   roleId?: number
@@ -207,6 +263,7 @@ type Role = {
   id: number
   name: string
   logic: Logic
+  anyOfNum?: number
   members: string[]
   imageUrl?: string
   description?: string
@@ -216,6 +273,7 @@ type Role = {
   visibility?: Visibility
   hiddenRequirements?: boolean
   hiddenRewards?: boolean
+  position: number
 }
 
 type GuildPlatform = {
@@ -261,6 +319,9 @@ const supportedSocialLinks = [
 type SocialLinkKey = (typeof supportedSocialLinks)[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
 
+const guildTags = ["VERIFIED", "FEATURED"] as const
+type GuildTags = (typeof guildTags)[number]
+
 type GuildContact = {
   type: "EMAIL" | "TELEGRAM"
   contact: string
@@ -287,6 +348,8 @@ type Guild = {
   onboardingComplete: boolean
   featureFlags: FeatureFlag[]
   hiddenRoles?: boolean
+  requiredPlatforms?: PlatformName[]
+  tags: GuildTags[]
 }
 type GuildFormType = Partial<
   Pick<
@@ -300,6 +363,7 @@ type GuildFormType = Partial<
     | "theme"
     | "contacts"
     | "featureFlags"
+    | "tags"
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
@@ -378,6 +442,9 @@ export enum PlatformType {
   "GITHUB" = 3,
   "GOOGLE" = 4,
   "TWITTER" = 5,
+  // "STEAM" = 6,
+  "CONTRACT_CALL" = 7,
+  "TWITTER_V1" = 8,
 }
 
 type WalletConnectConnectionData = {
@@ -482,48 +549,102 @@ type OneOf<First, Second> = First | Second extends object
   ? (Without<First, Second> & Second) | (Without<Second, First> & First)
   : First | Second
 
+type GuildPinAttribute =
+  | {
+      trait_type: "type"
+      value: string
+    }
+  | {
+      trait_type: "guildId"
+      value: string
+    }
+  | {
+      trait_type: "userId"
+      value: string
+    }
+  | {
+      trait_type: "mintDate"
+      display_type: "date"
+      value: number
+    }
+  | {
+      trait_type: "actionDate"
+      display_type: "date"
+      value: number
+    }
+  | {
+      trait_type: "rank"
+      value: string
+    }
+
+type GuildPinMetadata = {
+  name: string
+  description: string
+  image: string
+  attributes: GuildPinAttribute[]
+}
+
+type LeaderboardPinData = {
+  tokenId: number
+  chainId: Chains
+  rank: number
+  tokenUri: string
+}
+
+type DetailedUserLeaderboardData = {
+  address: string
+  score: number
+  pins: LeaderboardPinData[]
+}
+
+export { ValidationMethod, Visibility, supportedSocialLinks }
 export type {
-  OneOf,
-  WalletConnectConnectionData,
-  DiscordServerData,
-  GuildAdmin,
-  Token,
-  DiscordError,
-  WalletError,
-  Rest,
-  CoingeckoToken,
-  Poap,
-  GitPoap,
-  PoapContract,
-  GuildPoap,
-  User,
-  NFT,
-  Role,
-  GuildPlatform,
-  GuildBase,
+  AddressConnectionProvider,
+  BaseUser,
   BrainCardData,
-  Guild,
-  SocialLinkKey,
-  SocialLinks,
-  Trait,
-  Requirement,
-  RequirementType,
-  RolePlatform,
-  ThemeMode,
-  Logic,
-  PlatformAccountDetails,
-  SelectOption,
-  GuildFormType,
+  CoingeckoToken,
   CreatePoapForm,
   CreatedPoapData,
-  PlatformName,
-  MonetizePoapForm,
-  RequestMintLinksForm,
+  DetailedUserLeaderboardData,
+  DiscordError,
+  DiscordServerData,
+  GitPoap,
   GoogleFile,
-  VoiceRequirement,
-  VoiceParticipationForm,
-  VoiceRequirementParams,
+  Guild,
+  GuildAdmin,
+  GuildBase,
+  GuildFormType,
+  GuildPinMetadata,
+  PlatformGuildData,
+  GuildPlatform,
+  GuildPoap,
+  GuildTags,
+  LeaderboardPinData,
+  Logic,
+  MonetizePoapForm,
+  NFT,
+  OneOf,
+  PlatformAccountDetails,
+  PlatformName,
+  Poap,
+  PoapContract,
   PoapEventDetails,
-  AddressConnectionProvider,
+  RequestMintLinksForm,
+  Requirement,
+  RequirementType,
+  Rest,
+  Role,
+  RolePlatform,
+  SelectOption,
+  SocialLinkKey,
+  SocialLinks,
+  ThemeMode,
+  Token,
+  Trait,
+  User,
+  VoiceParticipationForm,
+  VoiceRequirement,
+  VoiceRequirementParams,
+  WalletConnectConnectionData,
+  WalletError,
 }
-export { ValidationMethod, Visibility, supportedSocialLinks }

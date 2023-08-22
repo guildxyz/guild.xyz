@@ -1,10 +1,11 @@
 import {
   Box,
+  BoxProps,
   Container,
-  Heading,
   HStack,
-  useColorMode,
+  Heading,
   VStack,
+  useColorMode,
 } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
@@ -27,11 +28,13 @@ type Props = {
   imageUrl?: string
   ogTitle?: string
   title?: string
+  titlePostfix?: JSX.Element
   ogDescription?: string
   description?: JSX.Element
   textColor?: string
   action?: ReactNode | undefined
   background?: string
+  backgroundProps?: BoxProps
   backgroundImage?: string
   backgroundOffset?: number
   backButton?: BackButtonProps
@@ -43,11 +46,13 @@ const Layout = ({
   imageUrl,
   ogTitle,
   title,
+  titlePostfix,
   ogDescription,
   description,
   textColor,
   action,
   background,
+  backgroundProps,
   backgroundImage,
   backgroundOffset = 128,
   backButton,
@@ -73,6 +78,7 @@ const Layout = ({
     backgroundImage,
     childrenWrapper?.current,
     action,
+    backgroundOffset,
   ])
 
   const { colorMode } = useColorMode()
@@ -94,15 +100,17 @@ const Layout = ({
         position="relative"
         bgColor={colorMode === "light" ? "gray.100" : "gray.800"}
         bgGradient={
-          !background &&
-          `linear(${
-            colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
-          } 0px, var(--chakra-colors-gray-100) 700px)`
+          !background
+            ? `linear(${
+                colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
+              } 0px, var(--chakra-colors-gray-100) 700px)`
+            : undefined
         }
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
         display="flex"
         flexDir={"column"}
+        color="var(--chakra-colors-chakra-body-text)"
       >
         {(background || backgroundImage) && (
           <Box
@@ -111,10 +119,9 @@ const Layout = ({
             left={0}
             w="full"
             h={bgHeight}
-            background={backgroundImage ? "gray.900" : background}
-            opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
+            background={"gray.900"}
           >
-            {backgroundImage && (
+            {backgroundImage ? (
               <Image
                 src={backgroundImage}
                 alt="Guild background image"
@@ -122,6 +129,14 @@ const Layout = ({
                 objectFit="cover"
                 priority
                 style={{ filter: "brightness(30%)" }}
+              />
+            ) : (
+              <Box
+                w="full"
+                h="full"
+                background={background}
+                opacity={colorContext?.textColor === "primary.800" ? 1 : ".5"}
+                {...backgroundProps}
               />
             )}
           </Box>
@@ -149,34 +164,39 @@ const Layout = ({
               {backButton.text}
             </LinkButton>
           )}
-          <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
-            <HStack justify="space-between" w="full" spacing={3}>
-              <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
-                {image}
-                <Heading
-                  as="h1"
-                  fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
-                  fontFamily="display"
-                  color={textColor}
-                  wordBreak={"break-word"}
-                >
-                  {title}
-                </Heading>
+          {(image || title || description) && (
+            <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
+              <HStack justify="space-between" w="full" spacing={3}>
+                <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
+                  {image}
+                  <HStack gap={1}>
+                    <Heading
+                      as="h1"
+                      fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+                      fontFamily="display"
+                      color={textColor}
+                      wordBreak={"break-word"}
+                    >
+                      {title}
+                    </Heading>
+                    {titlePostfix}
+                  </HStack>
+                </HStack>
+                {action}
               </HStack>
 
-              {action}
-            </HStack>
-            {description && (
-              <Box
-                w="full"
-                fontWeight="semibold"
-                color={textColor}
-                mb="-2 !important"
-              >
-                {description}
-              </Box>
-            )}
-          </VStack>
+              {description && (
+                <Box
+                  w="full"
+                  fontWeight="semibold"
+                  color={textColor}
+                  mb="-2 !important"
+                >
+                  {description}
+                </Box>
+              )}
+            </VStack>
+          )}
           <Box ref={childrenWrapper}>{children}</Box>
         </Container>
 

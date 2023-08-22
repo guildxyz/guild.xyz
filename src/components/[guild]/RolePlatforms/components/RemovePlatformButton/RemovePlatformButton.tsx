@@ -1,6 +1,7 @@
 import { CloseButton, Tooltip, useDisclosure } from "@chakra-ui/react"
 import RemovePlatformAlert from "components/[guild]/RemovePlatformAlert"
-import { GuildPlatform } from "types"
+import platforms from "platforms/platforms"
+import { GuildPlatform, PlatformType } from "types"
 import useRemovePlatform from "./hooks/useRemovePlatform"
 
 type Props = {
@@ -24,7 +25,12 @@ const RemovePlatformButton = ({
           rounded="full"
           aria-label="Remove reward"
           zIndex="1"
-          onClick={onOpen}
+          onClick={
+            platforms[PlatformType[guildPlatform.platformId]]
+              .shouldShowKeepAccessesModal
+              ? onOpen
+              : () => onSubmit()
+          }
         />
       </Tooltip>
 

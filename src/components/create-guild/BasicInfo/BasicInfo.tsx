@@ -59,7 +59,7 @@ const BasicInfo = (): JSX.Element => {
               <Box flex="1">
                 <FormLabel>Logo and name</FormLabel>
                 <HStack alignItems="start">
-                  <IconSelector uploader={iconUploader} />
+                  <IconSelector uploader={iconUploader} minW={512} minH={512} />
                   <Name width={null} />
                 </HStack>
               </Box>

@@ -2,9 +2,9 @@ import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
-import { usePostHog } from "posthog-js/react"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
 import usePurchaseAsset from "../../hooks/usePurchaseAsset"
@@ -12,14 +12,14 @@ import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseButton = (): JSX.Element => {
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
   const { account, chainId } = useWeb3React()
   const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const {
-    data: { priceToSendInWei },
+    data: { maxPriceInWei },
     isValidating: isPriceLoading,
     error,
   } = usePrice()
@@ -34,9 +34,7 @@ const PurchaseButton = (): JSX.Element => {
   const { onSubmit, isLoading, estimateGasError } = usePurchaseAsset()
 
   const isSufficientAllowance =
-    priceToSendInWei && allowance
-      ? BigNumber.from(priceToSendInWei).lte(allowance)
-      : false
+    maxPriceInWei && allowance ? BigNumber.from(maxPriceInWei).lte(allowance) : false
 
   const {
     coinBalance,
@@ -48,11 +46,11 @@ const PurchaseButton = (): JSX.Element => {
     pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
 
   const isSufficientBalance =
-    priceToSendInWei &&
+    maxPriceInWei &&
     (coinBalance || tokenBalance) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gt(BigNumber.from(priceToSendInWei))
-      : tokenBalance?.gt(BigNumber.from(priceToSendInWei)))
+      ? coinBalance?.gte(BigNumber.from(maxPriceInWei))
+      : tokenBalance?.gte(BigNumber.from(maxPriceInWei)))
 
   const isDisabled =
     !account ||
@@ -78,7 +76,7 @@ const PurchaseButton = (): JSX.Element => {
 
   const onClick = () => {
     onSubmit()
-    posthog.capture("Click: PurchaseButton (GuildCheckout)", {
+    captureEvent("Click: PurchaseButton (GuildCheckout)", {
       guild: urlName,
     })
   }
@@ -92,7 +90,6 @@ const PurchaseButton = (): JSX.Element => {
       colorScheme={!isDisabled ? "blue" : "gray"}
       w="full"
       onClick={onClick}
-      data-dd-action-name="PurchaseButton (GuildCheckout)"
     >
       {errorMsg || "Purchase"}
     </Button>

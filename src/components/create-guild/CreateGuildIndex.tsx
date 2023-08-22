@@ -1,4 +1,4 @@
-import { Divider, Flex, HStack, Text } from "@chakra-ui/react"
+import { HStack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { CaretRight } from "phosphor-react"
@@ -12,39 +12,18 @@ const CreateGuildIndex = (): JSX.Element => {
 
   return (
     <>
-      <Text
-        colorScheme="gray"
-        fontSize={{ base: "sm", md: "lg" }}
-        fontWeight="semibold"
-      >
-        You can connect more platforms later
-      </Text>
-
       <PlatformsGrid onSelection={setPlatform} />
 
-      <HStack>
-        <Divider />
-        <Text
-          as="span"
-          fontWeight="bold"
-          fontSize="sm"
-          color="gray"
-          textTransform="uppercase"
-          minW="max-content"
-        >
+      <HStack w="full" justifyContent={"left"} pt={{ base: 4, md: 6 }}>
+        <Text fontWeight="medium" colorScheme="gray" opacity=".7">
           or
         </Text>
-        <Divider />
-      </HStack>
-
-      <Flex justifyContent="center">
         <Button
           rightIcon={<CaretRight />}
           variant="link"
           color="gray"
-          fontWeight="normal"
-          maxW="max-content"
-          data-dd-action-name="Create guild without platform"
+          fontWeight="medium"
+          iconSpacing="1.5"
           onClick={() => {
             setPlatform("DEFAULT")
             nextStep()
@@ -52,7 +31,7 @@ const CreateGuildIndex = (): JSX.Element => {
         >
           Create guild without platform
         </Button>
-      </Flex>
+      </HStack>
     </>
   )
 }

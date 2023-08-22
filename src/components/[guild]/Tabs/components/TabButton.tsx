@@ -1,46 +1,54 @@
-import { Box, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useRouter } from "next/router"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
+import { useIsTabsStuck } from "../Tabs"
 
 type Props = {
-  href: string
+  href?: string
   disabled?: boolean
   tooltipText?: string
+  isActive?: boolean
 } & Rest
 
 const TabButton = ({
   href,
-  disabled = false,
-  tooltipText = "Coming soon",
+  isActive: isActiveProp,
   children,
   ...rest
 }: PropsWithChildren<Props>): JSX.Element => {
+  const { isStuck } = useIsTabsStuck()
+  const { textColor, buttonColorScheme } = useThemeContext() ?? {
+    textColor: "white",
+    buttonColorScheme: "whiteAlpha",
+  }
+
   const router = useRouter()
   const path = router.asPath.split("?")[0]
-  const isActive = path?.split("#")?.[0] === href
+  const isActive =
+    typeof isActiveProp === "undefined"
+      ? path?.split("#")?.[0] === href
+      : isActiveProp
 
-  return !disabled ? (
-    <LinkButton
+  const Component = href ? LinkButton : Button
+
+  return (
+    <Component
       href={href}
-      colorScheme="gray"
+      colorScheme={"gray"}
+      {...(!isStuck && {
+        color: textColor,
+        colorScheme: buttonColorScheme,
+      })}
       variant="ghost"
       isActive={isActive}
       minW="max-content"
       {...rest}
     >
       {children}
-    </LinkButton>
-  ) : (
-    <Tooltip label={tooltipText} placement="bottom">
-      <Box>
-        <Button variant="ghost" isDisabled {...rest}>
-          {children}
-        </Button>
-      </Box>
-    </Tooltip>
+    </Component>
   )
 }
 

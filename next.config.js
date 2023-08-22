@@ -23,12 +23,10 @@ module.exports = {
         "@chakra-ui/anatomy": false,
         "@chakra-ui/react": false,
         "@chakra-ui/theme-tools": false,
-        "@datadog/browser-rum": false,
-        "@datadog/rum-react-integration": false,
         "@web3-react/coinbase-wallet": false,
         "@web3-react/core": false,
         "@web3-react/metamask": false,
-        "@web3-react/walletconnect": false,
+        "@web3-react/walletconnect-v2": false,
         "@ethersproject/keccak256": false,
         "chakra-react-select": false,
         "chakra-ui-steps": false,
@@ -36,7 +34,6 @@ module.exports = {
         stream: false,
         "crypto-addr-codec": false,
         "@ensdomains/address-encoder": false,
-        dotbit: false,
       }
     }
 
@@ -161,7 +158,7 @@ module.exports = {
       afterFiles: [
         {
           source: "/js/script.js",
-          destination: "https://stat.zgen.hu/js/plausible.js",
+          destination: "https://stat.zgen.hu/js/plausible.exclusions.js",
         },
         {
           source: "/api/event",
@@ -172,17 +169,6 @@ module.exports = {
           destination: "/api/sitemap.xml",
         },
         {
-          source: "/api/ddrum",
-          has: [
-            {
-              type: "query",
-              key: "ddforward",
-              value: "https://(?<ddforward>.*)",
-            },
-          ],
-          destination: "https://:ddforward",
-        },
-        {
           source: "/api/posthog/:path*",
           destination: "https://app.posthog.com/:path*",
         },
@@ -191,6 +177,17 @@ module.exports = {
   },
   async redirects() {
     return [
+      {
+        source: "/",
+        destination: "/explorer",
+        permanent: false,
+        has: [
+          {
+            type: "host",
+            value: "guild.xyz",
+          },
+        ],
+      },
       {
         source: "/community",
         destination:

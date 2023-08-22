@@ -14,6 +14,7 @@ import { GuildPoap, PoapContract, RequirementType } from "types"
 
 type Props = { guildPoap: GuildPoap; poapContract: PoapContract } & RequirementProps
 
+// LEGACY, new POAPs use the general PaymentRequirement
 const PoapPaymentRequirement = ({ guildPoap, poapContract, ...props }: Props) => {
   const { id, vaultId, chainId: vaultChainId, contract } = poapContract
 
@@ -28,7 +29,7 @@ const PoapPaymentRequirement = ({ guildPoap, poapContract, ...props }: Props) =>
 
   const requirement = {
     id,
-    type: "PAYMENT" as RequirementType,
+    type: "POAP_PAYMENT" as RequirementType,
     chain: Chains[vaultChainId] as Chain,
     address: contract,
     data: { id: vaultId },
@@ -42,7 +43,11 @@ const PoapPaymentRequirement = ({ guildPoap, poapContract, ...props }: Props) =>
     <RequirementProvider requirement={requirement}>
       <Requirement
         image={<Icon as={Coins} boxSize={6} />}
-        footer={isAdmin && <Withdraw poapId={guildPoap?.id} />}
+        footer={
+          isAdmin && (
+            <Withdraw poapId={guildPoap?.id} vaultId={requirement.data.id} />
+          )
+        }
         {...props}
         rightElement={props?.rightElement}
       >

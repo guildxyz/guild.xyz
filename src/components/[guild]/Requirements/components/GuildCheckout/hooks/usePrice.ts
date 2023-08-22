@@ -1,9 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
-import { useEffect, useState } from "react"
 import useSWR, { SWRResponse } from "swr"
-import { Requirement } from "types"
 import fetcher from "utils/fetcher"
 import {
   PURCHASABLE_REQUIREMENT_TYPES,
@@ -11,13 +9,13 @@ import {
 } from "utils/guildCheckout/constants"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 
-const fetchPrice = (
-  _: string,
-  guildId: number,
-  account: string,
-  requirement: Requirement,
-  sellAddress: string
-): Promise<FetchPriceResponse> =>
+const fetchPrice = ([
+  _,
+  guildId,
+  account,
+  requirement,
+  sellAddress,
+]): Promise<FetchPriceResponse> =>
   fetcher(`/api/fetchPrice`, {
     method: "POST",
     body: {
@@ -32,8 +30,6 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
   const { account } = useWeb3React()
   const { id } = useGuild()
   const { requirement, isOpen, pickedCurrency } = useGuildCheckoutContext()
-
-  const [fallbackData, setFallbackData] = useState<FetchPriceResponse>()
 
   const shouldFetch =
     purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain) &&
@@ -50,16 +46,12 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
       shouldRetryOnError: false,
       revalidateOnFocus: false,
       refreshInterval: 30000,
+      keepPreviousData: true,
     }
   )
 
-  useEffect(() => {
-    if (!data) return
-    setFallbackData(data)
-  }, [data])
-
   return {
-    data: data ?? fallbackData ?? ({} as FetchPriceResponse),
+    data: data ?? ({} as FetchPriceResponse),
     ...swrResponse,
   }
 }

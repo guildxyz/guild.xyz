@@ -12,14 +12,17 @@ const useGuild = (guildId?: string | number) => {
   const { keyPair } = useKeyPair()
   const { account } = useWeb3React()
 
-  const { data, mutate, isValidating } = useSWRWithOptionalAuth<Guild>(
-    id ? `/guild/${id}` : null
+  const { data, mutate, isLoading } = useSWRWithOptionalAuth<Guild>(
+    id ? `/v2/guilds/guild-page/${id}` : null,
+    undefined,
+    undefined,
+    false
   )
 
   return {
     ...data,
     isDetailed: !!keyPair && !!account && !!data,
-    isLoading: !data && isValidating,
+    isLoading,
     mutateGuild: mutate,
   }
 }

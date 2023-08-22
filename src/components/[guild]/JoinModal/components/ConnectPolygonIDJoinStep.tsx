@@ -34,13 +34,12 @@ const ConnectPolygonIDJoinStep = (): JSX.Element => {
         icon={<Img src="requirementLogos/polygonId_white.svg" width="1.5em" />}
         title="Connect PolygonID"
         buttonLabel={isConnected ? "Connected" : "Connect"}
-        datadogActionName="Connect PolygonID (JoinModal)"
         onClick={onOpen}
         isDisabled={!isActive && "Connect wallet first"}
       />
 
       <ConnectPolygonIDModal
-        type="POLYGON_ID_BASIC"
+        type="POLYGON_ID_BASIC_MAIN"
         data={{}}
         onClose={onClose}
         isOpen={isOpen}

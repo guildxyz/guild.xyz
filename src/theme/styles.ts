@@ -10,6 +10,9 @@ const styles = {
       "--fg-color-5": "var(--chakra-colors-gray-600) !important",
     },
 
+    ul: {
+      listStyle: "none",
+    },
     /**
      * TODO: we want smooth scrolling for anchor tags, but don"t want it for page
      * navigation (e.g. explorer to guild)
@@ -83,9 +86,61 @@ const styles = {
       fontFamily: "var(--chakra-fonts-body)",
       lineHeight: "var(--chakra-lineHeights-base)",
     },
-
     "#walletconnect-wrapper": {
       color: "black",
+    },
+
+    ".intercom-lightweight-app": {
+      zIndex: "1 !important",
+    },
+    /*
+      Hides the default reCaptcha badge. We do indicate reCaptcha usage in the WalletSelectorModal
+      https://stackoverflow.com/questions/44543157/how-to-hide-the-google-invisible-recaptcha-badge#answer-44543771
+    */
+    ".grecaptcha-badge": {
+      visibility: "hidden",
+    },
+    ".lexical-content-editable": {
+      resize: "vertical",
+      overflow: "auto",
+      padding: "0.5rem",
+      minHeight: "4rem",
+      backgroundColor: "var(--chakra-colors-blackAlpha-300)",
+      border: "1px solid transparent",
+      ":focus-visible": {
+        borderRadius: "inherit",
+        borderTopRadius: "none",
+        outline: "none",
+        border: "1px solid var(--chakra-colors-gray-500)",
+        boxShadow: "0 0 0 1px var(--chakra-colors-gray-500)",
+      },
+      h1: {
+        fontWeight: "bold",
+        fontSize: "var(--chakra-fontSizes-2xl)",
+      },
+      h2: {
+        fontWeight: "bold",
+        fontSize: "var(--chakra-fontSizes-lg)",
+      },
+      ul: {
+        marginLeft: "1rem",
+        listStyle: "disc",
+      },
+      ol: {
+        marginLeft: "1rem",
+        listStyle: "decimal",
+      },
+      blockquote: {
+        borderLeft: "2px",
+        paddingLeft: "1rem",
+        borderColor: "var(--chakra-colors-gray-500)",
+      },
+      a: {
+        color: "var(--chakra-colors-blue-500)",
+      },
+    },
+    ".chakra-ui-light .lexical-content-editable": {
+      backgroundColor: "var(--chakra-colors-white)",
     },
   }),
 }

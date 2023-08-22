@@ -1,10 +1,13 @@
-import { HStack, Text } from "@chakra-ui/react"
+import { HStack, Tag, Text } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import PurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/PurchaseRequirement"
+import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
+import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
+import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
 import { UseFormSetValue } from "react-hook-form"
@@ -34,12 +37,17 @@ const TokenRequirement = ({ setValueForBalancy, ...rest }: Props) => {
       }
       isImageLoading={isValidating}
       footer={
-        requirement?.type === "ERC20" && (
+        requirement?.type === "ERC20" ? (
           <HStack spacing="4">
-            <PurchaseRequirement />
+            <GuildCheckoutProvider>
+              <DynamicPurchaseRequirement />
+              <PurchaseTransactionStatusModal />
+            </GuildCheckoutProvider>
             <BlockExplorerUrl />
           </HStack>
-        )
+        ) : requirement?.type === "COIN" ? (
+          <Tag size="sm">{RPC[requirement.chain].chainName}</Tag>
+        ) : null
       }
       {...rest}
     >

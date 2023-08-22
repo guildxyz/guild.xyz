@@ -1,7 +1,7 @@
 import { initializeConnector, Web3ReactHooks } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 
-const initializeMetaMaskConnector = (): [MetaMask, Web3ReactHooks] => {
+const initializeMetaMaskConnector = (): [MetaMask, Web3ReactHooks, "metamask"] => {
   /**
    * In edge runtime, the initializeConnector won't work, so as a workaround we're
    * using a try-catch here and returning an array with undefined values. This won't
@@ -19,9 +19,9 @@ const initializeMetaMaskConnector = (): [MetaMask, Web3ReactHooks] => {
         })
     )
 
-    return [metaMask, hooks]
+    return [metaMask, hooks, "metamask"]
   } catch (_) {
-    return [undefined, undefined]
+    return [undefined, undefined, undefined]
   }
 }
 

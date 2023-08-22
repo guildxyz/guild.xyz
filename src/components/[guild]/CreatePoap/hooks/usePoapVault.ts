@@ -9,11 +9,7 @@ type GetVaultResponse = {
   collected: string
 }
 
-const fetchPoapVault = async (
-  _: string,
-  vaultId: number,
-  chainId: number
-): Promise<GetVaultResponse> =>
+const fetchPoapVault = async ([_, vaultId, chainId]): Promise<GetVaultResponse> =>
   fetcher(`/api/poap/get-poap-vault/${vaultId}/${chainId}`)
 
 const usePoapVault = (

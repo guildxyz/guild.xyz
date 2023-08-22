@@ -7,12 +7,13 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import Button from "components/common/Button"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
@@ -26,24 +27,31 @@ type Props = {
 
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { roles } = useGuild()
-  const { hasAccess, isLoading, data, error } = useAccess(roleId)
+  const role = roles.find((r) => r.id === roleId)
+  const { hasAccess, data, error, isValidating } = useAccess(roleId)
+  const accessedRequirementCount = data?.requirements?.filter(
+    (r) => r.access
+  )?.length
 
+  const { openAccountModal } = useWeb3ConnectionManager()
   const { isActive } = useWeb3React()
   const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
   const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")
 
-  const hasRequirementsWithErrors = data?.requirements?.some(
-    (r) => r.access === null
+  const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
+  const requirementIdsWithErrors =
+    data?.requirements?.filter((r) => r.access === null) ?? []
+  const requirementsWithErrors = requirements.filter((req) =>
+    requirementIdsWithErrors.includes(req.id)
   )
   const errors = useRequirementErrorConfig()
-  const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
-  const firstRequirementWithErrorFromConfig = requirements.find(
+  const firstRequirementWithErrorFromConfig = requirementsWithErrors.find(
     (req) => !!errors[req.type.split("_")[0]]
   )
   const errorTextFromConfig =
-    hasRequirementsWithErrors &&
+    requirementsWithErrors.length > 0 &&
     errors[firstRequirementWithErrorFromConfig?.type.split("_")[0]]
 
   if (!isActive || (hasAccess && !isMember))
@@ -101,7 +109,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       </HStack>
     )
 
-  if (isLoading)
+  if (isValidating)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
   if (errorTextFromConfig)
@@ -119,6 +127,8 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         colorScheme="orange"
         label="Reconnect needed to check access"
         icon={Warning}
+        onClick={() => openAccountModal()}
+        cursor="pointer"
       />
     )
 
@@ -126,8 +136,10 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     return (
       <AccessIndicatorUI
         colorScheme="blue"
-        label="Auth needed to check access"
+        label="Connect needed to check access"
         icon={LockSimple}
+        onClick={() => openAccountModal()}
+        cursor="pointer"
       />
     )
 
@@ -140,7 +152,17 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  return <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
+  return (
+    <AccessIndicatorUI
+      colorScheme="gray"
+      label={`No access${
+        role.logic === "ANY_OF" && typeof accessedRequirementCount === "number"
+          ? ` (${accessedRequirementCount}/${role.anyOfNum})`
+          : ""
+      }`}
+      icon={X}
+    />
+  )
 }
 
 export default AccessIndicator

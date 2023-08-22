@@ -13,6 +13,7 @@ import React, { PropsWithChildren } from "react"
 
 type Props = {
   title: string
+  titleRightElement?: JSX.Element
   buttonLabel: string | JSX.Element
   isRequired?: boolean
   isDisabled?: string
@@ -20,18 +21,17 @@ type Props = {
   colorScheme: string
   isDone: boolean
   addonButton?: JSX.Element
-  datadogActionName?: string
 } & Omit<ButtonProps, "isDisabled">
 
 const JoinStep = ({
   title,
+  titleRightElement,
   buttonLabel,
   isRequired,
   icon,
   colorScheme,
   isDone,
   addonButton,
-  datadogActionName,
   children,
   ...buttonProps
 }: PropsWithChildren<Props>) => {
@@ -50,16 +50,19 @@ const JoinStep = ({
             }
           : { bg: "blackAlpha.100", borderColor: "whiteAlpha.100" })}
       >
-        {isDone && <Icon as={Check} weight="bold" color={"white"} />}
+        {isDone && <Icon as={Check} weight="bold" color={"white"} boxSize="0.8em" />}
       </Circle>
-      <Text w="full" fontWeight={"bold"} noOfLines={1}>
-        {title}
-        {isRequired && (
-          <Text as="span" color={"red.300"}>
-            {` *`}
-          </Text>
-        )}
-      </Text>
+      <HStack w="full">
+        <Text fontWeight="bold" noOfLines={1}>
+          {title}
+          {isRequired && (
+            <Text as="span" color="red.300">
+              {` *`}
+            </Text>
+          )}
+        </Text>
+        {titleRightElement}
+      </HStack>
       <ButtonWrapper {...buttonWrapperProps}>
         <Tooltip
           isDisabled={!buttonProps.isDisabled}
@@ -75,7 +78,6 @@ const JoinStep = ({
             {...buttonProps}
             isDisabled={isDone || buttonProps.isDisabled}
             borderRightRadius={!!addonButton && 0}
-            data-dd-action-name={datadogActionName}
           >
             {buttonLabel}
           </Button>

@@ -1,7 +1,7 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react"
 import OnboardingMarker from "components/common/OnboardingMarker"
 import { GearSix } from "phosphor-react"
-import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
+import { useThemeContext } from "../ThemeContext"
 import EditGuildDrawer from "./EditGuildDrawer"
 
 const EditGuildButton = (): JSX.Element => {
@@ -11,7 +11,7 @@ const EditGuildButton = (): JSX.Element => {
     onClose: onEditGuildClose,
   } = useDisclosure()
 
-  const { localStep } = useOnboardingContext()
+  const { textColor, buttonColorScheme } = useThemeContext()
 
   return (
     <>
@@ -21,10 +21,8 @@ const EditGuildButton = (): JSX.Element => {
           aria-label="Edit Guild"
           minW={"44px"}
           rounded="full"
-          colorScheme="alpha"
-          data-dd-action-name={
-            localStep === null ? "Edit guild" : "Edit guild [onboarding]"
-          }
+          colorScheme={buttonColorScheme}
+          color={textColor}
           onClick={onEditGuildOpen}
         />
       </OnboardingMarker>

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import AuthRedirect from "components/AuthRedirect"
 import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
-import useDatadog from "components/_app/Datadog/useDatadog"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
@@ -36,45 +36,51 @@ const getDataFromState = (
 
 const OAuth = () => {
   const router = useRouter()
-  const { addDatadogAction, addDatadogError } = useDatadog()
+  const { captureEvent } = usePostHogContext()
   const errorToast = useShowErrorToast()
 
   const handleOauthResponse = async () => {
     if (!router.isReady || typeof window === "undefined") return null
 
     let params: OAuthResponse
-    if (typeof router.query?.state !== "string") {
+    if (
+      typeof router.query?.state !== "string" &&
+      typeof router.query?.oauth_token !== "string" &&
+      typeof router.query?.denied !== "string"
+    ) {
       const fragment = new URLSearchParams(window.location.hash.slice(1))
       const { state, ...rest } = Object.fromEntries(fragment.entries())
       params = { ...getDataFromState(state), ...rest }
     } else {
       const { state, ...rest } = router.query
-      params = { ...getDataFromState(state), ...rest }
+      params = { ...getDataFromState(state?.toString()), ...rest }
     }
 
-    addDatadogAction("OAuth - params", { params })
-
-    if (!params.csrfToken || !params.platformName) {
-      addDatadogAction("OAuth - No params found, or it is in invalid form", {
+    if (
+      !params.oauth_token &&
+      !params.denied &&
+      (!params.csrfToken || !params.platformName)
+    ) {
+      captureEvent("OAuth - No params found, or it is in invalid form", {
         params,
       })
       await router.push("/")
       return
     }
 
-    const localStorageInfoKey = `${params.platformName}_oauthinfo`
+    const localStorageInfoKey = `${params.platformName ?? "TWITTER_V1"}_oauthinfo`
     const localStorageInfo: OAuthLocalStorageInfo = JSON.parse(
       window.localStorage.getItem(localStorageInfoKey) ?? "{}"
     )
     window.localStorage.removeItem(localStorageInfoKey)
 
-    addDatadogAction("OAuth - localStorageInfo", { localStorageInfo })
-
     if (
+      !params.oauth_token &&
+      !params.denied &&
       !!localStorageInfo.csrfToken &&
       localStorageInfo.csrfToken !== params.csrfToken
     ) {
-      addDatadogError(`OAuth - Invalid CSRF token`, {
+      captureEvent(`OAuth - Invalid CSRF token`, {
         received: params.csrfToken,
         expected: localStorageInfo.csrfToken,
       })
@@ -83,7 +89,9 @@ const OAuth = () => {
       return
     }
 
-    const channel = new BroadcastChannel(params.csrfToken)
+    const channel = new BroadcastChannel(
+      !params.platformName ? "TWITTER_V1" : params.csrfToken
+    )
 
     const isMessageConfirmed = timeoutPromise(
       new Promise<void>((resolve) => {
@@ -92,15 +100,26 @@ const OAuth = () => {
       OAUTH_CONFIRMATION_TIMEOUT_MS
     )
       .then(() => true)
-      .catch(() => {
-        addDatadogAction(`OAuth - Message confirmation timed out`)
-        return false
-      })
+      .catch(() => false)
 
     let response: Message
-    if (params.error) {
+    if (params.denied) {
+      response = {
+        type: "OAUTH_ERROR",
+        data: {
+          error: "Rejected",
+          errorDescription: "Authorization request has been rejected",
+        },
+      }
+    } else if (params.error) {
       const { error, error_description: errorDescription } = params
-      response = { type: "OAUTH_ERROR", data: { error, errorDescription } }
+      response = {
+        type: "OAUTH_ERROR",
+        data: {
+          error: error ?? "Unknown error",
+          errorDescription: errorDescription ?? "Unknown error",
+        },
+      }
     } else {
       const { error, error_description, csrfToken, platformName, ...data } = params
       const { csrfToken: _csrfToken, from, ...infoRest } = localStorageInfo
@@ -116,7 +135,7 @@ const OAuth = () => {
       window.close()
     } else {
       localStorage.setItem(
-        `${params.platformName}_shouldConnect`,
+        `${params.platformName ?? "TWITTER_V1"}_shouldConnect`,
         JSON.stringify(response)
       )
       router.push(localStorageInfo.from)
@@ -126,9 +145,10 @@ const OAuth = () => {
   useEffect(() => {
     handleOauthResponse().catch((error) => {
       console.error(error)
-      addDatadogError("OAuth - Unexpected error", {
+      captureEvent("OAuth - Unexpected error", {
         error:
           error?.message ?? error?.toString?.() ?? JSON.stringify(error ?? null),
+        trace: error?.stack,
       })
       errorToast(`An unexpected error happened while connecting a platform`)
       router.push("/")

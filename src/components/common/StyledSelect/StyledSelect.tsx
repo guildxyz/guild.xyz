@@ -7,18 +7,19 @@ import {
   SelectInstance,
 } from "chakra-react-select"
 import { forwardRef, Ref } from "react"
+import { OneOf } from "types"
 import CustomClearIndicator from "./components/CustomClearIndicator"
 import CustomMenuList from "./components/CustomMenuList"
 import CustomSelectOption from "./components/CustomSelectOption"
 
-export type StyledSelectProps = (
-  | ({ isCreatable: true } & CreatableProps<any, any, any>)
-  | ({ isCreatable?: never } & Props)
-) & { as?: any }
+export type StyledSelectProps = OneOf<
+  { isCreatable: true; noResultText?: string } & CreatableProps<any, any, any>,
+  { noResultText?: string } & Props
+> & { as?: any }
 
 const StyledSelect = forwardRef(
   (
-    { isCreatable, ...props }: StyledSelectProps,
+    { isCreatable, noResultText, ...props }: StyledSelectProps,
     ref: Ref<SelectInstance<unknown, boolean, GroupBase<unknown>>>
   ): JSX.Element => {
     const SelectComponent = props.as ?? (isCreatable ? CreatableSelect : Select)
@@ -56,7 +57,8 @@ const StyledSelect = forwardRef(
         }}
         components={{
           Option: CustomSelectOption,
-          MenuList: CustomMenuList,
+          MenuList: (menuListProps) =>
+            CustomMenuList({ ...menuListProps, noResultText }),
           ClearIndicator: CustomClearIndicator,
           IndicatorSeparator: null,
           ...props.components,

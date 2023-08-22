@@ -8,6 +8,8 @@ import {
   HStack,
   Icon,
   IconButton,
+  Skeleton,
+  SkeletonCircle,
   Tag,
   Text,
   Tooltip,
@@ -17,41 +19,43 @@ import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
 import Image from "next/image"
 import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
-import { AddressConnectionProvider } from "types"
+import { AddressConnectionProvider, User } from "types"
 import shortenHex from "utils/shortenHex"
-import useDisconnect from "../hooks/useDisconnect"
+import { useDisconnectAddress } from "../hooks/useDisconnect"
 import PrimaryAddressTag from "./PrimaryAddressTag"
 
 type Props = {
-  address: string
+  addressData: User["addresses"][number]
 }
 
 const providerIcons: Record<AddressConnectionProvider, string> = {
   DELEGATE: "delegatecash.png",
 }
 
-const LinkedAddress = ({ address }: Props) => {
-  const { addressProviders, addresses } = useUser()
+const LinkedAddress = ({ addressData }: Props) => {
+  const { address, provider, isPrimary } = addressData ?? {}
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { onSubmit, isLoading, signLoadingText } = useDisconnect(onClose)
+  const { onSubmit, isLoading, signLoadingText } = useDisconnectAddress(onClose)
   const alertCancelRef = useRef()
 
   const removeAddress = () => onSubmit({ address })
 
-  const provider = addressProviders?.[address]
-
   return (
     <>
-      <HStack spacing={4} alignItems="center" w="full">
-        <Circle size={8}>
-          <GuildAvatar address={address} size={6} />
+      <HStack spacing={2} alignItems="center" w="full">
+        <Circle size={7}>
+          <GuildAvatar address={address} size={4} mt="-1" />
         </Circle>
-        <CopyableAddress address={address} decimals={5} fontSize="md" />
+        <CopyableAddress
+          address={address}
+          decimals={5}
+          fontSize="sm"
+          fontWeight="bold"
+        />
         {provider && providerIcons[provider] && (
           <Tooltip label="Delegate.cash" placement="top">
             <Tag>
@@ -64,7 +68,7 @@ const LinkedAddress = ({ address }: Props) => {
             </Tag>
           </Tooltip>
         )}
-        {addresses.indexOf(address) === 0 ? <PrimaryAddressTag size="sm" /> : null}
+        {isPrimary ? <PrimaryAddressTag size="sm" /> : null}
         <Tooltip label="Disconnect address" placement="top" hasArrow>
           <IconButton
             rounded="full"
@@ -112,5 +116,12 @@ const LinkedAddress = ({ address }: Props) => {
     </>
   )
 }
+
+export const LinkedAddressSkeleton = () => (
+  <HStack spacing={2} alignItems="center" w="full" py="0.5">
+    <SkeletonCircle boxSize={7} />
+    <Skeleton h="5" w="36" />
+  </HStack>
+)
 
 export default LinkedAddress

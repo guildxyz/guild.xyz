@@ -9,19 +9,29 @@ type Props = {
   colorScheme: string
   isConnected: string
   isDisabled?: string
+  isReconnect?: boolean
+  titleRightElement?: JSX.Element
 } & Omit<ButtonProps, "isDisabled">
 
 const ConnectAccount = ({
   account,
   isConnected,
   children,
+  isReconnect,
+  titleRightElement,
   ...rest
 }: PropsWithChildren<Props>) => (
   <JoinStep
-    isDone={!!isConnected}
-    title={isConnected ? `${account} connected` : `Connect ${account}`}
-    buttonLabel={isConnected ? isConnected : "Connect"}
-    datadogActionName={`Connect ${account} (JoinModal)`}
+    isDone={!isReconnect && !!isConnected}
+    title={
+      isReconnect
+        ? `Reconnect ${account}`
+        : isConnected
+        ? `${account} connected`
+        : `Connect ${account}`
+    }
+    titleRightElement={titleRightElement}
+    buttonLabel={isReconnect ? "Reconnect" : isConnected || "Connect"}
     {...rest}
   >
     {children}

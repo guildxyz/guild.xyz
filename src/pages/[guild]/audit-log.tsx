@@ -5,13 +5,14 @@ import AuditLogFiltersBar from "components/[guild]/audit-log/AuditLogFiltersBar"
 import AuditLogSkeleton from "components/[guild]/audit-log/AuditLogSkeleton"
 import useAuditLog from "components/[guild]/audit-log/hooks/useAuditLog"
 import useGuild from "components/[guild]/hooks/useGuild"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useRef } from "react"
 
 const AuditLog = (): JSX.Element => {
-  const { name } = useGuild()
+  const { name, urlName } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   // TODO: redirect if user is not an admin of the guild
@@ -38,7 +39,11 @@ const AuditLog = (): JSX.Element => {
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
     >
-      <Tabs />
+      <Tabs>
+        <TabButton href={`/${urlName}`}>Home</TabButton>
+        <TabButton href={`/${urlName}/audit-log`}>Audit log</TabButton>
+      </Tabs>
+
       <AuditLogFiltersBar />
 
       <Section ref={listRef} title="Actions" mt={8}>

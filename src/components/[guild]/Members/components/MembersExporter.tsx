@@ -4,7 +4,6 @@ import {
   AlertIcon,
   AlertTitle,
   ButtonGroup,
-  CheckboxGroup,
   Flex,
   Icon,
   ModalBody,
@@ -23,7 +22,7 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
-import RoleOptionCard from "components/[guild]/RoleOptionCard"
+import RoleSelector from "components/[guild]/RoleSelector"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Check, Copy, DownloadSimple, Export } from "phosphor-react"
 import { useRef } from "react"
@@ -73,7 +72,6 @@ const MembersExporter = (): JSX.Element => {
         variant="ghost"
         leftIcon={<Icon as={Export} />}
         size="sm"
-        data-dd-action-name="Export members"
         onClick={onOpen}
       >
         {label}
@@ -105,19 +103,11 @@ const MembersExporter = (): JSX.Element => {
                 </Stack>
               </Alert>
             ) : (
-              <CheckboxGroup onChange={onChange} colorScheme="primary">
-                <Stack>
-                  {roles?.map((role) => (
-                    <RoleOptionCard
-                      key={role.id}
-                      role={{
-                        ...role,
-                        members: data.find((r) => r.roleId === role.id)?.members,
-                      }}
-                    />
-                  ))}
-                </Stack>
-              </CheckboxGroup>
+              <RoleSelector
+                roles={roles}
+                onChange={onChange}
+                colorScheme="primary"
+              />
             )}
           </ModalBody>
           {data?.length && (

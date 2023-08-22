@@ -22,8 +22,8 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
   const id = guildId ?? guild?.id
 
   const submit = (signedValidation: SignedValdation) =>
-    fetcher(`/guild/${id}`, {
-      method: "PATCH",
+    fetcher(`/v2/guilds/${id}`, {
+      method: "PUT",
       ...signedValidation,
     })
 
@@ -31,7 +31,9 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
     forcePrompt: true,
     onSuccess: (newGuild) => {
       if (onSuccess) onSuccess()
-      guild.mutateGuild()
+      guild.mutateGuild((prev) => ({ ...prev, ...newGuild }), {
+        revalidate: false,
+      })
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)

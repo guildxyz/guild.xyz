@@ -1,17 +1,17 @@
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDatadog from "components/_app/Datadog/useDatadog"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import useContract from "hooks/useContract"
 import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
-import { usePostHog } from "posthog-js/react"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
-import FEE_COLLECTOR_ABI from "static/abis/newFeeCollectorAbi.json"
+import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
+import { mutate } from "swr"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import processWalletError from "utils/processWalletError"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
@@ -58,15 +58,14 @@ const payFee = async (
 }
 
 const usePayFee = () => {
-  const { addDatadogAction, addDatadogError } = useDatadog()
-  const posthog = usePostHog()
-  const { urlName } = useGuild()
+  const { captureEvent } = usePostHogContext()
+  const { id, urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { chainId } = useWeb3React()
+  const { chainId, account } = useWeb3React()
 
   const { requirement, pickedCurrency } = useGuildCheckoutContext()
 
@@ -79,7 +78,7 @@ const usePayFee = () => {
   const {
     data: { token, fee, multiplePayments },
     isValidating: isVaultLoading,
-    mutate,
+    mutate: mutateVault,
   } = useVault(requirement.address, requirement.data.id, requirement.chain)
 
   const { data: hasPaid, isValidating: isHasPaidLoading } = useHasPaid(
@@ -103,7 +102,7 @@ const usePayFee = () => {
   const isSufficientBalance =
     fee &&
     (coinBalance || tokenBalance) &&
-    (pickedCurrencyIsNative ? coinBalance?.gt(fee) : tokenBalance?.gt(fee))
+    (pickedCurrencyIsNative ? coinBalance?.gte(fee) : tokenBalance?.gte(fee))
 
   const { allowance } = useAllowance(pickedCurrency, requirement.address)
 
@@ -116,13 +115,17 @@ const usePayFee = () => {
     isSufficientBalance &&
     (ADDRESS_REGEX.test(pickedCurrency) ? allowance && fee.lte(allowance) : true)
 
-  const { estimatedGasFee, estimatedGasFeeInUSD, estimateGasError } =
-    useEstimateGasFee(
-      requirement?.id?.toString(),
-      shouldEstimateGas ? feeCollectorContract : null,
-      "payFee",
-      [requirement.data.id, extraParam]
-    )
+  const {
+    estimatedGasFee,
+    estimatedGasFeeInUSD,
+    estimateGasError,
+    isEstimateGasLoading,
+  } = useEstimateGasFee(
+    requirement?.id?.toString(),
+    shouldEstimateGas ? feeCollectorContract : null,
+    "payFee",
+    [requirement.data.id, extraParam]
+  )
 
   const payFeeTransaction = (vaultId: number) =>
     payFee(feeCollectorContract, [vaultId, extraParam])
@@ -130,33 +133,40 @@ const usePayFee = () => {
   const useSubmitData = useSubmitTransaction<number>(payFeeTransaction, {
     onError: (error) => {
       showErrorToast(error)
-      addDatadogError("general payFee error (GuildCheckout)")
-      addDatadogError("payFee pre-call error (GuildCheckout)", {
+      captureEvent("Buy pass error (GuildCheckout)", postHogOptions)
+      captureEvent("payFee pre-call error (GuildCheckout)", {
+        ...postHogOptions,
         error,
       })
-      posthog.capture("Buy pass error (GuildCheckout)", postHogOptions)
-      posthog.capture("payFee pre-call error (GuildCheckout)", postHogOptions)
     },
     onSuccess: (receipt) => {
       if (receipt.status !== 1) {
         showErrorToast("Transaction failed")
-        addDatadogError("general payFee error (GuildCheckout)")
-        addDatadogError("payFee error (GuildCheckout)", {
+        captureEvent("Buy pass error (GuildCheckout)", {
+          ...postHogOptions,
           receipt,
         })
-        posthog.capture("Buy pass error (GuildCheckout)", postHogOptions)
-        posthog.capture("payFee error (GuildCheckout)", postHogOptions)
+        captureEvent("payFee error (GuildCheckout)", {
+          ...postHogOptions,
+          receipt,
+        })
         return
       }
 
-      addDatadogAction("successful payFee (GuildCheckout)")
-      posthog.capture("Bought pass (GuildCheckout)", postHogOptions)
+      captureEvent("Bought pass (GuildCheckout)", postHogOptions)
       toast({
         status: "success",
         title: "Successful payment",
       })
 
-      mutate()
+      mutateVault()
+
+      // temporary until POAPs are real roles
+      if (requirement?.poapId)
+        mutate(
+          `/assets/poap/checkUserPoapEligibility/${requirement.poapId}/${account}`
+        )
+      else mutate(`/guild/access/${id}/${account}`)
     },
   })
 
@@ -166,6 +176,7 @@ const usePayFee = () => {
     estimatedGasFee,
     estimatedGasFeeInUSD,
     estimateGasError,
+    isEstimateGasLoading,
   }
 }
 

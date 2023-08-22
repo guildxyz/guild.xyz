@@ -13,7 +13,11 @@ const GalaxyRequirement = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement image={campaign?.thumbnail} isImageLoading={isLoading} {...props}>
-      <Text as="span">{`Participate in the `}</Text>
+      <Text as="span">
+        {requirement.type === "GALAXY_PARTICIPATION"
+          ? "Participate in the "
+          : "Hold a(n) "}
+      </Text>
       {!campaign || isLoading ? (
         <DataBlock
           isLoading={isLoading}
@@ -34,7 +38,11 @@ const GalaxyRequirement = (props: RequirementProps): JSX.Element => {
           {campaign.name}
         </Link>
       )}
-      <Text as="span">{` Galxe campaign`}</Text>
+      <Text as="span">
+        {requirement.type === "GALAXY_PARTICIPATION"
+          ? " Galxe campaign"
+          : " Galxe NFT"}
+      </Text>
     </Requirement>
   )
 }

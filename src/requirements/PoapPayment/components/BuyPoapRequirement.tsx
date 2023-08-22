@@ -15,21 +15,21 @@ import {
 } from "@chakra-ui/react"
 import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
-import usePoapAllowance from "components/[guild]/claim-poap/hooks/usePoapAllowance"
-import usePoapPayFee from "components/[guild]/claim-poap/hooks/usePoapPayFee"
 import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import AlphaTag from "components/[guild]/Requirements/components/GuildCheckout/components/AlphaTag"
-import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
-import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import {
   GuildCheckoutProvider,
   useGuildCheckoutContext,
 } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import PaymentMethodButtons from "components/[guild]/Requirements/components/GuildCheckout/components/PaymentMethodButtons"
+import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
+import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
+import usePoapAllowance from "components/[guild]/claim-poap/hooks/usePoapAllowance"
+import usePoapPayFee from "components/[guild]/claim-poap/hooks/usePoapPayFee"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coin } from "phosphor-react"
@@ -46,7 +46,7 @@ type Props = { guildPoap: GuildPoap; poapContract: PoapContract } & ButtonProps
  * will switch to general payment requirement once POAP is a real reward
  */
 const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
-  const { id, vaultId, chainId: vaultChainId, contract } = poapContract
+  const { vaultId, chainId: vaultChainId } = poapContract
   const { account, chainId } = useWeb3React()
 
   const { poap } = usePoapById(guildPoap?.poapIdentifier?.toString())
@@ -60,7 +60,7 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
   const allowance = usePoapAllowance(vaultData?.token, vaultChainId)
 
   const {
-    data: { symbol, decimals },
+    data: { symbol },
     isValidating: isTokenDataLoading,
   } = useTokenData(Chains[vaultChainId], vaultData?.token)
 
@@ -103,7 +103,6 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
         borderRadius="lg"
         fontWeight="medium"
         onClick={onOpen}
-        data-dd-action-name="Pay (POAP)"
         {...rest}
       >
         Pay
@@ -161,7 +160,7 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
                   <ConnectWalletButton />
                 ) : (
                   <>
-                    <SwitchNetworkButton />
+                    <SwitchNetworkButton targetChainId={vaultChainId} />
 
                     <Button
                       size="lg"
@@ -171,7 +170,6 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
                       loadingText={payFeeLoadingText}
                       w="full"
                       onClick={onPayFeeSubmit}
-                      data-dd-action-name="BuyPoapButton"
                     >
                       {payButtonLabel}
                     </Button>

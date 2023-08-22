@@ -10,21 +10,22 @@ import {
   ModalOverlay,
   Spinner,
   Text,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useAccess from "components/[guild]/hooks/useAccess"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
-import useAccess from "components/[guild]/hooks/useAccess"
-import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
-import { RequirementType } from "requirements"
+import { useEffect } from "react"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 
 const ConnectPolygonID = (props: ButtonProps) => {
-  const { id, roleId, type, data } = useRequirementContext()
+  const { id, roleId, type, data, chain } = useRequirementContext()
   const { onOpen, onClose, isOpen } = useDisclosure()
 
   const { data: roleAccess } = useAccess(roleId, isOpen && { refreshInterval: 5000 })
@@ -33,11 +34,12 @@ const ConnectPolygonID = (props: ButtonProps) => {
     (err) => err.requirementId === id
   )?.errorType
 
-  if (
-    (type !== "POLYGON_ID_QUERY" && type !== "POLYGON_ID_BASIC") ||
-    !["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(errorType)
-  )
-    return null
+  // close modal (and stop revalidating access) on successful connect
+  useEffect(() => {
+    if (!errorType) onClose()
+  }, [errorType])
+
+  if (!errorType) return null
 
   return (
     <>
@@ -57,7 +59,7 @@ const ConnectPolygonID = (props: ButtonProps) => {
       <ConnectPolygonIDModal
         onClose={onClose}
         isOpen={isOpen}
-        type={type}
+        type={(chain === "POLYGON" ? `${type}_MAIN` : type) as any}
         data={data}
       ></ConnectPolygonIDModal>
     </>
@@ -67,7 +69,11 @@ const ConnectPolygonID = (props: ButtonProps) => {
 type ConnectPolygonIDModalProps = {
   isOpen: boolean
   onClose: () => void
-  type: Extract<RequirementType, "POLYGON_ID_QUERY" | "POLYGON_ID_BASIC">
+  type:
+    | "POLYGON_ID_QUERY"
+    | "POLYGON_ID_BASIC"
+    | "POLYGON_ID_QUERY_MAIN"
+    | "POLYGON_ID_BASIC_MAIN"
   data: {
     maxAmount?: number
     query?: Record<string, any>
@@ -93,8 +99,11 @@ const ConnectPolygonIDModal = ({
     fetcherWithSign
   )
 
+  const qrSize = useBreakpointValue({ base: 300, md: 400 })
+
   return (
     <Modal
+      size={"lg"}
       {...{
         isOpen,
         onClose,
@@ -118,7 +127,7 @@ const ConnectPolygonIDModal = ({
             ) : (
               <>
                 <Box borderRadius={"md"} borderWidth={3} overflow={"hidden"}>
-                  <QRCodeSVG value={JSON.stringify(response)} size={300} />
+                  <QRCodeSVG value={JSON.stringify(response)} size={qrSize} />
                 </Box>
                 <Button
                   size="xs"

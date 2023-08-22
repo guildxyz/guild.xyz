@@ -9,18 +9,18 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import ColorCard from "components/common/ColorCard"
-import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import SetVisibility from "components/[guild]/SetVisibility"
+import ColorCard from "components/common/ColorCard"
+import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import Image from "next/image"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
 
 type Props = {
-  label: string
+  label: string | JSX.Element
   title: string
-  description: string | JSX.Element
+  description?: string | JSX.Element
   image: string | JSX.Element
   colorScheme: ChakraProps["color"]
   actionRow?: JSX.Element
@@ -82,7 +82,7 @@ const RewardCard = ({
           <Stack spacing={0}>
             <HStack>
               <Skeleton isLoaded={!!title}>
-                <Text fontWeight={"bold"}>{title || "Loading platform..."}</Text>
+                <Text fontWeight={"bold"}>{title || "Loading reward..."}</Text>
               </Skeleton>
               {rolePlatform && (
                 <SetVisibility
@@ -92,7 +92,7 @@ const RewardCard = ({
               )}
             </HStack>
             {description && (
-              <Text as="span" color="gray" fontSize="sm">
+              <Text as="span" color="gray" fontSize="sm" noOfLines={3}>
                 {description}
               </Text>
             )}

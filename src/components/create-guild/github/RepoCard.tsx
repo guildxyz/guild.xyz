@@ -1,9 +1,10 @@
 import { HStack, Skeleton, Text, VStack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import Link from "components/common/Link"
-import useGuildByPlatformId from "hooks/useGuildByPlatformId"
 import NextLink from "next/link"
+import usePlatformUsageInfo from "platforms/hooks/usePlatformUsageInfo"
 
 const RepoCard = ({
   onSelection,
@@ -15,62 +16,61 @@ const RepoCard = ({
   repositoryName: string
   description?: string
 }) => {
-  const { id, isLoading, urlName } = useGuildByPlatformId(
-    "GITHUB",
-    encodeURIComponent(platformGuildId)
-  )
+  const { isAlreadyInUse, isUsedInCurrentGuild, guildUrlName, isValidating } =
+    usePlatformUsageInfo("GITHUB", encodeURIComponent(platformGuildId))
 
   const RepoName = () => (
     <Link href={`https://github.com/${platformGuildId}`} isExternal>
-      <Text fontWeight={"bold"}>{platformGuildId}</Text>
+      <Text fontWeight="bold" noOfLines={1}>
+        {platformGuildId}
+      </Text>
     </Link>
   )
 
+  if (isUsedInCurrentGuild) return null
+
   return (
-    <Card padding={4}>
-      <HStack justifyContent={"space-between"} w="full" h="full">
-        {description?.length > 0 ? (
-          <VStack spacing={0} alignItems="start">
+    <CardMotionWrapper>
+      <Card padding={4} h="full">
+        <HStack justifyContent={"space-between"} w="full" h="full">
+          {description?.length > 0 ? (
+            <VStack spacing={0} alignItems="start">
+              <RepoName />
+
+              <Text
+                color="gray"
+                maxW={"3xs"}
+                textOverflow="ellipsis"
+                overflow={"hidden"}
+                whiteSpace={"nowrap"}
+              >
+                {description}
+              </Text>
+            </VStack>
+          ) : (
             <RepoName />
+          )}
 
-            <Text
-              color="gray"
-              maxW={"3xs"}
-              textOverflow="ellipsis"
-              overflow={"hidden"}
-              whiteSpace={"nowrap"}
-            >
-              {description}
-            </Text>
-          </VStack>
-        ) : (
-          <RepoName />
-        )}
-
-        {isLoading ? (
-          <Button isLoading />
-        ) : id ? (
-          <NextLink href={`/${urlName}`} passHref>
+          {isValidating ? (
+            <Button isLoading />
+          ) : isAlreadyInUse ? (
+            <NextLink href={`/${guildUrlName}`} passHref>
+              <Button as="a" colorScheme="gray" minW="max-content">
+                Go to guild
+              </Button>
+            </NextLink>
+          ) : (
             <Button
-              as="a"
-              colorScheme="gray"
-              data-dd-action-name="Go to guild (github repo setup)"
+              flexShrink={0}
+              colorScheme="GITHUB"
+              onClick={() => onSelection(platformGuildId)}
             >
-              Go to guild
+              Gate repo
             </Button>
-          </NextLink>
-        ) : (
-          <Button
-            flexShrink={0}
-            colorScheme="GITHUB"
-            onClick={() => onSelection(platformGuildId)}
-            data-dd-action-name="Gate repo (github setup)"
-          >
-            Gate repo
-          </Button>
-        )}
-      </HStack>
-    </Card>
+          )}
+        </HStack>
+      </Card>
+    </CardMotionWrapper>
   )
 }
 

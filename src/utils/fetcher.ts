@@ -1,4 +1,3 @@
-import { datadogRum } from "@datadog/browser-rum"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
@@ -16,7 +15,6 @@ const fetcher = async (
   { body, validation, signedPayload, ...init }: Record<string, any> = {}
 ) => {
   const isGuildApiCall = !resource.startsWith("http") && !resource.startsWith("/api")
-  const isServerless = resource.startsWith("/api")
 
   const api = isGuildApiCall ? process.env.NEXT_PUBLIC_API : ""
 
@@ -59,55 +57,46 @@ const fetcher = async (
     }
   }
 
-  if (isGuildApiCall || isServerless)
-    datadogRum?.addAction(`FETCH ${resource}`, {
-      url: `${api}${resource}`,
-      options,
-      userAddress: resource.includes("checkPubKey")
-        ? body.address?.toLowerCase()
-        : undefined,
-    })
+  const endpoint = `${api}${resource}`.replace("/v1/v2/", "/v2/")
 
-  return fetch(`${api}${resource}`, options)
-    .catch((err) => {
-      datadogRum?.addError("Failed to fetch", {
-        url: `${api}${resource}`,
-        error: err?.message || err?.toString?.() || err,
-      })
-      throw err
-    })
-    .then(async (response: Response) => {
-      const res = await response.json?.()
+  return fetch(endpoint, options).then(async (response: Response) => {
+    const res = await response.json?.()
 
-      if (!response.ok) {
-        if (isGuildApiCall) {
-          const error = res.errors?.[0]
-          const errorMsg = error
-            ? `${error.msg}${error.param ? ` : ${error.param}` : ""}`
-            : res
-
-          datadogRum?.addError(
-            !error && resource.startsWith("/guild/access")
-              ? "Access check error(s)"
-              : "FETCH ERROR",
-            {
-              url: `${api}${resource}`,
-              response: errorMsg,
-            }
-          )
-
-          const correlationId = response.headers.get("X-Correlation-ID")
-          if (correlationId) pushToIntercomSetting("correlationId", correlationId)
-
-          return Promise.reject(errorMsg)
-        }
-
-        return Promise.reject(res)
+    if (!response.ok) {
+      if (
+        res?.message === "Invalid or expired timestamp!" ||
+        res?.message ===
+          "Invalid timestamp! The creation of timestamp too far in future!"
+      ) {
+        window.localStorage.setItem("shouldFetchTimestamp", "true")
+        location?.reload()
       }
 
-      return res
-    })
+      if (isGuildApiCall) {
+        const error = res.errors?.[0]
+        const errorMsg = error
+          ? `${error.msg}${error.param ? ` : ${error.param}` : ""}`
+          : res
+
+        const correlationId = response.headers.get("X-Correlation-ID")
+        if (correlationId) pushToIntercomSetting("correlationId", correlationId)
+
+        return Promise.reject(errorMsg)
+      }
+
+      return Promise.reject(res)
+    }
+
+    return res
+  })
 }
+
+/**
+ * In case of multiple parameters, SWR passes them as a single array now, so we
+ * introduced this middleware function that spreads it for the original fetcher
+ */
+const fetcherForSWR = async (props: string | [string, Record<string, any>]) =>
+  typeof props === "string" ? fetcher(props) : fetcher(...props)
 
 const fetcherWithSign = async (
   signProps: Omit<SignProps, "payload" | "forcePrompt"> & {
@@ -130,8 +119,9 @@ const useFetcherWithSign = () => {
   const { keyPair } = useKeyPair()
   const timeInaccuracy = useTimeInaccuracy()
 
-  return (resource: string, { signOptions, ...options }: Record<string, any> = {}) =>
-    fetcherWithSign(
+  return (props) => {
+    const [resource, { signOptions, ...options }] = props
+    return fetcherWithSign(
       {
         address: account,
         chainId: chainId.toString(),
@@ -143,7 +133,8 @@ const useFetcherWithSign = () => {
       resource,
       options
     )
+  }
 }
 
-export { fetcherWithSign, useFetcherWithSign }
+export { fetcherForSWR, fetcherWithSign, useFetcherWithSign }
 export default fetcher

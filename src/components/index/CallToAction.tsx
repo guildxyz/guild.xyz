@@ -47,7 +47,7 @@ const CallToAction = (): JSX.Element => {
         fontSize={{ base: "3xl", md: "4xl", lg: "6xl" }}
         textAlign="center"
       >
-        Start gating your <br />
+        Guild your <br />
         community today for free
       </Heading>
       <LandingButton

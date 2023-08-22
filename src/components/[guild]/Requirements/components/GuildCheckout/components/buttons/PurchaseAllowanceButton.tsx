@@ -4,16 +4,16 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
-import { usePostHog } from "posthog-js/react"
 import usePrice from "../../hooks/usePrice"
 import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const PurchaseAllowanceButton = (): JSX.Element => {
-  const posthog = usePostHog()
+  const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
   const { pickedCurrency, requirement } = useGuildCheckoutContext()
@@ -31,7 +31,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
 
   const {
-    data: { priceToSendInWei },
+    data: { maxPriceInWei },
     isValidating: isPriceLoading,
   } = usePrice()
 
@@ -47,13 +47,11 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   } = useAllowance(pickedCurrency, tokenBuyerContractData[Chains[chainId]]?.address)
 
   const isEnoughAllowance =
-    priceToSendInWei && allowance
-      ? BigNumber.from(priceToSendInWei).lte(allowance)
-      : false
+    maxPriceInWei && allowance ? BigNumber.from(maxPriceInWei).lte(allowance) : false
 
   const onClick = () => {
     onSubmit()
-    posthog.capture("Click: PurchaseAllowanceButton (GuildCheckout)", {
+    captureEvent("Click: PurchaseAllowanceButton (GuildCheckout)", {
       guild: urlName,
     })
   }
@@ -97,7 +95,6 @@ const PurchaseAllowanceButton = (): JSX.Element => {
             </Tooltip>
           )
         }
-        data-dd-action-name="PurchaseAllowanceButton (GuildCheckout)"
       >
         {allowanceError
           ? "Couldn't fetch allowance"

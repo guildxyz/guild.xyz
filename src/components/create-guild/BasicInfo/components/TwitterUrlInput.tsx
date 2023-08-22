@@ -1,14 +1,11 @@
 import { FormControl, Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import SocialIcon from "components/[guild]/SocialIcon"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 
 const TwitterUrlInput = (): JSX.Element => {
-  const { addDatadogAction } = useDatadog()
-
   const {
     control,
     register,
@@ -22,11 +19,6 @@ const TwitterUrlInput = (): JSX.Element => {
     if (!dirtyFields.socialLinks?.TWITTER) return
     setValue("roles.1.requirements.0.data.id", value?.split("/").slice(-1)[0])
   }, [dirtyFields, value])
-
-  useEffect(() => {
-    if (!value) return
-    addDatadogAction("Typed in Twitter social link (basic info)")
-  }, [value])
 
   return (
     <FormControl isInvalid={!!errors?.socialLinks?.TWITTER} isRequired>

@@ -41,11 +41,13 @@ const Hero = (): JSX.Element => {
         sx={{
           transform: "translateZ(-1px) scale(1.5)",
         }}
+        pointerEvents={"none"}
       />
       <Box
         position="absolute"
         inset={0}
         bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
+        pointerEvents={"none"}
       />
       <Flex
         position="relative"
@@ -82,6 +84,7 @@ const Hero = (): JSX.Element => {
               marginBottom: 24,
               height: logoSize,
               width: logoSize,
+              color: "white",
             }}
           />
         </Box>
@@ -93,8 +96,7 @@ const Hero = (): JSX.Element => {
           lineHeight="95%"
           textAlign="center"
         >
-          Build your <br />
-          tokenized Guild
+          Requirements, roles, rewards
         </Heading>
         <Text
           mb={12}

@@ -29,14 +29,23 @@ import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion
 import useDebouncedState from "hooks/useDebouncedState"
 import useToast from "hooks/useToast"
 import { ArrowLeft, CaretRight } from "phosphor-react"
-import { FC, forwardRef, useEffect, useRef, useState } from "react"
+import {
+  Dispatch,
+  FC,
+  forwardRef,
+  LegacyRef,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
-import { Visibility } from "types"
+import REQUIREMENTS, { REQUIREMENTS_DATA, RequirementType } from "requirements"
+import { Requirement, Visibility } from "types"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
-const GENERAL_REQUIREMENTS_COUNT = 7
+const GENERAL_REQUIREMENTS_COUNT = 8
 const general = REQUIREMENTS_DATA.slice(1, GENERAL_REQUIREMENTS_COUNT + 1)
 const integrations = REQUIREMENTS_DATA.slice(GENERAL_REQUIREMENTS_COUNT + 1)
 
@@ -46,18 +55,20 @@ Object.values(REQUIREMENTS).forEach((a: any) => a.formComponent?.render?.preload
 const TRANSITION_DURATION_MS = 200
 const HOME_MAXHEIGHT = "550px"
 
-const AddRequirement = ({ onAdd }): JSX.Element => {
+type AddRequirementProps = { onAdd: (req: Requirement) => void }
+
+const AddRequirement = ({ onAdd }: AddRequirementProps): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [onCloseAttemptToast, setOnCloseAttemptToast] = useState()
   const toast = useToast()
-  const [selectedType, setSelectedType] = useState<string>()
+  const [selectedType, setSelectedType] = useState<RequirementType>()
   const [height, setHeight] = useState("auto")
   const addCardRef = useRef()
   const homeRef = useRef(null)
   const formRef = useRef(null)
 
-  const handleClose = () => {
-    if (onCloseAttemptToast)
+  const handleClose = (forceClose = false) => {
+    if (onCloseAttemptToast && !forceClose)
       return toast({ status: "warning", title: onCloseAttemptToast })
 
     onClose()
@@ -91,7 +102,12 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
   return (
     <>
       <CardMotionWrapper>
-        <AddCard ref={addCardRef} title="Add requirement" onClick={onOpen} />
+        <AddCard
+          ref={addCardRef}
+          title="Add requirement"
+          onClick={onOpen}
+          data-test="add-requirement-button"
+        />
       </CardMotionWrapper>
       <Modal
         isOpen={isOpen}
@@ -100,7 +116,7 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
         finalFocusRef={addCardRef}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent data-test="add-requirement-modal">
           <ModalCloseButton />
           <ModalHeader>
             <HStack>
@@ -150,8 +166,23 @@ const AddRequirement = ({ onAdd }): JSX.Element => {
   )
 }
 
+type AddRequirementFormProps = {
+  onAdd: (req: Requirement) => void
+  handleClose: (forceClose?: boolean) => void
+  selectedType?: RequirementType
+  setOnCloseAttemptToast: Dispatch<SetStateAction<string | boolean>>
+}
+
 const AddRequirementForm = forwardRef(
-  ({ onAdd, handleClose, selectedType, setOnCloseAttemptToast }: any, ref: any) => {
+  (
+    {
+      onAdd,
+      handleClose,
+      selectedType,
+      setOnCloseAttemptToast,
+    }: AddRequirementFormProps,
+    ref: LegacyRef<HTMLDivElement>
+  ) => {
     const FormComponent = REQUIREMENTS[selectedType].formComponent
 
     const methods = useForm({ mode: "all" })
@@ -162,13 +193,13 @@ const AddRequirementForm = forwardRef(
       if (!isPresent) setTimeout(safeToRemove, TRANSITION_DURATION_MS)
     }, [isPresent])
 
-    const onSubmit = methods.handleSubmit((data) => {
+    const onSubmit = methods.handleSubmit((data: Requirement) => {
       onAdd({
         type: selectedType,
         visibility: roleVisibility,
         ...data,
       })
-      handleClose()
+      handleClose(true)
     })
 
     return (

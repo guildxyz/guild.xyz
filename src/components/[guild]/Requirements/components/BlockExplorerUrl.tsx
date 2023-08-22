@@ -20,9 +20,12 @@ const BlockExplorerUrl = ({
 
   if (type === "COIN" || addressProp === NULL_ADDRESS || !blockExplorer) return null
 
+  // explorer.zksync.io doesn't support the /token path
+  const path = (chainProp ?? chain) === "ZKSYNC_ERA" ? "address" : "token"
+
   return (
     <RequirementLinkButton
-      href={`${blockExplorer}/token/${addressProp ?? address}`}
+      href={`${blockExplorer}/${path}/${addressProp ?? address}`}
       imageUrl={RPC[chainProp ?? chain]?.blockExplorerIcons[colorMode]}
     >
       View on explorer

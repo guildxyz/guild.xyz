@@ -12,14 +12,11 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager/Web3ConnectionManager"
 import useKeyPair from "hooks/useKeyPair"
 import { ArrowSquareOut } from "phosphor-react"
 
 const DelegateCashButton = (): JSX.Element => {
-  const { addDatadogAction } = useDatadog()
-
   const { account, isActive: isAnyConnectorActive } = useWeb3React()
   const { ready } = useKeyPair()
 
@@ -31,10 +28,7 @@ const DelegateCashButton = (): JSX.Element => {
   if (account && ready && isAnyConnectorActive) return null
 
   return (
-    <Popover
-      trigger="hover"
-      onOpen={() => addDatadogAction("hover Delegate.cash button")}
-    >
+    <Popover trigger="hover">
       <PopoverTrigger>
         <Box mb="4" tabIndex={0}>
           <Button
@@ -62,12 +56,7 @@ const DelegateCashButton = (): JSX.Element => {
       <PopoverContent w="150px">
         <PopoverArrow />
         <PopoverBody>
-          <Link
-            href="https://delegate.cash"
-            isExternal
-            fontWeight={"semibold"}
-            onClick={() => addDatadogAction("view Delegate.cash website")}
-          >
+          <Link href="https://delegate.cash" isExternal fontWeight={"semibold"}>
             View website
             <Icon as={ArrowSquareOut} ml="1" />
           </Link>

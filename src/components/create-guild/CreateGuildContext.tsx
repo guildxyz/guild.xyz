@@ -1,4 +1,5 @@
-import { useSteps } from "chakra-ui-steps"
+import { useSteps } from "@chakra-ui/react"
+import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import {
   createContext,
   Dispatch,
@@ -9,7 +10,7 @@ import {
   useState,
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { GuildFormType, PlatformName as BasePlatformName } from "types"
+import { PlatformName as BasePlatformName, GuildFormType } from "types"
 import capitalize from "utils/capitalize"
 import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
@@ -21,7 +22,8 @@ type PlatformName = BasePlatformName | "DEFAULT"
 type TemplateType = "BASIC" | "GROWTH"
 
 type Step = {
-  label: string
+  title: string
+  label?: string
   description?: string
   content: JSX.Element
 }
@@ -32,7 +34,6 @@ const CreateGuildContext = createContext<{
   steps: Step[]
   prevStep: () => void
   nextStep: () => void
-  setStep: (step: number) => void
   activeStep: number
   platform?: PlatformName
   setPlatform: Dispatch<SetStateAction<PlatformName>>
@@ -90,10 +91,6 @@ const CreateGuildProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
   const [platform, setPlatform] = useState<PlatformName>(null)
-
-  const { prevStep, nextStep, setStep, activeStep } = useSteps({
-    initialStep: 0,
-  })
 
   const methods = useForm<GuildFormType>({
     mode: "all",
@@ -176,7 +173,11 @@ const CreateGuildProvider = ({
               },
             },
           ],
-          rolePlatforms,
+          rolePlatforms:
+            platforms[platform]?.asRewardRestriction ===
+            PlatformAsRewardRestrictions.MULTIPLE_ROLES
+              ? rolePlatforms
+              : undefined,
         },
       ] as any[],
     },
@@ -186,24 +187,35 @@ const CreateGuildProvider = ({
 
   const steps: Step[] = [
     {
-      label: "Choose platform",
-      description: `${
-        platform === "DEFAULT"
+      title: "Choose platform",
+      label: `${
+        !platform
+          ? "You can connect more later"
+          : platform === "DEFAULT"
           ? "Without platform"
-          : capitalize(platform?.toLowerCase() ?? "")
+          : platforms[platform]?.name ?? ""
       }${platform !== "DEFAULT" && guildName ? ` - ${guildName}` : ""}`,
       content: <CreateGuildIndex />,
     },
     {
-      label: "Choose template",
-      description: capitalize(template?.toLowerCase() ?? ""),
+      title: "Choose role template",
+      label: capitalize(template?.toLowerCase() ?? ""),
       content: <ChooseTemplate />,
     },
     {
-      label: "Basic information",
+      title: "Basic information",
       content: <BasicInfo />,
     },
   ]
+
+  const {
+    goToPrevious: prevStep,
+    goToNext: nextStep,
+    activeStep,
+  } = useSteps({
+    index: 0,
+    count: steps.length,
+  })
 
   useEffect(() => {
     if (typeof window !== "undefined")
@@ -222,7 +234,6 @@ const CreateGuildProvider = ({
         steps,
         prevStep,
         nextStep,
-        setStep,
         activeStep,
         platform,
         setPlatform,

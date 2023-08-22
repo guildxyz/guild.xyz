@@ -2,18 +2,32 @@ import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Poap } from "types"
 
-export const usePoaps = (): { poaps: Array<Poap>; isLoading: boolean } => {
-  const { isValidating, data } = useSWRImmutable("/assets/poap")
+export const usePoaps = (
+  search = ""
+): { poaps: Array<Poap>; isLoading: boolean } => {
+  const { isLoading, data } = useSWRImmutable(
+    search.length > 0 ? `/assets/poap?search=${search}` : null
+  )
 
-  return { isLoading: isValidating, poaps: data }
+  return {
+    isLoading,
+    poaps: data
+      ? data.map((poap) => ({ ...poap, image_url: `${poap.image_url}?size=small` }))
+      : undefined,
+  }
 }
 
 export const usePoap = (
   fancyId: string
 ): { poap: Poap; isLoading: boolean; mutatePoap: KeyedMutator<any>; error: any } => {
-  const { isValidating, data, mutate, error } = useSWRImmutable<Poap>(
+  const { isLoading, data, mutate, error } = useSWRImmutable<Poap>(
     fancyId ? `/assets/poap/${fancyId}` : null
   )
 
-  return { isLoading: isValidating, poap: data, mutatePoap: mutate, error }
+  return {
+    isLoading,
+    poap: data ? { ...data, image_url: `${data.image_url}?size=small` } : undefined,
+    mutatePoap: mutate,
+    error,
+  }
 }

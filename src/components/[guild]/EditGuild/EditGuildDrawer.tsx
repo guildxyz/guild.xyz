@@ -40,12 +40,13 @@ import useUser from "../hooks/useUser"
 import LeaveButton from "../LeaveButton"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
-import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
 import SocialLinks from "./components/SocialLinks"
+import TagManager from "./components/TagManager"
 import useEditGuild from "./hooks/useEditGuild"
+import useEditTags from "./hooks/useEditTags"
 
 type Props = {
   isOpen: boolean
@@ -67,12 +68,12 @@ const EditGuildDrawer = ({
     showMembers,
     admins,
     urlName,
-    guildPlatforms,
     hideFromExplorer,
     socialLinks,
     contacts,
     isDetailed,
     featureFlags,
+    tags: savedTags,
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
@@ -81,20 +82,29 @@ const EditGuildDrawer = ({
     name,
     imageUrl,
     description,
-    theme: theme ?? {},
+    theme: theme
+      ? {
+          backgroundCss: theme?.backgroundCss,
+          backgroundImage: theme?.backgroundImage,
+          color: theme?.color,
+          mode: theme?.mode,
+        }
+      : {},
     showMembers,
-    admins: admins?.flatMap((admin) => admin.address) ?? [],
+    admins: admins ?? [],
     urlName,
     hideFromExplorer,
     contacts,
     socialLinks,
-    guildPlatforms,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
+    tags: savedTags,
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
     defaultValues,
   })
+
+  const { onSubmit: onTagsSubmit } = useEditTags()
 
   // We'll only receive this info on client-side, so we're setting the default value of this field in a useEffect
   useEffect(() => {
@@ -118,8 +128,6 @@ const EditGuildDrawer = ({
 
   const {
     localThemeColor,
-    setLocalThemeMode,
-    localThemeMode,
     setLocalThemeColor,
     localBackgroundImage,
     setLocalBackgroundImage,
@@ -136,10 +144,8 @@ const EditGuildDrawer = ({
   } = useDisclosure()
 
   const onCloseAndClear = () => {
-    const themeMode = theme?.mode
     const themeColor = theme?.color
     const backgroundImage = theme?.backgroundImage
-    if (themeMode !== localThemeMode) setLocalThemeMode(themeMode)
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     if (backgroundImage !== localBackgroundImage)
       setLocalBackgroundImage(backgroundImage)
@@ -153,7 +159,7 @@ const EditGuildDrawer = ({
       methods.setValue(
         "imageUrl",
         `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        { shouldTouch: true }
+        { shouldTouch: true, shouldDirty: true }
       )
     },
     onError: () => {
@@ -167,7 +173,8 @@ const EditGuildDrawer = ({
     onSuccess: ({ IpfsHash }) => {
       methods.setValue(
         "theme.backgroundImage",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        { shouldDirty: true }
       )
     },
     onError: () => {
@@ -176,7 +183,12 @@ const EditGuildDrawer = ({
   })
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    methods.handleSubmit(onSubmit),
+    () => {
+      methods.handleSubmit((data) => {
+        onSubmit({ ...data, tags: undefined })
+        onTagsSubmit(data.tags)
+      })()
+    },
     backgroundUploader.isUploading || iconUploader.isUploading
   )
 
@@ -206,7 +218,7 @@ const EditGuildDrawer = ({
                     beforeDelete={() => methods.reset(defaultValues)}
                   />
                 ) : (
-                  <LeaveButton />
+                  <LeaveButton disableColoring />
                 )}
               </DrawerHeader>
               <VStack spacing={10} alignItems="start">
@@ -219,7 +231,11 @@ const EditGuildDrawer = ({
                     <Box>
                       <FormLabel>Logo and name</FormLabel>
                       <HStack spacing={2} alignItems="start">
-                        <IconSelector uploader={iconUploader} />
+                        <IconSelector
+                          uploader={iconUploader}
+                          minW={512}
+                          minH={512}
+                        />
                         <Name />
                       </HStack>
                     </Box>
@@ -234,19 +250,9 @@ const EditGuildDrawer = ({
                 </Section>
 
                 <Section title="Appearance">
-                  <Stack
-                    direction={{ base: "column", md: "row" }}
-                    justifyContent={"space-between"}
-                    spacing="5"
-                    sx={{
-                      "> *": {
-                        flex: "1 0",
-                      },
-                    }}
-                  >
+                  <Stack direction={{ base: "column", md: "row" }} spacing="5">
                     <ColorPicker fieldName="theme.color" />
                     <BackgroundImageUploader uploader={backgroundUploader} />
-                    <ColorModePicker fieldName="theme.mode" />
                   </Stack>
                 </Section>
 
@@ -268,7 +274,9 @@ const EditGuildDrawer = ({
                 {isSuperAdmin && (
                   <>
                     <Divider />
-
+                    <Section title="Tag manager" spacing="4">
+                      <TagManager />
+                    </Section>
                     <Section title="Enabled features" spacing="4">
                       <DynamicFeatureFlags />
                     </Section>

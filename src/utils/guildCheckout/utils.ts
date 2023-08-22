@@ -46,8 +46,8 @@ const generateGetAssetsParams = (
     return undefined
 
   const {
-    priceToSendInWei,
-    guildFeeInWei: rawGuildFeeInWei,
+    maxPriceInWei,
+    maxGuildFeeInWei: rawMaxGuildFeeInWei,
     buyAmountInWei,
     source,
     path,
@@ -57,16 +57,16 @@ const generateGetAssetsParams = (
   if (
     !guildId ||
     !account ||
-    !priceToSendInWei ||
-    !rawGuildFeeInWei ||
+    !maxPriceInWei ||
+    !rawMaxGuildFeeInWei ||
     !buyAmountInWei ||
     !source ||
     (!path && !tokenAddressPath)
   )
     return undefined
 
-  const amountIn = BigNumber.from(priceToSendInWei)
-  const guildFeeInWei = BigNumber.from(rawGuildFeeInWei)
+  const amountIn = BigNumber.from(maxPriceInWei)
+  const guildFeeInWei = BigNumber.from(rawMaxGuildFeeInWei)
   const amountInWithFee = amountIn.add(guildFeeInWei)
   const amountOut = BigNumber.from(buyAmountInWei)
 

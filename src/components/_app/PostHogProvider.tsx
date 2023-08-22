@@ -1,28 +1,10 @@
-import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import { posthog } from "posthog-js"
 import {
   PostHogProvider as DefaultPostHogProvider,
   usePostHog,
 } from "posthog-js/react"
-import { PropsWithChildren, useEffect } from "react"
-
-const PostHogProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
-  const posthogFromHook = usePostHog()
-
-  const { account } = useWeb3React()
-  const { id } = useUser()
-
-  useEffect(() => {
-    if (!posthogFromHook || !account || !id) return
-
-    posthogFromHook.identify(id.toString(), {
-      address: account.toLowerCase(),
-    })
-  }, [account, id, posthogFromHook])
-
-  return <>{children}</>
-}
+import { PropsWithChildren, createContext, useContext } from "react"
 
 if (typeof window !== "undefined") {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
@@ -43,10 +25,43 @@ if (typeof window !== "undefined") {
   })
 }
 
-const PostHogWrapper = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
+const PostHogContext = createContext<{
+  captureEvent: (event: string, options?: Record<string, any>) => void
+}>({
+  captureEvent: () => {},
+})
+
+const CustomPostHogProvider = ({
+  children,
+}: PropsWithChildren<unknown>): JSX.Element => {
+  const { id, addresses } = useUser()
+  const ph = usePostHog()
+
+  return (
+    <PostHogContext.Provider
+      value={{
+        captureEvent: (event, options) =>
+          ph.capture(event, {
+            userId: id,
+            userAddress:
+              typeof addresses?.[0] === "string"
+                ? addresses?.[0]
+                : addresses?.[0]?.address,
+            ...options,
+          }),
+      }}
+    >
+      {children}
+    </PostHogContext.Provider>
+  )
+}
+
+const PostHogProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
   <DefaultPostHogProvider client={posthog}>
-    <PostHogProvider>{children}</PostHogProvider>
+    <CustomPostHogProvider>{children}</CustomPostHogProvider>
   </DefaultPostHogProvider>
 )
 
-export default PostHogWrapper
+const usePostHogContext = () => useContext(PostHogContext)
+
+export { PostHogProvider, usePostHogContext }

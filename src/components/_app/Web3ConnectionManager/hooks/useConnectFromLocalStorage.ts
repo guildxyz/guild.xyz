@@ -1,7 +1,7 @@
 import useUser from "components/[guild]/hooks/useUser"
 import { useConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
-import useDatadog from "components/_app/Datadog/useDatadog"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useKeyPair from "hooks/useKeyPair"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
@@ -9,11 +9,11 @@ import { useEffect } from "react"
 
 const useConnectFromLocalStorage = () => {
   const { keyPair, isValid } = useKeyPair()
-  const { addDatadogError } = useDatadog()
+  const { captureEvent } = usePostHogContext()
   const toast = useToast()
   const { onSubmit } = useConnect(() => {
     toast({ status: "success", title: "Success", description: "Platform connected" })
-  })
+  }, true)
   const { platformUsers } = useUser()
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const useConnectFromLocalStorage = () => {
             description:
               data.data.errorDescription || `Failed to connect ${platformName}`,
           })
-          addDatadogError("OAuth error from localStorage data", data.data)
+          captureEvent("OAuth error from localStorage data", { data: data.data })
         }
       }
     })

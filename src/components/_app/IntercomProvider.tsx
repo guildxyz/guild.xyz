@@ -13,7 +13,9 @@ const IntercomContext = createContext<{
   triggerChat: () => {},
 })
 
-export const addIntercomSettings = (newData: Record<string, string | number>) => {
+export const addIntercomSettings = (
+  newData: Record<string, string | number | boolean>
+) => {
   if (typeof window === "undefined" || !newData) return
   const windowAsObject = window as Record<string, any>
 
@@ -59,12 +61,12 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
 
   const { cache } = useSWRConfig()
 
-  const memberships = useMemberships()
+  const { memberships } = useMemberships()
 
   useEffect(() => {
     if (!cache || !account || !user || !memberships) return
 
-    const guilds: GuildBase[] = cache.get("/guild?order=members")?.[0] ?? []
+    const guilds: GuildBase[] = cache.get("/v2/guilds?")?.[0] ?? []
 
     const connectedPlatforms = user.platformUsers
       ?.map((pu) => pu.platformName)

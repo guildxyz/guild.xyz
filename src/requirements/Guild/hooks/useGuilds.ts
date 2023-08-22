@@ -3,8 +3,13 @@ import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
 import fetcher from "utils/fetcher"
 
-const fetchGuilds = (_: string): Promise<SelectOption<number>[]> =>
-  fetcher("/guild?sort=members")
+const fetchGuilds = ([_, search]): Promise<SelectOption<number>[]> => {
+  const searchParams = new URLSearchParams({
+    sort: "members",
+    search: search ?? "",
+  }).toString()
+
+  return fetcher(`/v2/guilds?${searchParams}`)
     .then((list) =>
       list.map((guild) => ({
         img: guild.imageUrl,
@@ -14,8 +19,9 @@ const fetchGuilds = (_: string): Promise<SelectOption<number>[]> =>
       }))
     )
     .catch((_) => [])
+}
 
-const useGuilds = (): SWRResponse<SelectOption<number>[]> =>
-  useSWRImmutable("guildsOptions", fetchGuilds)
+const useGuilds = (search?: string): SWRResponse<SelectOption<number>[]> =>
+  useSWRImmutable(["guildsOptions", search], fetchGuilds)
 
 export default useGuilds

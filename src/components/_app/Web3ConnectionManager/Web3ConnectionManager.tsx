@@ -1,21 +1,22 @@
 import { useDisclosure } from "@chakra-ui/react"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
-import { WalletConnect } from "@web3-react/walletconnect"
-import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
+import { WalletConnect } from "@web3-react/walletconnect-v2"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import requestNetworkChangeHandler from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
-import { Chains, RPC } from "connectors"
+import { Chains, RPC, getConnectorName } from "connectors"
 import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import {
-  createContext,
   PropsWithChildren,
+  createContext,
   useContext,
   useEffect,
   useState,
 } from "react"
+import { PlatformName } from "types"
+import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
 import useEagerConnect from "./hooks/useEagerConnect"
@@ -39,6 +40,12 @@ const Web3Connection = createContext({
   isDelegateConnection: false,
   setIsDelegateConnection: (_: boolean) => {},
   isNetworkChangeInProgress: false,
+  showPlatformMergeAlert: (
+    _addressOrDomain: string,
+    _platformName: PlatformName
+  ) => {},
+  addressLinkParams: { userId: null as number, address: "" },
+  setAddressLinkParams: (_: { userId: number; address: string }) => {},
 })
 
 const Web3ConnectionManager = ({
@@ -46,6 +53,12 @@ const Web3ConnectionManager = ({
 }: PropsWithChildren<any>): JSX.Element => {
   const { isActive, connector } = useWeb3React()
   const router = useRouter()
+
+  useEffect(() => {
+    if (!connector || !isActive) return
+    const connectorName = getConnectorName(connector)
+    window.localStorage.setItem("connector", connectorName)
+  }, [connector, isActive])
 
   useContractWalletInfoToast()
   useConnectFromLocalStorage()
@@ -65,6 +78,18 @@ const Web3ConnectionManager = ({
     onOpen: openAccountModal,
     onClose: closeAccountModal,
   } = useDisclosure()
+  const {
+    isOpen: isPlatformMergeAlertOpen,
+    onOpen: openPlatformMergeAlert,
+    onClose: closePlatformMergeAlert,
+  } = useDisclosure()
+  const [accountMergeAddress, setAccountMergeAddress] = useState<string>("")
+  const [accountMergePlatformName, setAccountMergePlatformName] =
+    useState<PlatformName>()
+  const [addressLinkParams, setAddressLinkParams] = useState<{
+    userId: number
+    address: string
+  }>()
 
   const [isDelegateConnection, setIsDelegateConnection] = useState<boolean>(false)
 
@@ -102,9 +127,19 @@ const Web3ConnectionManager = ({
     }
   }
 
+  const showPlatformMergeAlert = (
+    addressOrDomain: string,
+    platformName: PlatformName
+  ) => {
+    setAccountMergeAddress(addressOrDomain)
+    setAccountMergePlatformName(platformName)
+    openPlatformMergeAlert()
+  }
+
   return (
     <Web3Connection.Provider
       value={{
+        showPlatformMergeAlert,
         isWalletSelectorModalOpen,
         openWalletSelectorModal,
         closeWalletSelectorModal,
@@ -119,6 +154,8 @@ const Web3ConnectionManager = ({
         isDelegateConnection,
         setIsDelegateConnection,
         isNetworkChangeInProgress,
+        addressLinkParams,
+        setAddressLinkParams,
       }}
     >
       {children}
@@ -128,7 +165,12 @@ const Web3ConnectionManager = ({
         onClose={closeWalletSelectorModal}
       />
       <NetworkModal isOpen={isNetworkModalOpen} onClose={closeNetworkModal} />
-      <AccountModal isOpen={isAccountModalOpen} onClose={closeAccountModal} />
+      <PlatformMergeErrorAlert
+        onClose={closePlatformMergeAlert}
+        isOpen={isPlatformMergeAlertOpen}
+        addressOrDomain={accountMergeAddress}
+        platformName={accountMergePlatformName}
+      />
     </Web3Connection.Provider>
   )
 }

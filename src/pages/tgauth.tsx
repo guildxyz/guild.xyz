@@ -1,6 +1,5 @@
 import { Center } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import useDatadog from "components/_app/Datadog/useDatadog"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
 import Script from "next/script"
@@ -33,8 +32,6 @@ type WindowTelegram = {
 const TGAuth = () => {
   const router = useRouter()
 
-  const { addDatadogAction, addDatadogError } = useDatadog()
-
   const auth = () =>
     new Promise<boolean>((resolve, reject) => {
       try {
@@ -43,10 +40,8 @@ const TGAuth = () => {
         )?.Telegram
         const telegramAuth = windowTelegram.Login?.auth
 
-        if (typeof telegramAuth !== "function") {
-          addDatadogError("Telegram login widget error.", { windowTelegram })
+        if (typeof telegramAuth !== "function")
           reject("Telegram login widget error.")
-        }
 
         telegramAuth(
           {
@@ -56,7 +51,6 @@ const TGAuth = () => {
           },
           (data) => {
             if (data === false) {
-              addDatadogAction("TG_AUTH_ERROR")
               window.opener?.postMessage(
                 {
                   type: "TG_AUTH_ERROR",
@@ -70,7 +64,6 @@ const TGAuth = () => {
               )
               reject()
             } else {
-              addDatadogAction("TG_AUTH_SUCCESS", { data })
               window.opener?.postMessage(
                 {
                   type: "TG_AUTH_SUCCESS",
@@ -83,7 +76,6 @@ const TGAuth = () => {
           }
         )
       } catch (tgAuthErr) {
-        addDatadogError("tgauth:catch", { error: tgAuthErr })
         window.opener.postMessage(
           {
             type: "TG_AUTH_ERROR",
@@ -96,7 +88,7 @@ const TGAuth = () => {
         )
         reject()
       }
-    })
+    }).finally(() => window.close())
 
   const { isLoading, onSubmit } = useSubmit(auth)
 

@@ -1,12 +1,4 @@
-import {
-  Divider,
-  HStack,
-  Icon,
-  Skeleton,
-  Stack,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react"
+import { HStack, Icon, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
@@ -14,6 +6,7 @@ import { Info, Question } from "phosphor-react"
 import { GUILD_FEE_PERCENTAGE } from "utils/guildCheckout/constants"
 import usePrice from "../hooks/usePrice"
 import usePurchaseAsset from "../hooks/usePurchaseAsset"
+import FeesTable from "./FeesTable"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 import PriceFallback from "./PriceFallback"
 
@@ -27,11 +20,12 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
   const {
     data: {
       guildBaseFeeInSellToken,
-      guildFeeInSellToken,
+      estimatedGuildFeeInSellToken,
+      estimatedGuildFeeInUSD,
+      maxGuildFeeInSellToken,
       estimatedPriceInSellToken,
       estimatedPriceInUSD,
-      guildFeeInUSD,
-      priceInSellToken,
+      maxPriceInSellToken,
     },
     isValidating,
     error,
@@ -44,95 +38,56 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
     isLoading: isEstimateGasLoading,
   } = usePurchaseAsset()
 
-  const nativeCurrency = RPC[requirement.chain].nativeCurrency
   const estimatedGasInFloat = estimatedGasFee
-    ? parseFloat(formatUnits(estimatedGasFee, nativeCurrency.decimals))
-    : undefined
+    ? parseFloat(
+        formatUnits(estimatedGasFee, RPC[requirement.chain].nativeCurrency.decimals)
+      )
+    : null
 
-  const isNativeCurrency = pickedCurrency === nativeCurrency.symbol
-  const calculatedGasFee = isNativeCurrency ? estimatedGasInFloat ?? 0 : 0
+  const isNativeCurrency =
+    pickedCurrency === RPC[requirement.chain].nativeCurrency.symbol
 
-  // TODO: we'll need to rewrite this logic once we'll support payments with ERC20 tokens!
-  const feeSum = Number(
-    ((calculatedGasFee ?? 0) + (guildFeeInSellToken ?? 0))?.toFixed(3)
-  )
+  // 1% + base fee on the estimated price
+  const guildFee = Number((estimatedGuildFeeInSellToken ?? 0)?.toFixed(3))
+
   const estimatedPriceSum = Number(
     (
-      estimatedPriceInSellToken +
-      (calculatedGasFee ?? 0) +
-      (guildFeeInSellToken ?? 0)
+      (estimatedPriceInSellToken ?? 0) +
+      (estimatedGuildFeeInSellToken ?? 0) +
+      (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
     )?.toFixed(3)
   )
   const maxPriceSum = Number(
     (
-      priceInSellToken +
-      (calculatedGasFee ?? 0) +
-      (guildFeeInSellToken ?? 0)
+      (maxPriceInSellToken ?? 0) +
+      (maxGuildFeeInSellToken ?? 0) +
+      (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
     )?.toFixed(3)
   )
 
   return (
-    <Stack spacing={3}>
-      <Stack divider={<Divider />}>
-        <HStack justifyContent="space-between">
-          <HStack>
-            <Text as="span" colorScheme="gray">
-              Fee
-            </Text>
-            <Tooltip
-              label={`${GUILD_FEE_PERCENTAGE * 100}%${
-                guildBaseFeeInSellToken
-                  ? ` + ${guildBaseFeeInSellToken} ${symbol}`
-                  : ""
-              } Guild fee + protocol fee + estimated network fee`}
-              placement="top"
-              hasArrow
-            >
-              <Icon as={Info} color="gray" />
-            </Tooltip>
-          </HStack>
-          <Skeleton
-            isLoaded={Boolean(
-              error ||
-                estimateGasError ||
-                (pickedCurrency && !isEstimateGasLoading && guildFeeInSellToken)
-            )}
-          >
-            <Text as="span" colorScheme="gray">
-              {error || (!estimatedGasFee && !guildFeeInSellToken) ? (
-                "Couldn't calculate"
-              ) : pickedCurrency ? (
-                <>
-                  {feeSum < 0.001 ? "< 0.001 " : `${feeSum} `}
-                  {symbol}
-                </>
-              ) : (
-                "Choose currency"
-              )}
-            </Text>
-          </Skeleton>
-        </HStack>
-
-        <HStack justifyContent="space-between">
+    <FeesTable
+      buttonComponent={
+        <HStack justifyContent={"space-between"} w="full">
           <Text as="span" colorScheme="gray">
-            Total
+            Total with fees:
           </Text>
 
           <PriceFallback {...{ error, pickedCurrency }}>
             <Text as="span">
               <Skeleton isLoaded={!isValidating}>
                 <Text as="span" colorScheme="gray">
-                  {estimatedPriceInUSD
+                  {estimatedPriceInUSD && estimatedGuildFeeInUSD
                     ? `$${(
                         estimatedPriceInUSD +
-                        guildFeeInUSD +
+                        estimatedGuildFeeInUSD +
                         (estimatedGasFeeInUSD ?? 0)
                       )?.toFixed(2)}`
                     : "$0.00"}
                   {" = "}
                 </Text>
                 <Text as="span" fontWeight="semibold">
-                  {estimatedPriceInSellToken && guildFeeInSellToken
+                  {estimatedPriceSum
                     ? `${
                         estimatedPriceSum < 0.001
                           ? "< 0.001 "
@@ -141,40 +96,86 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
                     : "0.00 "}
                   {symbol}
                 </Text>
+                {!isNativeCurrency && (
+                  <Text as="span" colorScheme="gray">
+                    {` + Gas`}
+                  </Text>
+                )}
               </Skeleton>
             </Text>
           </PriceFallback>
         </HStack>
-      </Stack>
+      }
+    >
+      <Tr>
+        <Td>
+          <HStack>
+            <Text as="span">Max price</Text>
 
-      {priceInSellToken && guildFeeInSellToken && (
-        <HStack justifyContent="end" spacing={1}>
-          <Text as="span" colorScheme="gray" fontSize="sm">
-            {`Max: ${maxPriceSum} ${symbol}`}
-          </Text>
+            <Tooltip
+              placement="top"
+              hasArrow
+              label="You will pay no more than this, including slippage"
+            >
+              <Icon as={Question} boxSize={4} color="gray" />
+            </Tooltip>
+          </HStack>
+        </Td>
+        <Td isNumeric color="WindowText">
+          <Skeleton isLoaded={!isValidating}>
+            <Text as="span">{`${maxPriceSum} ${symbol}`}</Text>
+          </Skeleton>
+        </Td>
+      </Tr>
 
-          <Tooltip
-            placement="top"
-            hasArrow
-            label="You will pay no more than this, including slippage"
-          >
-            <Icon as={Question} boxSize={4} color="gray" />
-          </Tooltip>
-        </HStack>
-      )}
+      <Tr>
+        <Td>Expected price</Td>
 
-      {estimatedGasFee && !isNativeCurrency && (
-        // We're displaying gas fee here when the user picked an ERC20 as sellToken
-        <Text as="span" colorScheme="gray" fontSize="sm">
-          {`Estimated gas fee: ${parseFloat(
-            formatUnits(
-              estimatedGasFee,
-              RPC[requirement.chain].nativeCurrency.decimals
-            )
-          ).toFixed(8)} ${RPC[requirement.chain].nativeCurrency.symbol}`}
-        </Text>
-      )}
-    </Stack>
+        <Td isNumeric>
+          <Skeleton isLoaded={!isValidating}>
+            <Text as="span">{`${estimatedPriceSum} ${symbol}`}</Text>
+          </Skeleton>
+        </Td>
+      </Tr>
+
+      <Tr>
+        <Td>
+          <HStack>
+            <Text as="span">Guild fee</Text>
+            <Tooltip
+              label={`${GUILD_FEE_PERCENTAGE * 100}% of the token's price${
+                guildBaseFeeInSellToken
+                  ? ` + ${guildBaseFeeInSellToken} ${symbol}`
+                  : ""
+              }`}
+              placement="top"
+              hasArrow
+            >
+              <Icon as={Info} />
+            </Tooltip>
+          </HStack>
+        </Td>
+        <Td isNumeric>
+          {guildFee < 0.001 ? "< 0.001 " : `${guildFee} `}
+          {symbol}
+        </Td>
+      </Tr>
+
+      <Tr>
+        <Td>Gas fee</Td>
+        <Td isNumeric>
+          <Skeleton isLoaded={!isEstimateGasLoading}>
+            <Text as="span">
+              {error || estimateGasError || !estimatedGasInFloat
+                ? "Couldn't estimate"
+                : `${estimatedGasInFloat.toFixed(8)} ${
+                    RPC[requirement.chain].nativeCurrency.symbol
+                  }`}
+            </Text>
+          </Skeleton>
+        </Td>
+      </Tr>
+    </FeesTable>
   )
 }
 

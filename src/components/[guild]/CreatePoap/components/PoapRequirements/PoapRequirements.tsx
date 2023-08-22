@@ -1,10 +1,10 @@
 import { Button, Flex, Heading, Stack } from "@chakra-ui/react"
+import LogicDivider from "components/[guild]/LogicDivider"
+import useGuild from "components/[guild]/hooks/useGuild"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
 import LogicPicker from "components/create-guild/Requirements/components/LogicPicker"
 import RequirementEditableCard from "components/create-guild/Requirements/components/RequirementEditableCard"
-import useGuild from "components/[guild]/hooks/useGuild"
-import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
@@ -16,11 +16,10 @@ import {
   useFormContext,
 } from "react-hook-form"
 import { RequirementType } from "requirements"
-import PoapPaymentForm from "requirements/PoapPayment"
 import PoapPaymentRequirementEditable from "requirements/PoapPayment/PoapPaymentRequirementEditable"
-import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import PoapVoiceForm from "requirements/PoapVoice/PoapVoiceForm"
 import PoapVoiceRequirementEditable from "requirements/PoapVoice/PoapVoiceRequirementEditable"
+import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import logo from "static/logo.svg"
 import { PlatformType } from "types"
 import useUpdatePoapRequirements from "../../hooks/useUpdatePoapRequirements"
@@ -28,6 +27,7 @@ import { useCreatePoapContext } from "../CreatePoapContext"
 import PoapSuccessCard from "../PoapSuccessCard"
 import AddPoapRequirement from "./components/AddPoapRequirement"
 import OriginalGuildRoleForm from "./components/OriginalGuildRoleForm"
+import PaymentFormWrapper from "./components/PaymentFormWrapper"
 
 const SetupPoapRequirements = ({
   onSuccess: onModalClose,
@@ -85,7 +85,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
 
   const methods = useFormContext()
   const { control, getValues, watch } = methods
-  const { fields, append, replace, remove, update } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     name: "requirements",
     control,
   })
@@ -94,7 +94,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
   const watchFieldArray = watch("requirements")
   const controlledFields = fields.map((field, index) => ({
     ...field,
-    ...watchFieldArray[index],
+    ...watchFieldArray?.[index],
   }))
 
   return (
@@ -108,6 +108,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
           </CardMotionWrapper>
         )}
 
+        {/* For legacy POAP payment requirement */}
         {guildPoap?.poapContracts?.map((poapContract, i) => (
           <CardMotionWrapper key={poapContract.id}>
             <PoapPaymentRequirementEditable
@@ -132,6 +133,7 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
                 index={i}
                 removeRequirement={remove}
                 updateRequirement={update}
+                isEditDisabled={type === "PAYMENT"}
               />
               <LogicPicker />
             </CardMotionWrapper>
@@ -153,7 +155,8 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
         title="Payment"
         description="Monetize POAP with different payment methods"
         rightIcon={Coin}
-        FormComponent={PoapPaymentForm}
+        FormComponent={PaymentFormWrapper}
+        onAdd={(d) => append(d)}
         poapId={guildPoap?.poapIdentifier}
       />
       {hasDiscord && !poapEventDetails?.voiceChannelId && (

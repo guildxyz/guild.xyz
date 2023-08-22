@@ -1,31 +1,13 @@
-import {
-  Center,
-  GridItem,
-  SimpleGrid,
-  Spinner,
-  Stack,
-  Tag,
-  useColorMode,
-  usePrevious,
-} from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import AddCard from "components/common/AddCard"
+import { useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
-import CategorySection from "components/explorer/CategorySection"
-import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
-import GuildCard from "components/explorer/GuildCard"
-import useMemberships, {
-  Memberships,
-} from "components/explorer/hooks/useMemberships"
-import OrderSelect, { OrderOptions } from "components/explorer/OrderSelect"
-import SearchBar from "components/explorer/SearchBar"
-import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
-import { useQueryState } from "hooks/useQueryState"
-import useScrollEffect from "hooks/useScrollEffect"
+import ExploreAllGuilds from "components/explorer/ExploreAllGuilds"
+import ExplorerTabs from "components/explorer/ExplorerTabs"
+import GoToCreateGuildButton from "components/explorer/GoToCreateGuildButton"
+import YourGuilds from "components/explorer/YourGuilds"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { GetStaticProps } from "next"
-import { useEffect, useMemo, useRef, useState } from "react"
-import useSWR from "swr"
+import { useRef } from "react"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
@@ -33,176 +15,63 @@ type Props = {
   guilds: GuildBase[]
 }
 
-const getUsersGuilds = (memberships: Memberships, guildsData: any) => {
-  if (!memberships?.length || !guildsData?.length) return []
-  const usersGuildsIds = memberships.map((membership) => membership.guildId)
-  const newUsersGuilds = guildsData.filter((guild) =>
-    usersGuildsIds.includes(guild.id)
-  )
-  return newUsersGuilds
-}
-
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
-  const { account } = useWeb3React()
+  const yourGuildsRef = useRef(null)
+  const allGuildsRef = useRef(null)
 
-  const [search, setSearch] = useQueryState<string>("search", undefined)
-  const prevSearch = usePrevious(search)
-  const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
-  const { renderedGuildsCount, setRenderedGuildsCount } = useExplorer()
+  // ? is included, so the request hits v2Replacer in fetcher
+  const { data: usersGuilds } = useSWRWithOptionalAuth(`/v2/guilds`)
 
-  const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
-
-  useEffect(() => {
-    if (prevSearch === search || prevSearch === undefined) return
-    setRenderedGuildsCount(BATCH_SIZE)
-  }, [search, prevSearch])
-
-  const guildsListEl = useRef(null)
-
-  const {
-    data: [allGuilds, filteredGuilds],
-    isValidating: isLoading,
-  } = useSWR(
-    `/guild?${query}`,
-    (url: string) =>
-      fetcher(url).then((data) => [
-        data,
-        data.filter(
-          (guild) =>
-            (guild.platforms?.length > 0 && guild.memberCount > 0) ||
-            guild.memberCount > 1
-        ),
-      ]),
-    {
-      fallbackData: [guildsInitial, guildsInitial],
-      dedupingInterval: 60000, // one minute
-    }
-  )
-
-  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
-  useScrollEffect(() => {
-    if (
-      !guildsListEl.current ||
-      guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      filteredGuilds?.length <= renderedGuildsCount
-    )
-      return
-
-    setRenderedGuildsCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [filteredGuilds, renderedGuildsCount])
-
-  const renderedGuilds = useMemo(
-    () => filteredGuilds?.slice(0, renderedGuildsCount) || [],
-    [filteredGuilds, renderedGuildsCount]
-  )
-
-  const memberships = useMemberships()
-  const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>(
-    getUsersGuilds(memberships, allGuilds)
-  )
-
-  useEffect(() => {
-    setUsersGuilds(getUsersGuilds(memberships, allGuilds))
-  }, [memberships, allGuilds])
-
-  // Setting up the dark mode, because this is a "static" page
-  const { setColorMode } = useColorMode()
-
-  useEffect(() => {
-    setColorMode("dark")
-  }, [])
+  const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
+  const bgOpacity = useColorModeValue(0.06, 0.1)
+  const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
 
   return (
     <>
       <LinkPreviewHead path="" />
       <Layout
-        title="Guildhall"
+        title={"Guildhall"}
         ogDescription="Automated membership management for the platforms your community already uses."
+        background={bgColor}
+        backgroundProps={{
+          opacity: 1,
+          _before: {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            bg: `linear-gradient(to top right, ${bgColor} ${bgLinearPercentage}, transparent), url('/banner.png ')`,
+            bgSize: { base: "auto 100%", sm: "auto 115%" },
+            bgRepeat: "no-repeat",
+            bgPosition: "top 10px right 0px",
+            opacity: bgOpacity,
+          },
+        }}
+        backgroundOffset={usersGuilds?.length ? 135 : 120}
+        textColor="white"
       >
-        <SimpleGrid
-          templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
-          gap={{ base: 2, md: "6" }}
-          mb={{ base: 8, md: 12, lg: 16 }}
-        >
-          <GridItem colSpan={{ base: 1, md: 2 }}>
-            <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
-          </GridItem>
-          <OrderSelect {...{ isLoading, order, setOrder }} />
-        </SimpleGrid>
+        <ExplorerTabs
+          {...{ yourGuildsRef, allGuildsRef }}
+          rightElement={usersGuilds?.length && <GoToCreateGuildButton />}
+          sticky
+        />
 
-        <Stack ref={guildsListEl} spacing={12}>
-          <CategorySection
-            title={
-              // usersGuilds will be empty in case of unmatched search query, memberships will be empty in case he's owner but not member of guilds
-              usersGuilds?.length || memberships?.length
-                ? "Your guilds"
-                : "You're not part of any guilds yet"
-            }
-            titleRightElement={
-              account && (!memberships || isLoading) && <Spinner size="sm" />
-            }
-            fallbackText={`No results for ${search}`}
-          >
-            {usersGuilds?.length || memberships?.length ? (
-              (usersGuilds.length || !search) &&
-              usersGuilds
-                .map((guild) => (
-                  <ExplorerCardMotionWrapper key={guild.urlName}>
-                    <GuildCard guildData={guild} />
-                  </ExplorerCardMotionWrapper>
-                ))
-                .concat(
-                  <ExplorerCardMotionWrapper key="create-guild">
-                    <AddCard title="Create guild" link="/create-guild" />
-                  </ExplorerCardMotionWrapper>
-                )
-            ) : (
-              <ExplorerCardMotionWrapper key="create-guild">
-                <AddCard title="Create guild" link="/create-guild" />
-              </ExplorerCardMotionWrapper>
-            )}
-          </CategorySection>
+        <YourGuilds ref={yourGuildsRef} />
 
-          <CategorySection
-            title="All guilds"
-            titleRightElement={
-              isLoading ? (
-                <Spinner size="sm" />
-              ) : (
-                <Tag size="sm">{filteredGuilds.length}</Tag>
-              )
-            }
-            fallbackText={
-              search?.length
-                ? `No results for ${search}`
-                : "Can't fetch guilds from the backend right now. Check back later!"
-            }
-          >
-            {renderedGuilds.length &&
-              renderedGuilds.map((guild) => (
-                <ExplorerCardMotionWrapper key={guild.urlName}>
-                  <GuildCard guildData={guild} />
-                </ExplorerCardMotionWrapper>
-              ))}
-          </CategorySection>
-
-          <Center>
-            {filteredGuilds?.length > renderedGuildsCount && <Spinner />}
-          </Center>
-        </Stack>
+        <ExploreAllGuilds ref={allGuildsRef} {...{ guildsInitial }} />
       </Layout>
     </>
   )
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetcher(`/guild?sort=members`)
-    .then((list) => list)
-    .catch((_) => [])
+  const guilds = await fetcher(`/v2/guilds?sort=members`).catch((_) => [])
 
   return {
     props: { guilds },
-    revalidate: 10,
+    revalidate: 300,
   }
 }
 

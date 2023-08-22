@@ -1,10 +1,11 @@
-import { Box, Flex } from "@chakra-ui/react"
+import { Box, Flex, useColorMode } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Account from "../components/Account"
 import NavMenu from "../components/NavMenu"
 
 const Header = (): JSX.Element => {
   const colorContext = useThemeContext()
+  const { colorMode } = useColorMode()
 
   return (
     <Flex
@@ -16,11 +17,12 @@ const Header = (): JSX.Element => {
       // temporary
       sx={{
         "[aria-label]": {
-          color: colorContext?.localThemeMode
-            ? colorContext?.textColor === "whiteAlpha.900"
-              ? "whiteAlpha.900"
-              : "gray.900"
-            : undefined,
+          color:
+            colorMode === "light"
+              ? colorContext?.textColor === "whiteAlpha.900" || !colorContext
+                ? "whiteAlpha.900"
+                : "gray.900"
+              : undefined,
         },
       }}
     >

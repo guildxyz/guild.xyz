@@ -1,4 +1,3 @@
-import { datadogRum } from "@datadog/browser-rum"
 import { hexStripZeros } from "@ethersproject/bytes"
 import { keccak256 } from "@ethersproject/keccak256"
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
@@ -152,14 +151,6 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
         msg: message,
         ts: Date.now() + timeInaccuracy,
       })
-        .catch((error) => {
-          if (error.code === 4001) {
-            datadogRum?.addAction("User rejected signature request")
-          } else {
-            datadogRum?.addError("Sign error", { error })
-          }
-          throw error
-        })
         .then(async ([signed, val]) => {
           const callbackData = signCallbacks.find(({ domain }) =>
             peerMeta?.url?.includes?.(domain)
@@ -176,7 +167,11 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
         .finally(() => setIsSigning(false))
 
       return fetch({ signedPayload, validation }).catch((e) => {
-        if (e?.message === "Invalid or expired timestamp!") {
+        if (
+          e?.message === "Invalid or expired timestamp!" ||
+          e?.message ===
+            "Invalid timestamp! The creation of timestamp too far in future!"
+        ) {
           setShouldFetchTimestamp(true)
           location?.reload()
         }
@@ -265,10 +260,7 @@ const sign = async ({
         ? new JsonRpcProvider(rpcUrl)
         : provider
 
-    const bytecode = await prov.getCode(address).catch((error) => {
-      datadogRum?.addError("Retrieving bytecode failed", { error })
-      return null
-    })
+    const bytecode = await prov.getCode(address).catch(() => null)
 
     const isSmartContract = bytecode && hexStripZeros(bytecode) !== "0x"
 

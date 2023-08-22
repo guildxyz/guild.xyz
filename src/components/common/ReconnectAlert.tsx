@@ -25,6 +25,7 @@ const ReconnectAlert = ({ platformName }: { platformName: PlatformName }) => {
           <Button
             flexShrink={0}
             size="sm"
+            colorScheme="white"
             onClick={onConnect}
             isLoading={isConnecting}
             loadingText={loadingText ?? "Loading"}

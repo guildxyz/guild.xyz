@@ -11,28 +11,27 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useWeb3React } from "@web3-react/core"
+import { GnosisSafe } from "@web3-react/gnosis-safe"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import { connectors } from "connectors"
-import useKeyPair, {
-  deleteKeyPairFromIdb,
-  getKeyPairFromIdb,
-} from "hooks/useKeyPair"
+import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
-import useSWR, { mutate, unstable_serialize } from "swr"
-import useSWRImmutable from "swr/immutable"
-import { User, WalletError } from "types"
+import ReCAPTCHA from "react-google-recaptcha"
+import { WalletError } from "types"
 import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
+import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
+import useShouldLinkToUser from "./hooks/useShouldLinkToUser"
 import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
@@ -41,43 +40,13 @@ type Props = {
   onOpen: () => void
 }
 
-const fetchShouldLinkToUser = async (_: "shouldLinkToUser", userId: number) => {
-  try {
-    const { id: userIdToConnectTo } = JSON.parse(
-      window.localStorage.getItem("userId")
-    )
-
-    if (
-      typeof userId === "number" &&
-      typeof userIdToConnectTo === "number" &&
-      userIdToConnectTo !== userId
-    ) {
-      try {
-        await deleteKeyPairFromIdb(userId).then(() =>
-          mutate(unstable_serialize(["keyPair", userId]))
-        )
-      } catch {}
-    }
-
-    const keypair = await getKeyPairFromIdb(+userIdToConnectTo)
-
-    return !!keypair
-  } catch {
-    // Remove in case it exists in an invalid form
-    window.localStorage.removeItem("userId")
-    return false
-  }
-}
-
 // We don't open the modal on these routes
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
-  const addDatadogAction = useRumAction("trackingAppAction")
-
   const { isActive, account, connector } = useWeb3React()
-  const { data: user } = useSWRImmutable<User>(account ? `/user/${account}` : null)
   const [error, setError] = useState<WalletError & Error>(null)
+  const { captchaVerifiedSince } = useUserPublic()
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -87,7 +56,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   const closeModalAndSendAction = () => {
     onClose()
-    addDatadogAction("Wallet selector modal closed")
     setTimeout(() => {
       connector.resetState()
       connector.deactivate?.()
@@ -116,15 +84,16 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }
   }, [keyPair, ready, router])
 
-  const { data: shouldLinkToUser } = useSWR(
-    ["shouldLinkToUser", user?.id],
-    fetchShouldLinkToUser
-  )
+  const shouldLinkToUser = useShouldLinkToUser()
 
   const { isDelegateConnection, setIsDelegateConnection } =
     useWeb3ConnectionManager()
 
   const isConnected = account && isActive && ready
+
+  const isWalletConnectModalActive = useIsWalletConnectModalActive()
+
+  const recaptchaRef = useRef<ReCAPTCHA>()
 
   return (
     <>
@@ -133,9 +102,10 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         onClose={closeModalAndSendAction}
         closeOnOverlayClick={!isActive || !!keyPair}
         closeOnEsc={!isActive || !!keyPair}
+        trapFocus={!isWalletConnectModalActive}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent data-test="wallet-selector-modal">
           <ModalHeader display={"flex"}>
             <Box
               {...((isConnected && !keyPair) || isDelegateConnection
@@ -177,18 +147,40 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Error error={error} processError={processConnectionError} />
+            <Error
+              {...(set.error
+                ? {
+                    error: set.error,
+                    processError: (err: any) => {
+                      if (err?.code === "ACTION_REJECTED") {
+                        return {
+                          title: "Rejected",
+                          description: "Signature request has been rejected",
+                        }
+                      }
+
+                      return {
+                        title: "Error",
+                        description:
+                          err?.message ??
+                          (typeof err === "string" ? err : err?.errors?.[0]?.msg),
+                      }
+                    },
+                  }
+                : { error, processError: processConnectionError })}
+            />
             {isConnected && !keyPair && (
               <Text mb="6" animation={"fadeIn .3s .1s both"}>
                 Sign message to verify that you're the owner of this account.
               </Text>
             )}
             <Stack spacing="0">
-              {connectors.map(([conn, connectorHooks]) => {
+              {connectors.map(([conn, connectorHooks], i) => {
                 if (!conn || !connectorHooks) return null
+                if (conn instanceof GnosisSafe && !conn?.sdk) return null
 
                 return (
-                  <CardMotionWrapper key={conn.constructor.name}>
+                  <CardMotionWrapper key={i}>
                     <ConnectorButton
                       connector={conn}
                       connectorHooks={connectorHooks}
@@ -205,46 +197,94 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               )}
             </Stack>
             {isConnected && !keyPair && (
-              <Box animation={"fadeIn .3s .1s both"}>
-                <ModalButton
-                  size="xl"
-                  mb="4"
-                  colorScheme={"green"}
-                  onClick={() => {
-                    set.onSubmit(shouldLinkToUser)
-                    addDatadogAction("click on Verify account")
-                  }}
-                  isLoading={set.isLoading || !ready}
-                  isDisabled={!ready || shouldLinkToUser === undefined}
-                  loadingText={
-                    !ready
-                      ? "Looking for keypairs"
-                      : set.signLoadingText || "Check your wallet"
-                  }
-                >
-                  {shouldLinkToUser ? "Link address" : "Verify account"}
-                </ModalButton>
-              </Box>
+              <>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                  size="invisible"
+                />
+                <Box animation={"fadeIn .3s .1s both"}>
+                  <ModalButton
+                    size="xl"
+                    mb="4"
+                    colorScheme={"green"}
+                    onClick={async () => {
+                      const token =
+                        !recaptchaRef.current || !!captchaVerifiedSince
+                          ? undefined
+                          : await recaptchaRef.current.executeAsync()
+
+                      if (token) {
+                        recaptchaRef.current.reset()
+                      }
+
+                      return set.onSubmit(shouldLinkToUser, undefined, token)
+                    }}
+                    isLoading={set.isLoading || !ready}
+                    isDisabled={!ready}
+                    loadingText={
+                      !ready
+                        ? "Looking for keypairs"
+                        : set.signLoadingText || "Check your wallet"
+                    }
+                  >
+                    {shouldLinkToUser ? "Link address" : "Verify account"}
+                  </ModalButton>
+                </Box>
+              </>
             )}
           </ModalBody>
           <ModalFooter mt="-4">
-            {!isConnected && (
-              <Text textAlign="center" w="full" colorScheme={"gray"}>
-                New to Ethereum wallets?{" "}
-                <Link
-                  colorScheme="blue"
-                  href="https://ethereum.org/en/wallets/"
-                  isExternal
-                >
-                  Learn more
-                  <Icon as={ArrowSquareOut} mx="1" />
-                </Link>
-              </Text>
-            )}
-            {isConnected && (
-              <Text textAlign="center" w="full" colorScheme={"gray"}>
-                Signing the message doesn't cost any gas
-              </Text>
+            {!isConnected ? (
+              <Stack textAlign="center" fontSize="sm" w="full">
+                <Text colorScheme="gray">
+                  New to Ethereum wallets?{" "}
+                  <Link
+                    colorScheme="blue"
+                    href="https://ethereum.org/en/wallets/"
+                    isExternal
+                  >
+                    Learn more
+                    <Icon as={ArrowSquareOut} mx="1" />
+                  </Link>
+                </Text>
+
+                <Text colorScheme="gray">
+                  By continuing, you agree to our{" "}
+                  <Link
+                    href="/privacy-policy"
+                    fontWeight={"semibold"}
+                    onClick={onClose}
+                  >
+                    Privacy Policy
+                  </Link>
+                </Text>
+              </Stack>
+            ) : (
+              <Stack textAlign="center" fontSize="sm" w="full">
+                <Text colorScheme={"gray"}>
+                  Signing the message doesn't cost any gas
+                </Text>
+                <Text colorScheme="gray">
+                  This site is protected by reCAPTCHA, so the Google{" "}
+                  <Link
+                    href="https://policies.google.com/privacy"
+                    isExternal
+                    fontWeight={"semibold"}
+                  >
+                    Privacy Policy
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="https://policies.google.com/terms"
+                    isExternal
+                    fontWeight={"semibold"}
+                  >
+                    Terms of Service
+                  </Link>{" "}
+                  apply
+                </Text>
+              </Stack>
             )}
           </ModalFooter>
         </ModalContent>

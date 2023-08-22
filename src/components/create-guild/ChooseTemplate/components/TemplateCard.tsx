@@ -48,7 +48,6 @@ const TemplateCard = ({
         e.preventDefault()
         onClick(id)
       }}
-      data-dd-action-name={`template: ${id}`}
       position="relative"
       mb={{ base: 4, md: 6 }}
       borderRadius="2xl"

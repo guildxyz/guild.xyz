@@ -11,6 +11,7 @@ import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import REQUIREMENTS from "requirements"
 import CompleteCaptcha from "requirements/Captcha/components/CompleteCaptcha"
+import SetupPassport from "requirements/GitcoinPassport/components/SetupPassport"
 import ConnectPolygonID from "requirements/PolygonId/components/ConnectPolygonID"
 import ConnectRequirementPlatformButton from "./ConnectRequirementPlatformButton"
 import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
@@ -56,6 +57,8 @@ const RequiementAccessIndicator = () => {
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
           {type === "CAPTCHA"
             ? "Complete CAPTCHA to check access"
+            : type.startsWith("GITCOIN_")
+            ? "Setup GitCoin Passport to check access"
             : "Connect account to check access"}
         </PopoverHeader>
         <PopoverFooter {...POPOVER_FOOTER_STYLES}>
@@ -63,6 +66,8 @@ const RequiementAccessIndicator = () => {
             <ConnectPolygonID size="sm" iconSpacing={2} />
           ) : type === "CAPTCHA" ? (
             <CompleteCaptcha size="sm" iconSpacing={2} />
+          ) : type.startsWith("GITCOIN_") ? (
+            <SetupPassport size="sm" />
           ) : (
             <ConnectRequirementPlatformButton size="sm" iconSpacing={2} />
           )}
@@ -104,8 +109,14 @@ const RequiementAccessIndicator = () => {
       {reqAccessData?.amount !== null && data?.minAmount && (
         <PopoverBody pt="0">
           {isNegated
-            ? `Expected max amount is ${data.minAmount} and you have ${reqAccessData?.amount}`
-            : `Expected amount is ${data.minAmount} but you only have ${reqAccessData?.amount}`}
+            ? `Expected max amount is ${data.minAmount}${
+                data.maxAmount ? `-${data.maxAmount}` : ""
+              } and you have ${reqAccessData?.amount}`
+            : `Expected amount is ${data.minAmount}${
+                data.maxAmount ? `-${data.maxAmount}` : ""
+              } but you ${data.maxAmount ? "" : "only"} have ${
+                reqAccessData?.amount
+              }`}
         </PopoverBody>
       )}
       <PopoverFooter {...POPOVER_FOOTER_STYLES}>
@@ -121,13 +132,13 @@ const RequiementAccessIndicator = () => {
   )
 }
 
-const POPOVER_HEADER_STYLES = {
+export const POPOVER_HEADER_STYLES = {
   fontWeight: "semibold",
   border: "0",
   px: "3",
 }
 
-const POPOVER_FOOTER_STYLES = {
+export const POPOVER_FOOTER_STYLES = {
   display: "flex",
   justifyContent: "flex-end",
   border: "0",

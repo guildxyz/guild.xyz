@@ -5,6 +5,7 @@ export type Memberships = Array<{
   guildId: number
   roleIds: number[]
   isAdmin: boolean
+  joinedAt: string
 }>
 
 const useMemberships = () => {
@@ -12,11 +13,15 @@ const useMemberships = () => {
 
   const shouldFetch = !!account
 
-  const { data } = useSWRWithOptionalAuth<Memberships>(
+  const { data, mutate, ...rest } = useSWRWithOptionalAuth<Memberships>(
     shouldFetch ? `/user/membership/${account}` : null
   )
 
-  return data
+  return {
+    memberships: data,
+    mutate,
+    ...rest,
+  }
 }
 
 export default useMemberships

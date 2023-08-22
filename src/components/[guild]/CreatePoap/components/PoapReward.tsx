@@ -4,44 +4,53 @@ import {
   Icon,
   Img,
   Skeleton,
+  Spinner,
   Tag,
   Text,
   Tooltip,
   Wrap,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
-import MintPoapButton from "components/[guild]/CreatePoap/components/MintPoapButton"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import Button from "components/common/Button"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { useMemo } from "react"
 import { Poap } from "types"
+import useMintPoapButton, { MintModal } from "../hooks/useMintPoapButton"
 
 type Props = {
   poap: Poap
   isExpired?: boolean
   isInteractive?: boolean
+  isLinkColorful?: boolean
 }
 
 /**
  * This is copy-pasted from Reward and adjusted to work with legacy POAP logic. Will
  * delete once POAP is a real reward
  */
-const PoapReward = ({ poap, isExpired, isInteractive = true }: Props) => {
+const PoapReward = ({
+  poap,
+  isExpired,
+  isInteractive = true,
+  isLinkColorful,
+}: Props) => {
   const isMember = useIsMember()
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
   const { poapLinks } = usePoapLinks(poap?.id)
   const availableLinks = poapLinks?.total - poapLinks?.claimed
 
-  const { data } = useUserPoapEligibility(poap?.id)
+  const { data, isLoading } = useUserPoapEligibility(poap?.id)
   const hasAccess = data?.access
 
+  const { buttonProps, modalProps } = useMintPoapButton(poap?.id)
+
   const state = useMemo(() => {
-    if (availableLinks === 0)
+    if (availableLinks === 0 && !modalProps.response)
       return {
         tooltipLabel: poapLinks?.total
           ? "All available POAPs have been minted"
@@ -51,7 +60,9 @@ const PoapReward = ({ poap, isExpired, isInteractive = true }: Props) => {
     if (isMember && hasAccess)
       return {
         tooltipLabel: "Go to minting page",
-        showMintButton: true,
+        buttonProps: isLinkColorful
+          ? { ...buttonProps, colorScheme: "blue" }
+          : buttonProps,
       }
     if (!account || (!isMember && hasAccess))
       return {
@@ -67,7 +78,7 @@ const PoapReward = ({ poap, isExpired, isInteractive = true }: Props) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, account, availableLinks])
+  }, [isMember, hasAccess, account, availableLinks, isLinkColorful])
 
   return (
     <HStack pt="3" spacing={2} alignItems={"flex-start"}>
@@ -85,26 +96,17 @@ const PoapReward = ({ poap, isExpired, isInteractive = true }: Props) => {
             </Skeleton>
           ) : (
             <Tooltip label={state.tooltipLabel} hasArrow>
-              {state.showMintButton ? (
-                <MintPoapButton
-                  poapId={poap?.id}
-                  variant="link"
-                  maxW="full"
-                  iconSpacing="1"
-                >
-                  {poap?.name}
-                </MintPoapButton>
-              ) : (
-                <Button
-                  variant="link"
-                  rightIcon={<ArrowSquareOut />}
-                  iconSpacing="1"
-                  maxW="full"
-                  {...state.buttonProps}
-                >
-                  {poap?.name}
-                </Button>
-              )}
+              <Button
+                variant="link"
+                rightIcon={
+                  isLoading ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
+                }
+                iconSpacing="1"
+                maxW="full"
+                {...state.buttonProps}
+              >
+                {poap?.name}
+              </Button>
             </Tooltip>
           )}
         </Text>
@@ -115,6 +117,7 @@ const PoapReward = ({ poap, isExpired, isInteractive = true }: Props) => {
             <Tag>{`${availableLinks}/${poapLinks?.total} available`}</Tag>
           ))}
       </Wrap>
+      <MintModal {...modalProps} />
     </HStack>
   )
 }

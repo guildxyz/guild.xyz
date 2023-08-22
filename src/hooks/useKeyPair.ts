@@ -1,6 +1,6 @@
-import { datadogRum } from "@datadog/browser-rum"
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { randomBytes } from "crypto"
 import { createStore, del, get, set } from "idb-keyval"
@@ -10,18 +10,22 @@ import useSWRImmutable from "swr/immutable"
 import { AddressConnectionProvider, User } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
-import useLocalStorage from "./useLocalStorage"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
 } from "./useSubmit/useSubmit"
-import { mutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import useToast from "./useToast"
 
 type StoredKeyPair = {
   keyPair: CryptoKeyPair
   pubKey: string
 }
+
+/**
+ * This is a generic RPC internal error code, but we are only using it for testing
+ * personal_sign errors, which should mean that the user rejected the request
+ */
+const RPC_INTERNAL_ERROR_CODE = -32603
 
 type AddressLinkParams =
   | ({
@@ -37,12 +41,18 @@ type AddressLinkParams =
       nonce: never
     })
 
-type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> & Partial<AddressLinkParams>
+type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> &
+  Partial<AddressLinkParams> & {
+    verificationParams?: {
+      reCaptcha: string
+    }
+  }
 
 const getStore = () => createStore("guild.xyz", "signingKeyPairs")
 
 const getKeyPairFromIdb = (userId: number) => get<StoredKeyPair>(userId, getStore())
-const deleteKeyPairFromIdb = (userId: number) => del(userId, getStore())
+const deleteKeyPairFromIdb = (userId: number) =>
+  userId ? del(userId, getStore()) : null
 const setKeyPairToIdb = (userId: number, keys: StoredKeyPair) =>
   set(userId, keys, getStore())
 
@@ -61,30 +71,21 @@ const generateKeyPair = async () => {
       ["sign", "verify"]
     )
 
-    try {
-      const generatedPubKey = await window.crypto.subtle.exportKey(
-        "raw",
-        generatedKeys.publicKey
-      )
+    const generatedPubKey = await window.crypto.subtle.exportKey(
+      "raw",
+      generatedKeys.publicKey
+    )
 
-      const generatedPubKeyHex = bufferToHex(generatedPubKey)
-      keyPair.pubKey = generatedPubKeyHex
-      keyPair.keyPair = generatedKeys
-      return keyPair
-    } catch {
-      throw new Error("Pubkey export error")
-    }
-  } catch (error) {
-    if (error?.code !== 4001) {
-      datadogRum.addError(`Keypair generation error`, {
-        error: error?.message || error?.toString?.() || error,
-      })
-    }
-    throw error
+    const generatedPubKeyHex = bufferToHex(generatedPubKey)
+    keyPair.pubKey = generatedPubKeyHex
+    keyPair.keyPair = generatedKeys
+    return keyPair
+  } catch {
+    throw new Error("Pubkey export error")
   }
 }
 
-const getKeyPair = async (_: string, id: number) => {
+const getKeyPair = async ([_, id]) => {
   const keyPairAndPubKey = await getKeyPairFromIdb(id)
 
   if (keyPairAndPubKey === undefined) {
@@ -102,11 +103,13 @@ const setKeyPair = async ({
   mutateKeyPair,
   generatedKeyPair,
   signedValidation,
+  id,
 }: {
   account: string
   mutateKeyPair: KeyedMutator<StoredKeyPair>
   generatedKeyPair: StoredKeyPair
   signedValidation: SignedValdation
+  id: number
 }): Promise<[StoredKeyPair, boolean]> => {
   const {
     userId: signedUserId,
@@ -120,14 +123,16 @@ const setKeyPair = async ({
     typeof signature === "string" &&
     typeof nonce === "string"
 
-  const { userId } = await fetcher("/user/pubKey", {
+  const newUser: User = await fetcher(`/v2/users/${id ?? account}/public-key`, {
     method: "POST",
     ...signedValidation,
   })
 
   let storedKeyPair: StoredKeyPair
 
-  const prevKeyPair = await getKeyPairFromIdb(userId).catch(() => null)
+  const prevKeyPair = await getKeyPairFromIdb(
+    (newUser as any)?.userId ?? newUser.id
+  ).catch(() => null)
 
   if (!shouldSendLink && (!addressConnectionProvider || !prevKeyPair)) {
     storedKeyPair = generatedKeyPair
@@ -137,50 +142,75 @@ const setKeyPair = async ({
      * Ignoring this error is fine, since we are falling back to just storing it in
      * memory.
      */
-    await setKeyPairToIdb(userId, storedKeyPair).catch(() => {})
+    await setKeyPairToIdb(
+      (newUser as any)?.userId ?? newUser.id,
+      storedKeyPair
+    ).catch(() => {})
   }
 
-  await mutate(`/user/${account}`)
+  mutate([`/v2/users/${newUser.id}/profile`, { method: "GET", body: {} }], newUser, {
+    revalidate: false,
+  })
+  mutate(
+    `/v2/users/${account}/profile`,
+    {
+      id: newUser?.id,
+      publicKey: newUser?.publicKey,
+      captchaVerifiedSince: newUser?.captchaVerifiedSince,
+    },
+    {
+      revalidate: false,
+    }
+  )
+
   if (shouldSendLink) {
-    await mutateOptionalAuthSWRKey(`/user/${account}`)
+    mutate(
+      [`/v2/users/${signedUserId}/profile`, { method: "GET", body: {} }],
+      newUser,
+      {
+        revalidate: false,
+      }
+    )
   }
+
   await mutateKeyPair()
 
   return [storedKeyPair, shouldSendLink]
 }
 
-const checkKeyPair = (_: string, savedPubKey: string, pubKey: string): boolean =>
-  savedPubKey === pubKey
-
-const usePublicUserData = (address?: string) => {
-  const { account } = useWeb3React()
-  return useSWRImmutable<User>(
-    address || account ? `/user/${address ?? account}` : null
-  )
-}
+const checkKeyPair = ([_, savedPubKey, pubKey]): boolean => savedPubKey === pubKey
 
 const useKeyPair = () => {
-  // Using the default Datadog implementation here, so the useDatadog, useUser, and useKeypair hooks don't call each other
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
+  const { captureEvent } = usePostHogContext()
 
   const { account } = useWeb3React()
 
-  const { isDelegateConnection, setIsDelegateConnection } =
-    useWeb3ConnectionManager()
+  const {
+    isDelegateConnection,
+    setIsDelegateConnection,
+    addressLinkParams,
+    setAddressLinkParams,
+  } = useWeb3ConnectionManager()
 
-  const { data: user, error: userError } = usePublicUserData()
+  const {
+    id,
+    publicKey,
+    error: publicUserError,
+    captchaVerifiedSince,
+    ...user
+  } = useUserPublic()
 
-  const defaultCustomAttributes = {
-    userId: user?.id,
-    userAddress: account?.toLowerCase(),
-  }
+  useEffect(() => {
+    if (!!id && !captchaVerifiedSince) {
+      deleteKeyPairFromIdb(id).then(() => mutateKeyPair())
+    }
+  }, [id, captchaVerifiedSince])
 
   const {
     data: { keyPair, pubKey },
     mutate: mutateKeyPair,
     error: keyPairError,
-  } = useSWR(!!user?.id ? ["keyPair", user?.id] : null, getKeyPair, {
+  } = useSWR(!!id || !!publicUserError ? ["keyPair", id] : null, getKeyPair, {
     revalidateOnMount: true,
     revalidateIfStale: true,
     revalidateOnFocus: true,
@@ -201,14 +231,16 @@ const useKeyPair = () => {
   const toast = useToast()
 
   const { data: isValid } = useSWRImmutable(
-    user?.signingKey && pubKey ? ["isKeyPairValid", user?.signingKey, pubKey] : null,
+    (id || publicUserError) && pubKey
+      ? ["isKeyPairValid", publicKey ?? (user as any)?.signingKey, pubKey]
+      : null,
     checkKeyPair,
     {
       onSuccess: (isKeyPairValid) => {
         if (!isKeyPairValid) {
-          addDatadogAction("Invalid keypair", {
-            ...defaultCustomAttributes,
-            data: { userId: user?.id, pubKey: keyPair.publicKey },
+          captureEvent("Invalid keypair", {
+            userId: id,
+            pubKey: keyPair.publicKey,
           })
 
           toast({
@@ -219,16 +251,13 @@ const useKeyPair = () => {
             duration: 5000,
           })
 
-          deleteKeyPairFromIdb(user?.id).then(() => {
+          deleteKeyPairFromIdb(id).then(() => {
             mutateKeyPair({ pubKey: undefined, keyPair: undefined }).then(() => {
-              mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
+              mutate(unstable_serialize(["shouldLinkToUser", id]))
             })
           })
-        } else if (
-          !!window.localStorage.getItem("userId") &&
-          JSON.parse(window.localStorage.getItem("userId")).id !== user?.id
-        ) {
-          deleteKeyPairFromIdb(user?.id).then(() => {
+        } else if (!!addressLinkParams?.userId && addressLinkParams?.userId !== id) {
+          deleteKeyPairFromIdb(id).then(() => {
             mutateKeyPair({ pubKey: undefined, keyPair: undefined })
           })
         }
@@ -246,6 +275,7 @@ const useKeyPair = () => {
         mutateKeyPair,
         generatedKeyPair,
         signedValidation,
+        id,
       }),
     {
       keyPair,
@@ -254,95 +284,78 @@ const useKeyPair = () => {
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
       onError: (error) => {
         console.error("setKeyPair error", error)
-        if (error?.code !== 4001) {
-          addDatadogError(
-            `Failed to set keypair`,
-            {
-              ...defaultCustomAttributes,
-              error: error?.message || error?.toString?.() || error,
-            },
-            "custom"
-          )
+        if (
+          error?.code !== RPC_INTERNAL_ERROR_CODE &&
+          error?.code !== "ACTION_REJECTED"
+        ) {
+          const trace = error?.stack || new Error().stack
+          captureEvent(`Failed to set keypair`, { error, trace })
         }
 
         try {
-          window.localStorage.removeItem("userId")
-          mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
+          setAddressLinkParams({ userId: null, address: null })
+          mutate(unstable_serialize(["shouldLinkToUser", id]))
         } catch (err) {
-          addDatadogError(
+          captureEvent(
             `Failed to remove userId from localStorage after unsuccessful account link`,
             {
-              ...defaultCustomAttributes,
               error: err?.message || err?.toString?.() || err,
-            },
-            "custom"
+            }
           )
         }
       },
       onSuccess: ([newKeyPair, shouldDeleteUserId]) => {
-        setTimeout(() => {
-          mutateOptionalAuthSWRKey(`/user/${account}`).then(() =>
-            setTimeout(() => {
-              mutate(unstable_serialize(["delegateCashVaults", user?.id])).then(
-                () => {
-                  window.localStorage.removeItem(`isDelegateDismissed_${user?.id}`)
-                }
-              )
-            }, 500)
-          )
-        }, 500)
+        mutate(unstable_serialize(["delegateCashVaults", id])).then(() => {
+          window.localStorage.removeItem(`isDelegateDismissed_${id}`)
+        })
 
         setIsDelegateConnection(false)
         if (shouldDeleteUserId) {
           try {
-            window.localStorage.removeItem("userId")
+            setAddressLinkParams({ userId: null, address: null })
           } catch (error) {
-            addDatadogError(
+            captureEvent(
               `Failed to remove userId from localStorage after account link`,
               {
-                ...defaultCustomAttributes,
                 error: error?.message || error?.toString?.() || error,
-              },
-              "custom"
+              }
             )
           }
-
-          addDatadogAction("Successfully linked address")
         } else {
           mutateKeyPair(newKeyPair)
-          addDatadogAction("Successfully generated keypair")
         }
       },
     }
   )
 
-  const ready = !(keyPair === undefined && keyPairError === undefined) || !!userError
+  const ready =
+    !(keyPair === undefined && keyPairError === undefined) || !!publicUserError
 
-  const [localStorageUser, setLocalStorageUser] = useLocalStorage(
-    "userId",
-    undefined
-  )
-
-  const mainUser = usePublicUserData(localStorageUser?.address)
+  const {
+    id: mainUserId,
+    publicKey: mainUserPublicKey,
+    ...mainUser
+  } = useUserPublic(addressLinkParams?.address)
 
   const { data: mainUserKeyPair, error } = useSWRImmutable(
-    mainUser?.data?.id ? ["mainUserKeyPair", mainUser?.data?.id] : null,
-    (_, id) => getKeyPairFromIdb(id)
+    mainUserId ? ["mainUserKeyPair", mainUserId] : null,
+    ([_, mainUserIdToGet]) => getKeyPairFromIdb(mainUserIdToGet)
   )
 
   const isMainUserKeyInvalid =
     !!error ||
-    (!!mainUser?.data?.id &&
-      !!localStorageUser?.id &&
-      mainUser.data.id !== user?.id &&
+    (!!mainUserId &&
+      !!addressLinkParams?.userId &&
+      mainUserId !== id &&
       mainUserKeyPair &&
-      mainUser.data.signingKey !== mainUserKeyPair.pubKey)
+      (mainUserPublicKey ?? (mainUser as any)?.signingKey) !==
+        mainUserKeyPair.pubKey)
 
   useEffect(() => {
     if (isMainUserKeyInvalid) {
-      setLocalStorageUser(undefined)
-      deleteKeyPairFromIdb(mainUser?.data?.id).then(() =>
-        mutate(unstable_serialize(["shouldLinkToUser", user?.id]))
+      setAddressLinkParams({ userId: null, address: null })
+      deleteKeyPairFromIdb(mainUserId).then(() =>
+        mutate(unstable_serialize(["shouldLinkToUser", id]))
       )
     }
   }, [isMainUserKeyInvalid])
@@ -356,28 +369,30 @@ const useKeyPair = () => {
       ...setSubmitResponse,
       onSubmit: async (
         shouldLinkToUser: boolean,
-        provider?: AddressConnectionProvider
+        provider?: AddressConnectionProvider,
+        reCaptchaToken?: string
       ) => {
         const body: SetKeypairPayload = { pubKey: undefined }
+
+        if (reCaptchaToken) {
+          body.verificationParams = {
+            reCaptcha: reCaptchaToken,
+          }
+        }
 
         try {
           body.pubKey = generatedKeyPair.pubKey
         } catch (err) {
           if (error?.code !== 4001) {
-            addDatadogError(
-              `Keypair generation error`,
-              {
-                ...defaultCustomAttributes,
-                error: err?.message || err?.toString?.() || err,
-              },
-              "custom"
-            )
+            captureEvent(`Keypair generation error`, {
+              error: err?.message || err?.toString?.() || err,
+            })
           }
           throw err
         }
 
         if (shouldLinkToUser) {
-          const userId = JSON.parse(window.localStorage.getItem("userId"))?.id
+          const userId = addressLinkParams?.userId
 
           const { keyPair: mainKeyPair } = await getKeyPairFromIdb(userId)
 
@@ -405,7 +420,7 @@ const useKeyPair = () => {
         }
 
         if (isDelegateConnection || provider === "DELEGATE") {
-          const prevKeyPair = await getKeyPairFromIdb(user?.id)
+          const prevKeyPair = await getKeyPairFromIdb(id)
           body.addressConnectionProvider = "DELEGATE"
           body.pubKey = prevKeyPair?.pubKey ?? body.pubKey
         }
@@ -416,5 +431,5 @@ const useKeyPair = () => {
   }
 }
 
-export { getKeyPairFromIdb, setKeyPairToIdb, deleteKeyPairFromIdb }
+export { deleteKeyPairFromIdb, getKeyPairFromIdb, setKeyPairToIdb }
 export default useKeyPair

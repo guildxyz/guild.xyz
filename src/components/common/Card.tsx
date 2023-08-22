@@ -1,5 +1,5 @@
 import { Box, useColorMode } from "@chakra-ui/react"
-import { forwardRef, PropsWithChildren } from "react"
+import { PropsWithChildren, forwardRef } from "react"
 import { Rest } from "types"
 
 type Props = {

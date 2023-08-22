@@ -12,20 +12,20 @@ type GalaxyCampaign = {
   }
 }
 
-export const useGalaxyCampaigns = () => {
-  const { data, isValidating } = useSWRImmutable<GalaxyCampaign[]>(
-    "/assets/galxe/campaign"
+export const useGalaxyCampaigns = (search = "") => {
+  const { data, isLoading } = useSWRImmutable<GalaxyCampaign[]>(
+    search.length > 0 ? `/assets/galxe/campaign?search=${search}` : null
   )
 
-  return { campaigns: data, isLoading: isValidating }
+  return { campaigns: data, isLoading }
 }
 
 export const useGalaxyCampaign = (
   id: string
 ): { campaign: GalaxyCampaign; isLoading: boolean } => {
-  const { data, isValidating } = useSWRImmutable(
+  const { data, isLoading } = useSWRImmutable(
     id?.length >= 10 ? `/assets/galxe/campaign/${id}` : null
   )
 
-  return { campaign: data, isLoading: isValidating }
+  return { campaign: data, isLoading }
 }

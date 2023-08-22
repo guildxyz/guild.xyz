@@ -7,7 +7,7 @@ export default async function handler(_, res) {
     production: "https://guild.xyz",
   }[process.env.NODE_ENV]
 
-  const guilds = await fetcher(`/guild?sort=members`).catch((_) => [])
+  const guilds = await fetcher(`/v2/guilds?sort=members`).catch((_) => [])
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

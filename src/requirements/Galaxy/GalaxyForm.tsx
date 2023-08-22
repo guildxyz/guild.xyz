@@ -4,15 +4,28 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
+  Stack,
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import { useGalaxyCampaign, useGalaxyCampaigns } from "./hooks/useGalaxyCampaigns"
+
+const galaxyRequirementTypes = [
+  {
+    label: "Hold a Galxe NFT",
+    value: "GALAXY",
+  },
+  {
+    label: "Participate in a campaign",
+    value: "GALAXY_PARTICIPATION",
+  },
+]
 
 const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
@@ -20,7 +33,6 @@ const customFilterOption = (candidate, input) =>
 
 const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const {
-    control,
     register,
     setValue,
     formState: { errors },
@@ -31,27 +43,34 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
     register(`${baseFieldPath}.data.galaxyId`)
   }, [register])
 
-  const selectedId = useWatch({ control, name: `${baseFieldPath}.data.id` })
+  const selectedGalaxyId = useWatch({
+    name: `${baseFieldPath}.data.galaxyId`,
+  })
 
-  const { campaigns, isLoading } = useGalaxyCampaigns()
+  const [searchText, setSearchText] = useState("")
+  const debouncedSearchText = useDebouncedState(searchText)
+  const { campaigns, isLoading } = useGalaxyCampaigns(debouncedSearchText)
 
   const [pastedId, setPastedId] = useState(field?.data?.galaxyId)
   const { campaign, isLoading: isCampaignLoading } = useGalaxyCampaign(
-    !campaigns || campaigns?.find((c) => c.id === pastedId) ? null : pastedId
+    selectedGalaxyId ??
+      (!campaigns || campaigns?.find((c) => c.id === pastedId) ? null : pastedId)
   )
 
   const mappedCampaigns = useMemo(() => {
-    if (isLoading || isCampaignLoading) return []
+    if (campaign)
+      return [
+        {
+          img: campaign.thumbnail,
+          label: campaign.name,
+          value: campaign.numberID?.toString(),
+          galaxyId: campaign.id,
+        },
+      ]
+
+    if (isLoading) return []
 
     let allCampaigns = []
-
-    if (campaign)
-      allCampaigns.push({
-        img: campaign.thumbnail,
-        label: campaign.name,
-        value: campaign.numberID?.toString(),
-        galaxyId: campaign.id,
-      })
 
     const publicCampaigns = campaigns?.map((c) => ({
       img: c.thumbnail,
@@ -65,68 +84,72 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
     return allCampaigns
   }, [campaigns, campaign])
 
-  const [campaignImage, setCampaignImage] = useState(null)
-
-  useEffect(() => {
-    if (!campaigns?.length) return
-    if (!selectedId) {
-      setCampaignImage(null)
-      return
-    }
-
-    const selectedCampaign = campaigns.find(
-      (c) => c.numberID?.toString() === selectedId
-    )
-
-    const isPrivateCampaign = selectedId === campaign?.numberID?.toString()
-
-    const thumbnail = isPrivateCampaign
-      ? campaign.thumbnail
-      : selectedCampaign?.thumbnail
-    setCampaignImage(thumbnail)
-  }, [campaigns, selectedId])
-
   return (
-    <FormControl
-      isRequired
-      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
-    >
-      <FormLabel>Campaign:</FormLabel>
-
-      <InputGroup>
-        {campaignImage && (
-          <InputLeftElement>
-            <OptionImage img={campaignImage} alt="Campaign thumbnail" />
-          </InputLeftElement>
-        )}
+    <Stack spacing={8} alignItems="start">
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type}
+      >
+        <FormLabel>Type:</FormLabel>
 
         <ControlledSelect
-          name={`${baseFieldPath}.data.id`}
-          rules={{
-            required: "This field is required.",
-          }}
-          isClearable
-          isLoading={isLoading || isCampaignLoading}
-          options={mappedCampaigns}
-          placeholder="Search campaigns..."
-          afterOnChange={(newValue) =>
-            setValue(`${baseFieldPath}.data.galaxyId`, newValue?.galaxyId)
-          }
-          onInputChange={(text, _) => {
-            if (!text?.length) return
-            const regex = /^[a-zA-Z0-9]+$/i
-            if (regex.test(text)) setPastedId(text)
-          }}
-          filterOption={customFilterOption}
+          name={`${baseFieldPath}.type`}
+          rules={{ required: "It's required to select a type" }}
+          options={galaxyRequirementTypes}
         />
-      </InputGroup>
 
-      <FormHelperText>Search by name or ID</FormHelperText>
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
+        </FormErrorMessage>
+      </FormControl>
 
-      <FormErrorMessage>
-        {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
-      </FormErrorMessage>
-    </FormControl>
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+      >
+        <FormLabel>Campaign:</FormLabel>
+
+        <InputGroup>
+          {campaign?.thumbnail && (
+            <InputLeftElement>
+              <OptionImage img={campaign.thumbnail} alt="Campaign thumbnail" />
+            </InputLeftElement>
+          )}
+
+          <ControlledSelect
+            name={`${baseFieldPath}.data.id`}
+            rules={{
+              required: "This field is required.",
+            }}
+            isClearable
+            isLoading={isLoading || isCampaignLoading}
+            options={mappedCampaigns}
+            placeholder="Search campaigns..."
+            afterOnChange={(newValue) =>
+              setValue(`${baseFieldPath}.data.galaxyId`, newValue?.galaxyId)
+            }
+            onInputChange={(text, _) => {
+              if (!text?.length) return
+              const regex = /^[a-zA-Z0-9]+$/i
+              if (regex.test(text)) {
+                setPastedId(text)
+              }
+              setSearchText(text)
+            }}
+            filterOption={customFilterOption}
+            noResultText={
+              !debouncedSearchText.length ? "Start typing..." : undefined
+            }
+          />
+        </InputGroup>
+
+        <FormHelperText>Search by name or ID</FormHelperText>
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+        </FormErrorMessage>
+      </FormControl>
+    </Stack>
   )
 }
 

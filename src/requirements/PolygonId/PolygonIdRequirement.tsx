@@ -7,6 +7,7 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Portal,
   useColorModeValue,
 } from "@chakra-ui/react"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -28,13 +29,15 @@ const PolygonIDRequirement = (props: RequirementProps) => {
 
   if (requirement?.data?.query)
     return (
-      <Popover placement="bottom" strategy="fixed">
+      <Popover placement="bottom">
         <Requirement
           image={`/requirementLogos/polygonId.svg`}
           footer={<ConnectPolygonID />}
           {...props}
         >
-          {`Satisfy a PolygonID `}
+          {`Satisfy the `}
+          <DataBlock>{requirement.data.query[0].query?.type}</DataBlock>
+          {` PolygonID `}
           <PopoverTrigger>
             <Button
               variant="link"
@@ -44,30 +47,23 @@ const PolygonIDRequirement = (props: RequirementProps) => {
               query
             </Button>
           </PopoverTrigger>
-
-          {proofAge && (
-            <>
-              {` (valid until `}
-              <DataBlock>{proofAge}</DataBlock>
-              {`)`}
-            </>
-          )}
         </Requirement>
-        <PopoverContent>
-          <PopoverArrow />
-          <PopoverBody p={0}>
-            <Box
-              overflow="auto"
-              as="pre"
+        <Portal>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverBody
               p={2}
               bgColor={bg}
-              borderRadius="sm"
-              fontSize="sm"
+              borderRadius={"xl"}
+              maxH={"md"}
+              overflow={"auto"}
             >
-              {JSON.stringify(requirement.data.query, null, 2)}
-            </Box>
-          </PopoverBody>
-        </PopoverContent>
+              <Box as="pre" fontSize="sm">
+                {JSON.stringify(requirement.data.query, null, 2)}
+              </Box>
+            </PopoverBody>
+          </PopoverContent>
+        </Portal>
       </Popover>
     )
 
@@ -78,6 +74,7 @@ const PolygonIDRequirement = (props: RequirementProps) => {
       {...props}
     >
       {`Authenticate with PolygonID`}
+      {requirement.chain === "POLYGON_MUMBAI" && " (on Mumbai)"}
       {proofAge && (
         <>
           {` (valid until `}
