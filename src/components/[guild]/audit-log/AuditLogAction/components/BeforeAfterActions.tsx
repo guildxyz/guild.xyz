@@ -45,20 +45,25 @@ const BeforeAfterActions = (): JSX.Element => {
 
   if (action === AUDITLOG.UpdateRequirement)
     return (
-      <UpdatedDataGrid
-        before={
-          <RequirementDisplayComponent
-            requirement={before as Requirement}
-            rightElement={null}
-          />
-        }
-        after={
-          <RequirementDisplayComponent
-            requirement={data as Requirement}
-            rightElement={null}
-          />
-        }
-      />
+      <AuditLogChildActionLayout
+        icon={<ActionIcon action={AUDITLOG.UpdateRequirement} size={6} />}
+        label="Update requirement"
+      >
+        <UpdatedDataGrid
+          before={
+            <RequirementDisplayComponent
+              requirement={before as Requirement}
+              rightElement={null}
+            />
+          }
+          after={
+            <RequirementDisplayComponent
+              requirement={data as Requirement}
+              rightElement={null}
+            />
+          }
+        />
+      </AuditLogChildActionLayout>
     )
 
   if (

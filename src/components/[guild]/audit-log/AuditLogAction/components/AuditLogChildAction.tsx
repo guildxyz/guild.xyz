@@ -46,7 +46,7 @@ const AuditLogChildAction = (): JSX.Element => {
 
 type AuditLogChildActionLayoutProps = {
   icon?: JSX.Element
-  label?: JSX.Element | string
+  label: JSX.Element | string
   isInline?: boolean
 }
 
@@ -63,7 +63,7 @@ const AuditLogChildActionLayout = ({
       {icon}
       <Stack w={isInline ? "max-content" : "full"}>
         <HStack>
-          {label && typeof label === "string" ? (
+          {typeof label === "string" ? (
             <Text as="span" fontWeight="semibold">
               {label}
             </Text>
