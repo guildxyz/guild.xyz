@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   ArrowRight,
   ArrowsClockwise,
   ArrowsLeftRight,
@@ -241,7 +242,7 @@ export const auditLogActionIcons: Record<
     color: "green.500",
   },
   [AUDITLOG.RevokeReward]: {
-    as: ArrowRight,
+    as: ArrowLeft,
   },
   [AUDITLOG.LoseReward]: {
     as: StarHalf,
