@@ -20,10 +20,13 @@ import ActionIcon from "./components/ActionIcon"
 import ActionLabel from "./components/ActionLabel"
 import AuditLogChildAction from "./components/AuditLogChildAction"
 import BeforeAfterActions from "./components/BeforeAfterActions"
+import MoreActions from "./components/MoreActions"
 
 type Props = {
   action: Action
 }
+
+const DISPLAYED_CHILD_ACTIONS = 5
 
 const AuditLogAction = (): JSX.Element => {
   const groupHoverBgColor = useColorModeValue("gray.50", "whiteAlpha.100")
@@ -95,11 +98,18 @@ const AuditLogAction = (): JSX.Element => {
         <Collapse in={isOpen}>
           <Stack spacing={3} pr={6} pl="4.5rem" py={4} bgColor={collapseBgColor}>
             <BeforeAfterActions />
-            {children.map((childAction) => (
+            {children.slice(0, DISPLAYED_CHILD_ACTIONS).map((childAction) => (
               <AuditLogActionProvider key={childAction.id} action={childAction}>
                 <AuditLogChildAction />
               </AuditLogActionProvider>
             ))}
+
+            {children.length > DISPLAYED_CHILD_ACTIONS && (
+              <MoreActions
+                actions={children}
+                displayedActionCount={DISPLAYED_CHILD_ACTIONS}
+              />
+            )}
           </Stack>
         </Collapse>
       )}
