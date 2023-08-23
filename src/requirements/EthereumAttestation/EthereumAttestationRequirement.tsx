@@ -6,6 +6,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import { RPC } from "connectors"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import shortenHex from "utils/shortenHex"
 
@@ -75,7 +76,8 @@ const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element =>
             </>
           )}
         </>
-      )}
+      )}{" "}
+      on {RPC[requirement.chain].chainName}
     </Requirement>
   )
 }
