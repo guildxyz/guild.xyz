@@ -96,7 +96,13 @@ const AuditLogAction = (): JSX.Element => {
 
       {shouldRenderCollapse && (
         <Collapse in={isOpen}>
-          <Stack spacing={3} pr={6} pl="4.5rem" py={4} bgColor={collapseBgColor}>
+          <Stack
+            spacing={3}
+            pr={6}
+            pl={{ base: 5, sm: "4.5rem" }}
+            py={4}
+            bgColor={collapseBgColor}
+          >
             <BeforeAfterActions />
             {children.slice(0, DISPLAYED_CHILD_ACTIONS).map((childAction) => (
               <AuditLogActionProvider key={childAction.id} action={childAction}>
