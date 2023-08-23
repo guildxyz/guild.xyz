@@ -13,6 +13,8 @@ import { normalizeProps, useMachine } from "@zag-js/react"
 import { useRouter } from "next/router"
 import { CaretDown, X } from "phosphor-react"
 import { KeyboardEvent, useEffect, useState } from "react"
+import ActionIcon from "../../AuditLogAction/components/ActionIcon"
+import { AUDITLOG } from "../../constants"
 import { SupportedQueryParam, SUPPORTED_QUERY_PARAMS } from "../../hooks/useAuditLog"
 import { useActiveFiltersReducer } from "./hooks/useActiveFiltersReducer"
 import TagInput from "./TagInput"
@@ -30,7 +32,8 @@ export type Filter = {
 
 const isSupportedQueryParam = (arg: any): arg is SupportedQueryParam =>
   typeof arg === "string" &&
-  SUPPORTED_QUERY_PARAMS.includes(arg as SupportedQueryParam)
+  (SUPPORTED_QUERY_PARAMS.includes(arg as SupportedQueryParam) ||
+    SUPPORTED_QUERY_PARAMS.includes(arg.split(":")[0] as SupportedQueryParam))
 
 const searchOptions: SearchOption[] = [
   {
@@ -54,6 +57,18 @@ const searchOptions: SearchOption[] = [
     value: "rolePlatformId",
   },
 ]
+
+const hiddenActions: (keyof typeof AUDITLOG)[] = [
+  "UpdateUrlName",
+  "UpdateLogoOrTitle",
+  "UpdateDescription",
+  "UpdateLogic",
+  "UpdateTheme",
+]
+
+const auditLogActions = Object.entries(AUDITLOG)
+  .filter(([actionType]) => !hiddenActions.includes(AUDITLOG[actionType]))
+  .map(([, actionName]) => actionName)
 
 const FiltersInput = (): JSX.Element => {
   const rootBgColor = useColorModeValue("white", "blackAlpha.300")
@@ -93,16 +108,20 @@ const FiltersInput = (): JSX.Element => {
         placement: "bottom-start",
         sameWidth: true,
       },
-      onSelect({ value: filterNameOrSearch }) {
-        if (!isSupportedQueryParam(filterNameOrSearch)) return
+      onSelect({ value }) {
+        if (!isSupportedQueryParam(value)) return
+
+        const [filterNameOrSearch, filterValue = ""] = value.split(":")
 
         dispatch({
           type: "addFilter",
           filter: {
-            filter: filterNameOrSearch,
-            value: "",
+            filter: filterNameOrSearch as SupportedQueryParam,
+            value: decodeURIComponent(filterValue),
           },
         })
+
+        if (filterValue.length) setInputValue("")
 
         const nativeTagInput: HTMLInputElement = document.querySelector(
           `#combobox\\:filter-input-combobox #${filterNameOrSearch}`
@@ -298,6 +317,40 @@ const FiltersInput = (): JSX.Element => {
               </Text>
             </HStack>
           )}
+
+          {inputValue?.length > 2 &&
+            !activeFilters?.some((filter) => filter.filter === "action") &&
+            auditLogActions
+              .filter((action) => action.includes(inputValue.toLowerCase()))
+              .map((action) => {
+                // Need to encode it, because it's used as an ID in the DOM and it'll break the filter input if the ID contains spaces
+                const value = `action:${encodeURIComponent(action)}`
+
+                return (
+                  <HStack
+                    key={action}
+                    {...getOptionProps({ label: action, value })}
+                    px={4}
+                    h={12}
+                    bgColor={
+                      focusedOption?.value === value ? optionFocusBgColor : undefined
+                    }
+                    _hover={{
+                      bgColor: optionFocusBgColor,
+                    }}
+                    transition="0.16s ease"
+                  >
+                    <Text as="span" fontWeight="bold" flexShrink={0}>
+                      {`Filter for actions: `}
+                    </Text>
+                    <ActionIcon action={action} size={6} />
+                    <Text as="span" isTruncated>
+                      {action}
+                    </Text>
+                  </HStack>
+                )
+              })}
+
           {searchOptions
             .filter(
               (option) => !activeFilters?.map((f) => f.filter).includes(option.value)

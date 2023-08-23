@@ -34,7 +34,7 @@ const getActionIconProps = (action: string, size = 8): ActionIconProps => {
 }
 
 const ActionIcon = ({ action: actionProp, size }: Props): JSX.Element => {
-  const { action } = useAuditLogActionContext()
+  const { action } = useAuditLogActionContext() ?? {}
 
   return <Icon {...getActionIconProps(actionProp ?? action, size)} />
 }
