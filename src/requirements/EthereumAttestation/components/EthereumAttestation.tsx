@@ -1,9 +1,11 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { Chain } from "connectors"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
+import { EAS_SCAN_BASE } from "../EthereumAttestationRequirement"
 
 const HEX_STRING_REGEX = /^0x[A-F0-9]+$/i
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -23,13 +25,7 @@ const EthereumAttestation = ({
     <>
       <ChainPicker
         controlName={`${baseFieldPath}.chain` as const}
-        supportedChains={[
-          "ETHEREUM",
-          "OPTIMISM",
-          "ARBITRUM",
-          "SEPOLIA",
-          "BASE_GOERLI",
-        ]}
+        supportedChains={Object.keys(EAS_SCAN_BASE) as Chain[]}
       />
 
       <FormControl

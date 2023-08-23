@@ -10,7 +10,13 @@ import { RPC } from "connectors"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import shortenHex from "utils/shortenHex"
 
-const EAS_SCAN_BASE = "https://easscan.org/schema/view"
+export const EAS_SCAN_BASE = {
+  ARBITRUM: "https://arbitrum.easscan.org/schema/view",
+  OPTIMISM: "https://optimism.easscan.org/schema/view",
+  ETHEREUM: "https://easscan.org/schema/view",
+  SEPOLIA: "https://sepolia.easscan.org/schema/view",
+  BASE_GOERLI: "https://base-goerli.easscan.org/schema/view",
+} as const
 
 const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
@@ -30,7 +36,9 @@ const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element =>
       footer={
         <HStack spacing={4}>
           <RequirementLinkButton
-            href={`${EAS_SCAN_BASE}/${requirement?.data?.schemaId}`}
+            href={`${EAS_SCAN_BASE[requirement?.chain ?? "ETHEREUM"]}/${
+              requirement?.data?.schemaId
+            }`}
             imageUrl="/requirementLogos/eas.png"
           >
             {/* View schema on EAS scan */}
