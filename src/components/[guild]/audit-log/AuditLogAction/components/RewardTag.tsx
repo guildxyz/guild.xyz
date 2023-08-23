@@ -30,7 +30,9 @@ const RewardTag = ({ rolePlatformId }: Props): JSX.Element => {
           <TagLeftIcon as={platforms[reward?.platformName].icon} />
         )}
 
-        <TagLabel>{reward?.platformGuildName ?? reward?.data?.name}</TagLabel>
+        <TagLabel>
+          {reward?.platformGuildName ?? reward?.data?.name ?? "Unknown reward"}
+        </TagLabel>
       </Tag>
     </Tooltip>
   )

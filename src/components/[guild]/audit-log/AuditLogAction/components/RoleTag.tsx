@@ -57,7 +57,7 @@ const RoleTag = ({ data, id }: Props): JSX.Element => {
                 />
               </Circle>
             )}
-            <Text as="span">{roleName}</Text>
+            <Text as="span">{roleName ?? "Unknown role"}</Text>
           </HStack>
         )}
       </Tag>
