@@ -7,11 +7,13 @@ import { useRequirementContext } from "./RequirementContext"
 type Props = {
   chain?: Chain
   address?: string
+  label?: string
 }
 
 const BlockExplorerUrl = ({
   chain: chainProp,
   address: addressProp,
+  label,
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const { chain, type, address } = useRequirementContext()
@@ -28,7 +30,7 @@ const BlockExplorerUrl = ({
       href={`${blockExplorer}/${path}/${addressProp ?? address}`}
       imageUrl={RPC[chainProp ?? chain]?.blockExplorerIcons[colorMode]}
     >
-      View on explorer
+      {label ?? "View on explorer"}
     </RequirementLinkButton>
   )
 }
