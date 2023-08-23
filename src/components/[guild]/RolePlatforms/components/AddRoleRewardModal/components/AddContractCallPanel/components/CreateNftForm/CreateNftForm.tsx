@@ -366,7 +366,11 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                     {formattedGuildFee ?? "..."}
                   </Skeleton>
                   {` ${RPC[chain]?.nativeCurrency?.symbol} Guild minting fee. `}
-                  <Link href="#" isExternal textDecoration="underline">
+                  <Link
+                    href="https://help.guild.xyz/en/articles/8193498-guild-base-fee"
+                    isExternal
+                    textDecoration="underline"
+                  >
                     Learn more
                     <Icon as={ArrowSquareOut} ml={0.5} />
                   </Link>
