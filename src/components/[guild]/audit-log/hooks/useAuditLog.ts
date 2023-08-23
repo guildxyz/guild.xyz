@@ -38,6 +38,7 @@ type AuditLogActionResponse = {
       platformName: PlatformName
       platformGuildId: string
       platformGuildName: string
+      data?: Record<string, any>
     }[]
     roles: { id: number; name: string }[]
     users: { id: number; address: string }[]
