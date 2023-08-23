@@ -30,6 +30,7 @@ const UserTag = ({ id }: Props): JSX.Element => {
         variant={variant}
         colorScheme={colorScheme}
         cursor="pointer"
+        w="max-content"
         onClick={() => {
           router.push({
             pathname: router.pathname,

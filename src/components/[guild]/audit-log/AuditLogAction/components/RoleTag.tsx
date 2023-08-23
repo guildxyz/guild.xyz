@@ -32,6 +32,7 @@ const RoleTag = ({ data, id }: Props): JSX.Element => {
       <Tag
         as="button"
         colorScheme={colorScheme}
+        w="max-content"
         onClick={
           id
             ? () => {

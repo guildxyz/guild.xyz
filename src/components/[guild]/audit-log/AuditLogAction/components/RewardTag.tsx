@@ -19,6 +19,7 @@ const RewardTag = ({ rolePlatformId }: Props): JSX.Element => {
         as="button"
         bgColor={`${platforms[reward?.platformName]?.colorScheme}.500` ?? "gray.500"}
         color="white"
+        w="max-content"
         onClick={() => {
           router.push({
             pathname: router.pathname,

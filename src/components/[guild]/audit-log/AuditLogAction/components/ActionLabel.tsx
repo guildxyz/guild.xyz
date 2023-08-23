@@ -1,4 +1,4 @@
-import { HStack, Text } from "@chakra-ui/react"
+import { Stack, Text } from "@chakra-ui/react"
 import platforms from "platforms/platforms"
 import capitalize from "utils/capitalize"
 import { AUDITLOG } from "../../constants"
@@ -16,7 +16,11 @@ const ActionLabel = (): JSX.Element => {
   const capitalizedName = capitalize(action)
 
   return (
-    <HStack fontWeight="semibold">
+    <Stack
+      direction={{ base: "column", sm: "row" }}
+      spacing={{ base: 1, sm: 2 }}
+      fontWeight="semibold"
+    >
       {(() => {
         switch (action) {
           case AUDITLOG.UpdateGuild:
@@ -121,7 +125,7 @@ const ActionLabel = (): JSX.Element => {
             )
         }
       })()}
-    </HStack>
+    </Stack>
   )
 }
 
