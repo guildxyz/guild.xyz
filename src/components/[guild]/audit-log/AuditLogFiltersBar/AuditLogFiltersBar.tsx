@@ -5,11 +5,11 @@ import FiltersInput from "./components/FiltersInput"
 const AuditLogFiltersBar = (): JSX.Element => (
   <StickyBar>
     <SimpleGrid columns={3} gap={4}>
-      <GridItem colSpan={2}>
+      <GridItem colSpan={{ base: 3, sm: 2 }}>
         <FiltersInput />
       </GridItem>
 
-      <GridItem>
+      <GridItem colSpan={{ base: 3, sm: 1 }}>
         <Select>
           <option>Last 1 week</option>
         </Select>
