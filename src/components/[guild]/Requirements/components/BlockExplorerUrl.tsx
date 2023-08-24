@@ -14,7 +14,7 @@ const BlockExplorerUrl = ({
   address: addressProp,
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
-  const { chain, type, address } = useRequirementContext()
+  const { chain, type, address, data } = useRequirementContext()
 
   const blockExplorer = RPC[chainProp ?? chain]?.blockExplorerUrls?.[0]
 
@@ -23,9 +23,13 @@ const BlockExplorerUrl = ({
   // explorer.zksync.io doesn't support the /token path
   const path = (chainProp ?? chain) === "ZKSYNC_ERA" ? "address" : "token"
 
+  const url = data?.id
+    ? `${blockExplorer}/nft/${addressProp ?? address}/${data?.id}`
+    : `${blockExplorer}/${path}/${addressProp ?? address}`
+
   return (
     <RequirementLinkButton
-      href={`${blockExplorer}/${path}/${addressProp ?? address}`}
+      href={url}
       imageUrl={RPC[chainProp ?? chain]?.blockExplorerIcons[colorMode]}
     >
       View on explorer
