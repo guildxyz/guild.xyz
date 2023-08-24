@@ -8,12 +8,14 @@ type Props = {
   chain?: Chain
   address?: string
   label?: string
+  path?: string
 }
 
 const BlockExplorerUrl = ({
   chain: chainProp,
   address: addressProp,
   label,
+  path: pathProp,
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const { chain, type, address } = useRequirementContext()
@@ -23,7 +25,8 @@ const BlockExplorerUrl = ({
   if (type === "COIN" || addressProp === NULL_ADDRESS || !blockExplorer) return null
 
   // explorer.zksync.io doesn't support the /token path
-  const path = (chainProp ?? chain) === "ZKSYNC_ERA" ? "address" : "token"
+  const path =
+    pathProp ?? ((chainProp ?? chain) === "ZKSYNC_ERA" ? "address" : "token")
 
   return (
     <RequirementLinkButton

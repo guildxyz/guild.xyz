@@ -45,6 +45,7 @@ const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element =>
             Schema
           </RequirementLinkButton>
           <BlockExplorerUrl
+            path="address"
             address={requirement.data?.attester ?? requirement.data?.recipient}
             // label={`View ${
             //   requirement.type === "EAS_ATTEST" ? "recipient" : "attester"
