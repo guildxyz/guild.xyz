@@ -108,7 +108,9 @@ const NftRequirement = (props: RequirementProps) => {
     >
       {"Own "}
       {requirement.data?.id
-        ? "the "
+        ? requirement.type === "ERC1155"
+          ? "a(n) "
+          : "the "
         : requirement.data?.maxAmount > 0
         ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount} `
         : requirement.data?.minAmount > 1
@@ -163,6 +165,12 @@ const NftRequirement = (props: RequirementProps) => {
             : ""
         }`
       )}
+      {requirement.data?.id ? (
+        <>
+          {" "}
+          with id <DataBlock>{requirement.data?.id}</DataBlock>
+        </>
+      ) : null}
     </Requirement>
   )
 }
