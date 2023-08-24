@@ -26,7 +26,7 @@ import {
 } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 
-export enum AUDITLOG {
+export enum ACTION {
   // Guild
   CreateGuild = "create guild",
   UpdateGuild = "update guild",
@@ -82,12 +82,12 @@ export enum AUDITLOG {
   UpdateTheme = "UpdateTheme",
 }
 
-export type AuditLogActionType = keyof typeof AUDITLOG
+export type ActivityLogActionType = keyof typeof ACTION
 
-export type AuditLogAction = {
+export type ActivityLogAction = {
   id: string
   parentId?: string
-  action: AUDITLOG
+  action: ACTION
   correlationId: string
   service: string
   timestamp: string
@@ -100,181 +100,181 @@ export type AuditLogAction = {
     role?: number
     rolePlatform?: number
   }
-  children?: Array<AuditLogAction>
+  children?: Array<ActivityLogAction>
 }
 
-export const auditLogActionIcons: Record<
-  AUDITLOG,
+export const activityLogActionIcons: Record<
+  ACTION,
   {
     as: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
     color?: string
   }
 > = {
-  [AUDITLOG.CreateGuild]: {
+  [ACTION.CreateGuild]: {
     as: House,
     color: "green.500",
   },
-  [AUDITLOG.UpdateGuild]: {
+  [ACTION.UpdateGuild]: {
     as: House,
     color: "blue.400",
   },
-  [AUDITLOG.DeleteGuild]: {
+  [ACTION.DeleteGuild]: {
     as: House,
     color: "red.500",
   },
-  [AUDITLOG.ExecutePendingActions]: {
+  [ACTION.ExecutePendingActions]: {
     as: Question,
     color: "gray.500",
   },
-  [AUDITLOG.TransferOwnership]: {
+  [ACTION.TransferOwnership]: {
     as: ArrowsLeftRight,
     color: "green.500",
   },
-  [AUDITLOG.AddAdmin]: {
+  [ACTION.AddAdmin]: {
     as: UserCircleGear,
     color: "green.500",
   },
-  [AUDITLOG.RemoveAdmin]: {
+  [ACTION.RemoveAdmin]: {
     as: UserCircleGear,
     color: "red.500",
   },
-  [AUDITLOG.ShowMembersOn]: {
+  [ACTION.ShowMembersOn]: {
     as: UserList,
     color: "green.500",
   },
-  [AUDITLOG.ShowMembersOff]: {
+  [ACTION.ShowMembersOff]: {
     as: UserList,
     color: "red.500",
   },
-  [AUDITLOG.HideFromExplorerOn]: {
+  [ACTION.HideFromExplorerOn]: {
     as: Eye,
     color: "red.500",
   },
-  [AUDITLOG.HideFromExplorerOff]: {
+  [ACTION.HideFromExplorerOff]: {
     as: Eye,
     color: "green.500",
   },
-  [AUDITLOG.CreateRole]: {
+  [ACTION.CreateRole]: {
     as: FolderUser,
     color: "green.500",
   },
-  [AUDITLOG.UpdateRole]: {
+  [ACTION.UpdateRole]: {
     as: FolderUser,
     color: "blue.400",
   },
-  [AUDITLOG.DeleteRole]: {
+  [ACTION.DeleteRole]: {
     as: FolderUser,
     color: "red.500",
   },
-  [AUDITLOG.AddReward]: {
+  [ACTION.AddReward]: {
     as: Star,
     color: "green.500",
   },
-  [AUDITLOG.RemoveReward]: {
+  [ACTION.RemoveReward]: {
     as: Star,
     color: "red.500",
   },
-  [AUDITLOG.UpdateReward]: {
+  [ACTION.UpdateReward]: {
     as: Star,
     color: "blue.400",
   },
-  [AUDITLOG.AddRequirement]: {
+  [ACTION.AddRequirement]: {
     as: LockKey,
     color: "green.500",
   },
-  [AUDITLOG.UpdateRequirement]: {
+  [ACTION.UpdateRequirement]: {
     as: LockKey,
     color: "blue.400",
   },
-  [AUDITLOG.RemoveRequirement]: {
+  [ACTION.RemoveRequirement]: {
     as: LockKey,
     color: "red.500",
   },
-  [AUDITLOG.StartStatusUpdate]: {
+  [ACTION.StartStatusUpdate]: {
     as: ArrowsClockwise,
     color: "blue.400",
   },
-  [AUDITLOG.RestartStatusUpdate]: {
+  [ACTION.RestartStatusUpdate]: {
     as: ArrowsClockwise,
     color: "orange.500",
   },
-  [AUDITLOG.StopStatusUpdate]: {
+  [ACTION.StopStatusUpdate]: {
     as: ArrowsClockwise,
     color: "red.500",
   },
-  [AUDITLOG.ClickJoinOnWeb]: {
+  [ACTION.ClickJoinOnWeb]: {
     as: SignIn,
     color: "green.500",
   },
-  [AUDITLOG.ClickJoinOnPlatform]: {
+  [ACTION.ClickJoinOnPlatform]: {
     as: SignIn,
     color: "green.500",
   },
-  [AUDITLOG.JoinGuild]: {
+  [ACTION.JoinGuild]: {
     as: SignIn,
     color: "green.500",
   },
-  [AUDITLOG.LeaveGuild]: {
+  [ACTION.LeaveGuild]: {
     as: SignOut,
     color: "red.500",
   },
-  [AUDITLOG.KickFromGuild]: {
+  [ACTION.KickFromGuild]: {
     as: UserMinus,
     color: "red.500",
   },
-  [AUDITLOG.UserStatusUpdate]: {
+  [ACTION.UserStatusUpdate]: {
     as: UserSwitch,
     color: "blue.400",
   },
-  [AUDITLOG.GetRole]: {
+  [ACTION.GetRole]: {
     as: IdentificationCard,
     color: "green.500",
   },
-  [AUDITLOG.LoseRole]: {
+  [ACTION.LoseRole]: {
     as: IdentificationCard,
     color: "red.500",
   },
-  [AUDITLOG.SendReward]: {
+  [ACTION.SendReward]: {
     as: ArrowRight,
   },
-  [AUDITLOG.GetReward]: {
+  [ACTION.GetReward]: {
     as: Star,
     color: "green.500",
   },
-  [AUDITLOG.RevokeReward]: {
+  [ACTION.RevokeReward]: {
     as: ArrowLeft,
   },
-  [AUDITLOG.LoseReward]: {
+  [ACTION.LoseReward]: {
     as: StarHalf,
     color: "red.500",
   },
-  [AUDITLOG.ConnectIdentity]: {
+  [ACTION.ConnectIdentity]: {
     as: UserFocus,
     color: "green.500",
   },
-  [AUDITLOG.DisconnectIdentity]: {
+  [ACTION.DisconnectIdentity]: {
     as: UserFocus,
     color: "red.500",
   },
 
   // Custom actions
-  [AUDITLOG.UpdateUrlName]: {
+  [ACTION.UpdateUrlName]: {
     as: LinkSimple,
     color: "blue.400",
   },
-  [AUDITLOG.UpdateLogoOrTitle]: {
+  [ACTION.UpdateLogoOrTitle]: {
     as: TextT,
     color: "blue.400",
   },
-  [AUDITLOG.UpdateDescription]: {
+  [ACTION.UpdateDescription]: {
     as: TextT,
     color: "blue.400",
   },
-  [AUDITLOG.UpdateLogic]: {
+  [ACTION.UpdateLogic]: {
     as: PlusMinus,
     color: "blue.400",
   },
-  [AUDITLOG.UpdateTheme]: {
+  [ACTION.UpdateTheme]: {
     as: PaintBrushBroad,
     color: "blue.400",
   },

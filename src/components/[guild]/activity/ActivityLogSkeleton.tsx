@@ -1,15 +1,15 @@
 import { HStack, Skeleton, SkeletonCircle, Stack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 
-const AuditLogSkeleton = (): JSX.Element => (
+const ActivityLogSkeleton = (): JSX.Element => (
   <>
     {[...Array(5)].map((_, i) => (
-      <AuditLogActionSkeleton key={i} />
+      <ActivityLogActionSkeleton key={i} />
     ))}
   </>
 )
 
-const AuditLogActionSkeleton = (): JSX.Element => (
+const ActivityLogActionSkeleton = (): JSX.Element => (
   <Card>
     <HStack spacing={4} px={{ base: 5, sm: 6 }} py={7}>
       <SkeletonCircle boxSize={8} flexShrink={0} />
@@ -21,4 +21,4 @@ const AuditLogActionSkeleton = (): JSX.Element => (
   </Card>
 )
 
-export default AuditLogSkeleton
+export default ActivityLogSkeleton

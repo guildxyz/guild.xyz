@@ -13,9 +13,12 @@ import { normalizeProps, useMachine } from "@zag-js/react"
 import { useRouter } from "next/router"
 import { CaretDown, X } from "phosphor-react"
 import { KeyboardEvent, useEffect, useState } from "react"
-import ActionIcon from "../../AuditLogAction/components/ActionIcon"
-import { AUDITLOG } from "../../constants"
-import { SupportedQueryParam, SUPPORTED_QUERY_PARAMS } from "../../hooks/useAuditLog"
+import ActionIcon from "../../ActivityLogAction/components/ActionIcon"
+import { ACTION } from "../../constants"
+import {
+  SupportedQueryParam,
+  SUPPORTED_QUERY_PARAMS,
+} from "../../hooks/useActivityLog"
 import { useActiveFiltersReducer } from "./hooks/useActiveFiltersReducer"
 import TagInput from "./TagInput"
 
@@ -58,7 +61,7 @@ const searchOptions: SearchOption[] = [
   },
 ]
 
-const hiddenActions: (keyof typeof AUDITLOG)[] = [
+const hiddenActions: (keyof typeof ACTION)[] = [
   "UpdateUrlName",
   "UpdateLogoOrTitle",
   "UpdateDescription",
@@ -66,8 +69,8 @@ const hiddenActions: (keyof typeof AUDITLOG)[] = [
   "UpdateTheme",
 ]
 
-const auditLogActions = Object.entries(AUDITLOG)
-  .filter(([actionType]) => !hiddenActions.includes(AUDITLOG[actionType]))
+const auditLogActions = Object.entries(ACTION)
+  .filter(([actionType]) => !hiddenActions.includes(ACTION[actionType]))
   .map(([, actionName]) => actionName)
 
 const FiltersInput = (): JSX.Element => {

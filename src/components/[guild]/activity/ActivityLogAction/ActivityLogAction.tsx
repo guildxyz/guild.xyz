@@ -11,14 +11,14 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { CaretDown } from "phosphor-react"
-import { AuditLogAction as Action } from "../constants"
+import { ActivityLogAction as Action } from "../constants"
 import {
-  AuditLogActionProvider,
-  useAuditLogActionContext,
-} from "./AuditLogActionContext"
+  ActivityLogActionProvider,
+  useActivityLogActionContext,
+} from "./ActivityLogActionContext"
 import ActionIcon from "./components/ActionIcon"
 import ActionLabel from "./components/ActionLabel"
-import AuditLogChildAction from "./components/AuditLogChildAction"
+import ActivityLogChildAction from "./components/ActivityLogChildAction"
 import BeforeAfterActions from "./components/BeforeAfterActions"
 import MoreActions from "./components/MoreActions"
 
@@ -28,13 +28,13 @@ type Props = {
 
 const DISPLAYED_CHILD_ACTIONS = 5
 
-const AuditLogAction = (): JSX.Element => {
+const ActivityLogAction = (): JSX.Element => {
   const groupHoverBgColor = useColorModeValue("gray.50", "whiteAlpha.100")
   const collapseBgColor = useColorModeValue("gray.50", "blackAlpha.400")
 
   const { isOpen, onToggle } = useDisclosure()
 
-  const { timestamp, children, before, data } = useAuditLogActionContext()
+  const { timestamp, children, before, data } = useActivityLogActionContext()
 
   const shouldRenderCollapse =
     children?.length > 0 ||
@@ -105,9 +105,9 @@ const AuditLogAction = (): JSX.Element => {
           >
             <BeforeAfterActions />
             {children.slice(0, DISPLAYED_CHILD_ACTIONS).map((childAction) => (
-              <AuditLogActionProvider key={childAction.id} action={childAction}>
-                <AuditLogChildAction />
-              </AuditLogActionProvider>
+              <ActivityLogActionProvider key={childAction.id} action={childAction}>
+                <ActivityLogChildAction />
+              </ActivityLogActionProvider>
             ))}
 
             {children.length > DISPLAYED_CHILD_ACTIONS && (
@@ -123,10 +123,10 @@ const AuditLogAction = (): JSX.Element => {
   )
 }
 
-const AuditLogActionWrapper = ({ action }: Props): JSX.Element => (
-  <AuditLogActionProvider action={action}>
-    <AuditLogAction />
-  </AuditLogActionProvider>
+const ActivityLogActionWrapper = ({ action }: Props): JSX.Element => (
+  <ActivityLogActionProvider action={action}>
+    <ActivityLogAction />
+  </ActivityLogActionProvider>
 )
 
-export default AuditLogActionWrapper
+export default ActivityLogActionWrapper

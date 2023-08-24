@@ -1,17 +1,17 @@
 import { Stack, Text } from "@chakra-ui/react"
 import platforms from "platforms/platforms"
 import capitalize from "utils/capitalize"
-import { AUDITLOG } from "../../constants"
-import useAuditLog from "../../hooks/useAuditLog"
-import { useAuditLogActionContext } from "../AuditLogActionContext"
+import { ACTION } from "../../constants"
+import useActivityLog from "../../hooks/useActivityLog"
+import { useActivityLogActionContext } from "../ActivityLogActionContext"
 import RewardTag from "./RewardTag"
 import RoleTag from "./RoleTag"
 import UserTag from "./UserTag"
 
 const ActionLabel = (): JSX.Element => {
-  const { data: auditLog } = useAuditLog()
+  const { data: activityLog } = useActivityLog()
 
-  const { action, ids, data, parentId } = useAuditLogActionContext()
+  const { action, ids, data, parentId } = useActivityLogActionContext()
 
   const capitalizedName = capitalize(action)
 
@@ -23,24 +23,24 @@ const ActionLabel = (): JSX.Element => {
     >
       {(() => {
         switch (action) {
-          case AUDITLOG.UpdateGuild:
+          case ACTION.UpdateGuild:
             return (
               <>
                 <Text as="span">{capitalizedName} by </Text>
                 <UserTag id={ids.user} />
               </>
             )
-          case AUDITLOG.AddAdmin:
-          case AUDITLOG.RemoveAdmin:
+          case ACTION.AddAdmin:
+          case ACTION.RemoveAdmin:
             return (
               <>
                 <Text as="span">{capitalizedName}:</Text>
                 {/* <UserTag /> TODO */}
               </>
             )
-          case AUDITLOG.CreateRole:
-          case AUDITLOG.UpdateRole:
-          case AUDITLOG.DeleteRole:
+          case ACTION.CreateRole:
+          case ACTION.UpdateRole:
+          case ACTION.DeleteRole:
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
@@ -49,26 +49,26 @@ const ActionLabel = (): JSX.Element => {
                 <UserTag id={ids.user} />
               </>
             )
-          case AUDITLOG.AddReward:
-          case AUDITLOG.RemoveReward:
-          case AUDITLOG.UpdateReward:
-          case AUDITLOG.SendReward:
-          case AUDITLOG.RevokeReward:
-          case AUDITLOG.LoseReward:
+          case ACTION.AddReward:
+          case ACTION.RemoveReward:
+          case ACTION.UpdateReward:
+          case ACTION.SendReward:
+          case ACTION.RevokeReward:
+          case ACTION.LoseReward:
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
                 <RewardTag rolePlatformId={ids.rolePlatform} />
               </>
             )
-          case AUDITLOG.ClickJoinOnWeb:
+          case ACTION.ClickJoinOnWeb:
             return (
               <>
                 <Text as="span">Join Guild through website</Text>
                 <UserTag id={ids.user} />
               </>
             )
-          case AUDITLOG.ClickJoinOnPlatform:
+          case ACTION.ClickJoinOnPlatform:
             return (
               <>
                 <Text as="span">{`Join Guild through ${
@@ -77,17 +77,17 @@ const ActionLabel = (): JSX.Element => {
                 <UserTag id={ids.user} />
               </>
             )
-          case AUDITLOG.GetRole:
-          case AUDITLOG.LoseRole:
-            const parentaction = auditLog?.entries?.find(
+          case ACTION.GetRole:
+          case ACTION.LoseRole:
+            const parentaction = activityLog?.entries?.find(
               (log) => log.id === parentId
             )?.action
             const isChildOfUserStatusUpdate = [
-              AUDITLOG.UserStatusUpdate,
-              AUDITLOG.JoinGuild,
-              AUDITLOG.ClickJoinOnWeb,
-              AUDITLOG.ClickJoinOnPlatform,
-              AUDITLOG.LeaveGuild,
+              ACTION.UserStatusUpdate,
+              ACTION.JoinGuild,
+              ACTION.ClickJoinOnWeb,
+              ACTION.ClickJoinOnPlatform,
+              ACTION.LeaveGuild,
             ].includes(parentaction)
 
             return (
@@ -103,9 +103,9 @@ const ActionLabel = (): JSX.Element => {
                 )}
               </>
             )
-          case AUDITLOG.AddRequirement:
-          case AUDITLOG.UpdateRequirement:
-          case AUDITLOG.RemoveRequirement:
+          case ACTION.AddRequirement:
+          case ACTION.UpdateRequirement:
+          case ACTION.RemoveRequirement:
             return <Text as="span">{capitalizedName}</Text>
 
           // TODO:

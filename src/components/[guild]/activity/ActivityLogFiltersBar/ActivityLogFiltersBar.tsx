@@ -2,7 +2,7 @@ import { GridItem, Select, SimpleGrid } from "@chakra-ui/react"
 import StickyBar from "components/common/Layout/StickyBar"
 import FiltersInput from "./components/FiltersInput"
 
-const AuditLogFiltersBar = (): JSX.Element => (
+const ActivityLogFiltersBar = (): JSX.Element => (
   <StickyBar>
     <SimpleGrid columns={3} gap={4}>
       <GridItem colSpan={{ base: 3, sm: 2 }}>
@@ -18,4 +18,4 @@ const AuditLogFiltersBar = (): JSX.Element => (
   </StickyBar>
 )
 
-export default AuditLogFiltersBar
+export default ActivityLogFiltersBar

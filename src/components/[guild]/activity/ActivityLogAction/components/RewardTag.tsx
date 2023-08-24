@@ -1,13 +1,13 @@
 import { Tag, TagLabel, TagLeftIcon, Tooltip } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import platforms from "platforms/platforms"
-import useAuditLog from "../../hooks/useAuditLog"
+import useActivityLog from "../../hooks/useActivityLog"
 
 type Props = {
   rolePlatformId: number
 }
 const RewardTag = ({ rolePlatformId }: Props): JSX.Element => {
-  const { data } = useAuditLog()
+  const { data } = useActivityLog()
 
   const reward = data.values.rolePlatforms.find((rp) => rp.id === rolePlatformId)
 

@@ -8,7 +8,7 @@ import {
 import GuildAvatar from "components/common/GuildAvatar"
 import { useRouter } from "next/router"
 import shortenHex from "utils/shortenHex"
-import useAuditLog from "../../hooks/useAuditLog"
+import useActivityLog from "../../hooks/useActivityLog"
 
 type Props = {
   id: number
@@ -18,7 +18,7 @@ const UserTag = ({ id }: Props): JSX.Element => {
   const variant = useColorModeValue("subtle", "solid")
   const colorScheme = useColorModeValue("alpha", "gray")
 
-  const { data } = useAuditLog()
+  const { data } = useActivityLog()
   const address = data.values.users.find((u) => u.id === id)?.address
 
   const router = useRouter()

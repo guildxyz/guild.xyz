@@ -1,7 +1,7 @@
 import { HStack, IconButton, Tag, Text, useColorModeValue } from "@chakra-ui/react"
 import { X } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
-import { SupportedQueryParam } from "../../hooks/useAuditLog"
+import { SupportedQueryParam } from "../../hooks/useActivityLog"
 import DynamicWidthInput from "./DynamicWidthInput"
 import { Filter } from "./FiltersInput"
 

@@ -13,14 +13,14 @@ import RequirementDisplayComponent from "components/[guild]/Requirements/compone
 import useColorPalette from "hooks/useColorPalette"
 import { ArrowRight } from "phosphor-react"
 import { Requirement } from "types"
-import { AUDITLOG } from "../../constants"
-import { useAuditLogActionContext } from "../AuditLogActionContext"
+import { ACTION } from "../../constants"
+import { useActivityLogActionContext } from "../ActivityLogActionContext"
 import ActionIcon from "./ActionIcon"
-import { AuditLogChildActionLayout } from "./AuditLogChildAction"
+import { ActivityLogChildActionLayout } from "./ActivityLogChildAction"
 import UpdatedDataGrid from "./UpdatedDataGrid"
 
 const BeforeAfterActions = (): JSX.Element => {
-  const { before, data, action } = useAuditLogActionContext()
+  const { before, data, action } = useActivityLogActionContext()
 
   const previousThemeProps = {
     color: before?.color,
@@ -43,10 +43,10 @@ const BeforeAfterActions = (): JSX.Element => {
     currentThemeProps.color
   )
 
-  if (action === AUDITLOG.UpdateRequirement)
+  if (action === ACTION.UpdateRequirement)
     return (
-      <AuditLogChildActionLayout
-        icon={<ActionIcon action={AUDITLOG.UpdateRequirement} size={6} />}
+      <ActivityLogChildActionLayout
+        icon={<ActionIcon action={ACTION.UpdateRequirement} size={6} />}
         label="Update requirement"
       >
         <UpdatedDataGrid
@@ -63,7 +63,7 @@ const BeforeAfterActions = (): JSX.Element => {
             />
           }
         />
-      </AuditLogChildActionLayout>
+      </ActivityLogChildActionLayout>
     )
 
   if (
@@ -76,8 +76,8 @@ const BeforeAfterActions = (): JSX.Element => {
   return (
     <Stack py={2} spacing={4}>
       {(before.name !== data.name || before.imageUrl !== data.imageUrl) && (
-        <AuditLogChildActionLayout
-          icon={<ActionIcon action={AUDITLOG.UpdateLogoOrTitle} size={6} />}
+        <ActivityLogChildActionLayout
+          icon={<ActionIcon action={ACTION.UpdateLogoOrTitle} size={6} />}
           label="Update logo / title:"
         >
           <UpdatedDataGrid
@@ -94,24 +94,24 @@ const BeforeAfterActions = (): JSX.Element => {
               </HStack>
             }
           />
-        </AuditLogChildActionLayout>
+        </ActivityLogChildActionLayout>
       )}
 
       {before.description !== data.description && (
-        <AuditLogChildActionLayout
-          icon={<ActionIcon action={AUDITLOG.UpdateDescription} size={6} />}
+        <ActivityLogChildActionLayout
+          icon={<ActionIcon action={ACTION.UpdateDescription} size={6} />}
           label="Update description:"
         >
           <UpdatedDataGrid
             before={<Text>{before.description}</Text>}
             after={<Text>{data.description}</Text>}
           />
-        </AuditLogChildActionLayout>
+        </ActivityLogChildActionLayout>
       )}
 
       {before.logic !== data.logic && (
-        <AuditLogChildActionLayout
-          icon={<ActionIcon action={AUDITLOG.UpdateLogic} size={6} />}
+        <ActivityLogChildActionLayout
+          icon={<ActionIcon action={ACTION.UpdateLogic} size={6} />}
           label={
             <HStack fontWeight="semibold">
               <Text as="span">Update logic:</Text>
@@ -129,8 +129,8 @@ const BeforeAfterActions = (): JSX.Element => {
       )}
 
       {before.urlName !== data.urlName && (
-        <AuditLogChildActionLayout
-          icon={<ActionIcon action={AUDITLOG.UpdateUrlName} size={6} />}
+        <ActivityLogChildActionLayout
+          icon={<ActionIcon action={ACTION.UpdateUrlName} size={6} />}
           label="Update URL:"
           isInline
         >
@@ -151,15 +151,15 @@ const BeforeAfterActions = (): JSX.Element => {
               >{`guild.xyz/${data.urlName}`}</Text>
             }
           />
-        </AuditLogChildActionLayout>
+        </ActivityLogChildActionLayout>
       )}
 
       {Object.values(previousThemeProps).every(Boolean) &&
         Object.keys(previousThemeProps).some(
           (key) => previousThemeProps[key] !== currentThemeProps[key]
         ) && (
-          <AuditLogChildActionLayout
-            icon={<ActionIcon action={AUDITLOG.UpdateTheme} size={6} />}
+          <ActivityLogChildActionLayout
+            icon={<ActionIcon action={ACTION.UpdateTheme} size={6} />}
             label="Update theme:"
           >
             <UpdatedDataGrid
@@ -203,7 +203,7 @@ const BeforeAfterActions = (): JSX.Element => {
                 </Flex>
               }
             />
-          </AuditLogChildActionLayout>
+          </ActivityLogChildActionLayout>
         )}
     </Stack>
   )

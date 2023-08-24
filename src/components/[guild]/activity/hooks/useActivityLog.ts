@@ -2,7 +2,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useRouter } from "next/router"
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite"
 import { PlatformName, Requirement } from "types"
-import { AuditLogAction } from "../constants"
+import { ActivityLogAction } from "../constants"
 
 const LIMIT = 25
 
@@ -24,8 +24,8 @@ export const SUPPORTED_QUERY_PARAMS = [
 ] as const
 export type SupportedQueryParam = (typeof SUPPORTED_QUERY_PARAMS)[number]
 
-type AuditLogActionResponse = {
-  entries: AuditLogAction[]
+type ActivityLogActionResponse = {
+  entries: ActivityLogAction[]
   values: {
     guilds: { id: number; name: string }[]
     poaps: any[] // TODO
@@ -50,15 +50,18 @@ const isSupportedQueryParam = (arg: any): arg is SupportedQueryParam => {
   return SUPPORTED_QUERY_PARAMS.includes(arg as SupportedQueryParam)
 }
 
-const useAuditLog = (): Omit<
-  SWRInfiniteResponse<AuditLogActionResponse>,
+const useActivityLog = (): Omit<
+  SWRInfiniteResponse<ActivityLogActionResponse>,
   "mutate" | "data"
-> & { data: AuditLogActionResponse; mutate: () => void } => {
+> & { data: ActivityLogActionResponse; mutate: () => void } => {
   const { id } = useGuild()
 
   const { query } = useRouter()
 
-  const getKey = (pageIndex: number, previousPageData: AuditLogActionResponse) => {
+  const getKey = (
+    pageIndex: number,
+    previousPageData: ActivityLogActionResponse
+  ) => {
     if (!id || (previousPageData?.entries && !previousPageData.entries.length))
       return null
 
@@ -78,7 +81,7 @@ const useAuditLog = (): Omit<
     return `/auditLog?${searchParams}`
   }
 
-  const swrResponse = useSWRInfinite<AuditLogActionResponse>(getKey, {
+  const swrResponse = useSWRInfinite<ActivityLogActionResponse>(getKey, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
@@ -100,17 +103,17 @@ const useAuditLog = (): Omit<
 
   return {
     ...swrResponse,
-    data: transformAuditLogInfiniteResponse(swrResponse.data),
+    data: transformActivityLogInfiniteResponse(swrResponse.data),
     mutate: () => swrResponse.mutate(),
   }
 }
 
-const transformAuditLogInfiniteResponse = (
-  rawResponse: AuditLogActionResponse[]
-): AuditLogActionResponse => {
+const transformActivityLogInfiniteResponse = (
+  rawResponse: ActivityLogActionResponse[]
+): ActivityLogActionResponse => {
   if (!rawResponse) return undefined
 
-  const transformedResponse: AuditLogActionResponse = {
+  const transformedResponse: ActivityLogActionResponse = {
     entries: [],
     values: {
       guilds: [],
@@ -133,4 +136,4 @@ const transformAuditLogInfiniteResponse = (
   return transformedResponse
 }
 
-export default useAuditLog
+export default useActivityLog

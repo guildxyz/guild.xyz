@@ -16,13 +16,13 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { ArrowSquareOut, DotsThree } from "phosphor-react"
 import { FixedSizeList } from "react-window"
-import { AuditLogAction } from "../../constants"
-import { AuditLogActionProvider } from "../AuditLogActionContext"
+import { ActivityLogAction } from "../../constants"
+import { ActivityLogActionProvider } from "../ActivityLogActionContext"
 import ActionIcon from "./ActionIcon"
 import ActionLabel from "./ActionLabel"
 
 type Props = {
-  actions: AuditLogAction[]
+  actions: ActivityLogAction[]
   displayedActionCount: number
 }
 
@@ -35,7 +35,7 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
 
     return (
       <ListItem style={style}>
-        <AuditLogActionProvider key={action.id} action={action}>
+        <ActivityLogActionProvider key={action.id} action={action}>
           <HStack spacing={4} pointerEvents="all">
             <ActionIcon size={6} />
             <Stack spacing={0.5}>
@@ -45,7 +45,7 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
               </Text>
             </Stack>
           </HStack>
-        </AuditLogActionProvider>
+        </ActivityLogActionProvider>
       </ListItem>
     )
   }

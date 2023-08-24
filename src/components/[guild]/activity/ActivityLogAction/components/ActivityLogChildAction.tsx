@@ -2,27 +2,27 @@ import { HStack, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { PropsWithChildren } from "react"
 import { Requirement } from "types"
-import { AUDITLOG } from "../../constants"
+import { ACTION } from "../../constants"
 import {
-  AuditLogActionProvider,
-  useAuditLogActionContext,
-} from "../AuditLogActionContext"
+  ActivityLogActionProvider,
+  useActivityLogActionContext,
+} from "../ActivityLogActionContext"
 import ActionIcon from "./ActionIcon"
 import ActionLabel from "./ActionLabel"
 import UpdatedDataGrid from "./UpdatedDataGrid"
 
-const AuditLogChildAction = (): JSX.Element => {
-  const { action, data, children } = useAuditLogActionContext()
+const ActivityLogChildAction = (): JSX.Element => {
+  const { action, data, children } = useActivityLogActionContext()
 
   return (
-    <AuditLogChildActionLayout
+    <ActivityLogChildActionLayout
       icon={<ActionIcon size={6} />}
       label={<ActionLabel />}
     >
       {[
-        AUDITLOG.AddRequirement,
-        AUDITLOG.UpdateRequirement,
-        AUDITLOG.RemoveRequirement,
+        ACTION.AddRequirement,
+        ACTION.UpdateRequirement,
+        ACTION.RemoveRequirement,
       ].includes(action) && (
         <UpdatedDataGrid
           before={
@@ -36,26 +36,26 @@ const AuditLogChildAction = (): JSX.Element => {
       )}
 
       {children?.map((childAction) => (
-        <AuditLogActionProvider key={childAction.id} action={childAction}>
-          <AuditLogChildAction />
-        </AuditLogActionProvider>
+        <ActivityLogActionProvider key={childAction.id} action={childAction}>
+          <ActivityLogChildAction />
+        </ActivityLogActionProvider>
       ))}
-    </AuditLogChildActionLayout>
+    </ActivityLogChildActionLayout>
   )
 }
 
-type AuditLogChildActionLayoutProps = {
+type ActivityLogChildActionLayoutProps = {
   icon?: JSX.Element
   label: JSX.Element | string
   isInline?: boolean
 }
 
-const AuditLogChildActionLayout = ({
+const ActivityLogChildActionLayout = ({
   icon,
   label,
   isInline,
   children,
-}: PropsWithChildren<AuditLogChildActionLayoutProps>): JSX.Element => {
+}: PropsWithChildren<ActivityLogChildActionLayoutProps>): JSX.Element => {
   const showInline = useBreakpointValue({ base: false, md: true })
 
   return (
@@ -79,5 +79,5 @@ const AuditLogChildActionLayout = ({
   )
 }
 
-export default AuditLogChildAction
-export { AuditLogChildActionLayout }
+export default ActivityLogChildAction
+export { ActivityLogChildActionLayout }

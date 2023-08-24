@@ -1,11 +1,11 @@
 import { Icon } from "@chakra-ui/react"
 import { SystemStyleObject } from "@chakra-ui/theme-tools"
 import { IconProps, Question } from "phosphor-react"
-import { AUDITLOG, auditLogActionIcons } from "../../constants"
-import { useAuditLogActionContext } from "../AuditLogActionContext"
+import { ACTION, activityLogActionIcons } from "../../constants"
+import { useActivityLogActionContext } from "../ActivityLogActionContext"
 
 type Props = {
-  action?: AUDITLOG
+  action?: ACTION
   size?: number
 }
 
@@ -29,12 +29,12 @@ const getActionIconProps = (action: string, size = 8): ActionIconProps => {
 
   return {
     ...propsBase,
-    ...auditLogActionIcons[action],
+    ...activityLogActionIcons[action],
   }
 }
 
 const ActionIcon = ({ action: actionProp, size }: Props): JSX.Element => {
-  const { action } = useAuditLogActionContext() ?? {}
+  const { action } = useActivityLogActionContext() ?? {}
 
   return <Icon {...getActionIconProps(actionProp ?? action, size)} />
 }

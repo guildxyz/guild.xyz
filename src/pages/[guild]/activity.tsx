@@ -1,9 +1,9 @@
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import AuditLogAction from "components/[guild]/audit-log/AuditLogAction"
-import AuditLogFiltersBar from "components/[guild]/audit-log/AuditLogFiltersBar"
-import AuditLogSkeleton from "components/[guild]/audit-log/AuditLogSkeleton"
-import useAuditLog from "components/[guild]/audit-log/hooks/useAuditLog"
+import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
+import ActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar"
+import ActivityLogSkeleton from "components/[guild]/activity/ActivityLogSkeleton"
+import useActivityLog from "components/[guild]/activity/hooks/useActivityLog"
 import useGuild from "components/[guild]/hooks/useGuild"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import Tabs from "components/[guild]/Tabs/Tabs"
@@ -13,13 +13,13 @@ import { useRef } from "react"
 
 const SCROLL_PADDING = 40
 
-const AuditLog = (): JSX.Element => {
+const ActivityLog = (): JSX.Element => {
   const { name, urlName } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   // TODO: redirect if user is not an admin of the guild
 
-  const { data, setSize, isValidating } = useAuditLog()
+  const { data, setSize, isValidating } = useActivityLog()
 
   const listRef = useRef(null)
   useScrollEffect(() => {
@@ -36,34 +36,34 @@ const AuditLog = (): JSX.Element => {
   return (
     <Layout
       title={name}
-      ogTitle={`Audig Log${name ? ` - ${name}` : ""}`}
+      ogTitle={`Activity${name ? ` - ${name}` : ""}`}
       textColor={textColor}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
     >
       <Tabs>
         <TabButton href={`/${urlName}`}>Home</TabButton>
-        <TabButton href={`/${urlName}/audit-log`}>Audit log</TabButton>
+        <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
       </Tabs>
 
-      <AuditLogFiltersBar />
+      <ActivityLogFiltersBar />
 
       <Section ref={listRef} title="Actions" mt={8}>
         {data?.entries?.length > 0 &&
           data.entries.map((action) => (
-            <AuditLogAction key={action.id} action={action} />
+            <ActivityLogAction key={action.id} action={action} />
           ))}
 
-        {isValidating && <AuditLogSkeleton />}
+        {isValidating && <ActivityLogSkeleton />}
       </Section>
     </Layout>
   )
 }
 
-const AuditLogWrapper = (): JSX.Element => (
+const ActivityLogWrapper = (): JSX.Element => (
   <ThemeProvider>
-    <AuditLog />
+    <ActivityLog />
   </ThemeProvider>
 )
 
-export default AuditLogWrapper
+export default ActivityLogWrapper
