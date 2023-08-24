@@ -23,9 +23,10 @@ const BlockExplorerUrl = ({
   // explorer.zksync.io doesn't support the /token path
   const path = (chainProp ?? chain) === "ZKSYNC_ERA" ? "address" : "token"
 
-  const url = data?.id
-    ? `${blockExplorer}/nft/${addressProp ?? address}/${data?.id}`
-    : `${blockExplorer}/${path}/${addressProp ?? address}`
+  const url =
+    (type === "ERC1155" || type === "ERC721") && data?.id
+      ? `${blockExplorer}/nft/${addressProp ?? address}/${data?.id}`
+      : `${blockExplorer}/${path}/${addressProp ?? address}`
 
   return (
     <RequirementLinkButton
