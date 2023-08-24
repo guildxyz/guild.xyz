@@ -3,7 +3,7 @@ import Card from "components/common/Card"
 
 const ActivityLogSkeleton = (): JSX.Element => (
   <>
-    {[...Array(5)].map((_, i) => (
+    {[...Array(25)].map((_, i) => (
       <ActivityLogActionSkeleton key={i} />
     ))}
   </>
