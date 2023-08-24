@@ -12,6 +12,7 @@ import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
 import { useRouter } from "next/router"
 import { CaretDown, X } from "phosphor-react"
+import { ParsedUrlQuery } from "querystring"
 import { KeyboardEvent, useEffect, useState } from "react"
 import ActionIcon from "../../ActivityLogAction/components/ActionIcon"
 import { ACTION } from "../../constants"
@@ -153,16 +154,17 @@ const FiltersInput = (): JSX.Element => {
   const [shouldRemoveLastFilter, setShouldRemoveLastFilter] = useState(false)
 
   const triggerSearch = () => {
-    const query: typeof router.query = { ...router.query }
+    const query: ParsedUrlQuery = { ...router.query }
 
-    searchOptions.forEach((option) => {
-      const relevantActiveFilter = activeFilters.find(
-        (f) => f.filter === option.value
-      )
-      query[option.value] = relevantActiveFilter?.value ?? ""
+    const filters: SupportedQueryParam[] = [
+      ...searchOptions.map((option) => option.value),
+      "action",
+    ]
+
+    filters.forEach((filter) => {
+      const relevantActiveFilter = activeFilters.find((f) => f.filter === filter)
+      query[filter] = relevantActiveFilter?.value ?? ""
     })
-
-    activeFilters.forEach(({ filter, value }) => (query[filter] = value))
 
     query.search = inputValue ?? ""
 
