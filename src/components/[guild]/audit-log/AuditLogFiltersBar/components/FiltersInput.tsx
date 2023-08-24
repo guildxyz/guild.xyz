@@ -180,13 +180,16 @@ const FiltersInput = (): JSX.Element => {
       triggerSearch()
     }
 
-    if (e.code !== "Backspace" || e.currentTarget.selectionStart !== 0) return
+    if (e.code !== "Backspace" || e.currentTarget.selectionStart !== 0) {
+      setShouldRemoveLastFilter(false)
+      return
+    }
 
     if (shouldRemoveLastFilter) {
       dispatch({
         type: "removeLastFilter",
       })
-      setShouldRemoveLastFilter(false)
+      if (activeFilters.length < 1) setShouldRemoveLastFilter(false)
       return
     }
 
