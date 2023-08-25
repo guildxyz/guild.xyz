@@ -49,6 +49,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
               letterSpacing="wide"
               maxW="full"
               noOfLines={1}
+              wordBreak="break-all"
             >
               {guildData.name}
             </Text>

@@ -1,4 +1,11 @@
-import { Box, CloseButton, HStack, Spinner, Text } from "@chakra-ui/react"
+import {
+  Box,
+  CloseButton,
+  HStack,
+  Spinner,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
@@ -27,7 +34,8 @@ const BalancyFormCard = ({
   onRemove,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { holders, isLoading } = useBalancy(baseFieldPath)
+  const { holders, isLoading, error } = useBalancy(baseFieldPath)
+  const errorColor = useColorModeValue("red.500", "red.300")
 
   return (
     <CardMotionWrapper>
@@ -75,6 +83,10 @@ const BalancyFormCard = ({
           </HStack>
         ) : isLoading ? (
           <Spinner color="gray" size="sm" mt={5} />
+        ) : error ? (
+          <Text color={errorColor} mt="5">
+            Couldn't calculate eligible addresses
+          </Text>
         ) : (
           <Text color="gray" mt="5">
             Fill inputs to calculate eligible addresses

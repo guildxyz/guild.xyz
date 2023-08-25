@@ -106,7 +106,12 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
       <DiscardAlert
         isOpen={isDiscardAlertOpen}
         onClose={onDiscardAlertClose}
-        onDiscard={onClose}
+        onDiscard={() => {
+          onClose()
+          onDiscardAlertClose()
+          setShouldShowCloseAlert(false)
+          setIsBackButtonDisabled(false)
+        }}
       />
     </AddRewardContext.Provider>
   )

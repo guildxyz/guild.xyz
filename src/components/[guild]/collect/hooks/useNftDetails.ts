@@ -62,8 +62,8 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
         contract.owner(),
         contract.name(),
         contract.totalSupply(),
-        contract.supportsInterface(ContractInterface.ERC721),
-        contract.supportsInterface(ContractInterface.ERC1155),
+        contract.supportsInterface(ContractInterface.ERC721).catch(() => false),
+        contract.supportsInterface(ContractInterface.ERC1155).catch(() => false),
         contract.tokenURI(0).catch(() => ""),
         contract.fee(),
       ])
@@ -105,6 +105,7 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       fee,
     }
   } catch (err) {
+    console.log("contract err", err)
     return {
       creator: undefined,
       name: undefined,

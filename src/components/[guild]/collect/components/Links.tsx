@@ -31,6 +31,19 @@ const Links = () => {
           </Link>
         )}
 
+        {chain === "BASE_MAINNET" && (
+          <Link
+            href={`https://nft.coinbase.com/collection/base/${address}`}
+            isExternal
+            colorScheme="gray"
+            fontWeight="medium"
+          >
+            <Img src={"/networkLogos/base.svg"} boxSize={5} mr="1.5" />
+            Coinbase NFT
+            <Icon ml={1.5} as={ArrowSquareOut} />
+          </Link>
+        )}
+
         <Link
           href={`${RPC[chain].blockExplorerUrls[0]}/token/${address}`}
           isExternal

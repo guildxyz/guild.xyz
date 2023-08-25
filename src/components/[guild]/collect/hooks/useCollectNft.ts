@@ -121,7 +121,10 @@ const useCollectNft = () => {
 
         mutateTopCollectors(
           (prevValue) => ({
-            topCollectors: [...prevValue?.topCollectors, account?.toLowerCase()],
+            topCollectors: [
+              ...(prevValue?.topCollectors ?? []),
+              account?.toLowerCase(),
+            ],
             uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
           }),
           {

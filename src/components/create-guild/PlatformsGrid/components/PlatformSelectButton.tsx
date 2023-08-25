@@ -9,13 +9,14 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import DisplayCard from "components/common/DisplayCard"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import DisplayCard from "components/common/DisplayCard"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
+import platforms from "platforms/platforms"
 import { ComponentType, RefAttributes, useMemo } from "react"
 import { PlatformName, Rest } from "types"
 
@@ -64,10 +65,12 @@ const PlatformSelectButton = ({
   const selectPlatform = () => onSelection(platform)
 
   const user = useUser()
-  const isPlatformConnected = user.platformUsers?.some(
-    ({ platformName, platformUserData }) =>
-      platformName === platform && !platformUserData?.readonly
-  )
+  const isPlatformConnected =
+    !platforms[platform].oauth ||
+    user.platformUsers?.some(
+      ({ platformName, platformUserData }) =>
+        platformName === platform && !platformUserData?.readonly
+    )
 
   const circleBgColor = useColorModeValue("gray.700", "gray.600")
   const DynamicCtaIcon = useMemo(
@@ -94,7 +97,7 @@ const PlatformSelectButton = ({
       <HStack spacing={4}>
         {icon ? (
           <Circle bgColor={circleBgColor} size="12" pos="relative" overflow="hidden">
-            <Icon as={icon} boxSize={6} weight="regular" color="white" />
+            <Icon as={icon} boxSize={5} weight="regular" color="white" />
           </Circle>
         ) : (
           <Circle size="12" pos="relative" overflow="hidden">
