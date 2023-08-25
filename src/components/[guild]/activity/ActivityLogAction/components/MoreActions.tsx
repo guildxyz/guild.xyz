@@ -36,7 +36,7 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
     return (
       <ListItem style={style}>
         <ActivityLogActionProvider key={action.id} action={action}>
-          <HStack spacing={4} pointerEvents="all">
+          <HStack spacing={4}>
             <ActionIcon size={6} />
             <Stack spacing={0.5}>
               <ActionLabel />

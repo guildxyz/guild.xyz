@@ -9,20 +9,22 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRouter } from "next/router"
+import { useActivityLog } from "../../ActivityLogContext"
 
 type Props = {
-  data?: Record<string, string>
   id?: number
 }
 
-const RoleTag = ({ data, id }: Props): JSX.Element => {
+const RoleTag = ({ id }: Props): JSX.Element => {
+  const { baseUrl, data } = useActivityLog()
   const colorScheme = useColorModeValue("alpha", "blackalpha")
 
   const { roles } = useGuild()
-  const role = roles?.find((r) => r.id === id)
+  const guildRole = roles?.find((role) => role.id === id)
+  const activityLogRole = data.values.roles.find((role) => role.id === id)
 
-  const roleName = role?.name ?? data?.name
-  const roleImageUrl = role?.imageUrl ?? data?.imageUrl
+  const roleName = activityLogRole?.name ?? "Unknown role"
+  const roleImageUrl = guildRole?.imageUrl
   const imgBgColor = useColorModeValue("gray.700", "gray.600")
 
   const router = useRouter()
@@ -32,12 +34,13 @@ const RoleTag = ({ data, id }: Props): JSX.Element => {
       <Tag
         as="button"
         colorScheme={colorScheme}
-        w="max-content"
+        minW="max-content"
+        h="max-content"
         onClick={
           id
             ? () => {
                 router.push({
-                  pathname: router.pathname,
+                  pathname: baseUrl,
                   query: { ...router.query, roleId: id },
                 })
               }
@@ -58,7 +61,9 @@ const RoleTag = ({ data, id }: Props): JSX.Element => {
                 />
               </Circle>
             )}
-            <Text as="span">{roleName ?? "Unknown role"}</Text>
+            <Text as="span" w="max-content">
+              {roleName ?? "Unknown role"}
+            </Text>
           </HStack>
         )}
       </Tag>

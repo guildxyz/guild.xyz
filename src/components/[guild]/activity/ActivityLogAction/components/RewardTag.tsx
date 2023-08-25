@@ -1,13 +1,13 @@
 import { Tag, TagLabel, TagLeftIcon, Tooltip } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import platforms from "platforms/platforms"
-import useActivityLog from "../../hooks/useActivityLog"
+import { useActivityLog } from "../../ActivityLogContext"
 
 type Props = {
   rolePlatformId: number
 }
 const RewardTag = ({ rolePlatformId }: Props): JSX.Element => {
-  const { data } = useActivityLog()
+  const { data, baseUrl } = useActivityLog()
 
   const reward = data.values.rolePlatforms.find((rp) => rp.id === rolePlatformId)
 
@@ -19,10 +19,11 @@ const RewardTag = ({ rolePlatformId }: Props): JSX.Element => {
         as="button"
         bgColor={`${platforms[reward?.platformName]?.colorScheme}.500` ?? "gray.500"}
         color="white"
-        w="max-content"
+        minW="max-content"
+        h="max-content"
         onClick={() => {
           router.push({
-            pathname: router.pathname,
+            pathname: baseUrl,
             query: { ...router.query, rolePlatformId },
           })
         }}

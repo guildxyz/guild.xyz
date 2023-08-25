@@ -15,11 +15,11 @@ import { CaretDown, X } from "phosphor-react"
 import { ParsedUrlQuery } from "querystring"
 import { KeyboardEvent, useEffect, useState } from "react"
 import ActionIcon from "../../ActivityLogAction/components/ActionIcon"
-import { ACTION } from "../../constants"
 import {
   SupportedQueryParam,
   SUPPORTED_QUERY_PARAMS,
-} from "../../hooks/useActivityLog"
+} from "../../ActivityLogContext"
+import { ACTION } from "../../constants"
 import { useActiveFiltersReducer } from "./hooks/useActiveFiltersReducer"
 import TagInput from "./TagInput"
 

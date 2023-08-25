@@ -1,8 +1,8 @@
 import { Stack, Text } from "@chakra-ui/react"
 import platforms from "platforms/platforms"
 import capitalize from "utils/capitalize"
+import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
-import useActivityLog from "../../hooks/useActivityLog"
 import { useActivityLogActionContext } from "../ActivityLogActionContext"
 import RewardTag from "./RewardTag"
 import RoleTag from "./RoleTag"
@@ -44,7 +44,7 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
-                <RoleTag id={ids.role} data={data} />
+                <RoleTag id={ids.role} />
                 <Text as="span">by</Text>
                 <UserTag id={ids.user} />
               </>
@@ -106,7 +106,14 @@ const ActionLabel = (): JSX.Element => {
           case ACTION.AddRequirement:
           case ACTION.UpdateRequirement:
           case ACTION.RemoveRequirement:
-            return <Text as="span">{capitalizedName}</Text>
+            return (
+              <>
+                <Text as="span">{capitalizedName} in role:</Text>
+                <RoleTag id={ids.role} />
+                <Text as="span">by</Text>
+                <UserTag id={ids.user} />
+              </>
+            )
 
           // TODO:
           //   ConnectIdentity,
@@ -117,7 +124,7 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {ids.role ? (
-                  <RoleTag id={ids.role} data={data} />
+                  <RoleTag id={ids.role} />
                 ) : ids.user ? (
                   <UserTag id={ids.user} />
                 ) : null}
