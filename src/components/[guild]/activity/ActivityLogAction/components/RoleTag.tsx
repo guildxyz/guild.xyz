@@ -12,18 +12,19 @@ import { useRouter } from "next/router"
 import { useActivityLog } from "../../ActivityLogContext"
 
 type Props = {
-  id?: number
+  id: number
+  guildId: number
 }
 
-const RoleTag = ({ id }: Props): JSX.Element => {
+const RoleTag = ({ id, guildId }: Props): JSX.Element => {
   const { baseUrl, data } = useActivityLog()
   const colorScheme = useColorModeValue("alpha", "blackalpha")
 
-  const { roles } = useGuild()
+  const { roles } = useGuild(guildId)
   const guildRole = roles?.find((role) => role.id === id)
   const activityLogRole = data.values.roles.find((role) => role.id === id)
 
-  const roleName = activityLogRole?.name ?? "Unknown role"
+  const roleName = guildRole?.name ?? activityLogRole?.name ?? "Unknown role"
   const roleImageUrl = guildRole?.imageUrl
   const imgBgColor = useColorModeValue("gray.700", "gray.600")
 
