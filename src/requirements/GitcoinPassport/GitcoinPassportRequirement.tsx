@@ -39,8 +39,10 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
   const requirement = useRequirementContext()
   const tableBgColor = useColorModeValue("white", "blackAlpha.300")
 
-  const { data: roleAccess } = useAccess(requirement.roleId)
-  const showCreatePassportButton = roleAccess?.errors?.some(
+  const {
+    data: { roleErrors },
+  } = useAccess(requirement.roleId)
+  const showCreatePassportButton = roleErrors?.some(
     (err) =>
       err.requirementId === requirement.id &&
       err.errorType === "PLATFORM_NOT_CONNECTED"

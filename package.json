@@ -84,6 +84,7 @@
     "cypress": "12.14.0"
   },
   "devDependencies": {
+    "@guild.xyz/guild-queues": "https://github.com/agoraxyz/guild-queues#implementation",
     "@hookform/devtools": "^4.3.0",
     "@svgr/webpack": "^6.5.1",
     "@synthetixio/synpress": "3.5.1",

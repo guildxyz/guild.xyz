@@ -45,11 +45,9 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
 
   const isReconnect =
     !!accesses &&
-    accesses?.data?.some(({ errors }) =>
-      errors?.some(
-        ({ errorType, subType }) =>
-          errorType === "PLATFORM_CONNECT_INVALID" && subType?.toUpperCase() === type
-      )
+    accesses?.data?.requirementErrors?.some(
+      ({ errorType, subType }) =>
+        errorType === "PLATFORM_CONNECT_INVALID" && subType?.toUpperCase() === type
     )
 
   return (

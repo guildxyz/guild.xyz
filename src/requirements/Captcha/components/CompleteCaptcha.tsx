@@ -29,9 +29,11 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
   const { id, roleId } = useRequirementContext()
   const { onOpen, onClose, isOpen } = useDisclosure()
 
-  const { data: roleAccess } = useAccess(roleId, isOpen ? 5000 : null)
+  const {
+    data: { requirementAccesses, roleAccess },
+  } = useAccess(roleId, isOpen ? 5000 : null)
 
-  const hasAccess = roleAccess?.requirements?.find(
+  const hasAccess = requirementAccesses?.find(
     (req) => req.requirementId === id
   )?.access
 

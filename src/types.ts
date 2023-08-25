@@ -589,8 +589,14 @@ type DetailedUserLeaderboardData = {
   pins: LeaderboardPinData[]
 }
 
+type RedefineFields<
+  Obj extends Record<string, any>,
+  Redefinitions extends Partial<Record<keyof Obj, any>>
+> = Omit<Obj, keyof Redefinitions> & Redefinitions
+
 export { ValidationMethod, Visibility, supportedSocialLinks }
 export type {
+  RedefineFields,
   AddressConnectionProvider,
   BaseUser,
   BrainCardData,

@@ -14,8 +14,9 @@ const ConnectPolygonIDJoinStep = (): JSX.Element => {
     ?.filter((req) => req.type === "POLYGON_ID_BASIC")
     .map((req) => req.id)
 
-  const { data: accesses } = useAccess()
-  const requirementAccesses = accesses?.flatMap((access) => access.requirements)
+  const {
+    data: { requirementAccesses },
+  } = useAccess()
 
   const isConnected = requirementAccesses?.some(
     (reqAccess) =>

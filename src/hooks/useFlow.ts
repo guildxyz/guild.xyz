@@ -1,4 +1,6 @@
+import { UnionToIntersection } from "react-hook-form/dist/types/path/common"
 import useSWRImmutable from "swr/immutable"
+import { RedefineFields } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import useKeyPair from "./useKeyPair"
 
@@ -6,10 +8,29 @@ const JOB_DEFAULT_POLL_MS = 1000
 
 type JobCreationResponse = { jobId: string }
 
-type BaseJob = { id: string; done: boolean }
+type BaseJob<FlowStep = unknown> = {
+  id: string
+  done: boolean
+  "completed-queue": FlowStep
+}
+
+export type FlattenJobType<
+  Job extends {
+    queueName: string
+    params: any
+    result: any
+  }
+> = UnionToIntersection<Job["result"]> & UnionToIntersection<Job["params"]>
 
 const useFlow = <
-  Job extends BaseJob,
+  Job extends {
+    queueName: string
+    params: any
+    result: any
+  },
+  Redefinitions extends Partial<
+    Record<keyof FlattenJobType<Job>, any>
+  > = FlattenJobType<Job>,
   Params extends Record<string, string> = Record<string, string>
 >(
   path: string,
@@ -18,6 +39,8 @@ const useFlow = <
   shouldFetch = true,
   { pollMs = JOB_DEFAULT_POLL_MS, creationPollMs = null as number } = {}
 ) => {
+  type FinalJob = RedefineFields<FlattenJobType<Job>, Redefinitions & BaseJob>
+
   const fetcherWithSign = useFetcherWithSign()
   const { isValid: hasValidKeypair } = useKeyPair()
 
@@ -48,7 +71,7 @@ const useFlow = <
       ? [`${path}?${pollParams}`, { method: "GET" }]
       : null,
     (props) =>
-      fetcherWithSign(props).then(async (result: Job[]) => {
+      fetcherWithSign(props).then(async (result: Array<FinalJob>) => {
         if (Array.isArray(result) && result.length > 0) {
           if (jobId?.length > 0) {
             const foundJob = result.find(({ id }) => id === jobId)

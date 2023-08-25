@@ -15,8 +15,9 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
     ?.filter((req) => req.type === "CAPTCHA")
     .map((req) => req.id)
 
-  const { data: accesses } = useAccess()
-  const requirementAccesses = accesses?.flatMap((access) => access.requirements)
+  const {
+    data: { requirementAccesses },
+  } = useAccess()
 
   const isDone = requirementAccesses?.some(
     (reqAccess) =>

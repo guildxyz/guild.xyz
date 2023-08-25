@@ -28,8 +28,13 @@ type Props = {
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { roles } = useGuild()
   const role = roles.find((r) => r.id === roleId)
-  const { hasAccess, data, error, isLoading } = useAccess(roleId)
-  const accessedRequirementCount = data?.requirements?.filter(
+  const {
+    hasAccess,
+    data: { requirementAccesses, roleErrors },
+    error,
+    isLoading,
+  } = useAccess(roleId)
+  const accessedRequirementCount = requirementAccesses?.filter(
     (r) => r.access
   )?.length
 
@@ -42,7 +47,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
 
   const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
   const requirementIdsWithErrors =
-    data?.requirements?.filter((r) => r.access === null) ?? []
+    requirementAccesses?.filter((r) => r.access === null) ?? []
   const requirementsWithErrors = requirements.filter((req) =>
     requirementIdsWithErrors.some(({ requirementId }) => requirementId === req.id)
   )
@@ -121,7 +126,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (data?.errors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
+  if (roleErrors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
     return (
       <AccessIndicatorUI
         colorScheme="orange"
@@ -132,7 +137,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (data?.errors?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED"))
+  if (roleErrors?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED"))
     return (
       <AccessIndicatorUI
         colorScheme="blue"
@@ -143,7 +148,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (data?.errors || error)
+  if (roleErrors || error)
     return (
       <AccessIndicatorUI
         colorScheme="orange"

@@ -1,6 +1,9 @@
 import { Icon } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
+import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
@@ -9,9 +12,6 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
@@ -43,14 +43,16 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   } = useTokenData(chain, token)
   const convertedFee = fee && decimals ? formatUnits(fee, decimals) : undefined
 
-  const { data: accessData } = useAccess(roleId ?? 0)
+  const {
+    data: { requirementAccesses },
+  } = useAccess(roleId ?? 0)
   // temporary until POAPs are real roles
   const { data: poapAccessData } = useUserPoapEligibility(poapId)
   const { poapLinks } = usePoapLinks(poapId)
 
-  const satisfiesRequirement = (accessData || poapAccessData)?.requirements?.find(
-    (req) => req.requirementId === id
-  )?.access
+  const satisfiesRequirement = (
+    requirementAccesses || poapAccessData?.requirements
+  )?.find((req) => req.requirementId === id)?.access
 
   return (
     <Requirement

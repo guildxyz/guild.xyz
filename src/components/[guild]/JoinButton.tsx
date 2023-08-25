@@ -1,15 +1,15 @@
 import { Box, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
 import Button from "components/common/Button"
 // import { useMemo } from "react"
-import { useOpenJoinModal } from "./JoinModal/JoinModalProvider"
 import useAccess from "./hooks/useAccess"
+import { useOpenJoinModal } from "./JoinModal/JoinModalProvider"
 // import useGuild from "./hooks/useGuild"
 // import usePlatformsToReconnect from "./hooks/usePlatformsToReconnect"
 // import useUser from "./hooks/useUser"
 
 const JoinButton = (): JSX.Element => {
   const openJoinModal = useOpenJoinModal()
-  const { hasAccess, isLoading } = useAccess()
+  const { isLoading } = useAccess()
   // const { requiredPlatforms } = useGuild()
   // const { platformUsers } = useUser()
   // const platformsToReconnect = usePlatformsToReconnect()

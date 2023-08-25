@@ -40,20 +40,22 @@ type Props = {
 
 const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
   const { roles } = useGuild()
-  const { data: accessData } = useAccess(roleId)
-  if (!accessData) return null
+  const {
+    data: { requirementAccesses, roleErrors, roleAccess },
+  } = useAccess(roleId)
+  if (!roleAccess) return null
 
   const publicReqIds = roles
     .find((role) => role.id === roleId)
     .requirements.map((req) => req.id)
 
-  const hiddenReqsAccessData = accessData?.requirements?.filter(
+  const hiddenReqsAccessData = requirementAccesses?.filter(
     (reqAccessData) => !publicReqIds.includes(reqAccessData.requirementId)
   )
 
   const hiddenReqsErrorMessages = [
     ...new Set<string>(
-      accessData?.errors
+      roleErrors
         ?.filter(
           (error) =>
             !publicReqIds.includes(error.requirementId) &&
@@ -72,7 +74,7 @@ const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
         return acc
       }
 
-      const reqError = accessData?.errors?.find(
+      const reqError = roleErrors?.find(
         (obj) => obj.requirementId === curr.requirementId
       )
       if (!reqError) {
@@ -120,7 +122,7 @@ const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
         colorScheme={"blue"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={LockSimple}
-        isAlwaysOpen={!accessData?.access}
+        isAlwaysOpen={!roleAccess?.access}
       >
         <HiddenRequiementAccessIndicatorPopover
           count={count}
@@ -135,7 +137,7 @@ const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
         colorScheme={"orange"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={Warning}
-        isAlwaysOpen={!accessData?.access}
+        isAlwaysOpen={!roleAccess?.access}
       >
         <HiddenRequiementAccessIndicatorPopover
           count={count}
@@ -149,7 +151,7 @@ const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
       colorScheme={"gray"}
       circleBgSwatch={{ light: 300, dark: 500 }}
       icon={count.notAccessed === hiddenReqsAccessData?.length ? X : DotsThree}
-      isAlwaysOpen={!accessData?.access}
+      isAlwaysOpen={!roleAccess?.access}
     >
       <HiddenRequiementAccessIndicatorPopover
         count={count}

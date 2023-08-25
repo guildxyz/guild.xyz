@@ -1,9 +1,9 @@
-import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
+import LinkButton from "components/common/LinkButton"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import LinkButton from "components/common/LinkButton"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import CollectNftModalButton from "platforms/ContractCall/CollectNftModalButton"
 import { GuildPlatform } from "types"
 
@@ -22,7 +22,9 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
     (rp) => rp.guildPlatformId === platform.id
   )?.id
 
-  const { data: roleAccess } = useAccess(role?.id)
+  const {
+    data: { roleAccess },
+  } = useAccess(role?.id)
   const hasAccessToRole = roleAccess?.access
 
   const { memberships } = useMemberships()

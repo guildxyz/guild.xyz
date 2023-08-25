@@ -1,9 +1,9 @@
 import { ButtonProps, Icon } from "@chakra-ui/react"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import Button from "components/common/Button"
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
-import Button from "components/common/Button"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import REQUIREMENTS from "requirements"
@@ -33,7 +33,10 @@ const ConnectRequirementPlatformButton = (props: ButtonProps) => {
 
   const { platformUsers } = useUser()
 
-  const { mutate: mutateAccesses, data: roleAccess } = useAccess(roleId ?? 0)
+  const {
+    mutate: mutateAccesses,
+    data: { roleAccess },
+  } = useAccess(roleId ?? 0)
   // temporary until POAP is not a real reward
   const { mutate: mutatePoapAccesses, data: poapAccess } =
     useUserPoapEligibility(poapId)

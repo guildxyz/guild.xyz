@@ -3,22 +3,23 @@ import { PlatformName } from "types"
 import useAccess from "./useAccess"
 
 const usePlatformsToReconnect = () => {
-  const { data: accesses } = useAccess()
+  const {
+    data: { requirementErrors, roleAccesses },
+  } = useAccess()
 
   const platformsToReconnect = useMemo(() => {
-    if (!accesses) {
+    if (!roleAccesses) {
       return []
     }
 
     return [
       ...new Set<PlatformName>(
-        (accesses ?? [])
-          ?.flatMap(({ errors }) => errors ?? [])
-          .filter(({ errorType }) => errorType === "PLATFORM_CONNECT_INVALID")
-          .map(({ subType }) => subType?.toUpperCase())
+        requirementErrors
+          ?.filter(({ errorType }) => errorType === "PLATFORM_CONNECT_INVALID")
+          .map(({ subType }) => subType?.toUpperCase() as PlatformName)
       ),
     ]
-  }, [accesses])
+  }, [roleAccesses, requirementErrors])
 
   return platformsToReconnect
 }

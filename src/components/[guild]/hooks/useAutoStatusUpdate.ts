@@ -9,10 +9,12 @@ import useGuild from "./useGuild"
 
 const useAutoStatusUpdate = () => {
   const { account } = useWeb3React()
-  const { id } = useGuild()
+  const { id, roles } = useGuild()
   const { keyPair } = useKeyPair()
 
-  const { data: accesses } = useAccess()
+  const {
+    data: { roleAccesses, requirementErrors },
+  } = useAccess()
   const { memberships } = useMemberships()
 
   const roleMemberships = memberships?.find(
@@ -25,25 +27,36 @@ const useAutoStatusUpdate = () => {
     if (
       !keyPair ||
       !account ||
-      !Array.isArray(accesses) ||
+      !Array.isArray(roleAccesses) ||
       !Array.isArray(roleMemberships) ||
-      !accesses?.length ||
+      !roleAccesses?.length ||
       !roleMemberships?.length
     )
       return
 
     const roleMembershipsSet = new Set(roleMemberships)
 
-    const accessedRoleIds = accesses
+    const accessedRoleIds = roleAccesses
       .filter(({ access }) => !!access)
       .map(({ roleId }) => roleId)
 
     const unaccessedRoleIdsSet = new Set(
-      accesses.filter(({ access }) => access === false).map(({ roleId }) => roleId)
+      roleAccesses
+        .filter(({ access }) => access === false)
+        .map(({ roleId }) => roleId)
     )
 
     const shouldSendStatusUpdate =
-      !accesses.some((roleAccess) => roleAccess.errors) &&
+      !roleAccesses.some(
+        (roleAccess) =>
+          // TODO: I kinda just cowboy coded it here, make sure this actually works
+          requirementErrors?.filter(({ requirementId }) => {
+            const requirementsOfRole = roles
+              .find(({ id: roleId }) => roleId === roleAccess.roleId)
+              ?.requirements?.map((req) => req.id)
+            return requirementsOfRole?.includes(requirementId)
+          })?.length > 0
+      ) &&
       (accessedRoleIds.some(
         (accessedRoleId) => !roleMembershipsSet.has(accessedRoleId)
       ) ||
@@ -62,7 +75,7 @@ const useAutoStatusUpdate = () => {
         ])
       )
     }
-  }, [accesses, roleMemberships, account, id])
+  }, [roleAccesses, roles, requirementErrors, roleMemberships, account, id])
 }
 
 export default useAutoStatusUpdate
