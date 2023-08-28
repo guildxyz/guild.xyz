@@ -3,6 +3,7 @@ import {
   Tag,
   TagLabel,
   TagLeftIcon,
+  TagProps,
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
@@ -13,28 +14,31 @@ import { useActivityLog } from "../../ActivityLogContext"
 
 type Props = {
   address: string
-}
+} & TagProps
 
-const UserTag = forwardRef<Props, "span">(({ address }, ref): JSX.Element => {
-  const variant = useColorModeValue("subtle", "solid")
-  const colorScheme = useColorModeValue("alpha", "gray")
+const UserTag = forwardRef<Props, "span">(
+  ({ address, ...rest }, ref): JSX.Element => {
+    const variant = useColorModeValue("subtle", "solid")
+    const colorScheme = useColorModeValue("alpha", "gray")
 
-  return (
-    <Tag
-      ref={ref}
-      variant={variant}
-      colorScheme={colorScheme}
-      cursor="pointer"
-      minW="max-content"
-      h="max-content"
-    >
-      {address && (
-        <TagLeftIcon mr={0.5} as={GuildAvatar} address={address} size={3} />
-      )}
-      <TagLabel>{address ? shortenHex(address, 3) : "Unknown user"}</TagLabel>
-    </Tag>
-  )
-})
+    return (
+      <Tag
+        ref={ref}
+        variant={variant}
+        colorScheme={colorScheme}
+        cursor="pointer"
+        minW="max-content"
+        h="max-content"
+        {...rest}
+      >
+        {address && (
+          <TagLeftIcon mr={0.5} as={GuildAvatar} address={address} size={3} />
+        )}
+        <TagLabel>{address ? shortenHex(address, 3) : "Unknown user"}</TagLabel>
+      </Tag>
+    )
+  }
+)
 
 type ClickableUserTagProps = {
   id: number

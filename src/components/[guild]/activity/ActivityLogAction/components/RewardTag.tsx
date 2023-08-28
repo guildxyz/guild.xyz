@@ -19,13 +19,14 @@ type Props = {
 } & Omit<TagProps, "colorScheme">
 
 const RewardTag = forwardRef<Props, "span">(
-  ({ name, icon, colorScheme }, ref): JSX.Element => (
+  ({ name, icon, colorScheme, ...rest }, ref): JSX.Element => (
     <Tag
       ref={ref}
       bgColor={colorScheme ? `${colorScheme}.500` : "gray.500"}
       color="white"
       minW="max-content"
       h="max-content"
+      {...rest}
     >
       {icon && <TagLeftIcon as={icon} />}
 
