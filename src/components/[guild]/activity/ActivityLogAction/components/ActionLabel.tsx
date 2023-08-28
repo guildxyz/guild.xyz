@@ -6,7 +6,7 @@ import { ACTION } from "../../constants"
 import { useActivityLogActionContext } from "../ActivityLogActionContext"
 import { ClickableRewardTag } from "./RewardTag"
 import { ClickableRoleTag } from "./RoleTag"
-import UserTag from "./UserTag"
+import { ClickableUserTag } from "./UserTag"
 
 const ActionLabel = (): JSX.Element => {
   const { data: activityLog } = useActivityLog()
@@ -27,7 +27,7 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName} by </Text>
-                <UserTag id={ids.user} />
+                <ClickableUserTag id={ids.user} />
               </>
             )
           case ACTION.AddAdmin:
@@ -35,7 +35,7 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}:</Text>
-                {/* <UserTag /> TODO */}
+                {/* <ClickableUserTag /> TODO */}
               </>
             )
           case ACTION.CreateRole:
@@ -46,7 +46,7 @@ const ActionLabel = (): JSX.Element => {
                 <Text as="span">{capitalizedName}</Text>
                 <ClickableRoleTag id={ids.role} guildId={ids.guild} />
                 <Text as="span">by</Text>
-                <UserTag id={ids.user} />
+                <ClickableUserTag id={ids.user} />
               </>
             )
           case ACTION.AddReward:
@@ -65,7 +65,7 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">Join Guild through website</Text>
-                <UserTag id={ids.user} />
+                <ClickableUserTag id={ids.user} />
               </>
             )
           case ACTION.ClickJoinOnPlatform:
@@ -74,7 +74,7 @@ const ActionLabel = (): JSX.Element => {
                 <Text as="span">{`Join Guild through ${
                   platforms[data.platformName].name
                 }`}</Text>
-                <UserTag id={ids.user} />
+                <ClickableUserTag id={ids.user} />
               </>
             )
           case ACTION.GetRole:
@@ -99,7 +99,7 @@ const ActionLabel = (): JSX.Element => {
                 {isChildOfUserStatusUpdate ? (
                   <ClickableRoleTag id={ids.role} guildId={ids.guild} />
                 ) : (
-                  <UserTag id={ids.user} />
+                  <ClickableUserTag id={ids.user} />
                 )}
               </>
             )
@@ -111,7 +111,7 @@ const ActionLabel = (): JSX.Element => {
                 <Text as="span">{capitalizedName} in role:</Text>
                 <ClickableRoleTag id={ids.role} guildId={ids.guild} />
                 <Text as="span">by</Text>
-                <UserTag id={ids.user} />
+                <ClickableUserTag id={ids.user} />
               </>
             )
 
@@ -126,7 +126,7 @@ const ActionLabel = (): JSX.Element => {
                 {ids.role ? (
                   <ClickableRoleTag id={ids.role} guildId={ids.guild} />
                 ) : ids.user ? (
-                  <UserTag id={ids.user} />
+                  <ClickableUserTag id={ids.user} />
                 ) : null}
               </>
             )

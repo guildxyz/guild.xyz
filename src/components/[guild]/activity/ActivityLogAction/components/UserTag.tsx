@@ -1,4 +1,5 @@
 import {
+  forwardRef,
   Tag,
   TagLabel,
   TagLeftIcon,
@@ -11,13 +12,35 @@ import shortenHex from "utils/shortenHex"
 import { useActivityLog } from "../../ActivityLogContext"
 
 type Props = {
-  id: number
+  address: string
 }
 
-const UserTag = ({ id }: Props): JSX.Element => {
+const UserTag = forwardRef<Props, "span">(({ address }, ref): JSX.Element => {
   const variant = useColorModeValue("subtle", "solid")
   const colorScheme = useColorModeValue("alpha", "gray")
 
+  return (
+    <Tag
+      ref={ref}
+      variant={variant}
+      colorScheme={colorScheme}
+      cursor="pointer"
+      minW="max-content"
+      h="max-content"
+    >
+      {address && (
+        <TagLeftIcon mr={0.5} as={GuildAvatar} address={address} size={3} />
+      )}
+      <TagLabel>{address ? shortenHex(address, 3) : "Unknown user"}</TagLabel>
+    </Tag>
+  )
+})
+
+type ClickableUserTagProps = {
+  id: number
+}
+
+const ClickableUserTag = ({ id }: ClickableUserTagProps): JSX.Element => {
   const { data, baseUrl } = useActivityLog()
   const address = data.values.users.find((u) => u.id === id)?.address
 
@@ -25,25 +48,19 @@ const UserTag = ({ id }: Props): JSX.Element => {
 
   return (
     <Tooltip label="Filter by user" placement="top" hasArrow>
-      <Tag
+      <UserTag
         as="button"
-        variant={variant}
-        colorScheme={colorScheme}
-        cursor="pointer"
-        minW="max-content"
-        h="max-content"
         onClick={() => {
           router.push({
             pathname: baseUrl,
             query: { ...router.query, userId: id },
           })
         }}
-      >
-        <TagLeftIcon mr={0.5} as={GuildAvatar} address={address} size={3} />
-        <TagLabel>{address ? shortenHex(address, 3) : "Unknown user"}</TagLabel>
-      </Tag>
+        address={address}
+      />
     </Tooltip>
   )
 }
 
 export default UserTag
+export { ClickableUserTag }
