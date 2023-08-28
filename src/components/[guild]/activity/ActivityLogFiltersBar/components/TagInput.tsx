@@ -1,6 +1,15 @@
-import { HStack, IconButton, Tag, Text, useColorModeValue } from "@chakra-ui/react"
+import {
+  HStack,
+  IconButton,
+  Spinner,
+  Tag,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { X } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
+import fetcher from "utils/fetcher"
+import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import { SupportedQueryParam } from "../../ActivityLogContext"
 import DynamicWidthInput from "./DynamicWidthInput"
 import { Filter } from "./FiltersInput"
@@ -18,7 +27,7 @@ const TagInput = ({
   filter: filterProp,
   label,
   value,
-  onChange,
+  onChange: onChangeProp,
   onRemove,
   onEnter,
 }: Props): JSX.Element => {
@@ -36,6 +45,39 @@ const TagInput = ({
   }
 
   useEffect(() => inputRef.current.focus(), [])
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const onChange = async (e) => {
+    const newValue = e.target.value
+
+    if (filterProp !== "userId") {
+      setFilterValue(newValue)
+      return
+    }
+
+    const splittedValue = newValue.split(",")
+    const newValueAsArray = []
+
+    for (const v of splittedValue) {
+      const trimmedValue = v.trim()
+      if (ADDRESS_REGEX.test(trimmedValue)) {
+        setIsLoading(true)
+        try {
+          const guildUser = await fetcher(`/v2/users/${trimmedValue}`)
+          newValueAsArray.push(guildUser.id)
+        } catch {
+          newValueAsArray.push(trimmedValue)
+        } finally {
+          setIsLoading(false)
+        }
+      } else {
+        newValueAsArray.push(v)
+      }
+    }
+
+    setFilterValue(newValueAsArray.join())
+  }
 
   return (
     <Tag
@@ -56,8 +98,8 @@ const TagInput = ({
           variant="unstyled"
           borderRadius="none"
           value={filterValue}
-          onChange={(e) => setFilterValue(e.target.value)}
-          onBlur={() => onChange(filter)}
+          onChange={onChange}
+          onBlur={() => onChangeProp(filter)}
           onKeyUp={(e) => {
             if (e.currentTarget.value.length > 0 && e.code === "Enter") onEnter()
 
@@ -71,19 +113,23 @@ const TagInput = ({
             setShouldRemove(e.currentTarget.value.length === 0)
           }}
         />
-        <IconButton
-          aria-label="Remove filter"
-          icon={<X />}
-          size="xs"
-          boxSize={4}
-          minW={4}
-          minH={4}
-          onClick={() => onRemove(filter)}
-          _focusVisible={{
-            bgColor: closeBtnFocusBgColor,
-            boxShadow: "none",
-          }}
-        />
+        {isLoading ? (
+          <Spinner size="xs" />
+        ) : (
+          <IconButton
+            aria-label="Remove filter"
+            icon={<X />}
+            size="xs"
+            boxSize={4}
+            minW={4}
+            minH={4}
+            onClick={() => onRemove(filter)}
+            _focusVisible={{
+              bgColor: closeBtnFocusBgColor,
+              boxShadow: "none",
+            }}
+          />
+        )}
       </HStack>
     </Tag>
   )
