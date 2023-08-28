@@ -15,7 +15,7 @@ const Identities = ({ member }: Props) => {
     <HStack spacing={1}>
       {platformUsers?.map((platformAccount, i) => (
         <IdentityTag
-          key={platformAccount.platformUserId}
+          key={platformAccount.platformId}
           platformAccount={platformAccount}
           order={i}
           zIndex={-1 * i}
