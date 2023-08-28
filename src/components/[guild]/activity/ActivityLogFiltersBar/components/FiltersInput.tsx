@@ -310,7 +310,7 @@ const FiltersInput = (): JSX.Element => {
         {...positionerProps}
       >
         <Stack spacing={0} {...contentProps}>
-          {inputValue?.length > 0 && (
+          {/* {inputValue?.length > 0 && (
             <HStack
               {...getOptionProps({ label: inputValue, value: inputValue })}
               px={4}
@@ -330,7 +330,7 @@ const FiltersInput = (): JSX.Element => {
                 {inputValue}
               </Text>
             </HStack>
-          )}
+          )} */}
 
           {inputValue?.length > 2 &&
             !activeFilters?.some((filter) => filter.filter === "action") &&
