@@ -114,6 +114,12 @@ const WalletActivityForm = ({
     "ZORA",
   ]
 
+  for (const covalentChain of COVALENT_CHAINS.values()) {
+    if (!walletActivitySupportedChains.includes(covalentChain)) {
+      walletActivitySupportedChains.push(covalentChain)
+    }
+  }
+
   const resetFields = () => {
     resetField(`${baseFieldPath}.address`, { defaultValue: "" })
     resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: "" })
