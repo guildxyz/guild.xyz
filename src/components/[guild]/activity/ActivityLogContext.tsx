@@ -123,16 +123,25 @@ const ActivityLogProvider = ({
     if (guildId) queryWithRelevantParams.guildId = guildId.toString()
     if (userId) queryWithRelevantParams.userId = userId.toString()
 
+    const searchParams = new URLSearchParams(queryWithRelevantParams)
+
     if (withSearchParams) {
       Object.entries(query).forEach(([key, value]) => {
-        if (isSupportedQueryParam(key))
-          queryWithRelevantParams[key] = value.toString()
+        if (isSupportedQueryParam(key)) {
+          const splitValue = value.toString().split(",")
+
+          if (splitValue.length > 1) {
+            splitValue.forEach((v) => {
+              searchParams.append(key, v)
+            })
+          } else {
+            searchParams.append(key, value.toString())
+          }
+        }
       })
     }
 
-    const searchParams = new URLSearchParams(queryWithRelevantParams).toString()
-
-    return `/auditLog?${searchParams}`
+    return `/auditLog?${searchParams.toString()}`
   }
 
   const ogSWRInfiniteResponse = useSWRInfinite<ActivityLogActionResponse>(getKey, {

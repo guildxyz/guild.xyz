@@ -90,7 +90,10 @@ const FiltersInput = (): JSX.Element => {
     const initialFilters: Filter[] = Object.entries(router.query)
       .map(([key, value]) =>
         isSupportedQueryParam(key) && value
-          ? { filter: key, value: value.toString() }
+          ? {
+              filter: key,
+              value: value.toString(),
+            }
           : null
       )
       .filter(Boolean)
