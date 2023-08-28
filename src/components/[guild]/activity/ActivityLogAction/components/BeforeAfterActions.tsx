@@ -8,8 +8,8 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import GuildLogo from "components/common/GuildLogo"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import GuildLogo from "components/common/GuildLogo"
 import useColorPalette from "hooks/useColorPalette"
 import { ArrowRight } from "phosphor-react"
 import { Requirement } from "types"
@@ -46,7 +46,7 @@ const BeforeAfterActions = (): JSX.Element => {
   if (action === ACTION.UpdateRequirement)
     return (
       <ActivityLogChildActionLayout
-        icon={<ActionIcon action={ACTION.UpdateRequirement} size={6} />}
+        icon={<ActionIcon action={ACTION.UpdateRequirement} size={5} />}
         label="Update requirement"
       >
         <UpdatedDataGrid
@@ -77,7 +77,7 @@ const BeforeAfterActions = (): JSX.Element => {
     <Stack py={2} spacing={4}>
       {(before.name !== data.name || before.imageUrl !== data.imageUrl) && (
         <ActivityLogChildActionLayout
-          icon={<ActionIcon action={ACTION.UpdateLogoOrTitle} size={6} />}
+          icon={<ActionIcon action={ACTION.UpdateLogoOrTitle} size={5} />}
           label="Update logo / title:"
         >
           <UpdatedDataGrid
@@ -99,7 +99,7 @@ const BeforeAfterActions = (): JSX.Element => {
 
       {before.description !== data.description && (
         <ActivityLogChildActionLayout
-          icon={<ActionIcon action={ACTION.UpdateDescription} size={6} />}
+          icon={<ActionIcon action={ACTION.UpdateDescription} size={5} />}
           label="Update description:"
         >
           <UpdatedDataGrid
@@ -111,7 +111,7 @@ const BeforeAfterActions = (): JSX.Element => {
 
       {before.logic !== data.logic && (
         <ActivityLogChildActionLayout
-          icon={<ActionIcon action={ACTION.UpdateLogic} size={6} />}
+          icon={<ActionIcon action={ACTION.UpdateLogic} size={5} />}
           label={
             <HStack fontWeight="semibold">
               <Text as="span">Update logic:</Text>
@@ -119,7 +119,7 @@ const BeforeAfterActions = (): JSX.Element => {
               <HStack>
                 <Text as="span">{before.logic}</Text>
                 <Center>
-                  <Icon as={ArrowRight} boxSize={6} />
+                  <Icon as={ArrowRight} boxSize={5} />
                 </Center>
                 <Text as="span">{data.logic}</Text>
               </HStack>
@@ -130,7 +130,7 @@ const BeforeAfterActions = (): JSX.Element => {
 
       {before.urlName !== data.urlName && (
         <ActivityLogChildActionLayout
-          icon={<ActionIcon action={ACTION.UpdateUrlName} size={6} />}
+          icon={<ActionIcon action={ACTION.UpdateUrlName} size={5} />}
           label="Update URL:"
           isInline
         >
@@ -159,7 +159,7 @@ const BeforeAfterActions = (): JSX.Element => {
           (key) => previousThemeProps[key] !== currentThemeProps[key]
         ) && (
           <ActivityLogChildActionLayout
-            icon={<ActionIcon action={ACTION.UpdateTheme} size={6} />}
+            icon={<ActionIcon action={ACTION.UpdateTheme} size={5} />}
             label="Update theme:"
           >
             <UpdatedDataGrid

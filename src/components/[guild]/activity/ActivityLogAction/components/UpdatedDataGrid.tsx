@@ -19,7 +19,7 @@ type Props = {
 const UpdatedDataGrid = ({
   before,
   after,
-  boxPadding = 4,
+  boxPadding,
   unstyled,
 }: Props): JSX.Element => {
   const borderColor = useColorModeValue("gray.100", "gray.700")
@@ -29,7 +29,7 @@ const UpdatedDataGrid = ({
   const boxProps = unstyled
     ? {}
     : {
-        p: boxPadding,
+        ...(boxPadding ? { p: boxPadding } : { py: 2, px: 4 }),
         borderWidth: 1,
         borderColor,
         borderRadius: "xl",

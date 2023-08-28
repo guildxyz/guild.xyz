@@ -1,13 +1,14 @@
 import { Icon } from "@chakra-ui/react"
 import { SystemStyleObject } from "@chakra-ui/theme-tools"
 import { IconProps, Question } from "phosphor-react"
+import { Rest } from "types"
 import { ACTION, activityLogActionIcons } from "../../constants"
 import { useActivityLogActionContext } from "../ActivityLogActionContext"
 
 type Props = {
   action?: ACTION
   size?: number
-}
+} & Rest
 
 type ActionIconProps = {
   as: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
@@ -16,7 +17,7 @@ type ActionIconProps = {
   sx: SystemStyleObject
 }
 
-const getActionIconProps = (action: string, size = 8): ActionIconProps => {
+const getActionIconProps = (action: string, size = 7): ActionIconProps => {
   const propsBase: ActionIconProps = {
     as: Question,
     boxSize: size,

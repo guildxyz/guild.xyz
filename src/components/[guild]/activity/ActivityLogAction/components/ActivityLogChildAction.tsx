@@ -1,4 +1,4 @@
-import { HStack, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
+import { Center, HStack, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { PropsWithChildren } from "react"
 import { Requirement } from "types"
@@ -16,7 +16,7 @@ const ActivityLogChildAction = (): JSX.Element => {
 
   return (
     <ActivityLogChildActionLayout
-      icon={<ActionIcon size={6} />}
+      icon={<ActionIcon size={5} />}
       label={<ActionLabel />}
     >
       {[
@@ -60,7 +60,7 @@ const ActivityLogChildActionLayout = ({
 
   return (
     <HStack alignItems="start">
-      {icon}
+      <Center boxSize={6}>{icon}</Center>
       <Stack w={isInline ? "max-content" : "full"}>
         <HStack>
           {typeof label === "string" ? (

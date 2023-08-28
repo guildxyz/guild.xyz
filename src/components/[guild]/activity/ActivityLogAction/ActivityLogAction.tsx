@@ -59,7 +59,7 @@ const ActivityLogAction = (): JSX.Element => {
           position="relative"
           justifyContent="space-between"
           px={{ base: 5, sm: 6 }}
-          py={7}
+          py={6}
           pointerEvents="none"
         >
           <HStack spacing={4} pointerEvents="all">
@@ -97,7 +97,7 @@ const ActivityLogAction = (): JSX.Element => {
       {shouldRenderCollapse && (
         <Collapse in={isOpen}>
           <Stack
-            spacing={3}
+            spacing={3.5}
             pr={6}
             pl={{ base: 5, sm: "4.5rem" }}
             py={4}

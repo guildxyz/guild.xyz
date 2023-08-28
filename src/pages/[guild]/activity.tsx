@@ -1,5 +1,7 @@
-import Layout from "components/common/Layout"
-import Section from "components/common/Section"
+import { Stack } from "@chakra-ui/react"
+import Tabs from "components/[guild]/Tabs/Tabs"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
 import {
   ActivityLogProvider,
@@ -8,9 +10,8 @@ import {
 import ActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar"
 import ActivityLogSkeleton from "components/[guild]/activity/ActivityLogSkeleton"
 import useGuild from "components/[guild]/hooks/useGuild"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
-import Tabs from "components/[guild]/Tabs/Tabs"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import Layout from "components/common/Layout"
+import { SectionTitle } from "components/common/Section"
 
 const ActivityLog = (): JSX.Element => {
   const { name, urlName } = useGuild()
@@ -35,14 +36,14 @@ const ActivityLog = (): JSX.Element => {
 
       <ActivityLogFiltersBar />
 
-      <Section title="Actions" mt={8}>
+      <SectionTitle title="Actions" mt={8} mb="4" />
+      <Stack spacing={2.5}>
         {data?.entries?.length > 0 &&
           data.entries.map((action) => (
             <ActivityLogAction key={action.id} action={action} />
           ))}
-
         {isValidating && <ActivityLogSkeleton />}
-      </Section>
+      </Stack>
     </Layout>
   )
 }

@@ -52,7 +52,7 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
 
   return (
     <>
-      <HStack pt={2}>
+      <HStack>
         <Icon as={DotsThree} boxSize={6} />
         <Text as="span" fontWeight="semibold">
           {`${numberOfAdditionalActions} more action${
