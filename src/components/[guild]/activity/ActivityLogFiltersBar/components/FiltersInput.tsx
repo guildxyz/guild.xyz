@@ -238,7 +238,10 @@ const FiltersInput = (): JSX.Element => {
               {activeFilters?.map(({ filter, value }) => (
                 <TagInput
                   key={filter}
-                  name={filter}
+                  filter={filter}
+                  label={
+                    searchOptions.find((option) => option.value === filter).label
+                  }
                   value={value}
                   onRemove={(filterToRemove) => {
                     dispatch({

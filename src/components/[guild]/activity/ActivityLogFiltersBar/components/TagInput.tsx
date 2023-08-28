@@ -6,7 +6,8 @@ import DynamicWidthInput from "./DynamicWidthInput"
 import { Filter } from "./FiltersInput"
 
 type Props = {
-  name: SupportedQueryParam
+  filter: SupportedQueryParam
+  label: string
   value: string
   onChange: (filter: Filter) => void
   onRemove: (filter: Filter) => void
@@ -14,7 +15,8 @@ type Props = {
 }
 
 const TagInput = ({
-  name,
+  filter: filterProp,
+  label,
   value,
   onChange,
   onRemove,
@@ -28,8 +30,8 @@ const TagInput = ({
 
   const [filterValue, setFilterValue] = useState(value)
 
-  const filter = {
-    filter: name,
+  const filter: Filter = {
+    filter: filterProp,
     value: filterValue,
   }
 
@@ -46,11 +48,11 @@ const TagInput = ({
     >
       <HStack>
         <Text as="span" fontSize="sm" fontWeight="bold">
-          {name}:
+          {label}:
         </Text>
         <DynamicWidthInput
           ref={inputRef}
-          id={name}
+          id={filterProp}
           variant="unstyled"
           borderRadius="none"
           value={filterValue}

@@ -8,6 +8,7 @@ const DynamicWidthInput = forwardRef(
       {...props}
       width={`${props.value?.toString().length ?? 0}ch`}
       minW={1}
+      fontFamily="monospace"
     />
   )
 )
