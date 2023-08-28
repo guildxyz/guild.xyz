@@ -311,28 +311,6 @@ const FiltersInput = (): JSX.Element => {
         {...positionerProps}
       >
         <Stack spacing={0} {...contentProps}>
-          {/* {inputValue?.length > 0 && (
-            <HStack
-              {...getOptionProps({ label: inputValue, value: inputValue })}
-              px={4}
-              h={12}
-              bgColor={
-                focusedOption?.value === inputValue ? optionFocusBgColor : undefined
-              }
-              _hover={{
-                bgColor: optionFocusBgColor,
-              }}
-              transition="0.16s ease"
-            >
-              <Text as="span" fontWeight="bold" flexShrink={0}>
-                {`Search for: `}
-              </Text>
-              <Text as="span" isTruncated>
-                {inputValue}
-              </Text>
-            </HStack>
-          )} */}
-
           {inputValue?.length > 2 &&
             !activeFilters?.some((filter) => filter.filter === "action") &&
             auditLogActions
