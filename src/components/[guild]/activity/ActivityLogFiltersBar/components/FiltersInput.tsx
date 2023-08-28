@@ -240,7 +240,8 @@ const FiltersInput = (): JSX.Element => {
                   key={filter}
                   filter={filter}
                   label={
-                    searchOptions.find((option) => option.value === filter).label
+                    searchOptions.find((option) => option.value === filter)?.label ??
+                    "Action"
                   }
                   value={value}
                   onRemove={(filterToRemove) => {
