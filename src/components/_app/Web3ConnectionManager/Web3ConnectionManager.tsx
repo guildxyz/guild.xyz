@@ -20,6 +20,7 @@ import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
 import useEagerConnect from "./hooks/useEagerConnect"
+import useNewSharedConnectionsToast from "./hooks/useNewSharedConnectionsToast"
 
 const Web3Connection = createContext({
   triedEager: false,
@@ -60,9 +61,6 @@ const Web3ConnectionManager = ({
     window.localStorage.setItem("connector", connectorName)
   }, [connector, isActive])
 
-  useContractWalletInfoToast()
-  useConnectFromLocalStorage()
-
   const {
     isOpen: isWalletSelectorModalOpen,
     onOpen: openWalletSelectorModal,
@@ -90,6 +88,10 @@ const Web3ConnectionManager = ({
     userId: number
     address: string
   }>()
+
+  useContractWalletInfoToast()
+  useConnectFromLocalStorage()
+  useNewSharedConnectionsToast(openAccountModal)
 
   const [isDelegateConnection, setIsDelegateConnection] = useState<boolean>(false)
 

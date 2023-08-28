@@ -30,6 +30,7 @@ import {
   Shield,
   ShieldCheck,
 } from "phosphor-react"
+import { useRef } from "react"
 
 const SharedConnections = () => {
   const { name, imageUrl } = useGuild()
@@ -43,10 +44,19 @@ const SharedConnections = () => {
     ml: "auto",
     my: "-1 !important",
     onClick: onOpen,
+    // so we can focus it from useNewSharedConnectionsToast
+    id: "sharedConnectionsButton",
+    _focus: {
+      boxShadow: "var(--chakra-shadows-outline)",
+    },
   }
+
+  // so the button doesn't get the focus ring on close
+  const dummyRef = useRef(null)
 
   return (
     <>
+      <span ref={dummyRef} />
       {!name ? (
         <Button {...buttonProps} leftIcon={<Shield />}>
           Shared with x guilds
@@ -65,6 +75,7 @@ const SharedConnections = () => {
         onClose={onClose}
         colorScheme="duotone"
         scrollBehavior="inside"
+        finalFocusRef={dummyRef}
       >
         <ModalOverlay />
         <ModalContent>

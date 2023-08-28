@@ -32,12 +32,10 @@ const useToastWithButton = () => {
   const toastIdRef = useRef<ToastId>()
   const actionButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
-  return ({ title, description, buttonProps, ...rest }: ActionToastOptions) => {
+  return ({ description, buttonProps, ...rest }: ActionToastOptions) => {
     const { onClick, ...restButtonProps } = buttonProps
 
     toastIdRef.current = toast({
-      status: "success",
-      title,
       duration: 8000,
       description: (
         <>
@@ -67,10 +65,11 @@ type TweetToastOptions = {
 }
 
 const useToastWithTweetButton = () => {
-  const toast = useToastWithButton()
+  const toastWithButton = useToastWithButton()
 
   return ({ title, tweetText }: TweetToastOptions) =>
-    toast({
+    toastWithButton({
+      status: "success",
       title,
       description: "Let others know as well by sharing it on Twitter",
       buttonProps: {
