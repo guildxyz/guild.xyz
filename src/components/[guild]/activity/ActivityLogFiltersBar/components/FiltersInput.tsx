@@ -41,8 +41,8 @@ const isSupportedQueryParam = (arg: any): arg is SupportedQueryParam =>
 
 const searchOptions: SearchOption[] = [
   {
-    label: "User",
-    description: "user ID",
+    label: "Users",
+    description: "user IDs",
     value: "userId",
   },
   {
