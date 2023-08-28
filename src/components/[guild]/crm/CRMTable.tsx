@@ -16,6 +16,7 @@ import Card from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useEffect, useRef, useState } from "react"
 import { PlatformAccountDetails } from "types"
+import { TABS_HEIGHT_SM, TABS_SM_BUTTONS_STYLES } from "../Tabs/Tabs"
 import MemberModal from "./MemberModal"
 import useMembers from "./useMembers"
 
@@ -33,6 +34,8 @@ type Props = {
   table: TableType<Member>
 }
 
+const HEADER_HEIGHT = "61px"
+
 const CRMTable = ({ table }: Props) => {
   const { isLoading, error } = useMembers()
 
@@ -48,7 +51,7 @@ const CRMTable = ({ table }: Props) => {
    */
   const [isStuck, setIsStuck] = useState(false)
   useScrollEffect(() => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 10) {
       setIsStuck(true)
     } else setIsStuck(false)
   }, [])
@@ -87,7 +90,9 @@ const CRMTable = ({ table }: Props) => {
         {/* not using overflow-y: hidden just hiding the scrollbar, so it's possible
         to scroll back at the top and get out of the stucked state */}
         {isStuck &&
-          `body::-webkit-scrollbar {display: none !important; scrollbar-width: none; -webkit-appearance: none;}`}
+          `body::-webkit-scrollbar {display: none !important; scrollbar-width: none; -webkit-appearance: none;}
+           #tabs::before {height: calc(${TABS_HEIGHT_SM} + ${HEADER_HEIGHT}); background-color: ${cardBg}}
+           ${TABS_SM_BUTTONS_STYLES}`}
         {/* the table is elevated to be above the headers shadow, and the popovers need to be elevated above that */}
         {`body {overflow-x: hidden !important}
           .chakra-popover__popper { z-index: var(--chakra-zIndices-banner) !important };`}
@@ -97,7 +102,7 @@ const CRMTable = ({ table }: Props) => {
         w={isStuck ? "100vw" : "calc(var(--vw, 1vw) * 100)"}
         flex="1 0 auto"
         // 100vh - Tabs height (button height + padding)
-        h="calc(100vh - calc(var(--chakra-space-11) + (2 * var(--chakra-space-2-5))))"
+        h={`calc(100vh - ${TABS_HEIGHT_SM})`}
         overflowY={isStuck ? "auto" : "hidden"}
       >
         <Card overflow="visible" h="fit-content" mx="auto" mb="2">

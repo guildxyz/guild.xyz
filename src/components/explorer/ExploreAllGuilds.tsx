@@ -10,7 +10,11 @@ import {
   usePrevious,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { TABS_HEIGHT, TABS_HEIGHT_SM } from "components/[guild]/Tabs/Tabs"
+import {
+  TABS_HEIGHT,
+  TABS_HEIGHT_SM,
+  TABS_SM_BUTTONS_STYLES,
+} from "components/[guild]/Tabs/Tabs"
 import { BATCH_SIZE } from "components/_app/ExplorerProvider"
 import Section from "components/common/Section"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
@@ -113,7 +117,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
         >
           {isStuck && (
             <style>{`#tabs::before {height: calc(${TABS_HEIGHT_SM} + ${searchAreaHeight}); background-image: ${stuckTabsBg}}
-            #tabs button {height: var(--chakra-space-8); font-size: var(--chakra-fontSizes-sm); border-radius: var(--chakra-radii-lg); padding: 0 var(--chakra-space-3)}`}</style>
+            ${TABS_SM_BUTTONS_STYLES}`}</style>
           )}
           <SearchBar
             placeholder="Search guilds"
