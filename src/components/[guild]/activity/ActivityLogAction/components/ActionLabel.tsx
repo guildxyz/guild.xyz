@@ -5,7 +5,7 @@ import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
 import { useActivityLogActionContext } from "../ActivityLogActionContext"
 import RewardTag from "./RewardTag"
-import RoleTag from "./RoleTag"
+import { ClickableRoleTag } from "./RoleTag"
 import UserTag from "./UserTag"
 
 const ActionLabel = (): JSX.Element => {
@@ -44,7 +44,7 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
-                <RoleTag id={ids.role} guildId={ids.guild} />
+                <ClickableRoleTag id={ids.role} guildId={ids.guild} />
                 <Text as="span">by</Text>
                 <UserTag id={ids.user} />
               </>
@@ -97,7 +97,7 @@ const ActionLabel = (): JSX.Element => {
                   {isChildOfUserStatusUpdate ? ":" : ""}
                 </Text>
                 {isChildOfUserStatusUpdate ? (
-                  <RoleTag id={ids.role} guildId={ids.guild} />
+                  <ClickableRoleTag id={ids.role} guildId={ids.guild} />
                 ) : (
                   <UserTag id={ids.user} />
                 )}
@@ -109,7 +109,7 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName} in role:</Text>
-                <RoleTag id={ids.role} guildId={ids.guild} />
+                <ClickableRoleTag id={ids.role} guildId={ids.guild} />
                 <Text as="span">by</Text>
                 <UserTag id={ids.user} />
               </>
@@ -124,7 +124,7 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {ids.role ? (
-                  <RoleTag id={ids.role} guildId={ids.guild} />
+                  <ClickableRoleTag id={ids.role} guildId={ids.guild} />
                 ) : ids.user ? (
                   <UserTag id={ids.user} />
                 ) : null}
