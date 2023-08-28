@@ -4,7 +4,7 @@ import capitalize from "utils/capitalize"
 import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
 import { useActivityLogActionContext } from "../ActivityLogActionContext"
-import RewardTag from "./RewardTag"
+import { ClickableRewardTag } from "./RewardTag"
 import { ClickableRoleTag } from "./RoleTag"
 import UserTag from "./UserTag"
 
@@ -58,7 +58,7 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
-                <RewardTag rolePlatformId={ids.rolePlatform} />
+                <ClickableRewardTag rolePlatformId={ids.rolePlatform} />
               </>
             )
           case ACTION.ClickJoinOnWeb:
