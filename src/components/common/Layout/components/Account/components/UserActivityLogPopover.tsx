@@ -11,9 +11,8 @@ import {
   Skeleton,
   SkeletonCircle,
   Stack,
-  Tooltip,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import LinkButton from "components/common/LinkButton"
 import { ActivityLogActionProvider } from "components/[guild]/activity/ActivityLogAction/ActivityLogActionContext"
 import ActionIcon from "components/[guild]/activity/ActivityLogAction/components/ActionIcon"
 import ActionLabel from "components/[guild]/activity/ActivityLogAction/components/ActionLabel"
@@ -84,17 +83,15 @@ const UserActivityLog = (): JSX.Element => {
             </ActivityLogActionProvider>
           ))}
 
-      <Tooltip placement="bottom" label="Coming soon" hasArrow>
-        <Button
-          w="full"
-          size="sm"
-          variant="solid"
-          rightIcon={<Icon as={ArrowRight} />}
-          isDisabled
-        >
-          View all
-        </Button>
-      </Tooltip>
+      <LinkButton
+        href="/profile/activity"
+        w="full"
+        size="sm"
+        colorScheme="gray"
+        rightIcon={<Icon as={ArrowRight} />}
+      >
+        View all
+      </LinkButton>
     </Stack>
   )
 }
