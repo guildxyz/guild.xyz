@@ -1,4 +1,4 @@
-import { Stack, Text } from "@chakra-ui/react"
+import { Text, Wrap } from "@chakra-ui/react"
 import platforms from "platforms/platforms"
 import capitalize from "utils/capitalize"
 import { useActivityLog } from "../../ActivityLogContext"
@@ -16,9 +16,9 @@ const ActionLabel = (): JSX.Element => {
   const capitalizedName = capitalize(action)
 
   return (
-    <Stack
-      direction={{ base: "column", sm: "row" }}
-      spacing={{ base: 1, sm: 2 }}
+    <Wrap
+      spacingX={{ base: 1, md: 1.5 }}
+      spacingY={{ base: 0.5, md: 1.5 }}
       fontWeight="semibold"
     >
       {(() => {
@@ -132,7 +132,7 @@ const ActionLabel = (): JSX.Element => {
             )
         }
       })()}
-    </Stack>
+    </Wrap>
   )
 }
 

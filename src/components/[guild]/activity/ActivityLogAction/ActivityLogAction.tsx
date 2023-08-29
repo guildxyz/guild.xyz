@@ -64,7 +64,7 @@ const ActivityLogAction = (): JSX.Element => {
         >
           <HStack spacing={4} pointerEvents="all">
             <ActionIcon />
-            <Stack spacing={0.5}>
+            <Stack spacing={{ base: 1.5, sm: 1, md: 0.5 }}>
               <ActionLabel />
               <Text as="span" colorScheme="gray" fontSize="sm">
                 {new Date(Number(timestamp)).toLocaleString()}
