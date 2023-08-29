@@ -31,6 +31,7 @@ const DISPLAYED_CHILD_ACTIONS = 5
 const ActivityLogAction = (): JSX.Element => {
   const groupHoverBgColor = useColorModeValue("gray.50", "whiteAlpha.100")
   const collapseBgColor = useColorModeValue("gray.50", "blackAlpha.400")
+  const collapseBorder = useColorModeValue("1px", "null")
 
   const { isOpen, onToggle } = useDisclosure()
 
@@ -52,7 +53,8 @@ const ActivityLogAction = (): JSX.Element => {
           bgColor="transparent"
           transition="background .2s"
           _groupHover={{
-            bgColor: shouldRenderCollapse ? groupHoverBgColor : "transparent",
+            bgColor:
+              shouldRenderCollapse && !isOpen ? groupHoverBgColor : "transparent",
           }}
         />
         <HStack
@@ -102,6 +104,7 @@ const ActivityLogAction = (): JSX.Element => {
             pl={{ base: 5, sm: "4.5rem" }}
             py={4}
             bgColor={collapseBgColor}
+            borderTopWidth={collapseBorder}
           >
             <BeforeAfterActions />
             {children.slice(0, DISPLAYED_CHILD_ACTIONS).map((childAction) => (
