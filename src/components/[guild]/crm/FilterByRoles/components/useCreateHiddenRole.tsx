@@ -44,6 +44,8 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
       toastIdRef.current = toast({
         duration: 8000,
         title: "Role successfully created",
+        description:
+          "It may take some time for all eligible members to get it. See the query status next to it!",
         status: "success",
       })
 

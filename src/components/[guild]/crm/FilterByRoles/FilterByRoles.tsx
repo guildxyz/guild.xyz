@@ -20,6 +20,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Column } from "@tanstack/react-table"
+import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import { Funnel } from "phosphor-react"
 import { useState } from "react"
 import { Visibility } from "types"
@@ -56,82 +57,97 @@ const FilterByRoles = ({ column }: Props) => {
   if (!roles) return null
 
   return (
-    <Popover placement="bottom-end">
-      <PopoverTrigger>
-        <Button
-          size="sm"
-          variant="ghost"
-          px="2"
-          right="-2"
-          colorScheme={selectedAggregated ? "blue" : "gray"}
-        >
-          {!!selectedAggregated && (
-            <Text colorScheme="blue" pl="0.5" pr="1" mb="-1px" fontSize="xs">
-              {`${selectedAggregated} filtered roles`}
-            </Text>
-          )}
-          <Icon as={Funnel} />
-        </Button>
-      </PopoverTrigger>
-      <Portal>
-        <PopoverContent>
-          <PopoverArrow />
-          <PopoverHeader
-            p="2.5"
-            pb="2 !important"
-            bg={headerBg}
-            borderTopRadius={"xl"}
-          >
-            <FilterByRolesLogicSelector column={column} />
-            <FilterByRolesSearch {...{ searchValue, setSearchValue }} />
-          </PopoverHeader>
-          <PopoverBody
-            py="4"
-            bg={bodyBg}
-            borderBottomRadius={"xl"}
-            overflowY={"auto"}
-            maxH="md"
-          >
-            <Stack spacing={5}>
-              {hiddenRoles?.length ? (
-                <RoleCheckboxGroup
-                  label="Hidden roles"
-                  labelRightElement={<AddAndEditHiddenRoles />}
-                  selectedRoleIds={selectedRoleIds.hiddenRoleIds}
-                  setSelectedRoleIds={(newValue) => {
-                    column
-                      .getLeafColumns()
-                      .find(({ id }) => id === "hiddenRoleIds")
-                      .setFilterValue((prevValue) => ({
-                        ...prevValue,
-                        roleIds: newValue,
-                      }))
-                  }}
-                  roles={hiddenRoles}
-                  searchValue={searchValue}
-                />
-              ) : (
-                <AddHiddenRoles />
+    <Popover placement="bottom-end" closeOnBlur={false}>
+      {({ isOpen, onClose }) => (
+        <>
+          <PopoverTrigger>
+            <Button
+              size="sm"
+              variant="ghost"
+              px="2"
+              right="-2"
+              colorScheme={selectedAggregated ? "blue" : "gray"}
+            >
+              {!!selectedAggregated && (
+                <Text colorScheme="blue" pl="0.5" pr="1" mb="-1px" fontSize="xs">
+                  {`${selectedAggregated} filtered roles`}
+                </Text>
               )}
-              <RoleCheckboxGroup
-                label="Public roles"
-                selectedRoleIds={selectedRoleIds.publicRoleIds}
-                setSelectedRoleIds={(newValue) => {
-                  column
-                    .getLeafColumns()
-                    .find(({ id }) => id === "publicRoleIds")
-                    .setFilterValue((prevValue) => ({
-                      ...prevValue,
-                      roleIds: newValue,
-                    }))
-                }}
-                roles={publicRoles}
-                searchValue={searchValue}
+              <Icon as={Funnel} />
+            </Button>
+          </PopoverTrigger>
+          <Portal>
+            {isOpen && (
+              <Box
+                pos={"fixed"}
+                top="0"
+                left="0"
+                h="100vh"
+                w="100vw"
+                zIndex={"1200"}
+                onClick={onClose}
               />
-            </Stack>
-          </PopoverBody>
-        </PopoverContent>
-      </Portal>
+            )}
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverHeader
+                p="2.5"
+                pb="2 !important"
+                bg={headerBg}
+                borderTopRadius={"xl"}
+              >
+                <FilterByRolesLogicSelector column={column} />
+                <FilterByRolesSearch {...{ searchValue, setSearchValue }} />
+              </PopoverHeader>
+              <PopoverBody
+                py="4"
+                bg={bodyBg}
+                borderBottomRadius={"xl"}
+                overflowY={"auto"}
+                maxH="md"
+              >
+                <Stack spacing={5}>
+                  {hiddenRoles?.length ? (
+                    <RoleCheckboxGroup
+                      label="Hidden roles"
+                      labelRightElement={<AddAndEditHiddenRoles />}
+                      selectedRoleIds={selectedRoleIds.hiddenRoleIds}
+                      setSelectedRoleIds={(newValue) => {
+                        column
+                          .getLeafColumns()
+                          .find(({ id }) => id === "hiddenRoleIds")
+                          .setFilterValue((prevValue) => ({
+                            ...prevValue,
+                            roleIds: newValue,
+                          }))
+                      }}
+                      roles={hiddenRoles}
+                      searchValue={searchValue}
+                    />
+                  ) : (
+                    <AddHiddenRoles />
+                  )}
+                  <RoleCheckboxGroup
+                    label="Public roles"
+                    selectedRoleIds={selectedRoleIds.publicRoleIds}
+                    setSelectedRoleIds={(newValue) => {
+                      column
+                        .getLeafColumns()
+                        .find(({ id }) => id === "publicRoleIds")
+                        .setFilterValue((prevValue) => ({
+                          ...prevValue,
+                          roleIds: newValue,
+                        }))
+                    }}
+                    roles={publicRoles}
+                    searchValue={searchValue}
+                  />
+                </Stack>
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
+        </>
+      )}
     </Popover>
   )
 }
@@ -184,8 +200,10 @@ const RoleCheckboxGroup = ({
                 )
               }
               spacing={3}
+              w="full"
+              sx={{ ".chakra-checkbox__label": { w: "full" } }}
             >
-              <HStack spacing={1.5}>
+              <HStack spacing={1.5} w="full">
                 {role.imageUrl?.startsWith("/guildLogos") ? (
                   <Center boxSize="5">
                     <Img
@@ -196,7 +214,14 @@ const RoleCheckboxGroup = ({
                 ) : (
                   <Img src={role.imageUrl} boxSize="5" borderRadius={"full"} />
                 )}
-                <Text>{role.name}</Text>
+                <Text w="full" noOfLines={1}>
+                  {role.name}
+                </Text>
+                <MemberCount
+                  roleId={role.id}
+                  memberCount={role.memberCount}
+                  size="sm"
+                />
               </HStack>
             </Checkbox>
           ))

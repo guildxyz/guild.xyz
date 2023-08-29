@@ -21,12 +21,7 @@ const AddAndEditHiddenRoles = () => {
   return (
     // not setting size and variant here, because the buttons inside AddHiddenRoleModal inherited them too
     <ButtonGroup isAttached>
-      <AddHiddenRoleButton
-        borderRadius="lg"
-        size="xs"
-        variant="ghost"
-        opacity=".6"
-      />
+      <AddHiddenRoleButton borderRadius="lg" size="xs" variant="ghost" />
       <Divider orientation="vertical" h="6" />
       <Menu placement="bottom-end">
         <MenuButton
@@ -35,7 +30,6 @@ const AddAndEditHiddenRoles = () => {
           borderRadius="lg"
           size="xs"
           variant="ghost"
-          opacity=".6"
         ></MenuButton>
         <MenuList>
           <Link passHref href={`/${urlName}#hiddenRoles`}>
