@@ -1,6 +1,5 @@
-import { useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
-import Layout from "components/common/Layout"
-import Section from "components/common/Section"
+import { Stack, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
+import { ThemeProvider } from "components/[guild]/ThemeContext"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
 import {
   ActivityLogProvider,
@@ -9,7 +8,8 @@ import {
 import ActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar"
 import ActivityLogSkeleton from "components/[guild]/activity/ActivityLogSkeleton"
 import useUser from "components/[guild]/hooks/useUser"
-import { ThemeProvider } from "components/[guild]/ThemeContext"
+import Layout from "components/common/Layout"
+import { SectionTitle } from "components/common/Section"
 
 const ActivityLog = (): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
@@ -45,14 +45,15 @@ const ActivityLog = (): JSX.Element => {
     >
       <ActivityLogFiltersBar />
 
-      <Section title="Actions" mt={8}>
+      <SectionTitle title="Actions" mt={8} mb="4" />
+      <Stack spacing={2.5}>
         {data?.entries?.length > 0 &&
           data.entries.map((action) => (
             <ActivityLogAction key={action.id} action={action} />
           ))}
 
         {isValidating && <ActivityLogSkeleton />}
-      </Section>
+      </Stack>
     </Layout>
   )
 }
