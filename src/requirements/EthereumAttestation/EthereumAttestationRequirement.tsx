@@ -41,15 +41,11 @@ const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element =>
             }`}
             imageUrl="/requirementLogos/eas.png"
           >
-            {/* View schema on EAS scan */}
             Schema
           </RequirementLinkButton>
           <BlockExplorerUrl
             path="address"
             address={requirement.data?.attester ?? requirement.data?.recipient}
-            // label={`View ${
-            //   requirement.type === "EAS_ATTEST" ? "recipient" : "attester"
-            // } on explorer`}
             label={requirement.type === "EAS_ATTEST" ? "Recipient" : "Attester"}
           />
         </HStack>
