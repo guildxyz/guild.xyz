@@ -10,28 +10,34 @@ import {
 } from "@chakra-ui/react"
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useRouter } from "next/router"
 import { CaretDown, X } from "phosphor-react"
+import platforms from "platforms/platforms"
 import { ParsedUrlQuery } from "querystring"
 import { KeyboardEvent, useEffect, useState } from "react"
+import { PlatformType } from "types"
+import capitalize from "utils/capitalize"
 import ActionIcon from "../../ActivityLogAction/components/ActionIcon"
+import RewardTag from "../../ActivityLogAction/components/RewardTag"
+import RoleTag from "../../ActivityLogAction/components/RoleTag"
 import {
   SupportedQueryParam,
   SUPPORTED_QUERY_PARAMS,
 } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
+import FilterTag from "./FilterTag"
 import { useActiveFiltersReducer } from "./hooks/useActiveFiltersReducer"
 import TagInput from "./TagInput"
 
 type SearchOption = {
   label: string
-  description: string
   value: SupportedQueryParam
 }
 
 export type Filter = {
   filter: SupportedQueryParam
-  value: string
+  value?: string
 }
 
 const isSupportedQueryParam = (arg: any): arg is SupportedQueryParam =>
@@ -39,25 +45,21 @@ const isSupportedQueryParam = (arg: any): arg is SupportedQueryParam =>
   (SUPPORTED_QUERY_PARAMS.includes(arg as SupportedQueryParam) ||
     SUPPORTED_QUERY_PARAMS.includes(arg.split(":")[0] as SupportedQueryParam))
 
-const searchOptions: SearchOption[] = [
+const possibleSearchOptions: SearchOption[] = [
   {
-    label: "Users",
-    description: "user IDs",
+    label: "User",
     value: "userId",
   },
   {
     label: "Role",
-    description: "role ID",
     value: "roleId",
   },
   {
     label: "Requirement",
-    description: "requirement ID",
     value: "requirementId",
   },
   {
-    label: "Platform",
-    description: "platform ID",
+    label: "Reward",
     value: "rolePlatformId",
   },
 ]
@@ -103,7 +105,7 @@ const FiltersInput = (): JSX.Element => {
       filters: initialFilters,
     })
 
-    setInputValue?.(router.query.search?.toString() ?? "")
+    setInputValue?.("")
   }, [router.query])
 
   const [state, send] = useMachine(
@@ -160,7 +162,7 @@ const FiltersInput = (): JSX.Element => {
     const query: ParsedUrlQuery = { ...router.query }
 
     const filters: SupportedQueryParam[] = [
-      ...searchOptions.map((option) => option.value),
+      ...possibleSearchOptions.map((option) => option.value),
       "action",
     ]
 
@@ -168,8 +170,6 @@ const FiltersInput = (): JSX.Element => {
       const relevantActiveFilter = activeFilters.find((f) => f.filter === filter)
       query[filter] = relevantActiveFilter?.value ?? ""
     })
-
-    query.search = inputValue ?? ""
 
     Object.entries(query).forEach(([key, value]) => {
       if (!value) {
@@ -205,13 +205,80 @@ const FiltersInput = (): JSX.Element => {
   }
 
   useEffect(() => {
-    const foundSearchOption = searchOptions.find(({ label }) => label === inputValue)
+    const foundSearchOption = possibleSearchOptions.find(
+      ({ label }) => label === inputValue
+    )
     if (
       foundSearchOption &&
       activeFilters.find(({ filter }) => foundSearchOption.value === filter)
     )
       setInputValue("")
   }, [inputValue])
+
+  // Search suggestions related logic
+  const { guildPlatforms, roles } = useGuild()
+
+  const rewardSuggestions = roles
+    ?.flatMap((role) => role.rolePlatforms)
+    .map((rp) => {
+      const role = roles.find((r) => r.id === rp.roleId)
+      const guildPlatform = guildPlatforms.find((gp) => gp.id === rp.guildPlatformId)
+      const name =
+        guildPlatform?.platformGuildName ?? guildPlatform?.platformGuildData?.name
+
+      return {
+        id: rp.id,
+        platformName: PlatformType[guildPlatform?.platformId],
+        name:
+          guildPlatform?.platformId === PlatformType.DISCORD
+            ? `${role.name} - ${name}`
+            : name,
+      }
+    })
+    .filter((reward) => {
+      const lowerCaseInputValue = inputValue?.trim().toLowerCase()
+
+      if (!lowerCaseInputValue) return true
+
+      return (
+        reward.name.toLowerCase().includes(lowerCaseInputValue) ||
+        "reward".includes(lowerCaseInputValue)
+      )
+    })
+  const shouldRenderRewardSuggestions =
+    rewardSuggestions?.length > 0 &&
+    !activeFilters?.some((af) => af.filter === "rolePlatformId")
+
+  const roleSuggestions = roles?.filter((role) => {
+    const lowerCaseInputValue = inputValue?.trim().toLowerCase()
+    return (
+      role.name.toLowerCase().includes(lowerCaseInputValue) ||
+      "role".includes(lowerCaseInputValue)
+    )
+  })
+  const shouldRenderRoleSuggestions =
+    roleSuggestions?.length > 0 &&
+    !activeFilters?.some((af) => af.filter === "roleId")
+
+  const actionSuggestions = auditLogActions.filter((action) => {
+    const lowerCaseInputValue = inputValue.toLowerCase()
+    return (
+      action.includes(lowerCaseInputValue) || "action".includes(lowerCaseInputValue)
+    )
+  })
+  const shouldRenderActionSuggestions =
+    actionSuggestions.length > 0 &&
+    !activeFilters?.some((af) => af.filter === "action")
+
+  const shouldRenderUserIdFilterOption = !activeFilters?.some(
+    (af) => af.filter === "userId"
+  )
+
+  const isFiltersInputEnabled =
+    shouldRenderRoleSuggestions ||
+    shouldRenderRewardSuggestions ||
+    shouldRenderActionSuggestions ||
+    shouldRenderUserIdFilterOption
 
   return (
     <>
@@ -235,28 +302,138 @@ const FiltersInput = (): JSX.Element => {
             className="invisible-scrollbar"
           >
             <HStack>
-              {activeFilters?.map(({ filter, value }) => (
-                <TagInput
-                  key={filter}
-                  filter={filter}
-                  label={
-                    searchOptions.find((option) => option.value === filter)?.label ??
-                    "Action"
+              {activeFilters?.map(({ filter, value }) => {
+                switch (filter) {
+                  case "action":
+                    return (
+                      <FilterTag
+                        label="Action:"
+                        onRemove={() => {
+                          dispatch({
+                            type: "removeFilter",
+                            filter: {
+                              filter,
+                            },
+                          })
+                          focus()
+                        }}
+                      >
+                        <HStack spacing={0.5}>
+                          <ActionIcon
+                            action={value as ACTION}
+                            size={4}
+                            position="relative"
+                          />
+                          <Text as="span" minW="max-content">
+                            {capitalize(value)}
+                          </Text>
+                        </HStack>
+                      </FilterTag>
+                    )
+                  case "roleId": {
+                    const role = roles?.find((r) => r.id === Number(value))
+                    return (
+                      <FilterTag
+                        label="Role"
+                        onRemove={() => {
+                          dispatch({
+                            type: "removeFilter",
+                            filter: {
+                              filter,
+                            },
+                          })
+                          focus()
+                        }}
+                        pr={0}
+                      >
+                        <RoleTag
+                          name={role?.name ?? "Unknown role"}
+                          image={role?.imageUrl}
+                          pr={7}
+                          borderLeftRadius={0}
+                        />
+                      </FilterTag>
+                    )
                   }
-                  value={value}
-                  onRemove={(filterToRemove) => {
-                    dispatch({
-                      type: "removeFilter",
-                      filter: filterToRemove,
-                    })
-                    focus()
-                  }}
-                  onChange={(newFilter) =>
-                    dispatch({ type: "updateFilter", filter: newFilter })
+                  case "rolePlatformId": {
+                    const role = roles?.find((r) =>
+                      r.rolePlatforms.some((rp) => rp.id === Number(value))
+                    )
+                    const rolePlatform = roles
+                      ?.flatMap((r) => r.rolePlatforms)
+                      .find((rp) => rp.id === Number(value))
+                    const guildPlatform = guildPlatforms?.find(
+                      (gp) => gp.id === rolePlatform?.guildPlatformId
+                    )
+                    const name =
+                      guildPlatform?.platformGuildName ??
+                      guildPlatform?.platformGuildData?.name
+
+                    return (
+                      <FilterTag
+                        label="Role"
+                        onRemove={() => {
+                          dispatch({
+                            type: "removeFilter",
+                            filter: {
+                              filter,
+                            },
+                          })
+                          focus()
+                        }}
+                        pr={0}
+                        closeButtonProps={{
+                          colorScheme: "whiteAlpha",
+                        }}
+                      >
+                        <RewardTag
+                          name={
+                            guildPlatform?.platformId === PlatformType.DISCORD
+                              ? `${role.name} - ${name}`
+                              : name
+                          }
+                          icon={
+                            platforms[PlatformType[guildPlatform?.platformId]]?.icon
+                          }
+                          colorScheme={
+                            platforms[PlatformType[guildPlatform?.platformId]]
+                              ?.colorScheme
+                          }
+                          pr={7}
+                          borderLeftRadius={0}
+                        />
+                      </FilterTag>
+                    )
                   }
-                  onEnter={focus}
-                />
-              ))}
+                  case "after":
+                  case "before":
+                    return null
+                  default:
+                    return (
+                      <TagInput
+                        key={filter}
+                        filter={filter}
+                        label={
+                          possibleSearchOptions.find(
+                            (option) => option.value === filter
+                          )?.label ?? "Action"
+                        }
+                        value={value}
+                        onRemove={(filterToRemove) => {
+                          dispatch({
+                            type: "removeFilter",
+                            filter: filterToRemove,
+                          })
+                          focus()
+                        }}
+                        onChange={(newFilter) =>
+                          dispatch({ type: "updateFilter", filter: newFilter })
+                        }
+                        onEnter={focus}
+                      />
+                    )
+                }
+              })}
             </HStack>
             <Input
               variant="unstyled"
@@ -307,15 +484,138 @@ const FiltersInput = (): JSX.Element => {
         borderRadius="md"
         zIndex="modal"
         overflowY="auto"
+        maxH="50vh"
         className="custom-scrollbar"
         {...positionerProps}
       >
         <Stack spacing={0} {...contentProps}>
-          {inputValue?.length > 2 &&
-            !activeFilters?.some((filter) => filter.filter === "action") &&
-            auditLogActions
-              .filter((action) => action.includes(inputValue.toLowerCase()))
-              .map((action) => {
+          {!isFiltersInputEnabled && (
+            <Text colorScheme="gray" p={4}>
+              You can't use any more filters
+            </Text>
+          )}
+
+          {shouldRenderUserIdFilterOption && (
+            <HStack
+              {...getOptionProps({ label: "User", value: "userId" })}
+              px={4}
+              h={12}
+              bgColor={
+                focusedOption?.value === "userId" ? optionFocusBgColor : undefined
+              }
+              _hover={{
+                bgColor: optionFocusBgColor,
+              }}
+              transition="0.16s ease"
+            >
+              <Text as="span" fontWeight="bold">
+                User address
+              </Text>
+              <Text as="span" colorScheme="gray" fontWeight="normal">
+                Paste user's wallet address
+              </Text>
+            </HStack>
+          )}
+
+          {shouldRenderRewardSuggestions && (
+            <Stack py={2} fontSize="sm" spacing={0}>
+              <Text
+                colorScheme="gray"
+                fontWeight="bold"
+                textTransform="uppercase"
+                px={4}
+                py={2}
+              >
+                Filter by reward
+              </Text>
+
+              {rewardSuggestions.map((suggestion) => (
+                <HStack
+                  key={suggestion.id}
+                  {...getOptionProps({
+                    label: "Reward",
+                    value: `rolePlatformId:${suggestion.id}`,
+                  })}
+                  px={4}
+                  h={10}
+                  minH={10}
+                  bgColor={
+                    focusedOption?.value === `rolePlatformId:${suggestion.id}`
+                      ? optionFocusBgColor
+                      : undefined
+                  }
+                  _hover={{
+                    bgColor: optionFocusBgColor,
+                  }}
+                  transition="0.16s ease"
+                >
+                  <Text as="span" fontWeight="bold">
+                    Reward:
+                  </Text>
+                  <RewardTag
+                    icon={platforms[suggestion.platformName].icon}
+                    name={suggestion.name}
+                    colorScheme={platforms[suggestion.platformName].colorScheme}
+                  />
+                </HStack>
+              ))}
+            </Stack>
+          )}
+
+          {shouldRenderRoleSuggestions && (
+            <Stack py={2} fontSize="sm" spacing={0}>
+              <Text
+                colorScheme="gray"
+                fontWeight="bold"
+                textTransform="uppercase"
+                px={4}
+                py={2}
+              >
+                Filter by role
+              </Text>
+
+              {roleSuggestions.map((suggestion) => (
+                <HStack
+                  key={suggestion.id}
+                  {...getOptionProps({
+                    label: "Role",
+                    value: `roleId:${suggestion.id}`,
+                  })}
+                  px={4}
+                  h={10}
+                  minH={10}
+                  bgColor={
+                    focusedOption?.value === `roleId:${suggestion.id}`
+                      ? optionFocusBgColor
+                      : undefined
+                  }
+                  _hover={{
+                    bgColor: optionFocusBgColor,
+                  }}
+                  transition="0.16s ease"
+                >
+                  <Text as="span" fontWeight="bold">
+                    Role:
+                  </Text>
+                  <RoleTag image={suggestion.imageUrl} name={suggestion.name} />
+                </HStack>
+              ))}
+            </Stack>
+          )}
+
+          {shouldRenderActionSuggestions && (
+            <Stack py={2} fontSize="sm" spacing={0}>
+              <Text
+                colorScheme="gray"
+                fontWeight="bold"
+                textTransform="uppercase"
+                px={4}
+                py={2}
+              >
+                Filter by action
+              </Text>
+
+              {actionSuggestions.map((action) => {
                 // Need to encode it, because it's used as an ID in the DOM and it'll break the filter input if the ID contains spaces
                 const value = `action:${encodeURIComponent(action)}`
 
@@ -324,7 +624,7 @@ const FiltersInput = (): JSX.Element => {
                     key={action}
                     {...getOptionProps({ label: action, value })}
                     px={4}
-                    h={12}
+                    h={10}
                     bgColor={
                       focusedOption?.value === value ? optionFocusBgColor : undefined
                     }
@@ -334,7 +634,7 @@ const FiltersInput = (): JSX.Element => {
                     transition="0.16s ease"
                   >
                     <Text as="span" fontWeight="bold" flexShrink={0}>
-                      {`Filter for actions: `}
+                      {`Action: `}
                     </Text>
                     <ActionIcon action={action} size={6} />
                     <Text as="span" isTruncated>
@@ -343,31 +643,8 @@ const FiltersInput = (): JSX.Element => {
                   </HStack>
                 )
               })}
-
-          {searchOptions
-            .filter(
-              (option) => !activeFilters?.map((f) => f.filter).includes(option.value)
-            )
-            .map(({ label, description, value }) => (
-              <HStack
-                key={value}
-                {...getOptionProps({ label, value })}
-                px={4}
-                h={12}
-                bgColor={
-                  focusedOption?.value === value ? optionFocusBgColor : undefined
-                }
-                _hover={{
-                  bgColor: optionFocusBgColor,
-                }}
-                transition="0.16s ease"
-              >
-                <Text as="span" fontWeight="bold">{`${label}: `}</Text>
-                <Text as="span" colorScheme="gray" fontWeight="normal">
-                  {description}
-                </Text>
-              </HStack>
-            ))}
+            </Stack>
+          )}
         </Stack>
       </Box>
     </>
