@@ -208,6 +208,18 @@ export const REQUIREMENTS_DATA = [
     isPlatform: true,
   },
   {
+    icon: "/requirementLogos/eas.png",
+    name: "EAS",
+    fileNameBase: "EAS",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/EthereumAttestation/EthereumAttestationRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/EthereumAttestation/EthereumAttestationForm")
+    ),
+    types: ["EAS_ATTESTED_BY", "EAS_ATTEST"],
+  },
+  {
     icon: "/requirementLogos/unlock.png",
     name: "Unlock",
     fileNameBase: "Unlock",
