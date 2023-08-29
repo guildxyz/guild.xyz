@@ -28,6 +28,8 @@ import {
 import { ACTION } from "../../constants"
 import FilterTag from "./FilterTag"
 import { useActiveFiltersReducer } from "./hooks/useActiveFiltersReducer"
+import Suggestion from "./Suggestion"
+import SuggestionsSection from "./SuggestionsSection"
 import TagInput from "./TagInput"
 
 type SearchOption = {
@@ -81,7 +83,6 @@ const FiltersInput = (): JSX.Element => {
   const dropdownBgColor = useColorModeValue("white", "gray.700")
   const dropdownBorderColor = useColorModeValue("gray.200", "gray.500")
   const dropdownShadow = useColorModeValue("lg", "dark-lg")
-  const optionFocusBgColor = useColorModeValue("blackAlpha.100", "gray.600")
 
   const router = useRouter()
 
@@ -496,154 +497,91 @@ const FiltersInput = (): JSX.Element => {
           )}
 
           {shouldRenderUserIdFilterOption && (
-            <HStack
+            <Suggestion
+              label="User"
+              isFocused={focusedOption?.value === "userId"}
               {...getOptionProps({ label: "User", value: "userId" })}
-              px={4}
-              h={12}
-              bgColor={
-                focusedOption?.value === "userId" ? optionFocusBgColor : undefined
-              }
-              _hover={{
-                bgColor: optionFocusBgColor,
-              }}
-              transition="0.16s ease"
             >
-              <Text as="span" fontWeight="bold">
-                User address
-              </Text>
               <Text as="span" colorScheme="gray" fontWeight="normal">
                 Paste user's wallet address
               </Text>
-            </HStack>
+            </Suggestion>
           )}
 
           {shouldRenderRewardSuggestions && (
-            <Stack py={2} fontSize="sm" spacing={0}>
-              <Text
-                colorScheme="gray"
-                fontWeight="bold"
-                textTransform="uppercase"
-                px={4}
-                py={2}
-              >
-                Filter by reward
-              </Text>
+            <SuggestionsSection title="Filter by reward">
+              {rewardSuggestions.map((suggestion) => {
+                const label = "Reward"
 
-              {rewardSuggestions.map((suggestion) => (
-                <HStack
-                  key={suggestion.id}
-                  {...getOptionProps({
-                    label: "Reward",
-                    value: `rolePlatformId:${suggestion.id}`,
-                  })}
-                  px={4}
-                  h={10}
-                  minH={10}
-                  bgColor={
-                    focusedOption?.value === `rolePlatformId:${suggestion.id}`
-                      ? optionFocusBgColor
-                      : undefined
-                  }
-                  _hover={{
-                    bgColor: optionFocusBgColor,
-                  }}
-                  transition="0.16s ease"
-                >
-                  <Text as="span" fontWeight="bold">
-                    Reward:
-                  </Text>
-                  <RewardTag
-                    icon={platforms[suggestion.platformName].icon}
-                    name={suggestion.name}
-                    colorScheme={platforms[suggestion.platformName].colorScheme}
-                  />
-                </HStack>
-              ))}
-            </Stack>
+                return (
+                  <Suggestion
+                    key={suggestion.id}
+                    label={label}
+                    isFocused={
+                      focusedOption?.value === `rolePlatformId:${suggestion.id}`
+                    }
+                    {...getOptionProps({
+                      label,
+                      value: `rolePlatformId:${suggestion.id}`,
+                    })}
+                  >
+                    <RewardTag
+                      icon={platforms[suggestion.platformName].icon}
+                      name={suggestion.name}
+                      colorScheme={platforms[suggestion.platformName].colorScheme}
+                    />
+                  </Suggestion>
+                )
+              })}
+            </SuggestionsSection>
           )}
 
           {shouldRenderRoleSuggestions && (
-            <Stack py={2} fontSize="sm" spacing={0}>
-              <Text
-                colorScheme="gray"
-                fontWeight="bold"
-                textTransform="uppercase"
-                px={4}
-                py={2}
-              >
-                Filter by role
-              </Text>
+            <SuggestionsSection title="Filter by role">
+              {roleSuggestions.map((suggestion) => {
+                const label = "Role"
 
-              {roleSuggestions.map((suggestion) => (
-                <HStack
-                  key={suggestion.id}
-                  {...getOptionProps({
-                    label: "Role",
-                    value: `roleId:${suggestion.id}`,
-                  })}
-                  px={4}
-                  h={10}
-                  minH={10}
-                  bgColor={
-                    focusedOption?.value === `roleId:${suggestion.id}`
-                      ? optionFocusBgColor
-                      : undefined
-                  }
-                  _hover={{
-                    bgColor: optionFocusBgColor,
-                  }}
-                  transition="0.16s ease"
-                >
-                  <Text as="span" fontWeight="bold">
-                    Role:
-                  </Text>
-                  <RoleTag image={suggestion.imageUrl} name={suggestion.name} />
-                </HStack>
-              ))}
-            </Stack>
+                return (
+                  <Suggestion
+                    key={suggestion.id}
+                    label={label}
+                    isFocused={focusedOption?.value === `roleId:${suggestion.id}`}
+                    {...getOptionProps({
+                      label,
+                      value: `roleId:${suggestion.id}`,
+                    })}
+                  >
+                    <RoleTag image={suggestion.imageUrl} name={suggestion.name} />
+                  </Suggestion>
+                )
+              })}
+            </SuggestionsSection>
           )}
 
           {shouldRenderActionSuggestions && (
-            <Stack py={2} fontSize="sm" spacing={0}>
-              <Text
-                colorScheme="gray"
-                fontWeight="bold"
-                textTransform="uppercase"
-                px={4}
-                py={2}
-              >
-                Filter by action
-              </Text>
-
+            <SuggestionsSection title="Filter by action">
               {actionSuggestions.map((action) => {
                 // Need to encode it, because it's used as an ID in the DOM and it'll break the filter input if the ID contains spaces
                 const value = `action:${encodeURIComponent(action)}`
 
                 return (
-                  <HStack
+                  <Suggestion
                     key={action}
-                    {...getOptionProps({ label: action, value })}
-                    px={4}
-                    h={10}
-                    bgColor={
-                      focusedOption?.value === value ? optionFocusBgColor : undefined
-                    }
-                    _hover={{
-                      bgColor: optionFocusBgColor,
-                    }}
-                    transition="0.16s ease"
+                    label="Action"
+                    isFocused={focusedOption?.value === value}
+                    {...getOptionProps({
+                      label: action,
+                      value,
+                    })}
                   >
-                    <Text as="span" fontWeight="bold" flexShrink={0}>
-                      {`Action: `}
-                    </Text>
-                    <ActionIcon action={action} size={6} />
                     <Text as="span" isTruncated>
                       {action}
                     </Text>
-                  </HStack>
+                    <ActionIcon action={action} size={6} />
+                  </Suggestion>
                 )
               })}
-            </Stack>
+            </SuggestionsSection>
           )}
         </Stack>
       </Box>
