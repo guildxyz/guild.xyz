@@ -1,6 +1,7 @@
 import { HStack, Img } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -55,21 +56,23 @@ const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element =>
       {requirement.type === "EAS_ATTEST" ? (
         <>
           Attest{" "}
-          <DataBlock>
+          <DataBlockWithCopy text={requirement.data?.recipient}>
             {recipientDomain ?? shortenHex(requirement.data?.recipient ?? "", 3)}
-          </DataBlock>{" "}
+          </DataBlockWithCopy>{" "}
           according to schema{" "}
         </>
       ) : (
         <>
           Be attested by{" "}
-          <DataBlock>
+          <DataBlockWithCopy text={requirement.data?.attester}>
             {attesterDomain ?? shortenHex(requirement.data?.attester ?? "", 3)}
-          </DataBlock>{" "}
+          </DataBlockWithCopy>{" "}
           according to schema{" "}
         </>
       )}
-      <DataBlock>{shortenHex(requirement.data.schemaId, 3)}</DataBlock>
+      <DataBlockWithCopy text={requirement.data.schemaId}>
+        {shortenHex(requirement.data.schemaId, 3)}
+      </DataBlockWithCopy>
       {requirement.data.key && (
         <>
           {" with key "}
