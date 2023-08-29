@@ -1,13 +1,4 @@
-import {
-  Center,
-  Checkbox,
-  HStack,
-  Heading,
-  Link,
-  Spinner,
-  Text,
-  Wrap,
-} from "@chakra-ui/react"
+import { Center, Checkbox, HStack, Heading, Spinner, Text } from "@chakra-ui/react"
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -16,7 +7,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -40,8 +30,7 @@ import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { useMemo } from "react"
-import { SocialLinkKey, Visibility } from "types"
-import parseDescription from "utils/parseDescription"
+import { Visibility } from "types"
 
 const DynamicActiveStatusUpdates = dynamic(
   () => import("components/[guild]/ActiveStatusUpdates")
@@ -157,37 +146,8 @@ const GuildPage = (): JSX.Element => {
 
       <Layout
         title={name}
+        ogTitle={`Members - ${name}`}
         textColor={textColor}
-        ogDescription={description}
-        description={
-          <>
-            {description && parseDescription(description)}
-            {Object.keys(socialLinks ?? {}).length > 0 && (
-              <Wrap w="full" spacing={3} mt="3">
-                {Object.entries(socialLinks).map(([type, link]) => {
-                  const prettyLink = link
-                    .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
-                    .replace(/\/+$/, "")
-
-                  return (
-                    <HStack key={type} spacing={1.5}>
-                      <SocialIcon type={type as SocialLinkKey} size="sm" />
-                      <Link
-                        href={link?.startsWith("http") ? link : `https://${link}`}
-                        isExternal
-                        fontSize="sm"
-                        fontWeight="semibold"
-                        color={textColor}
-                      >
-                        {prettyLink}
-                      </Link>
-                    </HStack>
-                  )
-                })}
-              </Wrap>
-            )}
-          </>
-        }
         image={
           <GuildLogo
             imageUrl={imageUrl}
@@ -199,7 +159,6 @@ const GuildPage = (): JSX.Element => {
         imageUrl={imageUrl}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
-        backButton={{ href: "/explorer", text: "Go back to explorer" }}
         backgroundOffset={112}
         showFooter={false}
       >
