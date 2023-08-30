@@ -4,28 +4,14 @@ import { createContext, PropsWithChildren, useContext } from "react"
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite"
 import { OneOf, PlatformName, Requirement } from "types"
 import useGuild from "../hooks/useGuild"
+import {
+  isSupportedQueryParam,
+  SupportedQueryParam,
+} from "./ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 import { ActivityLogAction } from "./constants"
 
 const LIMIT = 25
 const SCROLL_PADDING = 40
-
-export const SUPPORTED_QUERY_PARAMS = [
-  "order",
-  "limit",
-  "offset",
-  "tree",
-  "before",
-  "after",
-  "action",
-  "service",
-  "guildId",
-  "roleId",
-  "userId",
-  "requirementId",
-  "rolePlatformId",
-  "poapId",
-] as const
-export type SupportedQueryParam = (typeof SUPPORTED_QUERY_PARAMS)[number]
 
 export type ActivityLogActionResponse = {
   entries: ActivityLogAction[]
@@ -46,11 +32,6 @@ export type ActivityLogActionResponse = {
     roles: { id: number; name: string }[]
     users: { id: number; address: string }[]
   }
-}
-
-const isSupportedQueryParam = (arg: any): arg is SupportedQueryParam => {
-  if (typeof arg !== "string") return false
-  return SUPPORTED_QUERY_PARAMS.includes(arg as SupportedQueryParam)
 }
 
 const transformActivityLogInfiniteResponse = (

@@ -11,41 +11,30 @@ import {
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useRouter } from "next/router"
 import { CaretDown, X } from "phosphor-react"
 import platforms from "platforms/platforms"
-import { ParsedUrlQuery } from "querystring"
 import { KeyboardEvent, useEffect, useState } from "react"
 import { PlatformType } from "types"
 import capitalize from "utils/capitalize"
 import ActionIcon from "../../ActivityLogAction/components/ActionIcon"
 import RewardTag from "../../ActivityLogAction/components/RewardTag"
 import RoleTag from "../../ActivityLogAction/components/RoleTag"
-import {
-  SupportedQueryParam,
-  SUPPORTED_QUERY_PARAMS,
-} from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
+import {
+  isSupportedQueryParam,
+  SupportedQueryParam,
+  SupportedSearchOption,
+  useActivityLogFilters,
+} from "./ActivityLogFiltersContext"
 import FilterTag from "./FilterTag"
-import { useActiveFiltersReducer } from "./hooks/useActiveFiltersReducer"
 import Suggestion from "./Suggestion"
 import SuggestionsSection from "./SuggestionsSection"
 import TagInput from "./TagInput"
 
 type SearchOption = {
   label: string
-  value: SupportedQueryParam
+  value: SupportedSearchOption
 }
-
-export type Filter = {
-  filter: SupportedQueryParam
-  value?: string
-}
-
-const isSupportedQueryParam = (arg: any): arg is SupportedQueryParam =>
-  typeof arg === "string" &&
-  (SUPPORTED_QUERY_PARAMS.includes(arg as SupportedQueryParam) ||
-    SUPPORTED_QUERY_PARAMS.includes(arg.split(":")[0] as SupportedQueryParam))
 
 const possibleSearchOptions: SearchOption[] = [
   {
@@ -84,30 +73,15 @@ const FiltersInput = (): JSX.Element => {
   const dropdownBorderColor = useColorModeValue("gray.200", "gray.500")
   const dropdownShadow = useColorModeValue("lg", "dark-lg")
 
-  const router = useRouter()
-
-  const [activeFilters, dispatch] = useActiveFiltersReducer([])
-
-  useEffect(() => {
-    if (activeFilters.length > 0) return
-    const initialFilters: Filter[] = Object.entries(router.query)
-      .map(([key, value]) =>
-        isSupportedQueryParam(key) && value
-          ? {
-              filter: key,
-              value: value.toString(),
-            }
-          : null
-      )
-      .filter(Boolean)
-
-    dispatch({
-      type: "setFilters",
-      filters: initialFilters,
-    })
-
-    setInputValue?.("")
-  }, [router.query])
+  const {
+    activeFilters,
+    addFilter,
+    removeLastFilter,
+    removeFilter,
+    updateFilter,
+    clearFilters,
+    triggerSearch,
+  } = useActivityLogFilters()
 
   const [state, send] = useMachine(
     combobox.machine({
@@ -123,12 +97,9 @@ const FiltersInput = (): JSX.Element => {
 
         const [filterNameOrSearch, filterValue = ""] = value.split(":")
 
-        dispatch({
-          type: "addFilter",
-          filter: {
-            filter: filterNameOrSearch as SupportedQueryParam,
-            value: decodeURIComponent(filterValue),
-          },
+        addFilter({
+          filter: filterNameOrSearch as SupportedQueryParam,
+          value: decodeURIComponent(filterValue),
         })
 
         if (filterValue.length) setInputValue("")
@@ -138,6 +109,7 @@ const FiltersInput = (): JSX.Element => {
         )
         nativeTagInput?.focus()
       },
+      openOnClick: true,
     })
   )
 
@@ -159,31 +131,6 @@ const FiltersInput = (): JSX.Element => {
 
   const [shouldRemoveLastFilter, setShouldRemoveLastFilter] = useState(false)
 
-  const triggerSearch = () => {
-    const query: ParsedUrlQuery = { ...router.query }
-
-    const filters: SupportedQueryParam[] = [
-      ...possibleSearchOptions.map((option) => option.value),
-      "action",
-    ]
-
-    filters.forEach((filter) => {
-      const relevantActiveFilter = activeFilters.find((f) => f.filter === filter)
-      query[filter] = relevantActiveFilter?.value ?? ""
-    })
-
-    Object.entries(query).forEach(([key, value]) => {
-      if (!value) {
-        delete query[key]
-      }
-    })
-
-    router.push({
-      pathname: router.pathname,
-      query,
-    })
-  }
-
   const onKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.code === "Enter") {
       triggerSearch()
@@ -195,9 +142,7 @@ const FiltersInput = (): JSX.Element => {
     }
 
     if (shouldRemoveLastFilter) {
-      dispatch({
-        type: "removeLastFilter",
-      })
+      removeLastFilter()
       if (activeFilters.length < 1) setShouldRemoveLastFilter(false)
       return
     }
@@ -303,19 +248,14 @@ const FiltersInput = (): JSX.Element => {
             className="invisible-scrollbar"
           >
             <HStack>
-              {activeFilters?.map(({ filter, value }) => {
-                switch (filter) {
+              {activeFilters?.map(({ filter: filterName, value }) => {
+                switch (filterName) {
                   case "action":
                     return (
                       <FilterTag
                         label="Action:"
                         onRemove={() => {
-                          dispatch({
-                            type: "removeFilter",
-                            filter: {
-                              filter,
-                            },
-                          })
+                          removeFilter({ filter: filterName })
                           focus()
                         }}
                       >
@@ -337,12 +277,7 @@ const FiltersInput = (): JSX.Element => {
                       <FilterTag
                         label="Role"
                         onRemove={() => {
-                          dispatch({
-                            type: "removeFilter",
-                            filter: {
-                              filter,
-                            },
-                          })
+                          removeFilter({ filter: filterName })
                           focus()
                         }}
                         pr={0}
@@ -374,12 +309,7 @@ const FiltersInput = (): JSX.Element => {
                       <FilterTag
                         label="Role"
                         onRemove={() => {
-                          dispatch({
-                            type: "removeFilter",
-                            filter: {
-                              filter,
-                            },
-                          })
+                          removeFilter({ filter: filterName })
                           focus()
                         }}
                         pr={0}
@@ -412,24 +342,19 @@ const FiltersInput = (): JSX.Element => {
                   default:
                     return (
                       <TagInput
-                        key={filter}
-                        filter={filter}
+                        key={filterName}
+                        filter={filterName}
                         label={
                           possibleSearchOptions.find(
-                            (option) => option.value === filter
+                            (option) => option.value === filterName
                           )?.label ?? "Action"
                         }
                         value={value}
                         onRemove={(filterToRemove) => {
-                          dispatch({
-                            type: "removeFilter",
-                            filter: filterToRemove,
-                          })
+                          removeFilter(filterToRemove)
                           focus()
                         }}
-                        onChange={(newFilter) =>
-                          dispatch({ type: "updateFilter", filter: newFilter })
-                        }
+                        onChange={updateFilter}
                         onEnter={focus}
                       />
                     )
@@ -457,7 +382,7 @@ const FiltersInput = (): JSX.Element => {
               borderRadius="full"
               variant="ghost"
               onClick={() => {
-                dispatch({ type: "clearFilters" })
+                clearFilters()
                 setInputValue("")
               }}
             />

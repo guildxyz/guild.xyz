@@ -1,5 +1,5 @@
 import { useReducer } from "react"
-import { Filter } from "../FiltersInput"
+import { Filter } from "../components/ActivityLogFiltersContext"
 
 type Action = {
   type:

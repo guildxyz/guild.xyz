@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import fetcher from "utils/fetcher"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
-import { SupportedQueryParam } from "../../ActivityLogContext"
+import { Filter, SupportedQueryParam } from "./ActivityLogFiltersContext"
 import DynamicWidthInput from "./DynamicWidthInput"
-import { Filter } from "./FiltersInput"
 import FilterTag from "./FilterTag"
 
 type Props = {
