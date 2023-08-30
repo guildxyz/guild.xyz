@@ -1,5 +1,6 @@
 import { Stack, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
-import { ThemeProvider } from "components/[guild]/ThemeContext"
+import Layout from "components/common/Layout"
+import { SectionTitle } from "components/common/Section"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
 import {
   ActivityLogProvider,
@@ -8,8 +9,7 @@ import {
 import ActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar"
 import ActivityLogSkeleton from "components/[guild]/activity/ActivityLogSkeleton"
 import useUser from "components/[guild]/hooks/useUser"
-import Layout from "components/common/Layout"
-import { SectionTitle } from "components/common/Section"
+import { ThemeProvider } from "components/[guild]/ThemeContext"
 
 const ActivityLog = (): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
@@ -42,6 +42,7 @@ const ActivityLog = (): JSX.Element => {
       }}
       textColor="white"
       backgroundOffset={46}
+      backButton={{ href: "/explorer", text: "Go back to explorer" }}
     >
       <ActivityLogFiltersBar />
 
