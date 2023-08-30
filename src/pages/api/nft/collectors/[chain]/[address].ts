@@ -1,4 +1,5 @@
 import { kv } from "@vercel/kv"
+import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/CreateNftForm"
 import { Chain } from "connectors"
 import { NextApiHandler } from "next"
 import { OneOf } from "types"
@@ -18,9 +19,11 @@ export type TopCollectorsResponse = OneOf<
   { error: string }
 >
 
-const alchemyApiUrl: Partial<Record<Chain, string>> = {
+const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   POLYGON: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.POLYGON_ALCHEMY_KEY}/getOwnersForContract`,
   POLYGON_MUMBAI: `https://polygon-mumbai.g.alchemy.com/nft/v3/${process.env.POLYGON_MUMBAI_ALCHEMY_KEY}/getOwnersForContract`,
+  BASE_MAINNET: "",
+  ETHEREUM: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.MAINNET_ALCHEMY_KEY}/getOwnersForContract`,
 }
 
 export const validateNftChain = (value: string | string[]): Chain => {

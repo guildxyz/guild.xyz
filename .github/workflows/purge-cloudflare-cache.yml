@@ -6,7 +6,7 @@ on:
 
 jobs:
   purge-cache:
-    if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'Production – guild-xyz'
+    if: github.event_name == 'workflow_dispatch' || (github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'Production – guild-xyz')
     runs-on: ubuntu-latest
     steps:
       - name: Clear Cloudflare cache

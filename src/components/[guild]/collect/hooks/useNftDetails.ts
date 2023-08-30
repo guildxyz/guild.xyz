@@ -62,8 +62,8 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
         contract.owner(),
         contract.name(),
         contract.totalSupply(),
-        contract.supportsInterface(ContractInterface.ERC721),
-        contract.supportsInterface(ContractInterface.ERC1155),
+        contract.supportsInterface(ContractInterface.ERC721).catch(() => false),
+        contract.supportsInterface(ContractInterface.ERC1155).catch(() => false),
         contract.tokenURI(0).catch(() => ""),
         contract.fee(),
       ])
@@ -84,7 +84,6 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       const metadata = await fetcher(
         tokenURI.replace("ipfs://", process.env.NEXT_PUBLIC_IPFS_GATEWAY)
       ).catch(() => null)
-      console.log("metadata", metadata)
       description = metadata?.description
       image = metadata?.image?.replace(
         "ipfs://",
