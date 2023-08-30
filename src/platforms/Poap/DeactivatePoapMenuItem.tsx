@@ -20,7 +20,7 @@ const DeactivatePoapMenuItem = ({ guildPoap }: Props): JSX.Element => {
     <MenuItem
       isDisabled={isLoading}
       icon={isLoading ? <Spinner size="xs" /> : <LockSimple />}
-      onClick={() => onSubmit({ id: guildPoap.id, activate: false })}
+      onClick={() => onSubmit({ id: guildPoap.id, activated: false })}
     >
       Deactivate POAP
     </MenuItem>
