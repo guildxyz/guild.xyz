@@ -13,8 +13,8 @@ import fetcher from "utils/fetcher"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
-} from "./useSubmit/useSubmit"
-import useToast from "./useToast"
+} from "../../hooks/useSubmit/useSubmit"
+import useToast from "../../hooks/useToast"
 
 type StoredKeyPair = {
   keyPair: CryptoKeyPair
@@ -704,5 +704,5 @@ const useKeyPairOld = () => {
 
 const useKeyPair = () => useContext(KeyPairContext)
 
-export { KeyPairProvider, deleteKeyPairFromIdb, getKeyPairFromIdb, setKeyPairToIdb }
+export { KeyPairProvider, deleteKeyPairFromIdb, getKeyPairFromIdb }
 export default useKeyPair

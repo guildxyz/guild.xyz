@@ -1,4 +1,4 @@
-import useUser from "components/[guild]/hooks/useUser"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { posthog } from "posthog-js"
 import {
   PostHogProvider as DefaultPostHogProvider,
@@ -34,7 +34,7 @@ const PostHogContext = createContext<{
 const CustomPostHogProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
-  const { id, addresses } = useUser()
+  const { id, addresses } = useUserPublic()
   const ph = usePostHog()
 
   return (

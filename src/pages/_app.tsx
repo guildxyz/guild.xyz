@@ -5,9 +5,9 @@ import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import { KeyPairProvider } from "components/_app/useKeyPairContext"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { connectors } from "connectors"
-import { KeyPairProvider } from "hooks/useKeyPair"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import Script from "next/script"
@@ -77,18 +77,18 @@ const App = ({
         >
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
             <Web3ReactProvider connectors={connectors}>
-              <KeyPairProvider>
-                <Web3ConnectionManager>
-                  <PostHogProvider>
+              <PostHogProvider>
+                <KeyPairProvider>
+                  <Web3ConnectionManager>
                     <IntercomProvider>
                       <ExplorerProvider>
                         <Component {...pageProps} />
                         <AccountModal />
                       </ExplorerProvider>
                     </IntercomProvider>
-                  </PostHogProvider>
-                </Web3ConnectionManager>
-              </KeyPairProvider>
+                  </Web3ConnectionManager>
+                </KeyPairProvider>
+              </PostHogProvider>
             </Web3ReactProvider>
           </SWRConfig>
         </IconContext.Provider>

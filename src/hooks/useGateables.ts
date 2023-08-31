@@ -2,7 +2,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import useSWR, { SWRConfiguration } from "swr"
 import { GoogleFile, PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
-import useKeyPair from "./useKeyPair"
+import useKeyPair from "../components/_app/useKeyPairContext"
 
 type Gateables = {
   [PlatformType.DISCORD]: Array<{
