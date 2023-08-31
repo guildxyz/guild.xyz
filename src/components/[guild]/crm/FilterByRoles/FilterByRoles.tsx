@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react"
 import { Column } from "@tanstack/react-table"
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { Funnel } from "phosphor-react"
 import { useState } from "react"
 import { Visibility } from "types"
@@ -170,6 +171,7 @@ const RoleCheckboxGroup = ({
     roleIds.some((a) => selectedRoleIds.includes(a)) && !allChecked
 
   const { colorMode } = useColorMode()
+  const { id } = useGuild()
 
   return (
     <Box>
@@ -221,6 +223,9 @@ const RoleCheckboxGroup = ({
                   roleId={role.id}
                   memberCount={role.memberCount}
                   size="sm"
+                  onStatusUpdateSuccess={() =>
+                    mutateOptionalAuthSWRKey(`/guild/${id}/crm/members`)
+                  }
                 />
               </HStack>
             </Checkbox>

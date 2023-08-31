@@ -13,10 +13,16 @@ type Props = {
   memberCount: number
   roleId?: number
   size?: "sm" | "md"
+  onStatusUpdateSuccess?: () => void
 }
 
-const MemberCount = ({ memberCount, roleId, size = "md" }: Props) => {
-  const { status, progress } = useActiveStatusUpdates(roleId)
+const MemberCount = ({
+  memberCount,
+  roleId,
+  size = "md",
+  onStatusUpdateSuccess,
+}: Props) => {
+  const { status, progress } = useActiveStatusUpdates(roleId, onStatusUpdateSuccess)
 
   const iconSize = size === "sm" ? "14px" : "16px"
 

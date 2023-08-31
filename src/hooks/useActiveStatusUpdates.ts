@@ -35,7 +35,7 @@ const defaultData: Omit<RoleStatus, "roleId"> = {
 const isRoleSyncing = (role) =>
   role.status === "CREATED" || role.status === "STARTED"
 
-const useActiveStatusUpdates = (roleId?: number) => {
+const useActiveStatusUpdates = (roleId?: number, onSuccess?: () => void) => {
   const { id, mutateGuild } = useGuild()
   const [isActive, setIsActive] = useState(false)
   const { isAdmin } = useGuildPermission()
@@ -49,8 +49,11 @@ const useActiveStatusUpdates = (roleId?: number) => {
       onSuccess: (res) => {
         if (res.some(isRoleSyncing)) {
           setIsActive(true)
+        } else {
+          setIsActive(false)
           mutateGuild()
-        } else setIsActive(false)
+          onSuccess?.()
+        }
       },
     }
   )
