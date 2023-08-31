@@ -14,7 +14,7 @@ type Props = {
   onEnter: () => void
 }
 
-const TagInput = ({
+const UserTagInput = ({
   filter: filterProp,
   label,
   value,
@@ -99,4 +99,4 @@ const TagInput = ({
   )
 }
 
-export default TagInput
+export default UserTagInput

@@ -29,7 +29,7 @@ import {
 import FilterTag from "./FilterTag"
 import Suggestion from "./Suggestion"
 import SuggestionsSection from "./SuggestionsSection"
-import TagInput from "./TagInput"
+import UserTagInput from "./UserTagInput"
 
 type SearchOption = {
   label: string
@@ -341,7 +341,7 @@ const FiltersInput = (): JSX.Element => {
                     return null
                   default:
                     return (
-                      <TagInput
+                      <UserTagInput
                         key={filterName}
                         filter={filterName}
                         label={
@@ -355,7 +355,10 @@ const FiltersInput = (): JSX.Element => {
                           focus()
                         }}
                         onChange={updateFilter}
-                        onEnter={focus}
+                        onEnter={() => {
+                          triggerSearch()
+                          focus()
+                        }}
                       />
                     )
                 }
