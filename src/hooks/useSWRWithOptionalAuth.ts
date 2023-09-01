@@ -19,15 +19,15 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
 
   const shouldSendAuth = !!keyPair && ready && isValid && !!account
 
-  const publicResponse = useSWRImmutable<Data, Error, any>(
-    url && !onlyAuthRequest && !shouldSendAuth ? url : null,
-    options as any
-  )
-
   const fetcherWithSign = useFetcherWithSign()
   const authenticatedResponse = useSWRHook<Data, Error, any>(
     url && shouldSendAuth ? [url, { method: "GET", body: {} }] : null,
     fetcherWithSign,
+    options as any
+  )
+
+  const publicResponse = useSWRImmutable<Data, Error, any>(
+    url && !onlyAuthRequest && !authenticatedResponse.data ? url : null,
     options as any
   )
 
