@@ -185,14 +185,21 @@ const KeyPairContext = createContext<{
   pubKey: string | undefined
   keyPair: CryptoKeyPair | undefined
   isValid: boolean
-  set: any
-}>({
-  ready: false,
-  pubKey: undefined,
-  keyPair: undefined,
-  isValid: false,
-  set: () => {},
-})
+  set: {
+    isSigning: boolean
+    signLoadingText: string
+    response: [StoredKeyPair, boolean]
+    isLoading: boolean
+    error: any
+    reset: () => void
+
+    onSubmit: (
+      shouldLinkToUser: boolean,
+      provider?: AddressConnectionProvider,
+      reCaptchaToken?: string
+    ) => Promise<void>
+  }
+}>(undefined)
 
 const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const { captureEvent } = usePostHogContext()
