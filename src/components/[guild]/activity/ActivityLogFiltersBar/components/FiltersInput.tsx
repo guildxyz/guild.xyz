@@ -55,6 +55,7 @@ const FiltersInput = (): JSX.Element => {
         setInputValue("")
       },
       openOnClick: true,
+      loop: true,
     })
   )
 

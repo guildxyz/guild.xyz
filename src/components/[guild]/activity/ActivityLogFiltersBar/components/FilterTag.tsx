@@ -2,6 +2,7 @@ import {
   Center,
   HStack,
   IconButton,
+  Input,
   Spinner,
   Stack,
   Tag,
@@ -26,7 +27,6 @@ import UserTag from "../../ActivityLogAction/components/UserTag"
 import { ACTION } from "../../constants"
 import { filterNames, useActivityLogFilters } from "./ActivityLogFiltersContext"
 import Dropdown from "./Dropdown"
-import DynamicWidthInput from "./DynamicWidthInput"
 import Suggestion from "./Suggestion"
 
 type Props = {
@@ -74,6 +74,7 @@ const FilterTag = ({
       },
       openOnClick: true,
       autoFocus: true,
+      loop: true,
     })
   )
 
@@ -88,6 +89,8 @@ const FilterTag = ({
     inputValue,
     setInputValue,
   } = combobox.connect(state, send, normalizeProps)
+
+  const { size, ...filteredInputProps } = inputProps
 
   const onChange = async (e) => {
     const newValue = e.target.value
@@ -200,12 +203,16 @@ const FilterTag = ({
               })()}
             </>
           ) : (
-            <DynamicWidthInput
-              ref={inputRef}
+            <Input
               variant="unstyled"
               borderRadius="none"
               pr={6}
-              {...(inputProps as any)}
+              {...filteredInputProps}
+              htmlSize={size}
+              boxSizing="content-box"
+              width={`${inputValue?.length ?? 0}ch`}
+              minW={1}
+              fontFamily="monospace"
               value={inputValue}
               defaultValue={undefined}
               onChange={onChange}
