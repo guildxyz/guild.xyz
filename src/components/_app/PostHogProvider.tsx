@@ -45,7 +45,7 @@ const CustomPostHogProvider = ({
         captureEvent: (event, options) =>
           ph.capture(event, {
             userId: id,
-            userAddress: account,
+            userAddress: account?.toLowerCase(),
             ...options,
           }),
       }}
