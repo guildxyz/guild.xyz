@@ -1,10 +1,15 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
-import { createContext, PropsWithChildren, useContext, useEffect } from "react"
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import { PlatformName, PlatformType, Role } from "types"
 import { ACTION } from "../../constants"
-import { useActiveFiltersReducer } from "../hooks/useActiveFiltersReducer"
 
 export type Filter = {
   id?: string
@@ -86,8 +91,8 @@ const ActivityLogFiltersContext = createContext<{
 const ActivityLogFiltersProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
-  const [activeFilters, dispatch] = useActiveFiltersReducer([])
   const router = useRouter()
+  const [activeFilters, setActiveFilters] = useState<Filter[]>([])
 
   useEffect(() => {
     if (activeFilters.length > 0) return
@@ -103,27 +108,41 @@ const ActivityLogFiltersProvider = ({
       )
       .filter(Boolean)
 
-    dispatch({
-      type: "setFilters",
-      filters: initialFilters,
-    })
+    setActiveFilters(initialFilters)
   }, [router.query])
 
   // These are just wrappers for the dispatch actions, so we can use them in a cleaner way in our child components
 
   const addFilter = (filter: Filter) =>
-    dispatch({ type: "addFilter", filter: { id: crypto.randomUUID(), ...filter } })
+    setActiveFilters((prevActiveFilters) => [
+      ...prevActiveFilters,
+      { id: crypto.randomUUID(), ...filter },
+    ])
+
+  const updateFilter = (filter: Filter) =>
+    setActiveFilters((prevActiveFilters) => {
+      const modifiedFilters = [...prevActiveFilters]
+      const filterToModify = modifiedFilters.find((f) => f.id === filter?.id)
+      if (filterToModify) {
+        filterToModify.value = filter.value
+      }
+
+      return modifiedFilters
+    })
+
   const removeLastFilter = () =>
-    dispatch({
-      type: "removeLastFilter",
+    setActiveFilters((prevActiveFilters) => {
+      const modifiedFilters = [...prevActiveFilters]
+      modifiedFilters.pop()
+      return modifiedFilters
     })
+
   const removeFilter = (filter: Filter) =>
-    dispatch({
-      type: "removeFilter",
-      filter,
-    })
-  const updateFilter = (filter: Filter) => dispatch({ type: "updateFilter", filter })
-  const clearFilters = () => dispatch({ type: "clearFilters" })
+    setActiveFilters((prevActiveFilters) =>
+      prevActiveFilters.filter((f) => f.id !== filter?.id)
+    )
+
+  const clearFilters = () => setActiveFilters([])
 
   const triggerSearch = () => {
     const query: ParsedUrlQuery = { ...router.query }
@@ -182,7 +201,7 @@ const ActivityLogFiltersProvider = ({
         reward.name.toLowerCase().includes(lowerCaseInputValue) ||
         "reward".includes(lowerCaseInputValue)
       )
-    })
+    }) ?? []
 
   const getFilteredRoleSuggestions = (inputValue: string) =>
     roles?.filter((role) => {
@@ -191,7 +210,7 @@ const ActivityLogFiltersProvider = ({
         role.name.toLowerCase().includes(lowerCaseInputValue) ||
         "role".includes(lowerCaseInputValue)
       )
-    })
+    }) ?? []
 
   const getFilteredActionSuggestions = (inputValue: string) =>
     auditLogActions.filter((action) => {
