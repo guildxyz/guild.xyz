@@ -112,10 +112,6 @@ const FiltersInput = (): JSX.Element => {
     (af) => af.filter === "rolePlatformId"
   )
 
-  const shouldRenderActionSuggestions = !activeFilters?.some(
-    (af) => af.filter === "action"
-  )
-
   return (
     <>
       <Box
@@ -223,17 +219,15 @@ const FiltersInput = (): JSX.Element => {
             </Suggestion>
           )}
 
-          {shouldRenderActionSuggestions && (
-            <Suggestion
-              label="Action"
-              isFocused={focusedOption?.value === "action"}
-              {...getOptionProps({ label: "Action", value: "action" })}
-            >
-              <Text as="span" colorScheme="gray" fontWeight="normal">
-                Filter by action
-              </Text>
-            </Suggestion>
-          )}
+          <Suggestion
+            label="Action"
+            isFocused={focusedOption?.value === "action"}
+            {...getOptionProps({ label: "Action", value: "action" })}
+          >
+            <Text as="span" colorScheme="gray" fontWeight="normal">
+              Filter by action
+            </Text>
+          </Suggestion>
         </Stack>
       </Dropdown>
     </>
