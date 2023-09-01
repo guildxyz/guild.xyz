@@ -11,7 +11,7 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
   options: SWRSettings = {},
   isMutable = false,
   onlyAuthRequest = true
-): SWRResponse<Data, Error> => {
+): SWRResponse<Data, Error> & { isSigned: boolean } => {
   const useSWRHook = isMutable ? useSWR : useSWRImmutable
 
   const { account } = useWeb3React()
@@ -37,6 +37,7 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
     isValidating: authenticatedResponse.isValidating ?? publicResponse.isValidating,
     mutate: authenticatedResponse.mutate ?? publicResponse.mutate,
     error: authenticatedResponse.error ?? publicResponse.error,
+    isSigned: !!authenticatedResponse.data,
   }
 }
 
