@@ -57,6 +57,8 @@ const fetcher = async (
     }
   }
 
+  options.headers["x-route-to"] = "ab"
+
   const endpoint = `${api}${resource}`.replace("/v1/v2/", "/v2/")
 
   return fetch(endpoint, options).then(async (response: Response) => {
