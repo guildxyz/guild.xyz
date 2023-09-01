@@ -8,18 +8,25 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
+import useUser from "components/[guild]/hooks/useUser"
 import { useRouter } from "next/router"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import { useActivityLog } from "../../ActivityLogContext"
 
 type Props = {
-  address: string
+  address?: string
+  userId?: number
 } & TagProps
 
 const UserTag = forwardRef<Props, "span">(
-  ({ address, ...rest }, ref): JSX.Element => {
+  ({ address: addressProp, userId, ...rest }, ref): JSX.Element => {
     const variant = useColorModeValue("subtle", "solid")
     const colorScheme = useColorModeValue("alpha", "gray")
+
+    const user = useUser(userId ?? NULL_ADDRESS)
+
+    const address = addressProp ?? user?.addresses?.[0].address
 
     return (
       <Tag
@@ -34,7 +41,9 @@ const UserTag = forwardRef<Props, "span">(
         {address && (
           <TagLeftIcon mr={0.5} as={GuildAvatar} address={address} size={3} />
         )}
-        <TagLabel>{address ? shortenHex(address, 3) : "Unknown user"}</TagLabel>
+        <TagLabel>
+          {address ? shortenHex(address, 3) : userId ?? "Unknown user"}
+        </TagLabel>
       </Tag>
     )
   }

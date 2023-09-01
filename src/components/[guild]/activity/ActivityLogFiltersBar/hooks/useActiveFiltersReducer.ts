@@ -19,9 +19,7 @@ const activeFiltersReducer = (activeFilters: Filter[], action: Action) => {
       return [...activeFilters, action.filter]
     case "updateFilter": {
       const modifiedFilters = [...activeFilters]
-      const filterToModify = modifiedFilters.find(
-        (f) => f.filter === action.filter?.filter
-      )
+      const filterToModify = modifiedFilters.find((f) => f.id === action.filter?.id)
       if (filterToModify) {
         filterToModify.value = action.filter.value
       }
@@ -29,7 +27,7 @@ const activeFiltersReducer = (activeFilters: Filter[], action: Action) => {
       return modifiedFilters
     }
     case "removeFilter":
-      return [...activeFilters.filter((f) => f.filter !== action.filter?.filter)]
+      return [...activeFilters.filter((f) => f.id !== action.filter?.id)]
     case "removeLastFilter": {
       const modifiedFilters = [...activeFilters]
       modifiedFilters.pop()
