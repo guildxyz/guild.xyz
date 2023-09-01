@@ -1,4 +1,5 @@
 import {
+  Center,
   HStack,
   IconButton,
   Spinner,
@@ -274,6 +275,7 @@ const FilterTag = ({
 
                   return (
                     <>
+                      {!roleSuggestions.length && <NoResults />}
                       {roleSuggestions.map((roleSuggestion) => {
                         const suggestionLabel = "Role"
 
@@ -304,6 +306,7 @@ const FilterTag = ({
 
                   return (
                     <>
+                      {!rewardSuggestions.length && <NoResults />}
                       {rewardSuggestions.map((rewardSuggestion) => {
                         const suggestionLabel = "Reward"
 
@@ -338,6 +341,7 @@ const FilterTag = ({
 
                   return (
                     <>
+                      {!actionSuggestions.length && <NoResults />}
                       {actionSuggestions.map((action) => (
                         <Suggestion
                           key={action}
@@ -367,5 +371,13 @@ const FilterTag = ({
     </>
   )
 }
+
+const NoResults = (): JSX.Element => (
+  <Center p={4} color="gray.500">
+    <Text as="span" colorScheme="gray">
+      No results
+    </Text>
+  </Center>
+)
 
 export default FilterTag
