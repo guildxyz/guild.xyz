@@ -110,8 +110,6 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName} in role:</Text>
                 <ClickableRoleTag id={ids.role} guildId={ids.guild} />
-                <Text as="span">by</Text>
-                <ClickableUserTag id={ids.user} />
               </>
             )
 
