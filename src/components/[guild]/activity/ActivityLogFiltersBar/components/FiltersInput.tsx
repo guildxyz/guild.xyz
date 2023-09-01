@@ -190,7 +190,7 @@ const FiltersInput = (): JSX.Element => {
             isFocused={focusedOption?.value === "userId"}
             {...getOptionProps({ label: "User", value: "userId" })}
           >
-            <Text as="span" colorScheme="gray" fontWeight="normal">
+            <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
               Filter by wallet addresses
             </Text>
           </Suggestion>
@@ -201,7 +201,7 @@ const FiltersInput = (): JSX.Element => {
               isFocused={focusedOption?.value === "roleId"}
               {...getOptionProps({ label: "Role", value: "roleId" })}
             >
-              <Text as="span" colorScheme="gray" fontWeight="normal">
+              <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
                 Filter by role
               </Text>
             </Suggestion>
@@ -213,7 +213,7 @@ const FiltersInput = (): JSX.Element => {
               isFocused={focusedOption?.value === "rolePlatformId"}
               {...getOptionProps({ label: "Reward", value: "rolePlatformId" })}
             >
-              <Text as="span" colorScheme="gray" fontWeight="normal">
+              <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
                 Filter by reward
               </Text>
             </Suggestion>
@@ -224,7 +224,7 @@ const FiltersInput = (): JSX.Element => {
             isFocused={focusedOption?.value === "action"}
             {...getOptionProps({ label: "Action", value: "action" })}
           >
-            <Text as="span" colorScheme="gray" fontWeight="normal">
+            <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
               Filter by action
             </Text>
           </Suggestion>
