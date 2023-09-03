@@ -91,10 +91,11 @@ const ActivityLogFiltersProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
   const router = useRouter()
+  const [initialSetupDone, setInitialSetupDone] = useState(false)
   const [activeFilters, setActiveFilters] = useState<Filter[]>([])
 
   useEffect(() => {
-    if (activeFilters.length > 0) return
+    if (initialSetupDone || !Object.entries(router.query).length) return
 
     const initialFilters: Filter[] = Object.entries(router.query)
       .map(([key, value]) =>
@@ -109,6 +110,7 @@ const ActivityLogFiltersProvider = ({
       .filter(Boolean)
 
     setActiveFilters(initialFilters)
+    setInitialSetupDone(true)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query])
