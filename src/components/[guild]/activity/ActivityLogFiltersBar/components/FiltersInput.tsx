@@ -71,7 +71,14 @@ const FiltersInput = (): JSX.Element => {
     inputValue,
     setInputValue,
     focus,
+    isFocused,
   } = combobox.connect(state, send, normalizeProps)
+
+  useEffect(() => {
+    if (!isFocused) return
+    // Opening the suggestions dropdown
+    send({ type: "CLICK_INPUT" })
+  }, [isFocused])
 
   const { size, ...filteredInputProps } = inputProps
 

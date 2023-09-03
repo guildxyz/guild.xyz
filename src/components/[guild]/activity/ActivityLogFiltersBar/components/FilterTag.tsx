@@ -15,7 +15,7 @@ import { normalizeProps, useMachine } from "@zag-js/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { X } from "phosphor-react"
 import platforms from "platforms/platforms"
-import { PropsWithChildren, useRef, useState } from "react"
+import { PropsWithChildren, useEffect, useState } from "react"
 import { PlatformType } from "types"
 import capitalize from "utils/capitalize"
 import fetcher from "utils/fetcher"
@@ -56,7 +56,6 @@ const FilterTag = ({
 
   const { roles, guildPlatforms } = useGuild()
 
-  const inputRef = useRef<HTMLInputElement>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [shouldRemove, setShouldRemove] = useState(value.length === 0)
 
@@ -88,7 +87,15 @@ const FilterTag = ({
     focusedOption,
     inputValue,
     setInputValue,
+    focus,
+    isFocused,
   } = combobox.connect(state, send, normalizeProps)
+
+  useEffect(() => {
+    if (!isFocused) return
+    // Opening the suggestions dropdown
+    send({ type: "CLICK_INPUT" })
+  }, [isFocused])
 
   const { size, ...filteredInputProps } = inputProps
 
@@ -122,7 +129,7 @@ const FilterTag = ({
         color={tagFontColor}
         position="relative"
         borderColor="transparent"
-        onClick={() => inputRef.current?.focus()}
+        onClick={() => focus()}
         pr={0}
         {...tagProps}
         {...rootProps}
