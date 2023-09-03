@@ -1,4 +1,5 @@
-import { Text, Wrap } from "@chakra-ui/react"
+import { Center, Icon, Text, Wrap } from "@chakra-ui/react"
+import { ArrowRight } from "phosphor-react"
 import platforms from "platforms/platforms"
 import capitalize from "utils/capitalize"
 import { useActivityLog } from "../../ActivityLogContext"
@@ -54,11 +55,22 @@ const ActionLabel = (): JSX.Element => {
           case ACTION.UpdateReward:
           case ACTION.SendReward:
           case ACTION.RevokeReward:
-          case ACTION.LoseReward:
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
                 <ClickableRewardTag rolePlatformId={ids.rolePlatform} />
+              </>
+            )
+          case ACTION.LoseReward:
+          case ACTION.GetReward:
+            return (
+              <>
+                <Text as="span">{capitalizedName}</Text>
+                <ClickableRewardTag rolePlatformId={ids.rolePlatform} />
+                <Center h={6}>
+                  <Icon as={ArrowRight} />
+                </Center>
+                <ClickableUserTag id={ids.user} />
               </>
             )
           case ACTION.ClickJoinOnWeb:

@@ -8,9 +8,9 @@ import {
   isSupportedQueryParam,
   SupportedQueryParam,
 } from "./ActivityLogFiltersBar/components/ActivityLogFiltersContext"
-import { ActivityLogAction } from "./constants"
+import { ACTION, ActivityLogAction } from "./constants"
 
-const LIMIT = 25
+const LIMIT = 50
 const SCROLL_PADDING = 40
 
 export type ActivityLogActionResponse = {
@@ -52,7 +52,15 @@ const transformActivityLogInfiniteResponse = (
   }
 
   rawResponse.forEach((chunk) => {
-    transformedResponse.entries.push(...chunk.entries)
+    transformedResponse.entries.push(
+      ...chunk.entries
+        // We should remove this filter once these logs will have hierarchy!
+        .filter(
+          (entry) =>
+            entry.action !== ACTION.SendReward &&
+            entry.action !== ACTION.RevokeReward
+        )
+    )
 
     Object.keys(chunk.values).forEach((key) =>
       transformedResponse.values[key]?.push(...chunk.values[key])
