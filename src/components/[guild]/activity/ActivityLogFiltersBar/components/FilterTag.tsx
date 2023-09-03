@@ -101,18 +101,18 @@ const FilterTag = ({
     }
 
     const trimmedValue = newValue.trim()
+    setInputValue(trimmedValue)
+
     if (ADDRESS_REGEX.test(trimmedValue)) {
       setIsLoading(true)
       try {
         const guildUser = await fetcher(`/v2/users/${trimmedValue}`)
-        setInputValue(guildUser.id)
+        setInputValue(guildUser.id.toString())
       } catch {
-        setInputValue(trimmedValue)
+        // We just leave the original content of the input
       } finally {
         setIsLoading(false)
       }
-    } else {
-      setInputValue(trimmedValue)
     }
   }
 
@@ -211,7 +211,7 @@ const FilterTag = ({
               htmlSize={size}
               boxSizing="content-box"
               width={`${inputValue?.length ?? 0}ch`}
-              minW={1}
+              minW="px"
               fontFamily="monospace"
               value={inputValue}
               defaultValue={undefined}
