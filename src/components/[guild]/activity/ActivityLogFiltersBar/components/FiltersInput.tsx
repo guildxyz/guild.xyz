@@ -32,7 +32,7 @@ const getPositionerCSSVariables = (
 const FiltersInput = (): JSX.Element => {
   const rootBgColor = useColorModeValue("white", "blackAlpha.300")
 
-  const { activeFilters, addFilter, removeLastFilter, clearFilters, triggerSearch } =
+  const { activeFilters, addFilter, removeLastFilter, clearFilters } =
     useActivityLogFilters()
 
   const [state, send] = useMachine(
@@ -78,10 +78,6 @@ const FiltersInput = (): JSX.Element => {
   const [shouldRemoveLastFilter, setShouldRemoveLastFilter] = useState(false)
 
   const onKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === "Enter") {
-      triggerSearch()
-    }
-
     if (e.code !== "Backspace" || e.currentTarget.selectionStart !== 0) {
       setShouldRemoveLastFilter(false)
       return

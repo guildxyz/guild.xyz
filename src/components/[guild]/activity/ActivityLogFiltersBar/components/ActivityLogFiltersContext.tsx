@@ -80,7 +80,6 @@ const ActivityLogFiltersContext = createContext<{
   removeFilter: (filterToRemove: Filter) => void
   updateFilter: (updatedFilter: Filter) => void
   clearFilters: () => void
-  triggerSearch: () => void
   getFilter: (id: string) => Filter | Record<string, never>
   isActiveFilter: (filterType: SupportedQueryParam) => boolean
   getFilteredRewardSuggestions: (inputValue: string) => RewardSuggestion[]
@@ -96,6 +95,7 @@ const ActivityLogFiltersProvider = ({
 
   useEffect(() => {
     if (activeFilters.length > 0) return
+
     const initialFilters: Filter[] = Object.entries(router.query)
       .map(([key, value]) =>
         isSupportedQueryParam(key) && value
@@ -109,6 +109,8 @@ const ActivityLogFiltersProvider = ({
       .filter(Boolean)
 
     setActiveFilters(initialFilters)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query])
 
   // These are just wrappers for the dispatch actions, so we can use them in a cleaner way in our child components
@@ -144,27 +146,39 @@ const ActivityLogFiltersProvider = ({
 
   const clearFilters = () => setActiveFilters([])
 
-  const triggerSearch = () => {
-    const query: ParsedUrlQuery = { ...router.query }
+  const [query, setQuery] = useState<ParsedUrlQuery>({})
+
+  useEffect(() => {
+    const newQuery: ParsedUrlQuery = { ...router.query }
 
     const filters: SupportedQueryParam[] = [...SUPPORTED_SEARCH_OPTIONS, "action"]
 
     filters.forEach((filter) => {
       const relevantActiveFilter = activeFilters.find((f) => f.filter === filter)
-      query[filter] = relevantActiveFilter?.value ?? ""
+      newQuery[filter] = relevantActiveFilter?.value ?? ""
     })
 
-    Object.entries(query).forEach(([key, value]) => {
+    Object.entries(newQuery).forEach(([key, value]) => {
       if (!value) {
-        delete query[key]
+        delete newQuery[key]
       }
     })
+
+    setQuery(newQuery)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeFilters])
+
+  useEffect(() => {
+    if (!query.guild) return
 
     router.push({
       pathname: router.pathname,
       query,
     })
-  }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query])
 
   const getFilter = (id: string) => activeFilters?.find((f) => f.id === id) ?? {}
 
@@ -230,7 +244,6 @@ const ActivityLogFiltersProvider = ({
         removeFilter,
         updateFilter,
         clearFilters,
-        triggerSearch,
         getFilter,
         isActiveFilter,
         getFilteredRewardSuggestions,
