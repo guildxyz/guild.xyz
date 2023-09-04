@@ -1,4 +1,13 @@
-import { Box, Code, Heading, Img, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Code,
+  Heading,
+  Img,
+  ListItem,
+  OrderedList,
+  Text,
+  UnorderedList,
+} from "@chakra-ui/react"
 import Link from "components/common/Link"
 import { forwardRef } from "react"
 import ReactMarkdown from "react-markdown"
@@ -14,32 +23,12 @@ const reactMarkdownComponents: Partial<
     </Link>
   ),
   h1: ({ children, node: _node, ...props }) => (
-    <Heading as="h1" fontSize="3xl" mb={3} mt={4} {...props}>
+    <Heading as="h1" fontSize="2xl" mb={3} mt={4} {...props}>
       {children}
     </Heading>
   ),
   h2: ({ children, node: _node, ...props }) => (
-    <Heading as="h2" fontSize="2xl" mb={3} mt={4} {...props}>
-      {children}
-    </Heading>
-  ),
-  h3: ({ children, node: _node, ...props }) => (
-    <Heading as="h3" fontSize="xl" mb={3} mt={4} {...props}>
-      {children}
-    </Heading>
-  ),
-  h4: ({ children, node: _node, ...props }) => (
-    <Heading as="h4" fontSize="lg" mb={3} mt={4} {...props}>
-      {children}
-    </Heading>
-  ),
-  h5: ({ children, node: _node, ...props }) => (
-    <Heading as="h5" fontSize="md" mb={3} mt={4} {...props}>
-      {children}
-    </Heading>
-  ),
-  h6: ({ children, node: _node, ...props }) => (
-    <Heading as="h6" fontSize="sm" mb={3} mt={4} {...props}>
+    <Heading as="h2" fontSize="lg" mb={3} mt={4} {...props}>
       {children}
     </Heading>
   ),
@@ -57,6 +46,24 @@ const reactMarkdownComponents: Partial<
     <Img borderRadius={"lg"} mb={8} {...props}>
       {children}
     </Img>
+  ),
+  ul: ({ children, node: _node, ...props }) => (
+    <UnorderedList pl={2} mb={4} {...props}>
+      {children}
+    </UnorderedList>
+  ),
+  ol: ({ children, node: _node, ...props }) => (
+    <OrderedList pl={2} mb={4} {...props}>
+      {children}
+    </OrderedList>
+  ),
+  li: ({ children, node: _node, ...props }) => (
+    <ListItem {...props}>{children}</ListItem>
+  ),
+  blockquote: ({ children, node: _node, ...props }) => (
+    <Box as="blockquote" fontStyle="italic" {...props}>
+      {children}
+    </Box>
   ),
 }
 

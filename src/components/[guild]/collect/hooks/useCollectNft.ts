@@ -1,7 +1,9 @@
+import { BigNumber } from "@ethersproject/bignumber"
 import { useWeb3React } from "@web3-react/core"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import { CONTRACT_CALL_ARGS_TO_SIGN } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
 import useBalance from "hooks/useBalance"
@@ -11,9 +13,10 @@ import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
 import GUILD_REWARD_NFT_ABI from "static/abis/guildRewardNft.json"
 import { useFetcherWithSign } from "utils/fetcher"
-import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import useSubmitTransaction from "../../Requirements/components/GuildCheckout/hooks/useSubmitTransaction"
 import { useCollectNftContext } from "../components/CollectNftContext"
+import useGuildFee from "./useGuildFee"
+import useTopCollectors from "./useTopCollectors"
 
 type ClaimData = {
   // signed value which we need to send in the contract call
@@ -30,8 +33,12 @@ const useCollectNft = () => {
   const showErrorToast = useShowErrorToast()
 
   const { chainId, account } = useWeb3React()
-  const { chain, address, roleId, rolePlatformId } = useCollectNftContext()
-  const { data } = useNftDetails(chain, address)
+  const { chain, address, roleId, rolePlatformId, guildPlatform } =
+    useCollectNftContext()
+  const { guildFee } = useGuildFee(chain)
+  const { data, mutate: mutateNftDetails } = useNftDetails(chain, address)
+  const { mutate: mutateTopCollectors } = useTopCollectors()
+
   const shouldSwitchChain = chainId !== Chains[chain]
 
   const [loadingText, setLoadingText] = useState("")
@@ -41,7 +48,6 @@ const useCollectNft = () => {
 
   const { mutateTokenBalance } = useBalance(address, Chains[chain])
 
-  // Still WIP, no need to review
   const mint = async () => {
     if (shouldSwitchChain)
       return Promise.reject("Please switch network before minting")
@@ -52,18 +58,22 @@ const useCollectNft = () => {
       `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`,
       {
         body: {
-          args: [],
+          args: CONTRACT_CALL_ARGS_TO_SIGN[
+            guildPlatform?.platformGuildData?.function
+          ],
         },
       },
     ])
 
+    const claimFee =
+      guildFee && data.fee ? guildFee.add(data.fee) : BigNumber.from(0)
+
     const claimParams = [
-      NULL_ADDRESS,
       account,
       userId,
       uniqueValue,
       {
-        value: data.fee,
+        value: claimFee,
       },
     ]
 
@@ -97,6 +107,30 @@ const useCollectNft = () => {
         }
 
         mutateTokenBalance()
+
+        mutateNftDetails(
+          (prevValue) => ({
+            ...prevValue,
+            totalCollectors: (prevValue?.totalCollectors ?? 0) + 1,
+            totalCollectorsToday: (prevValue?.totalCollectorsToday ?? 0) + 1,
+          }),
+          {
+            revalidate: false,
+          }
+        )
+
+        mutateTopCollectors(
+          (prevValue) => ({
+            topCollectors: [
+              ...(prevValue?.topCollectors ?? []),
+              account?.toLowerCase(),
+            ],
+            uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
+          }),
+          {
+            revalidate: false,
+          }
+        )
 
         captureEvent("Minted NFT (GuildCheckout)", postHogOptions)
 

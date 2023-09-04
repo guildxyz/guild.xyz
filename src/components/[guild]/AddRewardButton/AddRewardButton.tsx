@@ -26,6 +26,7 @@ import {
   RoleTypeToAddTo,
   useAddRewardContext,
 } from "../AddRewardContext"
+import { CreatePoapProvider } from "../CreatePoap/components/CreatePoapContext"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useAddReward from "./hooks/useAddReward"
@@ -92,6 +93,8 @@ const AddRewardButton = (): JSX.Element => {
 
   const lightModalBgColor = useColorModeValue("white", "gray.700")
 
+  const { isBackButtonDisabled } = useAddRewardContext()
+
   return (
     <>
       <Button
@@ -119,69 +122,73 @@ const AddRewardButton = (): JSX.Element => {
           colorScheme="dark"
         >
           <ModalOverlay />
-          <ModalContent minH="550px">
-            <ModalCloseButton />
-            <ModalHeader
-              {...(step === "SELECT_ROLE"
-                ? {
-                    bgColor: lightModalBgColor,
-                    boxShadow: "sm",
-                    zIndex: 1,
-                  }
-                : {})}
-            >
-              <Stack spacing={8}>
-                <HStack>
-                  {selection && (
-                    <IconButton
-                      rounded="full"
-                      aria-label="Back"
-                      size="sm"
-                      mb="-3px"
-                      icon={<ArrowLeft size={20} />}
-                      variant="ghost"
-                      onClick={goBack}
-                    />
-                  )}
-                  <Text>
-                    {selection
-                      ? `Add ${platforms[selection].name} reward`
-                      : "Add reward"}
-                  </Text>
-                </HStack>
+          {/* TODO: this is a temporary solution, we should remove this from here when POAPs become real rewards */}
+          <CreatePoapProvider>
+            <ModalContent minH="550px">
+              <ModalCloseButton />
+              <ModalHeader
+                {...(step === "SELECT_ROLE"
+                  ? {
+                      bgColor: lightModalBgColor,
+                      boxShadow: "sm",
+                      zIndex: 1,
+                    }
+                  : {})}
+              >
+                <Stack spacing={8}>
+                  <HStack>
+                    {selection && (
+                      <IconButton
+                        isDisabled={isBackButtonDisabled}
+                        rounded="full"
+                        aria-label="Back"
+                        size="sm"
+                        mb="-3px"
+                        icon={<ArrowLeft size={20} />}
+                        variant="ghost"
+                        onClick={goBack}
+                      />
+                    )}
+                    <Text>
+                      {selection
+                        ? `Add ${platforms[selection].name} reward`
+                        : "Add reward"}
+                    </Text>
+                  </HStack>
 
-                {step === "SELECT_ROLE" && <PlatformPreview />}
-              </Stack>
-            </ModalHeader>
+                  {step === "SELECT_ROLE" && <PlatformPreview />}
+                </Stack>
+              </ModalHeader>
 
-            <ModalBody ref={modalRef} className="custom-scrollbar">
-              {selection === "POAP" ? (
-                <DynamicAddPoapPanel />
-              ) : selection && step === "SELECT_ROLE" ? (
-                <SelectRoleOrSetRequirements selectedPlatform={selection} />
-              ) : AddPlatformPanel ? (
-                <AddPlatformPanel
-                  onSuccess={() => setStep("SELECT_ROLE")}
-                  skipSettings
-                />
-              ) : (
-                <PlatformsGrid onSelection={setSelection} showPoap />
+              <ModalBody ref={modalRef} className="custom-scrollbar">
+                {selection === "POAP" ? (
+                  <DynamicAddPoapPanel />
+                ) : selection && step === "SELECT_ROLE" ? (
+                  <SelectRoleOrSetRequirements selectedPlatform={selection} />
+                ) : AddPlatformPanel ? (
+                  <AddPlatformPanel
+                    onSuccess={() => setStep("SELECT_ROLE")}
+                    skipSettings
+                  />
+                ) : (
+                  <PlatformsGrid onSelection={setSelection} showPoap />
+                )}
+              </ModalBody>
+
+              {selection !== "POAP" && step === "SELECT_ROLE" && (
+                <ModalFooter pt="6" pb="8">
+                  <Button
+                    isDisabled={isAddRewardButtonDisabled}
+                    colorScheme="green"
+                    onClick={methods.handleSubmit(onSubmit)}
+                    isLoading={isLoading}
+                  >
+                    Done
+                  </Button>
+                </ModalFooter>
               )}
-            </ModalBody>
-
-            {selection !== "POAP" && step === "SELECT_ROLE" && (
-              <ModalFooter pt="6" pb="8">
-                <Button
-                  isDisabled={isAddRewardButtonDisabled}
-                  colorScheme="green"
-                  onClick={methods.handleSubmit(onSubmit)}
-                  isLoading={isLoading}
-                >
-                  Done
-                </Button>
-              </ModalFooter>
-            )}
-          </ModalContent>
+            </ModalContent>
+          </CreatePoapProvider>
         </Modal>
       </FormProvider>
     </>

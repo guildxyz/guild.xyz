@@ -1,11 +1,9 @@
-import { useRouter } from "next/router"
 import { TopCollectorsResponse } from "pages/api/nft/collectors/[chain]/[address]"
 import useSWRImmutable from "swr/immutable"
+import { useCollectNftContext } from "../components/CollectNftContext"
 
 const useTopCollectors = () => {
-  const { query } = useRouter()
-
-  const { chain, address } = query
+  const { chain, address } = useCollectNftContext()
   const shouldFetch = chain && address
 
   return useSWRImmutable<TopCollectorsResponse>(

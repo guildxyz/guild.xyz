@@ -1,4 +1,5 @@
 import { useDisclosure } from "@chakra-ui/react"
+import DiscardAlert from "components/common/DiscardAlert"
 import {
   createContext,
   Dispatch,
@@ -30,6 +31,10 @@ const AddRewardContext = createContext<{
   setStep: (newStep: AddPlatformStep) => void
   activeTab: RoleTypeToAddTo
   setActiveTab: Dispatch<SetStateAction<RoleTypeToAddTo>>
+  shouldShowCloseAlert: boolean
+  setShouldShowCloseAlert: Dispatch<SetStateAction<boolean>>
+  isBackButtonDisabled: boolean
+  setIsBackButtonDisabled: Dispatch<SetStateAction<boolean>>
 }>(undefined)
 
 const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
@@ -55,6 +60,15 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
     RoleTypeToAddTo.EXISTING_ROLE
   )
 
+  const [shouldShowCloseAlert, setShouldShowCloseAlert] = useState(false)
+  const {
+    isOpen: isDiscardAlertOpen,
+    onOpen: onDiscardAlertOpen,
+    onClose: onDiscardAlertClose,
+  } = useDisclosure()
+
+  const [isBackButtonDisabled, setIsBackButtonDisabled] = useState(false)
+
   return (
     <AddRewardContext.Provider
       value={{
@@ -65,7 +79,16 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
           setStep("HOME")
           onOpen()
         },
-        onClose,
+        onClose: () => {
+          if (shouldShowCloseAlert) {
+            onDiscardAlertOpen()
+            return
+          }
+
+          onClose()
+          setShouldShowCloseAlert(false)
+          setIsBackButtonDisabled(false)
+        },
         scrollToTop,
         selection,
         setSelection,
@@ -73,9 +96,23 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
         setStep,
         activeTab,
         setActiveTab,
+        shouldShowCloseAlert,
+        setShouldShowCloseAlert,
+        isBackButtonDisabled,
+        setIsBackButtonDisabled,
       }}
     >
       {children}
+      <DiscardAlert
+        isOpen={isDiscardAlertOpen}
+        onClose={onDiscardAlertClose}
+        onDiscard={() => {
+          onClose()
+          onDiscardAlertClose()
+          setShouldShowCloseAlert(false)
+          setIsBackButtonDisabled(false)
+        }}
+      />
     </AddRewardContext.Provider>
   )
 }

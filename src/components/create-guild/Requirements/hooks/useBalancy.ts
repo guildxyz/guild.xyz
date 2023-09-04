@@ -86,6 +86,7 @@ const useBalancy = (
   holders: number
   usedLogic: "OR" | "AND"
   isLoading: boolean
+  error: string
   inaccuracy: number
 } => {
   const requirements = useWatch({ name: "requirements" })
@@ -172,7 +173,7 @@ const useBalancy = (
   const shouldFetch = !!balancyLogic && Object.keys(mappedRequirements)?.length > 0
 
   const [holders, setHolders] = useState<BalancyResponse>(undefined)
-  const { data, isValidating } = useSWR(
+  const { data, isValidating, error } = useSWR(
     shouldFetch ? ["balancy_holders", balancyLogic, mappedRequirements] : null,
     fetchHolders,
     {
@@ -268,6 +269,7 @@ const useBalancy = (
     holders: addresses?.length || (!!data ? 0 : undefined),
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
+    error,
     inaccuracy:
       renderedRequirements.length - (mappedRequirementsLength + allowlists.length), // Always non-negative
   }

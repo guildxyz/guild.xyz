@@ -1,15 +1,17 @@
-import { Icon, Img, Wrap } from "@chakra-ui/react"
-import SocialIcon from "components/[guild]/SocialIcon"
-import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
-import useGuild from "components/[guild]/hooks/useGuild"
+import { Icon, Img, useColorMode, Wrap } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import Section from "components/common/Section"
+import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
+import useGuild from "components/[guild]/hooks/useGuild"
+import SocialIcon from "components/[guild]/SocialIcon"
+import { RPC } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import { SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
 import { openseaBaseUrl } from "utils/guildCheckout/constants"
 
 const Links = () => {
+  const { colorMode } = useColorMode()
   const { chain, address } = useCollectNftContext()
   const { socialLinks } = useGuild()
 
@@ -28,6 +30,30 @@ const Links = () => {
             <Icon ml={1.5} as={ArrowSquareOut} />
           </Link>
         )}
+
+        {chain === "BASE_MAINNET" && (
+          <Link
+            href={`https://nft.coinbase.com/collection/base/${address}`}
+            isExternal
+            colorScheme="gray"
+            fontWeight="medium"
+          >
+            <Img src={"/networkLogos/base.svg"} boxSize={5} mr="1.5" />
+            Coinbase NFT
+            <Icon ml={1.5} as={ArrowSquareOut} />
+          </Link>
+        )}
+
+        <Link
+          href={`${RPC[chain].blockExplorerUrls[0]}/token/${address}`}
+          isExternal
+          colorScheme="gray"
+          fontWeight="medium"
+        >
+          <Img src={RPC[chain].blockExplorerIcons[colorMode]} boxSize={5} mr="1.5" />
+          Explorer
+          <Icon ml={1.5} as={ArrowSquareOut} />
+        </Link>
 
         {Object.keys(socialLinks ?? {}).length > 0 &&
           Object.entries(socialLinks).map(([type, link]) => (

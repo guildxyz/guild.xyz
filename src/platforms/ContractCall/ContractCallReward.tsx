@@ -1,7 +1,7 @@
 import { Circle, Img, SkeletonCircle, SkeletonProps } from "@chakra-ui/react"
+import LinkButton from "components/common/LinkButton"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
-import LinkButton from "components/common/LinkButton"
 import { motion } from "framer-motion"
 import { ArrowSquareOut } from "phosphor-react"
 import {
@@ -76,6 +76,7 @@ export const ContractCallRewardIcon = ({
     src: nftData?.image,
     alt: guildPlatform?.platformGuildName,
     boxSize: 6,
+    borderRadius: "full",
   }
 
   if (withMotionImg)
