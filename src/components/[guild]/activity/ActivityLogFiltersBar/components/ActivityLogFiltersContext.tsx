@@ -112,8 +112,6 @@ const ActivityLogFiltersProvider = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query])
 
-  // These are just wrappers for the dispatch actions, so we can use them in a cleaner way in our child components
-
   const addFilter = (filter: Filter) =>
     setActiveFilters((prevActiveFilters) => [
       ...prevActiveFilters,
