@@ -54,8 +54,6 @@ const ActionLabel = (): JSX.Element => {
           case ACTION.AddReward:
           case ACTION.RemoveReward:
           case ACTION.UpdateReward:
-          case ACTION.SendReward:
-          case ACTION.RevokeReward:
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
@@ -65,6 +63,17 @@ const ActionLabel = (): JSX.Element => {
                 />
                 <Text as="span">to role</Text>
                 <ClickableRoleTag id={ids.role} guildId={ids.guild} />
+              </>
+            )
+          case ACTION.SendReward:
+          case ACTION.RevokeReward:
+            return (
+              <>
+                <Text as="span">{capitalizedName}</Text>
+                <ClickableRewardTag
+                  roleId={ids.role}
+                  rolePlatformId={ids.rolePlatform}
+                />
               </>
             )
           case ACTION.LoseReward:
