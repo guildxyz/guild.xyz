@@ -5,6 +5,7 @@ import capitalize from "utils/capitalize"
 import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
 import { useActivityLogActionContext } from "../ActivityLogActionContext"
+import IdentityTag from "./IdentityTag"
 import { ClickableRewardTag } from "./RewardTag"
 import { ClickableRoleTag } from "./RoleTag"
 import { ClickableUserTag } from "./UserTag"
@@ -120,9 +121,18 @@ const ActionLabel = (): JSX.Element => {
           case ACTION.RemoveRequirement:
             return <Text as="span">{capitalizedName}</Text>
 
-          // TODO:
-          //   ConnectIdentity,
-          //   DisconnectIdentity
+          case ACTION.ConnectIdentity:
+          case ACTION.DisconnectIdentity:
+            return (
+              <>
+                <Text as="span">{capitalizedName}</Text>
+                <IdentityTag
+                  platformName={data.platformName}
+                  username={data.username}
+                />
+                <ClickableUserTag id={ids.user} />
+              </>
+            )
 
           default:
             return (
