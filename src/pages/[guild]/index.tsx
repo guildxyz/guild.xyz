@@ -47,7 +47,7 @@ import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
-import { SWRConfig, unstable_serialize } from "swr"
+import { SWRConfig } from "swr"
 import { Guild, PlatformType, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
@@ -90,6 +90,7 @@ const GuildPage = (): JSX.Element => {
     poaps,
     guildPlatforms,
     tags,
+    isDetailed,
   } = useGuild()
   useAutoStatusUpdate()
 
@@ -226,7 +227,7 @@ const GuildPage = (): JSX.Element => {
         imageUrl={imageUrl}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
-        action={isAdmin && <DynamicEditGuildButton />}
+        action={isAdmin && isDetailed && <DynamicEditGuildButton />}
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
         titlePostfix={
           tags?.includes("VERIFIED") && (
@@ -441,12 +442,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       fallback: {
         [`/guild/${params.guild?.toString()}`]: filteredData,
-        [unstable_serialize([
-          `/guild/${params.guild?.toString()}`,
-          { method: "GET", body: {} },
-        ])]: filteredData,
         [endpoint]: filteredData,
-        [unstable_serialize([endpoint, { method: "GET", body: {} }])]: filteredData,
       },
     },
     revalidate: 300,
