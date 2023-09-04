@@ -63,6 +63,8 @@ const ActionLabel = (): JSX.Element => {
                   roleId={ids.role}
                   rolePlatformId={ids.rolePlatform}
                 />
+                <Text as="span">to role</Text>
+                <ClickableRoleTag id={ids.role} guildId={ids.guild} />
               </>
             )
           case ACTION.LoseReward:

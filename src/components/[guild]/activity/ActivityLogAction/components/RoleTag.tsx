@@ -67,7 +67,7 @@ const ClickableRoleTag = ({ id, guildId }: ClickableRoleTagProps): JSX.Element =
   const guildRole = roles?.find((role) => role.id === id)
   const activityLogRole = data.values.roles.find((role) => role.id === id)
 
-  const name = guildRole?.name ?? activityLogRole?.name ?? "Unknown role"
+  const name = activityLogRole?.name ?? guildRole?.name ?? "Unknown role"
   const image = guildRole?.imageUrl
 
   const router = useRouter()
