@@ -40,13 +40,10 @@ export const SUPPORTED_QUERY_PARAMS = [
   "before",
   "after",
   "action",
-  "service",
   "guildId",
   "roleId",
   "userId",
-  "requirementId",
   "rolePlatformId",
-  "poapId",
 ] as const
 export type SupportedQueryParam = (typeof SUPPORTED_QUERY_PARAMS)[number]
 
@@ -79,7 +76,7 @@ const ActivityLogFiltersContext = createContext<{
   removeLastFilter: () => void
   removeFilter: (filterToRemove: Filter) => void
   updateFilter: (updatedFilter: Filter) => void
-  clearFilters: () => void
+  clearFilters: (filterTypesToClear?: SupportedQueryParam[]) => void
   getFilter: (id: string) => Filter | Record<string, never>
   isActiveFilter: (filterType: SupportedQueryParam) => boolean
   getFilteredRewardSuggestions: (inputValue: string) => RewardSuggestion[]
@@ -146,14 +143,29 @@ const ActivityLogFiltersProvider = ({
       prevActiveFilters.filter((f) => f.id !== filter?.id)
     )
 
-  const clearFilters = () => setActiveFilters([])
+  const clearFilters = (filterTypesToClear?: SupportedQueryParam[]) => {
+    if (!filterTypesToClear?.length) {
+      setActiveFilters([])
+      return
+    }
+
+    setActiveFilters((prevActiveFilters) => [
+      ...prevActiveFilters.filter(
+        ({ filter }) => !filterTypesToClear.includes(filter)
+      ),
+    ])
+  }
 
   const [query, setQuery] = useState<ParsedUrlQuery>({})
 
   useEffect(() => {
     const newQuery: ParsedUrlQuery = { ...router.query }
 
-    const filters: SupportedQueryParam[] = [...SUPPORTED_SEARCH_OPTIONS, "action"]
+    const filters: SupportedQueryParam[] = [
+      ...SUPPORTED_SEARCH_OPTIONS,
+      "before",
+      "after",
+    ]
 
     filters.forEach((filter) => {
       const relevantActiveFilter = activeFilters.find((f) => f.filter === filter)

@@ -1,6 +1,7 @@
-import { GridItem, Select, SimpleGrid } from "@chakra-ui/react"
+import { GridItem, SimpleGrid } from "@chakra-ui/react"
 import StickyBar from "components/common/Layout/StickyBar"
 import { ActivityLogFiltersProvider } from "./components/ActivityLogFiltersContext"
+import DateRangeInput from "./components/DateRangeInput"
 import FiltersInput from "./components/FiltersInput"
 
 const ActivityLogFiltersBar = (): JSX.Element => (
@@ -12,9 +13,7 @@ const ActivityLogFiltersBar = (): JSX.Element => (
         </GridItem>
 
         <GridItem colSpan={{ base: 3, sm: 1 }}>
-          <Select>
-            <option>Last 1 week</option>
-          </Select>
+          <DateRangeInput />
         </GridItem>
       </SimpleGrid>
     </StickyBar>

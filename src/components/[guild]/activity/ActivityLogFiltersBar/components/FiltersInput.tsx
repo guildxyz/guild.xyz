@@ -15,11 +15,19 @@ import { CaretDown, X } from "phosphor-react"
 import { KeyboardEvent, useEffect, useRef, useState } from "react"
 import {
   isSupportedQueryParam,
+  SupportedQueryParam,
   useActivityLogFilters,
 } from "./ActivityLogFiltersContext"
 import Dropdown from "./Dropdown"
 import FilterTag from "./FilterTag"
 import Suggestion from "./Suggestion"
+
+const FILTERS_TO_RENDER: SupportedQueryParam[] = [
+  "action",
+  "userId",
+  "roleId",
+  "rolePlatformId",
+]
 
 const getPositionerCSSVariables = (
   element: HTMLDivElement
@@ -38,6 +46,9 @@ const FiltersInput = (): JSX.Element => {
 
   const { activeFilters, addFilter, removeLastFilter, clearFilters } =
     useActivityLogFilters()
+  const renderedActiveFilters = activeFilters.filter((f) =>
+    FILTERS_TO_RENDER.includes(f.filter)
+  )
 
   const [state, send] = useMachine(
     combobox.machine({
@@ -141,7 +152,7 @@ const FiltersInput = (): JSX.Element => {
             className="invisible-scrollbar"
           >
             <HStack>
-              {activeFilters?.map(({ id }) => (
+              {renderedActiveFilters?.map(({ id }) => (
                 <FilterTag
                   key={id}
                   filterId={id}
@@ -171,7 +182,7 @@ const FiltersInput = (): JSX.Element => {
               borderRadius="full"
               variant="ghost"
               onClick={() => {
-                clearFilters()
+                clearFilters(["userId", "roleId", "rolePlatformId", "action"])
                 setInputValue("")
               }}
             />

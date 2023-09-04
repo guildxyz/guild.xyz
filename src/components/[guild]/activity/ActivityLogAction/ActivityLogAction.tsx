@@ -126,13 +126,13 @@ const ActivityLogAction = (): JSX.Element => {
               />
             )}
             <BeforeAfterActions />
-            {children.slice(0, DISPLAYED_CHILD_ACTIONS).map((childAction) => (
+            {children?.slice(0, DISPLAYED_CHILD_ACTIONS).map((childAction) => (
               <ActivityLogActionProvider key={childAction.id} action={childAction}>
                 <ActivityLogChildAction />
               </ActivityLogActionProvider>
             ))}
 
-            {children.length > DISPLAYED_CHILD_ACTIONS && (
+            {children?.length > DISPLAYED_CHILD_ACTIONS && (
               <MoreActions
                 actions={children}
                 displayedActionCount={DISPLAYED_CHILD_ACTIONS}
