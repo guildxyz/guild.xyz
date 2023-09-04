@@ -1,3 +1,4 @@
+import { usePrevious } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
@@ -155,6 +156,7 @@ const ActivityLogFiltersProvider = ({
   }
 
   const [query, setQuery] = useState<ParsedUrlQuery>({})
+  const prevQuery = usePrevious(query)
 
   useEffect(() => {
     const newQuery: ParsedUrlQuery = { ...router.query }
@@ -182,12 +184,24 @@ const ActivityLogFiltersProvider = ({
   }, [activeFilters])
 
   useEffect(() => {
-    if (!query.guild) return
+    if (!query.guild || !Object.keys(prevQuery ?? {}).length) return
 
-    router.push({
-      pathname: router.pathname,
-      query,
-    })
+    let shouldPushRouter = false
+
+    const allQueryParams = [
+      ...new Set([...Object.keys(query), ...Object.keys(prevQuery ?? {})]),
+    ]
+    for (const queryParam of allQueryParams) {
+      if (prevQuery[queryParam] !== query[queryParam]) shouldPushRouter = true
+      if (!prevQuery[queryParam] && query[queryParam] === "")
+        shouldPushRouter = false
+    }
+
+    if (shouldPushRouter)
+      router.push({
+        pathname: router.pathname,
+        query,
+      })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query])
