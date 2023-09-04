@@ -3,6 +3,7 @@ import {
   Center,
   Collapse,
   Divider,
+  Flex,
   Heading,
   HStack,
   Icon,
@@ -12,13 +13,9 @@ import {
   Tag,
   TagLeftIcon,
   Text,
+  VStack,
   Wrap,
 } from "@chakra-ui/react"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import AccessHub from "components/[guild]/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
@@ -39,13 +36,18 @@ import SocialIcon from "components/[guild]/SocialIcon"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { Info, Users } from "phosphor-react"
+import { CalendarBlank, Clock, Info, MapPin, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, PlatformType, SocialLinkKey, Visibility } from "types"
@@ -257,13 +259,61 @@ const GuildPage = (): JSX.Element => {
             <TabButton href={urlName} isActive>
               {showAccessHub ? "Home" : "Roles"}
             </TabButton>
+            <TabButton href={urlName}>Events</TabButton>
           </Tabs>
         )}
-
+        <Flex bg={"gray.700"} borderRadius={"2xl"} mb={"10"}>
+          <VStack alignItems={"flex-start"} flex={"1"} p={4} gap={3}>
+            <HStack>
+              <Icon
+                as={CalendarBlank}
+                bg={"gray.600"}
+                borderRadius={"full"}
+                p={1}
+                h={"1.5em"}
+                w={"1.5em"}
+                color={"gray.300"}
+              />
+              <Text fontSize={"sm"} color={"whiteAlpha.500"}>
+                Discord event
+              </Text>
+            </HStack>
+            <Text fontSize={"2xl"} fontFamily={"Dystopian"} fontWeight={"bold"}>
+              SmartCon 2023 by ChainLink -Where Web3 gets Real
+            </Text>
+            <HStack>
+              <Icon as={Clock} color={"whiteAlpha.300"} />
+              <Text fontSize={"md"} color={"whiteAlpha.700"}>
+                Tomorrow at 6:00 am
+              </Text>
+            </HStack>
+            <Text fontSize={"sm"}>
+              Join a wide range of curated experiences and learning sessions from
+              leading Web3 teams.
+            </Text>
+            <Divider />
+            <HStack gap={7}>
+              <HStack>
+                <Icon as={Users} color={"whiteAlpha.300"} />
+                <Text fontSize={"sm"} color={"whiteAlpha.700"}>
+                  12
+                </Text>
+              </HStack>
+              <HStack>
+                <Icon as={MapPin} color={"whiteAlpha.300"} />
+                <Text fontSize={"sm"} color={"whiteAlpha.700"}>
+                  main-stage
+                </Text>
+              </HStack>
+            </HStack>
+          </VStack>
+          <Box flex={"1"} p={4}>
+            <Box bg={"green.200"} borderRadius={"2xl"} h="200px"></Box>
+          </Box>
+        </Flex>
         <Collapse in={showAccessHub} unmountOnExit>
           <AccessHub />
         </Collapse>
-
         <Section
           title={(showAccessHub || showOnboarding) && "Roles"}
           titleRightElement={
@@ -322,7 +372,6 @@ const GuildPage = (): JSX.Element => {
             </CollapsibleRoleSection>
           )}
         </Section>
-
         {(showMembers || isAdmin) && (
           <>
             <Divider my={10} />
