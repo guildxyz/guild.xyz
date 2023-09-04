@@ -1,4 +1,5 @@
 import {
+  Box,
   HStack,
   Icon,
   ListItem,
@@ -15,6 +16,7 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { ArrowSquareOut, DotsThree } from "phosphor-react"
+import { memo } from "react"
 import { FixedSizeList } from "react-window"
 import { ActivityLogAction } from "../../constants"
 import { ActivityLogActionProvider } from "../ActivityLogActionContext"
@@ -30,25 +32,34 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const numberOfAdditionalActions = actions.length - displayedActionCount
 
-  const Row = ({ index, style }) => {
+  const Row = memo(({ index, style }: { index: number; style: any }) => {
     const action = actions[index]
 
     return (
       <ListItem style={style}>
         <ActivityLogActionProvider key={action.id} action={action}>
-          <HStack spacing={4}>
-            <ActionIcon size={6} />
-            <Stack spacing={0.5}>
-              <ActionLabel />
-              <Text as="span" colorScheme="gray" fontSize="sm">
-                {new Date(Number(action.timestamp)).toLocaleString()}
-              </Text>
-            </Stack>
-          </HStack>
+          <Box
+            overflowX="auto"
+            px={4}
+            className="invisible-scrollbar"
+            style={{
+              WebkitMaskImage: `linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)`,
+            }}
+          >
+            <HStack spacing={4} w="max-content">
+              <ActionIcon size={6} />
+              <Stack spacing={0.5}>
+                <ActionLabel />
+                <Text as="span" colorScheme="gray" fontSize="sm">
+                  {new Date(Number(action.timestamp)).toLocaleString()}
+                </Text>
+              </Stack>
+            </HStack>
+          </Box>
         </ActivityLogActionProvider>
       </ListItem>
     )
-  }
+  })
 
   return (
     <>
@@ -64,14 +75,14 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
         </Button>
       </HStack>
 
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="2xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>All actions</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
-            <UnorderedList ml={0}>
+            <UnorderedList mx={-4}>
               <FixedSizeList
                 height={400}
                 itemCount={actions.length}
