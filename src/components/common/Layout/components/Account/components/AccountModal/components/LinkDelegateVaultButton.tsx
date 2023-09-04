@@ -1,4 +1,4 @@
-import useKeyPair from "components/_app/useKeyPairContext"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import Button from "components/common/Button"
 import Image from "next/image"
 

@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
-import useKeyPair from "components/_app/useKeyPairContext"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"

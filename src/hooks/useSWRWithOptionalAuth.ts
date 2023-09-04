@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core"
 import useSWR, { mutate, SWRResponse, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
-import useKeyPair from "../components/_app/useKeyPairContext"
+import { useKeyPair } from "../components/_app/KeyPairProvider"
 
 type SWRSettings = Parameters<typeof useSWR>[2]
 

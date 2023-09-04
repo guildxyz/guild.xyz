@@ -2,7 +2,7 @@ import { useUserPublic } from "components/[guild]/hooks/useUser"
 import {
   deleteKeyPairFromIdb,
   getKeyPairFromIdb,
-} from "components/_app/useKeyPairContext"
+} from "components/_app/KeyPairProvider"
 import useSWR, { mutate, unstable_serialize } from "swr"
 import { useWeb3ConnectionManager } from "../../../Web3ConnectionManager"
 

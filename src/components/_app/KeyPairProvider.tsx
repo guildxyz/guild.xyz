@@ -4,7 +4,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { randomBytes } from "crypto"
 import { createStore, del, get, set } from "idb-keyval"
-import { createContext, PropsWithChildren, useContext, useEffect } from "react"
+import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { AddressConnectionProvider, User } from "types"
@@ -460,5 +460,4 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
 
 const useKeyPair = () => useContext(KeyPairContext)
 
-export { KeyPairProvider, deleteKeyPairFromIdb, getKeyPairFromIdb }
-export default useKeyPair
+export { KeyPairProvider, deleteKeyPairFromIdb, getKeyPairFromIdb, useKeyPair }

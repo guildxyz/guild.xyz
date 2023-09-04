@@ -10,7 +10,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
-import useKeyPair from "components/_app/useKeyPairContext"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import Button from "components/common/Button"
 import useDelegateVaults from "components/common/Layout/components/Account/components/delegate/useDelegateVaults"
 import Image from "next/image"
