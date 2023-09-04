@@ -10,6 +10,7 @@ import {
 import { useRouter } from "next/router"
 import { IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
+import { PlatformType } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
 
 type Props = {
@@ -36,14 +37,23 @@ const RewardTag = forwardRef<Props, "span">(
 )
 
 type ClickableRewardTagProps = {
+  roleId: number
   rolePlatformId: number
 }
 const ClickableRewardTag = ({
+  roleId,
   rolePlatformId,
 }: ClickableRewardTagProps): JSX.Element => {
   const { data, baseUrl } = useActivityLog()
 
   const reward = data.values.rolePlatforms.find((rp) => rp.id === rolePlatformId)
+  const role = data.values.roles.find((r) => r.id === roleId)
+
+  const rewardName = reward?.platformGuildName ?? reward?.data?.name
+  const name =
+    reward?.platformId === PlatformType.DISCORD
+      ? `${role.name} - ${rewardName}`
+      : rewardName
 
   const router = useRouter()
 
@@ -57,7 +67,7 @@ const ClickableRewardTag = ({
             query: { ...router.query, rolePlatformId },
           })
         }}
-        name={reward?.platformGuildName ?? reward?.data?.name}
+        name={name}
         icon={platforms[reward?.platformName]?.icon}
         colorScheme={platforms[reward?.platformName]?.colorScheme}
       />

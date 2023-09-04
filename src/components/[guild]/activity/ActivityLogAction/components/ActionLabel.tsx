@@ -59,7 +59,10 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
-                <ClickableRewardTag rolePlatformId={ids.rolePlatform} />
+                <ClickableRewardTag
+                  roleId={ids.role}
+                  rolePlatformId={ids.rolePlatform}
+                />
               </>
             )
           case ACTION.LoseReward:
@@ -67,7 +70,10 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
-                <ClickableRewardTag rolePlatformId={ids.rolePlatform} />
+                <ClickableRewardTag
+                  roleId={ids.role}
+                  rolePlatformId={ids.rolePlatform}
+                />
                 <Center h={6}>
                   <Icon as={ArrowRight} />
                 </Center>
