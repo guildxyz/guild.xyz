@@ -43,6 +43,31 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
           }
         }
 
+        // Make sure minAmount and maxAmount are in correct order
+        if (
+          processedRequirement.type?.includes("RELATIVE") &&
+          typeof processedRequirement.data?.minAmount === "number" &&
+          typeof processedRequirement.data?.maxAmount === "number" &&
+          typeof processedRequirement.data?.timestamps?.minAmount === "number" &&
+          typeof processedRequirement.data?.timestamps?.maxAmount === "number"
+        ) {
+          const [tsUpperEnd, tsLowerEnd] = [
+            processedRequirement.data.timestamps.minAmount,
+            processedRequirement.data.timestamps.maxAmount,
+          ].sort((a, b) => a - b)
+
+          const [upperEnd, lowerEnd] = [
+            processedRequirement.data.minAmount,
+            processedRequirement.data.maxAmount,
+          ].sort((a, b) => a - b)
+
+          processedRequirement.data.minAmount = lowerEnd
+          processedRequirement.data.maxAmount = upperEnd
+
+          processedRequirement.data.timestamps.minAmount = tsLowerEnd
+          processedRequirement.data.timestamps.maxAmount = tsUpperEnd
+        }
+
         if (processedRequirement.type?.startsWith("COVALENT_")) {
           if (!processedRequirement?.data?.timestamps?.minAmount) {
             delete processedRequirement.data.timestamps.minAmount
