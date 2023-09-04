@@ -127,7 +127,12 @@ const ActionLabel = (): JSX.Element => {
           case ACTION.AddRequirement:
           case ACTION.UpdateRequirement:
           case ACTION.RemoveRequirement:
-            return <Text as="span">{capitalizedName}</Text>
+            return (
+              <>
+                <Text as="span">{capitalizedName}</Text>
+                {!parentId && <ClickableRoleTag id={ids.role} guildId={ids.guild} />}
+              </>
+            )
 
           case ACTION.ConnectIdentity:
           case ACTION.DisconnectIdentity:

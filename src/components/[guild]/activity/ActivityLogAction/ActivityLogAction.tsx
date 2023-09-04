@@ -10,8 +10,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { CaretDown } from "phosphor-react"
-import { ActivityLogAction as Action } from "../constants"
+import { Requirement } from "types"
+import { ACTION, ActivityLogAction as Action } from "../constants"
 import {
   ActivityLogActionProvider,
   useActivityLogActionContext,
@@ -21,6 +23,7 @@ import ActionLabel from "./components/ActionLabel"
 import ActivityLogChildAction from "./components/ActivityLogChildAction"
 import BeforeAfterActions from "./components/BeforeAfterActions"
 import MoreActions from "./components/MoreActions"
+import UpdatedDataGrid from "./components/UpdatedDataGrid"
 
 type Props = {
   action: Action
@@ -35,12 +38,18 @@ const ActivityLogAction = (): JSX.Element => {
 
   const { isOpen, onToggle } = useDisclosure()
 
-  const { timestamp, children, before, data } = useActivityLogActionContext()
+  const { action, timestamp, children, before, data } = useActivityLogActionContext()
+
+  const isRequirementRelatedLog = [
+    ACTION.AddRequirement,
+    ACTION.RemoveRequirement,
+  ].includes(action)
 
   const shouldRenderCollapse =
     children?.length > 0 ||
     (Object.keys(before ?? {}).length > 0 &&
-      Object.entries(before).some(([key, value]) => data[key] !== value))
+      Object.entries(before).some(([key, value]) => data[key] !== value)) ||
+    (isRequirementRelatedLog && Object.entries(data ?? {}).length > 0)
 
   return (
     <Card>
@@ -106,6 +115,16 @@ const ActivityLogAction = (): JSX.Element => {
             bgColor={collapseBgColor}
             borderTopWidth={collapseBorder}
           >
+            {isRequirementRelatedLog && (
+              <UpdatedDataGrid
+                before={
+                  <RequirementDisplayComponent
+                    requirement={data as Requirement}
+                    rightElement={null}
+                  />
+                }
+              />
+            )}
             <BeforeAfterActions />
             {children.slice(0, DISPLAYED_CHILD_ACTIONS).map((childAction) => (
               <ActivityLogActionProvider key={childAction.id} action={childAction}>

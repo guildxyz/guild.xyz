@@ -8,8 +8,8 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import GuildLogo from "components/common/GuildLogo"
+import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import useColorPalette from "hooks/useColorPalette"
 import { ArrowRight } from "phosphor-react"
 import { Requirement } from "types"
@@ -45,25 +45,22 @@ const BeforeAfterActions = (): JSX.Element => {
 
   if (action === ACTION.UpdateRequirement)
     return (
-      <ActivityLogChildActionLayout
-        icon={<ActionIcon action={ACTION.UpdateRequirement} size={5} />}
-        label="Update requirement"
-      >
-        <UpdatedDataGrid
-          before={
+      <UpdatedDataGrid
+        before={
+          before && (
             <RequirementDisplayComponent
               requirement={before as Requirement}
               rightElement={null}
             />
-          }
-          after={
-            <RequirementDisplayComponent
-              requirement={data as Requirement}
-              rightElement={null}
-            />
-          }
-        />
-      </ActivityLogChildActionLayout>
+          )
+        }
+        after={
+          <RequirementDisplayComponent
+            requirement={data as Requirement}
+            rightElement={null}
+          />
+        }
+      />
     )
 
   if (
