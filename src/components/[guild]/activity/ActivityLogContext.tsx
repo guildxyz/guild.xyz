@@ -140,20 +140,6 @@ const ActivityLogProvider = ({
     revalidateFirstPage: false,
   })
 
-  // I'm actually not sure if we need simple text search here
-  // const searchQuery = query.search?.toString()
-
-  // return {
-  //   ...infiniteData,
-  //   data: searchQuery?.length
-  //     ? infiniteData.data?.map((chunk) =>
-  //         chunk.filter((actionData) =>
-  //           actionData.action.toLowerCase().includes(searchQuery.toLowerCase())
-  //         )
-  //       )
-  //     : infiniteData.data,
-  // }
-
   const value = {
     ...ogSWRInfiniteResponse,
     data: transformActivityLogInfiniteResponse(ogSWRInfiniteResponse.data),
