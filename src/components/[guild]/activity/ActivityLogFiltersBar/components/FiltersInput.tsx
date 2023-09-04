@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react"
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
+import { useRouter } from "next/router"
 import { CaretDown, X } from "phosphor-react"
 import { KeyboardEvent, useEffect, useRef, useState } from "react"
 import {
@@ -30,6 +31,9 @@ const getPositionerCSSVariables = (
 }
 
 const FiltersInput = (): JSX.Element => {
+  const router = useRouter()
+  const isUserActivityLog = router.pathname.includes("/profile")
+
   const rootBgColor = useColorModeValue("white", "blackAlpha.300")
 
   const { activeFilters, addFilter, removeLastFilter, clearFilters } =
@@ -108,13 +112,12 @@ const FiltersInput = (): JSX.Element => {
       setPositionerStyle(rawPositionerStyle)
   }, [rawPositionerStyle.transform])
 
-  const shouldRenderRoleSuggestions = !activeFilters?.some(
-    (af) => af.filter === "roleId"
-  )
+  const shouldRenderRoleSuggestions =
+    !isUserActivityLog && !activeFilters?.some((af) => af.filter === "roleId")
 
-  const shouldRenderRewardSuggestions = !activeFilters?.some(
-    (af) => af.filter === "rolePlatformId"
-  )
+  const shouldRenderRewardSuggestions =
+    !isUserActivityLog &&
+    !activeFilters?.some((af) => af.filter === "rolePlatformId")
 
   return (
     <>
@@ -189,15 +192,17 @@ const FiltersInput = (): JSX.Element => {
       </Box>
       <Dropdown ref={positionerRef} {...positionerProps}>
         <Stack spacing={0} {...contentProps}>
-          <Suggestion
-            label="User"
-            isFocused={focusedOption?.value === "userId"}
-            {...getOptionProps({ label: "User", value: "userId" })}
-          >
-            <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
-              Filter by wallet addresses
-            </Text>
-          </Suggestion>
+          {!isUserActivityLog && (
+            <Suggestion
+              label="User"
+              isFocused={focusedOption?.value === "userId"}
+              {...getOptionProps({ label: "User", value: "userId" })}
+            >
+              <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
+                Filter by wallet addresses
+              </Text>
+            </Suggestion>
+          )}
 
           {shouldRenderRoleSuggestions && (
             <Suggestion
