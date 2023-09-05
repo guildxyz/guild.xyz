@@ -50,8 +50,7 @@ export type SupportedQueryParam = (typeof SUPPORTED_QUERY_PARAMS)[number]
 
 export const isSupportedQueryParam = (arg: any): arg is SupportedQueryParam =>
   typeof arg === "string" &&
-  (SUPPORTED_QUERY_PARAMS.includes(arg as SupportedQueryParam) ||
-    SUPPORTED_QUERY_PARAMS.includes(arg.split(":")[0] as SupportedQueryParam))
+  SUPPORTED_QUERY_PARAMS.includes(arg as SupportedQueryParam)
 
 type RewardSuggestion = {
   rolePlatformId: number

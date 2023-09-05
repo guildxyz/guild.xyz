@@ -115,17 +115,7 @@ const ActivityLogProvider = ({
 
     if (withSearchParams) {
       Object.entries(query).forEach(([key, value]) => {
-        if (isSupportedQueryParam(key)) {
-          const splitValue = value.toString().split(",")
-
-          if (splitValue.length > 1) {
-            splitValue.forEach((v) => {
-              searchParams.append(key, v)
-            })
-          } else {
-            searchParams.append(key, value.toString())
-          }
-        }
+        if (isSupportedQueryParam(key)) searchParams.append(key, value.toString())
       })
     }
 
