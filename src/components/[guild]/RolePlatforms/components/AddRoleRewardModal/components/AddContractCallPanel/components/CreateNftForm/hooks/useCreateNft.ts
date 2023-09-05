@@ -1,6 +1,8 @@
 import { parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import { NFTDetails } from "components/[guild]/collect/hooks/useNftDetails"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useContract from "hooks/useContract"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
@@ -48,6 +50,10 @@ export type CreateNFTResponse = {
 const useCreateNft = (
   onSuccess: (newGuildPlatform: CreateNFTResponse["guildPlatform"]) => void
 ) => {
+  const { urlName } = useGuild()
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = { guild: urlName }
+
   const { chainId, account } = useWeb3React()
 
   const [loadingText, setLoadingText] = useState<string>()
@@ -120,9 +126,12 @@ const useCreateNft = (
         processedCallStaticError = walletError.title
       }
 
-      return Promise.reject(
+      const error =
         processedCallStaticError ?? callStaticError.errorName ?? callStaticError
-      )
+
+      captureEvent("useCreateNft callStatic error", { ...postHogOptions, error })
+
+      return Promise.reject(error)
     }
 
     const tx = await guildRewardNFTFactoryContract.deployBasicNFT(
@@ -173,6 +182,12 @@ const useCreateNft = (
         const { chain, contractAddress, name, image } = response.guildPlatform
           .platformGuildData as PlatformGuildData["CONTRACT_CALL"]
 
+        captureEvent("Successfully created NFT", {
+          ...postHogOptions,
+          chain,
+          contractAddress,
+        })
+
         mutate<NFTDetails>(
           ["nftDetails", chain, contractAddress],
           {
@@ -204,6 +219,12 @@ const useCreateNft = (
           error?.code === "ACTION_REJECTED"
             ? "User rejected the transaction"
             : error?.message ?? error
+
+        captureEvent("useCreateNft error", {
+          ...postHogOptions,
+          error: prettyError,
+        })
+
         showErrorToast(prettyError)
       },
     }),
