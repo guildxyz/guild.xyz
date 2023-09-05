@@ -1,5 +1,5 @@
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import Button from "components/common/Button"
-import useKeyPair from "hooks/useKeyPair"
 import Image from "next/image"
 
 const LinkDelegateVaultButton = ({ vaults }) => {

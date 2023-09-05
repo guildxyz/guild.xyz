@@ -84,7 +84,6 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       const metadata = await fetcher(
         tokenURI.replace("ipfs://", process.env.NEXT_PUBLIC_IPFS_GATEWAY)
       ).catch(() => null)
-      console.log("metadata", metadata)
       description = metadata?.description
       image = metadata?.image?.replace(
         "ipfs://",
@@ -105,7 +104,6 @@ const fetchNFTDetails = async ([, chain, address]): Promise<NFTDetails> => {
       fee,
     }
   } catch (err) {
-    console.log("contract err", err)
     return {
       creator: undefined,
       name: undefined,

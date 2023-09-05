@@ -4,7 +4,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { randomBytes } from "crypto"
 import { createStore, del, get, set } from "idb-keyval"
-import { useEffect } from "react"
+import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { AddressConnectionProvider, User } from "types"
@@ -13,8 +13,8 @@ import fetcher from "utils/fetcher"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
-} from "./useSubmit/useSubmit"
-import useToast from "./useToast"
+} from "../../hooks/useSubmit/useSubmit"
+import useToast from "../../hooks/useToast"
 
 type StoredKeyPair = {
   keyPair: CryptoKeyPair
@@ -180,7 +180,28 @@ const setKeyPair = async ({
 
 const checkKeyPair = ([_, savedPubKey, pubKey]): boolean => savedPubKey === pubKey
 
-const useKeyPair = () => {
+const KeyPairContext = createContext<{
+  ready: boolean
+  pubKey: string | undefined
+  keyPair: CryptoKeyPair | undefined
+  isValid: boolean
+  set: {
+    isSigning: boolean
+    signLoadingText: string
+    response: [StoredKeyPair, boolean]
+    isLoading: boolean
+    error: any
+    reset: () => void
+
+    onSubmit: (
+      shouldLinkToUser: boolean,
+      provider?: AddressConnectionProvider,
+      reCaptchaToken?: string
+    ) => Promise<void>
+  }
+}>(undefined)
+
+const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
   const { account } = useWeb3React()
@@ -360,76 +381,83 @@ const useKeyPair = () => {
     }
   }, [isMainUserKeyInvalid])
 
-  return {
-    ready,
-    pubKey,
-    keyPair,
-    isValid,
-    set: {
-      ...setSubmitResponse,
-      onSubmit: async (
-        shouldLinkToUser: boolean,
-        provider?: AddressConnectionProvider,
-        reCaptchaToken?: string
-      ) => {
-        const body: SetKeypairPayload = { pubKey: undefined }
+  return (
+    <KeyPairContext.Provider
+      value={{
+        ready,
+        pubKey,
+        keyPair,
+        isValid,
+        set: {
+          ...setSubmitResponse,
+          onSubmit: async (
+            shouldLinkToUser: boolean,
+            provider?: AddressConnectionProvider,
+            reCaptchaToken?: string
+          ) => {
+            const body: SetKeypairPayload = { pubKey: undefined }
 
-        if (reCaptchaToken) {
-          body.verificationParams = {
-            reCaptcha: reCaptchaToken,
-          }
-        }
+            if (reCaptchaToken) {
+              body.verificationParams = {
+                reCaptcha: reCaptchaToken,
+              }
+            }
 
-        try {
-          body.pubKey = generatedKeyPair.pubKey
-        } catch (err) {
-          if (error?.code !== 4001) {
-            captureEvent(`Keypair generation error`, {
-              error: err?.message || err?.toString?.() || err,
-            })
-          }
-          throw err
-        }
+            try {
+              body.pubKey = generatedKeyPair.pubKey
+            } catch (err) {
+              if (error?.code !== 4001) {
+                captureEvent(`Keypair generation error`, {
+                  error: err?.message || err?.toString?.() || err,
+                })
+              }
+              throw err
+            }
 
-        if (shouldLinkToUser) {
-          const userId = addressLinkParams?.userId
+            if (shouldLinkToUser) {
+              const userId = addressLinkParams?.userId
 
-          const { keyPair: mainKeyPair } = await getKeyPairFromIdb(userId)
+              const { keyPair: mainKeyPair } = await getKeyPairFromIdb(userId)
 
-          const nonce = randomBytes(32).toString("base64")
+              const nonce = randomBytes(32).toString("base64")
 
-          const mainUserSig = await window.crypto.subtle
-            .sign(
-              { name: "ECDSA", hash: "SHA-512" },
-              mainKeyPair?.privateKey,
-              strToBuffer(
-                `Address: ${account.toLowerCase()}\nNonce: ${nonce}\nUserID: ${userId}`
-              )
-            )
-            .then((signatureBuffer) => bufferToHex(signatureBuffer))
+              const mainUserSig = await window.crypto.subtle
+                .sign(
+                  { name: "ECDSA", hash: "SHA-512" },
+                  mainKeyPair?.privateKey,
+                  strToBuffer(
+                    `Address: ${account.toLowerCase()}\nNonce: ${nonce}\nUserID: ${userId}`
+                  )
+                )
+                .then((signatureBuffer) => bufferToHex(signatureBuffer))
 
-          if (
-            typeof mainUserSig === "string" &&
-            mainUserSig.length > 0 &&
-            typeof userId === "number"
-          ) {
-            body.signature = mainUserSig
-            body.userId = userId
-            body.nonce = nonce
-          }
-        }
+              if (
+                typeof mainUserSig === "string" &&
+                mainUserSig.length > 0 &&
+                typeof userId === "number"
+              ) {
+                body.signature = mainUserSig
+                body.userId = userId
+                body.nonce = nonce
+              }
+            }
 
-        if (isDelegateConnection || provider === "DELEGATE") {
-          const prevKeyPair = await getKeyPairFromIdb(id)
-          body.addressConnectionProvider = "DELEGATE"
-          body.pubKey = prevKeyPair?.pubKey ?? body.pubKey
-        }
+            if (isDelegateConnection || provider === "DELEGATE") {
+              const prevKeyPair = await getKeyPairFromIdb(id)
+              body.addressConnectionProvider = "DELEGATE"
+              body.pubKey = prevKeyPair?.pubKey ?? body.pubKey
+            }
 
-        return setSubmitResponse.onSubmit(body)
-      },
-    },
-  }
+            return setSubmitResponse.onSubmit(body)
+          },
+        },
+      }}
+    >
+      {children}
+    </KeyPairContext.Provider>
+  )
 }
 
-export { deleteKeyPairFromIdb, getKeyPairFromIdb, setKeyPairToIdb }
-export default useKeyPair
+const useKeyPair = () => useContext(KeyPairContext)
+
+export { KeyPairProvider, deleteKeyPairFromIdb, getKeyPairFromIdb, useKeyPair }

@@ -22,8 +22,10 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "BASE_MAINNET",
   "SCROLL_ALPHA",
   "ZORA",
+  "AVALANCHE",
 ])
 
+// These requirement types do not have a covalent equivalent, remove them once they do
 const COVALENT_EXCLUDED_TYPES = new Set([
   "ALCHEMY_TX_VALUE",
   "ALCHEMY_TX_VALUE_RELATIVE",
@@ -111,6 +113,12 @@ const WalletActivityForm = ({
     "BASE_GOERLI",
     "ZORA",
   ]
+
+  for (const covalentChain of COVALENT_CHAINS.values()) {
+    if (!walletActivitySupportedChains.includes(covalentChain)) {
+      walletActivitySupportedChains.push(covalentChain)
+    }
+  }
 
   const resetFields = () => {
     resetField(`${baseFieldPath}.address`, { defaultValue: "" })

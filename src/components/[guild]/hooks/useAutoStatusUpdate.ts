@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import useMemberships from "components/explorer/hooks/useMemberships"
-import useKeyPair from "hooks/useKeyPair"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useEffect } from "react"
 import { useFetcherWithSign } from "utils/fetcher"

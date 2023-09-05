@@ -1,7 +1,6 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
 import { useAddRewardContext } from "../AddRewardContext"
-import { CreatePoapProvider } from "./components/CreatePoapContext"
 import ImportPoap from "./components/ImportPoap"
 import CreatePoapForm from "./components/PoapDataForm/CreatePoapForm"
 import { SetupPoapRequirements } from "./components/PoapRequirements/PoapRequirements"
@@ -41,10 +40,4 @@ const AddPoapPanel = (): JSX.Element => {
   )
 }
 
-const AddPoapPanelWrapper = (): JSX.Element => (
-  <CreatePoapProvider>
-    <AddPoapPanel />
-  </CreatePoapProvider>
-)
-
-export default AddPoapPanelWrapper
+export default AddPoapPanel
