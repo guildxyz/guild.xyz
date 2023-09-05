@@ -258,7 +258,9 @@ const GuildPage = (): JSX.Element => {
             <TabButton href={`/${urlName}`}>
               {showAccessHub ? "Home" : "Roles"}
             </TabButton>
-            <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
+            {isAdmin && (
+              <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
+            )}
           </Tabs>
         )}
 

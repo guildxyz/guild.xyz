@@ -1,7 +1,6 @@
 import { Stack } from "@chakra-ui/react"
-import Tabs from "components/[guild]/Tabs/Tabs"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import Layout from "components/common/Layout"
+import { SectionTitle } from "components/common/Section"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
 import {
   ActivityLogProvider,
@@ -10,11 +9,14 @@ import {
 import ActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar"
 import ActivityLogSkeleton from "components/[guild]/activity/ActivityLogSkeleton"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Layout from "components/common/Layout"
-import { SectionTitle } from "components/common/Section"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
+import Tabs from "components/[guild]/Tabs/Tabs"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 
 const ActivityLog = (): JSX.Element => {
   const { name, urlName } = useGuild()
+  const { isAdmin } = useGuildPermission()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   // TODO: redirect if user is not an admin of the guild
@@ -31,7 +33,9 @@ const ActivityLog = (): JSX.Element => {
     >
       <Tabs>
         <TabButton href={`/${urlName}`}>Home</TabButton>
-        <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
+        {isAdmin && (
+          <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
+        )}
       </Tabs>
 
       <ActivityLogFiltersBar />
