@@ -35,6 +35,7 @@ const AccountConnections = () => {
     platformUsers,
     id: userId,
     addressProviders,
+    sharedSocials,
   } = useUser()
   const { account } = useWeb3React()
   const vaults = useDelegateVaults()
@@ -60,7 +61,7 @@ const AccountConnections = () => {
     <>
       <AccountSectionTitle
         title="Social accounts"
-        titleRightElement={<SharedConnections />}
+        titleRightElement={sharedSocials?.length && <SharedConnections />}
       />
       <AccountSection mb="6" divider={<Divider />}>
         {orderedSocials.map((platform) => (

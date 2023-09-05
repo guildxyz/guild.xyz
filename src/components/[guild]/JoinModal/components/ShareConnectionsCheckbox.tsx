@@ -5,14 +5,14 @@ import { useFormContext } from "react-hook-form"
 const ShareConnectionsCheckbox = (): JSX.Element => {
   const { setValue, watch } = useFormContext()
 
-  const shareConnections = watch("shareConnections")
+  const shareSocials = watch("shareSocials")
 
   return (
     <Checkbox
       alignItems="start"
       pb={4}
-      isChecked={shareConnections}
-      onChange={(e) => setValue("shareConnections", e.target.checked)}
+      isChecked={shareSocials}
+      onChange={(e) => setValue("shareSocials", e.target.checked)}
       size="sm"
     >
       <Text colorScheme="gray" mt="-5px">

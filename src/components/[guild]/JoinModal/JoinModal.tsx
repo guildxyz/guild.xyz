@@ -46,7 +46,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     mode: "all",
     defaultValues: {
       platforms: {},
-      shareConnections: true,
+      shareSocials: true,
     },
   })
   const { handleSubmit } = methods

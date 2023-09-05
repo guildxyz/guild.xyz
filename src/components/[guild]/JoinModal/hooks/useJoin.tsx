@@ -124,6 +124,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
     onSubmit: (data?) =>
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
+        shareSocials: data?.shareSocials,
         platforms:
           data &&
           Object.entries(data.platforms ?? {})

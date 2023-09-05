@@ -1,10 +1,10 @@
-import useKeyPair from "hooks/useKeyPair"
+import useUser from "components/[guild]/hooks/useUser"
 import { useToastWithButton } from "hooks/useToast"
 import { ArrowRight } from "phosphor-react"
 import { useEffect } from "react"
 
 const useNewSharedConnectionsToast = (openAccountModal) => {
-  const { keyPair } = useKeyPair()
+  const { sharedSocials } = useUser()
   const toastWithButton = useToastWithButton()
 
   const onClick = () => {
@@ -14,22 +14,27 @@ const useNewSharedConnectionsToast = (openAccountModal) => {
     }, 300)
   }
 
-  // TODO: only show when needed, based on BE
   useEffect(() => {
-    if (!keyPair) return
-
-    toastWithButton({
-      status: "info",
-      title: "New privacy settings",
-      description:
-        "Some guilds could access your connected accounts from now on. See & manage them in account settings!",
-      buttonProps: {
-        children: "Open account modal",
-        onClick,
-        rightIcon: <ArrowRight />,
-      },
-    })
-  }, [!!keyPair])
+    if (!sharedSocials) return
+    if (sharedSocials?.some((sharedSocial) => sharedSocial.isShared === null))
+      toastWithButton({
+        status: "info",
+        title: "New privacy settings",
+        description:
+          "Some guilds could access your connected accounts from now on. See & manage them in account settings!",
+        buttonProps: {
+          children: "Open account modal",
+          onClick,
+          rightIcon: <ArrowRight />,
+        },
+        secondButtonProps: {
+          children: "Later",
+          variant: "ghost",
+        },
+        duration: null,
+        isClosable: false,
+      })
+  }, [sharedSocials])
 }
 
 export default useNewSharedConnectionsToast

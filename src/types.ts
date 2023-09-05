@@ -105,6 +105,11 @@ type PlatformAccountDetails = {
   username?: string
 }
 
+type SharedSocial = {
+  guildId: number
+  isShared: boolean
+}
+
 type AddressConnectionProvider = "DELEGATE"
 
 type User = {
@@ -117,6 +122,7 @@ type User = {
     createdAt: string
   }>
   platformUsers: PlatformAccountDetails[]
+  sharedSocials: SharedSocial[]
   publicKey?: string
   isSuperAdmin: boolean
 
@@ -616,7 +622,6 @@ export type {
   GuildBase,
   GuildFormType,
   GuildPinMetadata,
-  PlatformGuildData,
   GuildPlatform,
   GuildPoap,
   GuildTags,
@@ -626,6 +631,7 @@ export type {
   NFT,
   OneOf,
   PlatformAccountDetails,
+  PlatformGuildData,
   PlatformName,
   Poap,
   PoapContract,
