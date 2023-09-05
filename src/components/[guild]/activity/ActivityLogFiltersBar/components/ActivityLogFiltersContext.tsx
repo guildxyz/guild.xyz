@@ -76,7 +76,7 @@ const ActivityLogFiltersContext = createContext<{
   removeLastFilter: () => void
   removeFilter: (filterToRemove: Filter) => void
   updateFilter: (updatedFilter: Filter) => void
-  clearFilters: (filterTypesToClear?: SupportedQueryParam[]) => void
+  clearFilters: (filterTypesToClear: SupportedQueryParam[]) => void
   getFilter: (id: string) => Filter | Record<string, never>
   isActiveFilter: (filterType: SupportedQueryParam) => boolean
   getFilteredRewardSuggestions: (inputValue: string) => RewardSuggestion[]
@@ -141,7 +141,7 @@ const ActivityLogFiltersProvider = ({
       prevActiveFilters.filter((f) => f.id !== filter?.id)
     )
 
-  const clearFilters = (filterTypesToClear?: SupportedQueryParam[]) => {
+  const clearFilters = (filterTypesToClear: SupportedQueryParam[]) => {
     if (!filterTypesToClear?.length) {
       setActiveFilters([])
       return
