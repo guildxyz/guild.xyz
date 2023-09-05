@@ -90,6 +90,9 @@ const DateRangeInput = () => {
           borderWidth={1}
           borderRadius="lg"
           rightIcon={<Icon as={CaretDown} boxSize={3.5} />}
+          _focusVisible={{
+            boxShadow: "0 0 0 1px var(--chakra-colors-gray-500)",
+          }}
         >
           {buttonLabel}
         </Button>
