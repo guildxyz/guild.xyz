@@ -13,8 +13,8 @@ import ActivityLogSkeleton from "components/[guild]/activity/ActivityLogSkeleton
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
+import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
-import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 
 const ActivityLog = (): JSX.Element => {

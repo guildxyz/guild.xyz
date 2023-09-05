@@ -37,7 +37,7 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}:</Text>
-                {/* <ClickableUserTag /> TODO */}
+                <ClickableUserTag id={ids.user} />
               </>
             )
           case ACTION.CreateRole:

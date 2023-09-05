@@ -1,5 +1,5 @@
+import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
-import Tabs from "components/[guild]/Tabs/Tabs"
 import useScrollspy from "hooks/useScrollSpy"
 
 const ExplorerTabs = ({ yourGuildsRef, allGuildsRef, ...rest }) => {

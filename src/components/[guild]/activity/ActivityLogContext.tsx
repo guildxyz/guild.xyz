@@ -18,7 +18,6 @@ export type ActivityLogActionResponse = {
   entries: ActivityLogAction[]
   values: {
     guilds: { id: number; name: string }[]
-    poaps: any[] // TODO
     requirements: Requirement[]
     rolePlatforms: {
       id: number
@@ -44,7 +43,6 @@ const transformActivityLogInfiniteResponse = (
     entries: [],
     values: {
       guilds: [],
-      poaps: [],
       requirements: [],
       rolePlatforms: [],
       roles: [],

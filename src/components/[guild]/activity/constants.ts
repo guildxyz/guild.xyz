@@ -71,8 +71,6 @@ export enum ACTION {
   LoseReward = "lose reward",
   ConnectIdentity = "connect identity",
   DisconnectIdentity = "disconnect identity",
-  // Poap (temporary)
-  // TODO?
 
   // These actions are only used on the frontend
   UpdateUrlName = "UpdateUrlName",
@@ -94,7 +92,6 @@ export type ActivityLogAction = {
   before?: Record<string, any>
   data?: Record<string, any>
   ids: {
-    // TODO: maybe there are some missing ids here
     user?: number
     guild?: number
     role?: number
