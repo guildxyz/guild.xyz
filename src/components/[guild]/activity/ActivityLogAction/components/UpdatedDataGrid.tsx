@@ -23,7 +23,10 @@ const UpdatedDataGrid = ({
   unstyled,
 }: Props): JSX.Element => {
   const borderColor = useColorModeValue("gray.200", "gray.700")
-  const templateColumns = useBreakpointValue({ base: "1fr", md: "1fr 2rem 1fr" })
+  const templateColumns = useBreakpointValue({
+    base: "1fr",
+    md: "1fr var(--chakra-space-8) 1fr",
+  })
   const icon = useBreakpointValue({ base: ArrowDown, md: ArrowRight })
 
   const boxProps = unstyled
