@@ -1,7 +1,7 @@
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
-import useKeyPair from "hooks/useKeyPair"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import { sign } from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"

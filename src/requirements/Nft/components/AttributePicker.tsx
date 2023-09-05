@@ -5,22 +5,15 @@ import {
   HStack,
   Icon,
   Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Stack,
-  Text,
   useColorModeValue,
-  VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Plus, TrashSimple, X } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import capitalize from "utils/capitalize"
 import isNumber from "utils/isNumber"
 import parseFromObject from "utils/parseFromObject"
@@ -46,7 +39,6 @@ const AttributePicker = ({
   const bgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   const {
-    control,
     register,
     getValues,
     setValue,
@@ -56,8 +48,8 @@ const AttributePicker = ({
   } = useFormContext()
 
   const [isRangeValue, setIsRangeValue] = useState(
-    getValues(`${baseFieldPath}.data.attributes.${index}.minValue`) ||
-      getValues(`${baseFieldPath}.data.attributes.${index}.maxValue`)
+    !!getValues(`${baseFieldPath}.data.attributes.${index}.minValue`) ||
+      !!getValues(`${baseFieldPath}.data.attributes.${index}.maxValue`)
   )
 
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
@@ -99,22 +91,24 @@ const AttributePicker = ({
 
   // Setting the "default values" this way, to avoid errors with the min-max inputs
   useEffect(() => {
+    if (!nftCustomAttributeNames?.length) return
     if (
-      nftCustomAttributeValues?.length === 2 &&
-      !getValues(`${baseFieldPath}.data.attributes.${index}.interval.min`) &&
-      !getValues(`${baseFieldPath}.data.attributes.${index}.interval.max`) &&
+      nftCustomAttributeValues.length === 2 &&
       nftCustomAttributeValues
         ?.map((attributeValue) => parseInt(attributeValue.value))
         .every(isNumber)
     ) {
+      setIsRangeValue(true)
       setValue(
-        `${baseFieldPath}.data.attributes.${index}.interval.min`,
+        `${baseFieldPath}.data.attributes.${index}.minValue`,
         parseInt(nftCustomAttributeValues[0]?.value)
       )
       setValue(
-        `${baseFieldPath}.data.attributes.${index}.interval.max`,
+        `${baseFieldPath}.data.attributes.${index}.maxValue`,
         parseInt(nftCustomAttributeValues[1]?.value)
       )
+    } else {
+      setIsRangeValue(false)
     }
   }, [nftCustomAttributeValues])
 
@@ -167,190 +161,128 @@ const AttributePicker = ({
 
   return (
     <Box p={2} borderRadius="xl" bgColor={bgColor}>
-      {nftCustomAttributeNames?.length ? (
-        <Stack>
-          <FormControl isDisabled={!nftCustomAttributeNames?.length}>
-            <ControlledSelect
-              name={`${baseFieldPath}.data.attributes.${index}.trait_type`}
-              isLoading={isAttributesLoading}
-              options={nftCustomAttributeNames}
-              placeholder="Attribute"
-              afterOnChange={() => {
-                setValue(`${baseFieldPath}.data.attributes.${index}.value`, null)
-                setValue(`${baseFieldPath}.data.attributes.${index}.interval`, null)
-                clearErrors([
-                  `${baseFieldPath}.data.attributes.${index}.value`,
-                  `${baseFieldPath}.data.attributes.${index}.interval`,
-                ])
-              }}
-            />
+      <FormControl>
+        <Stack spacing={2}>
+          <FormControl
+            isRequired
+            isInvalid={
+              !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
+                ?.trait_type
+            }
+          >
+            {nftCustomAttributeNames?.length ? (
+              <ControlledSelect
+                name={`${baseFieldPath}.data.attributes.${index}.trait_type`}
+                isLoading={isAttributesLoading}
+                options={nftCustomAttributeNames}
+                placeholder="Attribute"
+                afterOnChange={() => {
+                  resetField(`${baseFieldPath}.data.attributes.${index}.value`, {
+                    defaultValue: null,
+                  })
+                  resetField(`${baseFieldPath}.data.attributes.${index}.minValue`, {
+                    defaultValue: null,
+                  })
+                  resetField(`${baseFieldPath}.data.attributes.${index}.maxValue`, {
+                    defaultValue: null,
+                  })
+                }}
+              />
+            ) : (
+              <Input
+                {...register(
+                  `${baseFieldPath}.data.attributes.${index}.trait_type`,
+                  { required: "Required" }
+                )}
+                placeholder="Key"
+              />
+            )}
+            <FormErrorMessage>
+              {
+                parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
+                  ?.trait_type?.message
+              }
+            </FormErrorMessage>
           </FormControl>
 
-          {nftCustomAttributeValues?.length === 2 &&
-          nftCustomAttributeValues
-            .map((attributeValue) => parseInt(attributeValue.value))
-            .every(isNumber) ? (
-            <VStack alignItems="start">
-              <HStack spacing={2} alignItems="start">
-                <FormControl
-                  isDisabled={!traitType}
-                  isInvalid={
-                    traitType?.length &&
-                    !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
-                      index
-                    ]?.interval?.min
+          {isRangeValue ? (
+            <HStack alignItems="start">
+              <FormControl
+                isRequired
+                isInvalid={
+                  !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
+                    ?.minValue
+                }
+              >
+                <Input
+                  {...minValueProps}
+                  placeholder="From"
+                  onChange={(e) => {
+                    minValueOnChange(e)
+                    clearErrors(`${baseFieldPath}.data.attributes.${index}.maxValue`)
+                  }}
+                />
+                <FormErrorMessage>
+                  {
+                    parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
+                      ?.minValue?.message
                   }
-                >
-                  <Controller
-                    name={
-                      `${baseFieldPath}.data.attributes.${index}.interval.min` as const
-                    }
-                    control={control}
-                    rules={{
-                      required: "This field is required.",
-                      min: {
-                        value: nftCustomAttributeValues[0]?.value,
-                        message: `Minimum: ${nftCustomAttributeValues[0]?.value}`,
-                      },
-                      max: {
-                        value: getValues(
-                          `${baseFieldPath}.data.attributes.${index}.interval.max`
-                        ),
-                        message: `Maximum: ${getValues(
-                          `${baseFieldPath}.data.attributes.${index}.interval.max`
-                        )}`,
-                      },
-                    }}
-                    render={({
-                      field: {
-                        onChange,
-                        onBlur,
-                        value: value0NumberInputValue,
-                        ref,
-                      },
-                    }) => (
-                      <NumberInput
-                        ref={ref}
-                        value={value0NumberInputValue || undefined}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        min={+nftCustomAttributeValues[0]?.value}
-                        max={getValues(
-                          `${baseFieldPath}.data.attributes.${index}.interval.max`
-                        )}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    )}
-                  />
-                  <FormErrorMessage>
-                    {
-                      parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
-                        index
-                      ]?.interval?.min?.message
-                    }
-                  </FormErrorMessage>
-                </FormControl>
+                </FormErrorMessage>
+              </FormControl>
 
-                <Text as="span" h={1} pt={2}>
-                  -
-                </Text>
-
-                <FormControl
-                  isDisabled={!traitType}
-                  isInvalid={
-                    traitType?.length &&
-                    !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
-                      index
-                    ]?.interval?.max
+              <FormControl
+                isRequired
+                isInvalid={
+                  !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
+                    ?.maxValue
+                }
+              >
+                <Input
+                  {...maxValueProps}
+                  placeholder="To"
+                  onChange={(e) => {
+                    maxValueOnChange(e)
+                    clearErrors(`${baseFieldPath}.data.attributes.${index}.minValue`)
+                  }}
+                />
+                <FormErrorMessage>
+                  {
+                    parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
+                      ?.maxValue?.message
                   }
-                >
-                  <Controller
-                    name={
-                      `${baseFieldPath}.data.attributes.${index}.interval.max` as const
-                    }
-                    control={control}
-                    rules={{
-                      required: "This field is required.",
-                      min: {
-                        value: getValues(
-                          `${baseFieldPath}.data.attributes.${index}.interval.min`
-                        ),
-                        message: `Minimum: ${getValues(
-                          `${baseFieldPath}.data.attributes.${index}.interval.min`
-                        )}`,
-                      },
-                      max: {
-                        value: nftCustomAttributeValues[1]?.value,
-                        message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
-                      },
-                    }}
-                    render={({
-                      field: {
-                        onChange,
-                        onBlur,
-                        value: value1NumberInputValue,
-                        ref,
-                      },
-                    }) => (
-                      <NumberInput
-                        ref={ref}
-                        value={value1NumberInputValue || undefined}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        min={getValues(
-                          `${baseFieldPath}.data.attributes.${index}.interval.min`
-                        )}
-                        max={+nftCustomAttributeValues[1]?.value}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    )}
-                  />
-
-                  <FormErrorMessage>
-                    {
-                      parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
-                        index
-                      ]?.interval?.max?.message
-                    }
-                  </FormErrorMessage>
-                </FormControl>
-              </HStack>
-            </VStack>
+                </FormErrorMessage>
+              </FormControl>
+            </HStack>
           ) : (
             <FormControl
-              isRequired={
-                !!getValues(`${baseFieldPath}.data.attributes.${index}.trait_type`)
-              }
+              isRequired
               isInvalid={
                 !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
                   ?.value
               }
-              isDisabled={!nftCustomAttributeNames?.length}
             >
-              <ControlledSelect
-                name={`${baseFieldPath}.data.attributes.${index}.value`}
-                rules={{
-                  required:
-                    !nftCustomAttributeNames?.length &&
-                    getValues(
-                      `${baseFieldPath}.data.attributes.${index}.trait_type`
-                    ) &&
-                    "This field is required.",
-                }}
-                options={nftCustomAttributeValues}
-                placeholder="Any attribute values"
-              />
-
+              {nftCustomAttributeValues?.length > 1 ? (
+                <ControlledSelect
+                  name={`${baseFieldPath}.data.attributes.${index}.value`}
+                  rules={{
+                    required:
+                      !nftCustomAttributeNames?.length &&
+                      getValues(
+                        `${baseFieldPath}.data.attributes.${index}.trait_type`
+                      ) &&
+                      "This field is required.",
+                  }}
+                  options={nftCustomAttributeValues}
+                  placeholder="Any attribute values"
+                />
+              ) : (
+                <Input
+                  {...register(`${baseFieldPath}.data.attributes.${index}.value`, {
+                    required: isRangeValue ? false : "Required",
+                  })}
+                  placeholder="Value"
+                />
+              )}
               <FormErrorMessage>
                 {
                   parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
@@ -360,122 +292,19 @@ const AttributePicker = ({
             </FormControl>
           )}
         </Stack>
-      ) : (
-        <FormControl>
-          <Stack spacing={2}>
-            <FormControl
-              isRequired
-              isInvalid={
-                !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
-                  ?.trait_type
-              }
-            >
-              <Input
-                {...register(
-                  `${baseFieldPath}.data.attributes.${index}.trait_type`,
-                  { required: "Required" }
-                )}
-                placeholder="Key"
-              />
-              <FormErrorMessage>
-                {
-                  parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
-                    ?.trait_type?.message
-                }
-              </FormErrorMessage>
-            </FormControl>
-
-            {isRangeValue ? (
-              <HStack alignItems="start">
-                <FormControl
-                  isRequired
-                  isInvalid={
-                    !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
-                      index
-                    ]?.minValue
-                  }
-                >
-                  <Input
-                    {...minValueProps}
-                    placeholder="From"
-                    onChange={(e) => {
-                      minValueOnChange(e)
-                      clearErrors(
-                        `${baseFieldPath}.data.attributes.${index}.maxValue`
-                      )
-                    }}
-                  />
-                  <FormErrorMessage>
-                    {
-                      parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
-                        index
-                      ]?.minValue?.message
-                    }
-                  </FormErrorMessage>
-                </FormControl>
-
-                <FormControl
-                  isRequired
-                  isInvalid={
-                    !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
-                      index
-                    ]?.maxValue
-                  }
-                >
-                  <Input
-                    {...maxValueProps}
-                    placeholder="To"
-                    onChange={(e) => {
-                      maxValueOnChange(e)
-                      clearErrors(
-                        `${baseFieldPath}.data.attributes.${index}.minValue`
-                      )
-                    }}
-                  />
-                  <FormErrorMessage>
-                    {
-                      parseFromObject(errors, baseFieldPath)?.data?.attributes?.[
-                        index
-                      ]?.maxValue?.message
-                    }
-                  </FormErrorMessage>
-                </FormControl>
-              </HStack>
-            ) : (
-              <FormControl
-                isRequired
-                isInvalid={
-                  !!parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
-                    ?.value
-                }
-              >
-                <Input
-                  {...register(`${baseFieldPath}.data.attributes.${index}.value`, {
-                    required: isRangeValue ? false : "Required",
-                  })}
-                  placeholder="Value"
-                />
-                <FormErrorMessage>
-                  {
-                    parseFromObject(errors, baseFieldPath)?.data?.attributes?.[index]
-                      ?.value?.message
-                  }
-                </FormErrorMessage>
-              </FormControl>
-            )}
-          </Stack>
-        </FormControl>
-      )}
+      </FormControl>
 
       <Flex mt={2}>
-        <Button
-          leftIcon={<Icon as={isRangeValue ? X : Plus} />}
-          size="xs"
-          borderRadius="md"
-          onClick={changeRange}
-        >
-          {isRangeValue ? "Remove range" : "Add range"}
-        </Button>
+        {nftCustomAttributeValues?.length <= 1 && (
+          <Button
+            leftIcon={<Icon as={isRangeValue ? X : Plus} />}
+            size="xs"
+            borderRadius="md"
+            onClick={changeRange}
+          >
+            {isRangeValue ? "Remove range" : "Add range"}
+          </Button>
+        )}
 
         <Button
           ml="auto"
