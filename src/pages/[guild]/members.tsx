@@ -188,7 +188,7 @@ const GuildPageWrapper = (): JSX.Element => {
       </Center>
     )
 
-  if (!guild.id) return <ErrorPage statusCode={404} />
+  if (!guild?.featureFlags?.includes("CRM")) return <ErrorPage statusCode={404} />
 
   return (
     <>
