@@ -58,7 +58,7 @@ type RewardSuggestion = {
   name: string
 }
 
-const hiddenActions: (keyof typeof ACTION)[] = [
+const HIDDEN_ACTIONS: (keyof typeof ACTION)[] = [
   "UpdateUrlName",
   "UpdateLogoOrTitle",
   "UpdateDescription",
@@ -66,8 +66,8 @@ const hiddenActions: (keyof typeof ACTION)[] = [
   "UpdateTheme",
 ]
 
-const auditLogActions = Object.entries(ACTION)
-  .filter(([actionType]) => !hiddenActions.includes(ACTION[actionType]))
+const ACTIVITY_LOG_ACTIONS = Object.entries(ACTION)
+  .filter(([actionType]) => !HIDDEN_ACTIONS.includes(ACTION[actionType]))
   .map(([, actionName]) => actionName)
 
 const ActivityLogFiltersContext = createContext<{
@@ -252,7 +252,7 @@ const ActivityLogFiltersProvider = ({
     }) ?? []
 
   const getFilteredActionSuggestions = (inputValue: string) =>
-    auditLogActions.filter((action) => {
+    ACTIVITY_LOG_ACTIONS.filter((action) => {
       const lowerCaseInputValue = inputValue.toLowerCase()
       return (
         action.includes(lowerCaseInputValue) ||
