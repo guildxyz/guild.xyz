@@ -25,7 +25,7 @@ import RewardTag from "../../ActivityLogAction/components/RewardTag"
 import RoleTag from "../../ActivityLogAction/components/RoleTag"
 import UserTag from "../../ActivityLogAction/components/UserTag"
 import { ACTION } from "../../constants"
-import { filterNames, useActivityLogFilters } from "./ActivityLogFiltersContext"
+import { FILTER_NAMES, useActivityLogFilters } from "./ActivityLogFiltersContext"
 import Dropdown from "./Dropdown"
 import Suggestion from "./Suggestion"
 
@@ -136,7 +136,7 @@ const FilterTag = ({
       >
         <HStack {...controlProps}>
           <Text as="span" fontSize="sm" fontWeight="bold">
-            {filterNames[filter]}:
+            {FILTER_NAMES[filter]}:
           </Text>
 
           {value ? (

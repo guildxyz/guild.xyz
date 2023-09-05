@@ -26,7 +26,7 @@ const SUPPORTED_SEARCH_OPTIONS = [
 ] as const
 export type SupportedSearchOption = (typeof SUPPORTED_SEARCH_OPTIONS)[number]
 
-export const filterNames: Record<SupportedSearchOption, string> = {
+export const FILTER_NAMES: Record<SupportedSearchOption, string> = {
   userId: "User",
   roleId: "Role",
   rolePlatformId: "Reward",
