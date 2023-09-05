@@ -220,7 +220,7 @@ const useCreateNft = (
             ? "User rejected the transaction"
             : error?.message ?? error
 
-        captureEvent("useCreateNft callStatic error", {
+        captureEvent("useCreateNft error", {
           ...postHogOptions,
           error: prettyError,
         })
