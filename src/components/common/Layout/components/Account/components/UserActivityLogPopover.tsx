@@ -11,6 +11,7 @@ import {
   Skeleton,
   SkeletonCircle,
   Stack,
+  Text,
 } from "@chakra-ui/react"
 import LinkButton from "components/common/LinkButton"
 import { ActivityLogActionProvider } from "components/[guild]/activity/ActivityLogAction/ActivityLogActionContext"
@@ -65,33 +66,39 @@ const UserActivityLog = (): JSX.Element => {
   const { data, isValidating } = useActivityLog()
 
   return (
-    <Stack spacing={3}>
-      {!data || isValidating
-        ? [...Array(5)].map((_, i) => (
-            <HStack key={i} spacing={4}>
-              <SkeletonCircle boxSize={6} />
-              <Skeleton h={5} w={36} />
-              <Skeleton h={5} w={20} />
+    <Stack minW="xs" spacing={3}>
+      {!data || isValidating ? (
+        [...Array(5)].map((_, i) => (
+          <HStack key={i} spacing={4}>
+            <SkeletonCircle boxSize={6} />
+            <Skeleton h={5} w={36} />
+            <Skeleton h={5} w={20} />
+          </HStack>
+        ))
+      ) : !data.entries.length ? (
+        <Text colorScheme="gray">No recent activity</Text>
+      ) : (
+        data.entries.slice(0, 5)?.map((action) => (
+          <ActivityLogActionProvider key={action.id} action={action}>
+            <HStack spacing={4}>
+              <ActionIcon size={5} />
+              <ActionLabel />
             </HStack>
-          ))
-        : data.entries.slice(0, 5)?.map((action) => (
-            <ActivityLogActionProvider key={action.id} action={action}>
-              <HStack spacing={4}>
-                <ActionIcon size={5} />
-                <ActionLabel />
-              </HStack>
-            </ActivityLogActionProvider>
-          ))}
+          </ActivityLogActionProvider>
+        ))
+      )}
 
-      <LinkButton
-        href="/profile/activity"
-        w="full"
-        size="sm"
-        colorScheme="gray"
-        rightIcon={<Icon as={ArrowRight} />}
-      >
-        View all
-      </LinkButton>
+      {data?.entries?.length > 0 && (
+        <LinkButton
+          href="/profile/activity"
+          w="full"
+          size="sm"
+          colorScheme="gray"
+          rightIcon={<Icon as={ArrowRight} />}
+        >
+          View all
+        </LinkButton>
+      )}
     </Stack>
   )
 }
