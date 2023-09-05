@@ -16,7 +16,7 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { ArrowSquareOut, DotsThree } from "phosphor-react"
-import { memo } from "react"
+import { CSSProperties, memo } from "react"
 import { FixedSizeList } from "react-window"
 import { ActivityLogAction } from "../../constants"
 import { ActivityLogActionProvider } from "../ActivityLogActionContext"
@@ -32,7 +32,7 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const numberOfAdditionalActions = actions.length - displayedActionCount
 
-  const Row = memo(({ index, style }: { index: number; style: any }) => {
+  const Row = memo(({ index, style }: { index: number; style: CSSProperties }) => {
     const action = actions[index]
 
     return (
