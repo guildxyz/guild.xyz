@@ -46,7 +46,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     mode: "all",
     defaultValues: {
       platforms: {},
-      shareSocials: true,
+      ...(featureFlags.includes("CRM") ? { shareSocials: true } : {}),
     },
   })
   const { handleSubmit } = methods
@@ -96,7 +96,8 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 onClose={onClose}
               />
             </VStack>
-            {/* featureFlags.includes("CRM") && */ <ShareConnectionsCheckbox />}
+
+            {featureFlags.includes("CRM") && <ShareConnectionsCheckbox />}
 
             <TwitterRequirementsVerificationIssuesAlert />
 
