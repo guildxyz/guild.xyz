@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 import { createContext, PropsWithChildren, useContext } from "react"
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite"
 import { OneOf, PlatformName, Requirement } from "types"
+import { useFetcherWithSign } from "utils/fetcher"
 import useGuild from "../hooks/useGuild"
 import {
   isSupportedQueryParam,
@@ -133,12 +134,25 @@ const ActivityLogProvider = ({
     return `/auditLog?${searchParams.toString()}`
   }
 
-  const ogSWRInfiniteResponse = useSWRInfinite<ActivityLogActionResponse>(getKey, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    revalidateFirstPage: false,
-  })
+  const fetcherWithSign = useFetcherWithSign()
+  const fetchActivityLogPage = (url: string) =>
+    fetcherWithSign([
+      url,
+      {
+        method: "GET",
+        body: {},
+      },
+    ])
+  const ogSWRInfiniteResponse = useSWRInfinite<ActivityLogActionResponse>(
+    getKey,
+    fetchActivityLogPage,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateFirstPage: false,
+    }
+  )
 
   const value = {
     ...ogSWRInfiniteResponse,
