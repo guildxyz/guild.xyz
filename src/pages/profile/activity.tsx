@@ -1,4 +1,12 @@
-import { Stack, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Stack,
+  useBreakpointValue,
+  useColorModeValue,
+} from "@chakra-ui/react"
+import Card from "components/common/Card"
 import Layout from "components/common/Layout"
 import { SectionTitle } from "components/common/Section"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
@@ -18,6 +26,7 @@ const ActivityLog = (): JSX.Element => {
 
   // TODO: show an error if the user isn't connected
 
+  const { id } = useUser()
   const { data, isValidating } = useActivityLog()
 
   return (
@@ -44,17 +53,32 @@ const ActivityLog = (): JSX.Element => {
       backgroundOffset={46}
       backButton={{ href: "/explorer", text: "Go back to explorer" }}
     >
-      <ActivityLogFiltersBar />
+      {id ? (
+        <>
+          <ActivityLogFiltersBar />
 
-      <SectionTitle title="Actions" mt={8} mb="4" />
-      <Stack spacing={2.5}>
-        {data?.entries?.length > 0 &&
-          data.entries.map((action) => (
-            <ActivityLogAction key={action.id} action={action} />
-          ))}
+          <SectionTitle title="Actions" mt={8} mb="4" />
+          <Stack spacing={2.5}>
+            {data?.entries?.length > 0 &&
+              data.entries.map((action) => (
+                <ActivityLogAction key={action.id} action={action} />
+              ))}
 
-        {isValidating && <ActivityLogSkeleton />}
-      </Stack>
+            {isValidating && <ActivityLogSkeleton />}
+          </Stack>
+        </>
+      ) : (
+        <Card>
+          <Alert status="info" pb={5}>
+            <AlertIcon />
+            <Stack>
+              <AlertDescription position="relative" top={1} fontWeight="semibold">
+                Connect your wallet in order to see your activity log
+              </AlertDescription>
+            </Stack>
+          </Alert>
+        </Card>
+      )}
     </Layout>
   )
 }
