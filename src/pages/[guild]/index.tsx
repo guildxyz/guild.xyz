@@ -91,6 +91,7 @@ const GuildPage = (): JSX.Element => {
     guildPlatforms,
     tags,
     isDetailed,
+    featureFlags,
   } = useGuild()
   useAutoStatusUpdate()
 
@@ -257,7 +258,9 @@ const GuildPage = (): JSX.Element => {
             <TabButton href={urlName} isActive>
               {showAccessHub ? "Home" : "Roles"}
             </TabButton>
-            {isAdmin && <TabButton href={`${urlName}/members`}>Members</TabButton>}
+            {isAdmin && featureFlags.includes("CRM") && (
+              <TabButton href={`${urlName}/members`}>Members</TabButton>
+            )}
           </Tabs>
         )}
 
