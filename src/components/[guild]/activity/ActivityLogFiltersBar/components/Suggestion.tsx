@@ -3,12 +3,10 @@ import { HTMLAttributes, PropsWithChildren } from "react"
 
 type Props = {
   label: string
-  isFocused: boolean
 } & HTMLAttributes<HTMLElement>
 
 const Suggestion = ({
   label,
-  isFocused,
   children,
   ...htmlAttributes
 }: PropsWithChildren<Props>): JSX.Element => {
@@ -20,7 +18,7 @@ const Suggestion = ({
       px={4}
       h={10}
       minH={10}
-      bgColor={isFocused ? optionFocusBgColor : undefined}
+      bgColor={htmlAttributes["aria-selected"] ? optionFocusBgColor : undefined}
       _hover={{
         bgColor: optionFocusBgColor,
       }}

@@ -86,7 +86,6 @@ const FilterTag = ({
     positionerProps,
     contentProps,
     getOptionProps,
-    focusedOption,
     inputValue,
     setInputValue,
     focus,
@@ -299,9 +298,6 @@ const FilterTag = ({
                           <Suggestion
                             key={roleSuggestion.id}
                             label={suggestionLabel}
-                            isFocused={
-                              focusedOption?.value === roleSuggestion.id.toString()
-                            }
                             {...getOptionProps({
                               label: suggestionLabel,
                               value: roleSuggestion.id.toString(),
@@ -330,10 +326,6 @@ const FilterTag = ({
                           <Suggestion
                             key={rewardSuggestion.rolePlatformId}
                             label={suggestionLabel}
-                            isFocused={
-                              focusedOption?.value ===
-                              rewardSuggestion.rolePlatformId.toString()
-                            }
                             {...getOptionProps({
                               label: suggestionLabel,
                               value: rewardSuggestion.rolePlatformId.toString(),
@@ -362,7 +354,6 @@ const FilterTag = ({
                         <Suggestion
                           key={action}
                           label="Action"
-                          isFocused={focusedOption?.value === action}
                           {...getOptionProps({
                             label: capitalize(action),
                             value: action,

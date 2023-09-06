@@ -82,7 +82,6 @@ const FiltersInput = (): JSX.Element => {
     positionerProps,
     contentProps,
     getOptionProps,
-    focusedOption,
     inputValue,
     setInputValue,
     focus,
@@ -207,7 +206,6 @@ const FiltersInput = (): JSX.Element => {
           {!isUserActivityLog && (
             <Suggestion
               label="User"
-              isFocused={focusedOption?.value === "userId"}
               {...getOptionProps({ label: "User", value: "userId" })}
             >
               <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
@@ -219,7 +217,6 @@ const FiltersInput = (): JSX.Element => {
           {shouldRenderRoleSuggestions && (
             <Suggestion
               label="Role"
-              isFocused={focusedOption?.value === "roleId"}
               {...getOptionProps({ label: "Role", value: "roleId" })}
             >
               <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
@@ -231,7 +228,6 @@ const FiltersInput = (): JSX.Element => {
           {shouldRenderRewardSuggestions && (
             <Suggestion
               label="Reward"
-              isFocused={focusedOption?.value === "rolePlatformId"}
               {...getOptionProps({ label: "Reward", value: "rolePlatformId" })}
             >
               <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
@@ -242,7 +238,6 @@ const FiltersInput = (): JSX.Element => {
 
           <Suggestion
             label="Action"
-            isFocused={focusedOption?.value === "action"}
             {...getOptionProps({ label: "Action", value: "action" })}
           >
             <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
