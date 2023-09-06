@@ -8,14 +8,12 @@ import {
   useEffect,
   useState,
 } from "react"
-import { Requirement } from "types"
 import {
   TransactionStatusProvider,
   useTransactionStatusContext,
 } from "./TransactionStatusContext"
 
 export type GuildCheckoutContextType = {
-  requirement: Requirement
   isOpen: boolean
   onOpen: () => void
   onClose: () => void
@@ -30,11 +28,7 @@ const GuildCheckoutContext = createContext<GuildCheckoutContextType>(undefined)
 const GuildCheckoutProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
-  const requirement = useRequirementContext()
-  const { mutate: mutateAccess } = useAccess(requirement?.roleId)
-
-  const { isTxModalOpen, onTxModalOpen, txHash, txSuccess } =
-    useTransactionStatusContext()
+  const { isTxModalOpen, onTxModalOpen, txHash } = useTransactionStatusContext()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 

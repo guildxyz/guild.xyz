@@ -18,6 +18,7 @@ import {
   generateGetAssetsParams,
 } from "utils/guildCheckout/utils"
 import processWalletError from "utils/processWalletError"
+import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
@@ -81,7 +82,10 @@ const purchaseAsset = async (
 const usePurchaseAsset = () => {
   const { captureEvent } = usePostHogContext()
   const { id: guildId, urlName } = useGuild()
-  const { requirement, pickedCurrency } = useGuildCheckoutContext()
+
+  const requirement = useRequirementContext()
+  const { pickedCurrency } = useGuildCheckoutContext()
+
   const { mutate: mutateAccess } = useAccess(requirement?.roleId)
 
   const postHogOptions = { guild: urlName, chain: requirement.chain }

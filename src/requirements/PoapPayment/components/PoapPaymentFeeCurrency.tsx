@@ -3,6 +3,7 @@ import { formatUnits } from "@ethersproject/units"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { useGuildCheckoutContext } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import TokenInfo from "components/[guild]/Requirements/components/GuildCheckout/components/PaymentCurrencyPicker/components/TokenInfo"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
@@ -16,8 +17,8 @@ const PoapPaymentFeeCurrency = (): JSX.Element => {
   const lightShade = useColorModeValue("white", "gray.700")
   const borderWidth = useColorModeValue(1, 0)
 
-  const { requirement, pickedCurrency, setPickedCurrency } =
-    useGuildCheckoutContext()
+  const requirement = useRequirementContext()
+  const { pickedCurrency, setPickedCurrency } = useGuildCheckoutContext()
 
   const { vaultData, isVaultLoading: isValidating } = usePoapVault(
     requirement?.data?.id,
