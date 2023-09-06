@@ -1,3 +1,4 @@
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useRouter } from "next/router"
 import { createContext, PropsWithChildren, useContext } from "react"
@@ -92,12 +93,15 @@ const ActivityLogProvider = ({
   const { urlName } = useGuild(guildId)
   const { query } = useRouter()
 
+  const { ready } = useKeyPair()
+
   const getKey = (
     pageIndex: number,
     previousPageData: ActivityLogActionResponse
   ) => {
     if (
       (!guildId && !userId) ||
+      !ready ||
       (previousPageData?.entries && !previousPageData.entries.length)
     )
       return null
