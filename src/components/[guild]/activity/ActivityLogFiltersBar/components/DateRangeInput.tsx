@@ -1,15 +1,18 @@
 import {
+  HStack,
   Icon,
   Input,
   Popover,
   PopoverBody,
   PopoverContent,
+  PopoverHeader,
   PopoverTrigger,
   Stack,
+  Text,
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { CaretDown } from "phosphor-react"
+import { CaretDown, TrashSimple } from "phosphor-react"
 import { ChangeEvent } from "react"
 import {
   SupportedQueryParam,
@@ -98,7 +101,28 @@ const DateRangeInput = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent minW="none" w="none">
-        <PopoverBody p={2}>
+        <PopoverHeader border={0} pb="1">
+          <HStack justifyContent={"space-between"}>
+            <Text colorScheme="gray" fontWeight={"semibold"} fontSize="sm" mt="0.5">
+              Time interval
+            </Text>
+            {(beforeFilter || afterFilter) && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  removeFilter(beforeFilter)
+                  removeFilter(afterFilter)
+                }}
+                leftIcon={<TrashSimple />}
+                mb="-1"
+              >
+                Clear
+              </Button>
+            )}
+          </HStack>
+        </PopoverHeader>
+        <PopoverBody>
           <Stack>
             <Input
               type="date"
