@@ -18,7 +18,7 @@ export type Filter = {
   value?: string
 }
 
-const SUPPORTED_SEARCH_OPTIONS = [
+export const SUPPORTED_SEARCH_OPTIONS = [
   "userId",
   "roleId",
   "rolePlatformId",

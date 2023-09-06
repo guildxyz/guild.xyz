@@ -5,8 +5,8 @@ import {
   Input,
   Stack,
   Text,
-  Wrap,
   useColorModeValue,
+  Wrap,
 } from "@chakra-ui/react"
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
@@ -14,20 +14,14 @@ import { useRouter } from "next/router"
 import { CaretDown, X } from "phosphor-react"
 import { KeyboardEvent, useEffect, useRef, useState } from "react"
 import {
-  SupportedQueryParam,
   isSupportedQueryParam,
+  SupportedSearchOption,
+  SUPPORTED_SEARCH_OPTIONS,
   useActivityLogFilters,
 } from "./ActivityLogFiltersContext"
 import Dropdown from "./Dropdown"
 import FilterTag from "./FilterTag"
 import Suggestion from "./Suggestion"
-
-const FILTERS_TO_RENDER: SupportedQueryParam[] = [
-  "action",
-  "userId",
-  "roleId",
-  "rolePlatformId",
-]
 
 const getPositionerCSSVariables = (
   element: HTMLDivElement
@@ -47,7 +41,7 @@ const FiltersInput = (): JSX.Element => {
   const { activeFilters, addFilter, removeLastFilter, clearFilters } =
     useActivityLogFilters()
   const renderedActiveFilters = activeFilters.filter((f) =>
-    FILTERS_TO_RENDER.includes(f.filter)
+    SUPPORTED_SEARCH_OPTIONS.includes(f.filter as SupportedSearchOption)
   )
 
   const [state, send] = useMachine(
