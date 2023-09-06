@@ -18,7 +18,6 @@ const PoapBuyTotal = (): JSX.Element => {
     vaultError: error,
   } = usePoapVault(requirement.data.id, Chains[requirement?.chain])
   const { token, fee } = vaultData
-  console.log(pickedCurrency, error, token)
 
   const {
     data: { decimals, symbol },

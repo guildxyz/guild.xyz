@@ -12,25 +12,20 @@ import {
   useState,
 } from "react"
 import { Requirement } from "types"
+import {
+  TransactionStatusProvider,
+  useTransactionStatusContext,
+} from "./TransactionStatusContext"
 
 export type GuildCheckoutContextType = {
   requirement: Requirement
   isOpen: boolean
   onOpen: () => void
   onClose: () => void
-  isInfoModalOpen: boolean
-  onInfoModalOpen: () => void
-  onInfoModalClose: () => void
   pickedCurrency: string
   setPickedCurrency: Dispatch<SetStateAction<string>>
   agreeWithTOS: boolean
   setAgreeWithTOS: Dispatch<SetStateAction<boolean>>
-  txHash: string
-  setTxHash: Dispatch<SetStateAction<string>>
-  txSuccess: boolean
-  setTxSuccess: Dispatch<SetStateAction<boolean>>
-  txError: boolean
-  setTxError: Dispatch<SetStateAction<boolean>>
 }
 
 const GuildCheckoutContext = createContext<GuildCheckoutContextType>(undefined)
@@ -41,25 +36,20 @@ const GuildCheckoutProvider = ({
   const requirement = useRequirementContext()
   const { mutate: mutateAccess } = useAccess(requirement?.roleId)
 
+  const { isTxModalOpen, onTxModalOpen, txHash, txSuccess } =
+    useTransactionStatusContext()
+
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const {
-    isOpen: isInfoModalOpen,
-    onOpen: onInfoModalOpen,
-    onClose: onInfoModalClose,
-  } = useDisclosure()
+
   const [pickedCurrency, setPickedCurrency] = useState<string>()
   const [agreeWithTOS, setAgreeWithTOS] = useState(false)
 
   const triggerConfetti = useJsConfetti()
 
-  const [txHash, setTxHash] = useState("")
-  const [txError, setTxError] = useState(false)
-  const [txSuccess, setTxSuccess] = useState(false)
-
   useEffect(() => {
-    if (!txHash || !isOpen || isInfoModalOpen) return
+    if (!txHash || !isOpen || isTxModalOpen) return
     onClose()
-    onInfoModalOpen()
+    onTxModalOpen()
   }, [txHash])
 
   useEffect(() => {
@@ -75,19 +65,10 @@ const GuildCheckoutProvider = ({
         isOpen,
         onOpen,
         onClose,
-        isInfoModalOpen,
-        onInfoModalOpen,
-        onInfoModalClose,
         pickedCurrency,
         setPickedCurrency,
         agreeWithTOS,
         setAgreeWithTOS,
-        txHash,
-        setTxHash,
-        txSuccess,
-        setTxSuccess,
-        txError,
-        setTxError,
       }}
     >
       {children}
@@ -95,6 +76,17 @@ const GuildCheckoutProvider = ({
   )
 }
 
+const GuildCheckoutProviderWithWrapper = ({
+  children,
+}: PropsWithChildren<unknown>): JSX.Element => (
+  <TransactionStatusProvider>
+    <GuildCheckoutProvider>{children}</GuildCheckoutProvider>
+  </TransactionStatusProvider>
+)
+
 const useGuildCheckoutContext = () => useContext(GuildCheckoutContext)
 
-export { GuildCheckoutProvider, useGuildCheckoutContext }
+export {
+  GuildCheckoutProviderWithWrapper as GuildCheckoutProvider,
+  useGuildCheckoutContext,
+}

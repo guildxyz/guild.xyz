@@ -2,11 +2,11 @@ import { Icon, Link, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { Chains, RPC } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
-import { useGuildCheckoutContext } from "../../GuildCheckoutContex"
+import { useTransactionStatusContext } from "../../TransactionStatusContext"
 
 const TransactionLink = (): JSX.Element => {
   const { chainId } = useWeb3React()
-  const { txHash } = useGuildCheckoutContext()
+  const { txHash } = useTransactionStatusContext()
 
   return (
     <Text mb={6} colorScheme="gray">

@@ -19,11 +19,10 @@ const PoapPaymentFeeCurrency = (): JSX.Element => {
   const { requirement, pickedCurrency, setPickedCurrency } =
     useGuildCheckoutContext()
 
-  const {
-    vaultData,
-    isVaultLoading: isValidating,
-    vaultError: error,
-  } = usePoapVault(requirement?.data?.id, Chains[requirement?.chain])
+  const { vaultData, isVaultLoading: isValidating } = usePoapVault(
+    requirement?.data?.id,
+    Chains[requirement?.chain]
+  )
   const { token, fee } = vaultData
 
   const {
