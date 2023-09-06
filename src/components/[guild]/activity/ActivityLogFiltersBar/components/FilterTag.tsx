@@ -72,7 +72,6 @@ const FilterTag = ({
         focusFiltersInput()
       },
       openOnClick: true,
-      autoFocus: true,
       loop: true,
     })
   )
