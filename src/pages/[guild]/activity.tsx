@@ -14,11 +14,12 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
 import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
+import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import { SectionTitle } from "components/common/Section"
 
 const ActivityLog = (): JSX.Element => {
-  const { name, urlName } = useGuild()
+  const { name, urlName, imageUrl } = useGuild()
   const { id: userId } = useUser()
   const { isAdmin } = useGuildPermission()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
@@ -29,17 +30,24 @@ const ActivityLog = (): JSX.Element => {
     <Layout
       title={name}
       ogTitle={`Activity${name ? ` - ${name}` : ""}`}
+      image={
+        <GuildLogo
+          imageUrl={imageUrl}
+          size={{ base: "56px", lg: "72px" }}
+          mt={{ base: 1, lg: 2 }}
+          bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+        />
+      }
+      imageUrl={imageUrl}
       textColor={textColor}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
     >
       <Tabs>
         <TabButton href={`/${urlName}`}>Home</TabButton>
-        {isAdmin && (
-          <TabButton href={`/${urlName}/activity`} isActive>
-            Activity log
-          </TabButton>
-        )}
+        <TabButton href={`/${urlName}/activity`} isActive>
+          Activity log
+        </TabButton>
       </Tabs>
 
       {userId && !isAdmin ? (
