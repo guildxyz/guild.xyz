@@ -1,14 +1,14 @@
 import { TransactionReceipt, TransactionResponse } from "@ethersproject/providers"
 import useSubmit, { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { Rest } from "types"
-import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
+import { useTransactionStatusContext } from "../components/TransactionStatusContext"
 
 const useSubmitTransaction = <DataType>(
   sendTransaction: (data?: DataType) => Promise<TransactionResponse>,
   { onSuccess, onError }: UseSubmitOptions<TransactionReceipt & Rest> = {}
 ) => {
   const { setTxHash, txHash, setTxError, setTxSuccess } =
-    useGuildCheckoutContext() ?? {}
+    useTransactionStatusContext() ?? {}
 
   const fetch = async (data?: DataType) => {
     const transaction = await sendTransaction(data)

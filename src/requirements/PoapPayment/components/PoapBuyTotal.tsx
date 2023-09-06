@@ -3,6 +3,7 @@ import { formatUnits } from "@ethersproject/units"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { useGuildCheckoutContext } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import PriceFallback from "components/[guild]/Requirements/components/GuildCheckout/components/PriceFallback"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 
@@ -11,14 +12,15 @@ import useTokenData from "hooks/useTokenData"
  * will switch to general payment requirement once POAP is a reward
  */
 const PoapBuyTotal = (): JSX.Element => {
-  const { requirement, pickedCurrency } = useGuildCheckoutContext()
+  const requirement = useRequirementContext()
+  const { pickedCurrency } = useGuildCheckoutContext()
+
   const {
     vaultData,
     isVaultLoading: isValidating,
     vaultError: error,
   } = usePoapVault(requirement.data.id, Chains[requirement?.chain])
   const { token, fee } = vaultData
-  console.log(pickedCurrency, error, token)
 
   const {
     data: { decimals, symbol },

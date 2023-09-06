@@ -6,7 +6,9 @@ import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
+import { useRequirementContext } from "../RequirementContext"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
+import { useTransactionStatusContext } from "./components/TransactionStatusContext"
 
 const DynamicallyLoadedPurchaseRequirement = dynamic(
   () => import("./PurchaseRequirement"),
@@ -18,7 +20,9 @@ const DynamicallyLoadedPurchaseRequirement = dynamic(
 const DynamicPurchaseRequirement = () => {
   const { data } = useNonPurchasableAssets()
 
-  const { requirement, isOpen, isInfoModalOpen } = useGuildCheckoutContext()
+  const requirement = useRequirementContext()
+  const { isOpen } = useGuildCheckoutContext()
+  const { isTxModalOpen } = useTransactionStatusContext()
 
   const { data: accessData, isValidating: isAccessValidating } = useAccess(
     requirement?.roleId
@@ -29,7 +33,7 @@ const DynamicPurchaseRequirement = () => {
 
   const shouldNotRenderComponent =
     !isOpen &&
-    !isInfoModalOpen &&
+    !isTxModalOpen &&
     ((!accessData && isAccessValidating) ||
       satisfiesRequirement ||
       !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement.type) ||
