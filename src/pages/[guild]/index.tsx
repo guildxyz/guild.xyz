@@ -14,11 +14,6 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import AccessHub from "components/[guild]/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
@@ -39,6 +34,11 @@ import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -255,7 +255,7 @@ const GuildPage = (): JSX.Element => {
               </HStack>
             }
           >
-            <TabButton href={`/${urlName}`}>
+            <TabButton href={`/${urlName}`} isActive>
               {showAccessHub ? "Home" : "Roles"}
             </TabButton>
             {isAdmin && (

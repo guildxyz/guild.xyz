@@ -1,7 +1,6 @@
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
-import { useThemeContext } from "components/[guild]/ThemeContext"
-import { useRouter } from "next/router"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
 import { useIsTabsStuck } from "../Tabs"
@@ -15,7 +14,7 @@ type Props = {
 
 const TabButton = ({
   href,
-  isActive: isActiveProp,
+  isActive,
   children,
   ...rest
 }: PropsWithChildren<Props>): JSX.Element => {
@@ -24,13 +23,6 @@ const TabButton = ({
     textColor: "white",
     buttonColorScheme: "whiteAlpha",
   }
-
-  const router = useRouter()
-  const path = router.asPath.split("?")[0]
-  const isActive =
-    typeof isActiveProp === "undefined"
-      ? path?.split("#")?.[0] === href
-      : isActiveProp
 
   const Component = href ? LinkButton : Button
 

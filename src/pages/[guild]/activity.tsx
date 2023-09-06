@@ -1,8 +1,7 @@
 import { Stack } from "@chakra-ui/react"
-import Card from "components/common/Card"
-import ErrorAlert from "components/common/ErrorAlert"
-import Layout from "components/common/Layout"
-import { SectionTitle } from "components/common/Section"
+import Tabs from "components/[guild]/Tabs"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
 import {
   ActivityLogProvider,
@@ -13,9 +12,10 @@ import ActivityLogSkeleton from "components/[guild]/activity/ActivityLogSkeleton
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
-import Tabs from "components/[guild]/Tabs"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import Card from "components/common/Card"
+import ErrorAlert from "components/common/ErrorAlert"
+import Layout from "components/common/Layout"
+import { SectionTitle } from "components/common/Section"
 
 const ActivityLog = (): JSX.Element => {
   const { name, urlName } = useGuild()
@@ -36,7 +36,9 @@ const ActivityLog = (): JSX.Element => {
       <Tabs>
         <TabButton href={`/${urlName}`}>Home</TabButton>
         {isAdmin && (
-          <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
+          <TabButton href={`/${urlName}/activity`} isActive>
+            Activity log
+          </TabButton>
         )}
       </Tabs>
 
