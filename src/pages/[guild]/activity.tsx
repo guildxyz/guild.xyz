@@ -24,7 +24,7 @@ const ActivityLog = (): JSX.Element => {
   const { isAdmin } = useGuildPermission()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
-  const { data, isValidating } = useActivityLog()
+  const { data, isValidating, error } = useActivityLog()
 
   return (
     <Layout
@@ -67,7 +67,11 @@ const ActivityLog = (): JSX.Element => {
               data.entries.map((action) => (
                 <ActivityLogAction key={action.id} action={action} />
               ))}
-            {isValidating && <ActivityLogSkeletons />}
+            {isValidating ? (
+              <ActivityLogSkeletons />
+            ) : error ? (
+              <ErrorAlert label={error ?? "Couldn't load actions"} mb={0} />
+            ) : null}
           </Stack>
         </>
       )}

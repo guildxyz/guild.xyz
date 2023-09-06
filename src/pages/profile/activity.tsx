@@ -16,6 +16,7 @@ import ActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFilter
 import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleton"
 import useUser from "components/[guild]/hooks/useUser"
 import Card from "components/common/Card"
+import ErrorAlert from "components/common/ErrorAlert"
 import Layout from "components/common/Layout"
 import { SectionTitle } from "components/common/Section"
 
@@ -27,7 +28,7 @@ const ActivityLog = (): JSX.Element => {
   // TODO: show an error if the user isn't connected
 
   const { id } = useUser()
-  const { data, isValidating } = useActivityLog()
+  const { data, isValidating, error } = useActivityLog()
 
   return (
     <Layout
@@ -64,7 +65,11 @@ const ActivityLog = (): JSX.Element => {
                 <ActivityLogAction key={action.id} action={action} />
               ))}
 
-            {isValidating && <ActivityLogSkeletons />}
+            {isValidating ? (
+              <ActivityLogSkeletons />
+            ) : error ? (
+              <ErrorAlert label={error ?? "Couldn't load actions"} mb={0} />
+            ) : null}
           </Stack>
         </>
       ) : (
