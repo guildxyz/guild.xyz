@@ -1,6 +1,7 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { useWeb3React } from "@web3-react/core"
+import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
@@ -17,6 +18,7 @@ import {
   generateGetAssetsParams,
 } from "utils/guildCheckout/utils"
 import processWalletError from "utils/processWalletError"
+import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
@@ -80,7 +82,11 @@ const purchaseAsset = async (
 const usePurchaseAsset = () => {
   const { captureEvent } = usePostHogContext()
   const { id: guildId, urlName } = useGuild()
-  const { requirement, pickedCurrency } = useGuildCheckoutContext()
+
+  const requirement = useRequirementContext()
+  const { pickedCurrency } = useGuildCheckoutContext()
+
+  const { mutate: mutateAccess } = useAccess(requirement?.roleId)
 
   const postHogOptions = { guild: urlName, chain: requirement.chain }
 
@@ -180,6 +186,8 @@ const usePurchaseAsset = () => {
         }
 
         captureEvent("Purchased requirement (GuildCheckout)", postHogOptions)
+
+        mutateAccess()
 
         toast({
           status: "success",
