@@ -1,7 +1,7 @@
 import { HStack, Skeleton, SkeletonCircle, Stack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 
-const ActivityLogSkeleton = (): JSX.Element => (
+const ActivityLogSkeletons = (): JSX.Element => (
   <>
     {[...Array(25)].map((_, i) => (
       <ActivityLogActionSkeleton key={i} />
@@ -21,4 +21,4 @@ const ActivityLogActionSkeleton = (): JSX.Element => (
   </Card>
 )
 
-export default ActivityLogSkeleton
+export default ActivityLogSkeletons

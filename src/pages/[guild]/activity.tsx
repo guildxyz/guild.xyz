@@ -8,7 +8,7 @@ import {
   useActivityLog,
 } from "components/[guild]/activity/ActivityLogContext"
 import ActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar"
-import ActivityLogSkeleton from "components/[guild]/activity/ActivityLogSkeleton"
+import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
@@ -67,7 +67,7 @@ const ActivityLog = (): JSX.Element => {
               data.entries.map((action) => (
                 <ActivityLogAction key={action.id} action={action} />
               ))}
-            {isValidating && <ActivityLogSkeleton />}
+            {isValidating && <ActivityLogSkeletons />}
           </Stack>
         </>
       )}
