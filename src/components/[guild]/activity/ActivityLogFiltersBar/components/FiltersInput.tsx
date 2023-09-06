@@ -1,11 +1,11 @@
 import {
   Box,
-  Flex,
   HStack,
   IconButton,
   Input,
   Stack,
   Text,
+  Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
 import * as combobox from "@zag-js/combobox"
@@ -14,8 +14,8 @@ import { useRouter } from "next/router"
 import { CaretDown, X } from "phosphor-react"
 import { KeyboardEvent, useEffect, useRef, useState } from "react"
 import {
-  isSupportedQueryParam,
   SupportedQueryParam,
+  isSupportedQueryParam,
   useActivityLogFilters,
 } from "./ActivityLogFiltersContext"
 import Dropdown from "./Dropdown"
@@ -132,7 +132,6 @@ const FiltersInput = (): JSX.Element => {
   return (
     <>
       <Box
-        h={10}
         px={2}
         bgColor={rootBgColor}
         borderWidth={1}
@@ -143,33 +142,26 @@ const FiltersInput = (): JSX.Element => {
         {...rootProps}
       >
         <HStack {...controlProps}>
-          <Flex
-            alignItems="center"
-            w="full"
-            h={10}
-            overflowX="auto"
-            className="invisible-scrollbar"
-          >
-            <HStack>
-              {renderedActiveFilters?.map(({ id }) => (
-                <FilterTag
-                  key={id}
-                  filterId={id}
-                  isFiltersInputFocused={isFocused}
-                  focusFiltersInput={focus}
-                  positionerStyle={positionerStyle}
-                />
-              ))}
-            </HStack>
+          <Wrap w="full" py="2">
+            {renderedActiveFilters?.map(({ id }) => (
+              <FilterTag
+                key={id}
+                filterId={id}
+                isFiltersInputFocused={isFocused}
+                focusFiltersInput={focus}
+                positionerStyle={positionerStyle}
+              />
+            ))}
             <Input
               variant="unstyled"
               px={2}
+              flex={1}
               minW="max-content"
               htmlSize={size}
               onKeyUp={onKeyUp}
               {...filteredInputProps}
             />
-          </Flex>
+          </Wrap>
 
           {(activeFilters.length > 0 || inputValue.length > 0) && (
             <IconButton
