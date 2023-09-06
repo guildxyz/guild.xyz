@@ -2,7 +2,9 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  Box,
   Stack,
+  Text,
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
@@ -28,7 +30,7 @@ const ActivityLog = (): JSX.Element => {
   // TODO: show an error if the user isn't connected
 
   const { id } = useUser()
-  const { data, isValidating, error } = useActivityLog()
+  const { data, isValidating, isLoading, error } = useActivityLog()
 
   return (
     <Layout
@@ -60,16 +62,27 @@ const ActivityLog = (): JSX.Element => {
 
           <SectionTitle title="Actions" mt={8} mb="4" />
           <Stack spacing={2.5}>
-            {data?.entries?.length > 0 &&
-              data.entries.map((action) => (
-                <ActivityLogAction key={action.id} action={action} />
-              ))}
-
-            {isValidating ? (
+            {isLoading ? (
               <ActivityLogSkeletons />
             ) : error ? (
               <ErrorAlert label={error ?? "Couldn't load actions"} mb={0} />
-            ) : null}
+            ) : data && !data?.entries?.length ? (
+              <Box
+                p="8"
+                borderWidth="2px"
+                borderRadius={"2xl"}
+                borderStyle={"dashed"}
+              >
+                <Text colorScheme="gray">
+                  No actions found for the filters you've set
+                </Text>
+              </Box>
+            ) : (
+              data?.entries?.map((action) => (
+                <ActivityLogAction key={action.id} action={action} />
+              ))
+            )}
+            {!isLoading && isValidating && <ActivityLogSkeletons />}
           </Stack>
         </>
       ) : (
