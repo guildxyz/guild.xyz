@@ -499,24 +499,6 @@ export const REQUIREMENTS_DATA = [
     types: ["REP3"],
   },
   {
-    icon: "/explorerLogos/tessera.svg",
-    name: "Tessera",
-    fileNameBase: "Tessera",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Tessera/TesseraRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Tessera/TesseraForm")
-    ),
-    types: [
-      "TESSERA",
-      "TESSERA_HOLD",
-      "TESSERA_HOLD_COLLECTION",
-      "TESSERA_HOLD_STATE",
-      "TESSERA_LISTINGS",
-    ],
-  },
-  {
     icon: "/requirementLogos/parallel.png",
     name: "Parallel",
     fileNameBase: "Parallel",
