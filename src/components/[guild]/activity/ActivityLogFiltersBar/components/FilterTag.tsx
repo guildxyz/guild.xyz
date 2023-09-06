@@ -31,12 +31,14 @@ import Suggestion from "./Suggestion"
 
 type Props = {
   filterId: string
+  isFIltersInputFocused: boolean
   focusFiltersInput: () => void
   positionerStyle: Record<string, string>
 } & TagProps
 
 const FilterTag = ({
   filterId,
+  isFIltersInputFocused,
   focusFiltersInput,
   positionerStyle,
   ...tagProps
@@ -72,6 +74,7 @@ const FilterTag = ({
         focusFiltersInput()
       },
       openOnClick: true,
+      autoFocus: isFIltersInputFocused,
       loop: true,
     })
   )
