@@ -156,7 +156,7 @@ const FiltersInput = (): JSX.Element => {
                 <FilterTag
                   key={id}
                   filterId={id}
-                  isFIltersInputFocused={isFocused}
+                  isFiltersInputFocused={isFocused}
                   focusFiltersInput={focus}
                   positionerStyle={positionerStyle}
                 />
