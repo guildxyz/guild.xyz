@@ -6,11 +6,11 @@ import FiltersInput from "./components/FiltersInput"
 const ActivityLogFiltersBar = (): JSX.Element => (
   <StickyBar>
     <SimpleGrid columns={3} gap={4}>
-      <GridItem colSpan={{ base: 3, sm: 2 }}>
+      <GridItem colSpan={{ base: 3, md: 2 }}>
         <FiltersInput />
       </GridItem>
 
-      <GridItem colSpan={{ base: 3, sm: 1 }}>
+      <GridItem colSpan={{ base: 3, md: 1 }}>
         <DateRangeInput />
       </GridItem>
     </SimpleGrid>
