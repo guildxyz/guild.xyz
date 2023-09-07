@@ -109,7 +109,10 @@ const FilterTag = ({
       setIsLoading(true)
       try {
         const guildUser = await fetcher(`/v2/users/${trimmedValue}`)
-        setInputValue(guildUser.id.toString())
+        const newInputValue = guildUser.id.toString()
+        setInputValue(newInputValue)
+        updateFilter({ id, filter, value: newInputValue })
+        focusFiltersInput()
       } catch {
         // We just leave the original content of the input
       } finally {
@@ -220,7 +223,9 @@ const FilterTag = ({
               onChange={onChange}
               onKeyUp={(e) => {
                 if (e.currentTarget.value.length > 0 && e.code === "Enter") {
-                  updateFilter({ id, filter, value: inputValue })
+                  if (!inputValue.startsWith("0x")) {
+                    updateFilter({ id, filter, value: inputValue })
+                  }
                   focusFiltersInput()
                 }
 
