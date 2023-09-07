@@ -15,6 +15,11 @@ const DIRTY_KEYS_TO_KEEP = [
 const KEYS_TO_KEEP = [
   // There's a chance that we send empty arrays intentionally e.g. inside a contract call's guildPlatformData
   "argsToSign",
+
+  // These are processed into creates/updates/deletes in a useSubmit's fetcher. Therefore we need all of them to know if we need to delete some. Otherwise we couldn't tell if something needs to be deleted, or just hasn't been changed
+  "admins",
+  "contacts",
+  "featureFlags",
 ]
 
 /**
@@ -30,6 +35,10 @@ const KEYS_TO_KEEP = [
  * @returns A new object, that is a subset of formData based on dirtyFields
  */
 const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
+  if (!formData) {
+    return TO_FILTER_FLAG
+  }
+
   if (Array.isArray(dirtyFields)) {
     const newArr = dirtyFields
       .map((field, index) => formDataFilterForDirtyHelper(field, formData[index]))
