@@ -71,8 +71,6 @@ function useAccess(
     { creationPollMs: newAccessFlowIntervalMs }
   )
 
-  const accessCheckResult = poll.data?.["children:access-check:jobs"] ?? null // TODO
-
   const hasAccess = roleId
     ? poll.data?.roleAccesses?.find(
         (accessResult) => accessResult?.roleId === roleId
@@ -109,7 +107,7 @@ function useAccess(
     },
     error: poll.error,
     hasAccess,
-    isLoading: !accessCheckResult,
+    isLoading: poll.isLoading,
     mutate: () => poll.mutate(),
   }
 }
