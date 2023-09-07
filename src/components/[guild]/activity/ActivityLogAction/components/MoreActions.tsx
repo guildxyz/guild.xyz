@@ -1,5 +1,4 @@
 import {
-  Box,
   HStack,
   Icon,
   ListItem,
@@ -16,8 +15,8 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { ArrowSquareOut, DotsThree } from "phosphor-react"
-import { CSSProperties, memo } from "react"
-import { FixedSizeList } from "react-window"
+import { CSSProperties, memo, useEffect, useRef } from "react"
+import { VariableSizeList } from "react-window"
 import { ActivityLogAction } from "../../constants"
 import { ActivityLogActionProvider } from "../ActivityLogActionContext"
 import ActionIcon from "./ActionIcon"
@@ -32,30 +31,36 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const numberOfAdditionalActions = actions.length - displayedActionCount
 
+  const listRef = useRef(null)
+  const rowHeights = useRef<Record<number, number>>({})
+
   const Row = memo(({ index, style }: { index: number; style: CSSProperties }) => {
+    const rowRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+      if (!rowRef.current) return
+      // Recalculating row heights, then setting new row heights
+      listRef.current.resetAfterIndex(0)
+      rowHeights.current = {
+        ...rowHeights.current,
+        [index]: rowRef.current.clientHeight + 8,
+      }
+    }, [rowRef.current])
+
     const action = actions[index]
 
     return (
       <ListItem style={style}>
         <ActivityLogActionProvider key={action.id} action={action}>
-          <Box
-            overflowX="auto"
-            px={4}
-            className="invisible-scrollbar"
-            style={{
-              WebkitMaskImage: `linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)`,
-            }}
-          >
-            <HStack spacing={4} w="max-content">
-              <ActionIcon size={6} />
-              <Stack spacing={0.5}>
-                <ActionLabel />
-                <Text as="span" colorScheme="gray" fontSize="sm">
-                  {new Date(Number(action.timestamp)).toLocaleString()}
-                </Text>
-              </Stack>
-            </HStack>
-          </Box>
+          <HStack ref={rowRef} spacing={4}>
+            <ActionIcon size={6} />
+            <Stack spacing={0.5}>
+              <ActionLabel />
+              <Text as="span" colorScheme="gray" fontSize="sm">
+                {new Date(Number(action.timestamp)).toLocaleString()}
+              </Text>
+            </Stack>
+          </HStack>
         </ActivityLogActionProvider>
       </ListItem>
     )
@@ -82,15 +87,19 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
           <ModalCloseButton />
 
           <ModalBody>
-            <UnorderedList mx={-4}>
-              <FixedSizeList
+            <UnorderedList mx={0}>
+              <VariableSizeList
+                ref={listRef}
                 height={400}
                 itemCount={actions.length}
-                itemSize={56}
+                itemSize={(i) => rowHeights.current[i] ?? 0}
                 className="custom-scrollbar"
+                style={{
+                  overflowX: "hidden",
+                }}
               >
                 {Row}
-              </FixedSizeList>
+              </VariableSizeList>
             </UnorderedList>
           </ModalBody>
         </ModalContent>
