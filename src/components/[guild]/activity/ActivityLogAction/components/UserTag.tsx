@@ -1,13 +1,18 @@
 import {
+  Flex,
   forwardRef,
+  Icon,
+  IconButton,
   Tag,
   TagLabel,
   TagLeftIcon,
   TagProps,
   Tooltip,
+  useClipboard,
   useColorModeValue,
 } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
+import { Check, Copy } from "phosphor-react"
 
 import shortenHex from "utils/shortenHex"
 import { useActivityLog } from "../../ActivityLogContext"
@@ -16,10 +21,11 @@ import { useActivityLogFilters } from "../../ActivityLogFiltersBar/components/Ac
 type Props = {
   address?: string
   userId?: number
+  onClick?: () => void
 } & TagProps
 
 const UserTag = forwardRef<Props, "span">(
-  ({ address: addressProp, userId, ...rest }, ref): JSX.Element => {
+  ({ address: addressProp, userId, onClick, ...rest }, ref): JSX.Element => {
     const variant = useColorModeValue("subtle", "solid")
     const colorScheme = useColorModeValue("alpha", "gray")
 
@@ -32,17 +38,32 @@ const UserTag = forwardRef<Props, "span">(
         ref={ref}
         variant={variant}
         colorScheme={colorScheme}
-        cursor="pointer"
         minW="max-content"
         h="max-content"
+        overflow="hidden"
+        pr={onClick ? 0 : undefined}
+        _focusWithin={{
+          boxShadow: "outline",
+        }}
         {...rest}
       >
-        {address && (
-          <TagLeftIcon mr={0.5} as={GuildAvatar} address={address} size={3} />
-        )}
-        <TagLabel>
-          {address ? shortenHex(address, 3) : userId ?? "Unknown user"}
-        </TagLabel>
+        <Flex
+          as={onClick ? "button" : undefined}
+          alignItems="center"
+          onClick={onClick}
+          _focus={{
+            outline: "none",
+          }}
+        >
+          {address && (
+            <TagLeftIcon mr={0.5} as={GuildAvatar} address={address} size={3} />
+          )}
+          <TagLabel>
+            {address ? shortenHex(address, 3) : userId ?? "Unknown user"}
+          </TagLabel>
+        </Flex>
+
+        {onClick && address && <CopyAddressButton address={address} />}
       </Tag>
     )
   }
@@ -65,7 +86,6 @@ const ClickableUserTag = ({ id }: ClickableUserTagProps): JSX.Element => {
   return (
     <Tooltip label="Filter by user" placement="top" hasArrow isDisabled={isDisabled}>
       <UserTag
-        as="button"
         onClick={
           isDisabled
             ? undefined
@@ -75,6 +95,28 @@ const ClickableUserTag = ({ id }: ClickableUserTagProps): JSX.Element => {
         cursor={isDisabled ? "default" : "pointer"}
       />
     </Tooltip>
+  )
+}
+
+const CopyAddressButton = ({ address }: { address: string }): JSX.Element => {
+  const focusBgColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200")
+  const { onCopy, hasCopied } = useClipboard(address ?? "")
+
+  return (
+    <IconButton
+      aria-label="Copy address"
+      variant="ghost"
+      size="xs"
+      boxSize={6}
+      ml={1}
+      borderRadius="none"
+      onClick={onCopy}
+      icon={<Icon as={hasCopied ? Check : Copy} />}
+      _focus={{
+        boxShadow: "none",
+        bgColor: focusBgColor,
+      }}
+    />
   )
 }
 
