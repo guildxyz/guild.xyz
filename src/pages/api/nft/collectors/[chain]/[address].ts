@@ -24,6 +24,7 @@ const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   POLYGON_MUMBAI: `https://polygon-mumbai.g.alchemy.com/nft/v3/${process.env.POLYGON_MUMBAI_ALCHEMY_KEY}/getOwnersForContract`,
   BASE_MAINNET: "",
   ETHEREUM: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.MAINNET_ALCHEMY_KEY}/getOwnersForContract`,
+  OPTIMISM: `https://opt-mainnet.g.alchemy.com/v2/${process.env.OPTIMISM_ALCHEMY_KEY}`,
 }
 
 export const validateNftChain = (value: string | string[]): Chain => {

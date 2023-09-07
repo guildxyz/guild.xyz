@@ -69,6 +69,7 @@ export type CreateNftFormType = {
 const CONTRACT_CALL_SUPPORTED_CHAINS = [
   "ETHEREUM",
   "BASE_MAINNET",
+  "OPTIMISM",
   "POLYGON",
   "POLYGON_MUMBAI",
 ] as const
