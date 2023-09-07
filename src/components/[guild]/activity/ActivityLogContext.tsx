@@ -82,6 +82,7 @@ const ActivityLogContext = createContext<
   Omit<SWRInfiniteResponse<ActivityLogActionResponse>, "mutate" | "data"> & {
     data: ActivityLogActionResponse
     mutate: () => void
+    isUserActivityLog: boolean
   }
 >(undefined)
 
@@ -166,6 +167,7 @@ const ActivityLogProvider = ({
     ...ogSWRInfiniteResponse,
     data: transformActivityLogInfiniteResponse(ogSWRInfiniteResponse.data),
     mutate: () => ogSWRInfiniteResponse.mutate(),
+    isUserActivityLog: !!userId,
   }
 
   useScrollEffect(() => {

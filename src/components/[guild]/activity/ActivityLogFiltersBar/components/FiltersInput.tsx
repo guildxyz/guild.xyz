@@ -10,9 +10,9 @@ import {
 } from "@chakra-ui/react"
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
-import { useRouter } from "next/router"
 import { CaretDown, X } from "phosphor-react"
 import { KeyboardEvent, useEffect, useRef, useState } from "react"
+import { useActivityLog } from "../../ActivityLogContext"
 import {
   isSupportedQueryParam,
   SupportedSearchOption,
@@ -33,8 +33,7 @@ const getPositionerCSSVariables = (
 }
 
 const FiltersInput = (): JSX.Element => {
-  const router = useRouter()
-  const isUserActivityLog = router.pathname.includes("/profile")
+  const { isUserActivityLog } = useActivityLog()
 
   const rootBgColor = useColorModeValue("white", "blackAlpha.300")
 
