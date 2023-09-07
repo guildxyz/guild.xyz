@@ -1,5 +1,4 @@
 import { usePrevious } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import {
@@ -9,8 +8,6 @@ import {
   useEffect,
   useState,
 } from "react"
-import { PlatformName, PlatformType, Role } from "types"
-import { ACTION } from "../../constants"
 
 export type Filter = {
   id?: string
@@ -52,24 +49,6 @@ export const isSupportedQueryParam = (arg: any): arg is SupportedQueryParam =>
   typeof arg === "string" &&
   SUPPORTED_QUERY_PARAMS.includes(arg as SupportedQueryParam)
 
-type RewardSuggestion = {
-  rolePlatformId: number
-  platformName: PlatformName
-  name: string
-}
-
-const HIDDEN_ACTIONS: (keyof typeof ACTION)[] = [
-  "UpdateUrlName",
-  "UpdateLogoOrTitle",
-  "UpdateDescription",
-  "UpdateLogic",
-  "UpdateTheme",
-]
-
-const ACTIVITY_LOG_ACTIONS = Object.entries(ACTION)
-  .filter(([actionType]) => !HIDDEN_ACTIONS.includes(ACTION[actionType]))
-  .map(([, actionName]) => actionName)
-
 const ActivityLogFiltersContext = createContext<{
   activeFilters: Filter[]
   addFilter: (filter: Filter) => void
@@ -79,9 +58,6 @@ const ActivityLogFiltersContext = createContext<{
   clearFilters: (filterTypesToClear: SupportedQueryParam[]) => void
   getFilter: (id: string) => Filter | Record<string, never>
   isActiveFilter: (filterType: SupportedQueryParam) => boolean
-  getFilteredRewardSuggestions: (inputValue: string) => RewardSuggestion[]
-  getFilteredRoleSuggestions: (inputValue: string) => Role[]
-  getFilteredActionSuggestions: (inputValue: string) => ACTION[]
 }>(undefined)
 
 const ActivityLogFiltersProvider = ({
@@ -210,56 +186,6 @@ const ActivityLogFiltersProvider = ({
   const isActiveFilter = (filterType: SupportedQueryParam): boolean =>
     activeFilters?.some((f) => f.filter === filterType)
 
-  const { roles, guildPlatforms } = useGuild()
-
-  const rewardSuggestions: RewardSuggestion[] = roles
-    ?.flatMap((role) => role.rolePlatforms)
-    .map((rp) => {
-      const role = roles.find((r) => r.id === rp.roleId)
-      const guildPlatform = guildPlatforms.find((gp) => gp.id === rp.guildPlatformId)
-      const name =
-        guildPlatform?.platformGuildName ?? guildPlatform?.platformGuildData?.name
-
-      return {
-        rolePlatformId: rp.id,
-        platformName: PlatformType[guildPlatform?.platformId] as PlatformName,
-        name:
-          guildPlatform?.platformId === PlatformType.DISCORD
-            ? `${role.name} - ${name}`
-            : name,
-      }
-    })
-
-  const getFilteredRewardSuggestions = (inputValue: string) =>
-    rewardSuggestions?.filter((reward) => {
-      const lowerCaseInputValue = inputValue?.trim().toLowerCase()
-
-      if (!lowerCaseInputValue) return true
-
-      return (
-        reward.name.toLowerCase().includes(lowerCaseInputValue) ||
-        "reward".includes(lowerCaseInputValue)
-      )
-    }) ?? []
-
-  const getFilteredRoleSuggestions = (inputValue: string) =>
-    roles?.filter((role) => {
-      const lowerCaseInputValue = inputValue?.trim().toLowerCase()
-      return (
-        role.name.toLowerCase().includes(lowerCaseInputValue) ||
-        "role".includes(lowerCaseInputValue)
-      )
-    }) ?? []
-
-  const getFilteredActionSuggestions = (inputValue: string) =>
-    ACTIVITY_LOG_ACTIONS.filter((action) => {
-      const lowerCaseInputValue = inputValue.toLowerCase()
-      return (
-        action.includes(lowerCaseInputValue) ||
-        "action".includes(lowerCaseInputValue)
-      )
-    })
-
   return (
     <ActivityLogFiltersContext.Provider
       value={{
@@ -271,9 +197,6 @@ const ActivityLogFiltersProvider = ({
         clearFilters,
         getFilter,
         isActiveFilter,
-        getFilteredRewardSuggestions,
-        getFilteredRoleSuggestions,
-        getFilteredActionSuggestions,
       }}
     >
       {children}

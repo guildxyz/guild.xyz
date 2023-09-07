@@ -1,5 +1,4 @@
 import {
-  Center,
   HStack,
   IconButton,
   Input,
@@ -20,14 +19,16 @@ import { PlatformType } from "types"
 import capitalize from "utils/capitalize"
 import fetcher from "utils/fetcher"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
-import ActionIcon from "../../ActivityLogAction/components/ActionIcon"
-import RewardTag from "../../ActivityLogAction/components/RewardTag"
-import RoleTag from "../../ActivityLogAction/components/RoleTag"
-import UserTag from "../../ActivityLogAction/components/UserTag"
-import { ACTION } from "../../constants"
-import { FILTER_NAMES, useActivityLogFilters } from "./ActivityLogFiltersContext"
-import Dropdown from "./Dropdown"
-import Suggestion from "./Suggestion"
+import ActionIcon from "../../../ActivityLogAction/components/ActionIcon"
+import RewardTag from "../../../ActivityLogAction/components/RewardTag"
+import RoleTag from "../../../ActivityLogAction/components/RoleTag"
+import UserTag from "../../../ActivityLogAction/components/UserTag"
+import { ACTION } from "../../../constants"
+import { FILTER_NAMES, useActivityLogFilters } from "../ActivityLogFiltersContext"
+import Dropdown from "../Dropdown"
+import ActionSuggestons from "./components/ActionSuggestons"
+import RewardSuggestions from "./components/RewardSuggestions"
+import RoleSuggestions from "./components/RoleSuggestions"
 
 type Props = {
   filterId: string
@@ -46,14 +47,7 @@ const FilterTag = ({
   const tagFontColor = useColorModeValue("black", undefined)
   const closeBtnFocusBgColor = useColorModeValue("blackAlpha.300", "whiteAlpha.500")
 
-  const {
-    getFilter,
-    updateFilter,
-    removeFilter,
-    getFilteredRoleSuggestions,
-    getFilteredRewardSuggestions,
-    getFilteredActionSuggestions,
-  } = useActivityLogFilters()
+  const { getFilter, updateFilter, removeFilter } = useActivityLogFilters()
   const { id, filter, value } = getFilter(filterId)
 
   const { roles, guildPlatforms } = useGuild()
@@ -285,89 +279,27 @@ const FilterTag = ({
           <Stack spacing={0} {...contentProps}>
             {(() => {
               switch (filter) {
-                case "roleId": {
-                  const roleSuggestions = getFilteredRoleSuggestions(inputValue)
-
+                case "roleId":
                   return (
-                    <>
-                      {!roleSuggestions.length && <NoResults />}
-                      {roleSuggestions.map((roleSuggestion) => {
-                        const suggestionLabel = "Role"
-
-                        return (
-                          <Suggestion
-                            key={roleSuggestion.id}
-                            label={suggestionLabel}
-                            {...getOptionProps({
-                              label: suggestionLabel,
-                              value: roleSuggestion.id.toString(),
-                            })}
-                          >
-                            <RoleTag
-                              image={roleSuggestion.imageUrl}
-                              name={roleSuggestion.name}
-                            />
-                          </Suggestion>
-                        )
-                      })}
-                    </>
+                    <RoleSuggestions
+                      inputValue={inputValue}
+                      getOptionProps={getOptionProps}
+                    />
                   )
-                }
-                case "rolePlatformId": {
-                  const rewardSuggestions = getFilteredRewardSuggestions(inputValue)
-
+                case "rolePlatformId":
                   return (
-                    <>
-                      {!rewardSuggestions.length && <NoResults />}
-                      {rewardSuggestions.map((rewardSuggestion) => {
-                        const suggestionLabel = "Reward"
-
-                        return (
-                          <Suggestion
-                            key={rewardSuggestion.rolePlatformId}
-                            label={suggestionLabel}
-                            {...getOptionProps({
-                              label: suggestionLabel,
-                              value: rewardSuggestion.rolePlatformId.toString(),
-                            })}
-                          >
-                            <RewardTag
-                              icon={platforms[rewardSuggestion.platformName].icon}
-                              name={rewardSuggestion.name}
-                              colorScheme={
-                                platforms[rewardSuggestion.platformName].colorScheme
-                              }
-                            />
-                          </Suggestion>
-                        )
-                      })}
-                    </>
+                    <RewardSuggestions
+                      inputValue={inputValue}
+                      getOptionProps={getOptionProps}
+                    />
                   )
-                }
-                case "action": {
-                  const actionSuggestions = getFilteredActionSuggestions(inputValue)
-
+                case "action":
                   return (
-                    <>
-                      {!actionSuggestions.length && <NoResults />}
-                      {actionSuggestions.map((action) => (
-                        <Suggestion
-                          key={action}
-                          label="Action"
-                          {...getOptionProps({
-                            label: capitalize(action),
-                            value: action,
-                          })}
-                        >
-                          <Text as="span" isTruncated>
-                            {action}
-                          </Text>
-                          <ActionIcon action={action} size={6} />
-                        </Suggestion>
-                      ))}
-                    </>
+                    <ActionSuggestons
+                      inputValue={inputValue}
+                      getOptionProps={getOptionProps}
+                    />
                   )
-                }
                 default:
                   return null
               }
@@ -378,13 +310,5 @@ const FilterTag = ({
     </>
   )
 }
-
-const NoResults = (): JSX.Element => (
-  <Center p={4} color="gray.500">
-    <Text as="span" colorScheme="gray">
-      No results
-    </Text>
-  </Center>
-)
 
 export default FilterTag
