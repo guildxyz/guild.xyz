@@ -60,6 +60,15 @@ const transformActivityLogInfiniteResponse = (
             entry.action !== ACTION.SendReward &&
             entry.action !== ACTION.RevokeReward
         )
+        .map((entry) => ({
+          ...entry,
+          children:
+            entry.children?.filter(
+              (childAction) =>
+                childAction.action !== ACTION.SendReward &&
+                childAction.action !== ACTION.RevokeReward
+            ) ?? [],
+        }))
     )
 
     Object.keys(chunk.values).forEach((key) =>
