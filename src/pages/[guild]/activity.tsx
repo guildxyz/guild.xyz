@@ -1,7 +1,9 @@
 import { Box, Stack, Text } from "@chakra-ui/react"
-import Tabs from "components/[guild]/Tabs"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import Card from "components/common/Card"
+import ErrorAlert from "components/common/ErrorAlert"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import { SectionTitle } from "components/common/Section"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
 import {
   ActivityLogProvider,
@@ -12,11 +14,9 @@ import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleto
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
-import Card from "components/common/Card"
-import ErrorAlert from "components/common/ErrorAlert"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import { SectionTitle } from "components/common/Section"
+import Tabs from "components/[guild]/Tabs"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 
 const ActivityLog = (): JSX.Element => {
   const { name, urlName, imageUrl } = useGuild()
@@ -66,7 +66,10 @@ const ActivityLog = (): JSX.Element => {
             {isLoading ? (
               <ActivityLogSkeletons />
             ) : error ? (
-              <ErrorAlert label={error ?? "Couldn't load actions"} mb={0} />
+              <ErrorAlert
+                label={typeof error === "string" ? error : "Couldn't load actions"}
+                mb={0}
+              />
             ) : data && !data?.entries?.length ? (
               <Box
                 p="8"

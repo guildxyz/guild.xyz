@@ -8,7 +8,10 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ThemeProvider } from "components/[guild]/ThemeContext"
+import Card from "components/common/Card"
+import ErrorAlert from "components/common/ErrorAlert"
+import Layout from "components/common/Layout"
+import { SectionTitle } from "components/common/Section"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
 import {
   ActivityLogProvider,
@@ -17,17 +20,12 @@ import {
 import ActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar"
 import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleton"
 import useUser from "components/[guild]/hooks/useUser"
-import Card from "components/common/Card"
-import ErrorAlert from "components/common/ErrorAlert"
-import Layout from "components/common/Layout"
-import { SectionTitle } from "components/common/Section"
+import { ThemeProvider } from "components/[guild]/ThemeContext"
 
 const ActivityLog = (): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
   const bgOpacity = useColorModeValue(0.06, 0.1)
   const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
-
-  // TODO: show an error if the user isn't connected
 
   const { id } = useUser()
   const { data, isValidating, isLoading, error } = useActivityLog()
@@ -65,7 +63,10 @@ const ActivityLog = (): JSX.Element => {
             {isLoading ? (
               <ActivityLogSkeletons />
             ) : error ? (
-              <ErrorAlert label={error ?? "Couldn't load actions"} mb={0} />
+              <ErrorAlert
+                label={typeof error === "string" ? error : "Couldn't load actions"}
+                mb={0}
+              />
             ) : data && !data?.entries?.length ? (
               <Box
                 p="8"
