@@ -69,7 +69,8 @@ const useFlow = <
   const pollParams = new URLSearchParams(params).toString()
 
   const poll = useSWRImmutable(
-    jobId !== undefined || (shouldFetch && hasValidKeypair)
+    (jobId !== undefined || (shouldFetch && hasValidKeypair)) &&
+      typeof userId === "number"
       ? [`${path}?${pollParams}`, { method: "GET" }, userId]
       : null,
     ([url, options]) =>
