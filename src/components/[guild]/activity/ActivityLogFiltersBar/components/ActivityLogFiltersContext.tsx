@@ -173,7 +173,11 @@ const ActivityLogFiltersProvider = ({
   }, [activeFilters])
 
   useEffect(() => {
-    if (!query.guild || !Object.keys(prevQuery ?? {}).length) return
+    if (
+      !router.pathname.includes("/profile") &&
+      (!query.guild || !Object.keys(prevQuery ?? {}).length)
+    )
+      return
 
     let shouldPushRouter = false
 
