@@ -10,6 +10,7 @@ import {
   useActivityLog,
 } from "components/[guild]/activity/ActivityLogContext"
 import ActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar"
+import { ActivityLogFiltersProvider } from "components/[guild]/activity/ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -58,7 +59,7 @@ const ActivityLog = (): JSX.Element => {
           />
         </Card>
       ) : (
-        <>
+        <ActivityLogFiltersProvider>
           <ActivityLogFiltersBar />
 
           <SectionTitle title="Actions" mt={8} mb="4" />
@@ -88,7 +89,7 @@ const ActivityLog = (): JSX.Element => {
             )}
             {!isLoading && isValidating && <ActivityLogSkeletons />}
           </Stack>
-        </>
+        </ActivityLogFiltersProvider>
       )}
     </Layout>
   )

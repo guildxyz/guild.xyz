@@ -7,11 +7,11 @@ import {
   TagProps,
   Tooltip,
 } from "@chakra-ui/react"
-import { useRouter } from "next/router"
 import { IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { PlatformType } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
+import { useActivityLogFilters } from "../../ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 
 type Props = {
   name?: string
@@ -44,7 +44,7 @@ const ClickableRewardTag = ({
   roleId,
   rolePlatformId,
 }: ClickableRewardTagProps): JSX.Element => {
-  const { data, baseUrl } = useActivityLog()
+  const { data } = useActivityLog()
 
   const reward = data.values.rolePlatforms.find((rp) => rp.id === rolePlatformId)
   const role = data.values.roles.find((r) => r.id === roleId)
@@ -55,21 +55,36 @@ const ClickableRewardTag = ({
       ? `${role.name} - ${rewardName}`
       : rewardName
 
-  const router = useRouter()
+  const filtersContext = useActivityLogFilters()
+  const { activeFilters, addFilter } = filtersContext ?? {}
+  const isDisabled =
+    !filtersContext ||
+    !!activeFilters.find(
+      (f) => f.filter === "rolePlatformId" && f.value === rolePlatformId.toString()
+    )
 
   return (
-    <Tooltip label="Filter by reward" placement="top" hasArrow>
+    <Tooltip
+      label="Filter by reward"
+      placement="top"
+      hasArrow
+      isDisabled={isDisabled}
+    >
       <RewardTag
         as="button"
-        onClick={() => {
-          router.push({
-            pathname: baseUrl,
-            query: { ...router.query, rolePlatformId },
-          })
-        }}
+        onClick={
+          isDisabled
+            ? undefined
+            : () =>
+                addFilter({
+                  filter: "rolePlatformId",
+                  value: rolePlatformId.toString(),
+                })
+        }
         name={name}
         icon={platforms[reward?.platformName]?.icon}
         colorScheme={platforms[reward?.platformName]?.colorScheme}
+        cursor={isDisabled ? "default" : "pointer"}
       />
     </Tooltip>
   )

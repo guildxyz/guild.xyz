@@ -9,9 +9,9 @@ import {
 } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
 
-import { useRouter } from "next/router"
 import shortenHex from "utils/shortenHex"
 import { useActivityLog } from "../../ActivityLogContext"
+import { useActivityLogFilters } from "../../ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 
 type Props = {
   address?: string
@@ -53,22 +53,26 @@ type ClickableUserTagProps = {
 }
 
 const ClickableUserTag = ({ id }: ClickableUserTagProps): JSX.Element => {
-  const { data, baseUrl } = useActivityLog()
+  const { data } = useActivityLog()
   const address = data.values.users.find((u) => u.id === id)?.address
 
-  const router = useRouter()
+  const filtersContext = useActivityLogFilters()
+  const { activeFilters, addFilter } = filtersContext ?? {}
+  const isDisabled =
+    !filtersContext ||
+    !!activeFilters.find((f) => f.filter === "userId" && f.value === id.toString())
 
   return (
-    <Tooltip label="Filter by user" placement="top" hasArrow>
+    <Tooltip label="Filter by user" placement="top" hasArrow isDisabled={isDisabled}>
       <UserTag
         as="button"
-        onClick={() => {
-          router.push({
-            pathname: baseUrl,
-            query: { ...router.query, userId: id },
-          })
-        }}
+        onClick={
+          isDisabled
+            ? undefined
+            : () => addFilter({ filter: "userId", value: id.toString() })
+        }
         address={address}
+        cursor={isDisabled ? "default" : "pointer"}
       />
     </Tooltip>
   )

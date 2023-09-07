@@ -10,8 +10,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useRouter } from "next/router"
 import { useActivityLog } from "../../ActivityLogContext"
+import { useActivityLogFilters } from "../../ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 
 type Props = {
   name?: string
@@ -61,7 +61,7 @@ type ClickableRoleTagProps = {
 }
 
 const ClickableRoleTag = ({ id, guildId }: ClickableRoleTagProps): JSX.Element => {
-  const { baseUrl, data } = useActivityLog()
+  const { data } = useActivityLog()
 
   const { roles } = useGuild(guildId)
   const guildRole = roles?.find((role) => role.id === id)
@@ -70,24 +70,24 @@ const ClickableRoleTag = ({ id, guildId }: ClickableRoleTagProps): JSX.Element =
   const name = activityLogRole?.name ?? guildRole?.name ?? "Unknown role"
   const image = guildRole?.imageUrl
 
-  const router = useRouter()
+  const filtersContext = useActivityLogFilters()
+  const { activeFilters, addFilter } = filtersContext ?? {}
+  const isDisabled =
+    !filtersContext ||
+    !!activeFilters.find((f) => f.filter === "roleId" && f.value === id.toString())
 
   return (
-    <Tooltip label="Filter by role" isDisabled={!id} placement="top" hasArrow>
+    <Tooltip label="Filter by role" placement="top" hasArrow isDisabled={isDisabled}>
       <RoleTag
         as="button"
         onClick={
-          id
-            ? () => {
-                router.push({
-                  pathname: baseUrl,
-                  query: { ...router.query, roleId: id },
-                })
-              }
-            : undefined
+          isDisabled
+            ? undefined
+            : () => addFilter({ filter: "roleId", value: id.toString() })
         }
         name={name}
         image={image}
+        cursor={isDisabled ? "default" : "pointer"}
       />
     </Tooltip>
   )

@@ -18,6 +18,7 @@ import {
   useActivityLog,
 } from "components/[guild]/activity/ActivityLogContext"
 import ActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar"
+import { ActivityLogFiltersProvider } from "components/[guild]/activity/ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleton"
 import useUser from "components/[guild]/hooks/useUser"
 import { ThemeProvider } from "components/[guild]/ThemeContext"
@@ -55,7 +56,7 @@ const ActivityLog = (): JSX.Element => {
       backButton={{ href: "/explorer", text: "Go back to explorer" }}
     >
       {id ? (
-        <>
+        <ActivityLogFiltersProvider>
           <ActivityLogFiltersBar />
 
           <SectionTitle title="Actions" mt={8} mb="4" />
@@ -85,7 +86,7 @@ const ActivityLog = (): JSX.Element => {
             )}
             {!isLoading && isValidating && <ActivityLogSkeletons />}
           </Stack>
-        </>
+        </ActivityLogFiltersProvider>
       ) : (
         <Card>
           <Alert status="info" pb={5}>

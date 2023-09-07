@@ -74,7 +74,6 @@ const ActivityLogContext = createContext<
   Omit<SWRInfiniteResponse<ActivityLogActionResponse>, "mutate" | "data"> & {
     data: ActivityLogActionResponse
     mutate: () => void
-    baseUrl: string
   }
 >(undefined)
 
@@ -152,7 +151,6 @@ const ActivityLogProvider = ({
     ...ogSWRInfiniteResponse,
     data: transformActivityLogInfiniteResponse(ogSWRInfiniteResponse.data),
     mutate: () => ogSWRInfiniteResponse.mutate(),
-    baseUrl: userId ? "/profile/activity" : `/${urlName}/activity`,
   }
 
   useScrollEffect(() => {
