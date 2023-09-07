@@ -62,8 +62,6 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     isLoading,
     onSubmit,
     error: joinError,
-    isSigning,
-    signLoadingText,
     response,
   } = useJoin((res) => {
     methods.setValue("platforms", {})
@@ -95,8 +93,8 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               mt="8"
               onClick={handleSubmit(onSubmit)}
               colorScheme="green"
-              isLoading={isSigning || isLoading}
-              loadingText={signLoadingText || "Checking access"}
+              isLoading={isLoading}
+              loadingText={"Checking access"}
               isDisabled={!isActive}
             >
               Check access to join

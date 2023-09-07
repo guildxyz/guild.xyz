@@ -1,15 +1,16 @@
-import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
-import useAccess from "components/[guild]/hooks/useAccess"
+import type { AccessQueueJob } from "@guild.xyz/guild-queues"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useMemberships from "components/explorer/hooks/useMemberships"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import useFlow from "hooks/useFlow"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { useRouter } from "next/router"
 import { CircleWavyCheck } from "phosphor-react"
+import { useEffect } from "react"
+import { mutate } from "swr"
 import { PlatformName } from "types"
-import fetcher from "utils/fetcher"
 
 type PlatformResult = {
   platformId: number
@@ -34,104 +35,105 @@ export type JoinData = {
 }
 
 const useJoin = (onSuccess?: (response: Response) => void) => {
-  const { captureEvent } = usePostHogContext()
-
-  const access = useAccess()
   const guild = useGuild()
   const user = useUser()
 
+  const poll = useFlow<AccessQueueJob>(
+    `/v2/actions/join`,
+    { guildId: guild.id },
+    { guildId: `${guild.id}` },
+    false
+  )
+
+  const response = poll.data?.done
+    ? ({
+        success: poll.data.roleAccesses?.some((ra) => ra.access),
+        accessedRoleIds: poll.data.updateMembershipResult?.membershipRoleIds,
+        platformResults: [{}], // TODO
+      } as Response)
+    : null
+
+  const { mutate: mutateMemberships } = useMemberships()
+  const { pathname } = useRouter()
   const toastWithTweetButton = useToastWithTweetButton()
   const toastWithButton = useToastWithButton()
-
-  const { mutate } = useMemberships()
-
-  const submit = (signedValidation: SignedValdation): Promise<Response> =>
-    fetcher(`/user/join`, signedValidation).then((body) => {
-      if (body === "rejected") {
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
-        throw "Something went wrong, join request rejected."
-      }
-
-      if (typeof body === "string") {
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
-        throw body
-      }
-
-      return body
-    })
-
   const mintGuildPinContext = useMintGuildPinContext()
   // Destructuring it separately, since we don't have a MintGuildPinContext on the POAP minting page
   const { onOpen } = mintGuildPinContext ?? {}
-  const { pathname } = useRouter()
+  const { captureEvent } = usePostHogContext()
 
-  const useSubmitResponse = useSubmitWithSign<Response>(submit, {
-    onSuccess: (response) => {
-      access?.mutate?.()
-      // mutate user in case they connected new platforms during the join flow
-      user?.mutate?.()
+  // onSuccess
+  useEffect(() => {
+    if (!response) return
 
-      onSuccess?.(response)
+    mutate(
+      [
+        `/v2/actions/access-check?${new URLSearchParams({
+          guildId: `${guild?.id}`,
+        }).toString()}`,
+        { method: "GET" },
+        user?.id,
+      ],
+      poll.data,
+      { revalidate: false }
+    )
 
-      if (!response.success) return
+    onSuccess?.(response)
 
-      setTimeout(() => {
-        mutate(
-          (prev) => [
-            ...prev,
-            {
-              guildId: guild.id,
-              isAdmin: false,
-              roleIds: response.accessedRoleIds,
-              joinedAt: new Date().toISOString(),
-            },
-          ],
-          { revalidate: false }
-        )
-        // show user in guild's members
-        guild.mutateGuild()
-      }, 800)
+    if (!response.success) return
 
-      if (
-        pathname === "/[guild]" &&
-        guild.featureFlags.includes("GUILD_CREDENTIAL")
-      ) {
-        toastWithButton({
-          title: "Successfully joined guild",
-          description: "Let others know as well by minting it on-chain",
-          buttonProps: {
-            leftIcon: <CircleWavyCheck weight="fill" />,
-            children: "Mint Guild Pin",
-            onClick: onOpen,
+    setTimeout(() => {
+      mutateMemberships(
+        (prev) => [
+          ...prev,
+          {
+            guildId: guild.id,
+            isAdmin: false,
+            roleIds: response.accessedRoleIds,
+            joinedAt: new Date().toISOString(),
           },
-        })
-      } else {
-        toastWithTweetButton({
-          title: "Successfully joined guild",
-          tweetText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
+        ],
+        { revalidate: false }
+      )
+      // show user in guild's members
+      guild.mutateGuild()
+    }, 800)
+
+    if (pathname === "/[guild]" && guild.featureFlags.includes("GUILD_CREDENTIAL")) {
+      toastWithButton({
+        title: "Successfully joined guild",
+        description: "Let others know as well by minting it on-chain",
+        buttonProps: {
+          leftIcon: <CircleWavyCheck weight="fill" />,
+          children: "Mint Guild Pin",
+          onClick: onOpen,
+        },
+      })
+    } else {
+      toastWithTweetButton({
+        title: "Successfully joined guild",
+        tweetText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
           guild.xyz/${guild.urlName}`,
-        })
-      }
-    },
-    onError: (error) => {
-      captureEvent(`Guild join error`, { error })
-    },
-  })
+      })
+    }
+  }, [response])
+
+  const a = (response && response) || response
+
+  // onError
+  useEffect(() => {
+    if (!poll.error) return
+
+    captureEvent(`Guild join error`, { error: poll.error })
+  }, [poll.error])
 
   return {
-    ...useSubmitResponse,
-    onSubmit: (data?) =>
-      useSubmitResponse.onSubmit({
-        guildId: guild?.id,
-        platforms:
-          data &&
-          Object.entries(data.platforms ?? {})
-            .filter(([_, value]) => !!value)
-            .map(([key, value]: any) => ({
-              name: key,
-              ...value,
-            })),
-      }),
+    response,
+    isLoading: poll.isLoading,
+    error: poll.error,
+    onSubmit: () => {
+      poll.mutate()
+    },
   }
 }
 

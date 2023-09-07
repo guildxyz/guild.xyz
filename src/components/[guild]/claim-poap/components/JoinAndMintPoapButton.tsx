@@ -1,13 +1,13 @@
 import { ButtonProps, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { MintModal } from "components/[guild]/CreatePoap/hooks/useMintPoapButton"
-import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
-import useClaimPoap from "components/[guild]/claim-poap/hooks/useClaimPoap"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
+import useClaimPoap from "components/[guild]/claim-poap/hooks/useClaimPoap"
+import { MintModal } from "components/[guild]/CreatePoap/hooks/useMintPoapButton"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
 import useToast from "hooks/useToast"
 import { ArrowSquareOut } from "phosphor-react"
-import { PropsWithChildren, forwardRef } from "react"
+import { forwardRef, PropsWithChildren } from "react"
 
 type Props = {
   poapId: number
@@ -43,12 +43,8 @@ const JoinAndMintPoapButton = forwardRef(
       onMintModalOpen()
     }
 
-    const {
-      isLoading: isJoinLoading,
-      onSubmit: onJoinSubmit,
-      isSigning,
-      signLoadingText,
-    } = useJoin(handleSubmit)
+    const { isLoading: isJoinLoading, onSubmit: onJoinSubmit } =
+      useJoin(handleSubmit)
 
     const props = response
       ? {
@@ -65,8 +61,8 @@ const JoinAndMintPoapButton = forwardRef(
         }
       : {
           onClick: () => onJoinSubmit(),
-          isLoading: isJoinLoading || isSigning,
-          loadingText: signLoadingText || "Joining Guild",
+          isLoading: isJoinLoading,
+          loadingText: "Joining Guild",
           children: "Mint POAP",
         }
 
