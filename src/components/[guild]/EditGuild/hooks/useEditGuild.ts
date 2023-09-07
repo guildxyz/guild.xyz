@@ -32,11 +32,21 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
     const existingAdmins = guild?.admins ?? []
     const { admins = [], featureFlags = [], contacts = [], ...guildData } = data
 
-    const adminsToCreate = admins.filter((admin) => !admin.id)
+    const adminsToCreate = admins.filter(
+      (admin) =>
+        !existingAdmins.some(
+          (existingAdmin) =>
+            existingAdmin.address?.toLowerCase() === admin.address?.toLowerCase()
+        )
+    )
+
     const adminsToDelete = existingAdmins.filter(
       (existingAdmin) =>
         !existingAdmin?.isOwner &&
-        !admins.some((admin) => admin.id === existingAdmin.id)
+        !admins.some(
+          (admin) =>
+            existingAdmin.address?.toLowerCase() === admin.address?.toLowerCase()
+        )
     )
 
     const contactsToUpdate = contacts.filter((contact) => {

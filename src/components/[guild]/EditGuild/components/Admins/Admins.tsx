@@ -148,20 +148,9 @@ const Admins = () => {
           onBlur={onBlur}
           onChange={(selectedOption: SelectOption[]) => {
             onChange(
-              selectedOption?.map((option) => {
-                const prevAdmin = admins?.find(
-                  ({ address }) =>
-                    address?.toLowerCase() === option.value.toLowerCase()
-                )
-
-                if (prevAdmin) {
-                  return prevAdmin
-                }
-
-                return {
-                  address: option.value.toLowerCase(),
-                }
-              })
+              selectedOption?.map((option) => ({
+                address: option.value.toLowerCase(),
+              }))
             )
           }}
           isLoading={isLoading}
