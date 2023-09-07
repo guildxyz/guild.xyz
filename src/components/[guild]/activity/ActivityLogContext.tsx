@@ -93,7 +93,7 @@ const ActivityLogProvider = ({
   const { urlName } = useGuild(guildId)
   const { query } = useRouter()
 
-  const { ready } = useKeyPair()
+  const { keyPair, ready, isValid } = useKeyPair()
 
   const getKey = (
     pageIndex: number,
@@ -101,7 +101,9 @@ const ActivityLogProvider = ({
   ) => {
     if (
       (!guildId && !userId) ||
+      !keyPair ||
       !ready ||
+      !isValid ||
       (previousPageData?.entries && !previousPageData.entries.length)
     )
       return null
