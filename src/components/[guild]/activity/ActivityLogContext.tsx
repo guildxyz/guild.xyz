@@ -5,7 +5,6 @@ import { createContext, PropsWithChildren, useContext } from "react"
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite"
 import { OneOf, PlatformName, Requirement } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
-import useGuild from "../hooks/useGuild"
 import {
   isSupportedQueryParam,
   SupportedQueryParam,
@@ -98,7 +97,6 @@ const ActivityLogProvider = ({
   guildId,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { urlName } = useGuild(guildId)
   const { query } = useRouter()
 
   const { keyPair, ready, isValid } = useKeyPair()
@@ -129,7 +127,15 @@ const ActivityLogProvider = ({
 
     if (withSearchParams) {
       Object.entries(query).forEach(([key, value]) => {
-        if (isSupportedQueryParam(key)) searchParams.append(key, value.toString())
+        if (isSupportedQueryParam(key)) {
+          if (Array.isArray(value)) {
+            value.forEach((v) => {
+              searchParams.append(key, v.toString())
+            })
+          } else {
+            searchParams.append(key, value.toString())
+          }
+        }
       })
     }
 

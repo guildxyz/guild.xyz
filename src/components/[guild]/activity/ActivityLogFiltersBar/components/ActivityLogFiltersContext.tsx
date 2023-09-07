@@ -71,15 +71,24 @@ const ActivityLogFiltersProvider = ({
     if (initialSetupDone || !Object.entries(router.query).length) return
 
     const initialFilters: Filter[] = Object.entries(router.query)
-      .map(([key, value]) =>
-        isSupportedQueryParam(key) && value
-          ? {
-              id: crypto.randomUUID(),
-              filter: key,
-              value: value.toString(),
-            }
-          : null
-      )
+      .map(([key, value]) => {
+        if (!isSupportedQueryParam(key) || !value) return null
+
+        if (Array.isArray(value)) {
+          return value.map((singleValue) => ({
+            id: crypto.randomUUID(),
+            filter: key,
+            value: singleValue.toString(),
+          }))
+        } else {
+          return {
+            id: crypto.randomUUID(),
+            filter: key,
+            value: value.toString(),
+          }
+        }
+      })
+      .flat()
       .filter(Boolean)
 
     setActiveFilters(initialFilters)
@@ -143,8 +152,13 @@ const ActivityLogFiltersProvider = ({
     ]
 
     filters.forEach((filter) => {
-      const relevantActiveFilter = activeFilters.find((f) => f.filter === filter)
-      newQuery[filter] = relevantActiveFilter?.value ?? ""
+      const relevantActiveFilters = activeFilters.filter((f) => f.filter === filter)
+
+      if (relevantActiveFilters.length > 1) {
+        newQuery[filter] = relevantActiveFilters.map((f) => f.value)
+      } else {
+        newQuery[filter] = relevantActiveFilters[0]?.value ?? ""
+      }
     })
 
     Object.entries(newQuery).forEach(([key, value]) => {
