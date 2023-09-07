@@ -69,7 +69,7 @@ const useFlow = <
   const pollParams = new URLSearchParams(params).toString()
 
   const poll = useSWRImmutable(
-    jobId || (shouldFetch && hasValidKeypair)
+    jobId !== undefined || (shouldFetch && hasValidKeypair)
       ? [`${path}?${pollParams}`, { method: "GET" }, userId]
       : null,
     ([url, options]) =>
@@ -79,7 +79,7 @@ const useFlow = <
             const foundJob = result.find(({ id }) => id === jobId)
             if (foundJob?.done) {
               // TODO: check errors
-              await setjobId(undefined) // To stop polling
+              await setjobId(null) // To stop polling
             }
             if (foundJob) return foundJob
           }

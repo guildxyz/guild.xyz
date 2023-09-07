@@ -8,7 +8,7 @@ import useFlow from "hooks/useFlow"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { useRouter } from "next/router"
 import { CircleWavyCheck } from "phosphor-react"
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { mutate } from "swr"
 import { PlatformName } from "types"
 
@@ -45,13 +45,17 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
     false
   )
 
-  const response = poll.data?.done
-    ? ({
-        success: poll.data.roleAccesses?.some((ra) => ra.access),
-        accessedRoleIds: poll.data.updateMembershipResult?.membershipRoleIds,
-        platformResults: [{}], // TODO
-      } as Response)
-    : null
+  const response = useMemo(
+    () =>
+      poll.data?.done
+        ? ({
+            success: poll.data.roleAccesses?.some((ra) => ra.access),
+            accessedRoleIds: poll.data.updateMembershipResult?.membershipRoleIds,
+            platformResults: [{}], // TODO
+          } as Response)
+        : null,
+    [poll.data]
+  )
 
   const { mutate: mutateMemberships } = useMemberships()
   const { pathname } = useRouter()
