@@ -84,10 +84,14 @@ const ActionLabel = (): JSX.Element => {
                   roleId={ids.role}
                   rolePlatformId={ids.rolePlatform}
                 />
-                <Center h={6}>
-                  <Icon as={ArrowLeft} />
-                </Center>
-                <ClickableUserTag id={ids.user} />
+                {!parentId && (
+                  <>
+                    <Center h={6}>
+                      <Icon as={ArrowLeft} />
+                    </Center>
+                    <ClickableUserTag id={ids.user} />
+                  </>
+                )}
               </>
             )
           case ACTION.GetReward:
@@ -98,10 +102,14 @@ const ActionLabel = (): JSX.Element => {
                   roleId={ids.role}
                   rolePlatformId={ids.rolePlatform}
                 />
-                <Center h={6}>
-                  <Icon as={ArrowRight} />
-                </Center>
-                <ClickableUserTag id={ids.user} />
+                {!parentId && (
+                  <>
+                    <Center h={6}>
+                      <Icon as={ArrowRight} />
+                    </Center>
+                    <ClickableUserTag id={ids.user} />
+                  </>
+                )}
               </>
             )
           case ACTION.ClickJoinOnWeb:
