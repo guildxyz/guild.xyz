@@ -180,7 +180,6 @@ const ActivityLogFiltersProvider = ({
     const allQueryParams = [
       ...new Set([...Object.keys(query), ...Object.keys(prevQuery ?? {})]),
     ]
-    console.log("allQueryParams", allQueryParams)
     for (const queryParam of allQueryParams) {
       if (prevQuery[queryParam] !== query[queryParam]) shouldPushRouter = true
       if (!prevQuery[queryParam] && query[queryParam] === "")
