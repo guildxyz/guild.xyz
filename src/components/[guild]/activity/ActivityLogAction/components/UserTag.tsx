@@ -8,9 +8,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
-import useUser from "components/[guild]/hooks/useUser"
+
 import { useRouter } from "next/router"
-import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import { useActivityLog } from "../../ActivityLogContext"
 
@@ -24,9 +23,9 @@ const UserTag = forwardRef<Props, "span">(
     const variant = useColorModeValue("subtle", "solid")
     const colorScheme = useColorModeValue("alpha", "gray")
 
-    const user = useUser(userId ?? NULL_ADDRESS)
-
-    const address = addressProp ?? user?.addresses?.[0].address
+    const { data } = useActivityLog()
+    const address =
+      addressProp ?? data?.values.users.find((u) => u.id === userId)?.address
 
     return (
       <Tag
