@@ -1,5 +1,6 @@
 import {
   HStack,
+  Icon,
   IconButton,
   Input,
   Spinner,
@@ -7,12 +8,13 @@ import {
   Tag,
   TagProps,
   Text,
+  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { X } from "phosphor-react"
+import { Warning, X } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { PropsWithChildren, useEffect, useState } from "react"
 import { PlatformType } from "types"
@@ -55,6 +57,8 @@ const FilterTag = ({
   const [isLoading, setIsLoading] = useState(false)
   const [shouldRemove, setShouldRemove] = useState(value.length === 0)
 
+  const [inputError, setInputError] = useState<string>(null)
+
   const [state, send] = useMachine(
     combobox.machine({
       id: `tag-${id}-combobox`,
@@ -95,6 +99,7 @@ const FilterTag = ({
   const { size, ...filteredInputProps } = inputProps
 
   const onChange = async (e) => {
+    setInputError(null)
     const newValue = e.target.value
 
     if (filter !== "userId") {
@@ -115,9 +120,12 @@ const FilterTag = ({
         focusFiltersInput()
       } catch {
         // We just leave the original content of the input
+        setInputError("User doesn't exist")
       } finally {
         setIsLoading(false)
       }
+    } else if (trimmedValue.startsWith("0x")) {
+      setInputError("Invalid address")
     }
   }
 
@@ -133,6 +141,12 @@ const FilterTag = ({
         {...rootProps}
       >
         <HStack {...controlProps}>
+          {inputError && (
+            <Tooltip label={inputError} placement="top" hasArrow>
+              <Icon as={Warning} color="red.500" boxSize={3} />
+            </Tooltip>
+          )}
+
           <Text as="span" fontSize="sm" fontWeight="bold">
             {FILTER_NAMES[filter]}:
           </Text>
