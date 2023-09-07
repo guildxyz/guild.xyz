@@ -1,3 +1,4 @@
+import useUser from "components/[guild]/hooks/useUser"
 import { UnionToIntersection } from "react-hook-form/dist/types/path/common"
 import useSWRImmutable from "swr/immutable"
 import { RedefineFields } from "types"
@@ -43,9 +44,10 @@ const useFlow = <
 
   const fetcherWithSign = useFetcherWithSign()
   const { isValid: hasValidKeypair } = useKeyPair()
+  const { id: userId } = useUser()
 
   const { data: jobId, mutate: mutatejobId } = useSWRImmutable<string>(
-    ["jobId", path, body, params],
+    ["jobId", path, body, params, userId],
     () => undefined,
     {
       revalidateOnMount: false,
@@ -67,11 +69,11 @@ const useFlow = <
   const pollParams = new URLSearchParams(params).toString()
 
   const poll = useSWRImmutable(
-    shouldFetch && hasValidKeypair
-      ? [`${path}?${pollParams}`, { method: "GET" }]
+    jobId || (shouldFetch && hasValidKeypair)
+      ? [`${path}?${pollParams}`, { method: "GET" }, userId]
       : null,
-    (props) =>
-      fetcherWithSign(props).then(async (result: Array<FinalJob>) => {
+    ([url, options]) =>
+      fetcherWithSign([url, options]).then(async (result: Array<FinalJob>) => {
         if (Array.isArray(result) && result.length > 0) {
           if (jobId?.length > 0) {
             const foundJob = result.find(({ id }) => id === jobId)
@@ -94,6 +96,7 @@ const useFlow = <
     {
       onSuccess: (val) => console.log("POLL", val),
       refreshInterval: !!jobId ? pollMs : undefined,
+      keepPreviousData: true,
     }
   )
 
@@ -110,7 +113,11 @@ const useFlow = <
     }
   )
 
-  return { ...poll, mutate: () => createJob() }
+  return {
+    ...poll,
+    mutate: () => createJob(),
+    isLoading: !!jobId && !poll.data?.done,
+  }
 }
 
 export default useFlow
