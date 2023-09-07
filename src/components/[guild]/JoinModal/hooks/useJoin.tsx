@@ -118,8 +118,6 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
     }
   }, [response])
 
-  const a = (response && response) || response
-
   // onError
   useEffect(() => {
     if (!poll.error) return
