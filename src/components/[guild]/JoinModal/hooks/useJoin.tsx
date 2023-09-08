@@ -10,7 +10,7 @@ import { useRouter } from "next/router"
 import { CircleWavyCheck } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { mutate } from "swr"
-import { PlatformName } from "types"
+import { PlatformName, PlatformType } from "types"
 
 type PlatformResult = {
   platformId: number
@@ -51,7 +51,20 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
         ? ({
             success: poll.data.roleAccesses?.some((ra) => ra.access),
             accessedRoleIds: poll.data.updateMembershipResult?.membershipRoleIds,
-            platformResults: [{}], // TODO
+            platformResults: poll.data?.["children:manage-reward:jobs"]?.map(
+              (manageRewardJob) =>
+                ({
+                  errorMsg: manageRewardJob.failedErrorMsg,
+                  invite:
+                    manageRewardJob.manageRewardAction?.platformGuildData
+                      ?.inviteChannel ??
+                    manageRewardJob.manageRewardAction?.platformGuildData?.invite,
+                  platformId: manageRewardJob.manageRewardAction?.platformId,
+                  platformName:
+                    PlatformType[manageRewardJob.manageRewardAction?.platformId],
+                  success: !manageRewardJob.failed,
+                } as PlatformResult)
+            ),
           } as Response)
         : null,
     [poll.data]
