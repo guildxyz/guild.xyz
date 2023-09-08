@@ -88,7 +88,7 @@ const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
         prevStep={prevStep}
         nextStep={handleFinish}
         nextLabel="Finish"
-        nextLoading={isLoading || response}
+        nextLoading={isLoading || !!response}
       />
       {discordPlatform && (
         <>

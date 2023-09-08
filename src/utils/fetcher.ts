@@ -103,7 +103,7 @@ const fetcherWithSign = async (
     forcePrompt?: boolean
   },
   resource: string,
-  { body, ...rest }: Record<string, any> = {}
+  { body = {}, ...rest }: Record<string, any> = {}
 ) => {
   const [signedPayload, validation] = await sign({
     forcePrompt: false,
