@@ -13,7 +13,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import LinkButton from "components/common/LinkButton"
 import { ActivityLogActionProvider } from "components/[guild]/activity/ActivityLogAction/ActivityLogActionContext"
 import ActionIcon from "components/[guild]/activity/ActivityLogAction/components/ActionIcon"
 import ActionLabel from "components/[guild]/activity/ActivityLogAction/components/ActionLabel"
@@ -22,7 +21,8 @@ import {
   useActivityLog,
 } from "components/[guild]/activity/ActivityLogContext"
 import useUser from "components/[guild]/hooks/useUser"
-import { ArrowRight, UserList } from "phosphor-react"
+import LinkButton from "components/common/LinkButton"
+import { ArrowRight, Bell } from "phosphor-react"
 import AccountButton from "./AccountButton"
 
 const UserActivityLogPopover = () => {
@@ -32,7 +32,7 @@ const UserActivityLogPopover = () => {
     <Popover placement="bottom" isLazy strategy="fixed">
       <PopoverTrigger>
         <AccountButton aria-label="Activity log">
-          <Icon as={UserList} />
+          <Icon as={Bell} />
         </AccountButton>
       </PopoverTrigger>
 
