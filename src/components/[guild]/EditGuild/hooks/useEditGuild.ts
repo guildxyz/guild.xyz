@@ -30,50 +30,62 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
     const existingFeatureFlags = guild?.featureFlags ?? []
     const existingContacts = guild?.contacts ?? []
     const existingAdmins = guild?.admins ?? []
-    const { admins = [], featureFlags = [], contacts = [], ...guildData } = data
+    const { admins, featureFlags, contacts, ...guildData } = data
 
-    const adminsToCreate = admins.filter(
-      (admin) =>
-        !existingAdmins.some(
-          (existingAdmin) =>
-            existingAdmin.address?.toLowerCase() === admin.address?.toLowerCase()
-        )
-    )
-
-    const adminsToDelete = existingAdmins.filter(
-      (existingAdmin) =>
-        !existingAdmin?.isOwner &&
-        !admins.some(
+    const adminsToCreate = admins
+      ? admins.filter(
           (admin) =>
-            existingAdmin.address?.toLowerCase() === admin.address?.toLowerCase()
+            !existingAdmins.some(
+              (existingAdmin) =>
+                existingAdmin.address?.toLowerCase() === admin.address?.toLowerCase()
+            )
         )
-    )
+      : []
 
-    const contactsToUpdate = contacts.filter((contact) => {
-      if (!contact.id) return false
-      const prevContact = existingContacts?.find((ec) => ec.id === contact.id)
-      if (!prevContact) return false
-      return (
-        !!contact.id &&
-        !(
-          contact.id === prevContact.id &&
-          contact.contact === prevContact.contact &&
-          contact.type === prevContact.type
+    const adminsToDelete = admins
+      ? existingAdmins.filter(
+          (existingAdmin) =>
+            !existingAdmin?.isOwner &&
+            !admins.some(
+              (admin) =>
+                existingAdmin.address?.toLowerCase() === admin.address?.toLowerCase()
+            )
         )
-      )
-    })
-    const contactsToCreate = contacts.filter((contact) => !contact.id)
-    const contactsToDelete = existingContacts.filter(
-      (existingContact) =>
-        !contacts.some((contact) => contact.id === existingContact.id)
-    )
+      : []
 
-    const featureFlagsToCreate = featureFlags.filter(
-      (flag) => !existingFeatureFlags.includes(flag)
-    )
-    const featureFlagsToDelete = existingFeatureFlags.filter(
-      (existingFlag) => !featureFlags.includes(existingFlag)
-    )
+    const contactsToUpdate = contacts
+      ? contacts.filter((contact) => {
+          if (!contact.id) return false
+          const prevContact = existingContacts?.find((ec) => ec.id === contact.id)
+          if (!prevContact) return false
+          return (
+            !!contact.id &&
+            !(
+              contact.id === prevContact.id &&
+              contact.contact === prevContact.contact &&
+              contact.type === prevContact.type
+            )
+          )
+        })
+      : []
+    const contactsToCreate = contacts
+      ? contacts.filter((contact) => !contact.id)
+      : []
+    const contactsToDelete = contacts
+      ? existingContacts.filter(
+          (existingContact) =>
+            !contacts.some((contact) => contact.id === existingContact.id)
+        )
+      : []
+
+    const featureFlagsToCreate = featureFlags
+      ? featureFlags.filter((flag) => !existingFeatureFlags.includes(flag))
+      : []
+    const featureFlagsToDelete = featureFlags
+      ? existingFeatureFlags.filter(
+          (existingFlag) => !featureFlags.includes(existingFlag)
+        )
+      : []
 
     const shouldUpdateBaseGuild = guildData && Object.keys(guildData).length > 0
 
@@ -230,7 +242,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         contacts.deletions.failedCount <= 0 &&
         featureFlags.creations.failedCount <= 0 &&
         featureFlags.deletions.failedCount <= 0 &&
-        !guildUpdateResult
+        guildUpdateResult
       ) {
         toast({
           title: `Guild successfully updated!`,
@@ -307,7 +319,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
             ],
             featureFlags: [
               ...oldFeatureFlagsThatHaventBeenDeleted,
-              featureFlags.creations.success.map(
+              ...featureFlags.creations.success.map(
                 (createdFlag) => createdFlag.featureType
               ),
             ],

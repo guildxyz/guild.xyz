@@ -20,6 +20,7 @@ const KEYS_TO_KEEP = [
   "admins",
   "contacts",
   "featureFlags",
+  "socialLinks",
 ]
 
 /**
