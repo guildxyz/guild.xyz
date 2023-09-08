@@ -1,4 +1,4 @@
-import { HStack, Tag, Text } from "@chakra-ui/react"
+import { HStack, Text } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
@@ -6,8 +6,8 @@ import DynamicPurchaseRequirement from "components/[guild]/Requirements/componen
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
+import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
 import { UseFormSetValue } from "react-hook-form"
@@ -46,7 +46,7 @@ const TokenRequirement = ({ setValueForBalancy, ...rest }: Props) => {
             <BlockExplorerUrl />
           </HStack>
         ) : requirement?.type === "COIN" ? (
-          <Tag size="sm">{RPC[requirement.chain].chainName}</Tag>
+          <RequirementChainIndicator />
         ) : null
       }
       {...rest}

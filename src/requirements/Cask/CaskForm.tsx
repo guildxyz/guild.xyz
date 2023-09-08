@@ -18,7 +18,7 @@ const SUPPORTED_CHAINS: Chain[] = [
   "OPTIMISM",
 ]
 
-const CaskForm = ({ baseFieldPath, field }: RequirementFormProps) => {
+const CaskForm = ({ baseFieldPath }: RequirementFormProps) => {
   const {
     control,
     formState: { errors },

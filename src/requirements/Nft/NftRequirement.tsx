@@ -101,6 +101,7 @@ const NftRequirement = (props: RequirementProps) => {
             <DynamicPurchaseRequirement />
             <PurchaseTransactionStatusModal />
           </GuildCheckoutProvider>
+
           <BlockExplorerUrl />
         </HStack>
       }
