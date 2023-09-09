@@ -18,6 +18,7 @@ import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import AccessHub from "components/[guild]/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
@@ -46,7 +47,7 @@ import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
-import { SWRConfig, unstable_serialize } from "swr"
+import { SWRConfig } from "swr"
 import { Guild, PlatformType, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
@@ -88,23 +89,27 @@ const GuildPage = (): JSX.Element => {
     socialLinks,
     poaps,
     guildPlatforms,
+    tags,
+    isDetailed,
   } = useGuild()
   useAutoStatusUpdate()
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
-    if (roles.every((role) => role.position === null)) {
+    if (roles?.every((role) => role.position === null)) {
       const byMembers = roles?.sort(
         (role1, role2) => role2.memberCount - role1.memberCount
       )
       return byMembers
     }
 
-    return roles?.sort((role1, role2) => {
-      if (role1.position === null) return 1
-      if (role2.position === null) return -1
-      return role1.position - role2.position
-    })
+    return (
+      roles?.sort((role1, role2) => {
+        if (role1.position === null) return 1
+        if (role2.position === null) return -1
+        return role1.position - role2.position
+      }) ?? []
+    )
   }, [roles])
 
   const publicRoles = sortedRoles.filter(
@@ -149,7 +154,7 @@ const GuildPage = (): JSX.Element => {
 
   const showOnboarding = isAdmin && !onboardingComplete
   const showAccessHub =
-    (guildPlatforms.some(
+    (guildPlatforms?.some(
       (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
     ) ||
       isMember ||
@@ -222,8 +227,13 @@ const GuildPage = (): JSX.Element => {
         imageUrl={imageUrl}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
-        action={isAdmin && <DynamicEditGuildButton />}
+        action={isAdmin && isDetailed && <DynamicEditGuildButton />}
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
+        titlePostfix={
+          tags?.includes("VERIFIED") && (
+            <VerifiedIcon size={{ base: 5, lg: 6 }} mt={-1} />
+          )
+        }
       >
         {showOnboarding ? (
           <DynamicOnboarding />
@@ -404,7 +414,7 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
 }
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
-  const endpoint = `/guild/${params.guild?.toString()}`
+  const endpoint = `/v2/guilds/guild-page/${params.guild?.toString()}`
 
   const data = await fetcher(endpoint).catch((_) => ({}))
 
@@ -429,8 +439,8 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       fallback: {
+        [`/guild/${params.guild?.toString()}`]: filteredData,
         [endpoint]: filteredData,
-        [unstable_serialize([endpoint, { method: "GET", body: {} }])]: filteredData,
       },
     },
     revalidate: 300,
@@ -445,7 +455,7 @@ const getStaticPaths: GetStaticPaths = async () => {
         }))
       : []
 
-  const paths = await fetcher(`/guild?`).then(mapToPaths)
+  const paths = await fetcher(`/v2/guilds`).then(mapToPaths)
 
   return {
     paths,

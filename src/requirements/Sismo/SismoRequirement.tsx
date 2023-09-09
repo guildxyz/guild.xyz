@@ -2,6 +2,7 @@ import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
+import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useSismoBadges from "./hooks/useSismoBadges"
 import { DEPRECATED_PLAYGROUND_ADDRESS } from "./SismoForm"
@@ -20,6 +21,7 @@ const SismoRequirement = (props: RequirementProps) => {
       image={badge?.img}
       isImageLoading={isValidating}
       withImgBg={false}
+      footer={<RequirementChainIndicator />}
       {...props}
     >
       {`Have the `}

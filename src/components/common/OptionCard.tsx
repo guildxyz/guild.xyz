@@ -1,6 +1,5 @@
 import {
   Box,
-  Center,
   ChakraProps,
   Grid,
   HStack,
@@ -27,7 +26,7 @@ const OptionCard = ({
   children,
   ...rest
 }: PropsWithChildren<Props>): JSX.Element => (
-  <Card p="6" {...rest}>
+  <Card py="6" px="5" {...rest}>
     <HStack spacing={4}>
       {typeof image === "string" ? (
         <Img
@@ -58,26 +57,17 @@ const OptionCard = ({
   </Card>
 )
 
-type SkeletonProps = {
-  size?: "md" | "lg"
-}
-
-const OptionSkeletonCard = ({ size = "md" }: SkeletonProps) => (
-  <Card>
-    <Center py={size === "lg" ? { base: 12, md: 20 } : 8} bg="blackAlpha.100">
-      <SkeletonCircle pos="relative" boxSize={{ base: 20, md: 24 }} />
-    </Center>
-    <HStack
-      px={{ base: 5, md: size === "md" && 4 }}
-      py={size === "lg" ? 5 : 4}
-      spacing={6}
-      justifyContent="space-between"
-    >
-      <Grid gap={2.5}>
-        <Skeleton h={4} w={120} />
-        <Skeleton h={3} w={50} />
+const OptionSkeletonCard = () => (
+  <Card px={{ base: 5, sm: 6 }} py="7">
+    <HStack spacing={4}>
+      <SkeletonCircle boxSize={12} minW={12} />
+      <Grid w="full" gap={2.5}>
+        <Skeleton w="80%" h={5} />
+        <Skeleton w="25%" h={4} />
       </Grid>
-      <Skeleton h={10} borderRadius="xl" w={100} opacity={0.4} />
+      <Box flex="1 0 auto">
+        <Skeleton h={10} borderRadius="xl" w={100} opacity={0.4} />
+      </Box>
     </HStack>
   </Card>
 )

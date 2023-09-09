@@ -16,6 +16,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 import useBlockNumberByTimestamp from "../hooks/useBlockNumberByTimestamp"
 import useCurrentBlock from "../hooks/useCurrentBlock"
+import { COVALENT_CHAINS } from "../WalletActivityForm"
 
 type Props = {
   type?: "ABSOLUTE" | "RELATIVE"
@@ -45,12 +46,6 @@ const BlockNumberFormControl = ({
     formState: { errors },
   } = useFormContext()
 
-  useEffect(() => {
-    register(`${baseFieldPath}.data.${dataFieldName}`, {
-      required: isRequired && "This field is required.",
-    })
-  }, [])
-
   const timestamp = useWatch({
     name: `${baseFieldPath}.data.timestamps.${dataFieldName}`,
   })
@@ -63,21 +58,36 @@ const BlockNumberFormControl = ({
       : undefined
 
   const requirementType = useWatch({ name: `${baseFieldPath}.type` })
-  const shouldFetchBlockNumber = [
-    "ALCHEMY_FIRST_TX_RELATIVE",
-    "ALCHEMY_CONTRACT_DEPLOY_RELATIVE",
-    "ALCHEMY_TX_COUNT_RELATIVE",
-    "ALCHEMY_TX_VALUE_RELATIVE",
-  ].includes(requirementType)
-
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const shouldFetchBlockNumber =
+    [
+      "ALCHEMY_FIRST_TX",
+      "ALCHEMY_FIRST_TX_RELATIVE",
+      "ALCHEMY_CONTRACT_DEPLOY",
+      "ALCHEMY_CONTRACT_DEPLOY_RELATIVE",
+      "ALCHEMY_TX_COUNT",
+      "ALCHEMY_TX_COUNT_RELATIVE",
+      "ALCHEMY_TX_VALUE",
+      "ALCHEMY_TX_VALUE_RELATIVE",
+    ].includes(requirementType) && !COVALENT_CHAINS.has(chain)
+
+  useEffect(() => {
+    register(`${baseFieldPath}.data.${dataFieldName}`, {
+      required:
+        !!isRequired && !!shouldFetchBlockNumber && "This field is required.",
+    })
+  }, [])
+
   const { data: currentBlock, isValidating } = useCurrentBlock(
     shouldFetchBlockNumber ? chain : null
   )
   const isBlockNumberLoading =
     shouldFetchBlockNumber && (!currentBlock || isValidating)
 
-  const { data, error } = useBlockNumberByTimestamp(chain, unixTimestamp)
+  const { data, error } = useBlockNumberByTimestamp(
+    shouldFetchBlockNumber ? chain : null,
+    unixTimestamp
+  )
 
   useEffect(() => {
     if (!error) {
@@ -118,23 +128,24 @@ const BlockNumberFormControl = ({
         />
       )}
 
-      {isBlockNumberLoading ? (
-        <FormHelperText>
-          <HStack>
-            <Spinner size="xs" />
-            <Text as="span">Fetching current block number</Text>
-          </HStack>
-        </FormHelperText>
-      ) : unixTimestamp ? (
-        <FormHelperText>
-          <Text as="span">Block: </Text>
-          <Skeleton display="inline" isLoaded={!!data}>
-            {data ?? "loading"}
-          </Skeleton>
-        </FormHelperText>
-      ) : formHelperText ? (
-        <FormHelperText>{formHelperText}</FormHelperText>
-      ) : null}
+      {shouldFetchBlockNumber &&
+        (isBlockNumberLoading ? (
+          <FormHelperText>
+            <HStack>
+              <Spinner size="xs" />
+              <Text as="span">Fetching current block number</Text>
+            </HStack>
+          </FormHelperText>
+        ) : unixTimestamp ? (
+          <FormHelperText>
+            <Text as="span">Block: </Text>
+            <Skeleton display="inline" isLoaded={!!data}>
+              {data ?? "loading"}
+            </Skeleton>
+          </FormHelperText>
+        ) : formHelperText ? (
+          <FormHelperText>{formHelperText}</FormHelperText>
+        ) : null)}
 
       <FormErrorMessage>
         {parseFromObject(errors, baseFieldPath)?.data?.[dataFieldName]?.message ??

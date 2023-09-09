@@ -88,7 +88,7 @@ const TGAuth = () => {
         )
         reject()
       }
-    })
+    }).finally(() => window.close())
 
   const { isLoading, onSubmit } = useSubmit(auth)
 

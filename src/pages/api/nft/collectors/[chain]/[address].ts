@@ -1,6 +1,8 @@
 import { kv } from "@vercel/kv"
+import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/CreateNftForm"
 import { Chain } from "connectors"
 import { NextApiHandler } from "next"
+import { OneOf } from "types"
 import fetcher from "utils/fetcher"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 
@@ -9,17 +11,20 @@ type Owner = {
   tokenBalances: { tokenId: string; balance: string }[]
 }
 
-export type TopCollectorsResponse =
-  | {
-      uniqueCollectors: number
-      topCollectors: string[]
-      error?: never
-    }
-  | { uniqueCollectors?: never; topCollectors?: never; error: string }
+export type TopCollectorsResponse = OneOf<
+  {
+    uniqueCollectors: number
+    topCollectors: string[]
+  },
+  { error: string }
+>
 
-const alchemyApiUrl: Partial<Record<Chain, string>> = {
+const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   POLYGON: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.POLYGON_ALCHEMY_KEY}/getOwnersForContract`,
   POLYGON_MUMBAI: `https://polygon-mumbai.g.alchemy.com/nft/v3/${process.env.POLYGON_MUMBAI_ALCHEMY_KEY}/getOwnersForContract`,
+  BASE_MAINNET: "",
+  ETHEREUM: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.MAINNET_ALCHEMY_KEY}/getOwnersForContract`,
+  OPTIMISM: `https://opt-mainnet.g.alchemy.com/v2/${process.env.OPTIMISM_ALCHEMY_KEY}`,
 }
 
 export const validateNftChain = (value: string | string[]): Chain => {

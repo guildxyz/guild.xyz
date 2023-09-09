@@ -1,4 +1,5 @@
 import { useSteps } from "@chakra-ui/react"
+import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import {
   createContext,
   Dispatch,
@@ -172,7 +173,11 @@ const CreateGuildProvider = ({
               },
             },
           ],
-          rolePlatforms,
+          rolePlatforms:
+            platforms[platform]?.asRewardRestriction ===
+            PlatformAsRewardRestrictions.MULTIPLE_ROLES
+              ? rolePlatforms
+              : undefined,
         },
       ] as any[],
     },
@@ -188,12 +193,12 @@ const CreateGuildProvider = ({
           ? "You can connect more later"
           : platform === "DEFAULT"
           ? "Without platform"
-          : capitalize(platform?.toLowerCase() ?? "")
+          : platforms[platform]?.name ?? ""
       }${platform !== "DEFAULT" && guildName ? ` - ${guildName}` : ""}`,
       content: <CreateGuildIndex />,
     },
     {
-      title: "Choose template",
+      title: "Choose role template",
       label: capitalize(template?.toLowerCase() ?? ""),
       content: <ChooseTemplate />,
     },

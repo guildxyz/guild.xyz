@@ -1,8 +1,8 @@
 import { SimpleGrid, Text, Tooltip } from "@chakra-ui/react"
-import LogicDivider from "components/[guild]/LogicDivider"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import platforms from "platforms/platforms"
+import useGuild from "components/[guild]/hooks/useGuild"
+import LogicDivider from "components/[guild]/LogicDivider"
+import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import { useFieldArray, useWatch } from "react-hook-form"
 import { PlatformType, Visibility } from "types"
 import PlatformCard from "../../PlatformCard"
@@ -22,8 +22,6 @@ const SelectExistingPlatform = ({ onClose }) => {
 
   const filteredPlatforms = guildPlatforms.filter(
     (guildPlatform) =>
-      // TODO: Temporary solution, we'll handle this automatically after the rewards/platforms refactor
-      guildPlatform.platformId !== PlatformType.CONTRACT_CALL &&
       !fields.find(
         (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
       )
@@ -48,7 +46,8 @@ const SelectExistingPlatform = ({ onClose }) => {
             "application/vnd.google-apps.form"
 
           const isAddButtonDisabled =
-            platform.platformId === PlatformType.TELEGRAM &&
+            platforms[PlatformType[platform.platformId]].asRewardRestriction ===
+              PlatformAsRewardRestrictions.SINGLE_ROLE &&
             alreadyUsedRolePlatforms?.includes(platform.id)
 
           return (
@@ -59,8 +58,11 @@ const SelectExistingPlatform = ({ onClose }) => {
               colSpan={1}
             >
               <Tooltip
+                maxW="full"
                 isDisabled={!isAddButtonDisabled}
-                label="You can only use a Telegram reward for one role"
+                label={`You can use ${
+                  platforms[PlatformType[platform.platformId]].name
+                } rewards for one role only`}
                 placement="bottom"
                 hasArrow
               >
@@ -71,7 +73,6 @@ const SelectExistingPlatform = ({ onClose }) => {
                     append({
                       guildPlatformId: platform.id,
                       isNew: true,
-                      platformRoleData: {},
                       platformRoleId: isGoogleReward
                         ? isForm
                           ? "writer"

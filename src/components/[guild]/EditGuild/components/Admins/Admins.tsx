@@ -7,10 +7,10 @@ import {
   usePrevious,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import GuildAvatar from "components/common/GuildAvatar"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
-import GuildAvatar from "components/common/GuildAvatar"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { useMemo } from "react"
 import { useController, useFormContext } from "react-hook-form"
@@ -23,7 +23,9 @@ import AdminSelect from "./components/AdminSelect"
 const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
 
 const validateAdmins = (admins: string[]) =>
-  admins.every((admin) => ADDRESS_REGEX.test(admin.trim())) ||
+  (typeof admins?.[0] === "string"
+    ? admins.every((admin) => ADDRESS_REGEX.test(admin.trim()))
+    : admins.every((addr: any) => ADDRESS_REGEX.test(addr?.address.trim()))) ||
   "Every admin should be a valid address"
 
 const fetchMemberOptions = ([_, members, provider]) =>
@@ -51,7 +53,10 @@ const Admins = () => {
 
   const {
     field: { onChange, ref, value: admins, onBlur },
-  } = useController({ name: "admins", rules: { validate: validateAdmins } })
+  } = useController({
+    name: "admins",
+    rules: { validate: validateAdmins },
+  })
 
   const { data: options } = useSWR(
     !!members && !!admins && !!ownerAddress ? ["options", members, provider] : null,
@@ -59,7 +64,10 @@ const Admins = () => {
   )
 
   const memberOptions = useMemo(
-    () => options?.filter((option) => !admins?.includes(option.value)),
+    () =>
+      options?.filter(
+        (option) => !admins?.some(({ address }) => address === option.value)
+      ),
     [options, admins]
   )
 
@@ -77,21 +85,23 @@ const Admins = () => {
       isFixed: true,
     }
 
-    return [ownerOption].concat(
-      admins
-        ?.filter((admin: string) => admin !== ownerAddress)
-        ?.map((admin: string) => {
-          const option = options.find((o) => o.value === admin)
+    const toConcat = admins
+      ?.filter((admin) => admin.address !== ownerAddress)
+      ?.map((admin) => {
+        const option = options.find((o) => o.value === admin.address)
 
-          return {
-            ...(option ?? {
-              value: admin,
-              label: ADDRESS_REGEX.test(ownerAddress) ? shortenHex(admin) : admin,
-              img: <GuildAvatar address={admin} size={4} mr="2" />,
-            }),
-          }
-        })
-    )
+        return {
+          ...(option ?? {
+            value: admin.address,
+            label: ADDRESS_REGEX.test(ownerAddress)
+              ? shortenHex(admin.address)
+              : admin.address,
+            img: <GuildAvatar address={admin.address} size={4} mr="2" />,
+          }),
+        }
+      })
+
+    return [ownerOption].concat(toConcat ?? [])
   }, [options, admins, ownerAddress])
 
   const prevMemberOptions = usePrevious(memberOptions)
@@ -126,8 +136,8 @@ const Admins = () => {
 
                 if (!ADDRESS_REGEX.test(pastedData)) return
                 event.preventDefault()
-                if (admins.includes(pastedData)) return
-                onChange([...admins, pastedData])
+                if (admins.some(({ address }) => address === pastedData)) return
+                onChange([...admins, { address: pastedData }])
                 el.inputRef.focus()
               })
             }, 100)
@@ -137,7 +147,11 @@ const Admins = () => {
           options={memberOptions ?? prevMemberOptions}
           onBlur={onBlur}
           onChange={(selectedOption: SelectOption[]) => {
-            onChange(selectedOption?.map((option) => option.value.toLowerCase()))
+            onChange(
+              selectedOption?.map((option) => ({
+                address: option.value.toLowerCase(),
+              }))
+            )
           }}
           isLoading={isLoading}
           isClearable={false}

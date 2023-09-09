@@ -1,6 +1,5 @@
 import {
   Box,
-  Collapse,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -13,13 +12,9 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
-import RolePlatforms from "components/[guild]/RolePlatforms"
-import SetVisibility from "components/[guild]/SetVisibility"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
-import ErrorAlert from "components/common/ErrorAlert"
 import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
@@ -27,21 +22,35 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
+import useGuild from "components/[guild]/hooks/useGuild"
+import RolePlatforms from "components/[guild]/RolePlatforms"
+import SetVisibility from "components/[guild]/SetVisibility"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
+import { Logic, Requirement, RolePlatform, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
+import handleSubmitDirty from "utils/handleSubmitDirty"
 import mapRequirements from "utils/mapRequirements"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import useEditRole from "./hooks/useEditRole"
 
-const noRequirementsErrorMessage = "Set some requirements, or make the role free"
-
 type Props = {
   roleId: number
+}
+
+export type RoleEditFormData = {
+  id: number
+  name: string
+  description: string
+  imageUrl: string
+  logic: Logic
+  requirements: Requirement[]
+  rolePlatforms: RolePlatform[]
+  visibility: Visibility
 }
 
 const EditRole = ({ roleId }: Props): JSX.Element => {
@@ -128,6 +137,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
         {
           shouldTouch: true,
+          shouldDirty: true,
         }
       )
     },
@@ -138,26 +148,16 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     },
   })
 
-  const formRequirements = useWatch({
-    name: "requirements",
-    control: methods.control,
-  })
+  const drawerBodyRef = useRef<HTMLDivElement>()
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    (...props) => {
-      methods.clearErrors("requirements")
-      if (!formRequirements || formRequirements?.length === 0) {
-        methods.setError(
-          "requirements",
-          {
-            message: noRequirementsErrorMessage,
-          },
-          { shouldFocus: true }
-        )
-        document.getElementById("free-entry-checkbox")?.focus()
-      } else {
-        return methods.handleSubmit(onSubmit)(...props)
+    handleSubmitDirty(methods)(onSubmit, (formErrors) => {
+      if (formErrors.requirements && drawerBodyRef.current) {
+        drawerBodyRef.current.scrollBy({
+          top: drawerBodyRef.current.scrollHeight,
+          behavior: "smooth",
+        })
       }
-    },
+    }),
 
     iconUploader.isUploading
   )
@@ -186,7 +186,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerBody className="custom-scrollbar">
+          <DrawerBody ref={drawerBodyRef} className="custom-scrollbar">
             <FormProvider {...methods}>
               <DrawerHeader
                 title="Edit role"
@@ -214,16 +214,8 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                   </Box>
                   <Description />
                 </Section>
-                <SetRequirements />
 
-                <Collapse
-                  in={!!methods.formState.errors?.requirements}
-                  style={{
-                    width: "100%",
-                  }}
-                >
-                  <ErrorAlert label={noRequirementsErrorMessage} />
-                </Collapse>
+                <SetRequirements />
               </VStack>
             </FormProvider>
           </DrawerBody>

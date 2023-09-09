@@ -48,6 +48,7 @@ const Pagination = ({
     >
       <ButtonGroup>
         <Button
+          isDisabled={activeStep === 1 && platform === "CONTRACT_CALL"}
           onClick={
             (platform && activeStep === 0) ||
             (platform === "DEFAULT" && activeStep === 1)

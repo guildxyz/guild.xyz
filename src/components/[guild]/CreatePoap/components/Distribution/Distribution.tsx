@@ -88,9 +88,7 @@ const Distribution = ({
               </Button>
             ) : (
               <Button
-                onClick={() =>
-                  onActivateSubmit({ id: guildPoap.id, activate: true })
-                }
+                onClick={() => onActivateSubmit({ activated: true })}
                 isLoading={isActivateLoading}
                 colorScheme="green"
                 loadingText="Activating"

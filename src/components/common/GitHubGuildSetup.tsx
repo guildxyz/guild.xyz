@@ -8,7 +8,6 @@ import {
   SimpleGrid,
   VStack,
 } from "@chakra-ui/react"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
 import RepoCard, { RepoSkeletonCard } from "components/create-guild/github/RepoCard"
 import SearchBar from "components/explorer/SearchBar"
 import useGateables from "hooks/useGateables"
@@ -65,11 +64,11 @@ const GitHubGuildSetup = ({
 
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 5 }}>
           {(filteredRepos ?? gateables)?.map?.((repo) => (
-            <CardMotionWrapper key={repo.platformGuildId}>
-              <GridItem>
-                <RepoCard {...repo} onSelection={onSelection} />
-              </GridItem>
-            </CardMotionWrapper>
+            <RepoCard
+              key={repo.platformGuildId}
+              {...repo}
+              onSelection={onSelection}
+            />
           ))}
         </SimpleGrid>
       </>

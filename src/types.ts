@@ -1,4 +1,5 @@
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
+import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import type { Chain, Chains } from "connectors"
 import { RequirementType } from "requirements"
 
@@ -84,6 +85,7 @@ type PlatformName =
   | "GOOGLE"
   | "POAP"
   | "CONTRACT_CALL"
+  | "TWITTER_V1"
 
 type PlatformUserData = {
   acessToken?: string
@@ -106,11 +108,26 @@ type AddressConnectionProvider = "DELEGATE"
 
 type User = {
   id: number
-  addresses: Array<string>
-  addressProviders: Record<string, AddressConnectionProvider>
+  addresses: Array<{
+    address: string
+    userId: number
+    isPrimary: boolean
+    provider: AddressConnectionProvider
+    createdAt: string
+  }>
   platformUsers: PlatformAccountDetails[]
-  signingKey?: string
+  publicKey?: string
   isSuperAdmin: boolean
+
+  captchaVerifiedSince: Date
+
+  // Should be removed once we use only v2 API
+  addressProviders?: Record<string, AddressConnectionProvider>
+}
+
+type BaseUser = {
+  id: number
+  createdAt: Date
 }
 
 type GuildBase = {
@@ -122,6 +139,7 @@ type GuildBase = {
   platforms: Array<PlatformName>
   memberCount: number
   rolesCount: number
+  tags: Array<GuildTags>
 }
 
 type BrainCardData = {
@@ -152,6 +170,8 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
+    name?: never
+    symbol?: never
     description?: never
   }
   GOOGLE: {
@@ -166,13 +186,18 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
+    name?: never
+    symbol?: never
     description?: never
   }
   CONTRACT_CALL: {
     chain: Chain
     contractAddress: string
-    function: string
+    function: ContractCallFunction
     argsToSign: string[]
+    name: string
+    symbol: string
+    image: string
     description: string
     inviteChannel?: never
     joinButton?: never
@@ -221,6 +246,7 @@ type RolePlatform = {
   platformRoleId?: string
   guildPlatformId?: number
   guildPlatform?: GuildPlatform
+  platformRoleData?: Record<string, string | boolean>
   index?: number
   isNew?: boolean
   roleId?: number
@@ -293,9 +319,13 @@ const supportedSocialLinks = [
 type SocialLinkKey = (typeof supportedSocialLinks)[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
 
+const guildTags = ["VERIFIED", "FEATURED"] as const
+type GuildTags = (typeof guildTags)[number]
+
 type GuildContact = {
   type: "EMAIL" | "TELEGRAM"
   contact: string
+  id?: number
 }
 
 type Guild = {
@@ -320,6 +350,7 @@ type Guild = {
   featureFlags: FeatureFlag[]
   hiddenRoles?: boolean
   requiredPlatforms?: PlatformName[]
+  tags: GuildTags[]
 }
 type GuildFormType = Partial<
   Pick<
@@ -333,6 +364,7 @@ type GuildFormType = Partial<
     | "theme"
     | "contacts"
     | "featureFlags"
+    | "tags"
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
@@ -347,6 +379,11 @@ type GuildFormType = Partial<
   logic?: Logic
   requirements?: Requirement[]
   socialLinks?: Record<string, string>
+  admins?: Array<{
+    address: string
+    id?: number
+    isOwner?: boolean
+  }>
 }
 
 type SelectOption<T = string> = {
@@ -413,6 +450,7 @@ export enum PlatformType {
   "TWITTER" = 5,
   // "STEAM" = 6,
   "CONTRACT_CALL" = 7,
+  "TWITTER_V1" = 8,
 }
 
 type WalletConnectConnectionData = {
@@ -565,51 +603,54 @@ type DetailedUserLeaderboardData = {
   pins: LeaderboardPinData[]
 }
 
+export { ValidationMethod, Visibility, supportedSocialLinks }
 export type {
-  OneOf,
-  WalletConnectConnectionData,
-  DiscordServerData,
-  GuildAdmin,
-  Token,
-  DiscordError,
-  WalletError,
-  Rest,
-  CoingeckoToken,
-  Poap,
-  GitPoap,
-  PoapContract,
-  GuildPoap,
-  User,
-  NFT,
-  Role,
-  GuildPlatform,
-  GuildBase,
+  AddressConnectionProvider,
+  BaseUser,
   BrainCardData,
-  Guild,
-  SocialLinkKey,
-  SocialLinks,
-  Trait,
-  Requirement,
-  RequirementType,
-  RolePlatform,
-  ThemeMode,
-  Logic,
-  PlatformAccountDetails,
-  SelectOption,
-  GuildFormType,
+  CoingeckoToken,
   CreatePoapForm,
   CreatedPoapData,
-  PlatformName,
-  MonetizePoapForm,
-  RequestMintLinksForm,
-  GoogleFile,
-  VoiceRequirement,
-  VoiceParticipationForm,
-  VoiceRequirementParams,
-  PoapEventDetails,
-  AddressConnectionProvider,
-  GuildPinMetadata,
-  LeaderboardPinData,
   DetailedUserLeaderboardData,
+  DiscordError,
+  DiscordServerData,
+  GitPoap,
+  GoogleFile,
+  Guild,
+  GuildAdmin,
+  GuildBase,
+  GuildFormType,
+  GuildPinMetadata,
+  PlatformGuildData,
+  GuildPlatform,
+  GuildPoap,
+  GuildTags,
+  LeaderboardPinData,
+  Logic,
+  MonetizePoapForm,
+  NFT,
+  OneOf,
+  PlatformAccountDetails,
+  PlatformName,
+  Poap,
+  PoapContract,
+  PoapEventDetails,
+  RequestMintLinksForm,
+  Requirement,
+  RequirementType,
+  Rest,
+  Role,
+  RolePlatform,
+  SelectOption,
+  SocialLinkKey,
+  SocialLinks,
+  ThemeMode,
+  Token,
+  Trait,
+  User,
+  VoiceParticipationForm,
+  VoiceRequirement,
+  VoiceRequirementParams,
+  WalletConnectConnectionData,
+  WalletError,
 }
-export { ValidationMethod, Visibility, supportedSocialLinks }

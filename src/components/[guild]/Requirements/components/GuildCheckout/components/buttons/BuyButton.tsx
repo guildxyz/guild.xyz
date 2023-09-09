@@ -1,13 +1,14 @@
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
 import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import fetcher from "utils/fetcher"
+import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
 import usePayFee from "../../hooks/usePayFee"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
@@ -18,7 +19,9 @@ const BuyButton = (): JSX.Element => {
   const toast = useToast()
 
   const { chainId } = useWeb3React()
-  const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
+
+  const requirement = useRequirementContext()
+  const { pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const {
     data: { fee, multiplePayments },

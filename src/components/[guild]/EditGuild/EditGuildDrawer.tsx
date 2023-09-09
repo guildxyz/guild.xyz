@@ -13,10 +13,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
-import UrlName from "components/[guild]/EditGuild/components/UrlName"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -26,15 +22,19 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
+import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
+import UrlName from "components/[guild]/EditGuild/components/UrlName"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
-import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import dynamic from "next/dynamic"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
+import handleSubmitDirty from "utils/handleSubmitDirty"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useUser from "../hooks/useUser"
 import LeaveButton from "../LeaveButton"
@@ -44,7 +44,9 @@ import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
 import SocialLinks from "./components/SocialLinks"
+import TagManager from "./components/TagManager"
 import useEditGuild from "./hooks/useEditGuild"
+import useEditTags from "./hooks/useEditTags"
 
 type Props = {
   isOpen: boolean
@@ -66,12 +68,12 @@ const EditGuildDrawer = ({
     showMembers,
     admins,
     urlName,
-    guildPlatforms,
     hideFromExplorer,
     socialLinks,
     contacts,
     isDetailed,
     featureFlags,
+    tags: savedTags,
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
@@ -80,20 +82,29 @@ const EditGuildDrawer = ({
     name,
     imageUrl,
     description,
-    theme: theme ?? {},
+    theme: theme
+      ? {
+          backgroundCss: theme?.backgroundCss,
+          backgroundImage: theme?.backgroundImage,
+          color: theme?.color,
+          mode: theme?.mode,
+        }
+      : {},
     showMembers,
-    admins: admins?.flatMap((admin) => admin.address) ?? [],
+    admins: admins ?? [],
     urlName,
     hideFromExplorer,
     contacts,
     socialLinks,
-    guildPlatforms,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
+    tags: savedTags,
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
     defaultValues,
   })
+
+  const { onSubmit: onTagsSubmit } = useEditTags()
 
   // We'll only receive this info on client-side, so we're setting the default value of this field in a useEffect
   useEffect(() => {
@@ -101,17 +112,12 @@ const EditGuildDrawer = ({
     methods.setValue("contacts", contacts)
   }, [isDetailed])
 
-  const toast = useToast()
   const onSuccess = () => {
-    toast({
-      title: `Guild successfully updated!`,
-      status: "success",
-    })
     onClose()
     methods.reset(undefined, { keepValues: true })
   }
 
-  const { onSubmit, isLoading, isSigning, signLoadingText } = useEditGuild({
+  const { onSubmit, isLoading } = useEditGuild({
     onSuccess,
   })
 
@@ -133,7 +139,6 @@ const EditGuildDrawer = ({
   } = useDisclosure()
 
   const onCloseAndClear = () => {
-    const themeMode = theme?.mode
     const themeColor = theme?.color
     const backgroundImage = theme?.backgroundImage
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
@@ -149,7 +154,7 @@ const EditGuildDrawer = ({
       methods.setValue(
         "imageUrl",
         `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        { shouldTouch: true }
+        { shouldTouch: true, shouldDirty: true }
       )
     },
     onError: () => {
@@ -163,7 +168,8 @@ const EditGuildDrawer = ({
     onSuccess: ({ IpfsHash }) => {
       methods.setValue(
         "theme.backgroundImage",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        { shouldDirty: true }
       )
     },
     onError: () => {
@@ -172,11 +178,16 @@ const EditGuildDrawer = ({
   })
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    methods.handleSubmit(onSubmit),
+    () => {
+      handleSubmitDirty(methods)((data) => {
+        onSubmit({ ...data, tags: undefined })
+        if (data.tags) onTagsSubmit(data.tags)
+      })()
+    },
     backgroundUploader.isUploading || iconUploader.isUploading
   )
 
-  const loadingText = signLoadingText || uploadLoadingText || "Saving data"
+  const loadingText = uploadLoadingText || "Saving data"
 
   const isDirty =
     !!Object.keys(methods.formState.dirtyFields).length ||
@@ -258,7 +269,9 @@ const EditGuildDrawer = ({
                 {isSuperAdmin && (
                   <>
                     <Divider />
-
+                    <Section title="Tag manager" spacing="4">
+                      <TagManager />
+                    </Section>
                     <Section title="Enabled features" spacing="4">
                       <DynamicFeatureFlags />
                     </Section>
@@ -273,7 +286,7 @@ const EditGuildDrawer = ({
               </Button>
               <Button
                 // isDisabled={!isDirty}
-                isLoading={isLoading || isSigning || isUploadingShown}
+                isLoading={isLoading || isUploadingShown}
                 colorScheme="green"
                 loadingText={loadingText}
                 onClick={handleSubmit}

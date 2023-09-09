@@ -25,7 +25,7 @@ describe("without wallet", () => {
 describe("with wallet", () => {
   before(() => {
     cy.visit("/create-guild")
-    cy.connectWallet()
+    cy.connectWalletAndVerifyAccount()
   })
 
   it("can create a guild without platform", () => {
@@ -64,11 +64,12 @@ describe("with wallet", () => {
     cy.get("input[name='socialLinks.TWITTER']").clear().type("twitter.com/guildxyz")
     cy.getByDataTest("create-guild-button").should("be.enabled")
 
-    cy.getByDataTest("create-guild-button").click()
-
-    cy.intercept("POST", `${Cypress.env("guildApiUrl")}/guild`).as(
+    cy.intercept("POST", `${Cypress.env("guildApiUrl")}/guilds/with-roles`).as(
       "createGuildRequest"
     )
+
+    cy.getByDataTest("create-guild-button").click()
+
     cy.wait("@createGuildRequest").its("response.statusCode").should("eq", 201)
   })
 })

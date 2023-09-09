@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react"
+import { SimpleGrid } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { useEffect } from "react"
@@ -30,7 +30,7 @@ const ChooseTemplate = (): JSX.Element => {
 
   return (
     <>
-      <Box sx={{ columnCount: [1, 1, 2], columnGap: [4, 4, 6] }}>
+      <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 6 }}>
         {Object.entries(TEMPLATES).map(([id, template], index) => (
           <TemplateCard
             key={index}
@@ -43,7 +43,7 @@ const ChooseTemplate = (): JSX.Element => {
             }}
           />
         ))}
-      </Box>
+      </SimpleGrid>
       <Pagination nextButtonDisabled={!requirements?.length} />
     </>
   )

@@ -1,7 +1,7 @@
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
-import useKeyPair from "hooks/useKeyPair"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import { sign } from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
@@ -9,32 +9,6 @@ import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 const SIG_HEADER_NAME = "x-guild-sig"
 const PARAMS_HEADER_NAME = "x-guild-params"
 const AUTH_FLAG_HEADER_NAME = "x-guild-auth-location"
-
-/**
- * Temporary, so we can test out different v2 endpoints locally by just changing them
- * here, as we're going to be using a mix of v1 and v2 endpoints for some time
- */
-const v2Replacer = (endpoint: string, options: Record<string, any>) => {
-  // if (options.method?.toLowerCase() === "post" && endpoint.includes("/v1/guild")) {
-  //   return endpoint.replace("/v1/guild", "/v2/guild/with-roles")
-  // }
-  // if (options.method?.toLowerCase() === "get" && endpoint.includes("/v1/guild/")) {
-  //   return endpoint.replace("/v1/guild/", "/v2/guild/guild-page/")
-  // }
-
-  // This `FORCE_V2` is a pretty ugly solution, but we'll remove this soon (https://github.com/agoraxyz/guild.xyz/pull/808)
-  if (
-    endpoint.startsWith(`${process.env.NEXT_PUBLIC_API}/guild?`) ||
-    endpoint.startsWith(`${process.env.NEXT_PUBLIC_API}/FORCE_V2`)
-  ) {
-    return endpoint
-      .replace("/FORCE_V2", "")
-      .replace("/v1/", "/v2/")
-      .replace("/guild?", "/guilds?")
-  }
-
-  return endpoint
-}
 
 const fetcher = async (
   resource: string,
@@ -83,9 +57,7 @@ const fetcher = async (
     }
   }
 
-  const endpoint = isGuildApiCall
-    ? v2Replacer(`${api}${resource}`, options)
-    : `${api}${resource}`
+  const endpoint = `${api}${resource}`.replace("/v1/v2/", "/v2/")
 
   return fetch(endpoint, options).then(async (response: Response) => {
     const res = await response.json?.()
@@ -131,7 +103,7 @@ const fetcherWithSign = async (
     forcePrompt?: boolean
   },
   resource: string,
-  { body, ...rest }: Record<string, any> = {}
+  { body = {}, ...rest }: Record<string, any> = {}
 ) => {
   const [signedPayload, validation] = await sign({
     forcePrompt: false,
@@ -164,5 +136,5 @@ const useFetcherWithSign = () => {
   }
 }
 
-export { fetcherWithSign, useFetcherWithSign, fetcherForSWR }
+export { fetcherForSWR, fetcherWithSign, useFetcherWithSign }
 export default fetcher

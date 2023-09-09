@@ -14,7 +14,7 @@ const useRemoveGuildPlatform = (guildPlatformId: number) => {
   )
 
   const submit = async (signedValidation: SignedValdation) =>
-    fetcher(`/guild/${id}/platform/${guildPlatformId}`, {
+    fetcher(`/v2/guilds/${id}/guild-platforms/${guildPlatformId}`, {
       method: "DELETE",
       ...signedValidation,
     })
@@ -27,7 +27,26 @@ const useRemoveGuildPlatform = (guildPlatformId: number) => {
         status: "success",
       })
 
-      mutateGuild()
+      mutateGuild(
+        (prevGuild) => ({
+          ...prevGuild,
+          guildPlatforms:
+            prevGuild.guildPlatforms?.filter(
+              (prevGuildPlatform) => prevGuildPlatform.id !== guildPlatformId
+            ) ?? [],
+          roles:
+            prevGuild.roles?.map((prevRole) => ({
+              ...prevRole,
+              rolePlatforms:
+                prevRole.rolePlatforms?.filter(
+                  (prevRolePlatform) =>
+                    prevRolePlatform.guildPlatformId !== guildPlatformId
+                ) ?? [],
+            })) ?? [],
+        }),
+        { revalidate: false }
+      )
+
       mutateGateables()
     },
     onError: (error) => showErrorToast(error),

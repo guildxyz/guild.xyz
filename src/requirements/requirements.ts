@@ -102,6 +102,14 @@ export const REQUIREMENTS_DATA = [
       "ALCHEMY_TX_COUNT_RELATIVE",
       "ALCHEMY_TX_VALUE",
       "ALCHEMY_TX_VALUE_RELATIVE",
+
+      // Same types for covalent, except tx_value types
+      "COVALENT_FIRST_TX",
+      "COVALENT_FIRST_TX_RELATIVE",
+      "COVALENT_CONTRACT_DEPLOY",
+      "COVALENT_CONTRACT_DEPLOY_RELATIVE",
+      "COVALENT_TX_COUNT",
+      "COVALENT_TX_COUNT_RELATIVE",
     ],
   },
   {
@@ -198,6 +206,18 @@ export const REQUIREMENTS_DATA = [
       "DISCORD_MEMBER_SINCE",
     ],
     isPlatform: true,
+  },
+  {
+    icon: "/requirementLogos/eas.png",
+    name: "EAS",
+    fileNameBase: "EAS",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/EthereumAttestation/EthereumAttestationRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/EthereumAttestation/EthereumAttestationForm")
+    ),
+    types: ["EAS_ATTESTED_BY", "EAS_ATTEST"],
   },
   {
     icon: "/requirementLogos/unlock.png",
@@ -477,24 +497,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Rep3/Rep3Form")
     ),
     types: ["REP3"],
-  },
-  {
-    icon: "/explorerLogos/tessera.svg",
-    name: "Tessera",
-    fileNameBase: "Tessera",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Tessera/TesseraRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Tessera/TesseraForm")
-    ),
-    types: [
-      "TESSERA",
-      "TESSERA_HOLD",
-      "TESSERA_HOLD_COLLECTION",
-      "TESSERA_HOLD_STATE",
-      "TESSERA_LISTINGS",
-    ],
   },
   {
     icon: "/requirementLogos/parallel.png",

@@ -7,21 +7,18 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Reorder } from "framer-motion"
-import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import { useMemo, useState } from "react"
 import { Visibility } from "types"
-import fetcher from "utils/fetcher"
+import useReorderRoles from "../hooks/useReorderRoles"
 import DraggableRoleCard from "./DraggableRoleCard"
 
 const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
-  const { id, roles, mutateGuild } = useGuild()
+  const { roles } = useGuild()
   const {
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
@@ -30,18 +27,20 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
-    if (roles.every((role) => role.position === null)) {
+    if (roles?.every((role) => role.position === null)) {
       const byMembers = roles?.sort(
         (role1, role2) => role2.memberCount - role1.memberCount
       )
       return byMembers
     }
 
-    return roles?.sort((role1, role2) => {
-      if (role1.position === null) return 1
-      if (role2.position === null) return -1
-      return role1.position - role2.position
-    })
+    return (
+      roles?.sort((role1, role2) => {
+        if (role1.position === null) return 1
+        if (role2.position === null) return -1
+        return role1.position - role2.position
+      }) ?? []
+    )
   }, [roles])
 
   const publicRoles = sortedRoles.filter(
@@ -50,41 +49,6 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
 
   const defaultRoleIdsOrder = publicRoles?.map((role) => role.id)
   const [roleIdsOrder, setRoleIdsOrder] = useState(defaultRoleIdsOrder)
-  const toast = useToast()
-  const showErrorToast = useShowErrorToast()
-
-  const submit = (signedValidation: SignedValdation) =>
-    fetcher(`/guild/${id}/roles`, {
-      method: "PATCH",
-      ...signedValidation,
-    })
-
-  const { onSubmit, isLoading } = useSubmitWithSign(submit, {
-    onSuccess: (res) => {
-      toast({
-        status: "success",
-        title: "Successfully edited role order",
-      })
-      onClose()
-      mutateGuild(
-        (oldData) => ({
-          ...oldData,
-          /**
-           * Can't do just `roles: res`, because the requirements aren't included in
-           * the role objects in the response. After the API refactor (when they
-           * won't be in the original guild state anyway) we'll be able to switch to
-           * that
-           */
-          roles: oldData.roles.map((role) => ({
-            ...role,
-            position: res.find((resRole) => resRole.id === role.id)?.position,
-          })),
-        }),
-        { revalidate: false }
-      )
-    },
-    onError: (err) => showErrorToast(err),
-  })
 
   /**
    * Using JSON.stringify to compare the values, not the object identity (so it works
@@ -93,8 +57,22 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const isDirty =
     JSON.stringify(defaultRoleIdsOrder) !== JSON.stringify(roleIdsOrder)
 
-  const handleSubmit = () =>
-    onSubmit(roleIdsOrder.map((roleId, i) => ({ id: roleId, position: i })))
+  const { isLoading, onSubmit } = useReorderRoles(onClose)
+
+  const handleSubmit = () => {
+    const changedRoles = roleIdsOrder
+      .map((roleId, i) => ({
+        id: roleId,
+        position: i,
+      }))
+      .filter(({ id: roleId, position }) =>
+        (roles ?? []).some(
+          (prevRole) => prevRole.id === roleId && prevRole.position !== position
+        )
+      )
+
+    return onSubmit(changedRoles)
+  }
 
   const onCloseAndClear = () => {
     setRoleIdsOrder(defaultRoleIdsOrder)
@@ -124,7 +102,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
               {roleIdsOrder?.map((roleId) => (
                 <Reorder.Item key={roleId} value={roleId}>
                   <DraggableRoleCard
-                    role={roles.find((role) => role.id === roleId)}
+                    role={roles?.find((role) => role.id === roleId)}
                   />
                 </Reorder.Item>
               ))}

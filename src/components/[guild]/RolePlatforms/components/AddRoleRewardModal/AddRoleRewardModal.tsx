@@ -2,6 +2,7 @@ import {
   HStack,
   IconButton,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
@@ -9,80 +10,69 @@ import {
 } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { ArrowLeft } from "phosphor-react"
+import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import platforms from "platforms/platforms"
-import { useRef, useState } from "react"
-import { PlatformName } from "types"
-import AddDiscordPanel from "./components/AddDiscordPanel"
-import AddGithubPanel from "./components/AddGithubPanel"
-import AddGooglePanel from "./components/AddGooglePanel"
-import AddTelegramPanel from "./components/AddTelegramPanel"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
-const addPlatformComponents: Record<
-  Exclude<PlatformName, "" | "TWITTER" | "POAP" | "CONTRACT_CALL">,
-  (props) => JSX.Element
-> = {
-  DISCORD: AddDiscordPanel,
-  TELEGRAM: AddTelegramPanel,
-  GITHUB: AddGithubPanel,
-  GOOGLE: AddGooglePanel,
-}
-
-const AddRoleRewardModal = ({ isOpen, onClose }) => {
-  const [selection, setSelectionOg] = useState<PlatformName>(null)
-  const modalRef = useRef(null)
-
-  const AddPlatformPanel = addPlatformComponents[selection]
-
-  const setSelection = (platform: PlatformName) => {
-    setSelectionOg(platform)
-    modalRef.current?.scrollTo({ top: 0 })
+const AddRoleRewardModal = () => {
+  const { modalRef, selection, setSelection, step, setStep, isOpen, onClose } =
+    useAddRewardContext()
+  const goBack = () => {
+    if (step === "SELECT_ROLE") {
+      setStep("HOME")
+    } else {
+      setSelection(null)
+    }
   }
 
-  const closeModal = () => {
-    setSelection(null)
-    onClose()
-  }
+  const { AddPlatformPanel } = platforms[selection] ?? {}
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={closeModal}
+      onClose={onClose}
       size="4xl"
       scrollBehavior="inside"
-      colorScheme={"dark"}
+      colorScheme="dark"
     >
       <ModalOverlay />
       <ModalContent minH="550px">
+        <ModalCloseButton />
         <ModalHeader>
           <HStack>
-            {selection !== null && (
+            {selection && (
               <IconButton
-                rounded={"full"}
+                rounded="full"
                 aria-label="Back"
                 size="sm"
                 mb="-3px"
                 icon={<ArrowLeft size={20} />}
                 variant="ghost"
-                onClick={() => setSelection(null)}
+                onClick={goBack}
               />
             )}
             <Text>
-              Add {(selection === null && "reward") || platforms[selection].name}
+              {selection ? `Add ${platforms[selection].name} reward` : "Add reward"}
             </Text>
           </HStack>
         </ModalHeader>
-        <ModalBody ref={modalRef}>
-          {(selection === null && (
+
+        <ModalBody ref={modalRef} className="custom-scrollbar">
+          {selection && step === "SELECT_ROLE" ? (
+            <SelectRoleOrSetRequirements selectedPlatform={selection} />
+          ) : AddPlatformPanel ? (
+            <AddPlatformPanel onSuccess={onClose} skipSettings />
+          ) : (
             <>
               <SelectExistingPlatform onClose={onClose} />
-              <Text fontWeight={"bold"} mb="3">
+              <Text fontWeight="bold" mb="3">
                 Add new platform
               </Text>
               <PlatformsGrid onSelection={setSelection} />
             </>
-          )) || <AddPlatformPanel onSuccess={closeModal} />}
+          )}
         </ModalBody>
       </ModalContent>
     </Modal>

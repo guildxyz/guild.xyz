@@ -70,7 +70,7 @@ const ChainPicker = ({
 
   return (
     <>
-      <FormControl isRequired>
+      <FormControl>
         <FormLabel>Chain</FormLabel>
 
         <ControlledCombobox

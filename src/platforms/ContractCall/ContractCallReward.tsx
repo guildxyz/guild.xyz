@@ -1,7 +1,7 @@
 import { Circle, Img, SkeletonCircle, SkeletonProps } from "@chakra-ui/react"
+import LinkButton from "components/common/LinkButton"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
-import LinkButton from "components/common/LinkButton"
 import { motion } from "framer-motion"
 import { ArrowSquareOut } from "phosphor-react"
 import {
@@ -10,6 +10,7 @@ import {
   RewardProps,
 } from "../../components/[guild]/RoleCard/components/Reward"
 
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { forwardRef } from "react"
 
 const ContractCallReward = ({
@@ -18,6 +19,10 @@ const ContractCallReward = ({
   isLinkColorful,
 }: RewardProps) => {
   const { urlName } = useGuild()
+
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = { guild: urlName }
+
   const { chain, contractAddress } = platform.guildPlatform.platformGuildData ?? {}
   const { data: nftData } = useNftDetails(chain, contractAddress)
 
@@ -35,11 +40,17 @@ const ContractCallReward = ({
         <>
           {`Collect: `}
           <LinkButton
-            variant={"link"}
+            variant="link"
             rightIcon={<ArrowSquareOut />}
             iconSpacing="1"
             maxW="full"
             href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}
+            onClick={() => {
+              captureEvent(
+                "Click on collect page link (ContractCallReward)",
+                postHogOptions
+              )
+            }}
             colorScheme={isLinkColorful ? "blue" : "gray"}
           >
             {nftData?.name ?? "NFT"}
@@ -76,6 +87,7 @@ export const ContractCallRewardIcon = ({
     src: nftData?.image,
     alt: guildPlatform?.platformGuildName,
     boxSize: 6,
+    borderRadius: "full",
   }
 
   if (withMotionImg)

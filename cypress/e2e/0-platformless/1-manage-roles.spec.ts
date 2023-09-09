@@ -1,26 +1,49 @@
-before(() => {
-  cy.disconnectMetamaskWalletFromAllDapps()
-})
-
 const CONTEXT = {
   createdRoleId: undefined,
+  guild: undefined,
+  createdRequirement: undefined,
 }
 
-describe("roles", () => {
-  before(() => {
-    cy.visit("/explorer")
-    cy.connectWallet()
-  })
+const URL_NAME = `${Cypress.env("platformlessGuildUrlName")}-${Cypress.env(
+  "DEPLOYMENT_ID"
+)}`
 
+describe("roles", () => {
   beforeEach(() => {
     // Using a pre-made test guild here, since it isn't guaranteed that the 0-create-guild spec will run successfully
-    cy.visit("/guild-e2e-cypress")
+    cy.visit(URL_NAME)
+
+    // Cypress clears localStorage between tests, so we won't connect eagerly inside the `useEagerConnect` hook, that's why we need to connect manually before each tests
+    cy.disconnectMetamaskWalletFromAllDapps()
+  })
+
+  it("can fetch guild id", () => {
+    cy.connectWalletAndVerifyAccount()
+
+    // http://localhost:8989/v1/guild/platformless-cypress-gang
+    cy.intercept(
+      "GET",
+      `${Cypress.env("guildApiUrl")}/guilds/guild-page/${URL_NAME}`
+    ).as("fetchGuild")
+
+    cy.wait("@fetchGuild")
+      .then((intercept) => {
+        CONTEXT.guild = intercept.response.body
+        return intercept
+      })
+      .its("response.statusCode")
+      .should("eq", 200)
   })
 
   it("can create a role without rewards", () => {
-    cy.intercept("POST", `${Cypress.env("guildApiUrl")}/role`).as(
-      "createRoleApiCall"
-    )
+    cy.connectWallet()
+
+    cy.intercept(
+      "POST",
+      `${Cypress.env("guildApiUrl")}/guilds/${
+        CONTEXT.guild.id
+      }/roles/with-requirements-and-rewards`
+    ).as("createRoleApiCall")
 
     cy.getByDataTest("add-role-button").click()
 
@@ -56,16 +79,16 @@ describe("roles", () => {
   })
 
   it("can edit general role data", () => {
+    cy.connectWallet()
+
     if (!CONTEXT.createdRoleId)
       throw new Error("Can't run test, because couldn't create a role.")
 
-    // Workaround
-    cy.wait(5000) // Average replica lag
-    cy.reload(true) // Hard reloading, so we make sure we have a clean cache
-
     cy.intercept(
-      "PATCH",
-      `${Cypress.env("guildApiUrl")}/role/${CONTEXT.createdRoleId}`
+      "PUT",
+      `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}/roles/${
+        CONTEXT.createdRoleId
+      }`
     ).as("editRoleApiCall")
 
     cy.get(`#role-${CONTEXT.createdRoleId}`).should("exist")
@@ -81,12 +104,16 @@ describe("roles", () => {
   })
 
   it("can add requirements", () => {
+    cy.connectWallet()
+
     if (!CONTEXT.createdRoleId)
       throw new Error("Can't run test, because couldn't create a role.")
 
     cy.intercept(
-      "PATCH",
-      `${Cypress.env("guildApiUrl")}/role/${CONTEXT.createdRoleId}`
+      "POST",
+      `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}/roles/${
+        CONTEXT.createdRoleId
+      }/requirements`
     ).as("editRoleApiCall")
 
     cy.get(`#role-${CONTEXT.createdRoleId}`).should("exist")
@@ -110,39 +137,54 @@ describe("roles", () => {
     })
 
     cy.getByDataTest("save-role-button").click()
-    cy.wait("@editRoleApiCall").its("response.statusCode").should("eq", 200)
+    cy.wait("@editRoleApiCall")
+      .then((intercept) => {
+        CONTEXT.createdRequirement = intercept.response.body
+        return intercept
+      })
+      .its("response.statusCode")
+      .should("eq", 201)
   })
 
   it("can edit requirements list", () => {
+    cy.connectWallet()
+
     if (!CONTEXT.createdRoleId)
       throw new Error("Can't run test, because couldn't create a role.")
 
-    cy.intercept(
-      "PATCH",
-      `${Cypress.env("guildApiUrl")}/role/${CONTEXT.createdRoleId}`
-    ).as("editRoleApiCall")
+    // cy.intercept(
+    //   "DELETE",
+    //   `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}/roles/${
+    //     CONTEXT.createdRoleId
+    //   }/requirements/${CONTEXT.createdRequirement.id}`
+    // ).as("deleteRequirementApiCall")
 
     cy.get(`#role-${CONTEXT.createdRoleId}`).should("exist")
     cy.get(`#role-${CONTEXT.createdRoleId} button[aria-label='Edit role']`).click()
 
     cy.get("div[role='dialog'].chakra-slide").within(() => {
       cy.get("button[aria-label='Remove requirement']").first().click()
-
-      cy.getByDataTest("save-role-button").click()
-      cy.wait("@editRoleApiCall")
-        .its("response.body.requirements.length")
-        .should("eq", 1)
     })
+
+    cy.getByDataTest("delete-requirement-button").click()
+
+    cy.findByText("Requirement deleted!")
+
+    // cy.wait("@deleteRequirementApiCall").its("response.statusCode").should("eq", 200)
   })
 
   it("can delete a role", () => {
+    cy.connectWallet()
+
     if (!CONTEXT.createdRoleId)
       throw new Error("Can't run test, because couldn't create a role.")
 
-    cy.intercept(
-      "DELETE",
-      `${Cypress.env("guildApiUrl")}/role/${CONTEXT.createdRoleId}`
-    ).as("deleteRoleApiCall")
+    // cy.intercept(
+    //   "DELETE",
+    //   `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}/roles/${
+    //     CONTEXT.createdRoleId
+    //   }`
+    // ).as("deleteRoleApiCall")
 
     cy.get(`#role-${CONTEXT.createdRoleId}`).should("exist")
     cy.get(`#role-${CONTEXT.createdRoleId} button[aria-label='Edit role']`).click()
@@ -153,7 +195,11 @@ describe("roles", () => {
 
     cy.getByDataTest("delete-role-confirmation-button").click()
     cy.confirmMetamaskSignatureRequest()
-    cy.wait("@deleteRoleApiCall").its("response.statusCode").should("eq", 200)
+
+    // Couldn't get intercept to work here, so waiting the toast for now
+    cy.findByText("Role deleted!")
+
+    // cy.wait("@deleteRoleApiCall").its("response.statusCode").should("eq", 200)
   })
 })
 

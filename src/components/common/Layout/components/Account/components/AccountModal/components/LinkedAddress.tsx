@@ -19,33 +19,30 @@ import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
 import Image from "next/image"
 import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
-import { AddressConnectionProvider } from "types"
+import { AddressConnectionProvider, User } from "types"
 import shortenHex from "utils/shortenHex"
-import useDisconnect from "../hooks/useDisconnect"
+import { useDisconnectAddress } from "../hooks/useDisconnect"
 import PrimaryAddressTag from "./PrimaryAddressTag"
 
 type Props = {
-  address: string
+  addressData: User["addresses"][number]
 }
 
 const providerIcons: Record<AddressConnectionProvider, string> = {
   DELEGATE: "delegatecash.png",
 }
 
-const LinkedAddress = ({ address }: Props) => {
-  const { addressProviders, addresses } = useUser()
+const LinkedAddress = ({ addressData }: Props) => {
+  const { address, provider, isPrimary } = addressData ?? {}
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { onSubmit, isLoading, signLoadingText } = useDisconnect(onClose)
+  const { onSubmit, isLoading, signLoadingText } = useDisconnectAddress(onClose)
   const alertCancelRef = useRef()
 
   const removeAddress = () => onSubmit({ address })
-
-  const provider = addressProviders?.[address]
 
   return (
     <>
@@ -71,12 +68,8 @@ const LinkedAddress = ({ address }: Props) => {
             </Tag>
           </Tooltip>
         )}
-        {addresses.indexOf(address) === 0 ? <PrimaryAddressTag size="sm" /> : null}
-        <Tooltip
-          label="Disconnect address - temporarily disabled"
-          placement="top"
-          hasArrow
-        >
+        {isPrimary ? <PrimaryAddressTag size="sm" /> : null}
+        <Tooltip label="Disconnect address" placement="top" hasArrow>
           <IconButton
             rounded="full"
             variant="ghost"
@@ -84,8 +77,7 @@ const LinkedAddress = ({ address }: Props) => {
             icon={<Icon as={LinkBreak} />}
             colorScheme="red"
             ml="auto !important"
-            isDisabled
-            // onClick={onOpen}
+            onClick={onOpen}
             aria-label="Disconnect address"
           />
         </Tooltip>

@@ -1,49 +1,43 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
-import { useState } from "react"
-import { CreatePoapProvider } from "./components/CreatePoapContext"
+import { useFormContext } from "react-hook-form"
+import { useAddRewardContext } from "../AddRewardContext"
 import ImportPoap from "./components/ImportPoap"
 import CreatePoapForm from "./components/PoapDataForm/CreatePoapForm"
 import { SetupPoapRequirements } from "./components/PoapRequirements/PoapRequirements"
 
-type Props = {
-  onSuccess: () => void
-  scrollToTop: () => void
-}
-
-const AddPoapPanel = ({ onSuccess, scrollToTop }: Props): JSX.Element => {
-  const [step, setStep] = useState("home")
-
-  const handleSetStep = (newStep) => {
-    setStep(newStep)
-    scrollToTop()
-  }
-
-  if (step === "requirements") return <SetupPoapRequirements onSuccess={onSuccess} />
+const AddPoapPanel = (): JSX.Element => {
+  const { step, onClose } = useAddRewardContext()
+  const { reset } = useFormContext()
 
   return (
-    <Box>
-      <Tabs size="sm" isFitted variant="solid" colorScheme="indigo">
-        <TabList mb="8">
-          <Tab>Create new POAP</Tab>
-          <Tab>Import existing</Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <CreatePoapForm setStep={handleSetStep} />
-          </TabPanel>
-          <TabPanel>
-            <ImportPoap setStep={handleSetStep} />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    </Box>
+    <>
+      {step === "SELECT_ROLE" ? (
+        <SetupPoapRequirements
+          onSuccess={() => {
+            reset()
+            onClose()
+          }}
+        />
+      ) : (
+        <Box>
+          <Tabs size="sm" isFitted variant="solid" colorScheme="indigo">
+            <TabList mb="8">
+              <Tab>Create new POAP</Tab>
+              <Tab>Import existing</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <CreatePoapForm />
+              </TabPanel>
+              <TabPanel>
+                <ImportPoap />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Box>
+      )}
+    </>
   )
 }
 
-const AddPoapPanelWrapper = ({ onSuccess, scrollToTop }: Props): JSX.Element => (
-  <CreatePoapProvider>
-    <AddPoapPanel {...{ onSuccess, scrollToTop }} />
-  </CreatePoapProvider>
-)
-
-export default AddPoapPanelWrapper
+export default AddPoapPanel

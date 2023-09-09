@@ -1,6 +1,5 @@
 import {
   Box,
-  Collapse,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -11,29 +10,28 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
-import ErrorAlert from "components/common/ErrorAlert"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useCreateRole from "components/create-guild/hooks/useCreateRole"
+import useCreateRole, {
+  RoleToCreate,
+} from "components/create-guild/hooks/useCreateRole"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
-import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useEffect } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { useEffect, useRef } from "react"
+import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import RolePlatforms from "../../RolePlatforms"
 import SetVisibility from "../../SetVisibility"
-
-const noRequirementsErrorMessage = "Set some requirements, or make the role free"
 
 const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { id, guildPlatforms } = useGuild()
@@ -44,7 +42,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
     useCreateRole()
 
-  const defaultValues = {
+  const defaultValues: RoleToCreate = {
     guildId: id,
     name: "",
     description: "",
@@ -56,9 +54,10 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     rolePlatforms: discordPlatform
       ? [
           {
+            id: undefined,
             guildPlatformId: discordPlatform.id,
-            platformRoleData: {},
             platformRoleId: null,
+            platformRoleData: {},
             isNew: true,
             visibility: Visibility.PUBLIC,
           },
@@ -111,27 +110,17 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     },
   })
 
-  const formRequirements = useWatch({
-    name: "requirements",
-    control: methods.control,
-  })
+  const drawerBodyRef = useRef<HTMLDivElement>()
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    (...props) => {
-      methods.clearErrors("requirements")
-      if (!formRequirements || formRequirements?.length === 0) {
-        methods.setError(
-          "requirements",
-          {
-            message: noRequirementsErrorMessage,
-          },
-          { shouldFocus: true }
-        )
-        document.getElementById("free-entry-checkbox")?.focus()
-      } else {
-        return methods.handleSubmit(onSubmit)(...props)
+    methods.handleSubmit(onSubmit, (formErrors) => {
+      if (formErrors.requirements && drawerBodyRef.current) {
+        drawerBodyRef.current.scrollBy({
+          top: drawerBodyRef.current.scrollHeight,
+          behavior: "smooth",
+        })
       }
-    },
+    }),
     iconUploader.isUploading
   )
 
@@ -148,7 +137,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerBody className="custom-scrollbar">
+          <DrawerBody ref={drawerBodyRef} className="custom-scrollbar">
             <FormProvider {...methods}>
               <DrawerHeader
                 title="Add role"
@@ -174,16 +163,8 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
                   </Box>
                   <Description />
                 </Section>
-                <SetRequirements />
 
-                <Collapse
-                  in={!!methods.formState.errors?.requirements}
-                  style={{
-                    width: "100%",
-                  }}
-                >
-                  <ErrorAlert label={noRequirementsErrorMessage} />
-                </Collapse>
+                <SetRequirements />
               </VStack>
             </FormProvider>
           </DrawerBody>

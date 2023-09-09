@@ -1,11 +1,12 @@
 import { usePrevious } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import OptionCard from "components/common/OptionCard"
-import useGuildByPlatformId from "hooks/useGuildByPlatformId"
 import usePopupWindow from "hooks/usePopupWindow"
 import useServerData from "hooks/useServerData"
 import Link from "next/link"
 import { ArrowSquareIn } from "phosphor-react"
+import usePlatformUsageInfo from "platforms/hooks/usePlatformUsageInfo"
 import { useEffect } from "react"
 
 type Props = {
@@ -48,47 +49,53 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     }
   }, [channels, activeAddBotPopup])
 
-  const { id, urlName } = useGuildByPlatformId("DISCORD", serverData.id)
+  const { isAlreadyInUse, isUsedInCurrentGuild, guildUrlName, isValidating } =
+    usePlatformUsageInfo("DISCORD", serverData.id)
+
+  if (isUsedInCurrentGuild) return null
 
   return (
-    <OptionCard
-      title={serverData.name}
-      description={serverData.owner ? "Owner" : "Admin"}
-      image={serverData.img || "/default_discord_icon.png"}
-    >
-      {onCancel ? (
-        <Button h={10} onClick={onCancel}>
-          Cancel
-        </Button>
-      ) : isAdmin === undefined ? (
-        <Button h={10} isLoading />
-      ) : !isAdmin ? (
-        <Button
-          h={10}
-          colorScheme="DISCORD"
-          onClick={openAddBotPopup}
-          isLoading={!!activeAddBotPopup}
-          rightIcon={<ArrowSquareIn />}
-        >
-          Add bot
-        </Button>
-      ) : !id ? (
-        <Button
-          h={10}
-          colorScheme="green"
-          onClick={() => onSelect(serverData.id)}
-          data-test="select-dc-server-button"
-        >
-          Select
-        </Button>
-      ) : id ? (
-        <Link href={`/${urlName}`} passHref>
-          <Button as="a" h={10} colorScheme="gray">
-            Already guilded
+    <CardMotionWrapper>
+      <OptionCard
+        h="max-content"
+        title={serverData.name}
+        description={serverData.owner ? "Owner" : "Admin"}
+        image={serverData.img || "/default_discord_icon.png"}
+      >
+        {onCancel ? (
+          <Button h={10} onClick={onCancel}>
+            Cancel
           </Button>
-        </Link>
-      ) : null}
-    </OptionCard>
+        ) : isAdmin === undefined || isValidating ? (
+          <Button h={10} isLoading />
+        ) : !isAdmin ? (
+          <Button
+            h={10}
+            colorScheme="DISCORD"
+            onClick={openAddBotPopup}
+            isLoading={!!activeAddBotPopup}
+            rightIcon={<ArrowSquareIn />}
+          >
+            Add bot
+          </Button>
+        ) : !isAlreadyInUse ? (
+          <Button
+            h={10}
+            colorScheme="green"
+            onClick={() => onSelect(serverData.id)}
+            data-test="select-dc-server-button"
+          >
+            Select
+          </Button>
+        ) : isAlreadyInUse ? (
+          <Link href={`/${guildUrlName}`} passHref>
+            <Button as="a" h={10} colorScheme="gray">
+              Go to guild
+            </Button>
+          </Link>
+        ) : null}
+      </OptionCard>
+    </CardMotionWrapper>
   )
 }
 

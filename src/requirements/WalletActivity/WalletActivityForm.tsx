@@ -16,6 +16,21 @@ import AlchemyTxCountRelative from "./components/AlchemyTxCountRelative"
 import AlchemyTxValue from "./components/AlchemyTxValue"
 import AlchemyTxValueRelative from "./components/AlchemyTxValueRelative"
 
+// These can be extended for additional Covalent support
+export const COVALENT_CHAINS = new Set<Chain>([
+  "BASE_GOERLI",
+  "BASE_MAINNET",
+  "SCROLL_ALPHA",
+  "ZORA",
+  "AVALANCHE",
+])
+
+// These requirement types do not have a covalent equivalent, remove them once they do
+const COVALENT_EXCLUDED_TYPES = new Set([
+  "ALCHEMY_TX_VALUE",
+  "ALCHEMY_TX_VALUE_RELATIVE",
+])
+
 const walletActivityRequirementTypes: SelectOption[] = [
   {
     label: "Wallet age",
@@ -68,8 +83,21 @@ const WalletActivityForm = ({
   } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
+  const chain = useWatch({ name: `${baseFieldPath}.chain` })
 
-  const selected = walletActivityRequirementTypes.find(
+  const supportedRequirementTypes = COVALENT_CHAINS.has(chain)
+    ? walletActivityRequirementTypes
+        .filter(({ value }) => !COVALENT_EXCLUDED_TYPES.has(value))
+        .map(
+          ({ value, ...rest }) =>
+            ({
+              ...rest,
+              value: value.replace("ALCHEMY_", "COVALENT_"),
+            } as SelectOption)
+        )
+    : walletActivityRequirementTypes
+
+  const selected = supportedRequirementTypes.find(
     (reqType) => reqType.value === type
   )
 
@@ -80,10 +108,17 @@ const WalletActivityForm = ({
     "OPTIMISM",
     "GOERLI",
     "POLYGON_MUMBAI",
-    ...(!["ALCHEMY_TX_VALUE", "ALCHEMY_TX_VALUE_RELATIVE"].includes(type)
-      ? ["BASE_GOERLI" as Chain]
-      : []),
+    "SCROLL_ALPHA",
+    "BASE_MAINNET",
+    "BASE_GOERLI",
+    "ZORA",
   ]
+
+  for (const covalentChain of COVALENT_CHAINS.values()) {
+    if (!walletActivitySupportedChains.includes(covalentChain)) {
+      walletActivitySupportedChains.push(covalentChain)
+    }
+  }
 
   const resetFields = () => {
     resetField(`${baseFieldPath}.address`, { defaultValue: "" })
@@ -97,32 +132,35 @@ const WalletActivityForm = ({
 
   return (
     <Stack spacing={4} alignItems="start">
-      <FormControl
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
-      >
-        <FormLabel>Type</FormLabel>
+      <ChainPicker
+        controlName={`${baseFieldPath}.chain`}
+        supportedChains={walletActivitySupportedChains}
+      />
 
-        <ControlledCombobox
-          name={`${baseFieldPath}.type`}
-          rules={{ required: "It's required to select a type" }}
-          options={walletActivityRequirementTypes}
-          beforeOnChange={resetFields}
-          placeholder="Select type"
-          disableOptionFiltering
-        />
-
-        <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.type?.message}
-        </FormErrorMessage>
-      </FormControl>
-
-      {selected?.WalletActivityRequirement && (
+      {chain && (
         <>
-          <ChainPicker
-            controlName={`${baseFieldPath}.chain`}
-            supportedChains={walletActivitySupportedChains}
-          />
-          <selected.WalletActivityRequirement baseFieldPath={baseFieldPath} />
+          <FormControl
+            isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
+          >
+            <FormLabel>Type</FormLabel>
+
+            <ControlledCombobox
+              name={`${baseFieldPath}.type`}
+              rules={{ required: "It's required to select a type" }}
+              options={walletActivityRequirementTypes}
+              beforeOnChange={resetFields}
+              placeholder="Select type"
+              disableOptionFiltering
+            />
+
+            <FormErrorMessage>
+              {parseFromObject(errors, baseFieldPath)?.type?.message}
+            </FormErrorMessage>
+          </FormControl>
+
+          {selected?.WalletActivityRequirement && (
+            <selected.WalletActivityRequirement baseFieldPath={baseFieldPath} />
+          )}
         </>
       )}
     </Stack>

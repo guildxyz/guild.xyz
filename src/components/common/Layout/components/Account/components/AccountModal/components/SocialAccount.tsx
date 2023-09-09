@@ -21,7 +21,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { motion } from "framer-motion"
 import useToast from "hooks/useToast"
-import { LinkBreak } from "phosphor-react"
+import { LinkBreak, Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { memo, useRef } from "react"
 import { PlatformName } from "types"
@@ -76,7 +76,14 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
         <Text fontWeight="bold" flex="1" noOfLines={1} fontSize="sm">
           {platformUser?.platformUserData?.username ??
             `${platforms[type].name} ${!!platformUser ? "connected" : ""}`}
+          {type === "TWITTER_V1" ? (
+            <Text color={"gray"} display={"inline"}>
+              {" "}
+              (v1)
+            </Text>
+          ) : null}
         </Text>
+        {type === "TWITTER_V1" ? <TwitterV1Tooltip /> : null}
         {!platformUser ? (
           <ConnectPlatform type={type} colorScheme={colorScheme} />
         ) : (
@@ -91,6 +98,16 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
     </>
   )
 })
+
+export const TwitterV1Tooltip = () => (
+  <Tooltip
+    hasArrow
+    placement="top"
+    label="Some of our Twitter requirements can only be checked if your Twitter account is connected this way as well"
+  >
+    <Icon color="gray" as={Question} />
+  </Tooltip>
+)
 
 const ConnectPlatform = ({ type, colorScheme, isReconnect = false }) => {
   const toast = useToast()
@@ -133,19 +150,14 @@ const DisconnectPlatform = ({ type, name }) => {
 
   return (
     <>
-      <Tooltip
-        label="Disconnect account - temporarily disabled"
-        placement="top"
-        hasArrow
-      >
+      <Tooltip label="Disconnect account" placement="top" hasArrow>
         <IconButton
           rounded="full"
           variant="ghost"
           size="sm"
           icon={<Icon as={LinkBreak} />}
           colorScheme="red"
-          // onClick={onOpen}
-          isDisabled
+          onClick={onOpen}
           aria-label="Disconnect account"
         />
       </Tooltip>

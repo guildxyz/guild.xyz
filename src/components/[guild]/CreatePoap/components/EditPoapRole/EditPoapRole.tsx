@@ -48,11 +48,13 @@ const EditPoapRole = ({ poap, guildPoap }: Props): JSX.Element => {
   const btnRef = useRef()
 
   const defaultValues = {
+    poapId: guildPoap.id,
     name: poap.name,
     description: poap.description,
     imageUrl: poap.image_url,
     requirements: mapRequirements(guildPoap.poapRequirements),
-    logic: "OR",
+    // Pretty messy, but will be removed once POAP becames a real reward
+    logic: (guildPoap.poapRequirements?.[0] as any)?.logic ?? "OR",
   }
   const methods = useForm({
     mode: "all",

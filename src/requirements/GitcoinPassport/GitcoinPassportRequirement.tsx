@@ -15,8 +15,6 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import Link from "components/common/Link"
 import useAccess from "components/[guild]/hooks/useAccess"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
@@ -24,8 +22,9 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { ArrowSquareOut, CaretDown } from "phosphor-react"
+import { CaretDown } from "phosphor-react"
 import { scorers } from "./components/Score"
+import SetupPassport from "./components/SetupPassport"
 
 type Keys = "stamp" | "issuer" | "credType" | "minAmount" | "maxAmount"
 const nameByKey: Record<Keys, string> = {
@@ -53,24 +52,7 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
       {...rest}
       footer={
         <HStack>
-          {showCreatePassportButton && (
-            <Link
-              href="https://passport.gitcoin.co"
-              isExternal
-              _hover={{
-                textDecoration: "none",
-              }}
-            >
-              <Button
-                size="xs"
-                colorScheme="teal"
-                rightIcon={<ArrowSquareOut />}
-                iconSpacing="1"
-              >
-                Setup Passport
-              </Button>
-            </Link>
-          )}
+          {showCreatePassportButton && <SetupPassport />}
           {requirement.type === "GITCOIN_STAMP" &&
             Object.keys(requirement.data ?? {}).length > 0 && (
               <Popover placement="bottom">

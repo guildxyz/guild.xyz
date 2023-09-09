@@ -19,6 +19,7 @@ import CompleteCaptchaJoinStep from "./components/CompleteCaptchaJoinStep"
 import ConnectPlatform from "./components/ConnectPlatform"
 import ConnectPolygonIDJoinStep from "./components/ConnectPolygonIDJoinStep"
 import SatisfyRequirementsJoinStep from "./components/SatisfyRequirementsJoinStep"
+import TwitterRequirementsVerificationIssuesAlert from "./components/TwitterRequirementsVerificationIssuesAlert"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
@@ -87,6 +88,9 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 onClose={onClose}
               />
             </VStack>
+
+            <TwitterRequirementsVerificationIssuesAlert />
+
             <ModalButton
               mt="8"
               onClick={handleSubmit(onSubmit)}

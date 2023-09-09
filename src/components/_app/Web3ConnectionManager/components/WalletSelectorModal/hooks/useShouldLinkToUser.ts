@@ -1,8 +1,9 @@
-import { useWeb3React } from "@web3-react/core"
-import { deleteKeyPairFromIdb, getKeyPairFromIdb } from "hooks/useKeyPair"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
+import {
+  deleteKeyPairFromIdb,
+  getKeyPairFromIdb,
+} from "components/_app/KeyPairProvider"
 import useSWR, { mutate, unstable_serialize } from "swr"
-import useSWRImmutable from "swr/immutable"
-import { User } from "types"
 import { useWeb3ConnectionManager } from "../../../Web3ConnectionManager"
 
 const fetchShouldLinkToUser = async ([_, userId, connectParams]) => {
@@ -27,14 +28,11 @@ const fetchShouldLinkToUser = async ([_, userId, connectParams]) => {
 }
 
 const useShouldLinkToUser = () => {
-  const { account } = useWeb3React()
-  const { data: user } = useSWRImmutable<User>(account ? `/user/${account}` : null)
+  const { id } = useUserPublic()
   const { setAddressLinkParams, addressLinkParams } = useWeb3ConnectionManager()
 
   const { data: shouldLinkToUser } = useSWR(
-    addressLinkParams?.userId
-      ? ["shouldLinkToUser", user?.id, addressLinkParams]
-      : null,
+    addressLinkParams?.userId ? ["shouldLinkToUser", id, addressLinkParams] : null,
     fetchShouldLinkToUser,
     {
       shouldRetryOnError: false,

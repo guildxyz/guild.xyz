@@ -1,4 +1,5 @@
-import useUser from "components/[guild]/hooks/useUser"
+import { useWeb3React } from "@web3-react/core"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { posthog } from "posthog-js"
 import {
   PostHogProvider as DefaultPostHogProvider,
@@ -34,14 +35,19 @@ const PostHogContext = createContext<{
 const CustomPostHogProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
-  const { id, addresses } = useUser()
+  const { account } = useWeb3React()
+  const { id } = useUserPublic()
   const ph = usePostHog()
 
   return (
     <PostHogContext.Provider
       value={{
         captureEvent: (event, options) =>
-          ph.capture(event, { userId: id, userAddress: addresses?.[0], ...options }),
+          ph.capture(event, {
+            userId: id,
+            userAddress: account?.toLowerCase(),
+            ...options,
+          }),
       }}
     >
       {children}

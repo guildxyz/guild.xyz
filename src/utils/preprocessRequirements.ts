@@ -1,4 +1,5 @@
-import { Requirement } from "types"
+import { COVALENT_CHAINS } from "requirements/WalletActivity/WalletActivityForm"
+import { Requirement, RequirementType } from "types"
 
 const preprocessRequirements = (requirements: Array<Requirement>) => {
   if (!requirements || !Array.isArray(requirements)) return undefined
@@ -15,18 +16,76 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
       .map((requirement) => {
         const processedRequirement: Requirement = {
           ...requirement,
-          data: {
-            ...requirement.data,
-            validAddresses: undefined,
-          },
+          data: requirement.data
+            ? {
+                ...requirement.data,
+                validAddresses: undefined,
+              }
+            : undefined,
           nftRequirementType: undefined,
         }
 
         if (
+          processedRequirement.type?.startsWith("ALCHEMY_") &&
+          COVALENT_CHAINS.has(processedRequirement.chain)
+        ) {
+          processedRequirement.type = processedRequirement.type.replace(
+            "ALCHEMY_",
+            "COVALENT_"
+          ) as RequirementType
+
+          if (processedRequirement?.data?.timestamps?.minAmount) {
+            processedRequirement.data.timestamps.minAmount *= 1000
+          }
+
+          if (processedRequirement?.data?.timestamps?.maxAmount) {
+            processedRequirement.data.timestamps.maxAmount *= 1000
+          }
+        }
+
+        // Make sure minAmount and maxAmount are in correct order
+        if (
+          processedRequirement.type?.includes("RELATIVE") &&
+          typeof processedRequirement.data?.minAmount === "number" &&
+          typeof processedRequirement.data?.maxAmount === "number" &&
+          typeof processedRequirement.data?.timestamps?.minAmount === "number" &&
+          typeof processedRequirement.data?.timestamps?.maxAmount === "number"
+        ) {
+          const [tsUpperEnd, tsLowerEnd] = [
+            processedRequirement.data.timestamps.minAmount,
+            processedRequirement.data.timestamps.maxAmount,
+          ].sort((a, b) => a - b)
+
+          const [upperEnd, lowerEnd] = [
+            processedRequirement.data.minAmount,
+            processedRequirement.data.maxAmount,
+          ].sort((a, b) => a - b)
+
+          processedRequirement.data.minAmount = lowerEnd
+          processedRequirement.data.maxAmount = upperEnd
+
+          processedRequirement.data.timestamps.minAmount = tsLowerEnd
+          processedRequirement.data.timestamps.maxAmount = tsUpperEnd
+        }
+
+        if (processedRequirement.type?.startsWith("COVALENT_")) {
+          if (!processedRequirement?.data?.timestamps?.minAmount) {
+            delete processedRequirement.data.timestamps.minAmount
+          }
+
+          if (!processedRequirement?.data?.timestamps?.maxAmount) {
+            delete processedRequirement.data.timestamps.maxAmount
+          }
+        }
+
+        if (requirement.type === "COIN") {
+          processedRequirement.address = "0x0000000000000000000000000000000000000000"
+        } else if (
           !requirement.address ||
           requirement.address === "0x0000000000000000000000000000000000000000"
-        )
+        ) {
           processedRequirement.address = undefined
+        }
 
         if (
           (requirement.type === "ERC721" ||

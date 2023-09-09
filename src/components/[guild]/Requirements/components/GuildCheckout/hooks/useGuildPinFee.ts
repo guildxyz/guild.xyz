@@ -2,6 +2,7 @@ import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Chain, Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
@@ -28,6 +29,7 @@ const useGuildPinFee = (): {
   isGuildPinFeeLoading: boolean
   guildPinFeeError: any
 } => {
+  const { id } = useGuild()
   const { chainId } = useWeb3React()
   const guildPinContractsData = useGuildPinContractsData()
 
@@ -35,7 +37,7 @@ const useGuildPinFee = (): {
     data: guildPinFee,
     isValidating: isGuildPinFeeLoading,
     error: guildPinFeeError,
-  } = useSWRImmutable(["guildPinFee", Chains[chainId]], ([_, chain]) =>
+  } = useSWRImmutable(["guildPinFee", Chains[chainId], id], ([_, chain]) =>
     fetchFee(chain, guildPinContractsData)
   )
 

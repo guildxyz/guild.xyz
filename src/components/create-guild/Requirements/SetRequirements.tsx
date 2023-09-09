@@ -1,22 +1,34 @@
-import { Checkbox, Stack, Text, Wrap } from "@chakra-ui/react"
+import { ChakraProps, Checkbox, Collapse, Stack, Text, Wrap } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
+import ErrorAlert from "components/common/ErrorAlert"
 import { SectionTitle } from "components/common/Section"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { AnimatePresence } from "framer-motion"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { RequirementType } from "requirements"
 import FreeRequirement from "requirements/Free/FreeRequirement"
-import { Requirement } from "types"
+import { GuildFormType, Requirement } from "types"
 import AddRequirement from "./components/AddRequirement"
 import BalancyCounterWithPopover from "./components/BalancyCounter"
 import LogicFormControl from "./components/LogicFormControl"
 import RequirementEditableCard from "./components/RequirementEditableCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
-const SetRequirements = (): JSX.Element => {
-  const { control, getValues, watch, clearErrors, setValue } = useFormContext()
+type Props = {
+  titleSize?: ChakraProps["fontSize"]
+}
+
+const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
+  const {
+    control,
+    getValues,
+    watch,
+    setValue,
+    resetField,
+    formState: { errors },
+  } = useFormContext<GuildFormType["roles"][number]>()
 
   const logic = useWatch({ name: "logic" })
 
@@ -24,19 +36,10 @@ const SetRequirements = (): JSX.Element => {
     name: "requirements",
     control,
     keyName: "formFieldId",
+    rules: {
+      required: "Set some requirements, or make the role free",
+    },
   })
-
-  const requirements = useWatch({ name: "requirements" })
-
-  useEffect(() => {
-    if (!requirements || requirements?.length === 0) {
-      // setError("requirements", {
-      //   message: "Set some requirements, or make the role free",
-      // })
-    } else {
-      clearErrors("requirements")
-    }
-  }, [requirements])
 
   useAddRequirementsFromQuery(append)
 
@@ -44,7 +47,7 @@ const SetRequirements = (): JSX.Element => {
   const watchFieldArray = watch("requirements")
   const controlledFields = fields.map((field, index) => ({
     ...field,
-    ...watchFieldArray[index],
+    ...watchFieldArray?.[index],
   }))
 
   const removeReq = (index: number) => {
@@ -60,11 +63,13 @@ const SetRequirements = (): JSX.Element => {
   )
 
   const onFreeEntryChange = (e) => {
+    resetField("requirements", {
+      defaultValue: [],
+    })
+
     if (e.target.checked) {
       replace([{ type: "FREE", data: {}, chain: null, address: null }])
       setValue("logic", "AND")
-    } else {
-      replace([])
     }
   }
 
@@ -92,6 +97,7 @@ const SetRequirements = (): JSX.Element => {
               </Checkbox>
             </>
           }
+          {...(titleSize && { fontSize: titleSize })}
         />
         {!freeEntry && <BalancyCounterWithPopover ml="auto !important" pl="5" />}
       </Wrap>
@@ -124,18 +130,24 @@ const SetRequirements = (): JSX.Element => {
                     updateRequirement={update}
                     isEditDisabled={type === "PAYMENT"}
                   />
-                  <LogicDivider logic={logic} />
+                  <LogicDivider logic={logic ?? "AND"} />
                 </CardMotionWrapper>
               )
             })}
+
             <AddRequirement onAdd={append} />
           </AnimatePresence>
         </Stack>
       )}
 
-      {/* <FormErrorMessage id="requirements-error-message">
-        {errors.requirements?.message as string}
-      </FormErrorMessage> */}
+      <Collapse
+        in={!!errors.requirements?.root}
+        style={{
+          width: "100%",
+        }}
+      >
+        <ErrorAlert label={errors.requirements?.root?.message} />
+      </Collapse>
     </Stack>
   )
 }

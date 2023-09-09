@@ -5,13 +5,9 @@ import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
-import { PlatformName } from "types"
+import { PlatformName, User } from "types"
 import fetcher from "utils/fetcher"
-import useDCAuth from "./useDCAuth"
-import useGHAuth from "./useGHAuth"
-import useGoogleAuth from "./useGoogleAuth"
-import useTGAuth from "./useTGAuth"
-import useTwitterAuth from "./useTwitterAuth"
+import useOauthPopupWindow, { AuthLevel } from "./useOauthPopupWindow"
 
 const parseConnectError = (
   error: string
@@ -43,27 +39,20 @@ const parseConnectError = (
   }
 }
 
-const platformAuthHooks: Record<
-  Exclude<PlatformName, "POAP" | "CONTRACT_CALL">,
-  (scope?: string) => any
-> = {
-  DISCORD: useDCAuth,
-  GITHUB: useGHAuth,
-  TWITTER: useTwitterAuth,
-  TELEGRAM: useTGAuth,
-  GOOGLE: useGoogleAuth,
-}
-
 const useConnectPlatform = (
   platform: PlatformName,
   onSuccess?: () => void,
   isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
-  scope?: string,
+  authLevel: AuthLevel = "membership",
   disconnectFromExistingUser?: boolean
 ) => {
   const { platformUsers } = useUser()
-  const { onOpen, authData, isAuthenticating, ...rest } =
-    platformAuthHooks[platform]?.(scope) ?? {}
+
+  const { onOpen, authData, isAuthenticating, ...rest } = useOauthPopupWindow(
+    platform,
+    isReauth ? "creation" : authLevel
+  )
+
   const prevAuthData = usePrevious(authData)
 
   const { onSubmit, isLoading, response } = useConnect(() => {
@@ -97,14 +86,17 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
   const showErrorToast = useShowErrorToast()
   const { showPlatformMergeAlert } = useWeb3ConnectionManager()
 
-  const { mutate: mutateUser } = useUser()
+  const { mutate: mutateUser, id } = useUser()
 
   const submit = (signedValidation: SignedValdation) => {
     const platformName =
       JSON.parse(signedValidation?.signedPayload ?? "{}")?.platformName ??
       "UNKNOWN_PLATFORM"
 
-    return fetcher("/user/connect", signedValidation)
+    return fetcher(`/v2/users/${id}/platform-users`, {
+      method: "POST",
+      ...signedValidation,
+    })
       .then((body) => {
         if (body === "rejected") {
           // eslint-disable-next-line @typescript-eslint/no-throw-literal
@@ -124,14 +116,17 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
       })
   }
 
-  return useSubmitWithSign<{
-    platformName: PlatformName
-    authData: any
-    reauth?: boolean
-  }>(submit, {
-    onSuccess: ({ platformName }) => {
+  return useSubmitWithSign<User["platformUsers"][number]>(submit, {
+    onSuccess: (newPlatformUser) => {
       // captureEvent("Platform connection", { platformName })
-      mutateUser()
+      mutateUser(
+        (prev) => ({
+          ...prev,
+          platformUsers: [...(prev?.platformUsers ?? []), newPlatformUser],
+        }),
+        { revalidate: false }
+      )
+
       onSuccess?.()
     },
     onError: ([platformName, rawError]) => {
@@ -157,18 +152,17 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
 
       captureEvent("Platform connection error", errorObject)
 
-      // if (toastError?.startsWith("Before connecting your")) {
-      //   const [, addressOrDomain] = toastError.match(
-      //     /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
-      //   )
-      //   showPlatformMergeAlert(addressOrDomain, platformName)
-      // } else {
-      //   showErrorToast(toastError ?? rawError)
-      // }
-      showErrorToast(toastError ?? rawError)
+      if (toastError?.startsWith("Before connecting your")) {
+        const [, addressOrDomain] = toastError.match(
+          /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
+        )
+        showPlatformMergeAlert(addressOrDomain, platformName)
+      } else {
+        showErrorToast(toastError ?? rawError)
+      }
     },
   })
 }
 
 export default useConnectPlatform
-export { platformAuthHooks, useConnect }
+export { useConnect }

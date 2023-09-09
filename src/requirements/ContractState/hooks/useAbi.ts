@@ -12,7 +12,11 @@ const getContractMethods = (abi) => {
   }
 
   return parsedAbi?.filter(
-    (method) => method.type === "function" && method.stateMutability === "view"
+    (method) =>
+      method.type === "function" &&
+      (method.stateMutability === "view" ||
+        method.stateMutability === "pure" ||
+        method.constant)
   )
 }
 

@@ -5,7 +5,6 @@ import {
   Text,
   useBreakpointValue,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
@@ -15,6 +14,7 @@ import { Plus } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildPlatform, PlatformType } from "types"
+import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
 import PlatformCard from "./components/PlatformCard"
@@ -29,13 +29,13 @@ const RolePlatforms = ({ roleId }: Props) => {
   const { guildPlatforms } = useGuild()
   const { setValue } = useFormContext()
 
+  const { onOpen } = useAddRewardContext()
+
   /**
    * Using fields like this with useWatch because the one from useFieldArray is not
    * reactive to the append triggered in the add platform button
    */
   const fields = useWatch({ name: "rolePlatforms" })
-
-  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
   const rewardsLabel = useBreakpointValue({
@@ -90,7 +90,7 @@ const RolePlatforms = ({ roleId }: Props) => {
 
             return (
               <RolePlatformProvider
-                key={index}
+                key={JSON.stringify(rolePlatform)}
                 rolePlatform={{
                   ...rolePlatform,
                   roleId,
@@ -130,9 +130,16 @@ const RolePlatforms = ({ roleId }: Props) => {
           })
         )}
       </SimpleGrid>
-      <AddRoleRewardModal {...{ isOpen, onClose }} />
+
+      <AddRoleRewardModal />
     </Section>
   )
 }
 
-export default RolePlatforms
+const RolePlatformsWrapper = (props: Props): JSX.Element => (
+  <AddRewardProvider>
+    <RolePlatforms {...props} />
+  </AddRewardProvider>
+)
+
+export default RolePlatformsWrapper

@@ -10,16 +10,16 @@ import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
-import PoapCardMenu from "platforms/Poap/PoapCardMenu"
 import platforms from "platforms/platforms"
-import { PlatformType } from "types"
+import PoapCardMenu from "platforms/Poap/PoapCardMenu"
+import { PlatformName, PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
-import { useMintGuildPinContext } from "../Requirements/components/GuildCheckout/MintGuildPinContext"
-import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
-import PlatformCardButton from "./components/PlatformCardButton"
+import { useMintGuildPinContext } from "../Requirements/components/GuildCheckout/MintGuildPinContext"
+import PlatformCard from "../RolePlatforms/components/PlatformCard"
+import PlatformAccessButton from "./components/PlatformAccessButton"
 
 const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")
@@ -32,7 +32,7 @@ const useAccessedGuildPlatforms = () => {
   const { memberships } = useMemberships()
 
   // Displaying CONTRACT_CALL rewards for everyone, even for users who aren't members
-  const contractCallGuildPlatforms = guildPlatforms.filter(guildPlatform => guildPlatform.platformId === PlatformType.CONTRACT_CALL)
+  const contractCallGuildPlatforms = guildPlatforms?.filter(guildPlatform => guildPlatform.platformId === PlatformType.CONTRACT_CALL) ?? []
 
   if (isAdmin) return guildPlatforms
   
@@ -42,7 +42,7 @@ const useAccessedGuildPlatforms = () => {
   const accessedRoles = roles.filter(role => accessedRoleIds.includes(role.id))
   const accessedRolePlatforms = accessedRoles.map(role => role.rolePlatforms).flat().filter(rolePlatform => !!rolePlatform)
   const accessedGuildPlatformIds = [...new Set(accessedRolePlatforms.map(rolePlatform => rolePlatform.guildPlatformId))]
-  const accessedGuildPlatforms = guildPlatforms.filter(guildPlatform => accessedGuildPlatformIds.includes(guildPlatform.id) || guildPlatform.platformId === PlatformType.CONTRACT_CALL)
+  const accessedGuildPlatforms = guildPlatforms?.filter(guildPlatform => accessedGuildPlatformIds.includes(guildPlatform.id) || guildPlatform.platformId === PlatformType.CONTRACT_CALL)
 
   return accessedGuildPlatforms
 }
@@ -79,8 +79,8 @@ const AccessHub = (): JSX.Element => {
               cardPropsHook: useCardProps,
               cardMenuComponent: PlatformCardMenu,
               cardWarningComponent: PlatformCardWarning,
-              cardButton: CustomPlatformCardButton,
-            } = platforms[PlatformType[platform.platformId]]
+              cardButton: PlatformCardButton,
+            } = platforms[PlatformType[platform.platformId] as PlatformName]
 
             return (
               <PlatformCard
@@ -95,10 +95,10 @@ const AccessHub = (): JSX.Element => {
                   ) : null
                 }
               >
-                {CustomPlatformCardButton ? (
-                  <CustomPlatformCardButton platform={platform} />
-                ) : (
+                {PlatformCardButton ? (
                   <PlatformCardButton platform={platform} />
+                ) : (
+                  <PlatformAccessButton platform={platform} />
                 )}
               </PlatformCard>
             )

@@ -6,6 +6,7 @@ import DynamicPurchaseRequirement from "components/[guild]/Requirements/componen
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
+import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
@@ -36,7 +37,7 @@ const TokenRequirement = ({ setValueForBalancy, ...rest }: Props) => {
       }
       isImageLoading={isValidating}
       footer={
-        requirement?.type === "ERC20" && (
+        requirement?.type === "ERC20" ? (
           <HStack spacing="4">
             <GuildCheckoutProvider>
               <DynamicPurchaseRequirement />
@@ -44,7 +45,9 @@ const TokenRequirement = ({ setValueForBalancy, ...rest }: Props) => {
             </GuildCheckoutProvider>
             <BlockExplorerUrl />
           </HStack>
-        )
+        ) : requirement?.type === "COIN" ? (
+          <RequirementChainIndicator />
+        ) : null
       }
       {...rest}
     >

@@ -3,7 +3,9 @@ import useRemoveGuildPlatform from "components/[guild]/AccessHub/hooks/useRemove
 import useGuild from "components/[guild]/hooks/useGuild"
 import RemovePlatformAlert from "components/[guild]/RemovePlatformAlert"
 import { TrashSimple } from "phosphor-react"
+import platforms from "platforms/platforms"
 import { useEffect } from "react"
+import { PlatformType } from "types"
 
 type Props = {
   platformGuildId: string
@@ -32,7 +34,16 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
 
   return (
     <>
-      <MenuItem icon={<TrashSimple />} onClick={onOpen} color={color}>
+      <MenuItem
+        icon={<TrashSimple />}
+        onClick={
+          platforms[PlatformType[guildPlatform.platformId]]
+            .shouldShowKeepAccessesModal
+            ? onOpen
+            : () => onSubmit()
+        }
+        color={color}
+      >
         Remove reward...
       </MenuItem>
 

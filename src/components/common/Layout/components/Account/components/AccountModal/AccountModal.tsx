@@ -18,14 +18,13 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect-v2"
+import useUser from "components/[guild]/hooks/useUser"
+import { deleteKeyPairFromIdb } from "components/_app/KeyPairProvider"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
-import useIsV2 from "hooks/useIsV2"
-import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
@@ -39,7 +38,6 @@ const AccountModal = () => {
     closeAccountModal: onClose,
   } = useWeb3ConnectionManager()
   const { id, addresses } = useUser()
-  useIsV2()
 
   const connectorName = (c) =>
     c instanceof MetaMask
@@ -99,8 +97,11 @@ const AccountModal = () => {
                       decimals={5}
                       fontWeight="bold"
                     />
-                    {addresses?.indexOf(account.toLowerCase()) === 0 &&
-                    addresses.length > 1 ? (
+                    {(typeof addresses?.[0] === "string"
+                      ? (addresses as any)?.indexOf(account.toLowerCase())
+                      : addresses?.findIndex(
+                          ({ address }) => address === account.toLowerCase()
+                        )) === 0 && addresses.length > 1 ? (
                       <PrimaryAddressTag size="sm" />
                     ) : null}
                   </HStack>
