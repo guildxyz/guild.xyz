@@ -72,6 +72,29 @@ const Combobox = forwardRef(
       offset: [0, 8],
     })
 
+    const htmlInputPropValue = htmlInputProps.value?.toString() ?? ""
+
+    // TODO: creatable combobox
+    const options = isCreatable
+      ? [
+          ...optionsProp,
+          {
+            label: "",
+            value: "",
+            img: (
+              <Icon
+                as={Plus}
+                boxSize={5}
+                padding={0.5}
+                position="relative"
+                top={1}
+              />
+            ),
+            isCreateOption: true,
+          },
+        ]
+      : optionsProp
+
     const [state, send] = useMachine(
       combobox.machine({
         id: useId(),
@@ -81,6 +104,9 @@ const Combobox = forwardRef(
         positioning: {
           sameWidth: true,
         },
+        inputValue: htmlInputPropValue
+          ? options.find((option) => option.value === htmlInputPropValue)?.label
+          : undefined,
         onSelect: ({ value }) => {
           const newOption = options?.find((option) => option.value === value)
           beforeOnChange?.(newOption)
@@ -108,29 +134,6 @@ const Combobox = forwardRef(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { style, id, ...filteredPositionerProps } = positionerProps
 
-    const htmlInputPropValue = htmlInputProps.value?.toString() ?? ""
-
-    const options =
-      isCreatable && inputValue?.length
-        ? [
-            ...optionsProp,
-            {
-              label: inputValue,
-              value: inputValue,
-              img: (
-                <Icon
-                  as={Plus}
-                  boxSize={5}
-                  padding={0.5}
-                  position="relative"
-                  top={1}
-                />
-              ),
-              isCreateOption: true,
-            },
-          ]
-        : optionsProp
-
     const selectedOption =
       selectedValue || fallbackValue || htmlInputPropValue
         ? options?.find(
@@ -157,6 +160,9 @@ const Combobox = forwardRef(
       isLoading || (isClearable && (inputValue?.length || htmlInputPropValue))
     )
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { value: _, ...htmlInputPropWithoutValue } = htmlInputProps
+
     return (
       <>
         <Box w={htmlInputProps.w ?? "full"} {...rootProps}>
@@ -173,8 +179,7 @@ const Combobox = forwardRef(
                 htmlSize={size}
                 pr={shouldShowRightElement ? 14 : 10}
                 {...(htmlInputProps.isReadOnly ? undefined : filteredInputProps)}
-                {...htmlInputProps}
-                value={selectedOption?.label ?? htmlInputPropValue}
+                {...htmlInputPropWithoutValue}
               />
               {shouldShowRightElement && (
                 <InputRightElement mr={6} opacity={htmlInputProps.isDisabled && 0.4}>
