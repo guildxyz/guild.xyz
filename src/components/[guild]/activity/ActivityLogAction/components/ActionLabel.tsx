@@ -21,7 +21,7 @@ const ActionLabel = (): JSX.Element => {
   return (
     <Wrap
       spacingX={{ base: 1, md: 1.5 }}
-      spacingY={{ base: 0.5, md: 1.5 }}
+      spacingY={{ base: 0.5, md: 1 }}
       fontWeight="semibold"
     >
       {(() => {

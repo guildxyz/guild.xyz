@@ -49,7 +49,7 @@ const UserActivityLogPopover = () => {
       <PopoverContent
         minW="none"
         maxW={`calc(100vw - ${2 * VIEWPORT_GAP_PX}px)`}
-        w="full"
+        w="400px"
       >
         <PopoverArrow />
 
