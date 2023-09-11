@@ -1,11 +1,10 @@
-import { OptionData, OptionProps } from "@zag-js/combobox/dist/combobox.types"
+import { OptionProps } from "@zag-js/combobox/dist/combobox.types"
 import { createContext, HTMLAttributes, PropsWithChildren, useContext } from "react"
 import { SelectOption } from "types"
 
 type Props = {
   options: SelectOption[]
   getOptionProps: (props: OptionProps) => HTMLAttributes<HTMLElement>
-  focusedOption: OptionData
 }
 
 const ComboboxOptionsContext = createContext<Props>(undefined)

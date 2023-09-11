@@ -38,9 +38,18 @@ type RowProps = {
 }
 
 const Row = ({ style, index }: RowProps): JSX.Element => {
-  const { options, getOptionProps, focusedOption } = useComboboxOptions()
+  const { options, getOptionProps } = useComboboxOptions()
   const item = options[index]
   const optionFocusBgColor = useColorModeValue("blackAlpha.100", "gray.600")
+
+  const optionProps = {
+    ...getOptionProps({
+      label: item.label,
+      value: item.value,
+      index,
+      disabled: item.disabled,
+    }),
+  }
 
   return (
     <Flex
@@ -49,17 +58,12 @@ const Row = ({ style, index }: RowProps): JSX.Element => {
       alignItems="center"
       px={3}
       py={2}
-      bgColor={focusedOption?.value === item.value ? optionFocusBgColor : undefined}
+      bgColor={optionProps["aria-selected"] ? optionFocusBgColor : undefined}
       _hover={{
         bgColor: optionFocusBgColor,
       }}
       transition="0.16s ease"
-      {...getOptionProps({
-        label: item.label,
-        value: item.value,
-        index,
-        disabled: item.disabled,
-      })}
+      {...optionProps}
     >
       {item.img && (
         <Box mr={2}>

@@ -248,7 +248,6 @@ const Combobox = forwardRef(
                       : []),
                   ]}
                   getOptionProps={getOptionProps}
-                  focusedOption={focusedOption}
                 >
                   <ComboboxList noOptionsText={noOptionsText} />
                 </ComboboxOptionsProvider>
