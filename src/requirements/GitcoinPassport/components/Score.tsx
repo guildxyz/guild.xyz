@@ -7,8 +7,8 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
@@ -67,7 +67,7 @@ const Score = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       >
         <FormLabel>Scorer</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.data.id`}
           rules={{
             required: "This field is required.",
