@@ -3,7 +3,6 @@ import {
   Center,
   Collapse,
   Divider,
-  Flex,
   Heading,
   HStack,
   Icon,
@@ -13,12 +12,12 @@ import {
   Tag,
   TagLeftIcon,
   Text,
-  VStack,
   Wrap,
 } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
+import GuildEvents from "components/[guild]/Events/GuildEvents"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -39,6 +38,7 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
+import PulseMarker from "components/common/PulseMarker"
 import Section from "components/common/Section"
 import VerifiedIcon from "components/common/VerifiedIcon"
 import useScrollEffect from "hooks/useScrollEffect"
@@ -47,8 +47,8 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { CalendarBlank, Clock, Info, MapPin, Users } from "phosphor-react"
-import React, { useMemo, useRef, useState } from "react"
+import { Info, Users } from "phosphor-react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, PlatformType, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
@@ -95,6 +95,14 @@ const GuildPage = (): JSX.Element => {
     isDetailed,
   } = useGuild()
   useAutoStatusUpdate()
+
+  const [eventsSeen, setEventsSeen] = useState<boolean>()
+
+  const storageKey = "eventSeen"
+
+  useEffect(() => {
+    setEventsSeen(Boolean(window.localStorage.getItem(storageKey)))
+  })
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
@@ -149,6 +157,7 @@ const GuildPage = (): JSX.Element => {
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
+  const [activeTabIndex, setActiveTabIndex] = useState(0)
 
   // not importing it dynamically because that way the whole page flashes once when it loads
   const DynamicOnboardingProvider =
@@ -242,173 +251,150 @@ const GuildPage = (): JSX.Element => {
         ) : (
           <Tabs
             rightElement={
-              <HStack>
-                {isMember && !isAdmin && <DynamicResendRewardButton />}
-                {!isMember && (isAdmin ? hasAccess : true) ? (
-                  <JoinButton />
-                ) : !isAdmin ? (
-                  <LeaveButton />
-                ) : isAddRoleStuck ? (
-                  <DynamicAddAndOrderRoles />
-                ) : (
-                  <DynamicAddRewardButton />
-                )}
-              </HStack>
+              activeTabIndex === 0 ? (
+                <HStack>
+                  {isMember && !isAdmin && <DynamicResendRewardButton />}
+                  {!isMember && (isAdmin ? hasAccess : true) ? (
+                    <JoinButton />
+                  ) : !isAdmin ? (
+                    <LeaveButton />
+                  ) : isAddRoleStuck ? (
+                    <DynamicAddAndOrderRoles />
+                  ) : (
+                    <DynamicAddRewardButton />
+                  )}
+                </HStack>
+              ) : null
             }
           >
-            <TabButton href={urlName} isActive>
+            <TabButton
+              href={urlName}
+              isActive={activeTabIndex === 0}
+              onClick={() => setActiveTabIndex(0)}
+            >
               {showAccessHub ? "Home" : "Roles"}
             </TabButton>
-            <TabButton href={urlName}>Events</TabButton>
+            <PulseMarker placement="top" hidden={eventsSeen}>
+              <TabButton
+                href={urlName}
+                isActive={activeTabIndex === 1}
+                onClick={() => {
+                  setActiveTabIndex(1)
+                  window.localStorage.setItem(storageKey, "true")
+                }}
+              >
+                Events
+              </TabButton>
+            </PulseMarker>
           </Tabs>
         )}
-        <Flex bg={"gray.700"} borderRadius={"2xl"} mb={"10"}>
-          <VStack alignItems={"flex-start"} flex={"1"} p={4} gap={3}>
-            <HStack>
-              <Icon
-                as={CalendarBlank}
-                bg={"gray.600"}
-                borderRadius={"full"}
-                p={1}
-                h={"1.5em"}
-                w={"1.5em"}
-                color={"gray.300"}
-              />
-              <Text fontSize={"sm"} color={"whiteAlpha.500"}>
-                Discord event
-              </Text>
-            </HStack>
-            <Text fontSize={"2xl"} fontFamily={"Dystopian"} fontWeight={"bold"}>
-              SmartCon 2023 by ChainLink -Where Web3 gets Real
-            </Text>
-            <HStack>
-              <Icon as={Clock} color={"whiteAlpha.300"} />
-              <Text fontSize={"md"} color={"whiteAlpha.700"}>
-                Tomorrow at 6:00 am
-              </Text>
-            </HStack>
-            <Text fontSize={"sm"}>
-              Join a wide range of curated experiences and learning sessions from
-              leading Web3 teams.
-            </Text>
-            <Divider />
-            <HStack gap={7}>
-              <HStack>
-                <Icon as={Users} color={"whiteAlpha.300"} />
-                <Text fontSize={"sm"} color={"whiteAlpha.700"}>
-                  12
-                </Text>
-              </HStack>
-              <HStack>
-                <Icon as={MapPin} color={"whiteAlpha.300"} />
-                <Text fontSize={"sm"} color={"whiteAlpha.700"}>
-                  main-stage
-                </Text>
-              </HStack>
-            </HStack>
-          </VStack>
-          <Box flex={"1"} p={4}>
-            <Box bg={"green.200"} borderRadius={"2xl"} h="200px"></Box>
-          </Box>
-        </Flex>
-        <Collapse in={showAccessHub} unmountOnExit>
-          <AccessHub />
-        </Collapse>
-        <Section
-          title={(showAccessHub || showOnboarding) && "Roles"}
-          titleRightElement={
-            isAdmin &&
-            (showAccessHub || showOnboarding) && (
-              <Box my="-2 !important" ml="auto !important">
-                <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
-              </Box>
-            )
-          }
-          mb="10"
-        >
-          {renderedRoles.length ? (
-            <RequirementErrorConfigProvider>
-              <Stack ref={rolesEl} spacing={4}>
-                {/* Custom logic for Chainlink */}
-                {(isAdmin || guildId !== 16389) &&
-                  activePoaps.map((poap) => (
+        {activeTabIndex === 1 && <GuildEvents />}
+        {activeTabIndex === 0 && (
+          <>
+            <Collapse in={showAccessHub} unmountOnExit>
+              <AccessHub />
+            </Collapse>
+            <Section
+              title={(showAccessHub || showOnboarding) && "Roles"}
+              titleRightElement={
+                isAdmin &&
+                (showAccessHub || showOnboarding) && (
+                  <Box my="-2 !important" ml="auto !important">
+                    <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
+                  </Box>
+                )
+              }
+              mb="10"
+            >
+              {renderedRoles.length ? (
+                <RequirementErrorConfigProvider>
+                  <Stack ref={rolesEl} spacing={4}>
+                    {/* Custom logic for Chainlink */}
+                    {(isAdmin || guildId !== 16389) &&
+                      activePoaps.map((poap) => (
+                        <PoapRoleCard key={poap?.id} guildPoap={poap} />
+                      ))}
+                    {renderedRoles.map((role) => (
+                      <RoleCard key={role.id} role={role} />
+                    ))}
+                  </Stack>
+                </RequirementErrorConfigProvider>
+              ) : (
+                <DynamicNoRolesAlert />
+              )}
+
+              {roles?.length > renderedRolesCount && (
+                <Center pt={6}>
+                  <Spinner />
+                </Center>
+              )}
+
+              {!!hiddenRoles?.length && (
+                <CollapsibleRoleSection
+                  roleCount={hiddenRoles.length}
+                  label="hidden"
+                  defaultIsOpen
+                >
+                  {hiddenRoles.map((role) => (
+                    <RoleCard key={role.id} role={role} />
+                  ))}
+                </CollapsibleRoleSection>
+              )}
+              {!!expiredPoaps?.length && (
+                <CollapsibleRoleSection
+                  roleCount={expiredPoaps.length}
+                  label="expired"
+                  unmountOnExit
+                >
+                  {expiredPoaps.map((poap) => (
                     <PoapRoleCard key={poap?.id} guildPoap={poap} />
                   ))}
-                {renderedRoles.map((role) => (
-                  <RoleCard key={role.id} role={role} />
-                ))}
-              </Stack>
-            </RequirementErrorConfigProvider>
-          ) : (
-            <DynamicNoRolesAlert />
-          )}
-
-          {roles?.length > renderedRolesCount && (
-            <Center pt={6}>
-              <Spinner />
-            </Center>
-          )}
-
-          {!!hiddenRoles?.length && (
-            <CollapsibleRoleSection
-              roleCount={hiddenRoles.length}
-              label="hidden"
-              defaultIsOpen
-            >
-              {hiddenRoles.map((role) => (
-                <RoleCard key={role.id} role={role} />
-              ))}
-            </CollapsibleRoleSection>
-          )}
-          {!!expiredPoaps?.length && (
-            <CollapsibleRoleSection
-              roleCount={expiredPoaps.length}
-              label="expired"
-              unmountOnExit
-            >
-              {expiredPoaps.map((poap) => (
-                <PoapRoleCard key={poap?.id} guildPoap={poap} />
-              ))}
-            </CollapsibleRoleSection>
-          )}
-        </Section>
-        {(showMembers || isAdmin) && (
-          <>
-            <Divider my={10} />
-            <Section
-              title="Members"
-              titleRightElement={
-                <HStack justifyContent="space-between" w="full" my="-2 !important">
-                  <Tag maxH={6} pt={0.5}>
-                    <TagLeftIcon as={Users} />
-                    {isLoading ? (
-                      <Spinner size="xs" />
-                    ) : (
-                      new Intl.NumberFormat("en", { notation: "compact" }).format(
-                        memberCount ?? 0
-                      ) ?? 0
-                    )}
-                  </Tag>
-                  {isAdmin && <DynamicMembersExporter />}
-                </HStack>
-              }
-            >
-              <Box>
-                {isAdmin && <DynamicActiveStatusUpdates />}
-                {showMembers ? (
-                  <>
-                    <Members members={members} />
-                    {/* Temporary until the BE returns members again  */}
-                    <Text mt="6" colorScheme={"gray"}>
-                      <Icon as={Info} mr="2" mb="-2px" />
-                      Members are temporarily hidden, only admins are shown
-                    </Text>
-                  </>
-                ) : (
-                  <Text>Members are hidden</Text>
-                )}
-              </Box>
+                </CollapsibleRoleSection>
+              )}
             </Section>
+            {(showMembers || isAdmin) && (
+              <>
+                <Divider my={10} />
+                <Section
+                  title="Members"
+                  titleRightElement={
+                    <HStack
+                      justifyContent="space-between"
+                      w="full"
+                      my="-2 !important"
+                    >
+                      <Tag maxH={6} pt={0.5}>
+                        <TagLeftIcon as={Users} />
+                        {isLoading ? (
+                          <Spinner size="xs" />
+                        ) : (
+                          new Intl.NumberFormat("en", {
+                            notation: "compact",
+                          }).format(memberCount ?? 0) ?? 0
+                        )}
+                      </Tag>
+                      {isAdmin && <DynamicMembersExporter />}
+                    </HStack>
+                  }
+                >
+                  <Box>
+                    {isAdmin && <DynamicActiveStatusUpdates />}
+                    {showMembers ? (
+                      <>
+                        <Members members={members} />
+                        {/* Temporary until the BE returns members again  */}
+                        <Text mt="6" colorScheme={"gray"}>
+                          <Icon as={Info} mr="2" mb="-2px" />
+                          Members are temporarily hidden, only admins are shown
+                        </Text>
+                      </>
+                    ) : (
+                      <Text>Members are hidden</Text>
+                    )}
+                  </Box>
+                </Section>
+              </>
+            )}
           </>
         )}
       </Layout>

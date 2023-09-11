@@ -33,6 +33,28 @@ type ServerData = {
   isAdmin: boolean
   channels?: EntryChannel[]
   roles: Role[]
+  events: DiscordEvent[]
+}
+
+type DiscordEvent = {
+  id: string
+  guildId: string
+  channelId?: string
+  creatorId?: string
+  name: string
+  description?: string
+  scheduledStartTimestamp: string
+  scheduledEndTimestamp?: string
+  privacyLevel: number
+  status: number
+  entityType: number
+  entityId?: string
+  userCount?: number
+  creator?: number
+  entityMetadata?: {
+    location: string
+  }
+  image?: string
 }
 
 const fallbackData = {
