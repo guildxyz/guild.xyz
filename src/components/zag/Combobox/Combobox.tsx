@@ -145,7 +145,7 @@ const Combobox = forwardRef(
     useEffect(() => {
       if (!selectedOption?.label && !htmlInputPropValue) return
       setInputValue(selectedOption?.label || htmlInputPropValue)
-    }, [])
+    }, [selectedOption, htmlInputPropValue])
 
     return (
       <>
