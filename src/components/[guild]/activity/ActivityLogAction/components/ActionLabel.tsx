@@ -9,7 +9,7 @@ import GuildTag from "./GuildTag"
 import IdentityTag from "./IdentityTag"
 import { ClickableRewardTag } from "./RewardTag"
 import { ClickableRoleTag } from "./RoleTag"
-import { ClickableUserTag } from "./UserTag"
+import UserTag, { ClickableUserTag } from "./UserTag"
 
 const ActionLabel = (): JSX.Element => {
   const { data: activityLog, isUserActivityLog } = useActivityLog()
@@ -26,6 +26,21 @@ const ActionLabel = (): JSX.Element => {
     >
       {(() => {
         switch (action) {
+          case ACTION.CreateGuild:
+          case ACTION.LeaveGuild:
+            return (
+              <>
+                <Text as="span">{capitalizedName}</Text>
+                {isUserActivityLog ? (
+                  <GuildTag id={ids.guild} />
+                ) : (
+                  <>
+                    <Text as="span">by</Text>
+                    <UserTag userId={ids.user} />
+                  </>
+                )}
+              </>
+            )
           case ACTION.UpdateGuild:
             return (
               <>
@@ -148,6 +163,17 @@ const ActionLabel = (): JSX.Element => {
                   <GuildTag id={ids.guild} />
                 ) : (
                   <ClickableUserTag id={ids.user} />
+                )}
+              </>
+            )
+          case ACTION.UserStatusUpdate:
+            return (
+              <>
+                <Text as="span">{capitalizedName}</Text>
+                {isUserActivityLog ? (
+                  <GuildTag id={ids.guild} />
+                ) : (
+                  <UserTag userId={ids.user} />
                 )}
               </>
             )
