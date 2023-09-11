@@ -104,11 +104,13 @@ const Combobox = forwardRef(
         positioning: {
           sameWidth: true,
         },
-        inputValue: htmlInputPropValue
-          ? options.find((option) => option.value === htmlInputPropValue)?.label
-          : undefined,
-        onSelect: ({ value }) => {
-          const newOption = options?.find((option) => option.value === value)
+        allowCustomValue: isCreatable,
+        inputValue: htmlInputPropValue,
+        onSelect: ({ value, label }) => {
+          const newOption = options?.find((option) => option.value === value) ?? {
+            label,
+            value,
+          }
           beforeOnChange?.(newOption)
           onChangeProp?.(value)
           afterOnChange?.(newOption)
@@ -239,7 +241,12 @@ const Combobox = forwardRef(
             >
               <Box m={0} fontWeight="medium" {...contentProps}>
                 <ComboboxOptionsProvider
-                  options={filteredOptions}
+                  options={[
+                    ...filteredOptions,
+                    ...(isCreatable
+                      ? [{ label: inputValue, value: inputValue.toLowerCase() }]
+                      : []),
+                  ]}
                   getOptionProps={getOptionProps}
                   focusedOption={focusedOption}
                 >
