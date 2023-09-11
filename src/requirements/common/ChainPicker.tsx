@@ -78,6 +78,7 @@ const ChainPicker = ({
           options={mappedSupportedChains}
           afterOnChange={onChangeHandler}
           isDisabled={isDisabled}
+          disableOptionFiltering
         />
       </FormControl>
       {showDivider && <Divider />}
