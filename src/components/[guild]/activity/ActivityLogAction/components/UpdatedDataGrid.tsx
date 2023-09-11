@@ -32,7 +32,7 @@ const UpdatedDataGrid = ({
   const boxProps = unstyled
     ? {}
     : {
-        ...(boxPadding ? { p: boxPadding } : { py: 2, px: 4 }),
+        ...(typeof boxPadding === "number" ? { p: boxPadding } : { py: 2, px: 4 }),
         borderWidth: 1,
         borderColor,
         borderRadius: "xl",
