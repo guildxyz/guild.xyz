@@ -1,6 +1,5 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
-import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
+import { ControlledCombobox } from "components/zag/Combobox"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -42,13 +41,13 @@ const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
     >
       <FormLabel>Proposal</FormLabel>
 
-      <ControlledSelect
+      <ControlledCombobox
         name={`${baseFieldPath}.data.proposal`}
         placeholder="Search..."
         isClearable
         isLoading={isProposalsLoading}
         options={mappedProposals}
-        onInputChange={(text, _) => setSearch(text)}
+        onInputChange={(text) => setSearch(text)}
         beforeOnChange={(newValue) =>
           setValue(
             `${baseFieldPath}.data.space`,
@@ -56,20 +55,13 @@ const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
           )
         }
         afterOnChange={(newValue) => onChange?.(newValue)}
-        components={{
-          MenuList: (props) => (
-            <CustomMenuList
-              {...props}
-              noResultText={
-                !spaceId && debouncedSearch?.length < 3
-                  ? "Start typing..."
-                  : isProposalsLoading
-                  ? "Loading"
-                  : "No results"
-              }
-            />
-          ),
-        }}
+        noOptionsText={
+          !spaceId && debouncedSearch?.length < 3
+            ? "Start typing..."
+            : isProposalsLoading
+            ? "Loading"
+            : "No results"
+        }
       />
     </FormControl>
   )

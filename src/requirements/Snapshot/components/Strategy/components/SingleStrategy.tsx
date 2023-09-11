@@ -14,8 +14,8 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -122,7 +122,7 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
       >
         <FormLabel>Strategy</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.data.strategies.${index}.name`}
           rules={{ required: "This field is required." }}
           isClearable

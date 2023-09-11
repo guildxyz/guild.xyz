@@ -7,9 +7,9 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Switch from "components/common/Switch"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
@@ -101,7 +101,7 @@ const Proposals = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       <FormControl>
         <FormLabel>State</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.data.state`}
           options={proposalStateOptions}
           placeholder="Any state"

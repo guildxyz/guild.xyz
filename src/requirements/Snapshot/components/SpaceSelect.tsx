@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
@@ -22,9 +22,12 @@ export type Space = {
   name: string
 }
 
-const customFilterOption = (candidate, input) =>
-  candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
-  candidate.data.details.toLowerCase().includes(input?.toLowerCase())
+const customOptionsFilter = (
+  option: SelectOption<string>,
+  inputValue: string
+): boolean =>
+  option.label.toLowerCase().includes(inputValue?.toLowerCase()) ||
+  option.details?.toLowerCase().includes(inputValue?.toLowerCase())
 
 const SpaceSelect = ({
   baseFieldPath,
@@ -67,7 +70,7 @@ const SpaceSelect = ({
     >
       <FormLabel>Space</FormLabel>
 
-      <ControlledSelect
+      <ControlledCombobox
         name={`${baseFieldPath}.data.space`}
         rules={{
           required: !optional && "This field is required.",
@@ -77,8 +80,8 @@ const SpaceSelect = ({
         isLoading={isSpacesLoading || isSingleSpaceLoading}
         options={mappedSpaces}
         beforeOnChange={() => resetField(`${baseFieldPath}.data.proposal`)}
-        filterOption={customFilterOption}
-        onInputChange={(text, _) => {
+        customOptionsFilter={customOptionsFilter}
+        onInputChange={(text) => {
           setSearchSpaceId("")
           if (!SPACE_ID_REGEX.test(text)) return
           setSearchSpaceId(text)
