@@ -15,7 +15,7 @@ import * as combobox from "@zag-js/combobox"
 import { normalizeProps, Portal, useMachine } from "@zag-js/react"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { CaretDown, Plus, X } from "phosphor-react"
-import { forwardRef, useId } from "react"
+import { forwardRef, useEffect, useId } from "react"
 import { useController, UseControllerProps } from "react-hook-form"
 import { SelectOption } from "types"
 import ComboboxList from "./ComboboxList"
@@ -25,6 +25,7 @@ type Props = InputProps & {
   options?: SelectOption[]
   fallbackValue?: SelectOption
   isLoading?: boolean
+  onInputChange?: (newValue: string) => void
   beforeOnChange?: (newValue: SelectOption) => void
   onChange?: (newValue: string) => void
   afterOnChange?: (newValue: SelectOption) => void
@@ -46,11 +47,12 @@ const Combobox = forwardRef(
     {
       options = [],
       fallbackValue,
+      isLoading,
+      onInputChange,
       beforeOnChange,
       onChange: onChangeProp,
       afterOnChange,
       onClear,
-      isLoading,
       leftAddon,
       rightAddon,
       isClearable,
@@ -108,6 +110,7 @@ const Combobox = forwardRef(
       getOptionProps,
       selectedValue,
       inputValue,
+      setInputValue,
       setValue,
     } = combobox.connect(state, send, normalizeProps)
 
@@ -138,6 +141,12 @@ const Combobox = forwardRef(
       isLoading || (isClearable && (inputValue?.length || htmlInputPropValue))
     )
 
+    // Setting the input value this way, so we don't get an "A component is changing a controlled input to be uncontrolled" error
+    useEffect(() => {
+      if (!selectedOption?.label && !htmlInputPropValue) return
+      setInputValue(selectedOption?.label || htmlInputPropValue)
+    }, [])
+
     return (
       <>
         <Box w={htmlInputProps.w ?? "full"} {...rootProps}>
@@ -155,7 +164,10 @@ const Combobox = forwardRef(
                 pr={shouldShowRightElement ? 14 : 10}
                 {...(htmlInputProps.isReadOnly ? undefined : filteredInputProps)}
                 {...htmlInputPropsWithoutValue}
-                value={selectedOption?.label || htmlInputPropValue}
+                onChange={(e) => {
+                  filteredInputProps.onChange?.(e)
+                  onInputChange?.(e.target.value)
+                }}
               />
               {shouldShowRightElement && (
                 <InputRightElement mr={6} opacity={htmlInputProps.isDisabled && 0.4}>
