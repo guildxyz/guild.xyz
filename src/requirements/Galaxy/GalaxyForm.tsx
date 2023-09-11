@@ -25,7 +25,7 @@ const customOptionsFilter = (
   inputValue: string
 ): boolean =>
   option.label.toLowerCase().includes(inputValue?.toLowerCase()) ||
-  option.data?.galaxyId?.includes(inputValue)
+  option.galaxyId?.includes(inputValue)
 
 const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const {
