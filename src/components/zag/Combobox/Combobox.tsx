@@ -143,7 +143,6 @@ const Combobox = forwardRef(
 
     // Setting the input value this way, so we don't get an "A component is changing a controlled input to be uncontrolled" error
     useEffect(() => {
-      if (!selectedOption?.label && !htmlInputPropValue) return
       setInputValue(selectedOption?.label || htmlInputPropValue)
     }, [selectedOption, htmlInputPropValue])
 
