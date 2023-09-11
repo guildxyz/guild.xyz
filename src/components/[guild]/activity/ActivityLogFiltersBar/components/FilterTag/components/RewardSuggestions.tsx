@@ -1,7 +1,6 @@
 import * as combobox from "@zag-js/combobox"
 import RewardTag from "components/[guild]/activity/ActivityLogAction/components/RewardTag"
 import useGuild from "components/[guild]/hooks/useGuild"
-import platforms from "platforms/platforms"
 import { HTMLAttributes, useMemo } from "react"
 import { PlatformName, PlatformType } from "types"
 import Suggestion from "../../Suggestion"
@@ -39,6 +38,7 @@ const RewardSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element =
                   guildPlatform?.platformId === PlatformType.DISCORD
                     ? `${role.name} - ${name}`
                     : name,
+                roleId: role.id,
               }
             }),
     [roles]
@@ -77,9 +77,8 @@ const RewardSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element =
               })}
             >
               <RewardTag
-                icon={platforms[rewardSuggestion.platformName].icon}
-                name={rewardSuggestion.name}
-                colorScheme={platforms[rewardSuggestion.platformName].colorScheme}
+                rolePlatformId={rewardSuggestion.rolePlatformId}
+                roleId={rewardSuggestion.roleId}
               />
             </Suggestion>
           )

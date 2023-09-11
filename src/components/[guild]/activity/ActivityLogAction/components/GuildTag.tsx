@@ -2,15 +2,15 @@ import { Tag, useColorModeValue } from "@chakra-ui/react"
 import { useActivityLog } from "../../ActivityLogContext"
 
 type Props = {
-  id: number
+  guildId: number
 }
 
-const GuildTag = ({ id }: Props): JSX.Element => {
+const GuildTag = ({ guildId }: Props): JSX.Element => {
   const tagColorScheme = useColorModeValue("alpha", "blackalpha")
 
   const { data } = useActivityLog()
   const name =
-    data.values.guilds.find((guild) => guild.id === id)?.name ?? "Unknown guild"
+    data.values.guilds.find((guild) => guild.id === guildId)?.name ?? "Unknown guild"
 
   return (
     <Tag colorScheme={tagColorScheme} minW="max-content" h="max-content">

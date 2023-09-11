@@ -11,7 +11,7 @@ type Props = {
 }
 
 const RoleSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element => {
-  const { roles } = useGuild()
+  const { id: guildId, roles } = useGuild()
 
   const roleSuggestions = useMemo(
     () =>
@@ -42,7 +42,7 @@ const RoleSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element => 
                 value: roleSuggestion.id.toString(),
               })}
             >
-              <RoleTag image={roleSuggestion.imageUrl} name={roleSuggestion.name} />
+              <RoleTag roleId={roleSuggestion.id} guildId={guildId} />
             </Suggestion>
           )
         })

@@ -13,15 +13,21 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useActivityLog } from "../../ActivityLogContext"
 import { useActivityLogFilters } from "../../ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 
-type Props = {
-  name?: string
-  image?: string
-} & TagProps
+type Props = ClickableRoleTagProps & TagProps
 
 const RoleTag = forwardRef<Props, "span">(
-  ({ name, image, ...rest }, ref): JSX.Element => {
+  ({ roleId, guildId, ...rest }, ref): JSX.Element => {
     const tagColorScheme = useColorModeValue("alpha", "blackalpha")
     const imgBgColor = useColorModeValue("gray.700", "gray.600")
+
+    const { data } = useActivityLog()
+
+    const { roles } = useGuild(guildId)
+    const guildRole = roles?.find((role) => role.id === roleId)
+    const activityLogRole = data?.values.roles.find((role) => role.id === roleId)
+
+    const name = activityLogRole?.name ?? guildRole?.name ?? "Unknown role"
+    const image = guildRole?.imageUrl
 
     return (
       <Tag
@@ -56,25 +62,21 @@ const RoleTag = forwardRef<Props, "span">(
 )
 
 type ClickableRoleTagProps = {
-  id: number
+  roleId: number
   guildId: number
 }
 
-const ClickableRoleTag = ({ id, guildId }: ClickableRoleTagProps): JSX.Element => {
-  const { data } = useActivityLog()
-
-  const { roles } = useGuild(guildId)
-  const guildRole = roles?.find((role) => role.id === id)
-  const activityLogRole = data.values.roles.find((role) => role.id === id)
-
-  const name = activityLogRole?.name ?? guildRole?.name ?? "Unknown role"
-  const image = guildRole?.imageUrl
-
+const ClickableRoleTag = ({
+  roleId,
+  guildId,
+}: ClickableRoleTagProps): JSX.Element => {
   const filtersContext = useActivityLogFilters()
   const { activeFilters, addFilter } = filtersContext ?? {}
   const isDisabled =
     !filtersContext ||
-    !!activeFilters.find((f) => f.filter === "roleId" && f.value === id.toString())
+    !!activeFilters.find(
+      (f) => f.filter === "roleId" && f.value === roleId.toString()
+    )
 
   return (
     <Tooltip label="Filter by role" placement="top" hasArrow isDisabled={isDisabled}>
@@ -83,10 +85,10 @@ const ClickableRoleTag = ({ id, guildId }: ClickableRoleTagProps): JSX.Element =
         onClick={
           isDisabled
             ? undefined
-            : () => addFilter({ filter: "roleId", value: id.toString() })
+            : () => addFilter({ filter: "roleId", value: roleId.toString() })
         }
-        name={name}
-        image={image}
+        roleId={roleId}
+        guildId={guildId}
         cursor={isDisabled ? "default" : "pointer"}
       />
     </Tooltip>

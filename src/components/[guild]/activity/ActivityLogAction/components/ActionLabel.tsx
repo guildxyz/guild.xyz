@@ -32,7 +32,7 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {isUserActivityLog ? (
-                  <GuildTag id={ids.guild} />
+                  <GuildTag guildId={ids.guild} />
                 ) : (
                   <>
                     <Text as="span">by</Text>
@@ -46,11 +46,11 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {isUserActivityLog ? (
-                  <GuildTag id={ids.guild} />
+                  <GuildTag guildId={ids.guild} />
                 ) : (
                   <>
                     <Text as="span"> by </Text>
-                    <ClickableUserTag id={ids.user} />
+                    <ClickableUserTag userId={ids.user} />
                   </>
                 )}
               </>
@@ -60,8 +60,8 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}:</Text>
-                <ClickableUserTag id={ids.user} />
-                {isUserActivityLog && <GuildTag id={ids.guild} />}
+                <ClickableUserTag userId={ids.user} />
+                {isUserActivityLog && <GuildTag guildId={ids.guild} />}
               </>
             )
           case ACTION.CreateRole:
@@ -70,13 +70,13 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
-                <ClickableRoleTag id={ids.role} guildId={ids.guild} />
+                <ClickableRoleTag roleId={ids.role} guildId={ids.guild} />
                 {isUserActivityLog ? (
-                  <GuildTag id={ids.guild} />
+                  <GuildTag guildId={ids.guild} />
                 ) : (
                   <>
                     <Text as="span">by</Text>
-                    <ClickableUserTag id={ids.user} />
+                    <ClickableUserTag userId={ids.user} />
                   </>
                 )}
               </>
@@ -92,7 +92,7 @@ const ActionLabel = (): JSX.Element => {
                   rolePlatformId={ids.rolePlatform}
                 />
                 <Text as="span">to role</Text>
-                <ClickableRoleTag id={ids.role} guildId={ids.guild} />
+                <ClickableRoleTag roleId={ids.role} guildId={ids.guild} />
               </>
             )
           case ACTION.SendReward:
@@ -119,7 +119,7 @@ const ActionLabel = (): JSX.Element => {
                     <Center h={6}>
                       <Icon as={ArrowLeft} />
                     </Center>
-                    <ClickableUserTag id={ids.user} />
+                    <ClickableUserTag userId={ids.user} />
                   </>
                 )}
               </>
@@ -137,7 +137,7 @@ const ActionLabel = (): JSX.Element => {
                     <Center h={6}>
                       <Icon as={ArrowRight} />
                     </Center>
-                    <ClickableUserTag id={ids.user} />
+                    <ClickableUserTag userId={ids.user} />
                   </>
                 )}
               </>
@@ -147,9 +147,9 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">Join Guild through website</Text>
                 {isUserActivityLog ? (
-                  <GuildTag id={ids.guild} />
+                  <GuildTag guildId={ids.guild} />
                 ) : (
-                  <ClickableUserTag id={ids.user} />
+                  <ClickableUserTag userId={ids.user} />
                 )}
               </>
             )
@@ -160,9 +160,9 @@ const ActionLabel = (): JSX.Element => {
                   platforms[data.platformName].name
                 }`}</Text>
                 {isUserActivityLog ? (
-                  <GuildTag id={ids.guild} />
+                  <GuildTag guildId={ids.guild} />
                 ) : (
-                  <ClickableUserTag id={ids.user} />
+                  <ClickableUserTag userId={ids.user} />
                 )}
               </>
             )
@@ -171,7 +171,7 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {isUserActivityLog ? (
-                  <GuildTag id={ids.guild} />
+                  <GuildTag guildId={ids.guild} />
                 ) : (
                   <UserTag userId={ids.user} />
                 )}
@@ -197,9 +197,9 @@ const ActionLabel = (): JSX.Element => {
                   {isChildOfUserStatusUpdate ? ":" : ""}
                 </Text>
                 {isChildOfUserStatusUpdate ? (
-                  <ClickableRoleTag id={ids.role} guildId={ids.guild} />
+                  <ClickableRoleTag roleId={ids.role} guildId={ids.guild} />
                 ) : (
-                  <ClickableUserTag id={ids.user} />
+                  <ClickableUserTag userId={ids.user} />
                 )}
               </>
             )
@@ -209,7 +209,9 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
-                {!parentId && <ClickableRoleTag id={ids.role} guildId={ids.guild} />}
+                {!parentId && (
+                  <ClickableRoleTag roleId={ids.role} guildId={ids.guild} />
+                )}
               </>
             )
 
@@ -222,7 +224,7 @@ const ActionLabel = (): JSX.Element => {
                   platformName={data.platformName}
                   username={data.username}
                 />
-                {!isUserActivityLog && <ClickableUserTag id={ids.user} />}
+                {!isUserActivityLog && <ClickableUserTag userId={ids.user} />}
               </>
             )
 
@@ -231,9 +233,9 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {ids.role ? (
-                  <ClickableRoleTag id={ids.role} guildId={ids.guild} />
+                  <ClickableRoleTag roleId={ids.role} guildId={ids.guild} />
                 ) : ids.user ? (
-                  <ClickableUserTag id={ids.user} />
+                  <ClickableUserTag userId={ids.user} />
                 ) : null}
               </>
             )

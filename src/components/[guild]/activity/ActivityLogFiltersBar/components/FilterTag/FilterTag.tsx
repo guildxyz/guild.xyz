@@ -15,9 +15,7 @@ import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Warning, X } from "phosphor-react"
-import platforms from "platforms/platforms"
 import { PropsWithChildren, useEffect, useState } from "react"
-import { PlatformType } from "types"
 import capitalize from "utils/capitalize"
 import fetcher from "utils/fetcher"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
@@ -52,7 +50,7 @@ const FilterTag = ({
   const { getFilter, updateFilter, removeFilter } = useActivityLogFilters()
   const { id, filter, value } = getFilter(filterId)
 
-  const { roles, guildPlatforms } = useGuild()
+  const { id: guildId, roles } = useGuild()
 
   const [isLoading, setIsLoading] = useState(false)
   const [shouldRemove, setShouldRemove] = useState(value.length === 0)
@@ -169,11 +167,10 @@ const FilterTag = ({
                       </HStack>
                     )
                   case "roleId": {
-                    const role = roles?.find((r) => r.id === Number(value))
                     return (
                       <RoleTag
-                        name={role?.name ?? "Unknown role"}
-                        image={role?.imageUrl}
+                        roleId={Number(value)}
+                        guildId={guildId}
                         pr={6}
                         borderLeftRadius={0}
                       />
@@ -183,30 +180,11 @@ const FilterTag = ({
                     const role = roles?.find((r) =>
                       r.rolePlatforms.some((rp) => rp.id === Number(value))
                     )
-                    const rolePlatform = roles
-                      ?.flatMap((r) => r.rolePlatforms)
-                      .find((rp) => rp.id === Number(value))
-                    const guildPlatform = guildPlatforms?.find(
-                      (gp) => gp.id === rolePlatform?.guildPlatformId
-                    )
-                    const name =
-                      guildPlatform?.platformGuildName ??
-                      guildPlatform?.platformGuildData?.name
 
                     return (
                       <RewardTag
-                        name={
-                          guildPlatform?.platformId === PlatformType.DISCORD
-                            ? `${role.name} - ${name}`
-                            : name
-                        }
-                        icon={
-                          platforms[PlatformType[guildPlatform?.platformId]]?.icon
-                        }
-                        colorScheme={
-                          platforms[PlatformType[guildPlatform?.platformId]]
-                            ?.colorScheme
-                        }
+                        roleId={role?.id}
+                        rolePlatformId={Number(value)}
                         pr={7}
                         borderLeftRadius={0}
                       />

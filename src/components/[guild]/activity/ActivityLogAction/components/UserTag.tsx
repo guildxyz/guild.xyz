@@ -70,18 +70,20 @@ const UserTag = forwardRef<Props, "span">(
 )
 
 type ClickableUserTagProps = {
-  id: number
+  userId: number
 }
 
-const ClickableUserTag = ({ id }: ClickableUserTagProps): JSX.Element => {
+const ClickableUserTag = ({ userId }: ClickableUserTagProps): JSX.Element => {
   const { data } = useActivityLog()
-  const address = data.values.users.find((u) => u.id === id)?.address
+  const address = data.values.users.find((u) => u.id === userId)?.address
 
   const filtersContext = useActivityLogFilters()
   const { activeFilters, addFilter } = filtersContext ?? {}
   const isDisabled =
     !filtersContext ||
-    !!activeFilters.find((f) => f.filter === "userId" && f.value === id.toString())
+    !!activeFilters.find(
+      (f) => f.filter === "userId" && f.value === userId.toString()
+    )
 
   return (
     <Tooltip label="Filter by user" placement="top" hasArrow isDisabled={isDisabled}>
@@ -89,7 +91,7 @@ const ClickableUserTag = ({ id }: ClickableUserTagProps): JSX.Element => {
         onClick={
           isDisabled
             ? undefined
-            : () => addFilter({ filter: "userId", value: id.toString() })
+            : () => addFilter({ filter: "userId", value: userId.toString() })
         }
         address={address}
         cursor={isDisabled ? "default" : "pointer"}
