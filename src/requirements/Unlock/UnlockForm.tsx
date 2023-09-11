@@ -1,17 +1,11 @@
-import {
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputLeftElement,
-  Stack,
-} from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
+import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { Chains } from "connectors"
 import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../common/ChainPicker"
 import useLocks, { CHAINS_ENDPOINTS } from "./hooks/useLocks"
@@ -20,9 +14,12 @@ const supportedChains = Object.keys(CHAINS_ENDPOINTS).map(
   (chainId) => Chains[chainId]
 )
 
-const customFilterOption = (candidate, input) =>
-  candidate.label?.toLowerCase().includes(input?.toLowerCase()) ||
-  candidate.value?.toLowerCase() === input?.toLowerCase()
+const customOptionsFilter = (
+  option: SelectOption<string>,
+  inputValue: string
+): boolean =>
+  option.label?.toLowerCase().includes(inputValue?.toLowerCase()) ||
+  option.value?.toLowerCase() === inputValue?.toLowerCase()
 
 const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
@@ -31,7 +28,6 @@ const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   } = useFormContext()
 
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
-  const address = useWatch({ name: `${baseFieldPath}.address` })
 
   const { locks, isLoading } = useLocks(chain)
   const mappedLocks = useMemo(
@@ -43,8 +39,6 @@ const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       })),
     [locks]
   )
-
-  const pickedLock = mappedLocks?.find((lock) => lock.value === address)
 
   // Reset form on chain change
   const resetForm = () => {
@@ -66,24 +60,17 @@ const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       >
         <FormLabel>Lock:</FormLabel>
 
-        <InputGroup>
-          {address && (
-            <InputLeftElement>
-              <OptionImage img={pickedLock?.img} alt={pickedLock?.label} />
-            </InputLeftElement>
-          )}
-          <ControlledSelect
-            name={`${baseFieldPath}.address`}
-            rules={{
-              required: "This field is required.",
-            }}
-            isClearable
-            isLoading={isLoading}
-            options={mappedLocks}
-            placeholder="Search..."
-            filterOption={customFilterOption}
-          />
-        </InputGroup>
+        <ControlledCombobox
+          name={`${baseFieldPath}.address`}
+          rules={{
+            required: "This field is required.",
+          }}
+          isClearable
+          isLoading={isLoading}
+          options={mappedLocks}
+          placeholder="Search..."
+          customOptionsFilter={customOptionsFilter}
+        />
 
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.address?.message}
