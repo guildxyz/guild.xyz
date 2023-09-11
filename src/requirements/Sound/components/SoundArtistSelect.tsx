@@ -1,6 +1,5 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
-import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { PropsWithChildren, useState } from "react"
 import { useFormState, useWatch } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
@@ -46,14 +45,14 @@ const SoundArtistSelect = ({
     >
       <FormLabel>Artist:</FormLabel>
 
-      <ControlledSelect
+      <ControlledCombobox
         name={`${baseFieldPath}.data.id`}
         rules={{ required: "This field is required." }}
         isClearable
         options={artistOptions}
         placeholder="Search for an artist"
         afterOnChange={(newValue) => onChangeFn?.(newValue?.value)}
-        onInputChange={(text, _) => setSearch(text ? splitInput(text) : "")}
+        onInputChange={(text) => setSearch(text ? splitInput(text) : "")}
         isLoading={artistsLoading}
         fallbackValue={
           id && {
@@ -61,20 +60,13 @@ const SoundArtistSelect = ({
             value: id,
           }
         }
-        components={{
-          MenuList: (props) => (
-            <CustomMenuList
-              {...props}
-              noResultText={
-                !search?.length
-                  ? "Start typing..."
-                  : artistsLoading
-                  ? "Loading..."
-                  : "No results"
-              }
-            />
-          ),
-        }}
+        noOptionsText={
+          !search?.length
+            ? "Start typing..."
+            : artistsLoading
+            ? "Loading..."
+            : "No results"
+        }
       />
 
       <FormErrorMessage>

@@ -5,7 +5,7 @@ import {
   FormLabel,
   Stack,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -56,13 +56,14 @@ const SoundForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       >
         <FormLabel>Type</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={soundRequirementTypes}
           beforeOnChange={() =>
             resetField(`${baseFieldPath}.data.id`, { defaultValue: "" })
           }
+          disableOptionFiltering
         />
 
         <FormErrorMessage>

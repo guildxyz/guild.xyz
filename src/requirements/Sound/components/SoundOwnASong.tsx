@@ -1,6 +1,6 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
@@ -45,7 +45,7 @@ const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
       >
         <FormLabel>Song title:</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.data.title`}
           rules={{ required: "This field is required." }}
           isClearable
