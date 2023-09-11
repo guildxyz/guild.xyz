@@ -44,7 +44,7 @@ const defaultOptionsFilter = (option: SelectOption, inputValue: string): boolean
 const Combobox = forwardRef(
   (
     {
-      options: optionsProp = [],
+      options = [],
       fallbackValue,
       beforeOnChange,
       onChange: onChangeProp,
@@ -72,28 +72,9 @@ const Combobox = forwardRef(
       offset: [0, 8],
     })
 
-    const htmlInputPropValue = htmlInputProps.value?.toString() ?? ""
-
-    // TODO: creatable combobox
-    const options = isCreatable
-      ? [
-          ...optionsProp,
-          {
-            label: "",
-            value: "",
-            img: (
-              <Icon
-                as={Plus}
-                boxSize={5}
-                padding={0.5}
-                position="relative"
-                top={1}
-              />
-            ),
-            isCreateOption: true,
-          },
-        ]
-      : optionsProp
+    const { value: rawHtmlInputPropValue, ...htmlInputPropsWithoutValue } =
+      htmlInputProps
+    const htmlInputPropValue = rawHtmlInputPropValue?.toString() ?? ""
 
     const [state, send] = useMachine(
       combobox.machine({
@@ -105,7 +86,6 @@ const Combobox = forwardRef(
           sameWidth: true,
         },
         allowCustomValue: isCreatable,
-        inputValue: htmlInputPropValue,
         onSelect: ({ value, label }) => {
           const newOption = options?.find((option) => option.value === value) ?? {
             label,
@@ -126,22 +106,18 @@ const Combobox = forwardRef(
       positionerProps,
       contentProps,
       getOptionProps,
-      focusedOption,
       selectedValue,
       inputValue,
       setValue,
     } = combobox.connect(state, send, normalizeProps)
 
-    const { size, ...filteredInputProps } = inputProps
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { size, defaultValue, ...filteredInputProps } = inputProps
     const { style, id, ...filteredPositionerProps } = positionerProps
 
     const selectedOption =
       selectedValue || fallbackValue || htmlInputPropValue
         ? options?.find(
-            (option) =>
-              option.value === (selectedValue ?? htmlInputPropValue) ||
-              option.isCreateOption
+            (option) => option.value === (selectedValue ?? htmlInputPropValue)
           ) ??
           fallbackValue ?? {
             label: htmlInputPropValue,
@@ -162,9 +138,6 @@ const Combobox = forwardRef(
       isLoading || (isClearable && (inputValue?.length || htmlInputPropValue))
     )
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { value: _, ...htmlInputPropWithoutValue } = htmlInputProps
-
     return (
       <>
         <Box w={htmlInputProps.w ?? "full"} {...rootProps}>
@@ -181,7 +154,8 @@ const Combobox = forwardRef(
                 htmlSize={size}
                 pr={shouldShowRightElement ? 14 : 10}
                 {...(htmlInputProps.isReadOnly ? undefined : filteredInputProps)}
-                {...htmlInputPropWithoutValue}
+                {...htmlInputPropsWithoutValue}
+                value={selectedOption?.label || htmlInputPropValue}
               />
               {shouldShowRightElement && (
                 <InputRightElement mr={6} opacity={htmlInputProps.isDisabled && 0.4}>
@@ -244,7 +218,21 @@ const Combobox = forwardRef(
                   options={[
                     ...filteredOptions,
                     ...(isCreatable
-                      ? [{ label: inputValue, value: inputValue.toLowerCase() }]
+                      ? [
+                          {
+                            label: inputValue,
+                            value: inputValue,
+                            img: (
+                              <Icon
+                                as={Plus}
+                                boxSize={5}
+                                padding={0.5}
+                                position="relative"
+                                top={1}
+                              />
+                            ),
+                          },
+                        ]
                       : []),
                   ]}
                   getOptionProps={getOptionProps}
