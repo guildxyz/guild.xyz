@@ -92,6 +92,7 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={galaxyRequirementTypes}
+          disableOptionFiltering
         />
 
         <FormErrorMessage>

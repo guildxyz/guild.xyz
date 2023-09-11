@@ -48,6 +48,7 @@ const EthereumAttestationForm = ({
           rules={{ required: "It's required to select a type" }}
           options={typeOptions}
           beforeOnChange={resetFields}
+          disableOptionFiltering
         />
 
         <FormErrorMessage>
