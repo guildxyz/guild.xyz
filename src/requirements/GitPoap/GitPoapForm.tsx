@@ -1,33 +1,25 @@
-import {
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputLeftElement,
-  Stack,
-} from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
+import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import { useMemo } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { usePoap } from "requirements/Poap/hooks/usePoaps"
+import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../common/ChainInfo"
 import useGitPoaps from "./hooks/useGitPoaps"
 
-const customFilterOption = (candidate, input) =>
-  candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
-  candidate.data?.details?.includes(input)
+const customOptionsFilter = (
+  option: SelectOption<string>,
+  inputValue: string
+): boolean =>
+  option.label.toLowerCase().includes(inputValue?.toLowerCase()) ||
+  option?.details?.includes(inputValue)
 
 const GitPoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
-    control,
     formState: { errors },
   } = useFormContext()
-
-  const dataId = useWatch({ name: `${baseFieldPath}.data.id`, control })
-  const { poap: poapDetails } = usePoap(dataId)
 
   const { isLoading: isPoapsLoading, gitPoaps } = useGitPoaps()
 
@@ -51,25 +43,18 @@ const GitPoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
       >
         <FormLabel>GitPOAP:</FormLabel>
-        <InputGroup>
-          {poapDetails && (
-            <InputLeftElement>
-              <OptionImage img={poapDetails?.image_url} alt={poapDetails?.name} />
-            </InputLeftElement>
-          )}
 
-          <ControlledSelect
-            name={`${baseFieldPath}.data.id`}
-            rules={{
-              required: "This field is required.",
-            }}
-            isClearable
-            isLoading={isPoapsLoading}
-            options={mappedGitPoaps}
-            placeholder="Search..."
-            filterOption={customFilterOption}
-          />
-        </InputGroup>
+        <ControlledCombobox
+          name={`${baseFieldPath}.data.id`}
+          rules={{
+            required: "This field is required.",
+          }}
+          isClearable
+          isLoading={isPoapsLoading}
+          options={mappedGitPoaps}
+          placeholder="Search..."
+          customOptionsFilter={customOptionsFilter}
+        />
 
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
