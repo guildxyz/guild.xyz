@@ -164,7 +164,7 @@ const RPC: RpcConfig = {
   },
   GNOSIS: {
     chainId: 100,
-    chainName: "Gnosis Chain",
+    chainName: "Gnosis",
     nativeCurrency: {
       name: "Gnosis",
       symbol: "Gnosis",

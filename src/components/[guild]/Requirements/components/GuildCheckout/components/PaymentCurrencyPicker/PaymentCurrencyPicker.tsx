@@ -18,14 +18,15 @@ import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import { useEffect } from "react"
 import { SUPPORTED_CURRENCIES } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
+import { useRequirementContext } from "../../../RequirementContext"
 import usePrice from "../../hooks/usePrice"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 import CurrencyListItem from "./components/CurrencyListItem"
 import TokenInfo from "./components/TokenInfo"
 
 const PaymentCurrencyPicker = (): JSX.Element => {
-  const { requirement, pickedCurrency, setPickedCurrency } =
-    useGuildCheckoutContext()
+  const requirement = useRequirementContext()
+  const { pickedCurrency, setPickedCurrency } = useGuildCheckoutContext()
 
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
   const lightShade = useColorModeValue("white", "gray.700")

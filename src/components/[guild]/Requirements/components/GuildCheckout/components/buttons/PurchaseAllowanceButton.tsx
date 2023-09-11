@@ -8,6 +8,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
+import { useRequirementContext } from "../../../RequirementContext"
 import usePrice from "../../hooks/usePrice"
 import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
@@ -16,8 +17,9 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
-  const { pickedCurrency, requirement } = useGuildCheckoutContext()
+  const requirement = useRequirementContext()
   const requirementChainId = Chains[requirement.chain]
+  const { pickedCurrency } = useGuildCheckoutContext()
 
   const { chainId } = useWeb3React()
 

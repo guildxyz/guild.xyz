@@ -4,6 +4,7 @@ import CollectNftButton from "components/[guild]/collect/components/CollectNftBu
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import LogicDivider from "components/[guild]/LogicDivider"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
+import { TransactionStatusProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { Chains } from "connectors"
 import { Logic, Requirement } from "types"
@@ -64,7 +65,9 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
           {typeof alreadyCollected !== "undefined" && !alreadyCollected && (
             <SwitchNetworkButton targetChainId={Chains[chain]} />
           )}
-          <CollectNftButton label="Collect now" colorScheme="green" />
+          <TransactionStatusProvider>
+            <CollectNftButton label="Collect now" colorScheme="green" />
+          </TransactionStatusProvider>
         </Stack>
 
         {(data || isValidating) && (

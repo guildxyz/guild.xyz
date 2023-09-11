@@ -1,6 +1,8 @@
 import { parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import { NFTDetails } from "components/[guild]/collect/hooks/useNftDetails"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useContract from "hooks/useContract"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
@@ -20,6 +22,7 @@ export const GUILD_REWARD_NFT_FACTORY_ADDRESSES: Record<
 > = {
   ETHEREUM: "0x6ee2dd02fbfb71f518827042b6adca242f1ba0b2",
   BASE_MAINNET: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
+  OPTIMISM: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
   POLYGON: "0xc1c23618110277ffe6d529816eb23de42b24cc33",
   POLYGON_MUMBAI: "0xf14249947c6de788c61f8ac5db0495ee2663ec1b",
 }
@@ -48,6 +51,10 @@ export type CreateNFTResponse = {
 const useCreateNft = (
   onSuccess: (newGuildPlatform: CreateNFTResponse["guildPlatform"]) => void
 ) => {
+  const { urlName } = useGuild()
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = { guild: urlName }
+
   const { chainId, account } = useWeb3React()
 
   const [loadingText, setLoadingText] = useState<string>()
@@ -120,9 +127,12 @@ const useCreateNft = (
         processedCallStaticError = walletError.title
       }
 
-      return Promise.reject(
+      const error =
         processedCallStaticError ?? callStaticError.errorName ?? callStaticError
-      )
+
+      captureEvent("useCreateNft callStatic error", { ...postHogOptions, error })
+
+      return Promise.reject(error)
     }
 
     const tx = await guildRewardNFTFactoryContract.deployBasicNFT(
@@ -173,6 +183,12 @@ const useCreateNft = (
         const { chain, contractAddress, name, image } = response.guildPlatform
           .platformGuildData as PlatformGuildData["CONTRACT_CALL"]
 
+        captureEvent("Successfully created NFT", {
+          ...postHogOptions,
+          chain,
+          contractAddress,
+        })
+
         mutate<NFTDetails>(
           ["nftDetails", chain, contractAddress],
           {
@@ -204,6 +220,12 @@ const useCreateNft = (
           error?.code === "ACTION_REJECTED"
             ? "User rejected the transaction"
             : error?.message ?? error
+
+        captureEvent("useCreateNft error", {
+          ...postHogOptions,
+          error: prettyError,
+        })
+
         showErrorToast(prettyError)
       },
     }),

@@ -332,6 +332,7 @@ type GuildTags = (typeof guildTags)[number]
 type GuildContact = {
   type: "EMAIL" | "TELEGRAM"
   contact: string
+  id?: number
 }
 
 type Guild = {
@@ -385,6 +386,11 @@ type GuildFormType = Partial<
   logic?: Logic
   requirements?: Requirement[]
   socialLinks?: Record<string, string>
+  admins?: Array<{
+    address: string
+    id?: number
+    isOwner?: boolean
+  }>
 }
 
 type SelectOption<T = string> = {

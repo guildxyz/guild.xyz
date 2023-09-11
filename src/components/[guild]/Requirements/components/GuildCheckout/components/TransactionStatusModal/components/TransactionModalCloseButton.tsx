@@ -1,11 +1,11 @@
 import Button from "components/common/Button"
-import { useGuildCheckoutContext } from "../../GuildCheckoutContex"
+import { useTransactionStatusContext } from "../../TransactionStatusContext"
 
 const TransactionModalCloseButton = (): JSX.Element => {
-  const { onInfoModalClose } = useGuildCheckoutContext()
+  const { onTxModalClose } = useTransactionStatusContext()
 
   return (
-    <Button size="lg" colorScheme={"blue"} w="full" onClick={onInfoModalClose}>
+    <Button size="lg" colorScheme="blue" w="full" onClick={onTxModalClose}>
       Close
     </Button>
   )

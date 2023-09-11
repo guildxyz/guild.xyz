@@ -4,6 +4,7 @@ import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Info, Question } from "phosphor-react"
 import { GUILD_FEE_PERCENTAGE } from "utils/guildCheckout/constants"
+import { useRequirementContext } from "../../RequirementContext"
 import usePrice from "../hooks/usePrice"
 import usePurchaseAsset from "../hooks/usePurchaseAsset"
 import FeesTable from "./FeesTable"
@@ -11,7 +12,8 @@ import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 import PriceFallback from "./PriceFallback"
 
 const PurchaseFeeAndTotal = (): JSX.Element => {
-  const { pickedCurrency, requirement } = useGuildCheckoutContext()
+  const requirement = useRequirementContext()
+  const { pickedCurrency } = useGuildCheckoutContext()
 
   const {
     data: { symbol },

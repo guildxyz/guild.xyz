@@ -15,7 +15,8 @@ const getContractMethods = (abi) => {
     (method) =>
       method.type === "function" &&
       (method.stateMutability === "view" ||
-        (!method.stateMutability && method.constant))
+        method.stateMutability === "pure" ||
+        method.constant)
   )
 }
 

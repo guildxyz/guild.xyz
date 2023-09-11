@@ -20,7 +20,6 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 const AllowlistForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
     setValue,
-    clearErrors,
     formState: { errors },
     control,
     register,
