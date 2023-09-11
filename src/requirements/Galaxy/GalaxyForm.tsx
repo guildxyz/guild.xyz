@@ -1,18 +1,11 @@
-import {
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  InputGroup,
-  InputLeftElement,
-  Stack,
-} from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
+import { FormControl, FormHelperText, FormLabel, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import { ControlledCombobox } from "components/zag/Combobox"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import { useGalaxyCampaign, useGalaxyCampaigns } from "./hooks/useGalaxyCampaigns"
 
@@ -27,9 +20,12 @@ const galaxyRequirementTypes = [
   },
 ]
 
-const customFilterOption = (candidate, input) =>
-  candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
-  candidate.data?.galaxyId?.includes(input)
+const customOptionsFilter = (
+  option: SelectOption<string>,
+  inputValue: string
+): boolean =>
+  option.label.toLowerCase().includes(inputValue?.toLowerCase()) ||
+  option.data?.galaxyId?.includes(inputValue)
 
 const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const {
@@ -92,7 +88,7 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
       >
         <FormLabel>Type:</FormLabel>
 
-        <ControlledSelect
+        <ControlledCombobox
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={galaxyRequirementTypes}
@@ -109,39 +105,29 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
       >
         <FormLabel>Campaign:</FormLabel>
 
-        <InputGroup>
-          {campaign?.thumbnail && (
-            <InputLeftElement>
-              <OptionImage img={campaign.thumbnail} alt="Campaign thumbnail" />
-            </InputLeftElement>
-          )}
-
-          <ControlledSelect
-            name={`${baseFieldPath}.data.id`}
-            rules={{
-              required: "This field is required.",
-            }}
-            isClearable
-            isLoading={isLoading || isCampaignLoading}
-            options={mappedCampaigns}
-            placeholder="Search campaigns..."
-            afterOnChange={(newValue) =>
-              setValue(`${baseFieldPath}.data.galaxyId`, newValue?.galaxyId)
+        <ControlledCombobox
+          name={`${baseFieldPath}.data.id`}
+          rules={{
+            required: "This field is required.",
+          }}
+          isClearable
+          isLoading={isLoading || isCampaignLoading}
+          options={mappedCampaigns}
+          placeholder="Search campaigns..."
+          afterOnChange={(newValue) =>
+            setValue(`${baseFieldPath}.data.galaxyId`, newValue?.galaxyId)
+          }
+          onInputChange={(text) => {
+            if (!text?.length) return
+            const regex = /^[a-zA-Z0-9]+$/i
+            if (regex.test(text)) {
+              setPastedId(text)
             }
-            onInputChange={(text, _) => {
-              if (!text?.length) return
-              const regex = /^[a-zA-Z0-9]+$/i
-              if (regex.test(text)) {
-                setPastedId(text)
-              }
-              setSearchText(text)
-            }}
-            filterOption={customFilterOption}
-            noResultText={
-              !debouncedSearchText.length ? "Start typing..." : undefined
-            }
-          />
-        </InputGroup>
+            setSearchText(text)
+          }}
+          customOptionsFilter={customOptionsFilter}
+          noOptionsText={!debouncedSearchText.length ? "Start typing..." : undefined}
+        />
 
         <FormHelperText>Search by name or ID</FormHelperText>
 
