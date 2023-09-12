@@ -42,15 +42,13 @@ const FilterByRoles = ({ column }: Props) => {
   const publicRoles = roles?.filter((role) => role.visibility !== Visibility.HIDDEN)
   const hiddenRoles = roles?.filter((role) => role.visibility === Visibility.HIDDEN)
 
-  const selectedRoleIds = column.getLeafColumns().reduce(
-    (acc, curr) => {
-      acc[curr.id] = (curr.getFilterValue() as any)?.roleIds ?? []
-      return acc
-    },
-    { publicRoleIds: [], hiddenRoleIds: [] }
-  )
-  const selectedAggregated =
-    selectedRoleIds.publicRoleIds?.length + selectedRoleIds.hiddenRoleIds?.length
+  const selectedRoleIds = (column.getFilterValue() as any)?.roleIds ?? []
+  const setSelectedRoleIds = (newValue) => {
+    column.setFilterValue((prevValue) => ({
+      ...prevValue,
+      roleIds: newValue,
+    }))
+  }
 
   const headerBg = useColorModeValue(null, "whiteAlpha.50")
   const bodyBg = useColorModeValue("gray.50", null)
@@ -67,11 +65,11 @@ const FilterByRoles = ({ column }: Props) => {
               variant="ghost"
               px="2"
               right="-2"
-              colorScheme={selectedAggregated ? "blue" : "gray"}
+              colorScheme={selectedRoleIds.length ? "blue" : "gray"}
             >
-              {!!selectedAggregated && (
+              {!!selectedRoleIds.length && (
                 <Text colorScheme="blue" pl="0.5" pr="1" mb="-1px" fontSize="xs">
-                  {`${selectedAggregated} filtered roles`}
+                  {`${selectedRoleIds.length} filtered roles`}
                 </Text>
               )}
               <Icon as={Funnel} />
@@ -112,16 +110,8 @@ const FilterByRoles = ({ column }: Props) => {
                     <RoleCheckboxGroup
                       label="Hidden roles"
                       labelRightElement={<AddAndEditHiddenRoles />}
-                      selectedRoleIds={selectedRoleIds.hiddenRoleIds}
-                      setSelectedRoleIds={(newValue) => {
-                        column
-                          .getLeafColumns()
-                          .find(({ id }) => id === "hiddenRoleIds")
-                          .setFilterValue((prevValue) => ({
-                            ...prevValue,
-                            roleIds: newValue,
-                          }))
-                      }}
+                      selectedRoleIds={selectedRoleIds}
+                      setSelectedRoleIds={setSelectedRoleIds}
                       roles={hiddenRoles}
                       searchValue={searchValue}
                     />
@@ -130,16 +120,8 @@ const FilterByRoles = ({ column }: Props) => {
                   )}
                   <RoleCheckboxGroup
                     label="Public roles"
-                    selectedRoleIds={selectedRoleIds.publicRoleIds}
-                    setSelectedRoleIds={(newValue) => {
-                      column
-                        .getLeafColumns()
-                        .find(({ id }) => id === "publicRoleIds")
-                        .setFilterValue((prevValue) => ({
-                          ...prevValue,
-                          roleIds: newValue,
-                        }))
-                    }}
+                    selectedRoleIds={selectedRoleIds}
+                    setSelectedRoleIds={setSelectedRoleIds}
                     roles={publicRoles}
                     searchValue={searchValue}
                   />

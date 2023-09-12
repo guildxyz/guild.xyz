@@ -5,7 +5,7 @@ export const roleFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   const filteredRoleIds = value.roleIds
   if (!filteredRoleIds?.length) return true
 
-  const usersRoleIds = row.getValue(columnId) as string[]
+  const usersRoleIds = Object.values(row.getValue(columnId)).flat() as string[]
 
   if (value.logic === "all") {
     return filteredRoleIds.every((roleId) => usersRoleIds.includes(roleId))
@@ -19,8 +19,8 @@ export const roleSort: SortingFn<any> = (
   rowB: any,
   columnId: any
 ): number => {
-  const rolesLengthOfUserA = rowA.getValue(columnId).length
-  const rolesLengthOfUserB = rowB.getValue(columnId).length
+  const rolesLengthOfUserA = Object.values(rowA.getValue(columnId)).flat().length
+  const rolesLengthOfUserB = Object.values(rowB.getValue(columnId)).flat().length
 
   return rolesLengthOfUserA > rolesLengthOfUserB ? 1 : -1
 }

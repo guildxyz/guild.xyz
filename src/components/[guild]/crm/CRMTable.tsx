@@ -25,9 +25,10 @@ export type Member = {
   addresses: string[]
   platformUsers: PlatformAccountDetails[]
   joinedAt: string
-  roleIds: number[]
-  publicRoleIds: number[]
-  hiddenRoleIds: number[]
+  roleIds: {
+    hidden?: number[]
+    public: number[]
+  }
 }
 
 type Props = {

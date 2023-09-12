@@ -16,14 +16,14 @@ const useMembers = () => {
       .map((role) => role.id)
 
     if (!hiddenRoleIds.length)
-      return data.map((user) => ({ ...user, publicRoleIds: user.roleIds }))
+      return data.map((user) => ({ ...user, roleIds: { public: user.roleIds } }))
 
     return data.map((user) => ({
       ...user,
-      hiddenRoleIds: user.roleIds.filter((roleId) => hiddenRoleIds.includes(roleId)),
-      publicRoleIds: user.roleIds.filter(
-        (roleId) => !hiddenRoleIds.includes(roleId)
-      ),
+      roleIds: {
+        hidden: user.roleIds.filter((roleId) => hiddenRoleIds.includes(roleId)),
+        public: user.roleIds.filter((roleId) => !hiddenRoleIds.includes(roleId)),
+      },
     }))
   }, [data, roles])
 

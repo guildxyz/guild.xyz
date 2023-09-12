@@ -85,9 +85,11 @@ const MemberModal = ({ row }: Props) => {
             Roles
           </Text>
           <Wrap>
-            {roleIds.map((roleId) => (
-              <RoleTag key={roleId} roleId={roleId} />
-            ))}
+            {Object.values(roleIds)
+              .flat()
+              .map((roleId) => (
+                <RoleTag key={roleId} roleId={roleId} />
+              ))}
           </Wrap>
         </ModalBody>
       </ModalContent>

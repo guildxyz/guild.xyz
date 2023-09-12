@@ -93,40 +93,34 @@ const GuildPage = (): JSX.Element => {
         header: ({ column }) => <IdentitiesSearch column={column} />,
       }),
       {
-        id: "roles",
+        accessorKey: "roleIds",
         header: ({ column }) => (
           <HStack w="full" justifyContent={"space-between"}>
             <Text>{`Roles ${hasHiddenRoles ? "(hidden, public)" : ""}`}</Text>
             <HStack spacing="0">
               <FilterByRoles column={column} />
-              <OrderByColumn
-                label="Number of roles"
-                column={column
-                  .getLeafColumns()
-                  .find(({ id }) => id === "publicRoleIds")}
-              />
+              <OrderByColumn label="Number of roles" column={column} />
             </HStack>
           </HStack>
         ),
-        columns: hasHiddenRoles
-          ? [
-              columnHelper.accessor("hiddenRoleIds", {
-                filterFn: roleFilter,
-                cell: (info) => <RoleTags roleIds={info.getValue()} />,
-              }),
-              columnHelper.accessor("publicRoleIds", {
-                filterFn: roleFilter,
-                sortingFn: roleSort,
-                cell: (info) => <RoleTags roleIds={info.getValue()} />,
-              }),
-            ]
-          : [
-              columnHelper.accessor("publicRoleIds", {
-                filterFn: roleFilter,
-                sortingFn: roleSort,
-                cell: (info) => <RoleTags roleIds={info.getValue()} />,
-              }),
-            ],
+        filterFn: roleFilter,
+        sortingFn: roleSort,
+        columns: [
+          ...(hasHiddenRoles
+            ? [
+                {
+                  id: "hiddenRoles",
+                  accessorFn: (row) => row.roleIds.hidden,
+                  cell: (info) => <RoleTags roleIds={info.getValue()} />,
+                },
+              ]
+            : []),
+          {
+            id: "publicRoles",
+            accessorFn: (row) => row.roleIds.public,
+            cell: (info) => <RoleTags roleIds={info.getValue()} />,
+          },
+        ],
       },
       columnHelper.accessor("joinedAt", {
         header: ({ column }) => (
