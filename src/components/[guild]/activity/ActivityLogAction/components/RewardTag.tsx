@@ -7,14 +7,17 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import platforms from "platforms/platforms"
-import { PlatformType } from "types"
+import { PlatformName, PlatformType } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
 import { useActivityLogFilters } from "../../ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 
-type Props = ClickableRewardTagProps & Omit<TagProps, "colorScheme">
+type Props = ClickableRewardTagProps & {
+  label?: string
+  platformType?: PlatformName
+} & Omit<TagProps, "colorScheme">
 
 const RewardTag = forwardRef<Props, "span">(
-  ({ roleId, rolePlatformId, ...rest }, ref): JSX.Element => {
+  ({ roleId, rolePlatformId, label, platformType, ...rest }, ref): JSX.Element => {
     const { data } = useActivityLog()
 
     const reward = data?.values.rolePlatforms.find((rp) => rp.id === rolePlatformId)
@@ -22,12 +25,12 @@ const RewardTag = forwardRef<Props, "span">(
 
     const rewardName = reward?.platformGuildName ?? reward?.data?.name
     const name =
-      reward?.platformId === PlatformType.DISCORD
+      (reward?.platformId === PlatformType.DISCORD
         ? `${role.name} - ${rewardName}`
-        : rewardName
+        : rewardName) ?? label
 
-    const icon = platforms[reward?.platformName]?.icon
-    const colorScheme = platforms[reward?.platformName]?.colorScheme
+    const icon = platforms[reward?.platformName || platformType]?.icon
+    const colorScheme = platforms[reward?.platformName || platformType]?.colorScheme
 
     return (
       <Tag

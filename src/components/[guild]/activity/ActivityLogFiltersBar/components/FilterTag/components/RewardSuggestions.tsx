@@ -79,6 +79,8 @@ const RewardSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element =
               <RewardTag
                 rolePlatformId={rewardSuggestion.rolePlatformId}
                 roleId={rewardSuggestion.roleId}
+                platformType={rewardSuggestion.platformName}
+                label={rewardSuggestion.name}
               />
             </Suggestion>
           )
