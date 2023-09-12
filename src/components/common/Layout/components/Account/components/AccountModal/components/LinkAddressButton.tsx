@@ -10,11 +10,12 @@ import {
 } from "@chakra-ui/react"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import LogicDivider from "components/[guild]/LogicDivider"
-import useUser from "components/[guild]/hooks/useUser"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import useUser from "components/[guild]/hooks/useUser"
+import LogicDivider from "components/[guild]/LogicDivider"
+import { useAddressLinkContext } from "components/_app/AddressLinkProvider"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Plus, SignOut } from "phosphor-react"
 import { useState } from "react"
 
@@ -23,8 +24,8 @@ const LinkAddressButton = (props) => {
   const { id } = useUser()
   const { provider, connector, account } = useWeb3React<Web3Provider>()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { openWalletSelectorModal, setAddressLinkParams } =
-    useWeb3ConnectionManager()
+  const { setAddressLinkParams } = useAddressLinkContext()
+  const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
   if (!id) return null
 

@@ -40,8 +40,6 @@ const Web3Connection = createContext({
     _addressOrDomain: string,
     _platformName: PlatformName
   ) => {},
-  addressLinkParams: { userId: null as number, address: "" },
-  setAddressLinkParams: (_: { userId: number; address: string }) => {},
 })
 
 const Web3ConnectionManager = ({
@@ -77,10 +75,6 @@ const Web3ConnectionManager = ({
   const [accountMergeAddress, setAccountMergeAddress] = useState<string>("")
   const [accountMergePlatformName, setAccountMergePlatformName] =
     useState<PlatformName>()
-  const [addressLinkParams, setAddressLinkParams] = useState<{
-    userId: number
-    address: string
-  }>()
 
   const [isDelegateConnection, setIsDelegateConnection] = useState<boolean>(false)
 
@@ -142,8 +136,6 @@ const Web3ConnectionManager = ({
         isDelegateConnection,
         setIsDelegateConnection,
         isNetworkChangeInProgress,
-        addressLinkParams,
-        setAddressLinkParams,
       }}
     >
       {children}

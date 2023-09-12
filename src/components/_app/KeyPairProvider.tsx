@@ -4,7 +4,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { randomBytes } from "crypto"
 import { createStore, del, get, set } from "idb-keyval"
-import { PropsWithChildren, createContext, useContext, useEffect } from "react"
+import { createContext, PropsWithChildren, useContext, useEffect } from "react"
 import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { AddressConnectionProvider, User } from "types"
@@ -15,6 +15,7 @@ import {
   useSubmitWithSignWithParamKeyPair,
 } from "../../hooks/useSubmit/useSubmit"
 import useToast from "../../hooks/useToast"
+import { useAddressLinkContext } from "./AddressLinkProvider"
 
 type StoredKeyPair = {
   keyPair: CryptoKeyPair
@@ -206,12 +207,9 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
 
   const { account } = useWeb3React()
 
-  const {
-    isDelegateConnection,
-    setIsDelegateConnection,
-    addressLinkParams,
-    setAddressLinkParams,
-  } = useWeb3ConnectionManager()
+  const { addressLinkParams, setAddressLinkParams } = useAddressLinkContext()
+  const { isDelegateConnection, setIsDelegateConnection } =
+    useWeb3ConnectionManager()
 
   const {
     id,
