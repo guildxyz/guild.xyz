@@ -4,7 +4,7 @@ import { PropsWithChildren } from "react"
 const ChainInfo = ({ children }: PropsWithChildren<any>) => (
   <>
     <Flex direction="column">
-      <Text as="label" fontWeight={"medium"} mb={2}>
+      <Text as="label" fontWeight="medium" mb={2}>
         Chain
       </Text>
       <Text fontSize="sm">{children}</Text>

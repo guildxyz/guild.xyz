@@ -6,6 +6,7 @@ import DataBlockWithDate from "components/[guild]/Requirements/components/DataBl
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
+import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { RPC } from "connectors"
 import { ArrowsLeftRight, Coins, FileText, IconProps, Wallet } from "phosphor-react"
@@ -44,7 +45,11 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
       footer={
         ["ALCHEMY_TX_VALUE", "ALCHEMY_TX_VALUE_RELATIVE"].includes(
           requirement.type
-        ) && <BlockExplorerUrl />
+        ) ? (
+          <BlockExplorerUrl />
+        ) : (
+          <RequirementChainIndicator />
+        )
       }
       {...props}
     >
@@ -58,7 +63,6 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                 <DataBlockWithDate
                   timestamp={requirement.data.timestamps.maxAmount}
                 />
-                {` (on ${RPC[requirement.chain].chainName})`}
               </>
             )
           case "ALCHEMY_FIRST_TX_RELATIVE":
