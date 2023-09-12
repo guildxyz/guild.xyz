@@ -36,7 +36,7 @@ const PolygonIDRequirement = (props: RequirementProps) => {
           {...props}
         >
           {`Satisfy the `}
-          <DataBlock>{requirement.data.query[0].query?.type}</DataBlock>
+          <DataBlock>{requirement.data.query[0]?.query?.type}</DataBlock>
           {` PolygonID `}
           <PopoverTrigger>
             <Button

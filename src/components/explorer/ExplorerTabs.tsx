@@ -1,4 +1,4 @@
-import Tabs from "components/[guild]/Tabs/Tabs"
+import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import useScrollspy from "hooks/useScrollSpy"
 
