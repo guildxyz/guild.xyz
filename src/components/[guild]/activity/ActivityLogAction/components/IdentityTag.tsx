@@ -1,4 +1,5 @@
 import { Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
+import { Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 
@@ -8,7 +9,7 @@ type Props = {
 }
 
 const IdentityTag = ({ platformName, username }: Props): JSX.Element => {
-  const { colorScheme, icon } = platforms[platformName]
+  const { colorScheme, icon } = platforms[platformName] ?? {}
 
   return (
     <Tag
@@ -17,8 +18,8 @@ const IdentityTag = ({ platformName, username }: Props): JSX.Element => {
       minW="max-content"
       h="max-content"
     >
-      <TagLeftIcon as={icon} mr={1} />
-      <TagLabel>{username ?? platforms[platformName].name}</TagLabel>
+      <TagLeftIcon as={icon ?? Wallet} mr={1} />
+      <TagLabel>{username ?? platforms[platformName]?.name ?? "Wallet"}</TagLabel>
     </Tag>
   )
 }
