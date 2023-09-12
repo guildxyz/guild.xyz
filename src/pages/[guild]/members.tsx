@@ -7,8 +7,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
 import CRMTable, { Member } from "components/[guild]/crm/CRMTable"
 import ExportMembers from "components/[guild]/crm/ExportMembers"
 import FilterByRoles, {
@@ -26,6 +24,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
 import { useQueryState } from "hooks/useQueryState"
 import dynamic from "next/dynamic"
 import Head from "next/head"
@@ -183,11 +183,12 @@ const GuildPage = (): JSX.Element => {
         backgroundOffset={112}
         showFooter={false}
       >
-        <Tabs rightElement={<ExportMembers table={table} />}>
+        <Tabs sticky rightElement={<ExportMembers table={table} />}>
           <TabButton href={`/${urlName}`}>Home</TabButton>
           <TabButton href={`${urlName}/members`} isActive>
             Members
           </TabButton>
+          <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
         </Tabs>
         {/* {JSON.stringify(table.getState(), null, 2)} */}
         <CRMTable table={table} />

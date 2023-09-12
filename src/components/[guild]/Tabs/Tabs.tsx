@@ -1,6 +1,6 @@
 import { Box, HStack, useColorModeValue } from "@chakra-ui/react"
 import useIsStuck from "hooks/useIsStuck"
-import { createContext, PropsWithChildren, useContext } from "react"
+import { PropsWithChildren, createContext, useContext } from "react"
 
 type Props = {
   sticky?: boolean
@@ -78,6 +78,7 @@ const Tabs = ({
                 transition: "all .2s",
               },
             }}
+            spacing={0}
           >
             {children}
           </HStack>
