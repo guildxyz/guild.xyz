@@ -32,7 +32,7 @@ type Props = {
 
 const IdentitiesSearch = ({ column }: Props) => {
   const inputRef = useRef<HTMLInputElement>()
-  const [localValue, setLocalValue] = useState("")
+  const [localValue, setLocalValue] = useState(column.getFilterValue() as string)
   const debouncedValue = useDebouncedState(localValue)
 
   const handleOnChange = async (e) => setLocalValue(e.target.value)

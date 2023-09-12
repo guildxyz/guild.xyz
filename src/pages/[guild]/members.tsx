@@ -26,11 +26,13 @@ import useMembers from "components/[guild]/crm/useMembers"
 import useGuild from "components/[guild]/hooks/useGuild"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import { useQueryState } from "hooks/useQueryState"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { useMemo } from "react"
 import { Visibility } from "types"
+import tryToParseJSON from "utils/tryToParseJSON"
 
 const DynamicActiveStatusUpdates = dynamic(
   () => import("components/[guild]/ActiveStatusUpdates")
@@ -42,6 +44,18 @@ const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { name, roles, urlName, description, imageUrl, socialLinks } = useGuild()
   const hasHiddenRoles = roles?.some((role) => role.visibility === Visibility.HIDDEN)
+
+  const [columnFilters, setColumnFilters] = useQueryState("filters", undefined)
+
+  const parsedColumnFilters = useMemo(
+    () => tryToParseJSON(decodeURI(columnFilters)) || [],
+    [columnFilters]
+  )
+
+  const handleSetColumnFilters = (newValue) => {
+    if (!newValue()?.length) return setColumnFilters(null)
+    return setColumnFilters(encodeURI(JSON.stringify(newValue())))
+  }
 
   const { data } = useMembers()
 
@@ -130,6 +144,13 @@ const GuildPage = (): JSX.Element => {
   const table = useReactTable({
     data: data ?? [],
     columns,
+    state: {
+      columnFilters: parsedColumnFilters,
+    },
+    initialState: {
+      columnFilters: parsedColumnFilters,
+    },
+    onColumnFiltersChange: handleSetColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
