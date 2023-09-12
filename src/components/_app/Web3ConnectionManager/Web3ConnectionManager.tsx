@@ -2,20 +2,19 @@ import { useDisclosure } from "@chakra-ui/react"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect-v2"
-import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
-import requestNetworkChangeHandler from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
-import { Chains, RPC, getConnectorName } from "connectors"
+import { Chains, getConnectorName, RPC } from "connectors"
 import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import {
-  PropsWithChildren,
   createContext,
+  PropsWithChildren,
   useContext,
   useEffect,
   useState,
 } from "react"
 import { PlatformName } from "types"
+import requestNetworkChangeHandler from "utils/requestNetworkChange"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
@@ -27,9 +26,6 @@ const Web3Connection = createContext({
   isWalletSelectorModalOpen: false,
   openWalletSelectorModal: () => {},
   closeWalletSelectorModal: () => {},
-  isNetworkModalOpen: false,
-  openNetworkModal: () => {},
-  closeNetworkModal: () => {},
   isAccountModalOpen: false,
   openAccountModal: () => {},
   closeAccountModal: () => {},
@@ -45,8 +41,6 @@ const Web3Connection = createContext({
     _addressOrDomain: string,
     _platformName: PlatformName
   ) => {},
-  addressLinkParams: { userId: null as number, address: "" },
-  setAddressLinkParams: (_: { userId: number; address: string }) => {},
 })
 
 const Web3ConnectionManager = ({
@@ -67,11 +61,6 @@ const Web3ConnectionManager = ({
     onClose: closeWalletSelectorModal,
   } = useDisclosure()
   const {
-    isOpen: isNetworkModalOpen,
-    onOpen: openNetworkModal,
-    onClose: closeNetworkModal,
-  } = useDisclosure()
-  const {
     isOpen: isAccountModalOpen,
     onOpen: openAccountModal,
     onClose: closeAccountModal,
@@ -84,10 +73,6 @@ const Web3ConnectionManager = ({
   const [accountMergeAddress, setAccountMergeAddress] = useState<string>("")
   const [accountMergePlatformName, setAccountMergePlatformName] =
     useState<PlatformName>()
-  const [addressLinkParams, setAddressLinkParams] = useState<{
-    userId: number
-    address: string
-  }>()
 
   useContractWalletInfoToast()
   useConnectFromLocalStorage()
@@ -146,9 +131,6 @@ const Web3ConnectionManager = ({
         openWalletSelectorModal,
         closeWalletSelectorModal,
         triedEager,
-        isNetworkModalOpen,
-        openNetworkModal,
-        closeNetworkModal,
         isAccountModalOpen,
         openAccountModal,
         closeAccountModal,
@@ -156,8 +138,6 @@ const Web3ConnectionManager = ({
         isDelegateConnection,
         setIsDelegateConnection,
         isNetworkChangeInProgress,
-        addressLinkParams,
-        setAddressLinkParams,
       }}
     >
       {children}
@@ -166,7 +146,6 @@ const Web3ConnectionManager = ({
         onOpen={openWalletSelectorModal}
         onClose={closeWalletSelectorModal}
       />
-      <NetworkModal isOpen={isNetworkModalOpen} onClose={closeNetworkModal} />
       <PlatformMergeErrorAlert
         onClose={closePlatformMergeAlert}
         isOpen={isPlatformMergeAlertOpen}

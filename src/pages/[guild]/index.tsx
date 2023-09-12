@@ -14,6 +14,11 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import AccessHub from "components/[guild]/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
@@ -31,14 +36,9 @@ import { MintGuildPinProvider } from "components/[guild]/Requirements/components
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
+import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
-import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -240,6 +240,7 @@ const GuildPage = (): JSX.Element => {
           <DynamicOnboarding />
         ) : (
           <Tabs
+            sticky
             rightElement={
               <HStack>
                 {isMember && !isAdmin && <DynamicResendRewardButton />}
@@ -255,11 +256,14 @@ const GuildPage = (): JSX.Element => {
               </HStack>
             }
           >
-            <TabButton href={urlName} isActive>
+            <TabButton href={`/${urlName}`} isActive>
               {showAccessHub ? "Home" : "Roles"}
             </TabButton>
             {isAdmin && featureFlags.includes("CRM") && (
               <TabButton href={`${urlName}/members`}>Members</TabButton>
+            )}
+            {isAdmin && (
+              <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
             )}
           </Tabs>
         )}
