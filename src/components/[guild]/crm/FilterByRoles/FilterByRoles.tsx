@@ -39,8 +39,8 @@ const FilterByRoles = ({ column }: Props) => {
   const { roles } = useGuild()
   const [searchValue, setSearchValue] = useState("")
 
-  const publicRoles = roles.filter((role) => role.visibility !== Visibility.HIDDEN)
-  const hiddenRoles = roles.filter((role) => role.visibility === Visibility.HIDDEN)
+  const publicRoles = roles?.filter((role) => role.visibility !== Visibility.HIDDEN)
+  const hiddenRoles = roles?.filter((role) => role.visibility === Visibility.HIDDEN)
 
   const selectedRoleIds = column.getLeafColumns().reduce(
     (acc, curr) => {
