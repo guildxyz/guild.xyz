@@ -14,6 +14,7 @@ import {
 import Button from "components/common/Button"
 import { CaretDown, TrashSimple } from "phosphor-react"
 import { ChangeEvent } from "react"
+import { useActivityLog } from "../../ActivityLogContext"
 import {
   SupportedQueryParam,
   useActivityLogFilters,
@@ -31,6 +32,7 @@ const CURRENT_DATE = timestampToDateString(CURRENT_TIMESTAMP)
 const DateRangeInput = () => {
   const buttonBgColor = useColorModeValue("white", "blackAlpha.300")
 
+  const { isUserActivityLog } = useActivityLog()
   const { activeFilters, addFilter, updateFilter, removeFilter } =
     useActivityLogFilters()
   const beforeFilter = activeFilters?.find(({ filter }) => filter === "before")
@@ -75,7 +77,10 @@ const DateRangeInput = () => {
       ? `Before ${beforeInputValue}`
       : afterInputValue
       ? `After ${afterInputValue}`
-      : "Last 30 days"
+      : // TODO: if CRM is enabled, we should display "Last 30 days"
+      isUserActivityLog
+      ? "Last 30 days"
+      : "Last 24 hours"
 
   return (
     <Popover matchWidth>
