@@ -1,4 +1,4 @@
-import { Center, Checkbox, HStack, Heading, Spinner, Text } from "@chakra-ui/react"
+import { Center, Checkbox, Heading, HStack, Spinner, Text } from "@chakra-ui/react"
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -7,9 +7,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import Tabs from "components/[guild]/Tabs/Tabs"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
 import CRMTable, { Member } from "components/[guild]/crm/CRMTable"
 import ExportMembers from "components/[guild]/crm/ExportMembers"
 import FilterByRoles, {
@@ -24,8 +23,9 @@ import OrderByColumn from "components/[guild]/crm/OrderByColumn"
 import RoleTags from "components/[guild]/crm/RoleTags"
 import useMembers from "components/[guild]/crm/useMembers"
 import useGuild from "components/[guild]/hooks/useGuild"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
+import Tabs from "components/[guild]/Tabs/Tabs"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { useQueryState } from "hooks/useQueryState"
 import dynamic from "next/dynamic"
 import Head from "next/head"
@@ -142,7 +142,7 @@ const GuildPage = (): JSX.Element => {
   )
 
   const table = useReactTable({
-    data: data ?? [],
+    data: useMemo(() => data ?? [], [data]),
     columns,
     state: {
       columnFilters: parsedColumnFilters,
@@ -204,7 +204,7 @@ const GuildPageWrapper = (): JSX.Element => {
       <Center h="100vh" w="screen">
         <Spinner />
         <Heading fontFamily={"display"} size="md" ml="4" mb="1">
-          Loading guild...
+          Loading CRM...
         </Heading>
       </Center>
     )
