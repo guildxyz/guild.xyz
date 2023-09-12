@@ -1,12 +1,13 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { Web3ReactProvider } from "@web3-react/core"
+import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
+import { AddressLinkProvider } from "components/_app/AddressLinkProvider"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
 import { KeyPairProvider } from "components/_app/KeyPairProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { connectors } from "connectors"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
@@ -78,16 +79,18 @@ const App = ({
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
             <Web3ReactProvider connectors={connectors}>
               <PostHogProvider>
-                <KeyPairProvider>
-                  <Web3ConnectionManager>
-                    <IntercomProvider>
-                      <ExplorerProvider>
-                        <Component {...pageProps} />
-                        <AccountModal />
-                      </ExplorerProvider>
-                    </IntercomProvider>
-                  </Web3ConnectionManager>
-                </KeyPairProvider>
+                <AddressLinkProvider>
+                  <KeyPairProvider>
+                    <Web3ConnectionManager>
+                      <IntercomProvider>
+                        <ExplorerProvider>
+                          <Component {...pageProps} />
+                          <AccountModal />
+                        </ExplorerProvider>
+                      </IntercomProvider>
+                    </Web3ConnectionManager>
+                  </KeyPairProvider>
+                </AddressLinkProvider>
               </PostHogProvider>
             </Web3ReactProvider>
           </SWRConfig>
