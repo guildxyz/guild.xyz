@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Check, Copy } from "phosphor-react"
-
+import useSWRImmutable from "swr/immutable"
 import shortenHex from "utils/shortenHex"
 import { useActivityLog } from "../../ActivityLogContext"
 import { useActivityLogFilters } from "../../ActivityLogFiltersBar/components/ActivityLogFiltersContext"
@@ -30,8 +30,14 @@ const UserTag = forwardRef<Props, "span">(
     const colorScheme = useColorModeValue("alpha", "gray")
 
     const { data } = useActivityLog()
-    const address =
+    const staticAddress =
       addressProp ?? data?.values.users.find((u) => u.id === userId)?.address
+
+    const { data: publicUserData } = useSWRImmutable(
+      staticAddress ? null : `/v2/users/${userId}`
+    )
+
+    const address = staticAddress ?? publicUserData?.address
 
     return (
       <Tag
