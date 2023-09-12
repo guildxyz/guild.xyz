@@ -1,6 +1,6 @@
 import { FormControl, Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
-import FormErrorMessage from "components/common/FormErrorMessage"
 import SocialIcon from "components/[guild]/SocialIcon"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
@@ -32,9 +32,9 @@ const TwitterUrlInput = (): JSX.Element => {
           {...register("socialLinks.TWITTER", {
             required: "This field is required.",
             validate: (v) =>
-              (v.includes("twitter.com") &&
+              ((v.includes("twitter.com") || v.includes("x.com")) &&
                 v.includes("/") &&
-                !!v?.split("/").slice(-1)[0]?.length) ||
+                !!v.split("/").slice(-1)[0]?.length) ||
               "Invalid Twitter URL",
             shouldUnregister: true,
           })}

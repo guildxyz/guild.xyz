@@ -3,9 +3,9 @@ import { keccak256 } from "@ethersproject/keccak256"
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import { Chains, RPC } from "connectors"
 import { randomBytes } from "crypto"
-import useKeyPair from "hooks/useKeyPair"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import { useState } from "react"
@@ -281,4 +281,4 @@ const sign = async ({
 }
 
 export default useSubmit
-export { useSubmitWithSignWithParamKeyPair, sign, useSubmitWithSign }
+export { sign, useSubmitWithSign, useSubmitWithSignWithParamKeyPair }

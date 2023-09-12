@@ -99,7 +99,13 @@ const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
     }
   )
 
-  if (count.accessed >= role.anyOfNum)
+  if (
+    role.logic === "AND"
+      ? count.accessed === hiddenReqsAccessData.length
+      : role.logic === "ANY_OF"
+      ? count.accessed >= role.anyOfNum
+      : count.accessed > 0
+  )
     return (
       <RequiementAccessIndicatorUI
         colorScheme={"green"}

@@ -32,8 +32,8 @@ import { MintGuildPinProvider } from "components/[guild]/Requirements/components
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
+import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
-import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -250,6 +250,7 @@ const GuildPage = (): JSX.Element => {
           <DynamicOnboarding />
         ) : (
           <Tabs
+            sticky
             rightElement={
               activeTabIndex === 0 ? (
                 <HStack>
@@ -286,6 +287,9 @@ const GuildPage = (): JSX.Element => {
                 Events
               </TabButton>
             </PulseMarker>
+            {isAdmin && (
+              <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
+            )}
           </Tabs>
         )}
         {activeTabIndex === 1 && <GuildEvents />}

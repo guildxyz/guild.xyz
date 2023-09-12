@@ -19,6 +19,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
 import BlockExplorerUrl from "../BlockExplorerUrl"
+import { useRequirementContext } from "../RequirementContext"
 import AlphaTag from "./components/AlphaTag"
 import ConnectWalletButton from "./components/buttons/ConnectWalletButton"
 import PurchaseAllowanceButton from "./components/buttons/PurchaseAllowanceButton"
@@ -37,7 +38,10 @@ const PurchaseRequirement = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
   const { account, chainId } = useWeb3React()
-  const { requirement, isOpen, onOpen, onClose } = useGuildCheckoutContext()
+
+  const requirement = useRequirementContext()
+  const { isOpen, onOpen, onClose } = useGuildCheckoutContext()
+
   const { urlName, name } = useGuild()
 
   const {

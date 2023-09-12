@@ -5,7 +5,7 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
-import { useGuildCheckoutContext } from "../GuildCheckoutContex"
+import { useTransactionStatusContext } from "../TransactionStatusContext"
 import TxError from "./components/TxError"
 import TxInProgress from "./components/TxInProgress"
 import TxSuccess from "./components/TxSuccess"
@@ -29,14 +29,11 @@ const TransactionStatusModal = ({
   successText,
   errorComponent,
 }: Props): JSX.Element => {
-  const { isInfoModalOpen, onInfoModalClose, txSuccess, txError, txHash } =
-    useGuildCheckoutContext()
+  const { isTxModalOpen, onTxModalClose, txSuccess, txError, txHash } =
+    useTransactionStatusContext()
 
   return (
-    <Modal
-      isOpen={isInfoModalOpen}
-      onClose={txSuccess ? onInfoModalClose : undefined}
-    >
+    <Modal isOpen={isTxModalOpen} onClose={txSuccess ? onTxModalClose : undefined}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>

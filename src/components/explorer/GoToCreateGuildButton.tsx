@@ -1,6 +1,6 @@
 import { useBreakpointValue } from "@chakra-ui/react"
-import { useIsTabsStuck } from "components/[guild]/Tabs/Tabs"
 import LinkButton from "components/common/LinkButton"
+import { useIsTabsStuck } from "components/[guild]/Tabs"
 import { Plus } from "phosphor-react"
 
 const GoToCreateGuildButton = () => {

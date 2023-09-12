@@ -1,28 +1,18 @@
-import {
-  ButtonGroup,
-  Center,
-  Divider,
-  HStack,
-  Icon,
-  Img,
-  Text,
-  Tooltip,
-  VStack,
-} from "@chakra-ui/react"
+import { ButtonGroup, Divider, HStack, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import GuildAvatar from "components/common/GuildAvatar"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { Chains, RPC } from "connectors"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
-import { LinkBreak, SignIn } from "phosphor-react"
+import { SignIn } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
 import DelegatePopoverWrapper from "./components/delegate/DelegatePopoverWrapper"
+import UserActivityLogPopover from "./components/UserActivityLogPopover"
 
 const Account = (): JSX.Element => {
-  const { account, chainId } = useWeb3React()
-  const { openWalletSelectorModal, openNetworkModal, openAccountModal, triedEager } =
+  const { account } = useWeb3React()
+  const { openWalletSelectorModal, openAccountModal, triedEager } =
     useWeb3ConnectionManager()
 
   const domainName = useResolveAddress(account)
@@ -43,33 +33,19 @@ const Account = (): JSX.Element => {
   const linkedAddressesCount = (addresses?.length ?? 1) - 1
 
   return (
-    <DelegatePopoverWrapper>
-      <ButtonGroup
-        isAttached
-        variant="ghost"
-        alignItems="center"
-        borderRadius={"2xl"}
-      >
-        <AccountButton onClick={openNetworkModal}>
-          <Tooltip label={RPC[Chains[chainId]]?.chainName ?? "Unsupported chain"}>
-            {RPC[Chains[chainId]]?.iconUrls?.[0] ? (
-              <Img src={RPC[Chains[chainId]].iconUrls[0]} boxSize={4} />
-            ) : (
-              <Center>
-                <Icon as={LinkBreak} />
-              </Center>
-            )}
-          </Tooltip>
-        </AccountButton>
-        <Divider
-          orientation="vertical"
-          borderColor="whiteAlpha.300"
-          /**
-           * Space 11 is added to the theme by us and Chakra doesn't recognize it
-           * just by "11" for some reason
-           */
-          h="var(--chakra-space-11)"
-        />
+    <ButtonGroup isAttached variant="ghost" alignItems="center" borderRadius="2xl">
+      <UserActivityLogPopover />
+
+      <Divider
+        orientation="vertical"
+        borderColor="whiteAlpha.300"
+        /**
+         * Space 11 is added to the theme by us and Chakra doesn't recognize it just
+         * by "11" for some reason
+         */
+        h="var(--chakra-space-11)"
+      />
+      <DelegatePopoverWrapper>
         <AccountButton onClick={openAccountModal}>
           <HStack spacing={3}>
             <VStack spacing={0} alignItems="flex-end">
@@ -96,8 +72,8 @@ const Account = (): JSX.Element => {
             <GuildAvatar address={account} size={4} />
           </HStack>
         </AccountButton>
-      </ButtonGroup>
-    </DelegatePopoverWrapper>
+      </DelegatePopoverWrapper>
+    </ButtonGroup>
   )
 }
 
