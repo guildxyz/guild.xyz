@@ -1,5 +1,6 @@
 import { useRouter } from "next/router"
 import { useCallback, useEffect, useState } from "react"
+import tryToParseJSON from "utils/tryToParseJSON"
 
 export const useQueryState = <State extends string>(
   name: string,
@@ -10,7 +11,7 @@ export const useQueryState = <State extends string>(
   const getInitialState = () => {
     const queries = router.query[name]
     const query = Array.isArray(queries) ? queries[0] : queries
-    return query ? (query as State) : defaultState
+    return query ? tryToParseJSON(query) || query : defaultState
   }
 
   const [state, setState] = useState(getInitialState)
@@ -19,10 +20,16 @@ export const useQueryState = <State extends string>(
     if (router.isReady) setState(getInitialState)
   }, [router.isReady])
 
-  const toggle = useCallback(
-    (newState: State) => {
+  const handleSetState = useCallback(
+    (value: State | ((old: State) => State)) => {
+      const newState =
+        value instanceof Function
+          ? value(tryToParseJSON(router.query[name]) || router.query[name])
+          : value
+
       setState(newState)
-      router.query[name] = newState
+      router.query[name] =
+        typeof newState === "object" ? JSON.stringify(newState) : newState
       router.replace({ query: router.query }, undefined, {
         scroll: false,
       })
@@ -30,5 +37,5 @@ export const useQueryState = <State extends string>(
     [name, router]
   )
 
-  return [state, toggle] as const
+  return [state, handleSetState] as const
 }

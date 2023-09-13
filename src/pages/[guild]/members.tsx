@@ -32,7 +32,6 @@ import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { useMemo } from "react"
 import { Visibility } from "types"
-import tryToParseJSON from "utils/tryToParseJSON"
 
 const DynamicActiveStatusUpdates = dynamic(
   () => import("components/[guild]/ActiveStatusUpdates")
@@ -46,16 +45,6 @@ const GuildPage = (): JSX.Element => {
   const hasHiddenRoles = roles?.some((role) => role.visibility === Visibility.HIDDEN)
 
   const [columnFilters, setColumnFilters] = useQueryState("filters", undefined)
-
-  const parsedColumnFilters = useMemo(
-    () => tryToParseJSON(decodeURI(columnFilters)) || [],
-    [columnFilters]
-  )
-
-  const handleSetColumnFilters = (newValue) => {
-    if (!newValue()?.length) return setColumnFilters(null)
-    return setColumnFilters(encodeURI(JSON.stringify(newValue())))
-  }
 
   const { data } = useMembers()
 
@@ -139,12 +128,12 @@ const GuildPage = (): JSX.Element => {
     data: useMemo(() => data ?? [], [data]),
     columns,
     state: {
-      columnFilters: parsedColumnFilters,
+      columnFilters,
     },
     initialState: {
-      columnFilters: parsedColumnFilters,
+      columnFilters,
     },
-    onColumnFiltersChange: handleSetColumnFilters,
+    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
