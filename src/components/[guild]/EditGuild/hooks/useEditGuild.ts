@@ -305,7 +305,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           })
         }
 
-        if (guildUpdateResult.error) {
+        if (guildUpdateResult?.error) {
           showErrorToast({
             error: "Failed to update guild data",
             correlationId: guildUpdateResult.correlationId,
