@@ -13,7 +13,11 @@ type Props = {
   guildId?: string | number
 }
 
-const countFalsy = <Item>(arr: Array<Item>) => arr.filter((req) => !req).length
+const countFailed = (arr: Record<string, string>[]) =>
+  arr.filter((req) => !!req.error).length
+
+const getCorrelationId = (arr: Record<string, string>[]) =>
+  arr.filter((req) => !!req.error)[0]?.correlationId
 
 const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
   const guild = useGuild(guildId)
@@ -94,7 +98,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         fetcherWithSign([
           `/v2/guilds/${id}/admins`,
           { method: "POST", body: adminToCreate },
-        ]).catch(() => null)
+        ]).catch((error) => error)
       )
     )
 
@@ -105,7 +109,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           { method: "DELETE" },
         ])
           .then(() => ({ id: adminToDelete.id }))
-          .catch(() => null)
+          .catch((error) => error)
       )
     )
 
@@ -114,7 +118,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         fetcherWithSign([
           `/v2/guilds/${id}/contacts`,
           { method: "POST", body: contactToCreate },
-        ]).catch(() => null)
+        ]).catch((error) => error)
       )
     )
 
@@ -123,7 +127,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         fetcherWithSign([
           `/v2/guilds/${id}/contacts/${contactToUpdate.id}`,
           { method: "PUT", body: contactToUpdate },
-        ]).catch(() => null)
+        ]).catch((error) => error)
       )
     )
 
@@ -134,7 +138,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           { method: "DELETE" },
         ])
           .then(() => ({ id: contactToDelete.id }))
-          .catch(() => null)
+          .catch((error) => error)
       )
     )
 
@@ -143,7 +147,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         fetcherWithSign([
           `/v2/guilds/${id}/feature-flags`,
           { method: "POST", body: { featureType: featureFlagToCreate } },
-        ]).catch(() => null)
+        ]).catch((error) => error)
       )
     )
 
@@ -154,7 +158,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           { method: "DELETE" },
         ])
           .then(() => ({ flagType: featureFlagToDelete }))
-          .catch(() => null)
+          .catch((error) => error)
       )
     )
 
@@ -162,7 +166,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
       ? fetcherWithSign([
           `/v2/guilds/${id}`,
           { method: "PUT", body: guildData },
-        ]).catch(() => null)
+        ]).catch((error) => error)
       : new Promise<void>((resolve) => resolve())
 
     const [
@@ -188,38 +192,45 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
     return {
       admin: {
         creations: {
-          success: adminCreationResults.filter(Boolean),
-          failedCount: countFalsy(adminCreationResults),
+          success: adminCreationResults.filter((res) => !res.error),
+          failedCount: countFailed(adminCreationResults),
+          correlationId: getCorrelationId(adminCreationResults),
         },
         deletions: {
-          success: adminDeleteResults.filter(Boolean),
-          failedCount: countFalsy(adminDeleteResults),
+          success: adminDeleteResults.filter((res) => !res.error),
+          failedCount: countFailed(adminDeleteResults),
+          correlationId: getCorrelationId(adminDeleteResults),
         },
       },
 
       contacts: {
         creations: {
-          success: contactCreationResults.filter(Boolean),
-          failedCount: countFalsy(contactCreationResults),
+          success: contactCreationResults.filter((res) => !res.error),
+          failedCount: countFailed(contactCreationResults),
+          correlationId: getCorrelationId(contactCreationResults),
         },
         updates: {
-          success: contactUpdateResults.filter(Boolean),
-          failedCount: countFalsy(contactUpdateResults),
+          success: contactUpdateResults.filter((res) => !res.error),
+          failedCount: countFailed(contactUpdateResults),
+          correlationId: getCorrelationId(contactUpdateResults),
         },
         deletions: {
-          success: contactDeleteResults.filter(Boolean),
-          failedCount: countFalsy(contactDeleteResults),
+          success: contactDeleteResults.filter((res) => !res.error),
+          failedCount: countFailed(contactDeleteResults),
+          correlationId: getCorrelationId(contactDeleteResults),
         },
       },
 
       featureFlags: {
         creations: {
-          success: featureFlagCreationResults.filter(Boolean),
-          failedCount: countFalsy(featureFlagCreationResults),
+          success: featureFlagCreationResults.filter((res) => !res.error),
+          failedCount: countFailed(featureFlagCreationResults),
+          correlationId: getCorrelationId(featureFlagCreationResults),
         },
         deletions: {
-          success: featureFlagDeletionResults.filter(Boolean),
-          failedCount: countFalsy(featureFlagDeletionResults),
+          success: featureFlagDeletionResults.filter((res) => !res.error),
+          failedCount: countFailed(featureFlagDeletionResults),
+          correlationId: getCorrelationId(featureFlagDeletionResults),
         },
       },
 
@@ -250,31 +261,55 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         })
       } else {
         if (admin.creations.failedCount > 0) {
-          showErrorToast("Failed to create some admins")
+          showErrorToast({
+            error: "Failed to create some admins",
+            correlationId: admin.creations.correlationId,
+          })
         }
         if (admin.deletions.failedCount > 0) {
-          showErrorToast("Failed to delete some admins")
+          showErrorToast({
+            error: "Failed to delete some admins",
+            correlationId: admin.deletions.correlationId,
+          })
         }
 
         if (contacts.creations.failedCount > 0) {
-          showErrorToast("Failed to create some contacts")
+          showErrorToast({
+            error: "Failed to create some contacts",
+            correlationId: contacts.creations.correlationId,
+          })
         }
         if (contacts.updates.failedCount > 0) {
-          showErrorToast("Failed to update some contacts")
+          showErrorToast({
+            error: "Failed to update some contacts",
+            correlationId: contacts.updates.correlationId,
+          })
         }
         if (contacts.deletions.failedCount > 0) {
-          showErrorToast("Failed to delete some contacts")
+          showErrorToast({
+            error: "Failed to delete some contacts",
+            correlationId: contacts.deletions.correlationId,
+          })
         }
 
         if (featureFlags.creations.failedCount > 0) {
-          showErrorToast("Failed to create some feature flags")
+          showErrorToast({
+            error: "Failed to create some feature flags",
+            correlationId: featureFlags.creations.correlationId,
+          })
         }
         if (featureFlags.deletions.failedCount > 0) {
-          showErrorToast("Failed to delete some feature flags")
+          showErrorToast({
+            error: "Failed to delete some feature flags",
+            correlationId: featureFlags.deletions.correlationId,
+          })
         }
 
-        if (guildUpdateResult === null) {
-          showErrorToast("Failed to update guild data")
+        if (guildUpdateResult.error) {
+          showErrorToast({
+            error: "Failed to update guild data",
+            correlationId: guildUpdateResult.correlationId,
+          })
         }
       }
 

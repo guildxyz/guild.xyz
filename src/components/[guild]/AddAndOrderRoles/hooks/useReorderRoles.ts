@@ -42,7 +42,7 @@ const useReorderRoles = (onClose) => {
         }
       )
     },
-    onError: (err) => showErrorToast(err),
+    onError: (error) => showErrorToast(error),
   })
   return { onSubmit, isLoading }
 }

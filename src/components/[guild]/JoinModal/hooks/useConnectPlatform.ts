@@ -135,7 +135,7 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
         isAutoConnect: undefined,
         platformName,
       }
-      let toastError
+      let toastError: string
 
       if (isAutoConnect) {
         errorObject.isAutoConnect = true
@@ -158,7 +158,11 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
         )
         showPlatformMergeAlert(addressOrDomain, platformName)
       } else {
-        showErrorToast(toastError ?? rawError)
+        showErrorToast(
+          toastError
+            ? { error: toastError, correlationId: rawError.correlationId }
+            : rawError
+        )
       }
     },
   })
