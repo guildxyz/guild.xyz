@@ -11,6 +11,7 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Link from "components/common/Link"
 import Image from "next/image"
 import { ArrowSquareOut, Clock, Users } from "phosphor-react"
@@ -45,6 +46,7 @@ const DiscordEventCard = ({
     LOCALE,
     TO_LOCALE_STRING_OPTIONS
   )
+  const { captureEvent } = usePostHogContext()
   const cardBg = useColorModeValue("white", "gray.700")
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
   const tagBg = useColorModeValue("gray.200", "whiteAlpha.300")
@@ -53,7 +55,7 @@ const DiscordEventCard = ({
     <Flex
       bg={cardBg}
       borderRadius={"2xl"}
-      mb={"10"}
+      mb={"5"}
       shadow={"base"}
       direction={{ base: "column", md: "row" }}
     >
@@ -88,6 +90,14 @@ const DiscordEventCard = ({
           isExternal
           colorScheme="gray"
           fontWeight="medium"
+          onClick={() => {
+            captureEvent("Click on join event button", {
+              eventType: "Discord",
+              eventName: name,
+              userCount,
+              guildId,
+            })
+          }}
         >
           <Button colorScheme="indigo" rightIcon={<ArrowSquareOut />} size="sm">
             Join Discord event
@@ -97,7 +107,7 @@ const DiscordEventCard = ({
       <Box flex={"1"} p={4}>
         <Box borderRadius={"2xl"} overflow="clip">
           <Image
-            src={`https://cdn.discordapp.com/guild-events/${id}/${imageHash}.png`}
+            src={`https://cdn.discordapp.com/guild-events/${id}/${imageHash}.png?size=1024`}
             alt="event cover"
             width={800}
             height={400}

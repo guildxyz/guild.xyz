@@ -18,8 +18,6 @@ const PulseMarker = ({
 }: PropsWithChildren<Props>): JSX.Element => {
   const pulseColor = `var(--chakra-colors-${colorScheme ?? "primary"}-alpha)`
 
-  if (hidden) return <>{children}</>
-
   return (
     <Box position="relative" {...rest}>
       {children}
@@ -30,6 +28,7 @@ const PulseMarker = ({
         top={placement === "top" ? 1 : "auto"}
         boxSize={0}
         pointerEvents={"none"}
+        display={hidden ? "none" : "flex"}
         sx={{
           "@-webkit-keyframes pulse": {
             "0%": {
