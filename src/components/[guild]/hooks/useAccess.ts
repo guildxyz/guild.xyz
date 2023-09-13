@@ -32,7 +32,7 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
       .map((err) => err.errorType)
 
     if (nullAccesseErrors.length)
-      addIntercomSettings({ errorMessages: nullAccesseErrors.join() })
+      addIntercomSettings({ errorMessage: nullAccesseErrors.join() })
   }, [data])
 
   return {
