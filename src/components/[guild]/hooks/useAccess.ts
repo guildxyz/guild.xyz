@@ -29,6 +29,7 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
     const nullAccesseErrors = data
       .filter((roleAccess) => roleAccess.access === null)
       .flatMap((roleAccess) => roleAccess.errors)
+      .filter(Boolean)
       .map((err) => err.errorType)
 
     if (nullAccesseErrors.length)
