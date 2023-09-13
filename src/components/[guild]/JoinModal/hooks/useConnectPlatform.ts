@@ -116,52 +116,64 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
       })
   }
 
-  return useSubmitWithSign<User["platformUsers"][number]>(submit, {
-    onSuccess: (newPlatformUser) => {
-      // captureEvent("Platform connection", { platformName })
-      mutateUser(
-        (prev) => ({
-          ...prev,
-          platformUsers: [...(prev?.platformUsers ?? []), newPlatformUser],
-        }),
-        { revalidate: false }
-      )
-
-      onSuccess?.()
-    },
-    onError: ([platformName, rawError]) => {
-      const errorObject = {
-        error: undefined,
-        isAutoConnect: undefined,
-        platformName,
-      }
-      let toastError
-
-      if (isAutoConnect) {
-        errorObject.isAutoConnect = true
-      }
-
-      if (typeof rawError === "string") {
-        const parsedError = parseConnectError(rawError)
-        errorObject.error = parsedError
-        toastError =
-          typeof parsedError === "string" ? parsedError : parsedError.errors[0].msg
-      } else {
-        errorObject.error = rawError
-      }
-
-      captureEvent("Platform connection error", errorObject)
-
-      if (toastError?.startsWith("Before connecting your")) {
-        const [, addressOrDomain] = toastError.match(
-          /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
+  const { onSubmit, ...rest } = useSubmitWithSign<User["platformUsers"][number]>(
+    submit,
+    {
+      onSuccess: (newPlatformUser) => {
+        // captureEvent("Platform connection", { platformName })
+        mutateUser(
+          (prev) => ({
+            ...prev,
+            platformUsers: [...(prev?.platformUsers ?? []), newPlatformUser],
+          }),
+          { revalidate: false }
         )
-        showPlatformMergeAlert(addressOrDomain, platformName)
-      } else {
-        showErrorToast(toastError ?? rawError)
-      }
-    },
-  })
+
+        onSuccess?.()
+      },
+      onError: ([platformName, rawError]) => {
+        const errorObject = {
+          error: undefined,
+          isAutoConnect: undefined,
+          platformName,
+        }
+        let toastError
+
+        if (isAutoConnect) {
+          errorObject.isAutoConnect = true
+        }
+
+        if (typeof rawError === "string") {
+          const parsedError = parseConnectError(rawError)
+          errorObject.error = parsedError
+          toastError =
+            typeof parsedError === "string" ? parsedError : parsedError.errors[0].msg
+        } else {
+          errorObject.error = rawError
+        }
+
+        captureEvent("Platform connection error", errorObject)
+
+        if (toastError?.startsWith("Before connecting your")) {
+          const [, addressOrDomain] = toastError.match(
+            /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
+          )
+          showPlatformMergeAlert(addressOrDomain, platformName)
+        } else {
+          showErrorToast(toastError ?? rawError)
+        }
+      },
+    }
+  )
+
+  return {
+    ...rest,
+    onSubmit: (data) =>
+      onSubmit({
+        ...data,
+        identityType: data?.platformName === "EMAIL" ? "EMAIL" : "PLATFORM",
+      }),
+  }
 }
 
 export default useConnectPlatform
