@@ -1,10 +1,12 @@
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
-import { useKeyPair } from "components/_app/KeyPairProvider"
+import { getKeyPairFromIdb, useKeyPair } from "components/_app/KeyPairProvider"
 import { sign } from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
+import useSWRImmutable from "swr/immutable"
 
 const SIG_HEADER_NAME = "x-guild-sig"
 const PARAMS_HEADER_NAME = "x-guild-params"
@@ -136,5 +138,38 @@ const useFetcherWithSign = () => {
   }
 }
 
-export { fetcherForSWR, fetcherWithSign, useFetcherWithSign }
+const fetchKeyPairOfUser = ([, userId]: [string, number]) =>
+  getKeyPairFromIdb(userId)
+
+const useFetcherWithSignWithKeyPairOfUser = (address: string) => {
+  const timeInaccuracy = useTimeInaccuracy()
+
+  const user = useUserPublic(address)
+
+  const { data: keyPair } = useSWRImmutable(
+    user?.id ? ["useFetcherWithSignWithKeyPairOfUser", user?.id] : null,
+    fetchKeyPairOfUser
+  )
+
+  return (props) => {
+    const [resource, { signOptions, ...options }] = props
+    return fetcherWithSign(
+      {
+        address,
+        keyPair: keyPair?.keyPair,
+        ts: Date.now() + timeInaccuracy,
+        ...signOptions,
+      },
+      resource,
+      options
+    )
+  }
+}
+
+export {
+  fetcherForSWR,
+  fetcherWithSign,
+  useFetcherWithSign,
+  useFetcherWithSignWithKeyPairOfUser,
+}
 export default fetcher

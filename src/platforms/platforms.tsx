@@ -2,6 +2,7 @@ import { ChakraProps } from "@chakra-ui/react"
 import dynamic from "next/dynamic"
 import {
   DiscordLogo,
+  Envelope,
   GithubLogo,
   GoogleLogo,
   IconProps,
@@ -69,7 +70,10 @@ type PlatformData<
     params: OAuthParams
 
     // Probably only will be needed for Twitter v1. Once Twitter shuts it down, we will remove it, and this field can be removed as well
-    oauthOptionsInitializer?: (redirectUri: string) => Promise<OAuthParams>
+    oauthOptionsInitializer?: (
+      redirectUri: string,
+      address?: string
+    ) => Promise<OAuthParams>
   }
 } & OneOf<
   {
@@ -85,6 +89,21 @@ type PlatformData<
 >
 
 const platforms: Record<PlatformName, PlatformData> = {
+  EMAIL: {
+    icon: Envelope,
+    name: "E-Mail",
+    colorScheme: "gray",
+    gatedEntity: "email",
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
+
+    oauth: {
+      oauthOptionsInitializer: async (_, address) => ({ address }),
+      url: `${
+        typeof window === "undefined" ? "https://guild.xyz" : window.origin
+      }/email-verification`,
+      params: {},
+    },
+  },
   TELEGRAM: {
     icon: TelegramLogo,
     name: "Telegram",

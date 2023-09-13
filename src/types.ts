@@ -86,6 +86,7 @@ type PlatformName =
   | "POAP"
   | "CONTRACT_CALL"
   | "TWITTER_V1"
+  | "EMAIL"
 
 type PlatformUserData = {
   acessToken?: string
