@@ -13,9 +13,10 @@ import { useEffect, useRef, useState } from "react"
 import { Member } from "./CRMTable"
 
 export const identitiesFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-  const { addresses, platformUsers } = row.getValue(columnId) as Member
+  const { userId, addresses, platformUsers } = row.getValue(columnId) as Member
 
   if (
+    userId === value ||
     platformUsers.some((platformAccount) =>
       platformAccount.username?.toLowerCase().includes(value)
     ) ||
