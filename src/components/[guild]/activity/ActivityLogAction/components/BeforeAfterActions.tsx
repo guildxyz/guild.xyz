@@ -25,13 +25,11 @@ const BeforeAfterActions = (): JSX.Element => {
   const previousThemeProps = {
     color: before?.color,
     backgroundImage: before?.backgroundImage,
-    mode: before?.mode,
   }
 
   const currentThemeProps = {
     color: data?.color,
     backgroundImage: data?.backgroundImage,
-    mode: data?.mode,
   }
 
   const previousColorPalette = useColorPalette(

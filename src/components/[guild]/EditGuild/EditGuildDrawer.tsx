@@ -87,7 +87,6 @@ const EditGuildDrawer = ({
           backgroundCss: theme?.backgroundCss,
           backgroundImage: theme?.backgroundImage,
           color: theme?.color,
-          mode: theme?.mode,
         }
       : {},
     showMembers,

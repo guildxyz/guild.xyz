@@ -1,4 +1,4 @@
-import { useColorMode } from "@chakra-ui/react"
+import { useColorMode, useColorModeValue } from "@chakra-ui/react"
 import Color from "color"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useColorPalette from "hooks/useColorPalette"
@@ -25,8 +25,9 @@ const ThemeContext = createContext<{
 
 const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element => {
   const { theme } = useGuild()
-  const { mode: themeMode, backgroundImage } = theme ?? {}
-  const themeColor = theme?.color || (themeMode === "LIGHT" ? "#27272a" : "#18181b")
+  const { backgroundImage } = theme ?? {}
+  const themeColorFallback = useColorModeValue("#27272a", "#18181b")
+  const themeColor = theme?.color || themeColorFallback
 
   const [localThemeColor, setLocalThemeColor] = useState(themeColor)
   const [localBackgroundImage, setLocalBackgroundImage] = useState(backgroundImage)
