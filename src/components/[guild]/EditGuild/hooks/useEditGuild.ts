@@ -253,7 +253,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         contacts.deletions.failedCount <= 0 &&
         featureFlags.creations.failedCount <= 0 &&
         featureFlags.deletions.failedCount <= 0 &&
-        guildUpdateResult
+        (!guildUpdateResult || (!!guildUpdateResult && !guildUpdateResult.error))
       ) {
         toast({
           title: `Guild successfully updated!`,
