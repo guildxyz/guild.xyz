@@ -157,9 +157,8 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         createdRolePlatforms.filter((req) => !!req.error)[0]?.correlationId,
       ]
 
-      // Checking null explicitly for updatedRole, because undefined means that no role update has happened
       if (
-        updatedRole.error &&
+        !updatedRole.error &&
         failedRequirementUpdatesCount <= 0 &&
         failedRequirementCreationsCount <= 0 &&
         failedRolePlatformUpdatesCount <= 0 &&
