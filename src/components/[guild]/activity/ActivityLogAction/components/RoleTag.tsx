@@ -6,12 +6,11 @@ import {
   Tag,
   TagProps,
   Text,
-  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useActivityLog } from "../../ActivityLogContext"
-import { useActivityLogFilters } from "../../ActivityLogFiltersBar/components/ActivityLogFiltersContext"
+import ClickableTagPopover from "./ClickableTagPopover"
 
 type Props = ClickableRoleTagProps & TagProps
 
@@ -69,31 +68,22 @@ type ClickableRoleTagProps = {
 const ClickableRoleTag = ({
   roleId,
   guildId,
-}: ClickableRoleTagProps): JSX.Element => {
-  const filtersContext = useActivityLogFilters()
-  const { activeFilters, addFilter } = filtersContext ?? {}
-  const isDisabled =
-    !filtersContext ||
-    !!activeFilters.find(
-      (f) => f.filter === "roleId" && f.value === roleId.toString()
-    )
-
-  return (
-    <Tooltip label="Filter by role" placement="top" hasArrow isDisabled={isDisabled}>
-      <RoleTag
-        as="button"
-        onClick={
-          isDisabled
-            ? undefined
-            : () => addFilter({ filter: "roleId", value: roleId.toString() })
-        }
-        roleId={roleId}
-        guildId={guildId}
-        cursor={isDisabled ? "default" : "pointer"}
-      />
-    </Tooltip>
-  )
-}
+}: ClickableRoleTagProps): JSX.Element => (
+  <ClickableTagPopover
+    addFilterParam={{
+      filter: "roleId",
+      value: roleId.toString(),
+    }}
+    viewInCRMParam={{
+      id: "roleIds",
+      value: {
+        roleIds: [roleId],
+      },
+    }}
+  >
+    <RoleTag roleId={roleId} guildId={guildId} cursor="pointer" />
+  </ClickableTagPopover>
+)
 
 export default RoleTag
 export { ClickableRoleTag }
