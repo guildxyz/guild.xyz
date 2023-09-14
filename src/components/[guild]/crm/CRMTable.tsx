@@ -201,7 +201,8 @@ const CRMTable = ({ table }: Props) => {
               ) : table.getRowModel().rows.length ? (
                 table
                   .getRowModel()
-                  .rows.map((row) => (
+                  .rows.slice(0, 20)
+                  .map((row) => (
                     <Tr key={row.id} role="group">
                       {row.getVisibleCells().map((cell) => (
                         <Td
