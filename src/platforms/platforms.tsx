@@ -70,10 +70,11 @@ type PlatformData<
     params: OAuthParams
 
     // Probably only will be needed for Twitter v1. Once Twitter shuts it down, we will remove it, and this field can be removed as well
-    oauthOptionsInitializer?: (
-      redirectUri: string,
+    oauthOptionsInitializer?: (params: {
+      redirectUri: string
       address?: string
-    ) => Promise<OAuthParams>
+      emailAddress?: string
+    }) => Promise<OAuthParams>
   }
 } & OneOf<
   {
@@ -97,7 +98,11 @@ const platforms: Record<PlatformName, PlatformData> = {
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
 
     oauth: {
-      oauthOptionsInitializer: async (_, address) => ({ address }),
+      // It would be elegant to pass userId instead, but address is currently a required parameter of the authentication schema
+      oauthOptionsInitializer: async ({ address, emailAddress }) => ({
+        address,
+        ...(emailAddress ? { emailAddress } : {}),
+      }),
       url: `${
         typeof window === "undefined" ? "https://guild.xyz" : window.origin
       }/email-verification`,
@@ -237,9 +242,9 @@ const platforms: Record<PlatformName, PlatformData> = {
             : `${window.origin}/oauth`,
         x_auth_access_type: "read",
       },
-      oauthOptionsInitializer: (callbackUrl) =>
+      oauthOptionsInitializer: ({ redirectUri }) =>
         fetcher(
-          `/api/twitter-request-token?callbackUrl=${encodeURIComponent(callbackUrl)}`
+          `/api/twitter-request-token?callbackUrl=${encodeURIComponent(redirectUri)}`
         ).then((oauth_token) => ({ oauth_token } as any)),
     },
   },

@@ -1,4 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
+import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { randomBytes } from "crypto"
 import usePopupWindow from "hooks/usePopupWindow"
@@ -58,6 +59,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 ): OAuthState<OAuthResponse> & { onOpen: () => Promise<void> } => {
   const { captureEvent } = usePostHogContext()
   const { account } = useWeb3React()
+  const { emails } = useUser()
 
   const { params, url, oauthOptionsInitializer } = platforms[platformName].oauth ?? {
     params: {} as any,
@@ -90,7 +92,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
     if (oauthOptionsInitializer) {
       try {
-        finalOauthParams = await oauthOptionsInitializer(redirectUri, account)
+        finalOauthParams = await oauthOptionsInitializer({
+          redirectUri,
+          address: account,
+          emailAddress: emails?.emailAddress,
+        })
       } catch (error) {
         captureEvent("Failed to generate Twitter 1.0 request token", { error })
         setOauthState({
