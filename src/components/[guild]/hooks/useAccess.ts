@@ -26,11 +26,15 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
   const { addIntercomSettings } = useIntercom()
   useEffect(() => {
     if (!data?.length) return
-    const nullAccesseErrors = data
-      .filter((roleAccess) => roleAccess.access === null)
-      .flatMap((roleAccess) => roleAccess.errors)
-      .filter(Boolean)
-      .map((err) => err.errorType)
+    const nullAccesseErrors = [
+      ...new Set(
+        data
+          .filter((roleAccess) => roleAccess.access === null)
+          .flatMap((roleAccess) => roleAccess.errors)
+          .filter(Boolean)
+          .map((err) => err.errorType)
+      ),
+    ]
 
     if (nullAccesseErrors.length)
       addIntercomSettings({ errorMessage: nullAccesseErrors.join() })
