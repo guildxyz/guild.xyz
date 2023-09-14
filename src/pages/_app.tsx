@@ -9,7 +9,8 @@ import { KeyPairProvider } from "components/_app/KeyPairProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
-import type { AppProps } from "next/app"
+import type { AppContext, AppProps } from "next/app"
+import App from "next/app"
 import { useRouter } from "next/router"
 import Script from "next/script"
 import { IconContext } from "phosphor-react"
@@ -23,7 +24,7 @@ import { fetcherForSWR } from "utils/fetcher"
  */
 import "wicg-inert"
 
-const App = ({
+const CustomApp = ({
   Component,
   pageProps,
 }: AppProps<{ cookies: string }>): JSX.Element => {
@@ -100,6 +101,17 @@ const App = ({
   )
 }
 
-export { getServerSideProps } from "components/_app/Chakra"
+CustomApp.getInitialProps = async (appContext: AppContext) => {
+  // calls page's `getInitialProps` and fills `appProps.pageProps`
+  const appProps = await App.getInitialProps(appContext)
+  const req = appContext.ctx.req
 
-export default App
+  return {
+    pageProps: {
+      ...appProps.pageProps,
+      cookies: req?.headers.cookie ?? "",
+    },
+  }
+}
+
+export default CustomApp
