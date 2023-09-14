@@ -11,17 +11,14 @@ type MonetizePoapParams = {
   contract: string
 }
 
+const monetizePoap = (signedValidation: SignedValdation) =>
+  fetcher("/assets/poap/monetize", signedValidation)
+
 const useMonetizePoap = (callback?: () => void) => {
-  const { mutateGuild, id: guildId } = useGuild()
+  const { mutateGuild } = useGuild()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-
-  const monetizePoap = (signedValidation: SignedValdation) =>
-    fetcher(
-      `/v2/guilds/${guildId}/poaps/:poapId/monetization-contracts`,
-      signedValidation
-    )
 
   return useSubmitWithSign<any>(monetizePoap, {
     onError: (error) => showErrorToast(error?.message ?? error),

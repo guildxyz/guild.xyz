@@ -38,10 +38,7 @@ const PoapPaymentRequirementEditable = ({
   const cancelRef = useRef()
   const removeRef = useRef()
 
-  const { onSubmit, isLoading, response } = useDeleteMonetization(
-    guildPoap?.id,
-    poapContractId
-  )
+  const { onSubmit, isLoading, response } = useDeleteMonetization(poapContractId)
 
   useEffect(() => {
     if (!response) return
