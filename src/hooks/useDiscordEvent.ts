@@ -1,4 +1,5 @@
-import useSWR, { SWRConfiguration } from "swr"
+import { SWRConfiguration } from "swr"
+import useSWRImmutable from "swr/immutable"
 
 type DiscordEvent = {
   id: string
@@ -21,28 +22,25 @@ type DiscordEvent = {
   image?: string
 }
 
-const fallbackData = []
-
 const useDiscordEvents = (
   paltformGuildId: string,
   option?: {
     swrOptions?: SWRConfiguration
   }
 ) => {
-  const { data, isValidating, isLoading, error, mutate } = useSWR(
+  const { data, isValidating, isLoading, error, mutate } = useSWRImmutable(
     paltformGuildId ? `/discord/events/${paltformGuildId}` : null,
     {
-      fallbackData,
       revalidateOnFocus: false,
       ...option?.swrOptions,
     }
   )
 
   return {
-    data: data.events ? ([...data.events] as DiscordEvent[]) : [],
+    data: data?.events ? ([...data.events] as DiscordEvent[]) : null,
     isValidating,
     isLoading,
-    isError: error || data.error,
+    isError: error || data?.error,
     mutate,
   }
 }

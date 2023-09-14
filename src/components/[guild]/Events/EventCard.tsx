@@ -19,8 +19,8 @@ const EventCard = ({ children, modal }: PropsWithChildren<Props>): JSX.Element =
         onClick={() => {
           showModal(true)
         }}
+        style={{ width: "100%" }}
       >
-        {" "}
         {children}
       </div>
       <Modal
