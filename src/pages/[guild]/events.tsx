@@ -1,25 +1,31 @@
-import { Icon, Spinner, Text, VStack, useColorModeValue } from "@chakra-ui/react"
-import DiscordEventCard from "components/[guild]/Events/components/DiscordEventCard"
+import { Icon, Spinner, Text } from "@chakra-ui/react"
+import DiscordEventCard from "components/[guild]/Events/DiscordEventCard"
 import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import PulseMarker from "components/common/PulseMarker"
 import useDiscordEvents from "hooks/useDiscordEvent"
 import useLocalStorage from "hooks/useLocalStorage"
 import { NoteBlank, WarningOctagon } from "phosphor-react"
+import { PropsWithChildren } from "react"
 import { PlatformType } from "types"
+
+const FallBackFrame = (props: PropsWithChildren) => (
+  <Card mb={"10"} paddingY={14} alignItems={"center"}>
+    {props.children}
+  </Card>
+)
 
 const GuildEvents = (): JSX.Element => {
   const { id: guildId, name, imageUrl, urlName, guildPlatforms } = useGuild()
-  const cardBg = useColorModeValue("white", "gray.700")
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [eventsSeen, setEventsSeen] = useLocalStorage<boolean>("eventsSeen", false)
-
-  const cardTextColor = useColorModeValue("gray.400", "whiteAlpha.500")
-  const iconColor = useColorModeValue("gray.200", "whiteAlpha.300")
+  const { isAdmin } = useGuildPermission()
 
   const discordGuildPlatform = guildPlatforms?.find(
     (platform) => platform.platformId === PlatformType.DISCORD
@@ -30,44 +36,31 @@ const GuildEvents = (): JSX.Element => {
   )
 
   const LoadingState = (
-    <VStack
-      bg={cardBg}
-      borderRadius={"2xl"}
-      mb={"10"}
-      paddingY={14}
-      justify={"center"}
-    >
+    <FallBackFrame>
       <Spinner />
-      <Text color={cardTextColor} fontSize="sm">
+      <Text colorScheme="gray" fontSize="sm" mt={1}>
         searching for events...
       </Text>
-    </VStack>
+    </FallBackFrame>
   )
 
   const ErrorState = (
-    <VStack
-      bg={cardBg}
-      borderRadius={"2xl"}
-      mb={"10"}
-      paddingY={14}
-      paddingX={4}
-      justify={"center"}
-    >
-      <Icon as={WarningOctagon} bg={iconColor} rounded="full" h={8} w={8} p={2} />
-      <Text color={cardTextColor} fontSize="sm" align="center">
+    <FallBackFrame>
+      <Icon as={WarningOctagon} rounded="full" h={6} w={6} />
+      <Text colorScheme="gray" fontSize="sm" align="center" mt={1}>
         Something went wrong during the loading of the events.
       </Text>
-    </VStack>
+    </FallBackFrame>
   )
 
   const NoEventsState = (
-    <VStack bg={cardBg} borderRadius={"2xl"} mb={"10"} paddingY={14} paddingX={3}>
-      <Icon as={NoteBlank} bg={iconColor} rounded="full" h={8} w={8} p={2} />
+    <FallBackFrame>
+      <Icon as={NoteBlank} rounded="full" h={6} w={6} />
       <Text fontSize="xl">No events yet.</Text>
-      <Text color={cardTextColor}>
+      <Text colorScheme="gray">
         Your guild has no upcoming event currently or you have no access to Discord
       </Text>
-    </VStack>
+    </FallBackFrame>
   )
 
   return (
@@ -100,7 +93,9 @@ const GuildEvents = (): JSX.Element => {
             Events
           </TabButton>
         </PulseMarker>
-        <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
+        {isAdmin && (
+          <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
+        )}
       </Tabs>
       {isLoading && LoadingState}
       {!isLoading && isError && ErrorState}
@@ -109,16 +104,7 @@ const GuildEvents = (): JSX.Element => {
         !isError &&
         data.length > 0 &&
         data.map((event) => (
-          <DiscordEventCard
-            id={event.id}
-            name={event.name}
-            description={event.description}
-            imageHash={event.image}
-            startAt={event.scheduledStartTimestamp}
-            userCount={event.userCount}
-            guildId={guildId}
-            key={event.id}
-          />
+          <DiscordEventCard event={event} guildId={guildId} key={event.id} />
         ))}
     </Layout>
   )

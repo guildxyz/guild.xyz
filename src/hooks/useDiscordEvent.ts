@@ -48,3 +48,4 @@ const useDiscordEvents = (
 }
 
 export default useDiscordEvents
+export type { DiscordEvent }

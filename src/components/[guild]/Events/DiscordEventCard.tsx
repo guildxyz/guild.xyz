@@ -1,38 +1,33 @@
 import {
   Box,
   Button,
-  Flex,
+  Center,
+  Collapse,
   HStack,
   Heading,
+  IconButton,
   Tag,
   TagLabel,
   TagLeftIcon,
   Text,
   VStack,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Card from "components/common/Card"
 import Link from "components/common/Link"
+import { DiscordEvent } from "hooks/useDiscordEvent"
 import Image from "next/image"
-import { ArrowSquareOut, Clock, Users } from "phosphor-react"
+import { ArrowSquareOut, CaretDown, CaretUp, Clock, Users } from "phosphor-react"
 
 type Props = {
-  name: string
-  startAt: string
-  description?: string
-  imageHash?: string
-  userCount?: number
-  id: string
+  event: DiscordEvent
   guildId: number
 }
 
 const DiscordEventCard = ({
-  name,
-  description,
-  imageHash,
-  startAt,
-  userCount,
-  id,
+  event: { name, description, image, scheduledStartTimestamp, userCount, id },
   guildId,
 }: Props): JSX.Element => {
   const LOCALE = "en-US"
@@ -42,23 +37,19 @@ const DiscordEventCard = ({
     hour: "2-digit",
     minute: "2-digit",
   }
-  const formatedDateTime = new Date(startAt).toLocaleDateString(
+  const formatedDateTime = new Date(scheduledStartTimestamp).toLocaleDateString(
     LOCALE,
     TO_LOCALE_STRING_OPTIONS
   )
   const { captureEvent } = usePostHogContext()
-  const cardBg = useColorModeValue("white", "gray.700")
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
   const tagBg = useColorModeValue("gray.200", "whiteAlpha.300")
+  const { isOpen, onToggle } = useDisclosure({
+    defaultIsOpen: false,
+  })
 
   return (
-    <Flex
-      bg={cardBg}
-      borderRadius={"2xl"}
-      mb={"5"}
-      shadow={"base"}
-      direction={{ base: "column", md: "row" }}
-    >
+    <Card mb={"5"} flexDirection={{ base: "column-reverse", md: "row" }}>
       <VStack alignItems={"flex-start"} flex={"1"} p={5} gap={4}>
         <Heading
           fontSize={"2xl"}
@@ -69,27 +60,43 @@ const DiscordEventCard = ({
           {name}
         </Heading>
         <HStack gap={3} w="full">
-          <Tag bg={tagBg} color={textColor}>
+          <Tag colorScheme="gray">
             <TagLeftIcon as={Clock} boxSize={3.5} />
             <TagLabel> {formatedDateTime}</TagLabel>
           </Tag>
           {userCount && (
-            <Tag bg={tagBg} color={textColor}>
+            <Tag colorScheme="gray">
               <TagLeftIcon as={Users} boxSize={3.5} />
               <TagLabel> {userCount}</TagLabel>
             </Tag>
           )}
         </HStack>
         {description && (
-          <Text fontSize={"sm"} flexGrow={1}>
-            {description}
-          </Text>
+          <Box position={"relative"}>
+            <Collapse startingHeight={"40px"} in={isOpen}>
+              <Text fontSize={"sm"} flexGrow={1}>
+                {description}
+              </Text>
+            </Collapse>
+            <IconButton
+              aria-label="read-more-less"
+              icon={isOpen ? <CaretUp /> : <CaretDown />}
+              onClick={onToggle}
+              variant={"solid"}
+              size={"xs"}
+              position={"absolute"}
+              bottom={-7}
+              left={"50%"}
+              translateX={"-50%"}
+            />
+          </Box>
         )}
         <Link
           href={`https://discord.com/events/${guildId}/${id}`}
           isExternal
           colorScheme="gray"
           fontWeight="medium"
+          mt={3}
           onClick={() => {
             captureEvent("Click on join event button", {
               eventType: "Discord",
@@ -104,17 +111,24 @@ const DiscordEventCard = ({
           </Button>
         </Link>
       </VStack>
-      <Box flex={"1"} p={4}>
-        <Box borderRadius={"2xl"} overflow="clip">
+      {image ? (
+        <Box flex={"1"} p={4}>
           <Image
-            src={`https://cdn.discordapp.com/guild-events/${id}/${imageHash}.png?size=1024`}
+            src={`https://cdn.discordapp.com/guild-events/${id}/${image}.png?size=512`}
             alt="event cover"
             width={800}
-            height={400}
+            height={320}
+            style={{ borderRadius: "1rem", overflow: "clip" }}
           />
         </Box>
-      </Box>
-    </Flex>
+      ) : (
+        <Box flex={"1"} p={4} display={"flex"}>
+          <Center bg={tagBg} flexGrow={1} borderRadius={"2xl"} color={textColor}>
+            no cover image
+          </Center>
+        </Box>
+      )}
+    </Card>
   )
 }
 
