@@ -66,7 +66,7 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
     )
   }
 
-  const { onSubmit, isLoading, signLoadingText } = useTransferOwnership({
+  const { onSubmit, isLoading } = useTransferOwnership({
     onSuccess,
   })
 
@@ -102,7 +102,7 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
               onClick={() => onSubmit({ to: newOwner })}
               colorScheme="red"
               isLoading={isLoading}
-              loadingText={signLoadingText}
+              loadingText={"Loading"}
               isDisabled={!isValidAddress}
             >
               Transfer ownership

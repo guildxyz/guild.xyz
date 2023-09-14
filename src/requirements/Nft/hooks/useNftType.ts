@@ -16,7 +16,7 @@ const useNftType = (
 
   const { data: nftType, isLoading } = useSWR(
     contractAddress && !isNounsContract
-      ? `/util/contractType/${contractAddress}/1/${chain}`
+      ? `/v2/util/chains/${chain}/contracts/${contractAddress}/tokens/1`
       : null,
     {
       revalidateOnFocus: false,

@@ -12,7 +12,7 @@ const useProposals = (
   spaceId?: string
 ): { proposals: Proposal[]; isProposalsLoading: boolean } => {
   const { data, isValidating } = useSWRImmutable<Proposal[]>(
-    `/assets/snapshot/proposal?search=${search ?? ""}`
+    `/v2/third-party/snapshot/proposals?search=${search ?? ""}`
   )
 
   const proposals = spaceId

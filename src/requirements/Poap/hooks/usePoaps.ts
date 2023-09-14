@@ -6,7 +6,7 @@ export const usePoaps = (
   search = ""
 ): { poaps: Array<Poap>; isLoading: boolean } => {
   const { isLoading, data } = useSWRImmutable(
-    search.length > 0 ? `/assets/poap?search=${search}` : null
+    search.length > 0 ? `/v2/third-party/poaps?search=${search}` : null
   )
 
   return {
@@ -21,7 +21,7 @@ export const usePoap = (
   fancyId: string
 ): { poap: Poap; isLoading: boolean; mutatePoap: KeyedMutator<any>; error: any } => {
   const { isLoading, data, mutate, error } = useSWRImmutable<Poap>(
-    fancyId ? `/assets/poap/${fancyId}` : null
+    fancyId ? `/v2/third-party/poaps/${fancyId}` : null
   )
 
   return {

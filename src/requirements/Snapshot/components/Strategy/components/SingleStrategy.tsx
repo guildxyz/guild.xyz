@@ -57,7 +57,7 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
 
   const { data: strategies, isValidating: isLoading } = useSWRImmutable<
     Record<string, SnapshotStrategy>
-  >("/assets/snapshot/strategy")
+  >("/v2/third-party/snapshot/strategies")
 
   const mappedStrategies = useMemo(
     () =>

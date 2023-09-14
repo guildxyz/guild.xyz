@@ -1,19 +1,27 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import fetcher from "utils/fetcher"
+import useSubmit from "hooks/useSubmit"
+import { useFetcherWithSign } from "utils/fetcher"
 
 const useTransferOwnership = ({ onSuccess }) => {
   const { id } = useGuild()
-  const submit = async (signedValidation: SignedValdation) =>
-    fetcher(`/guild/${id}/ownership`, {
-      method: "PUT",
-      ...signedValidation,
-    })
+  const fetcherWithSign = useFetcherWithSign()
+  const submit = async ({ to }: { to: string }) =>
+    fetcherWithSign([
+      `/v2/guilds/${id}/admins/${to}/ownership`,
+      {
+        method: "PUT",
+        body: {
+          isOwner: true,
+        },
+        signOptions: {
+          forcePrompt: true,
+        },
+      },
+    ])
   const showErrorToast = useShowErrorToast()
 
-  return useSubmitWithSign<any>(submit, {
-    forcePrompt: true,
+  return useSubmit(submit, {
     onSuccess: (res) => {
       if (onSuccess) onSuccess(res)
     },

@@ -29,8 +29,8 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
   )
 
   const submit = (signedValidation: SignedValdation) =>
-    fetcher(`/guild/${id}/platform/${guildPlatform.id}`, {
-      method: "PATCH",
+    fetcher(`/v2/guilds/${id}/guild-platform/${guildPlatform.id}`, {
+      method: "PUT",
       ...signedValidation,
     })
 

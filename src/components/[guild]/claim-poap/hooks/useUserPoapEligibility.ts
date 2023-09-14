@@ -11,7 +11,7 @@ const useUserPoapEligibility = (poapIdentifier: number) => {
 
   const { data, isValidating, mutate } = useSWR(
     account && poapIdentifier
-      ? `/assets/poap/checkUserPoapEligibility/${poapIdentifier}/${account}`
+      ? `/v2/guilds/:guildId/poaps/${poapIdentifier}/users/${account}/eligibility`
       : null,
     {
       revalidateOnFocus: false,

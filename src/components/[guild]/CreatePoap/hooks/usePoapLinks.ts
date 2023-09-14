@@ -10,7 +10,7 @@ const usePoapLinks = (
   mutate: KeyedMutator<any>
 } => {
   const { account } = useWeb3React()
-  const { poaps } = useGuild()
+  const { poaps, id: guildId } = useGuild()
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapId)
 
   const {
@@ -18,7 +18,7 @@ const usePoapLinks = (
     isValidating: isPoapLinksLoading,
     mutate,
   } = useSWR(
-    poapId ? `/assets/poap/links/${poapId}` : null
+    poapId ? `/v2/guilds/${guildId}/poaps/${poapId}/links` : null
     // {
     //   refreshInterval:
     //     account && guildPoap?.expiryDate > Date.now() / 1000 ? 30000 : 0,

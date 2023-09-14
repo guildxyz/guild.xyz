@@ -18,11 +18,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!guildId || !poapId)
     return res.status(400).json({ error: "Missing parameters" })
 
-  const guild: Guild = await fetcher(`/guild/${guildId}`).catch((_) => ({}))
+  const guild: Guild = await fetcher(`/v2/guilds/${guildId}`).catch((_) => ({}))
 
   if (!guild.id) return res.status(404).json({ error: "Guild not found." })
 
-  const poap = guild.poaps?.find((p) => p.id.toString() === poapId)
+  const guildPoaps: Guild["poaps"] = await fetcher(
+    `/v2/guilds/${guildId}/poaps`
+  ).catch((_) => ({}))
+
+  const poap = guildPoaps?.find((p) => p.id.toString() === poapId)
 
   if (!poap) return res.status(404).json({ error: "POAP not found." })
 
@@ -38,7 +42,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }/api/poap/get-vault/${poapContract.vaultId}/${poapContract.chainId}`
       ).then(async (data: GetVaultResponse) => {
         const tokenData = await fetcher(
-          `/util/symbol/${data.token}/${Chains[poapContract.chainId]}`
+          `/v2/util/chains/${Chains[poapContract.chainId]}/contracts/${
+            data.token
+          }/symbol`
         )
         const decimals =
           data.token === "0x0000000000000000000000000000000000000000"

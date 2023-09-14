@@ -49,7 +49,7 @@ const NftRequirement = (props: RequirementProps) => {
   const { data: guildPinImageCID } = useSWRImmutable(
     isGuildPin
       ? // Fallback to "Our Guild" pin image
-        `/assets/guildPins/image?guildId=${guildIdAttribute ?? 1985}&guildAction=0`
+        `/v2/guilds/${guildIdAttribute ?? 1985}/pin?guildAction=0`
       : null
   )
   const { name: guildPinGuildName } = useGuild(guildIdAttribute ?? "")

@@ -11,7 +11,7 @@ const usePoapEventDetails = (
   isPoapEventDetailsLoading: boolean
   mutatePoapEventDetails: KeyedMutator<any>
 } => {
-  const { guildPlatforms } = useGuild()
+  const { guildPlatforms, id: guildId } = useGuild()
   const { poapData } = useCreatePoapContext()
 
   const hasDiscordGuildPlatform = guildPlatforms?.some(
@@ -24,7 +24,7 @@ const usePoapEventDetails = (
 
   const { data, isValidating, mutate } = useSWRImmutable(
     shouldFetch
-      ? `/assets/poap/eventDetails/${poapData?.id ?? poapIdentifier}`
+      ? `/v2/guilds/${guildId}/poaps/${poapData?.id ?? poapIdentifier}/event-details`
       : null
   )
 

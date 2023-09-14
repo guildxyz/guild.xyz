@@ -103,9 +103,7 @@ const MintGuildPinProviderComponent = ({
     isValidating: isImageValidating,
     error,
   } = useSWRImmutable(
-    shouldFetchImage
-      ? `/assets/guildPins/image?guildId=${id}&guildAction=${pinType}`
-      : null
+    shouldFetchImage ? `/v2/guilds/${id}/pin?guildAction=${pinType}` : null
   )
 
   const [mintedTokenId, setMintedTokenId] = useState<number>(null)
