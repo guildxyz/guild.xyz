@@ -40,8 +40,7 @@ const useUploadMintLinks = (poapId: number, { onSuccess }: UseSubmitOptions) => 
   const { onSubmit, ...rest } = useSubmitWithSign<UploadMintLinksData>(
     uploadMintLinks,
     {
-      onError: (error) =>
-        showErrorToast(error?.error?.message ?? error?.error ?? error),
+      onError: (error) => showErrorToast(error),
       onSuccess: () => {
         toast({
           title: "Successfully uploaded mint links!",

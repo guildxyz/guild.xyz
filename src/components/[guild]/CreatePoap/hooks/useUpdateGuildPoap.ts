@@ -24,7 +24,7 @@ const useUpdateGuildPoap = (
     })
 
   return useSubmitWithSign<GuildPoap>(updateGuildPoap, {
-    onError: (error) => showErrorToast(error?.error?.message ?? error?.error),
+    onError: (error) => showErrorToast(error),
     onSuccess: async (newPoap) => {
       mutatePoapEventDetails({
         ...newPoap,

@@ -30,7 +30,7 @@ const BlockExplorerUrl = ({
 
   const url =
     (type === "ERC1155" || type === "ERC721") && data?.id
-      ? `${blockExplorer}/nft/${addressProp ?? address}/${data?.id}`
+      ? `${blockExplorer}/token/${addressProp ?? address}?a=${data?.id}`
       : `${blockExplorer}/${path}/${addressProp ?? address}`
 
   return (

@@ -1,13 +1,9 @@
-const tryToParseJSON = (jsonString) => {
+const tryToParseJSON = (jsonString: any) => {
   try {
-    const obj = JSON.parse(jsonString)
-
-    if (obj && typeof obj === "object") {
-      return obj
-    }
-  } catch (e) {}
-
-  return false
+    return jsonString === "undefined" ? undefined : JSON.parse(jsonString ?? "")
+  } catch (e) {
+    return undefined
+  }
 }
 
 export default tryToParseJSON

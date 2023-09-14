@@ -18,12 +18,12 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect-v2"
-import useUser from "components/[guild]/hooks/useUser"
-import { deleteKeyPairFromIdb } from "components/_app/KeyPairProvider"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
+import useUser from "components/[guild]/hooks/useUser"
+import { deleteKeyPairFromIdb } from "components/_app/KeyPairProvider"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
@@ -64,7 +64,7 @@ const AccountModal = () => {
       window.localStorage.removeItem(key)
     })
 
-    deleteKeyPairFromIdb(id).catch(() => {})
+    deleteKeyPairFromIdb(id)?.catch(() => {})
   }
 
   const domain = useResolveAddress(account)

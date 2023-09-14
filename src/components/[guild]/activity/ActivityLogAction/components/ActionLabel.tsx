@@ -55,6 +55,13 @@ const ActionLabel = (): JSX.Element => {
                 )}
               </>
             )
+          case ACTION.DeleteGuild:
+            return (
+              <>
+                <Text as="span">{capitalizedName}</Text>
+                <GuildTag guildId={ids.guild} />
+              </>
+            )
           case ACTION.AddAdmin:
           case ACTION.RemoveAdmin:
             return (

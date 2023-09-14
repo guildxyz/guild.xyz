@@ -89,7 +89,7 @@ const FilterTag = ({
   } = combobox.connect(state, send, normalizeProps)
 
   useEffect(() => {
-    if (!isFocused) return
+    if (!isFocused || !!value) return
     // Opening the suggestions dropdown
     send({ type: "CLICK_INPUT" })
   }, [isFocused])
