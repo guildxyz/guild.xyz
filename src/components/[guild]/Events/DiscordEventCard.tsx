@@ -56,20 +56,20 @@ const DiscordEventCard = ({
     >
       <VStack alignItems={"flex-start"} flex={"1"} p={5} gap={4}>
         <Heading
-          fontSize={"2xl"}
+          fontSize={"xl"}
           fontFamily={"Dystopian"}
           fontWeight={"bold"}
           mb={-1}
         >
           {name}
         </Heading>
-        <HStack gap={3} w="full">
-          <Tag colorScheme="gray">
+        <HStack gap={2} w="full">
+          <Tag>
             <TagLeftIcon as={Clock} boxSize={3.5} />
             <TagLabel> {formatedDateTime}</TagLabel>
           </Tag>
           {userCount && (
-            <Tag colorScheme="gray">
+            <Tag>
               <TagLeftIcon as={Users} boxSize={3.5} />
               <TagLabel> {userCount}</TagLabel>
             </Tag>
