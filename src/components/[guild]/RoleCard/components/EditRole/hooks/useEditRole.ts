@@ -158,7 +158,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
       ]
 
       if (
-        !updatedRole.error &&
+        !updatedRole?.error &&
         failedRequirementUpdatesCount <= 0 &&
         failedRequirementCreationsCount <= 0 &&
         failedRolePlatformUpdatesCount <= 0 &&
