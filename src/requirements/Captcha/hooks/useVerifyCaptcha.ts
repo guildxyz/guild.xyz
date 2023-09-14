@@ -18,7 +18,11 @@ const useVerifyCaptcha = () => {
   const { mutate } = useAccess()
 
   return useSubmit(verifycCaptcha, {
-    onError: () => showErrorToast("Couldn't verify CAPTCHA"),
+    onError: (error) => {
+      const errorMsg = "Couldn't verify CAPTCHA"
+      const correlationId = error.correlationId
+      showErrorToast(correlationId ? { error: errorMsg, correlationId } : errorMsg)
+    },
     onSuccess: () => {
       mutate()
       toast({

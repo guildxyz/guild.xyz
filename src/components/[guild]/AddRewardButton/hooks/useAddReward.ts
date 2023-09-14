@@ -19,9 +19,9 @@ const useAddReward = (onSuccess?) => {
     fetcher(`/v2/guilds/${id}/guild-platforms`, signedValdation)
 
   return useSubmitWithSign<GuildPlatform & { roleIds?: number[] }>(fetchData, {
-    onError: (err) => {
-      showErrorToast(err)
-      captureEvent("useAddReward error", { ...postHogOptions, error: err })
+    onError: (error) => {
+      showErrorToast(error)
+      captureEvent("useAddReward error", { ...postHogOptions, error })
     },
     onSuccess: () => {
       toast({ status: "success", title: "Reward successfully added" })

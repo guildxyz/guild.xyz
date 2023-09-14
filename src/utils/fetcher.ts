@@ -72,16 +72,21 @@ const fetcher = async (
         location?.reload()
       }
 
-      if (isGuildApiCall) {
+      if (isGuildApiCall || resource.includes(process.env.NEXT_PUBLIC_API)) {
         const error = res.errors?.[0]
+
         const errorMsg = error
-          ? `${error.msg}${error.param ? ` : ${error.param}` : ""}`
+          ? `${error.msg}${error.param ? `: ${error.param}` : ""}`
           : res
 
         const correlationId = response.headers.get("X-Correlation-ID")
         if (correlationId) pushToIntercomSetting("correlationId", correlationId)
 
-        return Promise.reject(errorMsg)
+        // Some validators may return res.message, so we can't use res.errors.[0].msg in every case
+        return Promise.reject({
+          error: typeof errorMsg !== "string" ? errorMsg?.message : errorMsg,
+          correlationId,
+        })
       }
 
       return Promise.reject(res)
