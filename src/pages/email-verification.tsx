@@ -106,7 +106,7 @@ const EmailVerificationPage = () => {
                   value={field.value}
                   onChange={(value) => field.onChange(value)}
                 >
-                  <PinInputField />
+                  <PinInputField autoFocus />
                   <PinInputField />
                   <PinInputField />
                   <PinInputField />
@@ -126,6 +126,7 @@ const EmailVerificationPage = () => {
             <FormControl>
               <FormLabel>E-Mail address</FormLabel>
               <Input
+                autoFocus
                 type="email"
                 {...register("email", {
                   required: true,
