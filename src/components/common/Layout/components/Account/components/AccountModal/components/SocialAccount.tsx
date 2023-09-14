@@ -37,11 +37,13 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
   const { icon, name, colorScheme } = platforms[type]
 
   const circleBorderColor = useColorModeValue("gray.100", "gray.700")
-  const { platformUsers } = useUser()
+  const { platformUsers, emails } = useUser()
   const accesses = useAccess()
   const platformUser = platformUsers?.find(
     (platform) => platform.platformName.toString() === type
   )
+
+  const email = type === "EMAIL" ? emails : null
 
   const isReconnect =
     !!accesses &&
@@ -52,10 +54,14 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
       )
     )
 
+  const username = email
+    ? email?.emailAddress
+    : platformUser?.platformUserData?.username
+
   return (
     <>
       <MotionHStack layout spacing={3} alignItems="center" w="full">
-        {!platformUser ? (
+        {!platformUser || !!email ? (
           <Avatar
             icon={<Icon as={icon} boxSize={4} color="white" />}
             boxSize={7}
@@ -74,8 +80,14 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
           </Avatar>
         )}
         <Text fontWeight="bold" flex="1" noOfLines={1} fontSize="sm">
-          {platformUser?.platformUserData?.username ??
+          {username ??
             `${platforms[type].name} ${!!platformUser ? "connected" : ""}`}
+          {email?.pending && (
+            <Text color={"gray"} display={"inline"}>
+              {" "}
+              (pending)
+            </Text>
+          )}
           {type === "TWITTER_V1" ? (
             <Text color={"gray"} display={"inline"}>
               {" "}
@@ -85,7 +97,12 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
         </Text>
         {type === "TWITTER_V1" ? <TwitterV1Tooltip /> : null}
         {!platformUser ? (
-          <ConnectPlatform type={type} colorScheme={colorScheme} />
+          // || ("pending" in platformUser && platformUser.pending)
+          <ConnectPlatform
+            type={type}
+            colorScheme={colorScheme}
+            connectLabel={email?.pending ? "Verify" : undefined}
+          />
         ) : (
           <HStack spacing="1">
             {isReconnect && (
@@ -109,7 +126,12 @@ export const TwitterV1Tooltip = () => (
   </Tooltip>
 )
 
-const ConnectPlatform = ({ type, colorScheme, isReconnect = false }) => {
+const ConnectPlatform = ({
+  type,
+  colorScheme,
+  isReconnect = false,
+  connectLabel = "Connect",
+}) => {
   const toast = useToast()
   const { mutate: mutateAccesses } = useAccess()
 
@@ -136,7 +158,7 @@ const ConnectPlatform = ({ type, colorScheme, isReconnect = false }) => {
       variant={isReconnect ? "subtle" : "solid"}
       size="sm"
     >
-      {isReconnect ? "Reconnect" : "Connect"}
+      {isReconnect ? "Reconnect" : connectLabel}
     </Button>
   )
 }

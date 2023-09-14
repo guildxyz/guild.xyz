@@ -124,6 +124,12 @@ type User = {
 
   // Should be removed once we use only v2 API
   addressProviders?: Record<string, AddressConnectionProvider>
+
+  emails: {
+    emailAddress: string
+    pending: boolean
+    createdAt: Date
+  }
 }
 
 type BaseUser = {
