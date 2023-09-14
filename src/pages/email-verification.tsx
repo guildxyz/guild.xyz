@@ -31,33 +31,26 @@ const EmailVerificationPage = () => {
   })
   const { field } = useController({ control, name: "code" })
 
-  const dummySubmitVerificationRequest = async () => {
-    const profile = await fetcherWithSign([
-      `/v2/users/${address}/profile`,
-      { method: "GET" },
+  const submitVerificationRequest = async (emailAddress: string) => {
+    const verificationResponse = await fetcherWithSign([
+      `/v2/email/verifications`,
+      { method: "POST", body: { emailAddress } },
     ])
 
-    console.log("Sign PoC:", { profile })
-
-    const code = new Uint8Array(6)
-    self.crypto.getRandomValues(code)
-
-    return {
-      code: [...code].map((byte) => Math.floor((byte / 256) * 10)),
-    }
+    return verificationResponse
   }
 
   const {
     onSubmit: onSubmitVerificationRequest,
     isLoading: isVerificationRequestLoading,
     response: verificationRequestResponse,
-  } = useSubmit(dummySubmitVerificationRequest, {
+  } = useSubmit(submitVerificationRequest, {
     onSuccess: (resp) => console.log("resp", resp),
   })
 
-  const submitVerificationRequest = handleSubmit((formValues) => {
+  const handleSubmitVerificationRequest = handleSubmit((formValues) => {
     console.log("TODO: Send request with email:", formValues.email)
-    onSubmitVerificationRequest()
+    onSubmitVerificationRequest(formValues.email)
   })
 
   const { from, csrfToken } =
@@ -122,7 +115,7 @@ const EmailVerificationPage = () => {
             </Flex>
           </VStack>
         ) : (
-          <VStack spacing={7} as="form" onSubmit={submitVerificationRequest}>
+          <VStack spacing={7} as="form" onSubmit={handleSubmitVerificationRequest}>
             <FormControl>
               <FormLabel>E-Mail address</FormLabel>
               <Input
