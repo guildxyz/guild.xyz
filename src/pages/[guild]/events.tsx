@@ -1,5 +1,6 @@
-import { Icon, Spinner, Text } from "@chakra-ui/react"
+import { Icon, Spinner, Text, VStack } from "@chakra-ui/react"
 import DiscordEventCard from "components/[guild]/Events/DiscordEventCard"
+import EventCard from "components/[guild]/Events/EventCard"
 import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -100,12 +101,25 @@ const GuildEvents = (): JSX.Element => {
       {isLoading && LoadingState}
       {!isLoading && isError && ErrorState}
       {!isLoading && !isError && data.length === 0 && NoEventsState}
-      {!isLoading &&
-        !isError &&
-        data.length > 0 &&
-        data.map((event) => (
-          <DiscordEventCard event={event} guildId={guildId} key={event.id} />
-        ))}
+      {!isLoading && !isError && data.length > 0 && (
+        <VStack gap={5}>
+          {data.map((event) => (
+            <EventCard
+              key={event.id}
+              modal={
+                <DiscordEventCard
+                  event={event}
+                  guildId={guildId}
+                  showFullDescription
+                  flexDirectionMd="column-reverse"
+                />
+              }
+            >
+              <DiscordEventCard event={event} guildId={guildId} cursorPointer />
+            </EventCard>
+          ))}
+        </VStack>
+      )}
     </Layout>
   )
 }

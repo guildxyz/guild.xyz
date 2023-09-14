@@ -5,30 +5,34 @@ import {
   Collapse,
   HStack,
   Heading,
-  IconButton,
   Tag,
   TagLabel,
   TagLeftIcon,
   Text,
   VStack,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import { DiscordEvent } from "hooks/useDiscordEvent"
 import Image from "next/image"
-import { ArrowSquareOut, CaretDown, CaretUp, Clock, Users } from "phosphor-react"
+import { ArrowSquareOut, Clock, Users } from "phosphor-react"
 
 type Props = {
   event: DiscordEvent
   guildId: number
+  showFullDescription?: boolean
+  flexDirectionMd?: "row" | "column-reverse"
+  cursorPointer?: boolean
 }
 
 const DiscordEventCard = ({
   event: { name, description, image, scheduledStartTimestamp, userCount, id },
+  flexDirectionMd = "row",
   guildId,
+  showFullDescription,
+  cursorPointer,
 }: Props): JSX.Element => {
   const LOCALE = "en-US"
   const TO_LOCALE_STRING_OPTIONS: Intl.DateTimeFormatOptions = {
@@ -44,12 +48,12 @@ const DiscordEventCard = ({
   const { captureEvent } = usePostHogContext()
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
   const tagBg = useColorModeValue("gray.200", "whiteAlpha.300")
-  const { isOpen, onToggle } = useDisclosure({
-    defaultIsOpen: false,
-  })
 
   return (
-    <Card mb={"5"} flexDirection={{ base: "column-reverse", md: "row" }}>
+    <Card
+      flexDirection={{ base: "column-reverse", md: flexDirectionMd }}
+      cursor={cursorPointer ? "pointer" : "default"}
+    >
       <VStack alignItems={"flex-start"} flex={"1"} p={5} gap={4}>
         <Heading
           fontSize={"2xl"}
@@ -72,23 +76,12 @@ const DiscordEventCard = ({
           )}
         </HStack>
         {description && (
-          <Box position={"relative"}>
-            <Collapse startingHeight={"40px"} in={isOpen}>
+          <Box>
+            <Collapse startingHeight={"40px"} in={showFullDescription}>
               <Text fontSize={"sm"} flexGrow={1}>
                 {description}
               </Text>
             </Collapse>
-            <IconButton
-              aria-label="read-more-less"
-              icon={isOpen ? <CaretUp /> : <CaretDown />}
-              onClick={onToggle}
-              variant={"solid"}
-              size={"xs"}
-              position={"absolute"}
-              bottom={-7}
-              left={"50%"}
-              translateX={"-50%"}
-            />
           </Box>
         )}
         <Link
@@ -97,7 +90,8 @@ const DiscordEventCard = ({
           colorScheme="gray"
           fontWeight="medium"
           mt={3}
-          onClick={() => {
+          onClick={(event) => {
+            event.stopPropagation()
             captureEvent("Click on join event button", {
               eventType: "Discord",
               eventName: name,
