@@ -13,7 +13,7 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useController, useForm, useWatch } from "react-hook-form"
 import { useFetcherWithSignWithKeyPairOfUser } from "utils/fetcher"
 import timeoutPromise from "utils/timeoutPromise"
@@ -29,6 +29,8 @@ const steps = {
 const EmailVerificationPage = () => {
   const router = useRouter()
   const address = router?.query?.address?.toString()
+  const pendingEmailAddress = router?.query?.emailAddress?.toString()
+
   const fetcherWithSign = useFetcherWithSignWithKeyPairOfUser(address)
 
   const { register, handleSubmit, control, setValue } = useForm<{
@@ -43,14 +45,19 @@ const EmailVerificationPage = () => {
 
   const [activeStep, setActiveStep] = useState(steps.EMAIL_ENTRY)
 
-  const submitVerificationRequest = async (emailAddress: string) => {
+  useEffect(() => {
+    if (!pendingEmailAddress) return
+    setValue("email", pendingEmailAddress)
     setActiveStep(steps.PIN_ENTRY)
-    return true
+  }, [pendingEmailAddress])
+
+  const submitVerificationRequest = async (emailAddress: string) => {
     const verificationResponse = await fetcherWithSign([
       `/v2/email/verifications`,
       { method: "POST", body: { emailAddress } },
     ])
 
+    setActiveStep(steps.PIN_ENTRY)
     return verificationResponse
   }
 
@@ -154,7 +161,14 @@ const EmailVerificationPage = () => {
                   value={field.value}
                   onChange={(value) => field.onChange(value)}
                 >
-                  <PinInputField autoFocus />
+                  <PinInputField
+                    ref={(ref) => {
+                      // Couldn't find a better way to have a working autofocus
+                      if (!!ref && !ref.value) {
+                        ref?.focus()
+                      }
+                    }}
+                  />
                   <PinInputField />
                   <PinInputField />
                   <PinInputField />
