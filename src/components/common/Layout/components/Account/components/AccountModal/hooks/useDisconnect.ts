@@ -19,7 +19,7 @@ const useDisconnect = (onSuccess?: () => void) => {
     const { platformName } = JSON.parse(signedValidation.signedPayload)
 
     return fetcher(
-      `/v2/users/${userId}/platform-users/${PlatformType[platformName]}`,
+      `/v2/users/${userId}/platform-users/${PlatformType[platformName] ?? 0}`,
       {
         method: "DELETE",
         ...signedValidation,
