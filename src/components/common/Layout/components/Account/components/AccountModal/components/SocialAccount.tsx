@@ -96,11 +96,11 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
           ) : null}
         </Text>
         {type === "TWITTER_V1" ? <TwitterV1Tooltip /> : null}
-        {!platformUser ? (
+        {!platformUser && (!email?.createdAt || email?.pending) ? (
           // || ("pending" in platformUser && platformUser.pending)
           <ConnectPlatform
             type={type}
-            colorScheme={colorScheme}
+            colorScheme={email?.pending ? "orange" : colorScheme}
             connectLabel={email?.pending ? "Verify" : undefined}
           />
         ) : (

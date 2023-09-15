@@ -5,7 +5,7 @@ import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
-import { PlatformName, User } from "types"
+import { OneOf, PlatformName, User } from "types"
 import fetcher from "utils/fetcher"
 import useOauthPopupWindow, { AuthLevel } from "./useOauthPopupWindow"
 
@@ -81,7 +81,24 @@ const useConnectPlatform = (
   }
 }
 
-const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
+type EmailConnectRepsonse = {
+  identityType: PlatformName
+  identity: {
+    id: number
+    emailAddress: string
+    domain: string
+    primary: boolean
+    createdAt: Date
+    identityId: number
+    emailVerificationCodeId: number
+  }
+}
+
+const useConnect = (
+  onSuccess?: () => void,
+  isAutoConnect = false,
+  onError?: (error: any) => void
+) => {
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
   const { showPlatformMergeAlert } = useWeb3ConnectionManager()
@@ -116,11 +133,25 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
       })
   }
 
-  const { onSubmit, ...rest } = useSubmitWithSign<User["platformUsers"][number]>(
-    submit,
-    {
-      onSuccess: (newPlatformUser) => {
-        // captureEvent("Platform connection", { platformName })
+  const { onSubmit, ...rest } = useSubmitWithSign<
+    OneOf<User["platformUsers"][number], EmailConnectRepsonse>
+  >(submit, {
+    onSuccess: (newPlatformUser = {} as any) => {
+      // captureEvent("Platform connection", { platformName })
+
+      if ("identityType" in newPlatformUser) {
+        mutateUser(
+          (prev) => ({
+            ...prev,
+            emails: {
+              emailAddress: newPlatformUser?.identity?.emailAddress,
+              createdAt: newPlatformUser?.identity?.createdAt,
+              pending: false,
+            },
+          }),
+          { revalidate: false }
+        )
+      } else {
         mutateUser(
           (prev) => ({
             ...prev,
@@ -128,43 +159,45 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
           }),
           { revalidate: false }
         )
+      }
 
-        onSuccess?.()
-      },
-      onError: ([platformName, rawError]) => {
-        const errorObject = {
-          error: undefined,
-          isAutoConnect: undefined,
-          platformName,
-        }
-        let toastError
+      onSuccess?.()
+    },
+    onError: ([platformName, rawError]) => {
+      const errorObject = {
+        error: undefined,
+        isAutoConnect: undefined,
+        platformName,
+      }
+      let toastError
 
-        if (isAutoConnect) {
-          errorObject.isAutoConnect = true
-        }
+      if (isAutoConnect) {
+        errorObject.isAutoConnect = true
+      }
 
-        if (typeof rawError === "string") {
-          const parsedError = parseConnectError(rawError)
-          errorObject.error = parsedError
-          toastError =
-            typeof parsedError === "string" ? parsedError : parsedError.errors[0].msg
-        } else {
-          errorObject.error = rawError
-        }
+      if (typeof rawError === "string") {
+        const parsedError = parseConnectError(rawError)
+        errorObject.error = parsedError
+        toastError =
+          typeof parsedError === "string" ? parsedError : parsedError.errors[0].msg
+      } else {
+        errorObject.error = rawError
+      }
 
-        captureEvent("Platform connection error", errorObject)
+      captureEvent("Platform connection error", errorObject)
 
-        if (toastError?.startsWith("Before connecting your")) {
-          const [, addressOrDomain] = toastError.match(
-            /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
-          )
-          showPlatformMergeAlert(addressOrDomain, platformName)
-        } else {
-          showErrorToast(toastError ?? rawError)
-        }
-      },
-    }
-  )
+      if (toastError?.startsWith("Before connecting your")) {
+        const [, addressOrDomain] = toastError.match(
+          /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
+        )
+        showPlatformMergeAlert(addressOrDomain, platformName)
+      } else {
+        showErrorToast(toastError ?? rawError)
+      }
+
+      onError?.(rawError)
+    },
+  })
 
   return {
     ...rest,

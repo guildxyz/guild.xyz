@@ -65,17 +65,20 @@ type PlatformData<
   }>
   PlatformPreview?: ComponentType<Record<string, never>>
 
-  oauth?: {
-    url: string
-    params: OAuthParams
+  oauth?: OneOf<
+    {
+      url: string
+      params: OAuthParams
 
-    // Probably only will be needed for Twitter v1. Once Twitter shuts it down, we will remove it, and this field can be removed as well
-    oauthOptionsInitializer?: (params: {
-      redirectUri: string
-      address?: string
-      emailAddress?: string
-    }) => Promise<OAuthParams>
-  }
+      // Probably only will be needed for Twitter v1. Once Twitter shuts it down, we will remove it, and this field can be removed as well
+      oauthOptionsInitializer?: (params: {
+        redirectUri: string
+        address?: string
+        emailAddress?: string
+      }) => Promise<OAuthParams>
+    },
+    { modal: true }
+  >
 } & OneOf<
   {
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE
@@ -98,15 +101,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
 
     oauth: {
-      // It would be elegant to pass userId instead, but address is currently a required parameter of the authentication schema
-      oauthOptionsInitializer: async ({ address, emailAddress }) => ({
-        address,
-        ...(emailAddress ? { emailAddress } : {}),
-      }),
-      url: `${
-        typeof window === "undefined" ? "https://guild.xyz" : window.origin
-      }/email-verification`,
-      params: {},
+      modal: true,
     },
   },
   TELEGRAM: {
