@@ -1,4 +1,5 @@
 import useSWRImmutable from "swr/immutable"
+import { OneOf } from "types"
 
 type DiscordEvent = {
   id: string
@@ -22,13 +23,13 @@ type DiscordEvent = {
 }
 
 const useDiscordEvents = (paltformGuildId: string) => {
-  const swrResponse = useSWRImmutable(
-    paltformGuildId ? `/discord/events/${paltformGuildId}` : null
-  )
+  const swrResponse = useSWRImmutable<
+    OneOf<{ events: DiscordEvent[] }, { error: any }>
+  >(paltformGuildId ? `/discord/events/${paltformGuildId}` : null)
 
   return {
     ...swrResponse,
-    data: !swrResponse.data?.error ? swrResponse.data?.events ?? [] : undefined,
+    data: !swrResponse.data?.error ? swrResponse.data?.events : undefined,
     // When Discord API has an issue, the response from the guild is 200, and the payload contains an error object from Discord.
     error: swrResponse.error || swrResponse.data?.error,
   }

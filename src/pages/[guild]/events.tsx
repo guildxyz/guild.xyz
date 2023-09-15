@@ -65,7 +65,9 @@ const GuildEvents = (): JSX.Element => {
           <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
         )}
       </Tabs>
-      {isLoading && <FallbackFrame isLoading text="Searching for events..." />}
+      {((!data && !error) || isLoading) && (
+        <FallbackFrame isLoading text="Searching for events..." />
+      )}
 
       {!isLoading && !!error && (
         <FallbackFrame
