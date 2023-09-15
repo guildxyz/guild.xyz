@@ -4,6 +4,7 @@ import {
   Heading,
   LinkBox,
   LinkOverlay,
+  ModalCloseButton,
   ModalContent,
   ModalOverlay,
   Text,
@@ -73,6 +74,7 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
       <Modal isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
         <ModalContent>
+          <ModalCloseButton zIndex="modal" />
           <DiscordEventModal event={event} guildId={guildId} />
         </ModalContent>
       </Modal>
