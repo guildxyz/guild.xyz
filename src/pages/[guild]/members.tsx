@@ -1,4 +1,4 @@
-import { Center, Checkbox, Heading, HStack, Spinner, Text } from "@chakra-ui/react"
+import { Checkbox, HStack, Text } from "@chakra-ui/react"
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -216,25 +216,16 @@ const GuildPage = (): JSX.Element => {
 }
 
 const GuildPageWrapper = (): JSX.Element => {
-  const guild = useGuild()
+  const { featureFlags, name } = useGuild()
 
-  if (guild.isLoading)
-    return (
-      <Center h="100vh" w="screen">
-        <Spinner />
-        <Heading fontFamily={"display"} size="md" ml="4" mb="1">
-          Loading CRM...
-        </Heading>
-      </Center>
-    )
-
-  if (!guild?.featureFlags?.includes("CRM")) return <ErrorPage statusCode={404} />
+  if (featureFlags && !featureFlags?.includes("CRM"))
+    return <ErrorPage statusCode={404} />
 
   return (
     <>
       <Head>
-        <title>{`${guild.name} members`}</title>
-        <meta property="og:title" content={`${guild.name} members`} />
+        <title>{`${name} members`}</title>
+        <meta property="og:title" content={`${name} members`} />
       </Head>
       <ThemeProvider>
         <GuildPage />

@@ -38,7 +38,7 @@ type Props = {
 const HEADER_HEIGHT = "61px"
 
 const CRMTable = ({ table }: Props) => {
-  const { isLoading, error } = useMembers()
+  const { data, error } = useMembers()
 
   const cardBg = useColorModeValue("white", "var(--chakra-colors-gray-700)") // css variable form so it works in boxShadow literal for identityTags
   const tdBg = useColorModeValue(`gray.50`, "#3A3A40") // dark color is from blackAlpha.200, but without opacity so it can overlay when sticky
@@ -180,7 +180,20 @@ const CRMTable = ({ table }: Props) => {
                 },
               }}
             >
-              {isLoading ? (
+              {error ? (
+                <Tr>
+                  <Td
+                    px="3.5"
+                    py="10"
+                    textAlign={"center"}
+                    colSpan={"100%" as any}
+                    borderBottomRadius={"2xl"}
+                    bg={tdBg}
+                  >
+                    Couldn't fetch members
+                  </Td>
+                </Tr>
+              ) : !data ? (
                 [...Array(20)].map((i) => (
                   <Tr key={i}>
                     <Td fontSize={"sm"} px="3.5" w="12" bg={tdBg}>
@@ -196,19 +209,6 @@ const CRMTable = ({ table }: Props) => {
                       ))}
                   </Tr>
                 ))
-              ) : error ? (
-                <Tr>
-                  <Td
-                    px="3.5"
-                    py="10"
-                    textAlign={"center"}
-                    colSpan={"100%" as any}
-                    borderBottomRadius={"2xl"}
-                    bg={tdBg}
-                  >
-                    Couldn't fetch members
-                  </Td>
-                </Tr>
               ) : table.getRowModel().rows.length ? (
                 table
                   .getRowModel()
