@@ -8,7 +8,7 @@ import { useEffect } from "react"
 import { PlatformName } from "types"
 import timeoutPromise from "utils/timeoutPromise"
 
-export const OAUTH_CONFIRMATION_TIMEOUT_MS = 500
+const OAUTH_CONFIRMATION_TIMEOUT_MS = 500
 
 export type OAuthResponse = {
   error_description?: string
