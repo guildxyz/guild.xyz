@@ -71,11 +71,7 @@ type PlatformData<
       params: OAuthParams
 
       // Probably only will be needed for Twitter v1. Once Twitter shuts it down, we will remove it, and this field can be removed as well
-      oauthOptionsInitializer?: (params: {
-        redirectUri: string
-        address?: string
-        emailAddress?: string
-      }) => Promise<OAuthParams>
+      oauthOptionsInitializer?: (redirectUri: string) => Promise<OAuthParams>
     },
     { modal: true }
   >
@@ -237,9 +233,9 @@ const platforms: Record<PlatformName, PlatformData> = {
             : `${window.origin}/oauth`,
         x_auth_access_type: "read",
       },
-      oauthOptionsInitializer: ({ redirectUri }) =>
+      oauthOptionsInitializer: (callbackUrl) =>
         fetcher(
-          `/api/twitter-request-token?callbackUrl=${encodeURIComponent(redirectUri)}`
+          `/api/twitter-request-token?callbackUrl=${encodeURIComponent(callbackUrl)}`
         ).then((oauth_token) => ({ oauth_token } as any)),
     },
   },

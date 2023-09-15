@@ -104,11 +104,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
     if (oauthOptionsInitializer) {
       try {
-        finalOauthParams = await oauthOptionsInitializer({
-          redirectUri,
-          address: account,
-          emailAddress: emails?.emailAddress,
-        })
+        finalOauthParams = await oauthOptionsInitializer(redirectUri)
       } catch (error) {
         captureEvent("Failed to generate Twitter 1.0 request token", { error })
         setOauthState({
