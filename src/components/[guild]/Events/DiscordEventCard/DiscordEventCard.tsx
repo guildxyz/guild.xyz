@@ -4,9 +4,11 @@ import {
   Heading,
   LinkBox,
   LinkOverlay,
+  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
+  Stack,
   Text,
   useDisclosure,
   VStack,
@@ -14,10 +16,9 @@ import {
 import Card from "components/common/Card"
 import { Modal } from "components/common/Modal"
 import { DiscordEvent } from "hooks/useDiscordEvents"
-import DiscordEventModal from "./DiscordEventModal"
-import EventImage from "./EventImage"
-import EventInfo from "./EventInfo"
-import JoinDiscordEventButton from "./JoinDiscordEventButton"
+import EventImage from "./components/EventImage"
+import EventInfo from "./components/EventInfo"
+import JoinDiscordEventButton from "./components/JoinDiscordEventButton"
 
 type Props = {
   event: DiscordEvent
@@ -75,7 +76,31 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton zIndex="modal" />
-          <DiscordEventModal event={event} guildId={guildId} />
+          <ModalBody p="5 !important">
+            <Stack gap="5">
+              <EventImage eventId={id} image={image} showFallback={false} />
+              <Heading
+                fontSize={"xl"}
+                fontFamily={"Dystopian"}
+                fontWeight={"bold"}
+                mb={-1}
+              >
+                {name}
+              </Heading>
+              <EventInfo userCount={userCount} startDate={scheduledStartTimestamp} />
+              {description && (
+                <Text fontSize={"sm"} flexGrow={1}>
+                  {description}
+                </Text>
+              )}
+              <JoinDiscordEventButton
+                eventName={name}
+                guildId={guildId}
+                userCount={userCount}
+                eventId={id}
+              />
+            </Stack>
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>

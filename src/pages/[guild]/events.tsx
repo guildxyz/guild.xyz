@@ -1,6 +1,6 @@
 import { VStack } from "@chakra-ui/react"
+import DiscordEventCard from "components/[guild]/Events/DiscordEventCard"
 import FallbackFrame from "components/[guild]/Events/FallbackFrame"
-import DiscordEventCard from "components/[guild]/Events/components/DiscordEventCard"
 import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
