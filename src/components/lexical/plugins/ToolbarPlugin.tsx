@@ -105,14 +105,22 @@ const blockTypeToBlockIcon: Record<
 type LinkEditorProps = {
   editor: LexicalEditor
   isOpen: boolean
+  onOpen: () => void
   onClose: () => void
   insertLink: () => void
 }
 
-const LinkEditor = ({ editor, isOpen, onClose, insertLink }: LinkEditorProps) => {
+const LinkEditor = ({
+  editor,
+  isOpen,
+  onOpen,
+  onClose,
+  insertLink,
+}: LinkEditorProps) => {
   const initialFocusRef = useRef<HTMLInputElement>()
   const [linkUrl, setLinkUrl] = useState("")
   const [lastSelection, setLastSelection] = useState(null)
+  const [shouldOpenEditor, setShouldOpenEditor] = useState(false)
 
   const updateLinkEditor = useCallback(() => {
     const selection = $getSelection()
@@ -122,10 +130,13 @@ const LinkEditor = ({ editor, isOpen, onClose, insertLink }: LinkEditorProps) =>
       const parent = node.getParent()
       if ($isLinkNode(parent)) {
         setLinkUrl(parent.getURL())
+        setShouldOpenEditor(true)
       } else if ($isLinkNode(node)) {
         setLinkUrl(node.getURL())
+        setShouldOpenEditor(true)
       } else {
         setLinkUrl("")
+        setShouldOpenEditor(false)
       }
     }
 
@@ -184,7 +195,7 @@ const LinkEditor = ({ editor, isOpen, onClose, insertLink }: LinkEditorProps) =>
     >
       <PopoverTrigger>
         <IconButton
-          onClick={insertLink}
+          onClick={shouldOpenEditor ? onOpen : insertLink}
           isActive={isOpen}
           aria-label="Insert Link"
           icon={<Link />}
@@ -441,8 +452,6 @@ const ToolbarPlugin = () => {
       const parent = node.getParent()
       if ($isLinkNode(parent) || $isLinkNode(node)) {
         setIsLink(true)
-        if (selection.anchor.offset - selection.focus.offset !== 0)
-          onLinkEditorOpen()
       } else {
         setIsLink(false)
       }
@@ -571,6 +580,7 @@ const ToolbarPlugin = () => {
         editor={editor}
         insertLink={insertLink}
         isOpen={isLinkEditorOpen}
+        onOpen={onLinkEditorOpen}
         onClose={onLinkEditorClose}
       />
     </ButtonGroup>
