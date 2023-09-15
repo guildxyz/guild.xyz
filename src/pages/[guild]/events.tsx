@@ -1,28 +1,21 @@
-import { Icon, Spinner, Text, VStack } from "@chakra-ui/react"
-import EventCard from "components/[guild]/Events/EventCard"
-import DiscordEventCard, {
-  DiscordEventModal,
-} from "components/[guild]/Events/components/DiscordEventCard"
-import Tabs from "components/[guild]/Tabs"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import Card from "components/common/Card"
+import { VStack } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import PulseMarker from "components/common/PulseMarker"
-import useDiscordEvents from "hooks/useDiscordEvent"
+import DiscordEventCard, {
+  DiscordEventModal,
+} from "components/[guild]/Events/components/DiscordEventCard"
+import EventCard from "components/[guild]/Events/EventCard"
+import FallbackFrame from "components/[guild]/Events/FallbackFrame"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import Tabs from "components/[guild]/Tabs"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import useDiscordEvents from "hooks/useDiscordEvents"
 import useLocalStorage from "hooks/useLocalStorage"
 import { NoteBlank, WarningOctagon } from "phosphor-react"
-import { PropsWithChildren } from "react"
 import { PlatformType } from "types"
-
-const FallBackFrame = (props: PropsWithChildren) => (
-  <Card mb={"10"} paddingY={14} alignItems={"center"}>
-    {props.children}
-  </Card>
-)
 
 const GuildEvents = (): JSX.Element => {
   const { id: guildId, name, imageUrl, urlName, guildPlatforms } = useGuild()

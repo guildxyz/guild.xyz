@@ -1,6 +1,6 @@
 import { Box, Collapse, Heading, Text, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import { DiscordEvent } from "hooks/useDiscordEvent"
+import { DiscordEvent } from "hooks/useDiscordEvents"
 import EventImage from "./EventImage"
 import EventInfo from "./EventInfo"
 import JoinDiscordEventButton from "./JoinDiscordEventButton"
