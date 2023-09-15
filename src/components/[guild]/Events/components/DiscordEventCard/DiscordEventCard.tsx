@@ -49,7 +49,7 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
                   userCount={userCount}
                   startDate={scheduledStartTimestamp}
                 />
-                <Text fontSize={"sm"} flexGrow={1} noOfLines={2}>
+                <Text fontSize="sm" noOfLines={2}>
                   {description}
                 </Text>
                 <LinkOverlay>
