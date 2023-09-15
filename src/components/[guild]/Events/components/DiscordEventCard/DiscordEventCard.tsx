@@ -1,6 +1,4 @@
 import {
-  Box,
-  Collapse,
   Grid,
   GridItem,
   Heading,
@@ -51,15 +49,9 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
                   userCount={userCount}
                   startDate={scheduledStartTimestamp}
                 />
-                {description && (
-                  <Box>
-                    <Collapse startingHeight={"40px"} in={false}>
-                      <Text fontSize={"sm"} flexGrow={1}>
-                        {description}
-                      </Text>
-                    </Collapse>
-                  </Box>
-                )}
+                <Text fontSize={"sm"} flexGrow={1} noOfLines={2}>
+                  {description}
+                </Text>
                 <LinkOverlay>
                   <JoinDiscordEventButton
                     eventName={name}
