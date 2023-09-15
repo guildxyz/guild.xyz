@@ -1,6 +1,5 @@
-import { Button } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 
 type Props = {
@@ -19,14 +18,16 @@ const JoinDiscordEventButton = ({
   const { captureEvent } = usePostHogContext()
 
   return (
-    <Link
+    <Button
+      as="a"
       href={`https://discord.com/events/${guildId}/${eventId}`}
-      isExternal
-      colorScheme="gray"
-      fontWeight="medium"
+      target="_blank"
+      colorScheme="indigo"
+      rightIcon={<ArrowSquareOut />}
+      size="sm"
       mt={3}
       onClick={(event) => {
-        event.stopPropagation()
+        // event.stopPropagation() ?????
         captureEvent("Click on join event button", {
           eventType: "Discord",
           eventName,
@@ -35,10 +36,8 @@ const JoinDiscordEventButton = ({
         })
       }}
     >
-      <Button colorScheme="indigo" rightIcon={<ArrowSquareOut />} size="sm">
-        Join Discord event
-      </Button>
-    </Link>
+      Join Discord event
+    </Button>
   )
 }
 
