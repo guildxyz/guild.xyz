@@ -1,6 +1,7 @@
 import { HStack, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
 import { Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
+import { useMemo } from "react"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
 import { Member } from "./CRMTable"
 
@@ -11,9 +12,20 @@ type Props = {
 const Identities = ({ member }: Props) => {
   const { addresses, platformUsers } = member
 
+  const sortedAccounts = useMemo(
+    () =>
+      platformUsers.sort((account1, account2) => {
+        if (PlatformType[account2.platformId] === "DISCORD" && account2.username)
+          return 1
+        if (account2.username && !account1.username) return 1
+        return -1
+      }),
+    [platformUsers]
+  )
+
   return (
     <HStack spacing={1}>
-      {platformUsers?.map((platformAccount, i) => (
+      {sortedAccounts?.map((platformAccount, i) => (
         <IdentityTag
           key={platformAccount.platformId}
           platformAccount={platformAccount}
