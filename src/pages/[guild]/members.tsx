@@ -26,16 +26,29 @@ import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
-import { useQueryState } from "hooks/useQueryState"
-import dynamic from "next/dynamic"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Visibility } from "types"
 
-const DynamicActiveStatusUpdates = dynamic(
-  () => import("components/[guild]/ActiveStatusUpdates")
-)
+const parseFiltersFromQuery = (query) => {
+  const filtersArray = []
+
+  if (query.identity) filtersArray.push({ id: "identity", value: query.identity })
+  if (query.roleIds)
+    filtersArray.push({
+      id: "roleIds",
+      value: {
+        roleIds: Array.isArray(query.roleIds)
+          ? query.roleIds.map((id) => parseInt(id))
+          : [parseInt(query.roleIds)],
+        logic: query.logic,
+      },
+    })
+
+  return filtersArray
+}
 
 const columnHelper = createColumnHelper<Member>()
 
@@ -44,7 +57,29 @@ const GuildPage = (): JSX.Element => {
   const { name, roles, urlName, description, imageUrl, socialLinks } = useGuild()
   const hasHiddenRoles = roles?.some((role) => role.visibility === Visibility.HIDDEN)
 
-  const [columnFilters, setColumnFilters] = useQueryState("filters", undefined)
+  const router = useRouter()
+  const [columnFilters, setColumnFilters] = useState(() =>
+    parseFiltersFromQuery(router.query)
+  )
+
+  useEffect(() => {
+    if (!urlName) return
+
+    const newQuery = { guild: urlName } as any
+
+    const identityFilter = columnFilters.find((filter) => filter.id === "identity")
+    const roleIdsFilter = columnFilters.find((filter) => filter.id === "roleIds")
+
+    if (identityFilter?.value) newQuery.identity = identityFilter.value
+    if (roleIdsFilter?.value?.roleIds?.length) {
+      newQuery.roleIds = roleIdsFilter.value.roleIds
+      if (roleIdsFilter?.value?.logic) newQuery.logic = roleIdsFilter.value.logic
+    }
+
+    router.replace({ query: newQuery }, undefined, {
+      scroll: false,
+    })
+  }, [columnFilters])
 
   const { data } = useMembers()
 
