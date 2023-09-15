@@ -1,5 +1,6 @@
 import { Table } from "@tanstack/react-table"
 import Button from "components/common/Button"
+import useToast from "hooks/useToast"
 import { Export } from "phosphor-react"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { Member } from "./CRMTable"
@@ -10,6 +11,7 @@ type Props = {
 
 const ExportMembers = ({ table }: Props) => {
   const { isStuck } = useIsTabsStuck()
+  const toast = useToast()
 
   const value = table
     .getFilteredSelectedRowModel()
@@ -25,6 +27,14 @@ const ExportMembers = ({ table }: Props) => {
       as="a"
       download="members"
       href={!isDisabled ? csvContent : undefined}
+      onClick={() =>
+        toast({
+          status: "success",
+          title: "Successful export",
+          description: "Check your downloads folder",
+          duration: 2000,
+        })
+      }
       leftIcon={<Export />}
       variant="ghost"
       colorScheme={isStuck ? "gray" : "whiteAlpha"}
