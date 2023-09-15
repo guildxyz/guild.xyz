@@ -59,6 +59,7 @@ export const IdentityTag = ({
       className="identityTag"
       sx={{ "--stacked-margin-left": "-24px" }}
       transition={"margin .2s"}
+      ml={!isOpen && "-24px"}
       {...rest}
     >
       <TagLeftIcon as={platform.icon} /* size=".6em" */ mr="0" />
@@ -67,7 +68,7 @@ export const IdentityTag = ({
   )
 }
 
-export const WalletTag = ({ children }) => (
+export const WalletTag = ({ isOpen = false, children }) => (
   <Tag
     colorScheme={"gray"}
     bg={`gray.500`}
@@ -77,6 +78,7 @@ export const WalletTag = ({ children }) => (
     className="identityTag"
     sx={{ "--stacked-margin-left": "-39px" }}
     transition={"margin .2s"}
+    ml={!isOpen && "-39px"}
   >
     <TagLeftIcon as={Wallet} mr="0" />
     <TagLabel ml="1">{children}</TagLabel>

@@ -168,7 +168,18 @@ const CRMTable = ({ table }: Props) => {
                 ))}
               </Tr>
             </Thead>
-            <Tbody>
+            <Tbody
+              sx={{
+                ".identityTag": {
+                  boxShadow: `0 0 0 1px ${cardBg}`,
+                },
+                ":has(.identityTd:hover)": !isIdentityStuck && {
+                  ".identityTag": {
+                    marginLeft: "0",
+                  },
+                },
+              }}
+            >
               {isLoading ? (
                 [...Array(20)].map((i) => (
                   <Tr key={i}>
@@ -233,16 +244,9 @@ const CRMTable = ({ table }: Props) => {
                             left: "0",
                             width: "0px",
                             zIndex: 1,
+                            className: "identityTd",
                             ...(isIdentityStuck && {
                               bg: cardBg,
-                              sx: {
-                                ".identityTag": {
-                                  boxShadow: `0 0 0 1px ${cardBg}`,
-                                },
-                                ".identityTag:not(:first-of-type)": {
-                                  marginLeft: "var(--stacked-margin-left)",
-                                },
-                              },
                             }),
                           })}
                         >

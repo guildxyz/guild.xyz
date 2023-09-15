@@ -68,7 +68,7 @@ const MemberModal = ({ row }: Props) => {
               />
             ))}
             {addresses.slice(1).map((address) => (
-              <WalletTag key={address}>
+              <WalletTag key={address} isOpen>
                 <CopyableAddress address={address} fontSize="sm" />
               </WalletTag>
             ))}
