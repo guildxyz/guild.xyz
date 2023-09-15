@@ -27,36 +27,8 @@ const GuildEvents = (): JSX.Element => {
     (platform) => platform.platformId === PlatformType.DISCORD
   )
 
-  const { data, isLoading, isError } = useDiscordEvents(
+  const { data, isLoading, error } = useDiscordEvents(
     discordGuildPlatform?.platformGuildId
-  )
-
-  const LoadingState = (
-    <FallBackFrame>
-      <Spinner />
-      <Text colorScheme="gray" fontSize="sm" mt={1}>
-        searching for events...
-      </Text>
-    </FallBackFrame>
-  )
-
-  const ErrorState = (
-    <FallBackFrame>
-      <Icon as={WarningOctagon} rounded="full" h={6} w={6} />
-      <Text colorScheme="gray" fontSize="sm" align="center" mt={1}>
-        Something went wrong during the loading of the events.
-      </Text>
-    </FallBackFrame>
-  )
-
-  const NoEventsState = (
-    <FallBackFrame>
-      <Icon as={NoteBlank} rounded="full" h={6} w={6} />
-      <Text fontSize="xl">No events yet.</Text>
-      <Text colorScheme="gray">
-        Your guild has no upcoming event currently or you have no access to Discord
-      </Text>
-    </FallBackFrame>
   )
 
   return (
@@ -93,10 +65,24 @@ const GuildEvents = (): JSX.Element => {
           <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
         )}
       </Tabs>
-      {isLoading && LoadingState}
-      {!isLoading && isError && ErrorState}
-      {!isLoading && !isError && data?.length === 0 && NoEventsState}
-      {!isLoading && !isError && data?.length > 0 && (
+      {isLoading && <FallbackFrame isLoading text="Searching for events..." />}
+
+      {!isLoading && !!error && (
+        <FallbackFrame
+          icon={WarningOctagon}
+          text="Something went wrong, couldn't load events."
+        />
+      )}
+
+      {!isLoading && !error && data?.length === 0 && (
+        <FallbackFrame
+          icon={NoteBlank}
+          title="No events yet"
+          text="Your guild has no upcoming event currently or you have no access to Discord"
+        />
+      )}
+
+      {!isLoading && !error && data?.length > 0 && (
         <VStack gap={5}>
           {data.map((event) => (
             <EventCard
