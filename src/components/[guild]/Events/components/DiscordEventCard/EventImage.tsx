@@ -1,10 +1,4 @@
-import {
-  Box,
-  Center,
-  Img,
-  useBreakpointValue,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Box, Center, Img, useColorModeValue } from "@chakra-ui/react"
 import Image from "next/image"
 
 type Props = {
@@ -15,7 +9,6 @@ type Props = {
 
 const EventImage = ({ image, showFallback = true, eventId }: Props): JSX.Element => {
   const tagBg = useColorModeValue("gray.200", "whiteAlpha.200")
-  const isMobile = useBreakpointValue({ base: true, md: false })
 
   if (image)
     return (
@@ -30,12 +23,15 @@ const EventImage = ({ image, showFallback = true, eventId }: Props): JSX.Element
       </Box>
     )
 
-  if (isMobile) return null
-
   if (showFallback)
     return (
-      <Center bg={tagBg} flexGrow={1} borderRadius={"2xl"}>
-        <Img src="/guildLogos/46.svg" w="32px" mr="16px" opacity={0.5}></Img>
+      <Center
+        bg={tagBg}
+        flexGrow={1}
+        borderRadius={"2xl"}
+        display={{ base: "none", md: "flex" }}
+      >
+        <Img src="/guildLogos/46.svg" w={8} mr={4} opacity={0.5}></Img>
       </Center>
     )
 

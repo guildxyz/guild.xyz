@@ -29,6 +29,7 @@ const useDiscordEvents = (paltformGuildId: string) => {
   return {
     ...swrResponse,
     data: !swrResponse.data?.error ? swrResponse.data?.events ?? [] : undefined,
+    // When Discord API has an issue, the response from the guild is 200, and the payload contains an error object from Discord.
     error: swrResponse.error || swrResponse.data?.error,
   }
 }
