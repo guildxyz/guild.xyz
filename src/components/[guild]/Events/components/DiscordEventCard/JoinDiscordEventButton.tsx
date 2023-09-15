@@ -27,7 +27,8 @@ const JoinDiscordEventButton = ({
       size="sm"
       mt={3}
       onClick={(event) => {
-        // event.stopPropagation() ?????
+        // TODO: for some reason, LinkBox didn't work, so we ended up using `stopPropagation` here
+        event.stopPropagation()
         captureEvent("Click on join event button", {
           eventType: "Discord",
           eventName,

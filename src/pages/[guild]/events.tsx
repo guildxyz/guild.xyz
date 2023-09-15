@@ -2,10 +2,7 @@ import { VStack } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import PulseMarker from "components/common/PulseMarker"
-import DiscordEventCard, {
-  DiscordEventModal,
-} from "components/[guild]/Events/components/DiscordEventCard"
-import EventCard from "components/[guild]/Events/EventCard"
+import DiscordEventCard from "components/[guild]/Events/components/DiscordEventCard"
 import FallbackFrame from "components/[guild]/Events/FallbackFrame"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -87,12 +84,7 @@ const GuildEvents = (): JSX.Element => {
       {!isLoading && !error && data?.length > 0 && (
         <VStack gap={5}>
           {data.map((event) => (
-            <EventCard
-              key={event.id}
-              modal={<DiscordEventModal event={event} guildId={guildId} />}
-            >
-              <DiscordEventCard event={event} guildId={guildId} />
-            </EventCard>
+            <DiscordEventCard key={event.id} event={event} guildId={guildId} />
           ))}
         </VStack>
       )}
