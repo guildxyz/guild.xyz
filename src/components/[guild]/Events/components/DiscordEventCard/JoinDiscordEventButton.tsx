@@ -1,5 +1,6 @@
-import Button from "components/common/Button"
+import { ButtonProps } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
 import { ArrowSquareOut } from "phosphor-react"
 
 type Props = {
@@ -7,13 +8,14 @@ type Props = {
   userCount: number
   guildId: number
   eventId: string
-}
+} & ButtonProps
 
 const JoinDiscordEventButton = ({
   eventName,
   userCount,
   guildId,
   eventId,
+  ...rest
 }: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
@@ -24,7 +26,6 @@ const JoinDiscordEventButton = ({
       target="_blank"
       colorScheme="indigo"
       rightIcon={<ArrowSquareOut />}
-      size="sm"
       mt={3}
       onClick={(event) => {
         // TODO: for some reason, LinkBox didn't work, so we ended up using `stopPropagation` here
@@ -36,6 +37,7 @@ const JoinDiscordEventButton = ({
           guildId,
         })
       }}
+      {...rest}
     >
       Join Discord event
     </Button>

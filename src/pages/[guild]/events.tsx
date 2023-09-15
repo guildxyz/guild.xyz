@@ -1,14 +1,14 @@
 import { VStack } from "@chakra-ui/react"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import PulseMarker from "components/common/PulseMarker"
-import DiscordEventCard from "components/[guild]/Events/components/DiscordEventCard"
 import FallbackFrame from "components/[guild]/Events/FallbackFrame"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import DiscordEventCard from "components/[guild]/Events/components/DiscordEventCard"
 import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import PulseMarker from "components/common/PulseMarker"
 import useDiscordEvents from "hooks/useDiscordEvents"
 import useLocalStorage from "hooks/useLocalStorage"
 import { NoteBlank, WarningOctagon } from "phosphor-react"
@@ -82,7 +82,7 @@ const GuildEvents = (): JSX.Element => {
       )}
 
       {!isLoading && !error && data?.length > 0 && (
-        <VStack gap={5}>
+        <VStack gap={4}>
           {data.map((event) => (
             <DiscordEventCard key={event.id} event={event} guildId={guildId} />
           ))}

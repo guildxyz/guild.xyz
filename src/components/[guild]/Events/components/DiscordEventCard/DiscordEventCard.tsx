@@ -66,6 +66,7 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
                     guildId={guildId}
                     userCount={userCount}
                     eventId={id}
+                    size="sm"
                   />
                 </LinkOverlay>
               </VStack>

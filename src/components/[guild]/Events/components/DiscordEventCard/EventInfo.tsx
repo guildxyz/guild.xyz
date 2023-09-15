@@ -20,7 +20,7 @@ const EventInfo = ({ startDate, userCount }: Props): JSX.Element => {
   )
 
   return (
-    <HStack gap={3} w="full">
+    <HStack w="full">
       <Tag>
         <TagLeftIcon as={Clock} boxSize={3.5} />
         <TagLabel> {formatedDateTime}</TagLabel>
