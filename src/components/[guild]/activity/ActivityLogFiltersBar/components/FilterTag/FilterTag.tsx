@@ -13,6 +13,8 @@ import {
 } from "@chakra-ui/react"
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
+import ActivityLogRoleTag from "../../../ActivityLogAction/components/RoleTag"
+
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Warning, X } from "phosphor-react"
 import { PropsWithChildren, useEffect, useState } from "react"
@@ -21,7 +23,6 @@ import fetcher from "utils/fetcher"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import ActionIcon from "../../../ActivityLogAction/components/ActionIcon"
 import RewardTag from "../../../ActivityLogAction/components/RewardTag"
-import RoleTag from "../../../ActivityLogAction/components/RoleTag"
 import UserTag from "../../../ActivityLogAction/components/UserTag"
 import { ACTION } from "../../../constants"
 import { FILTER_NAMES, useActivityLogFilters } from "../ActivityLogFiltersContext"
@@ -168,7 +169,7 @@ const FilterTag = ({
                     )
                   case "roleId": {
                     return (
-                      <RoleTag
+                      <ActivityLogRoleTag
                         roleId={Number(value)}
                         guildId={guildId}
                         pr={6}

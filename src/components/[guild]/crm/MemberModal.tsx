@@ -18,7 +18,7 @@ import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { Member } from "./CRMTable"
 import { IdentityTag, WalletTag } from "./Identities"
-import { RoleTag } from "./RoleTags"
+import { CrmRoleTag } from "./RoleTags"
 
 type Props = {
   row: Row<Member>
@@ -88,7 +88,7 @@ const MemberModal = ({ row }: Props) => {
             {Object.values(roleIds)
               .flat()
               .map((roleId) => (
-                <RoleTag key={roleId} roleId={roleId} />
+                <CrmRoleTag key={roleId} roleId={roleId} />
               ))}
           </Wrap>
         </ModalBody>

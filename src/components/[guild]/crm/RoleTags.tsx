@@ -1,6 +1,5 @@
 import {
   HStack,
-  Img,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -8,12 +7,14 @@ import {
   PopoverTrigger,
   Tag,
   TagLabel,
-  TagLeftIcon,
+  TagProps,
   Text,
   Wrap,
+  forwardRef,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Visibility } from "types"
+import RoleTag from "../RoleTag"
 import useGuild from "../hooks/useGuild"
 
 type Props = {
@@ -32,7 +33,7 @@ const RoleTags = ({ roleIds }: Props) => {
   return (
     <HStack>
       {renderedRoleIds.map((roleId) => (
-        <RoleTag key={roleId} roleId={roleId} />
+        <CrmRoleTag key={roleId} roleId={roleId} />
       ))}
       {moreRolesCount > 0 && (
         <Popover trigger="hover" openDelay={0} closeDelay={0}>
@@ -52,7 +53,7 @@ const RoleTags = ({ roleIds }: Props) => {
             <PopoverBody>
               <Wrap>
                 {moreRoleIds.map((roleId) => (
-                  <RoleTag key={roleId} roleId={roleId} />
+                  <CrmRoleTag key={roleId} roleId={roleId} />
                 ))}
               </Wrap>
             </PopoverBody>
@@ -62,33 +63,28 @@ const RoleTags = ({ roleIds }: Props) => {
     </HStack>
   )
 }
-export const RoleTag = ({ roleId }: { roleId: number }) => {
-  const { roles } = useGuild()
-  const role = roles.find((r) => r.id === roleId)
 
-  const publicRoleBg = useColorModeValue("gray.700", "blackAlpha.300")
+type RoleTagProps = {
+  roleId: number
+  guildId?: number
+} & TagProps
 
-  if (!role) return null
+export const CrmRoleTag = forwardRef<RoleTagProps, "span">(
+  ({ roleId, guildId, ...rest }, ref) => {
+    const { roles } = useGuild(guildId)
+    const role = roles.find((r) => r.id === roleId)
 
-  return (
-    <Tag
-      {...(role.visibility === Visibility.HIDDEN
-        ? { variant: "solid", colorScheme: "gray" }
-        : { bg: publicRoleBg, color: "white" })}
-    >
-      {role.imageUrl?.startsWith("/guildLogos") ? (
-        <TagLeftIcon as={Img} src={role.imageUrl} />
-      ) : (
-        <TagLeftIcon
-          as={Img}
-          src={role.imageUrl}
-          borderRadius={"full"}
-          boxSize="4"
-        />
-      )}
-      <TagLabel>{role.name}</TagLabel>
-    </Tag>
-  )
-}
+    if (!role) return null
+
+    return (
+      <RoleTag
+        name={role.name}
+        imageUrl={role.imageUrl}
+        isHidden={role.visibility === Visibility.HIDDEN}
+        {...rest}
+      />
+    )
+  }
+)
 
 export default RoleTags
