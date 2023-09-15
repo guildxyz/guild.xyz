@@ -1,6 +1,8 @@
 import {
   Box,
   Collapse,
+  Grid,
+  GridItem,
   Heading,
   LinkBox,
   LinkOverlay,
@@ -30,45 +32,52 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
   return (
     <>
       <LinkBox onClick={onOpen} cursor="pointer">
-        <Card
-          flexDirection={{ base: "column-reverse", md: "row" }}
-          gap={5}
-          flexGrow="1"
-          p={5}
-        >
-          <VStack alignItems={"flex-start"} flex={"1"} gap={4}>
-            <Heading
-              fontSize={"xl"}
-              fontFamily={"Dystopian"}
-              fontWeight={"bold"}
-              mb={-1}
-            >
-              {name}
-            </Heading>
-            <EventInfo userCount={userCount} startDate={scheduledStartTimestamp} />
-            {description && (
-              <Box>
-                <Collapse startingHeight={"40px"} in={false}>
-                  <Text fontSize={"sm"} flexGrow={1}>
-                    {description}
-                  </Text>
-                </Collapse>
-              </Box>
-            )}
-            <LinkOverlay>
-              <JoinDiscordEventButton
-                eventName={name}
-                guildId={guildId}
-                userCount={userCount}
-                eventId={id}
-              />
-            </LinkOverlay>
-          </VStack>
-          <EventImage eventId={id} image={image} />
+        <Card w="full" p={5}>
+          <Grid
+            templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
+            gap={{ base: 3, md: 5 }}
+          >
+            <GridItem order={{ base: 2, md: 1 }}>
+              <VStack alignItems="flex-start" gap={4}>
+                <Heading
+                  fontSize={"xl"}
+                  fontFamily={"Dystopian"}
+                  fontWeight={"bold"}
+                  mb={-1}
+                >
+                  {name}
+                </Heading>
+                <EventInfo
+                  userCount={userCount}
+                  startDate={scheduledStartTimestamp}
+                />
+                {description && (
+                  <Box>
+                    <Collapse startingHeight={"40px"} in={false}>
+                      <Text fontSize={"sm"} flexGrow={1}>
+                        {description}
+                      </Text>
+                    </Collapse>
+                  </Box>
+                )}
+                <LinkOverlay>
+                  <JoinDiscordEventButton
+                    eventName={name}
+                    guildId={guildId}
+                    userCount={userCount}
+                    eventId={id}
+                  />
+                </LinkOverlay>
+              </VStack>
+            </GridItem>
+            <GridItem order={{ base: 1, md: 2 }}>
+              <EventImage eventId={id} image={image} />
+            </GridItem>
+          </Grid>
         </Card>
       </LinkBox>
 
-      <Modal colorScheme={"dark"} isOpen={isOpen} onClose={onClose} size="lg">
+      <Modal isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
         <ModalContent>
           <DiscordEventModal event={event} guildId={guildId} />
