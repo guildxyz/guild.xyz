@@ -149,57 +149,56 @@ const BeforeAfterActions = (): JSX.Element => {
         </ActivityLogChildActionLayout>
       )}
 
-      {Object.values(previousThemeProps).every(Boolean) &&
-        Object.keys(previousThemeProps).some(
-          (key) => previousThemeProps[key] !== currentThemeProps[key]
-        ) && (
-          <ActivityLogChildActionLayout
-            icon={<ActionIcon action={ACTION.UpdateTheme} size={5} />}
-            label="Update theme:"
-          >
-            <UpdatedDataGrid
-              boxPadding={0}
-              before={
-                <Flex
-                  sx={{
-                    ...previousColorPalette,
-                  }}
-                >
-                  <Box
-                    bgColor="primary.500"
-                    bgImage={previousThemeProps.backgroundImage}
-                    bgSize="cover"
-                    flexGrow={1}
-                  />
-                  <Center px={4} py={6}>
-                    <Button colorScheme="primary" size="sm" borderRadius="md">
-                      Button
-                    </Button>
-                  </Center>
-                </Flex>
-              }
-              after={
-                <Flex
-                  sx={{
-                    ...currentColorPalette,
-                  }}
-                >
-                  <Box
-                    bgColor="primary.500"
-                    bgImage={previousThemeProps.backgroundImage}
-                    bgSize="cover"
-                    flexGrow={1}
-                  />
-                  <Center px={4} py={6}>
-                    <Button colorScheme="primary" size="sm" borderRadius="md">
-                      Button
-                    </Button>
-                  </Center>
-                </Flex>
-              }
-            />
-          </ActivityLogChildActionLayout>
-        )}
+      {Object.keys(previousThemeProps).some(
+        (key) => previousThemeProps[key] !== currentThemeProps[key]
+      ) && (
+        <ActivityLogChildActionLayout
+          icon={<ActionIcon action={ACTION.UpdateTheme} size={5} />}
+          label="Update theme:"
+        >
+          <UpdatedDataGrid
+            boxPadding={0}
+            before={
+              <Flex
+                sx={{
+                  ...previousColorPalette,
+                }}
+              >
+                <Box
+                  bgColor="primary.500"
+                  bgImage={previousThemeProps.backgroundImage}
+                  bgSize="cover"
+                  flexGrow={1}
+                />
+                <Center px={4} py={6}>
+                  <Button colorScheme="primary" size="sm" borderRadius="md">
+                    Button
+                  </Button>
+                </Center>
+              </Flex>
+            }
+            after={
+              <Flex
+                sx={{
+                  ...currentColorPalette,
+                }}
+              >
+                <Box
+                  bgColor="primary.500"
+                  bgImage={currentThemeProps.backgroundImage}
+                  bgSize="cover"
+                  flexGrow={1}
+                />
+                <Center px={4} py={6}>
+                  <Button colorScheme="primary" size="sm" borderRadius="md">
+                    Button
+                  </Button>
+                </Center>
+              </Flex>
+            }
+          />
+        </ActivityLogChildActionLayout>
+      )}
     </Stack>
   )
 }
