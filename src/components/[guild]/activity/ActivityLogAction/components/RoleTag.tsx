@@ -35,11 +35,9 @@ const ClickableRoleTag = ({
       filter: "roleId",
       value: roleId.toString(),
     }}
-    viewInCRMParam={{
-      id: "roleIds",
-      value: {
-        roleIds: [roleId],
-      },
+    viewInCRMData={{
+      param: "roleIds",
+      value: roleId.toString(),
     }}
   >
     <ActivityLogRoleTag roleId={roleId} guildId={guildId} cursor="pointer" />

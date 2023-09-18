@@ -22,9 +22,9 @@ import {
 
 type Props = {
   addFilterParam: Filter
-  viewInCRMParam?: {
-    id: string
-    value: Record<string, string | string[] | number | number[]>
+  viewInCRMData?: {
+    param: string
+    value: string
   }
   copiableData?: {
     data?: string
@@ -34,7 +34,7 @@ type Props = {
 
 const ClickableTagPopover = ({
   addFilterParam,
-  viewInCRMParam,
+  viewInCRMData,
   copiableData,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
@@ -76,7 +76,7 @@ const ClickableTagPopover = ({
                 {`Filter by ${FILTER_NAMES[addFilterParam.filter].toLowerCase()}`}
               </Button>
 
-              {!isUserActivityLog && viewInCRMParam && (
+              {!isUserActivityLog && viewInCRMData && (
                 <Button
                   variant="ghost"
                   leftIcon={<ArrowSquareOut />}
@@ -85,9 +85,7 @@ const ClickableTagPopover = ({
                   isDisabled={isCRMDisabled}
                   onClick={() =>
                     router.push(
-                      `/${urlName}/members?filters=${JSON.stringify([
-                        viewInCRMParam,
-                      ])}`
+                      `/${urlName}/members?${`${viewInCRMData.param}=${viewInCRMData.value}`}`
                     )
                   }
                 >

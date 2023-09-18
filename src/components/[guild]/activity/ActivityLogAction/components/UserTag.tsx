@@ -70,12 +70,12 @@ const ClickableUserTag = ({ userId }: ClickableUserTagProps): JSX.Element => {
         filter: "userId",
         value: userId.toString(),
       }}
-      viewInCRMParam={{
-        id: "identity",
-        value: {
-          userId,
-        },
-      }}
+      viewInCRMData={
+        address && {
+          param: "identity",
+          value: address.toString(),
+        }
+      }
       copiableData={{ label: "Copy address", data: address }}
     >
       <UserTag address={address} cursor="pointer" />
