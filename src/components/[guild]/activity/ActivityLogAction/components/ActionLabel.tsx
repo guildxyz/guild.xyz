@@ -9,7 +9,7 @@ import GuildTag from "./GuildTag"
 import IdentityTag from "./IdentityTag"
 import { ClickableRewardTag } from "./RewardTag"
 import { ClickableRoleTag } from "./RoleTag"
-import UserTag, { ClickableUserTag } from "./UserTag"
+import { ClickableUserTag } from "./UserTag"
 
 const ActionLabel = (): JSX.Element => {
   const { data: activityLog, isUserActivityLog } = useActivityLog()
@@ -36,7 +36,7 @@ const ActionLabel = (): JSX.Element => {
                 ) : (
                   <>
                     <Text as="span">by</Text>
-                    <UserTag userId={ids.user} />
+                    <ClickableUserTag userId={ids.user} />
                   </>
                 )}
               </>
@@ -173,7 +173,7 @@ const ActionLabel = (): JSX.Element => {
                 {isUserActivityLog ? (
                   <GuildTag guildId={ids.guild} />
                 ) : (
-                  <UserTag userId={ids.user} />
+                  <ClickableUserTag userId={ids.user} />
                 )}
               </>
             )
