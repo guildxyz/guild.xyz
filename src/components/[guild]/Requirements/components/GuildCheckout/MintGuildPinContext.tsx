@@ -49,7 +49,7 @@ const MintGuildPinContext = createContext<
     isImageValidating: boolean
     isInvalidImage?: boolean
     isTooSmallImage?: boolean
-    error: string
+    error: any
     mintedTokenId?: number
     setMintedTokenId: Dispatch<SetStateAction<number>>
   } & GuildCheckoutContextType
