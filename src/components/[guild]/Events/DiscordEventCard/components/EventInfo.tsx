@@ -2,7 +2,7 @@ import { HStack, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
 import { Clock, Users } from "phosphor-react"
 
 type Props = {
-  startDate: string
+  startDate: number
   userCount: number
 }
 
