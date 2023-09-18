@@ -8,7 +8,7 @@ const useTransferOwnership = ({ onSuccess }) => {
   const fetcherWithSign = useFetcherWithSign()
   const submit = async ({ to }: { to: string }) =>
     fetcherWithSign([
-      `/v2/guilds/${id}/admins/${to}/ownership`,
+      `/v2/guilds/${id}/admins/${to}`,
       {
         method: "PUT",
         body: {
