@@ -6,11 +6,12 @@ import {
   PopoverTrigger,
   Portal,
   Stack,
+  useClipboard,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRouter } from "next/router"
-import { ArrowSquareOut, Funnel } from "phosphor-react"
+import { ArrowSquareOut, Check, Copy, Funnel } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { useActivityLog } from "../../ActivityLogContext"
 import {
@@ -25,11 +26,16 @@ type Props = {
     id: string
     value: Record<string, string | string[] | number | number[]>
   }
+  copiableData?: {
+    data?: string
+    label?: string
+  }
 }
 
 const ClickableTagPopover = ({
   addFilterParam,
   viewInCRMParam,
+  copiableData,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { isUserActivityLog } = useActivityLog()
@@ -46,6 +52,8 @@ const ClickableTagPopover = ({
     !!activeFilters.find(
       (f) => f.filter === addFilterParam.filter && f.value === addFilterParam.value
     )
+
+  const { onCopy, hasCopied } = useClipboard(copiableData?.data ?? "")
 
   return (
     <Popover>
@@ -84,6 +92,18 @@ const ClickableTagPopover = ({
                   }
                 >
                   View in CRM
+                </Button>
+              )}
+
+              {copiableData && (
+                <Button
+                  variant="ghost"
+                  leftIcon={hasCopied ? <Check /> : <Copy />}
+                  size="sm"
+                  borderRadius={0}
+                  onClick={onCopy}
+                >
+                  {copiableData.label}
                 </Button>
               )}
             </Stack>
