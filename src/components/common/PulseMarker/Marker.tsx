@@ -22,7 +22,7 @@ const Marker = ({ colorScheme, placement }: MarkerProps): JSX.Element => {
           "0%": {
             WebkitBoxShadow: `0 0 0 0 ${pulseColor}`,
           },
-          "70%": { WebkitBoxShadow: `0 0 0 15px transparent` },
+          "70%": { WebkitBoxShadow: `0 0 0 0.75rem transparent` },
           "100%": { WebkitBoxShadow: `0 0 0 0 transparent` },
         },
         "@keyframes pulse": {
@@ -31,8 +31,8 @@ const Marker = ({ colorScheme, placement }: MarkerProps): JSX.Element => {
             boxShadow: `0 0 0 0 ${pulseColor}`,
           },
           "70%": {
-            MozBoxShadow: `0 0 0 15px transparent`,
-            boxShadow: `0 0 0 15px transparent`,
+            MozBoxShadow: `0 0 0 0.75rem transparent`,
+            boxShadow: `0 0 0 0.75rem transparent`,
           },
           "100%": {
             MozBoxShadow: `0 0 0 0 transparent`,

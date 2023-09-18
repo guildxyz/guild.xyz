@@ -13,6 +13,7 @@ import RequirementDisplayComponent from "components/[guild]/Requirements/compone
 import useColorPalette from "hooks/useColorPalette"
 import { ArrowRight } from "phosphor-react"
 import { Requirement } from "types"
+import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
 import { useActivityLogActionContext } from "../ActivityLogActionContext"
 import ActionIcon from "./ActionIcon"
@@ -20,7 +21,12 @@ import { ActivityLogChildActionLayout } from "./ActivityLogChildAction"
 import UpdatedDataGrid from "./UpdatedDataGrid"
 
 const BeforeAfterActions = (): JSX.Element => {
-  const { before, data, action } = useActivityLogActionContext()
+  const { data: activityLogData } = useActivityLog()
+  const { before, data, action, ids } = useActivityLogActionContext()
+
+  const fallbackGuildName = ids?.guild
+    ? activityLogData?.values?.guilds?.find((guild) => guild.id === ids.guild)?.name
+    : undefined
 
   const previousThemeProps = {
     color: before?.color,
@@ -79,13 +85,13 @@ const BeforeAfterActions = (): JSX.Element => {
             before={
               <HStack>
                 <GuildLogo imageUrl={before.imageUrl} size={8} />
-                <Text as="span">{before.name}</Text>
+                <Text as="span">{before.name ?? fallbackGuildName}</Text>
               </HStack>
             }
             after={
               <HStack>
                 <GuildLogo imageUrl={data.imageUrl} size={8} />
-                <Text as="span">{data.name}</Text>
+                <Text as="span">{data.name ?? fallbackGuildName}</Text>
               </HStack>
             }
           />
@@ -149,57 +155,56 @@ const BeforeAfterActions = (): JSX.Element => {
         </ActivityLogChildActionLayout>
       )}
 
-      {Object.values(previousThemeProps).every(Boolean) &&
-        Object.keys(previousThemeProps).some(
-          (key) => previousThemeProps[key] !== currentThemeProps[key]
-        ) && (
-          <ActivityLogChildActionLayout
-            icon={<ActionIcon action={ACTION.UpdateTheme} size={5} />}
-            label="Update theme:"
-          >
-            <UpdatedDataGrid
-              boxPadding={0}
-              before={
-                <Flex
-                  sx={{
-                    ...previousColorPalette,
-                  }}
-                >
-                  <Box
-                    bgColor="primary.500"
-                    bgImage={previousThemeProps.backgroundImage}
-                    bgSize="cover"
-                    flexGrow={1}
-                  />
-                  <Center px={4} py={6}>
-                    <Button colorScheme="primary" size="sm" borderRadius="md">
-                      Button
-                    </Button>
-                  </Center>
-                </Flex>
-              }
-              after={
-                <Flex
-                  sx={{
-                    ...currentColorPalette,
-                  }}
-                >
-                  <Box
-                    bgColor="primary.500"
-                    bgImage={previousThemeProps.backgroundImage}
-                    bgSize="cover"
-                    flexGrow={1}
-                  />
-                  <Center px={4} py={6}>
-                    <Button colorScheme="primary" size="sm" borderRadius="md">
-                      Button
-                    </Button>
-                  </Center>
-                </Flex>
-              }
-            />
-          </ActivityLogChildActionLayout>
-        )}
+      {Object.keys(previousThemeProps).some(
+        (key) => previousThemeProps[key] !== currentThemeProps[key]
+      ) && (
+        <ActivityLogChildActionLayout
+          icon={<ActionIcon action={ACTION.UpdateTheme} size={5} />}
+          label="Update theme:"
+        >
+          <UpdatedDataGrid
+            boxPadding={0}
+            before={
+              <Flex
+                sx={{
+                  ...previousColorPalette,
+                }}
+              >
+                <Box
+                  bgColor="primary.500"
+                  bgImage={previousThemeProps.backgroundImage}
+                  bgSize="cover"
+                  flexGrow={1}
+                />
+                <Center px={4} py={6}>
+                  <Button colorScheme="primary" size="sm" borderRadius="md">
+                    Button
+                  </Button>
+                </Center>
+              </Flex>
+            }
+            after={
+              <Flex
+                sx={{
+                  ...currentColorPalette,
+                }}
+              >
+                <Box
+                  bgColor="primary.500"
+                  bgImage={currentThemeProps.backgroundImage}
+                  bgSize="cover"
+                  flexGrow={1}
+                />
+                <Center px={4} py={6}>
+                  <Button colorScheme="primary" size="sm" borderRadius="md">
+                    Button
+                  </Button>
+                </Center>
+              </Flex>
+            }
+          />
+        </ActivityLogChildActionLayout>
+      )}
     </Stack>
   )
 }
