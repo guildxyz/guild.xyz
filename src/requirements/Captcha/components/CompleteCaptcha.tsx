@@ -63,7 +63,7 @@ const CompleteCaptchaModal = ({ isOpen, onClose }) => {
     error: getGateCallbackError,
   } = useSWRImmutable(
     isOpen
-      ? [`/v2/util/gate-callbacks/session?requirement-type=CAPTCHA`, { body: {} }]
+      ? [`/v2/util/gate-callbacks/session?requirementType=CAPTCHA`, { body: {} }]
       : null,
     fetcherWithSign
   )

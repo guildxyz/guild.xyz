@@ -95,7 +95,7 @@ const ConnectPolygonIDModal = ({
   } = useSWRImmutable(
     isOpen
       ? [
-          `/v2/util/gate-callbacks/session?requirement-type=${type}`,
+          `/v2/util/gate-callbacks/session?requirementType=${type}`,
           { body: { query: data.query } },
         ]
       : null,
