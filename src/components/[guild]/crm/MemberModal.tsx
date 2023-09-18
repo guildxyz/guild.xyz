@@ -25,7 +25,7 @@ type Props = {
 }
 
 const MemberModal = ({ row }: Props) => {
-  const { addresses, platformUsers, roleIds, joinedAt } = row.original
+  const { addresses, platformUsers, roles, joinedAt } = row.original
 
   const primaryAddress = addresses?.[0]
   const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
@@ -85,9 +85,9 @@ const MemberModal = ({ row }: Props) => {
             Roles
           </Text>
           <Wrap>
-            {Object.values(roleIds)
+            {Object.values(roles)
               .flat()
-              .map((roleId) => (
+              .map(({ roleId }) => (
                 <CrmRoleTag key={roleId} roleId={roleId} />
               ))}
           </Wrap>

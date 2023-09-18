@@ -20,14 +20,20 @@ import { TABS_HEIGHT_SM, TABS_SM_BUTTONS_STYLES } from "../Tabs/Tabs"
 import MemberModal from "./MemberModal"
 import useMembers from "./useMembers"
 
+export type CrmRole = {
+  roleId: number
+  access?: boolean
+  amount?: number
+}
+
 export type Member = {
   userId: number
   addresses: string[]
   platformUsers: PlatformAccountDetails[]
   joinedAt: string
-  roleIds: {
-    hidden?: number[]
-    public: number[]
+  roles: {
+    hidden?: CrmRole[]
+    public: CrmRole[]
   }
 }
 

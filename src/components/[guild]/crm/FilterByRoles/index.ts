@@ -5,7 +5,9 @@ export const roleFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   const filteredRoleIds = value.roleIds
   if (!filteredRoleIds?.length) return true
 
-  const usersRoleIds = Object.values(row.getValue(columnId)).flat() as string[]
+  const usersRoleIds = Object.values(row.getValue(columnId))
+    .flat()
+    .map((role) => role.roleId) as string[]
 
   if (value.logic === "all") {
     return filteredRoleIds.every((roleId) => usersRoleIds.includes(roleId))

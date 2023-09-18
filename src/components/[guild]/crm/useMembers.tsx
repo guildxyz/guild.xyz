@@ -6,7 +6,7 @@ import useGuild from "../hooks/useGuild"
 const useMembers = () => {
   const { roles, id } = useGuild()
 
-  const { data, ...rest } = useSWRWithOptionalAuth(`/guild/${id}/crm/members`)
+  const { data, ...rest } = useSWRWithOptionalAuth(`/v2/crm/guilds/${id}/members`)
 
   const transformedData = useMemo(() => {
     if (!data) return null
@@ -16,13 +16,13 @@ const useMembers = () => {
       .map((role) => role.id)
 
     if (!hiddenRoleIds.length)
-      return data.map((user) => ({ ...user, roleIds: { public: user.roleIds } }))
+      return data.map((user) => ({ ...user, roles: { public: user.roleIds } }))
 
     return data.map((user) => ({
       ...user,
-      roleIds: {
-        hidden: user.roleIds.filter((roleId) => hiddenRoleIds.includes(roleId)),
-        public: user.roleIds.filter((roleId) => !hiddenRoleIds.includes(roleId)),
+      roles: {
+        hidden: user.roleIds.filter((role) => hiddenRoleIds.includes(role.roleId)),
+        public: user.roleIds.filter((role) => !hiddenRoleIds.includes(role.roleId)),
       },
     }))
   }, [data, roles])

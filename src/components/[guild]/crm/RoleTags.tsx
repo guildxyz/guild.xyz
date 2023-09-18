@@ -16,23 +16,24 @@ import {
 import { Visibility } from "types"
 import RoleTag from "../RoleTag"
 import useGuild from "../hooks/useGuild"
+import { CrmRole } from "./CRMTable"
 
 type Props = {
-  roleIds: number[]
+  roles: CrmRole[]
 }
 
-const RoleTags = ({ roleIds }: Props) => {
-  const renderedRoleIds = roleIds?.slice(0, 3)
-  const moreRolesCount = roleIds?.length - 3
-  const moreRoleIds = moreRolesCount > 0 && roleIds?.slice(-moreRolesCount)
+const RoleTags = ({ roles }: Props) => {
+  const renderedRoles = roles?.slice(0, 3)
+  const moreRolesCount = roles?.length - 3
+  const moreRoles = moreRolesCount > 0 && roles?.slice(-moreRolesCount)
 
   const moreRolesTagBorderColor = useColorModeValue("gray-300", "whiteAlpha-300")
 
-  if (!renderedRoleIds?.length) return <Text>-</Text>
+  if (!renderedRoles?.length) return <Text>-</Text>
 
   return (
     <HStack>
-      {renderedRoleIds.map((roleId) => (
+      {renderedRoles.map(({ roleId }) => (
         <CrmRoleTag key={roleId} roleId={roleId} />
       ))}
       {moreRolesCount > 0 && (
@@ -52,7 +53,7 @@ const RoleTags = ({ roleIds }: Props) => {
             <PopoverArrow />
             <PopoverBody>
               <Wrap>
-                {moreRoleIds.map((roleId) => (
+                {moreRoles.map(({ roleId }) => (
                   <CrmRoleTag key={roleId} roleId={roleId} />
                 ))}
               </Wrap>

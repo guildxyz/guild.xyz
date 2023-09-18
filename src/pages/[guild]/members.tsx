@@ -38,7 +38,7 @@ const parseFiltersFromQuery = (query) => {
   if (query.identity) filtersArray.push({ id: "identity", value: query.identity })
   if (query.roleIds)
     filtersArray.push({
-      id: "roleIds",
+      id: "roles",
       value: {
         roleIds: Array.isArray(query.roleIds)
           ? query.roleIds.map((id) => parseInt(id))
@@ -68,12 +68,12 @@ const GuildPage = (): JSX.Element => {
     const newQuery = { guild: urlName } as any
 
     const identityFilter = columnFilters.find((filter) => filter.id === "identity")
-    const roleIdsFilter = columnFilters.find((filter) => filter.id === "roleIds")
+    const rolesFilter = columnFilters.find((filter) => filter.id === "roles")
 
     if (identityFilter?.value) newQuery.identity = identityFilter.value
-    if (roleIdsFilter?.value?.roleIds?.length) {
-      newQuery.roleIds = roleIdsFilter.value.roleIds
-      if (roleIdsFilter?.value?.logic) newQuery.logic = roleIdsFilter.value.logic
+    if (rolesFilter?.value?.roleIds?.length) {
+      newQuery.roleIds = rolesFilter.value.roleIds
+      if (rolesFilter?.value?.logic) newQuery.logic = rolesFilter.value.logic
     }
 
     router.replace({ query: newQuery }, undefined, {
@@ -117,7 +117,7 @@ const GuildPage = (): JSX.Element => {
         header: ({ column }) => <IdentitiesSearch column={column} />,
       }),
       {
-        accessorKey: "roleIds",
+        accessorKey: "roles",
         header: ({ column }) => (
           <HStack w="full" justifyContent={"space-between"}>
             <Text>{`Roles ${hasHiddenRoles ? "(hidden, public)" : ""}`}</Text>
@@ -134,15 +134,15 @@ const GuildPage = (): JSX.Element => {
             ? [
                 {
                   id: "hiddenRoles",
-                  accessorFn: (row) => row.roleIds.hidden,
-                  cell: (info) => <RoleTags roleIds={info.getValue()} />,
+                  accessorFn: (row) => row.roles.hidden,
+                  cell: (info) => <RoleTags roles={info.getValue()} />,
                 },
               ]
             : []),
           {
             id: "publicRoles",
-            accessorFn: (row) => row.roleIds.public,
-            cell: (info) => <RoleTags roleIds={info.getValue()} />,
+            accessorFn: (row) => row.roles.public,
+            cell: (info) => <RoleTags roles={info.getValue()} />,
           },
         ],
       },
