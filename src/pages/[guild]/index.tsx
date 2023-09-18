@@ -34,11 +34,14 @@ import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
+import PulseMarker from "components/common/PulseMarker"
 import Section from "components/common/Section"
 import VerifiedIcon from "components/common/VerifiedIcon"
+import useLocalStorage from "hooks/useLocalStorage"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -93,6 +96,9 @@ const GuildPage = (): JSX.Element => {
     isDetailed,
   } = useGuild()
   useAutoStatusUpdate()
+
+  const [eventsSeen, setEventsSeen] = useLocalStorage<boolean>("eventsSeen", false)
+  const { captureEvent } = usePostHogContext()
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
@@ -255,19 +261,28 @@ const GuildPage = (): JSX.Element => {
               </HStack>
             }
           >
-            <TabButton href={`/${urlName}`} isActive>
+            <TabButton href={urlName} isActive>
               {showAccessHub ? "Home" : "Roles"}
             </TabButton>
+            <PulseMarker placement="top" hidden={eventsSeen}>
+              <TabButton
+                href={`/${urlName}/events`}
+                onClick={() => {
+                  setEventsSeen(true)
+                  captureEvent("Click on events tab", { from: "home" })
+                }}
+              >
+                Events
+              </TabButton>
+            </PulseMarker>
             {isAdmin && (
               <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
             )}
           </Tabs>
         )}
-
         <Collapse in={showAccessHub} unmountOnExit>
           <AccessHub />
         </Collapse>
-
         <Section
           title={(showAccessHub || showOnboarding) && "Roles"}
           titleRightElement={
@@ -326,7 +341,6 @@ const GuildPage = (): JSX.Element => {
             </CollapsibleRoleSection>
           )}
         </Section>
-
         {(showMembers || isAdmin) && (
           <>
             <Divider my={10} />
@@ -339,9 +353,9 @@ const GuildPage = (): JSX.Element => {
                     {isLoading ? (
                       <Spinner size="xs" />
                     ) : (
-                      new Intl.NumberFormat("en", { notation: "compact" }).format(
-                        memberCount ?? 0
-                      ) ?? 0
+                      new Intl.NumberFormat("en", {
+                        notation: "compact",
+                      }).format(memberCount ?? 0) ?? 0
                     )}
                   </Tag>
                   {isAdmin && <DynamicMembersExporter />}

@@ -36,7 +36,6 @@ const Tabs = ({
         alignItems="center"
         position={sticky ? "sticky" : "relative"}
         top={0}
-        py={3}
         mt={-3}
         mb={2}
         width="full"
@@ -64,6 +63,7 @@ const Tabs = ({
         >
           <HStack
             overflowX="auto"
+            py={3}
             px={8}
             sx={{
               "&::-webkit-scrollbar": {
