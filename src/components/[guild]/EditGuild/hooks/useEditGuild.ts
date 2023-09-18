@@ -13,10 +13,10 @@ type Props = {
   guildId?: string | number
 }
 
-const countFailed = (arr: Record<string, string>[]) =>
+export const countFailed = (arr: Record<string, string>[]) =>
   arr.filter((req) => !!req.error).length
 
-const getCorrelationId = (arr: Record<string, string>[]) =>
+export const getCorrelationId = (arr: Record<string, string>[]) =>
   arr.filter((req) => !!req.error)[0]?.correlationId
 
 const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
