@@ -222,10 +222,3 @@ const GuildPageWrapper = (): JSX.Element => {
 }
 
 export default GuildPageWrapper
-
-// for some reason the page errors without forcing SSR
-export async function getServerSideProps() {
-  return {
-    props: {},
-  }
-}

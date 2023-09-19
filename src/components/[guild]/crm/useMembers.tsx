@@ -6,10 +6,12 @@ import useGuild from "../hooks/useGuild"
 const useMembers = (query) => {
   const { roles, id } = useGuild()
 
+  const shouldFetch = !!id
+
   const queryString = new URLSearchParams(query).toString()
 
   const { data, ...rest } = useSWRWithOptionalAuth(
-    `/v2/crm/guilds/${id}/members?${queryString}`
+    shouldFetch ? `/v2/crm/guilds/${id}/members?${queryString}` : null
   )
 
   const transformedData = useMemo(() => {
