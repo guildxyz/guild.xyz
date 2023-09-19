@@ -13,8 +13,10 @@ import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPl
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin"
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
 import { HeadingNode, QuoteNode } from "@lexical/rich-text"
+import { ImageNode } from "components/lexical/nodes/ImageNode"
 import AutoLinkPlugin from "components/lexical/plugins/AutoLinkPlugin"
-import ToolbarPlugin from "components/lexical/plugins/ToolbarPlugin"
+import ImagesPlugin from "components/lexical/plugins/ImagesPlugin"
+import ToolbarPlugin from "components/lexical/plugins/ToolbarPlugin/ToolbarPlugin"
 
 type Props = {
   onChange?: (value: string) => void
@@ -40,6 +42,7 @@ const RichTextDescriptionEditor = ({ onChange }: Props) => {
       AutoLinkNode,
       LinkNode,
       CodeNode,
+      ImageNode,
     ],
   }
 
@@ -52,6 +55,7 @@ const RichTextDescriptionEditor = ({ onChange }: Props) => {
           placeholder={undefined}
           ErrorBoundary={LexicalErrorBoundary}
         />
+        <ImagesPlugin />
       </Stack>
 
       <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
