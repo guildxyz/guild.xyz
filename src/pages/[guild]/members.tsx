@@ -204,6 +204,7 @@ const GuildPage = (): JSX.Element => {
 
 const GuildPageWrapper = (): JSX.Element => {
   const { featureFlags, name, error } = useGuild()
+  const router = useRouter()
 
   if (error) return <ErrorPage statusCode={404} />
 
@@ -216,9 +217,7 @@ const GuildPageWrapper = (): JSX.Element => {
         <title>{`${name} members`}</title>
         <meta property="og:title" content={`${name} members`} />
       </Head>
-      <ThemeProvider>
-        <GuildPage />
-      </ThemeProvider>
+      <ThemeProvider>{router.isReady && <GuildPage />}</ThemeProvider>
     </>
   )
 }
