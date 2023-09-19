@@ -61,7 +61,7 @@ const GuildPage = (): JSX.Element => {
     })
   }, [columnFilters, sorting])
 
-  const { data } = useMembers()
+  const { data, error } = useMembers()
 
   const columns = useMemo(
     () => [
@@ -192,7 +192,7 @@ const GuildPage = (): JSX.Element => {
           <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
         </Tabs>
         {/* {JSON.stringify(table.getState(), null, 2)} */}
-        <CRMTable table={table} />
+        <CRMTable {...{ table, data, error }} />
       </Layout>
     </>
   )

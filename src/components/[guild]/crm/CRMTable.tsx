@@ -18,7 +18,6 @@ import { useEffect, useRef, useState } from "react"
 import { PlatformAccountDetails } from "types"
 import { TABS_HEIGHT_SM, TABS_SM_BUTTONS_STYLES } from "../Tabs/Tabs"
 import MemberModal from "./MemberModal"
-import useMembers from "./useMembers"
 
 export type CrmRole = {
   roleId: number
@@ -39,13 +38,13 @@ export type Member = {
 
 type Props = {
   table: TableType<Member>
+  data: Member[]
+  error: Error | string
 }
 
 const HEADER_HEIGHT = "61px"
 
-const CRMTable = ({ table }: Props) => {
-  const { data, error } = useMembers()
-
+const CRMTable = ({ table, data, error }: Props) => {
   const cardBg = useColorModeValue("white", "var(--chakra-colors-gray-700)") // css variable form so it works in boxShadow literal for identityTags
   const tdBg = useColorModeValue(`gray.50`, "#3A3A40") // dark color is from blackAlpha.200, but without opacity so it can overlay when sticky
   const tdHoverBg = useColorModeValue(`blackAlpha.50`, "whiteAlpha.50")
