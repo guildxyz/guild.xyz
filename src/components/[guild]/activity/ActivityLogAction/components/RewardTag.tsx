@@ -3,6 +3,7 @@ import platforms from "platforms/platforms"
 import { PlatformName, PlatformType } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"
+import FilterBy from "./ClickableTagPopover/components/FilterBy"
 
 type Props = ClickableRewardTagProps & {
   label?: string
@@ -51,10 +52,12 @@ const ClickableRewardTag = ({
   rolePlatformId,
 }: ClickableRewardTagProps): JSX.Element => (
   <ClickableTagPopover
-    addFilterParam={{
-      filter: "rolePlatformId",
-      value: rolePlatformId.toString(),
-    }}
+    options={[
+      <FilterBy
+        key="filterBy"
+        filter={{ filter: "rolePlatformId", value: rolePlatformId.toString() }}
+      />,
+    ]}
   >
     <RewardTag
       as="button"

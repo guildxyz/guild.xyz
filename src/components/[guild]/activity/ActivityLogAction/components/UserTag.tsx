@@ -11,6 +11,9 @@ import useSWRImmutable from "swr/immutable"
 import shortenHex from "utils/shortenHex"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"
+import CopyAddress from "./ClickableTagPopover/components/CopyAddress"
+import FilterBy from "./ClickableTagPopover/components/FilterBy"
+import ViewInCRM from "./ClickableTagPopover/components/ViewInCRM"
 
 type Props = {
   address?: string
@@ -66,17 +69,22 @@ const ClickableUserTag = ({ userId }: ClickableUserTagProps): JSX.Element => {
 
   return (
     <ClickableTagPopover
-      addFilterParam={{
-        filter: "userId",
-        value: userId.toString(),
-      }}
-      viewInCRMData={
-        address && {
-          param: "identity",
-          value: address.toString(),
-        }
-      }
-      copiableData={{ label: "Copy address", data: address }}
+      options={[
+        <FilterBy
+          key="filterBy"
+          filter={{
+            filter: "userId",
+            value: userId.toString(),
+          }}
+        />,
+        <ViewInCRM
+          key="viewInCRM"
+          label="View user in members"
+          queryKey="identity"
+          queryValue={address}
+        />,
+        <CopyAddress key="copyAddress" address={address} />,
+      ]}
     >
       <UserTag address={address} cursor="pointer" />
     </ClickableTagPopover>

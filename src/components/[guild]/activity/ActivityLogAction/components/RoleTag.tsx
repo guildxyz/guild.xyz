@@ -3,6 +3,9 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import RoleTag from "components/[guild]/RoleTag"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"
+import FilterBy from "./ClickableTagPopover/components/FilterBy"
+import ViewInCRM from "./ClickableTagPopover/components/ViewInCRM"
+import ViewRole from "./ClickableTagPopover/components/ViewRole"
 
 type Props = ClickableRoleTagProps & TagProps
 
@@ -31,14 +34,22 @@ const ClickableRoleTag = ({
   guildId,
 }: ClickableRoleTagProps): JSX.Element => (
   <ClickableTagPopover
-    addFilterParam={{
-      filter: "roleId",
-      value: roleId.toString(),
-    }}
-    viewInCRMData={{
-      param: "roleIds",
-      value: roleId.toString(),
-    }}
+    options={[
+      <FilterBy
+        key="filterBy"
+        filter={{
+          filter: "roleId",
+          value: roleId.toString(),
+        }}
+      />,
+      <ViewInCRM
+        key="viewInCRM"
+        label="View members"
+        queryKey="roleIds"
+        queryValue={roleId.toString()}
+      />,
+      <ViewRole key="viewRole" roleId={roleId} />,
+    ]}
   >
     <ActivityLogRoleTag roleId={roleId} guildId={guildId} cursor="pointer" />
   </ClickableTagPopover>
