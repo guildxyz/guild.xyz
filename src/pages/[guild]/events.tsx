@@ -35,7 +35,7 @@ const GuildEvents = (): JSX.Element => {
 
   const showOnboarding = isAdmin && !onboardingComplete
 
-  const showAccessHub =
+  const showHomeButton =
     (guildPlatforms?.some(
       (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
     ) ||
@@ -75,7 +75,7 @@ const GuildEvents = (): JSX.Element => {
     >
       <Tabs>
         <TabButton href={`/${urlName}`}>
-          {showAccessHub ? "Home" : "Roles"}
+          {showHomeButton ? "Home" : "Roles"}
         </TabButton>
         <PulseMarker placement="top" hidden={eventsSeen}>
           <TabButton
