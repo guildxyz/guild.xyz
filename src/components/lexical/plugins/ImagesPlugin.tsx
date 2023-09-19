@@ -1,4 +1,3 @@
-/** Copyright (c) Meta Platforms, Inc. and affiliates. */
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import { $wrapNodeInElement, mergeRegister } from "@lexical/utils"
 import {
