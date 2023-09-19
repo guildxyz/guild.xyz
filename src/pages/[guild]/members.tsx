@@ -1,10 +1,12 @@
 import { Checkbox, HStack, Text } from "@chakra-ui/react"
 import {
+  ColumnFiltersState,
   createColumnHelper,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table"
 import CRMTable, { Member } from "components/[guild]/crm/CRMTable"
@@ -32,7 +34,7 @@ import ErrorPage from "pages/_error"
 import { useEffect, useMemo, useState } from "react"
 import { Visibility } from "types"
 
-const parseFiltersFromQuery = (query) => {
+const parseFiltersFromQuery = (query): ColumnFiltersState => {
   const filtersArray = []
 
   if (query.identity) filtersArray.push({ id: "identity", value: query.identity })
@@ -50,6 +52,31 @@ const parseFiltersFromQuery = (query) => {
   return filtersArray
 }
 
+const parseSortingFromQuery = (query): SortingState => {
+  if (!query.orderBy) return []
+
+  return [{ id: query.orderBy, desc: query.orderByDesc }]
+}
+
+const buildQueryFromState = (columnFilters, sorting) => {
+  const query = {} as any
+
+  const identityFilter = columnFilters.find((filter) => filter.id === "identity")
+  const rolesFilter = columnFilters.find((filter) => filter.id === "roles")
+
+  if (identityFilter?.value) query.identity = identityFilter.value
+  if (rolesFilter?.value?.roleIds?.length) {
+    query.roleIds = rolesFilter.value.roleIds
+    if (rolesFilter?.value?.logic) query.logic = rolesFilter.value.logic
+  }
+  if (sorting.length) {
+    query.orderBy = sorting[0].id
+    if (sorting[0].desc) query.orderByDesc = true
+  }
+
+  return query
+}
+
 const columnHelper = createColumnHelper<Member>()
 
 const GuildPage = (): JSX.Element => {
@@ -61,25 +88,18 @@ const GuildPage = (): JSX.Element => {
   const [columnFilters, setColumnFilters] = useState(() =>
     parseFiltersFromQuery(router.query)
   )
+  const [sorting, setSorting] = useState(() => parseSortingFromQuery(router.query))
 
   useEffect(() => {
     if (!urlName) return
 
-    const newQuery = { guild: urlName } as any
-
-    const identityFilter = columnFilters.find((filter) => filter.id === "identity")
-    const rolesFilter = columnFilters.find((filter) => filter.id === "roles")
-
-    if (identityFilter?.value) newQuery.identity = identityFilter.value
-    if (rolesFilter?.value?.roleIds?.length) {
-      newQuery.roleIds = rolesFilter.value.roleIds
-      if (rolesFilter?.value?.logic) newQuery.logic = rolesFilter.value.logic
-    }
+    const newQuery = buildQueryFromState(columnFilters, sorting)
+    newQuery.guild = urlName
 
     router.replace({ query: newQuery }, undefined, {
       scroll: false,
     })
-  }, [columnFilters])
+  }, [columnFilters, sorting])
 
   const { data } = useMembers()
 
@@ -164,11 +184,14 @@ const GuildPage = (): JSX.Element => {
     columns,
     state: {
       columnFilters,
+      sorting,
     },
     initialState: {
       columnFilters,
+      sorting,
     },
     onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
