@@ -8,10 +8,8 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
-  Stack,
   Text,
   useDisclosure,
-  VStack,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { Modal } from "components/common/Modal"
@@ -37,33 +35,38 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
             templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
             gap={{ base: 3, md: 5 }}
           >
-            <GridItem order={{ base: 2, md: 1 }}>
-              <VStack alignItems="flex-start" gap={4}>
-                <Heading
-                  fontSize={"xl"}
-                  fontFamily={"Dystopian"}
-                  fontWeight={"bold"}
-                  mb={-1}
-                >
-                  {name}
-                </Heading>
-                <EventInfo
-                  userCount={userCount}
-                  startDate={scheduledStartTimestamp}
-                />
-                <Text fontSize="sm" noOfLines={2}>
+            <GridItem
+              order={{ base: 2, md: 1 }}
+              display="flex"
+              flexDirection={"column"}
+            >
+              <Heading
+                fontSize={"xl"}
+                fontFamily={"Dystopian"}
+                fontWeight={"bold"}
+                mb={3}
+              >
+                {name}
+              </Heading>
+              <EventInfo
+                userCount={userCount}
+                startDate={scheduledStartTimestamp}
+                mb="4"
+              />
+              {description && (
+                <Text fontSize="sm" noOfLines={2} mb="4">
                   {description}
                 </Text>
-                <LinkOverlay>
-                  <JoinDiscordEventButton
-                    eventName={name}
-                    guildId={guildId}
-                    userCount={userCount}
-                    eventId={id}
-                    size="sm"
-                  />
-                </LinkOverlay>
-              </VStack>
+              )}
+              <LinkOverlay mt="auto">
+                <JoinDiscordEventButton
+                  eventName={name}
+                  guildId={guildId}
+                  userCount={userCount}
+                  eventId={id}
+                  size="sm"
+                />
+              </LinkOverlay>
             </GridItem>
             <GridItem order={{ base: 1, md: 2 }}>
               <EventImage eventId={id} image={image} />
@@ -76,29 +79,32 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
         <ModalContent>
           <ModalCloseButton zIndex="modal" />
           <ModalBody p="5 !important">
-            <Stack gap="5">
-              <EventImage eventId={id} image={image} showFallback={false} />
-              <Heading
-                fontSize={"xl"}
-                fontFamily={"Dystopian"}
-                fontWeight={"bold"}
-                mb={-1}
-              >
-                {name}
-              </Heading>
-              <EventInfo userCount={userCount} startDate={scheduledStartTimestamp} />
-              {description && (
-                <Text fontSize={"sm"} flexGrow={1}>
-                  {description}
-                </Text>
-              )}
-              <JoinDiscordEventButton
-                eventName={name}
-                guildId={guildId}
-                userCount={userCount}
-                eventId={id}
-              />
-            </Stack>
+            <EventImage eventId={id} image={image} showFallback={false} mb="5" />
+            <Heading
+              fontSize={"xl"}
+              fontFamily={"Dystopian"}
+              fontWeight={"bold"}
+              mb={3}
+            >
+              {name}
+            </Heading>
+            <EventInfo
+              userCount={userCount}
+              startDate={scheduledStartTimestamp}
+              mb="5"
+            />
+            {description && (
+              <Text fontSize={"sm"} flexGrow={1} mb="5">
+                {description}
+              </Text>
+            )}
+            <JoinDiscordEventButton
+              eventName={name}
+              guildId={guildId}
+              userCount={userCount}
+              eventId={id}
+              w="full"
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

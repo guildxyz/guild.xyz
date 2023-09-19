@@ -1,12 +1,12 @@
-import { HStack, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
+import { HStack, StackProps, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
 import { Clock, Users } from "phosphor-react"
 
 type Props = {
   startDate: number
   userCount: number
-}
+} & StackProps
 
-const EventInfo = ({ startDate, userCount }: Props): JSX.Element => {
+const EventInfo = ({ startDate, userCount, ...rest }: Props): JSX.Element => {
   const LOCALE = "en-US"
   const TO_LOCALE_STRING_OPTIONS: Intl.DateTimeFormatOptions = {
     month: "short",
@@ -20,7 +20,7 @@ const EventInfo = ({ startDate, userCount }: Props): JSX.Element => {
   )
 
   return (
-    <HStack w="full">
+    <HStack w="full" {...rest}>
       <Tag>
         <TagLeftIcon as={Clock} boxSize={3.5} />
         <TagLabel> {formatedDateTime}</TagLabel>
