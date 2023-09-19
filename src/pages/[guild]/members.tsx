@@ -203,7 +203,9 @@ const GuildPage = (): JSX.Element => {
 }
 
 const GuildPageWrapper = (): JSX.Element => {
-  const { featureFlags, name } = useGuild()
+  const { featureFlags, name, error } = useGuild()
+
+  if (error) return <ErrorPage statusCode={404} />
 
   if (featureFlags && !featureFlags?.includes("CRM"))
     return <ErrorPage statusCode={404} />
