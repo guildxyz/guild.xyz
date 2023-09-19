@@ -2,7 +2,11 @@ import { Stack } from "@chakra-ui/react"
 import { CodeNode } from "@lexical/code"
 import { AutoLinkNode, LinkNode } from "@lexical/link"
 import { ListItemNode, ListNode } from "@lexical/list"
-import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown"
+import {
+  $convertToMarkdownString,
+  TextMatchTransformer,
+  TRANSFORMERS,
+} from "@lexical/markdown"
 import { InitialConfigType, LexicalComposer } from "@lexical/react/LexicalComposer"
 import { ContentEditable } from "@lexical/react/LexicalContentEditable"
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary"
@@ -13,7 +17,11 @@ import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPl
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin"
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
 import { HeadingNode, QuoteNode } from "@lexical/rich-text"
-import { ImageNode } from "components/lexical/nodes/ImageNode"
+import {
+  $createImageNode,
+  $isImageNode,
+  ImageNode,
+} from "components/lexical/nodes/ImageNode"
 import AutoLinkPlugin from "components/lexical/plugins/AutoLinkPlugin"
 import ImagesPlugin from "components/lexical/plugins/ImagesPlugin"
 import ToolbarPlugin from "components/lexical/plugins/ToolbarPlugin/ToolbarPlugin"
@@ -26,6 +34,32 @@ type Props = {
 const onError = (error) => {
   console.error(error)
 }
+
+// Image markdown transformer
+const IMAGE: TextMatchTransformer = {
+  export: (node, _exportChildren, __exportFormat) => {
+    if (!$isImageNode(node)) {
+      return null
+    }
+
+    return `![${node.getAltText()}](${node.getSrc()})`
+  },
+  importRegExp: /!(?:\[([^[]*)\])(?:\(([^(]+)\))/,
+  regExp: /!(?:\[([^[]*)\])(?:\(([^(]+)\))$/,
+  replace: (textNode, match) => {
+    const [, altText, src] = match
+    const imageNode = $createImageNode({
+      src,
+      altText,
+    })
+    textNode.replace(imageNode)
+  },
+  trigger: ")",
+  type: "text-match",
+  dependencies: [],
+}
+
+const MARKDOWN_TRANSFORMERS = [...TRANSFORMERS, IMAGE]
 
 const RichTextDescriptionEditor = ({ onChange }: Props) => {
   const initialConfig: InitialConfigType = {
@@ -58,7 +92,7 @@ const RichTextDescriptionEditor = ({ onChange }: Props) => {
         <ImagesPlugin />
       </Stack>
 
-      <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+      <MarkdownShortcutPlugin transformers={MARKDOWN_TRANSFORMERS} />
       <HistoryPlugin />
       <ListPlugin />
       <LinkPlugin />
@@ -66,7 +100,7 @@ const RichTextDescriptionEditor = ({ onChange }: Props) => {
       <OnChangePlugin
         onChange={(editorState) => {
           editorState.read(() => {
-            const markdown = $convertToMarkdownString(TRANSFORMERS)
+            const markdown = $convertToMarkdownString(MARKDOWN_TRANSFORMERS)
             onChange?.(markdown)
           })
         }}

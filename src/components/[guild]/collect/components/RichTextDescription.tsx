@@ -43,7 +43,7 @@ const reactMarkdownComponents: Partial<
     </Text>
   ),
   img: ({ children, node: _node, ...props }) => (
-    <Img borderRadius={"lg"} mb={8} {...props}>
+    <Img borderRadius="lg" mb={8} maxW="full" {...props}>
       {children}
     </Img>
   ),
