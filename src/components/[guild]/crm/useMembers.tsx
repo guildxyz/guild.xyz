@@ -3,10 +3,14 @@ import { useMemo } from "react"
 import { Visibility } from "types"
 import useGuild from "../hooks/useGuild"
 
-const useMembers = () => {
+const useMembers = (query) => {
   const { roles, id } = useGuild()
 
-  const { data, ...rest } = useSWRWithOptionalAuth(`/v2/crm/guilds/${id}/members`)
+  const queryString = new URLSearchParams(query).toString()
+
+  const { data, ...rest } = useSWRWithOptionalAuth(
+    `/v2/crm/guilds/${id}/members?${queryString}`
+  )
 
   const transformedData = useMemo(() => {
     if (!data) return null

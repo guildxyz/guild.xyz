@@ -50,18 +50,20 @@ const GuildPage = (): JSX.Element => {
   )
   const [sorting, setSorting] = useState(() => parseSortingFromQuery(router.query))
 
+  const query = useMemo(
+    () => buildQueryFromState(columnFilters, sorting),
+    [columnFilters, sorting]
+  )
+
   useEffect(() => {
     if (!urlName) return
 
-    const newQuery = buildQueryFromState(columnFilters, sorting)
-    newQuery.guild = urlName
-
-    router.replace({ query: newQuery }, undefined, {
+    router.replace({ query: { ...query, guild: urlName } }, undefined, {
       scroll: false,
     })
-  }, [columnFilters, sorting])
+  }, [query])
 
-  const { data, error } = useMembers()
+  const { data, error } = useMembers(query)
 
   const columns = useMemo(
     () => [
@@ -154,7 +156,9 @@ const GuildPage = (): JSX.Element => {
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    manualSorting: true,
     getFilteredRowModel: getFilteredRowModel(),
+    manualFiltering: true,
     getExpandedRowModel: getExpandedRowModel(),
     getRowCanExpand: () => true,
     enableRowSelection: true,
