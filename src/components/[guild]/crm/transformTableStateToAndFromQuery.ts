@@ -24,23 +24,24 @@ const parseSortingFromQuery = (query): SortingState => {
   return [{ id: query.orderBy, desc: query.orderByDesc }]
 }
 
-const buildQueryFromState = (columnFilters, sorting) => {
-  const query = {} as any
+const buildQueryStringFromState = (columnFilters, sorting) => {
+  const query = new URLSearchParams()
 
   const identityFilter = columnFilters.find((filter) => filter.id === "identity")
   const rolesFilter = columnFilters.find((filter) => filter.id === "roles")
 
-  if (identityFilter?.value) query.identity = identityFilter.value
+  if (identityFilter?.value) query.set("identity", identityFilter.value)
   if (rolesFilter?.value?.roleIds?.length) {
-    query.roleIds = rolesFilter.value.roleIds
-    if (rolesFilter?.value?.logic) query.logic = rolesFilter.value.logic
+    rolesFilter.value.roleIds.forEach((roleId) => query.append("roleIds", roleId))
+
+    if (rolesFilter?.value?.logic) query.set("logic", rolesFilter.value.logic)
   }
   if (sorting.length) {
-    query.orderBy = sorting[0].id
-    if (sorting[0].desc) query.orderByDesc = true
+    query.set("orderBy", sorting[0].id)
+    if (sorting[0].desc) query.set("orderByDesc", "true")
   }
 
-  return query
+  return query.toString()
 }
 
-export { buildQueryFromState, parseFiltersFromQuery, parseSortingFromQuery }
+export { buildQueryStringFromState, parseFiltersFromQuery, parseSortingFromQuery }

@@ -3,12 +3,10 @@ import { useMemo } from "react"
 import { Visibility } from "types"
 import useGuild from "../hooks/useGuild"
 
-const useMembers = (query) => {
+const useMembers = (queryString) => {
   const { roles, id } = useGuild()
 
   const shouldFetch = !!id
-
-  const queryString = new URLSearchParams(query).toString()
 
   const { data, ...rest } = useSWRWithOptionalAuth(
     shouldFetch ? `/v2/crm/guilds/${id}/members?${queryString}` : null

@@ -20,7 +20,7 @@ import IdentitiesSearch, {
 import OrderByColumn from "components/[guild]/crm/OrderByColumn"
 import RoleTags from "components/[guild]/crm/RoleTags"
 import {
-  buildQueryFromState,
+  buildQueryStringFromState,
   parseFiltersFromQuery,
   parseSortingFromQuery,
 } from "components/[guild]/crm/transformTableStateToAndFromQuery"
@@ -50,20 +50,20 @@ const GuildPage = (): JSX.Element => {
   )
   const [sorting, setSorting] = useState(() => parseSortingFromQuery(router.query))
 
-  const query = useMemo(
-    () => buildQueryFromState(columnFilters, sorting),
+  const queryString = useMemo(
+    () => buildQueryStringFromState(columnFilters, sorting),
     [columnFilters, sorting]
   )
 
   useEffect(() => {
     if (!urlName) return
 
-    router.replace({ query: { ...query, guild: urlName } }, undefined, {
+    router.replace({ query: `${queryString}&guild=${urlName}` }, undefined, {
       scroll: false,
     })
-  }, [query])
+  }, [queryString])
 
-  const { data, error } = useMembers(query)
+  const { data, error } = useMembers(queryString)
 
   const columns = useMemo(
     () => [
