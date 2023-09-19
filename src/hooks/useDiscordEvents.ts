@@ -8,8 +8,8 @@ type DiscordEvent = {
   creatorId?: string
   name: string
   description?: string
-  scheduledStartTimestamp: string
-  scheduledEndTimestamp?: string
+  scheduledStartTimestamp: number
+  scheduledEndTimestamp?: number
   privacyLevel: number
   status: number
   entityType: number

@@ -6,19 +6,42 @@ import TabButton from "components/[guild]/Tabs/components/TabButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useIsMember from "components/[guild]/hooks/useIsMember"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import PulseMarker from "components/common/PulseMarker"
-import useDiscordEvents from "hooks/useDiscordEvents"
+import useDiscordEvents, { DiscordEvent } from "hooks/useDiscordEvents"
 import useLocalStorage from "hooks/useLocalStorage"
+import dynamic from "next/dynamic"
 import { NoteBlank, WarningOctagon } from "phosphor-react"
 import { PlatformType } from "types"
 
+const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
+
 const GuildEvents = (): JSX.Element => {
-  const { id: guildId, name, imageUrl, urlName, guildPlatforms } = useGuild()
+  const {
+    id: guildId,
+    name,
+    imageUrl,
+    urlName,
+    guildPlatforms,
+    onboardingComplete,
+    isDetailed,
+  } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [eventsSeen, setEventsSeen] = useLocalStorage<boolean>("eventsSeen", false)
   const { isAdmin } = useGuildPermission()
+  const isMember = useIsMember()
+
+  const showOnboarding = isAdmin && !onboardingComplete
+
+  const showHomeButton =
+    (guildPlatforms?.some(
+      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
+    ) ||
+      isMember ||
+      isAdmin) &&
+    !showOnboarding
 
   const discordGuildPlatform = guildPlatforms?.find(
     (platform) => platform.platformId === PlatformType.DISCORD
@@ -27,6 +50,9 @@ const GuildEvents = (): JSX.Element => {
   const { data, isLoading, error } = useDiscordEvents(
     discordGuildPlatform?.platformGuildId
   )
+
+  const sortEventByStartDate = (eventA: DiscordEvent, eventB: DiscordEvent) =>
+    eventA.scheduledStartTimestamp - eventB.scheduledStartTimestamp
 
   return (
     <Layout
@@ -41,12 +67,16 @@ const GuildEvents = (): JSX.Element => {
         />
       }
       imageUrl={imageUrl}
+      action={isAdmin && isDetailed && <DynamicEditGuildButton />}
       textColor={textColor}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
+      backButton={{ href: "/explorer", text: "Go back to explorer" }}
     >
       <Tabs>
-        <TabButton href={`/${urlName}`}>Home</TabButton>
+        <TabButton href={`/${urlName}`}>
+          {showHomeButton ? "Home" : "Roles"}
+        </TabButton>
         <PulseMarker placement="top" hidden={eventsSeen}>
           <TabButton
             href={`/${urlName}/events`}
@@ -83,7 +113,7 @@ const GuildEvents = (): JSX.Element => {
 
       {!isLoading && !error && data?.length > 0 && (
         <VStack gap={4}>
-          {data.map((event) => (
+          {data.sort(sortEventByStartDate).map((event) => (
             <DiscordEventCard key={event.id} event={event} guildId={guildId} />
           ))}
         </VStack>

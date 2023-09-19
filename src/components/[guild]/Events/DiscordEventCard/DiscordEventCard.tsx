@@ -31,7 +31,7 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
 
   return (
     <>
-      <LinkBox onClick={onOpen} cursor="pointer">
+      <LinkBox onClick={onOpen} cursor="pointer" w="full">
         <Card w="full" p={5}>
           <Grid
             templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
@@ -71,7 +71,6 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
           </Grid>
         </Card>
       </LinkBox>
-
       <Modal isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
         <ModalContent>
