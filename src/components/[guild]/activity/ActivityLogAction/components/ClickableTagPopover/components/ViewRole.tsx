@@ -5,9 +5,10 @@ import { ArrowSquareOut } from "phosphor-react"
 
 type Props = {
   roleId: number
+  page?: "guild" | "activity"
 }
 
-const ViewRole = ({ roleId }: Props): JSX.Element => {
+const ViewRole = ({ roleId, page = "guild" }: Props): JSX.Element => {
   const router = useRouter()
   const { urlName } = useGuild()
 
@@ -17,10 +18,16 @@ const ViewRole = ({ roleId }: Props): JSX.Element => {
       leftIcon={<ArrowSquareOut />}
       size="sm"
       borderRadius={0}
-      onClick={() => router.push(`/${urlName}#role-${roleId}`)}
+      onClick={() =>
+        router.push(
+          page === "guild"
+            ? `/${urlName}#role-${roleId}`
+            : `/${urlName}/activity?roleId=${roleId}`
+        )
+      }
       justifyContent="start"
     >
-      View role
+      {page === "guild" ? "View role" : "View role in activity log"}
     </Button>
   )
 }

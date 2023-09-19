@@ -8,8 +8,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  Wrap,
   useColorModeValue,
+  Wrap,
 } from "@chakra-ui/react"
 import { Row } from "@tanstack/react-table"
 import CopyableAddress from "components/common/CopyableAddress"
@@ -18,7 +18,7 @@ import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import { Member } from "./CRMTable"
 import { IdentityTag, WalletTag } from "./Identities"
-import { CrmRoleTag } from "./RoleTags"
+import { ClickableCrmRoleTag } from "./RoleTags"
 
 type Props = {
   row: Row<Member>
@@ -88,7 +88,7 @@ const MemberModal = ({ row }: Props) => {
             {Object.values(roles)
               .flat()
               .map(({ roleId }) => (
-                <CrmRoleTag key={roleId} roleId={roleId} />
+                <ClickableCrmRoleTag key={roleId} roleId={roleId} />
               ))}
           </Wrap>
         </ModalBody>

@@ -1,4 +1,5 @@
 import {
+  forwardRef,
   HStack,
   Popover,
   PopoverArrow,
@@ -9,13 +10,14 @@ import {
   TagLabel,
   TagProps,
   Text,
-  Wrap,
-  forwardRef,
   useColorModeValue,
+  Wrap,
 } from "@chakra-ui/react"
 import { Visibility } from "types"
-import RoleTag from "../RoleTag"
+import ClickableTagPopover from "../activity/ActivityLogAction/components/ClickableTagPopover"
+import ViewRole from "../activity/ActivityLogAction/components/ClickableTagPopover/components/ViewRole"
 import useGuild from "../hooks/useGuild"
+import RoleTag from "../RoleTag"
 import { CrmRole } from "./CRMTable"
 
 type Props = {
@@ -67,25 +69,33 @@ const RoleTags = ({ roles }: Props) => {
 
 type RoleTagProps = {
   roleId: number
-  guildId?: number
 } & TagProps
 
-export const CrmRoleTag = forwardRef<RoleTagProps, "span">(
-  ({ roleId, guildId, ...rest }, ref) => {
-    const { roles } = useGuild(guildId)
-    const role = roles.find((r) => r.id === roleId)
+const CrmRoleTag = forwardRef<RoleTagProps, "span">(({ roleId, ...rest }, ref) => {
+  const { roles } = useGuild()
+  const role = roles.find((r) => r.id === roleId)
 
-    if (!role) return null
+  if (!role) return null
 
-    return (
-      <RoleTag
-        name={role.name}
-        imageUrl={role.imageUrl}
-        isHidden={role.visibility === Visibility.HIDDEN}
-        {...rest}
-      />
-    )
-  }
+  return (
+    <RoleTag
+      ref={ref}
+      name={role.name}
+      imageUrl={role.imageUrl}
+      isHidden={role.visibility === Visibility.HIDDEN}
+      {...rest}
+    />
+  )
+})
+
+export const ClickableCrmRoleTag = ({ roleId, ...tagProps }: RoleTagProps) => (
+  <ClickableTagPopover
+    options={[
+      <ViewRole key="viewRoleInActivityLog" roleId={roleId} page="activity" />,
+    ]}
+  >
+    <CrmRoleTag roleId={roleId} {...tagProps} />
+  </ClickableTagPopover>
 )
 
 export default RoleTags
