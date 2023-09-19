@@ -89,11 +89,7 @@ const CrmRoleTag = forwardRef<RoleTagProps, "span">(({ roleId, ...rest }, ref) =
 })
 
 export const ClickableCrmRoleTag = ({ roleId, ...tagProps }: RoleTagProps) => (
-  <ClickableTagPopover
-    options={[
-      <ViewRole key="viewRoleInActivityLog" roleId={roleId} page="activity" />,
-    ]}
-  >
+  <ClickableTagPopover options={<ViewRole roleId={roleId} page="activity" />}>
     <CrmRoleTag roleId={roleId} {...tagProps} />
   </ClickableTagPopover>
 )

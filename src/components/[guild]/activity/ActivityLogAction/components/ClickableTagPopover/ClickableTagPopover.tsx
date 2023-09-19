@@ -10,7 +10,7 @@ import {
 import { PropsWithChildren } from "react"
 
 type Props = {
-  options: JSX.Element[]
+  options: JSX.Element
 }
 
 const ClickableTagPopover = ({

@@ -52,12 +52,11 @@ const ClickableRewardTag = ({
   rolePlatformId,
 }: ClickableRewardTagProps): JSX.Element => (
   <ClickableTagPopover
-    options={[
+    options={
       <FilterBy
-        key="filterBy"
         filter={{ filter: "rolePlatformId", value: rolePlatformId.toString() }}
-      />,
-    ]}
+      />
+    }
   >
     <RewardTag
       as="button"

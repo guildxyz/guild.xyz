@@ -34,22 +34,22 @@ const ClickableRoleTag = ({
   guildId,
 }: ClickableRoleTagProps): JSX.Element => (
   <ClickableTagPopover
-    options={[
-      <FilterBy
-        key="filterBy"
-        filter={{
-          filter: "roleId",
-          value: roleId.toString(),
-        }}
-      />,
-      <ViewInCRM
-        key="viewInCRM"
-        label="View members"
-        queryKey="roleIds"
-        queryValue={roleId.toString()}
-      />,
-      <ViewRole key="viewRole" roleId={roleId} />,
-    ]}
+    options={
+      <>
+        <FilterBy
+          filter={{
+            filter: "roleId",
+            value: roleId.toString(),
+          }}
+        />
+        <ViewInCRM
+          label="View members"
+          queryKey="roleIds"
+          queryValue={roleId.toString()}
+        />
+        <ViewRole roleId={roleId} />
+      </>
+    }
   >
     <ActivityLogRoleTag roleId={roleId} guildId={guildId} cursor="pointer" />
   </ClickableTagPopover>

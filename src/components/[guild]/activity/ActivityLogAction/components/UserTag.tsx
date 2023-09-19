@@ -69,22 +69,22 @@ const ClickableUserTag = ({ userId }: ClickableUserTagProps): JSX.Element => {
 
   return (
     <ClickableTagPopover
-      options={[
-        <FilterBy
-          key="filterBy"
-          filter={{
-            filter: "userId",
-            value: userId.toString(),
-          }}
-        />,
-        <ViewInCRM
-          key="viewInCRM"
-          label="View user in members"
-          queryKey="identity"
-          queryValue={address}
-        />,
-        <CopyAddress key="copyAddress" address={address} />,
-      ]}
+      options={
+        <>
+          <FilterBy
+            filter={{
+              filter: "userId",
+              value: userId.toString(),
+            }}
+          />
+          <ViewInCRM
+            label="View user in members"
+            queryKey="identity"
+            queryValue={address}
+          />
+          <CopyAddress address={address} />
+        </>
+      }
     >
       <UserTag address={address} cursor="pointer" />
     </ClickableTagPopover>
