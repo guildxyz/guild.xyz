@@ -1,5 +1,6 @@
 /** Copyright (c) Meta Platforms, Inc. and affiliates. */
 
+import { Img } from "@chakra-ui/react"
 import type {
   DOMConversionMap,
   DOMConversionOutput,
@@ -12,10 +13,7 @@ import type {
 } from "lexical"
 
 import { $applyNodeReplacement, DecoratorNode } from "lexical"
-import * as React from "react"
 import { Suspense } from "react"
-
-const ImageComponent = React.lazy(() => import("./ImageComponent"))
 
 export interface ImagePayload {
   altText: string
@@ -148,12 +146,14 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 
   decorate(): JSX.Element {
     return (
-      <Suspense fallback={<>Loading.....</>}>
-        <ImageComponent
+      <Suspense fallback={null}>
+        <Img
           src={this.__src}
-          altText={this.__altText}
-          width={this.__width}
-          height={this.__height}
+          alt={this.__altText}
+          style={{
+            width: this.__width,
+            height: this.__height,
+          }}
         />
       </Suspense>
     )
