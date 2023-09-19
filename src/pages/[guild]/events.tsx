@@ -1,6 +1,7 @@
-import { VStack } from "@chakra-ui/react"
+import { HStack, Link, VStack, Wrap } from "@chakra-ui/react"
 import DiscordEventCard from "components/[guild]/Events/DiscordEventCard"
 import FallbackFrame from "components/[guild]/Events/FallbackFrame"
+import SocialIcon from "components/[guild]/SocialIcon"
 import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -10,11 +11,13 @@ import useIsMember from "components/[guild]/hooks/useIsMember"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import PulseMarker from "components/common/PulseMarker"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import useDiscordEvents, { DiscordEvent } from "hooks/useDiscordEvents"
 import useLocalStorage from "hooks/useLocalStorage"
 import dynamic from "next/dynamic"
 import { NoteBlank, WarningOctagon } from "phosphor-react"
-import { PlatformType } from "types"
+import { PlatformType, SocialLinkKey } from "types"
+import parseDescription from "utils/parseDescription"
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
 
@@ -27,6 +30,9 @@ const GuildEvents = (): JSX.Element => {
     guildPlatforms,
     onboardingComplete,
     isDetailed,
+    description,
+    socialLinks,
+    tags,
   } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [eventsSeen, setEventsSeen] = useLocalStorage<boolean>("eventsSeen", false)
@@ -57,7 +63,38 @@ const GuildEvents = (): JSX.Element => {
   return (
     <Layout
       title={name}
-      ogTitle={`Activity${name ? ` - ${name}` : ""}`}
+      textColor={textColor}
+      ogTitle={`Events${name ? ` - ${name}` : ""}`}
+      ogDescription={description}
+      description={
+        <>
+          {description && parseDescription(description)}
+          {Object.keys(socialLinks ?? {}).length > 0 && (
+            <Wrap w="full" spacing={3} mt="3">
+              {Object.entries(socialLinks).map(([type, link]) => {
+                const prettyLink = link
+                  .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
+                  .replace(/\/+$/, "")
+
+                return (
+                  <HStack key={type} spacing={1.5}>
+                    <SocialIcon type={type as SocialLinkKey} size="sm" />
+                    <Link
+                      href={link?.startsWith("http") ? link : `https://${link}`}
+                      isExternal
+                      fontSize="sm"
+                      fontWeight="semibold"
+                      color={textColor}
+                    >
+                      {prettyLink}
+                    </Link>
+                  </HStack>
+                )
+              })}
+            </Wrap>
+          )}
+        </>
+      }
       image={
         <GuildLogo
           imageUrl={imageUrl}
@@ -67,11 +104,15 @@ const GuildEvents = (): JSX.Element => {
         />
       }
       imageUrl={imageUrl}
-      action={isAdmin && isDetailed && <DynamicEditGuildButton />}
-      textColor={textColor}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
+      action={isAdmin && isDetailed && <DynamicEditGuildButton />}
       backButton={{ href: "/explorer", text: "Go back to explorer" }}
+      titlePostfix={
+        tags?.includes("VERIFIED") && (
+          <VerifiedIcon size={{ base: 5, lg: 6 }} mt={-1} />
+        )
+      }
     >
       <Tabs>
         <TabButton href={`/${urlName}`}>
@@ -92,8 +133,15 @@ const GuildEvents = (): JSX.Element => {
           <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
         )}
       </Tabs>
-      {((!data && !error) || isLoading) && (
+      {!data && !error && isLoading && (
         <FallbackFrame isLoading text="Searching for events..." />
+      )}
+      {!data && !error && !isLoading && (
+        <FallbackFrame
+          icon={NoteBlank}
+          title="No events yet"
+          text="Your guild has no upcoming event currently"
+        />
       )}
 
       {!isLoading && !!error && (
