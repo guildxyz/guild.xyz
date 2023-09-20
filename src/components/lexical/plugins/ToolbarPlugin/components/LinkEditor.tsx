@@ -11,33 +11,24 @@ import {
   PopoverTrigger,
 } from "@chakra-ui/react"
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link"
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import { mergeRegister } from "@lexical/utils"
 import Button from "components/common/Button"
-import {
-  $getSelection,
-  $isRangeSelection,
-  LexicalEditor,
-  SELECTION_CHANGE_COMMAND,
-} from "lexical"
+import { $getSelection, $isRangeSelection, SELECTION_CHANGE_COMMAND } from "lexical"
 import { Link } from "phosphor-react"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { getSelectedNode, LOW_PRIORITY } from "../ToolbarPlugin"
 
 type LinkEditorProps = {
-  editor: LexicalEditor
   isOpen: boolean
   onOpen: () => void
   onClose: () => void
   insertLink: () => void
 }
 
-const LinkEditor = ({
-  editor,
-  isOpen,
-  onOpen,
-  onClose,
-  insertLink,
-}: LinkEditorProps) => {
+const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) => {
+  const [editor] = useLexicalComposerContext()
+
   const initialFocusRef = useRef<HTMLInputElement>()
   const [linkUrl, setLinkUrl] = useState("")
   const [lastSelection, setLastSelection] = useState(null)
@@ -159,6 +150,7 @@ const LinkEditor = ({
                 editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkUrl)
                 onClose()
               }}
+              isDisabled={!linkUrl?.length}
             >
               Save
             </Button>

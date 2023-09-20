@@ -423,7 +423,6 @@ const ToolbarPlugin = () => {
       />
 
       <LinkEditor
-        editor={editor}
         insertLink={insertLink}
         isOpen={isLinkEditorOpen}
         onOpen={onLinkEditorOpen}
