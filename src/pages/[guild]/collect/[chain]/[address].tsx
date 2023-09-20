@@ -45,7 +45,7 @@ type Props = {
 }
 const Page = ({ chain, address }: Omit<Props, "fallback">) => {
   const { theme, imageUrl, name, urlName, roles, guildPlatforms } = useGuild()
-  const { textColor } = useThemeContext()
+  const { textColor, buttonColorScheme } = useThemeContext()
   const guildPlatform = guildPlatforms?.find(
     (gp) =>
       gp.platformGuildData?.chain === chain &&
@@ -99,7 +99,11 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
             </HStack>
 
             <HStack>
-              <ReportGuildButton layout="ICON" />
+              <ReportGuildButton
+                layout="ICON"
+                colorScheme={buttonColorScheme}
+                color={textColor}
+              />
               <ShareButton />
             </HStack>
           </HStack>
