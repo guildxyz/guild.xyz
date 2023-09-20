@@ -17,6 +17,7 @@ export type Filter = {
 
 export const SUPPORTED_SEARCH_OPTIONS = [
   "userId",
+  "guildId",
   "roleId",
   "rolePlatformId",
   "action",
@@ -25,6 +26,7 @@ export type SupportedSearchOption = (typeof SUPPORTED_SEARCH_OPTIONS)[number]
 
 export const FILTER_NAMES: Record<SupportedSearchOption, string> = {
   userId: "User",
+  guildId: "Guild",
   roleId: "Role",
   rolePlatformId: "Reward",
   action: "Action",
