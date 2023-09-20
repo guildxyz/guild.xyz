@@ -64,7 +64,7 @@ describe("with wallet", () => {
     cy.get("input[name='socialLinks.TWITTER']").clear().type("twitter.com/guildxyz")
     cy.getByDataTest("create-guild-button").should("be.enabled")
 
-    cy.intercept("POST", `${Cypress.env("guildApiUrl")}/guilds/with-roles`).as(
+    cy.intercept("POST", `${Cypress.env("guildApiUrl")}/guilds`).as(
       "createGuildRequest"
     )
 
