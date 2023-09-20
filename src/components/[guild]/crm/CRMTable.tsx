@@ -200,7 +200,7 @@ const CRMTable = ({ table, data, error }: Props) => {
                   </Td>
                 </Tr>
               ) : !data ? (
-                [...Array(20)].map((i) => (
+                [...Array(20)].map((_, i) => (
                   <Tr key={i}>
                     <Td fontSize={"sm"} px="3.5" w="12" bg={tdBg}>
                       <Checkbox mt="2px" />
@@ -262,7 +262,7 @@ const CRMTable = ({ table, data, error }: Props) => {
                     </Tr>
                   ))
                   .concat(
-                    <Tr>
+                    <Tr key="endOfResults">
                       <Td
                         px="3.5"
                         textAlign={"center"}
