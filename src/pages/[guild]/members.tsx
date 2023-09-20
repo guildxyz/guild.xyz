@@ -7,6 +7,9 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import PulseMarker from "components/common/PulseMarker"
 import CRMTable, { Member } from "components/[guild]/crm/CRMTable"
 import ExportMembers from "components/[guild]/crm/ExportMembers"
 import FilterByRoles, {
@@ -29,8 +32,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
+import { usePostHogContext } from "components/_app/PostHogProvider"
+import useLocalStorage from "hooks/useLocalStorage"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
@@ -41,8 +44,11 @@ const columnHelper = createColumnHelper<Member>()
 
 const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-  const { name, roles, urlName, description, imageUrl, socialLinks } = useGuild()
+  const { name, roles, urlName, imageUrl } = useGuild()
   const hasHiddenRoles = roles?.some((role) => role.visibility === Visibility.HIDDEN)
+
+  const [eventsSeen, setEventsSeen] = useLocalStorage<boolean>("eventsSeen", false)
+  const { captureEvent } = usePostHogContext()
 
   const router = useRouter()
   const [columnFilters, setColumnFilters] = useState(() =>
@@ -190,6 +196,17 @@ const GuildPage = (): JSX.Element => {
       >
         <Tabs sticky rightElement={<ExportMembers table={table} />}>
           <TabButton href={`/${urlName}`}>Home</TabButton>
+          <PulseMarker placement="top" hidden={eventsSeen}>
+            <TabButton
+              href={`/${urlName}/events`}
+              onClick={() => {
+                setEventsSeen(true)
+                captureEvent("Click on events tab", { from: "activity log" })
+              }}
+            >
+              Events
+            </TabButton>
+          </PulseMarker>
           <TabButton href={`${urlName}/members`} isActive>
             Members
           </TabButton>
