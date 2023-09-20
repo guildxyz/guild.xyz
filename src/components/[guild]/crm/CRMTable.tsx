@@ -11,7 +11,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Table as TableType, flexRender } from "@tanstack/react-table"
+import { flexRender, Table as TableType } from "@tanstack/react-table"
 import Card from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useEffect, useRef, useState } from "react"
@@ -20,7 +20,8 @@ import { TABS_HEIGHT_SM, TABS_SM_BUTTONS_STYLES } from "../Tabs/Tabs"
 import MemberModal from "./MemberModal"
 
 export type CrmRole = {
-  roleId: number
+  roleId?: number
+  requirementId?: number
   access?: boolean
   amount?: number
 }

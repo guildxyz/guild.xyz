@@ -35,8 +35,8 @@ const RoleTags = ({ roles }: Props) => {
 
   return (
     <HStack>
-      {renderedRoles.map(({ roleId }) => (
-        <CrmRoleTag key={roleId} roleId={roleId} />
+      {renderedRoles.map(({ roleId, requirementId }) => (
+        <CrmRoleTag key={requirementId ?? roleId} roleId={roleId} />
       ))}
       {moreRolesCount > 0 && (
         <Popover trigger="hover" openDelay={0} closeDelay={0}>
@@ -55,8 +55,8 @@ const RoleTags = ({ roles }: Props) => {
             <PopoverArrow />
             <PopoverBody>
               <Wrap>
-                {moreRoles.map(({ roleId }) => (
-                  <CrmRoleTag key={roleId} roleId={roleId} />
+                {moreRoles.map(({ roleId, requirementId }) => (
+                  <CrmRoleTag key={requirementId ?? roleId} roleId={roleId} />
                 ))}
               </Wrap>
             </PopoverBody>
