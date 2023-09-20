@@ -20,11 +20,11 @@ const GuildSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element =>
     .map((f) => f.value)
 
   const guildSuggestions =
-    data
-      ?.filter((g) => !activeGuildFilters?.includes(g.id.toString()))
-      .filter((g) =>
+    data?.filter(
+      (g) =>
+        !activeGuildFilters?.includes(g.id.toString()) &&
         g.name.toLowerCase().includes(inputValue?.trim().toLowerCase())
-      ) ?? []
+    ) ?? []
 
   return (
     <>
