@@ -55,7 +55,10 @@ const ActivityLog = (): JSX.Element => {
             href={`/${urlName}/events`}
             onClick={() => {
               setEventsSeen(true)
-              captureEvent("Click on events tab", { from: "activity log" })
+              captureEvent("Click on events tab", {
+                from: "activity log",
+                guild: urlName,
+              })
             }}
           >
             Events
