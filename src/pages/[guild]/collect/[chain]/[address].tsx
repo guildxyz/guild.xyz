@@ -23,6 +23,7 @@ import ShareButton from "components/[guild]/collect/components/ShareButton"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
+import ReportGuildButton from "components/[guild]/ReportGuildButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { Chain } from "connectors"
 import { AnimatePresence, motion } from "framer-motion"
@@ -97,7 +98,10 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
               </Link>
             </HStack>
 
-            <ShareButton />
+            <HStack>
+              <ReportGuildButton layout="ICON" />
+              <ShareButton />
+            </HStack>
           </HStack>
 
           <SimpleGrid
