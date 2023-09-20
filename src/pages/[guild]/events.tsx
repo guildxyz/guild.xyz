@@ -1,19 +1,15 @@
 import { HStack, Link, VStack, Wrap } from "@chakra-ui/react"
-import DiscordEventCard from "components/[guild]/Events/DiscordEventCard"
-import FallbackFrame from "components/[guild]/Events/FallbackFrame"
-import SocialIcon from "components/[guild]/SocialIcon"
-import Tabs from "components/[guild]/Tabs"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
-import PulseMarker from "components/common/PulseMarker"
 import VerifiedIcon from "components/common/VerifiedIcon"
+import DiscordEventCard from "components/[guild]/Events/DiscordEventCard"
+import FallbackFrame from "components/[guild]/Events/FallbackFrame"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import SocialIcon from "components/[guild]/SocialIcon"
+import GuildTabs from "components/[guild]/Tabs/GuildTabs"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useDiscordEvents, { DiscordEvent } from "hooks/useDiscordEvents"
-import useLocalStorage from "hooks/useLocalStorage"
 import dynamic from "next/dynamic"
 import { NoteBlank, WarningOctagon } from "phosphor-react"
 import { PlatformType, SocialLinkKey } from "types"
@@ -26,29 +22,14 @@ const GuildEvents = (): JSX.Element => {
     id: guildId,
     name,
     imageUrl,
-    urlName,
     guildPlatforms,
-    onboardingComplete,
     isDetailed,
     description,
     socialLinks,
     tags,
   } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-  const [eventsSeen, setEventsSeen] = useLocalStorage<boolean>("eventsSeen", false)
   const { isAdmin } = useGuildPermission()
-  const isMember = useIsMember()
-
-  const showOnboarding = isAdmin && !onboardingComplete
-
-  const showHomeButton =
-    (guildPlatforms?.some(
-      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
-    ) ||
-      isMember ||
-      isAdmin) &&
-    !showOnboarding
-
   const discordGuildPlatform = guildPlatforms?.find(
     (platform) => platform.platformId === PlatformType.DISCORD
   )
@@ -114,25 +95,7 @@ const GuildEvents = (): JSX.Element => {
         )
       }
     >
-      <Tabs>
-        <TabButton href={`/${urlName}`}>
-          {showHomeButton ? "Home" : "Roles"}
-        </TabButton>
-        <PulseMarker placement="top" hidden={eventsSeen}>
-          <TabButton
-            href={`/${urlName}/events`}
-            onClick={() => {
-              setEventsSeen(true)
-            }}
-            isActive
-          >
-            Events
-          </TabButton>
-        </PulseMarker>
-        {isAdmin && (
-          <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
-        )}
-      </Tabs>
+      <GuildTabs activeTab="EVENTS" />
       {!data && !error && isLoading && (
         <FallbackFrame isLoading text="Searching for events..." />
       )}

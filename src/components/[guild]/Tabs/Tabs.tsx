@@ -67,7 +67,7 @@ const Tabs = ({
         >
           <HStack
             overflowX="auto"
-            py={2.5}
+            py={3}
             px={8}
             sx={{
               "&::-webkit-scrollbar": {

@@ -3,7 +3,6 @@ import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
-import PulseMarker from "components/common/PulseMarker"
 import { SectionTitle } from "components/common/Section"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
 import {
@@ -16,19 +15,15 @@ import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleto
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
-import Tabs from "components/[guild]/Tabs"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
+import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import { usePostHogContext } from "components/_app/PostHogProvider"
-import useLocalStorage from "hooks/useLocalStorage"
 
 const ActivityLog = (): JSX.Element => {
-  const { name, urlName, imageUrl } = useGuild()
+  const { name, imageUrl } = useGuild()
   const { id: userId } = useUser()
   const { isAdmin } = useGuildPermission()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-  const [eventsSeen, setEventsSeen] = useLocalStorage<boolean>("eventsSeen", false)
-  const { captureEvent } = usePostHogContext()
+
   const { data, isValidating, isLoading, error } = useActivityLog()
 
   return (
@@ -48,27 +43,7 @@ const ActivityLog = (): JSX.Element => {
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
     >
-      <Tabs>
-        <TabButton href={`/${urlName}`}>Home</TabButton>
-        <PulseMarker placement="top" hidden={eventsSeen}>
-          <TabButton
-            href={`/${urlName}/events`}
-            onClick={() => {
-              setEventsSeen(true)
-              captureEvent("Click on events tab", {
-                from: "activity log",
-                guild: urlName,
-              })
-            }}
-          >
-            Events
-          </TabButton>
-        </PulseMarker>
-        <TabButton href={`/${urlName}/members`}>Members</TabButton>
-        <TabButton href={`/${urlName}/activity`} isActive>
-          Activity log
-        </TabButton>
-      </Tabs>
+      <GuildTabs activeTab="ACTIVITY" />
 
       {userId && !isAdmin ? (
         <Card>

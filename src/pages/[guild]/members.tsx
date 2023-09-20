@@ -9,7 +9,6 @@ import {
 } from "@tanstack/react-table"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
-import PulseMarker from "components/common/PulseMarker"
 import CRMTable, { Member } from "components/[guild]/crm/CRMTable"
 import ExportMembers from "components/[guild]/crm/ExportMembers"
 import FilterByRoles, {
@@ -29,11 +28,8 @@ import {
 } from "components/[guild]/crm/transformTableStateToAndFromQuery"
 import useMembers from "components/[guild]/crm/useMembers"
 import useGuild from "components/[guild]/hooks/useGuild"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
-import Tabs from "components/[guild]/Tabs/Tabs"
+import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import { usePostHogContext } from "components/_app/PostHogProvider"
-import useLocalStorage from "hooks/useLocalStorage"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
@@ -46,9 +42,6 @@ const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { name, roles, urlName, imageUrl } = useGuild()
   const hasHiddenRoles = roles?.some((role) => role.visibility === Visibility.HIDDEN)
-
-  const [eventsSeen, setEventsSeen] = useLocalStorage<boolean>("eventsSeen", false)
-  const { captureEvent } = usePostHogContext()
 
   const router = useRouter()
   const [columnFilters, setColumnFilters] = useState(() =>
@@ -194,27 +187,10 @@ const GuildPage = (): JSX.Element => {
         backgroundOffset={112}
         showFooter={false}
       >
-        <Tabs sticky rightElement={<ExportMembers table={table} />}>
-          <TabButton href={`/${urlName}`}>Home</TabButton>
-          <PulseMarker placement="top" hidden={eventsSeen}>
-            <TabButton
-              href={`/${urlName}/events`}
-              onClick={() => {
-                setEventsSeen(true)
-                captureEvent("Click on events tab", {
-                  from: "activity log",
-                  guild: urlName,
-                })
-              }}
-            >
-              Events
-            </TabButton>
-          </PulseMarker>
-          <TabButton href={`${urlName}/members`} isActive>
-            Members
-          </TabButton>
-          <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
-        </Tabs>
+        <GuildTabs
+          activeTab="MEMBERS"
+          rightElement={<ExportMembers table={table} />}
+        />
         {/* {JSON.stringify(table.getState(), null, 2)} */}
         <CRMTable {...{ table, data, error }} />
       </Layout>
@@ -223,7 +199,7 @@ const GuildPage = (): JSX.Element => {
 }
 
 const GuildPageWrapper = (): JSX.Element => {
-  const { urlName, featureFlags, name, error } = useGuild()
+  const { featureFlags, name, error } = useGuild()
   const router = useRouter()
 
   if (error) return <ErrorPage statusCode={404} />
