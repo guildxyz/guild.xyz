@@ -1,7 +1,10 @@
 import { Box, Stack, Text } from "@chakra-ui/react"
-import Tabs from "components/[guild]/Tabs"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import Card from "components/common/Card"
+import ErrorAlert from "components/common/ErrorAlert"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import PulseMarker from "components/common/PulseMarker"
+import { SectionTitle } from "components/common/Section"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
 import {
   ActivityLogProvider,
@@ -13,13 +16,10 @@ import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleto
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
+import Tabs from "components/[guild]/Tabs"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import Card from "components/common/Card"
-import ErrorAlert from "components/common/ErrorAlert"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import PulseMarker from "components/common/PulseMarker"
-import { SectionTitle } from "components/common/Section"
 import useLocalStorage from "hooks/useLocalStorage"
 
 const ActivityLog = (): JSX.Element => {
@@ -55,7 +55,10 @@ const ActivityLog = (): JSX.Element => {
             href={`/${urlName}/events`}
             onClick={() => {
               setEventsSeen(true)
-              captureEvent("Click on events tab", { from: "activity log" })
+              captureEvent("Click on events tab", {
+                from: "activity log",
+                guild: urlName,
+              })
             }}
           >
             Events
