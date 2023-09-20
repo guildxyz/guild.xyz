@@ -16,11 +16,12 @@ import {
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import Button from "components/common/Button"
 import { ImageSquare } from "phosphor-react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { INSERT_IMAGE_COMMAND } from "../../ImagesPlugin"
 
 const ImageEditor = (): JSX.Element => {
   const [editor] = useLexicalComposerContext()
+  const initialFocusRef = useRef<HTMLInputElement>()
 
   const { isOpen, onToggle, onClose } = useDisclosure()
 
@@ -34,6 +35,8 @@ const ImageEditor = (): JSX.Element => {
   }
 
   const addImage = () => {
+    if (!imageUrl) return
+
     editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
       src: imageUrl,
       altText: imageAlt,
@@ -48,6 +51,7 @@ const ImageEditor = (): JSX.Element => {
         isOpen={isOpen}
         onClose={onClose}
         placement="top"
+        initialFocusRef={initialFocusRef}
       >
         <PopoverTrigger>
           <IconButton
@@ -73,16 +77,23 @@ const ImageEditor = (): JSX.Element => {
           <PopoverBody px={2}>
             <Stack>
               <Input
+                ref={initialFocusRef}
                 size="sm"
                 placeholder="Image URL"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") addImage()
+                }}
               />
               <Input
                 size="sm"
                 placeholder="Alternate text"
                 value={imageAlt}
                 onChange={(e) => setImageAlt(e.target.value)}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") addImage()
+                }}
               />
             </Stack>
           </PopoverBody>
