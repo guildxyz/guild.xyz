@@ -40,9 +40,7 @@ describe("roles", () => {
 
     cy.intercept(
       "POST",
-      `${Cypress.env("guildApiUrl")}/guilds/${
-        CONTEXT.guild.id
-      }/roles/with-requirements-and-rewards`
+      `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}/roles`
     ).as("createRoleApiCall")
 
     cy.getByDataTest("add-role-button").click()

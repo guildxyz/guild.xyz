@@ -20,7 +20,7 @@ const useCreateGuild = () => {
   const fetcherWithSign = useFetcherWithSign()
 
   const fetchData = async (signedValidation: SignedValdation): Promise<Guild> =>
-    fetcher("/v2/guilds/with-roles", signedValidation)
+    fetcher("/v2/guilds", signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<Guild>(fetchData, {
     onError: (error_) =>

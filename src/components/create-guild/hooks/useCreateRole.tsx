@@ -33,7 +33,7 @@ const useCreateRole = (onSuccess?: () => void) => {
   const { id, urlName, mutateGuild } = useGuild()
 
   const fetchData = async (signedValidation: SignedValdation): Promise<Role> =>
-    fetcher(`/v2/guilds/${id}/roles/with-requirements-and-rewards`, signedValidation)
+    fetcher(`/v2/guilds/${id}/roles`, signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<Role>(fetchData, {
     onError: (error_) =>
