@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react"
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
+import GuildTag from "components/[guild]/activity/ActivityLogAction/components/GuildTag"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Warning, X } from "phosphor-react"
 import { PropsWithChildren, useEffect, useState } from "react"
@@ -27,6 +28,7 @@ import { ACTION } from "../../../constants"
 import { FILTER_NAMES, useActivityLogFilters } from "../ActivityLogFiltersContext"
 import Dropdown from "../Dropdown"
 import ActionSuggestons from "./components/ActionSuggestons"
+import GuildSuggestions from "./components/GuildSuggestions"
 import RewardSuggestions from "./components/RewardSuggestions"
 import RoleSuggestions from "./components/RoleSuggestions"
 
@@ -166,6 +168,15 @@ const FilterTag = ({
                         </Text>
                       </HStack>
                     )
+                  case "guildId": {
+                    return (
+                      <GuildTag
+                        guildId={Number(value)}
+                        pr={6}
+                        borderLeftRadius={0}
+                      />
+                    )
+                  }
                   case "roleId": {
                     return (
                       <RoleTag
@@ -266,7 +277,7 @@ const FilterTag = ({
         )}
       </Tag>
 
-      {["roleId", "rolePlatformId", "action"].includes(filter) && (
+      {["guildId", "roleId", "rolePlatformId", "action"].includes(filter) && (
         <Dropdown
           {...{
             ...positionerProps,
@@ -276,6 +287,13 @@ const FilterTag = ({
           <Stack spacing={0} {...contentProps}>
             {(() => {
               switch (filter) {
+                case "guildId":
+                  return (
+                    <GuildSuggestions
+                      inputValue={inputValue}
+                      getOptionProps={getOptionProps}
+                    />
+                  )
                 case "roleId":
                   return (
                     <RoleSuggestions
