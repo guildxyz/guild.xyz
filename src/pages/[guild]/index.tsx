@@ -269,7 +269,10 @@ const GuildPage = (): JSX.Element => {
                 href={`/${urlName}/events`}
                 onClick={() => {
                   setEventsSeen(true)
-                  captureEvent("Click on events tab", { from: "home" })
+                  captureEvent("Click on events tab", {
+                    from: "home",
+                    guildUrl: urlName,
+                  })
                 }}
               >
                 Events
