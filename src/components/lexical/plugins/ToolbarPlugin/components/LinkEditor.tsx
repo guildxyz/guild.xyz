@@ -98,6 +98,12 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
     })
   }, [editor, updateLinkEditor])
 
+  const addLink = () => {
+    if (!lastSelection || !linkUrl) return
+    editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkUrl)
+    onClose()
+  }
+
   return (
     <Popover
       initialFocusRef={initialFocusRef}
@@ -139,17 +145,16 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
               onChange={(event) => {
                 setLinkUrl(event.target.value)
               }}
+              onKeyUp={(e) => {
+                if (e.key === "Enter") addLink()
+              }}
             />
             <Button
               size="sm"
               variant="solid"
               flexShrink={0}
               borderRadius="lg"
-              onClick={() => {
-                if (!lastSelection || !linkUrl) return
-                editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkUrl)
-                onClose()
-              }}
+              onClick={addLink}
               isDisabled={!linkUrl?.length}
             >
               Save
