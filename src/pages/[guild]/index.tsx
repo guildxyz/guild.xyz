@@ -14,6 +14,12 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import PulseMarker from "components/common/PulseMarker"
+import Section from "components/common/Section"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import AccessHub from "components/[guild]/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
@@ -35,12 +41,6 @@ import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import PulseMarker from "components/common/PulseMarker"
-import Section from "components/common/Section"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import useLocalStorage from "hooks/useLocalStorage"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
@@ -271,7 +271,7 @@ const GuildPage = (): JSX.Element => {
                   setEventsSeen(true)
                   captureEvent("Click on events tab", {
                     from: "home",
-                    guildUrl: urlName,
+                    guild: urlName,
                   })
                 }}
               >
