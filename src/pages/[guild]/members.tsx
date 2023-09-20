@@ -201,7 +201,10 @@ const GuildPage = (): JSX.Element => {
               href={`/${urlName}/events`}
               onClick={() => {
                 setEventsSeen(true)
-                captureEvent("Click on events tab", { from: "activity log" })
+                captureEvent("Click on events tab", {
+                  from: "activity log",
+                  guild: urlName,
+                })
               }}
             >
               Events
@@ -220,7 +223,7 @@ const GuildPage = (): JSX.Element => {
 }
 
 const GuildPageWrapper = (): JSX.Element => {
-  const { featureFlags, name, error } = useGuild()
+  const { urlName, featureFlags, name, error } = useGuild()
   const router = useRouter()
 
   if (error) return <ErrorPage statusCode={404} />
