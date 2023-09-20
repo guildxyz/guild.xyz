@@ -16,10 +16,12 @@ const useDisconnect = (onSuccess?: () => void) => {
   const toast = useToast()
 
   const submit = async (signedValidation: SignedValdation) => {
-    const { platformName } = JSON.parse(signedValidation.signedPayload)
+    const { platformName, emailAddress } = JSON.parse(signedValidation.signedPayload)
 
     return fetcher(
-      `/v2/users/${userId}/platform-users/${PlatformType[platformName] ?? 0}`,
+      platformName === "EMAIL"
+        ? `/v2/users/${userId}/emails/${emailAddress}`
+        : `/v2/users/${userId}/platform-users/${PlatformType[platformName] ?? 0}`,
       {
         method: "DELETE",
         ...signedValidation,
@@ -27,28 +29,43 @@ const useDisconnect = (onSuccess?: () => void) => {
     )
   }
 
-  return useSubmitWithSign<{ platformId: number }>(submit, {
-    onSuccess: ({ platformId }) => {
-      mutateUser(
-        (prev) => ({
-          ...prev,
-          platformUsers: (prev?.platformUsers ?? []).filter(
-            (prevPlatformUser) => prevPlatformUser.platformId !== platformId
-          ),
-        }),
-        { revalidate: false }
-      )
-      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
+  return useSubmitWithSign<{ platformId: number; deletedEmailAddress?: string }>(
+    submit,
+    {
+      onSuccess: ({ platformId, deletedEmailAddress }) => {
+        if (deletedEmailAddress) {
+          mutateUser(
+            (prev) => ({
+              ...prev,
+              emails: undefined,
+            }),
+            { revalidate: false }
+          )
+        } else {
+          mutateUser(
+            (prev) => ({
+              ...prev,
+              platformUsers: (prev?.platformUsers ?? []).filter(
+                (prevPlatformUser) => prevPlatformUser.platformId !== platformId
+              ),
+            }),
+            { revalidate: false }
+          )
+        }
+        mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
 
-      toast({
-        title: `Account disconnected!`,
-        status: "success",
-      })
+        toast({
+          title: `${
+            deletedEmailAddress ? "Email address" : "Account"
+          } disconnected!`,
+          status: "success",
+        })
 
-      onSuccess?.()
-    },
-    onError: (error) => showErrorToast(error),
-  })
+        onSuccess?.()
+      },
+      onError: (error) => showErrorToast(error),
+    }
+  )
 }
 
 const useDisconnectAddress = (onSuccess?: () => void) => {

@@ -49,11 +49,14 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
   })
   const { field } = useController({ control, name: "code" })
   const email = useWatch({ control, name: "email" })
+  const { id: userId } = useUser()
 
   const [emailSentAt, setEmailSentAt] = useState<number>(null)
 
-  const submitVerificationRequest = (signedPayload: SignedValdation) =>
-    fetcher(`/v2/email/verifications`, signedPayload).then((data) => {
+  const submitVerificationRequest = (
+    signedPayload: SignedValdation
+  ): Promise<{ remainingAttempts: number; success: boolean }> =>
+    fetcher(`/v2/users/${userId}/emails`, signedPayload).then((data) => {
       setEmailSentAt(Date.now())
       return data
     })
@@ -148,6 +151,7 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
                       connect.onSubmit({
                         platformName: "EMAIL",
                         authData: { code: value },
+                        emailAddress: email,
                       })
                     }
                   }}

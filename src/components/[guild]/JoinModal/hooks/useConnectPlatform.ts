@@ -82,16 +82,13 @@ const useConnectPlatform = (
 }
 
 type EmailConnectRepsonse = {
-  identityType: PlatformName
-  identity: {
-    id: number
-    emailAddress: string
-    domain: string
-    primary: boolean
-    createdAt: Date
-    identityId: number
-    emailVerificationCodeId: number
-  }
+  createdAt: Date
+  domain: string
+  emailAddress: string
+  emailVerificationCodeId: number
+  id: number
+  identityId: number
+  primary: boolean
 }
 
 const useConnect = (
@@ -106,14 +103,19 @@ const useConnect = (
   const { mutate: mutateUser, id } = useUser()
 
   const submit = (signedValidation: SignedValdation) => {
-    const platformName =
-      JSON.parse(signedValidation?.signedPayload ?? "{}")?.platformName ??
-      "UNKNOWN_PLATFORM"
+    const { platformName = "UNKNOWN_PLATFORM", emailAddress } = JSON.parse(
+      signedValidation?.signedPayload ?? "{}"
+    )
 
-    return fetcher(`/v2/users/${id}/platform-users`, {
-      method: "POST",
-      ...signedValidation,
-    })
+    return fetcher(
+      platformName === "EMAIL"
+        ? `/v2/users/${id}/emails/${emailAddress}/verification`
+        : `/v2/users/${id}/platform-users`,
+      {
+        method: "POST",
+        ...signedValidation,
+      }
+    )
       .then((body) => {
         if (body === "rejected") {
           // eslint-disable-next-line @typescript-eslint/no-throw-literal
@@ -139,13 +141,13 @@ const useConnect = (
     onSuccess: (newPlatformUser = {} as any) => {
       // captureEvent("Platform connection", { platformName })
 
-      if ("identityType" in newPlatformUser) {
+      if (newPlatformUser?.platformName === "EMAIL") {
         mutateUser(
           (prev) => ({
             ...prev,
             emails: {
-              emailAddress: newPlatformUser?.identity?.emailAddress,
-              createdAt: newPlatformUser?.identity?.createdAt,
+              emailAddress: newPlatformUser?.emailAddress,
+              createdAt: newPlatformUser?.createdAt,
               pending: false,
             },
           }),

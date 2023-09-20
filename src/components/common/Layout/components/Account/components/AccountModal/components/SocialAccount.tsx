@@ -164,6 +164,7 @@ const ConnectPlatform = ({
 }
 
 const DisconnectPlatform = ({ type, name }) => {
+  const { emails } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const alertCancelRef = useRef()
 
@@ -172,6 +173,7 @@ const DisconnectPlatform = ({ type, name }) => {
     onSubmit({
       platformName: type,
       identityType: type === "EMAIL" ? "EMAIL" : "PLATFORM",
+      emailAddress: type === "EMAIL" ? emails?.emailAddress : undefined,
     })
 
   return (
