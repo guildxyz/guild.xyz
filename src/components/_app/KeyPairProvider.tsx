@@ -239,12 +239,8 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
   })
 
   const { data: generatedKeyPair } = useSWRImmutable(
-    "generatedKeyPair",
-    generateKeyPair,
-    {
-      revalidateOnMount: true,
-      fallbackData: { pubKey: undefined, keyPair: undefined },
-    }
+    ["generatedKeyPair", id],
+    generateKeyPair
   )
 
   const toast = useToast()

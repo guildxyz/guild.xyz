@@ -199,6 +199,17 @@ const FiltersInput = (): JSX.Element => {
             </Suggestion>
           )}
 
+          {isUserActivityLog && (
+            <Suggestion
+              label="Guild"
+              {...getOptionProps({ label: "Guild", value: "guildId" })}
+            >
+              <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
+                Filter by guild
+              </Text>
+            </Suggestion>
+          )}
+
           {shouldRenderRoleSuggestions && (
             <Suggestion
               label="Role"

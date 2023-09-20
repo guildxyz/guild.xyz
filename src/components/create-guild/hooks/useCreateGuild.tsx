@@ -23,10 +23,11 @@ const useCreateGuild = () => {
     fetcher("/v2/guilds/with-roles", signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<Guild>(fetchData, {
-    onError: (error_) => {
-      const processedError = processConnectorError(error_)
-      showErrorToast(processedError || error_)
-    },
+    onError: (error_) =>
+      showErrorToast({
+        error: processConnectorError(error_.error) ?? error_.error,
+        correlationId: error_.correlationId,
+      }),
     onSuccess: (response_) => {
       triggerConfetti()
 

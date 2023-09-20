@@ -47,8 +47,9 @@ const CollectNftModalButton = () => {
             guild: urlName,
           })
         }}
+        isDisabled={alreadyCollected}
       >
-        Collect NFT
+        {alreadyCollected ? "Already collected" : "Collect NFT"}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">

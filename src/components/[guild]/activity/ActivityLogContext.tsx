@@ -160,6 +160,7 @@ const ActivityLogProvider = ({
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateFirstPage: false,
+      revalidateOnMount: true,
     }
   )
 

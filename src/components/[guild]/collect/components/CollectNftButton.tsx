@@ -41,7 +41,11 @@ const CollectNftButton = ({
   const { onSubmit: onJoinAndMintSubmit, isLoading: isJoinLoading } =
     useSubmitWithSign(join, {
       onSuccess: onMintSubmit,
-      onError: () => showErrorToast("Couldn't check eligibility"),
+      onError: (error) =>
+        showErrorToast({
+          error: "Couldn't check eligibility",
+          correlationId: error.correlationId,
+        }),
     })
 
   const { data: nftDetails, isValidating: isNftDetailsValidating } = useNftDetails(

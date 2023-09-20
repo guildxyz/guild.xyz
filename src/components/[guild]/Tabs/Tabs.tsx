@@ -1,6 +1,6 @@
 import { Box, HStack, useColorModeValue } from "@chakra-ui/react"
 import useIsStuck from "hooks/useIsStuck"
-import { PropsWithChildren, createContext, useContext } from "react"
+import { createContext, PropsWithChildren, useContext } from "react"
 
 type Props = {
   sticky?: boolean
@@ -40,7 +40,6 @@ const Tabs = ({
         alignItems="center"
         position={sticky ? "sticky" : "relative"}
         top={0}
-        py={2.5}
         mt={-3}
         mb={2}
         width="full"
@@ -68,6 +67,7 @@ const Tabs = ({
         >
           <HStack
             overflowX="auto"
+            py={2.5}
             px={8}
             sx={{
               "&::-webkit-scrollbar": {

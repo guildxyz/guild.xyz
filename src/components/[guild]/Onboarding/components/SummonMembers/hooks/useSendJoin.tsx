@@ -1,5 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
@@ -8,6 +9,7 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
   const { mutateGuild } = useGuild()
 
   const toast = useToast()
+  const showErrorToast = useShowErrorToast()
 
   const sendJoin = (signedValidation: SignedValdation) =>
     fetcher("/discord/sendButton", {
@@ -16,16 +18,11 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
     })
 
   const useSubmitResponse = useSubmitWithSign(sendJoin, {
-    onError: (error) => {
-      const simpleError = error?.errors?.[0]?.msg
-      const processedError = processConnectorError(error)
-
-      toast({
-        status: "error",
-        title: `Failed to send ${type === "JOIN" ? "join" : "mint"} button`,
-        description: simpleError ?? processedError,
-      })
-    },
+    onError: (error) =>
+      showErrorToast({
+        error: processConnectorError(error.error) ?? error.error,
+        correlationId: error.correlationId,
+      }),
     onSuccess: () => {
       toast({
         status: "success",

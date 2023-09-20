@@ -5,7 +5,7 @@ import capitalize from "utils/capitalize"
 import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
 import { useActivityLogActionContext } from "../ActivityLogActionContext"
-import GuildTag from "./GuildTag"
+import { ClickableGuildTag } from "./GuildTag"
 import IdentityTag from "./IdentityTag"
 import { ClickableRewardTag } from "./RewardTag"
 import { ClickableRoleTag } from "./RoleTag"
@@ -32,7 +32,7 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {isUserActivityLog ? (
-                  <GuildTag guildId={ids.guild} />
+                  <ClickableGuildTag guildId={ids.guild} />
                 ) : (
                   <>
                     <Text as="span">by</Text>
@@ -46,7 +46,7 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {isUserActivityLog ? (
-                  <GuildTag guildId={ids.guild} />
+                  <ClickableGuildTag guildId={ids.guild} />
                 ) : (
                   <>
                     <Text as="span"> by </Text>
@@ -55,13 +55,20 @@ const ActionLabel = (): JSX.Element => {
                 )}
               </>
             )
+          case ACTION.DeleteGuild:
+            return (
+              <>
+                <Text as="span">{capitalizedName}</Text>
+                <ClickableGuildTag guildId={ids.guild} />
+              </>
+            )
           case ACTION.AddAdmin:
           case ACTION.RemoveAdmin:
             return (
               <>
                 <Text as="span">{capitalizedName}:</Text>
                 <ClickableUserTag userId={ids.user} />
-                {isUserActivityLog && <GuildTag guildId={ids.guild} />}
+                {isUserActivityLog && <ClickableGuildTag guildId={ids.guild} />}
               </>
             )
           case ACTION.CreateRole:
@@ -72,7 +79,7 @@ const ActionLabel = (): JSX.Element => {
                 <Text as="span">{capitalizedName}</Text>
                 <ClickableRoleTag roleId={ids.role} guildId={ids.guild} />
                 {isUserActivityLog ? (
-                  <GuildTag guildId={ids.guild} />
+                  <ClickableGuildTag guildId={ids.guild} />
                 ) : (
                   <>
                     <Text as="span">by</Text>
@@ -147,7 +154,7 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">Join Guild through website</Text>
                 {isUserActivityLog ? (
-                  <GuildTag guildId={ids.guild} />
+                  <ClickableGuildTag guildId={ids.guild} />
                 ) : (
                   <ClickableUserTag userId={ids.user} />
                 )}
@@ -160,7 +167,7 @@ const ActionLabel = (): JSX.Element => {
                   platforms[data.platformName].name
                 }`}</Text>
                 {isUserActivityLog ? (
-                  <GuildTag guildId={ids.guild} />
+                  <ClickableGuildTag guildId={ids.guild} />
                 ) : (
                   <ClickableUserTag userId={ids.user} />
                 )}
@@ -171,7 +178,7 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {isUserActivityLog ? (
-                  <GuildTag guildId={ids.guild} />
+                  <ClickableGuildTag guildId={ids.guild} />
                 ) : (
                   <ClickableUserTag userId={ids.user} />
                 )}

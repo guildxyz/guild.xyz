@@ -20,11 +20,8 @@ type Rest = {
 
 type Logic = "AND" | "OR" | "ANY_OF"
 
-type ThemeMode = "LIGHT" | "DARK"
-
 type Theme = {
   color?: string
-  mode?: ThemeMode
   backgroundImage?: string
   backgroundCss?: string
 }
@@ -651,7 +648,6 @@ export type {
   SelectOption,
   SocialLinkKey,
   SocialLinks,
-  ThemeMode,
   Token,
   Trait,
   User,

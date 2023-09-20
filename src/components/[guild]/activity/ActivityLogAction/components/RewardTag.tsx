@@ -20,7 +20,7 @@ const RewardTag = forwardRef<Props, "span">(
     const rewardName = reward?.platformGuildName ?? reward?.data?.name
     const name =
       (reward?.platformId === PlatformType.DISCORD
-        ? `${role.name} - ${rewardName}`
+        ? `${role?.name ?? "Unknown role"} - ${rewardName}`
         : rewardName) ?? label
 
     const icon = platforms[reward?.platformName || platformType]?.icon
