@@ -15,7 +15,6 @@ import {
 } from "react"
 import { PlatformName } from "types"
 import requestNetworkChangeHandler from "utils/requestNetworkChange"
-import EmailModal from "./components/EmailModal"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
@@ -41,11 +40,6 @@ const Web3Connection = createContext({
     _addressOrDomain: string,
     _platformName: PlatformName
   ) => {},
-  emailModal: {
-    isOpen: false,
-    onOpen: () => {},
-    onClose: () => {},
-  },
 })
 
 const Web3ConnectionManager = ({
@@ -127,8 +121,6 @@ const Web3ConnectionManager = ({
     openPlatformMergeAlert()
   }
 
-  const emailModal = useDisclosure()
-
   return (
     <Web3Connection.Provider
       value={{
@@ -144,11 +136,6 @@ const Web3ConnectionManager = ({
         isDelegateConnection,
         setIsDelegateConnection,
         isNetworkChangeInProgress,
-        emailModal: {
-          isOpen: emailModal.isOpen,
-          onClose: emailModal.onClose,
-          onOpen: emailModal.onOpen,
-        },
       }}
     >
       {children}
@@ -163,11 +150,10 @@ const Web3ConnectionManager = ({
         addressOrDomain={accountMergeAddress}
         platformName={accountMergePlatformName}
       />
-      <EmailModal {...emailModal} />
     </Web3Connection.Provider>
   )
 }
 
 const useWeb3ConnectionManager = () => useContext(Web3Connection)
 
-export { Web3ConnectionManager, useWeb3ConnectionManager }
+export { useWeb3ConnectionManager, Web3ConnectionManager }
