@@ -119,7 +119,7 @@ const MintGuildPinProviderComponent = ({
         isImageValidating,
         isInvalidImage,
         isTooSmallImage,
-        error,
+        error: error?.error,
         mintedTokenId,
         setMintedTokenId,
       }}
