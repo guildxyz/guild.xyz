@@ -1,6 +1,5 @@
 import {
   Alert,
-  AlertDescription,
   AlertIcon,
   AlertTitle,
   ModalBody,
@@ -18,6 +17,7 @@ import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
+import { ArrowSquareOut } from "phosphor-react"
 import AlphaTag from "./components/AlphaTag"
 import MintGuildPinButton from "./components/buttons/MintGuildPinButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
@@ -32,8 +32,16 @@ const MintGuildPin = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName, guildPin } = useGuild()
 
-  const { isOpen, onOpen, onClose, isInvalidImage, isTooSmallImage } =
-    useMintGuildPinContext()
+  const {
+    isOpen,
+    onOpen,
+    onClose,
+    isInvalidImage,
+    isTooSmallImage,
+    isImageValidating,
+    error,
+  } = useMintGuildPinContext()
+  const setupRequired = isInvalidImage || isTooSmallImage
 
   const { colorMode } = useColorMode()
 
@@ -42,9 +50,10 @@ const MintGuildPin = (): JSX.Element => {
       <Button
         onClick={() => {
           onOpen()
-          captureEvent("Click: Mint Guild Pin (GuildPinRewardCard)", {
-            guild: urlName,
-          })
+          if (guildPin.isActive)
+            captureEvent("Click: Mint Guild Pin (GuildPinRewardCard)", {
+              guild: urlName,
+            })
         }}
         variant="outline"
         borderColor={colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"}
@@ -59,7 +68,11 @@ const MintGuildPin = (): JSX.Element => {
             }
           : {})}
       >
-        {isInvalidImage || isTooSmallImage ? "Setup Guild Pin" : "Mint Guild Pin"}
+        {setupRequired
+          ? "Setup Guild Pin"
+          : !guildPin.isActive
+          ? "Activate Guild Pin"
+          : "Mint Guild Pin"}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
@@ -67,22 +80,38 @@ const MintGuildPin = (): JSX.Element => {
         <ModalContent>
           <ModalHeader pb={4} pr={16}>
             <Text as="span" mr={2}>
-              Mint Guild Pin
+              {setupRequired
+                ? "Setup Guild Pin"
+                : !guildPin.isActive
+                ? "Activate Guild Pin"
+                : "Mint Guild Pin"}
             </Text>
             <AlphaTag />
           </ModalHeader>
           <ModalCloseButton />
 
           <ModalBody pb="6">
-            {(isInvalidImage || isTooSmallImage) && (
-              <Alert status="error" mb="6" pb="5">
+            {!isImageValidating && (error || setupRequired) && (
+              <Alert status="info" mb="6" pb="5">
                 <AlertIcon />
                 <Stack position="relative" top={1}>
-                  <AlertTitle>Image too small</AlertTitle>
-                  <AlertDescription>
-                    Please upload a bigger image in guild settings to activate Guild
-                    Pin
-                  </AlertDescription>
+                  <AlertTitle>
+                    {error ??
+                      "Please upload a bigger image in guild settings to activate Guild Pin"}
+                  </AlertTitle>
+
+                  <Button
+                    size="sm"
+                    w="max-content"
+                    rightIcon={<ArrowSquareOut />}
+                    onClick={() => {
+                      // TODO: move the isOpen, onOpen, onClose states (and the modal itself?) to a context on the guild page, and use them from there
+                    }}
+                    colorScheme="blue"
+                    variant="link"
+                  >
+                    Open settings
+                  </Button>
                 </Stack>
               </Alert>
             )}
@@ -90,18 +119,29 @@ const MintGuildPin = (): JSX.Element => {
           </ModalBody>
 
           <ModalFooter flexDir="column">
-            <Stack w="full" spacing={6}>
-              <GuildPinFees />
+            {!guildPin.isActive || setupRequired ? (
+              <Button
+                size="lg"
+                colorScheme="green"
+                isDisabled={setupRequired}
+                w="full"
+              >
+                {setupRequired ? "Setup required" : "Activate Guild Pin"}
+              </Button>
+            ) : (
+              <Stack w="full" spacing={6}>
+                <GuildPinFees />
 
-              <Stack w="full" spacing={2}>
-                <SwitchNetworkButton targetChainId={Chains[guildPin.chain]} />
-                <MintGuildPinButton />
+                <Stack w="full" spacing={2}>
+                  <SwitchNetworkButton targetChainId={Chains[guildPin.chain]} />
+                  <MintGuildPinButton />
+                </Stack>
+
+                <Text colorScheme="gray" fontSize="sm">
+                  This is a non-transferable token that has no financial value.
+                </Text>
               </Stack>
-
-              <Text colorScheme="gray" fontSize="sm">
-                This is a non-transferable token that has no financial value.
-              </Text>
-            </Stack>
+            )}
           </ModalFooter>
         </ModalContent>
       </Modal>

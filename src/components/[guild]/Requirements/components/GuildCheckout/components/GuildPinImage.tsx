@@ -1,15 +1,10 @@
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   AspectRatio,
   Box,
   Circle,
   Icon,
   Img,
   Spinner,
-  Stack,
   Text,
   useColorModeValue,
   VStack,
@@ -18,13 +13,17 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { DownloadSimple } from "phosphor-react"
 import { useEffect, useState } from "react"
+import GuildGhost from "static/avatars/ghost.svg"
 import converSVGToPNG from "utils/convertSVGToPNG"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 
 const GuildPinImage = (): JSX.Element => {
-  const { pinType, pinImage, error } = useMintGuildPinContext()
+  const { pinType, pinImage, isInvalidImage, isTooSmallImage } =
+    useMintGuildPinContext()
   const { name } = useGuild()
   const { isAdmin } = useGuildPermission()
+
+  const ghostIconColor = useColorModeValue("blackAlpha.300", "whiteAlpha.300")
 
   const imageShadow = useColorModeValue(
     "10px 10px 20px #d4d4d4, -10px -10px 20px #ffffff;",
@@ -36,17 +35,6 @@ const GuildPinImage = (): JSX.Element => {
     [GuildAction.IS_OWNER]: `This is an onchain proof that you're the owner of ${name} on Guild.xyz.`,
     [GuildAction.IS_ADMIN]: `This is an onchain proof that you're an admin of ${name} on Guild.xyz.`,
   }
-
-  if (error)
-    return (
-      <Alert status="error" pb="6" mb="8">
-        <AlertIcon />
-        <Stack top="1" position="relative" w="full">
-          <AlertTitle>Couldn't generate Guild Pin</AlertTitle>
-          <AlertDescription wordBreak={"break-word"}>{error}</AlertDescription>
-        </Stack>
-      </Alert>
-    )
 
   const pinUrl = `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`
 
@@ -66,7 +54,9 @@ const GuildPinImage = (): JSX.Element => {
               />
             )}
 
-            {pinImage && isAdmin && <DownloadGuildPinImage pinUrl={pinUrl} />}
+            {pinImage && isAdmin && !isInvalidImage && !isTooSmallImage && (
+              <DownloadGuildPinImage pinUrl={pinUrl} />
+            )}
 
             <Circle
               position="absolute"
@@ -77,12 +67,16 @@ const GuildPinImage = (): JSX.Element => {
               transform="scale(0.98)"
               boxShadow={imageShadow}
             >
-              <VStack>
-                <Spinner size="lg" />
-                <Text fontWeight="bold" textAlign="center" fontSize="sm">
-                  Generating Guild Pin
-                </Text>
-              </VStack>
+              {isInvalidImage ? (
+                <Icon as={GuildGhost} boxSize={16} color={ghostIconColor} />
+              ) : (
+                <VStack>
+                  <Spinner size="lg" />
+                  <Text fontWeight="bold" textAlign="center" fontSize="sm">
+                    Generating Guild Pin
+                  </Text>
+                </VStack>
+              )}
             </Circle>
           </>
         </AspectRatio>

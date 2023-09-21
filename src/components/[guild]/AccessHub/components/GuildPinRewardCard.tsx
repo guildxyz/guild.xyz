@@ -1,6 +1,7 @@
 import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import RewardCard from "components/common/RewardCard"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import dynamic from "next/dynamic"
@@ -16,6 +17,7 @@ const GuildPinRewardCard = () => {
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
 
   const { isAdmin } = useGuildPermission()
+  const { guildPin } = useGuild()
 
   const { isInvalidImage, isTooSmallImage } = useMintGuildPinContext()
 
@@ -33,8 +35,8 @@ const GuildPinRewardCard = () => {
         }
         title="Guild Pin"
         image="/img/guild-pin-key-3d.svg"
-        colorScheme={isInvalidImage || isTooSmallImage ? "gray" : "GUILD"}
-        borderStyle={(isInvalidImage || isTooSmallImage) && "dashed"}
+        colorScheme={!guildPin?.isActive ? "gray" : "GUILD"}
+        borderStyle={!guildPin?.isActive && "dashed"}
         description="Onchain badge that shows your support and belonging to this community."
         bg={bgColor}
         _before={{

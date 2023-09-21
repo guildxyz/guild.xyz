@@ -2,14 +2,12 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import useUser from "components/[guild]/hooks/useUser"
-import useLocalStorage from "hooks/useLocalStorage"
 import {
   createContext,
   Dispatch,
   PropsWithChildren,
   SetStateAction,
   useContext,
-  useEffect,
   useState,
 } from "react"
 import useSWRImmutable from "swr/immutable"
@@ -75,27 +73,15 @@ const MintGuildPinProviderComponent = ({
     ? GuildAction.JOINED_GUILD
     : null
 
-  const [imageWHFromLocalstorage, setImageWHFromLocalstorage] =
-    useLocalStorage<ImageWH>(imageUrl ? `guildImageWH:${imageUrl}` : null, undefined)
-
   const { data, isValidating } = useSWRImmutable(
-    !isInvalidImage && !imageWHFromLocalstorage
-      ? ["imageWidthAndHeight", imageUrl]
-      : null,
+    !isInvalidImage ? ["imageWidthAndHeight", imageUrl] : null,
     getImageWidthAndHeight
   )
 
-  useEffect(() => {
-    if (!data || imageWHFromLocalstorage) return
-    setImageWHFromLocalstorage(data)
-  }, [data, imageWHFromLocalstorage])
-
-  const isTooSmallImage = imageWHFromLocalstorage
-    ? imageWHFromLocalstorage.width < MIN_IMAGE_WH ||
-      imageWHFromLocalstorage.height < MIN_IMAGE_WH
-    : !isValidating &&
-      data &&
-      (data.width < MIN_IMAGE_WH || data.height < MIN_IMAGE_WH)
+  const isTooSmallImage =
+    !isValidating &&
+    data &&
+    (data.width < MIN_IMAGE_WH || data.height < MIN_IMAGE_WH)
 
   const shouldFetchImage = id && typeof pinType === "number"
   const {

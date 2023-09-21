@@ -348,7 +348,7 @@ type Guild = {
   hiddenRoles?: boolean
   requiredPlatforms?: PlatformName[]
   tags: GuildTags[]
-  guildPin: {
+  guildPin?: {
     chain: Chain
     isActive: boolean
   }
