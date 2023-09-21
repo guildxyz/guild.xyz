@@ -10,7 +10,7 @@ import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useState } from "react"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
-import fetcher from "utils/fetcher"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import { GUILD_PIN_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 import useGuildPinFee from "./useGuildPinFee"
@@ -100,6 +100,8 @@ const useMintGuildPin = () => {
     return guildPinContract.claim(...contractCallParams)
   }
 
+  const fetcherWithSign = useFetcherWithSign()
+
   return {
     ...useSubmitTransaction<null>(mintGuildPin, {
       onSuccess: async (txReceipt) => {
@@ -145,6 +147,19 @@ const useMintGuildPin = () => {
             },
           ])
         } catch {}
+
+        const hasGuildPinRequirement = roles
+          .flatMap((r) => r.requirements)
+          .some(
+            (req) =>
+              req.type === "ERC721" &&
+              req.chain === Chains[chainId] &&
+              req.address.toLowerCase() === guildPinContract.address.toLowerCase()
+          )
+
+        if (hasGuildPinRequirement) {
+          fetcherWithSign([`/user/join`, { method: "POST", body: { guildId: id } }])
+        }
 
         toastWithTweetButton({
           title: "Successfully minted Guild Pin!",
