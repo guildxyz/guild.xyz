@@ -68,7 +68,6 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
   const shouldShowPinEntry = !!verificationRequest.response || !!pendingEmailAddress
 
   const onClose = () => {
-    toast({ status: "success", title: "Email verified" })
     const channel = new BroadcastChannel("EMAIL")
     // Sending null, so useOauthPopup's promise resolves, but we won't send a connect in useConnectPlatform because authData is falsy
     channel.postMessage({ type: "OAUTH_SUCCESS", data: null })
@@ -84,10 +83,17 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
 
   const pinInputRef = useRef<HTMLInputElement>()
 
-  const connect = useConnect(onClose, undefined, () => {
-    setValue("code", "")
-    pinInputRef.current?.focus()
-  })
+  const connect = useConnect(
+    () => {
+      toast({ status: "success", title: "Email verified" })
+      onClose()
+    },
+    undefined,
+    () => {
+      setValue("code", "")
+      pinInputRef.current?.focus()
+    }
+  )
 
   // Set the known pending email address
   useEffect(() => {
