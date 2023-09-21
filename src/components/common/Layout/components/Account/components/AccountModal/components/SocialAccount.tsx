@@ -19,13 +19,15 @@ import { Alert } from "components/common/Modal"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { motion } from "framer-motion"
 import useToast from "hooks/useToast"
 import { LinkBreak, Question } from "phosphor-react"
 import platforms from "platforms/platforms"
-import { memo, useRef } from "react"
+import { memo, ReactNode, useRef } from "react"
+import { PathString } from "react-hook-form"
 import { PlatformName } from "types"
-import useDisconnect from "../hooks/useDisconnect"
+import useDisconnect, { useDisconnectEmail } from "../hooks/useDisconnect"
 
 type Props = {
   type: PlatformName
@@ -34,16 +36,11 @@ type Props = {
 const MotionHStack = motion(HStack)
 
 const SocialAccount = memo(({ type }: Props): JSX.Element => {
-  const { icon, name, colorScheme } = platforms[type]
-
-  const circleBorderColor = useColorModeValue("gray.100", "gray.700")
-  const { platformUsers, emails } = useUser()
+  const { platformUsers } = useUser()
   const accesses = useAccess()
   const platformUser = platformUsers?.find(
     (platform) => platform.platformName.toString() === type
   )
-
-  const email = type === "EMAIL" ? emails : null
 
   const isReconnect =
     !!accesses &&
@@ -54,67 +51,92 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
       )
     )
 
-  const username = email
-    ? email?.emailAddress
-    : platformUser?.platformUserData?.username
-
   return (
-    <>
-      <MotionHStack layout spacing={3} alignItems="center" w="full">
-        {!platformUser || !!email ? (
-          <Avatar
-            icon={<Icon as={icon} boxSize={4} color="white" />}
-            boxSize={7}
-            bgColor={`${colorScheme}.500`}
-          />
-        ) : (
-          <Avatar src={platformUser.platformUserData?.avatar} size="sm" boxSize={7}>
-            <AvatarBadge
-              boxSize={5}
-              bgColor={`${colorScheme}.500`}
-              borderWidth={1}
-              borderColor={circleBorderColor}
-            >
-              <Icon as={icon} boxSize={3} color="white" />
-            </AvatarBadge>
-          </Avatar>
-        )}
-        <Text fontWeight="bold" flex="1" noOfLines={1} fontSize="sm">
-          {username ??
-            `${platforms[type].name} ${!!platformUser ? "connected" : ""}`}
-          {email?.pending && (
-            <Text color={"gray"} display={"inline"}>
-              {" "}
-              (pending)
-            </Text>
-          )}
-          {type === "TWITTER_V1" ? (
-            <Text color={"gray"} display={"inline"}>
-              {" "}
-              (v1)
-            </Text>
-          ) : null}
-        </Text>
-        {type === "TWITTER_V1" ? <TwitterV1Tooltip /> : null}
-        {!platformUser && (!email?.createdAt || email?.pending) ? (
-          // || ("pending" in platformUser && platformUser.pending)
-          <ConnectPlatform
-            type={type}
-            colorScheme={email?.pending ? "orange" : colorScheme}
-            connectLabel={email?.pending ? "Verify" : undefined}
-          />
-        ) : (
-          <HStack spacing="1">
-            {isReconnect && (
-              <ConnectPlatform type={type} colorScheme={colorScheme} isReconnect />
-            )}
-            <DisconnectPlatform type={type} name={name} />
-          </HStack>
-        )}
-      </MotionHStack>
-    </>
+    <ConnectButton
+      shouldReconnect={isReconnect}
+      type={type}
+      avatarUrl={platformUser?.platformUserData?.avatar}
+      username={platformUser?.platformUserData?.username}
+      isConnected={!!platformUser}
+    />
   )
 })
+
+const EmailAddress = () => {
+  const { emails } = useUser()
+
+  return (
+    <ConnectButton
+      type={"EMAIL"}
+      username={emails?.emailAddress}
+      isConnected={!!emails && !emails.pending}
+      ConnectButton={<ConnectEmail />}
+      DisconnectButton={<DisconnectEmail />}
+    />
+  )
+}
+
+const ConnectButton = ({
+  type,
+  avatarUrl,
+  username,
+  isConnected,
+  shouldReconnect,
+  DisconnectButton,
+  ConnectButton: PropConnectButton,
+}: {
+  type: PlatformName
+  avatarUrl?: string
+  username?: string
+  isConnected?: boolean
+  shouldReconnect?: boolean
+  DisconnectButton?: ReactNode
+  ConnectButton?: ReactNode
+}) => {
+  const { icon, name, colorScheme } = platforms[type]
+  const circleBorderColor = useColorModeValue("gray.100", "gray.700")
+
+  return (
+    <MotionHStack layout spacing={3} alignItems="center" w="full">
+      {!!avatarUrl ? (
+        <Avatar src={avatarUrl} size="sm" boxSize={7}>
+          <AvatarBadge
+            boxSize={5}
+            bgColor={`${colorScheme}.500`}
+            borderWidth={1}
+            borderColor={circleBorderColor}
+          >
+            <Icon as={icon} boxSize={3} color="white" />
+          </AvatarBadge>
+        </Avatar>
+      ) : (
+        <Avatar
+          icon={<Icon as={icon} boxSize={4} color="white" />}
+          boxSize={7}
+          bgColor={`${colorScheme}.500`}
+        />
+      )}
+      <Text fontWeight="bold" flex="1" noOfLines={1} fontSize="sm">
+        {username ?? `${platforms[type].name} ${isConnected ? "connected" : ""}`}
+        {type === "TWITTER_V1" ? (
+          <Text color={"gray"} display={"inline"}>
+            {" "}
+            (v1)
+          </Text>
+        ) : null}
+      </Text>
+      {type === "TWITTER_V1" ? <TwitterV1Tooltip /> : null}
+      {!isConnected ? (
+        PropConnectButton ?? <ConnectPlatform type={type} />
+      ) : (
+        <HStack spacing="1">
+          {shouldReconnect && <ConnectPlatform type={type} isReconnect />}
+          {DisconnectButton ?? <DisconnectPlatform type={type} name={name} />}
+        </HStack>
+      )}
+    </MotionHStack>
+  )
+}
 
 export const TwitterV1Tooltip = () => (
   <Tooltip
@@ -126,12 +148,7 @@ export const TwitterV1Tooltip = () => (
   </Tooltip>
 )
 
-const ConnectPlatform = ({
-  type,
-  colorScheme,
-  isReconnect = false,
-  connectLabel = "Connect",
-}) => {
+const ConnectPlatform = ({ type, isReconnect = false }) => {
   const toast = useToast()
   const { mutate: mutateAccesses } = useAccess()
 
@@ -154,27 +171,78 @@ const ConnectPlatform = ({
       isLoading={isLoading}
       onClick={onConnect}
       isDisabled={response}
-      colorScheme={isReconnect ? "orange" : colorScheme}
+      colorScheme={isReconnect ? "orange" : platforms[type].colorScheme}
       variant={isReconnect ? "subtle" : "solid"}
       size="sm"
     >
-      {isReconnect ? "Reconnect" : connectLabel}
+      {isReconnect ? "Reconnect" : "Connect"}
     </Button>
   )
 }
 
-const DisconnectPlatform = ({ type, name }) => {
+const ConnectEmail = () => {
   const { emails } = useUser()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const alertCancelRef = useRef()
+  const { emailModal } = useWeb3ConnectionManager()
 
-  const { onSubmit, isLoading, signLoadingText } = useDisconnect(onClose)
-  const disconnectAccount = () =>
-    onSubmit({
-      platformName: type,
-      identityType: type === "EMAIL" ? "EMAIL" : "PLATFORM",
-      emailAddress: type === "EMAIL" ? emails?.emailAddress : undefined,
-    })
+  return (
+    <Button
+      isLoading={emailModal.isOpen}
+      onClick={emailModal.onOpen}
+      colorScheme={emails?.pending ? "orange" : platforms.EMAIL.colorScheme}
+      variant={"solid"}
+      size="sm"
+    >
+      {emails?.pending ? "Verify" : "Connect"}
+    </Button>
+  )
+}
+
+const DisconnectEmail = () => {
+  const disclosure = useDisclosure()
+  const { emails } = useUser()
+
+  const { onSubmit, isLoading, signLoadingText } = useDisconnectEmail(
+    disclosure.onClose
+  )
+  const onConfirm = () => onSubmit(emails?.emailAddress)
+  const loadingText = signLoadingText ?? "Removing"
+
+  return (
+    <DisconnectButton
+      name={platforms.EMAIL.name}
+      {...{ disclosure, isLoading, loadingText, onConfirm }}
+    />
+  )
+}
+
+type Disclosure = ReturnType<typeof useDisclosure>
+
+const DisconnectPlatform = ({ type, name }) => {
+  const disclosure = useDisclosure()
+
+  const { onSubmit, isLoading, signLoadingText } = useDisconnect(disclosure.onClose)
+  const onConfirm = () => onSubmit({ platformName: type })
+  const loadingText = signLoadingText ?? "Removing"
+
+  return (
+    <DisconnectButton {...{ disclosure, isLoading, loadingText, onConfirm, name }} />
+  )
+}
+
+const DisconnectButton = ({
+  onConfirm,
+  isLoading,
+  loadingText,
+  name,
+  disclosure: { isOpen, onClose, onOpen },
+}: {
+  onConfirm: () => void
+  isLoading: boolean
+  loadingText: PathString
+  disclosure: Disclosure
+  name: string
+}) => {
+  const alertCancelRef = useRef()
 
   return (
     <>
@@ -204,9 +272,9 @@ const DisconnectPlatform = ({ type, name }) => {
               </Button>
               <Button
                 colorScheme="red"
-                onClick={disconnectAccount}
+                onClick={onConfirm}
                 isLoading={isLoading}
-                loadingText={signLoadingText || "Removing"}
+                loadingText={loadingText}
                 ml={3}
               >
                 Disconnect
@@ -219,4 +287,5 @@ const DisconnectPlatform = ({ type, name }) => {
   )
 }
 
+export { EmailAddress }
 export default SocialAccount

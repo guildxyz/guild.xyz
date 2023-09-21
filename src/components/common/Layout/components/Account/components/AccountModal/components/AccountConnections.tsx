@@ -25,7 +25,7 @@ import useDelegateVaults from "../../delegate/useDelegateVaults"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
 import LinkedAddress, { LinkedAddressSkeleton } from "./LinkedAddress"
-import SocialAccount from "./SocialAccount"
+import SocialAccount, { EmailAddress } from "./SocialAccount"
 
 const AccountConnections = () => {
   const {
@@ -63,9 +63,13 @@ const AccountConnections = () => {
     <>
       <AccountSectionTitle title="Social accounts" />
       <AccountSection mb="6" divider={<Divider />}>
-        {orderedSocials.map((platform) => (
-          <SocialAccount key={platform} type={platform} />
-        ))}
+        {orderedSocials.map((platform) =>
+          platform === "EMAIL" ? (
+            <EmailAddress key={"EMAIL"} />
+          ) : (
+            <SocialAccount key={platform} type={platform} />
+          )
+        )}
       </AccountSection>
       <AccountSectionTitle
         title="Linked addresses"
