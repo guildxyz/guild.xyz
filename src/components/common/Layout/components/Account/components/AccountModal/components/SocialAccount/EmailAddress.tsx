@@ -220,29 +220,35 @@ const ConnectEmailButton = () => {
               </Collapse>
             </ModalBody>
             <ModalFooter>
-              <Tooltip
-                label={
-                  "Check if you received the first code before requesting a new one (check in the spam as well)"
-                }
-                hasArrow
-                isDisabled={!isResendButtonDisabled}
-              >
+              {shouldShowPinEntry ? (
+                <Tooltip
+                  label={
+                    "Check if you received the first code before requesting a new one (check in the spam as well)"
+                  }
+                  hasArrow
+                  isDisabled={!isResendButtonDisabled}
+                >
+                  <Button
+                    w="full"
+                    isLoading={connect.isLoading || connect.isSigning}
+                    size={"sm"}
+                    variant={"ghost"}
+                    type={"submit"}
+                    isDisabled={isResendButtonDisabled}
+                  >
+                    Resend code
+                  </Button>
+                </Tooltip>
+              ) : (
                 <Button
                   w="full"
-                  isLoading={
-                    verificationRequest.isLoading ||
-                    connect.isLoading ||
-                    connect.isSigning
-                  }
-                  size={shouldShowPinEntry ? "sm" : undefined}
-                  colorScheme={shouldShowPinEntry ? "gray" : "green"}
-                  variant={shouldShowPinEntry ? "ghost" : "solid"}
+                  isLoading={verificationRequest.isLoading}
+                  colorScheme={"green"}
                   type={"submit"}
-                  isDisabled={isResendButtonDisabled}
                 >
-                  {shouldShowPinEntry ? "Resend code" : "Send code"}
+                  Send code
                 </Button>
-              </Tooltip>
+              )}
             </ModalFooter>
           </form>
         </ModalContent>
