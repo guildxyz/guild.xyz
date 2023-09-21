@@ -34,7 +34,7 @@ const Identities = ({ member }: Props) => {
           isOpen={i === 0}
         />
       ))}
-      <WalletTag>{addresses?.length}</WalletTag>
+      <WalletTag isOpen={!sortedAccounts?.length}>{addresses?.length}</WalletTag>
     </HStack>
   )
 }
