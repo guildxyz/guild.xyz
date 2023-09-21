@@ -316,6 +316,10 @@ const supportedSocialLinks = [
 type SocialLinkKey = (typeof supportedSocialLinks)[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
 
+const supportedEventProviders = ["LINK3", "EVENTBRITE", "LUMA"] as const
+type EventProviderKey = (typeof supportedEventProviders)[number]
+type EventProviders = Partial<Record<EventProviderKey, string>>
+
 const guildTags = ["VERIFIED", "FEATURED"] as const
 type GuildTags = (typeof guildTags)[number]
 
@@ -381,6 +385,13 @@ type GuildFormType = Partial<
     id?: number
     isOwner?: boolean
   }>
+}
+
+type EventsFormType = {
+  eventProviders: Record<
+    EventProviderKey,
+    { link: string | null; isEnabled: boolean }
+  >
 }
 
 type SelectOption<T = string> = {
@@ -600,7 +611,12 @@ type DetailedUserLeaderboardData = {
   pins: LeaderboardPinData[]
 }
 
-export { ValidationMethod, Visibility, supportedSocialLinks }
+export {
+  ValidationMethod,
+  Visibility,
+  supportedEventProviders,
+  supportedSocialLinks,
+}
 export type {
   AddressConnectionProvider,
   BaseUser,
@@ -611,6 +627,9 @@ export type {
   DetailedUserLeaderboardData,
   DiscordError,
   DiscordServerData,
+  EventProviderKey,
+  EventProviders,
+  EventsFormType,
   GitPoap,
   GoogleFile,
   Guild,
@@ -618,7 +637,6 @@ export type {
   GuildBase,
   GuildFormType,
   GuildPinMetadata,
-  PlatformGuildData,
   GuildPlatform,
   GuildPoap,
   GuildTags,
@@ -628,6 +646,7 @@ export type {
   NFT,
   OneOf,
   PlatformAccountDetails,
+  PlatformGuildData,
   PlatformName,
   Poap,
   PoapContract,
