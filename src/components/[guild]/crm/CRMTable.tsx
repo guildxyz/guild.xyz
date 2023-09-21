@@ -11,7 +11,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { flexRender, Table as TableType } from "@tanstack/react-table"
+import { Table as TableType, flexRender } from "@tanstack/react-table"
 import Card from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useEffect, useRef, useState } from "react"
@@ -41,11 +41,13 @@ type Props = {
   table: TableType<Member>
   data: Member[]
   error: Error | string
+  isValidating: boolean
+  setSize: any
 }
 
 const HEADER_HEIGHT = "61px"
 
-const CRMTable = ({ table, data, error }: Props) => {
+const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
   const cardBg = useColorModeValue("white", "var(--chakra-colors-gray-700)") // css variable form so it works in boxShadow literal for identityTags
   const tdBg = useColorModeValue(`gray.50`, "#3A3A40") // dark color is from blackAlpha.200, but without opacity so it can overlay when sticky
   const tdHoverBg = useColorModeValue(`blackAlpha.50`, "whiteAlpha.50")
@@ -82,11 +84,17 @@ const CRMTable = ({ table, data, error }: Props) => {
   const [isIdentityStuck, setIsIdentityStuck] = useState(false)
   useScrollEffect(
     () => {
-      if (scrollContainerRef.current.scrollLeft > CHECKBOX_COLUMN_WIDTH)
-        setIsIdentityStuck(true)
+      const { scrollLeft, scrollTop, scrollHeight, clientHeight } =
+        scrollContainerRef.current
+
+      if (scrollLeft > CHECKBOX_COLUMN_WIDTH) setIsIdentityStuck(true)
       else setIsIdentityStuck(false)
+
+      if (scrollTop + clientHeight >= scrollHeight - 300 && !isValidating) {
+        setSize((prevSize) => prevSize + 1)
+      }
     },
-    [scrollContainerRef.current],
+    [scrollContainerRef.current, isValidating],
     null,
     scrollContainerRef.current
   )
@@ -262,24 +270,42 @@ const CRMTable = ({ table, data, error }: Props) => {
                     </Tr>
                   ))
                   .concat(
-                    <Tr key="endOfResults">
-                      <Td
-                        px="3.5"
-                        textAlign={"center"}
-                        colSpan={"100%" as any}
-                        borderBottomRadius={"2xl"}
-                        bg={tdBg}
-                      >
-                        <Text
-                          colorScheme="gray"
-                          fontSize={"xs"}
-                          fontWeight={"bold"}
-                          textTransform={"uppercase"}
+                    isValidating ? (
+                      [...Array(20)].map((_, i) => (
+                        <Tr key={i}>
+                          <Td fontSize={"sm"} px="3.5" w="12" bg={tdBg}>
+                            <Checkbox mt="2px" />
+                          </Td>
+                          {table
+                            .getAllLeafColumns()
+                            .slice(1)
+                            .map((column) => (
+                              <Td key={column.id} fontSize={"sm"} px="3.5" bg={tdBg}>
+                                <Skeleton w="70%" h="5" />
+                              </Td>
+                            ))}
+                        </Tr>
+                      ))
+                    ) : (
+                      <Tr key="endOfResults">
+                        <Td
+                          px="3.5"
+                          textAlign={"center"}
+                          colSpan={"100%" as any}
+                          borderBottomRadius={"2xl"}
+                          bg={tdBg}
                         >
-                          End of results
-                        </Text>
-                      </Td>
-                    </Tr>
+                          <Text
+                            colorScheme="gray"
+                            fontSize={"xs"}
+                            fontWeight={"bold"}
+                            textTransform={"uppercase"}
+                          >
+                            End of results
+                          </Text>
+                        </Td>
+                      </Tr>
+                    )
                   )
               ) : (
                 <Tr>

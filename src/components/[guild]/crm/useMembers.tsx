@@ -1,38 +1,69 @@
-import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
-import { useMemo } from "react"
+import { useCallback, useMemo } from "react"
+import useSWRInfinite from "swr/infinite"
 import { Visibility } from "types"
+import { useFetcherWithSign } from "utils/fetcher"
 import useGuild from "../hooks/useGuild"
+
+const LIMIT = 100
 
 const useMembers = (queryString) => {
   const { roles, id } = useGuild()
 
-  const shouldFetch = !!id
+  const hiddenRoleIds = roles
+    ?.filter((role) => role.visibility === Visibility.HIDDEN)
+    ?.map((role) => role.id)
 
-  const { data, ...rest } = useSWRWithOptionalAuth(
-    shouldFetch ? `/v2/crm/guilds/${id}/members?${queryString}` : null
+  const getKey = useCallback(
+    (pageIndex, previousPageData) => {
+      if (!id || (previousPageData && !previousPageData.length)) return null
+
+      const pagination = `offset=${pageIndex * LIMIT}&limit=${LIMIT}`
+
+      return `/v2/crm/guilds/${id}/members?${[queryString, pagination].join("&")}`
+    },
+    [queryString, id]
   )
 
-  const transformedData = useMemo(() => {
-    if (!data) return null
+  const fetcherWithSign = useFetcherWithSign()
+  const fetchMembers = useCallback(
+    (url: string) =>
+      fetcherWithSign([
+        url,
+        {
+          method: "GET",
+          body: {},
+        },
+      ]).then((res) => {
+        if (!hiddenRoleIds.length)
+          return res.map((user) => ({ ...user, roles: { public: user.roleIds } }))
 
-    const hiddenRoleIds = roles
-      .filter((role) => role.visibility === Visibility.HIDDEN)
-      .map((role) => role.id)
+        return res.map((user) => ({
+          ...user,
+          roles: {
+            hidden: user.roleIds.filter((role) =>
+              hiddenRoleIds.includes(role.roleId)
+            ),
+            public: user.roleIds.filter(
+              (role) => !hiddenRoleIds.includes(role.roleId)
+            ),
+          },
+        }))
+      }),
+    [hiddenRoleIds, fetcherWithSign]
+  )
 
-    if (!hiddenRoleIds.length)
-      return data.map((user) => ({ ...user, roles: { public: user.roleIds } }))
+  const { data, ...rest } = useSWRInfinite(getKey, fetchMembers, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateFirstPage: false,
+    revalidateOnMount: true,
+  })
 
-    return data.map((user) => ({
-      ...user,
-      roles: {
-        hidden: user.roleIds.filter((role) => hiddenRoleIds.includes(role.roleId)),
-        public: user.roleIds.filter((role) => !hiddenRoleIds.includes(role.roleId)),
-      },
-    }))
-  }, [data, roles])
+  const flattenedData = useMemo(() => data?.flat(), [data])
 
   return {
-    data: transformedData,
+    data: flattenedData,
     ...rest,
   }
 }

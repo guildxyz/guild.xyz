@@ -7,8 +7,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
+import GuildTabs from "components/[guild]/Tabs/GuildTabs"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import CRMTable, { Member } from "components/[guild]/crm/CRMTable"
 import ExportMembers from "components/[guild]/crm/ExportMembers"
 import FilterByRoles, {
@@ -28,8 +28,8 @@ import {
 } from "components/[guild]/crm/transformTableStateToAndFromQuery"
 import useMembers from "components/[guild]/crm/useMembers"
 import useGuild from "components/[guild]/hooks/useGuild"
-import GuildTabs from "components/[guild]/Tabs/GuildTabs"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
@@ -61,8 +61,7 @@ const GuildPage = (): JSX.Element => {
       scroll: false,
     })
   }, [queryString])
-
-  const { data, error } = useMembers(queryString)
+  const { data, error, isValidating, setSize } = useMembers(queryString)
 
   const columns = useMemo(
     () => [
@@ -192,7 +191,7 @@ const GuildPage = (): JSX.Element => {
           rightElement={<ExportMembers table={table} />}
         />
         {/* {JSON.stringify(table.getState(), null, 2)} */}
-        <CRMTable {...{ table, data, error }} />
+        <CRMTable {...{ table, data, error, isValidating, setSize }} />
       </Layout>
     </>
   )
