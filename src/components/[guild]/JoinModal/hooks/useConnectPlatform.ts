@@ -211,5 +211,58 @@ const useConnect = (
   }
 }
 
+const useConnectEmail = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: () => void
+  onError?: (error: any) => void
+} = {}) => {
+  const { captureEvent } = usePostHogContext()
+  const { mutate: mutateUser, id } = useUser()
+
+  const submit = (signedValidation: SignedValdation) => {
+    const { emailAddress } = JSON.parse(signedValidation?.signedPayload ?? "{}")
+
+    return fetcher(`/v2/users/${id}/emails/${emailAddress}/verification`, {
+      method: "POST",
+      ...signedValidation,
+    })
+  }
+
+  const { onSubmit, ...rest } = useSubmitWithSign<
+    OneOf<User["platformUsers"][number], EmailConnectRepsonse>
+  >(submit, {
+    onSuccess: (newPlatformUser = {} as any) => {
+      mutateUser(
+        (prev) => ({
+          ...prev,
+          emails: {
+            emailAddress: newPlatformUser?.emailAddress,
+            createdAt: newPlatformUser?.createdAt,
+            pending: false,
+          },
+        }),
+        { revalidate: false }
+      )
+
+      onSuccess?.()
+    },
+    onError: (error) => {
+      captureEvent("Email connection error", error)
+      onError?.(error)
+    },
+  })
+
+  return {
+    ...rest,
+    onSubmit: (params: { authData: { code: string }; emailAddress: string }) =>
+      onSubmit({
+        ...params,
+        identityType: "EMAIL",
+      }),
+  }
+}
+
 export default useConnectPlatform
-export { useConnect }
+export { useConnect, useConnectEmail }

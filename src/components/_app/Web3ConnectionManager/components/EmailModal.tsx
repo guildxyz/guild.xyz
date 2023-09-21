@@ -20,7 +20,7 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
-import { useConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { PencilSimple } from "phosphor-react"
@@ -87,17 +87,16 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
 
   const pinInputRef = useRef<HTMLInputElement>()
 
-  const connect = useConnect(
-    () => {
+  const connect = useConnectEmail({
+    onSuccess: () => {
       toast({ status: "success", title: "Email verified" })
       onClose()
     },
-    undefined,
-    () => {
+    onError: () => {
       setValue("code", "")
       pinInputRef.current?.focus()
-    }
-  )
+    },
+  })
 
   // Set the known pending email address
   useEffect(() => {
@@ -171,7 +170,6 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
                       field.onChange(value)
                       if (value.length === PIN_LENGTH) {
                         connect.onSubmit({
-                          platformName: "EMAIL",
                           authData: { code: value },
                           emailAddress: email,
                         })
