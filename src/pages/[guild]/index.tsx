@@ -23,6 +23,7 @@ import VerifiedIcon from "components/common/VerifiedIcon"
 import AccessHub from "components/[guild]/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
+import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -425,7 +426,9 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
         <ThemeProvider>
           <MintGuildPinProvider>
             <JoinModalProvider>
-              <GuildPage />
+              <EditGuildDrawerProvider>
+                <GuildPage />
+              </EditGuildDrawerProvider>
             </JoinModalProvider>
           </MintGuildPinProvider>
         </ThemeProvider>

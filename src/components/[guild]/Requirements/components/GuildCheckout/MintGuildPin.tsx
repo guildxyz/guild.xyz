@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
@@ -44,6 +45,8 @@ const MintGuildPin = (): JSX.Element => {
   const setupRequired = isInvalidImage || isTooSmallImage
 
   const { colorMode } = useColorMode()
+
+  const { onOpen: onEditGuildDrawerOpen } = useEditGuildDrawer()
 
   return (
     <>
@@ -104,9 +107,7 @@ const MintGuildPin = (): JSX.Element => {
                     size="sm"
                     w="max-content"
                     rightIcon={<ArrowSquareOut />}
-                    onClick={() => {
-                      // TODO: move the isOpen, onOpen, onClose states (and the modal itself?) to a context on the guild page, and use them from there
-                    }}
+                    onClick={onEditGuildDrawerOpen}
                     colorScheme="blue"
                     variant="link"
                   >
