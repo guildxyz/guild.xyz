@@ -25,7 +25,7 @@ import useDelegateVaults from "../../delegate/useDelegateVaults"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
 import LinkedAddress, { LinkedAddressSkeleton } from "./LinkedAddress"
-import SharedConnections from "./SharedConnections"
+import SharedSocials from "./SharedSocials"
 import SocialAccount from "./SocialAccount"
 
 const AccountConnections = () => {
@@ -61,7 +61,7 @@ const AccountConnections = () => {
     <>
       <AccountSectionTitle
         title="Social accounts"
-        titleRightElement={sharedSocials?.length && <SharedConnections />}
+        titleRightElement={sharedSocials?.length && <SharedSocials />}
       />
       <AccountSection mb="6" divider={<Divider />}>
         {orderedSocials.map((platform) => (

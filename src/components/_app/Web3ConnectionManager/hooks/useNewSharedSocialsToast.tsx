@@ -3,14 +3,14 @@ import { useToastWithButton } from "hooks/useToast"
 import { ArrowRight } from "phosphor-react"
 import { useEffect } from "react"
 
-const useNewSharedConnectionsToast = (openAccountModal) => {
+const useNewSharedSocialsToast = (openAccountModal) => {
   const { sharedSocials } = useUser()
   const toastWithButton = useToastWithButton()
 
   const onClick = () => {
     openAccountModal()
     setTimeout(() => {
-      document.getElementById("sharedConnectionsButton").focus()
+      document.getElementById("sharedSocialsButton").focus()
     }, 300)
   }
 
@@ -37,4 +37,4 @@ const useNewSharedConnectionsToast = (openAccountModal) => {
   }, [sharedSocials])
 }
 
-export default useNewSharedConnectionsToast
+export default useNewSharedSocialsToast

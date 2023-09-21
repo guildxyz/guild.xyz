@@ -35,7 +35,7 @@ import { useEffect, useRef } from "react"
 import pluralize from "utils/pluralize"
 import useEditSharedSocials from "../hooks/useEditSharedSocials"
 
-const SharedConnections = () => {
+const SharedSocials = () => {
   const { id } = useGuild()
   const { sharedSocials } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -49,8 +49,8 @@ const SharedConnections = () => {
     ml: "auto",
     my: "-1 !important",
     onClick: onOpen,
-    // so we can focus it from useNewSharedConnectionsToast
-    id: "sharedConnectionsButton",
+    // so we can focus it from useNewSharedSocialsToast
+    id: "sharedSocialsButton",
     _focus: {
       boxShadow: "var(--chakra-shadows-outline)",
     },
@@ -101,7 +101,7 @@ const SharedConnections = () => {
             </Text>
             <Stack>
               {sharedSocials?.map((sharedSocial) => (
-                <ShareConnectionsWithGuildSelect
+                <ShareSocialsWithGuildSelect
                   key={sharedSocial.guildId}
                   guildId={sharedSocial.guildId}
                   sharedSocials={sharedSocials}
@@ -115,7 +115,7 @@ const SharedConnections = () => {
   )
 }
 
-const ShareConnectionsWithGuildSelect = ({ guildId, sharedSocials }) => {
+const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
   const { imageUrl, name } = useGuild(guildId)
   const { onSubmit, isLoading, submit } = useEditSharedSocials(guildId)
 
@@ -125,7 +125,7 @@ const ShareConnectionsWithGuildSelect = ({ guildId, sharedSocials }) => {
 
   /**
    * Change null to true on mount (without toast), indicating that the user has seen
-   * the notification, and the useNewSharedConnectionsToast won't fire again
+   * the notification, and the useNewSharedSocialsToast won't fire again
    */
   useEffect(() => {
     if (isShared === null) submit(true)
@@ -189,4 +189,4 @@ const MenuItemOption = ({ title, description, icon, onClick, selected }) => (
   </MenuItem>
 )
 
-export default SharedConnections
+export default SharedSocials
