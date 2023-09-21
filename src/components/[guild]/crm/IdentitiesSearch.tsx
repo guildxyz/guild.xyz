@@ -10,7 +10,7 @@ import { Column, FilterFn } from "@tanstack/react-table"
 import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
-import { Member } from "./CRMTable"
+import { Member } from "./useMembers"
 
 export const identitiesFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   const { userId, addresses, platformUsers } = row.getValue(columnId) as Member

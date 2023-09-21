@@ -15,27 +15,9 @@ import { Table as TableType, flexRender } from "@tanstack/react-table"
 import Card from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useEffect, useRef, useState } from "react"
-import { PlatformAccountDetails } from "types"
 import { TABS_HEIGHT_SM, TABS_SM_BUTTONS_STYLES } from "../Tabs/Tabs"
 import MemberModal from "./MemberModal"
-
-export type CrmRole = {
-  roleId?: number
-  requirementId?: number
-  access?: boolean
-  amount?: number
-}
-
-export type Member = {
-  userId: number
-  addresses: string[]
-  platformUsers: PlatformAccountDetails[]
-  joinedAt: string
-  roles: {
-    hidden?: CrmRole[]
-    public: CrmRole[]
-  }
-}
+import { Member } from "./useMembers"
 
 type Props = {
   table: TableType<Member>

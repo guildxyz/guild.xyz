@@ -1,8 +1,26 @@
 import { useCallback, useMemo } from "react"
 import useSWRInfinite from "swr/infinite"
-import { Visibility } from "types"
+import { PlatformAccountDetails, Visibility } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import useGuild from "../hooks/useGuild"
+
+type CrmRole = {
+  roleId?: number
+  requirementId?: number
+  access?: boolean
+  amount?: number
+}
+
+type Member = {
+  userId: number
+  addresses: string[]
+  platformUsers: PlatformAccountDetails[]
+  joinedAt: string
+  roles: {
+    hidden?: CrmRole[]
+    public: CrmRole[]
+  }
+}
 
 const LIMIT = 100
 
@@ -52,7 +70,7 @@ const useMembers = (queryString) => {
     [hiddenRoleIds, fetcherWithSign]
   )
 
-  const { data, ...rest } = useSWRInfinite(getKey, fetchMembers, {
+  const { data, ...rest } = useSWRInfinite<Member[]>(getKey, fetchMembers, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
@@ -69,3 +87,4 @@ const useMembers = (queryString) => {
 }
 
 export default useMembers
+export type { CrmRole, Member }

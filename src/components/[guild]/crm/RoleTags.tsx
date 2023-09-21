@@ -18,7 +18,7 @@ import ClickableTagPopover from "../activity/ActivityLogAction/components/Clicka
 import ViewRole from "../activity/ActivityLogAction/components/ClickableTagPopover/components/ViewRole"
 import useGuild from "../hooks/useGuild"
 import RoleTag from "../RoleTag"
-import { CrmRole } from "./CRMTable"
+import { CrmRole } from "./useMembers"
 
 type Props = {
   roles: CrmRole[]

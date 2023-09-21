@@ -16,9 +16,9 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
-import { Member } from "./CRMTable"
 import { IdentityTag, WalletTag } from "./Identities"
 import { ClickableCrmRoleTag } from "./RoleTags"
+import { Member } from "./useMembers"
 
 type Props = {
   row: Row<Member>

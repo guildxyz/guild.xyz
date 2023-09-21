@@ -3,7 +3,7 @@ import Button from "components/common/Button"
 import useToast from "hooks/useToast"
 import { Export } from "phosphor-react"
 import { useIsTabsStuck } from "../Tabs/Tabs"
-import { Member } from "./CRMTable"
+import { Member } from "./useMembers"
 
 type Props = {
   table: Table<Member>

@@ -3,7 +3,7 @@ import { Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
-import { Member } from "./CRMTable"
+import { Member } from "./useMembers"
 
 type Props = {
   member: Member

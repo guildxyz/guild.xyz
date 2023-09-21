@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-table"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import CRMTable, { Member } from "components/[guild]/crm/CRMTable"
+import CRMTable from "components/[guild]/crm/CRMTable"
 import ExportMembers from "components/[guild]/crm/ExportMembers"
 import FilterByRoles, {
   roleFilter,
@@ -26,7 +26,7 @@ import {
   parseFiltersFromQuery,
   parseSortingFromQuery,
 } from "components/[guild]/crm/transformTableStateToAndFromQuery"
-import useMembers from "components/[guild]/crm/useMembers"
+import useMembers, { Member } from "components/[guild]/crm/useMembers"
 import useGuild from "components/[guild]/hooks/useGuild"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
