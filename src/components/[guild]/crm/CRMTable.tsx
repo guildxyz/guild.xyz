@@ -49,9 +49,6 @@ const HEADER_HEIGHT = "61px"
 
 const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
   const cardBg = useColorModeValue("white", "var(--chakra-colors-gray-700)") // css variable form so it works in boxShadow literal for identityTags
-  const tdBg = useColorModeValue(`gray.50`, "#3A3A40") // dark color is from blackAlpha.200, but without opacity so it can overlay when sticky
-  const tdHoverBg = useColorModeValue(`blackAlpha.50`, "whiteAlpha.50")
-  const theadBoxShadow = useColorModeValue("md", "2xl")
 
   /**
    * Observing if we've scrolled to the bottom of the page. The table has to be the
@@ -116,7 +113,6 @@ const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
         ref={scrollContainerRef}
         w={isStuck ? "100vw" : "calc(var(--vw, 1vw) * 100)"}
         flex="1 0 auto"
-        // 100vh - Tabs height (button height + padding)
         h={`calc(100vh - ${TABS_HEIGHT_SM})`}
         overflowY={isStuck ? "auto" : "hidden"}
       >
@@ -127,58 +123,22 @@ const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
             // needed so the Th elements can have boxShadow
             sx={{ borderCollapse: "separate", borderSpacing: 0 }}
           >
-            <Thead
-            // _before={{
-            //   content: `""`,
-            //   position: "fixed",
-            //   top: "calc(var(--chakra-space-11) + (2 * var(--chakra-space-2-5)))",
-            //   left: 0,
-            //   right: 0,
-            //   width: "full",
-            //   // button height + padding
-            //   height: "61px",
-            //   bgColor: "white",
-            //   boxShadow: "md",
-            //   transition: "opacity 0.2s ease, visibility 0.1s ease",
-            //   visibility: isStuck ? "visible" : "hidden",
-            //   opacity: isStuck ? 1 : 0,
-            //   borderTopWidth: "1px",
-            //   borderTopStyle: "solid",
-            // }}
-            >
+            <Thead>
               <Tr>
                 {/* We don't support multiple header groups right now. Should rewrite it based on the example if we'll need it */}
                 {table.getHeaderGroups()[0].headers.map((header) => (
-                  <Th
+                  <CrmTh
                     key={header.id}
-                    position="sticky"
-                    top="0"
+                    isStuck={isStuck}
                     bg={cardBg}
-                    overflow="hidden"
-                    p="3.5"
-                    sx={
-                      !isStuck && {
-                        "&:first-of-type": {
-                          borderTopLeftRadius: "xl",
-                        },
-                        "&:last-of-type": {
-                          borderTopRightRadius: "xl",
-                          borderRightWidth: 0,
-                        },
-                      }
-                    }
-                    zIndex="1"
                     colSpan={header.colSpan}
-                    boxShadow={isStuck && theadBoxShadow}
-                    transition="box-shadow .2s"
-                    borderTopWidth="1px"
                     {...(header.column.id === "identity" && {
                       left: "0",
                       zIndex: 2,
                     })}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
-                  </Th>
+                  </CrmTh>
                 ))}
               </Tr>
             </Thead>
@@ -195,33 +155,10 @@ const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
               }}
             >
               {error ? (
-                <Tr>
-                  <Td
-                    px="3.5"
-                    py="10"
-                    textAlign={"center"}
-                    colSpan={"100%" as any}
-                    borderBottomRadius={"2xl"}
-                    bg={tdBg}
-                  >
-                    Couldn't fetch members
-                  </Td>
-                </Tr>
+                <CrmInfoRow py="10">Couldn't fetch members</CrmInfoRow>
               ) : !data ? (
                 [...Array(20)].map((_, i) => (
-                  <Tr key={i}>
-                    <Td fontSize={"sm"} px="3.5" w="12" bg={tdBg}>
-                      <Checkbox mt="2px" />
-                    </Td>
-                    {table
-                      .getAllLeafColumns()
-                      .slice(1)
-                      .map((column) => (
-                        <Td key={column.id} fontSize={"sm"} px="3.5" bg={tdBg}>
-                          <Skeleton w="20" h="5" />
-                        </Td>
-                      ))}
-                  </Tr>
+                  <CrmSkeletonRow key={i} columns={table.getAllLeafColumns()} />
                 ))
               ) : table.getRowModel().rows.length ? (
                 table
@@ -229,28 +166,8 @@ const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
                   .rows.map((row) => (
                     <Tr key={row.id} role="group">
                       {row.getVisibleCells().map((cell) => (
-                        <Td
-                          position={"relative"}
+                        <CrmInteractiveTd
                           key={cell.id}
-                          fontSize={"sm"}
-                          px="3.5"
-                          onClick={
-                            cell.column.id !== "select"
-                              ? row.getToggleExpandedHandler()
-                              : undefined
-                          }
-                          cursor="pointer"
-                          bg={tdBg}
-                          _before={{
-                            content: `""`,
-                            position: "absolute",
-                            inset: 0,
-                            bg: tdHoverBg,
-                            opacity: 0,
-                            transition: "opacity 0.1s",
-                            pointerEvents: "none",
-                          }}
-                          _groupHover={{ _before: { opacity: 1 } }}
                           transition="background .2s"
                           {...(cell.column.id === "identity" && {
                             position: "sticky",
@@ -264,7 +181,7 @@ const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
                           })}
                         >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </Td>
+                        </CrmInteractiveTd>
                       ))}
                       <MemberModal row={row} />
                     </Tr>
@@ -272,54 +189,28 @@ const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
                   .concat(
                     isValidating ? (
                       [...Array(20)].map((_, i) => (
-                        <Tr key={i}>
-                          <Td fontSize={"sm"} px="3.5" w="12" bg={tdBg}>
-                            <Checkbox mt="2px" />
-                          </Td>
-                          {table
-                            .getAllLeafColumns()
-                            .slice(1)
-                            .map((column) => (
-                              <Td key={column.id} fontSize={"sm"} px="3.5" bg={tdBg}>
-                                <Skeleton w="70%" h="5" />
-                              </Td>
-                            ))}
-                        </Tr>
+                        <CrmSkeletonRow
+                          key={i}
+                          columns={table.getAllLeafColumns()}
+                        />
                       ))
                     ) : (
-                      <Tr key="endOfResults">
-                        <Td
-                          px="3.5"
-                          textAlign={"center"}
-                          colSpan={"100%" as any}
-                          borderBottomRadius={"2xl"}
-                          bg={tdBg}
+                      <CrmInfoRow>
+                        <Text
+                          colorScheme="gray"
+                          fontSize={"xs"}
+                          fontWeight={"bold"}
+                          textTransform={"uppercase"}
                         >
-                          <Text
-                            colorScheme="gray"
-                            fontSize={"xs"}
-                            fontWeight={"bold"}
-                            textTransform={"uppercase"}
-                          >
-                            End of results
-                          </Text>
-                        </Td>
-                      </Tr>
+                          End of results
+                        </Text>
+                      </CrmInfoRow>
                     )
                   )
               ) : (
-                <Tr>
-                  <Td
-                    px="3.5"
-                    py="10"
-                    textAlign={"center"}
-                    colSpan={"100%" as any}
-                    borderBottomRadius={"2xl"}
-                    bg={tdBg}
-                  >
-                    No members satisfy the filters you've set
-                  </Td>
-                </Tr>
+                <CrmInfoRow py="10">
+                  No members satisfy the filters you've set
+                </CrmInfoRow>
               )}
             </Tbody>
           </Table>
@@ -328,5 +219,102 @@ const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
     </Flex>
   )
 }
+
+const CrmSkeletonRow = ({ columns }) => (
+  <Tr>
+    <CrmTd w="12">
+      <Checkbox mt="2px" />
+    </CrmTd>
+    {columns.slice(1).map((column) => (
+      <CrmTd
+        key={column.id}
+        {...(column.id === "identity" && {
+          position: "sticky",
+          left: "0",
+          zIndex: 1,
+        })}
+      >
+        <Skeleton w="70%" h="5" />
+      </CrmTd>
+    ))}
+  </Tr>
+)
+
+const CrmTh = ({ children, isStuck, ...rest }) => {
+  const theadBoxShadow = useColorModeValue("md", "2xl")
+
+  return (
+    <Th
+      position="sticky"
+      top="0"
+      overflow="hidden"
+      p="3.5"
+      sx={
+        !isStuck && {
+          "&:first-of-type": {
+            borderTopLeftRadius: "xl",
+          },
+          "&:last-of-type": {
+            borderTopRightRadius: "xl",
+            borderRightWidth: 0,
+          },
+        }
+      }
+      zIndex="1"
+      boxShadow={isStuck && theadBoxShadow}
+      transition="box-shadow .2s"
+      borderTopWidth="1px"
+      {...rest}
+    >
+      {children}
+    </Th>
+  )
+}
+
+const CrmTd = ({ children, ...rest }) => {
+  const tdBg = useColorModeValue(`gray.50`, "#3A3A40") // dark color is from blackAlpha.200, but without opacity so it can overlay when sticky
+
+  return (
+    <Td position={"relative"} fontSize={"sm"} px="3.5" bg={tdBg} {...rest}>
+      {children}
+    </Td>
+  )
+}
+
+const CrmInteractiveTd = ({ children, ...rest }) => {
+  const tdHoverBg = useColorModeValue(`blackAlpha.50`, "whiteAlpha.50")
+
+  return (
+    <CrmTd
+      cursor="pointer"
+      _before={{
+        content: `""`,
+        position: "absolute",
+        inset: 0,
+        bg: tdHoverBg,
+        opacity: 0,
+        transition: "opacity 0.1s",
+        pointerEvents: "none",
+      }}
+      _groupHover={{ _before: { opacity: 1 } }}
+      {...rest}
+    >
+      {children}
+    </CrmTd>
+  )
+}
+
+const CrmInfoRow = ({ children, ...rest }) => (
+  <Tr>
+    <CrmTd
+      textAlign={"center"}
+      colSpan={"100%" as any}
+      borderBottomRadius={"2xl"}
+      {...rest}
+    >
+      {children}
+    </CrmTd>
+  </Tr>
+)
 
 export default CRMTable
