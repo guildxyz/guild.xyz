@@ -71,7 +71,7 @@ const MintGuildPinProviderComponent = ({
     ? GuildAction.IS_OWNER
     : isAdmin && !isSuperAdmin
     ? GuildAction.IS_ADMIN
-    : isMember
+    : isMember || isSuperAdmin
     ? GuildAction.JOINED_GUILD
     : null
 
