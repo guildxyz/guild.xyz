@@ -1,7 +1,6 @@
 import { Contract } from "@ethersproject/contracts"
-import { Web3Provider } from "@ethersproject/providers"
-import { useWeb3React } from "@web3-react/core"
-import { Chain, Chains } from "connectors"
+import { JsonRpcProvider } from "@ethersproject/providers"
+import { Chain, RPC } from "connectors"
 import { createStore, del, get, set } from "idb-keyval"
 import UNS_REGISTRY_ABI from "static/abis/unsRegistryAbi.json"
 import useSWRImmutable from "swr/immutable"
@@ -31,15 +30,14 @@ const setResolvedAddressToIdb = (
   address: string,
   resolvedAddress: IDBResolvedAddress
 ) => set(address, resolvedAddress, getStore())
-const deleteResolvedAddressFromIdb = (address: number) => del(address, getStore())
+const deleteResolvedAddressFromIdb = (address: string) => del(address, getStore())
 
-const fetchENSName = async (
-  provider: Web3Provider,
-  address: string,
-  chainId: number
-): Promise<string> => {
-  if (chainId !== Chains.ETHEREUM && chainId !== Chains.GOERLI) return null
-  provider.network.ensAddress = ENS_REGISTRY
+const fetchENSName = async (address: string): Promise<string> => {
+  const provider = new JsonRpcProvider(RPC.ETHEREUM.rpcUrls[0], {
+    chainId: 1,
+    name: "Ethereum",
+    ensAddress: ENS_REGISTRY,
+  })
   const ens = await provider.lookupAddress(address)
 
   if (ens) {
@@ -52,13 +50,12 @@ const fetchENSName = async (
   return ens
 }
 
-const fetchNNSName = async (
-  provider: Web3Provider,
-  address: string,
-  chainId: number
-): Promise<string> => {
-  if (chainId !== Chains.ETHEREUM && chainId !== Chains.BSC) return null
-  provider.network.ensAddress = NNS_REGISTRY
+const fetchNNSName = async (address: string): Promise<string> => {
+  const provider = new JsonRpcProvider(RPC.ETHEREUM.rpcUrls[0], {
+    chainId: 1,
+    name: "Ethereum",
+    ensAddress: NNS_REGISTRY,
+  })
   const nns = await provider.lookupAddress(address)
 
   if (nns) {
@@ -95,16 +92,23 @@ const fetchLensProtocolName = async (address: string): Promise<string> => {
 }
 
 const fetchDotbitName = async (address: string): Promise<string> => {
-  const dotbit = await fetcher("https://indexer-v1.did.id/v1/reverse/record", {
+  const dotbit = await fetcher("https://indexer-basic.did.id", {
     body: {
-      type: "blockchain",
-      key_info: {
-        coin_type: "60", // 60: ETH, 195: TRX, 9006: BNB, 966: Matic
-        chain_id: "1", // 1: ETH, 56: BSC, 137: Polygon
-        key: address,
-      },
+      jsonrpc: "2.0",
+      id: 1,
+      method: "das_reverseRecord",
+      params: [
+        {
+          type: "blockchain",
+          key_info: {
+            coin_type: "60", // 60: ETH, 195: TRX, 9006: BNB, 966: Matic
+            chain_id: "1", // 1: ETH, 56: BSC, 137: Polygon
+            key: address,
+          },
+        },
+      ],
     },
-  }).then((res) => res.data.account)
+  }).then((res) => res.result?.data?.account)
 
   if (dotbit) {
     await setResolvedAddressToIdb(address, {
@@ -116,17 +120,26 @@ const fetchDotbitName = async (address: string): Promise<string> => {
   return dotbit
 }
 
-const fetchUnstoppableName = async (
-  provider: Web3Provider,
-  address: string
-): Promise<string> => {
-  const chain = provider.network.chainId
-  const contractAddress = UNSTOPPABLE_DOMAIN_CONTRACTS[Chains[chain]]
+const fetchUnstoppableName = async (address: string): Promise<string> => {
+  const providers: Partial<Record<UnstoppableDomainsChains, JsonRpcProvider>> = {}
+  const contracts: Partial<Record<UnstoppableDomainsChains, Contract>> = {}
 
-  if (!contractAddress) return null
+  for (const chain of Object.keys(UNSTOPPABLE_DOMAIN_CONTRACTS)) {
+    providers[chain] = new JsonRpcProvider(RPC[chain].rpcUrls[0])
+    contracts[chain] = new Contract(
+      UNSTOPPABLE_DOMAIN_CONTRACTS[chain],
+      UNS_REGISTRY_ABI,
+      providers[chain]
+    )
+  }
 
-  const contract = new Contract(contractAddress, UNS_REGISTRY_ABI, provider)
-  const unstoppable = await contract.reverseNameOf(address)
+  const unstoppableNames = await Promise.all(
+    Object.values(contracts).map((contract) =>
+      contract.reverseNameOf(address).catch(() => null)
+    )
+  )
+
+  const unstoppable = unstoppableNames?.find((name) => !!name)
 
   if (unstoppable) {
     await setResolvedAddressToIdb(address, {
@@ -140,49 +153,45 @@ const fetchUnstoppableName = async (
 
 const ONE_DAY_IN_MS = 1000 * 60 * 60 * 24
 
-const useResolveAddress = (accountParam: string): string => {
-  const { provider, chainId } = useWeb3React()
-  const shouldFetch = Boolean(provider && accountParam)
+const fetchDomains = async ([_, account]: [string, string]) => {
+  const lowerCaseAddress = account.toLowerCase()
 
-  const fetchDomains = async ([_, account, chainIdParam]) => {
-    const lowerCaseAddress = account.toLowerCase()
+  const idbData = await getResolvedAddressFromIdb(lowerCaseAddress).catch(
+    () => null as IDBResolvedAddress
+  )
 
-    const idbData = await getResolvedAddressFromIdb(lowerCaseAddress).catch(
-      () => null as IDBResolvedAddress
-    )
-
-    if (idbData?.createdAt > Date.now() - ONE_DAY_IN_MS) {
-      return idbData.resolvedAddress
-    } else if (!!idbData) {
-      await deleteResolvedAddressFromIdb(lowerCaseAddress).catch(() => {})
-    }
-
-    // test address: 0xe5358cab95014e2306815743793f16c93a8a5c70
-    const nns = await fetchNNSName(provider, lowerCaseAddress, chainIdParam)
-    if (nns) return nns
-
-    // test address: 0x5df52E6B70F25919Ad29add390EFE2614f91b2C6
-    const ens = await fetchENSName(provider, lowerCaseAddress, chainIdParam)
-    if (ens) return ens
-
-    // test address: 0xe055721b972d58f0bcf6370c357879fb3a37d2f3
-    const lens = await fetchLensProtocolName(lowerCaseAddress)
-    if (lens) return lens
-
-    // test address: 0x94ef5300cbc0aa600a821ccbc561b057e456ab23
-    const unstoppableDomain = await fetchUnstoppableName(provider, lowerCaseAddress)
-    if (unstoppableDomain) return unstoppableDomain
-
-    // test address: 0x9176acd39a3a9ae99dcb3922757f8af4f94cdf3c
-    const dotbit = await fetchDotbitName(lowerCaseAddress)
-    if (dotbit) return dotbit
-
-    return null
+  if (idbData?.createdAt > Date.now() - ONE_DAY_IN_MS) {
+    return idbData.resolvedAddress
+  } else if (!!idbData) {
+    await deleteResolvedAddressFromIdb(lowerCaseAddress).catch(() => {})
   }
 
+  // test address: 0xe5358cab95014e2306815743793f16c93a8a5c70 - nnsregistry.⌐◨-◨
+  const nns = await fetchNNSName(lowerCaseAddress)
+  if (nns) return nns
+
+  // test address: 0x5df52E6B70F25919Ad29add390EFE2614f91b2C6 - not.eth
+  const ens = await fetchENSName(lowerCaseAddress)
+  if (ens) return ens
+
+  // test address: 0xe055721b972d58f0bcf6370c357879fb3a37d2f3 - ladidaix.eth
+  const lens = await fetchLensProtocolName(lowerCaseAddress)
+  if (lens) return lens
+
+  // test address: 0x94ef5300cbc0aa600a821ccbc561b057e456ab23 - sandy.nft
+  const unstoppableDomain = await fetchUnstoppableName(lowerCaseAddress)
+  if (unstoppableDomain) return unstoppableDomain
+
+  // test address: 0x1d643fac9a463c9d544506006a6348c234da485f - jeffx.bit
+  const dotbit = await fetchDotbitName(lowerCaseAddress)
+  if (dotbit) return dotbit
+
+  return null
+}
+
+const useResolveAddress = (accountParam: string): string => {
   const { data } = useSWRImmutable(
-    // Passing chainId in the dependency list, so we refetch the domains if the user switches chains
-    shouldFetch ? ["domain", accountParam, chainId] : null,
+    !!accountParam ? ["domain", accountParam] : null,
     fetchDomains
   )
 
