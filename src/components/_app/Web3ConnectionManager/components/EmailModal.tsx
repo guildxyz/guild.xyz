@@ -17,10 +17,10 @@ import {
   Tooltip,
   VStack,
 } from "@chakra-ui/react"
-import { useConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import useUser from "components/[guild]/hooks/useUser"
+import { useConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { PencilSimple } from "phosphor-react"
@@ -74,6 +74,10 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
     channel.close()
     verificationRequest.reset()
     reset()
+    if (emails?.emailAddress) {
+      setPendingEmailAddress(emails.emailAddress)
+      setValue("email", emails.emailAddress)
+    }
     paramOnClose()
   }
 
