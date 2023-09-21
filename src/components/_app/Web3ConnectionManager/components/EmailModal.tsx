@@ -199,6 +199,7 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
               label={
                 "Check if you received the first code before requesting a new one (check in the spam as well)"
               }
+              hasArrow
               isDisabled={!isResendButtonDisabled}
             >
               <Button
