@@ -5,7 +5,7 @@ import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
-import { OneOf, PlatformName, User } from "types"
+import { PlatformName, User } from "types"
 import fetcher from "utils/fetcher"
 import useOauthPopupWindow, { AuthLevel } from "./useOauthPopupWindow"
 
@@ -81,21 +81,7 @@ const useConnectPlatform = (
   }
 }
 
-type EmailConnectRepsonse = {
-  createdAt: Date
-  domain: string
-  emailAddress: string
-  emailVerificationCodeId: number
-  id: number
-  identityId: number
-  primary: boolean
-}
-
-const useConnect = (
-  onSuccess?: () => void,
-  isAutoConnect = false,
-  onError?: (error: any) => void
-) => {
+const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
   const { showPlatformMergeAlert } = useWeb3ConnectionManager()
@@ -103,19 +89,14 @@ const useConnect = (
   const { mutate: mutateUser, id } = useUser()
 
   const submit = (signedValidation: SignedValdation) => {
-    const { platformName = "UNKNOWN_PLATFORM", emailAddress } = JSON.parse(
-      signedValidation?.signedPayload ?? "{}"
-    )
+    const platformName =
+      JSON.parse(signedValidation?.signedPayload ?? "{}")?.platformName ??
+      "UNKNOWN_PLATFORM"
 
-    return fetcher(
-      platformName === "EMAIL"
-        ? `/v2/users/${id}/emails/${emailAddress}/verification`
-        : `/v2/users/${id}/platform-users`,
-      {
-        method: "POST",
-        ...signedValidation,
-      }
-    )
+    return fetcher(`/v2/users/${id}/platform-users`, {
+      method: "POST",
+      ...signedValidation,
+    })
       .then((body) => {
         if (body === "rejected") {
           // eslint-disable-next-line @typescript-eslint/no-throw-literal
@@ -135,33 +116,16 @@ const useConnect = (
       })
   }
 
-  const { onSubmit, ...rest } = useSubmitWithSign<
-    OneOf<User["platformUsers"][number], EmailConnectRepsonse>
-  >(submit, {
-    onSuccess: (newPlatformUser = {} as any) => {
+  return useSubmitWithSign<User["platformUsers"][number]>(submit, {
+    onSuccess: (newPlatformUser) => {
       // captureEvent("Platform connection", { platformName })
-
-      if (newPlatformUser?.platformName === "EMAIL") {
-        mutateUser(
-          (prev) => ({
-            ...prev,
-            emails: {
-              emailAddress: newPlatformUser?.emailAddress,
-              createdAt: newPlatformUser?.createdAt,
-              pending: false,
-            },
-          }),
-          { revalidate: false }
-        )
-      } else {
-        mutateUser(
-          (prev) => ({
-            ...prev,
-            platformUsers: [...(prev?.platformUsers ?? []), newPlatformUser],
-          }),
-          { revalidate: false }
-        )
-      }
+      mutateUser(
+        (prev) => ({
+          ...prev,
+          platformUsers: [...(prev?.platformUsers ?? []), newPlatformUser],
+        }),
+        { revalidate: false }
+      )
 
       onSuccess?.()
     },
@@ -196,19 +160,18 @@ const useConnect = (
       } else {
         showErrorToast(toastError ?? rawError)
       }
-
-      onError?.(rawError)
     },
   })
+}
 
-  return {
-    ...rest,
-    onSubmit: (data) =>
-      onSubmit({
-        ...data,
-        identityType: data?.platformName === "EMAIL" ? "EMAIL" : "PLATFORM",
-      }),
-  }
+type EmailConnectRepsonse = {
+  createdAt: Date
+  domain: string
+  emailAddress: string
+  emailVerificationCodeId: number
+  id: number
+  identityId: number
+  primary: boolean
 }
 
 const useConnectEmail = ({
@@ -230,9 +193,7 @@ const useConnectEmail = ({
     })
   }
 
-  const { onSubmit, ...rest } = useSubmitWithSign<
-    OneOf<User["platformUsers"][number], EmailConnectRepsonse>
-  >(submit, {
+  const { onSubmit, ...rest } = useSubmitWithSign<EmailConnectRepsonse>(submit, {
     onSuccess: (newPlatformUser = {} as any) => {
       mutateUser(
         (prev) => ({
