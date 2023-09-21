@@ -13,6 +13,7 @@ import { ComponentType } from "react"
 import Photo from "static/icons/photo.svg"
 import { GuildPlatform, OneOf, PlatformName } from "types"
 import fetcher from "utils/fetcher"
+import PlatformPreview from "./components/PlatformPreview"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
@@ -27,7 +28,6 @@ import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
-import PlatformPreview from "./components/PlatformPreview"
 
 export enum PlatformAsRewardRestrictions {
   NOT_APPLICABLE, // e.g. Twitter
@@ -65,16 +65,13 @@ type PlatformData<
   }>
   PlatformPreview?: ComponentType<Record<string, never>>
 
-  oauth?: OneOf<
-    {
-      url: string
-      params: OAuthParams
+  oauth?: {
+    url: string
+    params: OAuthParams
 
-      // Probably only will be needed for Twitter v1. Once Twitter shuts it down, we will remove it, and this field can be removed as well
-      oauthOptionsInitializer?: (redirectUri: string) => Promise<OAuthParams>
-    },
-    { modal: true }
-  >
+    // Probably only will be needed for Twitter v1. Once Twitter shuts it down, we will remove it, and this field can be removed as well
+    oauthOptionsInitializer?: (redirectUri: string) => Promise<OAuthParams>
+  }
 } & OneOf<
   {
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE
@@ -95,10 +92,6 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "gray",
     gatedEntity: "email",
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
-
-    oauth: {
-      modal: true,
-    },
   },
   TELEGRAM: {
     icon: TelegramLogo,

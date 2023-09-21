@@ -1,7 +1,4 @@
-import { useWeb3React } from "@web3-react/core"
-import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { randomBytes } from "crypto"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
@@ -54,28 +51,15 @@ type TGAuthResult = {
   origin: string
 }
 
-export type OAuthResult = OneOf<
-  { type: "TG_AUTH_SUCCESS"; data: any },
-  {
-    type: "TG_AUTH_ERROR"
-    data: { error: string; errorDescription: string }
-  }
->
-
 const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   platformName: PlatformName,
   authLevel: AuthLevel = "membership"
 ): OAuthState<OAuthResponse> & { onOpen: () => Promise<void> } => {
   const { captureEvent } = usePostHogContext()
-  const { account } = useWeb3React()
-  const { emails } = useUser()
-  const { emailModal } = useWeb3ConnectionManager()
 
-  const {
-    params = {},
-    url,
-    oauthOptionsInitializer,
-  } = platforms[platformName].oauth ?? {}
+  const { params, url, oauthOptionsInitializer } = platforms[platformName].oauth ?? {
+    params: {} as any,
+  }
 
   const toast = useToast()
 
@@ -136,7 +120,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     )
 
     const channel = new BroadcastChannel(
-      ["TWITTER_V1", "EMAIL"].includes(platformName) ? platformName : csrfToken
+      platformName === "TWITTER_V1" ? "TWITTER_V1" : csrfToken
     )
 
     const getTgListener =
@@ -149,7 +133,12 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           ["TG_AUTH_SUCCESS", "TG_AUTH_ERROR"].includes(event.data.type)
         ) {
           try {
-            const { type, data } = event.data as OAuthResult
+            const { type, data } = event.data as
+              | { type: "TG_AUTH_SUCCESS"; data: TGAuthResult["result"] }
+              | {
+                  type: "TG_AUTH_ERROR"
+                  data: { error: string; errorDescription: string }
+                }
 
             setOauthState(
               type === "TG_AUTH_SUCCESS"
@@ -207,11 +196,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
         : undefined,
     }).toString()
 
-    if (platformName === "EMAIL") {
-      emailModal.onOpen()
-    } else {
-      onOpen(`${url}?${searchParams}`)
-    }
+    onOpen(`${url}?${searchParams}`)
 
     await hasReceivedResponse.finally(() => {
       channel.postMessage({ type: "OAUTH_CONFIRMATION" })
