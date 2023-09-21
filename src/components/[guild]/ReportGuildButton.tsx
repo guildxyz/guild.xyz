@@ -1,6 +1,8 @@
 import { ButtonProps, IconButton, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import { useIntercom } from "components/_app/IntercomProvider"
 import { Flag } from "phosphor-react"
+import useGuild from "./hooks/useGuild"
 
 type Props = {
   layout?: "FULL" | "ICON"
@@ -9,17 +11,23 @@ type Props = {
 const label = "Report guild"
 const className = "report-guild-btn"
 
-// No need to define an onClick handler, Intercom will do it automatically
 const ReportGuildButton = ({
   layout = "FULL",
   ...buttonProps
-}: Props): JSX.Element =>
-  layout === "FULL" ? (
+}: Props): JSX.Element => {
+  const { id, name } = useGuild()
+  const { addIntercomSettings } = useIntercom()
+
+  return layout === "FULL" ? (
     <Button
       className={className}
       size="sm"
       variant="ghost"
       leftIcon={<Flag />}
+      onClick={() => {
+        if (!id) return
+        addIntercomSettings({ guildPage: `${name} (#${id})` })
+      }}
       {...buttonProps}
     >
       {label}
@@ -39,5 +47,6 @@ const ReportGuildButton = ({
       />
     </Tooltip>
   )
+}
 
 export default ReportGuildButton
