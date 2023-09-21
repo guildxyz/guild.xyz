@@ -365,6 +365,11 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         }
       )
 
+      const guildPinCacheKeysRegExp = new RegExp(
+        `^/assets/guildPins/image\\?guildId=${id}&guildAction=\\d`
+      )
+      matchMutate(guildPinCacheKeysRegExp)
+
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
       if (
