@@ -17,19 +17,20 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { Chains } from "connectors"
 import AlphaTag from "./components/AlphaTag"
 import MintGuildPinButton from "./components/buttons/MintGuildPinButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import GuildPinFees from "./components/GuildPinFees"
 import GuildPinImage from "./components/GuildPinImage"
 import GuildPinReward from "./components/GuildPinReward"
-import MintGuildPinChainPicker from "./components/MintGuildPinChainPicker"
 import TransactionStatusModal from "./components/TransactionStatusModal"
 import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaLink"
 import { useMintGuildPinContext } from "./MintGuildPinContext"
 
 const MintGuildPin = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
-  const { urlName } = useGuild()
+  const { urlName, guildPin } = useGuild()
 
   const { isOpen, onOpen, onClose, isInvalidImage, isTooSmallImage } =
     useMintGuildPinContext()
@@ -90,9 +91,13 @@ const MintGuildPin = (): JSX.Element => {
 
           <ModalFooter flexDir="column">
             <Stack w="full" spacing={6}>
-              <MintGuildPinChainPicker />
               <GuildPinFees />
-              <MintGuildPinButton />
+
+              <Stack w="full" spacing={2}>
+                <SwitchNetworkButton targetChainId={Chains[guildPin.chain]} />
+                <MintGuildPinButton />
+              </Stack>
+
               <Text colorScheme="gray" fontSize="sm">
                 This is a non-transferable token that has no financial value.
               </Text>

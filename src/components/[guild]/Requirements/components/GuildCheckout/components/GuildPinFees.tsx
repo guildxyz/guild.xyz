@@ -1,15 +1,15 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
-import { useWeb3React } from "@web3-react/core"
-import { Chains, RPC } from "connectors"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { RPC } from "connectors"
 import useGuildPinFee from "../hooks/useGuildPinFee"
 import FeesTable from "./FeesTable"
 import PriceFallback from "./PriceFallback"
 
 const GuildPinFees = (): JSX.Element => {
-  const { chainId } = useWeb3React()
+  const { guildPin } = useGuild()
   const { guildPinFee, guildPinFeeError, isGuildPinFeeLoading } = useGuildPinFee()
-  const { symbol, decimals } = RPC[Chains[chainId]]?.nativeCurrency ?? {}
+  const { symbol, decimals } = RPC[guildPin.chain].nativeCurrency
 
   const guildPinFeeInFloat =
     guildPinFee && decimals && parseFloat(formatUnits(guildPinFee, decimals))
@@ -53,11 +53,6 @@ const GuildPinFees = (): JSX.Element => {
           </Skeleton>
         </Td>
       </Tr>
-
-      {/* <Tr>
-        <Td>Gas fee</Td>
-        <Td isNumeric>Can't calculate in advance</Td>
-      </Tr> */}
 
       <Tr>
         <Td>Total</Td>

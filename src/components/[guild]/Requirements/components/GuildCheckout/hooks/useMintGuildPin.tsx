@@ -11,9 +11,8 @@ import { useState } from "react"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import fetcher from "utils/fetcher"
-import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { GUILD_PIN_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
-import useGuildPinContractsData from "./useGuildPinContractsData"
 import useGuildPinFee from "./useGuildPinFee"
 import useSubmitTransaction from "./useSubmitTransaction"
 
@@ -31,7 +30,7 @@ type MintData = {
 
 const useMintGuildPin = () => {
   const { captureEvent } = usePostHogContext()
-  const { id, name, urlName } = useGuild()
+  const { id, name, urlName, roles } = useGuild()
   const postHogOptions = { guild: urlName }
 
   const { mutate } = useUsersGuildPins()
@@ -43,10 +42,9 @@ const useMintGuildPin = () => {
   const { pinType, setMintedTokenId } = useMintGuildPinContext()
   const [loadingText, setLoadingText] = useState<string>("")
 
-  const guildPinContractsData = useGuildPinContractsData()
   const guildPinContract = useContract(
-    guildPinContractsData[Chains[chainId]]?.address,
-    guildPinContractsData[Chains[chainId]]?.abi,
+    GUILD_PIN_CONTRACTS[Chains[chainId]]?.address,
+    GUILD_PIN_CONTRACTS[Chains[chainId]]?.abi,
     true
   )
 
