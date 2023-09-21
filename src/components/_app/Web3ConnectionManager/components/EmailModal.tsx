@@ -22,6 +22,7 @@ import Button from "components/common/Button"
 import useUser from "components/[guild]/hooks/useUser"
 import { useConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import useToast from "hooks/useToast"
 import { PencilSimple } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import { useController, useForm, useWatch } from "react-hook-form"
@@ -50,6 +51,7 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
   const { field } = useController({ control, name: "code" })
   const email = useWatch({ control, name: "email" })
   const { id: userId } = useUser()
+  const toast = useToast()
 
   const [emailSentAt, setEmailSentAt] = useState<number>(null)
 
@@ -66,6 +68,7 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
   const shouldShowPinEntry = !!verificationRequest.response || !!pendingEmailAddress
 
   const onClose = () => {
+    toast({ status: "success", title: "Email verified" })
     const channel = new BroadcastChannel("EMAIL")
     // Sending null, so useOauthPopup's promise resolves, but we won't send a connect in useConnectPlatform because authData is falsy
     channel.postMessage({ type: "OAUTH_SUCCESS", data: null })
