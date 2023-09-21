@@ -150,6 +150,11 @@ const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
                       {row.getVisibleCells().map((cell) => (
                         <CrmInteractiveTd
                           key={cell.id}
+                          onClick={
+                            cell.column.id !== "select"
+                              ? row.getToggleExpandedHandler()
+                              : undefined
+                          }
                           transition="background .2s"
                           {...(cell.column.id === "identity" && {
                             position: "sticky",
