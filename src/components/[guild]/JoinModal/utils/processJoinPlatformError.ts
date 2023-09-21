@@ -6,7 +6,35 @@ import processDiscordError from "./processDiscordError"
 
 type JoinError = WalletError | Response | Error | DiscordError | string
 
+const EMAIL_RESTRICTION = "You will be able to perform this action at: "
+
+const HUMAN_READABLE_MONTH = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+]
+
 const processJoinPlatformError = (error: JoinError): ErrorInfo => {
+  if (typeof error === "string" && error.includes(EMAIL_RESTRICTION)) {
+    const [, isoString] = error.split(EMAIL_RESTRICTION)
+    const date = new Date(isoString)
+    return {
+      title: "Timed out",
+      description: `You are timed out from email verification until ${
+        HUMAN_READABLE_MONTH[date.getMonth()]
+      }  ${date.getDate()}. ${date.getHours()}:${date.getMinutes()}`,
+    }
+  }
+
   // if it's a network error from fetching
   if (error instanceof Error) {
     if (

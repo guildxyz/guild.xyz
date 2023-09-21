@@ -18,9 +18,11 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import processJoinPlatformError from "components/[guild]/JoinModal/utils/processJoinPlatformError"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { PencilSimple } from "phosphor-react"
@@ -122,6 +124,11 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
           <ModalHeader>Connect email</ModalHeader>
           <ModalCloseButton />
           <ModalBody display={"flex"} flexDir="column" pb="6">
+            <Error
+              error={verificationRequest.error ?? connect.error}
+              processError={processJoinPlatformError}
+            />
+
             <Collapse
               in={!shouldShowPinEntry}
               unmountOnExit
