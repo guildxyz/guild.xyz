@@ -1,4 +1,10 @@
-import { MenuDivider, MenuItem, Spinner, useDisclosure } from "@chakra-ui/react"
+import {
+  MenuDivider,
+  MenuItem,
+  Spinner,
+  Tooltip,
+  useDisclosure,
+} from "@chakra-ui/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
@@ -31,21 +37,24 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         <MenuItem icon={<ChatDots />} onClick={onSendJoinButtonOpen}>
           Send join button
         </MenuItem>
-        <MenuItem
-          icon={
-            response ? (
-              <Check />
-            ) : isLoading ? (
-              <Spinner boxSize="1em" mb="-2px" />
-            ) : (
-              <ArrowsCounterClockwise />
-            )
-          }
-          onClick={triggerSync}
-          isDisabled={isLoading || response}
-        >
-          Sync members from Discord
-        </MenuItem>
+        <Tooltip label="Temporarily disabled" placement="right" hasArrow>
+          <MenuItem
+            icon={
+              response ? (
+                <Check />
+              ) : isLoading ? (
+                <Spinner boxSize="1em" mb="-2px" />
+              ) : (
+                <ArrowsCounterClockwise />
+              )
+            }
+            onClick={triggerSync}
+            // isDisabled={isLoading || response}
+            isDisabled={true}
+          >
+            Sync members from Discord
+          </MenuItem>
+        </Tooltip>
         <MenuItem icon={<Gear />} onClick={onSettingsOpen}>
           Settings
         </MenuItem>
