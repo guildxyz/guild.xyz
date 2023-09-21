@@ -167,7 +167,7 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
 type EmailConnectRepsonse = {
   createdAt: Date
   domain: string
-  emailAddress: string
+  address: string
   emailVerificationCodeId: number
   id: number
   identityId: number
@@ -199,7 +199,7 @@ const useConnectEmail = ({
         (prev) => ({
           ...prev,
           emails: {
-            emailAddress: newPlatformUser?.emailAddress,
+            emailAddress: newPlatformUser?.address,
             createdAt: newPlatformUser?.createdAt,
             pending: false,
           },
