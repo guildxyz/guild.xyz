@@ -1,8 +1,8 @@
 import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import RewardCard from "components/common/RewardCard"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import dynamic from "next/dynamic"
 import { CircleWavyCheck, Question } from "phosphor-react"
 
@@ -26,10 +26,7 @@ const GuildPinRewardCard = () => {
           <>
             <Icon as={CircleWavyCheck} mb="-2px" mr="1.5" />
             Guild.xyz
-            <Tooltip
-              label="This is a built in reward by Guild.xyz" // The card will disappear once you mint your Guild Pin
-              hasArrow
-            >
+            <Tooltip label="This is a built in reward by Guild.xyz" hasArrow>
               <Icon as={Question} mb="-2px" ml="1.5" />
             </Tooltip>
           </>
@@ -39,18 +36,6 @@ const GuildPinRewardCard = () => {
         colorScheme={isInvalidImage || isTooSmallImage ? "gray" : "GUILD"}
         borderStyle={(isInvalidImage || isTooSmallImage) && "dashed"}
         description="Onchain badge that shows your support and belonging to this community."
-        // description={
-        //   isInvalidImage || isTooSmallImage ? (
-        //     <HStack>
-        //       <Icon as={Warning} color="orange.300" weight="fill" />
-        //       <Text as="span">{`Please upload ${
-        //         isTooSmallImage ? "a bigger" : "an"
-        //       } image for your guild`}</Text>
-        //     </HStack>
-        //   ) : (
-        //     "On-chain proof of membership"
-        //   )
-        // }
         bg={bgColor}
         _before={{
           content: '""',
