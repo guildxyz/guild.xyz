@@ -1,9 +1,9 @@
-import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useMemberships from "components/explorer/hooks/useMemberships"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -98,7 +98,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
       ) {
         toastWithButton({
           title: "Successfully joined guild",
-          description: "Let others know as well by minting it on-chain",
+          description: "Let others know as well by minting it onchain",
           buttonProps: {
             leftIcon: <CircleWavyCheck weight="fill" />,
             children: "Mint Guild Pin",

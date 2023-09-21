@@ -26,9 +26,9 @@ const GuildPinImage = (): JSX.Element => {
   )
 
   const guildPinDescription: Record<GuildAction, string> = {
-    [GuildAction.JOINED_GUILD]: `This is an on-chain proof that you joined ${name} on Guild.xyz.`,
-    [GuildAction.IS_OWNER]: `This is an on-chain proof that you're the owner of ${name} on Guild.xyz.`,
-    [GuildAction.IS_ADMIN]: `This is an on-chain proof that you're an admin of ${name} on Guild.xyz.`,
+    [GuildAction.JOINED_GUILD]: `This is an onchain proof that you joined ${name} on Guild.xyz.`,
+    [GuildAction.IS_OWNER]: `This is an onchain proof that you're the owner of ${name} on Guild.xyz.`,
+    [GuildAction.IS_ADMIN]: `This is an onchain proof that you're an admin of ${name} on Guild.xyz.`,
   }
 
   if (error)
