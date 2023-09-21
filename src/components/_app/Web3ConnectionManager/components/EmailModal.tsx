@@ -114,92 +114,102 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm">
       <ModalOverlay />
-      <ModalContent as="form" onSubmit={submit}>
-        <ModalHeader>Connect {shouldShowPinEntry ? email : "Email"}</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody display={"flex"} flexDir="column">
-          <Collapse in={!shouldShowPinEntry} unmountOnExit>
-            <FormControl>
-              <FormLabel>Email address</FormLabel>
-              <Input
-                autoFocus
-                type="email"
-                {...register("email", {
-                  required: true,
-                  // We should get native validation
-                  // pattern: { value: EMAIL_REGEX, message: "Invalid E-Mail address" },
-                })}
-              />
-            </FormControl>
-          </Collapse>
-
-          <Collapse in={shouldShowPinEntry} unmountOnExit>
-            <VStack spacing={4}>
-              <Text textAlign={"center"}>
-                Enter the code we've sent to {email}{" "}
-                <IconButton
-                  size={"xs"}
-                  icon={<PencilSimple />}
-                  aria-label="Use different email address"
-                  onClick={() => {
-                    setPendingEmailAddress(null)
-                    setValue("code", "")
-                    setValue("email", "")
-                    connect.reset()
-                    verificationRequest.reset()
-                  }}
-                />
-              </Text>
-              <HStack justifyContent={"center"}>
-                <PinInput
-                  isInvalid={connect.error}
-                  value={field.value}
-                  onChange={(value) => {
-                    field.onChange(value)
-                    if (value.length === PIN_LENGTH) {
-                      connect.onSubmit({
-                        platformName: "EMAIL",
-                        authData: { code: value },
-                        emailAddress: email,
-                      })
-                    }
-                  }}
-                >
-                  <PinInputField autoFocus ref={pinInputRef} />
-                  <PinInputField />
-                  <PinInputField />
-                  <PinInputField />
-                  <PinInputField />
-                  <PinInputField />
-                </PinInput>
-              </HStack>
-            </VStack>
-          </Collapse>
-        </ModalBody>
-
-        <ModalFooter mt={-6}>
-          <Tooltip
-            label={
-              "Check if you received the first code before requesting a new one (check in the spam as well)"
-            }
-            isDisabled={!isResendButtonDisabled}
-          >
-            <Button
-              w="full"
-              isLoading={
-                verificationRequest.isLoading ||
-                connect.isLoading ||
-                connect.isSigning
-              }
-              size={shouldShowPinEntry ? "sm" : undefined}
-              colorScheme={shouldShowPinEntry ? "gray" : "green"}
-              type={"submit"}
-              isDisabled={isResendButtonDisabled}
+      <ModalContent>
+        <form onSubmit={submit}>
+          <ModalHeader>Connect email</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody display={"flex"} flexDir="column" pb="6">
+            <Collapse
+              in={!shouldShowPinEntry}
+              unmountOnExit
+              style={{ padding: "1px" }}
             >
-              {shouldShowPinEntry ? "Resend code" : "Send code"}
-            </Button>
-          </Tooltip>
-        </ModalFooter>
+              <FormControl>
+                <FormLabel>Email address</FormLabel>
+                <Input
+                  autoFocus
+                  type="email"
+                  placeholder="me@example.com"
+                  {...register("email", {
+                    required: true,
+                    // We should get native validation
+                    // pattern: { value: EMAIL_REGEX, message: "Invalid E-Mail address" },
+                  })}
+                />
+              </FormControl>
+            </Collapse>
+            <Collapse
+              in={shouldShowPinEntry}
+              unmountOnExit
+              style={{ padding: "1px" }}
+            >
+              <VStack spacing={4}>
+                <Text textAlign={"center"}>
+                  Enter the code we've sent to {email}{" "}
+                  <IconButton
+                    size={"xs"}
+                    icon={<PencilSimple />}
+                    aria-label="Use different email address"
+                    onClick={() => {
+                      setPendingEmailAddress(null)
+                      setValue("code", "")
+                      setValue("email", "")
+                      connect.reset()
+                      verificationRequest.reset()
+                    }}
+                  />
+                </Text>
+                <HStack justifyContent={"center"}>
+                  <PinInput
+                    isInvalid={connect.error}
+                    value={field.value}
+                    onChange={(value) => {
+                      field.onChange(value)
+                      if (value.length === PIN_LENGTH) {
+                        connect.onSubmit({
+                          platformName: "EMAIL",
+                          authData: { code: value },
+                          emailAddress: email,
+                        })
+                      }
+                    }}
+                  >
+                    <PinInputField autoFocus ref={pinInputRef} />
+                    <PinInputField />
+                    <PinInputField />
+                    <PinInputField />
+                    <PinInputField />
+                    <PinInputField />
+                  </PinInput>
+                </HStack>
+              </VStack>
+            </Collapse>
+          </ModalBody>
+          <ModalFooter>
+            <Tooltip
+              label={
+                "Check if you received the first code before requesting a new one (check in the spam as well)"
+              }
+              isDisabled={!isResendButtonDisabled}
+            >
+              <Button
+                w="full"
+                isLoading={
+                  verificationRequest.isLoading ||
+                  connect.isLoading ||
+                  connect.isSigning
+                }
+                size={shouldShowPinEntry ? "sm" : undefined}
+                colorScheme={shouldShowPinEntry ? "gray" : "green"}
+                variant={shouldShowPinEntry ? "ghost" : "solid"}
+                type={"submit"}
+                isDisabled={isResendButtonDisabled}
+              >
+                {shouldShowPinEntry ? "Resend code" : "Send code"}
+              </Button>
+            </Tooltip>
+          </ModalFooter>
+        </form>
       </ModalContent>
     </Modal>
   )
