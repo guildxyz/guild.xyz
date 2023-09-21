@@ -115,12 +115,12 @@ const EmailModal = ({ isOpen, onClose: paramOnClose }: EmailModalProps) => {
     <Modal isOpen={isOpen} onClose={onClose} size="sm">
       <ModalOverlay />
       <ModalContent as="form" onSubmit={submit}>
-        <ModalHeader>Connect {shouldShowPinEntry ? email : "E-Mail"}</ModalHeader>
+        <ModalHeader>Connect {shouldShowPinEntry ? email : "Email"}</ModalHeader>
         <ModalCloseButton />
         <ModalBody display={"flex"} flexDir="column">
           <Collapse in={!shouldShowPinEntry} unmountOnExit>
             <FormControl>
-              <FormLabel>E-Mail address</FormLabel>
+              <FormLabel>Email address</FormLabel>
               <Input
                 autoFocus
                 type="email"

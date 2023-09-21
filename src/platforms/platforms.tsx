@@ -13,7 +13,6 @@ import { ComponentType } from "react"
 import Photo from "static/icons/photo.svg"
 import { GuildPlatform, OneOf, PlatformName } from "types"
 import fetcher from "utils/fetcher"
-import PlatformPreview from "./components/PlatformPreview"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
@@ -28,6 +27,7 @@ import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
+import PlatformPreview from "./components/PlatformPreview"
 
 export enum PlatformAsRewardRestrictions {
   NOT_APPLICABLE, // e.g. Twitter
@@ -91,7 +91,7 @@ type PlatformData<
 const platforms: Record<PlatformName, PlatformData> = {
   EMAIL: {
     icon: EnvelopeSimple,
-    name: "E-Mail",
+    name: "Email",
     colorScheme: "gray",
     gatedEntity: "email",
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
