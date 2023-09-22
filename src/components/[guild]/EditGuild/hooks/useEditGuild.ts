@@ -2,7 +2,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { GuildFormType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -238,8 +237,6 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
     } as const
   }
 
-  const toast = useToast()
-
   const useSubmitResponse = useSubmit(submit, {
     onSuccess: ({ admin, contacts, featureFlags, guildUpdateResult }) => {
       // Show success / error toasts
@@ -253,11 +250,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         featureFlags.deletions.failedCount <= 0 &&
         (!guildUpdateResult || (!!guildUpdateResult && !guildUpdateResult.error))
       ) {
-        if (onSuccess) onSuccess()
-        toast({
-          title: `Guild successfully updated!`,
-          status: "success",
-        })
+        onSuccess?.()
       } else {
         if (admin.creations.failedCount > 0) {
           showErrorToast({

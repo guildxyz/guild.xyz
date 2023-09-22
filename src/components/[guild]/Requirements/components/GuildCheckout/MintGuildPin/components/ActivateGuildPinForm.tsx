@@ -37,6 +37,15 @@ const ActivateGuildPinForm = (): JSX.Element => {
 
   const { id: guildId } = useGuild()
 
+  const showSuccessToastAndCloseModal = () => {
+    toast({
+      status: "success",
+      title: "Success",
+      description: "Successfully activated Guild Pin",
+    })
+    onActivateModalClose()
+  }
+
   const { onSubmit: onEditGuildSubmit, isLoading: isEditGuildLoading } =
     useEditGuild({
       onSuccess: shouldCreatePinHolderRole
@@ -65,18 +74,11 @@ const ActivateGuildPinForm = (): JSX.Element => {
               rolePlatforms: [],
             })
           }
-        : () => {
-            toast({
-              status: "success",
-              title: "Success",
-              description: "Successfully activated Guild Pin",
-            })
-            onActivateModalClose()
-          },
+        : showSuccessToastAndCloseModal,
     })
 
   const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
-    useCreateRole(onActivateModalClose)
+    useCreateRole(showSuccessToastAndCloseModal)
 
   const activateGuildPin = (data: ActivatePinForm) => {
     onEditGuildSubmit({

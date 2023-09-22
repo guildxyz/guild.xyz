@@ -164,11 +164,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         failedRolePlatformUpdatesCount <= 0 &&
         failedRolePlatformCreationsCount <= 0
       ) {
-        toast({
-          title: `Role successfully updated!`,
-          status: "success",
-        })
-        if (onSuccess) onSuccess()
+        onSuccess?.()
       } else {
         if (updatedRole.error) {
           errorToast({

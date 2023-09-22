@@ -28,6 +28,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
+import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import dynamic from "next/dynamic"
 import { useEffect } from "react"
@@ -113,7 +114,13 @@ const EditGuildDrawer = ({
     methods.setValue("contacts", contacts)
   }, [isDetailed])
 
+  const toast = useToast()
+
   const onSuccess = () => {
+    toast({
+      title: `Guild successfully updated!`,
+      status: "success",
+    })
     onClose()
     methods.reset(undefined, { keepValues: true })
   }
