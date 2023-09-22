@@ -23,6 +23,7 @@ import ShareButton from "components/[guild]/collect/components/ShareButton"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
+import ReportGuildButton from "components/[guild]/ReportGuildButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { Chain } from "connectors"
 import { AnimatePresence, motion } from "framer-motion"
@@ -44,7 +45,7 @@ type Props = {
 }
 const Page = ({ chain, address }: Omit<Props, "fallback">) => {
   const { theme, imageUrl, name, urlName, roles, guildPlatforms } = useGuild()
-  const { textColor } = useThemeContext()
+  const { textColor, buttonColorScheme } = useThemeContext()
   const guildPlatform = guildPlatforms?.find(
     (gp) =>
       gp.platformGuildData?.chain === chain &&
@@ -97,7 +98,14 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
               </Link>
             </HStack>
 
-            <ShareButton />
+            <HStack>
+              <ReportGuildButton
+                layout="ICON"
+                colorScheme={buttonColorScheme}
+                color={textColor}
+              />
+              <ShareButton />
+            </HStack>
           </HStack>
 
           <SimpleGrid

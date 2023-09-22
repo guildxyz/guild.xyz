@@ -7,6 +7,7 @@ import {
   useClipboard,
 } from "@chakra-ui/react"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import { CopySimple, ShareNetwork, TwitterLogo } from "phosphor-react"
 import useNftDetails from "../hooks/useNftDetails"
 
@@ -19,6 +20,8 @@ const ShareButton = () => {
       : ""
   const { onCopy, hasCopied } = useClipboard(pageLink)
 
+  const { textColor, buttonColorScheme } = useThemeContext()
+
   return (
     <Menu closeOnSelect={false}>
       <MenuButton
@@ -30,6 +33,8 @@ const ShareButton = () => {
         size="sm"
         boxSize={8}
         minW="none"
+        colorScheme={buttonColorScheme}
+        color={textColor}
       />
       <MenuList>
         <MenuItem icon={<CopySimple size={12} />} fontSize="sm" onClick={onCopy}>
