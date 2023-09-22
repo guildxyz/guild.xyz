@@ -36,7 +36,10 @@ const MintGuildPin = (): JSX.Element => {
   const { urlName, guildPin } = useGuild()
   const { isAdmin } = useGuildPermission()
 
-  // Storing the initial state here, since when we activate the pin, we're updateing the SWR cache too and the activate modal gets unmounted too early
+  /**
+   * Storing the initial state here, since when we activate the pin, we update the
+   * SWR cache too and the activate modal gets unmounted too early
+   */
   const [initialIsActive] = useState(guildPin?.isActive)
 
   const {
