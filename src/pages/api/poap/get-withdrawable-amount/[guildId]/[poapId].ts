@@ -24,7 +24,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const guildPoaps: Guild["poaps"] = await fetcher(
     `/v2/guilds/${guildId}/poaps`
-  ).catch((_) => ({}))
+  ).catch(() => [])
 
   const poap = guildPoaps?.find((p) => p.id.toString() === poapId)
 
