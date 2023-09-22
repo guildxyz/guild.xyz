@@ -387,7 +387,7 @@ type GuildFormType = Partial<
     id?: number
     isOwner?: boolean
   }>
-  eventSources: Record<EventSourcesKey, string>
+  eventSources?: Record<EventSourcesKey, string>
 }
 
 type SelectOption<T = string> = {
