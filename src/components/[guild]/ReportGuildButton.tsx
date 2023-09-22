@@ -26,22 +26,20 @@ const ReportGuildButton = ({
     return () => addIntercomSettings({ reportedGuildName: null })
   }, [id, name])
 
+  const baseButtonProps = {
+    className,
+    size: "sm",
+    variant: "ghost",
+  }
+
   return layout === "FULL" ? (
-    <Button
-      className={className}
-      size="sm"
-      variant="ghost"
-      leftIcon={<Flag />}
-      {...buttonProps}
-    >
+    <Button {...baseButtonProps} leftIcon={<Flag />} {...buttonProps}>
       {label}
     </Button>
   ) : (
     <Tooltip label={label} placement="top" hasArrow>
       <IconButton
-        className={className}
-        size="sm"
-        variant="ghost"
+        {...baseButtonProps}
         icon={<Flag />}
         aria-label={label}
         boxSize={8}
