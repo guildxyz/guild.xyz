@@ -15,15 +15,14 @@ import {
   PinInputField,
   Text,
   Tooltip,
-  VStack,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react"
-import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import processJoinPlatformError from "components/[guild]/JoinModal/utils/processJoinPlatformError"
-import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
+import useUser from "components/[guild]/hooks/useUser"
+import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { PencilSimple } from "phosphor-react"
@@ -34,6 +33,7 @@ import fetcher from "utils/fetcher"
 import { useDisconnectEmail } from "../../hooks/useDisconnect"
 import DisconnectAccountButton from "./components/DisconnectAccountButton"
 import SocialAccountUI from "./components/SocialAccountUI"
+import processEmailError from "./utils/processEmailError"
 
 const EmailAddress = () => {
   const { emails } = useUser()
@@ -151,7 +151,7 @@ const ConnectEmailButton = () => {
             <ModalBody display={"flex"} flexDir="column" pb="6">
               <Error
                 error={verificationRequest.error ?? connect.error}
-                processError={processJoinPlatformError}
+                processError={processEmailError}
               />
 
               <Collapse
