@@ -26,7 +26,7 @@ const ReportGuildButton = ({
       leftIcon={<Flag />}
       onClick={() => {
         if (!id) return
-        addIntercomSettings({ guildPage: `${name} (#${id})` })
+        addIntercomSettings({ reportedGuild: `${name} (#${id})` })
       }}
       {...buttonProps}
     >
