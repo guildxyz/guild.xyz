@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core"
 import useSWR, { mutate, SWRResponse, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
-import useKeyPair from "./useKeyPair"
+import { useKeyPair } from "../components/_app/KeyPairProvider"
 
 type SWRSettings = Parameters<typeof useSWR>[2]
 
@@ -11,7 +11,7 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
   options: SWRSettings = {},
   isMutable = false,
   onlyAuthRequest = true
-): SWRResponse<Data, Error> => {
+): SWRResponse<Data, Error> & { isSigned: boolean } => {
   const useSWRHook = isMutable ? useSWR : useSWRImmutable
 
   const { account } = useWeb3React()
@@ -19,15 +19,15 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
 
   const shouldSendAuth = !!keyPair && ready && isValid && !!account
 
-  const publicResponse = useSWRImmutable<Data, Error, any>(
-    url && !onlyAuthRequest && !shouldSendAuth ? url : null,
-    options as any
-  )
-
   const fetcherWithSign = useFetcherWithSign()
   const authenticatedResponse = useSWRHook<Data, Error, any>(
     url && shouldSendAuth ? [url, { method: "GET", body: {} }] : null,
     fetcherWithSign,
+    options as any
+  )
+
+  const publicResponse = useSWRImmutable<Data, Error, any>(
+    url && !onlyAuthRequest && !authenticatedResponse.data ? url : null,
     options as any
   )
 
@@ -37,6 +37,7 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
     isValidating: authenticatedResponse.isValidating ?? publicResponse.isValidating,
     mutate: authenticatedResponse.mutate ?? publicResponse.mutate,
     error: authenticatedResponse.error ?? publicResponse.error,
+    isSigned: !!authenticatedResponse.data,
   }
 }
 

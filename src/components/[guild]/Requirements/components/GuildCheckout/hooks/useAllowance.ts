@@ -7,7 +7,7 @@ import useSubmit from "hooks/useSubmit"
 import { useState } from "react"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import useSWR from "swr"
-import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
+import { useRequirementContext } from "../../RequirementContext"
 
 const fetchAllowance = ([_, account, contract, contractAddress]) =>
   contract?.allowance(account, contractAddress)
@@ -19,7 +19,7 @@ const useAllowance = (tokenAddress: string, contract: string) => {
   const { account, chainId } = useWeb3React()
   const erc20Contract = useContract(tokenAddress, ERC20_ABI, true)
 
-  const { requirement } = useGuildCheckoutContext()
+  const requirement = useRequirementContext()
 
   const shouldFetch =
     tokenAddress &&

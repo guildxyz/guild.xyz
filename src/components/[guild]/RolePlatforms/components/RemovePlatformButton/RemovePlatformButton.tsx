@@ -31,8 +31,6 @@ const RemovePlatformButton = ({
               ? onOpen
               : () => onSubmit()
           }
-          // TODO: Disabled until we don't decide how should we handle it
-          isDisabled={guildPlatform.platformId === PlatformType.CONTRACT_CALL}
         />
       </Tooltip>
 

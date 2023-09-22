@@ -1,9 +1,9 @@
 import useUser from "components/[guild]/hooks/useUser"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import { UnionToIntersection } from "react-hook-form/dist/types/path/common"
 import useSWRImmutable from "swr/immutable"
 import { RedefineFields } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
-import useKeyPair from "./useKeyPair"
 
 const JOB_DEFAULT_POLL_MS = 1000
 

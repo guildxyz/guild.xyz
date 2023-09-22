@@ -1,6 +1,5 @@
 import {
   HStack,
-  Icon,
   SimpleGrid,
   Skeleton,
   SkeletonCircle,
@@ -8,17 +7,15 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
-  Tooltip,
   VStack,
   Wrap,
 } from "@chakra-ui/react"
-import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import DisplayCard from "components/common/DisplayCard"
 import GuildLogo from "components/common/GuildLogo"
 import Link from "components/common/Link"
 import VerifiedIcon from "components/common/VerifiedIcon"
 import image from "next/image"
-import { PushPin, Users } from "phosphor-react"
+import { Users } from "phosphor-react"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
 
@@ -52,6 +49,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
               letterSpacing="wide"
               maxW="full"
               noOfLines={1}
+              wordBreak="break-all"
             >
               {guildData.name}
             </Text>
@@ -72,7 +70,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
             </Tag>
           </Wrap>
         </VStack>
-        {guildData.tags?.includes("FEATURED") && (
+        {/* {guildData.tags?.includes("FEATURED") && (
           <Tooltip label="This guild is featured by Guild.xyz" hasArrow>
             <ColorCardLabel
               fallbackColor="white"
@@ -93,7 +91,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
               px="3"
             />
           </Tooltip>
-        )}
+        )} */}
       </SimpleGrid>
     </DisplayCard>
   </Link>

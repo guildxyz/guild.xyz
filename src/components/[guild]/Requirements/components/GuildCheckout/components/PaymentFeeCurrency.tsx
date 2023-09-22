@@ -5,6 +5,7 @@ import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 import TokenInfo from "./PaymentCurrencyPicker/components/TokenInfo"
 
@@ -12,8 +13,8 @@ const PaymentFeeCurrency = (): JSX.Element => {
   const lightShade = useColorModeValue("white", "gray.700")
   const borderWidth = useColorModeValue(1, 0)
 
-  const { requirement, pickedCurrency, setPickedCurrency } =
-    useGuildCheckoutContext()
+  const requirement = useRequirementContext()
+  const { pickedCurrency, setPickedCurrency } = useGuildCheckoutContext()
 
   const {
     data: { token, fee },

@@ -80,6 +80,7 @@ const TemplateCard = ({
         },
       }}
       cursor="pointer"
+      h="max-content"
     >
       <Stack>
         <Stack px={{ base: 5, sm: 6 }} pt={{ base: 5, sm: 6 }}>

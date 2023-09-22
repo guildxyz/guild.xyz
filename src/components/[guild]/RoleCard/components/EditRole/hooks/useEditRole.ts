@@ -1,10 +1,11 @@
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
+import { OneOf } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
@@ -27,13 +28,16 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     const { requirements, rolePlatforms, id: _id, ...baseRoleData } = data
 
     const roleUpdate: Promise<
-      Omit<RoleEditFormData, "requirements" | "rolePlatforms">
+      OneOf<
+        Omit<RoleEditFormData, "requirements" | "rolePlatforms">,
+        { error: string; correlationId: string }
+      >
     > =
       Object.keys(baseRoleData ?? {}).length > 0
         ? fetcherWithSign([
             `/v2/guilds/${id}/roles/${roleId}`,
             { method: "PUT", body: baseRoleData },
-          ]).catch(() => null)
+          ]).catch((error) => error)
         : new Promise((resolve) => resolve(undefined))
 
     const requirementUpdates = Promise.all(
@@ -43,7 +47,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
           fetcherWithSign([
             `/v2/guilds/${id}/roles/${roleId}/requirements/${requirement.id}`,
             { method: "PUT", body: requirement },
-          ]).catch(() => null)
+          ]).catch((error) => error)
         )
     )
 
@@ -54,7 +58,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
           fetcherWithSign([
             `/v2/guilds/${id}/roles/${roleId}/requirements`,
             { method: "POST", body: requirement },
-          ]).catch(() => null)
+          ]).catch((error) => error)
         )
     )
 
@@ -65,7 +69,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
           fetcherWithSign([
             `/v2/guilds/${id}/roles/${roleId}/role-platforms/${rolePlatform.id}`,
             { method: "PUT", body: rolePlatform },
-          ]).catch(() => null)
+          ]).catch((error) => error)
         )
     )
 
@@ -76,11 +80,10 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
           fetcherWithSign([
             `/v2/guilds/${id}/roles/${roleId}/role-platforms`,
             { method: "POST", body: rolePlatform },
-          ]).catch(() => null)
+          ]).catch((error) => error)
         )
     )
 
-    // TODO: Catch errors, collect them, and throw the collected errors, and trigger a toast for each of them
     const [
       updatedRole,
       updatedRequirements,
@@ -124,10 +127,10 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         failedRolePlatformUpdatesCount,
         failedRolePlatformCreationsCount,
       ] = [
-        updatedRequirements.filter((req) => !req).length,
-        createdRequirements.filter((req) => !req).length,
-        updatedRolePlatforms.filter((req) => !req).length,
-        createdRolePlatforms.filter((req) => !req).length,
+        updatedRequirements.filter((req) => !!req.error).length,
+        createdRequirements.filter((req) => !!req.error).length,
+        updatedRolePlatforms.filter((req) => !!req.error).length,
+        createdRolePlatforms.filter((req) => !!req.error).length,
       ]
 
       const [
@@ -136,15 +139,26 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         successfulRolePlatformUpdates,
         successfulRolePlatformCreations,
       ] = [
-        updatedRequirements.filter(Boolean),
-        createdRequirements.filter(Boolean),
-        updatedRolePlatforms.filter(Boolean),
-        createdRolePlatforms.filter(Boolean),
+        updatedRequirements.filter((res) => !res.error),
+        createdRequirements.filter((res) => !res.error),
+        updatedRolePlatforms.filter((res) => !res.error),
+        createdRolePlatforms.filter((res) => !res.error),
       ]
 
-      // Checking null explicitly for updatedRole, because undefined means that no role update has happened
+      const [
+        failedRequirementUpdatesCorrelationId,
+        failedRequirementCreationsCorrelationId,
+        failedRolePlatformUpdatesCorrelationId,
+        failedRolePlatformCreationsCorrelationId,
+      ] = [
+        updatedRequirements.filter((req) => !!req.error)[0]?.correlationId,
+        createdRequirements.filter((req) => !!req.error)[0]?.correlationId,
+        updatedRolePlatforms.filter((req) => !!req.error)[0]?.correlationId,
+        createdRolePlatforms.filter((req) => !!req.error)[0]?.correlationId,
+      ]
+
       if (
-        updatedRole !== null &&
+        !updatedRole?.error &&
         failedRequirementUpdatesCount <= 0 &&
         failedRequirementCreationsCount <= 0 &&
         failedRolePlatformUpdatesCount <= 0 &&
@@ -155,20 +169,35 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
           status: "success",
         })
       } else {
-        if (updatedRole === null) {
-          errorToast("Failed to update role")
+        if (updatedRole.error) {
+          errorToast({
+            error: "Failed to update role",
+            correlationId: updatedRole.correlationId,
+          })
         }
         if (failedRequirementUpdatesCount > 0) {
-          errorToast("Failed to update some requirements")
+          errorToast({
+            error: "Failed to update some requirements",
+            correlationId: failedRequirementUpdatesCorrelationId,
+          })
         }
         if (failedRequirementCreationsCount > 0) {
-          errorToast("Failed to create some requirements")
+          errorToast({
+            error: "Failed to create some requirements",
+            correlationId: failedRequirementCreationsCorrelationId,
+          })
         }
         if (failedRolePlatformUpdatesCount > 0) {
-          errorToast("Failed to update some rewards")
+          errorToast({
+            error: "Failed to update some rewards",
+            correlationId: failedRolePlatformUpdatesCorrelationId,
+          })
         }
         if (failedRolePlatformCreationsCount > 0) {
-          errorToast("Failed to create some rewards")
+          errorToast({
+            error: "Failed to create some rewards",
+            correlationId: failedRolePlatformCreationsCorrelationId,
+          })
         }
       }
 

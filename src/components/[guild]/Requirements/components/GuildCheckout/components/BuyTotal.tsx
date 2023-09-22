@@ -3,13 +3,16 @@ import { formatUnits } from "@ethersproject/units"
 import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useVault from "requirements/Payment/hooks/useVault"
+import { useRequirementContext } from "../../RequirementContext"
 import usePayFee from "../hooks/usePayFee"
 import FeesTable from "./FeesTable"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 import PriceFallback from "./PriceFallback"
 
 const BuyTotal = (): JSX.Element => {
-  const { requirement, pickedCurrency } = useGuildCheckoutContext()
+  const requirement = useRequirementContext()
+  const { pickedCurrency } = useGuildCheckoutContext()
+
   const {
     data: { token, fee },
     isValidating,

@@ -1,7 +1,7 @@
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
-import useKeyPair from "hooks/useKeyPair"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import { sign } from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
@@ -72,16 +72,21 @@ const fetcher = async (
         location?.reload()
       }
 
-      if (isGuildApiCall) {
+      if (isGuildApiCall || resource.includes(process.env.NEXT_PUBLIC_API)) {
         const error = res.errors?.[0]
+
         const errorMsg = error
-          ? `${error.msg}${error.param ? ` : ${error.param}` : ""}`
+          ? `${error.msg}${error.param ? `: ${error.param}` : ""}`
           : res
 
         const correlationId = response.headers.get("X-Correlation-ID")
         if (correlationId) pushToIntercomSetting("correlationId", correlationId)
 
-        return Promise.reject(errorMsg)
+        // Some validators may return res.message, so we can't use res.errors.[0].msg in every case
+        return Promise.reject({
+          error: typeof errorMsg !== "string" ? errorMsg?.message : errorMsg,
+          correlationId,
+        })
       }
 
       return Promise.reject(res)
@@ -122,7 +127,7 @@ const useFetcherWithSign = () => {
   return (
     props: [
       string,
-      Omit<RequestInit, "body"> & { signOptions?: SignProps; body?: any }
+      Omit<RequestInit, "body"> & { signOptions?: Partial<SignProps>; body?: any }
     ]
   ) => {
     const [resource, { signOptions, ...options }] = props

@@ -11,9 +11,9 @@ import {
   PopoverTrigger,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager/Web3ConnectionManager"
-import useKeyPair from "hooks/useKeyPair"
+import Button from "components/common/Button"
 import { ArrowSquareOut } from "phosphor-react"
 
 const DelegateCashButton = (): JSX.Element => {

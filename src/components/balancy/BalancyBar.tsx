@@ -1,5 +1,4 @@
 import {
-  Box,
   ButtonGroup,
   Divider,
   HStack,
@@ -9,15 +8,13 @@ import {
   useClipboard,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import Card from "components/common/Card"
+import StickyBar from "components/common/Layout/StickyBar"
 import useBalancy from "components/create-guild/Requirements/hooks/useBalancy"
-import useIsStuck from "hooks/useIsStuck"
 import { Copy, DownloadSimple } from "phosphor-react"
 import { useEffect } from "react"
 import pluralize from "utils/pluralize"
 
-const BalancyBar = ({ ...rest }) => {
-  const { ref, isStuck } = useIsStuck()
+const BalancyBar = () => {
   const { holders, addresses, isLoading, inaccuracy, usedLogic } = useBalancy()
 
   const { hasCopied, onCopy, setValue } = useClipboard("")
@@ -34,52 +31,37 @@ const BalancyBar = ({ ...rest }) => {
   }
 
   return (
-    <Box ref={ref} position="sticky" top={0} zIndex="9">
-      <Card
-        p="6"
-        isFullWidthOnMobile
-        {...(isStuck && {
-          boxShadow: "dark-lg",
-          borderTopLeftRadius: "0px !important",
-          borderTopRightRadius: "0px !important",
-        })}
-        transition="box-shadow .2s, borderRadius .2s"
-      >
-        <HStack w="full" {...rest}>
-          <Text fontWeight="bold">
-            {typeof holders === "number"
-              ? `${
-                  inaccuracy > 0
-                    ? usedLogic === "OR"
-                      ? "At least "
-                      : "At most "
-                    : ""
-                }${pluralize(holders, "eligible address", "es")}`
-              : "Add requirements below to calculate eligible addresses"}
-          </Text>
-          {isLoading && <Spinner size="sm" color="gray" mx={2} />}
-          <Spacer />
-          <ButtonGroup
-            flexShrink="0"
-            colorScheme="green"
-            isDisabled={!addresses?.length}
-            display={{
-              base: typeof holders !== "number" ? "none" : "inline-flex",
-              md: "inline-flex",
-            }}
-            isAttached
-          >
-            <Button onClick={onCopy} leftIcon={<Copy />}>
-              {hasCopied ? "Copied!" : "Copy"}
-            </Button>
-            <Divider orientation="vertical" />
-            <Button onClick={exportAddresses} leftIcon={<DownloadSimple />}>
-              Export
-            </Button>
-          </ButtonGroup>
-        </HStack>
-      </Card>
-    </Box>
+    <StickyBar>
+      <HStack w="full">
+        <Text fontWeight="bold">
+          {typeof holders === "number"
+            ? `${
+                inaccuracy > 0 ? (usedLogic === "OR" ? "At least " : "At most ") : ""
+              }${pluralize(holders, "eligible address", "es")}`
+            : "Add requirements below to calculate eligible addresses"}
+        </Text>
+        {isLoading && <Spinner size="sm" color="gray" mx={2} />}
+        <Spacer />
+        <ButtonGroup
+          flexShrink="0"
+          colorScheme="green"
+          isDisabled={!addresses?.length}
+          display={{
+            base: typeof holders !== "number" ? "none" : "inline-flex",
+            md: "inline-flex",
+          }}
+          isAttached
+        >
+          <Button onClick={onCopy} leftIcon={<Copy />}>
+            {hasCopied ? "Copied!" : "Copy"}
+          </Button>
+          <Divider orientation="vertical" />
+          <Button onClick={exportAddresses} leftIcon={<DownloadSimple />}>
+            Export
+          </Button>
+        </ButtonGroup>
+      </HStack>
+    </StickyBar>
   )
 }
 

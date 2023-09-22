@@ -1,4 +1,4 @@
-import type { AccessQueueJob } from "@guild.xyz/guild-queues"
+import type { AccessFlowJob } from "@guild.xyz/guild-queues"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
@@ -38,7 +38,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
   const guild = useGuild()
   const user = useUser()
 
-  const poll = useFlow<AccessQueueJob>(
+  const poll = useFlow<AccessFlowJob>(
     `/v2/actions/join`,
     { guildId: guild.id },
     { guildId: `${guild.id}` },
@@ -102,7 +102,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
     setTimeout(() => {
       mutateMemberships(
         (prev) => [
-          ...prev,
+          ...(prev ?? []),
           {
             guildId: guild.id,
             isAdmin: false,

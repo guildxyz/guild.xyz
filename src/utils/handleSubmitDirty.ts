@@ -7,9 +7,20 @@ import {
 
 const TO_FILTER_FLAG = "TO_FILTER"
 const KEYS_TO_FILTER = new Set(["validAddresses", "balancyDecimals", "formFieldId"])
-const KEYS_TO_KEEP = [
+const DIRTY_KEYS_TO_KEEP = [
   // data (of a requirement) is kept, because if we send partial data, that will overwrite the whole data field
   "data",
+  "socialLinks",
+]
+// Keys to keep even if they aren't dirty
+const KEYS_TO_KEEP = [
+  // There's a chance that we send empty arrays intentionally e.g. inside a contract call's guildPlatformData
+  "argsToSign",
+
+  // These are processed into creates/updates/deletes in a useSubmit's fetcher. Therefore we need all of them to know if we need to delete some. Otherwise we couldn't tell if something needs to be deleted, or just hasn't been changed
+  "admins",
+  "contacts",
+  "featureFlags",
 ]
 
 /**
@@ -25,6 +36,10 @@ const KEYS_TO_KEEP = [
  * @returns A new object, that is a subset of formData based on dirtyFields
  */
 const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
+  if (!formData) {
+    return TO_FILTER_FLAG
+  }
+
   if (Array.isArray(dirtyFields)) {
     const newArr = dirtyFields
       .map((field, index) => formDataFilterForDirtyHelper(field, formData[index]))
@@ -53,6 +68,12 @@ const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
     }
 
     KEYS_TO_KEEP.forEach((keyToKeep) => {
+      if (keyToKeep in formData) {
+        newObj[keyToKeep] = formData[keyToKeep]
+      }
+    })
+
+    DIRTY_KEYS_TO_KEEP.forEach((keyToKeep) => {
       if (keyToKeep in newObj) {
         newObj[keyToKeep] = formData[keyToKeep]
       }
@@ -78,13 +99,11 @@ const handleSubmitDirty =
     onValid: SubmitHandler<Partial<TFieldValues>>,
     onInvalid?: SubmitErrorHandler<TFieldValues>
   ) =>
-    methods.handleSubmit(
-      (formValues) =>
-        onValid(
-          (formDataFilterForDirty(methods.formState.dirtyFields, formValues) ??
-            {}) as Partial<TFieldValues>
-        ),
-      onInvalid
-    )
+    methods.handleSubmit((formValues) => {
+      onValid(
+        (formDataFilterForDirty(methods.formState.dirtyFields, formValues) ??
+          {}) as Partial<TFieldValues>
+      )
+    }, onInvalid)
 
 export default handleSubmitDirty

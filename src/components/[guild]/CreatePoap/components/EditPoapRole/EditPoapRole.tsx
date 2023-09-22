@@ -21,7 +21,6 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
-import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
@@ -44,7 +43,6 @@ type Props = {
  */
 const EditPoapRole = ({ poap, guildPoap }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const toast = useToast()
   const btnRef = useRef()
 
   const defaultValues = {
@@ -53,7 +51,8 @@ const EditPoapRole = ({ poap, guildPoap }: Props): JSX.Element => {
     description: poap.description,
     imageUrl: poap.image_url,
     requirements: mapRequirements(guildPoap.poapRequirements),
-    logic: "OR",
+    // Pretty messy, but will be removed once POAP becames a real reward
+    logic: (guildPoap.poapRequirements?.[0] as any)?.logic ?? "OR",
   }
   const methods = useForm({
     mode: "all",
@@ -61,16 +60,11 @@ const EditPoapRole = ({ poap, guildPoap }: Props): JSX.Element => {
   })
 
   const onSuccess = () => {
-    toast({
-      status: "success",
-      title: "Role successfully updated!",
-    })
     onClose()
     methods.reset(undefined, { keepValues: true })
   }
 
-  const { onSubmit, isLoading, isSigning, signLoadingText } =
-    useUpdatePoapRequirements(guildPoap, { onSuccess })
+  const { onSubmit, isLoading } = useUpdatePoapRequirements(guildPoap, { onSuccess })
 
   const isDirty = !!Object.keys(methods.formState.dirtyFields).length
   useWarnIfUnsavedChanges(isDirty && !methods.formState.isSubmitted)
@@ -86,8 +80,6 @@ const EditPoapRole = ({ poap, guildPoap }: Props): JSX.Element => {
     onAlertClose()
     onClose()
   }
-
-  const loadingText = signLoadingText || "Saving data"
 
   return (
     <>
@@ -144,9 +136,9 @@ const EditPoapRole = ({ poap, guildPoap }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              isLoading={isLoading || isSigning}
+              isLoading={isLoading}
               colorScheme="green"
-              loadingText={loadingText}
+              loadingText={"Saving data"}
               onClick={methods.handleSubmit(onSubmit)}
               leftIcon={<Icon as={Check} />}
             >

@@ -1,11 +1,11 @@
 import { useWeb3React } from "@web3-react/core"
-import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useGuild from "components/[guild]/hooks/useGuild"
+import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useMatchMutate from "hooks/useMatchMutate"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { Role } from "types"
@@ -33,13 +33,14 @@ const useCreateRole = (onSuccess?: () => void) => {
   const { id, urlName, mutateGuild } = useGuild()
 
   const fetchData = async (signedValidation: SignedValdation): Promise<Role> =>
-    fetcher(`/v2/guilds/${id}/roles/with-requirements-and-rewards`, signedValidation)
+    fetcher(`/v2/guilds/${id}/roles`, signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<Role>(fetchData, {
-    onError: (error_) => {
-      const processedError = processConnectorError(error_)
-      showErrorToast(processedError || error_)
-    },
+    onError: (error_) =>
+      showErrorToast({
+        error: processConnectorError(error_.error) ?? error_.error,
+        correlationId: error_.correlationId,
+      }),
     onSuccess: async (response_) => {
       triggerConfetti()
 

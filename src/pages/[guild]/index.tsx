@@ -17,6 +17,7 @@ import {
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
+import PulseMarker from "components/common/PulseMarker"
 import Section from "components/common/Section"
 import VerifiedIcon from "components/common/VerifiedIcon"
 import AccessHub from "components/[guild]/AccessHub"
@@ -36,9 +37,11 @@ import { MintGuildPinProvider } from "components/[guild]/Requirements/components
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
+import Tabs from "components/[guild]/Tabs"
 import TabButton from "components/[guild]/Tabs/components/TabButton"
-import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import { usePostHogContext } from "components/_app/PostHogProvider"
+import useLocalStorage from "hooks/useLocalStorage"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -47,7 +50,7 @@ import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
-import { SWRConfig, unstable_serialize } from "swr"
+import { SWRConfig } from "swr"
 import { Guild, PlatformType, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
@@ -90,8 +93,12 @@ const GuildPage = (): JSX.Element => {
     poaps,
     guildPlatforms,
     tags,
+    isDetailed,
   } = useGuild()
   useAutoStatusUpdate()
+
+  const [eventsSeen, setEventsSeen] = useLocalStorage<boolean>("eventsSeen", false)
+  const { captureEvent } = usePostHogContext()
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
@@ -226,7 +233,7 @@ const GuildPage = (): JSX.Element => {
         imageUrl={imageUrl}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
-        action={isAdmin && <DynamicEditGuildButton />}
+        action={isAdmin && isDetailed && <DynamicEditGuildButton />}
         backButton={{ href: "/explorer", text: "Go back to explorer" }}
         titlePostfix={
           tags?.includes("VERIFIED") && (
@@ -238,6 +245,7 @@ const GuildPage = (): JSX.Element => {
           <DynamicOnboarding />
         ) : (
           <Tabs
+            sticky
             rightElement={
               <HStack>
                 {isMember && !isAdmin && <DynamicResendRewardButton />}
@@ -256,13 +264,28 @@ const GuildPage = (): JSX.Element => {
             <TabButton href={urlName} isActive>
               {showAccessHub ? "Home" : "Roles"}
             </TabButton>
+            <PulseMarker placement="top" hidden={eventsSeen}>
+              <TabButton
+                href={`/${urlName}/events`}
+                onClick={() => {
+                  setEventsSeen(true)
+                  captureEvent("Click on events tab", {
+                    from: "home",
+                    guild: urlName,
+                  })
+                }}
+              >
+                Events
+              </TabButton>
+            </PulseMarker>
+            {isAdmin && (
+              <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
+            )}
           </Tabs>
         )}
-
         <Collapse in={showAccessHub} unmountOnExit>
           <AccessHub />
         </Collapse>
-
         <Section
           title={(showAccessHub || showOnboarding) && "Roles"}
           titleRightElement={
@@ -321,7 +344,6 @@ const GuildPage = (): JSX.Element => {
             </CollapsibleRoleSection>
           )}
         </Section>
-
         {(showMembers || isAdmin) && (
           <>
             <Divider my={10} />
@@ -334,9 +356,9 @@ const GuildPage = (): JSX.Element => {
                     {isLoading ? (
                       <Spinner size="xs" />
                     ) : (
-                      new Intl.NumberFormat("en", { notation: "compact" }).format(
-                        memberCount ?? 0
-                      ) ?? 0
+                      new Intl.NumberFormat("en", {
+                        notation: "compact",
+                      }).format(memberCount ?? 0) ?? 0
                     )}
                   </Tag>
                   {isAdmin && <DynamicMembersExporter />}
@@ -439,12 +461,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       fallback: {
         [`/guild/${params.guild?.toString()}`]: filteredData,
-        [unstable_serialize([
-          `/guild/${params.guild?.toString()}`,
-          { method: "GET", body: {} },
-        ])]: filteredData,
         [endpoint]: filteredData,
-        [unstable_serialize([endpoint, { method: "GET", body: {} }])]: filteredData,
       },
     },
     revalidate: 300,

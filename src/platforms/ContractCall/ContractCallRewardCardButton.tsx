@@ -1,9 +1,12 @@
+import { Tooltip } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import CollectNftModalButton from "platforms/ContractCall/CollectNftModalButton"
 import { GuildPlatform } from "types"
 
@@ -13,6 +16,9 @@ type Props = {
 
 const ContractCallRewardCardButton = ({ platform }: Props) => {
   const { id, urlName, roles } = useGuild()
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = { guild: urlName }
+
   const { chain, contractAddress } = platform.platformGuildData
 
   const role = roles.find((r) =>
@@ -34,11 +40,26 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
 
   const isEligible = hasAccessToRole || isMemberOfRole
 
+  if (!role)
+    return (
+      <Tooltip label="You need to add this reward to a role first">
+        <Button isDisabled colorScheme="cyan">
+          Collect NFT
+        </Button>
+      </Tooltip>
+    )
+
   if (!isEligible)
     return (
       <LinkButton
         colorScheme="cyan"
         href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}
+        onClick={() => {
+          captureEvent(
+            "Click on collect page link (ContractCallRewardCardButton)",
+            postHogOptions
+          )
+        }}
       >
         Collect NFT
       </LinkButton>

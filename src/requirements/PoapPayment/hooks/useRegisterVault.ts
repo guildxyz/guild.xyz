@@ -27,7 +27,9 @@ const useRegisterVault = (poapId, { onSuccess }: UseSubmitOptions) => {
     const tokenDataFromJSON = tokensFromJSON?.tokens?.find(
       (t) => t.address.toLowerCase() === token.toLowerCase()
     )
-    const tokenData = await fetcher(`/util/symbol/${token}/${Chains[chainId]}`)
+    const tokenData = await fetcher(
+      `/v2/util/chains/${Chains[chainId]}/contracts/${token}/symbol`
+    )
     const feeInWei = parseUnits(
       fee?.toString(),
       tokenDataFromJSON?.decimals ?? tokenData?.decimals ?? 18

@@ -1,9 +1,11 @@
 import {
+  Center,
   Circle,
   Divider,
   HStack,
   Icon,
   IconButton,
+  Img,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -13,25 +15,34 @@ import {
   Text,
   Tooltip,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect-v2"
+import useUser from "components/[guild]/hooks/useUser"
+import { deleteKeyPairFromIdb } from "components/_app/KeyPairProvider"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import { Chains, RPC } from "connectors"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
-import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
-import { SignOut } from "phosphor-react"
+import { LinkBreak, SignOut } from "phosphor-react"
+import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
 
 const AccountModal = () => {
-  const { account, connector } = useWeb3React()
+  const { account, connector, chainId } = useWeb3React()
+  const {
+    isOpen: isNetworkModalOpen,
+    onOpen: openNetworkModal,
+    onClose: closeNetworkModal,
+  } = useDisclosure()
   const {
     setIsDelegateConnection,
     isAccountModalOpen: isOpen,
@@ -64,7 +75,7 @@ const AccountModal = () => {
       window.localStorage.removeItem(key)
     })
 
-    deleteKeyPairFromIdb(id).catch(() => {})
+    deleteKeyPairFromIdb(id)?.catch(() => {})
   }
 
   const domain = useResolveAddress(account)
@@ -105,9 +116,35 @@ const AccountModal = () => {
                       <PrimaryAddressTag size="sm" />
                     ) : null}
                   </HStack>
-                  <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
-                    {`Connected with ${connectorName(connector)}`}
-                  </Text>
+                  <HStack spacing="1">
+                    <Text
+                      colorScheme="gray"
+                      fontSize="sm"
+                      fontWeight="medium"
+                      noOfLines={1}
+                    >
+                      {`Connected with ${connectorName(connector)} on`}
+                    </Text>
+                    <Button
+                      variant="ghost"
+                      p="0"
+                      onClick={openNetworkModal}
+                      size="xs"
+                      mt="-2px"
+                    >
+                      <Center>
+                        {RPC[Chains[chainId]]?.iconUrls?.[0] ? (
+                          <Img src={RPC[Chains[chainId]].iconUrls[0]} boxSize={4} />
+                        ) : (
+                          <Icon as={LinkBreak} />
+                        )}
+                      </Center>
+                    </Button>
+                  </HStack>
+                  <NetworkModal
+                    isOpen={isNetworkModalOpen}
+                    onClose={closeNetworkModal}
+                  />
                 </Stack>
                 <Tooltip label="Disconnect">
                   <IconButton

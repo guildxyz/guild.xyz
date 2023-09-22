@@ -15,7 +15,7 @@ type UploadMintLinksData = {
 const useUploadMintLinks = (poapId: number, { onSuccess }: UseSubmitOptions) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const { mutateGuild } = useGuild()
+  const { mutateGuild, id: guildId } = useGuild()
   const { mutate: mutatePoapLinks } = usePoapLinks(poapId)
 
   const [loadingText, setLoadingText] = useState<string>(null)
@@ -34,14 +34,13 @@ const useUploadMintLinks = (poapId: number, { onSuccess }: UseSubmitOptions) => 
 
     setLoadingText("Saving mint links")
 
-    return fetcher("/assets/poap/links", signedValidation)
+    return fetcher(`/v2/guilds/${guildId}/poaps/${poapId}/links`, signedValidation)
   }
 
   const { onSubmit, ...rest } = useSubmitWithSign<UploadMintLinksData>(
     uploadMintLinks,
     {
-      onError: (error) =>
-        showErrorToast(error?.error?.message ?? error?.error ?? error),
+      onError: (error) => showErrorToast(error),
       onSuccess: () => {
         toast({
           title: "Successfully uploaded mint links!",

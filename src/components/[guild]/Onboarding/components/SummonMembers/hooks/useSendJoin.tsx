@@ -1,31 +1,37 @@
+import { PoapDiscordEmbedForm } from "components/[guild]/CreatePoap/components/Distribution/components/SendPoapDiscordEmbed/SendPoapDiscordEmbed"
 import useGuild from "components/[guild]/hooks/useGuild"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import useShowErrorToast from "hooks/useShowErrorToast"
+import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import fetcher from "utils/fetcher"
+import { useFetcherWithSign } from "utils/fetcher"
+import { SummonMembersForm } from "../SummonMembers"
 
 const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
   const { mutateGuild } = useGuild()
 
   const toast = useToast()
+  const showErrorToast = useShowErrorToast()
+  const fetcerWithSign = useFetcherWithSign()
 
-  const sendJoin = (signedValidation: SignedValdation) =>
-    fetcher("/discord/sendButton", {
-      ...signedValidation,
-      method: "POST",
-    })
+  const sendJoin = ({
+    serverId,
+    ...body
+  }: SummonMembersForm | PoapDiscordEmbedForm) =>
+    fetcerWithSign([
+      `/v2/discord/servers/${serverId}/button`,
+      {
+        method: "POST",
+        body,
+      },
+    ])
 
-  const useSubmitResponse = useSubmitWithSign(sendJoin, {
-    onError: (error) => {
-      const simpleError = error?.errors?.[0]?.msg
-      const processedError = processConnectorError(error)
-
-      toast({
-        status: "error",
-        title: `Failed to send ${type === "JOIN" ? "join" : "mint"} button`,
-        description: simpleError ?? processedError,
-      })
-    },
+  const useSubmitResponse = useSubmit(sendJoin, {
+    onError: (error) =>
+      showErrorToast({
+        error: processConnectorError(error.error) ?? error.error,
+        correlationId: error.correlationId,
+      }),
     onSuccess: () => {
       toast({
         status: "success",

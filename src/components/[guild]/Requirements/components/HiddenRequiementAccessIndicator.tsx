@@ -40,14 +40,14 @@ type Props = {
 
 const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
   const { roles } = useGuild()
+  const role = roles.find((r) => r.id === roleId)
+
   const {
     data: { requirementAccesses, roleErrors, roleAccess },
   } = useAccess(roleId)
   if (!roleAccess) return null
 
-  const publicReqIds = roles
-    .find((role) => role.id === roleId)
-    .requirements.map((req) => req.id)
+  const publicReqIds = role.requirements.map((req) => req.id)
 
   const hiddenReqsAccessData = requirementAccesses?.filter(
     (reqAccessData) => !publicReqIds.includes(reqAccessData.requirementId)
@@ -102,7 +102,13 @@ const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
     }
   )
 
-  if (count.accessed === hiddenReqsAccessData?.length)
+  if (
+    role.logic === "AND"
+      ? count.accessed === hiddenReqsAccessData.length
+      : role.logic === "ANY_OF"
+      ? count.accessed >= role.anyOfNum
+      : count.accessed > 0
+  )
     return (
       <RequiementAccessIndicatorUI
         colorScheme={"green"}

@@ -7,9 +7,9 @@ import useToast from "hooks/useToast"
 import { ArrowsClockwise, Check } from "phosphor-react"
 import { useEffect, useState } from "react"
 import fetcher from "utils/fetcher"
+import useGuild from "./hooks/useGuild"
 import { useIsTabsStuck } from "./Tabs/Tabs"
 import { useThemeContext } from "./ThemeContext"
-import useGuild from "./hooks/useGuild"
 
 const TIMEOUT = 60_000
 
@@ -39,7 +39,18 @@ const ResendRewardButton = (): JSX.Element => {
       })
       setLatestResendDate(Date.now())
     },
-    onError: () => showErrorToast("Couldn't re-send rewards"),
+    onError: (error) => {
+      const errorMsg = "Couldn't re-send rewards"
+      const correlationId = error.correlationId
+      showErrorToast(
+        correlationId
+          ? {
+              error: errorMsg,
+              correlationId,
+            }
+          : errorMsg
+      )
+    },
   })
 
   useEffect(() => {

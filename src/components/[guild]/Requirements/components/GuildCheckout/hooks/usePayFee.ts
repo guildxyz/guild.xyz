@@ -14,6 +14,7 @@ import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
 import { mutate } from "swr"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import processWalletError from "utils/processWalletError"
+import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useAllowance from "./useAllowance"
 import useSubmitTransaction from "./useSubmitTransaction"
@@ -67,7 +68,8 @@ const usePayFee = () => {
 
   const { chainId, account } = useWeb3React()
 
-  const { requirement, pickedCurrency } = useGuildCheckoutContext()
+  const requirement = useRequirementContext()
+  const { pickedCurrency } = useGuildCheckoutContext()
 
   const feeCollectorContract = useContract(
     requirement.address,
@@ -164,7 +166,7 @@ const usePayFee = () => {
       // temporary until POAPs are real roles
       if (requirement?.poapId)
         mutate(
-          `/assets/poap/checkUserPoapEligibility/${requirement.poapId}/${account}`
+          `/v2/guilds/:guildId/poaps/${requirement.poapId}/users/${account}/eligibility`
         )
       else mutate(`/guild/access/${id}/${account}`)
     },

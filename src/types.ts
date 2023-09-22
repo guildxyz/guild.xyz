@@ -1,4 +1,5 @@
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
+import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import type { Chain, Chains } from "connectors"
 import { RequirementType } from "requirements"
 
@@ -19,11 +20,8 @@ type Rest = {
 
 type Logic = "AND" | "OR" | "ANY_OF"
 
-type ThemeMode = "LIGHT" | "DARK"
-
 type Theme = {
   color?: string
-  mode?: ThemeMode
   backgroundImage?: string
   backgroundCss?: string
 }
@@ -169,6 +167,8 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
+    name?: never
+    symbol?: never
     description?: never
   }
   GOOGLE: {
@@ -183,13 +183,18 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
+    name?: never
+    symbol?: never
     description?: never
   }
   CONTRACT_CALL: {
     chain: Chain
     contractAddress: string
-    function: string
+    function: ContractCallFunction
     argsToSign: string[]
+    name: string
+    symbol: string
+    image: string
     description: string
     inviteChannel?: never
     joinButton?: never
@@ -317,6 +322,7 @@ type GuildTags = (typeof guildTags)[number]
 type GuildContact = {
   type: "EMAIL" | "TELEGRAM"
   contact: string
+  id?: number
 }
 
 type Guild = {
@@ -370,6 +376,11 @@ type GuildFormType = Partial<
   logic?: Logic
   requirements?: Requirement[]
   socialLinks?: Record<string, string>
+  admins?: Array<{
+    address: string
+    id?: number
+    isOwner?: boolean
+  }>
 }
 
 type SelectOption<T = string> = {
@@ -613,6 +624,7 @@ export type {
   GuildBase,
   GuildFormType,
   GuildPinMetadata,
+  PlatformGuildData,
   GuildPlatform,
   GuildPoap,
   GuildTags,
@@ -635,7 +647,6 @@ export type {
   SelectOption,
   SocialLinkKey,
   SocialLinks,
-  ThemeMode,
   Token,
   Trait,
   User,

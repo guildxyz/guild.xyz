@@ -8,7 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useTokenData from "hooks/useTokenData"
-import { useGuildCheckoutContext } from "./GuildCheckoutContex"
+import { useRequirementContext } from "../../RequirementContext"
 
 type Props = {
   rightElement?: JSX.Element
@@ -18,7 +18,8 @@ type Props = {
 const PurchasedRequirementInfo = ({ rightElement, footer }: Props): JSX.Element => {
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
-  const { requirement } = useGuildCheckoutContext()
+  const requirement = useRequirementContext()
+
   const {
     data: { symbol, logoURI },
   } = useTokenData(requirement?.chain, requirement?.address)

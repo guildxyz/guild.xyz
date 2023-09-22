@@ -2,7 +2,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import useSWR, { SWRConfiguration } from "swr"
 import { GoogleFile, PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
-import useKeyPair from "./useKeyPair"
+import { useKeyPair } from "../components/_app/KeyPairProvider"
 
 type Gateables = {
   [PlatformType.DISCORD]: Array<{
@@ -29,7 +29,7 @@ const useGateables = <K extends keyof Gateables>(
 ) => {
   const { keyPair } = useKeyPair()
 
-  const { platformUsers } = useUser()
+  const { platformUsers, id: userId } = useUser()
   const isConnected = !!platformUsers?.some(
     (platformUser) => platformUser.platformName === PlatformType[platformId]
   )
@@ -45,8 +45,8 @@ const useGateables = <K extends keyof Gateables>(
   const { data, isLoading, mutate, error } = useSWR<Gateables[K]>(
     shouldFetch
       ? [
-          "/guild/listGateables",
-          { method: "POST", body: { platformName: PlatformType[platformId] } },
+          `/v2/users/${userId}/platforms/${PlatformType[platformId]}/gateables`,
+          { method: "GET" },
         ]
       : null,
     (props) =>

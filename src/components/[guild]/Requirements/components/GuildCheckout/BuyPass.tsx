@@ -26,6 +26,7 @@ import { Coin } from "phosphor-react"
 import { useEffect } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
+import { useRequirementContext } from "../RequirementContext"
 import AlphaTag from "./components/AlphaTag"
 import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
 import BuyButton from "./components/buttons/BuyButton"
@@ -41,8 +42,8 @@ const BuyPass = () => {
   const { captureEvent } = usePostHogContext()
 
   const { account, chainId } = useWeb3React()
-  const { requirement, isOpen, onOpen, onClose, setAgreeWithTOS } =
-    useGuildCheckoutContext()
+  const requirement = useRequirementContext()
+  const { isOpen, onOpen, onClose, setAgreeWithTOS } = useGuildCheckoutContext()
   const { urlName, name, roles, poaps } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
 

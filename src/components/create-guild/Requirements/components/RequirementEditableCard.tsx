@@ -66,7 +66,10 @@ const RequirementEditableCard = ({
     onSubmit: onDeletePoapRequirement,
     isLoading: isPoapRequirementDeleteLoading,
     isSigning: isPoapRequirementDeleteSigning,
-  } = useDeletePoapRequirement(poapId, requirementId)
+  } = useDeletePoapRequirement(poapId, requirementId, () => {
+    removeRequirement(index)
+    onRequirementDeleteClose()
+  })
 
   const {
     isOpen: isAlertOpen,

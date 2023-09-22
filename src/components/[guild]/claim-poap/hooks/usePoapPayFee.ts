@@ -3,6 +3,7 @@ import { TransactionResponse } from "@ethersproject/providers"
 import { formatUnits, parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useFeeCollectorContract, {
@@ -26,6 +27,7 @@ const usePoapPayFee = (
   { onSuccess }: UseSubmitOptions = {}
 ) => {
   const { account } = useWeb3React()
+  const { id: guildId } = useGuild()
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
@@ -43,7 +45,7 @@ const usePoapPayFee = (
   const erc20Contract = useContract(vaultData?.token, ERC20_ABI, true)
 
   const fetchPayFee = async () => {
-    await fetcher(`/api/poap/can-claim/${poap?.id}`).catch((e) => {
+    await fetcher(`/api/poap/can-claim/${poap?.id}/${guildId}`).catch((e) => {
       throw new Error(e?.error ?? "An unknown error occurred")
     })
 

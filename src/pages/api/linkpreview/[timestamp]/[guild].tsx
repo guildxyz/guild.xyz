@@ -33,7 +33,10 @@ const handler = async (req, _) => {
 
   if (!urlName) return new ImageResponse(<></>, { status: 404 })
 
-  const guild: Guild = await fetcher(`/guild/${urlName}`)
+  const [guild, guildRoles]: [Guild, Guild["roles"]] = await Promise.all([
+    fetcher(`/v2/guilds/${urlName}`),
+    fetcher(`/v2/guilds/${urlName}/roles`),
+  ])
 
   if (!guild?.id) return new ImageResponse(<></>, { status: 404 })
 
@@ -44,10 +47,9 @@ const handler = async (req, _) => {
       dystopianFont,
     ])
 
-    const roles = guild.roles?.map((role) => role.name)
+    const roles = guildRoles?.map((role) => role.name)
 
     const safeGuildDescription = guild.description?.replaceAll("\n", "")
-    const isLightMode = guild.theme?.mode === "LIGHT"
 
     return new ImageResponse(
       (
@@ -55,7 +57,7 @@ const handler = async (req, _) => {
           style={{
             display: "flex",
             position: "relative",
-            backgroundColor: isLightMode ? "#f4f4f5" : "#27272a",
+            backgroundColor: "#27272a",
             width: "800px",
             height: "450px",
             fontFamily: "Inter var, Inter, sans-serif",
@@ -72,7 +74,7 @@ const handler = async (req, _) => {
               height: "450px!important",
               opacity: 0.6,
             }}
-            src={`${baseUrl}/img/guilders${isLightMode ? "-dark" : ""}.svg`}
+            src={`${baseUrl}/img/guilders.svg`}
             alt="Guilders"
           />
 
@@ -85,9 +87,8 @@ const handler = async (req, _) => {
               left: 0,
               right: 0,
               backgroundColor: "transparent",
-              backgroundImage: isLightMode
-                ? "linear-gradient(to right, rgba(244, 244, 245, 1) 0%, rgba(244, 244, 245, 1) 55%, rgba(244, 244, 245, 0) 85%, rgba(244, 244, 245, 0))"
-                : "linear-gradient(to right, rgba(39, 39, 42, 1) 0%, rgba(39, 39, 42, 1) 55%, rgba(39, 39, 42, 0) 85%, rgba(39, 39, 42, 0))",
+              backgroundImage:
+                "linear-gradient(to right, rgba(39, 39, 42, 1) 0%, rgba(39, 39, 42, 1) 55%, rgba(39, 39, 42, 0) 85%, rgba(39, 39, 42, 0))",
             }}
           />
 
@@ -119,7 +120,7 @@ const handler = async (req, _) => {
                   marginRight: "16px",
                   width: "48px",
                   height: "48px",
-                  backgroundColor: isLightMode ? "#3f3f46" : "#52525b",
+                  backgroundColor: "#52525b",
                   borderRadius: "50%",
                   overflow: "hidden",
                 }}
@@ -144,7 +145,7 @@ const handler = async (req, _) => {
                   width: "356px",
                   fontFamily: "Dystopian, sans-serif",
                   fontSize: "48px",
-                  color: isLightMode ? "#27272A" : "white",
+                  color: "white",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -163,8 +164,8 @@ const handler = async (req, _) => {
                   paddingLeft: "16px",
                   paddingRight: "16px",
                   height: "32px",
-                  backgroundColor: isLightMode ? "#d4d4d8" : "#52525b",
-                  color: isLightMode ? "#27272A" : "white",
+                  backgroundColor: "#52525b",
+                  color: "white",
                   fontWeight: "bold",
                   borderRadius: "6px",
                   fontSize: "18px",
@@ -180,8 +181,8 @@ const handler = async (req, _) => {
                   paddingLeft: "16px",
                   paddingRight: "16px",
                   height: "32px",
-                  backgroundColor: isLightMode ? "#d4d4d8" : "#52525b",
-                  color: isLightMode ? "#27272A" : "white",
+                  backgroundColor: "#52525b",
+                  color: "white",
                   fontWeight: "bold",
                   borderRadius: "6px",
                   fontSize: "18px",
@@ -197,7 +198,7 @@ const handler = async (req, _) => {
                 fontFamily: "Dystopian, sans-serif",
                 fontSize: "24px",
                 fontWeight: "bold",
-                color: isLightMode ? "#27272A" : "white",
+                color: "white",
               }}
             >
               {guild.description ? (
@@ -228,7 +229,7 @@ const handler = async (req, _) => {
                   width: "20px",
                   height: "20px",
                 }}
-                src={`${baseUrl}/guildLogos/logo${isLightMode ? "-dark" : ""}.svg`}
+                src={`${baseUrl}/guildLogos/logo.svg`}
                 alt="Guild.xyz"
               />
               <div
@@ -236,7 +237,7 @@ const handler = async (req, _) => {
                   fontFamily: "Dystopian, sans-serif",
                   fontSize: "24px",
                   fontWeight: "bold",
-                  color: isLightMode ? "#27272A" : "white",
+                  color: "white",
                   lineHeight: 1.2,
                 }}
               >

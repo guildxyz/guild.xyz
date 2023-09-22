@@ -14,7 +14,7 @@ const useMemberships = () => {
   const shouldFetch = !!account
 
   const { data, mutate, ...rest } = useSWRWithOptionalAuth<Memberships>(
-    shouldFetch ? `/user/membership/${account}` : null
+    shouldFetch ? `/v2/users/${account}/memberships` : null
   )
 
   return {

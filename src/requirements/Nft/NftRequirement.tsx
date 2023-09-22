@@ -49,7 +49,7 @@ const NftRequirement = (props: RequirementProps) => {
   const { data: guildPinImageCID } = useSWRImmutable(
     isGuildPin
       ? // Fallback to "Our Guild" pin image
-        `/assets/guildPins/image?guildId=${guildIdAttribute ?? 1985}&guildAction=0`
+        `/v2/guilds/${guildIdAttribute ?? 1985}/pin?guildAction=0`
       : null
   )
   const { name: guildPinGuildName } = useGuild(guildIdAttribute ?? "")
@@ -101,6 +101,7 @@ const NftRequirement = (props: RequirementProps) => {
             <DynamicPurchaseRequirement />
             <PurchaseTransactionStatusModal />
           </GuildCheckoutProvider>
+
           <BlockExplorerUrl />
         </HStack>
       }
@@ -108,7 +109,9 @@ const NftRequirement = (props: RequirementProps) => {
     >
       {"Own "}
       {requirement.data?.id
-        ? "the "
+        ? requirement.type === "ERC1155"
+          ? "a(n) "
+          : "the "
         : requirement.data?.maxAmount > 0
         ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount} `
         : requirement.data?.minAmount > 1
@@ -137,12 +140,8 @@ const NftRequirement = (props: RequirementProps) => {
                 : trait.value
             return (
               <Fragment key={`${trait.trait_type}-${trait.value}`}>
-                {attributeValue || trait.interval
-                  ? `${
-                      trait.interval
-                        ? `${trait.interval.min}-${trait.interval.max}`
-                        : attributeValue
-                    } ${trait.trait_type}${
+                {attributeValue
+                  ? `${attributeValue} ${trait.trait_type}${
                       index < requirement.data.attributes.length - 1 ? ", " : ""
                     }`
                   : trait.minValue && trait.maxValue
@@ -163,6 +162,12 @@ const NftRequirement = (props: RequirementProps) => {
             : ""
         }`
       )}
+      {requirement.data?.id ? (
+        <>
+          {" "}
+          with id <DataBlock>{requirement.data?.id}</DataBlock>
+        </>
+      ) : null}
     </Requirement>
   )
 }

@@ -18,13 +18,13 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react"
+import Card from "components/common/Card"
+import Link from "components/common/Link"
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import Card from "components/common/Card"
-import Link from "components/common/Link"
 import { ArrowSquareOut, Clock } from "phosphor-react"
 import React, { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
@@ -47,7 +47,7 @@ type Props = {
 
 const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
-  const { urlName } = useGuild()
+  const { urlName, isDetailed } = useGuild()
   const { isAdmin } = useGuildPermission()
   const { poap, isLoading } = usePoap(guildPoap.fancyId)
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
@@ -207,7 +207,7 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
                 </Wrap>
               </Stack>
             </HStack>
-            {isAdmin && (
+            {isAdmin && isDetailed && (
               <>
                 <Spacer m="0 !important" />
                 {poap && guildPoap ? (

@@ -15,7 +15,7 @@ const usePlatformUsageInfo = (
   const shouldFetch = platformId?.length > 0
   const { data: guildByPlatform, isValidating } = useSWRWithOptionalAuth<
     Partial<Guild>
-  >(shouldFetch ? `/platform/guild/${platform}/${platformId}` : null, {
+  >(shouldFetch ? `/v2/platforms/${platform}/guilds/${platformId}` : null, {
     shouldRetryOnError: false,
   })
 

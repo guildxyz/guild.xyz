@@ -7,6 +7,7 @@ import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
+import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 
 const fetchPrice = ([
@@ -29,7 +30,9 @@ const fetchPrice = ([
 const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
   const { account } = useWeb3React()
   const { id } = useGuild()
-  const { requirement, isOpen, pickedCurrency } = useGuildCheckoutContext()
+
+  const requirement = useRequirementContext()
+  const { isOpen, pickedCurrency } = useGuildCheckoutContext()
 
   const shouldFetch =
     purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain) &&

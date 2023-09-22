@@ -5,6 +5,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
 import useBalance from "hooks/useBalance"
+import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
 import usePurchaseAsset from "../../hooks/usePurchaseAsset"
@@ -16,7 +17,9 @@ const PurchaseButton = (): JSX.Element => {
   const { urlName } = useGuild()
 
   const { account, chainId } = useWeb3React()
-  const { requirement, pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
+
+  const requirement = useRequirementContext()
+  const { pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const {
     data: { maxPriceInWei },

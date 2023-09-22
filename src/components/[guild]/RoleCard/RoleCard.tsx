@@ -38,7 +38,7 @@ type Props = {
 const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 
 const RoleCard = memo(({ role }: Props) => {
-  const { guildPlatforms } = useGuild()
+  const { guildPlatforms, isDetailed } = useGuild()
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
   const { hasAccess } = useAccess(role.id)
@@ -160,7 +160,7 @@ const RoleCard = memo(({ role }: Props) => {
               >
                 <MemberCount memberCount={role.memberCount} roleId={role.id} />
 
-                {isAdmin && (
+                {isAdmin && isDetailed && (
                   <>
                     <Spacer m="0 !important" />
                     <DynamicEditRole roleId={role.id} />

@@ -1,12 +1,12 @@
-import { Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react"
-import LogicDivider from "components/[guild]/LogicDivider"
-import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
-import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import { Box, Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react"
+import Card from "components/common/Card"
 import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
-import Card from "components/common/Card"
+import LogicDivider from "components/[guild]/LogicDivider"
+import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
+import { TransactionStatusProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
+import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { Chains } from "connectors"
-import { Fragment } from "react"
 import { Logic, Requirement } from "types"
 import useNftDetails from "../hooks/useNftDetails"
 import CollectNftFeesTable from "./CollectNftFeesTable"
@@ -50,10 +50,10 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
 
         <Stack spacing={0} w="full">
           {requirements.map((requirement, i) => (
-            <Fragment key={requirement.id}>
+            <Box key={requirement.id}>
               <RequirementDisplayComponent requirement={requirement} />
               {i < requirements.length - 1 && <LogicDivider logic={logic} />}
-            </Fragment>
+            </Box>
           ))}
         </Stack>
       </Stack>
@@ -65,7 +65,9 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
           {typeof alreadyCollected !== "undefined" && !alreadyCollected && (
             <SwitchNetworkButton targetChainId={Chains[chain]} />
           )}
-          <CollectNftButton label="Collect now" colorScheme="green" />
+          <TransactionStatusProvider>
+            <CollectNftButton label="Collect now" colorScheme="green" />
+          </TransactionStatusProvider>
         </Stack>
 
         {(data || isValidating) && (

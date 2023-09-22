@@ -5,7 +5,7 @@ const usePoapById = (poapId: string): { poap: Poap; isPoapByIdLoading: boolean }
   const parsedPoapId = poapId?.replace("#", "")
 
   const { isValidating, data } = useSWRImmutable<Poap>(
-    poapId ? `/assets/poap/id/${parsedPoapId}` : null
+    poapId ? `/v2/third-party/poaps/${parsedPoapId}` : null
   )
 
   return { isPoapByIdLoading: isValidating, poap: data }

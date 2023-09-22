@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { Modal } from "components/common/Modal"
-import NetworkButtonsList from "./components/NetworkButtonsList"
+import NetworkButtonsList from "./NetworkButtonsList"
 
 const NetworkModal = ({ isOpen, onClose }) => {
   const { isActive } = useWeb3React()

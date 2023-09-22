@@ -90,7 +90,7 @@ const RolePlatforms = ({ roleId }: Props) => {
 
             return (
               <RolePlatformProvider
-                key={index}
+                key={JSON.stringify(rolePlatform)}
                 rolePlatform={{
                   ...rolePlatform,
                   roleId,

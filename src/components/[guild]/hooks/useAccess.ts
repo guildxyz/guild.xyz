@@ -1,10 +1,11 @@
-import type { AccessCheckJob, AccessQueueJob } from "@guild.xyz/guild-queues"
+import type { AccessCheckJob, AccessFlowJob } from "@guild.xyz/guild-queues"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useIntercom } from "components/_app/IntercomProvider"
 import useFlow, { FlattenJobType } from "hooks/useFlow"
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 
 type AccessCheckJobs = Extract<
-  AccessQueueJob,
+  AccessFlowJob,
   { queueName: "access-preparation" | "access-logic" | "access-result" }
 >
 
@@ -99,6 +100,24 @@ function useAccess(
             ?.filter(Boolean)
         ),
       }
+
+  const { addIntercomSettings } = useIntercom()
+  useEffect(() => {
+    if (!poll.data) return
+
+    const nullAccesseErrors = [
+      ...new Set(
+        (poll.data["children:access-check:jobs"] ?? [])
+          .filter((acc) => acc.access === null)
+          .map(({ error }) => error)
+          .filter(Boolean)
+          .map((err) => err.errorType)
+      ),
+    ]
+
+    if (nullAccesseErrors.length)
+      addIntercomSettings({ errorMessage: nullAccesseErrors.join() })
+  }, [poll.data])
 
   return {
     data: {

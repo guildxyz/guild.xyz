@@ -7,12 +7,7 @@ import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
 import { PlatformName, User } from "types"
 import fetcher from "utils/fetcher"
-import useDCAuth from "./useDCAuth"
-import useGHAuth from "./useGHAuth"
-import useGoogleAuth from "./useGoogleAuth"
-import useLegacyTwitterAuth from "./useLegacyTwitterAuth"
-import useTGAuth from "./useTGAuth"
-import useTwitterAuth from "./useTwitterAuth"
+import useOauthPopupWindow, { AuthLevel } from "./useOauthPopupWindow"
 
 const parseConnectError = (
   error: string
@@ -44,28 +39,20 @@ const parseConnectError = (
   }
 }
 
-const platformAuthHooks: Record<
-  Exclude<PlatformName, "POAP" | "CONTRACT_CALL">,
-  (scope?: string) => any
-> = {
-  DISCORD: useDCAuth,
-  GITHUB: useGHAuth,
-  TWITTER: useTwitterAuth,
-  TWITTER_V1: useLegacyTwitterAuth,
-  TELEGRAM: useTGAuth,
-  GOOGLE: useGoogleAuth,
-}
-
 const useConnectPlatform = (
   platform: PlatformName,
   onSuccess?: () => void,
   isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
-  scope?: string,
+  authLevel: AuthLevel = "membership",
   disconnectFromExistingUser?: boolean
 ) => {
   const { platformUsers } = useUser()
-  const { onOpen, authData, isAuthenticating, ...rest } =
-    platformAuthHooks[platform]?.(scope) ?? {}
+
+  const { onOpen, authData, isAuthenticating, ...rest } = useOauthPopupWindow(
+    platform,
+    isReauth ? "creation" : authLevel
+  )
+
   const prevAuthData = usePrevious(authData)
 
   const { onSubmit, isLoading, response } = useConnect(() => {
@@ -148,7 +135,7 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
         isAutoConnect: undefined,
         platformName,
       }
-      let toastError
+      let toastError: string
 
       if (isAutoConnect) {
         errorObject.isAutoConnect = true
@@ -171,11 +158,15 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
         )
         showPlatformMergeAlert(addressOrDomain, platformName)
       } else {
-        showErrorToast(toastError ?? rawError)
+        showErrorToast(
+          toastError
+            ? { error: toastError, correlationId: rawError.correlationId }
+            : rawError
+        )
       }
     },
   })
 }
 
 export default useConnectPlatform
-export { platformAuthHooks, useConnect }
+export { useConnect }

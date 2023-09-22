@@ -208,6 +208,18 @@ export const REQUIREMENTS_DATA = [
     isPlatform: true,
   },
   {
+    icon: "/requirementLogos/eas.png",
+    name: "EAS",
+    fileNameBase: "EAS",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/EthereumAttestation/EthereumAttestationRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/EthereumAttestation/EthereumAttestationForm")
+    ),
+    types: ["EAS_ATTESTED_BY", "EAS_ATTEST"],
+  },
+  {
     icon: "/requirementLogos/unlock.png",
     name: "Unlock",
     fileNameBase: "Unlock",
@@ -485,24 +497,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Rep3/Rep3Form")
     ),
     types: ["REP3"],
-  },
-  {
-    icon: "/explorerLogos/tessera.svg",
-    name: "Tessera",
-    fileNameBase: "Tessera",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Tessera/TesseraRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Tessera/TesseraForm")
-    ),
-    types: [
-      "TESSERA",
-      "TESSERA_HOLD",
-      "TESSERA_HOLD_COLLECTION",
-      "TESSERA_HOLD_STATE",
-      "TESSERA_LISTINGS",
-    ],
   },
   {
     icon: "/requirementLogos/parallel.png",

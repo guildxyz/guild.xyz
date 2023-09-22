@@ -7,28 +7,38 @@ import { useRequirementContext } from "./RequirementContext"
 type Props = {
   chain?: Chain
   address?: string
+  label?: string
+  path?: string
 }
 
 const BlockExplorerUrl = ({
   chain: chainProp,
   address: addressProp,
+  label,
+  path: pathProp,
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
-  const { chain, type, address } = useRequirementContext()
+  const { chain, type, address, data } = useRequirementContext()
 
   const blockExplorer = RPC[chainProp ?? chain]?.blockExplorerUrls?.[0]
 
   if (type === "COIN" || addressProp === NULL_ADDRESS || !blockExplorer) return null
 
   // explorer.zksync.io doesn't support the /token path
-  const path = (chainProp ?? chain) === "ZKSYNC_ERA" ? "address" : "token"
+  const path =
+    pathProp ?? ((chainProp ?? chain) === "ZKSYNC_ERA" ? "address" : "token")
+
+  const url =
+    (type === "ERC1155" || type === "ERC721") && data?.id
+      ? `${blockExplorer}/token/${addressProp ?? address}?a=${data?.id}`
+      : `${blockExplorer}/${path}/${addressProp ?? address}`
 
   return (
     <RequirementLinkButton
-      href={`${blockExplorer}/${path}/${addressProp ?? address}`}
+      href={url}
       imageUrl={RPC[chainProp ?? chain]?.blockExplorerIcons[colorMode]}
     >
-      View on explorer
+      {label ?? "View on explorer"}
     </RequirementLinkButton>
   )
 }

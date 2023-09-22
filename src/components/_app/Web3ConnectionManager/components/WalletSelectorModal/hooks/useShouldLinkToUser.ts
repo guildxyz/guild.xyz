@@ -1,7 +1,10 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
-import { deleteKeyPairFromIdb, getKeyPairFromIdb } from "hooks/useKeyPair"
+import { useAddressLinkContext } from "components/_app/AddressLinkProvider"
+import {
+  deleteKeyPairFromIdb,
+  getKeyPairFromIdb,
+} from "components/_app/KeyPairProvider"
 import useSWR, { mutate, unstable_serialize } from "swr"
-import { useWeb3ConnectionManager } from "../../../Web3ConnectionManager"
 
 const fetchShouldLinkToUser = async ([_, userId, connectParams]) => {
   const { userId: userIdToConnectTo } = connectParams ?? {}
@@ -26,7 +29,7 @@ const fetchShouldLinkToUser = async ([_, userId, connectParams]) => {
 
 const useShouldLinkToUser = () => {
   const { id } = useUserPublic()
-  const { setAddressLinkParams, addressLinkParams } = useWeb3ConnectionManager()
+  const { setAddressLinkParams, addressLinkParams } = useAddressLinkContext()
 
   const { data: shouldLinkToUser } = useSWR(
     addressLinkParams?.userId ? ["shouldLinkToUser", id, addressLinkParams] : null,

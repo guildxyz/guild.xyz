@@ -2,8 +2,6 @@ import { useWeb3React } from "@web3-react/core"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import useUser from "components/[guild]/hooks/useUser"
 import { createContext, PropsWithChildren, useContext, useEffect } from "react"
-import { useSWRConfig } from "swr"
-import { GuildBase } from "types"
 
 const IntercomContext = createContext<{
   addIntercomSettings: (newData: Record<string, string | number>) => void
@@ -59,28 +57,19 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
   const { account } = useWeb3React()
   const user = useUser()
 
-  const { cache } = useSWRConfig()
-
   const { memberships } = useMemberships()
 
   useEffect(() => {
-    if (!cache || !account || !user || !memberships) return
-
-    const guilds: GuildBase[] = cache.get("/v2/guilds?")?.[0] ?? []
+    if (!account || !user || !memberships) return
 
     const connectedPlatforms = user.platformUsers
       ?.map((pu) => pu.platformName)
       .join(", ")
 
-    const managedGuildIds = memberships
+    const managedGuilds = memberships
       .filter((ms) => ms.isAdmin)
       .map((ms) => ms.guildId)
-    const managedGuilds = guilds?.length
-      ? guilds
-          .filter((g) => managedGuildIds.includes(g.id))
-          .map((g) => `${g.urlName} (${g.memberCount} members)`)
-          .join(", ")
-      : managedGuildIds.join(", ")
+      .join(", ")
 
     addIntercomSettings({
       userId: user.id,
@@ -88,7 +77,7 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
       connectedPlatforms,
       managedGuilds,
     })
-  }, [cache, account, user, memberships])
+  }, [account, user, memberships])
 
   return (
     <IntercomContext.Provider

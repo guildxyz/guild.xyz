@@ -12,14 +12,14 @@ import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
 import platforms from "platforms/platforms"
 import PoapCardMenu from "platforms/Poap/PoapCardMenu"
-import { PlatformType } from "types"
+import { PlatformName, PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
 import { useMintGuildPinContext } from "../Requirements/components/GuildCheckout/MintGuildPinContext"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
-import PlatformCardButton from "./components/PlatformCardButton"
+import PlatformAccessButton from "./components/PlatformAccessButton"
 
 const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")
@@ -79,8 +79,8 @@ const AccessHub = (): JSX.Element => {
               cardPropsHook: useCardProps,
               cardMenuComponent: PlatformCardMenu,
               cardWarningComponent: PlatformCardWarning,
-              cardButton: CustomPlatformCardButton,
-            } = platforms[PlatformType[platform.platformId]]
+              cardButton: PlatformCardButton,
+            } = platforms[PlatformType[platform.platformId] as PlatformName]
 
             return (
               <PlatformCard
@@ -95,10 +95,10 @@ const AccessHub = (): JSX.Element => {
                   ) : null
                 }
               >
-                {CustomPlatformCardButton ? (
-                  <CustomPlatformCardButton platform={platform} />
-                ) : (
+                {PlatformCardButton ? (
                   <PlatformCardButton platform={platform} />
+                ) : (
+                  <PlatformAccessButton platform={platform} />
                 )}
               </PlatformCard>
             )

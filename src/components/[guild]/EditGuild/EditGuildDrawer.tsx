@@ -28,13 +28,13 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
-import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import dynamic from "next/dynamic"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
+import handleSubmitDirty from "utils/handleSubmitDirty"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useUser from "../hooks/useUser"
 import LeaveButton from "../LeaveButton"
@@ -87,7 +87,6 @@ const EditGuildDrawer = ({
           backgroundCss: theme?.backgroundCss,
           backgroundImage: theme?.backgroundImage,
           color: theme?.color,
-          mode: theme?.mode,
         }
       : {},
     showMembers,
@@ -112,17 +111,12 @@ const EditGuildDrawer = ({
     methods.setValue("contacts", contacts)
   }, [isDetailed])
 
-  const toast = useToast()
   const onSuccess = () => {
-    toast({
-      title: `Guild successfully updated!`,
-      status: "success",
-    })
     onClose()
     methods.reset(undefined, { keepValues: true })
   }
 
-  const { onSubmit, isLoading, isSigning, signLoadingText } = useEditGuild({
+  const { onSubmit, isLoading } = useEditGuild({
     onSuccess,
   })
 
@@ -184,15 +178,15 @@ const EditGuildDrawer = ({
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     () => {
-      methods.handleSubmit((data) => {
+      handleSubmitDirty(methods)((data) => {
         onSubmit({ ...data, tags: undefined })
-        onTagsSubmit(data.tags)
+        if (data.tags) onTagsSubmit(data.tags)
       })()
     },
     backgroundUploader.isUploading || iconUploader.isUploading
   )
 
-  const loadingText = signLoadingText || uploadLoadingText || "Saving data"
+  const loadingText = uploadLoadingText || "Saving data"
 
   const isDirty =
     !!Object.keys(methods.formState.dirtyFields).length ||
@@ -291,7 +285,7 @@ const EditGuildDrawer = ({
               </Button>
               <Button
                 // isDisabled={!isDirty}
-                isLoading={isLoading || isSigning || isUploadingShown}
+                isLoading={isLoading || isUploadingShown}
                 colorScheme="green"
                 loadingText={loadingText}
                 onClick={handleSubmit}
