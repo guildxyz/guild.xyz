@@ -55,7 +55,7 @@ const RoleTags = ({ roles }: Props) => {
             <PopoverArrow />
             <PopoverBody>
               <Wrap>
-                {moreRoles.map(({ roleId, requirementId }) => (
+                {moreRoles?.slice(0, 15).map(({ roleId, requirementId }) => (
                   <CrmRoleTag key={requirementId ?? roleId} roleId={roleId} />
                 ))}
               </Wrap>

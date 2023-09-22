@@ -32,7 +32,11 @@ const MemberModal = ({ row }: Props) => {
   const domain = useResolveAddress(primaryAddress)
 
   return (
-    <Modal isOpen={row.getIsExpanded()} onClose={row.getToggleExpandedHandler()}>
+    <Modal
+      isOpen={row.getIsExpanded()}
+      onClose={row.getToggleExpandedHandler()}
+      scrollBehavior="inside"
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton top={9} right={8} />
