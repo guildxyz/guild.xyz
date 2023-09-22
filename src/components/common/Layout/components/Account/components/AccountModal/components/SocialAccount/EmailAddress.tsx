@@ -86,10 +86,6 @@ const ConnectEmailButton = () => {
   const shouldShowPinEntry = !!verificationRequest.response || !!pendingEmailAddress
 
   const handleOnClose = () => {
-    const channel = new BroadcastChannel("EMAIL")
-    // Sending null, so useOauthPopup's promise resolves, but we won't send a connect in useConnectPlatform because authData is falsy
-    channel.postMessage({ type: "OAUTH_SUCCESS", data: null })
-    channel.close()
     verificationRequest.reset()
     reset()
     if (emails?.emailAddress) {
