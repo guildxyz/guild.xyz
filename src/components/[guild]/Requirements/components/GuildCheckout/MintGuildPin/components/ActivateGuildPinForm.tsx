@@ -94,7 +94,9 @@ const ActivateGuildPinForm = (): JSX.Element => {
       <Stack w="full" spacing={4}>
         <ChainPicker
           controlName="chain"
-          supportedChains={Object.keys(GUILD_PIN_CONTRACTS) as Chain[]}
+          // TODO: uncomment this
+          // supportedChains={Object.keys(GUILD_PIN_CONTRACTS) as Chain[]}
+          supportedChains={["POLYGON_MUMBAI"]}
           showDivider={false}
         />
 
