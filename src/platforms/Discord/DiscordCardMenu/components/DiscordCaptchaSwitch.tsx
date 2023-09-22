@@ -22,8 +22,8 @@ const DiscordCaptchaSwitch = ({ serverId }: Props): JSX.Element => {
   )
 
   const submit = (signedValidation: SignedValdation) =>
-    fetcher(`/guild/${id}/platform/${guildPlatform.id}`, {
-      method: "PATCH",
+    fetcher(`/v2/guilds/${id}/guild-platforms/${guildPlatform.id}`, {
+      method: "PUT",
       ...signedValidation,
     })
 

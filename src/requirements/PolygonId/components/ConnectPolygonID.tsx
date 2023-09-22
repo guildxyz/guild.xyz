@@ -13,11 +13,11 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
+import useAccess from "components/[guild]/hooks/useAccess"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
 import { useEffect } from "react"
@@ -94,7 +94,10 @@ const ConnectPolygonIDModal = ({
     mutate,
   } = useSWRImmutable(
     isOpen
-      ? [`/util/getGateCallback/${type}`, { body: { query: data.query } }]
+      ? [
+          `/v2/util/gate-callbacks/session?requirementType=${type}`,
+          { body: { query: data.query } },
+        ]
       : null,
     fetcherWithSign
   )

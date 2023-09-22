@@ -55,7 +55,9 @@ const useServerData = (
   const shouldFetch = serverId?.length >= 0
   const { data, isValidating, error, mutate } = useSWR<ServerData>(
     shouldFetch
-      ? `/discord/server/${serverId}/${option?.memberCountDetails || false}`
+      ? `/v2/discord/servers/${serverId}?memberCountDetails=${
+          option?.memberCountDetails || false
+        }`
       : null,
     {
       fallbackData,

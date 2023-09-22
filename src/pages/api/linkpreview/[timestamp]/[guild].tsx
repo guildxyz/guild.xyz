@@ -33,7 +33,10 @@ const handler = async (req, _) => {
 
   if (!urlName) return new ImageResponse(<></>, { status: 404 })
 
-  const guild: Guild = await fetcher(`/guild/${urlName}`)
+  const [guild, guildRoles]: [Guild, Guild["roles"]] = await Promise.all([
+    fetcher(`/v2/guilds/${urlName}`),
+    fetcher(`/v2/guilds/${urlName}/roles`),
+  ])
 
   if (!guild?.id) return new ImageResponse(<></>, { status: 404 })
 
@@ -44,7 +47,7 @@ const handler = async (req, _) => {
       dystopianFont,
     ])
 
-    const roles = guild.roles?.map((role) => role.name)
+    const roles = guildRoles?.map((role) => role.name)
 
     const safeGuildDescription = guild.description?.replaceAll("\n", "")
 

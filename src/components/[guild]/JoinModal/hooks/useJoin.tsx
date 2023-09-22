@@ -78,7 +78,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
       setTimeout(() => {
         mutate(
           (prev) => [
-            ...prev,
+            ...(prev ?? []),
             {
               guildId: guild.id,
               isAdmin: false,

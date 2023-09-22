@@ -3,7 +3,9 @@ import { Poap } from "types"
 import fetcher from "utils/fetcher"
 
 const fetchData = async (fancyIds: Array<string>) => {
-  const promises = fancyIds.map((fancyId) => fetcher(`/assets/poap/${fancyId}`))
+  const promises = fancyIds.map((fancyId) =>
+    fetcher(`/v2/third-party/poaps/${fancyId}`)
+  )
   return Promise.all(promises)
 }
 

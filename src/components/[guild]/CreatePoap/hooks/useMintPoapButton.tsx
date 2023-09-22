@@ -86,7 +86,7 @@ const MintModal = ({ isOpen, onClose, isLoading, response, error }) => {
               </Box>
             </HStack>
           ) : (
-            <ErrorAlert label={error} />
+            <ErrorAlert label={error?.error} />
           )}
         </ModalBody>
       </ModalContent>

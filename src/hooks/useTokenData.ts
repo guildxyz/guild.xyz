@@ -27,7 +27,7 @@ const useTokenData = (chain: string, address: string, onFinish?: () => void) => 
   }, [tokensFromApi, address])
 
   const swrResponse = useSWRImmutable<Token>(
-    shouldFetch ? `/util/symbol/${address}/${chain}` : null,
+    shouldFetch ? `/v2/util/chains/${chain}/contracts/${address}/symbol` : null,
     {
       errorRetryInterval: 100,
       shouldRetryOnError: address?.toLowerCase() !== ENS_ADDRESS,
