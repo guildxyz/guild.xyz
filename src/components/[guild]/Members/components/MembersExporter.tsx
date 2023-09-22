@@ -31,7 +31,7 @@ const MembersExporter = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { id, roles } = useGuild()
   const { data, isValidating } = useSWRWithOptionalAuth(
-    isOpen ? `/guild/${id}/members` : null
+    isOpen ? `/v2/guilds/${id}/members` : null
   )
 
   const downloadAnchorRef = useRef(null)

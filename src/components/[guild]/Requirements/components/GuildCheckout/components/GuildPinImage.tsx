@@ -37,7 +37,9 @@ const GuildPinImage = (): JSX.Element => {
         <AlertIcon />
         <Stack top="1" position="relative" w="full">
           <AlertTitle>Couldn't generate Guild Pin</AlertTitle>
-          <AlertDescription wordBreak={"break-word"}>{error}</AlertDescription>
+          <AlertDescription wordBreak={"break-word"}>
+            {error?.error}
+          </AlertDescription>
         </Stack>
       </Alert>
     )

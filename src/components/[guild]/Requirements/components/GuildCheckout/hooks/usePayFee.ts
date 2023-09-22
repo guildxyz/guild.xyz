@@ -166,7 +166,7 @@ const usePayFee = () => {
       // temporary until POAPs are real roles
       if (requirement?.poapId)
         mutate(
-          `/assets/poap/checkUserPoapEligibility/${requirement.poapId}/${account}`
+          `/v2/guilds/:guildId/poaps/${requirement.poapId}/users/${account}/eligibility`
         )
       else mutate(`/guild/access/${id}/${account}`)
     },

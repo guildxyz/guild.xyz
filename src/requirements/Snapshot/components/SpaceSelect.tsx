@@ -40,12 +40,12 @@ const SpaceSelect = ({
   const [searchSpaceId, setSearchSpaceId] = useState("")
   const debouncedSearchSpaceId = useDebouncedState(searchSpaceId)
   const { data: spaces, isValidating: isSpacesLoading } = useSWRImmutable<Space[]>(
-    "/assets/snapshot/space"
+    "/v2/third-party/snapshot/spaces"
   )
   const { data: singleSpace, isValidating: isSingleSpaceLoading } =
     useSWRImmutable<Space>(
       debouncedSearchSpaceId
-        ? `/assets/snapshot/space/${debouncedSearchSpaceId}`
+        ? `/v2/third-party/snapshot/spaces/${debouncedSearchSpaceId}`
         : null
     )
 

@@ -49,7 +49,7 @@ const MintGuildPinContext = createContext<
     isImageValidating: boolean
     isInvalidImage?: boolean
     isTooSmallImage?: boolean
-    error: string
+    error: any
     mintedTokenId?: number
     setMintedTokenId: Dispatch<SetStateAction<number>>
   } & GuildCheckoutContextType
@@ -103,9 +103,7 @@ const MintGuildPinProviderComponent = ({
     isValidating: isImageValidating,
     error,
   } = useSWRImmutable(
-    shouldFetchImage
-      ? `/assets/guildPins/image?guildId=${id}&guildAction=${pinType}`
-      : null
+    shouldFetchImage ? `/v2/guilds/${id}/pin?guildAction=${pinType}` : null
   )
 
   const [mintedTokenId, setMintedTokenId] = useState<number>(null)

@@ -64,7 +64,7 @@ const useMintGuildPin = () => {
       timestamp,
       cid,
       signature,
-    }: MintData = await fetcher("/assets/guildPins", {
+    }: MintData = await fetcher(`/v2/guilds/${id}/pin`, {
       body: {
         userAddress: account,
         guildId: id,

@@ -21,10 +21,13 @@ describe("create-discord-guild", () => {
   })
 
   it("can authenticate with Discord and create a guild", () => {
-    cy.intercept(`${Cypress.env("guildApiUrl")}/guild/listGateables`, {
-      statusCode: 200,
-      fixture: "testUserDiscordGateables.json",
-    }).as("fetchDiscordGateables")
+    cy.intercept(
+      `${Cypress.env("guildApiUrl")}/users/*/platforms/DISCORD/gateables`,
+      {
+        statusCode: 200,
+        fixture: "testUserDiscordGateables.json",
+      }
+    ).as("fetchDiscordGateables")
 
     cy.intercept(`${Cypress.env("guildApiUrl")}/user/connect`, {
       statusCode: 200,
@@ -63,7 +66,7 @@ describe("create-discord-guild", () => {
     cy.getByDataTest("DISCORD-select-button-connected").click()
     cy.wait("@fetchDiscordGateables")
 
-    cy.intercept(`${Cypress.env("guildApiUrl")}/platform/guild/DISCORD/*`).as(
+    cy.intercept(`${Cypress.env("guildApiUrl")}/platforms/DISCORD/guilds/*`).as(
       "useGuildByPlatformId"
     )
     cy.wait("@useGuildByPlatformId")

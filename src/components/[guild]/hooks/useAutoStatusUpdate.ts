@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
-import { useKeyPair } from "components/_app/KeyPairProvider"
 import useMemberships from "components/explorer/hooks/useMemberships"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useEffect } from "react"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -58,7 +58,7 @@ const useAutoStatusUpdate = () => {
       ]).then(() =>
         Promise.all([
           mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`),
-          mutateOptionalAuthSWRKey(`/user/membership/${account}`),
+          mutateOptionalAuthSWRKey(`/v2/users/${account}/memberships`),
         ])
       )
     }

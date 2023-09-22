@@ -9,11 +9,12 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useFormContext, useFormState } from "react-hook-form"
 import slugify from "slugify"
+import fetcher from "utils/fetcher"
 
 const checkUrlName = (urlName: string) =>
-  fetch(`${process.env.NEXT_PUBLIC_API}/guild/${urlName}`).then(
-    async (response) => response.ok && response.status !== 204
-  )
+  fetcher(`/v2/guilds/${urlName}`)
+    .then(() => true)
+    .catch(() => false)
 
 const UrlName = ({ maxWidth = "sm" }) => {
   const { errors } = useFormState()

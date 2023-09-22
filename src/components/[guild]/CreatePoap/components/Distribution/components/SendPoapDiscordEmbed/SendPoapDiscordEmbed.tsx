@@ -37,7 +37,7 @@ import EmbedButton from "./components/EmbedButton"
 import EmbedDescription from "./components/EmbedDescription"
 import EmbedTitle from "./components/EmbedTitle"
 
-type PoapDiscordEmbedForm = {
+export type PoapDiscordEmbedForm = {
   poapId: number
   channelId: string
   title: string
@@ -85,18 +85,13 @@ const SendPoapDiscordEmbed = ({ poap, onSuccess }: Props): JSX.Element => {
 
   const triggerConfetti = useJsConfetti()
 
-  const { isLoading, isSigning, onSubmit, response, signLoadingText } = useSendJoin(
-    "POAP",
-    () => {
-      triggerConfetti()
-      onClose()
-      onSuccess()
-      // Mutating the guild data, so we get back the correct "activated" status for the POAPs
-      mutateGuild()
-    }
-  )
-
-  const loadingText = signLoadingText || "Sending"
+  const { isLoading, onSubmit, response } = useSendJoin("POAP", () => {
+    triggerConfetti()
+    onClose()
+    onSuccess()
+    // Mutating the guild data, so we get back the correct "activated" status for the POAPs
+    mutateGuild()
+  })
 
   return (
     <>
@@ -234,11 +229,10 @@ const SendPoapDiscordEmbed = ({ poap, onSuccess }: Props): JSX.Element => {
               <Button
                 colorScheme="green"
                 onClick={methods.handleSubmit(onSubmit)}
-                isLoading={isLoading || isSigning}
-                loadingText={loadingText}
+                isLoading={isLoading}
+                loadingText={"Sending"}
                 isDisabled={
                   isLoading ||
-                  isSigning ||
                   response ||
                   (poapEventDetails?.voiceChannelId &&
                     !poapEventDetails?.voiceEventEndedAt)

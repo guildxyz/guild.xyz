@@ -9,7 +9,7 @@ type JuiceboxProject = {
 
 export const useJuicebox = (search = "") => {
   const { data, isLoading } = useSWRImmutable<Array<JuiceboxProject>>(
-    search.length > 0 ? `/assets/juicebox/project?search=${search}` : null
+    search.length > 0 ? `/v2/third-party/juicebox/projects?search=${search}` : null
   )
 
   return { projects: data, isLoading }
@@ -17,7 +17,7 @@ export const useJuicebox = (search = "") => {
 
 export const useJuiceboxProject = (id: string) => {
   const { data, isLoading, error } = useSWRImmutable<JuiceboxProject>(
-    id ? `/assets/juicebox/project/${id}` : null
+    id ? `/v2/third-party/juicebox/projects/${id}` : null
   )
 
   return { project: data, isLoading, error }

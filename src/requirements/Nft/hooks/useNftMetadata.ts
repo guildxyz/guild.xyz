@@ -10,7 +10,7 @@ export type NftMetadata = {
   traits?: Record<string, Array<string>>
 }
 
-const baseUrl = `${process.env.NEXT_PUBLIC_API}/assets`
+const baseUrl = `/v2/third-party`
 
 const NOUNS_BACKGROUNDS = ["cool", "warm"]
 

@@ -28,7 +28,7 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
 
   const { data: proposal } = useSWRImmutable<Proposal>(
     requirement.data.proposal
-      ? `/assets/snapshot/proposal/${requirement.data.proposal}`
+      ? `/v2/third-party/snapshot/proposals/${requirement.data.proposal}`
       : null
   )
 
