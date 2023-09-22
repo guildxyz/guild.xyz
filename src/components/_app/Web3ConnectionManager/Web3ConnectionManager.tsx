@@ -156,4 +156,4 @@ const Web3ConnectionManager = ({
 
 const useWeb3ConnectionManager = () => useContext(Web3Connection)
 
-export { Web3ConnectionManager, useWeb3ConnectionManager }
+export { useWeb3ConnectionManager, Web3ConnectionManager }

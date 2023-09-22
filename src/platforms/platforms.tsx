@@ -2,6 +2,7 @@ import { ChakraProps } from "@chakra-ui/react"
 import dynamic from "next/dynamic"
 import {
   DiscordLogo,
+  EnvelopeSimple,
   GithubLogo,
   GoogleLogo,
   IconProps,
@@ -85,6 +86,13 @@ type PlatformData<
 >
 
 const platforms: Record<PlatformName, PlatformData> = {
+  EMAIL: {
+    icon: EnvelopeSimple,
+    name: "Email",
+    colorScheme: "gray",
+    gatedEntity: "email",
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
+  },
   TELEGRAM: {
     icon: TelegramLogo,
     name: "Telegram",
