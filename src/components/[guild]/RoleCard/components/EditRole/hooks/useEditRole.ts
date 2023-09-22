@@ -168,6 +168,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
           title: `Role successfully updated!`,
           status: "success",
         })
+        if (onSuccess) onSuccess()
       } else {
         if (updatedRole.error) {
           errorToast({
@@ -200,8 +201,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
           })
         }
       }
-
-      if (onSuccess) onSuccess()
 
       const updatedRequirementsById = mapToObject(successfulRequirementUpdates)
       const updatedRolePlatformsById = mapToObject(successfulRolePlatformUpdates)

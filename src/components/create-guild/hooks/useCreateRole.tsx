@@ -8,17 +8,18 @@ import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useSWRConfig } from "swr"
-import { Role } from "types"
+import { Requirement, Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 export type RoleToCreate = Omit<
   Role,
-  "id" | "members" | "memberCount" | "position"
+  "id" | "members" | "memberCount" | "position" | "requirements"
 > & {
   guildId: number
   roleType?: "NEW"
+  requirements: Omit<Requirement, "id" | "roleId" | "name" | "symbol">[]
 }
 
 const useCreateRole = (onSuccess?: () => void) => {

@@ -242,8 +242,6 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
 
   const useSubmitResponse = useSubmit(submit, {
     onSuccess: ({ admin, contacts, featureFlags, guildUpdateResult }) => {
-      if (onSuccess) onSuccess()
-
       // Show success / error toasts
       if (
         admin.creations.failedCount <= 0 &&
@@ -255,6 +253,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         featureFlags.deletions.failedCount <= 0 &&
         (!guildUpdateResult || (!!guildUpdateResult && !guildUpdateResult.error))
       ) {
+        if (onSuccess) onSuccess()
         toast({
           title: `Guild successfully updated!`,
           status: "success",

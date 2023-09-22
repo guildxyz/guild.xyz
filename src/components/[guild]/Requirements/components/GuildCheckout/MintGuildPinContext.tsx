@@ -1,3 +1,4 @@
+import { useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useIsMember from "components/[guild]/hooks/useIsMember"
@@ -48,6 +49,9 @@ const MintGuildPinContext = createContext<
     isInvalidImage?: boolean
     isTooSmallImage?: boolean
     error: string
+    isActivateModalOpen: boolean
+    onActivateModalOpen: () => void
+    onActivateModalClose: () => void
     mintedTokenId?: number
     setMintedTokenId: Dispatch<SetStateAction<number>>
   } & GuildCheckoutContextType
@@ -96,6 +100,12 @@ const MintGuildPinProviderComponent = ({
 
   const [mintedTokenId, setMintedTokenId] = useState<number>(null)
 
+  const {
+    isOpen: isActivateModalOpen,
+    onOpen: onActivateModalOpen,
+    onClose: onActivateModalClose,
+  } = useDisclosure()
+
   return (
     <MintGuildPinContext.Provider
       value={{
@@ -106,6 +116,9 @@ const MintGuildPinProviderComponent = ({
         isInvalidImage,
         isTooSmallImage,
         error: error?.error,
+        isActivateModalOpen,
+        onActivateModalOpen,
+        onActivateModalClose,
         mintedTokenId,
         setMintedTokenId,
       }}

@@ -31,7 +31,10 @@ const MintGuildPinButton = (): JSX.Element => {
   )
 
   const { guildPinFee, isGuildPinFeeLoading } = useGuildPinFee()
-  const { coinBalance, isLoading: isBalanceLoading } = useBalance()
+  const { coinBalance, isLoading: isBalanceLoading } = useBalance(
+    null,
+    Chains[guildPin?.chain]
+  )
   const isSufficientBalance =
     guildPinFee && coinBalance ? coinBalance.gt(guildPinFee) : false
 
