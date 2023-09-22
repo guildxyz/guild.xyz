@@ -37,7 +37,7 @@ import processEmailError from "./utils/processEmailError"
 
 const EmailAddress = () => {
   const { emails } = useUser()
-  const isConnected = !!emails && !emails.pending
+  const isConnected = !!emails?.emailAddress && !emails.pending
 
   return (
     <SocialAccountUI
@@ -45,7 +45,7 @@ const EmailAddress = () => {
       username={emails?.emailAddress}
       isConnected={isConnected}
     >
-      {isConnected ? <ConnectEmailButton /> : <DisconnectEmailButton />}
+      {isConnected ? <DisconnectEmailButton /> : <ConnectEmailButton />}
     </SocialAccountUI>
   )
 }
