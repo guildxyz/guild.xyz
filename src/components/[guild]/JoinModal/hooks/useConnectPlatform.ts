@@ -141,8 +141,8 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
         errorObject.isAutoConnect = true
       }
 
-      if (typeof rawError === "string") {
-        const parsedError = parseConnectError(rawError)
+      if (typeof rawError?.error === "string") {
+        const parsedError = parseConnectError(rawError.error)
         errorObject.error = parsedError
         toastError =
           typeof parsedError === "string" ? parsedError : parsedError.errors[0].msg
