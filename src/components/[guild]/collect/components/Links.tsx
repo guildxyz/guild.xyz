@@ -1,5 +1,4 @@
-import { Icon, Img, useColorMode, Wrap } from "@chakra-ui/react"
-import Link from "components/common/Link"
+import { Icon, Img, Link, useColorMode, Wrap } from "@chakra-ui/react"
 import Section from "components/common/Section"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
