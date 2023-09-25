@@ -355,6 +355,7 @@ type Guild = {
   hiddenRoles?: boolean
   requiredPlatforms?: PlatformName[]
   tags: GuildTags[]
+  isFallback?: boolean
 }
 type GuildFormType = Partial<
   Pick<

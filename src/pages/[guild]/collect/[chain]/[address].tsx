@@ -32,13 +32,15 @@ import { AnimatePresence, motion } from "framer-motion"
 import useLocalStorage from "hooks/useLocalStorage"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticPaths, GetStaticProps } from "next"
+import { useRouter } from "next/router"
 import {
   validateNftAddress,
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
+import ErrorPage from "pages/_error"
 import { useRef, useState } from "react"
-import { SWRConfig, unstable_serialize } from "swr"
-import { Guild } from "types"
+import { SWRConfig } from "swr"
+import { Guild, Requirement } from "types"
 import fetcher from "utils/fetcher"
 
 type Props = {
@@ -46,22 +48,38 @@ type Props = {
   address: string
   fallback: { [x: string]: Guild }
 }
-const Page = ({ chain, address }: Omit<Props, "fallback">) => {
-  const { theme, imageUrl, name, urlName, roles, guildPlatforms } = useGuild()
+const Page = ({
+  chain: chainFromProps,
+  address: addressFromProps,
+}: Omit<Props, "fallback">) => {
+  const router = useRouter()
+  const { chain: chainFromQuery, address: addressFromQuery } = router.query
+
+  const chain = chainFromProps ?? (chainFromQuery?.toString().toUpperCase() as Chain)
+  const address = addressFromProps ?? addressFromQuery?.toString()
+
+  const { theme, imageUrl, name, urlName, roles, guildPlatforms, isFallback } =
+    useGuild()
   const { isAdmin } = useGuildPermission()
   const { textColor, buttonColorScheme } = useThemeContext()
+
   const guildPlatform = guildPlatforms?.find(
     (gp) =>
       gp.platformGuildData?.chain === chain &&
       gp.platformGuildData?.contractAddress?.toLowerCase() === address
   )
+
   const role = roles?.find((r) =>
-    r.rolePlatforms?.find((rp) => rp.guildPlatformId === guildPlatform.id)
+    r.rolePlatforms?.find((rp) => rp.guildPlatformId === guildPlatform?.id)
   )
   const rolePlatformId = role?.rolePlatforms?.find(
-    (rp) => rp.guildPlatformId === guildPlatform.id
+    (rp) => rp.guildPlatformId === guildPlatform?.id
   )?.id
-  const requirements = role?.requirements ?? []
+  const requirements = !!role
+    ? role.hiddenRequirements || (role.requirements.length === 0 && !isFallback)
+      ? [...role.requirements, { type: "HIDDEN", roleId: role.id } as Requirement]
+      : role.requirements
+    : []
 
   const isMobile = useBreakpointValue({ base: true, md: false })
 
@@ -78,6 +96,8 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
     `${chain}_${address}_hasClickedShareButton`,
     false
   )
+
+  if (!isFallback && !guildPlatform) return <ErrorPage statusCode={404} />
 
   return (
     <CollectNftProvider
@@ -233,18 +253,12 @@ const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const endpoint = `/v2/guilds/guild-page/${urlName}`
   const guild: Guild = await fetcher(endpoint).catch((_) => ({}))
 
-  if (
-    !guild?.id ||
-    !guild.guildPlatforms.find(
-      (gp) =>
-        gp.platformGuildData?.chain === chain.toUpperCase() &&
-        gp.platformGuildData?.contractAddress?.toLowerCase() ===
-          address.toLowerCase()
-    )
-  )
+  if (!guild?.id)
     return {
       notFound: true,
     }
+
+  guild.isFallback = true
 
   return {
     props: {
@@ -252,7 +266,6 @@ const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       address,
       fallback: {
         [endpoint]: guild,
-        [unstable_serialize([endpoint, { method: "GET", body: {} }])]: guild,
       },
     },
   }
