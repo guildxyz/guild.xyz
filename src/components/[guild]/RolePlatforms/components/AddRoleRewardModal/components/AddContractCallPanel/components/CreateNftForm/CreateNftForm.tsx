@@ -396,6 +396,11 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                   placeholder={`e.g. ${account}`}
                 />
 
+                <FormHelperText>
+                  When users pay for minting the NFT, you'll receive the funds on
+                  this wallet address.
+                </FormHelperText>
+
                 <FormErrorMessage>{errors?.tokenTreasury?.message}</FormErrorMessage>
               </FormControl>
             </Stack>
