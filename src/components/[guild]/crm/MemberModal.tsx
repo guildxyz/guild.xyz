@@ -16,7 +16,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
-import { IdentityTag, WalletTag } from "./Identities"
+import { IdentityTag, PrivateSocialsTag, WalletTag } from "./Identities"
 import { ClickableCrmRoleTag } from "./RoleTags"
 import { Member } from "./useMembers"
 
@@ -63,14 +63,18 @@ const MemberModal = ({ row }: Props) => {
 
         <ModalBody>
           <Wrap>
-            {platformUsers.map((platformAccount) => (
-              <IdentityTag
-                key={platformAccount.platformId}
-                platformAccount={platformAccount}
-                isOpen={true}
-                fontWeight="semibold"
-              />
-            ))}
+            {platformUsers.length ? (
+              platformUsers.map((platformAccount) => (
+                <IdentityTag
+                  key={platformAccount.platformId}
+                  platformAccount={platformAccount}
+                  isOpen={true}
+                  fontWeight="semibold"
+                />
+              ))
+            ) : (
+              <PrivateSocialsTag isOpen />
+            )}
             {addresses.slice(1).map((address) => (
               <WalletTag key={address} isOpen>
                 <CopyableAddress address={address} fontSize="sm" />

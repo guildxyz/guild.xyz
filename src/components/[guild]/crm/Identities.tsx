@@ -1,8 +1,9 @@
-import { HStack, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
-import { Wallet } from "phosphor-react"
+import { HStack, Tag, TagLabel, TagLeftIcon, Tooltip } from "@chakra-ui/react"
+import { LockSimple, Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
+import shortenHex from "utils/shortenHex"
 import { Member } from "./useMembers"
 
 type Props = {
@@ -23,6 +24,8 @@ const Identities = ({ member }: Props) => {
     [platformUsers]
   )
 
+  const areSocialsPrivate = !platformUsers.length
+
   return (
     <HStack spacing={1}>
       {sortedAccounts?.map((platformAccount, i) => (
@@ -34,7 +37,10 @@ const Identities = ({ member }: Props) => {
           isOpen={i === 0}
         />
       ))}
-      <WalletTag isOpen={!sortedAccounts?.length}>{addresses?.length}</WalletTag>
+      <WalletTag isOpen={areSocialsPrivate}>
+        {areSocialsPrivate ? shortenHex(addresses?.[0]) : addresses?.length}
+      </WalletTag>
+      {areSocialsPrivate && <PrivateSocialsTag />}
     </HStack>
   )
 }
@@ -83,6 +89,18 @@ export const WalletTag = ({ isOpen = false, children }) => (
     <TagLeftIcon as={Wallet} mr="0" />
     <TagLabel ml="1">{children}</TagLabel>
   </Tag>
+)
+
+export const PrivateSocialsTag = ({ isOpen = false }) => (
+  <Tooltip
+    label="This user has opted to keep their connected accounts private"
+    hasArrow
+  >
+    <Tag bg="null" borderWidth="1px" px="1.5">
+      <TagLeftIcon as={LockSimple} mr="0" />
+      {isOpen && <TagLabel ml="1">Private socials</TagLabel>}
+    </Tag>
+  </Tooltip>
 )
 
 export default Identities
