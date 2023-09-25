@@ -12,6 +12,7 @@ import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
+import PulseMarker from "components/common/PulseMarker"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
 import Details from "components/[guild]/collect/components/Details"
@@ -23,10 +24,12 @@ import ShareButton from "components/[guild]/collect/components/ShareButton"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import ReportGuildButton from "components/[guild]/ReportGuildButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { Chain } from "connectors"
 import { AnimatePresence, motion } from "framer-motion"
+import useLocalStorage from "hooks/useLocalStorage"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticPaths, GetStaticProps } from "next"
 import {
@@ -45,6 +48,7 @@ type Props = {
 }
 const Page = ({ chain, address }: Omit<Props, "fallback">) => {
   const { theme, imageUrl, name, urlName, roles, guildPlatforms } = useGuild()
+  const { isAdmin } = useGuildPermission()
   const { textColor, buttonColorScheme } = useThemeContext()
   const guildPlatform = guildPlatforms?.find(
     (gp) =>
@@ -69,6 +73,11 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
   }, [])
 
   const { data, isValidating } = useNftDetails(chain, address)
+
+  const [hasClickedShareButton, setHasClickedShareButton] = useLocalStorage(
+    `${chain}_${address}_hasClickedShareButton`,
+    false
+  )
 
   return (
     <CollectNftProvider
@@ -99,12 +108,21 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
             </HStack>
 
             <HStack>
-              <ReportGuildButton
-                layout="ICON"
-                colorScheme={buttonColorScheme}
-                color={textColor}
-              />
-              <ShareButton />
+              <PulseMarker
+                placement="top"
+                hidden={
+                  !isAdmin || hasClickedShareButton || data?.totalCollectors > 0
+                }
+              >
+                <ShareButton onClick={() => setHasClickedShareButton(true)} />
+              </PulseMarker>
+              {!isAdmin && (
+                <ReportGuildButton
+                  layout="ICON"
+                  colorScheme={buttonColorScheme}
+                  color={textColor}
+                />
+              )}
             </HStack>
           </HStack>
 
