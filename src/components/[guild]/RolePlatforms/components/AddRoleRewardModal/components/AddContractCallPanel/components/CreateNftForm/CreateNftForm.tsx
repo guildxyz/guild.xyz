@@ -206,7 +206,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
 
                 <FormHelperText>
-                  This description will be included in the NFT metadata JSON.
+                  This description will be included in the NFT metadata.
                 </FormHelperText>
               </FormControl>
 

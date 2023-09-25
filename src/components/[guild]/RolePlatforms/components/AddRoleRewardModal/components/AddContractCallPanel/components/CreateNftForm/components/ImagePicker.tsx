@@ -68,12 +68,8 @@ const ImagePicker = () => {
       </AspectRatio>
 
       <FormHelperText display="flex" flexDir="column" gap={1.5} lineHeight={1.5}>
-        <Text>Maximum file size is 5MB</Text>
-        <Text>Supported formats: .jpg, .png, .gif</Text>
-        <Text>
-          Preferred aspect ratio is 1:1, but you can upload landscape or portrait
-          images too
-        </Text>
+        Please upload an image (max 5MB) in jpg, png, or gif format; while a 1:1
+        aspect ratio is preferred, any aspect ratio is accepted.
       </FormHelperText>
 
       <FormErrorMessage>
