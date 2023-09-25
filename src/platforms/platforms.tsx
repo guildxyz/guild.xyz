@@ -6,6 +6,7 @@ import {
   GithubLogo,
   GoogleLogo,
   IconProps,
+  Star,
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
@@ -28,6 +29,8 @@ import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
+import TextCardMenu from "./Text/TextCardMenu"
+import useTextCardProps from "./Text/useTextCardProps"
 
 export enum PlatformAsRewardRestrictions {
   NOT_APPLICABLE, // e.g. Twitter
@@ -299,6 +302,28 @@ const platforms: Record<PlatformName, PlatformData> = {
         loading: () => <PlatformPreview isLoading={true} />,
       }
     ),
+  },
+  TEXT: {
+    icon: Star,
+    name: "Custom text",
+    colorScheme: "gray",
+    gatedEntity: "",
+    cardPropsHook: useTextCardProps,
+    cardButton: () => null,
+    cardMenuComponent: TextCardMenu,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: false,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTextPanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(() => import("platforms/components/TextPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
   },
 }
 

@@ -18,7 +18,7 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   const platformsData: Record<
     Exclude<
       PlatformName,
-      "" | "TWITTER" | "TWITTER_V1" | "POAP" | "CONTRACT_CALL" | "EMAIL"
+      "" | "TWITTER" | "TWITTER_V1" | "POAP" | "CONTRACT_CALL" | "EMAIL" | "TEXT"
     >,
     PlatformsGridData
   > = {
@@ -64,11 +64,19 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
             />
           )
         )}
+        {/* TODO: maybe we should start using a "General" section for these? */}
+        <PlatformSelectButton
+          platform="TEXT"
+          title={platforms.TEXT.name}
+          description="Show a text for the users"
+          icon={platforms.TEXT.icon}
+          onSelection={onSelection}
+        />
         {featureFlags?.includes("CONTRACT_CALL") && (
           <PlatformSelectButton
-            platform={"CONTRACT_CALL"}
+            platform="CONTRACT_CALL"
             title={platforms.CONTRACT_CALL.name}
-            description={"Create a gated NFT"}
+            description="Create a gated NFT"
             icon={platforms.CONTRACT_CALL.icon}
             onSelection={onSelection}
           />

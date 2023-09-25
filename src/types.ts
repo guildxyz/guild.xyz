@@ -84,6 +84,7 @@ type PlatformName =
   | "CONTRACT_CALL"
   | "TWITTER_V1"
   | "EMAIL"
+  | "TEXT"
 
 type PlatformUserData = {
   acessToken?: string
@@ -203,6 +204,23 @@ type PlatformGuildData = {
     symbol: string
     image: string
     description: string
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    role?: never
+    mimeType?: never
+    iconLink?: never
+  }
+  TEXT: {
+    text: string
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    name?: never
+    symbol?: never
+    image?: never
+    description?: never
     inviteChannel?: never
     joinButton?: never
     needCaptcha?: never
@@ -455,6 +473,7 @@ export enum PlatformType {
   // "STEAM" = 6,
   "CONTRACT_CALL" = 7,
   "TWITTER_V1" = 8,
+  "TEXT" = 10,
 }
 
 type WalletConnectConnectionData = {
