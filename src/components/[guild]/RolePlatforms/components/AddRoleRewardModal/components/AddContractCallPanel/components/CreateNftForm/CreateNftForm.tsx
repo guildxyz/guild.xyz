@@ -425,7 +425,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 return handleSubmit(onSubmit)(e)
               }}
             >
-              Create NFT
+              Create NFT & continue setup
             </Button>
           </Tooltip>
         </HStack>
