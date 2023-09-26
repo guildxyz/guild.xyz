@@ -9,7 +9,7 @@ import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useSWRConfig } from "swr"
-import { Role, Visibility } from "types"
+import { GuildPlatform, PlatformType, Role, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
@@ -21,6 +21,8 @@ export type RoleToCreate = Omit<
   guildId: number
   roleType?: "NEW"
 }
+
+type CreateRoleResponse = Role & { createdGuildPlatforms?: GuildPlatform[] }
 
 const useCreateRole = (onSuccess?: () => void) => {
   const { id, urlName, memberCount, mutateGuild } = useGuild()
@@ -36,10 +38,12 @@ const useCreateRole = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
 
-  const fetchData = async (signedValidation: SignedValdation): Promise<Role> =>
+  const fetchData = async (
+    signedValidation: SignedValdation
+  ): Promise<CreateRoleResponse> =>
     fetcher(`/v2/guilds/${id}/roles`, signedValidation)
 
-  const useSubmitResponse = useSubmitWithSign<Role>(fetchData, {
+  const useSubmitResponse = useSubmitWithSign<CreateRoleResponse>(fetchData, {
     onError: (error_) =>
       showErrorToast({
         error: processConnectorError(error_.error) ?? error_.error,
@@ -55,6 +59,17 @@ const useCreateRole = (onSuccess?: () => void) => {
 
       if (response_.requirements.some((req) => req.type === "PAYMENT")) {
         captureEvent("Created role with PAYMENT requirement", postHogOptions)
+      }
+
+      if (
+        response_.createdGuildPlatforms?.some(
+          (cgp) => cgp.platformId === PlatformType.CONTRACT_CALL
+        )
+      ) {
+        captureEvent("Created NFT reward", {
+          ...postHogOptions,
+          hook: "useCreateRole",
+        })
       }
 
       triggerConfetti()

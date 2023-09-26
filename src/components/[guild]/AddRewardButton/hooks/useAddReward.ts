@@ -25,7 +25,10 @@ const useAddReward = (onSuccess?) => {
     },
     onSuccess: (response) => {
       if (response.platformId === PlatformType.CONTRACT_CALL) {
-        captureEvent("Created an NFT reward", postHogOptions)
+        captureEvent("Created NFT reward", {
+          ...postHogOptions,
+          hook: "useAddReward",
+        })
       }
 
       toast({ status: "success", title: "Reward successfully added" })
