@@ -359,6 +359,7 @@ type Guild = {
     chain: Chain
     isActive: boolean
   }
+  isFallback?: boolean
 }
 type GuildFormType = Partial<
   Pick<

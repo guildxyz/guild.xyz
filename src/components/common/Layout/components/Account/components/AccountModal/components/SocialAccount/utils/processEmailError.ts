@@ -17,7 +17,8 @@ const HUMAN_READABLE_MONTH = [
   "Dec",
 ]
 
-const processEmailError = (error: any): ErrorInfo => {
+const processEmailError = (paramError: any): ErrorInfo => {
+  const error = paramError?.error ?? paramError
   if (typeof error === "string") {
     if (error.includes(EMAIL_RESTRICTION)) {
       const [, isoString] = error.split(EMAIL_RESTRICTION)
@@ -32,13 +33,14 @@ const processEmailError = (error: any): ErrorInfo => {
 
     return {
       title: "Email verification failed",
-      description: error,
+      description: error?.replace("Error: ", ""),
     }
   }
 
   return {
     title: "Email verification failed",
-    description: error?.errors?.[0]?.msg ?? "Something went wrong",
+    description:
+      error?.errors?.[0]?.msg?.replace("Error: ", "") ?? "Something went wrong",
   }
 }
 

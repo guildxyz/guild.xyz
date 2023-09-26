@@ -463,7 +463,6 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       fallback: {
-        [`/guild/${params.guild?.toString()}`]: filteredData,
         [endpoint]: filteredData,
       },
     },

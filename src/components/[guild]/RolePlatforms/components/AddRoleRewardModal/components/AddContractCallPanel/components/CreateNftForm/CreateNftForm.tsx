@@ -206,7 +206,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
 
                 <FormHelperText>
-                  This description will be included in the NFT metadata JSON.
+                  This description will be included in the NFT metadata.
                 </FormHelperText>
               </FormControl>
 
@@ -396,6 +396,11 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                   placeholder={`e.g. ${account}`}
                 />
 
+                <FormHelperText>
+                  When users pay for minting the NFT, you'll receive the funds on
+                  this wallet address.
+                </FormHelperText>
+
                 <FormErrorMessage>{errors?.tokenTreasury?.message}</FormErrorMessage>
               </FormControl>
             </Stack>
@@ -425,7 +430,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 return handleSubmit(onSubmit)(e)
               }}
             >
-              Create NFT
+              Create NFT & continue setup
             </Button>
           </Tooltip>
         </HStack>

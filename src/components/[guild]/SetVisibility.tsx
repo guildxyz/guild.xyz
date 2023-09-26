@@ -22,7 +22,6 @@ import { Detective, Eye, EyeSlash, IconProps } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes, useRef } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { Visibility } from "types"
-import useGuild from "./hooks/useGuild"
 
 export const visibilityData: Record<
   Visibility,
@@ -55,7 +54,9 @@ const VisibilityTag = ({ visibility }: { visibility: Visibility }) => {
   return (
     <Button
       size={"xs"}
-      colorScheme={"blackAlpha" as ButtonProps["colorScheme"]}
+      colorScheme="blackAlpha"
+      bgColor="blackAlpha.300"
+      variant="solid"
       leftIcon={<Icon />}
       isDisabled
       opacity={"1 !important"}
@@ -118,7 +119,6 @@ const SetVisibility = ({
   entityType: FilterableEntity
   fieldBase?: string
 } & ButtonProps) => {
-  const { featureFlags } = useGuild()
   const parentField = fieldBase ?? ""
   const { isOpen, onClose, onOpen } = useDisclosure()
 
@@ -134,31 +134,22 @@ const SetVisibility = ({
 
   const Icon = visibilityData[currentVisibility].Icon
 
-  const isDisabled = !featureFlags.includes("VISIBILITY")
-
   return (
     <>
       {entityType === "role" ? (
-        <Tooltip label="Visibility - coming soon" isDisabled={!isDisabled}>
-          <Button
-            ml={3}
-            size="xs"
-            leftIcon={<Icon />}
-            onClick={onOpen}
-            ref={buttonRef}
-            {...buttonProps}
-            isDisabled={isDisabled}
-          >
-            {visibilityData[currentVisibility].title}
-          </Button>
-        </Tooltip>
+        <Button
+          ml={3}
+          size="xs"
+          leftIcon={<Icon />}
+          onClick={onOpen}
+          ref={buttonRef}
+          {...buttonProps}
+        >
+          {visibilityData[currentVisibility].title}
+        </Button>
       ) : (
         <Tooltip
-          label={
-            isDisabled
-              ? "Visibility - coming soon"
-              : `${visibilityData[currentVisibility].title}: ${visibilityData[currentVisibility].description}`
-          }
+          label={`${visibilityData[currentVisibility].title}: ${visibilityData[currentVisibility].description}`}
         >
           <IconButton
             size={"sm"}
@@ -170,7 +161,6 @@ const SetVisibility = ({
             ref={buttonRef}
             ml={1}
             color="gray"
-            isDisabled={isDisabled}
           />
         </Tooltip>
       )}

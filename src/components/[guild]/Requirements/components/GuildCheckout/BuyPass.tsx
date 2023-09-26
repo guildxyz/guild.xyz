@@ -11,7 +11,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
@@ -27,7 +26,6 @@ import { useEffect } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import { useRequirementContext } from "../RequirementContext"
-import AlphaTag from "./components/AlphaTag"
 import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
 import BuyButton from "./components/buttons/BuyButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
@@ -94,8 +92,7 @@ const BuyPass = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader pb={4} pr={16}>
-            <Text as="span" mr={2}>{`Buy ${name} pass`}</Text>
-            <AlphaTag />
+            {`Buy ${name} pass`}
           </ModalHeader>
           <ModalCloseButton />
 

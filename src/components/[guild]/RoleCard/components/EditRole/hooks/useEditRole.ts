@@ -1,11 +1,12 @@
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
-import { OneOf } from "types"
+import { OneOf, Visibility } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
@@ -15,7 +16,11 @@ const mapToObject = <T extends { id: number }>(array: T[], by: keyof T = "id") =
   Object.fromEntries(array.map((item) => [item[by], item]))
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
-  const { id, mutateGuild } = useGuild()
+  const { id, urlName, roles, memberCount, mutateGuild } = useGuild()
+  const currentRole = roles.find((role) => role.id === roleId)
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = { guild: urlName, memberCount }
+
   const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
   const toast = useToast()
@@ -164,6 +169,26 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         failedRolePlatformUpdatesCount <= 0 &&
         failedRolePlatformCreationsCount <= 0
       ) {
+        createdRequirements?.forEach((req) => {
+          if (req.visibility !== Visibility.PUBLIC) {
+            captureEvent(`Created a ${req.visibility} requirement`, {
+              ...postHogOptions,
+              requirementType: req.type,
+            })
+          }
+        })
+
+        if (
+          !!updatedRole &&
+          currentRole.visibility === Visibility.PUBLIC &&
+          updatedRole.visibility !== Visibility.PUBLIC
+        ) {
+          captureEvent(
+            `Changed role visibility from PUBLIC to ${updatedRole.visibility}`,
+            postHogOptions
+          )
+        }
+
         onSuccess?.()
       } else {
         if (updatedRole.error) {
