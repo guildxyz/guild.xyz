@@ -49,13 +49,7 @@ const GuildEvents = (): JSX.Element => {
       isAdmin) &&
     !showOnboarding
 
-  const discordGuildPlatform = guildPlatforms?.find(
-    (platform) => platform.platformId === PlatformType.DISCORD
-  )
-
-  const { data, isLoading, error } = useDiscordEvents(
-    discordGuildPlatform?.platformGuildId
-  )
+  const { data, isLoading, error } = useDiscordEvents(guildId)
 
   const sortEventByStartDate = (eventA: DiscordEvent, eventB: DiscordEvent) =>
     eventA.start - eventB.start

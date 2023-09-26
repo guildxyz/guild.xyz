@@ -74,6 +74,7 @@ const EditGuildDrawer = ({
     contacts,
     isDetailed,
     featureFlags,
+    eventSources,
     tags: savedTags,
   } = useGuild()
   const { isOwner } = useGuildPermission()
@@ -98,8 +99,8 @@ const EditGuildDrawer = ({
     socialLinks,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
     tags: savedTags,
-    eventProviders: {
-      EVENTBRITE: "",
+    eventSources: {
+      EVENTBRITE: eventSources.EVENTBRITE,
       LINK3: "",
       LUMA: "",
     },

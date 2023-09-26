@@ -13,16 +13,16 @@ type DiscordEvent = {
   image: string
 }
 
-const useDiscordEvents = (paltformGuildId: string) => {
+const useDiscordEvents = (paltformGuildId: number) => {
   const swrResponse = useSWRImmutable<
-    OneOf<{ events: DiscordEvent[] }, { error: any }>
-  >(paltformGuildId ? `/discord/events/${paltformGuildId}` : null)
+    OneOf<{ events: DiscordEvent[] }, { errors: any }>
+  >(paltformGuildId ? `/v2/guilds/${paltformGuildId}/events` : null)
 
   return {
     ...swrResponse,
-    data: !swrResponse.data?.error ? swrResponse.data?.events : undefined,
+    data: !swrResponse.data?.errors ? swrResponse.data?.events : undefined,
     // When Discord API has an issue, the response from the guild is 200, and the payload contains an error object from Discord.
-    error: swrResponse.error || swrResponse.data?.error,
+    error: swrResponse.error || swrResponse.data?.errors,
   }
 }
 

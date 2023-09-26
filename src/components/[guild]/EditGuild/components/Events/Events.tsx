@@ -1,5 +1,4 @@
 import { SimpleGrid, Text } from "@chakra-ui/react"
-import { supportedEventSources } from "types"
 import EventInput from "./EventInput"
 
 const Events = () => (
@@ -9,11 +8,13 @@ const Events = () => (
       place.
     </Text>
     <SimpleGrid columns={2} gap={3}>
-      {supportedEventSources
+      <EventInput name={"EVENTBRITE"} />
+
+      {/*supportedEventSources
         .filter((source) => source !== supportedEventSources[3])
         .map((provider) => (
           <EventInput key={provider} name={provider} />
-        ))}
+        ))*/}
     </SimpleGrid>
   </>
 )
