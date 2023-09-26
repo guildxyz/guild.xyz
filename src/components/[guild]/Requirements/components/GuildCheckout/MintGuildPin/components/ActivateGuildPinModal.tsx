@@ -26,7 +26,6 @@ const ActivateGuildPinModal = (): JSX.Element => {
     onActivateModalClose,
     isInvalidImage,
     isTooSmallImage,
-    isImageValidating,
     error,
   } = useMintGuildPinContext()
   const setupRequired = isInvalidImage || isTooSmallImage
@@ -47,15 +46,17 @@ const ActivateGuildPinModal = (): JSX.Element => {
         </ModalHeader>
 
         <ModalBody pb="6">
-          {!isImageValidating && (error || setupRequired) && (
-            <Alert status="info" mb="6" pb="5">
-              <AlertIcon />
-              <Stack position="relative" top={1}>
-                <AlertTitle>
-                  {error ??
-                    "Please upload a bigger image in guild settings to activate Guild Pin"}
-                </AlertTitle>
+          <Alert status="info" mb="6" pb="5">
+            <AlertIcon />
+            <Stack position="relative" top={1}>
+              <AlertTitle>
+                {error ??
+                  (isTooSmallImage
+                    ? "Please upload a bigger image in guild settings to activate Guild Pin"
+                    : "Onchain badge for members, that shows their support and belonging to this community. Activate it, so members can mint it and shill your guild onchain!")}
+              </AlertTitle>
 
+              {(!!error || isTooSmallImage) && (
                 <Button
                   size="sm"
                   w="max-content"
@@ -66,19 +67,15 @@ const ActivateGuildPinModal = (): JSX.Element => {
                 >
                   Open settings
                 </Button>
-              </Stack>
-            </Alert>
-          )}
+              )}
+            </Stack>
+          </Alert>
 
           <GuildPinImage pinType={GuildAction.JOINED_GUILD} />
         </ModalBody>
 
         <ModalFooter flexDir="column" gap={6}>
           <ActivateGuildPinForm />
-          <Text colorScheme="gray" fontSize="sm" textAlign="center">
-            Once you activate this Guild Pin, anyone who joins your guild will be
-            able to mint it.
-          </Text>
         </ModalFooter>
       </ModalContent>
     </Modal>
