@@ -14,23 +14,12 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { DownloadSimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import GuildGhost from "static/avatars/ghost.svg"
-import useSWRImmutable from "swr/immutable"
 import converSVGToPNG from "utils/convertSVGToPNG"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 
-type Props = {
-  pinType?: GuildAction
-}
-
-const GuildPinImage = ({ pinType: pinTypeProp }: Props): JSX.Element => {
-  const { id } = useGuild()
-  const {
-    pinType: pinTypeFromContext,
-    pinImage: pinImageFromContext,
-    isInvalidImage,
-    isTooSmallImage,
-  } = useMintGuildPinContext()
-  const pinType = pinTypeProp ?? pinTypeFromContext
+const GuildPinImage = (): JSX.Element => {
+  const { pinType, pinImage, isInvalidImage, isTooSmallImage } =
+    useMintGuildPinContext()
   const { name } = useGuild()
   const { isAdmin } = useGuildPermission()
 
@@ -46,15 +35,6 @@ const GuildPinImage = ({ pinType: pinTypeProp }: Props): JSX.Element => {
     [GuildAction.IS_OWNER]: `This is an onchain proof that you're the owner of ${name} on Guild.xyz.`,
     [GuildAction.IS_ADMIN]: `This is an onchain proof that you're an admin of ${name} on Guild.xyz.`,
   }
-
-  // fetching the joined guild type pin image here, so the setup flow won't be confusing for the guild owner
-  const { data: joinedGuildPinImage, isValidating } = useSWRImmutable(
-    typeof pinTypeProp === "number"
-      ? `/v2/guilds/${id}/pin?guildAction=${pinTypeProp}`
-      : null
-  )
-
-  const pinImage = isValidating ? null : joinedGuildPinImage ?? pinImageFromContext
 
   const pinUrl = `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`
 

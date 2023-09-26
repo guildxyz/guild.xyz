@@ -1,8 +1,5 @@
 import { useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useIsMember from "components/[guild]/hooks/useIsMember"
-import useUser from "components/[guild]/hooks/useUser"
 import {
   createContext,
   Dispatch,
@@ -65,17 +62,8 @@ const MintGuildPinProviderComponent = ({
   const { id, imageUrl } = useGuild()
   const isInvalidImage = !imageUrl || imageUrl?.startsWith("/guildLogos")
 
-  const isMember = useIsMember()
-  const { isOwner, isAdmin } = useGuildPermission()
-  const { isSuperAdmin } = useUser()
-
-  const pinType = isOwner
-    ? GuildAction.IS_OWNER
-    : isAdmin && !isSuperAdmin
-    ? GuildAction.IS_ADMIN
-    : isMember || isSuperAdmin
-    ? GuildAction.JOINED_GUILD
-    : null
+  // TODO: allow the guild owners and admins to mint the other 2 pin types too
+  const pinType = GuildAction.JOINED_GUILD
 
   const { data, isValidating } = useSWRImmutable(
     !isInvalidImage ? ["imageWidthAndHeight", imageUrl] : null,
