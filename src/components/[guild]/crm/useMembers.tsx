@@ -22,14 +22,14 @@ type Member = {
   }
 }
 
-const LIMIT = 100
+const LIMIT = 50
 
 const useMembers = (queryString) => {
   const { id } = useGuild()
 
   const getKey = useCallback(
     (pageIndex, previousPageData) => {
-      if (!id || (previousPageData && !previousPageData.length)) return null
+      if (!id || (previousPageData && previousPageData.length < LIMIT)) return null
 
       const pagination = `offset=${pageIndex * LIMIT}&limit=${LIMIT}`
 
