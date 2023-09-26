@@ -21,12 +21,12 @@ const SaveAlert = ({ onClose, onSave, ...rest }: Props): JSX.Element => {
     <Alert leastDestructiveRef={cancelRef} onClose={onClose} {...rest}>
       <AlertDialogOverlay>
         <AlertDialogContent>
-          <AlertDialogHeader>Edit Guild Pin?</AlertDialogHeader>
+          <AlertDialogHeader>Edit Guild Pin design?</AlertDialogHeader>
           <AlertDialogBody>
-            Are you sure you want to make changes to your Guild Pin design? Users who
-            have already minted your Guild Pin will continue to see the previous
-            design, while future minters will see the updated version. Would you like
-            to proceed?
+            Changing the image, name or color of your guild will affect the
+            appearance of the mintable Guild Pin too. Users who have already minted
+            will see the previous version, while future minters will see the new one.
+            Would you like to proceed?
           </AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
@@ -40,7 +40,7 @@ const SaveAlert = ({ onClose, onSave, ...rest }: Props): JSX.Element => {
                 onClose()
               }}
             >
-              Save
+              Yes, save changes
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
