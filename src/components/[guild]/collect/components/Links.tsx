@@ -1,5 +1,4 @@
-import { Icon, Img, useColorMode, Wrap } from "@chakra-ui/react"
-import Link from "components/common/Link"
+import { Icon, Img, Link, useColorMode, Wrap } from "@chakra-ui/react"
 import Section from "components/common/Section"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -9,16 +8,18 @@ import { ArrowSquareOut } from "phosphor-react"
 import { SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
 import { openseaBaseUrl } from "utils/guildCheckout/constants"
+import useNftDetails from "../hooks/useNftDetails"
 
 const Links = () => {
   const { colorMode } = useColorMode()
   const { chain, address } = useCollectNftContext()
+  const { data } = useNftDetails(chain, address)
   const { socialLinks } = useGuild()
 
   return (
     <Section title="Links" spacing={3}>
       <Wrap spacingX={6} spacingY={3}>
-        {openseaBaseUrl[chain] && (
+        {openseaBaseUrl[chain] && !!data?.totalCollectors && (
           <Link
             href={`${openseaBaseUrl[chain]}/${address}`}
             isExternal

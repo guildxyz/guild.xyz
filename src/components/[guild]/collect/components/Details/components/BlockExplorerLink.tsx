@@ -33,7 +33,7 @@ const BlockExplorerLink = ({
           <Text as="span" fontSize="md" mr={1.5} colorScheme="gray" noOfLines={1}>
             {displayedAddress}
           </Text>
-          <Icon as={ArrowSquareOut} color="gray" size="sm" />
+          <Icon as={ArrowSquareOut} color="gray" />
         </Link>
       )}
     </Skeleton>
