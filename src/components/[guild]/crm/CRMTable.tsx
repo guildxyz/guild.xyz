@@ -15,18 +15,16 @@ import { Table as TableType, flexRender } from "@tanstack/react-table"
 import Card from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useEffect, useRef, useState } from "react"
+import { SWRInfiniteResponse } from "swr/infinite"
 import { TABS_HEIGHT_SM, TABS_SM_BUTTONS_STYLES } from "../Tabs/Tabs"
 import MemberModal from "./MemberModal"
 import { Member } from "./useMembers"
 
 type Props = {
   table: TableType<Member>
-  data: Member[]
-  error: Error | string
-  isValidating: boolean
-  setSize: any
   hasReachedTheEnd: boolean
-}
+  data: Member[]
+} & Omit<SWRInfiniteResponse<Member[]>, "data">
 
 const HEADER_HEIGHT = "61px"
 

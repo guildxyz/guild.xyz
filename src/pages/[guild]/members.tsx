@@ -61,8 +61,7 @@ const GuildPage = (): JSX.Element => {
       scroll: false,
     })
   }, [queryString])
-  const { data, error, isValidating, setSize, hasReachedTheEnd } =
-    useMembers(queryString)
+  const { data, ...rest } = useMembers(queryString)
 
   const columns = useMemo(
     () => [
@@ -192,9 +191,7 @@ const GuildPage = (): JSX.Element => {
           rightElement={<ExportMembers table={table} />}
         />
         {/* {JSON.stringify(table.getState(), null, 2)} */}
-        <CRMTable
-          {...{ table, data, error, isValidating, setSize, hasReachedTheEnd }}
-        />
+        <CRMTable table={table} data={data} {...rest} />
       </Layout>
     </>
   )
