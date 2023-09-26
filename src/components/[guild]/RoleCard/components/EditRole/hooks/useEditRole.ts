@@ -176,7 +176,10 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
 
         createdRequirements?.forEach((req) => {
           if (req.visibility !== Visibility.PUBLIC) {
-            captureEvent(`Created a ${req.visibility} requirement`, postHogOptions)
+            captureEvent(`Created a ${req.visibility} requirement`, {
+              ...postHogOptions,
+              requirementType: req.type,
+            })
           }
         })
 
