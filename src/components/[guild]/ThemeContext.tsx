@@ -36,10 +36,10 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
 
   // the initial value isn't enough, have to keep them in sync when they change due to SWR refetch
   useEffect(() => {
-    if (themeColor) setLocalThemeColor(themeColor)
+    setLocalThemeColor(themeColor)
   }, [themeColor])
   useEffect(() => {
-    if (backgroundImage) setLocalBackgroundImage(backgroundImage)
+    setLocalBackgroundImage(backgroundImage)
   }, [backgroundImage])
 
   const textColor = useMemo(() => {
