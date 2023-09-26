@@ -37,6 +37,7 @@ const CRMTable = ({
   hasReachedTheEnd,
 }: Props) => {
   const cardBg = useColorModeValue("white", "var(--chakra-colors-gray-700)") // css variable form so it works in boxShadow literal for identityTags
+  const theadBoxShadow = useColorModeValue("md", "2xl")
 
   /**
    * Observing if we've scrolled to the bottom of the page. The table has to be the
@@ -108,25 +109,44 @@ const CRMTable = ({
           <Table
             borderColor="whiteAlpha.300"
             minWidth="calc(var(--chakra-sizes-container-lg) - calc(var(--chakra-space-10) * 2))"
-            // needed so the Th elements can have boxShadow
+            // needed so the Th elements can have border
             sx={{ borderCollapse: "separate", borderSpacing: 0 }}
           >
-            <Thead>
+            <Thead
+              position="sticky"
+              top="0"
+              zIndex="2"
+              boxShadow={isStuck && theadBoxShadow}
+              transition="box-shadow .2s"
+            >
               <Tr>
                 {/* We don't support multiple header groups right now. Should rewrite it based on the example if we'll need it */}
                 {table.getHeaderGroups()[0].headers.map((header) => (
-                  <CrmTh
+                  <Th
                     key={header.id}
-                    isStuck={isStuck}
+                    p="3.5"
+                    borderTopWidth="1px"
                     bg={cardBg}
                     colSpan={header.colSpan}
+                    sx={
+                      !isStuck && {
+                        "&:first-of-type": {
+                          borderTopLeftRadius: "xl",
+                        },
+                        "&:last-of-type": {
+                          borderTopRightRadius: "xl",
+                          borderRightWidth: 0,
+                        },
+                      }
+                    }
                     {...(header.column.id === "identity" && {
+                      position: "sticky",
                       left: "0",
                       zIndex: 2,
                     })}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
-                  </CrmTh>
+                  </Th>
                 ))}
               </Tr>
             </Thead>
@@ -232,37 +252,6 @@ const CrmSkeletonRow = ({ columns }) => (
     ))}
   </Tr>
 )
-
-const CrmTh = ({ children, isStuck, ...rest }) => {
-  const theadBoxShadow = useColorModeValue("md", "2xl")
-
-  return (
-    <Th
-      position="sticky"
-      top="0"
-      overflow="hidden"
-      p="3.5"
-      sx={
-        !isStuck && {
-          "&:first-of-type": {
-            borderTopLeftRadius: "xl",
-          },
-          "&:last-of-type": {
-            borderTopRightRadius: "xl",
-            borderRightWidth: 0,
-          },
-        }
-      }
-      zIndex="1"
-      boxShadow={isStuck && theadBoxShadow}
-      transition="box-shadow .2s"
-      borderTopWidth="1px"
-      {...rest}
-    >
-      {children}
-    </Th>
-  )
-}
 
 const CrmTd = ({ children, ...rest }) => {
   const tdBg = useColorModeValue(`gray.50`, "#3A3A40") // dark color is from blackAlpha.200, but without opacity so it can overlay when sticky
