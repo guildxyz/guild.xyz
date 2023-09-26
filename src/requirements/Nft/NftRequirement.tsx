@@ -66,10 +66,10 @@ const NftRequirement = (props: RequirementProps) => {
     <>
       {guildPinGuildName && (
         <>
-          <DataBlock>{`Joined ${guildPinGuildName}`}</DataBlock>{" "}
+          <DataBlock>{guildPinGuildName}</DataBlock>
         </>
       )}
-      {"Guild Pin"}
+      {" Guild Pin"}
     </>
   ) : (
     metadataWithTraits?.name || metadata?.name
