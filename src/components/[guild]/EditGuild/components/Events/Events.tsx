@@ -9,9 +9,11 @@ const Events = () => (
       place.
     </Text>
     <SimpleGrid columns={2} gap={3}>
-      {supportedEventSources.map((provider) => (
-        <EventInput key={provider} name={provider} />
-      ))}
+      {supportedEventSources
+        .filter((source) => source !== supportedEventSources[3])
+        .map((provider) => (
+          <EventInput key={provider} name={provider} />
+        ))}
     </SimpleGrid>
   </>
 )

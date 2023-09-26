@@ -58,7 +58,7 @@ const GuildEvents = (): JSX.Element => {
   )
 
   const sortEventByStartDate = (eventA: DiscordEvent, eventB: DiscordEvent) =>
-    eventA.scheduledStartTimestamp - eventB.scheduledStartTimestamp
+    eventA.start - eventB.start
 
   return (
     <Layout
@@ -162,7 +162,7 @@ const GuildEvents = (): JSX.Element => {
       {!isLoading && !error && data?.length > 0 && (
         <VStack gap={4}>
           {data.sort(sortEventByStartDate).map((event) => (
-            <DiscordEventCard key={event.id} event={event} guildId={guildId} />
+            <DiscordEventCard key={event.title} event={event} guildId={guildId} />
           ))}
         </VStack>
       )}

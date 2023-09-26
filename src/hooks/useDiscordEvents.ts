@@ -1,25 +1,16 @@
 import useSWRImmutable from "swr/immutable"
-import { OneOf } from "types"
+import { EventSourcesKey, OneOf } from "types"
 
 type DiscordEvent = {
-  id: string
-  guildId: string
-  channelId?: string
-  creatorId?: string
-  name: string
-  description?: string
-  scheduledStartTimestamp: number
-  scheduledEndTimestamp?: number
-  privacyLevel: number
-  status: number
-  entityType: number
-  entityId?: string
-  userCount?: number
-  creator?: number
-  entityMetadata?: {
-    location: string
-  }
-  image?: string
+  title: string
+  description: string
+  start: number
+  end: number
+  memberCount: number
+  eventType: EventSourcesKey
+  location: string
+  url: string
+  image: string
 }
 
 const useDiscordEvents = (paltformGuildId: string) => {

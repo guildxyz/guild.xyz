@@ -2,19 +2,36 @@ import { ButtonProps } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { ArrowSquareOut } from "phosphor-react"
+import { EventSourcesKey } from "types"
 
 type Props = {
   eventName: string
   userCount: number
   guildId: number
-  eventId: string
+  eventType: EventSourcesKey
+  url: string
 } & ButtonProps
+
+const eventButtonColor: Record<EventSourcesKey, string> = {
+  EVENTBRITE: "#f05537",
+  LINK3: "#606060",
+  LUMA: "#000000",
+  DISCORD: "#5865f2",
+}
+
+const eventButtonText: Record<EventSourcesKey, string> = {
+  EVENTBRITE: "Eventbrite",
+  LINK3: "Link3",
+  LUMA: "Lu.ma",
+  DISCORD: "Discord",
+}
 
 const JoinDiscordEventButton = ({
   eventName,
   userCount,
   guildId,
-  eventId,
+  eventType,
+  url,
   ...rest
 }: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
@@ -22,9 +39,9 @@ const JoinDiscordEventButton = ({
   return (
     <Button
       as="a"
-      href={`https://discord.com/events/${guildId}/${eventId}`}
+      href={url}
       target="_blank"
-      colorScheme="indigo"
+      bg={eventButtonColor[eventType]}
       rightIcon={<ArrowSquareOut />}
       mt={3}
       onClick={(event) => {
@@ -39,7 +56,7 @@ const JoinDiscordEventButton = ({
       }}
       {...rest}
     >
-      Join Discord event
+      {`Join ${eventButtonText[eventType] ?? ""} event`}
     </Button>
   )
 }

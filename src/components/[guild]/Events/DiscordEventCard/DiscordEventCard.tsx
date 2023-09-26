@@ -25,7 +25,7 @@ type Props = {
 
 const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { name, description, image, scheduledStartTimestamp, userCount, id } = event
+  const { title, description, start, memberCount } = event
 
   return (
     <>
@@ -46,13 +46,9 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
                 fontWeight={"bold"}
                 mb={3}
               >
-                {name}
+                {title}
               </Heading>
-              <EventInfo
-                userCount={userCount}
-                startDate={scheduledStartTimestamp}
-                mb="4"
-              />
+              <EventInfo userCount={memberCount} startDate={start} mb="4" />
               {description && (
                 <Text fontSize="sm" noOfLines={2} mb="4">
                   {description}
@@ -60,16 +56,17 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
               )}
               <LinkOverlay mt="auto">
                 <JoinDiscordEventButton
-                  eventName={name}
+                  eventName={title}
+                  eventType={event.eventType}
                   guildId={guildId}
-                  userCount={userCount}
-                  eventId={id}
+                  userCount={memberCount}
+                  url={event.url}
                   size="sm"
                 />
               </LinkOverlay>
             </GridItem>
             <GridItem order={{ base: 1, md: 2 }}>
-              <EventImage eventId={id} image={image} />
+              <EventImage url={event.url} />
             </GridItem>
           </Grid>
         </Card>
@@ -79,30 +76,27 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
         <ModalContent>
           <ModalCloseButton zIndex="modal" />
           <ModalBody p="5 !important">
-            <EventImage eventId={id} image={image} showFallback={false} mb="5" />
+            <EventImage url={event.url} showFallback={false} mb="5" />
             <Heading
               fontSize={"xl"}
               fontFamily={"Dystopian"}
               fontWeight={"bold"}
               mb={3}
             >
-              {name}
+              {title}
             </Heading>
-            <EventInfo
-              userCount={userCount}
-              startDate={scheduledStartTimestamp}
-              mb="5"
-            />
+            <EventInfo userCount={memberCount} startDate={start} mb="5" />
             {description && (
               <Text fontSize={"sm"} flexGrow={1} mb="5">
                 {description}
               </Text>
             )}
             <JoinDiscordEventButton
-              eventName={name}
+              eventName={title}
               guildId={guildId}
-              userCount={userCount}
-              eventId={id}
+              eventType={event.eventType}
+              userCount={memberCount}
+              url={event.url}
               w="full"
             />
           </ModalBody>

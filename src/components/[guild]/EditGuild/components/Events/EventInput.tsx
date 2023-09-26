@@ -10,12 +10,14 @@ const placeholders: Record<EventSourcesKey, string> = {
   EVENTBRITE: "Eventbrite",
   LINK3: "Link3",
   LUMA: "lu.ma",
+  DISCORD: "Diiscord",
 }
 
 const logos: Record<EventSourcesKey, string> = {
   EVENTBRITE: "/platforms/eventbrite.png",
   LINK3: "/platforms/link3.png",
   LUMA: "/platforms/luma.png",
+  DISCORD: "platforms/discord.png",
 }
 
 const EventInput = ({ name }: Props) => {

@@ -325,7 +325,7 @@ type GuildContact = {
   id?: number
 }
 
-const supportedEventSources = ["LINK3", "EVENTBRITE", "LUMA"] as const
+const supportedEventSources = ["LINK3", "EVENTBRITE", "LUMA", "DISCORD"] as const
 type EventSourcesKey = (typeof supportedEventSources)[number]
 type EventSources = Partial<Record<EventSourcesKey, string>>
 
