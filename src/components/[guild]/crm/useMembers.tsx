@@ -25,11 +25,7 @@ type Member = {
 const LIMIT = 100
 
 const useMembers = (queryString) => {
-  const { roles, id } = useGuild()
-
-  const hiddenRoleIds = roles
-    ?.filter((role) => role.visibility === Visibility.HIDDEN)
-    ?.map((role) => role.id)
+  const { id } = useGuild()
 
   const getKey = useCallback(
     (pageIndex, previousPageData) => {
@@ -51,23 +47,20 @@ const useMembers = (queryString) => {
           method: "GET",
           body: {},
         },
-      ]).then((res) => {
-        if (!hiddenRoleIds.length)
-          return res.map((user) => ({ ...user, roles: { public: user.roleIds } }))
-
-        return res.map((user) => ({
+      ]).then((res) =>
+        res.map((user) => ({
           ...user,
           roles: {
-            hidden: user.roleIds.filter((role) =>
-              hiddenRoleIds.includes(role.roleId)
+            hidden: user.roles.filter(
+              (role) => role.visibility === Visibility.HIDDEN
             ),
-            public: user.roleIds.filter(
-              (role) => !hiddenRoleIds.includes(role.roleId)
+            public: user.roles.filter(
+              (role) => role.visibility !== Visibility.HIDDEN
             ),
           },
         }))
-      }),
-    [hiddenRoleIds, fetcherWithSign]
+      ),
+    [fetcherWithSign]
   )
 
   const { data, ...rest } = useSWRInfinite<Member[]>(getKey, fetchMembers, {
