@@ -174,7 +174,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
           status: "success",
         })
 
-        createdRequirements?.filter((req) => {
+        createdRequirements?.forEach((req) => {
           if (req.visibility !== Visibility.PUBLIC) {
             captureEvent(`Created a ${req.visibility} requirement`, postHogOptions)
           }
