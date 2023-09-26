@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react"
+import { useCallback, useMemo, useState } from "react"
 import useSWRInfinite from "swr/infinite"
 import { PlatformAccountDetails, Visibility } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -26,10 +26,16 @@ const LIMIT = 50
 
 const useMembers = (queryString) => {
   const { id } = useGuild()
+  const [hasReachedTheEnd, setHasReachedTheEnd] = useState(true)
 
   const getKey = useCallback(
     (pageIndex, previousPageData) => {
-      if (!id || (previousPageData && previousPageData.length < LIMIT)) return null
+      if (!id) return null
+
+      if (previousPageData && previousPageData.length < LIMIT) {
+        setHasReachedTheEnd(true)
+        return null
+      }
 
       const pagination = `offset=${pageIndex * LIMIT}&limit=${LIMIT}`
 
@@ -47,8 +53,10 @@ const useMembers = (queryString) => {
           method: "GET",
           body: {},
         },
-      ]).then((res) =>
-        res.map((user) => ({
+      ]).then((res) => {
+        if (res.length === LIMIT) setHasReachedTheEnd(false)
+
+        return res.map((user) => ({
           ...user,
           roles: {
             hidden: user.roles.filter(
@@ -59,7 +67,7 @@ const useMembers = (queryString) => {
             ),
           },
         }))
-      ),
+      }),
     [fetcherWithSign]
   )
 
@@ -75,6 +83,7 @@ const useMembers = (queryString) => {
 
   return {
     data: flattenedData,
+    hasReachedTheEnd,
     ...rest,
   }
 }

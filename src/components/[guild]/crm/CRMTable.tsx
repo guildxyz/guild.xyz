@@ -25,11 +25,19 @@ type Props = {
   error: Error | string
   isValidating: boolean
   setSize: any
+  hasReachedTheEnd: boolean
 }
 
 const HEADER_HEIGHT = "61px"
 
-const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
+const CRMTable = ({
+  table,
+  data,
+  error,
+  isValidating,
+  setSize,
+  hasReachedTheEnd,
+}: Props) => {
   const cardBg = useColorModeValue("white", "var(--chakra-colors-gray-700)") // css variable form so it works in boxShadow literal for identityTags
 
   /**
@@ -174,14 +182,7 @@ const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
                     </Tr>
                   ))
                   .concat(
-                    isValidating ? (
-                      [...Array(20)].map((_, i) => (
-                        <CrmSkeletonRow
-                          key={i}
-                          columns={table.getAllLeafColumns()}
-                        />
-                      ))
-                    ) : (
+                    hasReachedTheEnd ? (
                       <CrmInfoRow>
                         <Text
                           colorScheme="gray"
@@ -192,6 +193,13 @@ const CRMTable = ({ table, data, error, isValidating, setSize }: Props) => {
                           End of results
                         </Text>
                       </CrmInfoRow>
+                    ) : (
+                      [...Array(20)].map((_, i) => (
+                        <CrmSkeletonRow
+                          key={i}
+                          columns={table.getAllLeafColumns()}
+                        />
+                      ))
                     )
                   )
               ) : (
