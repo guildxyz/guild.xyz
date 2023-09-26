@@ -9,23 +9,23 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { Chains } from "connectors"
 import dynamic from "next/dynamic"
 import { useState } from "react"
+import { useMintGuildPinContext } from "../MintGuildPinContext"
 import AlphaTag from "../components/AlphaTag"
-import MintGuildPinButton from "../components/buttons/MintGuildPinButton"
-import SwitchNetworkButton from "../components/buttons/SwitchNetworkButton"
 import GuildPinFees from "../components/GuildPinFees"
 import GuildPinImage from "../components/GuildPinImage"
 import GuildPinReward from "../components/GuildPinReward"
 import TransactionStatusModal from "../components/TransactionStatusModal"
 import OpenseaLink from "../components/TransactionStatusModal/components/OpenseaLink"
-import { useMintGuildPinContext } from "../MintGuildPinContext"
+import MintGuildPinButton from "../components/buttons/MintGuildPinButton"
+import SwitchNetworkButton from "../components/buttons/SwitchNetworkButton"
 
 const DynamicActivateGuildPinModal = dynamic(
   () => import("./components/ActivateGuildPinModal")
@@ -42,15 +42,7 @@ const MintGuildPin = (): JSX.Element => {
    */
   const [initialIsActive] = useState(guildPin?.isActive)
 
-  const {
-    isOpen,
-    onOpen,
-    onClose,
-    isInvalidImage,
-    isTooSmallImage,
-    onActivateModalOpen,
-  } = useMintGuildPinContext()
-  const setupRequired = isInvalidImage || isTooSmallImage
+  const { isOpen, onOpen, onClose, onActivateModalOpen } = useMintGuildPinContext()
 
   const { colorMode } = useColorMode()
 
@@ -80,11 +72,7 @@ const MintGuildPin = (): JSX.Element => {
             }
           : {})}
       >
-        {setupRequired
-          ? "Setup Guild Pin"
-          : !guildPin?.isActive
-          ? "Activate Guild Pin"
-          : "Mint Guild Pin"}
+        {!guildPin?.isActive ? "Setup Guild Pin" : "Mint Guild Pin"}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">

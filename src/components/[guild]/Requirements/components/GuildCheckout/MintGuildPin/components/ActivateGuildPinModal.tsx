@@ -1,7 +1,7 @@
 import {
   Alert,
+  AlertDescription,
   AlertIcon,
-  AlertTitle,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -10,25 +10,19 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import { ArrowSquareOut } from "phosphor-react"
+import { useMintGuildPinContext } from "../../MintGuildPinContext"
 import AlphaTag from "../../components/AlphaTag"
 import GuildPinImage from "../../components/GuildPinImage"
-import { useMintGuildPinContext } from "../../MintGuildPinContext"
 import ActivateGuildPinForm from "./ActivateGuildPinForm"
 
 const ActivateGuildPinModal = (): JSX.Element => {
   const { onOpen: onEditGuildDrawerOpen } = useEditGuildDrawer()
-  const {
-    isActivateModalOpen,
-    onActivateModalClose,
-    isInvalidImage,
-    isTooSmallImage,
-    error,
-  } = useMintGuildPinContext()
-  const setupRequired = isInvalidImage || isTooSmallImage
+  const { isActivateModalOpen, onActivateModalClose, isTooSmallImage, error } =
+    useMintGuildPinContext()
 
   return (
     <Modal
@@ -40,7 +34,7 @@ const ActivateGuildPinModal = (): JSX.Element => {
       <ModalContent>
         <ModalHeader pb={4} pr={16}>
           <Text as="span" mr={2}>
-            {setupRequired ? "Setup Guild Pin" : "Activate Guild Pin"}
+            Setup Guild Pin
           </Text>
           <AlphaTag />
         </ModalHeader>
@@ -49,12 +43,12 @@ const ActivateGuildPinModal = (): JSX.Element => {
           <Alert status="info" mb="6" pb="5">
             <AlertIcon />
             <Stack position="relative" top={1}>
-              <AlertTitle>
+              <AlertDescription>
                 {error ??
                   (isTooSmallImage
                     ? "Please upload a bigger image in guild settings to activate Guild Pin"
-                    : "Onchain badge for members, that shows their support and belonging to this community. Activate it, so members can mint it and shill your guild onchain!")}
-              </AlertTitle>
+                    : "Onchain badge for members, that shows their support and belonging to this community. Activate it, so members can mint it and shill your guild onchain!")}
+              </AlertDescription>
 
               {(!!error || isTooSmallImage) && (
                 <Button

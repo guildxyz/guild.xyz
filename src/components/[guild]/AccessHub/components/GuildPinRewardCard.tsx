@@ -1,9 +1,9 @@
 import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
-import RewardCard from "components/common/RewardCard"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
+import RewardCard from "components/common/RewardCard"
 import dynamic from "next/dynamic"
 import { CircleWavyCheck, Question } from "phosphor-react"
 
@@ -37,7 +37,11 @@ const GuildPinRewardCard = () => {
         image="/img/guild-pin-key-3d.svg"
         colorScheme={!guildPin?.isActive ? "gray" : "GUILD"}
         borderStyle={!guildPin?.isActive && "dashed"}
-        description="Onchain badge that shows your support and belonging to this community."
+        description={
+          !guildPin?.isActive
+            ? "Mintable badge of membership"
+            : "Onchain badge that shows your support and belonging to this community."
+        }
         bg={bgColor}
         _before={{
           content: '""',
