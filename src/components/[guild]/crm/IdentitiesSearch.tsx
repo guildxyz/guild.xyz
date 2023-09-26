@@ -58,7 +58,7 @@ const IdentitiesSearch = ({ column }: Props) => {
         placeholder={"Search members"}
         // whiteSpace="nowrap"
         // textOverflow="ellipsis"
-        value={localValue}
+        value={localValue ?? ""}
         variant={"unstyled"}
         onChange={handleOnChange}
         h="8"

@@ -180,7 +180,10 @@ const CRMTable = ({
                 <CrmInfoRow py="10">Couldn't fetch members</CrmInfoRow>
               ) : !data ? (
                 [...Array(20)].map((_, i) => (
-                  <CrmSkeletonRow key={i} columns={table.getAllLeafColumns()} />
+                  <CrmSkeletonRow
+                    key={`loading_skeleton_${i}`}
+                    columns={table.getAllLeafColumns()}
+                  />
                 ))
               ) : table.getRowModel().rows.length ? (
                 table
@@ -215,7 +218,7 @@ const CRMTable = ({
                   ))
                   .concat(
                     hasReachedTheEnd ? (
-                      <CrmInfoRow>
+                      <CrmInfoRow key="end_of_results">
                         <Text
                           colorScheme="gray"
                           fontSize={"xs"}
@@ -228,7 +231,7 @@ const CRMTable = ({
                     ) : (
                       [...Array(20)].map((_, i) => (
                         <CrmSkeletonRow
-                          key={i}
+                          key={`validating_skeleton_${i}`}
                           columns={table.getAllLeafColumns()}
                         />
                       ))
