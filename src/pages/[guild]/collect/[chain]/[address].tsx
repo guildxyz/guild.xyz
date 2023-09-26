@@ -55,8 +55,8 @@ const Page = ({
   const router = useRouter()
   const { chain: chainFromQuery, address: addressFromQuery } = router.query
 
-  const chain = chainFromProps ?? (chainFromQuery?.toString().toUpperCase() as Chain)
-  const address = addressFromProps ?? addressFromQuery?.toString()
+  const chain = chainFromProps ?? validateNftChain(chainFromQuery)
+  const address = addressFromProps ?? validateNftAddress(addressFromQuery)
 
   const { theme, imageUrl, name, urlName, roles, guildPlatforms, isFallback } =
     useGuild()
