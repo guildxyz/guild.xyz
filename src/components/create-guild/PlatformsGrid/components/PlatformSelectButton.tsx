@@ -9,10 +9,10 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import DisplayCard from "components/common/DisplayCard"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import DisplayCard from "components/common/DisplayCard"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
@@ -95,13 +95,13 @@ const PlatformSelectButton = ({
       }`}
     >
       <HStack spacing={4}>
-        {icon ? (
-          <Circle bgColor={circleBgColor} size="12" pos="relative" overflow="hidden">
-            <Icon as={icon} boxSize={5} weight="regular" color="white" />
-          </Circle>
-        ) : (
+        {imageUrl ? (
           <Circle size="12" pos="relative" overflow="hidden">
             <Image src={imageUrl} alt="Guild logo" layout="fill" />
+          </Circle>
+        ) : (
+          <Circle bgColor={circleBgColor} size="12" pos="relative" overflow="hidden">
+            <Icon as={icon} boxSize={5} weight="regular" color="white" />
           </Circle>
         )}
         <VStack

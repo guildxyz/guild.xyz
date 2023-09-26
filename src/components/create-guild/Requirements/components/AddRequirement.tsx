@@ -13,7 +13,6 @@ import {
   ModalOverlay,
   SimpleGrid,
   Stack,
-  Tag,
   Text,
   Tooltip,
   useDisclosure,
@@ -24,7 +23,6 @@ import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
 import useToast from "hooks/useToast"
@@ -236,8 +234,6 @@ const AddRequirementForm = forwardRef(
 
 const AddRequirementHome = forwardRef(
   ({ selectedType, setSelectedType }: any, ref: any) => {
-    const { featureFlags } = useGuild()
-
     const [search, setSearch] = useState("")
     const filteredIntegrations = integrations?.filter((integration) =>
       integration.name.toLowerCase().includes(search.toLowerCase())
@@ -247,16 +243,6 @@ const AddRequirementHome = forwardRef(
       selectedType,
       TRANSITION_DURATION_MS
     )
-
-    const openPaymentRequirementNotionForm = () => {
-      if (typeof window === "undefined") return
-      window
-        .open(
-          "https://notionforms.io/forms/payment-requirement-alpha-interest-form-warden-edition",
-          "_blank"
-        )
-        ?.focus()
-    }
 
     return (
       <ModalBody
@@ -269,41 +255,19 @@ const AddRequirementHome = forwardRef(
           General
         </Heading>
         <SimpleGrid columns={2} gap={2}>
-          {general.map((requirementButton) => {
-            const isPayment = requirementButton.types[0] === "PAYMENT"
-            const isPaymentAllowed = featureFlags?.includes("PAYMENT_REQUIREMENT")
-
-            return (
-              <Button
-                key={requirementButton.types[0]}
-                w="full"
-                py={11}
-                onClick={() =>
-                  isPayment && !isPaymentAllowed
-                    ? openPaymentRequirementNotionForm()
-                    : setSelectedType(requirementButton.types[0])
-                }
-              >
-                <VStack w="full" whiteSpace="break-spaces">
-                  <Icon as={requirementButton.icon as FC} boxSize={6} />
-                  <Text as="span">{requirementButton.name}</Text>
-                </VStack>
-
-                {isPayment && (
-                  <Tag
-                    position="absolute"
-                    top={2}
-                    right={2}
-                    size="sm"
-                    bgColor="blue.500"
-                    color="white"
-                  >
-                    Alpha
-                  </Tag>
-                )}
-              </Button>
-            )
-          })}
+          {general.map((requirementButton) => (
+            <Button
+              key={requirementButton.types[0]}
+              w="full"
+              py={11}
+              onClick={() => setSelectedType(requirementButton.types[0])}
+            >
+              <VStack w="full" whiteSpace="break-spaces">
+                <Icon as={requirementButton.icon as FC} boxSize={6} />
+                <Text as="span">{requirementButton.name}</Text>
+              </VStack>
+            </Button>
+          ))}
         </SimpleGrid>
 
         <Heading size="sm" mb="3" mt="8">

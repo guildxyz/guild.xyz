@@ -4,13 +4,7 @@ import { useController } from "react-hook-form"
 import { SelectOption } from "types"
 import capitalize from "utils/capitalize"
 
-const FEATURE_FLAGS = [
-  "PAYMENT_REQUIREMENT",
-  "TWITTER_EXTRA_REQUIREMENT",
-  "VISIBILITY",
-  "GUILD_CREDENTIAL",
-  "CONTRACT_CALL",
-] as const
+const FEATURE_FLAGS = ["TWITTER_EXTRA_REQUIREMENT", "GUILD_CREDENTIAL"] as const
 export type FeatureFlag = (typeof FEATURE_FLAGS)[number]
 
 const generateLabel = (flag: FeatureFlag) =>
