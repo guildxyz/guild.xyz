@@ -77,6 +77,7 @@ const useMembers = (queryString) => {
     revalidateOnReconnect: false,
     revalidateFirstPage: false,
     revalidateOnMount: true,
+    keepPreviousData: true,
   })
 
   const flattenedData = useMemo(() => data?.flat(), [data])

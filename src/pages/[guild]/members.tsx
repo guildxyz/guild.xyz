@@ -40,7 +40,7 @@ const columnHelper = createColumnHelper<Member>()
 
 const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-  const { name, roles, urlName, imageUrl } = useGuild()
+  const { name, roles, imageUrl } = useGuild()
   const hasHiddenRoles = roles?.some((role) => role.visibility === Visibility.HIDDEN)
 
   const router = useRouter()
@@ -55,11 +55,7 @@ const GuildPage = (): JSX.Element => {
   )
 
   useEffect(() => {
-    if (!urlName) return
-
-    router.replace({ query: `${queryString}&guild=${urlName}` }, undefined, {
-      scroll: false,
-    })
+    window.history.pushState("", "", `?${queryString}`)
   }, [queryString])
   const { data, ...rest } = useMembers(queryString)
 

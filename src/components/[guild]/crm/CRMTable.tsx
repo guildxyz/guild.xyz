@@ -1,6 +1,7 @@
 import {
   Checkbox,
   Flex,
+  Progress,
   Skeleton,
   Table,
   Tbody,
@@ -33,6 +34,7 @@ const CRMTable = ({
   data,
   error,
   isValidating,
+  isLoading,
   setSize,
   hasReachedTheEnd,
 }: Props) => {
@@ -149,6 +151,18 @@ const CRMTable = ({
                   </Th>
                 ))}
               </Tr>
+              {isLoading && (
+                <Progress
+                  pos="absolute"
+                  bg="transparent"
+                  left="0"
+                  right="0"
+                  bottom="0"
+                  zIndex="2"
+                  size="xs"
+                  isIndeterminate
+                />
+              )}
             </Thead>
             <Tbody
               sx={{
