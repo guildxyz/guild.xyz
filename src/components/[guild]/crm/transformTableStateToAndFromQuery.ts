@@ -3,7 +3,7 @@ import { ColumnFiltersState, SortingState } from "@tanstack/react-table"
 const parseFiltersFromQuery = (query): ColumnFiltersState => {
   const filtersArray = []
 
-  if (query.identity) filtersArray.push({ id: "identity", value: query.identity })
+  if (query.search) filtersArray.push({ id: "identity", value: query.identity })
   if (query.roleIds)
     filtersArray.push({
       id: "roles",
@@ -30,7 +30,7 @@ const buildQueryStringFromState = (columnFilters, sorting) => {
   const identityFilter = columnFilters.find((filter) => filter.id === "identity")
   const rolesFilter = columnFilters.find((filter) => filter.id === "roles")
 
-  if (identityFilter?.value) query.set("identity", identityFilter.value)
+  if (identityFilter?.value) query.set("search", identityFilter.value)
   if (rolesFilter?.value?.roleIds?.length) {
     rolesFilter.value.roleIds.forEach((roleId) => query.append("roleIds", roleId))
 
