@@ -16,7 +16,7 @@ import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawer
 import { ArrowSquareOut } from "phosphor-react"
 import AlphaTag from "../../components/AlphaTag"
 import GuildPinImage from "../../components/GuildPinImage"
-import { useMintGuildPinContext } from "../../MintGuildPinContext"
+import { GuildAction, useMintGuildPinContext } from "../../MintGuildPinContext"
 import ActivateGuildPinForm from "./ActivateGuildPinForm"
 
 const ActivateGuildPinModal = (): JSX.Element => {
@@ -70,7 +70,7 @@ const ActivateGuildPinModal = (): JSX.Element => {
             </Alert>
           )}
 
-          <GuildPinImage />
+          <GuildPinImage pinType={GuildAction.JOINED_GUILD} />
         </ModalBody>
 
         <ModalFooter flexDir="column" gap={6}>
