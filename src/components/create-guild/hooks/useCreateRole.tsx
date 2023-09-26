@@ -2,13 +2,14 @@ import { useWeb3React } from "@web3-react/core"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useGuild from "components/[guild]/hooks/useGuild"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useSWRConfig } from "swr"
-import { Role } from "types"
+import { Role, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
@@ -22,6 +23,10 @@ export type RoleToCreate = Omit<
 }
 
 const useCreateRole = (onSuccess?: () => void) => {
+  const { id, urlName, memberCount, mutateGuild } = useGuild()
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = { guild: urlName, memberCount }
+
   const { account } = useWeb3React()
 
   const { mutate } = useSWRConfig()
@@ -30,7 +35,6 @@ const useCreateRole = (onSuccess?: () => void) => {
   const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
-  const { id, urlName, mutateGuild } = useGuild()
 
   const fetchData = async (signedValidation: SignedValdation): Promise<Role> =>
     fetcher(`/v2/guilds/${id}/roles`, signedValidation)
@@ -42,6 +46,17 @@ const useCreateRole = (onSuccess?: () => void) => {
         correlationId: error_.correlationId,
       }),
     onSuccess: async (response_) => {
+      if (response_.visibility !== Visibility.PUBLIC) {
+        captureEvent(
+          `Created role with ${response_.visibility} visibility`,
+          postHogOptions
+        )
+      }
+
+      if (response_.requirements.some((req) => req.type === "PAYMENT")) {
+        captureEvent("Created role with PAYMENT requirement", postHogOptions)
+      }
+
       triggerConfetti()
 
       toastWithTweetButton({

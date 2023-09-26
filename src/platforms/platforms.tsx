@@ -45,6 +45,7 @@ type PlatformData<
   } & Record<string, any>
 > = {
   icon: (props: IconProps) => JSX.Element
+  imageUrl?: string
   name: string
   colorScheme: ChakraProps["color"]
   gatedEntity: string
@@ -95,6 +96,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
   TELEGRAM: {
     icon: TelegramLogo,
+    imageUrl: "/platforms/telegram.png",
     name: "Telegram",
     colorScheme: "TELEGRAM",
     gatedEntity: "group",
@@ -132,6 +134,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
   DISCORD: {
     icon: DiscordLogo,
+    imageUrl: "/platforms/discord.png",
     name: "Discord",
     colorScheme: "DISCORD",
     gatedEntity: "server",
@@ -162,6 +165,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
   GITHUB: {
     icon: GithubLogo,
+    imageUrl: "/platforms/github.png",
     name: "GitHub",
     colorScheme: "GITHUB",
     gatedEntity: "repo",
@@ -234,6 +238,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
   GOOGLE: {
     icon: GoogleLogo,
+    imageUrl: "/platforms/google.png",
     name: "Google Workspace",
     colorScheme: "blue",
     gatedEntity: "document",
@@ -265,6 +270,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
   POAP: {
     icon: null,
+    imageUrl: "/platforms/poap.png",
     name: "POAP",
     colorScheme: "purple",
     gatedEntity: "POAP",
