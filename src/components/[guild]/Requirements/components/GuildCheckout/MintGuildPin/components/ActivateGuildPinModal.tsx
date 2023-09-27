@@ -47,7 +47,7 @@ const ActivateGuildPinModal = (): JSX.Element => {
                 {error ??
                   (isTooSmallImage
                     ? "Please upload a bigger image in guild settings to activate Guild Pin"
-                    : "Onchain badge for members, that shows their support and belonging to this community. Activate it, so members can mint it and shill your guild onchain!")}
+                    : "Onchain badge for members to show support and belonging to this community. Activate it to let members see the reward and mint their Pins!")}
               </AlertDescription>
 
               {(!!error || isTooSmallImage) && (
