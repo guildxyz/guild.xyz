@@ -37,6 +37,7 @@ import { useEffect, useMemo, useState } from "react"
 import { Visibility } from "types"
 
 const columnHelper = createColumnHelper<Member>()
+const getRowId = (row: Member) => `user_${row.userId}`
 
 const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
@@ -48,6 +49,7 @@ const GuildPage = (): JSX.Element => {
     parseFiltersFromQuery(router.query)
   )
   const [sorting, setSorting] = useState(() => parseSortingFromQuery(router.query))
+  const [rowSelection, setRowSelection] = useState({})
 
   const queryString = useMemo(
     () => buildQueryStringFromState(columnFilters, sorting),
@@ -139,19 +141,31 @@ const GuildPage = (): JSX.Element => {
     [hasHiddenRoles]
   )
 
+  const handleSetColumnFilters = (props) => {
+    setRowSelection({})
+    setColumnFilters(props)
+  }
+  const handleSetSorting = (props) => {
+    setRowSelection({})
+    setSorting(props)
+  }
+
   const table = useReactTable({
     data: useMemo(() => data ?? [], [data]),
     columns,
     state: {
       columnFilters,
       sorting,
+      rowSelection,
     },
     initialState: {
       columnFilters,
       sorting,
+      rowSelection,
     },
-    onColumnFiltersChange: setColumnFilters,
-    onSortingChange: setSorting,
+    onColumnFiltersChange: handleSetColumnFilters,
+    onSortingChange: handleSetSorting,
+    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     manualSorting: true,
@@ -160,6 +174,7 @@ const GuildPage = (): JSX.Element => {
     getExpandedRowModel: getExpandedRowModel(),
     getRowCanExpand: () => true,
     enableRowSelection: true,
+    getRowId,
   })
 
   return (
