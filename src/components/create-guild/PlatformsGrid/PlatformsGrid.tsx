@@ -1,5 +1,4 @@
 import { SimpleGrid, Stack } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 import PlatformSelectButton from "./components/PlatformSelectButton"
@@ -16,10 +15,7 @@ type PlatformsGridData = {
 const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
   const platformsData: Record<
-    Exclude<
-      PlatformName,
-      "" | "TWITTER" | "TWITTER_V1" | "POAP" | "CONTRACT_CALL" | "EMAIL" | "TEXT"
-    >,
+    Exclude<PlatformName, "" | "TWITTER" | "TWITTER_V1" | "POAP" | "EMAIL">,
     PlatformsGridData
   > = {
     DISCORD: {
@@ -41,9 +37,13 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
           },
         }
       : {}),
+    CONTRACT_CALL: {
+      description: "Create a gated NFT",
+    },
+    TEXT: {
+      description: "Show a text for the users",
+    },
   }
-
-  const { featureFlags } = useGuild()
 
   return (
     <Stack spacing={8}>
@@ -59,27 +59,11 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
               platform={platform}
               title={platforms[platform].name}
               description={description}
-              imageUrl={`/platforms/${platform.toLowerCase()}.png`}
+              icon={platforms[platform].icon}
+              imageUrl={platforms[platform].imageUrl}
               onSelection={onSelection}
             />
           )
-        )}
-        {/* TODO: maybe we should start using a "General" section for these? */}
-        <PlatformSelectButton
-          platform="TEXT"
-          title={platforms.TEXT.name}
-          description="Show a text for the users"
-          icon={platforms.TEXT.icon}
-          onSelection={onSelection}
-        />
-        {featureFlags?.includes("CONTRACT_CALL") && (
-          <PlatformSelectButton
-            platform="CONTRACT_CALL"
-            title={platforms.CONTRACT_CALL.name}
-            description="Create a gated NFT"
-            icon={platforms.CONTRACT_CALL.icon}
-            onSelection={onSelection}
-          />
         )}
       </SimpleGrid>
     </Stack>

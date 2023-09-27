@@ -1,23 +1,16 @@
 import { BigNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider } from "@ethersproject/providers"
-import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { Chain, Chains, RPC } from "connectors"
+import { RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
-import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import useGuildPinContractsData from "./useGuildPinContractsData"
+import { GUILD_PIN_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
 
-const fetchFee = async (
-  chain,
-  contractsData: Partial<Record<Chain, { address: string; abi: any }>>
-): Promise<BigNumber> => {
-  if (!contractsData[chain]) return undefined
-
+const fetchFee = async ([_, chain]): Promise<BigNumber> => {
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0])
   const contract = new Contract(
-    contractsData[chain].address,
-    contractsData[chain].abi,
+    GUILD_PIN_CONTRACTS[chain].address,
+    GUILD_PIN_CONTRACTS[chain].abi,
     provider
   )
 
@@ -29,17 +22,13 @@ const useGuildPinFee = (): {
   isGuildPinFeeLoading: boolean
   guildPinFeeError: any
 } => {
-  const { id } = useGuild()
-  const { chainId } = useWeb3React()
-  const guildPinContractsData = useGuildPinContractsData()
+  const { id, guildPin } = useGuild()
 
   const {
     data: guildPinFee,
     isValidating: isGuildPinFeeLoading,
     error: guildPinFeeError,
-  } = useSWRImmutable(["guildPinFee", Chains[chainId], id], ([_, chain]) =>
-    fetchFee(chain, guildPinContractsData)
-  )
+  } = useSWRImmutable(["guildPinFee", guildPin.chain, id], fetchFee)
 
   return {
     guildPinFee,

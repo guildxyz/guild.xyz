@@ -98,7 +98,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
       ) {
         toastWithButton({
           title: "Successfully joined guild",
-          description: "Let others know as well by minting it on-chain",
+          description: "Let others know as well by minting it onchain",
           buttonProps: {
             leftIcon: <CircleWavyCheck weight="fill" />,
             children: "Mint Guild Pin",
