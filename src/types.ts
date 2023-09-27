@@ -355,6 +355,10 @@ type Guild = {
   hiddenRoles?: boolean
   requiredPlatforms?: PlatformName[]
   tags: GuildTags[]
+  guildPin?: {
+    chain: Chain
+    isActive: boolean
+  }
   isFallback?: boolean
 }
 type GuildFormType = Partial<

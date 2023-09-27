@@ -1,15 +1,11 @@
+import { useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useIsMember from "components/[guild]/hooks/useIsMember"
-import useUser from "components/[guild]/hooks/useUser"
-import useLocalStorage from "hooks/useLocalStorage"
 import {
   createContext,
   Dispatch,
   PropsWithChildren,
   SetStateAction,
   useContext,
-  useEffect,
   useState,
 } from "react"
 import useSWRImmutable from "swr/immutable"
@@ -50,6 +46,9 @@ const MintGuildPinContext = createContext<
     isInvalidImage?: boolean
     isTooSmallImage?: boolean
     error: any
+    isActivateModalOpen: boolean
+    onActivateModalOpen: () => void
+    onActivateModalClose: () => void
     mintedTokenId?: number
     setMintedTokenId: Dispatch<SetStateAction<number>>
   } & GuildCheckoutContextType
@@ -63,39 +62,18 @@ const MintGuildPinProviderComponent = ({
   const { id, imageUrl } = useGuild()
   const isInvalidImage = !imageUrl || imageUrl?.startsWith("/guildLogos")
 
-  const isMember = useIsMember()
-  const { isOwner, isAdmin } = useGuildPermission()
-  const { isSuperAdmin } = useUser()
-
-  const pinType = isOwner
-    ? GuildAction.IS_OWNER
-    : isAdmin && !isSuperAdmin
-    ? GuildAction.IS_ADMIN
-    : isMember
-    ? GuildAction.JOINED_GUILD
-    : null
-
-  const [imageWHFromLocalstorage, setImageWHFromLocalstorage] =
-    useLocalStorage<ImageWH>(imageUrl ? `guildImageWH:${imageUrl}` : null, undefined)
+  // TODO: allow the guild owners and admins to mint the other 2 pin types too
+  const pinType = GuildAction.JOINED_GUILD
 
   const { data, isValidating } = useSWRImmutable(
-    !isInvalidImage && !imageWHFromLocalstorage
-      ? ["imageWidthAndHeight", imageUrl]
-      : null,
+    !isInvalidImage ? ["imageWidthAndHeight", imageUrl] : null,
     getImageWidthAndHeight
   )
 
-  useEffect(() => {
-    if (!data || imageWHFromLocalstorage) return
-    setImageWHFromLocalstorage(data)
-  }, [data, imageWHFromLocalstorage])
-
-  const isTooSmallImage = imageWHFromLocalstorage
-    ? imageWHFromLocalstorage.width < MIN_IMAGE_WH ||
-      imageWHFromLocalstorage.height < MIN_IMAGE_WH
-    : !isValidating &&
-      data &&
-      (data.width < MIN_IMAGE_WH || data.height < MIN_IMAGE_WH)
+  const isTooSmallImage =
+    !isValidating &&
+    data &&
+    (data.width < MIN_IMAGE_WH || data.height < MIN_IMAGE_WH)
 
   const shouldFetchImage = id && typeof pinType === "number"
   const {
@@ -108,6 +86,12 @@ const MintGuildPinProviderComponent = ({
 
   const [mintedTokenId, setMintedTokenId] = useState<number>(null)
 
+  const {
+    isOpen: isActivateModalOpen,
+    onOpen: onActivateModalOpen,
+    onClose: onActivateModalClose,
+  } = useDisclosure()
+
   return (
     <MintGuildPinContext.Provider
       value={{
@@ -117,7 +101,10 @@ const MintGuildPinProviderComponent = ({
         isImageValidating,
         isInvalidImage,
         isTooSmallImage,
-        error,
+        error: error?.error,
+        isActivateModalOpen,
+        onActivateModalOpen,
+        onActivateModalClose,
         mintedTokenId,
         setMintedTokenId,
       }}

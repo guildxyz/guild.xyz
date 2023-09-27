@@ -7,13 +7,13 @@ import { Chain, Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata, User } from "types"
 import base64ToObject from "utils/base64ToObject"
-import { flattenedGuildPinChainsData } from "utils/guildCheckout/constants"
+import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 
 const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
   const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0])
   const contract = new Contract(
-    flattenedGuildPinChainsData[chain].address,
-    flattenedGuildPinChainsData[chain].abi,
+    GUILD_PIN_CONTRACTS[chain].address,
+    GUILD_PIN_CONTRACTS[chain].abi,
     provider
   )
 
@@ -61,7 +61,7 @@ const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
 }
 
 const fetchGuildPins = async ([_, addresses]: [string, User["addresses"]]) => {
-  const guildPinChains = Object.keys(flattenedGuildPinChainsData) as Chain[]
+  const guildPinChains = Object.keys(GUILD_PIN_CONTRACTS) as Chain[]
   const responseArray = await Promise.all(
     guildPinChains.flatMap((chain) =>
       addresses.flatMap((addressData) =>

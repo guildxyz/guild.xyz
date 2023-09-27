@@ -169,11 +169,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         failedRolePlatformUpdatesCount <= 0 &&
         failedRolePlatformCreationsCount <= 0
       ) {
-        toast({
-          title: `Role successfully updated!`,
-          status: "success",
-        })
-
         createdRequirements?.forEach((req) => {
           if (req.visibility !== Visibility.PUBLIC) {
             captureEvent(`Created a ${req.visibility} requirement`, {
@@ -193,6 +188,8 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
             postHogOptions
           )
         }
+
+        onSuccess?.()
       } else {
         if (updatedRole.error) {
           errorToast({
@@ -225,8 +222,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
           })
         }
       }
-
-      if (onSuccess) onSuccess()
 
       const updatedRequirementsById = mapToObject(successfulRequirementUpdates)
       const updatedRolePlatformsById = mapToObject(successfulRolePlatformUpdates)
