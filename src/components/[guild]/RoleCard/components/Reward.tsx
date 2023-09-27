@@ -1,16 +1,26 @@
-import { HStack, Icon, Img, Spinner, Text, Tooltip } from "@chakra-ui/react"
+import {
+  Circle,
+  HStack,
+  Icon,
+  Img,
+  Spinner,
+  Text,
+  Tooltip,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import Visibility from "components/[guild]/Visibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
-import Button from "components/common/Button"
-import { Transition, motion } from "framer-motion"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import Visibility from "components/[guild]/Visibility"
+import { motion, Transition } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import ContractCallReward from "platforms/ContractCall/ContractCallReward"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
+import platforms from "platforms/platforms"
 import { ReactNode, useMemo } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
@@ -155,6 +165,7 @@ export type RewardIconProps = {
 }
 
 const MotionImg = motion(Img)
+const MotionCircle = motion(Circle)
 
 const RewardIcon = ({
   rolePlatformId,
@@ -162,20 +173,40 @@ const RewardIcon = ({
   withMotionImg = true,
   transition,
 }: RewardIconProps) => {
+  const circleBgColor = useColorModeValue("gray.700", "gray.600")
+
   const props = {
-    src: `/platforms/${PlatformType[guildPlatform?.platformId]?.toLowerCase()}.png`,
+    src: platforms[PlatformType[guildPlatform?.platformId]].imageUrl,
     alt: guildPlatform?.platformGuildName,
     boxSize: 6,
   }
 
-  if (withMotionImg)
+  const circleProps = {
+    bgColor: circleBgColor,
+    boxSize: 6,
+  }
+
+  const motionElementProps = {
+    layoutId: `${rolePlatformId}_reward_img`,
+    transition: { type: "spring", duration: 0.5, ...transition },
+  }
+
+  if (!props.src) {
+    if (withMotionImg)
+      return (
+        <MotionCircle {...motionElementProps} {...circleProps}>
+          <Icon as={platforms[PlatformType[guildPlatform?.platformId]].icon} />
+        </MotionCircle>
+      )
+
     return (
-      <MotionImg
-        layoutId={`${rolePlatformId}_reward_img`}
-        transition={{ type: "spring", duration: 0.5, ...transition }}
-        {...props}
-      />
+      <Circle {...circleProps}>
+        <Icon as={platforms[PlatformType[guildPlatform?.platformId]].icon} />
+      </Circle>
     )
+  }
+
+  if (withMotionImg) return <MotionImg {...motionElementProps} {...props} />
 
   return <Img {...props} />
 }
