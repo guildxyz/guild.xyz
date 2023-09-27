@@ -7,7 +7,6 @@ import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
-import { useToastWithTweetButton } from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { GuildPlatform, PlatformType, Role, Visibility } from "types"
 import fetcher from "utils/fetcher"
@@ -24,7 +23,7 @@ export type RoleToCreate = Omit<
 
 type CreateRoleResponse = Role & { createdGuildPlatforms?: GuildPlatform[] }
 
-const useCreateRole = (onSuccess?: () => void) => {
+const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
   const { id, urlName, memberCount, mutateGuild } = useGuild()
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName, memberCount }
@@ -34,7 +33,6 @@ const useCreateRole = (onSuccess?: () => void) => {
   const { mutate } = useSWRConfig()
   const matchMutate = useMatchMutate()
 
-  const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
 
@@ -73,12 +71,6 @@ const useCreateRole = (onSuccess?: () => void) => {
       }
 
       triggerConfetti()
-
-      toastWithTweetButton({
-        title: "Role successfully created",
-        tweetText: `I've just added a new role to my guild. Check it out, maybe you have access 😉
-guild.xyz/${urlName}`,
-      })
 
       mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
       mutate(`/statusUpdate/guild/${id}`)

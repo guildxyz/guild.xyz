@@ -17,6 +17,7 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
+import useToast from "hooks/useToast"
 import dynamic from "next/dynamic"
 import { ArrowLeft, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
@@ -84,10 +85,17 @@ const AddRewardButton = (): JSX.Element => {
     onHiddenRoleAlertClose()
   }
 
+  const toast = useToast()
+
   const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
-    useAddReward(onClose)
+    useAddReward({ onSuccess: onClose })
   const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
-    useCreateRole(onClose)
+    useCreateRole({
+      onSuccess: () => {
+        toast({ status: "success", title: "Reward successfully added" })
+        onClose()
+      },
+    })
 
   const isLoading = isAddRewardLoading || isCreateRoleLoading
 
