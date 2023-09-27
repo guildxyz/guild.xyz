@@ -14,7 +14,7 @@ import ReactMarkdown from "react-markdown"
 import { SpecialComponents } from "react-markdown/lib/ast-to-react"
 import { NormalComponents } from "react-markdown/lib/complex-types"
 
-const reactMarkdownComponents: Partial<
+export const reactMarkdownComponents: Partial<
   Omit<NormalComponents, keyof SpecialComponents> & SpecialComponents
 > = {
   a: ({ href, children, ...props }) => (

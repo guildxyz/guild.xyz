@@ -29,6 +29,7 @@ import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
+import TextCardButton from "./Text/TextCardButton"
 import TextCardMenu from "./Text/TextCardMenu"
 import useTextCardProps from "./Text/useTextCardProps"
 
@@ -315,7 +316,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "gray",
     gatedEntity: "",
     cardPropsHook: useTextCardProps,
-    cardButton: () => null,
+    cardButton: TextCardButton,
     cardMenuComponent: TextCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,
