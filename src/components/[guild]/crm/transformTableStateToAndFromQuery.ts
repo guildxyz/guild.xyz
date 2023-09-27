@@ -19,9 +19,9 @@ const parseFiltersFromQuery = (query): ColumnFiltersState => {
 }
 
 const parseSortingFromQuery = (query): SortingState => {
-  if (!query.orderBy) return []
+  if (!query.sortBy) return []
 
-  return [{ id: query.orderBy, desc: query.orderByDesc }]
+  return [{ id: query.sortBy, desc: query.sortOrder === "desc" }]
 }
 
 const buildQueryStringFromState = (columnFilters, sorting) => {
@@ -37,8 +37,8 @@ const buildQueryStringFromState = (columnFilters, sorting) => {
     if (rolesFilter?.value?.logic) query.set("logic", rolesFilter.value.logic)
   }
   if (sorting.length) {
-    query.set("orderBy", sorting[0].id)
-    if (sorting[0].desc) query.set("orderByDesc", "true")
+    query.set("sortBy", sorting[0].id)
+    query.set("sortOrder", sorting[0].desc ? "desc" : "asc")
   }
 
   return query.toString()
