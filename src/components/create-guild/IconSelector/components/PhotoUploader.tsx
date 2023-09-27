@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, HStack, Progress } from "@chakra-ui/react"
+import { FormControl, FormLabel, HStack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"
@@ -11,7 +11,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
   uploader: Uploader
-  closeModal: () => void
+  closeModal?: () => void
   minW?: number
   minH?: number
 }
@@ -111,7 +111,7 @@ const PhotoUploader = ({
     onDrop: (accepted) => {
       if (accepted.length > 0) {
         setValue("imageUrl", URL.createObjectURL(accepted[0]))
-        closeModal()
+        closeModal?.()
         onUpload({ data: [accepted[0]], onProgress: setProgress })
       }
     },
@@ -127,26 +127,18 @@ const PhotoUploader = ({
           size={"48px"}
           bgColor="gray.100"
         />
-
-        {isUploading ? (
-          <Progress
-            mt={3}
-            w="full"
-            isIndeterminate={progress === 0}
-            value={progress * 100}
-          />
-        ) : (
-          <Button
-            {...getRootProps()}
-            as="label"
-            variant="outline"
-            leftIcon={<File />}
-            fontWeight="medium"
-          >
-            <input {...getInputProps()} hidden />
-            {isDragActive ? "Drop the file here" : "Choose image"}
-          </Button>
-        )}
+        <Button
+          {...getRootProps()}
+          as="label"
+          variant="outline"
+          leftIcon={<File />}
+          fontWeight="medium"
+          isLoading={isUploading}
+          cursor="pointer"
+        >
+          <input {...getInputProps()} hidden />
+          {isDragActive ? "Drop the file here" : "Choose image"}
+        </Button>
       </HStack>
       <FormErrorMessage>
         {errorMessages[fileRejections?.[0]?.errors?.[0]?.code] ??

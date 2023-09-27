@@ -1,16 +1,19 @@
 import { Circle, Icon, useColorModeValue } from "@chakra-ui/react"
 import platforms from "platforms/platforms"
-import { GuildPlatform, PlatformName } from "types"
+import { GuildPlatform, PlatformGuildData, PlatformName } from "types"
 
 const useTextCardProps = (guildPlatform: GuildPlatform) => {
   const bgColor = useColorModeValue("gray.700", "gray.600")
 
+  const platformGuildData =
+    guildPlatform.platformGuildData as PlatformGuildData["TEXT"]
+
   return {
-    name: guildPlatform.platformGuildData.name ?? "Text",
+    name: platformGuildData.name ?? "Text",
     type: "TEXT" as PlatformName,
-    image: (
+    image: platformGuildData.image ?? (
       <Circle size={10} bgColor={bgColor}>
-        <Icon as={platforms.TEXT.icon} boxSize={6} />
+        <Icon as={platforms.TEXT.icon} boxSize={6} color="white" />
       </Circle>
     ),
   }

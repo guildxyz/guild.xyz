@@ -1,13 +1,16 @@
 import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import PhotoUploader from "components/create-guild/IconSelector/components/PhotoUploader"
 import useGuild from "components/[guild]/hooks/useGuild"
+import usePinata from "hooks/usePinata"
 import { useFieldArray, useForm, useWatch } from "react-hook-form"
 import { Visibility } from "types"
 import RichTextDescriptionEditor from "./AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
 
 type AddTextRewardForm = {
   name: string
+  image?: string
   text: string
 }
 
@@ -33,6 +36,19 @@ const AddTextPanel = ({ onSuccess }: Props) => {
     name: "rolePlatforms",
   })
 
+  const uploader = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "image",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        {
+          shouldTouch: true,
+          shouldValidate: true,
+        }
+      )
+    },
+  })
+
   const onContinue = (data: AddTextRewardForm) => {
     append({
       guildPlatform: {
@@ -41,6 +57,7 @@ const AddTextPanel = ({ onSuccess }: Props) => {
         platformGuildData: {
           text: data.text,
           name: data.name,
+          image: data.image,
         },
       },
       isNew: true,
@@ -50,7 +67,7 @@ const AddTextPanel = ({ onSuccess }: Props) => {
   }
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={8}>
       <FormControl isRequired maxW="sm" isInvalid={!!errors?.name}>
         <FormLabel>Reward name</FormLabel>
         <Input
@@ -58,6 +75,8 @@ const AddTextPanel = ({ onSuccess }: Props) => {
         />
         <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
       </FormControl>
+
+      <PhotoUploader uploader={uploader} />
 
       <FormControl isRequired isInvalid={!!errors?.text}>
         <FormLabel>Text</FormLabel>
@@ -71,7 +90,7 @@ const AddTextPanel = ({ onSuccess }: Props) => {
 
       <Button
         colorScheme="indigo"
-        isDisabled={!name?.length || !text?.length}
+        isDisabled={uploader.isUploading || !name?.length || !text?.length}
         w="max-content"
         ml="auto"
         onClick={handleSubmit(onContinue)}

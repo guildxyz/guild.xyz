@@ -195,13 +195,19 @@ const RewardIcon = ({
     if (withMotionImg)
       return (
         <MotionCircle {...motionElementProps} {...circleProps}>
-          <Icon as={platforms[PlatformType[guildPlatform?.platformId]].icon} />
+          <Icon
+            as={platforms[PlatformType[guildPlatform?.platformId]].icon}
+            color="white"
+          />
         </MotionCircle>
       )
 
     return (
       <Circle {...circleProps}>
-        <Icon as={platforms[PlatformType[guildPlatform?.platformId]].icon} />
+        <Icon
+          as={platforms[PlatformType[guildPlatform?.platformId]].icon}
+          color="white"
+        />
       </Circle>
     )
   }
