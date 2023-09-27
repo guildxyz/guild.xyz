@@ -1,15 +1,23 @@
 import { FormControl, FormLabel, Stack, Textarea } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { useFormContext, useWatch } from "react-hook-form"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { useState } from "react"
+import { useFieldArray, useWatch } from "react-hook-form"
+import { Visibility } from "types"
 
 type Props = {
   onSuccess: () => void
 }
 
 const AddTextPanel = ({ onSuccess }: Props) => {
-  const { register } = useFormContext()
+  const { id: guildId } = useGuild()
 
-  const text = useWatch({ name: "rolePlatforms.0.text" })
+  const [text, setText] = useState("")
+
+  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
+  const { append } = useFieldArray({
+    name: "rolePlatforms",
+  })
 
   return (
     <Stack>
@@ -17,9 +25,8 @@ const AddTextPanel = ({ onSuccess }: Props) => {
         <FormLabel>Text:</FormLabel>
 
         <Textarea
-          {...register("rolePlatforms.0.text", {
-            required: "This field is required",
-          })}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           minH={64}
           placeholder="Type or paste here the text which you'd like to send as reward to your users..."
         />
@@ -30,7 +37,20 @@ const AddTextPanel = ({ onSuccess }: Props) => {
         isDisabled={!text?.length}
         w="max-content"
         ml="auto"
-        onClick={onSuccess}
+        onClick={() => {
+          append({
+            guildPlatform: {
+              platformName: "TEXT",
+              platformGuildId: `text-${guildId}-${Date.now()}`,
+              platformGuildData: {
+                text,
+              },
+            },
+            isNew: true,
+            visibility: roleVisibility,
+          })
+          onSuccess()
+        }}
       >
         Continue
       </Button>
