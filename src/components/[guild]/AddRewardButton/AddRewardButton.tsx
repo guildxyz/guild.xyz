@@ -41,6 +41,11 @@ const DynamicAddPoapPanel = dynamic(() => import("components/[guild]/CreatePoap"
   ssr: false,
 })
 
+const defaultValues = {
+  requirements: [],
+  visibility: Visibility.PUBLIC,
+}
+
 const AddRewardButton = (): JSX.Element => {
   const { account } = useWeb3React()
 
@@ -56,7 +61,9 @@ const AddRewardButton = (): JSX.Element => {
     onClose: onAddRewardModalClose,
   } = useAddRewardContext()
 
-  const methods = useForm()
+  const methods = useForm({
+    defaultValues,
+  })
 
   const { isStuck } = useIsTabsStuck()
   const { textColor, buttonColorScheme } = useThemeContext()
@@ -64,7 +71,7 @@ const AddRewardButton = (): JSX.Element => {
   const goBack = () => {
     if (step === "SELECT_ROLE") {
       setStep("HOME")
-      methods.reset()
+      methods.reset(defaultValues)
     } else {
       setSelection(null)
     }
@@ -157,7 +164,7 @@ const AddRewardButton = (): JSX.Element => {
         <Modal
           isOpen={isOpen}
           onClose={() => {
-            methods.reset()
+            methods.reset(defaultValues)
             onClose()
           }}
           size={step === "HOME" ? "4xl" : "2xl"}

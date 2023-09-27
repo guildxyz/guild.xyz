@@ -1,4 +1,14 @@
-import { Tab, TabList, TabPanel, TabPanels, TabProps, Tabs } from "@chakra-ui/react"
+import {
+  HStack,
+  Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  TabProps,
+  Tabs,
+  Text,
+} from "@chakra-ui/react"
 import SetRequirements from "components/create-guild/Requirements"
 import {
   RoleTypeToAddTo,
@@ -6,6 +16,7 @@ import {
 } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RoleSelector from "components/[guild]/RoleSelector"
+import SetVisibility from "components/[guild]/SetVisibility"
 import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
@@ -65,7 +76,16 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
           />
         </TabPanel>
         <TabPanel>
-          <SetRequirements titleSize="md" />
+          <Stack spacing={4}>
+            <HStack>
+              <Text as="span" fontWeight="bold">
+                Visibility
+              </Text>
+              <SetVisibility entityType="role" ml={0} />
+            </HStack>
+
+            <SetRequirements titleSize="md" />
+          </Stack>
         </TabPanel>
       </TabPanels>
     </Tabs>

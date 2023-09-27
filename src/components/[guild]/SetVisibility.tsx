@@ -218,7 +218,7 @@ const SetVisibilityModal = ({
   const roleVisibility = useWatch({ name: ".visibility" })
 
   const mapToAtLeastPrivate = (entities, base) =>
-    entities.forEach(({ visibility }, index) => {
+    entities?.forEach(({ visibility }, index) => {
       if (visibility === Visibility.PUBLIC) {
         setValue(`${base}.${index}.visibility`, Visibility.PRIVATE, {
           shouldDirty: true,
@@ -227,7 +227,7 @@ const SetVisibilityModal = ({
     })
 
   const mapToHidden = (entities, base) =>
-    entities.forEach(({ visibility }, index) => {
+    entities?.forEach(({ visibility }, index) => {
       if (visibility !== Visibility.HIDDEN) {
         setValue(`${base}.${index}.visibility`, Visibility.HIDDEN, {
           shouldDirty: true,
