@@ -1,6 +1,6 @@
 import { useDisclosure } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { GuildPlatform, PlatformGuildData } from "types"
+import { GuildPlatform } from "types"
 import ViewFullTextModal from "./ViewFullTextModal"
 
 type Props = {
@@ -15,7 +15,7 @@ const TextCardButton = ({ platform }: Props) => {
       <Button onClick={onOpen}>View text</Button>
 
       <ViewFullTextModal isOpen={isOpen} onClose={onClose}>
-        {(platform.platformGuildData as PlatformGuildData["TEXT"]).text}
+        {platform.platformGuildData.text}
       </ViewFullTextModal>
     </>
   )

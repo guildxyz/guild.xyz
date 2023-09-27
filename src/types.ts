@@ -178,6 +178,8 @@ type PlatformGuildData = {
     name?: never
     symbol?: never
     description?: never
+    image?: never
+    text?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -194,6 +196,8 @@ type PlatformGuildData = {
     name?: never
     symbol?: never
     description?: never
+    image?: never
+    text?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -210,6 +214,7 @@ type PlatformGuildData = {
     role?: never
     mimeType?: never
     iconLink?: never
+    text?: never
   }
   TEXT: {
     text: string

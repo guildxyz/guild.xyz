@@ -71,7 +71,7 @@ const MotionSkeletonCircle = motion(
   ))
 )
 
-export const ContractCallRewardIcon = ({
+const ContractCallRewardIcon = ({
   rolePlatformId,
   guildPlatform,
   isLoading,

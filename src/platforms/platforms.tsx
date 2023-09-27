@@ -1,4 +1,5 @@
 import { ChakraProps } from "@chakra-ui/react"
+import { RewardProps } from "components/[guild]/RoleCard/components/Reward"
 import dynamic from "next/dynamic"
 import {
   DiscordLogo,
@@ -69,6 +70,7 @@ type PlatformData<
     skipSettings?: boolean
   }>
   PlatformPreview?: ComponentType<Record<string, never>>
+  RoleCardComponent?: ComponentType<RewardProps>
 
   oauth?: {
     url: string
@@ -309,6 +311,12 @@ const platforms: Record<PlatformName, PlatformData> = {
         loading: () => <PlatformPreview isLoading={true} />,
       }
     ),
+    RoleCardComponent: dynamic(
+      () => import("platforms/ContractCall/ContractCallReward"),
+      {
+        ssr: false,
+      }
+    ),
   },
   TEXT: {
     icon: Star,
@@ -330,6 +338,9 @@ const platforms: Record<PlatformName, PlatformData> = {
     PlatformPreview: dynamic(() => import("platforms/components/TextPreview"), {
       ssr: false,
       loading: () => <PlatformPreview isLoading={true} />,
+    }),
+    RoleCardComponent: dynamic(() => import("platforms/Text/TextReward"), {
+      ssr: false,
     }),
   },
 }

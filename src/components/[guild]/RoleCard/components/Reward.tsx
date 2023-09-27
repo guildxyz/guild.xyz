@@ -18,7 +18,6 @@ import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider
 import Visibility from "components/[guild]/Visibility"
 import { motion, Transition } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
-import ContractCallReward from "platforms/ContractCall/ContractCallReward"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import platforms from "platforms/platforms"
 import { ReactNode, useMemo } from "react"
@@ -176,9 +175,12 @@ const RewardIcon = ({
   const circleBgColor = useColorModeValue("gray.700", "gray.600")
 
   const props = {
-    src: platforms[PlatformType[guildPlatform?.platformId]].imageUrl,
+    src:
+      guildPlatform?.platformGuildData?.image ??
+      platforms[PlatformType[guildPlatform?.platformId]].imageUrl,
     alt: guildPlatform?.platformGuildName,
     boxSize: 6,
+    rounded: "full",
   }
 
   const circleProps = {
@@ -229,9 +231,7 @@ const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
   const Component =
-    guildPlatform.platformId === PlatformType.CONTRACT_CALL
-      ? ContractCallReward
-      : Reward
+    platforms[PlatformType[guildPlatform?.platformId]].RoleCardComponent ?? Reward
 
   return <Component platform={platformWithGuildPlatform} {...props} />
 }
