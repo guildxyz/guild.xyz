@@ -1,17 +1,18 @@
 import { HStack, Link, VStack, Wrap } from "@chakra-ui/react"
-import DiscordEventCard from "components/[guild]/Events/DiscordEventCard"
-import FallbackFrame from "components/[guild]/Events/FallbackFrame"
-import SocialIcon from "components/[guild]/SocialIcon"
-import Tabs from "components/[guild]/Tabs"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import PulseMarker from "components/common/PulseMarker"
 import VerifiedIcon from "components/common/VerifiedIcon"
+import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
+import DiscordEventCard from "components/[guild]/Events/DiscordEventCard"
+import FallbackFrame from "components/[guild]/Events/FallbackFrame"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import SocialIcon from "components/[guild]/SocialIcon"
+import Tabs from "components/[guild]/Tabs"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useDiscordEvents, { DiscordEvent } from "hooks/useDiscordEvents"
 import useLocalStorage from "hooks/useLocalStorage"
 import dynamic from "next/dynamic"
@@ -172,7 +173,9 @@ const GuildEvents = (): JSX.Element => {
 
 const GuildEventsWrapper = (): JSX.Element => (
   <ThemeProvider>
-    <GuildEvents />
+    <EditGuildDrawerProvider>
+      <GuildEvents />
+    </EditGuildDrawerProvider>
   </ThemeProvider>
 )
 
