@@ -10,7 +10,9 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
@@ -20,6 +22,7 @@ import { ArrowLeft, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import platforms from "platforms/platforms"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import {
   AddRewardProvider,
@@ -29,6 +32,7 @@ import {
 import { CreatePoapProvider } from "../CreatePoap/components/CreatePoapContext"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
+import HiddenRoleAlert from "./components/HiddenRoleAlert"
 import useAddReward from "./hooks/useAddReward"
 
 // temporary until POAPs are real rewards
@@ -37,6 +41,8 @@ const DynamicAddPoapPanel = dynamic(() => import("components/[guild]/CreatePoap"
 })
 
 const AddRewardButton = (): JSX.Element => {
+  const { account } = useWeb3React()
+
   const {
     modalRef,
     selection,
@@ -46,7 +52,7 @@ const AddRewardButton = (): JSX.Element => {
     activeTab,
     isOpen,
     onOpen,
-    onClose,
+    onClose: onAddRewardModalClose,
   } = useAddRewardContext()
 
   const methods = useForm()
@@ -67,6 +73,17 @@ const AddRewardButton = (): JSX.Element => {
   const isAddRewardButtonDisabled =
     activeTab === RoleTypeToAddTo.NEW_ROLE && !requirements?.length
 
+  const {
+    isOpen: isHiddenRoleAlertOpen,
+    onOpen: onHiddenRoleAlertOpen,
+    onClose: onHiddenRoleAlertClose,
+  } = useDisclosure()
+
+  const onClose = () => {
+    onAddRewardModalClose()
+    onHiddenRoleAlertClose()
+  }
+
   const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
     useAddReward(onClose)
   const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
@@ -81,13 +98,31 @@ const AddRewardButton = (): JSX.Element => {
         name: data.name || `New ${platforms[selection].name} role`,
         imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
       })
-    } else {
+    } else if (data.roleIds?.length) {
       onAddRewardSubmit({
         ...data.rolePlatforms[0].guildPlatform,
         roleIds: data.roleIds?.filter((roleId) => !!roleId),
       })
+    } else {
+      onHiddenRoleAlertOpen()
     }
   }
+
+  const onSubmitWithHiddenRole = (data: any) =>
+    onCreateRoleSubmit({
+      ...data,
+      name: data.name || `New ${platforms[selection].name} role`,
+      imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
+      visibility: Visibility.HIDDEN,
+      requirements: [
+        {
+          type: "ALLOWLIST",
+          data: {
+            addresses: [account.toLowerCase()],
+          },
+        },
+      ],
+    })
 
   const { AddPlatformPanel, PlatformPreview } = platforms[selection] ?? {}
 
@@ -190,6 +225,13 @@ const AddRewardButton = (): JSX.Element => {
             </ModalContent>
           </CreatePoapProvider>
         </Modal>
+
+        <HiddenRoleAlert
+          isOpen={isHiddenRoleAlertOpen}
+          onClose={onHiddenRoleAlertClose}
+          onAccept={methods.handleSubmit(onSubmitWithHiddenRole)}
+          isCreateRoleLoading={isCreateRoleLoading}
+        />
       </FormProvider>
     </>
   )
