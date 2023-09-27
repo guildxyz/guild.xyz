@@ -22,9 +22,11 @@ import { Member } from "./useMembers"
 
 type Props = {
   row: Row<Member>
+  isOpen: boolean
+  onClose: () => void
 }
 
-const MemberModal = ({ row }: Props) => {
+const MemberModal = ({ row, isOpen, onClose }: Props) => {
   const { addresses, platformUsers, roles, joinedAt } = row.original
 
   const primaryAddress = addresses?.[0]
@@ -32,11 +34,7 @@ const MemberModal = ({ row }: Props) => {
   const domain = useResolveAddress(primaryAddress)
 
   return (
-    <Modal
-      isOpen={row.getIsExpanded()}
-      onClose={row.getToggleExpandedHandler()}
-      scrollBehavior="inside"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton top={9} right={8} />

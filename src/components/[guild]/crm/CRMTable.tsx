@@ -12,6 +12,7 @@ import {
   Thead,
   Tr,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { Table as TableType, flexRender } from "@tanstack/react-table"
 import Card from "components/common/Card"
@@ -195,33 +196,7 @@ const CRMTable = ({
                 table
                   .getRowModel()
                   .rows.map((row) => (
-                    <Tr key={row.id} role="group">
-                      {row.getVisibleCells().map((cell) => (
-                        <CrmInteractiveTd
-                          key={cell.id}
-                          onClick={
-                            cell.column.id !== "select"
-                              ? row.getToggleExpandedHandler()
-                              : undefined
-                          }
-                          transition="background .2s"
-                          {...(cell.column.id === "identity" && {
-                            position: "sticky",
-                            left: "0",
-                            width: "0px",
-                            zIndex: 1,
-                            className: "identityTd",
-                            ...(isIdentityStuck && {
-                              maxWidth: "150px",
-                              bg: cardBg,
-                            }),
-                          })}
-                        >
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </CrmInteractiveTd>
-                      ))}
-                      <MemberModal row={row} />
-                    </Tr>
+                    <MemberRow key={row.id} {...{ row, isIdentityStuck, cardBg }} />
                   ))
                   .concat(
                     hasReachedTheEnd ? (
@@ -254,6 +229,36 @@ const CRMTable = ({
         </Card>
       </Flex>
     </Flex>
+  )
+}
+
+const MemberRow = ({ row, isIdentityStuck, cardBg }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  return (
+    <Tr role="group">
+      {row.getVisibleCells().map((cell) => (
+        <CrmInteractiveTd
+          key={cell.id}
+          onClick={cell.column.id !== "select" ? onOpen : undefined}
+          transition="background .2s"
+          {...(cell.column.id === "identity" && {
+            position: "sticky",
+            left: "0",
+            width: "0px",
+            zIndex: 1,
+            className: "identityTd",
+            ...(isIdentityStuck && {
+              maxWidth: "150px",
+              bg: cardBg,
+            }),
+          })}
+        >
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </CrmInteractiveTd>
+      ))}
+      <MemberModal {...{ row, isOpen, onClose }} />
+    </Tr>
   )
 }
 

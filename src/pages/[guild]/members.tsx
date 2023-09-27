@@ -171,8 +171,7 @@ const GuildPage = (): JSX.Element => {
     manualSorting: true,
     getFilteredRowModel: getFilteredRowModel(),
     manualFiltering: true,
-    getExpandedRowModel: getExpandedRowModel(),
-    getRowCanExpand: () => true,
+
     enableRowSelection: true,
     getRowId,
   })
