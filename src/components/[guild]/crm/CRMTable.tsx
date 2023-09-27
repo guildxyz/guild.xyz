@@ -1,4 +1,5 @@
 import {
+  Center,
   Checkbox,
   Flex,
   Progress,
@@ -110,7 +111,11 @@ const CRMTable = ({
         <Card overflow="visible" h="fit-content" mx="auto" mb="2">
           <Table
             borderColor="whiteAlpha.300"
-            minWidth="calc(var(--chakra-sizes-container-lg) - calc(var(--chakra-space-10) * 2))"
+            minWidth={{
+              base: "container.sm",
+              md: "880px",
+              lg: "calc(var(--chakra-sizes-container-lg) - calc(var(--chakra-space-10) * 2))",
+            }}
             // needed so the Th elements can have border
             sx={{ borderCollapse: "separate", borderSpacing: 0 }}
           >
@@ -130,6 +135,7 @@ const CRMTable = ({
                     borderTopWidth="1px"
                     bg={cardBg}
                     colSpan={header.colSpan}
+                    width={header.column.getSize()}
                     sx={
                       !isStuck && {
                         "&:first-of-type": {
@@ -206,6 +212,7 @@ const CRMTable = ({
                             zIndex: 1,
                             className: "identityTd",
                             ...(isIdentityStuck && {
+                              maxWidth: "150px",
                               bg: cardBg,
                             }),
                           })}
@@ -309,9 +316,14 @@ const CrmInfoRow = ({ children, ...rest }) => (
       textAlign={"center"}
       colSpan={"100%" as any}
       borderBottomRadius={"2xl"}
+      fontSize="md"
+      px="0"
       {...rest}
     >
-      {children}
+      {/* so it stays visible in the center when the table is bigger than the viewport too  */}
+      <Center pos="sticky" left="0" px="3.5" maxW="100vw">
+        {children}
+      </Center>
     </CrmTd>
   </Tr>
 )

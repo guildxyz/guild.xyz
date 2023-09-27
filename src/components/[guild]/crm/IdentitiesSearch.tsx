@@ -56,6 +56,7 @@ const IdentitiesSearch = ({ column }: Props) => {
       <Input
         ref={inputRef}
         placeholder={"Search members"}
+        noOfLines={1}
         // whiteSpace="nowrap"
         // textOverflow="ellipsis"
         value={localValue ?? ""}

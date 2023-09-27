@@ -63,6 +63,7 @@ const GuildPage = (): JSX.Element => {
     () => [
       {
         id: "select",
+        size: 30,
         header: ({ table }) => (
           <Checkbox
             {...{
@@ -88,12 +89,14 @@ const GuildPage = (): JSX.Element => {
       },
       columnHelper.accessor((row) => row, {
         id: "identity",
+        size: 210,
         filterFn: identitiesFilter,
         cell: (info) => <Identities member={info.getValue()} />,
         header: ({ column }) => <IdentitiesSearch column={column} />,
       }),
       {
         accessorKey: "roles",
+        size: "auto" as any,
         header: ({ column }) => (
           <HStack w="full" justifyContent={"space-between"}>
             <Text>{`Roles ${hasHiddenRoles ? "(hidden, public)" : ""}`}</Text>
@@ -123,6 +126,7 @@ const GuildPage = (): JSX.Element => {
         ],
       },
       columnHelper.accessor("joinedAt", {
+        size: 140,
         header: ({ column }) => (
           <HStack w="full" justifyContent={"space-between"}>
             <Text>Joined at</Text>
