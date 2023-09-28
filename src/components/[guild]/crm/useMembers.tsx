@@ -24,7 +24,7 @@ type Member = {
 
 const LIMIT = 50
 
-const useMembers = (queryString) => {
+const useMembers = (queryString: string) => {
   const { id } = useGuild()
   const [hasReachedTheEnd, setHasReachedTheEnd] = useState(true)
 
