@@ -1,4 +1,5 @@
 import {
+  ButtonProps,
   Collapse,
   FormControl,
   FormLabel,
@@ -53,7 +54,11 @@ const EmailAddress = () => {
 const PIN_LENGTH = 6
 const TIMEOUT = 10_000
 
-const ConnectEmailButton = () => {
+const ConnectEmailButton = ({
+  onSuccess,
+
+  ...props
+}: ButtonProps & { onSuccess?: () => void; isReconnection?: boolean }) => {
   const { emails } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [pendingEmailAddress, setPendingEmailAddress] = useState(
@@ -103,7 +108,11 @@ const ConnectEmailButton = () => {
 
   const connect = useConnectEmail({
     onSuccess: () => {
-      toast({ status: "success", title: "Email verified" })
+      if (onSuccess) {
+        onSuccess()
+      } else {
+        toast({ status: "success", title: "Email verified" })
+      }
       handleOnClose()
     },
     onError: () => {
@@ -135,6 +144,7 @@ const ConnectEmailButton = () => {
         colorScheme={emails?.pending ? "orange" : platforms.EMAIL.colorScheme}
         variant={"solid"}
         size="sm"
+        {...props}
       >
         {emails?.pending ? "Verify" : "Connect"}
       </Button>
@@ -271,4 +281,5 @@ const DisconnectEmailButton = () => {
   )
 }
 
+export { ConnectEmailButton }
 export default EmailAddress
