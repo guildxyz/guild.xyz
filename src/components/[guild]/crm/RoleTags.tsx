@@ -29,7 +29,7 @@ const RoleTags = ({ roles }: Props) => {
   const moreRolesCount = roles?.length - 3
   const moreRoles = moreRolesCount > 0 && roles?.slice(-moreRolesCount)
 
-  const moreRolesTagBorderColor = useColorModeValue("gray-300", "whiteAlpha-300")
+  const moreRolesTagBorderColorVar = useColorModeValue("gray-300", "whiteAlpha-300")
 
   if (!renderedRoles?.length) return <Text>-</Text>
 
@@ -45,7 +45,7 @@ const RoleTags = ({ roles }: Props) => {
               variant={"outline"}
               color="initial"
               sx={{
-                "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColor}) !important`,
+                "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColorVar}) !important`,
               }}
             >
               <TagLabel>{`${moreRolesCount} more roles`}</TagLabel>
