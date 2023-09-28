@@ -3,6 +3,7 @@ import { CodeNode } from "@lexical/code"
 import { AutoLinkNode, LinkNode } from "@lexical/link"
 import { ListItemNode, ListNode } from "@lexical/list"
 import {
+  $convertFromMarkdownString,
   $convertToMarkdownString,
   TextMatchTransformer,
   TRANSFORMERS,
@@ -29,6 +30,7 @@ import ToolbarPlugin from "components/lexical/plugins/ToolbarPlugin/ToolbarPlugi
 type Props = {
   onChange?: (value: string) => void
   placeholder?: string
+  defaultValue?: string
   minHeight?: string
 }
 
@@ -63,8 +65,15 @@ const IMAGE: TextMatchTransformer = {
 
 const MARKDOWN_TRANSFORMERS = [...TRANSFORMERS, IMAGE]
 
-const RichTextDescriptionEditor = ({ onChange, placeholder, minHeight }: Props) => {
+const RichTextDescriptionEditor = ({
+  onChange,
+  placeholder,
+  defaultValue,
+  minHeight,
+}: Props) => {
   const initialConfig: InitialConfigType = {
+    editorState: () =>
+      $convertFromMarkdownString(defaultValue, MARKDOWN_TRANSFORMERS),
     namespace: "MyEditor",
     theme: {
       strikethrough: "text-strikethrough",
