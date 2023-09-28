@@ -7,9 +7,14 @@ import {
   InputRightElement,
 } from "@chakra-ui/react"
 import { MagnifyingGlass } from "phosphor-react"
-import { useRef } from "react"
+import { Dispatch, SetStateAction, useRef } from "react"
 
-const FilterByRolesSearch = ({ searchValue, setSearchValue }) => {
+type Props = {
+  searchValue: string
+  setSearchValue: Dispatch<SetStateAction<string>>
+}
+
+const FilterByRolesSearch = ({ searchValue, setSearchValue }: Props) => {
   const inputRef = useRef(null)
   const handleOnChange = async (e) => setSearchValue(e.target.value)
 
