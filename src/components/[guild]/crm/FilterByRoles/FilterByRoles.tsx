@@ -24,15 +24,16 @@ import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { Funnel } from "phosphor-react"
 import { useState } from "react"
-import { Visibility } from "types"
+import { Role, Visibility } from "types"
 import useGuild from "../../hooks/useGuild"
-import FilterByRolesLogicSelector from "./FilterByRolesLogicSelector"
+import { Member } from "../useMembers"
 import AddAndEditHiddenRoles from "./components/AddAndEditHiddenRoles"
 import AddHiddenRoles from "./components/AddHiddenRoles"
 import FilterByRolesSearch from "./components/FilterByRolesSearch"
+import FilterByRolesLogicSelector from "./FilterByRolesLogicSelector"
 
 type Props = {
-  column: Column<any>
+  column: Column<Member, Member>
 }
 
 const FilterByRoles = ({ column }: Props) => {
@@ -42,8 +43,8 @@ const FilterByRoles = ({ column }: Props) => {
   const publicRoles = roles?.filter((role) => role.visibility !== Visibility.HIDDEN)
   const hiddenRoles = roles?.filter((role) => role.visibility === Visibility.HIDDEN)
 
-  const selectedRoleIds = (column.getFilterValue() as any)?.roleIds ?? []
-  const setSelectedRoleIds = (newValue) => {
+  const selectedRoleIds: number[] = (column.getFilterValue() as any)?.roleIds ?? []
+  const setSelectedRoleIds = (newValue: number[]) => {
     column.setFilterValue((prevValue) => ({
       ...prevValue,
       roleIds: newValue,
@@ -135,6 +136,15 @@ const FilterByRoles = ({ column }: Props) => {
   )
 }
 
+type RoleCheckboxGroupProps = {
+  label: string
+  labelRightElement?: JSX.Element
+  roles: Role[]
+  selectedRoleIds: number[]
+  setSelectedRoleIds: (newValue: number[]) => void
+  searchValue?: string
+}
+
 const RoleCheckboxGroup = ({
   label,
   labelRightElement = null,
@@ -142,7 +152,7 @@ const RoleCheckboxGroup = ({
   selectedRoleIds,
   setSelectedRoleIds,
   searchValue,
-}) => {
+}: RoleCheckboxGroupProps) => {
   const roleIds = roles.map((role) => role.id)
   const shownRoles = roles.filter((role) =>
     role.name.toLowerCase().includes(searchValue.toLowerCase())
