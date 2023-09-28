@@ -44,7 +44,7 @@ const ClickableRoleTag = ({
         />
         <ViewInCRM
           label="View members"
-          queryKey="roleIds"
+          queryKey="roleId"
           queryValue={roleId.toString()}
         />
         <ViewRole roleId={roleId} />

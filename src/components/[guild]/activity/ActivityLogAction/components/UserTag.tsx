@@ -79,7 +79,7 @@ const ClickableUserTag = ({ userId }: ClickableUserTagProps): JSX.Element => {
           />
           <ViewInCRM
             label="View user in members"
-            queryKey="identity"
+            queryKey="search"
             queryValue={address}
           />
           <CopyAddress address={address} />
