@@ -49,26 +49,33 @@ const RequirementConnectButton = (props: ButtonProps) => {
     })
   }
 
-  const connect = useConnectEmail()
+  const ButtonComponent = type?.startsWith("EMAIL")
+    ? ConnectRequirementEmailButton
+    : ConnectRequirementPlatformButton
 
-  if (type?.startsWith("EMAIL")) {
-    return (
-      <Button
-        size="xs"
-        onClick={connect.onSubmit}
-        isLoading={connect.isLoading}
-        loadingText={"Connecting"}
-        colorScheme={platforms[platform]?.colorScheme}
-        leftIcon={<Icon as={platforms[platform]?.icon} />}
-        iconSpacing="1"
-        {...props}
-      >
-        Connect {platforms[platform]?.name}
-      </Button>
-    )
-  }
+  return <ButtonComponent onSuccess={onSuccess} {...props} />
+}
 
-  return <ConnectRequirementPlatformButton onSuccess={onSuccess} {...props} />
+const ConnectRequirementEmailButton = ({
+  onSuccess,
+  ...props
+}: ButtonProps & { onSuccess: () => void }) => {
+  const connect = useConnectEmail({ onSuccess })
+
+  return (
+    <Button
+      size="xs"
+      onClick={connect.onSubmit}
+      isLoading={connect.isLoading}
+      loadingText={"Connecting"}
+      colorScheme={platforms.EMAIL.colorScheme}
+      leftIcon={<Icon as={platforms.EMAIL.icon} />}
+      iconSpacing="1"
+      {...props}
+    >
+      Connect {platforms.EMAIL.name}
+    </Button>
+  )
 }
 
 const ConnectRequirementPlatformButton = ({
