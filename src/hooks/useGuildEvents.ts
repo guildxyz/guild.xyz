@@ -72,15 +72,16 @@ const useGuildEvents = (platformGuildId: string, guildId: number) => {
     )
 
   const error = []
+  const serverError = []
 
   if (swrResponseEvents.error)
-    error.push({ type: "Guild.xyz", ...swrResponseEvents.error })
+    serverError.push({ type: "LUMA, EVENTBRITE", ...swrResponseEvents.error })
   if (swrResponseEvents.data?.errors)
     error.push(
       ...swrResponseEvents.data?.errors.filter((err) => err.type !== "DISCORD")
     )
   if (swrResponseDiscord.error)
-    error.push({ type: "Guild.xyz", ...swrResponseDiscord.error })
+    serverError.push({ type: "DISCORD", ...swrResponseDiscord.error })
   if (swrResponseDiscord.data?.error) error.push(...swrResponseDiscord.data?.error)
 
   return {
@@ -90,6 +91,7 @@ const useGuildEvents = (platformGuildId: string, guildId: number) => {
         ? data
         : undefined,
     error,
+    serverError,
   }
 }
 

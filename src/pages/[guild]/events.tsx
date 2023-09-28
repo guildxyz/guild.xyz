@@ -54,7 +54,10 @@ const GuildEvents = (): JSX.Element => {
     (platform) => platform.platformId === PlatformType.DISCORD
   )?.platformGuildId
 
-  const { data, isLoading, error } = useGuildEvents(discordGuildPlatform, guildId)
+  const { data, isLoading, error, serverError } = useGuildEvents(
+    discordGuildPlatform,
+    guildId
+  )
 
   const sortEventByStartDate = (eventA: GuildEvent, eventB: GuildEvent) =>
     eventA.start - eventB.start
@@ -154,6 +157,14 @@ const GuildEvents = (): JSX.Element => {
         <ErrorAlert
           label={`"Couldn't fetch events from ${error
             .map((err) => (err.type ? err.type : null))
+            .join(", ")}`}
+          mt={4}
+        />
+      ) : null}
+      {isAdmin && !isLoading && serverError.length ? (
+        <ErrorAlert
+          label={`"Couldn't fetch events from ${serverError
+            .map((err) => err.type)
             .join(", ")}`}
           mt={4}
         />
