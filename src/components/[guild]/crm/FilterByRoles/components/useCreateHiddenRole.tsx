@@ -1,11 +1,11 @@
 import { ToastId } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
+import useGuild from "components/[guild]/hooks/useGuild"
+import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { useRef } from "react"
 import { useSWRConfig } from "swr"
@@ -25,7 +25,7 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
-  const { id, urlName, mutateGuild } = useGuild()
+  const { id, mutateGuild } = useGuild()
 
   const fetchData = async (
     signedValidation: SignedValdation
@@ -33,12 +33,12 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
 
   const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {
     onError: (error_) => {
-      const processedError = processConnectorError(error_)
-      showErrorToast(processedError || error_)
+      showErrorToast({
+        error: processConnectorError(error_.error) ?? error_.error,
+        correlationId: error_.correlationId,
+      })
     },
     onSuccess: async (response_) => {
-      onSuccess?.()
-
       triggerConfetti()
 
       toastIdRef.current = toast({
@@ -56,6 +56,8 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
         ...curr,
         roles: [...curr.roles, response_],
       }))
+
+      onSuccess?.()
     },
   })
 
