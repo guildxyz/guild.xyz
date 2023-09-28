@@ -13,13 +13,13 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { Modal } from "components/common/Modal"
-import { DiscordEvent } from "hooks/useDiscordEvents"
+import { GuildEvent } from "hooks/useGuildEvents"
 import EventImage from "./components/EventImage"
 import EventInfo from "./components/EventInfo"
 import JoinDiscordEventButton from "./components/JoinDiscordEventButton"
 
 type Props = {
-  event: DiscordEvent
+  event: GuildEvent
   guildId: number
 }
 
@@ -66,7 +66,7 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
               </LinkOverlay>
             </GridItem>
             <GridItem order={{ base: 1, md: 2 }}>
-              <EventImage url={event.url} />
+              <EventImage url={event.image} />
             </GridItem>
           </Grid>
         </Card>
@@ -76,7 +76,7 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
         <ModalContent>
           <ModalCloseButton zIndex="modal" />
           <ModalBody p="5 !important">
-            <EventImage url={event.url} showFallback={false} mb="5" />
+            <EventImage url={event.image} showFallback={false} mb="5" />
             <Heading
               fontSize={"xl"}
               fontFamily={"Dystopian"}

@@ -102,7 +102,7 @@ const EditGuildDrawer = ({
     eventSources: {
       EVENTBRITE: eventSources.EVENTBRITE,
       LINK3: "",
-      LUMA: "",
+      LUMA: eventSources.LUMA,
     },
   }
   const methods = useForm<GuildFormType>({

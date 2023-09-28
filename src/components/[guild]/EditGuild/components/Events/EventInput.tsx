@@ -1,4 +1,12 @@
-import { Circle, Img, Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
+import {
+  Circle,
+  CloseButton,
+  Img,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+} from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
 import { EventSourcesKey, GuildFormType } from "types"
 
@@ -21,7 +29,7 @@ const logos: Record<EventSourcesKey, string> = {
 }
 
 const EventInput = ({ name }: Props) => {
-  const { register } = useFormContext<GuildFormType>()
+  const { register, setValue } = useFormContext<GuildFormType>()
 
   return (
     <InputGroup size={"lg"}>
@@ -35,6 +43,14 @@ const EventInput = ({ name }: Props) => {
         size={"lg"}
         placeholder={placeholders[name]}
       />
+      <InputRightElement>
+        <CloseButton
+          aria-label="Remove link"
+          size="sm"
+          rounded="full"
+          onClick={() => setValue(`eventSources.${name}`, undefined)}
+        />
+      </InputRightElement>
     </InputGroup>
   )
 }

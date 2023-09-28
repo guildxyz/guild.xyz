@@ -8,14 +8,15 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useIsMember from "components/[guild]/hooks/useIsMember"
+import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import PulseMarker from "components/common/PulseMarker"
 import VerifiedIcon from "components/common/VerifiedIcon"
-import useDiscordEvents, { DiscordEvent } from "hooks/useDiscordEvents"
+import useGuildEvents, { GuildEvent } from "hooks/useGuildEvents"
 import useLocalStorage from "hooks/useLocalStorage"
 import dynamic from "next/dynamic"
-import { NoteBlank, WarningOctagon } from "phosphor-react"
+import { NoteBlank } from "phosphor-react"
 import { PlatformType, SocialLinkKey } from "types"
 import parseDescription from "utils/parseDescription"
 
@@ -49,10 +50,16 @@ const GuildEvents = (): JSX.Element => {
       isAdmin) &&
     !showOnboarding
 
-  const { data, isLoading, error } = useDiscordEvents(guildId)
+  const discordGuildPlatform = guildPlatforms?.find(
+    (platform) => platform.platformId === PlatformType.DISCORD
+  )?.platformGuildId
 
-  const sortEventByStartDate = (eventA: DiscordEvent, eventB: DiscordEvent) =>
+  const { data, isLoading, error } = useGuildEvents(discordGuildPlatform, guildId)
+
+  const sortEventByStartDate = (eventA: GuildEvent, eventB: GuildEvent) =>
     eventA.start - eventB.start
+
+  console.log("xy", error)
 
   return (
     <Layout
@@ -127,39 +134,32 @@ const GuildEvents = (): JSX.Element => {
           <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
         )}
       </Tabs>
-      {!data && !error && isLoading && (
-        <FallbackFrame isLoading text="Searching for events..." />
-      )}
-      {!data && !error && !isLoading && (
-        <FallbackFrame
-          icon={NoteBlank}
-          title="No events yet"
-          text="Your guild has no upcoming event currently"
-        />
-      )}
-
-      {!isLoading && !!error && (
-        <FallbackFrame
-          icon={WarningOctagon}
-          text="Something went wrong, couldn't load events."
-        />
-      )}
-
-      {!isLoading && !error && data?.length === 0 && (
+      {isLoading ||
+        (data === undefined && (
+          <FallbackFrame isLoading text="Searching for events..." />
+        ))}
+      {!isLoading && data?.length === 0 && (
         <FallbackFrame
           icon={NoteBlank}
           title="No events yet"
           text="Your guild has no upcoming event currently or you have no access to Discord"
         />
       )}
-
-      {!isLoading && !error && data?.length > 0 && (
+      {!isLoading && data?.length > 0 && (
         <VStack gap={4}>
           {data.sort(sortEventByStartDate).map((event) => (
             <DiscordEventCard key={event.title} event={event} guildId={guildId} />
           ))}
         </VStack>
       )}
+      {isAdmin && !isLoading && error.length ? (
+        <ErrorAlert
+          label={`"Couldn't fetch events from ${error
+            .map((err) => (err.type ? err.type : null))
+            .join(", ")}`}
+          mt={4}
+        />
+      ) : null}
     </Layout>
   )
 }

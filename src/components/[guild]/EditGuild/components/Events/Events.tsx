@@ -9,6 +9,7 @@ const Events = () => (
     </Text>
     <SimpleGrid columns={2} gap={3}>
       <EventInput name={"EVENTBRITE"} />
+      <EventInput name={"LUMA"} />
 
       {/*supportedEventSources
         .filter((source) => source !== supportedEventSources[3])
