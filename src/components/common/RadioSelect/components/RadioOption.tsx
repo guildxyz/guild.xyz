@@ -34,7 +34,7 @@ const RadioOption = (props) => {
 
   if (disabled)
     return (
-      <Tooltip label={tooltipLabel}>
+      <Tooltip label={tooltipLabel} hasArrow>
         <Button
           as="fieldset"
           w="full"

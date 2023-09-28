@@ -35,6 +35,9 @@ const UsersGuildPins = () => {
                 guild={pin.attributes
                   .find((attribute) => attribute.trait_type === "guildId")
                   .value.toString()}
+                rank={pin.attributes
+                  .find((attribute) => attribute.trait_type === "rank")
+                  .value.toString()}
               />
             ))
           ) : (

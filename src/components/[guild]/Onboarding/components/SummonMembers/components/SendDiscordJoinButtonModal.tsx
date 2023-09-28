@@ -27,15 +27,10 @@ const SendDiscordJoinButtonModal = ({
   onSuccess = undefined,
   serverId,
 }) => {
-  const { isLoading, isSigning, onSubmit, signLoadingText } = useSendJoin(
-    "JOIN",
-    () => {
-      onClose()
-      onSuccess?.()
-    }
-  )
-
-  const loadingText = signLoadingText || "Sending"
+  const { isLoading, onSubmit } = useSendJoin("JOIN", () => {
+    onClose()
+    onSuccess?.()
+  })
 
   const { description, name } = useGuild()
   const {
@@ -97,9 +92,9 @@ const SendDiscordJoinButtonModal = ({
           <Button
             colorScheme="green"
             onClick={methods.handleSubmit(onSubmit)}
-            isLoading={isLoading || isSigning}
-            loadingText={loadingText}
-            isDisabled={isLoading || isSigning}
+            isLoading={isLoading}
+            loadingText={"Sending"}
+            isDisabled={isLoading}
           >
             Send
           </Button>

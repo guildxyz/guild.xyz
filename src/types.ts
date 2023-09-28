@@ -83,6 +83,7 @@ type PlatformName =
   | "POAP"
   | "CONTRACT_CALL"
   | "TWITTER_V1"
+  | "EMAIL"
 
 type PlatformUserData = {
   acessToken?: string
@@ -127,6 +128,12 @@ type User = {
 
   // Should be removed once we use only v2 API
   addressProviders?: Record<string, AddressConnectionProvider>
+
+  emails: {
+    emailAddress: string
+    pending: boolean
+    createdAt: Date
+  }
 }
 
 type BaseUser = {
@@ -355,6 +362,11 @@ type Guild = {
   hiddenRoles?: boolean
   requiredPlatforms?: PlatformName[]
   tags: GuildTags[]
+  guildPin?: {
+    chain: Chain
+    isActive: boolean
+  }
+  isFallback?: boolean
 }
 type GuildFormType = Partial<
   Pick<

@@ -8,7 +8,7 @@ import LandingButton from "./LandingButton"
 import LandingWideSection from "./LandingWideSection"
 
 const ExploreTrendingGuilds = (): JSX.Element => {
-  const { data: guilds, isValidating } = useSWR("/guild", {
+  const { data: guilds, isValidating } = useSWR("/v2/guilds", {
     refreshInterval: 0,
     revalidateIfStale: false,
     revalidateOnFocus: false,

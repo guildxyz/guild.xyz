@@ -3,12 +3,10 @@ import { useWeb3React } from "@web3-react/core"
 import Link from "components/common/Link"
 import { Chains } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
-import { openseaBaseUrl } from "utils/guildCheckout/constants"
-import useGuildPinContractsData from "../../../hooks/useGuildPinContractsData"
+import { GUILD_PIN_CONTRACTS, openseaBaseUrl } from "utils/guildCheckout/constants"
 import { useMintGuildPinContext } from "../../../MintGuildPinContext"
 
 const OpenseaLink = (): JSX.Element => {
-  const guildPinContractsData = useGuildPinContractsData()
   const { chainId } = useWeb3React()
   const { mintedTokenId } = useMintGuildPinContext()
 
@@ -19,7 +17,7 @@ const OpenseaLink = (): JSX.Element => {
       <Link
         isExternal
         href={`${openseaBaseUrl[Chains[chainId]]}/${
-          guildPinContractsData[Chains[chainId]].address
+          GUILD_PIN_CONTRACTS[Chains[chainId]].address
         }/${mintedTokenId}`}
       >
         <Img src={"/requirementLogos/opensea.svg"} boxSize={"1em"} mr="1.5" />

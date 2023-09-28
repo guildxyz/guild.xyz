@@ -22,7 +22,7 @@ const TwitterRequirement = (props: RequirementProps) => {
 
   const { data: twitterAvatar } = useSWRImmutable(
     requirement.data.id && TWITTER_HANDLE_REGEX.test(requirement.data.id)
-      ? `/assets/twitter/avatar/${requirement.data.id}`
+      ? `/v2/third-party/twitter/users/${requirement.data.id}/avatar`
       : null
   )
 

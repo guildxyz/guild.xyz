@@ -1,8 +1,4 @@
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -13,26 +9,40 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
-import AlphaTag from "./components/AlphaTag"
-import MintGuildPinButton from "./components/buttons/MintGuildPinButton"
-import GuildPinFees from "./components/GuildPinFees"
-import GuildPinImage from "./components/GuildPinImage"
-import GuildPinReward from "./components/GuildPinReward"
-import MintGuildPinChainPicker from "./components/MintGuildPinChainPicker"
-import TransactionStatusModal from "./components/TransactionStatusModal"
-import OpenseaLink from "./components/TransactionStatusModal/components/OpenseaLink"
-import { useMintGuildPinContext } from "./MintGuildPinContext"
+import { Chains } from "connectors"
+import dynamic from "next/dynamic"
+import { useState } from "react"
+import { useMintGuildPinContext } from "../MintGuildPinContext"
+import AlphaTag from "../components/AlphaTag"
+import GuildPinFees from "../components/GuildPinFees"
+import GuildPinImage from "../components/GuildPinImage"
+import GuildPinReward from "../components/GuildPinReward"
+import TransactionStatusModal from "../components/TransactionStatusModal"
+import OpenseaLink from "../components/TransactionStatusModal/components/OpenseaLink"
+import MintGuildPinButton from "../components/buttons/MintGuildPinButton"
+import SwitchNetworkButton from "../components/buttons/SwitchNetworkButton"
+
+const DynamicActivateGuildPinModal = dynamic(
+  () => import("./components/ActivateGuildPinModal")
+)
 
 const MintGuildPin = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
-  const { urlName } = useGuild()
+  const { urlName, guildPin } = useGuild()
+  const { isAdmin } = useGuildPermission()
 
-  const { isOpen, onOpen, onClose, isInvalidImage, isTooSmallImage } =
-    useMintGuildPinContext()
+  /**
+   * Storing the initial state here, since when we activate the pin, we update the
+   * SWR cache too and the activate modal gets unmounted too early
+   */
+  const [initialIsActive] = useState(guildPin?.isActive)
+
+  const { isOpen, onOpen, onClose, onActivateModalOpen } = useMintGuildPinContext()
 
   const { colorMode } = useColorMode()
 
@@ -40,10 +50,14 @@ const MintGuildPin = (): JSX.Element => {
     <>
       <Button
         onClick={() => {
-          onOpen()
-          captureEvent("Click: Mint Guild Pin (GuildPinRewardCard)", {
-            guild: urlName,
-          })
+          if (!guildPin?.isActive) {
+            onActivateModalOpen()
+          } else {
+            onOpen()
+            captureEvent("Click: Mint Guild Pin (GuildPinRewardCard)", {
+              guild: urlName,
+            })
+          }
         }}
         variant="outline"
         borderColor={colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"}
@@ -58,7 +72,7 @@ const MintGuildPin = (): JSX.Element => {
             }
           : {})}
       >
-        {isInvalidImage || isTooSmallImage ? "Setup Guild Pin" : "Mint Guild Pin"}
+        {!guildPin?.isActive ? "Setup Guild Pin" : "Mint Guild Pin"}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
@@ -73,26 +87,18 @@ const MintGuildPin = (): JSX.Element => {
           <ModalCloseButton />
 
           <ModalBody pb="6">
-            {(isInvalidImage || isTooSmallImage) && (
-              <Alert status="error" mb="6" pb="5">
-                <AlertIcon />
-                <Stack position="relative" top={1}>
-                  <AlertTitle>Image too small</AlertTitle>
-                  <AlertDescription>
-                    Please upload a bigger image in guild settings to activate Guild
-                    Pin
-                  </AlertDescription>
-                </Stack>
-              </Alert>
-            )}
             <GuildPinImage />
           </ModalBody>
 
           <ModalFooter flexDir="column">
             <Stack w="full" spacing={6}>
-              <MintGuildPinChainPicker />
               <GuildPinFees />
-              <MintGuildPinButton />
+
+              <Stack w="full" spacing={2}>
+                <SwitchNetworkButton targetChainId={Chains[guildPin?.chain]} />
+                <MintGuildPinButton />
+              </Stack>
+
               <Text colorScheme="gray" fontSize="sm">
                 This is a non-transferable token that has no financial value.
               </Text>
@@ -100,6 +106,8 @@ const MintGuildPin = (): JSX.Element => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {!initialIsActive && isAdmin && <DynamicActivateGuildPinModal />}
 
       <TransactionStatusModal
         title="Mint Guild Pin"

@@ -1,14 +1,15 @@
 import { HStack, Link, VStack, Wrap } from "@chakra-ui/react"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import VerifiedIcon from "components/common/VerifiedIcon"
+import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import DiscordEventCard from "components/[guild]/Events/DiscordEventCard"
 import FallbackFrame from "components/[guild]/Events/FallbackFrame"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import useDiscordEvents, { DiscordEvent } from "hooks/useDiscordEvents"
 import dynamic from "next/dynamic"
 import { NoteBlank, WarningOctagon } from "phosphor-react"
@@ -135,7 +136,9 @@ const GuildEvents = (): JSX.Element => {
 
 const GuildEventsWrapper = (): JSX.Element => (
   <ThemeProvider>
-    <GuildEvents />
+    <EditGuildDrawerProvider>
+      <GuildEvents />
+    </EditGuildDrawerProvider>
   </ThemeProvider>
 )
 

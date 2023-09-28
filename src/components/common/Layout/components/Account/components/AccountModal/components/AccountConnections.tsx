@@ -26,7 +26,7 @@ import LinkAddressButton from "./LinkAddressButton"
 import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
 import LinkedAddress, { LinkedAddressSkeleton } from "./LinkedAddress"
 import SharedSocials from "./SharedSocials"
-import SocialAccount from "./SocialAccount"
+import SocialAccount, { EmailAddress } from "./SocialAccount"
 
 const AccountConnections = () => {
   const {
@@ -45,10 +45,14 @@ const AccountConnections = () => {
       platformUsers?.map((platformUser) => platformUser.platformName as string) ?? []
     const notConnectedPlatforms = Object.keys(platforms).filter(
       (platform) =>
-        !["POAP", "CONTRACT_CALL"].includes(platform) &&
+        !["POAP", "CONTRACT_CALL", "EMAIL"].includes(platform) &&
         !connectedPlatforms?.includes(platform)
     )
-    return [...connectedPlatforms, ...notConnectedPlatforms] as PlatformName[]
+    return [
+      ...connectedPlatforms,
+      "EMAIL",
+      ...notConnectedPlatforms,
+    ] as PlatformName[]
   }, [platformUsers])
 
   const linkedAddresses = addresses?.filter(
@@ -64,9 +68,13 @@ const AccountConnections = () => {
         titleRightElement={sharedSocials?.length && <SharedSocials />}
       />
       <AccountSection mb="6" divider={<Divider />}>
-        {orderedSocials.map((platform) => (
-          <SocialAccount key={platform} type={platform} />
-        ))}
+        {orderedSocials.map((platform) =>
+          platform === "EMAIL" ? (
+            <EmailAddress key={"EMAIL"} />
+          ) : (
+            <SocialAccount key={platform} type={platform} />
+          )
+        )}
       </AccountSection>
       <AccountSectionTitle
         title="Linked addresses"

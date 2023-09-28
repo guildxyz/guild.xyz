@@ -1,5 +1,6 @@
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
@@ -10,6 +11,8 @@ import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
 const useCreateGuild = () => {
+  const { captureEvent } = usePostHogContext()
+
   const matchMutate = useMatchMutate()
 
   const toast = useToast()
@@ -20,7 +23,7 @@ const useCreateGuild = () => {
   const fetcherWithSign = useFetcherWithSign()
 
   const fetchData = async (signedValidation: SignedValdation): Promise<Guild> =>
-    fetcher("/v2/guilds/with-roles", signedValidation)
+    fetcher("/v2/guilds", signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<Guild>(fetchData, {
     onError: (error_) =>
@@ -47,6 +50,12 @@ const useCreateGuild = () => {
             },
           },
         ])
+
+      if (response_.guildPlatforms[0]?.platformId === PlatformType.CONTRACT_CALL) {
+        captureEvent("Created NFT reward", {
+          hook: "useCreateGuild",
+        })
+      }
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)

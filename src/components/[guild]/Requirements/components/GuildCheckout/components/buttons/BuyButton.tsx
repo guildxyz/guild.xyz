@@ -15,7 +15,7 @@ import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const BuyButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
-  const { urlName } = useGuild()
+  const { urlName, id: guildId } = useGuild()
   const toast = useToast()
 
   const { chainId } = useWeb3React()
@@ -45,7 +45,9 @@ const BuyButton = (): JSX.Element => {
   // temporary (in it's current form) until POAPs are real roles and there's a capacity attribute
   const handleSubmit = async () => {
     if (requirement?.poapId) {
-      const poapLinks = await fetcher(`/assets/poap/links/${requirement.poapId}`)
+      const poapLinks = await fetcher(
+        `/v2/guilds/${guildId}/poaps/${requirement.poapId}/links`
+      )
       if (poapLinks?.claimed === poapLinks?.total)
         return toast({
           status: "error",
