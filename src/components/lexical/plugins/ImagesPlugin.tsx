@@ -17,11 +17,7 @@ export type InsertImagePayload = Readonly<ImagePayload>
 export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> =
   createCommand("INSERT_IMAGE_COMMAND")
 
-const ImagesPlugin = ({
-  captionsEnabled,
-}: {
-  captionsEnabled?: boolean
-}): JSX.Element | null => {
+const ImagesPlugin = (): JSX.Element | null => {
   const [editor] = useLexicalComposerContext()
 
   useEffect(() => {
@@ -44,7 +40,7 @@ const ImagesPlugin = ({
         COMMAND_PRIORITY_EDITOR
       )
     )
-  }, [captionsEnabled, editor])
+  }, [editor])
 
   return null
 }

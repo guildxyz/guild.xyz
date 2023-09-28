@@ -63,7 +63,8 @@ const IMAGE: TextMatchTransformer = {
   dependencies: [],
 }
 
-const MARKDOWN_TRANSFORMERS = [...TRANSFORMERS, IMAGE]
+// image transformer must be before the other ones, so we don't accidentally display an image as a link
+const MARKDOWN_TRANSFORMERS = [IMAGE, ...TRANSFORMERS]
 
 const RichTextDescriptionEditor = ({
   onChange,
