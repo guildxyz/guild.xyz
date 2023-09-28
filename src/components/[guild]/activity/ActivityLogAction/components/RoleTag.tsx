@@ -9,7 +9,7 @@ import ViewRole from "./ClickableTagPopover/components/ViewRole"
 
 type Props = ClickableRoleTagProps & TagProps
 
-const ActivityLogRoleTag = forwardRef<Props, any>(
+const ActivityLogRoleTag = forwardRef<Props, "span">(
   ({ roleId, guildId, ...rest }, ref): JSX.Element => {
     const { data } = useActivityLog()
 
