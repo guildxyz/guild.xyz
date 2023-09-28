@@ -1,9 +1,9 @@
 import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import PhotoUploader from "components/create-guild/IconSelector/components/PhotoUploader"
 import RichTextDescriptionEditor from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
 import usePinata from "hooks/usePinata"
+import { PropsWithChildren } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 
 export type TextRewardForm = {
@@ -12,21 +12,13 @@ export type TextRewardForm = {
   text: string
 }
 
-type Props = {
-  buttonLabel?: string
-  isLoading?: boolean
-  onSubmit?: (data: TextRewardForm) => void
-}
-
-const TextDataForm = ({ buttonLabel, isLoading, onSubmit }: Props) => {
+const TextDataForm = ({ children }: PropsWithChildren<unknown>) => {
   const {
     register,
     setValue,
     formState: { errors },
-    handleSubmit,
   } = useFormContext<TextRewardForm>()
 
-  const name = useWatch({ name: "name" })
   const text = useWatch({ name: "text" })
 
   const uploader = usePinata({
@@ -60,17 +52,7 @@ const TextDataForm = ({ buttonLabel, isLoading, onSubmit }: Props) => {
         <FormErrorMessage>{errors?.text?.message}</FormErrorMessage>
       </FormControl>
 
-      <Button
-        colorScheme="indigo"
-        isDisabled={!name?.length || !text?.length}
-        w="max-content"
-        ml="auto"
-        onClick={handleSubmit(onSubmit)}
-        isLoading={isLoading}
-        loadingText="Saving reward"
-      >
-        {buttonLabel ?? "Continue"}
-      </Button>
+      {children}
     </Stack>
   )
 }

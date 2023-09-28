@@ -5,11 +5,12 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
 import useToast from "hooks/useToast"
 import { FormProvider, useForm } from "react-hook-form"
-import { GuildPlatform, PlatformGuildData } from "types"
+import { GuildPlatform } from "types"
 import TextDataForm, { TextRewardForm } from "./TextDataForm"
 
 type Props = {
@@ -48,6 +49,9 @@ const EditTextModal = ({
     },
   })
 
+  const onEditTextRewardSubmit = (data: TextRewardForm) =>
+    onSubmit({ platformGuildData: data })
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
@@ -57,12 +61,19 @@ const EditTextModal = ({
 
         <ModalBody>
           <FormProvider {...methods}>
-            <TextDataForm
-              isLoading={isLoading}
-              onSubmit={(data) =>
-                onSubmit({ platformGuildData: data as PlatformGuildData["TEXT"] })
-              }
-            />
+            <TextDataForm>
+              <Button
+                colorScheme="indigo"
+                isDisabled={!name?.length || !text?.length}
+                w="max-content"
+                ml="auto"
+                onClick={methods.handleSubmit(onEditTextRewardSubmit)}
+                isLoading={isLoading}
+                loadingText="Saving reward"
+              >
+                Continue
+              </Button>
+            </TextDataForm>
           </FormProvider>
         </ModalBody>
       </ModalContent>

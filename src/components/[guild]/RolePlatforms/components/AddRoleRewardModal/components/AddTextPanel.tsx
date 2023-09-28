@@ -1,4 +1,5 @@
-import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
+import useUser from "components/[guild]/hooks/useUser"
 import TextDataForm, { TextRewardForm } from "platforms/Text/TextDataForm"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { Visibility } from "types"
@@ -8,9 +9,12 @@ type Props = {
 }
 
 const AddTextPanel = ({ onSuccess }: Props) => {
-  const { id: guildId } = useGuild()
+  const { id: userId } = useUser()
 
   const methods = useForm<TextRewardForm>({ mode: "all" })
+
+  const name = useWatch({ control: methods.control, name: "name" })
+  const text = useWatch({ control: methods.control, name: "text" })
 
   const roleVisibility: Visibility = useWatch({ name: ".visibility" })
   const { append } = useFieldArray({
@@ -21,7 +25,7 @@ const AddTextPanel = ({ onSuccess }: Props) => {
     append({
       guildPlatform: {
         platformName: "TEXT",
-        platformGuildId: `text-${guildId}-${Date.now()}`,
+        platformGuildId: `text-${userId}-${Date.now()}`,
         platformGuildData: {
           text: data.text,
           name: data.name,
@@ -36,7 +40,17 @@ const AddTextPanel = ({ onSuccess }: Props) => {
 
   return (
     <FormProvider {...methods}>
-      <TextDataForm onSubmit={onContinue} />
+      <TextDataForm>
+        <Button
+          colorScheme="indigo"
+          isDisabled={!name?.length || !text?.length}
+          w="max-content"
+          ml="auto"
+          onClick={methods.handleSubmit(onContinue)}
+        >
+          Continue
+        </Button>
+      </TextDataForm>
     </FormProvider>
   )
 }

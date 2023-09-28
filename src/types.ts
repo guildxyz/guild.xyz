@@ -218,13 +218,13 @@ type PlatformGuildData = {
   }
   TEXT: {
     text: string
+    name: string
+    image: string
     chain?: never
     contractAddress?: never
     function?: never
     argsToSign?: never
-    name?: never
     symbol?: never
-    image?: never
     description?: never
     inviteChannel?: never
     joinButton?: never
