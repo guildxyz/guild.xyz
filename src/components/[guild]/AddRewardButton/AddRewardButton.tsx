@@ -67,10 +67,15 @@ const AddRewardButton = (): JSX.Element => {
   const isAddRewardButtonDisabled =
     activeTab === RoleTypeToAddTo.NEW_ROLE && !requirements?.length
 
+  const onSuccess = () => {
+    onClose()
+    methods.reset()
+  }
+
   const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
-    useAddReward(onClose)
+    useAddReward(onSuccess)
   const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
-    useCreateRole(onClose)
+    useCreateRole(onSuccess)
 
   const isLoading = isAddRewardLoading || isCreateRoleLoading
 
