@@ -44,6 +44,7 @@ const JoinDiscordEventButton = ({
       bg={eventButtonColor[eventType]}
       rightIcon={<ArrowSquareOut />}
       mt={3}
+      color="white"
       onClick={(event) => {
         // TODO: for some reason, LinkBox didn't work, so we ended up using `stopPropagation` here
         event.stopPropagation()

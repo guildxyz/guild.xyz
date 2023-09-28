@@ -59,8 +59,6 @@ const GuildEvents = (): JSX.Element => {
   const sortEventByStartDate = (eventA: GuildEvent, eventB: GuildEvent) =>
     eventA.start - eventB.start
 
-  console.log("xy", error)
-
   return (
     <Layout
       title={name}
