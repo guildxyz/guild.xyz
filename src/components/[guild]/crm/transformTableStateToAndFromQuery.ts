@@ -1,6 +1,7 @@
 import { ColumnFiltersState, SortingState } from "@tanstack/react-table"
+import { ParsedUrlQuery } from "querystring"
 
-const parseFiltersFromQuery = (query): ColumnFiltersState => {
+const parseFiltersFromQuery = (query: ParsedUrlQuery): ColumnFiltersState => {
   const filtersArray = []
 
   if (query.search) filtersArray.push({ id: "identity", value: query.search })
@@ -18,10 +19,10 @@ const parseFiltersFromQuery = (query): ColumnFiltersState => {
   return filtersArray
 }
 
-const parseSortingFromQuery = (query): SortingState => {
+const parseSortingFromQuery = (query: ParsedUrlQuery): SortingState => {
   if (!query.sortBy) return []
 
-  return [{ id: query.sortBy, desc: query.sortOrder === "desc" }]
+  return [{ id: query.sortBy.toString(), desc: query.sortOrder === "desc" }]
 }
 
 const buildQueryStringFromState = (columnFilters, sorting) => {
