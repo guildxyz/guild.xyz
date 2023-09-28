@@ -69,7 +69,7 @@ const MARKDOWN_TRANSFORMERS = [IMAGE, ...TRANSFORMERS]
 const RichTextDescriptionEditor = ({
   onChange,
   placeholder,
-  defaultValue,
+  defaultValue = "",
   minHeight,
 }: Props) => {
   const initialConfig: InitialConfigType = {
