@@ -5,33 +5,20 @@ import AddRequirement from "components/create-guild/Requirements/components/AddR
 import LogicFormControl from "components/create-guild/Requirements/components/LogicFormControl"
 import RequirementEditableCard from "components/create-guild/Requirements/components/RequirementEditableCard"
 import { AnimatePresence } from "framer-motion"
-import { useEffect } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { RequirementType } from "requirements"
 import { Requirement } from "types"
 
 const SetHiddenRoleRequirements = (): JSX.Element => {
-  const { control, getValues, watch, clearErrors, setValue } = useFormContext()
+  const { control, getValues, watch, setValue } = useFormContext()
 
   const logic = useWatch({ name: "logic" })
 
-  const { fields, append, replace, update } = useFieldArray({
+  const { fields, append, update } = useFieldArray({
     name: "requirements",
     control,
     keyName: "formFieldId",
   })
-
-  const requirements = useWatch({ name: "requirements" })
-
-  useEffect(() => {
-    if (!requirements || requirements?.length === 0) {
-      // setError("requirements", {
-      //   message: "Set some requirements, or make the role free",
-      // })
-    } else {
-      clearErrors("requirements")
-    }
-  }, [requirements])
 
   // Watching the nested fields too, so we can properly update the list
   const watchFieldArray = watch("requirements")

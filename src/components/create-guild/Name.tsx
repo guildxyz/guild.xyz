@@ -1,11 +1,16 @@
-import { FormControl, Input } from "@chakra-ui/react"
+import { FormControl, Input, ResponsiveValue } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext } from "react-hook-form"
 
+type Props = {
+  isDisabled?: boolean
+  width?: ResponsiveValue<string>
+}
+
 const Name = ({
-  isDisabled = false,
-  width = { base: "full", md: "sm" } as any,
-}): JSX.Element => {
+  isDisabled,
+  width = { base: "full", md: "sm" },
+}: Props): JSX.Element => {
   const {
     register,
     formState: { errors },

@@ -6,26 +6,25 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react"
-import { Column, FilterFn } from "@tanstack/react-table"
+import { Column } from "@tanstack/react-table"
 import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
-import { Member } from "./useMembers"
 
-export const identitiesFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-  const { userId, addresses, platformUsers } = row.getValue(columnId) as Member
+// export const identitiesFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+//   const { userId, addresses, platformUsers } = row.getValue(columnId) as Member
 
-  if (
-    userId === value ||
-    platformUsers.some((platformAccount) =>
-      platformAccount.username?.toLowerCase().includes(value)
-    ) ||
-    addresses.some((address) => address.toLowerCase().includes(value))
-  )
-    return true
+//   if (
+//     userId === value ||
+//     platformUsers.some((platformAccount) =>
+//       platformAccount.username?.toLowerCase().includes(value)
+//     ) ||
+//     addresses.some((address) => address.toLowerCase().includes(value))
+//   )
+//     return true
 
-  return false
-}
+//   return false
+// }
 
 type Props = {
   column: Column<any>
@@ -57,8 +56,6 @@ const IdentitiesSearch = ({ column }: Props) => {
         ref={inputRef}
         placeholder={"Search members"}
         noOfLines={1}
-        // whiteSpace="nowrap"
-        // textOverflow="ellipsis"
         value={localValue ?? ""}
         variant={"unstyled"}
         onChange={handleOnChange}

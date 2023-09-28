@@ -2,23 +2,15 @@ import { Checkbox, HStack, Text } from "@chakra-ui/react"
 import {
   createColumnHelper,
   getCoreRowModel,
-  getExpandedRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import CRMTable from "components/[guild]/crm/CRMTable"
 import ExportMembers from "components/[guild]/crm/ExportMembers"
-import FilterByRoles, {
-  roleFilter,
-  roleSort,
-} from "components/[guild]/crm/FilterByRoles"
+import FilterByRoles from "components/[guild]/crm/FilterByRoles"
 import Identities from "components/[guild]/crm/Identities"
-import IdentitiesSearch, {
-  identitiesFilter,
-} from "components/[guild]/crm/IdentitiesSearch"
+import IdentitiesSearch from "components/[guild]/crm/IdentitiesSearch"
 import OrderByColumn from "components/[guild]/crm/OrderByColumn"
 import RoleTags from "components/[guild]/crm/RoleTags"
 import {
@@ -92,7 +84,7 @@ const GuildPage = (): JSX.Element => {
       columnHelper.accessor((row) => row, {
         id: "identity",
         size: 210,
-        filterFn: identitiesFilter,
+        // filterFn: identitiesFilter,
         cell: (info) => <Identities member={info.getValue()} />,
         header: ({ column }) => <IdentitiesSearch column={column} />,
       }),
@@ -108,8 +100,8 @@ const GuildPage = (): JSX.Element => {
             </HStack>
           </HStack>
         ),
-        filterFn: roleFilter,
-        sortingFn: roleSort,
+        // filterFn: roleFilter,
+        // sortingFn: roleSort,
         columns: [
           ...(hasHiddenRoles
             ? [
@@ -141,6 +133,7 @@ const GuildPage = (): JSX.Element => {
     [hasHiddenRoles]
   )
 
+  // TODO: keep row selection when the data changes. Right now we just reset the selection
   const handleSetColumnFilters = (props) => {
     setRowSelection({})
     setColumnFilters(props)
@@ -163,17 +156,16 @@ const GuildPage = (): JSX.Element => {
       sorting,
       rowSelection,
     },
+    manualSorting: true,
+    manualFiltering: true,
+    enableRowSelection: true,
     onColumnFiltersChange: handleSetColumnFilters,
     onSortingChange: handleSetSorting,
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    manualSorting: true,
-    getFilteredRowModel: getFilteredRowModel(),
-    manualFiltering: true,
-
-    enableRowSelection: true,
     getRowId,
+    // getSortedRowModel: getSortedRowModel(),
+    // getFilteredRowModel: getFilteredRowModel(),
   })
 
   return (
@@ -204,6 +196,7 @@ const GuildPage = (): JSX.Element => {
           activeTab="MEMBERS"
           rightElement={<ExportMembers table={table} />}
         />
+        {/* for debugging */}
         {/* {JSON.stringify(table.getState(), null, 2)} */}
         <CRMTable table={table} data={data} {...rest} />
       </Layout>

@@ -14,11 +14,6 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import AccessHub from "components/[guild]/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
@@ -38,6 +33,11 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -294,6 +294,7 @@ const GuildPage = (): JSX.Element => {
 
           {!!hiddenRoles?.length && (
             <CollapsibleRoleSection
+              id="hiddenRoles"
               roleCount={hiddenRoles.length}
               label="hidden"
               defaultIsOpen

@@ -30,6 +30,7 @@ type Props = {
 } & Omit<SWRInfiniteResponse<Member[]>, "data">
 
 const HEADER_HEIGHT = "61px"
+const CHECKBOX_COLUMN_WIDTH = 45
 
 const CRMTable = ({
   table,
@@ -69,7 +70,6 @@ const CRMTable = ({
     }
   }, [])
 
-  const CHECKBOX_COLUMN_WIDTH = 45
   const scrollContainerRef = useRef(null)
   const [isIdentityStuck, setIsIdentityStuck] = useState(false)
   useScrollEffect(
@@ -172,6 +172,11 @@ const CRMTable = ({
               )}
             </Thead>
             <Tbody
+              /**
+               * Will change: these styles are needed here so the css only hover
+               * based expand animation works, will rework to be manually switchable
+               * with state management
+               */
               sx={{
                 ".identityTag": {
                   boxShadow: `0 0 0 1px ${cardBg}`,

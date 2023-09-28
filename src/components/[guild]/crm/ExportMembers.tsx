@@ -14,7 +14,7 @@ const ExportMembers = ({ table }: Props) => {
   const toast = useToast()
 
   const value = table
-    .getFilteredSelectedRowModel()
+    .getSelectedRowModel()
     .rows.map((row) => row.original.addresses[0])
 
   const csvContent = encodeURI("data:text/csv;charset=utf-8," + value)
