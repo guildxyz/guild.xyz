@@ -36,6 +36,9 @@ import DisconnectAccountButton from "./components/DisconnectAccountButton"
 import SocialAccountUI from "./components/SocialAccountUI"
 import processEmailError from "./utils/processEmailError"
 
+const TOO_MANY_ATTEMPTS_ERROR =
+  "The code has been invalidated due to too many attempts"
+
 const EmailAddress = () => {
   const { emails } = useUser()
   const isConnected = !!emails?.emailAddress && !emails.pending
@@ -106,6 +109,14 @@ const ConnectEmailButton = ({
 
   const pinInputRef = useRef<HTMLInputElement>()
 
+  const differentEmail = () => {
+    setPendingEmailAddress(null)
+    setValue("code", "")
+    setValue("email", "")
+    connect.reset()
+    verificationRequest.reset()
+  }
+
   const connect = useConnectEmail({
     onSuccess: () => {
       if (onSuccess) {
@@ -115,7 +126,11 @@ const ConnectEmailButton = ({
       }
       handleOnClose()
     },
-    onError: () => {
+    onError: (error) => {
+      if (error?.error?.includes(TOO_MANY_ATTEMPTS_ERROR)) {
+        differentEmail()
+        return
+      }
       setValue("code", "")
       pinInputRef.current?.focus()
     },
@@ -191,13 +206,7 @@ const ConnectEmailButton = ({
                       size={"xs"}
                       icon={<PencilSimple />}
                       aria-label="Use different email address"
-                      onClick={() => {
-                        setPendingEmailAddress(null)
-                        setValue("code", "")
-                        setValue("email", "")
-                        connect.reset()
-                        verificationRequest.reset()
-                      }}
+                      onClick={differentEmail}
                     />
                   </Text>
                   <HStack justifyContent={"center"}>
