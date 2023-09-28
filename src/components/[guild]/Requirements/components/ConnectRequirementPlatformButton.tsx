@@ -1,9 +1,11 @@
 import { ButtonProps, Icon } from "@chakra-ui/react"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import Button from "components/common/Button"
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
-import Button from "components/common/Button"
+import useConnectPlatform, {
+  useConnectEmail,
+} from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import REQUIREMENTS from "requirements"
@@ -26,19 +28,15 @@ const mapTwitterV1 = (
   return platformName
 }
 
-const ConnectRequirementPlatformButton = (props: ButtonProps) => {
-  const { id, roleId, poapId, type } = useRequirementContext()
-
+const RequirementConnectButton = (props: ButtonProps) => {
+  const { type, roleId, poapId } = useRequirementContext()
   const platform = mapTwitterV1(type, REQUIREMENTS[type].types[0] as PlatformName)
 
-  const { platformUsers } = useUser()
-
-  const { mutate: mutateAccesses, data: roleAccess } = useAccess(roleId ?? 0)
+  const { mutate: mutateAccesses } = useAccess(roleId ?? 0)
   // temporary until POAP is not a real reward
-  const { mutate: mutatePoapAccesses, data: poapAccess } =
-    useUserPoapEligibility(poapId)
-
+  const { mutate: mutatePoapAccesses } = useUserPoapEligibility(poapId)
   const toast = useToast()
+
   const onSuccess = () => {
     mutateAccesses()
     if (poapId) {
@@ -50,6 +48,42 @@ const ConnectRequirementPlatformButton = (props: ButtonProps) => {
       status: "success",
     })
   }
+
+  const connect = useConnectEmail()
+
+  if (type?.startsWith("EMAIL")) {
+    return (
+      <Button
+        size="xs"
+        onClick={connect.onSubmit}
+        isLoading={connect.isLoading}
+        loadingText={"Connecting"}
+        colorScheme={platforms[platform]?.colorScheme}
+        leftIcon={<Icon as={platforms[platform]?.icon} />}
+        iconSpacing="1"
+        {...props}
+      >
+        Connect {platforms[platform]?.name}
+      </Button>
+    )
+  }
+
+  return <ConnectRequirementPlatformButton onSuccess={onSuccess} {...props} />
+}
+
+const ConnectRequirementPlatformButton = ({
+  onSuccess,
+  ...props
+}: ButtonProps & { onSuccess: () => void }) => {
+  const { id, roleId, poapId, type } = useRequirementContext()
+
+  const platform = mapTwitterV1(type, REQUIREMENTS[type].types[0] as PlatformName)
+
+  const { platformUsers } = useUser()
+
+  const { data: roleAccess } = useAccess(roleId ?? 0)
+  // temporary until POAP is not a real reward
+  const { data: poapAccess } = useUserPoapEligibility(poapId)
 
   const isReconnection = (roleAccess || poapAccess)?.errors?.some(
     (err) => err.requirementId === id && err.errorType === "PLATFORM_CONNECT_INVALID"
@@ -83,4 +117,4 @@ const ConnectRequirementPlatformButton = (props: ButtonProps) => {
   )
 }
 
-export default ConnectRequirementPlatformButton
+export default RequirementConnectButton
