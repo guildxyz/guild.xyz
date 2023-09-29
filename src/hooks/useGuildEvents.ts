@@ -96,20 +96,20 @@ const useGuildEvents = () => {
 
   if (swrResponseDiscord.data?.error) error.push(...swrResponseDiscord.data.error)
 
-  const revalidate = () => {
+  const mutate = () => {
     swrResponseDiscord.mutate()
     swrResponseEvents.mutate()
   }
 
   return {
-    isLoading: swrResponseEvents.isValidating || swrResponseDiscord.isValidating,
+    isValidating: swrResponseEvents.isValidating || swrResponseDiscord.isValidating,
     data:
       swrResponseEvents.data?.events || swrResponseDiscord.data?.events
         ? data
         : undefined,
     error,
     serverError,
-    revalidate,
+    mutate,
   }
 }
 

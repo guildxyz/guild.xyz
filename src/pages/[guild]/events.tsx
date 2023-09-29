@@ -51,7 +51,7 @@ const GuildEvents = (): JSX.Element => {
       isAdmin) &&
     !showOnboarding
 
-  const { data, isLoading, error, serverError } = useGuildEvents()
+  const { data, isValidating, error, serverError } = useGuildEvents()
 
   const sortEventByStartDate = (eventA: GuildEvent, eventB: GuildEvent) =>
     eventA.start - eventB.start
@@ -129,24 +129,24 @@ const GuildEvents = (): JSX.Element => {
           <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
         )}
       </Tabs>
-      {(isLoading || data === undefined) && (
+      {(isValidating || data === undefined) && (
         <FallbackFrame isLoading text="Searching for events..." />
       )}
-      {!isLoading && data?.length === 0 && (
+      {!isValidating && data?.length === 0 && (
         <FallbackFrame
           icon={NoteBlank}
           title="No events yet"
           text="Your guild has no upcoming event currently or you have no access to Discord"
         />
       )}
-      {!isLoading && data?.length > 0 && (
+      {!isValidating && data?.length > 0 && (
         <VStack gap={4}>
           {data.sort(sortEventByStartDate).map((event) => (
             <EventCard key={event.title} event={event} guildId={guildId} />
           ))}
         </VStack>
       )}
-      {isAdmin && !isLoading && error.length ? (
+      {isAdmin && !isValidating && error.length ? (
         <ErrorAlert
           label={`"Couldn't fetch events from ${error
             .map((err) => (err.type ? err.type : null))
@@ -154,7 +154,7 @@ const GuildEvents = (): JSX.Element => {
           mt={4}
         />
       ) : null}
-      {isAdmin && !isLoading && serverError.length ? (
+      {isAdmin && !isValidating && serverError.length ? (
         <ErrorAlert
           label={`"Couldn't fetch events from ${serverError
             .map((err) => err.type)

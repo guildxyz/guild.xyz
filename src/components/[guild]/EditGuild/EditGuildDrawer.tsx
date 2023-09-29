@@ -83,7 +83,7 @@ const EditGuildDrawer = ({
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
-  const { revalidate } = useGuildEvents()
+  const { mutate: mutateEvents } = useGuildEvents()
 
   const defaultValues = {
     name,
@@ -130,7 +130,7 @@ const EditGuildDrawer = ({
       status: "success",
     })
     onClose()
-    revalidate()
+    mutateEvents()
     methods.reset(undefined, { keepValues: true })
   }
 
