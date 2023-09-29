@@ -1,6 +1,7 @@
 import { ButtonProps } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
+import useColorPalette from "hooks/useColorPalette"
 import { ArrowSquareOut } from "phosphor-react"
 import { EventSourcesKey } from "types"
 
@@ -15,7 +16,7 @@ type Props = {
 const eventButtonColor: Record<EventSourcesKey, string> = {
   EVENTBRITE: "#f05537",
   LINK3: "#606060",
-  LUMA: "#000000",
+  LUMA: "#ff5385",
   DISCORD: "#5865f2",
 }
 
@@ -36,15 +37,19 @@ const JoinDiscordEventButton = ({
 }: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
+  const generatedColors = useColorPalette(
+    "chakra-colors-primary",
+    eventButtonColor[eventType]
+  )
+
   return (
     <Button
       as="a"
       href={url}
       target="_blank"
-      bg={eventButtonColor[eventType]}
       rightIcon={<ArrowSquareOut />}
       mt={3}
-      color="white"
+      colorScheme="primary"
       onClick={(event) => {
         // TODO: for some reason, LinkBox didn't work, so we ended up using `stopPropagation` here
         event.stopPropagation()
@@ -54,6 +59,9 @@ const JoinDiscordEventButton = ({
           userCount,
           guildId,
         })
+      }}
+      sx={{
+        ...generatedColors,
       }}
       {...rest}
     >

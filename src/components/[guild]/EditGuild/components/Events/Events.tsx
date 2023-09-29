@@ -8,14 +8,8 @@ const Events = () => (
       place.
     </Text>
     <SimpleGrid columns={2} gap={3}>
-      <EventInput name={"EVENTBRITE"} />
-      <EventInput name={"LUMA"} />
-
-      {/*supportedEventSources
-        .filter((source) => source !== supportedEventSources[3])
-        .map((provider) => (
-          <EventInput key={provider} name={provider} />
-        ))*/}
+      <EventInput eventSource={"EVENTBRITE"} />
+      <EventInput eventSource={"LUMA"} />
     </SimpleGrid>
   </>
 )

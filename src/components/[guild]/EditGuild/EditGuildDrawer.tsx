@@ -101,7 +101,6 @@ const EditGuildDrawer = ({
     tags: savedTags,
     eventSources: {
       EVENTBRITE: eventSources.EVENTBRITE,
-      LINK3: "",
       LUMA: eventSources.LUMA,
     },
   }

@@ -50,14 +50,7 @@ const GuildEvents = (): JSX.Element => {
       isAdmin) &&
     !showOnboarding
 
-  const discordGuildPlatform = guildPlatforms?.find(
-    (platform) => platform.platformId === PlatformType.DISCORD
-  )?.platformGuildId
-
-  const { data, isLoading, error, serverError } = useGuildEvents(
-    discordGuildPlatform,
-    guildId
-  )
+  const { data, isLoading, error, serverError } = useGuildEvents()
 
   const sortEventByStartDate = (eventA: GuildEvent, eventB: GuildEvent) =>
     eventA.start - eventB.start
@@ -135,10 +128,9 @@ const GuildEvents = (): JSX.Element => {
           <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
         )}
       </Tabs>
-      {isLoading ||
-        (data === undefined && (
-          <FallbackFrame isLoading text="Searching for events..." />
-        ))}
+      {(isLoading || data === undefined) && (
+        <FallbackFrame isLoading text="Searching for events..." />
+      )}
       {!isLoading && data?.length === 0 && (
         <FallbackFrame
           icon={NoteBlank}
