@@ -1,4 +1,5 @@
 import {
+  ButtonProps,
   Collapse,
   FormControl,
   FormLabel,
@@ -35,6 +36,9 @@ import DisconnectAccountButton from "./components/DisconnectAccountButton"
 import SocialAccountUI from "./components/SocialAccountUI"
 import processEmailError from "./utils/processEmailError"
 
+const TOO_MANY_ATTEMPTS_ERROR =
+  "The code has been invalidated due to too many attempts"
+
 const EmailAddress = () => {
   const { emails } = useUser()
   const isConnected = !!emails?.emailAddress && !emails.pending
@@ -53,7 +57,11 @@ const EmailAddress = () => {
 const PIN_LENGTH = 6
 const TIMEOUT = 10_000
 
-const ConnectEmailButton = () => {
+const ConnectEmailButton = ({
+  onSuccess,
+
+  ...props
+}: ButtonProps & { onSuccess?: () => void; isReconnection?: boolean }) => {
   const { emails } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [pendingEmailAddress, setPendingEmailAddress] = useState(
@@ -101,12 +109,28 @@ const ConnectEmailButton = () => {
 
   const pinInputRef = useRef<HTMLInputElement>()
 
+  const differentEmail = () => {
+    setPendingEmailAddress(null)
+    setValue("code", "")
+    setValue("email", "")
+    connect.reset()
+    verificationRequest.reset()
+  }
+
   const connect = useConnectEmail({
     onSuccess: () => {
-      toast({ status: "success", title: "Email verified" })
+      if (onSuccess) {
+        onSuccess()
+      } else {
+        toast({ status: "success", title: "Email verified" })
+      }
       handleOnClose()
     },
-    onError: () => {
+    onError: (error) => {
+      if (error?.error?.includes(TOO_MANY_ATTEMPTS_ERROR)) {
+        differentEmail()
+        return
+      }
       setValue("code", "")
       pinInputRef.current?.focus()
     },
@@ -135,6 +159,7 @@ const ConnectEmailButton = () => {
         colorScheme={emails?.pending ? "orange" : platforms.EMAIL.colorScheme}
         variant={"solid"}
         size="sm"
+        {...props}
       >
         {emails?.pending ? "Verify" : "Connect"}
       </Button>
@@ -181,13 +206,7 @@ const ConnectEmailButton = () => {
                       size={"xs"}
                       icon={<PencilSimple />}
                       aria-label="Use different email address"
-                      onClick={() => {
-                        setPendingEmailAddress(null)
-                        setValue("code", "")
-                        setValue("email", "")
-                        connect.reset()
-                        verificationRequest.reset()
-                      }}
+                      onClick={differentEmail}
                     />
                   </Text>
                   <HStack justifyContent={"center"}>
@@ -271,4 +290,5 @@ const DisconnectEmailButton = () => {
   )
 }
 
+export { ConnectEmailButton }
 export default EmailAddress
