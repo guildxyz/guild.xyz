@@ -100,6 +100,7 @@ const CRMTable = ({
             borderColor="whiteAlpha.300"
             minWidth={{
               base: "container.sm",
+              sm: "700px",
               md: "880px",
               lg: "calc(var(--chakra-sizes-container-lg) - calc(var(--chakra-space-10) * 2))",
             }}
@@ -174,45 +175,52 @@ const CRMTable = ({
                 },
               }}
             >
-              {error ? (
-                <CrmInfoRow py="10">Couldn't fetch members</CrmInfoRow>
-              ) : !data ? (
+              {!data && isLoading ? (
                 [...Array(20)].map((_, i) => (
                   <CrmSkeletonRow
                     key={`loading_skeleton_${i}`}
                     columns={table.getAllLeafColumns()}
                   />
                 ))
-              ) : table.getRowModel().rows.length ? (
-                table
-                  .getRowModel()
-                  .rows.map((row) => (
-                    <MemberRow key={row.id} {...{ row, isIdentityStuck, cardBg }} />
-                  ))
-                  .concat(
-                    hasReachedTheEnd ? (
-                      <CrmInfoRow key="end_of_results">
-                        <Text
-                          colorScheme="gray"
-                          fontSize={"xs"}
-                          fontWeight={"bold"}
-                          textTransform={"uppercase"}
-                        >
-                          End of results
-                        </Text>
-                      </CrmInfoRow>
-                    ) : (
-                      [...Array(20)].map((_, i) => (
-                        <CrmSkeletonRow
-                          key={`validating_skeleton_${i}`}
-                          columns={table.getAllLeafColumns()}
-                        />
-                      ))
+              ) : data ? (
+                table.getRowModel().rows.length ? (
+                  table
+                    .getRowModel()
+                    .rows.map((row) => (
+                      <MemberRow
+                        key={row.id}
+                        {...{ row, isIdentityStuck, cardBg }}
+                      />
+                    ))
+                    .concat(
+                      hasReachedTheEnd ? (
+                        <CrmInfoRow key="end_of_results">
+                          <Text
+                            colorScheme="gray"
+                            fontSize={"xs"}
+                            fontWeight={"bold"}
+                            textTransform={"uppercase"}
+                          >
+                            End of results
+                          </Text>
+                        </CrmInfoRow>
+                      ) : (
+                        [...Array(20)].map((_, i) => (
+                          <CrmSkeletonRow
+                            key={`validating_skeleton_${i}`}
+                            columns={table.getAllLeafColumns()}
+                          />
+                        ))
+                      )
                     )
-                  )
+                ) : (
+                  <CrmInfoRow py="10">
+                    No members satisfy the filters you've set
+                  </CrmInfoRow>
+                )
               ) : (
                 <CrmInfoRow py="10">
-                  No members satisfy the filters you've set
+                  {error?.message || "Couldn't fetch members"}
                 </CrmInfoRow>
               )}
             </Tbody>

@@ -1,3 +1,4 @@
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import { useCallback, useMemo, useState } from "react"
 import useSWRInfinite from "swr/infinite"
 import { PlatformAccountDetails, Visibility } from "types"
@@ -26,11 +27,12 @@ const LIMIT = 50
 
 const useMembers = (queryString: string) => {
   const { id } = useGuild()
+  const { keyPair, ready, isValid } = useKeyPair()
   const [hasReachedTheEnd, setHasReachedTheEnd] = useState(true)
 
   const getKey = useCallback(
     (pageIndex, previousPageData) => {
-      if (!id) return null
+      if (!id || !keyPair || !ready || !isValid) return null
 
       if (previousPageData && previousPageData.length < LIMIT) {
         setHasReachedTheEnd(true)
@@ -41,7 +43,7 @@ const useMembers = (queryString: string) => {
 
       return `/v2/crm/guilds/${id}/members?${[queryString, pagination].join("&")}`
     },
-    [queryString, id]
+    [queryString, id, keyPair, ready, isValid]
   )
 
   const fetcherWithSign = useFetcherWithSign()
