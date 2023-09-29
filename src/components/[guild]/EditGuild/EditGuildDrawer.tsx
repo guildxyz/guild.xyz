@@ -26,6 +26,7 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
+import useGuildEvents from "hooks/useGuildEvents"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
@@ -82,6 +83,7 @@ const EditGuildDrawer = ({
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
+  const { revalidate } = useGuildEvents()
 
   const defaultValues = {
     name,
@@ -128,6 +130,7 @@ const EditGuildDrawer = ({
       status: "success",
     })
     onClose()
+    revalidate()
     methods.reset(undefined, { keepValues: true })
   }
 
