@@ -17,7 +17,7 @@ import {
 import { Table as TableType, flexRender } from "@tanstack/react-table"
 import Card from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { SWRInfiniteResponse } from "swr/infinite"
 import { TABS_HEIGHT_SM, TABS_SM_BUTTONS_STYLES } from "../Tabs/Tabs"
 import MemberModal from "./MemberModal"
@@ -56,20 +56,6 @@ const CRMTable = ({
     } else setIsStuck(false)
   }, [])
 
-  /** "100vw without scrollbar" solution, so the tables sides doesn't get cut off */
-  useEffect(() => {
-    const setVw = () => {
-      const vw = document.documentElement.clientWidth / 100
-      document.documentElement.style.setProperty("--vw", `${vw}px`)
-    }
-    setVw()
-    window.addEventListener("resize", setVw)
-
-    return () => {
-      window.removeEventListener("resize", setVw)
-    }
-  }, [])
-
   const scrollContainerRef = useRef(null)
   const [isIdentityStuck, setIsIdentityStuck] = useState(false)
   useScrollEffect(
@@ -104,7 +90,7 @@ const CRMTable = ({
       </style>
       <Flex
         ref={scrollContainerRef}
-        w={isStuck ? "100vw" : "calc(var(--vw, 1vw) * 100)"}
+        w="100vw"
         flex="1 0 auto"
         h={`calc(100vh - ${TABS_HEIGHT_SM})`}
         overflowY={isStuck ? "auto" : "hidden"}
