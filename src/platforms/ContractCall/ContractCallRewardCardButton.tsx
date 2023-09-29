@@ -1,13 +1,11 @@
 import { Tooltip } from "@chakra-ui/react"
+import { BigNumber } from "@ethersproject/bignumber"
 import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
-import useMemberships from "components/explorer/hooks/useMemberships"
-import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import CollectNftModalButton from "platforms/ContractCall/CollectNftModalButton"
+import { Chains } from "connectors"
+import useBalance from "hooks/useBalance"
 import { GuildPlatform } from "types"
 
 type Props = {
@@ -15,7 +13,7 @@ type Props = {
 }
 
 const ContractCallRewardCardButton = ({ platform }: Props) => {
-  const { id, urlName, roles } = useGuild()
+  const { urlName, roles } = useGuild()
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName }
 
@@ -24,19 +22,9 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
   const role = roles.find((r) =>
     r.rolePlatforms?.find((rp) => rp.guildPlatformId === platform.id)
   )
-  const rolePlatformId = role?.rolePlatforms?.find(
-    (rp) => rp.guildPlatformId === platform.id
-  )?.id
 
-  const { data: roleAccess } = useAccess(role?.id)
-  const hasAccessToRole = roleAccess?.access
-
-  const { memberships } = useMemberships()
-  const isMemberOfRole = !!memberships
-    ?.find((membership) => membership.guildId === id)
-    ?.roleIds.find((roleId) => roleId === role?.id)
-
-  const isEligible = hasAccessToRole || isMemberOfRole
+  const { tokenBalance: nftBalance } = useBalance(contractAddress, Chains[chain])
+  const alreadyCollected = nftBalance?.gt(BigNumber.from(0))
 
   if (!role)
     return (
@@ -47,34 +35,19 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
       </Tooltip>
     )
 
-  if (!isEligible)
-    return (
-      <LinkButton
-        colorScheme="cyan"
-        href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}
-        onClick={() => {
-          captureEvent(
-            "Click on collect page link (ContractCallRewardCardButton)",
-            postHogOptions
-          )
-        }}
-      >
-        Collect NFT
-      </LinkButton>
-    )
-
   return (
-    <GuildCheckoutProvider>
-      <CollectNftProvider
-        roleId={role?.id}
-        rolePlatformId={rolePlatformId}
-        guildPlatform={platform}
-        chain={platform.platformGuildData.chain}
-        address={platform.platformGuildData.contractAddress}
-      >
-        <CollectNftModalButton />
-      </CollectNftProvider>
-    </GuildCheckoutProvider>
+    <LinkButton
+      colorScheme="cyan"
+      href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}
+      onClick={() => {
+        captureEvent(
+          "Click on collect page link (ContractCallRewardCardButton)",
+          postHogOptions
+        )
+      }}
+    >
+      {alreadyCollected ? "View NFT details" : "Collect NFT"}
+    </LinkButton>
   )
 }
 

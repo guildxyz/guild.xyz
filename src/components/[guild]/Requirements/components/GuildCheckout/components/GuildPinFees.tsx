@@ -1,15 +1,29 @@
-import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
+import {
+  HStack,
+  Icon,
+  Link,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Skeleton,
+  Td,
+  Text,
+  Tr,
+} from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
-import { useWeb3React } from "@web3-react/core"
-import { Chains, RPC } from "connectors"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { RPC } from "connectors"
+import { ArrowSquareOut, Question } from "phosphor-react"
 import useGuildPinFee from "../hooks/useGuildPinFee"
 import FeesTable from "./FeesTable"
 import PriceFallback from "./PriceFallback"
 
 const GuildPinFees = (): JSX.Element => {
-  const { chainId } = useWeb3React()
+  const { guildPin } = useGuild()
   const { guildPinFee, guildPinFeeError, isGuildPinFeeLoading } = useGuildPinFee()
-  const { symbol, decimals } = RPC[Chains[chainId]]?.nativeCurrency ?? {}
+  const { symbol, decimals } = RPC[guildPin.chain].nativeCurrency
 
   const guildPinFeeInFloat =
     guildPinFee && decimals && parseFloat(formatUnits(guildPinFee, decimals))
@@ -18,7 +32,26 @@ const GuildPinFees = (): JSX.Element => {
     <FeesTable
       buttonComponent={
         <HStack justifyContent={"space-between"} w="full">
-          <Text fontWeight={"medium"}>Minting fee:</Text>
+          <HStack spacing={1}>
+            <Text fontWeight={"medium"}>Minting fee</Text>
+            <Popover placement="top" trigger="hover">
+              <PopoverTrigger>
+                <Icon as={Question} color="gray" />
+              </PopoverTrigger>
+              <PopoverContent w="max-content">
+                <PopoverArrow />
+                <PopoverBody fontSize="sm">
+                  {`Learn more about `}
+                  <Link
+                    isExternal
+                    href="https://help.guild.xyz/en/articles/8193498-guild-base-fee"
+                  >
+                    Guild base fee <Icon as={ArrowSquareOut} ml={1} />
+                  </Link>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </HStack>
 
           <PriceFallback pickedCurrency={symbol} error={guildPinFeeError}>
             <Text as="span">
@@ -53,11 +86,6 @@ const GuildPinFees = (): JSX.Element => {
           </Skeleton>
         </Td>
       </Tr>
-
-      {/* <Tr>
-        <Td>Gas fee</Td>
-        <Td isNumeric>Can't calculate in advance</Td>
-      </Tr> */}
 
       <Tr>
         <Td>Total</Td>

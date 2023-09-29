@@ -1,16 +1,15 @@
-import {
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  useClipboard,
-} from "@chakra-ui/react"
+import { Menu, MenuButton, MenuItem, MenuList, useClipboard } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import { CopySimple, ShareNetwork, TwitterLogo } from "phosphor-react"
 import useNftDetails from "../hooks/useNftDetails"
 
-const ShareButton = () => {
+type Props = {
+  onClick?: () => void
+}
+
+const ShareButton = ({ onClick }: Props): JSX.Element => {
   const { chain, address } = useCollectNftContext()
   const { data } = useNftDetails(chain, address)
   const pageLink =
@@ -19,18 +18,21 @@ const ShareButton = () => {
       : ""
   const { onCopy, hasCopied } = useClipboard(pageLink)
 
+  const { textColor, buttonColorScheme } = useThemeContext()
+
   return (
     <Menu closeOnSelect={false}>
       <MenuButton
-        as={IconButton}
-        aria-label="Share"
-        icon={<ShareNetwork />}
+        as={Button}
+        leftIcon={<ShareNetwork />}
         variant="ghost"
-        rounded="full"
         size="sm"
-        boxSize={8}
-        minW="none"
-      />
+        colorScheme={buttonColorScheme}
+        color={textColor}
+        onClick={onClick}
+      >
+        Share
+      </MenuButton>
       <MenuList>
         <MenuItem icon={<CopySimple size={12} />} fontSize="sm" onClick={onCopy}>
           {hasCopied ? "Copied!" : "Copy URL"}

@@ -12,6 +12,7 @@ import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
+import PulseMarker from "components/common/PulseMarker"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
 import Details from "components/[guild]/collect/components/Details"
@@ -23,18 +24,23 @@ import ShareButton from "components/[guild]/collect/components/ShareButton"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import ReportGuildButton from "components/[guild]/ReportGuildButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { Chain } from "connectors"
 import { AnimatePresence, motion } from "framer-motion"
+import useLocalStorage from "hooks/useLocalStorage"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticPaths, GetStaticProps } from "next"
+import { useRouter } from "next/router"
 import {
   validateNftAddress,
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
+import ErrorPage from "pages/_error"
 import { useRef, useState } from "react"
-import { SWRConfig, unstable_serialize } from "swr"
-import { Guild } from "types"
+import { SWRConfig } from "swr"
+import { Guild, Requirement } from "types"
 import fetcher from "utils/fetcher"
 
 type Props = {
@@ -42,21 +48,38 @@ type Props = {
   address: string
   fallback: { [x: string]: Guild }
 }
-const Page = ({ chain, address }: Omit<Props, "fallback">) => {
-  const { theme, imageUrl, name, urlName, roles, guildPlatforms } = useGuild()
-  const { textColor } = useThemeContext()
+const Page = ({
+  chain: chainFromProps,
+  address: addressFromProps,
+}: Omit<Props, "fallback">) => {
+  const router = useRouter()
+  const { chain: chainFromQuery, address: addressFromQuery } = router.query
+
+  const chain = chainFromProps ?? validateNftChain(chainFromQuery)
+  const address = addressFromProps ?? validateNftAddress(addressFromQuery)
+
+  const { theme, imageUrl, name, urlName, roles, guildPlatforms, isFallback } =
+    useGuild()
+  const { isAdmin } = useGuildPermission()
+  const { textColor, buttonColorScheme } = useThemeContext()
+
   const guildPlatform = guildPlatforms?.find(
     (gp) =>
       gp.platformGuildData?.chain === chain &&
       gp.platformGuildData?.contractAddress?.toLowerCase() === address
   )
+
   const role = roles?.find((r) =>
-    r.rolePlatforms?.find((rp) => rp.guildPlatformId === guildPlatform.id)
+    r.rolePlatforms?.find((rp) => rp.guildPlatformId === guildPlatform?.id)
   )
   const rolePlatformId = role?.rolePlatforms?.find(
-    (rp) => rp.guildPlatformId === guildPlatform.id
+    (rp) => rp.guildPlatformId === guildPlatform?.id
   )?.id
-  const requirements = role?.requirements ?? []
+  const requirements = !!role
+    ? role.hiddenRequirements || (role.requirements.length === 0 && !isFallback)
+      ? [...role.requirements, { type: "HIDDEN", roleId: role.id } as Requirement]
+      : role.requirements
+    : []
 
   const isMobile = useBreakpointValue({ base: true, md: false })
 
@@ -68,6 +91,13 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
   }, [])
 
   const { data, isValidating } = useNftDetails(chain, address)
+
+  const [hasClickedShareButton, setHasClickedShareButton] = useLocalStorage(
+    `${chain}_${address}_hasClickedShareButton`,
+    false
+  )
+
+  if (!isFallback && !guildPlatform) return <ErrorPage statusCode={404} />
 
   return (
     <CollectNftProvider
@@ -97,7 +127,23 @@ const Page = ({ chain, address }: Omit<Props, "fallback">) => {
               </Link>
             </HStack>
 
-            <ShareButton />
+            <HStack>
+              <PulseMarker
+                placement="top"
+                hidden={
+                  !isAdmin || hasClickedShareButton || data?.totalCollectors > 0
+                }
+              >
+                <ShareButton onClick={() => setHasClickedShareButton(true)} />
+              </PulseMarker>
+              {!isAdmin && (
+                <ReportGuildButton
+                  layout="ICON"
+                  colorScheme={buttonColorScheme}
+                  color={textColor}
+                />
+              )}
+            </HStack>
           </HStack>
 
           <SimpleGrid
@@ -207,18 +253,12 @@ const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const endpoint = `/v2/guilds/guild-page/${urlName}`
   const guild: Guild = await fetcher(endpoint).catch((_) => ({}))
 
-  if (
-    !guild?.id ||
-    !guild.guildPlatforms.find(
-      (gp) =>
-        gp.platformGuildData?.chain === chain.toUpperCase() &&
-        gp.platformGuildData?.contractAddress?.toLowerCase() ===
-          address.toLowerCase()
-    )
-  )
+  if (!guild?.id)
     return {
       notFound: true,
     }
+
+  guild.isFallback = true
 
   return {
     props: {
@@ -226,7 +266,6 @@ const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       address,
       fallback: {
         [endpoint]: guild,
-        [unstable_serialize([endpoint, { method: "GET", body: {} }])]: guild,
       },
     },
   }

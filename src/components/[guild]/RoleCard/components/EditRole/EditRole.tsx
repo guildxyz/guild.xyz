@@ -27,6 +27,7 @@ import RolePlatforms from "components/[guild]/RolePlatforms"
 import SetVisibility from "components/[guild]/SetVisibility"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
+import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
@@ -105,7 +106,13 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     methods.setValue("rolePlatforms", rolePlatforms ?? [])
   }
 
+  const toast = useToast()
+
   const onSuccess = () => {
+    toast({
+      title: `Role successfully updated!`,
+      status: "success",
+    })
     onClose()
     methods.reset(undefined, { keepValues: true })
   }
