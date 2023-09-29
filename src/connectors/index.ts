@@ -106,7 +106,7 @@ const RPC: RpcConfig = {
       logoURI:
         "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png?1547034615",
     },
-    rpcUrls: ["https://bsc-dataseed1.binance.org"],
+    rpcUrls: ["https://binance.llamarpc.com"],
     blockExplorerUrls: ["https://bscscan.com"],
     blockExplorerIcons: {
       light: "/explorerLogos/bscscan-light.svg",

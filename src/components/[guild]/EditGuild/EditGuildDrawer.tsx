@@ -28,6 +28,7 @@ import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
+import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import dynamic from "next/dynamic"
 import { useEffect } from "react"
@@ -44,6 +45,7 @@ import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import Events from "./components/Events/Events"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
+import SaveAlert from "./components/SaveAlert"
 import SocialLinks from "./components/SocialLinks"
 import TagManager from "./components/TagManager"
 import useEditGuild from "./hooks/useEditGuild"
@@ -76,6 +78,7 @@ const EditGuildDrawer = ({
     featureFlags,
     eventSources,
     tags: savedTags,
+    guildPin,
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
@@ -117,7 +120,13 @@ const EditGuildDrawer = ({
     methods.setValue("contacts", contacts)
   }, [isDetailed])
 
+  const toast = useToast()
+
   const onSuccess = () => {
+    toast({
+      title: `Guild successfully updated!`,
+      status: "success",
+    })
     onClose()
     methods.reset(undefined, { keepValues: true })
   }
@@ -141,6 +150,12 @@ const EditGuildDrawer = ({
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
     onClose: onAlertClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: isSaveAlertOpen,
+    onOpen: onSaveAlertOpen,
+    onClose: onSaveAlertClose,
   } = useDisclosure()
 
   const onCloseAndClear = () => {
@@ -198,6 +213,20 @@ const EditGuildDrawer = ({
     !!Object.keys(methods.formState.dirtyFields).length ||
     backgroundUploader.isUploading ||
     iconUploader.isUploading
+
+  const onSave = (e) => {
+    if (
+      guildPin?.isActive &&
+      (methods.formState.dirtyFields.name ||
+        methods.formState.dirtyFields.imageUrl ||
+        iconUploader.isUploading ||
+        methods.formState.dirtyFields.theme?.color)
+    ) {
+      onSaveAlertOpen()
+    } else {
+      handleSubmit(e)
+    }
+  }
 
   return (
     <>
@@ -298,7 +327,7 @@ const EditGuildDrawer = ({
                 isLoading={isLoading || isUploadingShown}
                 colorScheme="green"
                 loadingText={loadingText}
-                onClick={handleSubmit}
+                onClick={onSave}
               >
                 Save
               </Button>
@@ -312,6 +341,12 @@ const EditGuildDrawer = ({
         isOpen={isAlertOpen}
         onClose={onAlertClose}
         onDiscard={onCloseAndClear}
+      />
+
+      <SaveAlert
+        isOpen={isSaveAlertOpen}
+        onClose={onSaveAlertClose}
+        onSave={handleSubmit}
       />
     </>
   )

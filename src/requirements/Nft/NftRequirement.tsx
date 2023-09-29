@@ -13,7 +13,7 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import { Fragment } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Trait } from "types"
-import { flattenedGuildPinChainsData } from "utils/guildCheckout/constants"
+import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import useNftMetadata, {
   NOUNS_BACKGROUNDS,
@@ -40,7 +40,7 @@ const NftRequirement = (props: RequirementProps) => {
 
   // This is a really basic solution, and it'll only handle the "Joined Guild" NFTs. We should probably think about a better solution in the future.
   const isGuildPin =
-    flattenedGuildPinChainsData[requirement.chain]?.address ===
+    GUILD_PIN_CONTRACTS[requirement.chain]?.address ===
     requirement.address.toLowerCase()
 
   const guildIdAttribute =
@@ -66,10 +66,10 @@ const NftRequirement = (props: RequirementProps) => {
     <>
       {guildPinGuildName && (
         <>
-          <DataBlock>{`Joined ${guildPinGuildName}`}</DataBlock>{" "}
+          <DataBlock>{guildPinGuildName}</DataBlock>
         </>
       )}
-      {"Guild Pin"}
+      {" Guild Pin"}
     </>
   ) : (
     metadataWithTraits?.name || metadata?.name
