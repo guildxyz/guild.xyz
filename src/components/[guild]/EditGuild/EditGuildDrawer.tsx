@@ -105,8 +105,8 @@ const EditGuildDrawer = ({
     featureFlags: isSuperAdmin ? featureFlags : undefined,
     tags: savedTags,
     eventSources: {
-      EVENTBRITE: eventSources ? eventSources.EVENTBRITE : "",
-      LUMA: eventSources ? eventSources.LUMA : "",
+      EVENTBRITE: eventSources ? eventSources.EVENTBRITE : null,
+      LUMA: eventSources ? eventSources.LUMA : null,
     },
   }
   const methods = useForm<GuildFormType>({
