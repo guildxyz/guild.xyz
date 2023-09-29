@@ -177,6 +177,7 @@ type PlatformGuildData = {
     name?: never
     symbol?: never
     description?: never
+    imageUrl?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -193,6 +194,7 @@ type PlatformGuildData = {
     name?: never
     symbol?: never
     description?: never
+    imageUrl?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -201,7 +203,7 @@ type PlatformGuildData = {
     argsToSign: string[]
     name: string
     symbol: string
-    image: string
+    imageUrl: string
     description: string
     inviteChannel?: never
     joinButton?: never
