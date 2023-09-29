@@ -13,6 +13,10 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
+import UrlName from "components/[guild]/EditGuild/components/UrlName"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -22,10 +26,7 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
-import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
-import UrlName from "components/[guild]/EditGuild/components/UrlName"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { useThemeContext } from "components/[guild]/ThemeContext"
+import useGuildEvents from "hooks/useGuildEvents"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
@@ -43,6 +44,7 @@ import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
+import Events from "./components/Events/Events"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
 import SaveAlert from "./components/SaveAlert"
 import SocialLinks from "./components/SocialLinks"
@@ -75,11 +77,13 @@ const EditGuildDrawer = ({
     contacts,
     isDetailed,
     featureFlags,
+    eventSources,
     tags: savedTags,
     guildPin,
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
+  const { mutate: mutateEvents } = useGuildEvents()
 
   const defaultValues = {
     name,
@@ -100,6 +104,10 @@ const EditGuildDrawer = ({
     socialLinks,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
     tags: savedTags,
+    eventSources: {
+      EVENTBRITE: eventSources.EVENTBRITE,
+      LUMA: eventSources.LUMA,
+    },
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
@@ -122,6 +130,7 @@ const EditGuildDrawer = ({
       status: "success",
     })
     onClose()
+    mutateEvents()
     methods.reset(undefined, { keepValues: true })
   }
 
@@ -280,6 +289,10 @@ const EditGuildDrawer = ({
                 </Section>
 
                 <Divider />
+
+                <Section title="Events">
+                  <Events />
+                </Section>
 
                 <Section title="Security">
                   <MembersToggle />
