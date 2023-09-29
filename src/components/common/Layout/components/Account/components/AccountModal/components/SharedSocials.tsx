@@ -154,7 +154,13 @@ const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
         >
           {isSharedBoolean ? "Shared" : "Hidden"}
         </MenuButton>
-        <MenuList py="0" overflow={"hidden"} borderRadius={"lg"}>
+        <MenuList
+          py="0"
+          overflow={"hidden"}
+          borderRadius={"lg"}
+          w="370px"
+          maxW="100vw"
+        >
           <MenuItemOption
             title="Shared"
             description="The guild owner can see your account connections"
@@ -177,10 +183,10 @@ const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
 }
 
 const MenuItemOption = ({ title, description, icon, onClick, selected }) => (
-  <MenuItem onClick={!selected ? onClick : null} py="4">
+  <MenuItem onClick={!selected ? onClick : null} p="4">
     <HStack spacing={4} w="full">
       <Center boxSize="3">{selected && <Icon as={Check} />}</Center>
-      <Box w="290px">
+      <Box w="full">
         <Text fontWeight={"bold"}>{title}</Text>
         <Text colorScheme="gray">{description}</Text>
       </Box>
