@@ -16,14 +16,14 @@ import { Modal } from "components/common/Modal"
 import { GuildEvent } from "hooks/useGuildEvents"
 import EventImage from "./components/EventImage"
 import EventInfo from "./components/EventInfo"
-import JoinDiscordEventButton from "./components/JoinDiscordEventButton"
+import JoinEventButton from "./components/JoinEventButton"
 
 type Props = {
   event: GuildEvent
   guildId: number
 }
 
-const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
+const EventCard = ({ event, guildId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { title, description, start, memberCount } = event
 
@@ -55,7 +55,7 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
                 </Text>
               )}
               <LinkOverlay mt="auto">
-                <JoinDiscordEventButton
+                <JoinEventButton
                   eventName={title}
                   eventType={event.eventType}
                   guildId={guildId}
@@ -91,7 +91,7 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
                 {description}
               </Text>
             )}
-            <JoinDiscordEventButton
+            <JoinEventButton
               eventName={title}
               guildId={guildId}
               eventType={event.eventType}
@@ -106,4 +106,4 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
   )
 }
 
-export default DiscordEventCard
+export default EventCard

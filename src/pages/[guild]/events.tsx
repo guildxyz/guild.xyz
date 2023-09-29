@@ -1,19 +1,19 @@
 import { HStack, Link, VStack, Wrap } from "@chakra-ui/react"
+import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
+import EventCard from "components/[guild]/Events/EventCard"
+import FallbackFrame from "components/[guild]/Events/FallbackFrame"
+import SocialIcon from "components/[guild]/SocialIcon"
+import Tabs from "components/[guild]/Tabs"
+import TabButton from "components/[guild]/Tabs/components/TabButton"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useIsMember from "components/[guild]/hooks/useIsMember"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import PulseMarker from "components/common/PulseMarker"
 import VerifiedIcon from "components/common/VerifiedIcon"
-import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
-import DiscordEventCard from "components/[guild]/Events/DiscordEventCard"
-import FallbackFrame from "components/[guild]/Events/FallbackFrame"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useIsMember from "components/[guild]/hooks/useIsMember"
-import SocialIcon from "components/[guild]/SocialIcon"
-import Tabs from "components/[guild]/Tabs"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildEvents, { GuildEvent } from "hooks/useGuildEvents"
 import useLocalStorage from "hooks/useLocalStorage"
 import dynamic from "next/dynamic"
@@ -142,7 +142,7 @@ const GuildEvents = (): JSX.Element => {
       {!isLoading && data?.length > 0 && (
         <VStack gap={4}>
           {data.sort(sortEventByStartDate).map((event) => (
-            <DiscordEventCard key={event.title} event={event} guildId={guildId} />
+            <EventCard key={event.title} event={event} guildId={guildId} />
           ))}
         </VStack>
       )}

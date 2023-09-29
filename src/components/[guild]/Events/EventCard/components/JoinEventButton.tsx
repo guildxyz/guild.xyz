@@ -27,7 +27,7 @@ const eventButtonText: Record<EventSourcesKey, string> = {
   DISCORD: "Discord",
 }
 
-const JoinDiscordEventButton = ({
+const JoinEventButton = ({
   eventName,
   userCount,
   guildId,
@@ -70,4 +70,4 @@ const JoinDiscordEventButton = ({
   )
 }
 
-export default JoinDiscordEventButton
+export default JoinEventButton
