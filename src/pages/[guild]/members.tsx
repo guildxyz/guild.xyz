@@ -84,7 +84,6 @@ const GuildPage = (): JSX.Element => {
       columnHelper.accessor((row) => row, {
         id: "identity",
         size: 210,
-        // filterFn: identitiesFilter,
         cell: (info) => <Identities member={info.getValue()} />,
         header: ({ column }) => <IdentitiesSearch column={column} />,
       }),
@@ -100,8 +99,6 @@ const GuildPage = (): JSX.Element => {
             </HStack>
           </HStack>
         ),
-        // filterFn: roleFilter,
-        // sortingFn: roleSort,
         columns: [
           ...(hasHiddenRoles
             ? [
@@ -164,8 +161,6 @@ const GuildPage = (): JSX.Element => {
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getRowId,
-    // getSortedRowModel: getSortedRowModel(),
-    // getFilteredRowModel: getFilteredRowModel(),
   })
 
   return (

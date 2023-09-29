@@ -11,21 +11,6 @@ import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 
-// export const identitiesFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-//   const { userId, addresses, platformUsers } = row.getValue(columnId) as Member
-
-//   if (
-//     userId === value ||
-//     platformUsers.some((platformAccount) =>
-//       platformAccount.username?.toLowerCase().includes(value)
-//     ) ||
-//     addresses.some((address) => address.toLowerCase().includes(value))
-//   )
-//     return true
-
-//   return false
-// }
-
 type Props = {
   column: Column<any>
 }
