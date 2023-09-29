@@ -74,6 +74,8 @@ const AccessHub = (): JSX.Element => {
       {accessedGuildPlatforms?.length || futurePoaps?.length ? (
         <>
           {accessedGuildPlatforms.map((platform) => {
+            if (!platforms[PlatformType[platform.platformId]]) return null
+
             const {
               cardPropsHook: useCardProps,
               cardMenuComponent: PlatformCardMenu,
