@@ -1,5 +1,4 @@
-import { Checkbox, Icon, Link, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "phosphor-react"
+import { Checkbox, Text } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
 
 const ShareSocialsCheckbox = (): JSX.Element => {
@@ -18,10 +17,10 @@ const ShareSocialsCheckbox = (): JSX.Element => {
       <Text colorScheme="gray" mt="-5px">
         {`I agree to share my socials with the guild owner, so they can potentially
         reward me for my engagement in the community. `}
-        <Link isExternal fontWeight={"semibold"}>
+        {/* <Link href="" isExternal fontWeight={"semibold"} onClick={(e) => e.preventDefault()}>
           Learn more
           <Icon as={ArrowSquareOut} ml="0.5" />
-        </Link>
+        </Link> */}
       </Text>
     </Checkbox>
   )
