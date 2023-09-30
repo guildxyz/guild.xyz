@@ -23,6 +23,19 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
         ? "CUSTOM_ID"
         : "AMOUNT"
 
+    if (
+      newRequirement.type === "CONTRACT" &&
+      Array.isArray(requirement.data.params)
+    ) {
+      newRequirement.data.params = requirement.data.params.map((param) =>
+        typeof param === "string"
+          ? {
+              value: param,
+            }
+          : param
+      )
+    }
+
     // Removind id, roleId, symbol, name, since we don't need those in the form
     // delete newRequirement.id
     delete newRequirement.roleId
