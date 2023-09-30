@@ -4,7 +4,6 @@ import { Requirement, RequirementType } from "types"
 const preprocessRequirements = (
   requirements: Array<Partial<Requirement>>
 ): Requirement[] => {
-  console.log("preprocessRequirements")
   if (!requirements || !Array.isArray(requirements)) return undefined
 
   const freeRequirement = requirements.find(
@@ -121,7 +120,6 @@ const preprocessRequirements = (
         )
           processedRequirement.data.addresses = []
 
-        console.log("preprocessRequirements:type", requirement.type)
         if (
           /**
            * TODO: we couldn't use the type field here, because `handleSubmitDirty`
@@ -131,7 +129,6 @@ const preprocessRequirements = (
           // requirement.type === "CONTRACT" &&
           Array.isArray(requirement.data.params)
         ) {
-          console.log("preprocessing contract state params", requirement.data.params)
           processedRequirement.data.params = requirement.data.params.map(
             (param) => param.value
           )
