@@ -33,12 +33,7 @@ const TextDataForm = ({ children }: PropsWithChildren<unknown>) => {
     formState: { errors },
   } = useFormContext<TextRewardForm>()
 
-  const name = useWatch({ name: "name" })
-  const imageUrl = useWatch({ name: "imageUrl" })
-  const capacity = useWatch({ name: "capacity" })
   const text = useWatch({ name: "text" })
-
-  console.log(name, imageUrl, capacity, text)
 
   const uploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
