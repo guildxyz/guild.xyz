@@ -1,25 +1,44 @@
-import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Stack,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import PhotoUploader from "components/create-guild/IconSelector/components/PhotoUploader"
 import RichTextDescriptionEditor from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
 import usePinata from "hooks/usePinata"
 import { PropsWithChildren } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 
 export type TextRewardForm = {
   name: string
   imageUrl?: string
+  // TODO: we don't actually send capacity to the API yet, but we'll need to implement that functionality too
+  capacity?: number
   text: string
 }
 
 const TextDataForm = ({ children }: PropsWithChildren<unknown>) => {
   const {
+    control,
     register,
     setValue,
     formState: { errors },
   } = useFormContext<TextRewardForm>()
 
+  const name = useWatch({ name: "name" })
+  const imageUrl = useWatch({ name: "imageUrl" })
+  const capacity = useWatch({ name: "capacity" })
   const text = useWatch({ name: "text" })
+
+  console.log(name, imageUrl, capacity, text)
 
   const uploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
@@ -39,6 +58,40 @@ const TextDataForm = ({ children }: PropsWithChildren<unknown>) => {
       </FormControl>
 
       <PhotoUploader uploader={uploader} />
+
+      <FormControl maxW="sm">
+        <FormLabel>Capacity</FormLabel>
+
+        <Controller
+          name="capacity"
+          control={control}
+          rules={{
+            min: {
+              value: 1,
+              message: "Must be greater than 0",
+            },
+          }}
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <NumberInput
+              ref={ref}
+              value={value ?? ""}
+              onChange={(_, valueAsNumber) =>
+                onChange(isNaN(valueAsNumber) ? undefined : valueAsNumber)
+              }
+              onBlur={onBlur}
+              min={1}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          )}
+        />
+
+        <FormHelperText>TODO: explain what capacity means</FormHelperText>
+      </FormControl>
 
       <FormControl isRequired isInvalid={!!errors?.text}>
         <FormLabel>Text</FormLabel>
