@@ -29,7 +29,7 @@ const AddTextPanel = ({ onSuccess }: Props) => {
         platformGuildData: {
           text: data.text,
           name: data.name,
-          image: data.image,
+          imageUrl: data.imageUrl,
         },
       },
       isNew: true,

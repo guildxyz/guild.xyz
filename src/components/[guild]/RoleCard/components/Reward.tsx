@@ -176,7 +176,7 @@ const RewardIcon = ({
 
   const props = {
     src:
-      guildPlatform?.platformGuildData?.image ??
+      guildPlatform?.platformGuildData?.imageUrl ??
       platforms[PlatformType[guildPlatform?.platformId]].imageUrl,
     alt: guildPlatform?.platformGuildName,
     boxSize: 6,

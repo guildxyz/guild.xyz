@@ -24,6 +24,7 @@ const useShowErrorToast = () => {
             fontSize="x-small"
             cursor="pointer"
             onClick={() => copyToClipboard(correlationId)}
+            opacity="0.6"
           >
             {`ID: ${correlationId}`}
           </Text>

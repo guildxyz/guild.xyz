@@ -15,7 +15,7 @@ const CreateGuildText = () => {
 
   const name = useWatch({ control: methods.control, name: "name" })
   const text = useWatch({ control: methods.control, name: "text" })
-  const image = useWatch({ control: methods.control, name: "image" })
+  const imageUrl = useWatch({ control: methods.control, name: "imageUrl" })
 
   return (
     <>
@@ -32,7 +32,7 @@ const CreateGuildText = () => {
             platformGuildData: {
               text,
               name,
-              image,
+              imageUrl,
             },
           })
           nextStep()

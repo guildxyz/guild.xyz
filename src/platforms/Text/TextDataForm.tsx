@@ -8,7 +8,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 
 export type TextRewardForm = {
   name: string
-  image?: string
+  imageUrl?: string
   text: string
 }
 
@@ -23,8 +23,7 @@ const TextDataForm = ({ children }: PropsWithChildren<unknown>) => {
 
   const uploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
-      // TODO: we'll call this imageUrl, and that's great, since the PhotoUploader looks for that field inside the form
-      setValue("image", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`, {
+      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`, {
         shouldTouch: true,
         shouldValidate: true,
       })

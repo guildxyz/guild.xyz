@@ -26,13 +26,13 @@ const EditTextModal = ({
   guildPlatformId,
   platformGuildData,
 }: Props) => {
-  const { name, image, text } = platformGuildData
+  const { name, imageUrl, text } = platformGuildData
 
   const methods = useForm<TextRewardForm>({
     mode: "all",
     defaultValues: {
       name,
-      image,
+      imageUrl,
       text,
     },
   })

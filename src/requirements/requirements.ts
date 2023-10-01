@@ -9,6 +9,7 @@ import {
   Wallet,
   Wrench,
 } from "phosphor-react"
+import platforms from "platforms/platforms"
 import { RequirementFormProps } from "requirements"
 import GuildLogo from "static/logo.svg"
 
@@ -141,6 +142,18 @@ export const REQUIREMENTS_DATA = [
       "GUILD_ADMIN",
       "GUILD_USER_SINCE",
     ],
+  },
+  {
+    icon: platforms.EMAIL.icon,
+    name: platforms.EMAIL.name,
+    fileNameBase: platforms.EMAIL.name,
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Email/EmailRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Email/EmailForm")
+    ),
+    types: ["EMAIL", "EMAIL_VERIFIED", "EMAIL_DOMAIN"],
   },
   {
     icon: "/requirementLogos/twitter.svg",

@@ -16,8 +16,9 @@ import {
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
+import platforms from "platforms/platforms"
 import { memo, useEffect, useRef } from "react"
-import { Role, Visibility as VisibilityType } from "types"
+import { PlatformType, Role, Visibility as VisibilityType } from "types"
 import useAccess from "../hooks/useAccess"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -185,21 +186,29 @@ const RoleCard = memo(({ role }: Props) => {
               </SlideFade>
             )}
             <Box p={5} pt={2} mt="auto">
-              {role.rolePlatforms?.map((platform, i) => (
-                <SlideFade
-                  key={platform.guildPlatformId}
-                  offsetY={10}
-                  in={isOpen}
-                  transition={{ enter: { delay: i * 0.1 } }}
-                  /**
-                   * Spreading inert because it's not added to @types/react yet:
-                   * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
-                   */
-                  {...(!isOpen && { inert: "true" })}
-                >
-                  <Reward platform={platform} role={role} withLink withMotionImg />
-                </SlideFade>
-              ))}
+              {role.rolePlatforms?.map((platform, i) => {
+                const guildPlatformType = guildPlatforms.find(
+                  (gp) => gp.id === platform.guildPlatformId
+                ).platformId
+
+                if (!platforms[PlatformType[guildPlatformType]]) return
+
+                return (
+                  <SlideFade
+                    key={platform.guildPlatformId}
+                    offsetY={10}
+                    in={isOpen}
+                    transition={{ enter: { delay: i * 0.1 } }}
+                    /**
+                     * Spreading inert because it's not added to @types/react yet:
+                     * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
+                     */
+                    {...(!isOpen && { inert: "true" })}
+                  >
+                    <Reward platform={platform} role={role} withLink withMotionImg />
+                  </SlideFade>
+                )
+              })}
               {role.hiddenRewards && <HiddenRewards />}
             </Box>
           </Flex>

@@ -178,8 +178,8 @@ type PlatformGuildData = {
     name?: never
     symbol?: never
     description?: never
-    image?: never
     text?: never
+    imageUrl?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -196,8 +196,8 @@ type PlatformGuildData = {
     name?: never
     symbol?: never
     description?: never
-    image?: never
     text?: never
+    imageUrl?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -206,7 +206,7 @@ type PlatformGuildData = {
     argsToSign: string[]
     name: string
     symbol: string
-    image: string
+    imageUrl: string
     description: string
     inviteChannel?: never
     joinButton?: never
@@ -219,7 +219,7 @@ type PlatformGuildData = {
   TEXT: {
     text: string
     name: string
-    image: string
+    imageUrl: string
     chain?: never
     contractAddress?: never
     function?: never
@@ -355,6 +355,10 @@ type GuildContact = {
   id?: number
 }
 
+const supportedEventSources = ["LINK3", "EVENTBRITE", "LUMA", "DISCORD"] as const
+type EventSourcesKey = (typeof supportedEventSources)[number]
+type EventSources = Partial<Record<EventSourcesKey, string>>
+
 type Guild = {
   id: number
   name: string
@@ -378,6 +382,7 @@ type Guild = {
   hiddenRoles?: boolean
   requiredPlatforms?: PlatformName[]
   tags: GuildTags[]
+  eventSources: Record<EventSourcesKey, string>
   guildPin?: {
     chain: Chain
     isActive: boolean
@@ -397,6 +402,7 @@ type GuildFormType = Partial<
     | "contacts"
     | "featureFlags"
     | "tags"
+    | "eventSources"
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
@@ -416,6 +422,7 @@ type GuildFormType = Partial<
     id?: number
     isOwner?: boolean
   }>
+  eventSources?: Record<EventSourcesKey, string>
 }
 
 type SelectOption<T = string> = {
@@ -636,7 +643,7 @@ type DetailedUserLeaderboardData = {
   pins: LeaderboardPinData[]
 }
 
-export { ValidationMethod, Visibility, supportedSocialLinks }
+export { ValidationMethod, Visibility, supportedEventSources, supportedSocialLinks }
 export type {
   AddressConnectionProvider,
   BaseUser,
@@ -647,6 +654,8 @@ export type {
   DetailedUserLeaderboardData,
   DiscordError,
   DiscordServerData,
+  EventSources,
+  EventSourcesKey,
   GitPoap,
   GoogleFile,
   Guild,
@@ -654,7 +663,6 @@ export type {
   GuildBase,
   GuildFormType,
   GuildPinMetadata,
-  PlatformGuildData,
   GuildPlatform,
   GuildPoap,
   GuildTags,
@@ -664,6 +672,7 @@ export type {
   NFT,
   OneOf,
   PlatformAccountDetails,
+  PlatformGuildData,
   PlatformName,
   Poap,
   PoapContract,

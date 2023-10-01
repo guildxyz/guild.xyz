@@ -10,7 +10,7 @@ const useTextCardProps = (guildPlatform: GuildPlatform) => {
   return {
     name: platformGuildData.name ?? "Text",
     type: "TEXT" as PlatformName,
-    image: platformGuildData.image ?? (
+    image: platformGuildData.imageUrl ?? (
       <Circle size={10} bgColor={bgColor}>
         <Icon as={platforms.TEXT.icon} boxSize={6} color="white" />
       </Circle>

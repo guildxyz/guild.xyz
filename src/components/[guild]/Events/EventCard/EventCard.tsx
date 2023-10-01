@@ -13,19 +13,19 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { Modal } from "components/common/Modal"
-import { DiscordEvent } from "hooks/useDiscordEvents"
+import { GuildEvent } from "hooks/useGuildEvents"
 import EventImage from "./components/EventImage"
 import EventInfo from "./components/EventInfo"
-import JoinDiscordEventButton from "./components/JoinDiscordEventButton"
+import JoinEventButton from "./components/JoinEventButton"
 
 type Props = {
-  event: DiscordEvent
+  event: GuildEvent
   guildId: number
 }
 
-const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
+const EventCard = ({ event, guildId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { name, description, image, scheduledStartTimestamp, userCount, id } = event
+  const { title, description, start, memberCount } = event
 
   return (
     <>
@@ -46,30 +46,27 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
                 fontWeight={"bold"}
                 mb={3}
               >
-                {name}
+                {title}
               </Heading>
-              <EventInfo
-                userCount={userCount}
-                startDate={scheduledStartTimestamp}
-                mb="4"
-              />
+              <EventInfo userCount={memberCount} startDate={start} mb="4" />
               {description && (
                 <Text fontSize="sm" noOfLines={2} mb="4">
                   {description}
                 </Text>
               )}
               <LinkOverlay mt="auto">
-                <JoinDiscordEventButton
-                  eventName={name}
+                <JoinEventButton
+                  eventName={title}
+                  eventType={event.eventType}
                   guildId={guildId}
-                  userCount={userCount}
-                  eventId={id}
+                  userCount={memberCount}
+                  url={event.url}
                   size="sm"
                 />
               </LinkOverlay>
             </GridItem>
             <GridItem order={{ base: 1, md: 2 }}>
-              <EventImage eventId={id} image={image} />
+              <EventImage url={event.image} />
             </GridItem>
           </Grid>
         </Card>
@@ -79,30 +76,27 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
         <ModalContent>
           <ModalCloseButton zIndex="modal" />
           <ModalBody p="5 !important">
-            <EventImage eventId={id} image={image} showFallback={false} mb="5" />
+            <EventImage url={event.image} showFallback={false} mb="5" />
             <Heading
               fontSize={"xl"}
               fontFamily={"Dystopian"}
               fontWeight={"bold"}
               mb={3}
             >
-              {name}
+              {title}
             </Heading>
-            <EventInfo
-              userCount={userCount}
-              startDate={scheduledStartTimestamp}
-              mb="5"
-            />
+            <EventInfo userCount={memberCount} startDate={start} mb="5" />
             {description && (
               <Text fontSize={"sm"} flexGrow={1} mb="5">
                 {description}
               </Text>
             )}
-            <JoinDiscordEventButton
-              eventName={name}
+            <JoinEventButton
+              eventName={title}
               guildId={guildId}
-              userCount={userCount}
-              eventId={id}
+              eventType={event.eventType}
+              userCount={memberCount}
+              url={event.url}
               w="full"
             />
           </ModalBody>
@@ -112,4 +106,4 @@ const DiscordEventCard = ({ event, guildId }: Props): JSX.Element => {
   )
 }
 
-export default DiscordEventCard
+export default EventCard
