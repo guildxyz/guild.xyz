@@ -71,7 +71,7 @@ const EditTextModal = ({
                 isLoading={isLoading}
                 loadingText="Saving reward"
               >
-                Continue
+                Save
               </Button>
             </TextDataForm>
           </FormProvider>
