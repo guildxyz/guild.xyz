@@ -14,7 +14,7 @@ const TextPreview = (): JSX.Element => {
       type="TEXT"
       name={platformGuildData?.name ?? "Text reward"}
       image={
-        platformGuildData?.image ?? (
+        platformGuildData?.imageUrl ?? (
           <Circle
             size={12}
             bgColor={circleBg}
