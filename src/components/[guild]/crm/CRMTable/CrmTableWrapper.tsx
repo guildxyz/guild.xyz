@@ -69,7 +69,8 @@ const CrmTableWrapper = ({
            thead {box-shadow: var(--chakra-shadows-${theadBoxShadow})}
            th {border-radius: 0 !important}`}
         {isIdentityStuck &&
-          `.identityTd {max-width: 120px; background: ${cardBg}}
+          `.identityTd {background: ${cardBg}}
+           @media only screen and (max-width: 700px) {.identityTd {max-width: 120px}}
            ${IDENTITIES_COLLAPSED_STYLE}
            .identitiesToggle {display: none}`}
         {/* the table is elevated to be above the headers shadow, and the popovers need to be elevated above that */}
