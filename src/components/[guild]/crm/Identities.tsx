@@ -2,7 +2,6 @@ import { HStack, Tag, TagLabel, TagLeftIcon, Tooltip } from "@chakra-ui/react"
 import { useCardBg } from "components/common/Card"
 import { LockSimple, Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
-import { useMemo } from "react"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
 import shortenHex from "utils/shortenHex"
 import { Member } from "./useMembers"
@@ -11,25 +10,23 @@ type Props = {
   member: Member
 }
 
+export const sortAccounts = (
+  account1: PlatformAccountDetails,
+  account2: PlatformAccountDetails
+) => {
+  if (PlatformType[account2.platformId] === "DISCORD" && account2.username) return 1
+  if (account2.username && !account1.username) return 1
+  return -1
+}
+
 const Identities = ({ member }: Props) => {
   const { addresses, platformUsers } = member
-
-  const sortedAccounts = useMemo(
-    () =>
-      platformUsers.sort((account1, account2) => {
-        if (PlatformType[account2.platformId] === "DISCORD" && account2.username)
-          return 1
-        if (account2.username && !account1.username) return 1
-        return -1
-      }),
-    [platformUsers]
-  )
 
   const areSocialsPrivate = !platformUsers.length
 
   return (
     <HStack spacing={1}>
-      {sortedAccounts?.map((platformAccount, i) => (
+      {platformUsers?.map((platformAccount, i) => (
         <IdentityTag
           key={platformAccount.platformId}
           platformAccount={platformAccount}

@@ -4,6 +4,7 @@ import useSWRInfinite from "swr/infinite"
 import { PlatformAccountDetails, Visibility } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import useGuild from "../hooks/useGuild"
+import { sortAccounts } from "./Identities"
 
 type CrmRole = {
   roleId?: number
@@ -54,6 +55,7 @@ const useMembers = (queryString: string) => {
       ]).then((res) =>
         res.map((user) => ({
           ...user,
+          platformUsers: user.platformUsers.sort(sortAccounts),
           roles: {
             hidden: user.roles.filter(
               (role) => role.visibility === Visibility.HIDDEN
