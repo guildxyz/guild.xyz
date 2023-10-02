@@ -56,7 +56,13 @@ const NavMenu = (): JSX.Element => {
           </HStack>
         </Button>
       </PopoverTrigger>
-      <PopoverContent w="auto" minW="xs" borderRadius={"lg"} overflow={"hidden"}>
+      <PopoverContent
+        w="auto"
+        minW="xs"
+        borderRadius={"lg"}
+        overflow={"hidden"}
+        zIndex="popover"
+      >
         <PopoverBody px={{ base: 2, sm: 3 }} py="4">
           <Grid
             templateColumns={{ base: "1fr", sm: "1fr 150px" }}

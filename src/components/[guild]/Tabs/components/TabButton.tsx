@@ -36,6 +36,15 @@ const TabButton = ({
       })}
       variant="ghost"
       isActive={isActive}
+      mx={isActive && 2}
+      sx={{
+        ":first-of-type": {
+          ml: 0,
+        },
+        ":last-of-type": {
+          mr: 0,
+        },
+      }}
       minW="max-content"
       {...rest}
     >

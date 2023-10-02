@@ -100,6 +100,12 @@ type PlatformAccountDetails = {
   platformName: PlatformName
   platformUserId: string
   platformUserData?: PlatformUserData
+  username?: string
+}
+
+type SharedSocial = {
+  guildId: number
+  isShared: boolean
 }
 
 type AddressConnectionProvider = "DELEGATE"
@@ -114,6 +120,7 @@ type User = {
     createdAt: string
   }>
   platformUsers: PlatformAccountDetails[]
+  sharedSocials: SharedSocial[]
   publicKey?: string
   isSuperAdmin: boolean
 

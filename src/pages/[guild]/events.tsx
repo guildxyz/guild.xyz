@@ -3,22 +3,18 @@ import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildD
 import EventCard from "components/[guild]/Events/EventCard"
 import FallbackFrame from "components/[guild]/Events/FallbackFrame"
 import SocialIcon from "components/[guild]/SocialIcon"
-import Tabs from "components/[guild]/Tabs"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
+import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
-import PulseMarker from "components/common/PulseMarker"
 import VerifiedIcon from "components/common/VerifiedIcon"
 import useGuildEvents, { GuildEvent } from "hooks/useGuildEvents"
-import useLocalStorage from "hooks/useLocalStorage"
 import dynamic from "next/dynamic"
 import { NoteBlank } from "phosphor-react"
-import { PlatformType, SocialLinkKey } from "types"
+import { SocialLinkKey } from "types"
 import parseDescription from "utils/parseDescription"
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
@@ -28,28 +24,13 @@ const GuildEvents = (): JSX.Element => {
     id: guildId,
     name,
     imageUrl,
-    urlName,
-    guildPlatforms,
-    onboardingComplete,
     isDetailed,
     description,
     socialLinks,
     tags,
   } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-  const [eventsSeen, setEventsSeen] = useLocalStorage<boolean>("eventsSeen", false)
   const { isAdmin } = useGuildPermission()
-  const isMember = useIsMember()
-
-  const showOnboarding = isAdmin && !onboardingComplete
-
-  const showHomeButton =
-    (guildPlatforms?.some(
-      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
-    ) ||
-      isMember ||
-      isAdmin) &&
-    !showOnboarding
 
   const { data, isValidating, error, serverError } = useGuildEvents()
 
@@ -110,25 +91,7 @@ const GuildEvents = (): JSX.Element => {
         )
       }
     >
-      <Tabs>
-        <TabButton href={`/${urlName}`}>
-          {showHomeButton ? "Home" : "Roles"}
-        </TabButton>
-        <PulseMarker placement="top" hidden={eventsSeen}>
-          <TabButton
-            href={`/${urlName}/events`}
-            onClick={() => {
-              setEventsSeen(true)
-            }}
-            isActive
-          >
-            Events
-          </TabButton>
-        </PulseMarker>
-        {isAdmin && (
-          <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
-        )}
-      </Tabs>
+      <GuildTabs activeTab="EVENTS" />
       {(isValidating || data === undefined) && (
         <FallbackFrame isLoading text="Searching for events..." />
       )}

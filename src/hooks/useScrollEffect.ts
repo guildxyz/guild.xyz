@@ -3,15 +3,16 @@ import { useCallback, useEffect } from "react"
 const useScrollEffect = (
   callback: () => void,
   deps: any[] = [],
-  listenerOptions?: AddEventListenerOptions
+  listenerOptions?: AddEventListenerOptions,
+  element = typeof document !== "undefined" && document
 ) => {
   const listener = useCallback(callback, deps)
 
   useEffect(() => {
-    if (!document) return
-    document.addEventListener("scroll", listener, listenerOptions)
+    if (!element) return
+    element.addEventListener("scroll", listener, listenerOptions)
     return () => {
-      document.removeEventListener("scroll", listener, listenerOptions)
+      element.removeEventListener("scroll", listener, listenerOptions)
     }
   }, [listener])
 }

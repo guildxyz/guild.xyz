@@ -1,15 +1,9 @@
-import {
-  forwardRef,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  TagProps,
-  Tooltip,
-} from "@chakra-ui/react"
+import { forwardRef, Tag, TagLabel, TagLeftIcon, TagProps } from "@chakra-ui/react"
 import platforms from "platforms/platforms"
 import { PlatformName, PlatformType } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
-import { useActivityLogFilters } from "../../ActivityLogFiltersBar/components/ActivityLogFiltersContext"
+import ClickableTagPopover from "./ClickableTagPopover"
+import FilterBy from "./ClickableTagPopover/components/FilterBy"
 
 type Props = ClickableRewardTagProps & {
   label?: string
@@ -56,40 +50,22 @@ type ClickableRewardTagProps = {
 const ClickableRewardTag = ({
   roleId,
   rolePlatformId,
-}: ClickableRewardTagProps): JSX.Element => {
-  const filtersContext = useActivityLogFilters()
-  const { activeFilters, addFilter } = filtersContext ?? {}
-  const isDisabled =
-    !filtersContext ||
-    !!activeFilters.find(
-      (f) => f.filter === "rolePlatformId" && f.value === rolePlatformId.toString()
-    )
-
-  return (
-    <Tooltip
-      label="Filter by reward"
-      placement="top"
-      hasArrow
-      isDisabled={isDisabled}
-    >
-      <RewardTag
-        as="button"
-        onClick={
-          isDisabled
-            ? undefined
-            : () =>
-                addFilter({
-                  filter: "rolePlatformId",
-                  value: rolePlatformId.toString(),
-                })
-        }
-        roleId={roleId}
-        rolePlatformId={rolePlatformId}
-        cursor={isDisabled ? "default" : "pointer"}
+}: ClickableRewardTagProps): JSX.Element => (
+  <ClickableTagPopover
+    options={
+      <FilterBy
+        filter={{ filter: "rolePlatformId", value: rolePlatformId.toString() }}
       />
-    </Tooltip>
-  )
-}
+    }
+  >
+    <RewardTag
+      as="button"
+      roleId={roleId}
+      rolePlatformId={rolePlatformId}
+      cursor={"pointer"}
+    />
+  </ClickableTagPopover>
+)
 
 export default RewardTag
 export { ClickableRewardTag }

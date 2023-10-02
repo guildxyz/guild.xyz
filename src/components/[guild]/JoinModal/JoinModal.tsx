@@ -8,11 +8,11 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useGuild from "components/[guild]/hooks/useGuild"
 import platforms from "platforms/platforms"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
@@ -20,6 +20,7 @@ import CompleteCaptchaJoinStep from "./components/CompleteCaptchaJoinStep"
 import ConnectPlatform from "./components/ConnectPlatform"
 import ConnectPolygonIDJoinStep from "./components/ConnectPolygonIDJoinStep"
 import SatisfyRequirementsJoinStep from "./components/SatisfyRequirementsJoinStep"
+import ShareSocialsCheckbox from "./components/ShareSocialsCheckbox"
 import TwitterRequirementsVerificationIssuesAlert from "./components/TwitterRequirementsVerificationIssuesAlert"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
@@ -40,12 +41,13 @@ const customJoinStep: Partial<Record<Joinable, () => JSX.Element>> = {
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isActive } = useWeb3React()
-  const { name, requiredPlatforms } = useGuild()
+  const { name, requiredPlatforms, featureFlags } = useGuild()
 
   const methods = useForm({
     mode: "all",
     defaultValues: {
       platforms: {},
+      ...(featureFlags.includes("CRM") ? { shareSocials: true } : {}),
     },
   })
   const { handleSubmit } = methods
@@ -82,7 +84,13 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalCloseButton />
           <ModalBody>
             <Error error={joinError} processError={processJoinPlatformError} />
-            <VStack spacing="3" alignItems="stretch" w="full" divider={<Divider />}>
+            <VStack
+              spacing="3"
+              alignItems="stretch"
+              w="full"
+              divider={<Divider />}
+              mb="8"
+            >
               <WalletAuthButton />
               {renderedSteps}
               <SatisfyRequirementsJoinStep
@@ -92,10 +100,12 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               />
             </VStack>
 
+            {featureFlags.includes("CRM") && <ShareSocialsCheckbox />}
+
             <TwitterRequirementsVerificationIssuesAlert />
 
             <ModalButton
-              mt="8"
+              mt="2"
               onClick={handleSubmit(onSubmit)}
               colorScheme="green"
               isLoading={isSigning || isLoading}

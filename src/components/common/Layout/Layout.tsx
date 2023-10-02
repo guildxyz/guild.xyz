@@ -39,6 +39,7 @@ type Props = {
   backgroundOffset?: number
   backButton?: BackButtonProps
   maxWidth?: string
+  showFooter?: boolean
 }
 
 const Layout = ({
@@ -57,6 +58,7 @@ const Layout = ({
   backgroundOffset = 128,
   backButton,
   maxWidth = "container.lg",
+  showFooter = true,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
@@ -147,7 +149,7 @@ const Layout = ({
           position="relative"
           maxW={maxWidth}
           pt={{ base: 6, md: 9 }}
-          pb={24}
+          pb={showFooter && 24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
           {backButton && hasNavigated && (
@@ -200,7 +202,7 @@ const Layout = ({
           <Box ref={childrenWrapper}>{children}</Box>
         </Container>
 
-        <Footer />
+        {showFooter && <Footer />}
       </Box>
     </>
   )
