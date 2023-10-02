@@ -90,6 +90,7 @@ export const WalletTag = ({ children }) => {
       sx={{ "--stacked-margin-left": "-39px" }}
       transition={"margin .2s"}
       boxShadow={`0 0 0 1px ${borderColor}`}
+      flexShrink={0}
     >
       <TagLeftIcon as={Wallet} mr="0" />
       <TagLabel ml="1">{children}</TagLabel>
