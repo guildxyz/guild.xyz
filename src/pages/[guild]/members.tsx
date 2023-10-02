@@ -63,8 +63,7 @@ const GuildPage = (): JSX.Element => {
      */
     window.history.pushState("", "", `?${queryString}`)
   }, [queryString])
-  const { data, error, isLoading, isValidating, setSize, hasReachedTheEnd } =
-    useMembers(queryString)
+  const { data, error, isLoading, isValidating, setSize } = useMembers(queryString)
 
   const columns = useMemo(
     () => [
@@ -213,7 +212,7 @@ const GuildPage = (): JSX.Element => {
         {/* {JSON.stringify(table.getState(), null, 2)} */}
         <CrmTableWrapper {...{ isValidating, setSize }}>
           <CrmThead {...{ table, isLoading }} />
-          <CrmTbody {...{ table, isLoading, data, error, hasReachedTheEnd }} />
+          <CrmTbody {...{ table, isValidating, data, error }} />
         </CrmTableWrapper>
       </Layout>
     </>

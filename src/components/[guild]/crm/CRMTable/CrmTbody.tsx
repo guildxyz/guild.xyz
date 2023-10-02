@@ -19,16 +19,15 @@ type Props = {
   table: Table<Member>
   data: Member[]
   error: any
-  isLoading: boolean
-  hasReachedTheEnd: boolean
+  isValidating: boolean
 }
 
-const CrmTbody = ({ table, data, error, isLoading, hasReachedTheEnd }: Props) => {
+const CrmTbody = ({ table, data, error, isValidating }: Props) => {
   const rows = table.getRowModel().rows
 
   return (
     <Tbody>
-      {!data && isLoading ? (
+      {!data && isValidating ? (
         [...Array(20)].map((_, i) => (
           <CrmSkeletonRow
             key={`loading_skeleton_${i}`}
@@ -40,7 +39,14 @@ const CrmTbody = ({ table, data, error, isLoading, hasReachedTheEnd }: Props) =>
           rows
             .map((row) => <MemberRow key={row.id} row={row} />)
             .concat(
-              hasReachedTheEnd ? (
+              isValidating ? (
+                <CrmInfoRow key="loading">
+                  <HStack>
+                    <Spinner size="sm" />
+                    <Text>Loading more members</Text>
+                  </HStack>
+                </CrmInfoRow>
+              ) : (
                 <CrmInfoRow key="end_of_results">
                   <Text
                     colorScheme="gray"
@@ -50,13 +56,6 @@ const CrmTbody = ({ table, data, error, isLoading, hasReachedTheEnd }: Props) =>
                   >
                     End of results
                   </Text>
-                </CrmInfoRow>
-              ) : (
-                <CrmInfoRow key="loading">
-                  <HStack>
-                    <Spinner size="sm" />
-                    <Text>Loading more members</Text>
-                  </HStack>
                 </CrmInfoRow>
               )
             )
