@@ -1,9 +1,9 @@
 import { Box, HStack, useColorModeValue } from "@chakra-ui/react"
 import useIsStuck from "hooks/useIsStuck"
-import { createContext, PropsWithChildren, useContext } from "react"
+import { PropsWithChildren, createContext, useContext } from "react"
 
-type Props = {
-  sticky?: boolean
+export type TabsProps = {
+  isSticky?: boolean
   rightElement?: JSX.Element
 }
 
@@ -23,10 +23,10 @@ const TabsContext = createContext<{
 }>(null)
 
 const Tabs = ({
-  sticky,
+  isSticky = true,
   rightElement,
   children,
-}: PropsWithChildren<Props>): JSX.Element => {
+}: PropsWithChildren<TabsProps>): JSX.Element => {
   const { ref, isStuck } = useIsStuck()
 
   const bgColor = useColorModeValue("white", "gray.800")
@@ -38,19 +38,19 @@ const Tabs = ({
         ref={ref}
         justifyContent="space-between"
         alignItems="center"
-        position={sticky ? "sticky" : "relative"}
+        position={isSticky ? "sticky" : "relative"}
         top={0}
         mt={-3}
         mb={2}
         width="full"
-        zIndex={sticky && isStuck ? "banner" : "auto"}
+        zIndex={isSticky && isStuck ? "banner" : "auto"}
         _before={{
           content: `""`,
           position: "fixed",
           top: 0,
           left: 0,
           width: "full",
-          height: sticky && isStuck ? TABS_HEIGHT : 0,
+          height: isSticky && isStuck ? TABS_HEIGHT : 0,
           bgColor: bgColor,
           boxShadow: "md",
           transition: "height .2s",
@@ -67,7 +67,7 @@ const Tabs = ({
         >
           <HStack
             overflowX="auto"
-            py={3}
+            py={2.5}
             px={8}
             sx={{
               "&::-webkit-scrollbar": {

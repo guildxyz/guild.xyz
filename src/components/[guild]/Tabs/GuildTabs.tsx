@@ -1,19 +1,18 @@
-import PulseMarker from "components/common/PulseMarker"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import PulseMarker from "components/common/PulseMarker"
 import useLocalStorage from "hooks/useLocalStorage"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
+import Tabs, { TabsProps } from "./Tabs"
 import TabButton from "./components/TabButton"
-import Tabs from "./Tabs"
 
 type Props = {
   activeTab: "HOME" | "EVENTS" | "MEMBERS" | "ACTIVITY"
-  rightElement?: JSX.Element
-}
+} & TabsProps
 
-const GuildTabs = ({ activeTab, rightElement }: Props): JSX.Element => {
+const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
   const { onboardingComplete, urlName, featureFlags, guildPlatforms } = useGuild()
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
@@ -32,7 +31,7 @@ const GuildTabs = ({ activeTab, rightElement }: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
   return (
-    <Tabs sticky rightElement={rightElement}>
+    <Tabs {...rest}>
       <TabButton href={`/${urlName}`} isActive={activeTab === "HOME"}>
         {showAccessHub ? "Home" : "Roles"}
       </TabButton>
