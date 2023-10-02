@@ -1,7 +1,7 @@
 import { Flex, Table, useColorModeValue } from "@chakra-ui/react"
 import Card, { useCardBg } from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
-import { PropsWithChildren, memo, useRef, useState } from "react"
+import { PropsWithChildren, memo, useEffect, useRef, useState } from "react"
 import { TABS_HEIGHT_SM, TABS_SM_BUTTONS_STYLES } from "../../Tabs/Tabs"
 import { IDENTITIES_COLLAPSED_STYLE } from "../IdentitiesExpansionToggle"
 
@@ -49,6 +49,20 @@ const CrmTableWrapper = memo(
       scrollContainerRef.current
     )
 
+    /** "100vw without scrollbar" solution, so the tables sides doesn't get cut off */
+    useEffect(() => {
+      const setVw = () => {
+        const vw = document.documentElement.clientWidth / 100
+        document.documentElement.style.setProperty("--vw", `${vw}px`)
+      }
+      setVw()
+      window.addEventListener("resize", setVw)
+
+      return () => {
+        window.removeEventListener("resize", setVw)
+      }
+    }, [])
+
     return (
       <Flex justifyContent={"center"} position="relative" zIndex="banner">
         {/**
@@ -76,7 +90,7 @@ const CrmTableWrapper = memo(
         </style>
         <Flex
           ref={scrollContainerRef}
-          w="100vw"
+          w={isStuck ? "100vw" : "calc(var(--vw, 1vw) * 100)"}
           flex="1 0 auto"
           h={`calc(100vh - ${TABS_HEIGHT_SM})`}
           overflowY={isStuck ? "auto" : "hidden"}
