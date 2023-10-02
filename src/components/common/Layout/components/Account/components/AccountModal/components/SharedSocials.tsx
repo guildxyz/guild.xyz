@@ -15,6 +15,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Skeleton,
+  SkeletonCircle,
   Stack,
   Text,
   Tooltip,
@@ -157,8 +158,10 @@ const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
 
   return (
     <HStack gap={4}>
-      <GuildLogo imageUrl={imageUrl} size="36px" />
-      <Skeleton w="full" isLoaded={!!name?.length}>
+      <SkeletonCircle isLoaded={!!imageUrl} size="36px">
+        <GuildLogo imageUrl={imageUrl} size="36px" />
+      </SkeletonCircle>
+      <Skeleton w="full" h="7" isLoaded={!!name?.length}>
         <Text as="span" fontSize="lg" fontWeight="bold" noOfLines={1}>
           {name}
         </Text>
