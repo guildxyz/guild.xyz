@@ -1,11 +1,5 @@
-import {
-  HStack,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  Tooltip,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { HStack, Tag, TagLabel, TagLeftIcon, Tooltip } from "@chakra-ui/react"
+import { useCardBg } from "components/common/Card"
 import { LockSimple, Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
@@ -62,7 +56,7 @@ export const IdentityTag = ({
 } & Rest) => {
   const platform = platforms[PlatformType[platformAccount.platformId]]
   const username = platformAccount.username ?? platformAccount.platformUserId
-  const borderColor = useColorModeValue("white", "var(--chakra-colors-gray-700)")
+  const borderColor = useCardBg()
 
   return (
     <Tag
@@ -83,7 +77,7 @@ export const IdentityTag = ({
 }
 
 export const WalletTag = ({ children }) => {
-  const borderColor = useColorModeValue("white", "var(--chakra-colors-gray-700)")
+  const borderColor = useCardBg()
 
   return (
     <Tag

@@ -6,7 +6,9 @@ import {
 } from "@tanstack/react-table"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import CRMTable, { CrmTbody } from "components/[guild]/crm/CRMTable"
+import CrmTableWrapper from "components/[guild]/crm/CRMTable/CrmTableWrapper"
+import CrmTbody from "components/[guild]/crm/CRMTable/CrmTbody"
+import CrmThead from "components/[guild]/crm/CRMTable/CrmThead"
 import ExportMembers from "components/[guild]/crm/ExportMembers"
 import FilterByRoles from "components/[guild]/crm/FilterByRoles"
 import Identities from "components/[guild]/crm/Identities"
@@ -209,11 +211,10 @@ const GuildPage = (): JSX.Element => {
         />
         {/* for debugging */}
         {/* {JSON.stringify(table.getState(), null, 2)} */}
-        <CRMTable
-          {...{ table, data, isLoading, isValidating, setSize, hasReachedTheEnd }}
-        >
-          <CrmTbody {...{ data, error, table, isLoading, hasReachedTheEnd }} />
-        </CRMTable>
+        <CrmTableWrapper {...{ isValidating, setSize }}>
+          <CrmThead {...{ table, isLoading }} />
+          <CrmTbody {...{ table, isLoading, data, error, hasReachedTheEnd }} />
+        </CrmTableWrapper>
       </Layout>
     </>
   )
