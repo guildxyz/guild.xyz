@@ -4,6 +4,7 @@ import {
   Divider,
   HStack,
   Icon,
+  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -16,6 +17,7 @@ import {
   Skeleton,
   Stack,
   Text,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -23,7 +25,13 @@ import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
-import { CaretDown, Check, Shield, ShieldCheck } from "phosphor-react"
+import {
+  ArrowSquareOut,
+  CaretDown,
+  Check,
+  Shield,
+  ShieldCheck,
+} from "phosphor-react"
 import { useEffect, useRef } from "react"
 import pluralize from "utils/pluralize"
 import useEditSharedSocials from "../hooks/useEditSharedSocials"
@@ -91,9 +99,16 @@ const SharedSocials = () => {
           <ModalBody>
             <Text mb="8">
               Choose which CRM enabled guilds you share your connections with.{" "}
-              {/* <Link colorScheme="gray" fontWeight={"semibold"}>
-                Learn more <Icon as={ArrowSquareOut} ml="1" />
-              </Link> */}
+              <Tooltip label="Soon" shouldWrapChildren hasArrow>
+                <Link
+                  colorScheme="gray"
+                  fontWeight={"semibold"}
+                  opacity={0.5}
+                  pointerEvents={"none"}
+                >
+                  Learn more <Icon as={ArrowSquareOut} ml="1" />
+                </Link>
+              </Tooltip>
             </Text>
             <Stack divider={<Divider />} spacing="4">
               {guildSharedSocial && (
