@@ -11,7 +11,7 @@ type Props = {
     link?: string
     image?: string | JSX.Element
     name: string
-    info?: string
+    info?: string | JSX.Element
     type: PlatformName
   }
 } & Rest

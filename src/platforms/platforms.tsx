@@ -58,7 +58,7 @@ type PlatformData<
     type: PlatformName
     name: string
     image?: string | JSX.Element
-    info?: string
+    info?: string | JSX.Element
     link?: string
   }
   cardSettingsComponent?: () => JSX.Element
