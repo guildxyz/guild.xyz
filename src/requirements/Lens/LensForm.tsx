@@ -93,7 +93,7 @@ const LensForm = ({ baseFieldPath, field }: RequirementFormProps) => {
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
                 ref={ref}
-                placeholder="Paste Lenster link"
+                placeholder="Paste Hey link"
                 value={value ?? ""}
                 onChange={(event) => {
                   const newValue = event.target.value

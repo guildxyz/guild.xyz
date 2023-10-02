@@ -13,6 +13,7 @@ import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import platforms from "platforms/platforms"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
 import CompleteCaptchaJoinStep from "./components/CompleteCaptchaJoinStep"
@@ -52,6 +53,8 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { handleSubmit } = methods
 
   const renderedSteps = (requiredPlatforms ?? []).map((platform) => {
+    if (!platforms[platform]) return null
+
     if (platform in customJoinStep) {
       const ConnectComponent = customJoinStep[platform]
       return <ConnectComponent key={platform} />

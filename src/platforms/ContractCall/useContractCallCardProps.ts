@@ -7,8 +7,8 @@ const useContractCallCardProps = (guildPlatform: GuildPlatform) => {
 
   return {
     type: "CONTRACT_CALL" as PlatformName,
-    name: data?.name || "",
-    image: data?.image || "",
+    name: data?.name || guildPlatform.platformGuildData?.name,
+    image: data?.image || guildPlatform.platformGuildData?.imageUrl,
     info: data?.description,
   }
 }

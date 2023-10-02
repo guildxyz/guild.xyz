@@ -9,21 +9,15 @@ import Image from "next/image"
 import GuildGhost from "static/avatars/ghost.svg"
 
 type Props = {
-  image: string
-  eventId: string
+  url: string
   showFallback?: boolean
 } & AspectRatioProps
 
-const EventImage = ({
-  image,
-  showFallback = true,
-  eventId,
-  ...rest
-}: Props): JSX.Element => {
+const EventImage = ({ url, showFallback = true, ...rest }: Props): JSX.Element => {
   const bg = useColorModeValue("gray.200", "whiteAlpha.200")
   const ghostColor = useColorModeValue("white", "whiteAlpha.300")
 
-  if (!image && !showFallback) return null
+  if (!url && !showFallback) return null
 
   return (
     <AspectRatio
@@ -35,13 +29,8 @@ const EventImage = ({
       h="full"
       {...rest}
     >
-      {image ? (
-        <Image
-          src={`https://cdn.discordapp.com/guild-events/${eventId}/${image}.png?size=512`}
-          alt="event cover"
-          layout="fill"
-          objectFit="cover"
-        />
+      {url ? (
+        <Image src={url} alt="event cover" layout="fill" objectFit="cover" />
       ) : (
         <Center>
           <Icon as={GuildGhost} color={ghostColor} boxSize={12} />

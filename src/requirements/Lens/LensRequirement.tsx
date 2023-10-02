@@ -17,7 +17,7 @@ const LensRequirement = (props: RequirementProps) => {
               <>
                 {`Collect the `}
                 <Link
-                  href={`https://lenster.xyz/posts/${requirement.data.id}`}
+                  href={`https://hey.xyz/posts/${requirement.data.id}`}
                   isExternal
                   display="inline"
                   colorScheme="blue"
@@ -33,7 +33,7 @@ const LensRequirement = (props: RequirementProps) => {
               <>
                 {`Mirror the `}
                 <Link
-                  href={`https://lenster.xyz/posts/${requirement.data.id}`}
+                  href={`https://hey.xyz/posts/${requirement.data.id}`}
                   isExternal
                   display="inline"
                   colorScheme="blue"

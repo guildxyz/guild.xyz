@@ -291,7 +291,11 @@ const AddRequirementHome = forwardRef(
                         py="8"
                         px="6"
                         leftIcon={
-                          <Img src={requirementButton.icon as string} boxSize="6" />
+                          typeof requirementButton.icon === "string" ? (
+                            <Img src={requirementButton.icon} boxSize="6" />
+                          ) : (
+                            <Icon as={requirementButton.icon} boxSize={6} />
+                          )
                         }
                         rightIcon={<Icon as={CaretRight} />}
                         iconSpacing={4}

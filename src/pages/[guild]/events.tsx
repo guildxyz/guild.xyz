@@ -1,19 +1,20 @@
 import { HStack, Link, VStack, Wrap } from "@chakra-ui/react"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
-import DiscordEventCard from "components/[guild]/Events/DiscordEventCard"
+import EventCard from "components/[guild]/Events/EventCard"
 import FallbackFrame from "components/[guild]/Events/FallbackFrame"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import VerifiedIcon from "components/common/VerifiedIcon"
-import useDiscordEvents, { DiscordEvent } from "hooks/useDiscordEvents"
+import useGuildEvents, { GuildEvent } from "hooks/useGuildEvents"
 import dynamic from "next/dynamic"
-import { NoteBlank, WarningOctagon } from "phosphor-react"
-import { PlatformType, SocialLinkKey } from "types"
+import { NoteBlank } from "phosphor-react"
+import { SocialLinkKey } from "types"
 import parseDescription from "utils/parseDescription"
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
@@ -23,7 +24,6 @@ const GuildEvents = (): JSX.Element => {
     id: guildId,
     name,
     imageUrl,
-    guildPlatforms,
     isDetailed,
     description,
     socialLinks,
@@ -31,16 +31,11 @@ const GuildEvents = (): JSX.Element => {
   } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { isAdmin } = useGuildPermission()
-  const discordGuildPlatform = guildPlatforms?.find(
-    (platform) => platform.platformId === PlatformType.DISCORD
-  )
 
-  const { data, isLoading, error } = useDiscordEvents(
-    discordGuildPlatform?.platformGuildId
-  )
+  const { data, isValidating, error, serverError } = useGuildEvents()
 
-  const sortEventByStartDate = (eventA: DiscordEvent, eventB: DiscordEvent) =>
-    eventA.scheduledStartTimestamp - eventB.scheduledStartTimestamp
+  const sortEventByStartDate = (eventA: GuildEvent, eventB: GuildEvent) =>
+    eventA.start - eventB.start
 
   return (
     <Layout
@@ -97,39 +92,39 @@ const GuildEvents = (): JSX.Element => {
       }
     >
       <GuildTabs activeTab="EVENTS" />
-      {!data && !error && isLoading && (
+      {(isValidating || data === undefined) && (
         <FallbackFrame isLoading text="Searching for events..." />
       )}
-      {!data && !error && !isLoading && (
-        <FallbackFrame
-          icon={NoteBlank}
-          title="No events yet"
-          text="Your guild has no upcoming event currently"
-        />
-      )}
-
-      {!isLoading && !!error && (
-        <FallbackFrame
-          icon={WarningOctagon}
-          text="Something went wrong, couldn't load events."
-        />
-      )}
-
-      {!isLoading && !error && data?.length === 0 && (
+      {!isValidating && data?.length === 0 && (
         <FallbackFrame
           icon={NoteBlank}
           title="No events yet"
           text="Your guild has no upcoming event currently or you have no access to Discord"
         />
       )}
-
-      {!isLoading && !error && data?.length > 0 && (
+      {!isValidating && data?.length > 0 && (
         <VStack gap={4}>
           {data.sort(sortEventByStartDate).map((event) => (
-            <DiscordEventCard key={event.id} event={event} guildId={guildId} />
+            <EventCard key={event.title} event={event} guildId={guildId} />
           ))}
         </VStack>
       )}
+      {isAdmin && !isValidating && error.length ? (
+        <ErrorAlert
+          label={`"Couldn't fetch events from ${error
+            .map((err) => (err.type ? err.type : null))
+            .join(", ")}`}
+          mt={4}
+        />
+      ) : null}
+      {isAdmin && !isValidating && serverError.length ? (
+        <ErrorAlert
+          label={`"Couldn't fetch events from ${serverError
+            .map((err) => err.type)
+            .join(", ")}`}
+          mt={4}
+        />
+      ) : null}
     </Layout>
   )
 }
