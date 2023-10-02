@@ -31,7 +31,9 @@ const FallbackFrame = ({ isLoading, icon, title, text }: FallbackProps) => (
       </Text>
     )}
 
-    <Text colorScheme="gray">{text}</Text>
+    <Text colorScheme="gray" mt="2">
+      {text}
+    </Text>
   </Card>
 )
 

@@ -294,6 +294,8 @@ const EditGuildDrawer = ({
                   <Events />
                 </Section>
 
+                <Divider />
+
                 <Section title="Security">
                   <MembersToggle />
                   <HideFromExplorerToggle />
