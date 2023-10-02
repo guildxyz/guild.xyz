@@ -35,6 +35,9 @@ const SharedSocials = () => {
 
   const guildSharedSocial =
     id && sharedSocials?.find((sharedSocial) => sharedSocial.guildId === id)
+  const restSharedSocials = !guildSharedSocial
+    ? sharedSocials
+    : sharedSocials?.filter((sharedSocial) => sharedSocial.guildId !== id)
 
   const buttonProps = {
     size: "sm",
@@ -92,8 +95,15 @@ const SharedSocials = () => {
                 Learn more <Icon as={ArrowSquareOut} ml="1" />
               </Link> */}
             </Text>
-            <Stack>
-              {sharedSocials?.map((sharedSocial) => (
+            <Stack divider={<Divider />} spacing="4">
+              {guildSharedSocial && (
+                <ShareSocialsWithGuildSelect
+                  key={guildSharedSocial.guildId}
+                  guildId={guildSharedSocial.guildId}
+                  sharedSocials={sharedSocials}
+                />
+              )}
+              {restSharedSocials.map((sharedSocial) => (
                 <ShareSocialsWithGuildSelect
                   key={sharedSocial.guildId}
                   guildId={sharedSocial.guildId}
@@ -108,6 +118,10 @@ const SharedSocials = () => {
   )
 }
 
+/**
+ * Passing sharedSocials as prop instead of just isShared, because it doesn't change
+ * on edit success that way for some reason, regardless of the mutate
+ */
 const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
   const { imageUrl, name } = useGuild(guildId)
   const { onSubmit, isLoading, submit } = useEditSharedSocials(guildId)
