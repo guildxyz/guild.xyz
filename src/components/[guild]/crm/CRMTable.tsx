@@ -17,9 +17,10 @@ import {
 import { Table as TableType, flexRender } from "@tanstack/react-table"
 import Card from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
-import { useRef, useState } from "react"
+import { PropsWithChildren, useRef, useState } from "react"
 import { SWRInfiniteResponse } from "swr/infinite"
 import { TABS_HEIGHT_SM, TABS_SM_BUTTONS_STYLES } from "../Tabs/Tabs"
+import { IDENTITIES_COLLAPSED_STYLE } from "./IdentitiesExpansionToggle"
 import MemberModal from "./MemberModal"
 import { Member } from "./useMembers"
 
@@ -27,21 +28,19 @@ type Props = {
   table: TableType<Member>
   hasReachedTheEnd: boolean
   data: Member[]
-} & Omit<SWRInfiniteResponse<Member[]>, "data">
+} & Omit<SWRInfiniteResponse<Member[]>, "data" | "size" | "error" | "mutate">
 
 const HEADER_HEIGHT = "61px"
 const CHECKBOX_COLUMN_WIDTH = 45
 
 const CRMTable = ({
   table,
-  data,
-  error,
   isValidating,
   isLoading,
   setSize,
-  hasReachedTheEnd,
-}: Props) => {
-  const cardBg = useColorModeValue("white", "var(--chakra-colors-gray-700)") // css variable form so it works in boxShadow literal for identityTags
+  children,
+}: PropsWithChildren<Props>) => {
+  const cardBg = useColorModeValue("white", "var(--chakra-colors-gray-700)")
   const theadBoxShadow = useColorModeValue("md", "2xl")
 
   /**
@@ -86,7 +85,11 @@ const CRMTable = ({
            ${TABS_SM_BUTTONS_STYLES}`}
         {/* the table is elevated to be above the headers shadow, and the popovers need to be elevated above that */}
         {`body {overflow-x: hidden !important}
-          .chakra-popover__popper { z-index: var(--chakra-zIndices-banner) !important };`}
+          .chakra-popover__popper { z-index: var(--chakra-zIndices-banner) !important }`}
+        {isIdentityStuck &&
+          `.identityTd {max-width: 120px; background: ${cardBg}}
+           ${IDENTITIES_COLLAPSED_STYLE}
+           .identitiesToggle {display: none}`}
       </style>
       <Flex
         ref={scrollContainerRef}
@@ -158,72 +161,7 @@ const CRMTable = ({
                 />
               )}
             </Thead>
-            <Tbody
-              /**
-               * Will change: these styles are needed here so the css only hover
-               * based expand animation works, will rework to be manually switchable
-               * with state management
-               */
-              sx={{
-                ".identityTag": {
-                  boxShadow: `0 0 0 1px ${cardBg}`,
-                },
-                ":has(.identityTd:hover)": !isIdentityStuck && {
-                  ".identityTag": {
-                    marginLeft: "0",
-                  },
-                },
-              }}
-            >
-              {!data && isLoading ? (
-                [...Array(20)].map((_, i) => (
-                  <CrmSkeletonRow
-                    key={`loading_skeleton_${i}`}
-                    columns={table.getAllLeafColumns()}
-                  />
-                ))
-              ) : data ? (
-                table.getRowModel().rows.length ? (
-                  table
-                    .getRowModel()
-                    .rows.map((row) => (
-                      <MemberRow
-                        key={row.id}
-                        {...{ row, isIdentityStuck, cardBg }}
-                      />
-                    ))
-                    .concat(
-                      hasReachedTheEnd ? (
-                        <CrmInfoRow key="end_of_results">
-                          <Text
-                            colorScheme="gray"
-                            fontSize={"xs"}
-                            fontWeight={"bold"}
-                            textTransform={"uppercase"}
-                          >
-                            End of results
-                          </Text>
-                        </CrmInfoRow>
-                      ) : (
-                        [...Array(20)].map((_, i) => (
-                          <CrmSkeletonRow
-                            key={`validating_skeleton_${i}`}
-                            columns={table.getAllLeafColumns()}
-                          />
-                        ))
-                      )
-                    )
-                ) : (
-                  <CrmInfoRow py="10">
-                    No members satisfy the filters you've set
-                  </CrmInfoRow>
-                )
-              ) : (
-                <CrmInfoRow py="10">
-                  {error?.message || "Couldn't fetch members"}
-                </CrmInfoRow>
-              )}
-            </Tbody>
+            {children}
           </Table>
         </Card>
       </Flex>
@@ -231,7 +169,57 @@ const CRMTable = ({
   )
 }
 
-const MemberRow = ({ row, isIdentityStuck, cardBg }) => {
+export const CrmTbody = ({
+  table,
+  data,
+  error,
+  isLoading,
+  hasReachedTheEnd,
+}: any) => (
+  <Tbody>
+    {!data && isLoading ? (
+      [...Array(20)].map((_, i) => (
+        <CrmSkeletonRow
+          key={`loading_skeleton_${i}`}
+          columns={table.getAllLeafColumns()}
+        />
+      ))
+    ) : data ? (
+      table.getRowModel().rows.length ? (
+        table
+          .getRowModel()
+          .rows.map((row) => <MemberRow key={row.id} row={row} />)
+          .concat(
+            hasReachedTheEnd ? (
+              <CrmInfoRow key="end_of_results">
+                <Text
+                  colorScheme="gray"
+                  fontSize={"xs"}
+                  fontWeight={"bold"}
+                  textTransform={"uppercase"}
+                >
+                  End of results
+                </Text>
+              </CrmInfoRow>
+            ) : (
+              [...Array(20)].map((_, i) => (
+                <CrmSkeletonRow
+                  key={`validating_skeleton_${i}`}
+                  columns={table.getAllLeafColumns()}
+                />
+              ))
+            )
+          )
+      ) : (
+        <CrmInfoRow py="10">No members satisfy the filters you've set</CrmInfoRow>
+      )
+    ) : (
+      <CrmInfoRow py="10">{error?.message || "Couldn't fetch members"}</CrmInfoRow>
+    )}
+  </Tbody>
+)
+
+const MemberRow = ({ row }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -245,12 +233,10 @@ const MemberRow = ({ row, isIdentityStuck, cardBg }) => {
             position: "sticky",
             left: "0",
             width: "0px",
+            maxWidth: "350px",
+            transition: "max-width .2s",
             zIndex: 1,
             className: "identityTd",
-            ...(isIdentityStuck && {
-              maxWidth: "150px",
-              bg: cardBg,
-            }),
           })}
         >
           {flexRender(cell.column.columnDef.cell, cell.getContext())}

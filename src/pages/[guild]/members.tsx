@@ -6,10 +6,11 @@ import {
 } from "@tanstack/react-table"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import CRMTable from "components/[guild]/crm/CRMTable"
+import CRMTable, { CrmTbody } from "components/[guild]/crm/CRMTable"
 import ExportMembers from "components/[guild]/crm/ExportMembers"
 import FilterByRoles from "components/[guild]/crm/FilterByRoles"
 import Identities from "components/[guild]/crm/Identities"
+import IdentitiesExpansionToggle from "components/[guild]/crm/IdentitiesExpansionToggle"
 import IdentitiesSearch from "components/[guild]/crm/IdentitiesSearch"
 import OrderByColumn from "components/[guild]/crm/OrderByColumn"
 import RoleTags from "components/[guild]/crm/RoleTags"
@@ -60,7 +61,8 @@ const GuildPage = (): JSX.Element => {
      */
     window.history.pushState("", "", `?${queryString}`)
   }, [queryString])
-  const { data, ...rest } = useMembers(queryString)
+  const { data, error, isLoading, isValidating, setSize, hasReachedTheEnd } =
+    useMembers(queryString)
 
   const columns = useMemo(
     () => [
@@ -94,7 +96,12 @@ const GuildPage = (): JSX.Element => {
         id: "identity",
         size: 210,
         cell: (info) => <Identities member={info.getValue()} />,
-        header: ({ column }) => <IdentitiesSearch column={column} />,
+        header: ({ column }) => (
+          <HStack spacing="0">
+            <IdentitiesSearch column={column} />
+            <IdentitiesExpansionToggle />
+          </HStack>
+        ),
       }),
       {
         accessorKey: "roles",
@@ -202,7 +209,11 @@ const GuildPage = (): JSX.Element => {
         />
         {/* for debugging */}
         {/* {JSON.stringify(table.getState(), null, 2)} */}
-        <CRMTable table={table} data={data} {...rest} />
+        <CRMTable
+          {...{ table, data, isLoading, isValidating, setSize, hasReachedTheEnd }}
+        >
+          <CrmTbody {...{ data, error, table, isLoading, hasReachedTheEnd }} />
+        </CRMTable>
       </Layout>
     </>
   )

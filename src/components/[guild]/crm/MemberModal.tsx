@@ -66,15 +66,15 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
                 <IdentityTag
                   key={platformAccount.platformId}
                   platformAccount={platformAccount}
-                  isOpen={true}
                   fontWeight="semibold"
+                  isOpen
                 />
               ))
             ) : (
               <PrivateSocialsTag isOpen />
             )}
             {addresses.slice(1).map((address) => (
-              <WalletTag key={address} isOpen>
+              <WalletTag key={address}>
                 <CopyableAddress address={address} fontSize="sm" />
               </WalletTag>
             ))}

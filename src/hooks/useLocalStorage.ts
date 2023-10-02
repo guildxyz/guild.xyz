@@ -14,7 +14,7 @@ const getDataFromLocalstorage = <T>(
         window.localStorage.setItem(key, JSON.stringify(initialValue))
       return initialValue
     }
-    return tryToParseJSON(item) || item
+    return tryToParseJSON(item) ?? item
   } catch (error) {
     console.error(error)
     return initialValue

@@ -1,4 +1,11 @@
-import { HStack, Tag, TagLabel, TagLeftIcon, Tooltip } from "@chakra-ui/react"
+import {
+  HStack,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  Tooltip,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { LockSimple, Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
@@ -37,7 +44,7 @@ const Identities = ({ member }: Props) => {
           isOpen={i === 0}
         />
       ))}
-      <WalletTag isOpen={areSocialsPrivate}>
+      <WalletTag>
         {areSocialsPrivate ? shortenHex(addresses?.[0]) : addresses?.length}
       </WalletTag>
       {areSocialsPrivate && <PrivateSocialsTag />}
@@ -55,6 +62,7 @@ export const IdentityTag = ({
 } & Rest) => {
   const platform = platforms[PlatformType[platformAccount.platformId]]
   const username = platformAccount.username ?? platformAccount.platformUserId
+  const borderColor = useColorModeValue("white", "var(--chakra-colors-gray-700)")
 
   return (
     <Tag
@@ -65,7 +73,7 @@ export const IdentityTag = ({
       className="identityTag"
       sx={{ "--stacked-margin-left": "-24px" }}
       transition={"margin .2s"}
-      ml={!isOpen && "-24px"}
+      boxShadow={`0 0 0 1px ${borderColor}`}
       {...rest}
     >
       <TagLeftIcon as={platform.icon} /* size=".6em" */ mr="0" />
@@ -74,22 +82,26 @@ export const IdentityTag = ({
   )
 }
 
-export const WalletTag = ({ isOpen = false, children }) => (
-  <Tag
-    colorScheme={"gray"}
-    bg={`gray.500`}
-    variant="solid"
-    px="1.5"
-    order="0"
-    className="identityTag"
-    sx={{ "--stacked-margin-left": "-39px" }}
-    transition={"margin .2s"}
-    ml={!isOpen && "-39px"}
-  >
-    <TagLeftIcon as={Wallet} mr="0" />
-    <TagLabel ml="1">{children}</TagLabel>
-  </Tag>
-)
+export const WalletTag = ({ children }) => {
+  const borderColor = useColorModeValue("white", "var(--chakra-colors-gray-700)")
+
+  return (
+    <Tag
+      colorScheme={"gray"}
+      bg={`gray.500`}
+      variant="solid"
+      px="1.5"
+      order="0"
+      className="identityTag"
+      sx={{ "--stacked-margin-left": "-39px" }}
+      transition={"margin .2s"}
+      boxShadow={`0 0 0 1px ${borderColor}`}
+    >
+      <TagLeftIcon as={Wallet} mr="0" />
+      <TagLabel ml="1">{children}</TagLabel>
+    </Tag>
+  )
+}
 
 export const PrivateSocialsTag = ({ isOpen = false }) => (
   <Tooltip
