@@ -1,7 +1,9 @@
 import {
   Center,
   Checkbox,
+  HStack,
   Skeleton,
+  Spinner,
   Tbody,
   Td,
   Text,
@@ -50,12 +52,12 @@ const CrmTbody = ({ table, data, error, isLoading, hasReachedTheEnd }: Props) =>
                   </Text>
                 </CrmInfoRow>
               ) : (
-                [...Array(20)].map((_, i) => (
-                  <CrmSkeletonRow
-                    key={`validating_skeleton_${i}`}
-                    columns={table.getAllLeafColumns()}
-                  />
-                ))
+                <CrmInfoRow key="loading">
+                  <HStack>
+                    <Spinner size="sm" />
+                    <Text>Loading more members</Text>
+                  </HStack>
+                </CrmInfoRow>
               )
             )
         ) : (
