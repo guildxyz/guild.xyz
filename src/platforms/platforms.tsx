@@ -320,7 +320,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
   TEXT: {
     icon: Star,
-    name: "Custom text",
+    name: "Secret",
     colorScheme: "gray",
     gatedEntity: "",
     cardPropsHook: useTextCardProps,

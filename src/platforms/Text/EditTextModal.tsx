@@ -56,7 +56,7 @@ const EditTextModal = ({
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Edit text reward</ModalHeader>
+        <ModalHeader>Edit secret</ModalHeader>
         <ModalCloseButton />
 
         <ModalBody>

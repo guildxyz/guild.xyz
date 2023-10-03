@@ -21,7 +21,7 @@ const TextCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     <>
       <PlatformCardMenu>
         <MenuItem icon={<PencilSimple />} onClick={onOpen}>
-          Edit text
+          Edit secret
         </MenuItem>
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
       </PlatformCardMenu>

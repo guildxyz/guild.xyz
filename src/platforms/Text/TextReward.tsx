@@ -49,7 +49,7 @@ const TextReward = ({ platform, withMotionImg }: RewardProps) => {
                   onOpen()
                 }}
               >
-                {platformGuildData.name ?? "Text reward"}
+                {platformGuildData.name ?? "Secret"}
               </Button>
             </>
           )

@@ -41,7 +41,7 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
       description: "Create a gated NFT",
     },
     TEXT: {
-      description: "Show a text for the users",
+      description: "Show a secret for the users",
     },
   }
 

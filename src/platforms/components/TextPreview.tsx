@@ -12,7 +12,7 @@ const TextPreview = (): JSX.Element => {
   return (
     <PlatformPreview
       type="TEXT"
-      name={platformGuildData?.name ?? "Text reward"}
+      name={platformGuildData?.name ?? "Secret"}
       image={
         platformGuildData?.imageUrl ?? (
           <Circle
