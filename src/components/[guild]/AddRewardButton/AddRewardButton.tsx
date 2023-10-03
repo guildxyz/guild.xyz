@@ -91,7 +91,7 @@ const AddRewardButton = (): JSX.Element => {
           ?.filter((roleId) => !!roleId)
           .map((roleId) => ({
             // We'll be able to send additional params here, like capacity & time
-            platformRoleId: roleId,
+            roleId: +roleId,
             visibility: roles.find((role) => role.id === +roleId).visibility,
           })),
       })
