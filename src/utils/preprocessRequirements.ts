@@ -120,6 +120,15 @@ const preprocessRequirements = (
         )
           processedRequirement.data.addresses = []
 
+        if (
+          requirement.type === "CONTRACT" &&
+          Array.isArray(requirement.data?.params)
+        ) {
+          processedRequirement.data.params = requirement.data.params.map(
+            (param) => param.value
+          )
+        }
+
         // needed for POAP requirements, temporary
         delete (processedRequirement as any).requirementId
         delete (processedRequirement as any).logic

@@ -65,10 +65,10 @@ const ContractStateRequirement = (props: RequirementProps) => {
                     borderBottomRadius="xl"
                   >
                     <Tbody fontWeight="normal" fontSize="xs">
-                      {(requirement.data.params as string[])?.map((param, i) => (
+                      {requirement.data.params?.map((param, i) => (
                         <Tr key={i}>
                           <Td>{`${i + 1}. input param`}</Td>
-                          <Td>{param}</Td>
+                          <Td>{param.value}</Td>
                         </Tr>
                       ))}
                       <Tr fontWeight={"semibold"}>
