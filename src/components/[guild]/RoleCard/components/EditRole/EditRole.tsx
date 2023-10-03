@@ -248,10 +248,12 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
               <MotionDrawerFooter
                 initial={{ y: FOOTER_OFFSET, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -FOOTER_OFFSET, opacity: 0 }}
+                exit={{ y: FOOTER_OFFSET, opacity: 0 }}
+                transition={{ duration: 0.3 }}
                 position="absolute"
                 w="full"
                 bottom="0"
+                key={"role-editor-drawer-footer"}
               >
                 <Button variant="outline" mr={3} onClick={onCloseAndClear}>
                   Cancel
