@@ -34,6 +34,7 @@ const TextReward = ({ platform, withMotionImg }: RewardProps) => {
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
 
+  // This is a partial duplication of the logic in the `Reward` component. I'll see what'll we need from it during the unique text reward implementation
   const state = useMemo(() => {
     if (isMember && hasAccess)
       return {
