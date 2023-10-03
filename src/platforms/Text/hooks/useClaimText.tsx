@@ -40,7 +40,7 @@ const useClaimText = (rolePlatformId: number) => {
 
   const claimFetcher = (signedValidation: SignedValdation) =>
     fetcher(
-      `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}1/claim`,
+      `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`,
       {
         method: "POST",
         ...signedValidation,
