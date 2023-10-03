@@ -38,7 +38,7 @@ const TextReward = ({ platform, withMotionImg }: RewardProps) => {
             <Text opacity={0.5}>Claiming reward...</Text>
           ) : (
             <>
-              {`View text: `}
+              {`Reveal secret: `}
               <Button
                 variant="link"
                 rightIcon={<ArrowSquareOut />}

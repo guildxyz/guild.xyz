@@ -30,7 +30,7 @@ const TextCardButton = ({ platform }: Props) => {
         isLoading={isLoading}
         loadingText="Claiming secret..."
       >
-        View secret
+        Reveal secret
       </Button>
 
       <ClaimTextModal
