@@ -57,7 +57,6 @@ module.exports = {
       "discord.com",
       "img.evbuc.com",
       "images.lumacdn.com",
-      "link3-image.cyberconnect.dev",
       "og.link3.to",
     ],
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
