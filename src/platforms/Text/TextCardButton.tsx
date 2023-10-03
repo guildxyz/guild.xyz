@@ -1,22 +1,45 @@
-import { useDisclosure } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { GuildPlatform } from "types"
-import ViewFullTextModal from "./ViewFullTextModal"
+import useClaimText, { ClaimTextModal } from "./hooks/useClaimText"
 
 type Props = {
   platform: GuildPlatform
 }
 
 const TextCardButton = ({ platform }: Props) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { roles } = useGuild()
+  const rolePlatformId = roles
+    ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
+    ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)?.id
+  const {
+    onSubmit,
+    isLoading,
+    error,
+    response,
+    modalProps: { isOpen, onOpen, onClose },
+  } = useClaimText(rolePlatformId)
 
   return (
     <>
-      <Button onClick={onOpen}>View text</Button>
+      <Button
+        onClick={() => {
+          onOpen()
+          onSubmit()
+        }}
+        isLoading={isLoading}
+        loadingText="Claiming secret..."
+      >
+        View secret
+      </Button>
 
-      <ViewFullTextModal isOpen={isOpen} onClose={onClose}>
-        {platform.platformGuildData.text}
-      </ViewFullTextModal>
+      <ClaimTextModal
+        isOpen={isOpen}
+        onClose={onClose}
+        isLoading={isLoading}
+        error={error}
+        response={response}
+      />
     </>
   )
 }
