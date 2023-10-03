@@ -102,7 +102,9 @@ const useBalancy = (
   const renderedRequirements = useMemo<Requirement[]>(
     () =>
       (baseFieldPath !== undefined
-        ? [debouncedRequirement]
+        ? debouncedRequirement
+          ? [debouncedRequirement]
+          : []
         : debouncedRequirements) ?? [],
     [debouncedRequirements, baseFieldPath, debouncedRequirement]
   )
