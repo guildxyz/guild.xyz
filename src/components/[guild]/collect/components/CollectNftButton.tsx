@@ -2,6 +2,7 @@ import { ButtonProps } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
+import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
@@ -26,8 +27,10 @@ const CollectNftButton = ({
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
 
-  const { chain, address, alreadyCollected } = useCollectNftContext()
+  const { chain, address, alreadyCollected, roleId } = useCollectNftContext()
   const { id: guildId, urlName } = useGuild()
+
+  const { isLoading: isAccessLoading, hasAccess } = useAccess(roleId)
 
   const { chainId } = useWeb3React()
   const shouldSwitchNetwork = chainId !== Chains[chain]
@@ -61,7 +64,11 @@ const CollectNftButton = ({
     nftDetails?.fee && coinBalance ? coinBalance.gt(nftDetails.fee) : undefined
 
   const isLoading =
-    isJoinLoading || isMinting || isNftDetailsValidating || isBalanceLoading
+    isAccessLoading ||
+    isJoinLoading ||
+    isMinting ||
+    isNftDetailsValidating ||
+    isBalanceLoading
   const loadingText =
     isNftBalanceLoading || isJoinLoading
       ? "Checking eligibility"
@@ -70,7 +77,11 @@ const CollectNftButton = ({
       : "Checking your balance"
 
   const isDisabled =
-    shouldSwitchNetwork || alreadyCollected || !isSufficientBalance || isLoading
+    shouldSwitchNetwork ||
+    !hasAccess ||
+    alreadyCollected ||
+    !isSufficientBalance ||
+    isLoading
 
   return (
     <Button
