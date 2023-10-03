@@ -37,8 +37,10 @@ const SelectExistingPlatform = ({ onClose }) => {
 
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={{ base: 4, md: 6 }}>
         {filteredPlatforms?.map((platform) => {
-          const useCardProps =
-            platforms[PlatformType[platform.platformId]].cardPropsHook
+          const platformData = platforms[PlatformType[platform.platformId]]
+          if (!platformData) return null
+
+          const useCardProps = platformData.cardPropsHook
 
           const isGoogleReward = platform.platformId === PlatformType.GOOGLE
           const isForm =
@@ -46,7 +48,7 @@ const SelectExistingPlatform = ({ onClose }) => {
             "application/vnd.google-apps.form"
 
           const isAddButtonDisabled =
-            platforms[PlatformType[platform.platformId]].asRewardRestriction ===
+            platformData.asRewardRestriction ===
               PlatformAsRewardRestrictions.SINGLE_ROLE &&
             alreadyUsedRolePlatforms?.includes(platform.id)
 
@@ -60,9 +62,7 @@ const SelectExistingPlatform = ({ onClose }) => {
               <Tooltip
                 maxW="full"
                 isDisabled={!isAddButtonDisabled}
-                label={`You can use ${
-                  platforms[PlatformType[platform.platformId]].name
-                } rewards for one role only`}
+                label={`You can use ${platformData.name} rewards for one role only`}
                 placement="bottom"
                 hasArrow
               >
