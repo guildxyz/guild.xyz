@@ -253,7 +253,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                 position="absolute"
                 w="full"
                 bottom="0"
-                key={"role-editor-drawer-footer"}
               >
                 <Button variant="outline" mr={3} onClick={onCloseAndClear}>
                   Cancel
