@@ -16,7 +16,7 @@ const ShareSocialsCheckbox = (): JSX.Element => {
       size="sm"
     >
       <Text colorScheme="gray" mt="-5px">
-        {`I agree to share my socials with the guild owner, so they can potentially
+        {`I agree to share my profile with the guild, so they can potentially
         reward me for my engagement in the community. `}
         <Tooltip label="Soon" shouldWrapChildren hasArrow>
           <Link

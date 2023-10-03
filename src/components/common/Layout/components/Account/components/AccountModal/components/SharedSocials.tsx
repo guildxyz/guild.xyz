@@ -98,8 +98,8 @@ const SharedSocials = () => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text mb="8">
-              Choose which CRM enabled guilds you share your connections with.{" "}
+            <Text mb="10">
+              Choose which guilds you'd like to share your profile with.{" "}
               <Tooltip label="Soon" shouldWrapChildren hasArrow>
                 <Link
                   colorScheme="gray"
