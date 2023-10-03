@@ -121,13 +121,8 @@ const preprocessRequirements = (
           processedRequirement.data.addresses = []
 
         if (
-          /**
-           * TODO: we couldn't use the type field here, because `handleSubmitDirty`
-           * removes it in most cases, but we should fix this issue and uncomment
-           * this line
-           */
-          // requirement.type === "CONTRACT" &&
-          Array.isArray(requirement.data.params)
+          requirement.type === "CONTRACT" &&
+          Array.isArray(requirement.data?.params)
         ) {
           processedRequirement.data.params = requirement.data.params.map(
             (param) => param.value
