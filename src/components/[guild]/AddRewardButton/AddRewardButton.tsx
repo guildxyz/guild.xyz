@@ -27,6 +27,7 @@ import {
   useAddRewardContext,
 } from "../AddRewardContext"
 import { CreatePoapProvider } from "../CreatePoap/components/CreatePoapContext"
+import useGuild from "../hooks/useGuild"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useAddReward from "./hooks/useAddReward"
@@ -37,6 +38,8 @@ const DynamicAddPoapPanel = dynamic(() => import("components/[guild]/CreatePoap"
 })
 
 const AddRewardButton = (): JSX.Element => {
+  const { roles } = useGuild()
+
   const {
     modalRef,
     selection,
@@ -84,7 +87,13 @@ const AddRewardButton = (): JSX.Element => {
     } else {
       onAddRewardSubmit({
         ...data.rolePlatforms[0].guildPlatform,
-        roleIds: data.roleIds?.filter((roleId) => !!roleId),
+        rolePlatforms: data.roleIds
+          ?.filter((roleId) => !!roleId)
+          .map((roleId) => ({
+            // We'll be able to send additional params here, like capacity & time
+            roleId: +roleId,
+            visibility: roles.find((role) => role.id === +roleId).visibility,
+          })),
       })
     }
   }
