@@ -3,6 +3,7 @@ import {
   AspectRatioProps,
   Center,
   Icon,
+  Img,
   useColorModeValue,
 } from "@chakra-ui/react"
 import Image from "next/image"
@@ -36,7 +37,7 @@ const EventImage = ({ url, showFallback = true, ...rest }: Props): JSX.Element =
         {isMatch ? (
           <Image src={url} alt="event cover" layout="fill" objectFit="cover" />
         ) : (
-          <img src={url} alt="event cover" />
+          <Img src={url} alt="event cover chakra" objectFit="cover" />
         )}
       </AspectRatio>
     )
