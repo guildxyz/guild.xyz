@@ -97,7 +97,7 @@ const ClaimTextModal = ({
     <ModalContent>
       <ModalCloseButton />
 
-      {!response?.uniqueValue && <ModalHeader pb={0}>Claim secret</ModalHeader>}
+      {!response?.uniqueValue && <ModalHeader pb={0}>Reveal secret</ModalHeader>}
 
       <ModalBody pt={8}>
         {isLoading ? (

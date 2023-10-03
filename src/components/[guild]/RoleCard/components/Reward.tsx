@@ -200,6 +200,7 @@ const RewardIcon = ({
           <Icon
             as={platforms[PlatformType[guildPlatform?.platformId]].icon}
             color="white"
+            boxSize={3}
           />
         </MotionCircle>
       )
@@ -209,6 +210,7 @@ const RewardIcon = ({
         <Icon
           as={platforms[PlatformType[guildPlatform?.platformId]].icon}
           color="white"
+          boxSize={3}
         />
       </Circle>
     )

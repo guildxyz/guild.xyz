@@ -7,11 +7,11 @@ import {
   GithubLogo,
   GoogleLogo,
   IconProps,
-  Star,
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
 import { ComponentType } from "react"
+import Box from "static/icons/box.svg"
 import Photo from "static/icons/photo.svg"
 import { GuildPlatform, OneOf, PlatformName } from "types"
 import fetcher from "utils/fetcher"
@@ -319,7 +319,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
   },
   TEXT: {
-    icon: Star,
+    icon: Box,
     name: "Secret",
     colorScheme: "gray",
     gatedEntity: "",
