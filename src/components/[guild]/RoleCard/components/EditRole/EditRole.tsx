@@ -55,6 +55,9 @@ export type RoleEditFormData = {
   visibility: Visibility
 }
 
+const MotionDrawerFooter = motion(DrawerFooter)
+const ANIMATION_SPEED = 50
+
 const EditRole = ({ roleId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
@@ -172,8 +175,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
-  console.log("xy", methods.formState.isDirty, defaultValues.requirements)
-
   return (
     <>
       <OnboardingMarker step={0} onClick={handleOpen}>
@@ -242,27 +243,25 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
           </DrawerBody>
           <AnimatePresence>
             {isDirty && (
-              <motion.div
-                initial={{ y: 300, opacity: 0 }}
+              <MotionDrawerFooter
+                initial={{ y: ANIMATION_SPEED, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -300, opacity: 0 }}
+                exit={{ y: -ANIMATION_SPEED, opacity: 0 }}
               >
-                <DrawerFooter>
-                  <Button variant="outline" mr={3} onClick={onCloseAndClear}>
-                    Cancel
-                  </Button>
-                  <Button
-                    isLoading={isLoading || isSigning || isUploadingShown}
-                    colorScheme="green"
-                    loadingText={loadingText}
-                    onClick={handleSubmit}
-                    leftIcon={<Icon as={Check} />}
-                    data-test="save-role-button"
-                  >
-                    Save
-                  </Button>
-                </DrawerFooter>
-              </motion.div>
+                <Button variant="outline" mr={3} onClick={onCloseAndClear}>
+                  Cancel
+                </Button>
+                <Button
+                  isLoading={isLoading || isSigning || isUploadingShown}
+                  colorScheme="green"
+                  loadingText={loadingText}
+                  onClick={handleSubmit}
+                  leftIcon={<Icon as={Check} />}
+                  data-test="save-role-button"
+                >
+                  Save
+                </Button>
+              </MotionDrawerFooter>
             )}
           </AnimatePresence>
         </DrawerContent>
