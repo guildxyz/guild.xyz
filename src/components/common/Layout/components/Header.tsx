@@ -14,6 +14,7 @@ const Header = (): JSX.Element => {
       justifyContent="space-between"
       alignItems="center"
       p="2"
+      zIndex="overlay"
       // temporary
       sx={{
         "[aria-label]": {

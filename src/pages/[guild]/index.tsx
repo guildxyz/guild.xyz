@@ -14,15 +14,10 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import PulseMarker from "components/common/PulseMarker"
-import Section from "components/common/Section"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import AccessHub from "components/[guild]/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
+import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -37,11 +32,13 @@ import { MintGuildPinProvider } from "components/[guild]/Requirements/components
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
-import Tabs from "components/[guild]/Tabs"
-import TabButton from "components/[guild]/Tabs/components/TabButton"
+import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import { usePostHogContext } from "components/_app/PostHogProvider"
-import useLocalStorage from "hooks/useLocalStorage"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -79,7 +76,6 @@ const DynamicResendRewardButton = dynamic(
 const GuildPage = (): JSX.Element => {
   const {
     id: guildId,
-    urlName,
     name,
     description,
     imageUrl,
@@ -96,9 +92,6 @@ const GuildPage = (): JSX.Element => {
     isDetailed,
   } = useGuild()
   useAutoStatusUpdate()
-
-  const [eventsSeen, setEventsSeen] = useLocalStorage<boolean>("eventsSeen", false)
-  const { captureEvent } = usePostHogContext()
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
@@ -244,8 +237,8 @@ const GuildPage = (): JSX.Element => {
         {showOnboarding ? (
           <DynamicOnboarding />
         ) : (
-          <Tabs
-            sticky
+          <GuildTabs
+            activeTab="HOME"
             rightElement={
               <HStack>
                 {isMember && !isAdmin && <DynamicResendRewardButton />}
@@ -260,28 +253,7 @@ const GuildPage = (): JSX.Element => {
                 )}
               </HStack>
             }
-          >
-            <TabButton href={urlName} isActive>
-              {showAccessHub ? "Home" : "Roles"}
-            </TabButton>
-            <PulseMarker placement="top" hidden={eventsSeen}>
-              <TabButton
-                href={`/${urlName}/events`}
-                onClick={() => {
-                  setEventsSeen(true)
-                  captureEvent("Click on events tab", {
-                    from: "home",
-                    guild: urlName,
-                  })
-                }}
-              >
-                Events
-              </TabButton>
-            </PulseMarker>
-            {isAdmin && (
-              <TabButton href={`/${urlName}/activity`}>Activity log</TabButton>
-            )}
-          </Tabs>
+          />
         )}
         <Collapse in={showAccessHub} unmountOnExit>
           <AccessHub />
@@ -323,6 +295,7 @@ const GuildPage = (): JSX.Element => {
 
           {!!hiddenRoles?.length && (
             <CollapsibleRoleSection
+              id="hiddenRoles"
               roleCount={hiddenRoles.length}
               label="hidden"
               defaultIsOpen
@@ -425,7 +398,9 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
         <ThemeProvider>
           <MintGuildPinProvider>
             <JoinModalProvider>
-              <GuildPage />
+              <EditGuildDrawerProvider>
+                <GuildPage />
+              </EditGuildDrawerProvider>
             </JoinModalProvider>
           </MintGuildPinProvider>
         </ThemeProvider>

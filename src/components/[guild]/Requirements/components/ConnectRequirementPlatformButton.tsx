@@ -1,9 +1,10 @@
 import { ButtonProps, Icon } from "@chakra-ui/react"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import Button from "components/common/Button"
+import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
-import Button from "components/common/Button"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import REQUIREMENTS from "requirements"
@@ -26,19 +27,32 @@ const mapTwitterV1 = (
   return platformName
 }
 
-const ConnectRequirementPlatformButton = (props: ButtonProps) => {
-  const { id, roleId, poapId, type } = useRequirementContext()
-
+const RequirementConnectButton = (props: ButtonProps) => {
+  const { platformUsers, emails } = useUser()
+  const { type, roleId, poapId, id } = useRequirementContext()
   const platform = mapTwitterV1(type, REQUIREMENTS[type].types[0] as PlatformName)
-
-  const { platformUsers } = useUser()
 
   const { mutate: mutateAccesses, data: roleAccess } = useAccess(roleId ?? 0)
   // temporary until POAP is not a real reward
   const { mutate: mutatePoapAccesses, data: poapAccess } =
     useUserPoapEligibility(poapId)
-
   const toast = useToast()
+
+  const isReconnection = (roleAccess || poapAccess)?.errors?.some(
+    (err) => err.requirementId === id && err.errorType === "PLATFORM_CONNECT_INVALID"
+  )
+
+  const platformFromDb = platformUsers?.some(
+    (platformAccount) => platformAccount.platformName === platform
+  )
+
+  if (
+    type?.startsWith("EMAIL")
+      ? !emails?.pending && emails?.emailAddress
+      : !isReconnection && (!platformUsers || platformFromDb)
+  )
+    return null
+
   const onSuccess = () => {
     mutateAccesses()
     if (poapId) {
@@ -51,31 +65,43 @@ const ConnectRequirementPlatformButton = (props: ButtonProps) => {
     })
   }
 
-  const isReconnection = (roleAccess || poapAccess)?.errors?.some(
-    (err) => err.requirementId === id && err.errorType === "PLATFORM_CONNECT_INVALID"
-  )
+  const ButtonComponent = type?.startsWith("EMAIL")
+    ? ConnectEmailButton
+    : ConnectRequirementPlatformButton
 
-  const { onConnect, isLoading, loadingText, response } = useConnectPlatform(
+  return (
+    <ButtonComponent
+      isReconnection={isReconnection}
+      onSuccess={onSuccess}
+      leftIcon={<Icon as={platforms[platform]?.icon} />}
+      size="xs"
+      iconSpacing="1"
+      {...props}
+    />
+  )
+}
+
+const ConnectRequirementPlatformButton = ({
+  onSuccess,
+  isReconnection,
+  ...props
+}: ButtonProps & { onSuccess: () => void; isReconnection?: boolean }) => {
+  const { type } = useRequirementContext()
+
+  const platform = mapTwitterV1(type, REQUIREMENTS[type].types[0] as PlatformName)
+
+  const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,
     onSuccess,
     isReconnection
   )
 
-  const platformFromDb = platformUsers?.some(
-    (platformAccount) => platformAccount.platformName === platform
-  )
-
-  if (!isReconnection && (!platformUsers || platformFromDb || response)) return null
-
   return (
     <Button
-      size="xs"
       onClick={onConnect}
       isLoading={isLoading}
       loadingText={loadingText}
       colorScheme={platforms[platform]?.colorScheme}
-      leftIcon={<Icon as={platforms[platform]?.icon} />}
-      iconSpacing="1"
       {...props}
     >
       {`${isReconnection ? "Reconnect" : "Connect"} ${platforms[platform]?.name}`}
@@ -83,4 +109,4 @@ const ConnectRequirementPlatformButton = (props: ButtonProps) => {
   )
 }
 
-export default ConnectRequirementPlatformButton
+export default RequirementConnectButton

@@ -1,17 +1,17 @@
 import { BigNumberish } from "@ethersproject/bignumber"
-import { ContractInterface } from "@ethersproject/contracts"
 import { Chain, RPC } from "connectors"
 import { RequirementType } from "requirements"
 import GUILD_PIN_ABI from "static/abis/guildPin.json"
+import GUILD_PIN_ZKSYNC_ABI from "static/abis/guildPinZkSync.json"
 import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
 import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
 import {
-  UNIVERSAL_ROUTER_COMMANDS,
   encodePermit2Permit,
   encodeUnwrapEth,
   encodeV2SwapExactOut,
   encodeV3SwapExactOut,
   encodeWrapEth,
+  UNIVERSAL_ROUTER_COMMANDS,
 } from "./encoders"
 
 export type TokenBuyerContractConfig = Partial<
@@ -222,74 +222,31 @@ export const paymentSupportedChains: Chain[] = Object.keys(
   FEE_COLLECTOR_CONTRACT
 ) as Chain[]
 
-type GuildPinContracts = Partial<
-  Record<Chain, { address: string; abi: ContractInterface }>
->
-
-const GUILD_PIN_CONTRACTS = {
-  DEFAULT: {
-    // POLYGON_MUMBAI: {
-    //   address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
-    //   abi: GUILD_PIN_ABI,
-    // },
-    POLYGON: {
-      address: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
-      abi: GUILD_PIN_ABI,
-    },
+export const GUILD_PIN_CONTRACTS = {
+  POLYGON: {
+    address: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
+    abi: GUILD_PIN_ABI,
   },
-  // Sybil-test
-  32076: {
-    BSC: {
-      address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
-      abi: GUILD_PIN_ABI,
-    },
+  POLYGON_MUMBAI: {
+    address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
+    abi: GUILD_PIN_ABI,
   },
-  // Linea
-  32319: {
-    BSC: {
-      address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
-      abi: GUILD_PIN_ABI,
-    },
+  BSC: {
+    address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
+    abi: GUILD_PIN_ABI,
   },
-  // Arbitrum
-  9839: {
-    ARBITRUM: {
-      address: "0x0e6a14106497a7de36fba446628860c062e9e302",
-      abi: GUILD_PIN_ABI,
-    },
+  ARBITRUM: {
+    address: "0x0e6a14106497a7de36fba446628860c062e9e302",
+    abi: GUILD_PIN_ABI,
   },
-  // Alpha Venture DAO
-  17326: {
-    ARBITRUM: {
-      address: "0x0e6a14106497a7de36fba446628860c062e9e302",
-      abi: GUILD_PIN_ABI,
-    },
+  ZKSYNC_ERA: {
+    address: "0xd1e4254fe7e56f58777ba624e7eeb3644f872b0d",
+    abi: GUILD_PIN_ZKSYNC_ABI,
   },
-  // Livepeer
-  13713: {
-    ARBITRUM: {
-      address: "0x0e6a14106497a7de36fba446628860c062e9e302",
-      abi: GUILD_PIN_ABI,
-    },
-  },
-}
+} as const
 // TODO: satisfies Partial<Record<Chain, { address: string; abi: ContractInterface }>> - we just can't use it in Next.js 12, but we should add it later.
 
-export type GuildPinsSupportedChain =
-  keyof typeof GUILD_PIN_CONTRACTS extends infer Keys
-    ? Keys extends keyof typeof GUILD_PIN_CONTRACTS
-      ? keyof (typeof GUILD_PIN_CONTRACTS)[Keys]
-      : never
-    : never
-
-export const getGuildPinContracts = (guildId?: number): GuildPinContracts => {
-  if (!guildId) return GUILD_PIN_CONTRACTS.DEFAULT
-  return GUILD_PIN_CONTRACTS[guildId] ?? GUILD_PIN_CONTRACTS.DEFAULT
-}
-
-export const flattenedGuildPinChainsData = Object.fromEntries(
-  Object.values(GUILD_PIN_CONTRACTS).map((entry) => Object.entries(entry).flat())
-)
+export type GuildPinsSupportedChain = keyof typeof GUILD_PIN_CONTRACTS
 
 export const openseaBaseUrl: Partial<Record<Chain, string>> = {
   POLYGON_MUMBAI: "https://testnets.opensea.io/assets/mumbai",

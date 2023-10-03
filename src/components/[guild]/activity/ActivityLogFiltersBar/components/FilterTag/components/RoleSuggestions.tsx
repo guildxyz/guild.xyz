@@ -1,5 +1,5 @@
 import * as combobox from "@zag-js/combobox"
-import RoleTag from "components/[guild]/activity/ActivityLogAction/components/RoleTag"
+import ActivityLogRoleTag from "components/[guild]/activity/ActivityLogAction/components/RoleTag"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { HTMLAttributes, useMemo } from "react"
 import Suggestion from "../../Suggestion"
@@ -42,7 +42,7 @@ const RoleSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element => 
                 value: roleSuggestion.id.toString(),
               })}
             >
-              <RoleTag roleId={roleSuggestion.id} guildId={guildId} />
+              <ActivityLogRoleTag roleId={roleSuggestion.id} guildId={guildId} />
             </Suggestion>
           )
         })

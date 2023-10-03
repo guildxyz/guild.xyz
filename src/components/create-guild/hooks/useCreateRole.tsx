@@ -8,17 +8,18 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useSWRConfig } from "swr"
-import { GuildPlatform, PlatformType, Role, Visibility } from "types"
+import { GuildPlatform, PlatformType, Requirement, Role, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 export type RoleToCreate = Omit<
   Role,
-  "id" | "members" | "memberCount" | "position"
+  "id" | "members" | "memberCount" | "position" | "requirements"
 > & {
   guildId: number
   roleType?: "NEW"
+  requirements: Omit<Requirement, "id" | "roleId" | "name" | "symbol">[]
 }
 
 type CreateRoleResponse = Role & { createdGuildPlatforms?: GuildPlatform[] }

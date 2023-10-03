@@ -11,6 +11,7 @@ const DIRTY_KEYS_TO_KEEP = [
   // data (of a requirement) is kept, because if we send partial data, that will overwrite the whole data field
   "data",
   "socialLinks",
+  "eventSources",
 ]
 // Keys to keep even if they aren't dirty
 const KEYS_TO_KEEP = [
@@ -21,6 +22,7 @@ const KEYS_TO_KEEP = [
   "admins",
   "contacts",
   "featureFlags",
+  "type",
 ]
 
 /**

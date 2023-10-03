@@ -1,28 +1,32 @@
 import { Box, HStack, useColorModeValue } from "@chakra-ui/react"
 import useIsStuck from "hooks/useIsStuck"
-import { createContext, PropsWithChildren, useContext } from "react"
+import { PropsWithChildren, createContext, useContext } from "react"
 
-type Props = {
-  sticky?: boolean
+export type TabsProps = {
+  isSticky?: boolean
   rightElement?: JSX.Element
 }
 
+// TODO: should be 2.5 instead of 3?
 // button height + padding
 export const TABS_HEIGHT =
-  "calc(var(--chakra-space-11) + (2 * var(--chakra-space-3)))"
+  "calc(var(--chakra-space-11) + (2 * var(--chakra-space-2-5)))"
 // size: sm button height + padding
 export const TABS_HEIGHT_SM =
-  "calc(var(--chakra-space-8) + (2 * var(--chakra-space-3)))"
+  "calc(var(--chakra-space-8) + (2 * var(--chakra-space-2-5)))"
+
+export const TABS_SM_BUTTONS_STYLES =
+  "#tabs .chakra-button {height: var(--chakra-space-8); font-size: var(--chakra-fontSizes-sm); border-radius: var(--chakra-radii-lg); padding: 0 var(--chakra-space-3)}"
 
 const TabsContext = createContext<{
   isStuck: boolean
 }>(null)
 
 const Tabs = ({
-  sticky,
+  isSticky = true,
   rightElement,
   children,
-}: PropsWithChildren<Props>): JSX.Element => {
+}: PropsWithChildren<TabsProps>): JSX.Element => {
   const { ref, isStuck } = useIsStuck()
 
   const bgColor = useColorModeValue("white", "gray.800")
@@ -34,19 +38,19 @@ const Tabs = ({
         ref={ref}
         justifyContent="space-between"
         alignItems="center"
-        position={sticky ? "sticky" : "relative"}
+        position={isSticky ? "sticky" : "relative"}
         top={0}
         mt={-3}
         mb={2}
         width="full"
-        zIndex={sticky && isStuck ? "banner" : "auto"}
+        zIndex={isSticky && isStuck ? "banner" : "auto"}
         _before={{
           content: `""`,
           position: "fixed",
           top: 0,
           left: 0,
           width: "full",
-          height: sticky && isStuck ? TABS_HEIGHT : 0,
+          height: isSticky && isStuck ? TABS_HEIGHT : 0,
           bgColor: bgColor,
           boxShadow: "md",
           transition: "height .2s",
@@ -63,17 +67,18 @@ const Tabs = ({
         >
           <HStack
             overflowX="auto"
-            py={3}
+            py={2.5}
             px={8}
             sx={{
               "&::-webkit-scrollbar": {
                 display: "none",
               },
               scrollbarWidth: "none",
-              button: {
+              ".chakra-button": {
                 transition: "all .2s",
               },
             }}
+            spacing={0}
           >
             {children}
           </HStack>

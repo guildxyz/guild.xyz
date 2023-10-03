@@ -31,6 +31,7 @@ import {
   useAddRewardContext,
 } from "../AddRewardContext"
 import { CreatePoapProvider } from "../CreatePoap/components/CreatePoapContext"
+import useGuild from "../hooks/useGuild"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import HiddenRoleAlert from "./components/HiddenRoleAlert"
@@ -48,6 +49,7 @@ const defaultValues = {
 
 const AddRewardButton = (): JSX.Element => {
   const { account } = useWeb3React()
+  const { roles } = useGuild()
 
   const {
     modalRef,
@@ -116,7 +118,13 @@ const AddRewardButton = (): JSX.Element => {
     } else if (data.roleIds?.length) {
       onAddRewardSubmit({
         ...data.rolePlatforms[0].guildPlatform,
-        roleIds: data.roleIds?.filter((roleId) => !!roleId),
+        rolePlatforms: data.roleIds
+          ?.filter((roleId) => !!roleId)
+          .map((roleId) => ({
+            // We'll be able to send additional params here, like capacity & time
+            roleId: +roleId,
+            visibility: roles.find((role) => role.id === +roleId).visibility,
+          })),
       })
     } else {
       onHiddenRoleAlertOpen()

@@ -17,7 +17,6 @@ import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
-import { useMintGuildPinContext } from "../Requirements/components/GuildCheckout/MintGuildPinContext"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import PlatformAccessButton from "./components/PlatformAccessButton"
 
@@ -48,11 +47,10 @@ const useAccessedGuildPlatforms = () => {
 }
 
 const AccessHub = (): JSX.Element => {
-  const { id: guildId, poaps, featureFlags } = useGuild()
+  const { id: guildId, poaps, featureFlags, guildPin } = useGuild()
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
-  const { isInvalidImage, isTooSmallImage } = useMintGuildPinContext()
 
   const futurePoaps = poaps?.filter((poap) => {
     const currentTime = Date.now() / 1000
@@ -60,7 +58,8 @@ const AccessHub = (): JSX.Element => {
   })
 
   const shouldShowGuildPin =
-    (isMember && !isInvalidImage && !isTooSmallImage) || isAdmin
+    featureFlags.includes("GUILD_CREDENTIAL") &&
+    ((isMember && guildPin?.isActive) || isAdmin)
 
   return (
     <SimpleGrid
@@ -75,6 +74,8 @@ const AccessHub = (): JSX.Element => {
       {accessedGuildPlatforms?.length || futurePoaps?.length ? (
         <>
           {accessedGuildPlatforms.map((platform) => {
+            if (!platforms[PlatformType[platform.platformId]]) return null
+
             const {
               cardPropsHook: useCardProps,
               cardMenuComponent: PlatformCardMenu,
@@ -129,9 +130,7 @@ const AccessHub = (): JSX.Element => {
           </Alert>
         </Card>
       ) : null}
-      {guildId !== 1985 &&
-        featureFlags.includes("GUILD_CREDENTIAL") &&
-        shouldShowGuildPin && <DynamicGuildPinRewardCard />}
+      {guildId !== 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
     </SimpleGrid>
   )
 }

@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertIcon, Stack } from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertIcon } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { RequirementType } from "requirements"
 
@@ -18,14 +18,12 @@ const TwitterRequirementsVerificationIssuesAlert = () => {
   if (!hasTwitterFollowRequirements) return null
 
   return (
-    <Alert mt={4} status="warning">
+    <Alert mb={4} status="warning">
       <AlertIcon />
 
-      <Stack position="relative" top={1}>
-        <AlertDescription>
-          Access verification may be limited due to Twitter API issues.
-        </AlertDescription>
-      </Stack>
+      <AlertDescription>
+        Access verification may be limited due to Twitter API issues.
+      </AlertDescription>
     </Alert>
   )
 }

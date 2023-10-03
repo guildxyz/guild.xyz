@@ -1,4 +1,4 @@
-import { Box, useColorMode } from "@chakra-ui/react"
+import { Box, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { PropsWithChildren, forwardRef } from "react"
 import { Rest } from "types"
 
@@ -36,5 +36,8 @@ const Card = forwardRef(
     )
   }
 )
+
+export const useCardBg = () =>
+  useColorModeValue("white", "var(--chakra-colors-gray-700)")
 
 export default Card

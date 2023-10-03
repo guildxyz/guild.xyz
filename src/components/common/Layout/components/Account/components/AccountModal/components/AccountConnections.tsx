@@ -15,8 +15,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { SectionProps } from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
+import { SectionProps } from "components/common/Section"
 import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
@@ -25,6 +25,7 @@ import useDelegateVaults from "../../delegate/useDelegateVaults"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
 import LinkedAddress, { LinkedAddressSkeleton } from "./LinkedAddress"
+import SharedSocials from "./SharedSocials"
 import SocialAccount, { EmailAddress } from "./SocialAccount"
 
 const AccountConnections = () => {
@@ -34,6 +35,7 @@ const AccountConnections = () => {
     platformUsers,
     id: userId,
     addressProviders,
+    sharedSocials,
   } = useUser()
   const { account } = useWeb3React()
   const vaults = useDelegateVaults()
@@ -61,7 +63,10 @@ const AccountConnections = () => {
 
   return (
     <>
-      <AccountSectionTitle title="Social accounts" />
+      <AccountSectionTitle
+        title="Social accounts"
+        titleRightElement={sharedSocials?.length && <SharedSocials />}
+      />
       <AccountSection mb="6" divider={<Divider />}>
         {orderedSocials.map((platform) =>
           platform === "EMAIL" ? (

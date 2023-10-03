@@ -7,7 +7,7 @@ const useGuild = (guildId?: string | number) => {
 
   const id = guildId ?? router.query.guild
 
-  const { data, mutate, isLoading, isSigned } = useSWRWithOptionalAuth<Guild>(
+  const { data, mutate, isLoading, error, isSigned } = useSWRWithOptionalAuth<Guild>(
     id ? `/v2/guilds/guild-page/${id}` : null,
     undefined,
     undefined,
@@ -18,6 +18,7 @@ const useGuild = (guildId?: string | number) => {
     ...data,
     isDetailed: isSigned,
     isLoading,
+    error,
     mutateGuild: mutate,
   }
 }

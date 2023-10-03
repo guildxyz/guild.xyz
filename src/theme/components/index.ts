@@ -11,6 +11,7 @@ import Popover from "./popover"
 import Select from "./select"
 import Spinner from "./spinner"
 import Switch from "./switch"
+import Table from "./table"
 import Tabs from "./tabs"
 import Tag from "./tag"
 import Text from "./text"
@@ -36,6 +37,7 @@ const components = {
   Drawer,
   Steps,
   Spinner,
+  Table,
 }
 
 export default components

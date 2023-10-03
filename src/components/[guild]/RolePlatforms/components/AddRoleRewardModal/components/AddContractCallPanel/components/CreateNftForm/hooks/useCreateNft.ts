@@ -12,7 +12,7 @@ import useToast from "hooks/useToast"
 import { useState } from "react"
 import GUILD_REWARD_NFT_FACTORY_ABI from "static/abis/guildRewardNFTFactory.json"
 import { mutate } from "swr"
-import { GuildPlatform, PlatformGuildData, PlatformType } from "types"
+import { GuildPlatform, PlatformType } from "types"
 import processWalletError from "utils/processWalletError"
 import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
 
@@ -163,7 +163,7 @@ const useCreateNft = (
           argsToSign: CONTRACT_CALL_ARGS_TO_SIGN[ContractCallFunction.SIMPLE_CLAIM],
           name: trimmedName,
           symbol: trimmedSymbol,
-          image: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${imageCID}`,
+          imageUrl: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${imageCID}`,
           description: data.richTextDescription,
         },
       },
@@ -180,8 +180,8 @@ const useCreateNft = (
           title: "Successfully deployed NFT contract",
         })
 
-        const { chain, contractAddress, name, image } = response.guildPlatform
-          .platformGuildData as PlatformGuildData["CONTRACT_CALL"]
+        const { chain, contractAddress, name, imageUrl } =
+          response.guildPlatform.platformGuildData
 
         captureEvent("Successfully created NFT", {
           ...postHogOptions,
@@ -197,7 +197,7 @@ const useCreateNft = (
             totalCollectors: 0,
             totalCollectorsToday: 0,
             standard: "ERC-721", // TODO: we should use a dynamic value here
-            image,
+            image: imageUrl,
             description: response.formData.description,
             fee: parseUnits(
               response.formData.price.toString() ?? "0",

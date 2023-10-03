@@ -13,6 +13,10 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
+import UrlName from "components/[guild]/EditGuild/components/UrlName"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -22,12 +26,10 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
-import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
-import UrlName from "components/[guild]/EditGuild/components/UrlName"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { useThemeContext } from "components/[guild]/ThemeContext"
+import useGuildEvents from "hooks/useGuildEvents"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
+import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import dynamic from "next/dynamic"
 import { useEffect } from "react"
@@ -42,7 +44,9 @@ import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
+import Events from "./components/Events/Events"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
+import SaveAlert from "./components/SaveAlert"
 import SocialLinks from "./components/SocialLinks"
 import TagManager from "./components/TagManager"
 import useEditGuild from "./hooks/useEditGuild"
@@ -73,10 +77,13 @@ const EditGuildDrawer = ({
     contacts,
     isDetailed,
     featureFlags,
+    eventSources,
     tags: savedTags,
+    guildPin,
   } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
+  const { mutate: mutateEvents } = useGuildEvents()
 
   const defaultValues = {
     name,
@@ -97,6 +104,10 @@ const EditGuildDrawer = ({
     socialLinks,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
     tags: savedTags,
+    eventSources: {
+      EVENTBRITE: eventSources ? eventSources.EVENTBRITE : null,
+      LUMA: eventSources ? eventSources.LUMA : null,
+    },
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
@@ -111,8 +122,15 @@ const EditGuildDrawer = ({
     methods.setValue("contacts", contacts)
   }, [isDetailed])
 
+  const toast = useToast()
+
   const onSuccess = () => {
+    toast({
+      title: `Guild successfully updated!`,
+      status: "success",
+    })
     onClose()
+    mutateEvents()
     methods.reset(undefined, { keepValues: true })
   }
 
@@ -135,6 +153,12 @@ const EditGuildDrawer = ({
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
     onClose: onAlertClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: isSaveAlertOpen,
+    onOpen: onSaveAlertOpen,
+    onClose: onSaveAlertClose,
   } = useDisclosure()
 
   const onCloseAndClear = () => {
@@ -192,6 +216,20 @@ const EditGuildDrawer = ({
     !!Object.keys(methods.formState.dirtyFields).length ||
     backgroundUploader.isUploading ||
     iconUploader.isUploading
+
+  const onSave = (e) => {
+    if (
+      guildPin?.isActive &&
+      (methods.formState.dirtyFields.name ||
+        methods.formState.dirtyFields.imageUrl ||
+        iconUploader.isUploading ||
+        methods.formState.dirtyFields.theme?.color)
+    ) {
+      onSaveAlertOpen()
+    } else {
+      handleSubmit(e)
+    }
+  }
 
   return (
     <>
@@ -252,6 +290,12 @@ const EditGuildDrawer = ({
 
                 <Divider />
 
+                <Section title="Events">
+                  <Events />
+                </Section>
+
+                <Divider />
+
                 <Section title="Security">
                   <MembersToggle />
                   <HideFromExplorerToggle />
@@ -288,7 +332,7 @@ const EditGuildDrawer = ({
                 isLoading={isLoading || isUploadingShown}
                 colorScheme="green"
                 loadingText={loadingText}
-                onClick={handleSubmit}
+                onClick={onSave}
               >
                 Save
               </Button>
@@ -302,6 +346,12 @@ const EditGuildDrawer = ({
         isOpen={isAlertOpen}
         onClose={onAlertClose}
         onDiscard={onCloseAndClear}
+      />
+
+      <SaveAlert
+        isOpen={isSaveAlertOpen}
+        onClose={onSaveAlertClose}
+        onSave={handleSubmit}
       />
     </>
   )

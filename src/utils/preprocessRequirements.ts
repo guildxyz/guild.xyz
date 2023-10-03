@@ -1,14 +1,16 @@
 import { COVALENT_CHAINS } from "requirements/WalletActivity/WalletActivityForm"
 import { Requirement, RequirementType } from "types"
 
-const preprocessRequirements = (requirements: Array<Requirement>) => {
+const preprocessRequirements = (
+  requirements: Array<Partial<Requirement>>
+): Requirement[] => {
   if (!requirements || !Array.isArray(requirements)) return undefined
 
   const freeRequirement = requirements.find(
     (requirement) => requirement.type === "FREE"
   )
 
-  if (freeRequirement) return [freeRequirement]
+  if (freeRequirement) return [freeRequirement as Requirement]
 
   return (
     requirements
@@ -23,7 +25,7 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
               }
             : undefined,
           nftRequirementType: undefined,
-        }
+        } as Requirement
 
         if (
           processedRequirement.type?.startsWith("ALCHEMY_") &&
@@ -117,6 +119,15 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
           !requirement.data.hideAllowlist
         )
           processedRequirement.data.addresses = []
+
+        if (
+          requirement.type === "CONTRACT" &&
+          Array.isArray(requirement.data?.params)
+        ) {
+          processedRequirement.data.params = requirement.data.params.map(
+            (param) => param.value
+          )
+        }
 
         // needed for POAP requirements, temporary
         delete (processedRequirement as any).requirementId
