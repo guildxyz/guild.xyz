@@ -56,7 +56,8 @@ export type RoleEditFormData = {
 }
 
 const MotionDrawerFooter = motion(DrawerFooter)
-const ANIMATION_SPEED = 50
+// Footer is 76px high
+const FOOTER_OFFSET = 76
 
 const EditRole = ({ roleId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -197,7 +198,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerBody ref={drawerBodyRef} className="custom-scrollbar">
+          <DrawerBody ref={drawerBodyRef} className="custom-scrollbar" pb={24}>
             <FormProvider {...methods}>
               <DrawerHeader
                 title="Edit role"
@@ -241,12 +242,16 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
               </VStack>
             </FormProvider>
           </DrawerBody>
+
           <AnimatePresence>
             {isDirty && (
               <MotionDrawerFooter
-                initial={{ y: ANIMATION_SPEED, opacity: 0 }}
+                initial={{ y: FOOTER_OFFSET, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -ANIMATION_SPEED, opacity: 0 }}
+                exit={{ y: -FOOTER_OFFSET, opacity: 0 }}
+                position="absolute"
+                w="full"
+                bottom="0"
               >
                 <Button variant="outline" mr={3} onClick={onCloseAndClear}>
                   Cancel
