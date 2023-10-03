@@ -6,12 +6,12 @@ import {
   Tag,
   TagProps,
   Text,
-  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useYourGuilds } from "components/explorer/YourGuilds"
 import { useActivityLog } from "../../ActivityLogContext"
-import { useActivityLogFilters } from "../../ActivityLogFiltersBar/components/ActivityLogFiltersContext"
+import ClickableTagPopover from "./ClickableTagPopover"
+import FilterBy from "./ClickableTagPopover/components/FilterBy"
 
 type Props = ClickableGuildTagProps & Omit<TagProps, "colorScheme">
 
@@ -66,35 +66,20 @@ type ClickableGuildTagProps = {
   guildId: number
 }
 
-const ClickableGuildTag = ({ guildId }: ClickableGuildTagProps): JSX.Element => {
-  const filtersContext = useActivityLogFilters()
-  const { activeFilters, addFilter } = filtersContext ?? {}
-  const isDisabled =
-    !filtersContext ||
-    !!activeFilters.find(
-      (f) => f.filter === "guildId" && f.value === guildId?.toString()
-    )
-
-  return (
-    <Tooltip
-      label="Filter by guild"
-      placement="top"
-      hasArrow
-      isDisabled={isDisabled}
-    >
-      <GuildTag
-        as="button"
-        onClick={
-          isDisabled
-            ? undefined
-            : () => addFilter({ filter: "guildId", value: guildId?.toString() })
-        }
-        guildId={guildId}
-        cursor={isDisabled ? "default" : "pointer"}
+const ClickableGuildTag = ({ guildId }: ClickableGuildTagProps): JSX.Element => (
+  <ClickableTagPopover
+    options={
+      <FilterBy
+        filter={{
+          filter: "guildId",
+          value: guildId?.toString(),
+        }}
       />
-    </Tooltip>
-  )
-}
+    }
+  >
+    <GuildTag guildId={guildId} cursor={"pointer"} />
+  </ClickableTagPopover>
+)
 
 export default GuildTag
 export { ClickableGuildTag }

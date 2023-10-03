@@ -55,7 +55,6 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         <ExplorerTabs
           {...{ yourGuildsRef, allGuildsRef }}
           rightElement={usersGuilds?.length && <GoToCreateGuildButton />}
-          sticky
         />
 
         <YourGuilds ref={yourGuildsRef} />

@@ -9,11 +9,12 @@ const CollapsibleRoleSection = ({
   unmountOnExit = false,
   defaultIsOpen = false,
   children,
+  ...rest
 }) => {
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen })
 
   return (
-    <Box>
+    <Box {...rest}>
       <Button
         variant="link"
         size="sm"

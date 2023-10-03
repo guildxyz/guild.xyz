@@ -75,7 +75,6 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {"Have a wallet older than "}
                 <DataBlock>{formattedWalletAge}</DataBlock>
-                {` (on ${RPC[requirement.chain].chainName})`}
               </>
             )
           }
@@ -86,9 +85,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {`Deployed ${
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } contract${requirement.data.txCount > 1 ? "s" : ""} on ${
-                  RPC[requirement.chain].chainName
-                }`}
+                } contract${requirement.data.txCount > 1 ? "s" : ""}`}
                 {requirement.data.timestamps.maxAmount &&
                 requirement.data.timestamps.minAmount ? (
                   <>
@@ -125,9 +122,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {`Deployed ${
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } contract${requirement.data.txCount > 1 ? "s" : ""} on ${
-                  RPC[requirement.chain].chainName
-                }`}
+                } contract${requirement.data.txCount > 1 ? "s" : ""}`}
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>
                     {" between the last "}
@@ -161,7 +156,6 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                   </>
                 )}
 
-                {` on ${RPC[requirement.chain].chainName}`}
                 {requirement.data.timestamps.maxAmount &&
                 requirement.data.timestamps.minAmount ? (
                   <>
@@ -198,9 +192,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {`Have ${
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } transaction${requirement.data.txCount > 1 ? "s" : ""} on ${
-                  RPC[requirement.chain].chainName
-                }`}
+                } transaction${requirement.data.txCount > 1 ? "s" : ""}`}
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>
                     {" between the last "}

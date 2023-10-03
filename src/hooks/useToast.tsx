@@ -1,4 +1,5 @@
 import {
+  ButtonGroup,
   ButtonProps,
   LinkProps,
   Text,
@@ -25,6 +26,7 @@ const useToast = (toastOptions?: UseToastOptions) => {
 
 type ActionToastOptions = UseToastOptions & {
   buttonProps: ButtonProps & LinkProps
+  secondButtonProps?: ButtonProps & LinkProps
 }
 
 const useToastWithButton = () => {
@@ -32,28 +34,43 @@ const useToastWithButton = () => {
   const toastIdRef = useRef<ToastId>()
   const actionButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
-  return ({ title, description, buttonProps, ...rest }: ActionToastOptions) => {
+  return ({
+    description,
+    buttonProps,
+    secondButtonProps,
+    ...rest
+  }: ActionToastOptions) => {
     const { onClick, ...restButtonProps } = buttonProps
+    const { onClick: secondButtonOnClick, ...restSecondButtonProps } =
+      secondButtonProps ?? {}
 
     toastIdRef.current = toast({
-      status: "success",
-      title,
       duration: 8000,
       description: (
         <>
           {description && <Text>{description}</Text>}
-          <Button
-            bg={actionButtonBackground}
-            size="sm"
-            onClick={() => {
-              onClick?.(null)
-              toast.close(toastIdRef.current)
-            }}
-            mt={3}
-            mb="1"
-            borderRadius="lg"
-            {...restButtonProps}
-          />
+          <ButtonGroup mt={3} mb="1" size="sm">
+            <Button
+              bg={actionButtonBackground}
+              onClick={() => {
+                onClick?.(null)
+                toast.close(toastIdRef.current)
+              }}
+              borderRadius="lg"
+              {...restButtonProps}
+            />
+            {secondButtonProps && (
+              <Button
+                bg={actionButtonBackground}
+                onClick={() => {
+                  secondButtonOnClick?.(null)
+                  toast.close(toastIdRef.current)
+                }}
+                borderRadius="lg"
+                {...restSecondButtonProps}
+              />
+            )}
+          </ButtonGroup>
         </>
       ),
       ...rest,
@@ -67,10 +84,11 @@ type TweetToastOptions = {
 }
 
 const useToastWithTweetButton = () => {
-  const toast = useToastWithButton()
+  const toastWithButton = useToastWithButton()
 
   return ({ title, tweetText }: TweetToastOptions) =>
-    toast({
+    toastWithButton({
+      status: "success",
       title,
       description: "Let others know as well by sharing it on Twitter",
       buttonProps: {

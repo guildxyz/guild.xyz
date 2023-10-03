@@ -31,7 +31,7 @@ const ExplorerTabs = ({ yourGuildsRef, allGuildsRef, ...rest }) => {
         onClick={() =>
           window.scrollTo({
             top:
-              window.scrollY + allGuildsRef.current.getBoundingClientRect().top - 25,
+              window.scrollY + allGuildsRef.current.getBoundingClientRect().top - 20,
             behavior: "smooth",
           })
         }

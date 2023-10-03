@@ -97,6 +97,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
         guild.featureFlags.includes("GUILD_CREDENTIAL")
       ) {
         toastWithButton({
+          status: "success",
           title: "Successfully joined guild",
           description: "Let others know as well by minting it onchain",
           buttonProps: {
@@ -123,6 +124,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
     onSubmit: (data?) =>
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
+        shareSocials: data?.shareSocials,
         platforms:
           data &&
           Object.entries(data.platforms ?? {})
