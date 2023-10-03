@@ -1,26 +1,15 @@
-import {
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Stack,
-} from "@chakra-ui/react"
+import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import PhotoUploader from "components/create-guild/IconSelector/components/PhotoUploader"
 import RichTextDescriptionEditor from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
 import usePinata from "hooks/usePinata"
 import { PropsWithChildren } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 
 export type TextRewardForm = {
   name: string
   imageUrl?: string
-  // TODO: we don't actually send capacity to the API yet, but we'll need to implement that functionality too
+  // TODO: we'll implement capacity in a new PR
   capacity?: number
   text: string
 }
@@ -54,7 +43,7 @@ const TextDataForm = ({ children }: PropsWithChildren<unknown>) => {
 
       <PhotoUploader uploader={uploader} />
 
-      <FormControl maxW="sm">
+      {/* <FormControl maxW="sm">
         <FormLabel>Capacity</FormLabel>
 
         <Controller
@@ -86,7 +75,7 @@ const TextDataForm = ({ children }: PropsWithChildren<unknown>) => {
         />
 
         <FormHelperText>TODO: explain what capacity means</FormHelperText>
-      </FormControl>
+      </FormControl> */}
 
       <FormControl isRequired isInvalid={!!errors?.text}>
         <FormLabel>Text</FormLabel>
