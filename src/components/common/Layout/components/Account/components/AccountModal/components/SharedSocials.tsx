@@ -170,7 +170,9 @@ const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
         <MenuButton
           as={Button}
           leftIcon={isSharedBoolean ? <ShieldCheck /> : <Shield />}
-          color={isSharedBoolean ? "green.500" : "initial"}
+          color={
+            isSharedBoolean ? "green.500" : "var(--chakra-colors-chakra-body-text)"
+          }
           variant="ghost"
           size="sm"
           rightIcon={<CaretDown />}
