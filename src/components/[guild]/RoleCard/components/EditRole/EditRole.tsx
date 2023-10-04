@@ -12,6 +12,9 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
+import RolePlatforms from "components/[guild]/RolePlatforms"
+import SetVisibility from "components/[guild]/SetVisibility"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -22,14 +25,12 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
-import useGuild from "components/[guild]/hooks/useGuild"
-import RolePlatforms from "components/[guild]/RolePlatforms"
-import SetVisibility from "components/[guild]/SetVisibility"
+import { AnimatePresence, motion } from "framer-motion"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Check, PencilSimple } from "phosphor-react"
+import { ArrowLeft, Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Logic, Requirement, RolePlatform, Visibility } from "types"
@@ -53,6 +54,10 @@ export type RoleEditFormData = {
   rolePlatforms: RolePlatform[]
   visibility: Visibility
 }
+
+const MotionDrawerFooter = motion(DrawerFooter)
+// Footer is 76px high
+const FOOTER_OFFSET = 76
 
 const EditRole = ({ roleId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -193,7 +198,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerBody ref={drawerBodyRef} className="custom-scrollbar">
+          <DrawerBody ref={drawerBodyRef} className="custom-scrollbar" pb={24}>
             <FormProvider {...methods}>
               <DrawerHeader
                 title="Edit role"
@@ -201,6 +206,17 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                 spacing={1}
                 alignItems="center"
                 w="full"
+                leftElement={
+                  <IconButton
+                    aria-label="cancel"
+                    icon={<ArrowLeft size={20} />}
+                    mr={3}
+                    onClick={onCloseAndClear}
+                    display={{ base: "flex", md: "none" }}
+                  >
+                    Cancel
+                  </IconButton>
+                }
               >
                 <HStack justifyContent={"space-between"} flexGrow={1}>
                   <SetVisibility entityType="role" />
@@ -227,21 +243,33 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
             </FormProvider>
           </DrawerBody>
 
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onCloseAndClear}>
-              Cancel
-            </Button>
-            <Button
-              isLoading={isLoading || isSigning || isUploadingShown}
-              colorScheme="green"
-              loadingText={loadingText}
-              onClick={handleSubmit}
-              leftIcon={<Icon as={Check} />}
-              data-test="save-role-button"
-            >
-              Save
-            </Button>
-          </DrawerFooter>
+          <AnimatePresence>
+            {isDirty && (
+              <MotionDrawerFooter
+                initial={{ y: FOOTER_OFFSET, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: FOOTER_OFFSET, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                position="absolute"
+                w="full"
+                bottom="0"
+              >
+                <Button variant="outline" mr={3} onClick={onCloseAndClear}>
+                  Cancel
+                </Button>
+                <Button
+                  isLoading={isLoading || isSigning || isUploadingShown}
+                  colorScheme="green"
+                  loadingText={loadingText}
+                  onClick={handleSubmit}
+                  leftIcon={<Icon as={Check} />}
+                  data-test="save-role-button"
+                >
+                  Save
+                </Button>
+              </MotionDrawerFooter>
+            )}
+          </AnimatePresence>
         </DrawerContent>
         <DynamicDevTool control={methods.control} />
       </Drawer>

@@ -3,6 +3,7 @@ import Card from "components/common/Card"
 import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import LogicDivider from "components/[guild]/LogicDivider"
+import AnyOfHeader from "components/[guild]/Requirements/components/AnyOfHeader"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import { TransactionStatusProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
@@ -14,9 +15,10 @@ import CollectNftFeesTable from "./CollectNftFeesTable"
 type Props = {
   requirements: Requirement[]
   logic: Logic
+  anyOfNum?: number
 }
 
-const RequirementsCard = ({ requirements, logic }: Props) => {
+const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
 
@@ -28,9 +30,7 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
   return (
     <Card w="full" h="max-content">
       <Stack
-        p={padding}
         bgColor={requirementsSectionBgColor}
-        spacing={{ base: 4, md: 8 }}
         w="full"
         alignItems="center"
         borderBottomWidth={1}
@@ -38,6 +38,9 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
       >
         <Text
           as="span"
+          pt={padding}
+          px={padding}
+          pb={2}
           w="full"
           fontSize="xs"
           fontWeight="bold"
@@ -49,12 +52,15 @@ const RequirementsCard = ({ requirements, logic }: Props) => {
         </Text>
 
         <Stack spacing={0} w="full">
-          {requirements.map((requirement, i) => (
-            <Box key={requirement.id}>
-              <RequirementDisplayComponent requirement={requirement} />
-              {i < requirements.length - 1 && <LogicDivider logic={logic} />}
-            </Box>
-          ))}
+          {logic === "ANY_OF" && <AnyOfHeader anyOfNum={anyOfNum} />}
+          <Stack spacing={0} w="full" px={padding} pb={padding}>
+            {requirements.map((requirement, i) => (
+              <Box key={requirement.id}>
+                <RequirementDisplayComponent requirement={requirement} />
+                {i < requirements.length - 1 && <LogicDivider logic={logic} />}
+              </Box>
+            ))}
+          </Stack>
         </Stack>
       </Stack>
 

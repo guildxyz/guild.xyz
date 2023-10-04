@@ -1,4 +1,4 @@
-import { HStack, Img } from "@chakra-ui/react"
+import { HStack, Img, Wrap } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
@@ -6,8 +6,8 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
+import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { RPC } from "connectors"
 import useResolveAddress from "hooks/resolving/useResolveAddress"
 import shortenHex from "utils/shortenHex"
 
@@ -17,6 +17,7 @@ export const EAS_SCAN_BASE = {
   ETHEREUM: "https://easscan.org/schema/view",
   SEPOLIA: "https://sepolia.easscan.org/schema/view",
   BASE_GOERLI: "https://base-goerli.easscan.org/schema/view",
+  BASE_MAINNET: "https://base.easscan.org/schema/view",
 } as const
 
 const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element => {
@@ -35,21 +36,24 @@ const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element =>
         />
       }
       footer={
-        <HStack spacing={4}>
-          <RequirementLinkButton
-            href={`${EAS_SCAN_BASE[requirement?.chain ?? "ETHEREUM"]}/${
-              requirement?.data?.schemaId
-            }`}
-            imageUrl="/requirementLogos/eas.png"
-          >
-            Schema
-          </RequirementLinkButton>
-          <BlockExplorerUrl
-            path="address"
-            address={requirement.data?.attester ?? requirement.data?.recipient}
-            label={requirement.type === "EAS_ATTEST" ? "Recipient" : "Attester"}
-          />
-        </HStack>
+        <Wrap spacing={4} spacingY={2}>
+          <RequirementChainIndicator />
+          <HStack spacing={4}>
+            <RequirementLinkButton
+              href={`${EAS_SCAN_BASE[requirement?.chain ?? "ETHEREUM"]}/${
+                requirement?.data?.schemaId
+              }`}
+              imageUrl="/requirementLogos/eas.png"
+            >
+              Schema
+            </RequirementLinkButton>
+            <BlockExplorerUrl
+              path="address"
+              address={requirement.data?.attester ?? requirement.data?.recipient}
+              label={requirement.type === "EAS_ATTEST" ? "Recipient" : "Attester"}
+            />
+          </HStack>
+        </Wrap>
       }
       {...props}
     >
@@ -85,7 +89,6 @@ const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element =>
           )}
         </>
       )}{" "}
-      on {RPC[requirement.chain].chainName}
     </Requirement>
   )
 }
