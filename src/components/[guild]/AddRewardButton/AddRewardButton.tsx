@@ -35,8 +35,6 @@ import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useAddReward from "./hooks/useAddReward"
 
-type SaveAs = "DRAFT" | "PUBLIC"
-
 // temporary until POAPs are real rewards
 const DynamicAddPoapPanel = dynamic(() => import("components/[guild]/CreatePoap"), {
   ssr: false,
@@ -98,9 +96,9 @@ const AddRewardButton = (): JSX.Element => {
 
   const isLoading = isAddRewardLoading || isCreateRoleLoading
 
-  const [saveAsState, setSaveAsState] = useState<SaveAs>("PUBLIC")
+  const [saveAsDraft, setSaveAsDraft] = useState(false)
 
-  const onSubmit = (data: any, saveAs: SaveAs = "PUBLIC") => {
+  const onSubmit = (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
     if (data.requirements?.length > 0) {
       const visibility = saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
       onCreateRoleSubmit({
@@ -218,10 +216,10 @@ const AddRewardButton = (): JSX.Element => {
                   <Button
                     isDisabled={isAddRewardButtonDisabled}
                     onClick={methods.handleSubmit((data) => {
-                      setSaveAsState("DRAFT")
+                      setSaveAsDraft(true)
                       onSubmit(data, "DRAFT")
                     })}
-                    isLoading={saveAsState === "DRAFT" && isLoading}
+                    isLoading={saveAsDraft && isLoading}
                   >
                     Save as draft
                   </Button>
@@ -229,10 +227,10 @@ const AddRewardButton = (): JSX.Element => {
                     isDisabled={isAddRewardButtonDisabled}
                     colorScheme="green"
                     onClick={methods.handleSubmit((data) => {
-                      setSaveAsState("PUBLIC")
+                      setSaveAsDraft(false)
                       onSubmit(data)
                     })}
-                    isLoading={saveAsState === "PUBLIC" && isLoading}
+                    isLoading={!saveAsDraft && isLoading}
                   >
                     Done
                   </Button>
