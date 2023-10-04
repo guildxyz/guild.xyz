@@ -15,8 +15,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useUser from "components/[guild]/hooks/useUser"
 import { SectionProps } from "components/common/Section"
+import useUser from "components/[guild]/hooks/useUser"
 import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
@@ -45,7 +45,7 @@ const AccountConnections = () => {
       platformUsers?.map((platformUser) => platformUser.platformName as string) ?? []
     const notConnectedPlatforms = Object.keys(platforms).filter(
       (platform) =>
-        !["POAP", "CONTRACT_CALL", "EMAIL"].includes(platform) &&
+        !["POAP", "CONTRACT_CALL", "EMAIL", "TEXT"].includes(platform) &&
         !connectedPlatforms?.includes(platform)
     )
     return [
