@@ -12,6 +12,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   POLYGON: [
     "https://unpkg.com/quickswap-default-token-list@1.0.91/build/quickswap-default.tokenlist.json",
   ],
+  POLYGON_ZKEVM: [],
   AVALANCHE: ["https://tokens.coingecko.com/avalanche/all.json"],
   FANTOM: ["https://tokens.coingecko.com/fantom/all.json"],
   ARBITRUM: ["https://tokens.coingecko.com/arbitrum-one/all.json"],
