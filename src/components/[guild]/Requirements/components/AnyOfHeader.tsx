@@ -9,7 +9,7 @@ const AnyOfHeader = ({ anyOfNum }: Props): JSX.Element => {
   const textColor = useColorModeValue("blackAlpha.500", "whiteAlpha.400")
 
   return (
-    <HStack py={3} width="full" spacing={4} w="calc(100% + var(--chakra-space-10))">
+    <HStack py={3} width="full" spacing={4}>
       <Box
         width="full"
         h={4}
