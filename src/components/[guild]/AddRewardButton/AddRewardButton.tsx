@@ -9,15 +9,16 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
+import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useToast from "hooks/useToast"
 import dynamic from "next/dynamic"
-import { ArrowLeft, Plus } from "phosphor-react"
+import { ArrowLeft, Info, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import platforms from "platforms/platforms"
 import { useState } from "react"
@@ -30,9 +31,9 @@ import {
   useAddRewardContext,
 } from "../AddRewardContext"
 import { CreatePoapProvider } from "../CreatePoap/components/CreatePoapContext"
-import useGuild from "../hooks/useGuild"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
+import useGuild from "../hooks/useGuild"
 import useAddReward from "./hooks/useAddReward"
 
 // temporary until POAPs are real rewards
@@ -59,6 +60,7 @@ const AddRewardButton = (): JSX.Element => {
     isOpen,
     onOpen,
     onClose: onAddRewardModalClose,
+    isBackButtonDisabled,
   } = useAddRewardContext()
 
   const methods = useForm({
@@ -133,8 +135,6 @@ const AddRewardButton = (): JSX.Element => {
   const { AddPlatformPanel, PlatformPreview } = platforms[selection] ?? {}
 
   const lightModalBgColor = useColorModeValue("white", "gray.700")
-
-  const { isBackButtonDisabled } = useAddRewardContext()
 
   return (
     <>
@@ -225,6 +225,17 @@ const AddRewardButton = (): JSX.Element => {
                       onSubmit(data, "DRAFT")
                     })}
                     isLoading={saveAsDraft && isLoading}
+                    rightIcon={
+                      <Tooltip
+                        label={
+                          activeTab === RoleTypeToAddTo.EXISTING_ROLE
+                            ? "The reward will be added to the role you select with hidden visibility, so users won't see it yet. You can edit & activate it later"
+                            : "The role will be created with hidden visibility, so user's won't see it yet. You can edit & activate it later"
+                        }
+                      >
+                        <Info />
+                      </Tooltip>
+                    }
                   >
                     Save as draft
                   </Button>
@@ -237,7 +248,7 @@ const AddRewardButton = (): JSX.Element => {
                     })}
                     isLoading={!saveAsDraft && isLoading}
                   >
-                    Done
+                    Save
                   </Button>
                 </ModalFooter>
               )}
