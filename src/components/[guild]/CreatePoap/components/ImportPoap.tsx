@@ -11,9 +11,9 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
 import useToast from "hooks/useToast"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
@@ -47,6 +47,7 @@ const ImportPoap = (): JSX.Element => {
       poapId: poap?.id,
       fancyId: poap?.fancy_id,
       expiryDate: convertPoapExpiryDate(poap?.expiry_date),
+      activated: false,
     })
   }
 
