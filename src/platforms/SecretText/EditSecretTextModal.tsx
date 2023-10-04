@@ -9,6 +9,7 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
 import useToast from "hooks/useToast"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPlatform } from "types"
 import SecretTextDataForm, {
@@ -32,12 +33,10 @@ const EditSecretTextModal = ({
 
   const methods = useForm<SecretTextRewardForm>({
     mode: "all",
-    defaultValues: {
-      name,
-      imageUrl,
-      text,
-    },
   })
+
+  // `defaultValues` didn't work properly in useForm, so we're just resetting the form on mount instead
+  useEffect(() => methods.reset({ name, imageUrl, text }), [])
 
   const toast = useToast()
   const { onSubmit, isLoading } = useEditGuildPlatform({
