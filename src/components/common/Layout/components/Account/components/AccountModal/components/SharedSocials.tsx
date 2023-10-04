@@ -21,11 +21,11 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
 import {
   ArrowSquareOut,
   CaretDown,
