@@ -25,7 +25,7 @@ const TextCardButton = ({ platform }: Props) => {
       <Button
         onClick={() => {
           onOpen()
-          onSubmit()
+          if (!response) onSubmit()
         }}
         isLoading={isLoading}
         loadingText="Claiming secret..."
@@ -34,6 +34,7 @@ const TextCardButton = ({ platform }: Props) => {
       </Button>
 
       <ClaimTextModal
+        title={platform.platformGuildData.name}
         isOpen={isOpen}
         onClose={onClose}
         isLoading={isLoading}

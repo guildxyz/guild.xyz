@@ -85,8 +85,8 @@ const TextReward = ({ platform, withMotionImg }: RewardProps) => {
                 iconSpacing="1"
                 maxW="full"
                 onClick={() => {
-                  onSubmit()
                   onOpen()
+                  if (!response) onSubmit()
                 }}
                 {...state.buttonProps}
               >
@@ -98,6 +98,7 @@ const TextReward = ({ platform, withMotionImg }: RewardProps) => {
       />
 
       <ClaimTextModal
+        title={platformGuildData.name}
         isOpen={isOpen}
         onClose={onClose}
         isLoading={isLoading}

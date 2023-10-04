@@ -78,6 +78,7 @@ const useClaimText = (rolePlatformId: number) => {
 }
 
 type ModalProps = {
+  title: string
   isOpen: boolean
   onClose: () => void
   isLoading: boolean
@@ -86,6 +87,7 @@ type ModalProps = {
 }
 
 const ClaimTextModal = ({
+  title,
   isOpen,
   onClose,
   isLoading,
@@ -97,7 +99,7 @@ const ClaimTextModal = ({
     <ModalContent>
       <ModalCloseButton />
 
-      {!response?.uniqueValue && <ModalHeader pb={0}>Reveal secret</ModalHeader>}
+      <ModalHeader pb={0}>{title}</ModalHeader>
 
       <ModalBody pt={8}>
         {isLoading ? (
