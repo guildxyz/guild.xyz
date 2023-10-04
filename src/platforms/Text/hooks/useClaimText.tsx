@@ -18,6 +18,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import ReactMarkdown from "react-markdown"
+import { useSWRConfig } from "swr"
+import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
 type ClaimResponse = {
@@ -28,6 +30,8 @@ const joinFetcher = (signedValidation: SignedValdation) =>
   fetcher(`/user/join`, signedValidation)
 
 const useClaimText = (rolePlatformId: number) => {
+  const { cache } = useSWRConfig()
+
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { id: guildId, roles } = useGuild()
@@ -38,19 +42,30 @@ const useClaimText = (rolePlatformId: number) => {
   const triggerConfetti = useJsConfetti()
   const showErrorToast = useShowErrorToast()
 
+  const endpoint = `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`
+  const { data: responseFromCache, mutate: mutateCachedResponse } = useSWRImmutable(
+    endpoint,
+    () => cache.get(endpoint)?.data
+  )
+
   const claimFetcher = (signedValidation: SignedValdation) =>
-    fetcher(
-      `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`,
-      {
-        method: "POST",
-        ...signedValidation,
-      }
-    )
+    fetcher(endpoint, {
+      method: "POST",
+      ...signedValidation,
+    })
 
   const { onSubmit: onClaimTextSubmit, ...claim } = useSubmitWithSign<ClaimResponse>(
     claimFetcher,
     {
-      onSuccess: () => triggerConfetti(),
+      onSuccess: (response) => {
+        triggerConfetti()
+        /**
+         * Saving in SWR cache so we don't need to re-claim the reward if the user
+         * clicks on the claim button in the AccessHub, then on the RoleCard (or vice
+         * versa)
+         */
+        mutateCachedResponse(response)
+      },
       onError: (error) => showErrorToast(error),
     }
   )
@@ -66,7 +81,7 @@ const useClaimText = (rolePlatformId: number) => {
 
   return {
     error: claim.error ?? join.error,
-    response: claim.response,
+    response: responseFromCache ?? claim.response,
     isLoading: claim.isLoading || join.isLoading,
     onSubmit: () => join.onSubmit({ guildId }),
     modalProps: {
