@@ -1,13 +1,18 @@
 import { forwardRef, TagProps } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RoleTag from "components/[guild]/RoleTag"
+import { DotsThreeVertical, IconProps } from "phosphor-react"
+import { ForwardRefExoticComponent, RefAttributes } from "react"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"
 import FilterBy from "./ClickableTagPopover/components/FilterBy"
 import ViewInCRM from "./ClickableTagPopover/components/ViewInCRM"
 import ViewRole from "./ClickableTagPopover/components/ViewRole"
 
-type Props = ClickableRoleTagProps & TagProps
+type Props = ClickableRoleTagProps &
+  TagProps & {
+    rightIcon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+  }
 
 const ActivityLogRoleTag = forwardRef<Props, "span">(
   ({ roleId, guildId, ...rest }, ref): JSX.Element => {
@@ -51,7 +56,12 @@ const ClickableRoleTag = ({
       </>
     }
   >
-    <ActivityLogRoleTag roleId={roleId} guildId={guildId} cursor="pointer" />
+    <ActivityLogRoleTag
+      roleId={roleId}
+      guildId={guildId}
+      cursor="pointer"
+      rightIcon={DotsThreeVertical}
+    />
   </ClickableTagPopover>
 )
 

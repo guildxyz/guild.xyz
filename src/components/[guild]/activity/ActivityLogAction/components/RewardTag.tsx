@@ -1,5 +1,14 @@
-import { forwardRef, Tag, TagLabel, TagLeftIcon, TagProps } from "@chakra-ui/react"
+import {
+  forwardRef,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  TagProps,
+  TagRightIcon,
+} from "@chakra-ui/react"
+import { DotsThreeVertical, IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
+import { ForwardRefExoticComponent, RefAttributes } from "react"
 import { PlatformName, PlatformType } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"
@@ -8,10 +17,14 @@ import FilterBy from "./ClickableTagPopover/components/FilterBy"
 type Props = ClickableRewardTagProps & {
   label?: string
   platformType?: PlatformName
+  rightIcon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
 } & Omit<TagProps, "colorScheme">
 
 const RewardTag = forwardRef<Props, "span">(
-  ({ roleId, rolePlatformId, label, platformType, ...rest }, ref): JSX.Element => {
+  (
+    { roleId, rolePlatformId, label, platformType, rightIcon, ...rest },
+    ref
+  ): JSX.Element => {
     const { data } = useActivityLog()
 
     const reward = data?.values.rolePlatforms.find((rp) => rp.id === rolePlatformId)
@@ -38,6 +51,8 @@ const RewardTag = forwardRef<Props, "span">(
         {icon && <TagLeftIcon as={icon} />}
 
         <TagLabel>{name ?? "Unknown reward"}</TagLabel>
+
+        {rightIcon && <TagRightIcon as={rightIcon} />}
       </Tag>
     )
   }
@@ -63,6 +78,7 @@ const ClickableRewardTag = ({
       roleId={roleId}
       rolePlatformId={rolePlatformId}
       cursor={"pointer"}
+      rightIcon={DotsThreeVertical}
     />
   </ClickableTagPopover>
 )
