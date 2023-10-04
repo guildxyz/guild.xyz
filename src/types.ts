@@ -154,6 +154,25 @@ type GuildBase = {
   tags: Array<GuildTags>
 }
 
+type SimpleGuild = {
+  id: number
+  name: string
+  urlName: string
+  description: string
+  imageUrl: string
+  showMembers: boolean
+  hideFromExplorer: boolean
+  socialLinks: SocialLinks
+  eventSources: EventSources
+  onboardingComplete: boolean
+  memberCount: number
+  guildPin?: {
+    chain: Chain
+    isActive: boolean
+  }
+  theme: Theme
+}
+
 type BrainCardData = {
   id: string
   title: string
@@ -293,21 +312,24 @@ enum Visibility {
   HIDDEN = "HIDDEN",
 }
 
-type Role = {
+type SimpleRole = {
   id: number
   name: string
-  logic: Logic
-  anyOfNum?: number
-  members: string[]
-  imageUrl?: string
   description?: string
+  imageUrl?: string
+  logic: Logic
   memberCount: number
+  visibility: Visibility
+  position?: number
+  anyOfNum?: number
+}
+
+type Role = SimpleRole & {
+  members: string[]
   requirements: Requirement[]
   rolePlatforms: RolePlatform[]
-  visibility?: Visibility
   hiddenRequirements?: boolean
   hiddenRewards?: boolean
-  position: number
 }
 
 type GuildPlatform = {
@@ -668,6 +690,7 @@ export type {
   Guild,
   GuildAdmin,
   GuildBase,
+  SimpleGuild,
   GuildFormType,
   GuildPinMetadata,
   GuildPlatform,
@@ -688,6 +711,7 @@ export type {
   Requirement,
   RequirementType,
   Rest,
+  SimpleRole,
   Role,
   RolePlatform,
   SelectOption,

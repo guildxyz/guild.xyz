@@ -1,6 +1,7 @@
 import { Icon, Img } from "@chakra-ui/react"
 import Link from "components/common/Link"
-import useGuild from "components/[guild]/hooks/useGuild"
+import { useSimpleGuild } from "components/[guild]/hooks/useGuild"
+import useRole from "components/[guild]/hooks/useRole"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
@@ -12,24 +13,26 @@ import pluralize from "utils/pluralize"
 const HaveRole = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
-  const { id } = useGuild()
-  const { name, roles, urlName, isLoading } = useGuild(requirement.data.guildId)
-  const role = roles?.find((r) => r.id === requirement.data.roleId)
-
-  const isRoleInvisible = !!roles && !role
+  const { id } = useSimpleGuild()
+  const { name, urlName, isLoading } = useSimpleGuild(requirement.data.guildId)
+  const {
+    id: roleId,
+    name: roleName,
+    imageUrl: roleImageUrl,
+  } = useRole(requirement.data.guildId, requirement.data.roleId)
 
   return (
     <Requirement
       image={
-        isRoleInvisible ? (
+        !roleId ? (
           <Icon as={Detective} boxSize={6} />
         ) : (
-          role?.imageUrl &&
-          (role.imageUrl?.match("guildLogos") ? (
-            <Img src={role.imageUrl} alt="Role image" boxSize="40%" />
+          roleImageUrl &&
+          (roleImageUrl.match("guildLogos") ? (
+            <Img src={roleImageUrl} alt="Role image" boxSize="40%" />
           ) : (
             <Img
-              src={role.imageUrl}
+              src={roleImageUrl}
               alt="Role image"
               w="full"
               h="full"
@@ -41,16 +44,16 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
       isImageLoading={isLoading}
       {...props}
     >
-      {isRoleInvisible ? (
+      {!roleId ? (
         "The required guild role is invisible"
       ) : (
         <>
           {"Have the "}
           <Link
-            href={`/${urlName ?? requirement.data.guildId}#role-${role?.id}`}
+            href={`/${urlName ?? requirement.data.guildId}#role-${roleId}`}
             colorScheme="blue"
           >
-            {`${role?.name ?? "unknown"} role`}
+            {`${roleName ?? "unknown"} role`}
             {id !== requirement.data.guildId &&
               ` in the ${name ?? `#${requirement.data.guildId}`} guild`}
           </Link>
