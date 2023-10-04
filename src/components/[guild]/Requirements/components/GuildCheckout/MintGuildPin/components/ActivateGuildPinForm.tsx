@@ -78,7 +78,7 @@ const ActivateGuildPinForm = (): JSX.Element => {
     })
 
   const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
-    useCreateRole(showSuccessToastAndCloseModal)
+    useCreateRole({ onSuccess: showSuccessToastAndCloseModal })
 
   const activateGuildPin = (data: ActivatePinForm) => {
     onEditGuildSubmit({
