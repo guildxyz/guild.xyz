@@ -28,11 +28,11 @@ import GoogleCardMenu from "./Google/GoogleCardMenu"
 import GoogleCardSettings from "./Google/GoogleCardSettings"
 import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
+import SecretTextCardButton from "./SecretText/SecretTextCardButton"
+import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
+import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
-import TextCardButton from "./Text/TextCardButton"
-import TextCardMenu from "./Text/TextCardMenu"
-import useTextCardProps from "./Text/useTextCardProps"
 
 export enum PlatformAsRewardRestrictions {
   NOT_APPLICABLE, // e.g. Twitter
@@ -323,25 +323,31 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "Secret",
     colorScheme: "gray",
     gatedEntity: "",
-    cardPropsHook: useTextCardProps,
-    cardButton: TextCardButton,
-    cardMenuComponent: TextCardMenu,
+    cardPropsHook: useSecretTextCardProps,
+    cardButton: SecretTextCardButton,
+    cardMenuComponent: SecretTextCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,
     AddPlatformPanel: dynamic(
       () =>
         import(
-          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTextPanel"
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddSecretTextPanel"
         ),
       { ssr: false }
     ),
-    PlatformPreview: dynamic(() => import("platforms/components/TextPreview"), {
-      ssr: false,
-      loading: () => <PlatformPreview isLoading={true} />,
-    }),
-    RoleCardComponent: dynamic(() => import("platforms/Text/TextReward"), {
-      ssr: false,
-    }),
+    PlatformPreview: dynamic(
+      () => import("platforms/components/SecretTextPreview"),
+      {
+        ssr: false,
+        loading: () => <PlatformPreview isLoading={true} />,
+      }
+    ),
+    RoleCardComponent: dynamic(
+      () => import("platforms/SecretText/SecretTextReward"),
+      {
+        ssr: false,
+      }
+    ),
   },
 }
 

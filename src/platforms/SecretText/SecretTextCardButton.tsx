@@ -7,7 +7,7 @@ type Props = {
   platform: GuildPlatform
 }
 
-const TextCardButton = ({ platform }: Props) => {
+const SecretTextCardButton = ({ platform }: Props) => {
   const { roles } = useGuild()
   const rolePlatformId = roles
     ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
@@ -45,4 +45,4 @@ const TextCardButton = ({ platform }: Props) => {
   )
 }
 
-export default TextCardButton
+export default SecretTextCardButton

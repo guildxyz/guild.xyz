@@ -1,6 +1,8 @@
 import Button from "components/common/Button"
 import useUser from "components/[guild]/hooks/useUser"
-import TextDataForm, { TextRewardForm } from "platforms/Text/TextDataForm"
+import SecretTextDataForm, {
+  SecretTextRewardForm,
+} from "platforms/SecretText/SecretTextDataForm/SecretTextDataForm"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { Visibility } from "types"
 
@@ -8,10 +10,10 @@ type Props = {
   onSuccess: () => void
 }
 
-const AddTextPanel = ({ onSuccess }: Props) => {
+const AddSecretTextPanel = ({ onSuccess }: Props) => {
   const { id: userId } = useUser()
 
-  const methods = useForm<TextRewardForm>({ mode: "all" })
+  const methods = useForm<SecretTextRewardForm>({ mode: "all" })
 
   const name = useWatch({ control: methods.control, name: "name" })
   const text = useWatch({ control: methods.control, name: "text" })
@@ -21,7 +23,7 @@ const AddTextPanel = ({ onSuccess }: Props) => {
     name: "rolePlatforms",
   })
 
-  const onContinue = (data: TextRewardForm) => {
+  const onContinue = (data: SecretTextRewardForm) => {
     append({
       guildPlatform: {
         platformName: "TEXT",
@@ -40,7 +42,7 @@ const AddTextPanel = ({ onSuccess }: Props) => {
 
   return (
     <FormProvider {...methods}>
-      <TextDataForm>
+      <SecretTextDataForm>
         <Button
           colorScheme="indigo"
           isDisabled={!name?.length || !text?.length}
@@ -50,8 +52,8 @@ const AddTextPanel = ({ onSuccess }: Props) => {
         >
           Continue
         </Button>
-      </TextDataForm>
+      </SecretTextDataForm>
     </FormProvider>
   )
 }
-export default AddTextPanel
+export default AddSecretTextPanel

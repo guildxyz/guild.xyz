@@ -5,13 +5,15 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
-import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
 import useToast from "hooks/useToast"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPlatform } from "types"
-import TextDataForm, { TextRewardForm } from "./TextDataForm"
+import SecretTextDataForm, {
+  SecretTextRewardForm,
+} from "./SecretTextDataForm/SecretTextDataForm"
 
 type Props = {
   isOpen: boolean
@@ -20,7 +22,7 @@ type Props = {
   platformGuildData: GuildPlatform["platformGuildData"]
 }
 
-const EditTextModal = ({
+const EditSecretTextModal = ({
   isOpen,
   onClose,
   guildPlatformId,
@@ -28,7 +30,7 @@ const EditTextModal = ({
 }: Props) => {
   const { name, imageUrl, text } = platformGuildData
 
-  const methods = useForm<TextRewardForm>({
+  const methods = useForm<SecretTextRewardForm>({
     mode: "all",
     defaultValues: {
       name,
@@ -49,7 +51,7 @@ const EditTextModal = ({
     },
   })
 
-  const onEditTextRewardSubmit = (data: TextRewardForm) =>
+  const onEditTextRewardSubmit = (data: SecretTextRewardForm) =>
     onSubmit({ platformGuildData: data })
 
   return (
@@ -61,7 +63,7 @@ const EditTextModal = ({
 
         <ModalBody>
           <FormProvider {...methods}>
-            <TextDataForm>
+            <SecretTextDataForm>
               <Button
                 colorScheme="indigo"
                 isDisabled={!name?.length || !text?.length}
@@ -73,11 +75,11 @@ const EditTextModal = ({
               >
                 Save
               </Button>
-            </TextDataForm>
+            </SecretTextDataForm>
           </FormProvider>
         </ModalBody>
       </ModalContent>
     </Modal>
   )
 }
-export default EditTextModal
+export default EditSecretTextModal

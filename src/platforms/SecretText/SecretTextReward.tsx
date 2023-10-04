@@ -14,7 +14,7 @@ import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { useMemo } from "react"
 import useClaimText, { ClaimTextModal } from "./hooks/useClaimText"
 
-const TextReward = ({ platform, withMotionImg }: RewardProps) => {
+const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
   const platformGuildData = platform.guildPlatform.platformGuildData
 
   const {
@@ -108,4 +108,4 @@ const TextReward = ({ platform, withMotionImg }: RewardProps) => {
     </>
   )
 }
-export default TextReward
+export default SecretTextReward

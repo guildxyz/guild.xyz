@@ -1,22 +1,22 @@
 import { Box, FormControl, FormLabel, HStack, Input, Stack } from "@chakra-ui/react"
-import RichTextDescriptionEditor from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import RichTextDescriptionEditor from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
 import { PropsWithChildren } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import RewardImagePicker from "./components/RewardImagePicker"
 
-export type TextRewardForm = {
+export type SecretTextRewardForm = {
   name: string
   imageUrl?: string
   text: string
 }
 
-const TextDataForm = ({ children }: PropsWithChildren<unknown>) => {
+const SecretTextDataForm = ({ children }: PropsWithChildren<unknown>) => {
   const {
     register,
     setValue,
     formState: { errors },
-  } = useFormContext<TextRewardForm>()
+  } = useFormContext<SecretTextRewardForm>()
 
   const text = useWatch({ name: "text" })
 
@@ -51,4 +51,4 @@ const TextDataForm = ({ children }: PropsWithChildren<unknown>) => {
     </Stack>
   )
 }
-export default TextDataForm
+export default SecretTextDataForm

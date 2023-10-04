@@ -12,10 +12,10 @@ import usePinata from "hooks/usePinata"
 import { useState } from "react"
 import { useFormContext } from "react-hook-form"
 import BoxIcon from "static/icons/box.svg"
-import { TextRewardForm } from "../TextDataForm"
+import { SecretTextRewardForm } from "../SecretTextDataForm"
 
 const RewardImagePicker = () => {
-  const { setValue } = useFormContext<TextRewardForm>()
+  const { setValue } = useFormContext<SecretTextRewardForm>()
 
   const iconButtonBgColor = useColorModeValue("gray.700", "blackAlpha.300")
   const iconButtonHoverBgColor = useColorModeValue("gray.600", "blackAlpha.200")

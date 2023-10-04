@@ -4,8 +4,8 @@ import CreateGuildContractCall from "./components/CreateGuildContractCall"
 import CreateGuildDiscord from "./components/CreateGuildDiscord"
 import CreateGuildGithub from "./components/CreateGuildGithub"
 import CreateGuildGoogle from "./components/CreateGuildGoogle"
+import CreateGuildSecretText from "./components/CreateGuildSecretText"
 import CreateGuildTelegram from "./components/CreateGuildTelegram"
-import CreateGuildText from "./components/CreateGuildText"
 
 // TODO: we could move these to platforms.tsx too?
 const createGuildPlatformComponents: Record<
@@ -17,7 +17,7 @@ const createGuildPlatformComponents: Record<
   GOOGLE: CreateGuildGoogle,
   GITHUB: CreateGuildGithub,
   CONTRACT_CALL: CreateGuildContractCall,
-  TEXT: CreateGuildText,
+  TEXT: CreateGuildSecretText,
 }
 
 const CreateGuildPlatform = (): JSX.Element => {
