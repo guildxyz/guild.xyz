@@ -84,13 +84,18 @@ const AddRewardButton = (): JSX.Element => {
 
   const toast = useToast()
 
+  const onCloseAndClear = () => {
+    methods.reset(defaultValues)
+    onAddRewardModalClose()
+  }
+
   const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
-    useAddReward({ onSuccess: onAddRewardModalClose })
+    useAddReward({ onSuccess: onCloseAndClear })
   const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
     useCreateRole({
       onSuccess: () => {
         toast({ status: "success", title: "Reward successfully added" })
-        onAddRewardModalClose()
+        onCloseAndClear()
       },
     })
 
