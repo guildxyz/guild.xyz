@@ -43,7 +43,7 @@ const RoleTags = ({ roles }: Props) => {
           <PopoverTrigger>
             <Tag
               variant={"outline"}
-              color="initial"
+              color="var(--chakra-colors-chakra-body-text)"
               sx={{
                 "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColorVar}) !important`,
               }}

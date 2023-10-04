@@ -81,7 +81,7 @@ const CrmTableWrapper = memo(
            th {border-radius: 0 !important}`}
           {isIdentityStuck &&
             `.identityTd {background: ${cardBg}}
-           @media only screen and (max-width: 700px) {.identityTd {max-width: 120px}}
+           @media only screen and (max-width: 600px) {.identityTd {max-width: 130px}}
            ${IDENTITIES_COLLAPSED_STYLE}
            .identitiesToggle {display: none}`}
           {/* the table is elevated to be above the headers shadow, and the popovers need to be elevated above that */}

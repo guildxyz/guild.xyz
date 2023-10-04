@@ -59,69 +59,71 @@ const RoleRequirements = ({
     <SlideFade in={isOpen} {...(!isOpen && { inert: "true" })}>
       <VStack spacing="0">
         {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
-        {!requirements?.length ? (
-          <Spinner />
-        ) : isVirtualList ? (
-          <VirtualRequirements
-            {...{ isExpanded, requirements, descriptionRef }}
-            logic={role.logic}
-          />
-        ) : (
-          <>
-            <VStack ref={initialRequirementsRef} spacing={0} w="full">
-              {shownRequirements.map((requirement, i) => (
-                <SlideFade
-                  key={i}
-                  in={isOpen}
-                  transition={{ enter: { delay: i * 0.1 } }}
-                  style={{ width: "100%" }}
-                >
-                  <RequirementDisplayComponent requirement={requirement} />
-                  {i < shownRequirements.length - 1 && (
-                    <LogicDivider logic={role.logic} />
-                  )}
-                </SlideFade>
-              ))}
-            </VStack>
-            <Collapse
-              in={isExpanded}
-              animateOpacity={false}
-              style={{ width: "100%" }}
-            >
-              {hiddenRequirements.map((requirement, i) => (
-                <React.Fragment key={i}>
-                  {i === 0 && <LogicDivider logic={role.logic} />}
-                  <RequirementDisplayComponent requirement={requirement} />
-                  {i < hiddenRequirements.length - 1 && (
-                    <LogicDivider logic={role.logic} />
-                  )}
-                </React.Fragment>
-              ))}
-            </Collapse>
-          </>
-        )}
-
-        {hiddenRequirements.length > 0 && (
-          <>
-            <ExpandRequirementsButton
+        <VStack ref={initialRequirementsRef} spacing={0} w="full" p={5} pt={0}>
+          {!requirements?.length ? (
+            <Spinner />
+          ) : isVirtualList ? (
+            <VirtualRequirements
+              {...{ isExpanded, requirements, descriptionRef }}
               logic={role.logic}
-              hiddenRequirements={hiddenRequirements.length}
-              isRequirementsExpanded={isExpanded}
-              onToggleExpanded={onToggleExpanded}
             />
-            <Box
-              position="absolute"
-              bottom={0}
-              left={0}
-              right={0}
-              height={6}
-              bgGradient={`linear-gradient(to top, ${shadowColor}, transparent)`}
-              pointerEvents="none"
-              opacity={!isVirtualList && isExpanded ? 0 : 0.6}
-              transition="opacity 0.2s ease"
-            />
-          </>
-        )}
+          ) : (
+            <>
+              <VStack ref={initialRequirementsRef} spacing={0} w="full">
+                {shownRequirements.map((requirement, i) => (
+                  <SlideFade
+                    key={i}
+                    in={isOpen}
+                    transition={{ enter: { delay: i * 0.1 } }}
+                    style={{ width: "100%" }}
+                  >
+                    <RequirementDisplayComponent requirement={requirement} />
+                    {i < shownRequirements.length - 1 && (
+                      <LogicDivider logic={role.logic} />
+                    )}
+                  </SlideFade>
+                ))}
+              </VStack>
+              <Collapse
+                in={isExpanded}
+                animateOpacity={false}
+                style={{ width: "100%" }}
+              >
+                {hiddenRequirements.map((requirement, i) => (
+                  <React.Fragment key={i}>
+                    {i === 0 && <LogicDivider logic={role.logic} />}
+                    <RequirementDisplayComponent requirement={requirement} />
+                    {i < hiddenRequirements.length - 1 && (
+                      <LogicDivider logic={role.logic} />
+                    )}
+                  </React.Fragment>
+                ))}
+              </Collapse>
+            </>
+          )}
+
+          {hiddenRequirements.length > 0 && (
+            <>
+              <ExpandRequirementsButton
+                logic={role.logic}
+                hiddenRequirements={hiddenRequirements.length}
+                isRequirementsExpanded={isExpanded}
+                onToggleExpanded={onToggleExpanded}
+              />
+              <Box
+                position="absolute"
+                bottom={0}
+                left={0}
+                right={0}
+                height={6}
+                bgGradient={`linear-gradient(to top, ${shadowColor}, transparent)`}
+                pointerEvents="none"
+                opacity={!isVirtualList && isExpanded ? 0 : 0.6}
+                transition="opacity 0.2s ease"
+              />
+            </>
+          )}
+        </VStack>
       </VStack>
     </SlideFade>
   )

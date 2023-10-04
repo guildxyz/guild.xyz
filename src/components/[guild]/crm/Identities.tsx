@@ -100,7 +100,15 @@ export const PrivateSocialsTag = ({ isOpen = false }) => (
     label="This user has opted to keep their connected accounts private"
     hasArrow
   >
-    <Tag bg="null" borderWidth="1px" px="1.5">
+    <Tag
+      className="identityTag"
+      bg="null"
+      borderWidth="1px"
+      px="1.5"
+      sx={{ "--stacked-margin-left": "-28px" }}
+      zIndex={-1}
+      transition={"margin .2s"}
+    >
       <TagLeftIcon as={LockSimple} mr="0" />
       {isOpen && <TagLabel ml="1">Private socials</TagLabel>}
     </Tag>

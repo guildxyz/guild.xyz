@@ -214,7 +214,6 @@ const RoleCard = memo(({ role }: Props) => {
           </Flex>
           <Flex
             direction="column"
-            p={5}
             bgColor={isOpen && requirementsSectionBgColor}
             borderLeftWidth={{ base: 0, md: 1 }}
             borderLeftColor={isOpen ? requirementsSectionBorderColor : "transparent"}
@@ -225,6 +224,8 @@ const RoleCard = memo(({ role }: Props) => {
             pos="relative"
           >
             <HStack
+              p={5}
+              pb={0}
               mb={{ base: 4, md: 6 }}
               transform={!isOpen && "translateY(10px)"}
               transition="transform .2s"

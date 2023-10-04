@@ -47,7 +47,7 @@ const IdentitiesSearch = ({ column }: Props) => {
         h="8"
         pl="6"
         pr="6"
-        color="initial"
+        color="var(--chakra-colors-chakra-body-text)"
       />
       {localValue?.length > 0 && (
         <InputRightElement h="8" w="auto">

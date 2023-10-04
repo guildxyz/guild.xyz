@@ -168,6 +168,7 @@ const Page = ({
                   <RequirementsCard
                     requirements={requirements}
                     logic={role?.logic}
+                    anyOfNum={role?.anyOfNum}
                   />
                 )}
 
@@ -219,6 +220,7 @@ const Page = ({
                     <RequirementsCard
                       requirements={requirements}
                       logic={role?.logic}
+                      anyOfNum={role?.anyOfNum}
                     />
                   </motion.div>
                 </Stack>

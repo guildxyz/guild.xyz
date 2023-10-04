@@ -21,11 +21,11 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
 import {
   ArrowSquareOut,
   CaretDown,
@@ -98,8 +98,8 @@ const SharedSocials = () => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text mb="8">
-              Choose which CRM enabled guilds you share your connections with.{" "}
+            <Text mb="10">
+              Choose which guilds you'd like to share your profile with.{" "}
               <Tooltip label="Soon" shouldWrapChildren hasArrow>
                 <Link
                   colorScheme="gray"
@@ -170,7 +170,9 @@ const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
         <MenuButton
           as={Button}
           leftIcon={isSharedBoolean ? <ShieldCheck /> : <Shield />}
-          color={isSharedBoolean ? "green.500" : "initial"}
+          color={
+            isSharedBoolean ? "green.500" : "var(--chakra-colors-chakra-body-text)"
+          }
           variant="ghost"
           size="sm"
           rightIcon={<CaretDown />}
