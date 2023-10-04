@@ -10,7 +10,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -23,8 +22,10 @@ import useCreateRole, {
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
+import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
+import { useToastWithTweetButton } from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -34,13 +35,23 @@ import RolePlatforms from "../../RolePlatforms"
 import SetVisibility from "../../SetVisibility"
 
 const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
-  const { id, guildPlatforms } = useGuild()
+  const { id, urlName, guildPlatforms } = useGuild()
   const discordPlatform = guildPlatforms?.find(
     (p) => p.platformId === PlatformType.DISCORD
   )
 
+  const toastWithTweetButton = useToastWithTweetButton()
+
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
-    useCreateRole()
+    useCreateRole({
+      onSuccess: () => {
+        toastWithTweetButton({
+          title: "Role successfully created",
+          tweetText: `I've just added a new role to my guild. Check it out, maybe you have access 😉
+  guild.xyz/${urlName}`,
+        })
+      },
+    })
 
   const defaultValues: RoleToCreate = {
     guildId: id,

@@ -5,18 +5,24 @@ import {
   Img,
   Tag,
   TagProps,
+  TagRightIcon,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useYourGuilds } from "components/explorer/YourGuilds"
+import { DotsThreeVertical, IconProps } from "phosphor-react"
+import { ForwardRefExoticComponent, RefAttributes } from "react"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"
 import FilterBy from "./ClickableTagPopover/components/FilterBy"
 
-type Props = ClickableGuildTagProps & Omit<TagProps, "colorScheme">
+type Props = ClickableGuildTagProps &
+  Omit<TagProps, "colorScheme"> & {
+    rightIcon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+  }
 
 const GuildTag = forwardRef<Props, "span">(
-  ({ guildId, ...tagProps }: Props, ref): JSX.Element => {
+  ({ guildId, rightIcon, ...tagProps }: Props, ref): JSX.Element => {
     const tagColorScheme = useColorModeValue("alpha", "blackalpha")
     const imgBgColor = useColorModeValue("gray.700", "gray.600")
 
@@ -57,6 +63,8 @@ const GuildTag = forwardRef<Props, "span">(
             </Text>
           </HStack>
         )}
+
+        {rightIcon && <TagRightIcon as={rightIcon} />}
       </Tag>
     )
   }
@@ -77,7 +85,7 @@ const ClickableGuildTag = ({ guildId }: ClickableGuildTagProps): JSX.Element => 
       />
     }
   >
-    <GuildTag guildId={guildId} cursor={"pointer"} />
+    <GuildTag guildId={guildId} cursor="pointer" rightIcon={DotsThreeVertical} />
   </ClickableTagPopover>
 )
 

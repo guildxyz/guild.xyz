@@ -189,7 +189,7 @@ const RoleCard = memo(({ role }: Props) => {
               {role.rolePlatforms?.map((platform, i) => {
                 const guildPlatformType = guildPlatforms.find(
                   (gp) => gp.id === platform.guildPlatformId
-                ).platformId
+                )?.platformId
 
                 if (!platforms[PlatformType[guildPlatformType]]) return
 

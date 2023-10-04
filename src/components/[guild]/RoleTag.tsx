@@ -1,21 +1,25 @@
 import {
+  forwardRef,
   Img,
   Tag,
   TagLabel,
   TagLeftIcon,
   TagProps,
-  forwardRef,
+  TagRightIcon,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { IconProps } from "phosphor-react"
+import { ForwardRefExoticComponent, RefAttributes } from "react"
 
 type Props = {
   name: string
   imageUrl?: string
   isHidden?: boolean
+  rightIcon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
 } & TagProps
 
 const RoleTag = forwardRef<Props, "span">(
-  ({ name, imageUrl, isHidden, ...rest }, ref): JSX.Element => {
+  ({ name, imageUrl, isHidden, rightIcon, ...rest }, ref): JSX.Element => {
     const publicRoleBg = useColorModeValue("gray.700", "blackAlpha.300")
 
     return (
@@ -33,6 +37,8 @@ const RoleTag = forwardRef<Props, "span">(
             <TagLeftIcon as={Img} src={imageUrl} borderRadius={"full"} boxSize="4" />
           ))}
         <TagLabel>{name ?? "Unknown role"}</TagLabel>
+
+        {rightIcon && <TagRightIcon as={rightIcon} />}
       </Tag>
     )
   }

@@ -191,7 +191,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
 
         onSuccess?.()
       } else {
-        if (updatedRole.error) {
+        if (updatedRole?.error) {
           errorToast({
             error: "Failed to update role",
             correlationId: updatedRole.correlationId,
