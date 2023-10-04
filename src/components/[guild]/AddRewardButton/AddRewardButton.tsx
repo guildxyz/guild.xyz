@@ -10,9 +10,7 @@ import {
   Stack,
   Text,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
@@ -22,6 +20,7 @@ import dynamic from "next/dynamic"
 import { ArrowLeft, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import platforms from "platforms/platforms"
+import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -34,8 +33,9 @@ import { CreatePoapProvider } from "../CreatePoap/components/CreatePoapContext"
 import useGuild from "../hooks/useGuild"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
-import HiddenRoleAlert from "./components/HiddenRoleAlert"
 import useAddReward from "./hooks/useAddReward"
+
+type SaveAs = "DRAFT" | "PUBLIC"
 
 // temporary until POAPs are real rewards
 const DynamicAddPoapPanel = dynamic(() => import("components/[guild]/CreatePoap"), {
@@ -44,11 +44,11 @@ const DynamicAddPoapPanel = dynamic(() => import("components/[guild]/CreatePoap"
 
 const defaultValues = {
   requirements: [],
+  roleIds: [],
   visibility: Visibility.PUBLIC,
 }
 
 const AddRewardButton = (): JSX.Element => {
-  const { account } = useWeb3React()
   const { roles } = useGuild()
 
   const {
@@ -80,40 +80,35 @@ const AddRewardButton = (): JSX.Element => {
   }
 
   const requirements = useWatch({ name: "requirements", control: methods.control })
+  const roleIds = useWatch({ name: "roleIds", control: methods.control })
   const isAddRewardButtonDisabled =
-    activeTab === RoleTypeToAddTo.NEW_ROLE && !requirements?.length
-
-  const {
-    isOpen: isHiddenRoleAlertOpen,
-    onOpen: onHiddenRoleAlertOpen,
-    onClose: onHiddenRoleAlertClose,
-  } = useDisclosure()
-
-  const onClose = () => {
-    onAddRewardModalClose()
-    onHiddenRoleAlertClose()
-  }
+    activeTab === RoleTypeToAddTo.NEW_ROLE ? !requirements?.length : !roleIds?.length
 
   const toast = useToast()
 
   const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
-    useAddReward({ onSuccess: onClose })
+    useAddReward({ onSuccess: onAddRewardModalClose })
   const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
     useCreateRole({
       onSuccess: () => {
         toast({ status: "success", title: "Reward successfully added" })
-        onClose()
+        onAddRewardModalClose()
       },
     })
 
   const isLoading = isAddRewardLoading || isCreateRoleLoading
 
-  const onSubmit = (data: any) => {
+  const [saveAsState, setSaveAsState] = useState<SaveAs>("PUBLIC")
+
+  const onSubmit = (data: any, saveAs: SaveAs = "PUBLIC") => {
     if (data.requirements?.length > 0) {
+      const visibility = saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
       onCreateRoleSubmit({
         ...data,
         name: data.name || `New ${platforms[selection].name} role`,
         imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
+        visibility,
+        rolePlatforms: data.rolePlatforms.map((rp) => ({ ...rp, visibility })),
       })
     } else if (data.roleIds?.length) {
       onAddRewardSubmit({
@@ -123,29 +118,14 @@ const AddRewardButton = (): JSX.Element => {
           .map((roleId) => ({
             // We'll be able to send additional params here, like capacity & time
             roleId: +roleId,
-            visibility: roles.find((role) => role.id === +roleId).visibility,
+            visibility:
+              saveAs === "DRAFT"
+                ? Visibility.HIDDEN
+                : roles.find((role) => role.id === +roleId).visibility,
           })),
       })
-    } else {
-      onHiddenRoleAlertOpen()
     }
   }
-
-  const onSubmitWithHiddenRole = (data: any) =>
-    onCreateRoleSubmit({
-      ...data,
-      name: data.name || `New ${platforms[selection].name} role`,
-      imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
-      visibility: Visibility.HIDDEN,
-      requirements: [
-        {
-          type: "ALLOWLIST",
-          data: {
-            addresses: [account.toLowerCase()],
-          },
-        },
-      ],
-    })
 
   const { AddPlatformPanel, PlatformPreview } = platforms[selection] ?? {}
 
@@ -173,7 +153,7 @@ const AddRewardButton = (): JSX.Element => {
           isOpen={isOpen}
           onClose={() => {
             methods.reset(defaultValues)
-            onClose()
+            onAddRewardModalClose()
           }}
           size={step === "HOME" ? "4xl" : "2xl"}
           scrollBehavior="inside"
@@ -234,12 +214,25 @@ const AddRewardButton = (): JSX.Element => {
               </ModalBody>
 
               {selection !== "POAP" && step === "SELECT_ROLE" && (
-                <ModalFooter pt="6" pb="8">
+                <ModalFooter pt="6" pb="8" gap={2}>
+                  <Button
+                    isDisabled={isAddRewardButtonDisabled}
+                    onClick={methods.handleSubmit((data) => {
+                      setSaveAsState("DRAFT")
+                      onSubmit(data, "DRAFT")
+                    })}
+                    isLoading={saveAsState === "DRAFT" && isLoading}
+                  >
+                    Save as draft
+                  </Button>
                   <Button
                     isDisabled={isAddRewardButtonDisabled}
                     colorScheme="green"
-                    onClick={methods.handleSubmit(onSubmit)}
-                    isLoading={isLoading}
+                    onClick={methods.handleSubmit((data) => {
+                      setSaveAsState("PUBLIC")
+                      onSubmit(data)
+                    })}
+                    isLoading={saveAsState === "PUBLIC" && isLoading}
                   >
                     Done
                   </Button>
@@ -248,13 +241,6 @@ const AddRewardButton = (): JSX.Element => {
             </ModalContent>
           </CreatePoapProvider>
         </Modal>
-
-        <HiddenRoleAlert
-          isOpen={isHiddenRoleAlertOpen}
-          onClose={onHiddenRoleAlertClose}
-          onAccept={methods.handleSubmit(onSubmitWithHiddenRole)}
-          isCreateRoleLoading={isCreateRoleLoading}
-        />
       </FormProvider>
     </>
   )
