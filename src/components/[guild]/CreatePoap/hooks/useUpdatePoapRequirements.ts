@@ -23,7 +23,9 @@ const useUpdatePoapRequirements = (
     logic: Logic
     requirements: Omit<GuildPoap["poapRequirements"], "logic">
   }) => {
-    const existingPoapRequirements = poaps?.flatMap((poap) => poap.poapRequirements)
+    const existingPoapRequirements = poaps
+      ?.flatMap((poap) => poap.poapRequirements)
+      ?.filter(Boolean)
 
     const poapRequirementsToCreate =
       body?.requirements?.filter((req) => !req.id) ?? []
