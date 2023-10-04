@@ -43,7 +43,7 @@ const RewardImagePicker = () => {
       <Button
         position="relative"
         rounded="full"
-        boxSize={12}
+        boxSize={10}
         p={0}
         overflow="hidden"
         colorScheme="gray"

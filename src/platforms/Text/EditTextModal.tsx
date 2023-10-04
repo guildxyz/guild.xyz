@@ -5,9 +5,9 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
+import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
 import useToast from "hooks/useToast"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPlatform } from "types"

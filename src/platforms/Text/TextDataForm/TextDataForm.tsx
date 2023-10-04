@@ -1,7 +1,6 @@
-import { FormControl, HStack, Input, Stack } from "@chakra-ui/react"
-import FormErrorMessage from "components/common/FormErrorMessage"
-import { SectionTitle } from "components/common/Section"
+import { Box, FormControl, FormLabel, HStack, Input, Stack } from "@chakra-ui/react"
 import RichTextDescriptionEditor from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { PropsWithChildren } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import RewardImagePicker from "./components/RewardImagePicker"
@@ -23,23 +22,20 @@ const TextDataForm = ({ children }: PropsWithChildren<unknown>) => {
 
   return (
     <Stack spacing={8}>
-      <Stack spacing={4}>
-        <SectionTitle title="Display reward publicly as" />
+      <Box>
+        <FormLabel>Display reward publicly as</FormLabel>
         <HStack alignItems="start">
           <RewardImagePicker />
 
           <FormControl isRequired maxW="sm" isInvalid={!!errors?.name}>
-            <Input
-              {...register("name", { required: "This field is required" })}
-              mt={1}
-            />
+            <Input {...register("name", { required: "This field is required" })} />
             <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
           </FormControl>
         </HStack>
-      </Stack>
+      </Box>
 
-      <Stack spacing={4}>
-        <SectionTitle title="Secret content to reveal" />
+      <Box>
+        <FormLabel>Secret content to reveal</FormLabel>
         <FormControl isRequired isInvalid={!!errors?.text}>
           <RichTextDescriptionEditor
             defaultValue={text}
@@ -49,7 +45,7 @@ const TextDataForm = ({ children }: PropsWithChildren<unknown>) => {
           />
           <FormErrorMessage>{errors?.text?.message}</FormErrorMessage>
         </FormControl>
-      </Stack>
+      </Box>
 
       {children}
     </Stack>
