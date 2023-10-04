@@ -40,6 +40,9 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
     CONTRACT_CALL: {
       description: "Create a gated NFT",
     },
+    TEXT: {
+      description: "Gate any info as revealable text",
+    },
   }
 
   return (

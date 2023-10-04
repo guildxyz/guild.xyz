@@ -4,17 +4,20 @@ import CreateGuildContractCall from "./components/CreateGuildContractCall"
 import CreateGuildDiscord from "./components/CreateGuildDiscord"
 import CreateGuildGithub from "./components/CreateGuildGithub"
 import CreateGuildGoogle from "./components/CreateGuildGoogle"
+import CreateGuildSecretText from "./components/CreateGuildSecretText"
 import CreateGuildTelegram from "./components/CreateGuildTelegram"
 
 // TODO: we could move these to platforms.tsx too?
-const createGuildPlatformComponents: Partial<
-  Record<PlatformName, () => JSX.Element>
+const createGuildPlatformComponents: Record<
+  Exclude<PlatformName, "POAP" | "TWITTER" | "TWITTER_V1" | "EMAIL">,
+  () => JSX.Element
 > = {
   DISCORD: CreateGuildDiscord,
   TELEGRAM: CreateGuildTelegram,
   GOOGLE: CreateGuildGoogle,
   GITHUB: CreateGuildGithub,
   CONTRACT_CALL: CreateGuildContractCall,
+  TEXT: CreateGuildSecretText,
 }
 
 const CreateGuildPlatform = (): JSX.Element => {

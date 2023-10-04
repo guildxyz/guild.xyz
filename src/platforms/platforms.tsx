@@ -1,4 +1,5 @@
 import { ChakraProps } from "@chakra-ui/react"
+import { RewardProps } from "components/[guild]/RoleCard/components/Reward"
 import dynamic from "next/dynamic"
 import {
   DiscordLogo,
@@ -10,6 +11,7 @@ import {
   TwitterLogo,
 } from "phosphor-react"
 import { ComponentType } from "react"
+import Box from "static/icons/box.svg"
 import Photo from "static/icons/photo.svg"
 import { GuildPlatform, OneOf, PlatformName } from "types"
 import fetcher from "utils/fetcher"
@@ -26,6 +28,9 @@ import GoogleCardMenu from "./Google/GoogleCardMenu"
 import GoogleCardSettings from "./Google/GoogleCardSettings"
 import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
+import SecretTextCardButton from "./SecretText/SecretTextCardButton"
+import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
+import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
 
@@ -53,7 +58,7 @@ type PlatformData<
     type: PlatformName
     name: string
     image?: string | JSX.Element
-    info?: string
+    info?: string | JSX.Element
     link?: string
   }
   cardSettingsComponent?: () => JSX.Element
@@ -65,6 +70,7 @@ type PlatformData<
     skipSettings?: boolean
   }>
   PlatformPreview?: ComponentType<Record<string, never>>
+  RoleCardComponent?: ComponentType<RewardProps>
 
   oauth?: {
     url: string
@@ -303,6 +309,43 @@ const platforms: Record<PlatformName, PlatformData> = {
       {
         ssr: false,
         loading: () => <PlatformPreview isLoading={true} />,
+      }
+    ),
+    RoleCardComponent: dynamic(
+      () => import("platforms/ContractCall/ContractCallReward"),
+      {
+        ssr: false,
+      }
+    ),
+  },
+  TEXT: {
+    icon: Box,
+    name: "Secret",
+    colorScheme: "gray",
+    gatedEntity: "",
+    cardPropsHook: useSecretTextCardProps,
+    cardButton: SecretTextCardButton,
+    cardMenuComponent: SecretTextCardMenu,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: false,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddSecretTextPanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(
+      () => import("platforms/components/SecretTextPreview"),
+      {
+        ssr: false,
+        loading: () => <PlatformPreview isLoading={true} />,
+      }
+    ),
+    RoleCardComponent: dynamic(
+      () => import("platforms/SecretText/SecretTextReward"),
+      {
+        ssr: false,
       }
     ),
   },

@@ -1,8 +1,9 @@
-import { Stack } from "@chakra-ui/react"
+import { Stack, Text } from "@chakra-ui/react"
 import { CodeNode } from "@lexical/code"
 import { AutoLinkNode, LinkNode } from "@lexical/link"
 import { ListItemNode, ListNode } from "@lexical/list"
 import {
+  $convertFromMarkdownString,
   $convertToMarkdownString,
   TextMatchTransformer,
   TRANSFORMERS,
@@ -28,6 +29,9 @@ import ToolbarPlugin from "components/lexical/plugins/ToolbarPlugin/ToolbarPlugi
 
 type Props = {
   onChange?: (value: string) => void
+  placeholder?: string
+  defaultValue?: string
+  minHeight?: string
 }
 
 // TODO: proper error handling maybe
@@ -59,10 +63,18 @@ const IMAGE: TextMatchTransformer = {
   dependencies: [],
 }
 
-const MARKDOWN_TRANSFORMERS = [...TRANSFORMERS, IMAGE]
+// image transformer must be before the other ones, so we don't accidentally display an image as a link
+const MARKDOWN_TRANSFORMERS = [IMAGE, ...TRANSFORMERS]
 
-const RichTextDescriptionEditor = ({ onChange }: Props) => {
+const RichTextDescriptionEditor = ({
+  onChange,
+  placeholder,
+  defaultValue = "",
+  minHeight,
+}: Props) => {
   const initialConfig: InitialConfigType = {
+    editorState: () =>
+      $convertFromMarkdownString(defaultValue, MARKDOWN_TRANSFORMERS),
     namespace: "MyEditor",
     theme: {
       strikethrough: "text-strikethrough",
@@ -85,8 +97,25 @@ const RichTextDescriptionEditor = ({ onChange }: Props) => {
       <Stack spacing={0} borderWidth={1} borderRadius="lg">
         <ToolbarPlugin />
         <RichTextPlugin
-          contentEditable={<ContentEditable className="lexical-content-editable" />}
-          placeholder={undefined}
+          contentEditable={
+            <ContentEditable
+              className="lexical-content-editable"
+              style={{
+                height: "auto",
+                minHeight,
+              }}
+            />
+          }
+          placeholder={
+            <Text
+              colorScheme="gray"
+              position="absolute"
+              top="calc(var(--chakra-space-10) + 2px)"
+              left={3}
+            >
+              {placeholder}
+            </Text>
+          }
           ErrorBoundary={LexicalErrorBoundary}
         />
         <ImagesPlugin />
