@@ -10,7 +10,7 @@ import Button from "components/common/Button"
 import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import { useState } from "react"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import BoxIcon from "static/icons/box.svg"
 import { SecretTextRewardForm } from "../SecretTextDataForm"
 
@@ -27,6 +27,8 @@ const RewardImagePicker = () => {
       setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`)
     },
   })
+
+  const imageUrl = useWatch({ name: "imageUrl" })
 
   const [preview, setPreview] = useState<string>()
   const { getRootProps, getInputProps } = useDropzone({
@@ -55,8 +57,13 @@ const RewardImagePicker = () => {
         _active={{ bg: iconButtonActiveBgColor }}
         {...getRootProps()}
       >
-        {preview ? (
-          <Img aspectRatio={1} objectFit="cover" src={preview} alt="Secret image" />
+        {preview || imageUrl ? (
+          <Img
+            aspectRatio={1}
+            objectFit="cover"
+            src={preview || imageUrl}
+            alt="Secret image"
+          />
         ) : (
           <Icon as={BoxIcon} color="white" display="flex" />
         )}
