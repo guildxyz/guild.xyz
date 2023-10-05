@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
@@ -50,7 +51,14 @@ const DynamicResendRewardButton = dynamic(
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 
 const GroupPage = (): JSX.Element => {
-  const { roles, guildPlatforms, groups, imageUrl: guildImageUrl } = useGuild()
+  const {
+    roles,
+    guildPlatforms,
+    groups,
+    name: guildName,
+    urlName: guildUrlName,
+    imageUrl: guildImageUrl,
+  } = useGuild()
 
   useAutoStatusUpdate()
 
@@ -123,19 +131,34 @@ const GroupPage = (): JSX.Element => {
       </Head>
 
       <Layout
+        beforeHeaderElement={
+          <HStack mb={3}>
+            <GuildLogo imageUrl={guildImageUrl} size={8} />
+            <Link
+              href={`/${guildUrlName}`}
+              fontFamily="display"
+              fontWeight="bold"
+              color={textColor}
+            >
+              {guildName}
+            </Link>
+          </HStack>
+        }
         title={group.name}
         textColor={textColor}
         ogDescription={group.description}
         description={group.description && parseDescription(group.description)}
         image={
-          <GuildLogo
-            imageUrl={group.imageUrl || guildImageUrl}
-            size={{ base: "56px", lg: "72px" }}
-            mt={{ base: 1, lg: 2 }}
-            bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
-          />
+          group.imageUrl && (
+            <GuildLogo
+              imageUrl={group.imageUrl}
+              size={{ base: "56px", lg: "72px" }}
+              mt={{ base: 1, lg: 2 }}
+              bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+            />
+          )
         }
-        imageUrl={group.imageUrl}
+        imageUrl={group.imageUrl ?? guildImageUrl}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
       >
