@@ -9,12 +9,12 @@ import {
 import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
-import { useRouter } from "next/router"
 import { StarHalf } from "phosphor-react"
 import platforms from "platforms/platforms"
 import PoapCardMenu from "platforms/Poap/PoapCardMenu"
 import { PlatformName, PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
+import useGroup from "../hooks/useGroup"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
@@ -54,14 +54,11 @@ const useAccessedGuildPlatforms = (groupId?: number) => {
 }
 
 const AccessHub = (): JSX.Element => {
-  const { id: guildId, poaps, featureFlags, guildPin, groups } = useGuild()
+  const { id: guildId, poaps, featureFlags, guildPin } = useGuild()
 
-  const { query } = useRouter()
-  const groupId = query.group
-    ? groups.find((group) => group.urlName === query.group)?.id
-    : undefined
+  const group = useGroup()
 
-  const accessedGuildPlatforms = useAccessedGuildPlatforms(groupId)
+  const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
 

@@ -17,6 +17,7 @@ import AccessHub from "components/[guild]/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
+import useGroup from "components/[guild]/hooks/useGroup"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useIsMember from "components/[guild]/hooks/useIsMember"
@@ -30,7 +31,6 @@ import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
-import { useRouter } from "next/router"
 import { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, PlatformType, Visibility } from "types"
@@ -54,7 +54,6 @@ const GroupPage = (): JSX.Element => {
   const {
     roles,
     guildPlatforms,
-    groups,
     name: guildName,
     urlName: guildUrlName,
     imageUrl: guildImageUrl,
@@ -62,10 +61,7 @@ const GroupPage = (): JSX.Element => {
 
   useAutoStatusUpdate()
 
-  const { query } = useRouter()
-  const group = query.group
-    ? groups.find((g) => g.urlName === query.group.toString())
-    : null
+  const group = useGroup()
   const groupRoles = roles?.filter((role) => role.groupId === group.id)
 
   // temporary, will order roles already in the SQL query in the future
@@ -235,11 +231,7 @@ type Props = {
 const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
   const guild = useGuild()
 
-  const { query } = useRouter()
-  const group =
-    guild?.groups && query.group
-      ? guild.groups.find((g) => g.urlName === query.group.toString())
-      : null
+  const group = useGroup()
 
   if (!fallback || !guild.id || !group.id) {
     return (
