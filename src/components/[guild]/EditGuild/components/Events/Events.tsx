@@ -10,6 +10,7 @@ const Events = () => (
     <SimpleGrid columns={2} gap={3}>
       <EventInput eventSource={"EVENTBRITE"} />
       <EventInput eventSource={"LUMA"} />
+      <EventInput eventSource={"LINK3"} />
     </SimpleGrid>
   </>
 )

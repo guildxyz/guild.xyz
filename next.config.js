@@ -57,6 +57,7 @@ module.exports = {
       "discord.com",
       "img.evbuc.com",
       "images.lumacdn.com",
+      "og.link3.to",
     ],
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },

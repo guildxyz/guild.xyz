@@ -66,7 +66,10 @@ const EventCard = ({ event, guildId }: Props): JSX.Element => {
               </LinkOverlay>
             </GridItem>
             <GridItem order={{ base: 1, md: 2 }}>
-              <EventImage url={event.image} />
+              <EventImage
+                url={event.image}
+                altText={`${event.title} -  event cover`}
+              />
             </GridItem>
           </Grid>
         </Card>
@@ -76,7 +79,12 @@ const EventCard = ({ event, guildId }: Props): JSX.Element => {
         <ModalContent>
           <ModalCloseButton zIndex="modal" />
           <ModalBody p="5 !important">
-            <EventImage url={event.image} showFallback={false} mb="5" />
+            <EventImage
+              url={event.image}
+              showFallback={false}
+              altText={`${event.title} -  event cover`}
+              mb="5"
+            />
             <Heading
               fontSize={"xl"}
               fontFamily={"Dystopian"}

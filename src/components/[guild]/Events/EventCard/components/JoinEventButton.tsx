@@ -15,7 +15,7 @@ type Props = {
 
 const eventButtonColor: Record<EventSourcesKey, string> = {
   EVENTBRITE: "#f05537",
-  LINK3: "#606060",
+  LINK3: "#586079",
   LUMA: "#ff5385",
   DISCORD: "#5865f2",
 }

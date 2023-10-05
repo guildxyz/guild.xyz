@@ -86,7 +86,7 @@ const useGuildEvents = () => {
   const serverError = []
 
   if (swrResponseEvents.error)
-    serverError.push({ type: "LUMA, EVENTBRITE", ...swrResponseEvents.error })
+    serverError.push({ type: "LUMA, EVENTBRITE, LINK3", ...swrResponseEvents.error })
 
   if (swrResponseEvents.data?.errors)
     error.push(
