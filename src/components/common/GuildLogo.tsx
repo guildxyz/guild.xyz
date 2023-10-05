@@ -1,5 +1,5 @@
-import { Circle, Img, ResponsiveValue, useColorMode } from "@chakra-ui/react"
-import Image from "next/image"
+import { Circle, Image, Img, ResponsiveValue, useColorMode } from "@chakra-ui/react"
+// import Image from "next/image"
 import { memo } from "react"
 import { Rest } from "types"
 
@@ -32,15 +32,17 @@ const GuildLogo = memo(
           (imageUrl?.match("guildLogos") ? (
             <Img src={imageUrl} alt="Guild logo" boxSize="40%" />
           ) : (
-            <Image
-              src={imageUrl}
-              quality={imageQuality}
-              alt="Guild logo"
-              layout="fill"
-              sizes={typeof size === "string" ? size : Object.values(size).at(-1)}
-              objectFit="cover"
-              priority={priority}
-            />
+            // TODO: use next/image here!
+            <Image src={imageUrl} alt="Guild logo" objectFit="cover" />
+            // <Image
+            //   src={imageUrl}
+            //   quality={imageQuality}
+            //   alt="Guild logo"
+            //   layout="fill"
+            //   sizes={typeof size === "string" ? size : Object.values(size).at(-1)}
+            //   objectFit="cover"
+            //   priority={priority}
+            // />
           ))}
       </Circle>
     )

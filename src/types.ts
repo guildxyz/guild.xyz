@@ -325,6 +325,7 @@ type SimpleRole = {
 }
 
 type Role = SimpleRole & {
+  groupId?: number
   members: string[]
   requirements: Requirement[]
   rolePlatforms: RolePlatform[]
@@ -404,6 +405,7 @@ type Guild = {
   theme: Theme
   guildPlatforms: GuildPlatform[]
   roles: Role[]
+  groups: Group[]
   members: Array<string>
   poaps: Array<GuildPoap>
   onboardingComplete: boolean
@@ -452,6 +454,17 @@ type GuildFormType = Partial<
     isOwner?: boolean
   }>
   eventSources?: Record<EventSourcesKey, string>
+}
+
+type Group = {
+  id: number
+  urlName: string
+  name: string
+  description?: string
+  imageUrl?: string
+  type?: string
+  position: number
+  guildId: number
 }
 
 type SelectOption<T = string> = {
@@ -688,6 +701,7 @@ export type {
   GitPoap,
   GoogleFile,
   Guild,
+  Group,
   GuildAdmin,
   GuildBase,
   SimpleGuild,
