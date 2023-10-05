@@ -346,12 +346,9 @@ const platforms: Record<PlatformName, PlatformData> = {
         loading: () => <PlatformPreview isLoading={true} />,
       }
     ),
-    RoleCardComponent: dynamic(
-      () => import("platforms/SecretText/SecretTextReward"),
-      {
-        ssr: false,
-      }
-    ),
+    RoleCardComponent: dynamic(() => import("platforms/components/TextReward"), {
+      ssr: false,
+    }),
   },
   UNIQUE_TEXT: {
     icon: Key,
@@ -377,12 +374,9 @@ const platforms: Record<PlatformName, PlatformData> = {
         loading: () => <PlatformPreview isLoading={true} />,
       }
     ),
-    RoleCardComponent: dynamic(
-      () => import("platforms/UniqueText/UniqueTextReward"),
-      {
-        ssr: false,
-      }
-    ),
+    RoleCardComponent: dynamic(() => import("platforms/components/TextReward"), {
+      ssr: false,
+    }),
   },
 }
 
