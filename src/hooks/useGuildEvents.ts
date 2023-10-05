@@ -42,7 +42,9 @@ const discordEventToGuildEvent = (
   description: discordEvent.description,
   title: discordEvent.name,
   eventType: supportedEventSources[3],
-  image: `https://cdn.discordapp.com/guild-events/${discordEvent.id}/${discordEvent.image}.png?size=512`,
+  image: discordEvent.image
+    ? `https://cdn.discordapp.com/guild-events/${discordEvent.id}/${discordEvent.image}.png?size=512`
+    : null,
   location: discordEvent.entityMetadata.location,
   memberCount: discordEvent.userCount,
   start: discordEvent.scheduledStartTimestamp,
