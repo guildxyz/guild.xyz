@@ -34,8 +34,6 @@ const EventInput = ({ eventSource }: Props) => {
     name: `eventSources.${eventSource}`,
   })
 
-  console.log("xy", link)
-
   if (!link && link !== "") return null
 
   return (
