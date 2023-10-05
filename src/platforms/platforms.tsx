@@ -7,6 +7,7 @@ import {
   GithubLogo,
   GoogleLogo,
   IconProps,
+  Question,
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
@@ -33,6 +34,9 @@ import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
+import UniqueTextCardButton from "./UniqueText/UniqueTextCardButton"
+import UniqueTextCardMenu from "./UniqueText/UniqueTextCardMenu"
+import useUniqueTextCardProps from "./UniqueText/useUniqueTextCardProps"
 
 export enum PlatformAsRewardRestrictions {
   NOT_APPLICABLE, // e.g. Twitter
@@ -344,6 +348,37 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
     RoleCardComponent: dynamic(
       () => import("platforms/SecretText/SecretTextReward"),
+      {
+        ssr: false,
+      }
+    ),
+  },
+  UNIQUE_TEXT: {
+    icon: Question,
+    name: "Secret",
+    colorScheme: "gray",
+    gatedEntity: "",
+    cardPropsHook: useUniqueTextCardProps,
+    cardButton: UniqueTextCardButton,
+    cardMenuComponent: UniqueTextCardMenu,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: false,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddUniqueTextPanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(
+      () => import("platforms/components/UniqueTextPreview"),
+      {
+        ssr: false,
+        loading: () => <PlatformPreview isLoading={true} />,
+      }
+    ),
+    RoleCardComponent: dynamic(
+      () => import("platforms/UniqueText/UniqueTextReward"),
       {
         ssr: false,
       }

@@ -43,6 +43,9 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
     TEXT: {
       description: "Gate any info as revealable text",
     },
+    UNIQUE_TEXT: {
+      description: "TODO: description",
+    },
   }
 
   return (
