@@ -7,7 +7,7 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { EventSourcesKey, GuildFormType } from "types"
 
 type Props = {
@@ -30,6 +30,13 @@ const logos: Record<EventSourcesKey, string> = {
 
 const EventInput = ({ eventSource }: Props) => {
   const { register, setValue } = useFormContext<GuildFormType>()
+  const link = useWatch({
+    name: `eventSources.${eventSource}`,
+  })
+
+  console.log("xy", link)
+
+  if (!link && link !== "") return null
 
   return (
     <InputGroup size={"lg"}>
@@ -55,4 +62,5 @@ const EventInput = ({ eventSource }: Props) => {
   )
 }
 
+export { logos, placeholders }
 export default EventInput
