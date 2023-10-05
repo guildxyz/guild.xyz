@@ -7,12 +7,12 @@ import {
   GithubLogo,
   GoogleLogo,
   IconProps,
-  Question,
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
 import { ComponentType } from "react"
 import Box from "static/icons/box.svg"
+import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
 import { GuildPlatform, OneOf, PlatformName } from "types"
 import fetcher from "utils/fetcher"
@@ -354,8 +354,8 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
   },
   UNIQUE_TEXT: {
-    icon: Question,
-    name: "Secret",
+    icon: Key,
+    name: "Unique text",
     colorScheme: "gray",
     gatedEntity: "",
     cardPropsHook: useUniqueTextCardProps,
