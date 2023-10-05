@@ -12,9 +12,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
-import RolePlatforms from "components/[guild]/RolePlatforms"
-import SetVisibility from "components/[guild]/SetVisibility"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -25,6 +22,9 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
+import useGuild from "components/[guild]/hooks/useGuild"
+import RolePlatforms from "components/[guild]/RolePlatforms"
+import SetVisibility from "components/[guild]/SetVisibility"
 import { AnimatePresence, motion } from "framer-motion"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
@@ -208,11 +208,14 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                 w="full"
                 leftElement={
                   <IconButton
-                    aria-label="cancel"
-                    icon={<ArrowLeft size={20} />}
-                    mr={3}
-                    onClick={onCloseAndClear}
+                    aria-label="Back"
+                    icon={<Icon as={ArrowLeft} boxSize="1.1em" weight="bold" />}
                     display={{ base: "flex", md: "none" }}
+                    borderRadius="full"
+                    maxW={10}
+                    maxH={10}
+                    mr={2}
+                    onClick={onCloseAndClear}
                   >
                     Cancel
                   </IconButton>
