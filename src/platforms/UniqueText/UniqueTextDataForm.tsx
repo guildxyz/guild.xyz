@@ -20,7 +20,11 @@ export type UniqueTextRewardForm = {
   texts: string[]
 }
 
-const UniqueTextDataForm = ({ children }: PropsWithChildren<unknown>) => {
+type Props = {
+  isEditForm?: boolean
+}
+
+const UniqueTextDataForm = ({ isEditForm, children }: PropsWithChildren<Props>) => {
   const {
     setValue,
     formState: { errors },
@@ -55,7 +59,9 @@ const UniqueTextDataForm = ({ children }: PropsWithChildren<unknown>) => {
       <PublicRewardDataForm defaultIcon={Key} />
 
       <Stack>
-        <FormLabel>Unique texts</FormLabel>
+        <FormLabel>
+          {isEditForm ? "Upload additional unique texts" : "Unique texts"}
+        </FormLabel>
 
         <FormControl isInvalid={!!fileRejections?.[0] || !!regexError}>
           <Button {...getRootProps()} as="label" leftIcon={<File />}>

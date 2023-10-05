@@ -225,6 +225,7 @@ type PlatformGuildData = {
     mimeType?: never
     iconLink?: never
     text?: never
+    texts?: never
   }
   UNIQUE_TEXT: {
     texts: string[]
