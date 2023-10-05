@@ -307,7 +307,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
 
       guild.mutateGuild(
         (prev) => {
-          const oldAdminsThatHaventBeenDeleted = (prev.admins ?? []).filter(
+          const oldAdminsThatHaventBeenDeleted = (prev?.admins ?? []).filter(
             (prevAdmin) =>
               !admin.deletions.success.some(
                 (deletedAdmin) => deletedAdmin.id === prevAdmin.id
@@ -315,7 +315,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           )
 
           const oldContactsThatHaventBeenDeletedNorUpdated = (
-            prev.contacts ?? []
+            prev?.contacts ?? []
           ).filter(
             (prevContact) =>
               !contacts.deletions.success.some(
@@ -327,7 +327,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           )
 
           const oldFeatureFlagsThatHaventBeenDeleted = (
-            prev.featureFlags ?? []
+            prev?.featureFlags ?? []
           ).filter(
             (prevFeatureFlag) =>
               !featureFlags.deletions.success.some(
