@@ -9,6 +9,7 @@ import {
 import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
+import { useRouter } from "next/router"
 import { StarHalf } from "phosphor-react"
 import platforms from "platforms/platforms"
 import PoapCardMenu from "platforms/Poap/PoapCardMenu"
@@ -26,15 +27,20 @@ const DynamicGuildPinRewardCard = dynamic(
 )
 
 // prettier-ignore
-const useAccessedGuildPlatforms = () => {
+const useAccessedGuildPlatforms = (groupId?: number) => {
   const { id, guildPlatforms, roles } = useGuild()
+  const relevantRoles = groupId ? roles.filter(role => role.groupId === groupId) : roles
+
+  const relevantGuildPlatformIds = relevantRoles.flatMap((role) => role.rolePlatforms.map(rp => rp.guildPlatformId))
+  const relevantGuildPlatforms = guildPlatforms.filter(gp => relevantGuildPlatformIds.includes(gp.id))
+
   const { isAdmin } = useGuildPermission()
   const { memberships } = useMemberships()
 
   // Displaying CONTRACT_CALL rewards for everyone, even for users who aren't members
-  const contractCallGuildPlatforms = guildPlatforms?.filter(guildPlatform => guildPlatform.platformId === PlatformType.CONTRACT_CALL) ?? []
+  const contractCallGuildPlatforms = relevantGuildPlatforms?.filter(guildPlatform => guildPlatform.platformId === PlatformType.CONTRACT_CALL) ?? []
 
-  if (isAdmin) return guildPlatforms
+  if (isAdmin) return relevantGuildPlatforms
   
   const accessedRoleIds = memberships?.find((membership) => membership.guildId === id)?.roleIds
   if (!accessedRoleIds) return contractCallGuildPlatforms
@@ -42,14 +48,20 @@ const useAccessedGuildPlatforms = () => {
   const accessedRoles = roles.filter(role => accessedRoleIds.includes(role.id))
   const accessedRolePlatforms = accessedRoles.map(role => role.rolePlatforms).flat().filter(rolePlatform => !!rolePlatform)
   const accessedGuildPlatformIds = [...new Set(accessedRolePlatforms.map(rolePlatform => rolePlatform.guildPlatformId))]
-  const accessedGuildPlatforms = guildPlatforms?.filter(guildPlatform => accessedGuildPlatformIds.includes(guildPlatform.id) || guildPlatform.platformId === PlatformType.CONTRACT_CALL)
+  const accessedGuildPlatforms = relevantGuildPlatforms?.filter(guildPlatform => accessedGuildPlatformIds.includes(guildPlatform.id) || guildPlatform.platformId === PlatformType.CONTRACT_CALL)
 
   return accessedGuildPlatforms
 }
 
 const AccessHub = (): JSX.Element => {
-  const { id: guildId, poaps, featureFlags, guildPin } = useGuild()
-  const accessedGuildPlatforms = useAccessedGuildPlatforms()
+  const { id: guildId, poaps, featureFlags, guildPin, groups } = useGuild()
+
+  const { query } = useRouter()
+  const groupId = query.group
+    ? groups.find((group) => group.urlName === query.group)?.id
+    : undefined
+
+  const accessedGuildPlatforms = useAccessedGuildPlatforms(groupId)
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
 

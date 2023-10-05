@@ -3,13 +3,15 @@ import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import LinkButton from "components/common/LinkButton"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useRouter } from "next/router"
 import { ArrowRight } from "phosphor-react"
 // import Image from "next/image"
 
 const RoleGroupCards = () => {
   const { groups, imageUrl: guildImageUrl, urlName: guildUrlName } = useGuild()
+  const { query } = useRouter()
 
-  if (!groups?.length) return null
+  if (!groups?.length || !!query.group) return null
 
   return (
     <>
