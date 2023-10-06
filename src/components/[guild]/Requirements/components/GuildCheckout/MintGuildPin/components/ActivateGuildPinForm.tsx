@@ -7,6 +7,7 @@ import { Chain } from "connectors"
 import useToast from "hooks/useToast"
 import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"
+import { Visibility } from "types"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
 
@@ -72,6 +73,7 @@ const ActivateGuildPinForm = (): JSX.Element => {
                 },
               ],
               rolePlatforms: [],
+              visibility: Visibility.PUBLIC,
             })
           }
         : showSuccessToastAndCloseModal,

@@ -102,7 +102,7 @@ const EditPoapRole = ({ poap, guildPoap }: Props): JSX.Element => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
-            <DrawerHeader title="Edit role"></DrawerHeader>
+            <DrawerHeader title="Edit role" />
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title={"Rewards"}>

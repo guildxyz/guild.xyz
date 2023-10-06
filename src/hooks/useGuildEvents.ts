@@ -42,7 +42,9 @@ const discordEventToGuildEvent = (
   description: discordEvent.description,
   title: discordEvent.name,
   eventType: supportedEventSources[3],
-  image: `https://cdn.discordapp.com/guild-events/${discordEvent.id}/${discordEvent.image}.png?size=512`,
+  image: discordEvent.image
+    ? `https://cdn.discordapp.com/guild-events/${discordEvent.id}/${discordEvent.image}.png?size=512`
+    : null,
   location: discordEvent.entityMetadata.location,
   memberCount: discordEvent.userCount,
   start: discordEvent.scheduledStartTimestamp,
@@ -84,7 +86,7 @@ const useGuildEvents = () => {
   const serverError = []
 
   if (swrResponseEvents.error)
-    serverError.push({ type: "LUMA, EVENTBRITE", ...swrResponseEvents.error })
+    serverError.push({ type: "LUMA, EVENTBRITE, LINK3", ...swrResponseEvents.error })
 
   if (swrResponseEvents.data?.errors)
     error.push(

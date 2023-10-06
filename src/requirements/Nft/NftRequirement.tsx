@@ -55,7 +55,7 @@ const NftRequirement = (props: RequirementProps) => {
   const { name: guildPinGuildName } = useGuild(guildIdAttribute ?? "")
 
   const { metadata: metadataWithTraits, isLoading: isMetadataWithTraitsLoading } =
-    useNftMetadata(requirement.chain, requirement.address, requirement.data.id)
+    useNftMetadata(requirement.chain, requirement.address, requirement.data?.id)
   const { metadata, isLoading } = useNftMetadataWithTraits(
     requirement.chain,
     requirement.address
