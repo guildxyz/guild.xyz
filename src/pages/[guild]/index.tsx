@@ -14,7 +14,13 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import AccessHub from "components/[guild]/AccessHub"
+import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
@@ -34,11 +40,6 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -48,7 +49,7 @@ import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
-import { Guild, PlatformType, SocialLinkKey, Visibility } from "types"
+import { Guild, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
 
@@ -87,8 +88,8 @@ const GuildPage = (): JSX.Element => {
     onboardingComplete,
     socialLinks,
     poaps,
-    guildPlatforms,
     tags,
+    groups,
     isDetailed,
   } = useGuild()
   useAutoStatusUpdate()
@@ -152,13 +153,7 @@ const GuildPage = (): JSX.Element => {
     isAdmin && !onboardingComplete ? OnboardingProvider : React.Fragment
 
   const showOnboarding = isAdmin && !onboardingComplete
-  const showAccessHub =
-    (guildPlatforms?.some(
-      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
-    ) ||
-      isMember ||
-      isAdmin) &&
-    !showOnboarding
+  const showAccessHub = isAdmin ? onboardingComplete : true
 
   const currentTime = Date.now() / 1000
   const { activePoaps, expiredPoaps } =
@@ -175,6 +170,8 @@ const GuildPage = (): JSX.Element => {
         },
         { activePoaps: [], expiredPoaps: [] }
       ) ?? {}
+
+  const accessedGuildPlatforms = useAccessedGuildPlatforms()
 
   return (
     <DynamicOnboardingProvider>
@@ -259,7 +256,10 @@ const GuildPage = (): JSX.Element => {
           <AccessHub />
         </Collapse>
         <Section
-          title={(showAccessHub || showOnboarding) && "Roles"}
+          title={
+            (isMember || (showAccessHub && !!accessedGuildPlatforms?.length)) &&
+            "Roles"
+          }
           titleRightElement={
             isAdmin &&
             (showAccessHub || showOnboarding) && (

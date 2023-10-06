@@ -26,35 +26,56 @@ const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")
 )
 
-// prettier-ignore
-const useAccessedGuildPlatforms = (groupId?: number) => {
+export const useAccessedGuildPlatforms = (groupId?: number) => {
   const { id, guildPlatforms, roles } = useGuild()
-  const relevantRoles = groupId ? roles.filter(role => role.groupId === groupId) : roles
+  const relevantRoles = groupId
+    ? roles.filter((role) => role.groupId === groupId)
+    : roles
 
-  const relevantGuildPlatformIds = relevantRoles.flatMap((role) => role.rolePlatforms.map(rp => rp.guildPlatformId))
-  const relevantGuildPlatforms = guildPlatforms.filter(gp => relevantGuildPlatformIds.includes(gp.id))
+  const relevantGuildPlatformIds = relevantRoles.flatMap((role) =>
+    role.rolePlatforms.map((rp) => rp.guildPlatformId)
+  )
+  const relevantGuildPlatforms = guildPlatforms.filter((gp) =>
+    relevantGuildPlatformIds.includes(gp.id)
+  )
 
   const { isAdmin } = useGuildPermission()
   const { memberships } = useMemberships()
 
   // Displaying CONTRACT_CALL rewards for everyone, even for users who aren't members
-  const contractCallGuildPlatforms = relevantGuildPlatforms?.filter(guildPlatform => guildPlatform.platformId === PlatformType.CONTRACT_CALL) ?? []
+  const contractCallGuildPlatforms =
+    relevantGuildPlatforms?.filter(
+      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
+    ) ?? []
 
   if (isAdmin) return relevantGuildPlatforms
-  
-  const accessedRoleIds = memberships?.find((membership) => membership.guildId === id)?.roleIds
+
+  const accessedRoleIds = memberships?.find(
+    (membership) => membership.guildId === id
+  )?.roleIds
   if (!accessedRoleIds) return contractCallGuildPlatforms
 
-  const accessedRoles = roles.filter(role => accessedRoleIds.includes(role.id))
-  const accessedRolePlatforms = accessedRoles.map(role => role.rolePlatforms).flat().filter(rolePlatform => !!rolePlatform)
-  const accessedGuildPlatformIds = [...new Set(accessedRolePlatforms.map(rolePlatform => rolePlatform.guildPlatformId))]
-  const accessedGuildPlatforms = relevantGuildPlatforms?.filter(guildPlatform => accessedGuildPlatformIds.includes(guildPlatform.id) || guildPlatform.platformId === PlatformType.CONTRACT_CALL)
+  const accessedRoles = roles.filter((role) => accessedRoleIds.includes(role.id))
+  const accessedRolePlatforms = accessedRoles
+    .map((role) => role.rolePlatforms)
+    .flat()
+    .filter((rolePlatform) => !!rolePlatform)
+  const accessedGuildPlatformIds = [
+    ...new Set(
+      accessedRolePlatforms.map((rolePlatform) => rolePlatform.guildPlatformId)
+    ),
+  ]
+  const accessedGuildPlatforms = relevantGuildPlatforms?.filter(
+    (guildPlatform) =>
+      accessedGuildPlatformIds.includes(guildPlatform.id) ||
+      guildPlatform.platformId === PlatformType.CONTRACT_CALL
+  )
 
   return accessedGuildPlatforms
 }
 
 const AccessHub = (): JSX.Element => {
-  const { id: guildId, poaps, featureFlags, guildPin } = useGuild()
+  const { id: guildId, poaps, featureFlags, guildPin, groups } = useGuild()
 
   const group = useGroup()
 
@@ -71,6 +92,19 @@ const AccessHub = (): JSX.Element => {
     featureFlags.includes("GUILD_CREDENTIAL") &&
     ((isMember && guildPin?.isActive) || isAdmin)
 
+  const showNoAccessedRewards =
+    isMember &&
+    (!featureFlags.includes("GUILD_CREDENTIAL") || !shouldShowGuildPin) &&
+    (group ? true : !groups?.length)
+
+  const marginBottom =
+    !accessedGuildPlatforms?.length &&
+    !futurePoaps?.length &&
+    !showNoAccessedRewards &&
+    !groups?.length
+      ? 0
+      : 10
+
   return (
     <SimpleGrid
       templateColumns={{
@@ -78,7 +112,7 @@ const AccessHub = (): JSX.Element => {
         md: "repeat(auto-fit, minmax(250px, .5fr))",
       }}
       gap={4}
-      mb="10"
+      mb={marginBottom}
     >
       <RoleGroupCards />
       {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
@@ -126,7 +160,7 @@ const AccessHub = (): JSX.Element => {
               />
             ))}
         </>
-      ) : !featureFlags.includes("GUILD_CREDENTIAL") || !shouldShowGuildPin ? (
+      ) : showNoAccessedRewards ? (
         <Card>
           <Alert status="info" h="full">
             <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />

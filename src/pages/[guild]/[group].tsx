@@ -14,6 +14,7 @@ import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
+import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
@@ -33,7 +34,7 @@ import dynamic from "next/dynamic"
 import Head from "next/head"
 import { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
-import { Guild, PlatformType, Visibility } from "types"
+import { Guild, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
 
@@ -55,10 +56,10 @@ const DynamicAddRoleCard = dynamic(
 const GroupPage = (): JSX.Element => {
   const {
     roles,
-    guildPlatforms,
     name: guildName,
     urlName: guildUrlName,
     imageUrl: guildImageUrl,
+    onboardingComplete,
   } = useGuild()
 
   useAutoStatusUpdate()
@@ -114,13 +115,9 @@ const GroupPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
-  // TODO: show only the relevant rewards in the access hub!
-  const showAccessHub =
-    guildPlatforms?.some(
-      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
-    ) ||
-    isMember ||
-    isAdmin
+  const showAccessHub = isAdmin ? onboardingComplete : true
+
+  const accessedGuildPlatforms = useAccessedGuildPlatforms(group.id)
 
   return (
     <>
@@ -178,7 +175,10 @@ const GroupPage = (): JSX.Element => {
           <AccessHub />
         </Collapse>
         <Section
-          title={showAccessHub && "Roles"}
+          title={
+            (isMember || (showAccessHub && !!accessedGuildPlatforms?.length)) &&
+            "Roles"
+          }
           titleRightElement={
             isAdmin &&
             showAccessHub && (
