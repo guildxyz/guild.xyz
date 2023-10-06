@@ -12,7 +12,7 @@ const UniqueTextPreview = (): JSX.Element => {
   return (
     <PlatformPreview
       type="UNIQUE_TEXT"
-      name={platformGuildData?.name ?? "Unique text"}
+      name={platformGuildData?.name ?? "Unique secret"}
       image={
         platformGuildData?.imageUrl ?? (
           <Circle

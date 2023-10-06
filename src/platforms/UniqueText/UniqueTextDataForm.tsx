@@ -60,7 +60,7 @@ const UniqueTextDataForm = ({ isEditForm, children }: PropsWithChildren<Props>) 
 
       <Stack>
         <FormLabel>
-          {isEditForm ? "Upload additional unique texts" : "Unique texts"}
+          {isEditForm ? "Upload additional secrets" : "Unique secrets"}
         </FormLabel>
 
         <FormControl isInvalid={!!fileRejections?.[0] || !!regexError}>

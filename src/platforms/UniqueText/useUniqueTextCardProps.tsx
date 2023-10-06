@@ -8,7 +8,7 @@ const useUniqueTextCardProps = (guildPlatform: GuildPlatform) => {
   const platformGuildData = guildPlatform.platformGuildData
 
   return {
-    name: platformGuildData.name ?? "Unique text",
+    name: platformGuildData.name ?? "Unique secret",
     type: "UNIQUE_TEXT" as PlatformName,
     image: platformGuildData.imageUrl ?? (
       <Circle size={10} bgColor={bgColor}>

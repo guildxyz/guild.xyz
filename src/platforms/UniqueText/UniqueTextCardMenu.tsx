@@ -21,7 +21,7 @@ const UniqueTextCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     <>
       <PlatformCardMenu>
         <MenuItem icon={<PencilSimple />} onClick={onOpen}>
-          Edit unique text
+          Edit unique secret
         </MenuItem>
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
       </PlatformCardMenu>

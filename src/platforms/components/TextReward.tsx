@@ -40,7 +40,6 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const label = platformId === PlatformType.TEXT ? "Reveal secret" : "Claim"
 
-  // This is a partial duplication of the logic in the `Reward` component. I'll see what'll we need from it during the unique text reward implementation
   const state = useMemo(() => {
     if (isMember && hasAccess)
       return {

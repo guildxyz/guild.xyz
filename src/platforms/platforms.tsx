@@ -352,7 +352,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
   UNIQUE_TEXT: {
     icon: Key,
-    name: "Unique text",
+    name: "Unique secret",
     colorScheme: "gray",
     gatedEntity: "",
     cardPropsHook: useUniqueTextCardProps,
