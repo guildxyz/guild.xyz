@@ -22,7 +22,6 @@ const SecretTextCardButton = ({ platform }: Props) => {
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimText(rolePlatformId)
 
-  // TODO: not sure about the copy here
   return (
     <>
       <Button
