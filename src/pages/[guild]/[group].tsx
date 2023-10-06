@@ -48,7 +48,9 @@ const DynamicAddRewardButton = dynamic(
 const DynamicResendRewardButton = dynamic(
   () => import("components/[guild]/ResendRewardButton")
 )
-const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
+const DynamicAddRoleCard = dynamic(
+  () => import("components/[guild]/[group]/AddRoleCard")
+)
 
 const GroupPage = (): JSX.Element => {
   const {
@@ -96,12 +98,12 @@ const GroupPage = (): JSX.Element => {
     if (
       !rolesEl.current ||
       rolesEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      roles?.length <= renderedRolesCount
+      groupRoles?.length <= renderedRolesCount
     )
       return
 
     setRenderedRolesCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [roles, renderedRolesCount])
+  }, [groupRoles, renderedRolesCount])
 
   const renderedRoles = publicRoles?.slice(0, renderedRolesCount) || []
 
@@ -197,10 +199,10 @@ const GroupPage = (): JSX.Element => {
               </Stack>
             </RequirementErrorConfigProvider>
           ) : (
-            <DynamicNoRolesAlert type="GROUP" />
+            <DynamicAddRoleCard />
           )}
 
-          {roles?.length > renderedRolesCount && (
+          {groupRoles?.length > renderedRolesCount && (
             <Center pt={6}>
               <Spinner />
             </Center>
