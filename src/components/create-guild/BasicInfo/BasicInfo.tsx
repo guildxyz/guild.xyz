@@ -1,24 +1,28 @@
 import { Box, FormLabel, HStack, SimpleGrid, Stack } from "@chakra-ui/react"
+import BackgroundImageUploader from "components/[guild]/EditGuild/components/BackgroundImageUploader"
+import ColorPicker from "components/[guild]/EditGuild/components/ColorPicker"
+import UrlName from "components/[guild]/EditGuild/components/UrlName"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import Card from "components/common/Card"
 import Section from "components/common/Section"
-import UrlName from "components/[guild]/EditGuild/components/UrlName"
 import usePinata from "hooks/usePinata"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import slugify from "slugify"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
-import CreateGuildButton from "../CreateGuildButton"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import Description from "../Description"
+import GuildCreationProgress from "../GuildCreationProgress"
 import IconSelector from "../IconSelector"
 import Name from "../Name"
-import Pagination from "../Pagination"
 import ContactInfo from "./components/ContactInfo"
 import TwitterUrlInput from "./components/TwitterUrlInput"
 
 const BasicInfo = (): JSX.Element => {
-  const { template } = useCreateGuildContext()
+  const { template, nextStep } = useCreateGuildContext()
+  const { setLocalBackgroundImage } = useThemeContext()
+
   const {
     control,
     getValues,
@@ -46,6 +50,19 @@ const BasicInfo = (): JSX.Element => {
       setValue("urlName", slugify(name), { shouldValidate: true })
   }, [name, dirtyFields])
 
+  const backgroundUploader = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      /*methods.setValue(
+        "theme.backgroundImage",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        { shouldDirty: true }
+      )*/
+    },
+    onError: () => {
+      setLocalBackgroundImage(null)
+    },
+  })
+
   return (
     <>
       <Card px={{ base: 5, sm: 6 }} py={8}>
@@ -67,7 +84,10 @@ const BasicInfo = (): JSX.Element => {
             </SimpleGrid>
             <Description />
           </Stack>
-
+          <Stack direction={{ base: "column", md: "row" }} spacing="5">
+            <ColorPicker fieldName="theme.color" />
+            <BackgroundImageUploader uploader={backgroundUploader} />
+          </Stack>
           <Section title="How could we contact you?" spacing="4">
             <ContactInfo showAddButton={false} />
           </Section>
@@ -79,16 +99,7 @@ const BasicInfo = (): JSX.Element => {
           )}
         </Stack>
       </Card>
-
-      <Pagination nextButtonHidden>
-        <CreateGuildButton
-          isDisabled={
-            !name ||
-            !!Object.values(errors).length ||
-            (template === "GROWTH" && !getValues("socialLinks.TWITTER"))
-          }
-        />
-      </Pagination>
+      <GuildCreationProgress next={nextStep} progress={35} />
     </>
   )
 }

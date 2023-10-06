@@ -4,7 +4,6 @@ import {
   Icon,
   Stack,
   Step,
-  StepDescription,
   StepIcon,
   StepIndicator,
   StepNumber,
@@ -12,10 +11,12 @@ import {
   StepStatus,
   StepTitle,
   Stepper,
+  Text,
   useBreakpointValue,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { ThemeProvider } from "components/[guild]/ThemeContext"
 import Card from "components/common/Card"
 import Layout from "components/common/Layout"
 import {
@@ -78,6 +79,7 @@ const CreateGuildPage = (): JSX.Element => {
             orientation={orientation}
             gap={{ base: 0, md: 4 }}
             w="full"
+            size={"sm"}
           >
             {steps.map((step, index) => (
               <WrapperComponent
@@ -108,8 +110,9 @@ const CreateGuildPage = (): JSX.Element => {
                     spacing="0"
                     w={{ base: "full", md: "auto" }}
                   >
-                    <StepTitle>{step.title}</StepTitle>
-                    {step.label && <StepDescription>{step.label}</StepDescription>}
+                    <StepTitle as={"p"} style={{ fontSize: "xs" }}>
+                      {step.title}
+                    </StepTitle>
                   </Stack>
                   {activeStep === index && (
                     <Center>
@@ -122,16 +125,17 @@ const CreateGuildPage = (): JSX.Element => {
                       />
                     </Center>
                   )}
-                  <StepSeparator
-                    {...({
-                      minWidth: { md: "4" },
-                      opacity: { base: !isOpen && "0", md: "1" },
-                    } as any)}
-                  />
                 </Step>
+                <StepSeparator
+                  {...({
+                    minWidth: { md: "4" },
+                    opacity: { base: !isOpen && "0", md: "1" },
+                  } as any)}
+                />
               </WrapperComponent>
             ))}
           </Stepper>
+          {steps[activeStep].label && <Text pt={7}>{steps[activeStep].label}</Text>}
         </Card>
         <Stack w="full" spacing={{ base: 4, md: 4 }} pt="6">
           {steps[activeStep].content}
@@ -144,7 +148,9 @@ const CreateGuildPage = (): JSX.Element => {
 
 const CreateGuildPageWrapper = (): JSX.Element => (
   <CreateGuildProvider>
-    <CreateGuildPage />
+    <ThemeProvider>
+      <CreateGuildPage />
+    </ThemeProvider>
   </CreateGuildProvider>
 )
 

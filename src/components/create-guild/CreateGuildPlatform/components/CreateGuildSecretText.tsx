@@ -1,6 +1,12 @@
+import {
+  ModalBody,
+  ModalCloseButton,
+  ModalFooter,
+  ModalHeader,
+} from "@chakra-ui/react"
+import useUser from "components/[guild]/hooks/useUser"
 import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import Pagination from "components/create-guild/Pagination"
-import useUser from "components/[guild]/hooks/useUser"
 import SecretTextDataForm, {
   SecretTextRewardForm,
 } from "platforms/SecretText/SecretTextDataForm"
@@ -10,7 +16,7 @@ import { GuildFormType } from "types"
 const CreateGuildSecretText = () => {
   const { id: userId } = useUser()
 
-  const { nextStep } = useCreateGuildContext()
+  const { setPlatform, addConnectedPlatform } = useCreateGuildContext()
 
   const { setValue } = useFormContext<GuildFormType>()
   const methods = useForm<SecretTextRewardForm>({ mode: "all" })
@@ -21,25 +27,32 @@ const CreateGuildSecretText = () => {
 
   return (
     <>
-      <FormProvider {...methods}>
-        <SecretTextDataForm />
-      </FormProvider>
-
-      <Pagination
-        nextButtonDisabled={!name?.length || !text?.length}
-        nextStepHandler={() => {
-          setValue("guildPlatforms.0", {
-            platformName: "TEXT",
-            platformGuildId: `text-${userId}-${Date.now()}`,
-            platformGuildData: {
-              text,
-              name,
-              imageUrl,
-            },
-          })
-          nextStep()
-        }}
-      />
+      <ModalHeader>Add Secret</ModalHeader>
+      <ModalCloseButton />
+      <ModalBody>
+        <FormProvider {...methods}>
+          <SecretTextDataForm />
+        </FormProvider>
+      </ModalBody>
+      <ModalFooter>
+        <Pagination
+          nextButtonDisabled={!name?.length || !text?.length}
+          nextStepHandler={() => {
+            setValue("guildPlatforms.0", {
+              platformName: "TEXT",
+              platformGuildId: `text-${userId}-${Date.now()}`,
+              platformGuildData: {
+                text,
+                name,
+                imageUrl,
+              },
+            })
+            console.log("xy text called")
+            setPlatform("DEFAULT")
+            addConnectedPlatform("TEXT")
+          }}
+        />
+      </ModalFooter>
     </>
   )
 }

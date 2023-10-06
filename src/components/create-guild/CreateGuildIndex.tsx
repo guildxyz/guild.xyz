@@ -1,37 +1,46 @@
-import { HStack, Text } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import PlatformsGrid from "components/create-guild/PlatformsGrid"
-import { CaretRight } from "phosphor-react"
+import { Checkbox, HStack, Text } from "@chakra-ui/react"
 import { useCreateGuildContext } from "./CreateGuildContext"
 import CreateGuildPlatform from "./CreateGuildPlatform"
+import GuildCreationProgress from "./GuildCreationProgress"
+import MultiPlatformsGrid from "./MultiPlatformGrid"
 
 const CreateGuildIndex = (): JSX.Element => {
-  const { platform, setPlatform, nextStep } = useCreateGuildContext()
+  const {
+    platform,
+    setPlatform,
+    nextStep,
+    addConnectedPlatform,
+    connectedPlatforms,
+  } = useCreateGuildContext()
 
   if (platform && platform !== "DEFAULT") return <CreateGuildPlatform />
 
   return (
     <>
-      <PlatformsGrid onSelection={setPlatform} />
-
+      <MultiPlatformsGrid
+        onSelection={(platformName) => {
+          setPlatform(platformName)
+          addConnectedPlatform(platformName)
+        }}
+        connectedPlatforms={connectedPlatforms}
+      />
       <HStack w="full" justifyContent={"left"} pt={{ base: 4, md: 6 }}>
         <Text fontWeight="medium" colorScheme="gray" opacity=".7">
           or
         </Text>
-        <Button
-          rightIcon={<CaretRight />}
-          variant="link"
-          color="gray"
+        <Checkbox />
+        <Text
           fontWeight="medium"
-          iconSpacing="1.5"
+          colorScheme="gray"
+          opacity=".7"
           onClick={() => {
             setPlatform("DEFAULT")
-            nextStep()
           }}
         >
-          Create guild without platform
-        </Button>
+          continue without platform
+        </Text>
       </HStack>
+      <GuildCreationProgress next={nextStep} progress={20} />
     </>
   )
 }

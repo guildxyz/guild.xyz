@@ -1,3 +1,5 @@
+import { ModalContent, ModalOverlay } from "@chakra-ui/react"
+import { Modal } from "components/common/Modal"
 import { PlatformName } from "types"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import CreateGuildContractCall from "./components/CreateGuildContractCall"
@@ -21,12 +23,26 @@ const createGuildPlatformComponents: Record<
 }
 
 const CreateGuildPlatform = (): JSX.Element => {
-  const { platform } = useCreateGuildContext()
+  const { platform, setPlatform } = useCreateGuildContext()
   const CreateGuildPlatformComponent = platform
     ? createGuildPlatformComponents[platform]
     : null
 
-  return <CreateGuildPlatformComponent />
+  return (
+    <Modal
+      isOpen={true}
+      onClose={() => {
+        setPlatform("DEFAULT")
+      }}
+      scrollBehavior="inside"
+      size="2xl"
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <CreateGuildPlatformComponent />
+      </ModalContent>
+    </Modal>
+  )
 }
 
 export default CreateGuildPlatform

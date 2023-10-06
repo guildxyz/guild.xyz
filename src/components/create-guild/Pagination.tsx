@@ -47,7 +47,7 @@ const Pagination = ({
           })}
     >
       <ButtonGroup>
-        <Button
+        {/*<Button
           isDisabled={activeStep === 1 && platform === "CONTRACT_CALL"}
           onClick={
             (platform && activeStep === 0) ||
@@ -60,14 +60,14 @@ const Pagination = ({
           }
         >
           {prevStepText}
-        </Button>
+        </Button>*/}
         {!nextButtonHidden && (
           <Button
-            colorScheme="indigo"
+            colorScheme="green"
             isDisabled={nextButtonDisabled}
             onClick={nextStepHandler ?? nextStep}
           >
-            {nextStepText}
+            Add{/*nextStepText*/}
           </Button>
         )}
         {children}

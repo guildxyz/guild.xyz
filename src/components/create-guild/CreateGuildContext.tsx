@@ -9,7 +9,7 @@ import {
   useEffect,
   useState,
 } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName as BasePlatformName, GuildFormType } from "types"
 import capitalize from "utils/capitalize"
 import getRandomInt from "utils/getRandomInt"
@@ -36,6 +36,8 @@ const CreateGuildContext = createContext<{
   nextStep: () => void
   activeStep: number
   platform?: PlatformName
+  connectedPlatforms: BasePlatformName[]
+  addConnectedPlatform: (platform: BasePlatformName) => void
   setPlatform: Dispatch<SetStateAction<PlatformName>>
   TEMPLATES: Record<string, Template>
 } | null>(null)
@@ -91,11 +93,18 @@ const CreateGuildProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
   const [platform, setPlatform] = useState<PlatformName>(null)
+  const [connectedPlatforms, setConnectedPlatforms] = useState<BasePlatformName[]>(
+    []
+  )
 
   const methods = useForm<GuildFormType>({
     mode: "all",
   })
-  const guildName = useWatch({ control: methods.control, name: "name" })
+
+  const addConnectedPlatform = (newPlatform: BasePlatformName) => {
+    const updateConnectedPlatforms = [...connectedPlatforms, newPlatform]
+    setConnectedPlatforms(updateConnectedPlatforms)
+  }
 
   const rolePlatforms =
     platform !== "DEFAULT"
@@ -187,24 +196,27 @@ const CreateGuildProvider = ({
 
   const steps: Step[] = [
     {
-      title: "Choose platform",
-      label: `${
-        !platform
-          ? "You can connect more later"
-          : platform === "DEFAULT"
-          ? "Without platform"
-          : platforms[platform]?.name ?? ""
-      }${platform !== "DEFAULT" && guildName ? ` - ${guildName}` : ""}`,
+      title: "Set platforms",
+      label:
+        "Connect platforms below that you build your community around. We’ll generate templates for your guild based on this",
       content: <CreateGuildIndex />,
     },
     {
-      title: "Choose role template",
+      title: "Customize guild",
       label: capitalize(template?.toLowerCase() ?? ""),
+      content: <BasicInfo />,
+    },
+    {
+      title: "Choose template",
       content: <ChooseTemplate />,
     },
     {
-      title: "Basic information",
-      content: <BasicInfo />,
+      title: "Edit roles",
+      content: <></>,
+    },
+    {
+      title: "Finish",
+      content: <></>,
     },
   ]
 
@@ -240,6 +252,8 @@ const CreateGuildProvider = ({
         template,
         setTemplate,
         TEMPLATES,
+        connectedPlatforms,
+        addConnectedPlatform,
       }}
     >
       <FormProvider {...methods}>{children}</FormProvider>
