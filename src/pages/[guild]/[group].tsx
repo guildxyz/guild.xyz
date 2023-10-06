@@ -52,6 +52,7 @@ const DynamicResendRewardButton = dynamic(
 const DynamicAddRoleCard = dynamic(
   () => import("components/[guild]/[group]/AddRoleCard")
 )
+const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 
 const GroupPage = (): JSX.Element => {
   const {
@@ -198,8 +199,10 @@ const GroupPage = (): JSX.Element => {
                 ))}
               </Stack>
             </RequirementErrorConfigProvider>
-          ) : (
+          ) : isAdmin ? (
             <DynamicAddRoleCard />
+          ) : (
+            <DynamicNoRolesAlert type="GROUP" />
           )}
 
           {groupRoles?.length > renderedRolesCount && (

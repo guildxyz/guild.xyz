@@ -50,7 +50,7 @@ import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey, Visibility } from "types"
-import fetcher from "utils/fetcher"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
 
 const BATCH_SIZE = 10
@@ -75,6 +75,7 @@ const DynamicResendRewardButton = dynamic(
 )
 
 const GuildPage = (): JSX.Element => {
+  const fetcherWithSign = useFetcherWithSign()
   const {
     id: guildId,
     name,
