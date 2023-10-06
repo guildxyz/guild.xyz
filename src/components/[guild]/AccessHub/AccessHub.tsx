@@ -89,6 +89,7 @@ const AccessHub = (): JSX.Element => {
   })
 
   const shouldShowGuildPin =
+    !group &&
     featureFlags.includes("GUILD_CREDENTIAL") &&
     ((isMember && guildPin?.isActive) || isAdmin)
 
