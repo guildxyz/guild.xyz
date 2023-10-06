@@ -83,16 +83,17 @@ const GuildPage = (): JSX.Element => {
     admins,
     showMembers,
     memberCount,
-    roles,
+    roles: allRoles,
     isLoading,
     onboardingComplete,
     socialLinks,
     poaps,
     tags,
-    groups,
     isDetailed,
   } = useGuild()
   useAutoStatusUpdate()
+
+  const roles = allRoles.filter((role) => !role.groupId)
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
