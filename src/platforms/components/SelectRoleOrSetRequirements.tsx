@@ -4,6 +4,7 @@ import {
   RoleTypeToAddTo,
   useAddRewardContext,
 } from "components/[guild]/AddRewardContext"
+import useGroup from "components/[guild]/hooks/useGroup"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RoleSelector from "components/[guild]/RoleSelector"
 import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
@@ -23,6 +24,11 @@ const TAB_STYLE_PROPS: TabProps = {
 
 const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
   const { roles } = useGuild()
+  const group = useGroup()
+  const relevantRoles = group
+    ? roles.filter((role) => role.groupId === group.id)
+    : roles
+
   const { setValue, unregister } = useFormContext()
   const { selection, activeTab, setActiveTab } = useAddRewardContext()
 
@@ -60,7 +66,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
               platforms[selection].asRewardRestriction ===
               PlatformAsRewardRestrictions.MULTIPLE_ROLES
             }
-            roles={roles}
+            roles={relevantRoles}
             onChange={(selectedRoleIds) => setValue("roleIds", selectedRoleIds)}
           />
         </TabPanel>
