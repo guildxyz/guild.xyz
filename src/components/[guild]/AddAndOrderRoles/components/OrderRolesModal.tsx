@@ -10,6 +10,7 @@ import {
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
+import useGroup from "components/[guild]/hooks/useGroup"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Reorder } from "framer-motion"
 import { useMemo, useState } from "react"
@@ -19,6 +20,11 @@ import DraggableRoleCard from "./DraggableRoleCard"
 
 const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { roles } = useGuild()
+  const group = useGroup()
+  const relevantRoleIds = group
+    ? roles.filter((role) => role.groupId === group.id).map((role) => role.id)
+    : roles.map((role) => role.id)
+
   const {
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
@@ -103,6 +109,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
                 <Reorder.Item key={roleId} value={roleId}>
                   <DraggableRoleCard
                     role={roles?.find((role) => role.id === roleId)}
+                    isDisabled={!relevantRoleIds.includes(roleId)}
                   />
                 </Reorder.Item>
               ))}
