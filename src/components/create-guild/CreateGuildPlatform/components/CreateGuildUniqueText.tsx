@@ -32,7 +32,7 @@ const CreateGuildUniqueText = () => {
             platformName: "UNIQUE_TEXT",
             platformGuildId: `unique-text-${userId}-${Date.now()}`,
             platformGuildData: {
-              texts,
+              texts: texts?.filter(Boolean) ?? [],
               name,
               imageUrl,
             },
