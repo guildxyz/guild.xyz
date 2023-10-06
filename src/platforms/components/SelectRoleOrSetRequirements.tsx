@@ -27,7 +27,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
   const group = useGroup()
   const relevantRoles = group
     ? roles.filter((role) => role.groupId === group.id)
-    : roles
+    : roles.filter((role) => !role.groupId)
 
   const { setValue, unregister } = useFormContext()
   const { selection, activeTab, setActiveTab } = useAddRewardContext()

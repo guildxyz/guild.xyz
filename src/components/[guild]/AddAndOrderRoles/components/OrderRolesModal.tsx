@@ -23,7 +23,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const group = useGroup()
   const relevantRoles = group
     ? roles.filter((role) => role.groupId === group.id)
-    : roles
+    : roles.filter((role) => !role.groupId)
 
   const {
     isOpen: isAlertOpen,

@@ -30,7 +30,7 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   const { id, guildPlatforms, roles } = useGuild()
   const relevantRoles = groupId
     ? roles.filter((role) => role.groupId === groupId)
-    : roles
+    : roles.filter((role) => !role.groupId)
 
   const relevantGuildPlatformIds = relevantRoles.flatMap((role) =>
     role.rolePlatforms.map((rp) => rp.guildPlatformId)
