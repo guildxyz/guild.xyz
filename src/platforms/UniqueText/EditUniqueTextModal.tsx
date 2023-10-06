@@ -58,7 +58,7 @@ const EditUniqueTextModal = ({
   })
 
   const onEditTextRewardSubmit = (data: UniqueTextRewardForm) =>
-    onSubmit({ platformGuildData: data })
+    onSubmit({ platformGuildData: { ...data, texts: data.texts?.filter(Boolean) } })
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
