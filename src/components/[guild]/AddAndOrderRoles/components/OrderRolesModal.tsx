@@ -21,9 +21,9 @@ import DraggableRoleCard from "./DraggableRoleCard"
 const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { roles } = useGuild()
   const group = useGroup()
-  const relevantRoleIds = group
-    ? roles.filter((role) => role.groupId === group.id).map((role) => role.id)
-    : roles.map((role) => role.id)
+  const relevantRoles = group
+    ? roles.filter((role) => role.groupId === group.id)
+    : roles
 
   const {
     isOpen: isAlertOpen,
@@ -33,21 +33,21 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
-    if (roles?.every((role) => role.position === null)) {
-      const byMembers = roles?.sort(
+    if (relevantRoles?.every((role) => role.position === null)) {
+      const byMembers = relevantRoles?.sort(
         (role1, role2) => role2.memberCount - role1.memberCount
       )
       return byMembers
     }
 
     return (
-      roles?.sort((role1, role2) => {
+      relevantRoles?.sort((role1, role2) => {
         if (role1.position === null) return 1
         if (role2.position === null) return -1
         return role1.position - role2.position
       }) ?? []
     )
-  }, [roles])
+  }, [relevantRoles])
 
   const publicRoles = sortedRoles.filter(
     (role) => role.visibility !== Visibility.HIDDEN
@@ -72,7 +72,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
         position: i,
       }))
       .filter(({ id: roleId, position }) =>
-        (roles ?? []).some(
+        (relevantRoles ?? []).some(
           (prevRole) => prevRole.id === roleId && prevRole.position !== position
         )
       )
@@ -108,8 +108,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
               {roleIdsOrder?.map((roleId) => (
                 <Reorder.Item key={roleId} value={roleId}>
                   <DraggableRoleCard
-                    role={roles?.find((role) => role.id === roleId)}
-                    isDisabled={!relevantRoleIds.includes(roleId)}
+                    role={relevantRoles?.find((role) => role.id === roleId)}
                   />
                 </Reorder.Item>
               ))}

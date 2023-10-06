@@ -7,14 +7,13 @@ import { Role } from "types"
 
 type Props = {
   role: Role
-  isDisabled?: boolean
 }
 
-const DraggableRoleCard = ({ role, isDisabled }: Props) => {
+const DraggableRoleCard = ({ role }: Props) => {
   if (!role) return null
 
   return (
-    <Card p={4} cursor="grab" mb="3" opacity={isDisabled ? 0.5 : 1}>
+    <Card p={4} cursor="grab" mb="3">
       <HStack spacing={4}>
         <GuildLogo imageUrl={role.imageUrl} size={"36px"} />
         <Heading as="h3" fontSize={"md"} fontFamily="display">
