@@ -2,6 +2,7 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
+  Collapse,
   Icon,
   SimpleGrid,
   Stack,
@@ -75,7 +76,14 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
 }
 
 const AccessHub = (): JSX.Element => {
-  const { id: guildId, poaps, featureFlags, guildPin, groups } = useGuild()
+  const {
+    id: guildId,
+    poaps,
+    featureFlags,
+    guildPin,
+    groups,
+    onboardingComplete,
+  } = useGuild()
 
   const group = useGroup()
 
@@ -93,91 +101,85 @@ const AccessHub = (): JSX.Element => {
     featureFlags.includes("GUILD_CREDENTIAL") &&
     ((isMember && guildPin?.isActive) || isAdmin)
 
-  const showNoAccessedRewards =
-    isMember &&
-    (!featureFlags.includes("GUILD_CREDENTIAL") || !shouldShowGuildPin) &&
-    (group ? true : !groups?.length)
-
-  const marginBottom =
-    !accessedGuildPlatforms?.length &&
-    !futurePoaps?.length &&
-    !showNoAccessedRewards &&
-    !groups?.length
-      ? 0
-      : 10
+  const showAccessHub =
+    (isAdmin ? !!onboardingComplete : isMember) ||
+    !!accessedGuildPlatforms?.length ||
+    !!groups?.length
 
   return (
-    <SimpleGrid
-      templateColumns={{
-        base: "repeat(auto-fit, minmax(250px, 1fr))",
-        md: "repeat(auto-fit, minmax(250px, .5fr))",
-      }}
-      gap={4}
-      mb={marginBottom}
-    >
-      <RoleGroupCards />
-      {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
-      {accessedGuildPlatforms?.length || futurePoaps?.length ? (
-        <>
-          {accessedGuildPlatforms.map((platform) => {
-            if (!platforms[PlatformType[platform.platformId]]) return null
+    <Collapse in={showAccessHub} unmountOnExit>
+      <SimpleGrid
+        templateColumns={{
+          base: "repeat(auto-fit, minmax(250px, 1fr))",
+          md: "repeat(auto-fit, minmax(250px, .5fr))",
+        }}
+        gap={4}
+        mb={10}
+      >
+        <RoleGroupCards />
+        {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
+        {accessedGuildPlatforms?.length || futurePoaps?.length ? (
+          <>
+            {accessedGuildPlatforms.map((platform) => {
+              if (!platforms[PlatformType[platform.platformId]]) return null
 
-            const {
-              cardPropsHook: useCardProps,
-              cardMenuComponent: PlatformCardMenu,
-              cardWarningComponent: PlatformCardWarning,
-              cardButton: PlatformCardButton,
-            } = platforms[PlatformType[platform.platformId] as PlatformName]
+              const {
+                cardPropsHook: useCardProps,
+                cardMenuComponent: PlatformCardMenu,
+                cardWarningComponent: PlatformCardWarning,
+                cardButton: PlatformCardButton,
+              } = platforms[PlatformType[platform.platformId] as PlatformName]
 
-            return (
-              <PlatformCard
-                usePlatformProps={useCardProps}
-                guildPlatform={platform}
-                key={platform.id}
-                cornerButton={
-                  isAdmin && PlatformCardMenu ? (
-                    <PlatformCardMenu platformGuildId={platform.platformGuildId} />
-                  ) : PlatformCardWarning ? (
-                    <PlatformCardWarning guildPlatform={platform} />
-                  ) : null
-                }
-              >
-                {PlatformCardButton ? (
-                  <PlatformCardButton platform={platform} />
-                ) : (
-                  <PlatformAccessButton platform={platform} />
-                )}
-              </PlatformCard>
-            )
-          })}
+              return (
+                <PlatformCard
+                  usePlatformProps={useCardProps}
+                  guildPlatform={platform}
+                  key={platform.id}
+                  cornerButton={
+                    isAdmin && PlatformCardMenu ? (
+                      <PlatformCardMenu platformGuildId={platform.platformGuildId} />
+                    ) : PlatformCardWarning ? (
+                      <PlatformCardWarning guildPlatform={platform} />
+                    ) : null
+                  }
+                >
+                  {PlatformCardButton ? (
+                    <PlatformCardButton platform={platform} />
+                  ) : (
+                    <PlatformAccessButton platform={platform} />
+                  )}
+                </PlatformCard>
+              )
+            })}
 
-          {/* Custom logic for Chainlink */}
-          {(isAdmin || guildId !== 16389) &&
-            futurePoaps.map((poap) => (
-              <PoapRewardCard
-                key={poap?.id}
-                guildPoap={poap}
-                cornerButton={isAdmin && <PoapCardMenu guildPoap={poap} />}
-              />
-            ))}
-        </>
-      ) : showNoAccessedRewards ? (
-        <Card>
-          <Alert status="info" h="full">
-            <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
-            <Stack>
-              <AlertTitle>No accessed reward</AlertTitle>
-              <AlertDescription>
-                You're a member of the guild, but your roles don't give you any
-                auto-managed rewards. The owner might add some in the future or
-                reward you another way!
-              </AlertDescription>
-            </Stack>
-          </Alert>
-        </Card>
-      ) : null}
-      {guildId !== 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
-    </SimpleGrid>
+            {/* Custom logic for Chainlink */}
+            {(isAdmin || guildId !== 16389) &&
+              futurePoaps.map((poap) => (
+                <PoapRewardCard
+                  key={poap?.id}
+                  guildPoap={poap}
+                  cornerButton={isAdmin && <PoapCardMenu guildPoap={poap} />}
+                />
+              ))}
+          </>
+        ) : isMember || isAdmin ? (
+          <Card>
+            <Alert status="info" h="full">
+              <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
+              <Stack>
+                <AlertTitle>No accessed reward</AlertTitle>
+                <AlertDescription>
+                  You're a member of the guild, but your roles don't give you any
+                  auto-managed rewards. The owner might add some in the future or
+                  reward you another way!
+                </AlertDescription>
+              </Stack>
+            </Alert>
+          </Card>
+        ) : null}
+        {guildId !== 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
+      </SimpleGrid>
+    </Collapse>
   )
 }
 

@@ -1,13 +1,4 @@
-import {
-  Box,
-  Center,
-  Collapse,
-  Flex,
-  Heading,
-  HStack,
-  Spinner,
-  Stack,
-} from "@chakra-ui/react"
+import { Box, Center, Flex, Heading, HStack, Spinner, Stack } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import Link from "components/common/Link"
@@ -116,8 +107,6 @@ const GroupPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
-  const showAccessHub = isAdmin ? onboardingComplete : true
-
   const accessedGuildPlatforms = useAccessedGuildPlatforms(group.id)
 
   return (
@@ -172,19 +161,14 @@ const GroupPage = (): JSX.Element => {
             )}
           </HStack>
         </Flex>
-        <Collapse in={showAccessHub} unmountOnExit>
-          <AccessHub />
-        </Collapse>
+
+        <AccessHub />
+
         <Section
-          title={
-            (isMember || (showAccessHub && !!accessedGuildPlatforms?.length)) &&
-            "Roles"
-          }
+          title={(isMember || !!accessedGuildPlatforms?.length) && "Roles"}
           titleRightElement={
-            isAdmin &&
-            showAccessHub && (
+            isAdmin && (
               <Box my="-2 !important" ml="auto !important">
-                {/* TODO: I think we can't order roles inside a group (yet?) We must double check that! */}
                 <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
               </Box>
             )

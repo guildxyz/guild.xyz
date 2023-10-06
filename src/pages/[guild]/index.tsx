@@ -1,7 +1,6 @@
 import {
   Box,
   Center,
-  Collapse,
   Divider,
   Heading,
   HStack,
@@ -50,7 +49,7 @@ import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey, Visibility } from "types"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
 
 const BATCH_SIZE = 10
@@ -75,7 +74,6 @@ const DynamicResendRewardButton = dynamic(
 )
 
 const GuildPage = (): JSX.Element => {
-  const fetcherWithSign = useFetcherWithSign()
   const {
     id: guildId,
     name,
@@ -155,7 +153,6 @@ const GuildPage = (): JSX.Element => {
     isAdmin && !onboardingComplete ? OnboardingProvider : React.Fragment
 
   const showOnboarding = isAdmin && !onboardingComplete
-  const showAccessHub = isAdmin ? onboardingComplete : true
 
   const currentTime = Date.now() / 1000
   const { activePoaps, expiredPoaps } =
@@ -254,17 +251,13 @@ const GuildPage = (): JSX.Element => {
             }
           />
         )}
-        <Collapse in={showAccessHub} unmountOnExit>
-          <AccessHub />
-        </Collapse>
+
+        <AccessHub />
+
         <Section
-          title={
-            (isMember || (showAccessHub && !!accessedGuildPlatforms?.length)) &&
-            "Roles"
-          }
+          title={(isMember || !!accessedGuildPlatforms?.length) && "Roles"}
           titleRightElement={
-            isAdmin &&
-            (showAccessHub || showOnboarding) && (
+            isAdmin && (
               <Box my="-2 !important" ml="auto !important">
                 <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
               </Box>
