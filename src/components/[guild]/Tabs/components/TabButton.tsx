@@ -38,10 +38,10 @@ const TabButton = ({
       isActive={isActive}
       mx={isActive && 2}
       sx={{
-        ":first-of-type": {
+        ":first-child": {
           ml: 0,
         },
-        ":last-of-type": {
+        ":last-child": {
           mr: 0,
         },
       }}
