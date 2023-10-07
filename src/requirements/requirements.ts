@@ -565,6 +565,26 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
   },
+  {
+    icon: "/requirementLogos/farcaster.png",
+    name: "Farcaster",
+    fileNameBase: "Farcaster",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Farcaster/FarcasterRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Farcaster/FarcasterForm")
+    ),
+    types: [
+      "FARCASTER",
+      "FARCASTER_PROFILE",
+      "FARCASTER_TOTAL_FOLLOWERS",
+      "FARCASTER_FOLLOW",
+      "FARCASTER_FOLLOWED_BY",
+      "FARCASTER_LIKE",
+      "FARCASTER_RECAST",
+    ],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
