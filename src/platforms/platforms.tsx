@@ -10,12 +10,11 @@ import {
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
-import { ComponentType } from "react"
+import { ComponentType, ForwardRefExoticComponent } from "react"
 import Box from "static/icons/box.svg"
 import Photo from "static/icons/photo.svg"
 import { GuildPlatform, OneOf, PlatformName } from "types"
 import fetcher from "utils/fetcher"
-import PlatformPreview from "./components/PlatformPreview"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
@@ -33,6 +32,7 @@ import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
+import PlatformPreview from "./components/PlatformPreview"
 
 export enum PlatformAsRewardRestrictions {
   NOT_APPLICABLE, // e.g. Twitter
@@ -49,7 +49,7 @@ type PlatformData<
     scope?: string | { membership: string; creation: string }
   } & Record<string, any>
 > = {
-  icon: (props: IconProps) => JSX.Element
+  icon: ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
   imageUrl?: string
   name: string
   colorScheme: ChakraProps["color"]
