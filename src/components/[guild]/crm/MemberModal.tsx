@@ -7,7 +7,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Tag,
   Text,
   useColorModeValue,
   Wrap,
@@ -61,30 +60,24 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
         </ModalHeader>
 
         <ModalBody>
-          {/* <pre>{JSON.stringify(row.original, null, 2)}</pre> */}
           <Wrap>
-            {Array.isArray(addresses) ? (
-              platformUsers.length ? (
-                platformUsers.map((platformAccount) => (
-                  <IdentityTag
-                    key={platformAccount.platformId}
-                    platformAccount={platformAccount}
-                    fontWeight="semibold"
-                    isOpen
-                  />
-                ))
-              ) : (
-                <Tag>No connected socials</Tag>
-              )
+            {platformUsers.length ? (
+              platformUsers.map((platformAccount) => (
+                <IdentityTag
+                  key={platformAccount.platformId}
+                  platformAccount={platformAccount}
+                  fontWeight="semibold"
+                  isOpen
+                />
+              ))
             ) : (
               <PrivateSocialsTag isOpen />
             )}
-            {Array.isArray(addresses) &&
-              addresses.slice(1).map((address) => (
-                <WalletTag key={address}>
-                  <CopyableAddress address={address} fontSize="sm" />
-                </WalletTag>
-              ))}
+            {addresses.slice(1).map((address) => (
+              <WalletTag key={address}>
+                <CopyableAddress address={address} fontSize="sm" />
+              </WalletTag>
+            ))}
           </Wrap>
 
           <Text fontWeight={"bold"} mt="8" mb="2">
