@@ -1,8 +1,10 @@
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import shortenHex from "utils/shortenHex"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
 
 const FarcasterRequirement = (props: RequirementProps) => {
@@ -42,9 +44,16 @@ const FarcasterRequirement = (props: RequirementProps) => {
               <>{`Have at least ${requirement.data.min} followers on Farcaster`}</>
             )
           case "FARCASTER_LIKE":
-            return <>FARCASTER_LIKE</>
           case "FARCASTER_RECAST":
-            return <>FARCASTER_RECAST</>
+            return (
+              <>
+                {`${requirement.type === "FARCASTER_LIKE" ? "Like" : "Recast"} the `}
+                <DataBlockWithCopy text={requirement.data.hash}>
+                  {shortenHex(requirement.data.hash, 3)}
+                </DataBlockWithCopy>
+                {` cast`}
+              </>
+            )
           default:
             return <>Have a Farcaster profile</>
         }

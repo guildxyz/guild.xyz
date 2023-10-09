@@ -1,6 +1,7 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext } from "react-hook-form"
+import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import parseFromObject from "utils/parseFromObject"
 
 type Props = {
@@ -23,6 +24,11 @@ const FarcasterCastHash = ({ baseFieldPath }: Props) => {
       <Input
         {...register(`${baseFieldPath}.data.hash`, {
           required: "This field is required.",
+          pattern: {
+            value: ADDRESS_REGEX,
+            message:
+              "Please input a 42 characters long, 0x-prefixed hexadecimal hash.",
+          },
         })}
       />
 
