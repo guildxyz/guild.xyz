@@ -204,12 +204,7 @@ const getLeftSideIcon =
     const { colorMode } = useColorMode()
 
     return (
-      <Circle
-        bg={colorMode === "dark" ? "gray.600" : "blackAlpha.200"}
-        p={3}
-        ml={"0 !important"}
-        mr={"3 !important"}
-      >
+      <Circle bg={colorMode === "dark" ? "gray.600" : "blackAlpha.200"} p={3}>
         <Icon />
       </Circle>
     )
