@@ -45,7 +45,8 @@ const NftRequirement = (props: RequirementProps) => {
 
   const guildIdAttribute =
     isGuildPin &&
-    requirement.data.attributes?.find((attr) => attr.trait_type === "guildId")?.value
+    requirement.data?.attributes?.find((attr) => attr.trait_type === "guildId")
+      ?.value
   const { data: guildPinImageCID } = useSWRImmutable(
     isGuildPin
       ? // Fallback to "Our Guild" pin image
