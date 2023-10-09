@@ -24,7 +24,7 @@ const SecretTextDataForm = ({ children }: PropsWithChildren<unknown>) => {
     <Stack spacing={8}>
       <Text colorScheme="gray" fontWeight="semibold">
         Eligible users will be able to reveal the secret content you set below -
-        great to distribute any info that should be kept private based on roles
+        great to distribute any special info based on roles
       </Text>
 
       <PublicRewardDataForm defaultIcon={BoxIcon} />
