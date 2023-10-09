@@ -1,8 +1,9 @@
 import {
   FormControl,
-  FormHelperText,
   FormLabel,
+  HStack,
   Stack,
+  Text,
   Textarea,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -56,20 +57,32 @@ const UniqueTextDataForm = ({ isEditForm, children }: PropsWithChildren<Props>) 
 
   return (
     <Stack spacing={8}>
+      <Text colorScheme="gray" fontWeight="semibold">
+        Eligible users will be able to claim one of the uploaded secret values -
+        great for distributing single-usable links, promo codes, etc
+      </Text>
+
       <PublicRewardDataForm defaultIcon={Key} />
 
       <Stack>
-        <FormLabel>
-          {isEditForm ? "Upload additional secrets" : "Unique secrets"}
-        </FormLabel>
-
         <FormControl isInvalid={!!fileRejections?.[0] || !!regexError}>
-          <Button {...getRootProps()} as="label" leftIcon={<File />}>
-            <input {...getInputProps()} hidden />
-            {isDragActive ? "Drop the file here" : "Upload list"}
-          </Button>
-
-          <FormHelperText>In .txt format, each text in a new line</FormHelperText>
+          <FormLabel>
+            {isEditForm ? "Upload additional secrets " : "Secrets to distribute "}
+            <Text display="inline-block" colorScheme="gray">
+              (line-by-line)
+            </Text>
+          </FormLabel>
+          <HStack>
+            <Button
+              {...getRootProps()}
+              as="label"
+              leftIcon={<File />}
+              cursor="pointer"
+            >
+              <input {...getInputProps()} hidden />
+              {isDragActive ? "Drop the file here" : "Upload .txt "}
+            </Button>
+          </HStack>
 
           <FormErrorMessage>
             {fileRejections?.[0]?.errors?.[0]?.message || regexError}
@@ -79,7 +92,7 @@ const UniqueTextDataForm = ({ isEditForm, children }: PropsWithChildren<Props>) 
         <FormControl isInvalid={!!errors?.texts}>
           <Textarea
             minH={52}
-            placeholder="...or paste links, each one in a new line"
+            placeholder="...or paste secrets, each one in a new line"
             value={texts?.join("\n")}
             onChange={(e) => {
               if (!e.target.value) {

@@ -1,6 +1,6 @@
-import { Box, FormControl, FormLabel, Stack } from "@chakra-ui/react"
-import FormErrorMessage from "components/common/FormErrorMessage"
+import { Box, FormControl, FormLabel, Stack, Text } from "@chakra-ui/react"
 import RichTextDescriptionEditor from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { PropsWithChildren } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import BoxIcon from "static/icons/box.svg"
@@ -22,6 +22,11 @@ const SecretTextDataForm = ({ children }: PropsWithChildren<unknown>) => {
 
   return (
     <Stack spacing={8}>
+      <Text colorScheme="gray" fontWeight="semibold">
+        Eligible users will be able to reveal the secret content you set below -
+        great to distribute any info that should be kept private based on roles
+      </Text>
+
       <PublicRewardDataForm defaultIcon={BoxIcon} />
 
       <Box>
