@@ -20,9 +20,7 @@ export const sortAccounts = (
 }
 
 const Identities = ({ member }: Props) => {
-  const { addresses, platformUsers } = member
-
-  const areSocialsPrivate = !platformUsers.length
+  const { addresses, platformUsers, areSocialsPrivate } = member
 
   return (
     <HStack spacing={1}>
@@ -36,7 +34,7 @@ const Identities = ({ member }: Props) => {
         />
       ))}
       <WalletTag>
-        {areSocialsPrivate ? shortenHex(addresses?.[0]) : addresses?.length}
+        {!platformUsers.length ? shortenHex(addresses[0]) : addresses?.length}
       </WalletTag>
       {areSocialsPrivate && <PrivateSocialsTag />}
     </HStack>
