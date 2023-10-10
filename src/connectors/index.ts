@@ -144,7 +144,7 @@ const RPC: RpcConfig = {
   },
   POLYGON_ZKEVM: {
     chainId: 1101,
-    chainName: "Polygon",
+    chainName: "Polygon zkEVM",
     nativeCurrency: {
       name: "Ether",
       symbol: "ETH",
