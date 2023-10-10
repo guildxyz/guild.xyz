@@ -1,6 +1,6 @@
 import { Box, FormControl, FormLabel, Stack, Text } from "@chakra-ui/react"
-import RichTextDescriptionEditor from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import RichTextDescriptionEditor from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
 import { PropsWithChildren } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import BoxIcon from "static/icons/box.svg"

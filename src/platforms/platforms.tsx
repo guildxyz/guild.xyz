@@ -360,13 +360,6 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardMenuComponent: UniqueTextCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,
-    AddPlatformPanel: dynamic(
-      () =>
-        import(
-          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddUniqueTextPanel"
-        ),
-      { ssr: false }
-    ),
     PlatformPreview: dynamic(
       () => import("platforms/components/UniqueTextPreview"),
       {
