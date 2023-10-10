@@ -417,6 +417,7 @@ type Guild = {
     isActive: boolean
   }
   isFallback?: boolean
+  isDetailed?: boolean
 }
 type GuildFormType = Partial<
   Pick<
