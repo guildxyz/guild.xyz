@@ -38,7 +38,7 @@ const KEYS_TO_KEEP = [
  * @returns A new object, that is a subset of formData based on dirtyFields
  */
 const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
-  if (!formData) {
+  if (typeof formData === "undefined") {
     return TO_FILTER_FLAG
   }
 
