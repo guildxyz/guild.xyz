@@ -238,5 +238,5 @@ const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   return <Component platform={platformWithGuildPlatform} {...props} />
 }
 
-export { Reward, RewardDisplay, RewardIcon }
+export { Reward, RewardDisplay, RewardIcon, getRewardLabel }
 export default RewardWrapper

@@ -7,9 +7,14 @@ import { useFormContext } from "react-hook-form"
 type Props = {
   next: () => void
   progress: number
+  isDisabled?: boolean
 }
 
-const GuildCreationProgress = ({ next, progress }: Props): JSX.Element => {
+const GuildCreationProgress = ({
+  next,
+  progress,
+  isDisabled,
+}: Props): JSX.Element => {
   const progressText = `${progress}%`
   const lottiePlayer = useRef(null)
   const lottiePlayerBg = useRef(null)
@@ -76,7 +81,7 @@ const GuildCreationProgress = ({ next, progress }: Props): JSX.Element => {
               </Box>
               <Text colorScheme="gray"> Guild {progressText} completed</Text>
             </HStack>
-            <Button colorScheme={"green"} onClick={next}>
+            <Button colorScheme={"green"} onClick={next} isDisabled={isDisabled}>
               Continue
             </Button>
           </HStack>

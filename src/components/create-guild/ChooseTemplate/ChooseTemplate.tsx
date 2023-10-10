@@ -5,7 +5,7 @@ import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 import { TemplateType, useCreateGuildContext } from "../CreateGuildContext"
-import Pagination from "../Pagination"
+import GuildCreationProgress from "../GuildCreationProgress"
 import TemplateCard from "./components/TemplateCard"
 
 const ChooseTemplate = (): JSX.Element => {
@@ -23,9 +23,10 @@ const ChooseTemplate = (): JSX.Element => {
     template: templateInContext,
     getTemplate,
     setTemplate,
+    nextStep,
   } = useCreateGuildContext()
 
-  const { control, setValue } = useFormContext<GuildFormType>()
+  const { control, setValue, getValues } = useFormContext<GuildFormType>()
 
   const requirements = useWatch({ control, name: "roles.0.requirements" })
 
@@ -36,6 +37,7 @@ const ChooseTemplate = (): JSX.Element => {
           <TemplateCard
             key={index}
             id={id}
+            selectedGuildPlatforms={getValues("guildPlatforms")}
             selected={!!templateInContext.find((selected) => selected === id)}
             {...template}
             onClick={(newTemplateId) => {
@@ -45,7 +47,11 @@ const ChooseTemplate = (): JSX.Element => {
           />
         ))}
       </VStack>
-      <Pagination nextButtonDisabled={!requirements?.length} />
+      <GuildCreationProgress
+        next={nextStep}
+        progress={65}
+        isDisabled={!requirements?.length}
+      />
     </>
   )
 }

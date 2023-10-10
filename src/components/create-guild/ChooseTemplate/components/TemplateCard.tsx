@@ -18,8 +18,10 @@ import { RewardDisplay } from "components/[guild]/RoleCard/components/Reward"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import { Check } from "phosphor-react"
+import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import { Fragment, KeyboardEvent } from "react"
-import { GuildFormType, Requirement } from "types"
+import { GuildFormType, GuildPlatform, PlatformType, Requirement } from "types"
+import capitalize from "utils/capitalize"
 
 type Template = {
   name: string
@@ -30,7 +32,21 @@ type Template = {
 type Props = Template & {
   id: string
   selected?: boolean
+  selectedGuildPlatforms: (Partial<GuildPlatform> & { platformName: string })[]
   onClick: (newTemplateId: string) => void
+}
+
+const getRewardLabel = (platform: Partial<GuildPlatform>) => {
+  switch (platform.platformId) {
+    case PlatformType.DISCORD:
+      return "Role in: "
+
+    case PlatformType.GOOGLE:
+      return `${capitalize(platform.platformGuildId ?? "reader")} access to: `
+
+    default:
+      return "Access to: "
+  }
 }
 
 const TemplateCard = ({
@@ -39,6 +55,7 @@ const TemplateCard = ({
   description,
   roles,
   selected,
+  selectedGuildPlatforms,
   onClick,
 }: Props): JSX.Element => {
   const roleBottomBgColor = useColorModeValue("gray.50", "blackAlpha.300")
@@ -126,16 +143,30 @@ const TemplateCard = ({
             </HStack>
             <Box pl={5}>{description}</Box>
             <Box p={5} pt={2} mt="auto">
-              {role.rolePlatforms?.map((platform, i) => {
-                console.log("xy role", platform)
-                return (
-                  <RewardDisplay
-                    key={i}
-                    icon={""}
-                    label={platform.guildPlatformId}
-                  />
-                )
-              })}
+              {selectedGuildPlatforms?.map((platform, i) => (
+                <RewardDisplay
+                  key={i}
+                  label={
+                    <>
+                      {getRewardLabel(platform)}
+                      <Text as="span" fontWeight="bold">
+                        {platform.platformGuildName || platform.platformGuildId}
+                      </Text>
+                    </>
+                  }
+                  rightElement={
+                    <>
+                      {platform.platformId === PlatformType.GOOGLE && (
+                        <GoogleCardWarning
+                          guildPlatform={platform as GuildPlatform}
+                          roleMemberCount={role.memberCount}
+                          size="sm"
+                        />
+                      )}
+                    </>
+                  }
+                />
+              ))}
               {role.hiddenRewards && <HiddenRewards />}
             </Box>
           </Flex>
