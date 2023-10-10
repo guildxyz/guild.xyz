@@ -43,11 +43,11 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     )
   }, [roles])
 
-  const publicRoles = sortedRoles.filter(
-    (role) => role.visibility !== Visibility.HIDDEN
+  const publicAndSecretRoles = sortedRoles.filter(
+    (role) => role.visibility !== Visibility.PRIVATE
   )
 
-  const defaultRoleIdsOrder = publicRoles?.map((role) => role.id)
+  const defaultRoleIdsOrder = publicAndSecretRoles?.map((role) => role.id)
   const [roleIdsOrder, setRoleIdsOrder] = useState(defaultRoleIdsOrder)
 
   /**
