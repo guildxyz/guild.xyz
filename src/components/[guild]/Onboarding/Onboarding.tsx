@@ -11,10 +11,7 @@ import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Card from "components/common/Card"
 import { useEffect, useState } from "react"
 import useGuild from "../hooks/useGuild"
-import AddRolesAndRequirements from "./components/AddRolesAndRequirements"
 import { useOnboardingContext } from "./components/OnboardingProvider"
-import PaginationButtons from "./components/PaginationButtons"
-import SummonMembers from "./components/SummonMembers"
 
 type Props = {
   activeStep: number
@@ -26,24 +23,24 @@ const GUILD_CASTLE_COMPLETED_FRAME = 38
 
 const steps = [
   {
-    label: "Roles, requirements, rewards",
-    content: AddRolesAndRequirements,
+    title: "Set platforms",
+    content: <></>,
   },
   {
-    label: "Customize guild",
-    content: (props: Props) => (
-      <>
-        <Text>
-          Set a description, customize page appearance, and edit privacy settings
-          with the gear icon above!
-        </Text>
-        <PaginationButtons {...props} />
-      </>
-    ),
+    title: "Customize guild",
+    content: <></>,
   },
   {
-    label: "Summon members",
-    content: SummonMembers,
+    title: "Choose template",
+    content: <></>,
+  },
+  {
+    title: "Edit roles",
+    content: <></>,
+  },
+  {
+    title: "Finish",
+    content: <></>,
   },
 ]
 
@@ -84,7 +81,7 @@ const Onboarding = (): JSX.Element => {
   return (
     <Collapse in={!onboardingComplete} unmountOnExit>
       <Card
-        borderColor="primary.500"
+        borderColor={"indigo.500"}
         borderWidth={3}
         p={{ base: 4, sm: 6 }}
         mb="8"
@@ -110,10 +107,10 @@ const Onboarding = (): JSX.Element => {
           orientation={orientation}
           size="sm"
         >
-          {steps.map(({ label, content: Content }) => (
-            <Step label={label} key={label}>
+          {steps.map(({ title, content }) => (
+            <Step label={title} key={title}>
               <Box pt={{ md: 6 }} textAlign="left">
-                <Content {...{ activeStep, prevStep, nextStep }} />
+                {content}
               </Box>
             </Step>
           ))}

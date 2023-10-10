@@ -4,6 +4,7 @@ import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
+import CreateGuildButton from "../CreateGuildButton"
 import { TemplateType, useCreateGuildContext } from "../CreateGuildContext"
 import GuildCreationProgress from "../GuildCreationProgress"
 import TemplateCard from "./components/TemplateCard"
@@ -26,9 +27,11 @@ const ChooseTemplate = (): JSX.Element => {
     nextStep,
   } = useCreateGuildContext()
 
-  const { control, setValue, getValues } = useFormContext<GuildFormType>()
+  const { control, setValue, getValues, formState } = useFormContext<GuildFormType>()
 
   const requirements = useWatch({ control, name: "roles.0.requirements" })
+
+  console.log("xy ", getValues("name"), !!Object.values(formState.errors).length)
 
   return (
     <>
@@ -51,6 +54,13 @@ const ChooseTemplate = (): JSX.Element => {
         next={nextStep}
         progress={65}
         isDisabled={!requirements?.length}
+        customButton={
+          <CreateGuildButton
+            isDisabled={
+              !getValues("name") || !!Object.values(formState.errors).length
+            }
+          />
+        }
       />
     </>
   )

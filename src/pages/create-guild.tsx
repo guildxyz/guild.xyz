@@ -71,7 +71,7 @@ const CreateGuildPage = (): JSX.Element => {
           }}
           onClick={onToggle}
           borderWidth="2px"
-          borderColor={borderColor}
+          borderColor={"indigo.500"}
         >
           <Stepper
             index={activeStep}

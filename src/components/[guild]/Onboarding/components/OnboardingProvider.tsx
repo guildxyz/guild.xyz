@@ -9,7 +9,7 @@ const OnboardingContext = createContext<{
 
 const OnboardingProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
   const { id } = useGuild()
-  const [localStep, setLocalStep] = useLocalStorage(`${id}_onboard_step`, 0)
+  const [localStep, setLocalStep] = useLocalStorage(`${id}_onboard_step`, 4)
 
   return (
     <OnboardingContext.Provider value={{ localStep: +localStep, setLocalStep }}>

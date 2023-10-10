@@ -8,12 +8,14 @@ type Props = {
   next: () => void
   progress: number
   isDisabled?: boolean
+  customButton?: JSX.Element
 }
 
 const GuildCreationProgress = ({
   next,
   progress,
   isDisabled,
+  customButton,
 }: Props): JSX.Element => {
   const progressText = `${progress}%`
   const lottiePlayer = useRef(null)
@@ -81,9 +83,13 @@ const GuildCreationProgress = ({
               </Box>
               <Text colorScheme="gray"> Guild {progressText} completed</Text>
             </HStack>
-            <Button colorScheme={"green"} onClick={next} isDisabled={isDisabled}>
-              Continue
-            </Button>
+            {customButton ? (
+              customButton
+            ) : (
+              <Button colorScheme={"green"} onClick={next} isDisabled={isDisabled}>
+                Continue
+              </Button>
+            )}
           </HStack>
         </DisplayCard>
       </Container>
