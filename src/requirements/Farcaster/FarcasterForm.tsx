@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
-import { useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import FarcasterCastHash from "./components/FarcasterCastHash"
 import FarcasterTotalFollowers from "./components/FarcasterTotalFollowers"
@@ -34,10 +34,13 @@ const typeOptions = [
 ]
 
 const FarcasterForm = ({ baseFieldPath }: RequirementFormProps) => {
+  const { resetField } = useFormContext()
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
   const resetForm = () => {
-    // TODO
+    resetField(`${baseFieldPath}.data.min`)
+    resetField(`${baseFieldPath}.data.id`)
+    resetField(`${baseFieldPath}.data.hash`)
   }
 
   return (
