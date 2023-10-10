@@ -64,8 +64,6 @@ const FarcasterUser = ({ baseFieldPath }: Props) => {
             DropdownIndicator: () => null,
             IndicatorSeparator: () => null,
           }}
-          // TODO: return users as SelectOption[] from the hooks!
-          // TODO: set SWR cache for single user when selection an option, that way we won't experience a delay between selecting and displaying a user in the select
           fallbackValue={farcasterUser}
         />
       </InputGroup>
