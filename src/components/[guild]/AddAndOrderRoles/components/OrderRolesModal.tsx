@@ -44,7 +44,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   }, [roles])
 
   const publicAndSecretRoles = sortedRoles.filter(
-    (role) => role.visibility !== Visibility.PRIVATE
+    (role) => role.visibility !== Visibility.HIDDEN
   )
 
   const defaultRoleIdsOrder = publicAndSecretRoles?.map((role) => role.id)
