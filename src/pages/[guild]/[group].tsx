@@ -1,9 +1,4 @@
 import { Box, Center, Flex, Heading, HStack, Spinner, Stack } from "@chakra-ui/react"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import Link from "components/common/Link"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
@@ -19,6 +14,11 @@ import LeaveButton from "components/[guild]/LeaveButton"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import Link from "components/common/Link"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -146,6 +146,7 @@ const GroupPage = (): JSX.Element => {
         imageUrl={group.imageUrl ?? guildImageUrl}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
+        backgroundOffset={100}
       >
         <Flex justifyContent="end" mb={3}>
           <HStack>
