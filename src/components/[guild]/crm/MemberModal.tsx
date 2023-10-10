@@ -7,6 +7,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Tag,
   Text,
   useColorModeValue,
   Wrap,
@@ -27,7 +28,8 @@ type Props = {
 }
 
 const MemberModal = ({ row, isOpen, onClose }: Props) => {
-  const { addresses, platformUsers, roles, joinedAt } = row.original
+  const { addresses, platformUsers, roles, joinedAt, areSocialsPrivate } =
+    row.original
 
   const primaryAddress = addresses?.[0]
   const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
@@ -61,7 +63,9 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
 
         <ModalBody>
           <Wrap>
-            {platformUsers.length ? (
+            {areSocialsPrivate ? (
+              <PrivateSocialsTag isOpen />
+            ) : platformUsers.length ? (
               platformUsers.map((platformAccount) => (
                 <IdentityTag
                   key={platformAccount.platformId}
@@ -71,7 +75,7 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
                 />
               ))
             ) : (
-              <PrivateSocialsTag isOpen />
+              <Tag>No connected socials</Tag>
             )}
             {addresses.slice(1).map((address) => (
               <WalletTag key={address}>

@@ -98,8 +98,8 @@ const GuildEvents = (): JSX.Element => {
       {!isValidating && data?.length === 0 && (
         <FallbackFrame
           icon={NoteBlank}
-          title="No events yet"
-          text="Your guild has no upcoming event currently or you have no access to Discord"
+          title="No upcoming events"
+          text="There aren't any upcoming events currently"
         />
       )}
       {!isValidating && data?.length > 0 && (
