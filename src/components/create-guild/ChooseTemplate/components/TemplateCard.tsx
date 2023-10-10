@@ -2,15 +2,21 @@ import {
   Box,
   Circle,
   Flex,
+  HStack,
   Heading,
   Icon,
-  Stack,
+  SimpleGrid,
+  Spacer,
   Text,
+  Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
-import Card from "components/common/Card"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import HiddenRewards from "components/[guild]/RoleCard/components/HiddenRewards"
+import { RewardDisplay } from "components/[guild]/RoleCard/components/Reward"
+import Card from "components/common/Card"
+import GuildLogo from "components/common/GuildLogo"
 import { Check } from "phosphor-react"
 import { Fragment, KeyboardEvent } from "react"
 import { GuildFormType, Requirement } from "types"
@@ -35,9 +41,9 @@ const TemplateCard = ({
   selected,
   onClick,
 }: Props): JSX.Element => {
-  const bottomBgColor = useColorModeValue("gray.100", "gray.800")
   const roleBottomBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const roleBottomBorderColor = useColorModeValue("gray.200", "gray.600")
+  const role = roles[0]
 
   return (
     <Box
@@ -81,79 +87,105 @@ const TemplateCard = ({
       }}
       cursor="pointer"
       h="max-content"
+      w="full"
     >
-      <Stack>
-        <Stack px={{ base: 5, sm: 6 }} pt={{ base: 5, sm: 6 }}>
-          <Heading
-            as="h2"
-            fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
-            fontFamily="display"
-          >
-            {name}
-          </Heading>
-
-          <Text colorScheme="gray" fontWeight="semibold">
-            {description}
-          </Text>
-        </Stack>
-
-        <Stack p={{ base: 5, sm: 6 }} bgColor={bottomBgColor} spacing={4}>
-          {roles?.map((role, index) => (
-            <Card key={index}>
-              <Stack>
-                <Stack px={{ base: 5, sm: 6 }} pt={{ base: 5, sm: 6 }} pb={4}>
+      <Card
+        scrollMarginTop={"calc(var(--chakra-space-12) + var(--chakra-space-6))"}
+        overflow="clip"
+        sx={{
+          ":target": {
+            boxShadow: "var(--chakra-shadows-outline)",
+          },
+        }}
+        onClick={() => {
+          if (window.location.hash === `#role-${role.id}`) window.location.hash = "!"
+        }}
+      >
+        <SimpleGrid columns={{ base: 1, md: 2 }}>
+          <Flex direction="column">
+            <HStack spacing={3} p={5}>
+              <HStack spacing={4} minW={0}>
+                <GuildLogo
+                  imageUrl={role.imageUrl}
+                  size={{ base: "48px", md: "52px" }}
+                />
+                <Wrap spacingX={3} spacingY={1}>
                   <Heading
                     as="h3"
-                    fontSize={{ base: "md", md: "lg" }}
+                    fontSize="xl"
                     fontFamily="display"
+                    minW={0}
+                    overflowWrap={"break-word"}
+                    mt="-1px !important"
                   >
                     {role.name}
                   </Heading>
-                </Stack>
-
-                <Stack
-                  p={{ base: 5, sm: 6 }}
-                  bgColor={roleBottomBgColor}
-                  borderTopWidth={1}
-                  borderTopColor={roleBottomBorderColor}
-                >
-                  <Text
-                    as="span"
-                    mt={1}
-                    mr={2}
-                    mb={2}
-                    fontSize="xs"
-                    fontWeight="bold"
-                    color="gray"
-                    textTransform="uppercase"
-                    noOfLines={1}
-                  >
-                    Requirements to qualify
-                  </Text>
-
-                  {role.requirements.map((requirement, i) => (
-                    <Fragment key={i}>
-                      <RequirementDisplayComponent
-                        requirement={requirement as Requirement}
-                      />
-                      {i < role.requirements.length - 1 && (
-                        <LogicDivider logic="AND" py={1} />
-                      )}
-                    </Fragment>
-                  ))}
-                </Stack>
-              </Stack>
-            </Card>
-          ))}
-        </Stack>
-      </Stack>
-
+                  {/*<Visibility entityVisibility={role.visibility} showTagLabel />*/}
+                </Wrap>
+              </HStack>
+            </HStack>
+            <Box pl={5}>{description}</Box>
+            <Box p={5} pt={2} mt="auto">
+              {role.rolePlatforms?.map((platform, i) => {
+                console.log("xy role", platform)
+                return (
+                  <RewardDisplay
+                    key={i}
+                    icon={""}
+                    label={platform.guildPlatformId}
+                  />
+                )
+              })}
+              {role.hiddenRewards && <HiddenRewards />}
+            </Box>
+          </Flex>
+          <Flex
+            direction="column"
+            bgColor={roleBottomBgColor}
+            borderLeftWidth={{ base: 0, md: 1 }}
+            borderLeftColor={roleBottomBorderColor}
+            transition="background .2s"
+            // Card's `overflow: clip` isn't enough in Safari
+            borderTopRightRadius={{ md: "2xl" }}
+            borderBottomRightRadius={{ md: "2xl" }}
+            pos="relative"
+          >
+            <HStack p={5} pb={0} mb={{ base: 4, md: 6 }} transition="transform .2s">
+              <Text
+                as="span"
+                mt="1"
+                mr="2"
+                fontSize="xs"
+                fontWeight="bold"
+                color="gray"
+                textTransform="uppercase"
+                noOfLines={1}
+                transition="opacity .2s"
+              >
+                Requirements to qualify
+              </Text>
+              <Spacer />
+            </HStack>
+            <Box p={5} pt={0}>
+              {role.requirements.map((requirement, i) => (
+                <Fragment key={i}>
+                  <RequirementDisplayComponent
+                    requirement={requirement as Requirement}
+                  />
+                  {i < role.requirements.length - 1 && (
+                    <LogicDivider logic="AND" py={1} />
+                  )}
+                </Fragment>
+              ))}
+            </Box>
+          </Flex>
+        </SimpleGrid>
+      </Card>
       <Flex
         position="absolute"
         inset={0}
         justifyContent="end"
-        px={{ base: 5, sm: 6 }}
-        py={7}
+        p={5}
         borderWidth={2}
         borderStyle={selected ? "solid" : "dashed"}
         borderColor={selected && "green.500"}

@@ -9,14 +9,14 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import Visibility from "components/[guild]/Visibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import Visibility from "components/[guild]/Visibility"
-import { motion, Transition } from "framer-motion"
+import Button from "components/common/Button"
+import { Transition, motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import platforms from "platforms/platforms"
@@ -238,5 +238,5 @@ const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   return <Component platform={platformWithGuildPlatform} {...props} />
 }
 
-export { RewardDisplay, RewardIcon }
+export { Reward, RewardDisplay, RewardIcon }
 export default RewardWrapper

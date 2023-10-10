@@ -16,6 +16,7 @@ import Image from "next/image"
 import { CheckCircle, IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { ComponentType, RefAttributes } from "react"
+import { useWatch } from "react-hook-form"
 import { PlatformName, Rest } from "types"
 
 export type PlatformHookType = ({
@@ -38,7 +39,6 @@ type Props = {
   description?: string
   imageUrl?: string
   icon?: ComponentType<IconProps & RefAttributes<SVGSVGElement>>
-  isSelected?: boolean
   onSelection: (platform: PlatformName) => void
 } & Rest
 
@@ -48,7 +48,6 @@ const MultiPlatformSelectButton = ({
   description,
   imageUrl,
   icon,
-  isSelected,
   onSelection,
   ...rest
 }: Props) => {
@@ -61,6 +60,8 @@ const MultiPlatformSelectButton = ({
     false,
     "creation"
   )
+
+  const guildPlatforms = useWatch({ name: "guildPlatforms" })
 
   const selectPlatform = () => onSelection(platform)
 
@@ -121,9 +122,9 @@ const MultiPlatformSelectButton = ({
             </Text>
           )}
         </VStack>
-        {isSelected && (
-          <Icon as={CheckCircle} weight="fill" boxSize={6} color={"green.500"} />
-        )}
+        {guildPlatforms.find(
+          (platfomAdded) => platform === platfomAdded.platformName
+        ) && <Icon as={CheckCircle} weight="fill" boxSize={6} color={"green.500"} />}
       </HStack>
     </DisplayCard>
   )

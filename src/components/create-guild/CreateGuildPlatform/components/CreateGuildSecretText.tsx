@@ -10,15 +10,26 @@ import Pagination from "components/create-guild/Pagination"
 import SecretTextDataForm, {
   SecretTextRewardForm,
 } from "platforms/SecretText/SecretTextDataForm"
-import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
+import {
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useFormContext,
+  useWatch,
+} from "react-hook-form"
 import { GuildFormType } from "types"
 
 const CreateGuildSecretText = () => {
   const { id: userId } = useUser()
 
-  const { setPlatform, addConnectedPlatform } = useCreateGuildContext()
+  const { setPlatform } = useCreateGuildContext()
 
-  const { setValue } = useFormContext<GuildFormType>()
+  const { control } = useFormContext<GuildFormType>()
+  const { append } = useFieldArray({
+    control,
+    name: "guildPlatforms",
+  })
+
   const methods = useForm<SecretTextRewardForm>({ mode: "all" })
 
   const name = useWatch({ control: methods.control, name: "name" })
@@ -38,7 +49,7 @@ const CreateGuildSecretText = () => {
         <Pagination
           nextButtonDisabled={!name?.length || !text?.length}
           nextStepHandler={() => {
-            setValue("guildPlatforms.0", {
+            append({
               platformName: "TEXT",
               platformGuildId: `text-${userId}-${Date.now()}`,
               platformGuildData: {
@@ -47,9 +58,7 @@ const CreateGuildSecretText = () => {
                 imageUrl,
               },
             })
-            console.log("xy text called")
             setPlatform("DEFAULT")
-            addConnectedPlatform("TEXT")
           }}
         />
       </ModalFooter>

@@ -76,13 +76,7 @@ const GuildCreationProgress = ({ next, progress }: Props): JSX.Element => {
               </Box>
               <Text colorScheme="gray"> Guild {progressText} completed</Text>
             </HStack>
-            <Button
-              colorScheme={"green"}
-              onClick={() => {
-                console.log("xy: formStates", methods.formState)
-                next()
-              }}
-            >
+            <Button colorScheme={"green"} onClick={next}>
               Continue
             </Button>
           </HStack>

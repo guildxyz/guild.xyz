@@ -1,5 +1,4 @@
 import { useSteps } from "@chakra-ui/react"
-import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import {
   createContext,
   Dispatch,
@@ -11,7 +10,6 @@ import {
 } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName as BasePlatformName, GuildFormType } from "types"
-import capitalize from "utils/capitalize"
 import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
 import ChooseTemplate from "./ChooseTemplate"
@@ -19,7 +17,7 @@ import { Template } from "./ChooseTemplate/components/TemplateCard"
 import CreateGuildIndex from "./CreateGuildIndex"
 
 type PlatformName = BasePlatformName | "DEFAULT"
-type TemplateType = "BASIC" | "GROWTH"
+type TemplateType = "VERIFIED" | "MEMBER" | "SUPPORTER" | "OG_MEMBER"
 
 type Step = {
   title: string
@@ -29,17 +27,16 @@ type Step = {
 }
 
 const CreateGuildContext = createContext<{
-  template: string | undefined
-  setTemplate: Dispatch<SetStateAction<string>>
+  template: TemplateType[]
+  setTemplate: (id: TemplateType) => void
   steps: Step[]
   prevStep: () => void
   nextStep: () => void
   activeStep: number
   platform?: PlatformName
-  connectedPlatforms: BasePlatformName[]
-  addConnectedPlatform: (platform: BasePlatformName) => void
   setPlatform: Dispatch<SetStateAction<PlatformName>>
-  TEMPLATES: Record<string, Template>
+  getTemplate: () => Partial<Record<TemplateType, Template>>
+  TEMPLATES: Partial<Record<TemplateType, Template>>
 } | null>(null)
 
 const defaultIcon = `/guildLogos/${getRandomInt(286)}.svg`
@@ -89,21 +86,98 @@ export const defaultValues: Partial<Record<PlatformName, GuildFormType>> = {
   DEFAULT: basicDefaultValues,
 }
 
+const TEMPLATES: Partial<Record<TemplateType, Template>> = {
+  MEMBER: {
+    name: "Start from scratch",
+    description: "Default role without special requirements",
+    roles: [
+      {
+        name: "Member",
+        logic: "AND",
+        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+        requirements: [
+          {
+            type: "FREE",
+          },
+        ],
+      },
+    ] as any[],
+  },
+  VERIFIED: {
+    name: "Growth",
+    description: "Basic anti-bot member verification",
+    roles: [
+      {
+        name: "Verified member",
+        logic: "AND",
+        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+        requirements: [
+          {
+            type: "COIN",
+            chain: "ETHEREUM",
+            address: "0x0000000000000000000000000000000000000000",
+            data: {
+              minAmount: 0.001,
+            },
+          },
+          {
+            type: "DISCORD_JOIN_FROM_NOW",
+            data: {
+              memberSince: 31536000000,
+            },
+          },
+        ],
+      },
+    ] as any[],
+  },
+  SUPPORTER: {
+    name: "Growth",
+    description: "Basic anti-bot member verification",
+    roles: [
+      {
+        name: "Twitter fam",
+        logic: "AND",
+        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+        requirements: [
+          {
+            type: "TWITTER_FOLLOW",
+            data: {
+              id: "{your_twitter_handle}",
+            },
+          },
+          {
+            type: "TWITTER_FOLLOWER_COUNT",
+            data: {
+              minAmount: 50,
+            },
+          },
+        ],
+      },
+    ] as any[],
+  },
+}
+
 const CreateGuildProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
   const [platform, setPlatform] = useState<PlatformName>(null)
-  const [connectedPlatforms, setConnectedPlatforms] = useState<BasePlatformName[]>(
-    []
-  )
+  const [templatesSelected, setTemplatesSelected] = useState<TemplateType[]>([])
 
   const methods = useForm<GuildFormType>({
     mode: "all",
+    defaultValues: {
+      guildPlatforms: [],
+    },
   })
 
-  const addConnectedPlatform = (newPlatform: BasePlatformName) => {
-    const updateConnectedPlatforms = [...connectedPlatforms, newPlatform]
-    setConnectedPlatforms(updateConnectedPlatforms)
+  const buildTemplate = () => {
+    const newTemplates = JSON.parse(JSON.stringify(TEMPLATES))
+
+    Object.entries(newTemplates).forEach(([id], index) => {
+      newTemplates[id].roles[0].rolePlatforms = methods.getValues("guildPlatforms")
+    })
+
+    return newTemplates
   }
 
   const rolePlatforms =
@@ -117,82 +191,17 @@ const CreateGuildProvider = ({
                 ? methods.getValues("roles.0.rolePlatforms.0.platformRoleId")
                 : undefined,
           },
+          { guildPlatformIndex: 10 },
         ]
       : undefined
 
-  const TEMPLATES: Record<TemplateType, Template> = {
-    BASIC: {
-      name: "Start from scratch",
-      description: "Default role without special requirements",
-      roles: [
-        {
-          name: "Member",
-          logic: "AND",
-          imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-          requirements: [
-            {
-              type: "FREE",
-            },
-          ],
-          rolePlatforms,
-        },
-      ] as any[],
-    },
-    GROWTH: {
-      name: "Growth",
-      description: "Basic anti-bot member verification",
-      roles: [
-        {
-          name: "Verified member",
-          logic: "AND",
-          imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-          requirements: [
-            {
-              type: "COIN",
-              chain: "ETHEREUM",
-              address: "0x0000000000000000000000000000000000000000",
-              data: {
-                minAmount: 0.001,
-              },
-            },
-            {
-              type: "DISCORD_JOIN_FROM_NOW",
-              data: {
-                memberSince: 31536000000,
-              },
-            },
-          ],
-          rolePlatforms,
-        },
-        {
-          name: "Twitter fam",
-          logic: "AND",
-          imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-          requirements: [
-            {
-              type: "TWITTER_FOLLOW",
-              data: {
-                id: "{your_twitter_handle}",
-              },
-            },
-            {
-              type: "TWITTER_FOLLOWER_COUNT",
-              data: {
-                minAmount: 50,
-              },
-            },
-          ],
-          rolePlatforms:
-            platforms[platform]?.asRewardRestriction ===
-            PlatformAsRewardRestrictions.MULTIPLE_ROLES
-              ? rolePlatforms
-              : undefined,
-        },
-      ] as any[],
-    },
-  }
+  const toggleTemplate = (id: TemplateType) => {
+    const isSelected = templatesSelected.find((template) => template === id)
 
-  const [template, setTemplate] = useState<TemplateType>()
+    if (isSelected) {
+      setTemplatesSelected(templatesSelected.filter((t) => t !== id))
+    } else setTemplatesSelected([...templatesSelected, id])
+  }
 
   const steps: Step[] = [
     {
@@ -203,7 +212,6 @@ const CreateGuildProvider = ({
     },
     {
       title: "Customize guild",
-      label: capitalize(template?.toLowerCase() ?? ""),
       content: <BasicInfo />,
     },
     {
@@ -236,8 +244,6 @@ const CreateGuildProvider = ({
         behavior: "smooth",
       })
     if (activeStep > 0) return
-    methods.reset(defaultValues[platform ?? "DEFAULT"])
-    setTemplate(null)
   }, [activeStep, platform])
 
   return (
@@ -249,11 +255,10 @@ const CreateGuildProvider = ({
         activeStep,
         platform,
         setPlatform,
-        template,
-        setTemplate,
+        template: templatesSelected,
+        setTemplate: toggleTemplate,
+        getTemplate: buildTemplate,
         TEMPLATES,
-        connectedPlatforms,
-        addConnectedPlatform,
       }}
     >
       <FormProvider {...methods}>{children}</FormProvider>
@@ -263,4 +268,4 @@ const CreateGuildProvider = ({
 
 const useCreateGuildContext = () => useContext(CreateGuildContext)
 
-export { CreateGuildProvider, useCreateGuildContext }
+export { CreateGuildProvider, useCreateGuildContext, type TemplateType }

@@ -1,10 +1,10 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import { VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
-import { useCreateGuildContext } from "../CreateGuildContext"
+import { TemplateType, useCreateGuildContext } from "../CreateGuildContext"
 import Pagination from "../Pagination"
 import TemplateCard from "./components/TemplateCard"
 
@@ -21,6 +21,7 @@ const ChooseTemplate = (): JSX.Element => {
   const {
     TEMPLATES,
     template: templateInContext,
+    getTemplate,
     setTemplate,
   } = useCreateGuildContext()
 
@@ -30,20 +31,20 @@ const ChooseTemplate = (): JSX.Element => {
 
   return (
     <>
-      <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 6 }}>
-        {Object.entries(TEMPLATES).map(([id, template], index) => (
+      <VStack>
+        {Object.entries(getTemplate()).map(([id, template], index) => (
           <TemplateCard
             key={index}
             id={id}
+            selected={!!templateInContext.find((selected) => selected === id)}
             {...template}
-            selected={id === templateInContext}
             onClick={(newTemplateId) => {
               setValue("roles", TEMPLATES[newTemplateId].roles)
-              setTemplate(newTemplateId)
+              setTemplate(id as TemplateType)
             }}
           />
         ))}
-      </SimpleGrid>
+      </VStack>
       <Pagination nextButtonDisabled={!requirements?.length} />
     </>
   )

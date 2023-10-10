@@ -17,7 +17,6 @@ import GuildCreationProgress from "../GuildCreationProgress"
 import IconSelector from "../IconSelector"
 import Name from "../Name"
 import ContactInfo from "./components/ContactInfo"
-import TwitterUrlInput from "./components/TwitterUrlInput"
 
 const BasicInfo = (): JSX.Element => {
   const { template, nextStep } = useCreateGuildContext()
@@ -91,12 +90,6 @@ const BasicInfo = (): JSX.Element => {
           <Section title="How could we contact you?" spacing="4">
             <ContactInfo showAddButton={false} />
           </Section>
-
-          {template === "GROWTH" && (
-            <Section title="Template required socials" spacing="4">
-              <TwitterUrlInput />
-            </Section>
-          )}
         </Stack>
       </Card>
       <GuildCreationProgress next={nextStep} progress={35} />

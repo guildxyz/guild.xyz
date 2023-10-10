@@ -6,18 +6,13 @@ import MultiPlatformSelectButton from "./components/MultiPlatformSelectButton"
 type Props = {
   onSelection: (platform: PlatformName) => void
   showPoap?: boolean
-  connectedPlatforms: PlatformName[]
 }
 
 type PlatformsGridData = {
   description?: string
 }
 
-const MultiPlatformsGrid = ({
-  onSelection,
-  showPoap = false,
-  connectedPlatforms,
-}: Props) => {
+const MultiPlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
   const platformsData: Record<
     Exclude<PlatformName, "" | "TWITTER" | "TWITTER_V1" | "POAP" | "EMAIL">,
@@ -67,11 +62,6 @@ const MultiPlatformsGrid = ({
               icon={platforms[platform].icon}
               imageUrl={platforms[platform].imageUrl}
               onSelection={onSelection}
-              isSelected={
-                !!connectedPlatforms.find(
-                  (connectedPlatform) => connectedPlatform === platform
-                )
-              }
             />
           )
         )}
