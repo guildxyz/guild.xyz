@@ -118,12 +118,13 @@ const GroupPage = (): JSX.Element => {
       <Layout
         beforeHeaderElement={
           <HStack mb={3}>
-            <GuildLogo imageUrl={guildImageUrl} size={8} />
+            <GuildLogo imageUrl={guildImageUrl} size={6} />
             <Link
               href={`/${guildUrlName}`}
               fontFamily="display"
               fontWeight="bold"
               color={textColor}
+              opacity="0.7"
             >
               {guildName}
             </Link>
