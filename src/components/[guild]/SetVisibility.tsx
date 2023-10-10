@@ -20,12 +20,12 @@ import PulseMarker from "components/common/PulseMarker"
 import RadioSelect from "components/common/RadioSelect"
 import { Option } from "components/common/RadioSelect/RadioSelect"
 import useLocalStorage from "hooks/useLocalStorage"
-import { Detective, Eye, EyeSlash, IconProps } from "phosphor-react"
-import { ForwardRefExoticComponent, RefAttributes, useRef } from "react"
+import { Detective, EyeSlash, GlobeHemisphereEast, IconProps } from "phosphor-react"
+import { useRef } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { Visibility } from "types"
 
-export const visibilityData: Record<
+export const VISIBILITY_DATA: Record<
   Visibility,
   Partial<Option> & {
     Icon: React.ForwardRefExoticComponent<
@@ -35,7 +35,7 @@ export const visibilityData: Record<
 > = {
   [Visibility.PUBLIC]: {
     title: "Public",
-    Icon: Eye,
+    Icon: GlobeHemisphereEast,
     description: "Visible to everyone",
   },
   [Visibility.PRIVATE]: {
@@ -51,7 +51,7 @@ export const visibilityData: Record<
 }
 
 const VisibilityTag = ({ visibility }: { visibility: Visibility }) => {
-  const { Icon, title } = visibilityData[visibility]
+  const { Icon, title } = VISIBILITY_DATA[visibility]
 
   return (
     <Button
@@ -68,7 +68,7 @@ const VisibilityTag = ({ visibility }: { visibility: Visibility }) => {
   )
 }
 
-const visibilityDataFromRoleVisibility: Record<
+const VISIBILITY_DATA_BASED_ON_ROLE_VISIBILITY: Record<
   Exclude<Visibility, "HIDDEN">,
   Partial<Record<Exclude<Visibility, "PUBLIC">, Partial<Option>>>
 > = {
@@ -141,7 +141,7 @@ const SetVisibility = ({
     return null
   }
 
-  const Icon = visibilityData[currentVisibility].Icon
+  const Icon = VISIBILITY_DATA[currentVisibility].Icon
 
   return (
     <>
@@ -158,12 +158,12 @@ const SetVisibility = ({
             ref={buttonRef}
             {...buttonProps}
           >
-            {visibilityData[currentVisibility].title}
+            {VISIBILITY_DATA[currentVisibility].title}
           </Button>
         </PulseMarker>
       ) : (
         <Tooltip
-          label={`${visibilityData[currentVisibility].title}: ${visibilityData[currentVisibility].description}`}
+          label={`${VISIBILITY_DATA[currentVisibility].title}: ${VISIBILITY_DATA[currentVisibility].description}`}
           placement="top"
           hasArrow
           shouldWrapChildren
@@ -198,18 +198,6 @@ const SetVisibility = ({
   )
 }
 
-const getLeftSideIcon =
-  (Icon: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>) =>
-  () => {
-    const { colorMode } = useColorMode()
-
-    return (
-      <Circle bg={colorMode === "dark" ? "gray.600" : "blackAlpha.200"} p={3}>
-        <Icon />
-      </Circle>
-    )
-  }
-
 const SetVisibilityModal = ({
   entityType,
   fieldBase = "",
@@ -224,6 +212,7 @@ const SetVisibilityModal = ({
 } & Partial<ModalProps>) => {
   const visibilityField = `${fieldBase}.visibility`
   const { field } = useController({ name: visibilityField })
+  const { colorMode } = useColorMode()
 
   const saveAndClose = () => {
     onClose()
@@ -266,6 +255,21 @@ const SetVisibilityModal = ({
     setValue(visibilityField, newValue, { shouldDirty: true })
   }
 
+  const options = Object.entries(VISIBILITY_DATA).map(
+    ([key, { Icon, ...rest }]) => ({
+      value: key,
+      leftComponent: (
+        <Circle bg={colorMode === "dark" ? "gray.600" : "blackAlpha.200"} p={3}>
+          <Icon />
+        </Circle>
+      ),
+      ...rest,
+      ...(entityType === "role"
+        ? {}
+        : VISIBILITY_DATA_BASED_ON_ROLE_VISIBILITY[key]?.[roleVisibility] ?? {}),
+    })
+  )
+
   return (
     <Modal
       colorScheme={"dark"}
@@ -282,16 +286,7 @@ const SetVisibilityModal = ({
         <ModalBody>
           <RadioSelect
             colorScheme="indigo"
-            options={Object.entries(visibilityData).map(
-              ([value, { Icon, ...options }]) => ({
-                value,
-                ...options,
-                RightComponent: getLeftSideIcon(Icon),
-                ...(entityType === "role"
-                  ? {}
-                  : visibilityDataFromRoleVisibility[value]?.[roleVisibility] ?? {}),
-              })
-            )}
+            options={options}
             {...field}
             onChange={onChange}
           />
