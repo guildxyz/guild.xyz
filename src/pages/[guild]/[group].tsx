@@ -116,7 +116,7 @@ const GroupPage = (): JSX.Element => {
       </Head>
 
       <Layout
-        beforeHeaderElement={
+        backButton={
           <HStack mb={3}>
             <GuildLogo imageUrl={guildImageUrl} size={6} />
             <Link

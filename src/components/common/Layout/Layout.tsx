@@ -11,17 +11,9 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
-import { useRouter } from "next/router"
-import { ArrowLeft } from "phosphor-react"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
-import LinkButton from "../LinkButton"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
-
-type BackButtonProps = {
-  href: string
-  text: string
-}
 
 type Props = {
   image?: JSX.Element
@@ -37,8 +29,7 @@ type Props = {
   backgroundProps?: BoxProps
   backgroundImage?: string
   backgroundOffset?: number
-  backButton?: BackButtonProps
-  beforeHeaderElement?: JSX.Element
+  backButton?: JSX.Element
   maxWidth?: string
   showFooter?: boolean
 }
@@ -58,7 +49,6 @@ const Layout = ({
   backgroundImage,
   backgroundOffset = 128,
   backButton,
-  beforeHeaderElement,
   maxWidth = "container.lg",
   showFooter = true,
   children,
@@ -66,8 +56,6 @@ const Layout = ({
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
 
-  const router: any = useRouter()
-  const hasNavigated = router.components && Object.keys(router.components).length > 2
   const colorContext = useThemeContext()
 
   useIsomorphicLayoutEffect(() => {
@@ -154,22 +142,7 @@ const Layout = ({
           pb={showFooter && 24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
-          {backButton && hasNavigated ? (
-            <LinkButton
-              href={backButton.href}
-              variant="link"
-              color={colorContext?.textColor}
-              opacity={0.75}
-              size="sm"
-              leftIcon={<ArrowLeft />}
-              alignSelf="flex-start"
-              mb="6"
-            >
-              {backButton.text}
-            </LinkButton>
-          ) : (
-            beforeHeaderElement
-          )}
+          {backButton}
           {(image || title || description) && (
             <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
               <HStack justify="space-between" w="full" spacing={3}>

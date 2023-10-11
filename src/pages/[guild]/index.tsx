@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import BackButton from "components/common/Layout/components/BackButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import VerifiedIcon from "components/common/VerifiedIcon"
@@ -223,7 +224,7 @@ const GuildPage = (): JSX.Element => {
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
         action={isAdmin && isDetailed && <DynamicEditGuildButton />}
-        backButton={{ href: "/explorer", text: "Go back to explorer" }}
+        backButton={<BackButton />}
         titlePostfix={
           tags?.includes("VERIFIED") && (
             <VerifiedIcon size={{ base: 5, lg: 6 }} mt={-1} />
