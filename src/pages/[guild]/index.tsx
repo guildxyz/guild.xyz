@@ -14,6 +14,11 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
+import VerifiedIcon from "components/common/VerifiedIcon"
 import AccessHub from "components/[guild]/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
@@ -34,11 +39,6 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -197,7 +197,7 @@ const GuildPage = (): JSX.Element => {
                     .replace(/\/+$/, "")
 
                   return (
-                    <HStack key={type} spacing={1.5}>
+                    <HStack key={type} spacing={1.5} maxW="full">
                       <SocialIcon type={type as SocialLinkKey} size="sm" />
                       <Link
                         href={link?.startsWith("http") ? link : `https://${link}`}
@@ -205,6 +205,7 @@ const GuildPage = (): JSX.Element => {
                         fontSize="sm"
                         fontWeight="semibold"
                         color={textColor}
+                        noOfLines={1}
                       >
                         {prettyLink}
                       </Link>
