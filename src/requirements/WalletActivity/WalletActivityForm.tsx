@@ -25,6 +25,7 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "AVALANCHE",
   "ZKSYNC_ERA",
   "POLYGON_ZKEVM",
+  "CRONOS",
 ])
 
 // These requirement types do not have a covalent equivalent, remove them once they do
@@ -114,6 +115,7 @@ const WalletActivityForm = ({
     "BASE_GOERLI",
     "ZORA",
     "ZKSYNC_ERA",
+    "CRONOS",
     "GOERLI",
     "POLYGON_MUMBAI",
   ]
