@@ -51,23 +51,8 @@ const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
   }
 
   if (typeof dirtyFields === "object") {
-    const extendedDiryFields = JSON.parse(JSON.stringify(dirtyFields))
-
-    Object.entries(dirtyFields).forEach(([key]) => {
-      const keyIsDirtyFrom = DIRTY_KEYS_TO_KEEP.find(
-        (keeyToKeep) => keeyToKeep === key
-      )
-      const allfields = formData[keyIsDirtyFrom]
-
-      if (allfields)
-        Object.entries(allfields).forEach(([fieldKey, value]) => {
-          if (!extendedDiryFields[keyIsDirtyFrom].key)
-            extendedDiryFields[keyIsDirtyFrom][fieldKey] = value
-        })
-    })
-
     const newObj = Object.fromEntries(
-      Object.entries(extendedDiryFields)
+      Object.entries(dirtyFields)
         .map(([key, value]) => [
           key,
           formDataFilterForDirtyHelper(value, formData[key]),
@@ -76,6 +61,12 @@ const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
           ([key, value]) => value !== TO_FILTER_FLAG && !KEYS_TO_FILTER.has(key)
         )
     )
+
+    DIRTY_KEYS_TO_KEEP.forEach((keyToKeep) => {
+      if (keyToKeep in dirtyFields) {
+        newObj[keyToKeep] = formData[keyToKeep]
+      }
+    })
 
     const isEmpty = Object.keys(newObj).length <= 0
 
@@ -86,12 +77,6 @@ const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
 
     KEYS_TO_KEEP.forEach((keyToKeep) => {
       if (keyToKeep in formData) {
-        newObj[keyToKeep] = formData[keyToKeep]
-      }
-    })
-
-    DIRTY_KEYS_TO_KEEP.forEach((keyToKeep) => {
-      if (keyToKeep in newObj) {
         newObj[keyToKeep] = formData[keyToKeep]
       }
     })
