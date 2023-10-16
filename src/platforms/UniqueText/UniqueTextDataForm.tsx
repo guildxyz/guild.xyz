@@ -78,6 +78,7 @@ const UniqueTextDataForm = ({ isEditForm, children }: PropsWithChildren<Props>) 
               as="label"
               leftIcon={<File />}
               cursor="pointer"
+              h={10}
             >
               <input {...getInputProps()} hidden />
               {isDragActive ? "Drop the file here" : "Upload .txt "}

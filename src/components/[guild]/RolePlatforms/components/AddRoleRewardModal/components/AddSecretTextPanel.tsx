@@ -1,6 +1,6 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import useUser from "components/[guild]/hooks/useUser"
+import Button from "components/common/Button"
 import SecretTextDataForm, {
   SecretTextRewardForm,
 } from "platforms/SecretText/SecretTextDataForm/SecretTextDataForm"
@@ -76,7 +76,7 @@ const AddSecretTextPanel = ({ onSuccess }: Props) => {
         colorScheme="indigo"
         onChange={handleChange}
       >
-        <TabList mt="6" mb="7">
+        <TabList mb="7">
           <Tab>Same content for everyone</Tab>
           <Tab>Unique values (links, promo codes)</Tab>
         </TabList>
