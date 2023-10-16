@@ -3,13 +3,13 @@ import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/Remo
 import useGuild from "components/[guild]/hooks/useGuild"
 import { PencilSimple } from "phosphor-react"
 import PlatformCardMenu from "../../components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
-import EditSecretTextModal from "./EditSecretTextModal"
+import EditUniqueTextModal from "./EditUniqueTextModal"
 
 type Props = {
   platformGuildId: string
 }
 
-const SecretTextCardMenu = ({ platformGuildId }: Props): JSX.Element => {
+const UniqueTextCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   const { guildPlatforms } = useGuild()
   const guildPlatform = guildPlatforms?.find(
     (gp) => gp.platformGuildId === platformGuildId
@@ -21,12 +21,12 @@ const SecretTextCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     <>
       <PlatformCardMenu>
         <MenuItem icon={<PencilSimple />} onClick={onOpen}>
-          Edit secret
+          Edit unique secret
         </MenuItem>
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
       </PlatformCardMenu>
 
-      <EditSecretTextModal
+      <EditUniqueTextModal
         isOpen={isOpen}
         onClose={onClose}
         guildPlatformId={guildPlatform?.id}
@@ -35,5 +35,4 @@ const SecretTextCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     </>
   )
 }
-
-export default SecretTextCardMenu
+export default UniqueTextCardMenu
