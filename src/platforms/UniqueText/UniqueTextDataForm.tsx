@@ -59,7 +59,7 @@ const UniqueTextDataForm = ({ isEditForm, children }: PropsWithChildren<Props>) 
     <Stack spacing={8}>
       <Text colorScheme="gray" fontWeight="semibold">
         Eligible users will be able to claim one of the uploaded secret values -
-        great for distributing single-usable links, promo codes, etc
+        great for distributing single-use links, promo codes, etc
       </Text>
 
       <PublicRewardDataForm defaultIcon={Key} />
