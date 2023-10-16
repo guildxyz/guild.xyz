@@ -48,7 +48,6 @@ const FarcasterTotalFollowers = ({ baseFieldPath }: Props) => {
             }}
             onBlur={onBlur}
             min={1}
-            max={20}
           >
             <NumberInputField />
             <NumberInputStepper>
