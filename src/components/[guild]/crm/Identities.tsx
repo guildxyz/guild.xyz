@@ -33,7 +33,7 @@ const Identities = ({ member }: Props) => {
           isOpen={i === 0}
         />
       ))}
-      <WalletTag>
+      <WalletTag zIndex={areSocialsPrivate && 1}>
         {!platformUsers.length ? shortenHex(addresses[0]) : addresses?.length}
       </WalletTag>
       {areSocialsPrivate && <PrivateSocialsTag />}
@@ -71,7 +71,7 @@ export const IdentityTag = ({
   )
 }
 
-export const WalletTag = ({ children }) => {
+export const WalletTag = ({ children, ...rest }) => {
   const borderColor = useCardBg()
 
   return (
@@ -86,6 +86,7 @@ export const WalletTag = ({ children }) => {
       transition={"margin .2s"}
       boxShadow={`0 0 0 1px ${borderColor}`}
       flexShrink={0}
+      {...rest}
     >
       <TagLeftIcon as={Wallet} mr="0" />
       <TagLabel ml="1">{children}</TagLabel>
@@ -104,7 +105,6 @@ export const PrivateSocialsTag = ({ isOpen = false }) => (
       borderWidth="1px"
       px="1.5"
       sx={{ "--stacked-margin-left": "-28px" }}
-      zIndex={-1}
       transition={"margin .2s"}
     >
       <TagLeftIcon as={LockSimple} mr="0" />
