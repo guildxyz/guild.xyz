@@ -10,7 +10,7 @@ import useToast from "hooks/useToast"
 import { useRef } from "react"
 import { useSWRConfig } from "swr"
 import { Role } from "types"
-import fetcher from "utils/fetcher"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
@@ -21,6 +21,7 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
   const { account } = useWeb3React()
 
   const { mutate } = useSWRConfig()
+  const fetcherWithSign = useFetcherWithSign()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -29,7 +30,7 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
 
   const fetchData = async (
     signedValidation: SignedValdation
-  ): Promise<RoleOrGuild> => fetcher("/role", signedValidation)
+  ): Promise<RoleOrGuild> => fetcher(`/v2/guilds/${id}/roles`, signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {
     onError: (error_) => {
@@ -50,7 +51,19 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
       })
 
       mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
-      mutate(`/statusUpdate/guild/${id}`)
+
+      fetcherWithSign([
+        `/v2/actions/status-update`,
+        {
+          method: "POST",
+          body: {
+            roleIds: [response_.id],
+            manageRewards: false,
+          },
+        },
+      ])
+      mutate(`/v2/actions/status-update?guildId=${id}`)
+      mutate(`/v2/actions/status-update?roleId=${response_.id}`)
 
       await mutateGuild(async (curr) => ({
         ...curr,
