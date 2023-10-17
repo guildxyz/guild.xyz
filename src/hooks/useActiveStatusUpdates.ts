@@ -37,23 +37,7 @@ const useActiveStatusUpdates = (roleId?: number, onSuccess?: () => void) => {
       onSuccess: (res) => {
         if (!res?.length) return
 
-        if (roleId) {
-          if (
-            res
-              .filter((chunk) => !chunk.done)
-              .some((chunk) => chunk.roleIds.includes(roleId))
-          ) {
-            setIsActive(true)
-          } else {
-            setIsActive(false)
-            mutateGuild()
-            onSuccess?.()
-          }
-
-          return
-        }
-
-        if (res.some((chunk) => !chunk.done)) {
+        if (res.some((job) => !job.done)) {
           setIsActive(true)
         } else {
           setIsActive(false)
@@ -64,9 +48,18 @@ const useActiveStatusUpdates = (roleId?: number, onSuccess?: () => void) => {
     }
   )
 
+  const dataToReturn = roleId
+    ? data?.filter((job) => job.roleIds.includes(roleId))
+    : data
+
   return {
-    data: data ?? [],
-    status: data?.length > 0 ? (isActive ? "STARTED" : "DONE") : null,
+    data: dataToReturn ?? [],
+    status:
+      dataToReturn?.length > 0
+        ? dataToReturn.every((job) => job.done)
+          ? "DONE"
+          : "STARTED"
+        : null,
     isValidating,
     mutate,
   }
