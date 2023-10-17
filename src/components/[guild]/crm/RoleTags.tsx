@@ -44,6 +44,7 @@ const RoleTags = ({ roles }: Props) => {
             <Tag
               variant={"outline"}
               color="var(--chakra-colors-chakra-body-text)"
+              w="max-content"
               sx={{
                 "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColorVar}) !important`,
               }}
@@ -69,24 +70,31 @@ const RoleTags = ({ roles }: Props) => {
 
 type RoleTagProps = {
   roleId: number
+  amount?: number
 } & TagProps
 
-const CrmRoleTag = forwardRef<RoleTagProps, "span">(({ roleId, ...rest }, ref) => {
-  const { roles } = useGuild()
-  const role = roles.find((r) => r.id === roleId)
+const CrmRoleTag = forwardRef<RoleTagProps, "span">(
+  ({ roleId, amount: amountProp, ...rest }, ref) => {
+    const { roles } = useGuild()
+    const role = roles.find((r) => r.id === roleId)
 
-  if (!role) return null
+    if (!role) return null
 
-  return (
-    <RoleTag
-      ref={ref}
-      name={role.name}
-      imageUrl={role.imageUrl}
-      isHidden={role.visibility === Visibility.HIDDEN}
-      {...rest}
-    />
-  )
-})
+    const amount = role.requirements.length === 1 ? amountProp : undefined
+
+    return (
+      <RoleTag
+        ref={ref}
+        name={role.name}
+        imageUrl={role.imageUrl}
+        isHidden={role.visibility === Visibility.HIDDEN}
+        amount={amount}
+        w="max-content"
+        {...rest}
+      />
+    )
+  }
+)
 
 export const ClickableCrmRoleTag = ({ roleId, ...tagProps }: RoleTagProps) => (
   <ClickableTagPopover options={<ViewRole roleId={roleId} page="activity" />}>
