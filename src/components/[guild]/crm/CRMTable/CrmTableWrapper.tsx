@@ -81,9 +81,11 @@ const CrmTableWrapper = memo(
            th {border-radius: 0 !important}`}
           {isIdentityStuck &&
             `.identityTd {background: ${cardBg}}
-           @media only screen and (max-width: 600px) {.identityTd {max-width: 130px}}
-           ${IDENTITIES_COLLAPSED_STYLE}
-           .identitiesToggle {display: none}`}
+              @media only screen and (max-width: 600px) {
+                ${IDENTITIES_COLLAPSED_STYLE}
+                .identitiesToggle {display: none}
+                .identityTd {max-width: 130px}
+              }`}
           {/* the table is elevated to be above the headers shadow, and the popovers need to be elevated above that */}
           {`.chakra-popover__popper { z-index: var(--chakra-zIndices-banner) !important }
           body {overflow-x: hidden !important}`}
