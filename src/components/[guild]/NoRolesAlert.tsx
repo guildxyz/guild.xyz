@@ -19,10 +19,9 @@ const NoRolesAlert = ({ type = "GUILD" }: Props): JSX.Element => {
       <Alert status="info">
         <AlertIcon boxSize="5" mr="2" mt="1px" />
         <Stack>
-          <AlertTitle>Couldn't find roles</AlertTitle>
+          <AlertTitle>No public roles</AlertTitle>
           <AlertDescription>
-            {`It seems like this ${entity} doesn't have any roles yet. If you're a guild
-          admin, please add at least one role to your ${entity}.`}
+            {`It seems like this ${entity} doesn't have any public roles. There might be some secret / hidden ones that you can unlock though!`}
           </AlertDescription>
         </Stack>
       </Alert>
