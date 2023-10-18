@@ -3,14 +3,14 @@ import { useWeb3React } from "@web3-react/core"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useGuild from "components/[guild]/hooks/useGuild"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { useRef } from "react"
-import { useSWRConfig } from "swr"
 import { Role } from "types"
-import fetcher from "utils/fetcher"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
@@ -20,16 +20,18 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
   const toastIdRef = useRef<ToastId>()
   const { account } = useWeb3React()
 
-  const { mutate } = useSWRConfig()
+  const fetcherWithSign = useFetcherWithSign()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const { id, mutateGuild } = useGuild()
 
+  const { mutate: mutateActiveStatusUpdates } = useActiveStatusUpdates()
+
   const fetchData = async (
     signedValidation: SignedValdation
-  ): Promise<RoleOrGuild> => fetcher("/role", signedValidation)
+  ): Promise<RoleOrGuild> => fetcher(`/v2/guilds/${id}/roles`, signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {
     onError: (error_) => {
@@ -50,7 +52,18 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
       })
 
       mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
-      mutate(`/statusUpdate/guild/${id}`)
+
+      await fetcherWithSign([
+        `/v2/actions/status-update`,
+        {
+          method: "POST",
+          body: {
+            roleIds: [response_.id],
+            manageRewards: false,
+          },
+        },
+      ])
+      mutateActiveStatusUpdates()
 
       await mutateGuild(async (curr) => ({
         ...curr,
