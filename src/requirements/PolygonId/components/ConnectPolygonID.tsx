@@ -96,7 +96,7 @@ const ConnectPolygonIDModal = ({
     isOpen
       ? [
           `/v2/util/gate-callbacks/session?requirementType=${type}`,
-          { body: { query: data.query } },
+          { body: { query: data?.query } },
         ]
       : null,
     fetcherWithSign
