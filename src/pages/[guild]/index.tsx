@@ -1,7 +1,6 @@
 import {
   Box,
   Center,
-  Collapse,
   Divider,
   Heading,
   HStack,
@@ -16,10 +15,12 @@ import {
 } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import BackButton from "components/common/Layout/components/BackButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import VerifiedIcon from "components/common/VerifiedIcon"
 import AccessHub from "components/[guild]/AccessHub"
+import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
@@ -48,7 +49,7 @@ import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
-import { Guild, PlatformType, SocialLinkKey, Visibility } from "types"
+import { Guild, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
 
@@ -82,16 +83,17 @@ const GuildPage = (): JSX.Element => {
     admins,
     showMembers,
     memberCount,
-    roles,
+    roles: allRoles,
     isLoading,
     onboardingComplete,
     socialLinks,
     poaps,
-    guildPlatforms,
     tags,
     isDetailed,
   } = useGuild()
   useAutoStatusUpdate()
+
+  const roles = allRoles.filter((role) => !role.groupId)
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
@@ -152,13 +154,6 @@ const GuildPage = (): JSX.Element => {
     isAdmin && !onboardingComplete ? OnboardingProvider : React.Fragment
 
   const showOnboarding = isAdmin && !onboardingComplete
-  const showAccessHub =
-    (guildPlatforms?.some(
-      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
-    ) ||
-      isMember ||
-      isAdmin) &&
-    !showOnboarding
 
   const currentTime = Date.now() / 1000
   const { activePoaps, expiredPoaps } =
@@ -175,6 +170,8 @@ const GuildPage = (): JSX.Element => {
         },
         { activePoaps: [], expiredPoaps: [] }
       ) ?? {}
+
+  const accessedGuildPlatforms = useAccessedGuildPlatforms()
 
   return (
     <DynamicOnboardingProvider>
@@ -228,7 +225,7 @@ const GuildPage = (): JSX.Element => {
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
         action={isAdmin && isDetailed && <DynamicEditGuildButton />}
-        backButton={{ href: "/explorer", text: "Go back to explorer" }}
+        backButton={<BackButton />}
         titlePostfix={
           tags?.includes("VERIFIED") && (
             <VerifiedIcon size={{ base: 5, lg: 6 }} mt={-1} />
@@ -256,14 +253,13 @@ const GuildPage = (): JSX.Element => {
             }
           />
         )}
-        <Collapse in={showAccessHub} unmountOnExit>
-          <AccessHub />
-        </Collapse>
+
+        <AccessHub />
+
         <Section
-          title={(showAccessHub || showOnboarding) && "Roles"}
+          title={(isMember || !!accessedGuildPlatforms?.length) && "Roles"}
           titleRightElement={
-            isAdmin &&
-            (showAccessHub || showOnboarding) && (
+            isAdmin && (
               <Box my="-2 !important" ml="auto !important">
                 <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
               </Box>
