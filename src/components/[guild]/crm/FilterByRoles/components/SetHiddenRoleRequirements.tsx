@@ -39,8 +39,9 @@ const SetHiddenRoleRequirements = (): JSX.Element => {
       <Box>
         <FormLabel>Requirements</FormLabel>
         <Text colorScheme="gray">
-          Set the requirements to query members by, so you can see their involvement
-          in the area you're interested in
+          Query members by any requirements. If you only set one, you'll see the
+          exact amounts users have that they satisfy it with! (e.g. ETH balance,
+          Twitter followers)
         </Text>
       </Box>
 
