@@ -114,6 +114,17 @@ const preprocessRequirements = (
         }
 
         if (
+          (requirement.type === "ERC721" ||
+            requirement.type === "ERC1155" ||
+            requirement.type === "NOUNS") &&
+          !processedRequirement.data
+        ) {
+          processedRequirement.data = {
+            minAmount: 0,
+          }
+        }
+
+        if (
           requirement.type === "ALLOWLIST" &&
           !requirement.data?.addresses &&
           !requirement.data?.hideAllowlist

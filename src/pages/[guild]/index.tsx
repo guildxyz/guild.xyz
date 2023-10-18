@@ -194,7 +194,7 @@ const GuildPage = (): JSX.Element => {
                     .replace(/\/+$/, "")
 
                   return (
-                    <HStack key={type} spacing={1.5}>
+                    <HStack key={type} spacing={1.5} maxW="full">
                       <SocialIcon type={type as SocialLinkKey} size="sm" />
                       <Link
                         href={link?.startsWith("http") ? link : `https://${link}`}
@@ -202,6 +202,7 @@ const GuildPage = (): JSX.Element => {
                         fontSize="sm"
                         fontWeight="semibold"
                         color={textColor}
+                        noOfLines={1}
                       >
                         {prettyLink}
                       </Link>

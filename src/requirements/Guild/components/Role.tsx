@@ -5,10 +5,10 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -50,7 +50,11 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
   const [foundGuild, setFoundGuild] = useState<Guild>()
 
   useEffect(() => {
-    if (!fetchedGuild?.id || fetchedGuild.id === foundGuild?.id) return
+    if (
+      !fetchedGuild?.id ||
+      (foundGuild?.isDetailed && fetchedGuild.id === foundGuild?.id)
+    )
+      return
     setFoundGuild(fetchedGuild)
   }, [fetchedGuild])
 

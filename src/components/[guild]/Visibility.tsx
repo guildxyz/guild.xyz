@@ -1,17 +1,17 @@
 import { Tag, TagLabel, TagLeftIcon, TagProps, Tooltip } from "@chakra-ui/react"
 import { Visibility as VisibilityType } from "types"
-import { visibilityData } from "./SetVisibility"
+import { VISIBILITY_DATA } from "./SetVisibility"
 
 type Props = { entityVisibility: VisibilityType; showTagLabel?: boolean } & TagProps
 
 const Visibility = ({ entityVisibility, showTagLabel, ...tagProps }: Props) => {
-  const VisibilityIcon = visibilityData[entityVisibility].Icon
+  const VisibilityIcon = VISIBILITY_DATA[entityVisibility].Icon
 
   if (entityVisibility === VisibilityType.PUBLIC) return null
 
   return (
     <Tooltip
-      label={`${visibilityData[entityVisibility].title}: ${visibilityData[entityVisibility].description}`}
+      label={`${VISIBILITY_DATA[entityVisibility].title}: ${VISIBILITY_DATA[entityVisibility].description}`}
     >
       <Tag
         bg={showTagLabel ? undefined : "unset"}
@@ -20,7 +20,7 @@ const Visibility = ({ entityVisibility, showTagLabel, ...tagProps }: Props) => {
       >
         <TagLeftIcon as={VisibilityIcon} boxSize={3.5} />
         {showTagLabel && (
-          <TagLabel>{visibilityData[entityVisibility].title}</TagLabel>
+          <TagLabel>{VISIBILITY_DATA[entityVisibility].title}</TagLabel>
         )}
       </Tag>
     </Tooltip>

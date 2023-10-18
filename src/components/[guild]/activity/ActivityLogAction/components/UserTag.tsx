@@ -4,9 +4,11 @@ import {
   TagLabel,
   TagLeftIcon,
   TagProps,
+  TagRightIcon,
   useColorModeValue,
 } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
+import { DotsThreeVertical } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import shortenHex from "utils/shortenHex"
 import { useActivityLog } from "../../ActivityLogContext"
@@ -18,10 +20,11 @@ import ViewInCRM from "./ClickableTagPopover/components/ViewInCRM"
 type Props = {
   address?: string
   userId?: number
+  rightIcon?: React.FC
 } & TagProps
 
 const UserTag = forwardRef<Props, "span">(
-  ({ address: addressProp, userId, ...rest }, ref): JSX.Element => {
+  ({ address: addressProp, userId, rightIcon, ...rest }, ref): JSX.Element => {
     const variant = useColorModeValue("subtle", "solid")
     const colorScheme = useColorModeValue("alpha", "gray")
 
@@ -54,6 +57,7 @@ const UserTag = forwardRef<Props, "span">(
         <TagLabel>
           {address ? shortenHex(address, 3) : userId ?? "Unknown user"}
         </TagLabel>
+        {rightIcon && <TagRightIcon as={rightIcon} />}
       </Tag>
     )
   }
@@ -86,7 +90,7 @@ const ClickableUserTag = ({ userId }: ClickableUserTagProps): JSX.Element => {
         </>
       }
     >
-      <UserTag address={address} cursor="pointer" />
+      <UserTag address={address} cursor="pointer" rightIcon={DotsThreeVertical} />
     </ClickableTagPopover>
   )
 }

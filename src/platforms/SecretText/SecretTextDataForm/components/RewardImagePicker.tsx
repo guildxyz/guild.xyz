@@ -11,10 +11,10 @@ import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import BoxIcon from "static/icons/box.svg"
+import Photo from "static/icons/photo.svg"
 import { SecretTextRewardForm } from "../SecretTextDataForm"
 
-const RewardImagePicker = () => {
+const RewardImagePicker = ({ defaultIcon }) => {
   const { setValue } = useFormContext<SecretTextRewardForm>()
 
   const iconButtonBgColor = useColorModeValue("gray.700", "blackAlpha.300")
@@ -65,7 +65,7 @@ const RewardImagePicker = () => {
             alt="Secret image"
           />
         ) : (
-          <Icon as={BoxIcon} color="white" display="flex" />
+          <Icon as={defaultIcon ?? Photo} color="white" display="flex" />
         )}
 
         {isUploading && (

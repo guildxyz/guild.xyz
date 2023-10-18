@@ -65,7 +65,6 @@
     "chakra-ui-steps": "2.1.0",
     "color": "^4.2.3",
     "colorthief": "^2.3.2",
-    "crypto-browserify": "^3.12.0",
     "ethers-multicall": "^0.2.3",
     "events": "^3.3.0",
     "formidable": "^2.1.2",
@@ -89,7 +88,7 @@
     "react-notion-x": "^6.15.6",
     "react-window": "^1.8.8",
     "slugify": "^1.6.5",
-    "swr": "2.2.0",
+    "swr": "^2.2.4",
     "wicg-inert": "^3.1.2"
   },
   "peerDependencies": {

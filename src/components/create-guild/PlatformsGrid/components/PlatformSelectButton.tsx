@@ -9,10 +9,10 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import DisplayCard from "components/common/DisplayCard"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import DisplayCard from "components/common/DisplayCard"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
@@ -111,7 +111,7 @@ const PlatformSelectButton = ({
           maxW="full"
         >
           <Heading
-            fontSize={{ lg: "lg" }}
+            fontSize="md"
             fontWeight="bold"
             letterSpacing="wide"
             maxW="full"

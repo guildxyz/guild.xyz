@@ -11,11 +11,15 @@ import {
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
+import platforms from "platforms/platforms"
+import useClaimText, {
+  ClaimTextModal,
+} from "platforms/SecretText/hooks/useClaimText"
 import { useMemo } from "react"
-import useClaimText, { ClaimTextModal } from "./hooks/useClaimText"
+import { PlatformType } from "types"
 
 const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
-  const platformGuildData = platform.guildPlatform.platformGuildData
+  const { platformId, platformGuildData } = platform.guildPlatform
 
   const {
     onSubmit,
@@ -34,11 +38,12 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
   const { account } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
 
-  // This is a partial duplication of the logic in the `Reward` component. I'll see what'll we need from it during the unique text reward implementation
+  const label = platformId === PlatformType.TEXT ? "Reveal secret" : "Claim"
+
   const state = useMemo(() => {
     if (isMember && hasAccess)
       return {
-        tooltipLabel: "Reveal secret",
+        tooltipLabel: label,
         buttonProps: {},
       }
     if (!account || (!isMember && hasAccess))
@@ -76,7 +81,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
             <Text opacity={0.5}>Claiming reward...</Text>
           ) : (
             <Tooltip label={state.tooltipLabel} hasArrow shouldWrapChildren>
-              {`Reveal secret: `}
+              {`${label}: `}
               <Button
                 variant="link"
                 rightIcon={
@@ -90,7 +95,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
                 }}
                 {...state.buttonProps}
               >
-                {platformGuildData.name ?? "Secret"}
+                {platformGuildData.name ?? platforms[PlatformType[platformId]].name}
               </Button>
             </Tooltip>
           )

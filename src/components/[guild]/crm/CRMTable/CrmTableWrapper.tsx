@@ -16,7 +16,7 @@ const CHECKBOX_COLUMN_WIDTH = 45
 const CrmTableWrapper = memo(
   ({ isValidating, setSize, children }: PropsWithChildren<Props>) => {
     const cardBg = useCardBg()
-    const theadBoxShadow = useColorModeValue("md", "2xl")
+    const theadBoxShadow = useColorModeValue("md", "xl")
 
     /**
      * Observing if we've scrolled to the bottom of the page. The table has to be the

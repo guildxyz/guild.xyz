@@ -1,5 +1,4 @@
 import {
-  Center,
   HStack,
   ModalBody,
   ModalCloseButton,
@@ -119,9 +118,7 @@ const ClaimTextModal = ({
       <ModalBody pt={8}>
         {isLoading ? (
           <HStack spacing="6">
-            <Center boxSize="16">
-              <Spinner />
-            </Center>
+            <Spinner />
             <Text>Getting your secret...</Text>
           </HStack>
         ) : response?.uniqueValue ? (

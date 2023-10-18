@@ -84,6 +84,7 @@ type PlatformName =
   | "CONTRACT_CALL"
   | "TWITTER_V1"
   | "EMAIL"
+  | "UNIQUE_TEXT"
   | "TEXT"
 
 type PlatformUserData = {
@@ -205,6 +206,7 @@ type PlatformGuildData = {
     symbol?: never
     description?: never
     text?: never
+    texts?: never
     imageUrl?: never
   }
   GOOGLE: {
@@ -223,6 +225,7 @@ type PlatformGuildData = {
     symbol?: never
     description?: never
     text?: never
+    texts?: never
     imageUrl?: never
   }
   CONTRACT_CALL: {
@@ -241,9 +244,29 @@ type PlatformGuildData = {
     mimeType?: never
     iconLink?: never
     text?: never
+    texts?: never
+  }
+  UNIQUE_TEXT: {
+    texts: string[]
+    text?: never
+    name: string
+    imageUrl: string
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    description?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    role?: never
+    mimeType?: never
+    iconLink?: never
   }
   TEXT: {
     text: string
+    texts?: never
     name: string
     imageUrl: string
     chain?: never
@@ -419,6 +442,7 @@ type Guild = {
     isActive: boolean
   }
   isFallback?: boolean
+  isDetailed?: boolean
 }
 type GuildFormType = Partial<
   Pick<
@@ -532,6 +556,7 @@ export enum PlatformType {
   // "STEAM" = 6,
   "CONTRACT_CALL" = 7,
   "TWITTER_V1" = 8,
+  "UNIQUE_TEXT" = 9,
   "TEXT" = 10,
 }
 

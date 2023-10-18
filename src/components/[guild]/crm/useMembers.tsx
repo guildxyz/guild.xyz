@@ -22,6 +22,7 @@ type Member = {
     hidden?: CrmRole[]
     public: CrmRole[]
   }
+  areSocialsPrivate: boolean
 }
 
 const LIMIT = 50
@@ -53,18 +54,24 @@ const useMembers = (queryString: string) => {
           body: {},
         },
       ]).then((res) =>
-        res.map((user) => ({
-          ...user,
-          platformUsers: user.platformUsers.sort(sortAccounts),
-          roles: {
-            hidden: user.roles.filter(
-              (role) => role.visibility === Visibility.HIDDEN
-            ),
-            public: user.roles.filter(
-              (role) => role.visibility !== Visibility.HIDDEN
-            ),
-          },
-        }))
+        res.map((user) => {
+          const areSocialsPrivate = typeof user.addresses === "string"
+
+          return {
+            ...user,
+            areSocialsPrivate,
+            addresses: areSocialsPrivate ? [user.addresses] : user.addresses,
+            platformUsers: user.platformUsers.sort(sortAccounts),
+            roles: {
+              hidden: user.roles.filter(
+                (role) => role.visibility === Visibility.HIDDEN
+              ),
+              public: user.roles.filter(
+                (role) => role.visibility !== Visibility.HIDDEN
+              ),
+            },
+          }
+        })
       ),
     [fetcherWithSign]
   )
