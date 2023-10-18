@@ -49,8 +49,8 @@ const useActiveStatusUpdates = (roleId?: number, onSuccess?: () => void) => {
   )
 
   const dataToReturn = roleId
-    ? data?.filter((job) => job.roleIds.includes(roleId))
-    : data
+    ? data?.filter((job) => job.roleIds?.includes(roleId))
+    : data?.filter((job) => !!job.roleIds)
 
   return {
     data: dataToReturn ?? [],
