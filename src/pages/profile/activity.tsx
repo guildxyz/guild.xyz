@@ -11,6 +11,7 @@ import {
 import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
 import Layout from "components/common/Layout"
+import BackButton from "components/common/Layout/components/BackButton"
 import { SectionTitle } from "components/common/Section"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
 import {
@@ -53,7 +54,7 @@ const ActivityLog = (): JSX.Element => {
       }}
       textColor="white"
       backgroundOffset={46}
-      backButton={{ href: "/explorer", text: "Go back to explorer" }}
+      backButton={<BackButton />}
     >
       {id ? (
         <ActivityLogFiltersProvider>

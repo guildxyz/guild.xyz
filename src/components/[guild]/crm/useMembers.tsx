@@ -1,4 +1,5 @@
 import { useKeyPair } from "components/_app/KeyPairProvider"
+import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 import { useCallback, useMemo } from "react"
 import useSWRInfinite from "swr/infinite"
 import { PlatformAccountDetails, Visibility } from "types"
@@ -76,7 +77,7 @@ const useMembers = (queryString: string) => {
     [fetcherWithSign]
   )
 
-  const { data, ...rest } = useSWRInfinite<Member[]>(getKey, fetchMembers, {
+  const { data, mutate, ...rest } = useSWRInfinite<Member[]>(getKey, fetchMembers, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
@@ -87,8 +88,12 @@ const useMembers = (queryString: string) => {
 
   const flattenedData = useMemo(() => data?.flat(), [data])
 
+  // Mutating the data on successful status update
+  useActiveStatusUpdates(null, mutate)
+
   return {
     data: flattenedData,
+    mutate,
     ...rest,
   }
 }

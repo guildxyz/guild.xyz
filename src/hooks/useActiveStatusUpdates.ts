@@ -2,52 +2,42 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { useState } from "react"
 import useSWR from "swr"
+import { useFetcherWithSign } from "utils/fetcher"
 
-type RoleStatus = {
-  roleId: number
-  status: "CREATED" | "STARTED" | "STOPPED" | "FINISHED" | "FAILED"
-  progress: {
-    total: number
-    accessCheckDone: number
-    actionsDone: number
-    failed: number
-  }
-  params?: {
-    guildify: boolean
-    updateDb: boolean
-    updatePlatforms: boolean
-    forcePlatformUpdates: boolean
-  }
+type Status = {
+  id: string
+  guildId: number
+  roleIds: number[]
+  done: boolean
 }
 
-type Response = RoleStatus[]
-
-const defaultData: Omit<RoleStatus, "roleId"> = {
-  status: null,
-  progress: {
-    total: 0,
-    accessCheckDone: 0,
-    actionsDone: 0,
-    failed: 0,
-  },
-}
-
-const isRoleSyncing = (role) =>
-  role.status === "CREATED" || role.status === "STARTED"
+type Response = Status[]
 
 const useActiveStatusUpdates = (roleId?: number, onSuccess?: () => void) => {
   const { id, mutateGuild } = useGuild()
   const [isActive, setIsActive] = useState(false)
   const { isAdmin } = useGuildPermission()
 
-  const { data, isValidating } = useSWR<Response>(
-    isAdmin ? `/statusUpdate/guild/${id}` : null,
+  const fetcherWithSign = useFetcherWithSign()
+
+  const { data, isValidating, mutate } = useSWR<Response>(
+    isAdmin ? `/v2/actions/status-update?guildId=${id}` : null,
+    (url) =>
+      fetcherWithSign([
+        url,
+        {
+          method: "GET",
+          body: {},
+        },
+      ]),
     {
       refreshInterval: isActive && 5000,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       onSuccess: (res) => {
-        if (res.some(isRoleSyncing)) {
+        if (!res?.length) return
+
+        if (res.some((job) => !job.done)) {
           setIsActive(true)
         } else {
           setIsActive(false)
@@ -58,25 +48,21 @@ const useActiveStatusUpdates = (roleId?: number, onSuccess?: () => void) => {
     }
   )
 
-  if (!data) return defaultData
+  const dataToReturn = roleId
+    ? data?.filter((job) => job.roleIds.includes(roleId))
+    : data
 
-  let res: Omit<RoleStatus, "roleId"> = null
-  if (roleId) {
-    res = data.find((role) => role.roleId === roleId)
-  } else {
-    const activeRoles = data.filter(isRoleSyncing)
-    if (!activeRoles) return defaultData
-
-    // we're returning the status of the role with the most members instead of aggregating them for now
-    const largestRole = activeRoles.reduce(
-      (prev, current) =>
-        prev.progress.total > current.progress.total ? prev : current,
-      defaultData
-    )
-    res = largestRole
+  return {
+    data: dataToReturn ?? [],
+    status:
+      dataToReturn?.length > 0
+        ? dataToReturn.every((job) => job.done)
+          ? "DONE"
+          : "STARTED"
+        : null,
+    isValidating,
+    mutate,
   }
-
-  return { ...defaultData, ...res }
 }
 
 export default useActiveStatusUpdates
