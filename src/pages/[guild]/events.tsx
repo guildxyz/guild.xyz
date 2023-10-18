@@ -1,16 +1,17 @@
 import { HStack, Link, VStack, Wrap } from "@chakra-ui/react"
-import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
-import EventCard from "components/[guild]/Events/EventCard"
-import FallbackFrame from "components/[guild]/Events/FallbackFrame"
-import SocialIcon from "components/[guild]/SocialIcon"
-import GuildTabs from "components/[guild]/Tabs/GuildTabs"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import BackButton from "components/common/Layout/components/BackButton"
 import VerifiedIcon from "components/common/VerifiedIcon"
+import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
+import EventCard from "components/[guild]/Events/EventCard"
+import FallbackFrame from "components/[guild]/Events/FallbackFrame"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import SocialIcon from "components/[guild]/SocialIcon"
+import GuildTabs from "components/[guild]/Tabs/GuildTabs"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildEvents, { GuildEvent } from "hooks/useGuildEvents"
 import dynamic from "next/dynamic"
 import { NoteBlank } from "phosphor-react"
@@ -84,7 +85,7 @@ const GuildEvents = (): JSX.Element => {
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
       action={isAdmin && isDetailed && <DynamicEditGuildButton />}
-      backButton={{ href: "/explorer", text: "Go back to explorer" }}
+      backButton={<BackButton />}
       titlePostfix={
         tags?.includes("VERIFIED") && (
           <VerifiedIcon size={{ base: 5, lg: 6 }} mt={-1} />

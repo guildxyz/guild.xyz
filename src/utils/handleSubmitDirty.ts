@@ -62,6 +62,12 @@ const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
         )
     )
 
+    DIRTY_KEYS_TO_KEEP.forEach((keyToKeep) => {
+      if (keyToKeep in dirtyFields) {
+        newObj[keyToKeep] = formData[keyToKeep]
+      }
+    })
+
     const isEmpty = Object.keys(newObj).length <= 0
 
     // Re-attach id field to dirty objects
@@ -71,12 +77,6 @@ const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
 
     KEYS_TO_KEEP.forEach((keyToKeep) => {
       if (keyToKeep in formData) {
-        newObj[keyToKeep] = formData[keyToKeep]
-      }
-    })
-
-    DIRTY_KEYS_TO_KEEP.forEach((keyToKeep) => {
-      if (keyToKeep in newObj) {
         newObj[keyToKeep] = formData[keyToKeep]
       }
     })

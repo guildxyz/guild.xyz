@@ -9,9 +9,9 @@ import {
   InputRightElement,
   SimpleGrid,
 } from "@chakra-ui/react"
+import SocialIcon from "components/[guild]/SocialIcon"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
-import SocialIcon from "components/[guild]/SocialIcon"
 import { Plus } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, SelectOption, supportedSocialLinks } from "types"
@@ -58,7 +58,11 @@ const SocialLinks = (): JSX.Element => {
                     aria-label="Remove link"
                     size="sm"
                     rounded="full"
-                    onClick={() => setValue(`socialLinks.${key}`, undefined)}
+                    onClick={() =>
+                      setValue(`socialLinks.${key}`, undefined, {
+                        shouldDirty: true,
+                      })
+                    }
                   />
                 </InputRightElement>
               </InputGroup>
