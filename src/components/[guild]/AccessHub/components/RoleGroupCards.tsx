@@ -1,11 +1,11 @@
-import { Box, HStack, Image, SkeletonCircle, Text } from "@chakra-ui/react"
+import { Box, HStack, SkeletonCircle, Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import LinkButton from "components/common/LinkButton"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Image from "next/image"
 import { useRouter } from "next/router"
 import { ArrowRight } from "phosphor-react"
-// import Image from "next/image"
 
 const RoleGroupCards = () => {
   const { groups, imageUrl: guildImageUrl, urlName: guildUrlName } = useGuild()
@@ -33,13 +33,7 @@ const RoleGroupCards = () => {
                 flexShrink={0}
                 position="relative"
               >
-                <Image
-                  src={imageUrl || guildImageUrl}
-                  alt={name}
-                  objectFit="cover"
-                />
-                {/* TODO use next image here */}
-                {/* <Image src={imageUrl || guildImageUrl} alt={name} layout="fill" /> */}
+                <Image src={imageUrl || guildImageUrl} alt={name} layout="fill" />
               </Box>
             ) : (
               <SkeletonCircle size="10" />
