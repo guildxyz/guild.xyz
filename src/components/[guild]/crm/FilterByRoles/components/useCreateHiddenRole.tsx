@@ -53,16 +53,17 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
 
       mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
 
-      await fetcherWithSign([
-        `/v2/actions/status-update`,
-        {
-          method: "POST",
-          body: {
-            roleIds: [response_.id],
-            manageRewards: false,
-          },
-        },
-      ])
+      // Disabled temporarily, until we test it properly
+      // await fetcherWithSign([
+      //   `/v2/actions/status-update`,
+      //   {
+      //     method: "POST",
+      //     body: {
+      //       roleIds: [response_.id],
+      //       manageRewards: false,
+      //     },
+      //   },
+      // ])
       mutateActiveStatusUpdates()
 
       await mutateGuild(async (curr) => ({
