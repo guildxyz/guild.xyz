@@ -18,14 +18,13 @@ import {
   SkeletonCircle,
   Stack,
   Text,
-  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
 import {
   ArrowSquareOut,
   CaretDown,
@@ -100,16 +99,14 @@ const SharedSocials = () => {
           <ModalBody>
             <Text mb="10">
               Choose which guilds you'd like to share your profile with.{" "}
-              <Tooltip label="Soon" shouldWrapChildren hasArrow>
-                <Link
-                  colorScheme="gray"
-                  fontWeight={"semibold"}
-                  opacity={0.5}
-                  pointerEvents={"none"}
-                >
-                  Learn more <Icon as={ArrowSquareOut} ml="1" />
-                </Link>
-              </Tooltip>
+              <Link
+                href="https://help.guild.xyz/en/articles/8489031-privacy-for-members"
+                isExternal
+                colorScheme="gray"
+                fontWeight={"semibold"}
+              >
+                Learn more <Icon as={ArrowSquareOut} ml="1" />
+              </Link>
             </Text>
             <Stack divider={<Divider />} spacing="4">
               {guildSharedSocial && (
