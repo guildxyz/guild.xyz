@@ -97,8 +97,8 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
           <Wrap>
             {Object.values(roles)
               .flat()
-              .map(({ roleId }) => (
-                <ClickableCrmRoleTag key={roleId} roleId={roleId} />
+              .map(({ roleId, amount }) => (
+                <ClickableCrmRoleTag key={roleId} roleId={roleId} amount={amount} />
               ))}
           </Wrap>
         </ModalBody>

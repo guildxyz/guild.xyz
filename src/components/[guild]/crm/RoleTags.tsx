@@ -14,6 +14,7 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import { Visibility } from "types"
+import pluralize from "utils/pluralize"
 import ClickableTagPopover from "../activity/ActivityLogAction/components/ClickableTagPopover"
 import ViewRole from "../activity/ActivityLogAction/components/ClickableTagPopover/components/ViewRole"
 import useGuild from "../hooks/useGuild"
@@ -35,8 +36,8 @@ const RoleTags = ({ roles }: Props) => {
 
   return (
     <HStack>
-      {renderedRoles.map(({ roleId, requirementId }) => (
-        <CrmRoleTag key={requirementId ?? roleId} roleId={roleId} />
+      {renderedRoles.map(({ roleId, requirementId, amount }) => (
+        <CrmRoleTag key={requirementId ?? roleId} roleId={roleId} amount={amount} />
       ))}
       {moreRolesCount > 0 && (
         <Popover trigger="hover" openDelay={0} closeDelay={0}>
@@ -49,15 +50,19 @@ const RoleTags = ({ roles }: Props) => {
                 "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColorVar}) !important`,
               }}
             >
-              <TagLabel>{`${moreRolesCount} more roles`}</TagLabel>
+              <TagLabel>{pluralize(moreRolesCount, "more role")}</TagLabel>
             </Tag>
           </PopoverTrigger>
           <PopoverContent>
             <PopoverArrow />
             <PopoverBody>
               <Wrap>
-                {moreRoles?.slice(0, 15).map(({ roleId, requirementId }) => (
-                  <CrmRoleTag key={requirementId ?? roleId} roleId={roleId} />
+                {moreRoles?.slice(0, 15).map(({ roleId, requirementId, amount }) => (
+                  <CrmRoleTag
+                    key={requirementId ?? roleId}
+                    roleId={roleId}
+                    amount={amount}
+                  />
                 ))}
               </Wrap>
             </PopoverBody>
@@ -88,7 +93,7 @@ const CrmRoleTag = forwardRef<RoleTagProps, "span">(
         name={role.name}
         imageUrl={role.imageUrl}
         isHidden={role.visibility === Visibility.HIDDEN}
-        amount={amount}
+        amount={typeof amount === "number" ? Number(amount.toFixed(2)) : undefined}
         w="max-content"
         {...rest}
       />
