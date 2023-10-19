@@ -58,10 +58,7 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
 
   const { data: allowance } = useContractRead({
     abi: erc20ABI,
-    address:
-      vaultData?.token === NULL_ADDRESS
-        ? undefined
-        : (vaultData?.token as `0x${string}`),
+    address: vaultData?.token === NULL_ADDRESS ? undefined : vaultData?.token,
     functionName: "allowance",
     chainId: vaultChainId,
   })

@@ -3,10 +3,7 @@ import { GuildPlatform, PlatformName } from "types"
 
 const useContractCallCardProps = (guildPlatform: GuildPlatform) => {
   const { chain, contractAddress } = guildPlatform.platformGuildData
-  const { name, image, description } = useNftDetails(
-    chain,
-    contractAddress as `0x${string}`
-  )
+  const { name, image, description } = useNftDetails(chain, contractAddress)
 
   return {
     type: "CONTRACT_CALL" as PlatformName,

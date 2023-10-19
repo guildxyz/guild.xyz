@@ -24,7 +24,7 @@ const ContractCallReward = ({
   const postHogOptions = { guild: urlName }
 
   const { chain, contractAddress } = platform.guildPlatform.platformGuildData ?? {}
-  const { name, isLoading } = useNftDetails(chain, contractAddress as `0x${string}`)
+  const { name, isLoading } = useNftDetails(chain, contractAddress)
 
   return (
     <RewardDisplay
@@ -80,7 +80,7 @@ const ContractCallRewardIcon = ({
 }: RewardIconProps & { isLoading?: boolean }) => {
   const { image } = useNftDetails(
     guildPlatform?.platformGuildData?.chain,
-    guildPlatform?.platformGuildData?.contractAddress as `0x${string}`
+    guildPlatform?.platformGuildData?.contractAddress
   )
 
   const props = {

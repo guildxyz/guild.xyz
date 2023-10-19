@@ -230,7 +230,7 @@ type PlatformGuildData = {
   }
   CONTRACT_CALL: {
     chain: Chain
-    contractAddress: string
+    contractAddress: `0x${string}`
     function: ContractCallFunction
     argsToSign: string[]
     name: string
@@ -725,8 +725,8 @@ export type {
   EventSourcesKey,
   GitPoap,
   GoogleFile,
-  Guild,
   Group,
+  Guild,
   GuildAdmin,
   GuildBase,
   GuildFormType,

@@ -25,7 +25,7 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
   const { address } = useAccount()
   const { data: nftBalanceData } = useBalance({
     address,
-    token: contractAddress as `0x${string}`,
+    token: contractAddress,
     chainId: Chains[chain],
   })
   const alreadyCollected = nftBalanceData?.value > 0

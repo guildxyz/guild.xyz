@@ -46,7 +46,7 @@ type FetchPriceBodyParams = {
   data: Record<string, any>
 }
 
-const getDecimals = async (chain: Chain, tokenAddress: `0x${string}` | string) => {
+const getDecimals = async (chain: Chain, tokenAddress: string) => {
   if (tokenAddress === RPC[chain].nativeCurrency.symbol)
     return RPC[chain].nativeCurrency.decimals
 
