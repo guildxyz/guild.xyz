@@ -69,7 +69,7 @@ const useDelegateVaults = () => {
     ?.filter(
       (res) =>
         res.type_ === DelegationType.ALL &&
-        !alreadyLinkedAddresses.has(res.vault.toLowerCase())
+        !alreadyLinkedAddresses.has(res.vault.toLowerCase() as `0x${string}`)
     )
     .map((res) => res.vault)
     .filter(Boolean)

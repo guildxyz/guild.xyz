@@ -115,7 +115,7 @@ type AddressConnectionProvider = "DELEGATE"
 type User = {
   id: number
   addresses: Array<{
-    address: string
+    address: `0x${string}`
     userId: number
     isPrimary: boolean
     provider: AddressConnectionProvider
