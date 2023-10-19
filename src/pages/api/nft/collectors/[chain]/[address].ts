@@ -32,10 +32,10 @@ export const validateNftChain = (value: string | string[]): Chain => {
   if (!value || !Object.keys(alchemyApiUrl).includes(valueAsString)) return null
   return valueAsString as Chain
 }
-export const validateNftAddress = (value: string | string[]): string => {
+export const validateNftAddress = (value: string | string[]): `0x${string}` => {
   const valueAsString = value?.toString()
   if (!ADDRESS_REGEX.test(valueAsString)) return null
-  return valueAsString
+  return valueAsString as `0x${string}`
 }
 
 const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {

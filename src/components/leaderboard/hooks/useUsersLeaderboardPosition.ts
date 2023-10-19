@@ -1,13 +1,13 @@
-import { useWeb3React } from "@web3-react/core"
 import useSWRImmutable from "swr/immutable"
+import { useAccount } from "wagmi"
 
 const useUsersLeaderboardPosition = () => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   return useSWRImmutable<{
     score: number
     position: number
-  }>(account ? `/api/leaderboard/${account}` : null)
+  }>(address ? `/api/leaderboard/${address}` : null)
 }
 
 export default useUsersLeaderboardPosition

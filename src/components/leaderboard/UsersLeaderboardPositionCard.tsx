@@ -1,13 +1,13 @@
-import { useWeb3React } from "@web3-react/core"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
+import { useAccount } from "wagmi"
 import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
 } from "./LeaderboardUserCard"
 import useUsersLeaderboardPosition from "./hooks/useUsersLeaderboardPosition"
 
 const UsersLeaderboardPositionCard = () => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { data, isLoading } = useUsersLeaderboardPosition()
 
   const { data: usersGuildPins } = useUsersGuildPins()
@@ -17,7 +17,7 @@ const UsersLeaderboardPositionCard = () => {
   ) : data ? (
     <CardMotionWrapper>
       <LeaderboardUserCard
-        address={account}
+        address={address}
         score={data.score}
         position={data.position}
         pinMetadataArray={usersGuildPins}

@@ -1,8 +1,8 @@
 import { Icon, Img, Link, useColorMode, Wrap } from "@chakra-ui/react"
-import Section from "components/common/Section"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import SocialIcon from "components/[guild]/SocialIcon"
+import Section from "components/common/Section"
 import { RPC } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import { SocialLinkKey } from "types"
@@ -12,16 +12,16 @@ import useNftDetails from "../hooks/useNftDetails"
 
 const Links = () => {
   const { colorMode } = useColorMode()
-  const { chain, address } = useCollectNftContext()
-  const { data } = useNftDetails(chain, address)
+  const { chain, nftAddress } = useCollectNftContext()
+  const { totalCollectors } = useNftDetails(chain, nftAddress)
   const { socialLinks } = useGuild()
 
   return (
     <Section title="Links" spacing={3}>
       <Wrap spacingX={6} spacingY={3}>
-        {openseaBaseUrl[chain] && !!data?.totalCollectors && (
+        {openseaBaseUrl[chain] && totalCollectors && (
           <Link
-            href={`${openseaBaseUrl[chain]}/${address}`}
+            href={`${openseaBaseUrl[chain]}/${nftAddress}`}
             isExternal
             colorScheme="gray"
             fontWeight="medium"
@@ -34,7 +34,7 @@ const Links = () => {
 
         {chain === "BASE_MAINNET" && (
           <Link
-            href={`https://nft.coinbase.com/collection/base/${address}`}
+            href={`https://nft.coinbase.com/collection/base/${nftAddress}`}
             isExternal
             colorScheme="gray"
             fontWeight="medium"
@@ -46,7 +46,7 @@ const Links = () => {
         )}
 
         <Link
-          href={`${RPC[chain].blockExplorerUrls[0]}/token/${address}`}
+          href={`${RPC[chain].blockExplorerUrls[0]}/token/${nftAddress}`}
           isExternal
           colorScheme="gray"
           fontWeight="medium"

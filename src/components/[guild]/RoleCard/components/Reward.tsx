@@ -8,21 +8,21 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import Visibility from "components/[guild]/Visibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import Visibility from "components/[guild]/Visibility"
-import { motion, Transition } from "framer-motion"
+import Button from "components/common/Button"
+import { Transition, motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import platforms from "platforms/platforms"
 import { ReactNode, useMemo } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
+import { useAccount } from "wagmi"
 
 export type RewardProps = {
   role: Role // should change to just roleId when we won't need memberCount anymore
@@ -53,7 +53,7 @@ const Reward = ({
   isLinkColorful,
 }: RewardProps) => {
   const isMember = useIsMember()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   const { hasAccess, isValidating } = useAccess(role.id)
@@ -69,7 +69,7 @@ const Reward = ({
           ? { ...accessButtonProps, colorScheme: "blue" }
           : accessButtonProps,
       }
-    if (!account || (!isMember && hasAccess))
+    if (!address || (!isMember && hasAccess))
       return {
         tooltipLabel: (
           <>
@@ -83,7 +83,7 @@ const Reward = ({
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, account, accessButtonProps, isLinkColorful])
+  }, [isMember, hasAccess, address, accessButtonProps, isLinkColorful])
 
   return (
     <RewardDisplay

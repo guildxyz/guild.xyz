@@ -1,12 +1,12 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
+import { useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
@@ -19,7 +19,7 @@ const BuyAllowanceButton = (): JSX.Element => {
   const requirementChainId = Chains[requirement.chain]
   const { pickedCurrency } = useGuildCheckoutContext()
 
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   const {
     data: { symbol, name },
@@ -30,24 +30,27 @@ const BuyAllowanceButton = (): JSX.Element => {
   const tokenSymbol = isNativeCurrencyPicked ? nativeCurrency.symbol : symbol
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
 
-  const {
-    data: { fee },
-    isValidating: isVaultLoading,
-  } = useVault(requirement.address, requirement.data.id, requirement.chain)
+  const { fee, isLoading: isVaultLoading } = useVault(
+    requirement.address,
+    requirement.data.id,
+    requirement.chain
+  )
 
   const {
     allowance,
     isAllowanceLoading,
     isAllowing,
     allowanceError,
-    onSubmit,
-    isLoading,
+    allowSpendingTokens,
   } = useAllowance(pickedCurrency, requirement.address)
 
-  const isEnoughAllowance = fee && allowance ? fee.lte(allowance) : false
+  const isEnoughAllowance =
+    typeof fee === "bigint" && typeof allowance === "bigint"
+      ? fee <= allowance
+      : false
 
   const onClick = () => {
-    onSubmit()
+    allowSpendingTokens()
     captureEvent("Click: BuyAllowanceButton (GuildCheckout)", {
       guild: urlName,
     })
@@ -66,7 +69,7 @@ const BuyAllowanceButton = (): JSX.Element => {
         size="lg"
         colorScheme={allowanceError ? "red" : "blue"}
         isDisabled={isEnoughAllowance}
-        isLoading={isVaultLoading || isAllowanceLoading || isLoading}
+        isLoading={isVaultLoading || isAllowanceLoading || isAllowing}
         loadingText={
           isVaultLoading || isAllowanceLoading
             ? "Checking allowance"

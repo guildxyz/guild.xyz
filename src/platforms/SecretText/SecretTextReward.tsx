@@ -1,17 +1,17 @@
 import { Icon, Spinner, Text, Tooltip } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import {
   RewardDisplay,
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import Button from "components/common/Button"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { useMemo } from "react"
+import { useAccount } from "wagmi"
 import useClaimText, { ClaimTextModal } from "./hooks/useClaimText"
 
 const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
@@ -31,7 +31,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const isMember = useIsMember()
   const { hasAccess, isValidating: isAccessValidating } = useAccess(role.id)
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   // This is a partial duplication of the logic in the `Reward` component. I'll see what'll we need from it during the unique text reward implementation
@@ -41,7 +41,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
         tooltipLabel: "Reveal secret",
         buttonProps: {},
       }
-    if (!account || (!isMember && hasAccess))
+    if (!address || (!isMember && hasAccess))
       return {
         tooltipLabel: (
           <>
@@ -55,7 +55,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, account])
+  }, [isMember, hasAccess, address])
 
   return (
     <>

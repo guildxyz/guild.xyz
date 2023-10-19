@@ -1,15 +1,14 @@
-import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
-import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { OneOf, Visibility } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
+import { useAccount } from "wagmi"
 import { RoleEditFormData } from "../EditRole"
 
 const mapToObject = <T extends { id: number }>(array: T[], by: keyof T = "id") =>
@@ -21,9 +20,9 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName, memberCount }
 
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { mutate } = useSWRConfig()
-  const toast = useToast()
+
   const errorToast = useShowErrorToast()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
@@ -268,7 +267,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         }),
         { revalidate: false }
       )
-      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
+      mutateOptionalAuthSWRKey(`/guild/access/${id}/${address}`)
       mutate(`/statusUpdate/guild/${id}`)
     },
     onError: (err) => showErrorToast(err),

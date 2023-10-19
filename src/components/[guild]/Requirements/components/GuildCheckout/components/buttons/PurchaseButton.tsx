@@ -1,10 +1,8 @@
-import { BigNumber } from "@ethersproject/bignumber"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
-import useBalance from "hooks/useBalance"
+import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
@@ -16,7 +14,8 @@ const PurchaseButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
-  const { account, chainId } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
 
   const requirement = useRequirementContext()
   const { pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
@@ -37,26 +36,35 @@ const PurchaseButton = (): JSX.Element => {
   const { onSubmit, isLoading, estimateGasError } = usePurchaseAsset()
 
   const isSufficientAllowance =
-    maxPriceInWei && allowance ? BigNumber.from(maxPriceInWei).lte(allowance) : false
-
-  const {
-    coinBalance,
-    tokenBalance,
-    isLoading: isBalanceLoading,
-  } = useBalance(pickedCurrency, Chains[requirement?.chain])
+    typeof maxPriceInWei === "bigint" && typeof allowance === "bigint"
+      ? maxPriceInWei <= allowance
+      : false
 
   const pickedCurrencyIsNative =
     pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
 
+  const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
+    address,
+    chainId: Chains[requirement?.chain],
+  })
+  const { data: tokenBalanceData, isLoading: isTokenBalanceLoading } = useBalance({
+    address,
+    token: pickedCurrency,
+    chainId: Chains[requirement?.chain],
+    enabled: !pickedCurrencyIsNative,
+  })
+
+  const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
+
   const isSufficientBalance =
     maxPriceInWei &&
-    (coinBalance || tokenBalance) &&
+    (coinBalanceData || tokenBalanceData) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gte(BigNumber.from(maxPriceInWei))
-      : tokenBalance?.gte(BigNumber.from(maxPriceInWei)))
+      ? coinBalanceData.value >= maxPriceInWei
+      : tokenBalanceData.value >= maxPriceInWei)
 
   const isDisabled =
-    !account ||
+    !address ||
     error ||
     estimateGasError ||
     !agreeWithTOS ||
@@ -75,7 +83,7 @@ const PurchaseButton = (): JSX.Element => {
       (estimateGasError?.data?.message?.includes("insufficient")
         ? "Insufficient funds for gas"
         : "Couldn't estimate gas")) ??
-    (account && !isSufficientBalance && "Insufficient balance")
+    (address && !isSufficientBalance && "Insufficient balance")
 
   const onClick = () => {
     onSubmit()

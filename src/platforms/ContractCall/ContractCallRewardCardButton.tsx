@@ -1,12 +1,11 @@
 import { Tooltip } from "@chakra-ui/react"
-import { BigNumber } from "@ethersproject/bignumber"
-import Button from "components/common/Button"
-import LinkButton from "components/common/LinkButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import LinkButton from "components/common/LinkButton"
 import { Chains } from "connectors"
-import useBalance from "hooks/useBalance"
 import { GuildPlatform } from "types"
+import { useAccount, useBalance } from "wagmi"
 
 type Props = {
   platform: GuildPlatform
@@ -23,8 +22,13 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
     r.rolePlatforms?.find((rp) => rp.guildPlatformId === platform.id)
   )
 
-  const { tokenBalance: nftBalance } = useBalance(contractAddress, Chains[chain])
-  const alreadyCollected = nftBalance?.gt(BigNumber.from(0))
+  const { address } = useAccount()
+  const { data: nftBalanceData } = useBalance({
+    address,
+    token: contractAddress as `0x${string}`,
+    chainId: Chains[chain],
+  })
+  const alreadyCollected = nftBalanceData?.value > 0
 
   if (!role)
     return (

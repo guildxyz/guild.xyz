@@ -1,13 +1,13 @@
 import { useColorModeValue } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildCheckoutContext } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import usePrice from "../../../hooks/usePrice"
 import TokenInfo from "./TokenInfo"
 
 type Props = {
   chainId: number
-  address?: string
+  address?: `0x${string}`
 }
 
 const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {

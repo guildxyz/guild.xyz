@@ -1,10 +1,10 @@
-import { Contract } from "@ethersproject/contracts"
-import { JsonRpcProvider } from "@ethersproject/providers"
-import { Chain, RPC } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "connectors"
 import { createStore, del, get, set } from "idb-keyval"
-import UNS_REGISTRY_ABI from "static/abis/unsRegistryAbi.json"
+import unsRegistryAbi from "static/abis/unsRegistry"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
+import { PublicClient, createPublicClient, http } from "viem"
+import { mainnet } from "wagmi"
 
 const ENS_REGISTRY = "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
 const NNS_REGISTRY = "0x3e1970dc478991b49c4327973ea8a4862ef5a4de"
@@ -32,13 +32,15 @@ const setResolvedAddressToIdb = (
 ) => set(address, resolvedAddress, getStore())
 const deleteResolvedAddressFromIdb = (address: string) => del(address, getStore())
 
-const fetchENSName = async (address: string): Promise<string> => {
-  const provider = new JsonRpcProvider(RPC.ETHEREUM.rpcUrls[0], {
-    chainId: 1,
-    name: "Ethereum",
-    ensAddress: ENS_REGISTRY,
+const fetchENSName = async (address: `0x${string}`): Promise<string> => {
+  const publicClient = createPublicClient({
+    chain: mainnet,
+    transport: http(),
   })
-  const ens = await provider.lookupAddress(address)
+  const ens = await publicClient.getEnsName({
+    address,
+    universalResolverAddress: ENS_REGISTRY,
+  })
 
   if (ens) {
     await setResolvedAddressToIdb(address, {
@@ -50,13 +52,15 @@ const fetchENSName = async (address: string): Promise<string> => {
   return ens
 }
 
-const fetchNNSName = async (address: string): Promise<string> => {
-  const provider = new JsonRpcProvider(RPC.ETHEREUM.rpcUrls[0], {
-    chainId: 1,
-    name: "Ethereum",
-    ensAddress: NNS_REGISTRY,
+const fetchNNSName = async (address: `0x${string}`): Promise<string> => {
+  const publicClient = createPublicClient({
+    chain: mainnet,
+    transport: http(),
   })
-  const nns = await provider.lookupAddress(address)
+  const nns = await publicClient.getEnsName({
+    address,
+    universalResolverAddress: NNS_REGISTRY,
+  })
 
   if (nns) {
     await setResolvedAddressToIdb(address, {
@@ -120,22 +124,26 @@ const fetchDotbitName = async (address: string): Promise<string> => {
   return dotbit
 }
 
-const fetchUnstoppableName = async (address: string): Promise<string> => {
-  const providers: Partial<Record<UnstoppableDomainsChains, JsonRpcProvider>> = {}
-  const contracts: Partial<Record<UnstoppableDomainsChains, Contract>> = {}
+const fetchUnstoppableName = async (address: `0x${string}`): Promise<string> => {
+  const providers: Partial<Record<UnstoppableDomainsChains, PublicClient>> = {}
 
   for (const chain of Object.keys(UNSTOPPABLE_DOMAIN_CONTRACTS)) {
-    providers[chain] = new JsonRpcProvider(RPC[chain].rpcUrls[0])
-    contracts[chain] = new Contract(
-      UNSTOPPABLE_DOMAIN_CONTRACTS[chain],
-      UNS_REGISTRY_ABI,
-      providers[chain]
-    )
+    providers[chain] = createPublicClient({
+      chain: CHAIN_CONFIG[chain],
+      transport: http(),
+    })
   }
 
   const unstoppableNames = await Promise.all(
-    Object.values(contracts).map((contract) =>
-      contract.reverseNameOf(address).catch(() => null)
+    Object.values(providers).map((pc) =>
+      pc
+        .readContract({
+          abi: unsRegistryAbi,
+          address: UNSTOPPABLE_DOMAIN_CONTRACTS[Chains[pc.chain.id]],
+          functionName: "reverseNameOf",
+          args: [address],
+        })
+        .catch(() => null)
     )
   )
 
@@ -153,8 +161,8 @@ const fetchUnstoppableName = async (address: string): Promise<string> => {
 
 const ONE_DAY_IN_MS = 1000 * 60 * 60 * 24
 
-const fetchDomains = async ([_, account]: [string, string]) => {
-  const lowerCaseAddress = account.toLowerCase()
+const fetchDomains = async ([_, account]: [string, `0x${string}`]) => {
+  const lowerCaseAddress = account.toLowerCase() as `0x${string}`
 
   const idbData = await getResolvedAddressFromIdb(lowerCaseAddress).catch(
     () => null as IDBResolvedAddress

@@ -13,21 +13,21 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
+import useClaimPoap from "components/[guild]/claim-poap/hooks/useClaimPoap"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
-import useClaimPoap from "components/[guild]/claim-poap/hooks/useClaimPoap"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
+import { useAccount } from "wagmi"
 
 const useMintPoapButton = (poapId: number) => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { onSubmit, response, ...rest } = useClaimPoap(poapId)
 
   const buttonProps = response
-    ? { as: "a", target: "_blank", href: `${response}?address=${account}` }
+    ? { as: "a", target: "_blank", href: `${response}?address=${address}` }
     : {
         onClick: () => {
           onSubmit()
@@ -47,7 +47,7 @@ const useMintPoapButton = (poapId: number) => {
 }
 
 const MintModal = ({ isOpen, onClose, isLoading, response, error }) => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   const httpsLink = response?.replace("http://", "https://")
 
@@ -73,7 +73,7 @@ const MintModal = ({ isOpen, onClose, isLoading, response, error }) => {
                 <Link
                   mt={2}
                   maxW="full"
-                  href={`${httpsLink}?address=${account}`}
+                  href={`${httpsLink}?address=${address}`}
                   colorScheme="blue"
                   isExternal
                   fontWeight="semibold"

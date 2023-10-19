@@ -1,7 +1,7 @@
 import { Circle, Img, SkeletonCircle, SkeletonProps } from "@chakra-ui/react"
-import LinkButton from "components/common/LinkButton"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
+import LinkButton from "components/common/LinkButton"
 import { motion } from "framer-motion"
 import { ArrowSquareOut } from "phosphor-react"
 import {
@@ -24,7 +24,7 @@ const ContractCallReward = ({
   const postHogOptions = { guild: urlName }
 
   const { chain, contractAddress } = platform.guildPlatform.platformGuildData ?? {}
-  const { data: nftData } = useNftDetails(chain, contractAddress)
+  const { name, isLoading } = useNftDetails(chain, contractAddress as `0x${string}`)
 
   return (
     <RewardDisplay
@@ -33,7 +33,7 @@ const ContractCallReward = ({
           rolePlatformId={platform.id}
           guildPlatform={platform?.guildPlatform}
           withMotionImg={withMotionImg}
-          isLoading={!nftData}
+          isLoading={isLoading}
         />
       }
       label={
@@ -53,7 +53,7 @@ const ContractCallReward = ({
             }}
             colorScheme={isLinkColorful ? "blue" : "gray"}
           >
-            {nftData?.name ?? "NFT"}
+            {name ?? "NFT"}
           </LinkButton>
         </>
       }
@@ -78,13 +78,13 @@ const ContractCallRewardIcon = ({
   withMotionImg = true,
   transition,
 }: RewardIconProps & { isLoading?: boolean }) => {
-  const { data: nftData } = useNftDetails(
+  const { image } = useNftDetails(
     guildPlatform?.platformGuildData?.chain,
-    guildPlatform?.platformGuildData?.contractAddress
+    guildPlatform?.platformGuildData?.contractAddress as `0x${string}`
   )
 
   const props = {
-    src: nftData?.image,
+    src: image,
     alt: guildPlatform?.platformGuildName,
     boxSize: 6,
     borderRadius: "full",

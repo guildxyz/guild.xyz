@@ -25,16 +25,14 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
-import { useWeb3React } from "@web3-react/core"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
 import StyledSelect from "components/common/StyledSelect"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { useAddRewardContext } from "components/[guild]/AddRewardContext"
-import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chain, Chains, RPC } from "connectors"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import {
@@ -46,6 +44,8 @@ import {
 } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
+import { formatUnits } from "viem"
+import { useAccount, useChainId } from "wagmi"
 import ImagePicker from "./components/ImagePicker"
 import RichTextDescriptionEditor from "./components/RichTextDescriptionEditor"
 import useCreateNft, { CreateNFTResponse } from "./hooks/useCreateNft"
@@ -78,7 +78,8 @@ export type ContractCallSupportedChain =
   (typeof CONTRACT_CALL_SUPPORTED_CHAINS)[number]
 
 const CreateNftForm = ({ onSuccess }: Props) => {
-  const { chainId, account } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
   const { requestNetworkChange, isNetworkChangeInProgress } =
     useWeb3ConnectionManager()
 
@@ -392,8 +393,8 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                         "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
                     },
                   })}
-                  defaultValue={account}
-                  placeholder={`e.g. ${account}`}
+                  defaultValue={address}
+                  placeholder={`e.g. ${address}`}
                 />
 
                 <FormHelperText>

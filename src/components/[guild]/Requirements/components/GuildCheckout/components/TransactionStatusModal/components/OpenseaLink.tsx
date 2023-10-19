@@ -1,13 +1,13 @@
 import { Icon, Img, Text } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import Link from "components/common/Link"
 import { Chains } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import { GUILD_PIN_CONTRACTS, openseaBaseUrl } from "utils/guildCheckout/constants"
+import { useChainId } from "wagmi"
 import { useMintGuildPinContext } from "../../../MintGuildPinContext"
 
 const OpenseaLink = (): JSX.Element => {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const { mintedTokenId } = useMintGuildPinContext()
 
   if (!mintedTokenId || !openseaBaseUrl[Chains[chainId]]) return null

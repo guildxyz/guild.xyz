@@ -19,8 +19,8 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
   - SWR for fetching and caching
   - React Hook Form for form state
 - Web3 stuff:
-  - ethers.js
-  - web3-react for connection management
+  - viem
+  - wagmi for connection management
 - Deployment:
   - Vercel
 - Monitoring:

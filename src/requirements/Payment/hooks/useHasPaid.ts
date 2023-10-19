@@ -1,34 +1,23 @@
-import { Contract } from "@ethersproject/contracts"
-import { JsonRpcProvider } from "@ethersproject/providers"
-import { useWeb3React } from "@web3-react/core"
-import { Chain, RPC } from "connectors"
-import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
-import { SWRResponse } from "swr"
-import useSWRImmutable from "swr/immutable"
-
-const fetchHasPaid = async ([_, contractAddress, account, vaultId, chain]) => {
-  const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0])
-  const feeCollectorContract = new Contract(
-    contractAddress,
-    FEE_COLLECTOR_ABI,
-    provider
-  )
-
-  return feeCollectorContract.hasPaid(vaultId, account)
-}
+import { Chain, Chains } from "connectors"
+import feeCollectorAbi from "static/abis/feeCollector"
+import { useAccount, useContractRead } from "wagmi"
 
 const useHasPaid = (
-  contractAddress: string,
+  contractAddress: `0x${string}`,
   vaultId: number,
   chain?: Chain
-): SWRResponse<boolean> => {
-  const { account } = useWeb3React()
-  const shouldFetch = contractAddress && account && vaultId
+) => {
+  const { address } = useAccount()
+  const enabled = Boolean(contractAddress && address && vaultId)
 
-  return useSWRImmutable(
-    shouldFetch ? ["hasPaid", contractAddress, account, vaultId, chain] : null,
-    fetchHasPaid
-  )
+  return useContractRead({
+    abi: feeCollectorAbi,
+    address: contractAddress,
+    functionName: "hasPaid",
+    args: [BigInt(vaultId ?? 0), address],
+    chainId: Chains[chain],
+    enabled,
+  })
 }
 
 export default useHasPaid

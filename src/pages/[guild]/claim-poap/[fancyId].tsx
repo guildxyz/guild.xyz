@@ -21,10 +21,6 @@ import {
   useColorMode,
   Wrap,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Card from "components/common/Card"
-import Layout from "components/common/Layout"
-import LinkButton from "components/common/LinkButton"
 import ConnectDiscordButton from "components/[guild]/claim-poap/components/ConnectDiscordButton"
 import ConnectWalletButton from "components/[guild]/claim-poap/components/ConnectWalletButton"
 import JoinAndMintPoapButton from "components/[guild]/claim-poap/components/JoinAndMintPoapButton"
@@ -36,6 +32,9 @@ import useUser from "components/[guild]/hooks/useUser"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { RequirementSkeleton } from "components/[guild]/Requirements/components/Requirement"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import Card from "components/common/Card"
+import Layout from "components/common/Layout"
+import LinkButton from "components/common/LinkButton"
 import { useRouter } from "next/router"
 import { ArrowLeft, Clock } from "phosphor-react"
 import React, { useMemo } from "react"
@@ -47,13 +46,14 @@ import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetail
 import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import parseDescription from "utils/parseDescription"
+import { useAccount } from "wagmi"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
   const { colorMode } = useColorMode()
 
-  const { account } = useWeb3React()
-  const { theme, urlName, imageUrl, name, poaps } = useGuild()
+  const { address } = useAccount()
+  const { theme, urlName, name, poaps } = useGuild()
 
   const rawPoapFancyIdFromUrl = router.query.fancyId?.toString()
   const poapFancyIdFromUrl =
@@ -106,7 +106,7 @@ const Page = (): JSX.Element => {
       }
 
   const requirementRightElement = isActive ? (
-    account ? (
+    address ? (
       <PoapRequiementAccessIndicator poapIdentifier={guildPoap?.poapIdentifier} />
     ) : (
       <ConnectWalletButton />
@@ -122,7 +122,7 @@ const Page = (): JSX.Element => {
                   key="voice"
                   guildPoap={guildPoap}
                   rightElement={
-                    isActive && account && !discordFromDb ? (
+                    isActive && address && !discordFromDb ? (
                       <ConnectDiscordButton />
                     ) : (
                       requirementRightElement
@@ -304,7 +304,7 @@ const Page = (): JSX.Element => {
                       )
                     ) : (
                       <FreeRequirement
-                        rightElement={!account && <ConnectWalletButton />}
+                        rightElement={!address && <ConnectWalletButton />}
                       />
                     )}
                   </Stack>
@@ -319,7 +319,7 @@ const Page = (): JSX.Element => {
                         poapId={guildPoap?.poapIdentifier}
                         colorScheme="purple"
                         w="full"
-                        isDisabled={!isActive || !account || !access}
+                        isDisabled={!isActive || !address || !access}
                       >
                         Mint POAP
                       </JoinAndMintPoapButton>

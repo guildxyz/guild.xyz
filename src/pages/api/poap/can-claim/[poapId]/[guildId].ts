@@ -1,16 +1,9 @@
-import { BigNumber } from "@ethersproject/bignumber"
-import { Contract } from "@ethersproject/contracts"
-import { JsonRpcProvider, Provider } from "@ethersproject/providers"
-import { Chain, RPC_URLS } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "connectors"
 import { NextApiRequest, NextApiResponse } from "next"
-import FEE_COLLECTOR_ABI from "static/abis/legacyPoapFeeCollectorAbi.json"
+import legacyPoapFeeCollectorAbi from "static/abis/legacyPoapFeeCollector"
 import { PoapEventDetails } from "types"
 import fetcher from "utils/fetcher"
-
-type PartialVault = {
-  fee: BigNumber
-  collected: BigNumber
-}
+import { PublicClient, Chain as ViemChain, createPublicClient, http } from "viem"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "GET") {
@@ -40,8 +33,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!poapData)
     return res.status(404).json({ error: "Couldn't fetch POAP event details." })
 
-  const providers: Partial<Record<Chain, Provider>> = {}
-  const contracts: Partial<Record<Chain, Contract>> = {}
+  const providers: Partial<Record<number, PublicClient>> = {}
+  const contracts: Partial<Record<Chain, `0x${string}`>> = {}
 
   const { contracts: poapContracts } = poapData
 
@@ -49,24 +42,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   for (const { chainId, vaultId, contract: contractAddress } of poapContracts) {
     if (!providers[chainId])
-      providers[chainId] = new JsonRpcProvider(RPC_URLS[chainId][0])
+      providers[chainId] = createPublicClient({
+        chain: CHAIN_CONFIG[Chains[chainId]] as ViemChain,
+        transport: http(),
+      })
 
-    if (!contracts[chainId])
-      contracts[chainId] = new Contract(
-        contractAddress,
-        FEE_COLLECTOR_ABI,
-        providers[chainId]
-      )
+    if (!contracts[chainId]) contracts[chainId] = contractAddress
 
-    const contract = contracts[chainId]
-
-    const vault: PartialVault = await contract?.getVault(vaultId)
+    const vault = await providers[chainId].readContract({
+      abi: legacyPoapFeeCollectorAbi,
+      address: contracts[chainId],
+      functionName: "getVault",
+      args: [BigInt(vaultId)],
+    })
 
     if (!vault) res.status(400).json({ error: "Couldn't get vault." })
 
-    const { fee, collected } = vault
+    const [, , , fee, collected] = vault
 
-    numOfClaims += collected.div(fee).toNumber()
+    numOfClaims += Number(collected / fee)
   }
 
   if (numOfClaims >= poapLinks.total)
@@ -74,7 +68,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       .status(400)
       .json({ error: "There is no more claimable POAP left from this collection." })
 
-  // Sending "numOfClaims" here for easier debugging
   return res.json({ canClaim: true, claimedLinks: numOfClaims })
 }
 

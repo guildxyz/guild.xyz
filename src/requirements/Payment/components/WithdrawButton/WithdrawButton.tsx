@@ -1,7 +1,4 @@
 import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
-import { BigNumber } from "@ethersproject/bignumber"
-import { formatUnits } from "@ethersproject/units"
-import { useWeb3React } from "@web3-react/core"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
@@ -10,32 +7,33 @@ import useTokenData from "hooks/useTokenData"
 import { LinkBreak, Wallet } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
 import shortenHex from "utils/shortenHex"
+import { formatUnits } from "viem"
+import { useAccount, useChainId } from "wagmi"
 import useWithdraw from "./hooks/useWithdraw"
 
 const WithdrawButton = (): JSX.Element => {
-  const { address, chain, data } = useRequirementContext()
-  const {
-    data: { owner, token, collected },
-  } = useVault(address, data?.id, chain)
+  const { address: vaultAddress, chain, data } = useRequirementContext()
+  const { owner, token, balance } = useVault(vaultAddress, data?.id, chain)
   const {
     data: { symbol, decimals },
   } = useTokenData(chain, token)
 
-  const { chainId, account } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
   const { requestNetworkChange } = useWeb3ConnectionManager()
 
   const isOnVaultsChain = Chains[chain] === chainId
   const isDisabledLabel =
-    collected && collected.eq(BigNumber.from(0))
+    typeof balance === "bigint" && balance === BigInt(0)
       ? "Withdrawable amount is 0"
-      : owner && owner !== account
+      : owner && owner !== address
       ? `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
       : null
 
   const formattedWithdrawableAmount =
-    collected && decimals && Number(formatUnits(collected, decimals)) * 0.9
+    balance && decimals && Number(formatUnits(balance, decimals)) * 0.9
 
-  const { onSubmit, isLoading } = useWithdraw(address, data?.id, chain)
+  const { onSubmit, isLoading } = useWithdraw(vaultAddress, data?.id, chain)
 
   return (
     <Tooltip

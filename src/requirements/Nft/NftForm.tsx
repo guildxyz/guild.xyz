@@ -36,8 +36,8 @@ import ChainPicker from "../common/ChainPicker"
 import MinMaxAmount from "../common/MinMaxAmount"
 import AttributePicker from "./components/AttributePicker"
 import { useNftMetadataWithTraits } from "./hooks/useNftMetadata"
-import useNfts from "./hooks/useNfts"
 import useNftType from "./hooks/useNftType"
+import useNfts from "./hooks/useNfts"
 
 type NftRequirementTypeOption = {
   label: string

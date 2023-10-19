@@ -5,7 +5,6 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import ControlledSelect from "components/common/ControlledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { BALANCY_SUPPORTED_CHAINS } from "components/create-guild/Requirements/hooks/useBalancy"
@@ -18,6 +17,7 @@ import {
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { useChainId } from "wagmi"
 
 type Props = {
   controlName: string
@@ -46,7 +46,7 @@ const ChainPicker = ({
 
   const { setValue } = useFormContext()
 
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const chain = useWatch({ name: controlName })
 
   const mappedSupportedChains = isBalancyPlayground

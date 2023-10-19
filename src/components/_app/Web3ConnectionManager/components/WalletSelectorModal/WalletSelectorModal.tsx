@@ -12,8 +12,6 @@ import {
   Text,
 } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
-import { useWeb3React } from "@web3-react/core"
-import { GnosisSafe } from "@web3-react/gnosis-safe"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -21,12 +19,11 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
-import { connectors } from "connectors"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
-import { WalletError } from "types"
+import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
@@ -44,8 +41,9 @@ type Props = {
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
-  const { isActive, account, connector } = useWeb3React()
-  const [error, setError] = useState<WalletError & Error>(null)
+  const { connectors, error, isLoading, pendingConnector } = useConnect()
+  const { disconnect } = useDisconnect()
+  const { isConnected, connector } = useAccount()
   const { captchaVerifiedSince } = useUserPublic()
 
   // initialize metamask onboarding
@@ -57,8 +55,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const closeModalAndSendAction = () => {
     onClose()
     setTimeout(() => {
-      connector.resetState()
-      connector.deactivate?.()
+      disconnect()
     }, 200)
   }
 
@@ -77,7 +74,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       router.isReady &&
       !ignoredRoutes.includes(router.route)
     ) {
-      const activate = connector.activate()
+      const activate = connector.connect()
       if (typeof activate !== "undefined") {
         activate.finally(() => onOpen())
       }
@@ -89,7 +86,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { isDelegateConnection, setIsDelegateConnection } =
     useWeb3ConnectionManager()
 
-  const isConnected = account && isActive && ready
+  const isConnectedAndKeyPairReady = isConnected && ready
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
 
@@ -100,15 +97,15 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       <Modal
         isOpen={isOpen}
         onClose={closeModalAndSendAction}
-        closeOnOverlayClick={!isActive || !!keyPair}
-        closeOnEsc={!isActive || !!keyPair}
+        closeOnOverlayClick={!isConnected || !!keyPair}
+        closeOnEsc={!isConnected || !!keyPair}
         trapFocus={!isWalletConnectModalActive}
       >
         <ModalOverlay />
         <ModalContent data-test="wallet-selector-modal">
           <ModalHeader display={"flex"}>
             <Box
-              {...((isConnected && !keyPair) || isDelegateConnection
+              {...((isConnectedAndKeyPairReady && !keyPair) || isDelegateConnection
                 ? {
                     w: "10",
                     opacity: 1,
@@ -127,13 +124,15 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 icon={<ArrowLeft size={20} />}
                 variant="ghost"
                 onClick={() => {
-                  if (isDelegateConnection && !(isConnected && !keyPair)) {
+                  if (
+                    isDelegateConnection &&
+                    !(isConnectedAndKeyPairReady && !keyPair)
+                  ) {
                     setIsDelegateConnection(false)
                     return
                   }
                   set.reset()
-                  connector.resetState()
-                  connector.deactivate?.()
+                  disconnect()
                 }}
               />
             </Box>
@@ -169,24 +168,18 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   }
                 : { error, processError: processConnectionError })}
             />
-            {isConnected && !keyPair && (
+            {isConnectedAndKeyPairReady && !keyPair && (
               <Text mb="6" animation={"fadeIn .3s .1s both"}>
-                Sign message to verify that you're the owner of this account.
+                Sign message to verify that you're the owner of this address.
               </Text>
             )}
             <Stack spacing="0">
-              {connectors.map(([conn, connectorHooks], i) => {
-                if (!conn || !connectorHooks) return null
-                if (conn instanceof GnosisSafe && !conn?.sdk) return null
-
+              {connectors.map((conn) => {
+                // WAGMI TODO: not sure how should we detect this
+                // if (conn.id === 'safe' && !conn?.sdk) return null
                 return (
-                  <CardMotionWrapper key={i}>
-                    <ConnectorButton
-                      connector={conn}
-                      connectorHooks={connectorHooks}
-                      error={error}
-                      setError={setError}
-                    />
+                  <CardMotionWrapper key={conn.id}>
+                    <ConnectorButton connector={conn} />
                   </CardMotionWrapper>
                 )
               })}
@@ -196,7 +189,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 </CardMotionWrapper>
               )}
             </Stack>
-            {isConnected && !keyPair && (
+            {isConnectedAndKeyPairReady && !keyPair && (
               <>
                 <ReCAPTCHA
                   ref={recaptchaRef}
@@ -228,14 +221,14 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                         : set.signLoadingText || "Check your wallet"
                     }
                   >
-                    {shouldLinkToUser ? "Link address" : "Verify account"}
+                    {shouldLinkToUser ? "Link address" : "Verify address"}
                   </ModalButton>
                 </Box>
               </>
             )}
           </ModalBody>
           <ModalFooter mt="-4">
-            {!isConnected ? (
+            {!isConnectedAndKeyPairReady ? (
               <Stack textAlign="center" fontSize="sm" w="full">
                 <Text colorScheme="gray">
                   New to Ethereum wallets?{" "}

@@ -1,7 +1,7 @@
-import { useWeb3React } from "@web3-react/core"
-import useMemberships from "components/explorer/hooks/useMemberships"
 import useUser from "components/[guild]/hooks/useUser"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { createContext, PropsWithChildren, useContext, useEffect } from "react"
+import { useAccount } from "wagmi"
 
 const IntercomContext = createContext<{
   addIntercomSettings: (newData: Record<string, string | number>) => void
@@ -54,13 +54,13 @@ const triggerChat = () => {
 }
 
 const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const user = useUser()
 
   const { memberships } = useMemberships()
 
   useEffect(() => {
-    if (!account || !user || !memberships) return
+    if (!address || !user || !memberships) return
 
     const connectedPlatforms = user.platformUsers
       ?.map((pu) => pu.platformName)
@@ -73,11 +73,11 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
 
     addIntercomSettings({
       userId: user.id,
-      address: account.toLowerCase(),
+      address: address.toLowerCase(),
       connectedPlatforms,
       managedGuilds,
     })
-  }, [account, user, memberships])
+  }, [address, user, memberships])
 
   return (
     <IntercomContext.Provider

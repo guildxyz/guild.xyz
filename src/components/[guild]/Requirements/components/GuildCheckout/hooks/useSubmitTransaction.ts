@@ -1,11 +1,14 @@
-import { TransactionReceipt, TransactionResponse } from "@ethersproject/providers"
+// WAGMI TODO
+// import { TransactionReceipt, TransactionResponse } from "@ethersproject/providers"
 import useSubmit, { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { Rest } from "types"
 import { useTransactionStatusContext } from "../components/TransactionStatusContext"
 
 const useSubmitTransaction = <DataType>(
-  sendTransaction: (data?: DataType) => Promise<TransactionResponse>,
-  { onSuccess, onError }: UseSubmitOptions<TransactionReceipt & Rest> = {}
+  // sendTransaction: (data?: DataType) => Promise<TransactionResponse>,
+  sendTransaction: (data?: DataType) => Promise<any>,
+  // { onSuccess, onError }: UseSubmitOptions<TransactionReceipt & Rest> = {}
+  { onSuccess, onError }: UseSubmitOptions<Rest> = {}
 ) => {
   const { setTxHash, txHash, setTxError, setTxSuccess } =
     useTransactionStatusContext() ?? {}

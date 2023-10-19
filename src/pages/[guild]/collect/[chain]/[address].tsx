@@ -7,12 +7,6 @@ import {
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import Link from "components/common/Link"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import PulseMarker from "components/common/PulseMarker"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
 import Details from "components/[guild]/collect/components/Details"
@@ -27,17 +21,23 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import ReportGuildButton from "components/[guild]/ReportGuildButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import Link from "components/common/Link"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import PulseMarker from "components/common/PulseMarker"
 import { Chain } from "connectors"
 import { AnimatePresence, motion } from "framer-motion"
 import useLocalStorage from "hooks/useLocalStorage"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useRouter } from "next/router"
+import ErrorPage from "pages/_error"
 import {
   validateNftAddress,
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
-import ErrorPage from "pages/_error"
 import { useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, Requirement } from "types"
@@ -45,7 +45,7 @@ import fetcher from "utils/fetcher"
 
 type Props = {
   chain: Chain
-  address: string
+  address: `0x${string}`
   fallback: { [x: string]: Guild }
 }
 const Page = ({
@@ -58,8 +58,15 @@ const Page = ({
   const chain = chainFromProps ?? validateNftChain(chainFromQuery)
   const address = addressFromProps ?? validateNftAddress(addressFromQuery)
 
-  const { theme, imageUrl, name, urlName, roles, guildPlatforms, isFallback } =
-    useGuild()
+  const {
+    theme,
+    imageUrl,
+    name: guildName,
+    urlName,
+    roles,
+    guildPlatforms,
+    isFallback,
+  } = useGuild()
   const { isAdmin } = useGuildPermission()
   const { textColor, buttonColorScheme } = useThemeContext()
 
@@ -90,7 +97,7 @@ const Page = ({
     setShouldShowSmallImage(nftDescription.getBoundingClientRect().top < 100)
   }, [])
 
-  const { data, isValidating } = useNftDetails(chain, address)
+  const { name, image, totalCollectors, isLoading } = useNftDetails(chain, address)
 
   const [hasClickedShareButton, setHasClickedShareButton] = useLocalStorage(
     `${chain}_${address}_hasClickedShareButton`,
@@ -105,7 +112,7 @@ const Page = ({
       rolePlatformId={rolePlatformId}
       guildPlatform={guildPlatform}
       chain={chain}
-      address={address}
+      nftAddress={address}
     >
       <Layout
         ogTitle="Collect NFT"
@@ -123,16 +130,14 @@ const Page = ({
                 fontWeight="bold"
                 color={textColor}
               >
-                {name}
+                {guildName}
               </Link>
             </HStack>
 
             <HStack>
               <PulseMarker
                 placement="top"
-                hidden={
-                  !isAdmin || hasClickedShareButton || data?.totalCollectors > 0
-                }
+                hidden={!isAdmin || hasClickedShareButton || totalCollectors > 0}
               >
                 <ShareButton onClick={() => setHasClickedShareButton(true)} />
               </PulseMarker>
@@ -154,7 +159,7 @@ const Page = ({
             gap={{ base: 6, lg: 8 }}
           >
             <Stack overflow="hidden" w="full" spacing={{ base: 6, lg: 8 }}>
-              <CollectibleImage src={data?.image} isLoading={isValidating} />
+              <CollectibleImage src={image} isLoading={isLoading} />
 
               <Stack spacing={6}>
                 <Heading
@@ -162,7 +167,7 @@ const Page = ({
                   fontFamily="display"
                   fontSize={{ base: "3xl", lg: "4xl" }}
                 >
-                  {data?.name}
+                  {name}
                 </Heading>
                 {isMobile && (
                   <RequirementsCard
@@ -200,14 +205,11 @@ const Page = ({
                         gridTemplateColumns="var(--chakra-sizes-24) auto"
                         gap={4}
                       >
-                        <CollectibleImage
-                          src={data?.image}
-                          isLoading={isValidating}
-                        />
+                        <CollectibleImage src={image} isLoading={isLoading} />
 
                         <Stack spacing={3} justifyContent={"center"}>
                           <Heading as="h2" fontFamily="display" fontSize="2xl">
-                            {data?.name}
+                            {name}
                           </Heading>
 
                           <NftByRole role={role} />

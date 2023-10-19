@@ -1,19 +1,17 @@
-import { parseUnits } from "@ethersproject/units"
-import { useWeb3React } from "@web3-react/core"
 import { NFTDetails } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
-import useContract from "hooks/useContract"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useState } from "react"
-import GUILD_REWARD_NFT_FACTORY_ABI from "static/abis/guildRewardNFTFactory.json"
 import { mutate } from "swr"
 import { GuildPlatform, PlatformType } from "types"
 import processWalletError from "utils/processWalletError"
+import { parseUnits } from "viem"
+import { useAccount, useChainId } from "wagmi"
 import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
 
 export const GUILD_REWARD_NFT_FACTORY_ADDRESSES: Record<
@@ -55,18 +53,21 @@ const useCreateNft = (
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName }
 
-  const { chainId, account } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
 
   const [loadingText, setLoadingText] = useState<string>()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const guildRewardNFTFactoryContract = useContract(
-    GUILD_REWARD_NFT_FACTORY_ADDRESSES[Chains[chainId]],
-    GUILD_REWARD_NFT_FACTORY_ABI,
-    true
-  )
+  // WAGMI TODO
+  // const guildRewardNFTFactoryContract = useContract(
+  //   GUILD_REWARD_NFT_FACTORY_ADDRESSES[Chains[chainId]],
+  //   GUILD_REWARD_NFT_FACTORY_ABI,
+  //   true
+  // )
+  const guildRewardNFTFactoryContract = null
 
   const createNft = async (data: CreateNftFormType): Promise<CreateNFTResponse> => {
     setLoadingText("Uploading image")
@@ -107,7 +108,7 @@ const useCreateNft = (
       trimmedName,
       trimmedSymbol,
       metadataCID,
-      account,
+      address,
       tokenTreasury,
       parseUnits(
         price?.toString() ?? "0",
@@ -192,7 +193,7 @@ const useCreateNft = (
         mutate<NFTDetails>(
           ["nftDetails", chain, contractAddress],
           {
-            creator: account.toLowerCase(),
+            creator: address.toLowerCase(),
             name,
             totalCollectors: 0,
             totalCollectorsToday: 0,

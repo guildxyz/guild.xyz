@@ -1,26 +1,22 @@
-import { Contract } from "@ethersproject/contracts"
-import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
-import useBalance from "hooks/useBalance"
-import useContract from "hooks/useContract"
-import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
-import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
 import { mutate } from "swr"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import processWalletError from "utils/processWalletError"
+import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useAllowance from "./useAllowance"
 import useSubmitTransaction from "./useSubmitTransaction"
 
 const payFee = async (
-  feeCollectorContract: Contract,
+  // feeCollectorContract: Contract, // WAGMI TODO
+  feeCollectorContract: any,
   params: [number, Record<string, any>]
 ) => {
   if (!feeCollectorContract)
@@ -66,24 +62,28 @@ const usePayFee = () => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { chainId, account } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
 
   const requirement = useRequirementContext()
   const { pickedCurrency } = useGuildCheckoutContext()
 
-  const feeCollectorContract = useContract(
-    requirement.address,
-    FEE_COLLECTOR_ABI,
-    true
-  )
+  // const feeCollectorContract = useContract(
+  //   requirement.address,
+  //   FEE_COLLECTOR_ABI,
+  //   true
+  // )
+  const feeCollectorContract = null
 
   const {
-    data: { token, fee, multiplePayments },
-    isValidating: isVaultLoading,
-    mutate: mutateVault,
+    token,
+    fee,
+    multiplePayments,
+    isLoading: isVaultLoading,
+    refetch: refetchVault,
   } = useVault(requirement.address, requirement.data.id, requirement.chain)
 
-  const { data: hasPaid, isValidating: isHasPaidLoading } = useHasPaid(
+  const { data: hasPaid, isLoading: isHasPaidLoading } = useHasPaid(
     requirement.address,
     requirement.data.id,
     requirement.chain
@@ -93,18 +93,26 @@ const usePayFee = () => {
     value: token === NULL_ADDRESS ? fee : undefined,
   }
 
-  const { coinBalance, tokenBalance } = useBalance(
-    pickedCurrency,
-    Chains[requirement.chain]
-  )
+  const { data: coinBalanceData } = useBalance({
+    address,
+    chainId: Chains[requirement.chain],
+  })
+  const { data: tokenBalanceData } = useBalance({
+    address,
+    token: pickedCurrency as `0x${string}`,
+    chainId: Chains[requirement.chain],
+    enabled: !!pickedCurrency,
+  })
 
   const pickedCurrencyIsNative =
     pickedCurrency === RPC[requirement?.chain]?.nativeCurrency?.symbol
 
   const isSufficientBalance =
     fee &&
-    (coinBalance || tokenBalance) &&
-    (pickedCurrencyIsNative ? coinBalance?.gte(fee) : tokenBalance?.gte(fee))
+    (coinBalanceData || tokenBalanceData) &&
+    (pickedCurrencyIsNative
+      ? coinBalanceData.value >= fee
+      : tokenBalanceData.value >= fee)
 
   const { allowance } = useAllowance(pickedCurrency, requirement.address)
 
@@ -113,21 +121,27 @@ const usePayFee = () => {
     !isVaultLoading &&
     !isHasPaidLoading &&
     (multiplePayments || !hasPaid) &&
-    fee &&
+    typeof fee === "bigint" &&
     isSufficientBalance &&
-    (ADDRESS_REGEX.test(pickedCurrency) ? allowance && fee.lte(allowance) : true)
+    (ADDRESS_REGEX.test(pickedCurrency)
+      ? typeof allowance === "bigint" && fee <= allowance
+      : true)
 
-  const {
-    estimatedGasFee,
-    estimatedGasFeeInUSD,
-    estimateGasError,
-    isEstimateGasLoading,
-  } = useEstimateGasFee(
-    requirement?.id?.toString(),
-    shouldEstimateGas ? feeCollectorContract : null,
-    "payFee",
-    [requirement.data.id, extraParam]
-  )
+  // const {
+  //   estimatedGasFee,
+  //   estimatedGasFeeInUSD,
+  //   estimateGasError,
+  //   isEstimateGasLoading,
+  // } = useEstimateGasFee(
+  //   requirement?.id?.toString(),
+  //   shouldEstimateGas ? feeCollectorContract : null,
+  //   "payFee",
+  //   [requirement.data.id, extraParam]
+  // )
+  const estimatedGasFee = null
+  const estimatedGasFeeInUSD = null
+  const estimateGasError = null
+  const isEstimateGasLoading = false
 
   const payFeeTransaction = (vaultId: number) =>
     payFee(feeCollectorContract, [vaultId, extraParam])
@@ -161,14 +175,14 @@ const usePayFee = () => {
         title: "Successful payment",
       })
 
-      mutateVault()
+      refetchVault()
 
       // temporary until POAPs are real roles
       if (requirement?.poapId)
         mutate(
-          `/v2/guilds/:guildId/poaps/${requirement.poapId}/users/${account}/eligibility`
+          `/v2/guilds/:guildId/poaps/${requirement.poapId}/users/${address}/eligibility`
         )
-      else mutate(`/guild/access/${id}/${account}`)
+      else mutate(`/guild/access/${id}/${address}`)
     },
   })
 

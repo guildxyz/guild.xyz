@@ -1,13 +1,9 @@
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
-import { Contract } from "@ethersproject/contracts"
-import { useWeb3React } from "@web3-react/core"
+// import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
+// import { Contract } from "@ethersproject/contracts"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains, RPC } from "connectors"
-import useBalance from "hooks/useBalance"
-import useContract from "hooks/useContract"
-import useEstimateGasFee from "hooks/useEstimateGasFee"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
@@ -18,6 +14,7 @@ import {
   generateGetAssetsParams,
 } from "utils/guildCheckout/utils"
 import processWalletError from "utils/processWalletError"
+import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useAllowance from "./useAllowance"
@@ -28,14 +25,14 @@ import useTokenBuyerContractData from "./useTokenBuyerContractData"
 const isConfigParam = (
   param: any
 ): param is {
-  value?: BigNumberish
-  gasLimit?: BigNumberish
+  value?: bigint
+  gasLimit?: bigint
 } => "value" in (param ?? {})
 
 const purchaseAsset = async (
-  tokenBuyerContract: Contract,
+  tokenBuyerContract: any,
   generatedGetAssetsParams: GeneratedGetAssetsParams,
-  estimatedGasLimit?: BigNumber
+  estimatedGasLimit?: bigint
 ) => {
   // We shouldn't run into these issues, but rejecting here in case something wrong happens.
   if (!tokenBuyerContract) return Promise.reject("Can't find TokenBuyer contract.")
@@ -47,7 +44,7 @@ const purchaseAsset = async (
   const generatedGetAssetsParamsWithGasLimit = [...generatedGetAssetsParams]
 
   if (estimatedGasLimit) {
-    const customGasLimit = estimatedGasLimit.mul(12)?.div(10)
+    const customGasLimit = (estimatedGasLimit * BigInt(12)) / BigInt(10)
     if (isConfigParam(generatedGetAssetsParamsWithGasLimit[4]))
       generatedGetAssetsParamsWithGasLimit[4].gasLimit = customGasLimit
     else if (isConfigParam(generatedGetAssetsParamsWithGasLimit[3]))
@@ -93,7 +90,8 @@ const usePurchaseAsset = () => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { account, chainId } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
 
   const {
     data: { symbol },
@@ -102,16 +100,18 @@ const usePurchaseAsset = () => {
 
   const tokenBuyerContractData = useTokenBuyerContractData()
 
-  const tokenBuyerContract = useContract(
-    tokenBuyerContractData[Chains[chainId]]?.address,
-    tokenBuyerContractData[Chains[chainId]]?.abi,
-    true
-  )
+  // WAGMI TODO
+  // const tokenBuyerContract = useContract(
+  //   tokenBuyerContractData[Chains[chainId]]?.address,
+  //   tokenBuyerContractData[Chains[chainId]]?.abi,
+  //   true
+  // )
+  const tokenBuyerContract = null
 
   const generatedGetAssetsParams = useMemo(
     () =>
-      generateGetAssetsParams(guildId, account, chainId, pickedCurrency, priceData),
-    [guildId, account, chainId, pickedCurrency, priceData]
+      generateGetAssetsParams(guildId, address, chainId, pickedCurrency, priceData),
+    [guildId, address, chainId, pickedCurrency, priceData]
   )
 
   const { allowance } = useAllowance(
@@ -119,40 +119,49 @@ const usePurchaseAsset = () => {
     tokenBuyerContractData[Chains[chainId]]?.address
   )
 
-  const { coinBalance, tokenBalance } = useBalance(
-    pickedCurrency,
-    Chains[requirement?.chain]
-  )
+  const { data: coinBalanceData } = useBalance({
+    address,
+    chainId: Chains[requirement?.chain],
+  })
+  const { data: tokenBalanceData } = useBalance({
+    address,
+    token: pickedCurrency as `0x${string}`,
+    chainId: Chains[requirement?.chain],
+  })
 
   const pickedCurrencyIsNative =
     pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
 
   const isSufficientBalance =
     priceData?.maxPriceInWei &&
-    (coinBalance || tokenBalance) &&
+    (coinBalanceData || tokenBalanceData) &&
     (pickedCurrencyIsNative
-      ? coinBalance?.gte(BigNumber.from(priceData.maxPriceInWei))
-      : tokenBalance?.gte(BigNumber.from(priceData.maxPriceInWei)))
+      ? coinBalanceData.value >= priceData.maxPriceInWei
+      : tokenBalanceData.value >= priceData.maxPriceInWei)
 
   const shouldEstimateGas =
     requirement?.chain === Chains[chainId] &&
-    priceData?.maxPriceInWei &&
+    typeof priceData?.maxPriceInWei === "bigint" &&
     isSufficientBalance &&
     (ADDRESS_REGEX.test(pickedCurrency)
-      ? allowance && BigNumber.from(priceData.maxPriceInWei).lte(allowance)
+      ? typeof allowance === "bigint" && priceData.maxPriceInWei <= allowance
       : true)
 
-  const {
-    estimatedGasLimit,
-    estimatedGasFee,
-    estimatedGasFeeInUSD,
-    estimateGasError,
-  } = useEstimateGasFee(
-    requirement?.id?.toString(),
-    shouldEstimateGas ? tokenBuyerContract : null,
-    "getAssets",
-    generatedGetAssetsParams
-  )
+  // const {
+  //   estimatedGasLimit,
+  //   estimatedGasFee,
+  //   estimatedGasFeeInUSD,
+  //   estimateGasError,
+  // } = useEstimateGasFee(
+  //   requirement?.id?.toString(),
+  //   shouldEstimateGas ? tokenBuyerContract : null,
+  //   "getAssets",
+  //   generatedGetAssetsParams
+  // )
+  const estimatedGasFee = null
+  const estimatedGasFeeInUSD = null
+  const estimateGasError = null
+  const estimatedGasLimit = null
 
   const purchaseAssetTransaction = (data?: GeneratedGetAssetsParams) =>
     purchaseAsset(tokenBuyerContract, data, estimatedGasLimit)

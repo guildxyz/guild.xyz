@@ -12,34 +12,35 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
+import Reward from "components/[guild]/RoleCard/components/Reward"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Reward from "components/[guild]/RoleCard/components/Reward"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { Chains } from "connectors"
 import { Coin } from "phosphor-react"
 import { useEffect } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
+import { useAccount, useChainId } from "wagmi"
 import { useRequirementContext } from "../RequirementContext"
-import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
-import BuyButton from "./components/buttons/BuyButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import BuyTotal from "./components/BuyTotal"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
 import NoReward from "./components/NoReward"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
 import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
+import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
+import BuyButton from "./components/buttons/BuyButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
 const BuyPass = () => {
   const { captureEvent } = usePostHogContext()
 
-  const { account, chainId } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
   const requirement = useRequirementContext()
   const { isOpen, onOpen, onClose, setAgreeWithTOS } = useGuildCheckoutContext()
   const { urlName, name, roles, poaps } = useGuild()
@@ -68,7 +69,7 @@ const BuyPass = () => {
   }
 
   if (
-    !account ||
+    !address ||
     (!accessData && isAccessValidating) ||
     requirement?.type !== "PAYMENT" ||
     !paymentSupportedChains.includes(requirement?.chain)

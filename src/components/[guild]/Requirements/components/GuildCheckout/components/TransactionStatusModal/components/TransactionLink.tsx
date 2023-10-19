@@ -1,11 +1,11 @@
 import { Icon, Link, Text } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import { Chains, RPC } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
+import { useChainId } from "wagmi"
 import { useTransactionStatusContext } from "../../TransactionStatusContext"
 
 const TransactionLink = (): JSX.Element => {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const { txHash } = useTransactionStatusContext()
 
   return (

@@ -17,8 +17,8 @@ export type GuildCheckoutContextType = {
   isOpen: boolean
   onOpen: () => void
   onClose: () => void
-  pickedCurrency: string
-  setPickedCurrency: Dispatch<SetStateAction<string>>
+  pickedCurrency: `0x${string}`
+  setPickedCurrency: Dispatch<SetStateAction<`0x${string}`>>
   agreeWithTOS: boolean
   setAgreeWithTOS: Dispatch<SetStateAction<boolean>>
 }
@@ -32,7 +32,7 @@ const GuildCheckoutProvider = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const [pickedCurrency, setPickedCurrency] = useState<string>()
+  const [pickedCurrency, setPickedCurrency] = useState<`0x${string}`>()
   const [agreeWithTOS, setAgreeWithTOS] = useState(false)
 
   useEffect(() => {

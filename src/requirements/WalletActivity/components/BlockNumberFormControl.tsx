@@ -14,9 +14,9 @@ import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
-import useBlockNumberByTimestamp from "../hooks/useBlockNumberByTimestamp"
-import useCurrentBlock from "../hooks/useCurrentBlock"
+import { useBlockNumber } from "wagmi"
 import { COVALENT_CHAINS } from "../WalletActivityForm"
+import useBlockNumberByTimestamp from "../hooks/useBlockNumberByTimestamp"
 
 type Props = {
   type?: "ABSOLUTE" | "RELATIVE"
@@ -78,11 +78,10 @@ const BlockNumberFormControl = ({
     })
   }, [])
 
-  const { data: currentBlock, isValidating } = useCurrentBlock(
-    shouldFetchBlockNumber ? chain : null
-  )
-  const isBlockNumberLoading =
-    shouldFetchBlockNumber && (!currentBlock || isValidating)
+  const { data: currentBlock, isLoading } = useBlockNumber({
+    enabled: shouldFetchBlockNumber,
+  })
+  const isBlockNumberLoading = shouldFetchBlockNumber && (!currentBlock || isLoading)
 
   const { data, error } = useBlockNumberByTimestamp(
     shouldFetchBlockNumber ? chain : null,

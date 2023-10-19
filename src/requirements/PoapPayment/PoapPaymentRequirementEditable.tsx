@@ -8,31 +8,27 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { Alert } from "components/common/Modal"
-import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useRef } from "react"
 import { GuildPoap, PoapContract } from "types"
-import useDeleteMonetization from "./hooks/useDeleteMonetization"
 import PoapPaymentRequirement from "./PoapPaymentRequirement"
+import useDeleteMonetization from "./hooks/useDeleteMonetization"
 
 type Props = { guildPoap: GuildPoap; poapContract: PoapContract }
 
-const PoapPaymentRequirementEditable = ({
-  guildPoap,
-  poapContract,
-  ...props
-}: Props) => {
+const PoapPaymentRequirementEditable = ({ guildPoap, poapContract }: Props) => {
   const { id: poapContractId, vaultId, chainId } = poapContract
 
   const { vaultData } = usePoapVault(vaultId, chainId)
 
   const {
-    data: { symbol, decimals },
-  } = useTokenData(Chains[chainId], vaultData?.token)
+    data: { symbol },
+  } = useTokenData(Chains[chainId], vaultData.token)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()

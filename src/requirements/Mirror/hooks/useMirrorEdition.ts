@@ -1,42 +1,39 @@
-import { Contract } from "@ethersproject/contracts"
-import { JsonRpcProvider } from "@ethersproject/providers"
-import { Chain, RPC } from "connectors"
-import MIRROR_CONTRACT_ABI from "static/abis/mirrorAbi.json"
-import useSWRImmutable from "swr/immutable"
-
-const fetchMirrorEdition = async ([_, address, chain]) => {
-  const provider = new JsonRpcProvider(RPC[chain]?.rpcUrls[0])
-  const contract = new Contract(address, MIRROR_CONTRACT_ABI, provider)
-
-  const [name, imageURI] = await Promise.all([
-    contract.name().catch(() => null),
-    contract.imageURI().catch(() => null),
-  ])
-
-  return {
-    name,
-    imageURI,
-  }
-}
+import { Chain, Chains } from "connectors"
+import mirrorAbi from "static/abis/mirror"
+import { useContractReads } from "wagmi"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const useMirrorEdition = (
-  address: string,
+  address: `0x${string}`,
   chain: Chain = "OPTIMISM"
 ): { name: string; image: string; isLoading: boolean; error: any } => {
-  const shouldFetch =
+  const enabled =
     address &&
     address.match(ADDRESS_REGEX) &&
     (chain === "OPTIMISM" || chain === "ETHEREUM")
-  const { data, isLoading, error } = useSWRImmutable(
-    shouldFetch ? ["mirrorEdition", address, chain] : null,
-    fetchMirrorEdition
-  )
+
+  const contract = { abi: mirrorAbi, chainId: Chains[chain], address }
+
+  const { data, isLoading, error } = useContractReads({
+    contracts: [
+      {
+        ...contract,
+        functionName: "name",
+      },
+      {
+        ...contract,
+        functionName: "imageURI",
+      },
+    ],
+    enabled,
+  })
+
+  const [name, imageURI] = data?.map((res) => res.result) ?? []
 
   return {
-    name: data?.name,
-    image: data?.imageURI ? `https://ipfs.fleek.co/ipfs/${data.imageURI}` : null,
+    name,
+    image: imageURI ? `https://ipfs.fleek.co/ipfs/${imageURI}` : null,
     isLoading,
     error,
   }

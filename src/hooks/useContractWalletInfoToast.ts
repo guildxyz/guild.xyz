@@ -1,18 +1,24 @@
-import { hexStripZeros } from "@ethersproject/bytes"
-import { JsonRpcProvider } from "@ethersproject/providers"
-import { useWeb3React } from "@web3-react/core"
-import { Chain, Chains, RPC, supportedChains } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains, supportedChains } from "connectors"
 import useToast from "hooks/useToast"
 import { useEffect } from "react"
+import { createPublicClient, http, trim } from "viem"
+import { useAccount, useChainId } from "wagmi"
 
-const chainsOfAddressWithDeployedContract = (address: string) =>
+const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
   Promise.all(
     supportedChains.map(async (chain) => {
-      const rpcUrl = RPC[chain]?.rpcUrls?.[0]
-      const prov = new JsonRpcProvider(rpcUrl)
+      const publicClient = createPublicClient({
+        chain: CHAIN_CONFIG[chain],
+        transport: http(),
+      })
 
-      const bytecode = await prov.getCode(address).catch(() => null)
-      return [chain, bytecode && hexStripZeros(bytecode) !== "0x"]
+      const bytecode = await publicClient
+        .getBytecode({
+          address,
+        })
+        .catch(() => null)
+
+      return [chain, bytecode && trim(bytecode) !== "0x"]
     })
   ).then(
     (results) =>
@@ -22,15 +28,17 @@ const chainsOfAddressWithDeployedContract = (address: string) =>
   )
 
 const useContractWalletInfoToast = () => {
-  const { account, chainId } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
+
   const toast = useToast()
 
   useEffect(() => {
-    if (!account || !chainId) {
+    if (!address || !chainId) {
       return
     }
 
-    chainsOfAddressWithDeployedContract(account)
+    chainsOfAddressWithDeployedContract(address)
       .then((chainsWithDeployedContract) => {
         if (
           chainsWithDeployedContract.size > 0 &&
@@ -44,7 +52,7 @@ const useContractWalletInfoToast = () => {
         }
       })
       .catch(() => {})
-  }, [chainId, account])
+  }, [chainId, address])
 }
 
 export default useContractWalletInfoToast

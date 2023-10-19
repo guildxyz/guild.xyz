@@ -1,23 +1,23 @@
 import { Stack, Text } from "@chakra-ui/react"
 import { kv } from "@vercel/kv"
-import { useWeb3React } from "@web3-react/core"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import useHasAlreadyClaimedMysteryBox from "components/leaderboard/hooks/useHasAlreadyClaimedMysteryBox"
-import useIsEligibleForMysteryBox from "components/leaderboard/hooks/useIsEligibleForMysteryBox"
-import useUsersLeaderboardPosition from "components/leaderboard/hooks/useUsersLeaderboardPosition"
 import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
 } from "components/leaderboard/LeaderboardUserCard"
 import MysteryBoxCard from "components/leaderboard/MysteryBoxCard"
 import UsersLeaderboardPositionCard from "components/leaderboard/UsersLeaderboardPositionCard"
+import useHasAlreadyClaimedMysteryBox from "components/leaderboard/hooks/useHasAlreadyClaimedMysteryBox"
+import useUsersLeaderboardPosition from "components/leaderboard/hooks/useUsersLeaderboardPosition"
 import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWRInfinite from "swr/infinite"
 import { DetailedUserLeaderboardData } from "types"
+import { erc721ABI, useAccount, useContractRead } from "wagmi"
+import { MYSTERY_BOX_NFT } from "./api/leaderboard/mystery-box"
 
 const MotionSection = motion(Section)
 
@@ -37,8 +37,13 @@ const getKey = (pageIndex: number, previousPageData: any[]) => {
 }
 
 const Page = ({ leaderboard: initialData }: Props) => {
-  const { account } = useWeb3React()
-  const { data: isEligibleForMysteryBox } = useIsEligibleForMysteryBox()
+  const { address } = useAccount()
+  const { data: mysteryBoxBalance } = useContractRead({
+    abi: erc721ABI,
+    address: MYSTERY_BOX_NFT.address,
+    functionName: "balanceOf",
+    args: [address],
+  })
   const {
     data: { alreadyClaimed },
   } = useHasAlreadyClaimedMysteryBox()
@@ -54,7 +59,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
     setInitialAlreadyClaimed(alreadyClaimed)
   }, [alreadyClaimed])
 
-  const showMysteryBox = isEligibleForMysteryBox && !initialAlreadyClaimed
+  const showMysteryBox = mysteryBoxBalance > 0 && !initialAlreadyClaimed
 
   const {
     isValidating: isLeaderboardValidating,
@@ -113,7 +118,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
         </AnimatePresence>
         <Stack spacing={10}>
           <AnimatePresence>
-            {account && <UsersLeaderboardPositionCard />}
+            {address && <UsersLeaderboardPositionCard />}
           </AnimatePresence>
 
           <MotionSection layout title={data ? "Leaderboard" : undefined}>

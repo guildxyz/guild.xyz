@@ -1,12 +1,12 @@
 import { Box, Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react"
-import Card from "components/common/Card"
-import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
-import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import LogicDivider from "components/[guild]/LogicDivider"
 import AnyOfHeader from "components/[guild]/Requirements/components/AnyOfHeader"
-import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import { TransactionStatusProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
+import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
+import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
+import Card from "components/common/Card"
 import { Chains } from "connectors"
 import { Logic, Requirement } from "types"
 import useNftDetails from "../hooks/useNftDetails"
@@ -22,8 +22,11 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
 
-  const { chain, address, alreadyCollected } = useCollectNftContext()
-  const { data, isValidating } = useNftDetails(chain, address)
+  const { chain, nftAddress, alreadyCollected } = useCollectNftContext()
+  const { totalCollectors, totalCollectorsToday, isLoading } = useNftDetails(
+    chain,
+    nftAddress
+  )
 
   const padding = { base: 5, sm: 6, lg: 7, xl: 8 }
 
@@ -76,21 +79,26 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
           </TransactionStatusProvider>
         </Stack>
 
-        {(data || isValidating) && (
-          <Skeleton maxW="max-content" isLoaded={!isValidating && !!data}>
-            <Text fontSize="sm" colorScheme="gray" fontWeight="medium">
-              {`${
-                new Intl.NumberFormat("en", {
-                  notation: "standard",
-                }).format(data?.totalCollectors) ?? 0
-              } collected - ${
-                new Intl.NumberFormat("en", {
-                  notation: "standard",
-                }).format(data?.totalCollectorsToday) ?? 0
-              } collected today`}
-            </Text>
-          </Skeleton>
-        )}
+        <Skeleton
+          maxW="max-content"
+          isLoaded={
+            !isLoading &&
+            typeof totalCollectors !== "undefined" &&
+            typeof totalCollectorsToday !== "undefined"
+          }
+        >
+          <Text fontSize="sm" colorScheme="gray" fontWeight="medium">
+            {`${
+              new Intl.NumberFormat("en", {
+                notation: "standard",
+              }).format(totalCollectors) ?? 0
+            } collected - ${
+              new Intl.NumberFormat("en", {
+                notation: "standard",
+              }).format(totalCollectorsToday) ?? 0
+            } collected today`}
+          </Text>
+        </Skeleton>
       </Stack>
     </Card>
   )

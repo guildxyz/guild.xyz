@@ -13,8 +13,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { BigNumber } from "@ethersproject/bignumber"
-import { useWeb3React } from "@web3-react/core"
 import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
@@ -26,7 +24,6 @@ import {
 import PaymentMethodButtons from "components/[guild]/Requirements/components/GuildCheckout/components/PaymentMethodButtons"
 import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
-import usePoapAllowance from "components/[guild]/claim-poap/hooks/usePoapAllowance"
 import usePoapPayFee from "components/[guild]/claim-poap/hooks/usePoapPayFee"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
@@ -36,6 +33,7 @@ import { Coin } from "phosphor-react"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
 import { GuildPoap, PoapContract } from "types"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { erc20ABI, useAccount, useChainId, useContractRead } from "wagmi"
 import PoapBuyTotal from "./PoapBuyTotal"
 import PoapPaymentFeeCurrency from "./PoapPaymentFeeCurrency"
 
@@ -47,7 +45,8 @@ type Props = { guildPoap: GuildPoap; poapContract: PoapContract } & ButtonProps
  */
 const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
   const { vaultId, chainId: vaultChainId } = poapContract
-  const { account, chainId } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
 
   const { poap } = usePoapById(guildPoap?.poapIdentifier?.toString())
   const { vaultData, isVaultLoading } = usePoapVault(vaultId, vaultChainId)
@@ -57,7 +56,15 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
 
   const isWrongChain = chainId !== vaultChainId
 
-  const allowance = usePoapAllowance(vaultData?.token, vaultChainId)
+  const { data: allowance } = useContractRead({
+    abi: erc20ABI,
+    address:
+      vaultData?.token === NULL_ADDRESS
+        ? undefined
+        : (vaultData?.token as `0x${string}`),
+    functionName: "allowance",
+    chainId: vaultChainId,
+  })
 
   const {
     data: { symbol },
@@ -68,8 +75,7 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
     ? "Switch chain"
     : // : hasPaid
     // ? "Paid fee"
-    vaultData?.token === NULL_ADDRESS ||
-      allowance?.gte(vaultData?.fee ?? BigNumber.from(0))
+    vaultData?.token === NULL_ADDRESS || allowance >= (vaultData?.fee ?? 0)
     ? `Pay`
     : `Approve ${symbol} & Pay`
 
@@ -156,7 +162,7 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
                   },
                 }}
               >
-                {!account ? (
+                {!address ? (
                   <ConnectWalletButton />
                 ) : (
                   <>

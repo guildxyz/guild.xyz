@@ -1,13 +1,13 @@
 import { HStack, Icon, Stack, Tooltip } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import Button from "components/common/Button"
 import { Chains } from "connectors"
 import { Check, Question } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
+import { useAccount, useChainId } from "wagmi"
 import RegisterVaultForm, {
   RegisterVaultFormType,
 } from "./components/RegisterVaultForm"
@@ -18,7 +18,8 @@ const PaymentForm = ({
   addRequirement,
   setOnCloseAttemptToast,
 }: RequirementFormProps): JSX.Element => {
-  const { chainId, account } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
   const { requestNetworkChange } = useWeb3ConnectionManager()
 
   const { setValue } = useFormContext()
@@ -32,7 +33,7 @@ const PaymentForm = ({
 
   const registerVaultFormMethods = useForm<RegisterVaultFormType>({
     mode: "all",
-    defaultValues: { owner: account },
+    defaultValues: { owner: address },
   })
   const {
     control: registerVaultFormControl,

@@ -1,23 +1,26 @@
-import { BigNumber } from "@ethersproject/bignumber"
-import { Contract } from "@ethersproject/contracts"
-import { JsonRpcProvider } from "@ethersproject/providers"
-import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
-import { Chain, Chains, RPC } from "connectors"
+import { Chain, Chains } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata, User } from "types"
 import base64ToObject from "utils/base64ToObject"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
+import { useAccount } from "wagmi"
 
+// WAGMI TODO: use wagmi's useContractReads() hook
 const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
-  const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0])
-  const contract = new Contract(
-    GUILD_PIN_CONTRACTS[chain].address,
-    GUILD_PIN_CONTRACTS[chain].abi,
-    provider
-  )
+  // const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0])
+  // const contract = new Contract(
+  //   GUILD_PIN_CONTRACTS[chain].address,
+  //   GUILD_PIN_CONTRACTS[chain].abi,
+  //   provider
+  // )
 
-  const usersGuildPinIdsOnChain: BigNumber[] = []
+  return []
+
+  const contract = null
+  const provider = null
+
+  const usersGuildPinIdsOnChain: bigint[] = []
 
   const balance = await contract.balanceOf(address)
 
@@ -35,7 +38,7 @@ const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
       const tokenUri: string = await contract.tokenURI(tokenId)
       return {
         chainId: Chains[chain],
-        tokenId: tokenId.toNumber(),
+        tokenId: Number(tokenId),
         tokenUri,
       }
     })
@@ -77,10 +80,10 @@ const fetchGuildPins = async ([_, addresses]: [string, User["addresses"]]) => {
 }
 
 const useUsersGuildPins = (disabled = false) => {
-  const { isActive } = useWeb3React()
+  const { isConnected } = useAccount()
   const { addresses } = useUser()
 
-  const shouldFetch = Boolean(!disabled && isActive && addresses?.length)
+  const shouldFetch = Boolean(!disabled && isConnected && addresses?.length)
 
   return useSWRImmutable<
     ({ chainId: number; tokenId: number } & GuildPinMetadata)[]

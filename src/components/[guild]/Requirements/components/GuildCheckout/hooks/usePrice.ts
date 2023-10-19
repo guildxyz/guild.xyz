@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
 import useSWR, { SWRResponse } from "swr"
@@ -7,16 +6,13 @@ import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
+import { useAccount } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 
-const fetchPrice = ([
-  _,
-  guildId,
-  account,
-  requirement,
-  sellAddress,
-]): Promise<FetchPriceResponse> =>
+const fetchPrice = ([_, guildId, account, requirement, sellAddress]): Promise<
+  FetchPriceResponse<bigint>
+> =>
   fetcher(`/api/fetchPrice`, {
     method: "POST",
     body: {
@@ -25,10 +21,16 @@ const fetchPrice = ([
       ...requirement,
       sellToken: sellAddress,
     },
-  })
+  }).then((data) => ({
+    ...data,
+    buyAmountInWei: BigInt(data.buyAmountInWei),
+    maxPriceInWei: BigInt(data.maxPriceInWei),
+    estimatedGuildFeeInWei: BigInt(data.estimatedGuildFeeInWei),
+    maxGuildFeeInWei: BigInt(data.maxGuildFeeInWei),
+  }))
 
-const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
-  const { account } = useWeb3React()
+const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse<bigint>> => {
+  const { address } = useAccount()
   const { id } = useGuild()
 
   const requirement = useRequirementContext()
@@ -40,9 +42,9 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
     PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) &&
     (sellAddress ?? pickedCurrency)
 
-  const { data, ...swrResponse } = useSWR<FetchPriceResponse>(
+  const { data, ...swrResponse } = useSWR<FetchPriceResponse<bigint>>(
     shouldFetch
-      ? ["fetchPrice", id, account, requirement, sellAddress ?? pickedCurrency]
+      ? ["fetchPrice", id, address, requirement, sellAddress ?? pickedCurrency]
       : null,
     fetchPrice,
     {
@@ -54,7 +56,7 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse> => {
   )
 
   return {
-    data: data ?? ({} as FetchPriceResponse),
+    data: data ?? ({} as FetchPriceResponse<bigint>),
     ...swrResponse,
   }
 }

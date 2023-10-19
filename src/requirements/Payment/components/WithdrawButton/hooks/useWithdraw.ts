@@ -1,12 +1,9 @@
-import { useWeb3React } from "@web3-react/core"
-import { Chain, Chains } from "connectors"
-import useContract from "hooks/useContract"
+import { Chain } from "connectors"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import useVault from "requirements/Payment/hooks/useVault"
-import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
-import LEGACY_FEE_COLLECTOR_ABI from "static/abis/legacyFeeCollectorAbi.json"
+import { useChainId } from "wagmi"
 
 const LEGACY_CONTRACTS: Partial<Record<Chain, string>> = {
   ETHEREUM: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
@@ -14,21 +11,27 @@ const LEGACY_CONTRACTS: Partial<Record<Chain, string>> = {
   GOERLI: "0x32547e6cc18651647e58f57164a0117da82f77f0",
 }
 
-const useWithdraw = (contractAddress: string, vaultId: number, chain: Chain) => {
+const useWithdraw = (
+  contractAddress: `0x${string}`,
+  vaultId: number,
+  chain: Chain
+) => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   const isLegacyContract = contractAddress === LEGACY_CONTRACTS[chain]
 
-  const feeCollectorContract = useContract(
-    Chains[chain] === chainId ? contractAddress : null,
-    isLegacyContract ? LEGACY_FEE_COLLECTOR_ABI : FEE_COLLECTOR_ABI,
-    true
-  )
+  // WAGMI TODO
+  // const feeCollectorContract = useContract(
+  //   Chains[chain] === chainId ? contractAddress : null,
+  //   isLegacyContract ? LEGACY_FEE_COLLECTOR_ABI : FEE_COLLECTOR_ABI,
+  //   true
+  // )
+  const feeCollectorContract = null
 
-  const { mutate } = useVault(contractAddress, vaultId, chain)
+  const { refetch } = useVault(contractAddress, vaultId, chain)
 
   const withdraw = async () => {
     if (!feeCollectorContract)
@@ -65,7 +68,7 @@ const useWithdraw = (contractAddress: string, vaultId: number, chain: Chain) => 
         title: "Successful withdraw",
         status: "success",
       })
-      mutate()
+      refetch()
     },
   })
 }

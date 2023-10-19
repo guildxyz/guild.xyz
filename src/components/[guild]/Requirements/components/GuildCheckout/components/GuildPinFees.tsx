@@ -12,10 +12,10 @@ import {
   Text,
   Tr,
 } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { RPC } from "connectors"
 import { ArrowSquareOut, Question } from "phosphor-react"
+import { formatUnits } from "viem"
 import useGuildPinFee from "../hooks/useGuildPinFee"
 import FeesTable from "./FeesTable"
 import PriceFallback from "./PriceFallback"

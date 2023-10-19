@@ -1,13 +1,12 @@
 import { Box, Stack, Text, useColorModeValue } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { useGuildCheckoutContext } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import TokenInfo from "components/[guild]/Requirements/components/GuildCheckout/components/PaymentCurrencyPicker/components/TokenInfo"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { Chains, RPC } from "connectors"
+import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
-import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { formatUnits } from "viem"
 
 /**
  * This is copy-pasted from BuyPass and adjusted to work with legacy POAP logic. We
@@ -34,9 +33,7 @@ const PoapPaymentFeeCurrency = (): JSX.Element => {
 
   useEffect(() => {
     if (!token) return
-    setPickedCurrency(
-      token === NULL_ADDRESS ? RPC[requirement.chain].nativeCurrency.symbol : token
-    )
+    setPickedCurrency(token)
   }, [token])
 
   return (

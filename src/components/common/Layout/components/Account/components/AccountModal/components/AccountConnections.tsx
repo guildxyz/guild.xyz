@@ -14,13 +14,13 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import { SectionProps } from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
+import { SectionProps } from "components/common/Section"
 import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformName } from "types"
+import { useAccount } from "wagmi"
 import useDelegateVaults from "../../delegate/useDelegateVaults"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
@@ -37,7 +37,7 @@ const AccountConnections = () => {
     addressProviders,
     sharedSocials,
   } = useUser()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const vaults = useDelegateVaults()
 
   const orderedSocials = useMemo(() => {
@@ -58,7 +58,7 @@ const AccountConnections = () => {
   const linkedAddresses = addresses?.filter(
     (addr) =>
       (typeof addr === "string" ? addr : addr?.address)?.toLowerCase() !==
-      account.toLowerCase()
+      address.toLowerCase()
   )
 
   return (

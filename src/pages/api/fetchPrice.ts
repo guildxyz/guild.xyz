@@ -1,41 +1,36 @@
-import { BigNumber } from "@ethersproject/bignumber"
-import { Contract } from "@ethersproject/contracts"
-import { JsonRpcProvider } from "@ethersproject/providers"
-import { formatUnits, parseUnits } from "@ethersproject/units"
 import { kv } from "@vercel/kv"
-import { Chain, Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains, RPC } from "connectors"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
-import ERC20_ABI from "static/abis/erc20Abi.json"
-import capitalize from "utils/capitalize"
 import {
   ADDRESS_REGEX,
-  getTokenBuyerContractData,
   GUILD_FEE_PERCENTAGE,
   NULL_ADDRESS,
   PURCHASABLE_REQUIREMENT_TYPES,
-  RESERVOIR_API_URLS,
-  ZeroXSupportedSources,
   ZEROX_API_URLS,
   ZEROX_SUPPORTED_SOURCES,
+  ZeroXSupportedSources,
+  getTokenBuyerContractData,
 } from "utils/guildCheckout/constants"
 import { flipPath } from "utils/guildCheckout/utils"
+import { createPublicClient, formatUnits, http, parseUnits } from "viem"
+import { erc20ABI } from "wagmi"
 import { NON_PURCHASABLE_ASSETS_KV_KEY } from "./nonPurchasableAssets"
 
-export type FetchPriceResponse = {
+export type FetchPriceResponse<T extends string | bigint = string> = {
   buyAmount: number
-  buyAmountInWei: BigNumber
+  buyAmountInWei: T // since we can't serialize bigint
   estimatedPriceInSellToken: number
   estimatedPriceInUSD: number
   maxPriceInSellToken: number
   maxPriceInUSD: number
-  maxPriceInWei: BigNumber
+  maxPriceInWei: T // since we can't serialize bigint
   guildBaseFeeInSellToken: number // Base fee (fetched from the TokenBuyer contract)
   estimatedGuildFeeInSellToken: number // Base fee + percentage on the expected price
-  estimatedGuildFeeInWei: BigNumber
+  estimatedGuildFeeInWei: T // since we can't serialize bigint
   estimatedGuildFeeInUSD: number
   maxGuildFeeInSellToken: number // Base fee + percentage on the max price
-  maxGuildFeeInWei: BigNumber
+  maxGuildFeeInWei: T // since we can't serialize bigint
   maxGuildFeeInUSD: number
   source: ZeroXSupportedSources
   tokenAddressPath: string[]
@@ -51,13 +46,19 @@ type FetchPriceBodyParams = {
   data: Record<string, any>
 }
 
-const getDecimals = async (chain: Chain, tokenAddress: string) => {
+const getDecimals = async (chain: Chain, tokenAddress: `0x${string}` | string) => {
   if (tokenAddress === RPC[chain].nativeCurrency.symbol)
     return RPC[chain].nativeCurrency.decimals
 
-  const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0], Chains[chain])
-  const tokenContract = new Contract(tokenAddress, ERC20_ABI, provider)
-  const decimals = await tokenContract.decimals()
+  const publicClient = createPublicClient({
+    chain: CHAIN_CONFIG[chain],
+    transport: http(),
+  })
+  const decimals = await publicClient.readContract({
+    address: tokenAddress as `0x${string}`,
+    abi: erc20ABI,
+    functionName: "decimals",
+  })
 
   return decimals
 }
@@ -84,22 +85,25 @@ const getGuildFee = async (
   if (!tokenBuyerContractData[Chains[chainId]])
     return Promise.reject("Unsupported chain")
 
-  const provider = new JsonRpcProvider(RPC[Chains[chainId]].rpcUrls[0], chainId)
-  const tokenBuyerContract = new Contract(
-    tokenBuyerContractData[Chains[chainId]].address,
-    tokenBuyerContractData[Chains[chainId]].abi,
-    provider
-  )
+  const publicClient = createPublicClient({
+    chain: CHAIN_CONFIG[Chains[chainId]],
+    transport: http(),
+  })
+  const guildBaseFeeInWei = await publicClient.readContract({
+    address: tokenBuyerContractData[Chains[chainId]].address,
+    abi: tokenBuyerContractData[Chains[chainId]].abi,
+    functionName: "baseFee",
+    args: [
+      sellToken === RPC[Chains[chainId]].nativeCurrency.symbol
+        ? NULL_ADDRESS
+        : sellToken,
+    ],
+  })
 
   const sellTokenDecimals = await getDecimals(Chains[chainId] as Chain, sellToken)
 
-  const guildBaseFeeInWei = await tokenBuyerContract.baseFee(
-    sellToken === RPC[Chains[chainId]].nativeCurrency.symbol
-      ? NULL_ADDRESS
-      : sellToken
-  )
   const guildBaseFeeInSellToken = parseFloat(
-    formatUnits(guildBaseFeeInWei, sellTokenDecimals)
+    formatUnits(guildBaseFeeInWei as bigint, sellTokenDecimals)
   )
   const guildBaseFeeInUSD =
     (nativeCurrencyPriceInUSD / sellTokenToEthRate) * guildBaseFeeInSellToken
@@ -213,9 +217,10 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     if (!ZEROX_API_URLS[chain])
       return res.status(400).json({ error: "Unsupported chain" })
 
-    const decimals = await getDecimals(chain, address).catch(() =>
+    const decimals = await getDecimals(chain, address).catch(() => {
       res.status(500).json({ error: "Couldn't fetch buyToken decimals" })
-    )
+      return null
+    })
 
     const buyAmountInWei = parseUnits(minAmount.toFixed(decimals), decimals)
 
@@ -320,9 +325,10 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       maxGuildFeeInUSD,
     } = guildFeeData
 
-    const sellTokenDecimals = await getDecimals(chain, sellToken).catch(() =>
+    const sellTokenDecimals = await getDecimals(chain, sellToken).catch(() => {
       res.status(500).json({ error: "Couldn't fetch sellToken decimals" })
-    )
+      return null
+    })
 
     const estimatedGuildFeeInWei = parseUnits(
       estimatedGuildFeeInSellToken.toFixed(sellTokenDecimals),
@@ -337,160 +343,158 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const source = foundSource.name as ZeroXSupportedSources
 
     // We're sending this amount to the contract. The unused tokens will be sent back to the user during the transaction.
-    const maxPriceInWei = parseUnits(
-      maxPriceInSellToken.toFixed(sellTokenDecimals),
-      sellTokenDecimals
-    )
-      .sub(100000)
-      .div(100000)
-      .mul(100000)
-    // This was previously "priceInWei"
-    // BigNumber.from(
-    //   (Math.ceil(relevantOrder.takerAmount / 10000) * 10000).toString()
-    // )
+    const maxPriceInWei =
+      ((parseUnits(
+        maxPriceInSellToken.toFixed(sellTokenDecimals),
+        sellTokenDecimals
+      ) -
+        BigInt(100000)) /
+        BigInt(100000)) *
+      BigInt(100000)
 
     return res.json({
       buyAmount: minAmount,
-      buyAmountInWei,
+      buyAmountInWei: buyAmountInWei.toString(),
       estimatedPriceInSellToken,
       estimatedPriceInUSD,
       maxPriceInSellToken,
       maxPriceInUSD,
-      maxPriceInWei,
+      maxPriceInWei: maxPriceInWei.toString(),
       guildBaseFeeInSellToken,
       estimatedGuildFeeInSellToken,
       estimatedGuildFeeInUSD,
-      estimatedGuildFeeInWei,
+      estimatedGuildFeeInWei: estimatedGuildFeeInWei.toString(),
       maxGuildFeeInSellToken,
       maxGuildFeeInUSD,
-      maxGuildFeeInWei,
+      maxGuildFeeInWei: maxGuildFeeInWei.toString(),
       source,
       tokenAddressPath,
       path,
     })
-  } else if (type === "ERC721" || type === "ERC1155") {
-    if (!RESERVOIR_API_URLS[chain])
-      return res.status(400).json({ error: "Unsupported chain" })
-
-    const queryParams: {
-      limit: string
-      collection?: string
-      attributes?: string
-      tokens?: string
-      [x: string]: string
-    } = {
-      collection: address,
-      limit: minAmount.toString(),
-    }
-
-    if (data?.attributes?.length) {
-      data.attributes.forEach(
-        (attr) =>
-          (queryParams[`attributes[${attr.trait_type}]`] = capitalize(attr.value))
-      )
-    } else if (data?.id?.length) {
-      delete queryParams.collection
-      queryParams.tokens = `${address}:${data.id}`
-    }
-
-    const urlSearchParams = new URLSearchParams(queryParams).toString()
-
-    const response = await fetch(
-      `${RESERVOIR_API_URLS[chain]}/tokens/v5?${urlSearchParams}`
-    )
-
-    if (response.status !== 200)
-      return res.status(response.status).json({ error: response.statusText })
-
-    const responseData = await response.json()
-
-    if (
-      !responseData.tokens?.length ||
-      responseData.tokens.length < minAmount ||
-      !responseData.tokens.every((t) => !!t.market.floorAsk.price)
-    )
-      return res.status(500).json({ error: "Couldn't find purchasable NFTs." })
-
-    const nativeCurrencyPriceInUSD = await fetchNativeCurrencyPriceInUSD(chain)
-
-    if (typeof nativeCurrencyPriceInUSD === "undefined")
-      return res.status(500).json({
-        error: `Couldn't fetch ${RPC[chain].nativeCurrency.symbol}-USD rate.`,
-      })
-
-    // sellToken is always nativeCurrency here (at least for now)
-    // TODO: maybe we don't need map here? And the user will be able to buy only one token at a time?
-    const maxPriceInSellToken = responseData.tokens
-      .map((t) => t.market.floorAsk.price.amount.native)
-      .reduce((p1, p2) => p1 + p2, 0)
-
-    const maxPriceInUSD = responseData.tokens
-      .map((t) => t.market.floorAsk.price.amount.usd)
-      .reduce((p1, p2) => p1 + p2, 0)
-
-    const maxPriceInWei = parseUnits(
-      maxPriceInSellToken.toString(),
-      RPC[chain].nativeCurrency.decimals
-    )
-
-    let guildFeeData
-    try {
-      // TODO: fix this once we support NFT purchases
-      guildFeeData = await getGuildFee(
-        guildId,
-        sellToken,
-        Chains[chain],
-        nativeCurrencyPriceInUSD,
-        0,
-        0,
-        maxPriceInSellToken,
-        maxPriceInUSD,
-        1
-      )
-    } catch (getGuildFeeError) {
-      return res.status(500).json({ error: getGuildFeeError })
-    }
-
-    const {
-      guildBaseFeeInSellToken,
-      estimatedGuildFeeInSellToken,
-      estimatedGuildFeeInUSD,
-      maxGuildFeeInSellToken,
-      maxGuildFeeInUSD,
-    } = guildFeeData
-
-    const estimatedGuildFeeInWei = parseUnits(
-      estimatedGuildFeeInSellToken.toString(),
-      RPC[chain].nativeCurrency.decimals
-    )
-
-    const maxGuildFeeInWei = parseUnits(
-      maxGuildFeeInSellToken.toString(),
-      RPC[chain].nativeCurrency.decimals
-    )
-
-    const source = responseData.tokens[0].market.floorAsk.source.name
-
-    return res.json({
-      buyAmount: minAmount,
-      buyAmountInWei: BigNumber.from(0), // TODO
-      estimatedPriceInSellToken: 0, // TODO
-      estimatedPriceInUSD: 0, // TODO
-      maxPriceInSellToken,
-      maxPriceInUSD,
-      maxPriceInWei,
-      guildBaseFeeInSellToken,
-      estimatedGuildFeeInSellToken,
-      estimatedGuildFeeInUSD,
-      estimatedGuildFeeInWei,
-      maxGuildFeeInSellToken,
-      maxGuildFeeInUSD,
-      maxGuildFeeInWei,
-      source, // TODO
-      tokenAddressPath: [], // TODO
-      path: "", // TODO
-    })
   }
+  // else if (type === "ERC721" || type === "ERC1155") {
+  //   if (!RESERVOIR_API_URLS[chain])
+  //     return res.status(400).json({ error: "Unsupported chain" })
+
+  //   const queryParams: {
+  //     limit: string
+  //     collection?: string
+  //     attributes?: string
+  //     tokens?: string
+  //     [x: string]: string
+  //   } = {
+  //     collection: address,
+  //     limit: minAmount.toString(),
+  //   }
+
+  //   if (data?.attributes?.length) {
+  //     data.attributes.forEach(
+  //       (attr) =>
+  //         (queryParams[`attributes[${attr.trait_type}]`] = capitalize(attr.value))
+  //     )
+  //   } else if (data?.id?.length) {
+  //     delete queryParams.collection
+  //     queryParams.tokens = `${address}:${data.id}`
+  //   }
+
+  //   const urlSearchParams = new URLSearchParams(queryParams).toString()
+
+  //   const response = await fetch(
+  //     `${RESERVOIR_API_URLS[chain]}/tokens/v5?${urlSearchParams}`
+  //   )
+
+  //   if (response.status !== 200)
+  //     return res.status(response.status).json({ error: response.statusText })
+
+  //   const responseData = await response.json()
+
+  //   if (
+  //     !responseData.tokens?.length ||
+  //     responseData.tokens.length < minAmount ||
+  //     !responseData.tokens.every((t) => !!t.market.floorAsk.price)
+  //   )
+  //     return res.status(500).json({ error: "Couldn't find purchasable NFTs." })
+
+  //   const nativeCurrencyPriceInUSD = await fetchNativeCurrencyPriceInUSD(chain)
+
+  //   if (typeof nativeCurrencyPriceInUSD === "undefined")
+  //     return res.status(500).json({
+  //       error: `Couldn't fetch ${RPC[chain].nativeCurrency.symbol}-USD rate.`,
+  //     })
+
+  //   // sellToken is always nativeCurrency here (at least for now)
+  //   // TODO: maybe we don't need map here? And the user will be able to buy only one token at a time?
+  //   const maxPriceInSellToken = responseData.tokens
+  //     .map((t) => t.market.floorAsk.price.amount.native)
+  //     .reduce((p1, p2) => p1 + p2, 0)
+
+  //   const maxPriceInUSD = responseData.tokens
+  //     .map((t) => t.market.floorAsk.price.amount.usd)
+  //     .reduce((p1, p2) => p1 + p2, 0)
+
+  //   const maxPriceInWei = parseUnits(
+  //     maxPriceInSellToken.toString(),
+  //     RPC[chain].nativeCurrency.decimals
+  //   )
+
+  //   let guildFeeData
+  //   try {
+  //     // TODO: fix this once we support NFT purchases
+  //     guildFeeData = await getGuildFee(
+  //       guildId,
+  //       sellToken,
+  //       Chains[chain],
+  //       nativeCurrencyPriceInUSD,
+  //       0,
+  //       0,
+  //       maxPriceInSellToken,
+  //       maxPriceInUSD,
+  //       1
+  //     )
+  //   } catch (getGuildFeeError) {
+  //     return res.status(500).json({ error: getGuildFeeError })
+  //   }
+
+  //   const {
+  //     guildBaseFeeInSellToken,
+  //     estimatedGuildFeeInSellToken,
+  //     estimatedGuildFeeInUSD,
+  //     maxGuildFeeInSellToken,
+  //     maxGuildFeeInUSD,
+  //   } = guildFeeData
+
+  //   const estimatedGuildFeeInWei = parseUnits(
+  //     estimatedGuildFeeInSellToken.toString(),
+  //     RPC[chain].nativeCurrency.decimals
+  //   )
+
+  //   const maxGuildFeeInWei = parseUnits(
+  //     maxGuildFeeInSellToken.toString(),
+  //     RPC[chain].nativeCurrency.decimals
+  //   )
+
+  //   const source = responseData.tokens[0].market.floorAsk.source.name
+
+  //   return res.json({
+  //     buyAmount: minAmount,
+  //     buyAmountInWei: BigNumber.from(0), // TODO
+  //     estimatedPriceInSellToken: 0, // TODO
+  //     estimatedPriceInUSD: 0, // TODO
+  //     maxPriceInSellToken,
+  //     maxPriceInUSD,
+  //     maxPriceInWei,
+  //     guildBaseFeeInSellToken,
+  //     estimatedGuildFeeInSellToken,
+  //     estimatedGuildFeeInUSD,
+  //     estimatedGuildFeeInWei,
+  //     maxGuildFeeInSellToken,
+  //     maxGuildFeeInUSD,
+  //     maxGuildFeeInWei,
+  //     source, // TODO
+  //     tokenAddressPath: [], // TODO
+  //     path: "", // TODO
+  //   })
+  // }
 
   res.json(undefined)
 }

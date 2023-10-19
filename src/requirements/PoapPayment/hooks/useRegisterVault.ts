@@ -1,5 +1,3 @@
-import { parseUnits } from "@ethersproject/units"
-import { useWeb3React } from "@web3-react/core"
 import { Chains } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -7,6 +5,8 @@ import useSubmit from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { TokenApiURLs } from "hooks/useTokens"
 import fetcher from "utils/fetcher"
+import { parseUnits } from "viem"
+import { useChainId } from "wagmi"
 
 type RegisterVaultParams = {
   owner: string
@@ -17,7 +17,7 @@ type RegisterVaultParams = {
 const useRegisterVault = (poapId, { onSuccess }: UseSubmitOptions) => {
   const showErrorToast = useShowErrorToast()
 
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const feeCollectorContract = useFeeCollectorContract()
 
   const registerVault = async (data: RegisterVaultParams) => {

@@ -9,17 +9,16 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
-import { useWeb3React } from "@web3-react/core"
 import { Chains, RPC } from "connectors"
-import useBalance from "hooks/useBalance"
 import useTokenData from "hooks/useTokenData"
 import { Fragment } from "react"
 import { Rest } from "types"
+import { formatUnits } from "viem"
+import { useAccount, useBalance } from "wagmi"
 
 type Props = {
   chainId: number
-  address: string
+  address: `0x${string}`
   isLoading?: boolean
   error?: any
   requiredAmount: number
@@ -28,7 +27,7 @@ type Props = {
 
 const TokenInfo = ({
   chainId,
-  address,
+  address: tokenAddress,
   asMenuItem,
   isLoading,
   error,
@@ -45,20 +44,28 @@ const TokenInfo = ({
     data: { symbol, decimals, logoURI },
     error: tokenDataError,
     isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[chainId], address)
+  } = useTokenData(Chains[chainId], tokenAddress)
 
-  const { account } = useWeb3React()
-  const {
-    coinBalance,
-    tokenBalance,
-    isLoading: isBalanceLoading,
-  } = useBalance(address, chainId)
+  const { address } = useAccount()
+  const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
+    address,
+    chainId,
+  })
+  const { data: tokenBalanceData, isLoading: isTokenBalanceLoading } = useBalance({
+    address,
+    token: tokenAddress,
+    chainId,
+  })
+
+  const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
 
   const balance = formatUnits(
-    (address === RPC[Chains[chainId]]?.nativeCurrency?.symbol
-      ? coinBalance
-      : tokenBalance) ?? "0",
-    address === RPC[Chains[chainId]]?.nativeCurrency?.symbol
+    BigInt(
+      (tokenAddress === RPC[Chains[chainId]]?.nativeCurrency?.symbol
+        ? coinBalanceData?.value
+        : tokenBalanceData?.value) ?? 0
+    ),
+    tokenAddress === RPC[Chains[chainId]]?.nativeCurrency?.symbol
       ? RPC[Chains[chainId]]?.nativeCurrency?.decimals
       : decimals ?? 18
   )
@@ -107,7 +114,7 @@ const TokenInfo = ({
           </Skeleton>
 
           <Text as="span" colorScheme="gray" fontSize="xs">
-            {account ? (
+            {address ? (
               <>
                 {`Balance: `}
                 <Skeleton

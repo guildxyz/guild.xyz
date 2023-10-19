@@ -1,8 +1,8 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
-import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
+import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import { RPC } from "connectors"
+import { formatUnits } from "viem"
 import useGuildFee from "../hooks/useGuildFee"
 import useNftDetails from "../hooks/useNftDetails"
 
@@ -11,17 +11,18 @@ type Props = {
 }
 
 const CollectNftFeesTable = ({ bgColor }: Props) => {
-  const { chain, address } = useCollectNftContext()
+  const { chain, nftAddress } = useCollectNftContext()
 
   const { guildFee } = useGuildFee(chain)
   const formattedGuildFee = guildFee
     ? Number(formatUnits(guildFee, RPC[chain].nativeCurrency.decimals))
     : undefined
 
-  const { data } = useNftDetails(chain, address)
-  const formattedFee = data?.fee
-    ? Number(formatUnits(data.fee, RPC[chain].nativeCurrency.decimals))
-    : undefined
+  const { fee } = useNftDetails(chain, nftAddress)
+  const formattedFee =
+    typeof fee === "bigint"
+      ? Number(formatUnits(fee, RPC[chain].nativeCurrency.decimals))
+      : undefined
 
   const isFormattedGuildFeeLoaded = typeof formattedGuildFee === "number"
   const isFormattedFeeLoaded = typeof formattedFee === "number"

@@ -1,5 +1,4 @@
 import { Stack } from "@chakra-ui/react"
-import { BigNumber } from "@ethersproject/bignumber"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -47,10 +46,7 @@ const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
 
   useEffect(() => {
     try {
-      setValue(
-        `${baseFieldPath}.balancyDecimals`,
-        BigNumber.from(decimals).toNumber()
-      )
+      setValue(`${baseFieldPath}.balancyDecimals`, decimals)
     } catch {
       setValue(`${baseFieldPath}.balancyDecimals`, undefined)
     }

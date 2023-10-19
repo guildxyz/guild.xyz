@@ -10,14 +10,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager/Web3ConnectionManager"
 import Button from "components/common/Button"
 import { ArrowSquareOut } from "phosphor-react"
+import { useAccount } from "wagmi"
 
 const DelegateCashButton = (): JSX.Element => {
-  const { account, isActive: isAnyConnectorActive } = useWeb3React()
+  const { address, isConnected } = useAccount()
   const { ready } = useKeyPair()
 
   const iconUrl = "delegatecash.png"
@@ -25,7 +25,8 @@ const DelegateCashButton = (): JSX.Element => {
 
   const { setIsDelegateConnection } = useWeb3ConnectionManager()
 
-  if (account && ready && isAnyConnectorActive) return null
+  // WAGMI TODO: do we really need to check both address and isConnected here?
+  if (address && ready && isConnected) return null
 
   return (
     <Popover trigger="hover">

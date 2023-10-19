@@ -1,62 +1,43 @@
-import { BigNumber } from "@ethersproject/bignumber"
-import { Contract } from "@ethersproject/contracts"
-import { JsonRpcProvider } from "@ethersproject/providers"
-import { Chain, Chains, RPC } from "connectors"
-import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
-import { SWRResponse } from "swr"
-import useSWRImmutable from "swr/immutable"
+import { Chain, Chains } from "connectors"
+import feeCollectorAbi from "static/abis/feeCollector"
+import { useContractRead } from "wagmi"
 
 type GetVaultResponse = {
-  owner: string
-  token: string
-  fee: BigNumber
+  owner: `0x${string}`
+  token: `0x${string}`
   multiplePayments: boolean
-
-  // it's 'collected' in legacy contracts and 'balance' in the new one
-  balance?: BigNumber
-  collected?: BigNumber
-}
-
-const fetchVault = async ([
-  _,
-  contractAddress,
-  vaultId,
-  chain,
-]): Promise<GetVaultResponse> => {
-  const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0], Chains[chain])
-  const feeCollectorContract = new Contract(
-    contractAddress,
-    FEE_COLLECTOR_ABI,
-    provider
-  )
-
-  const getVaultRes: GetVaultResponse = feeCollectorContract.getVault(vaultId)
-
-  if (!getVaultRes) return undefined
-
-  return getVaultRes
+  fee: bigint
+  balance: bigint
+  error: Error
+  isLoading: boolean
+  refetch: () => void
 }
 
 const useVault = (
-  contractAddress: string,
+  contractAddress: `0x${string}`,
   vaultId: number | string,
   chain: Chain
-): SWRResponse<GetVaultResponse> => {
-  const shouldFetch = contractAddress && vaultId && chain
+): GetVaultResponse => {
+  const { data, error, isLoading, refetch } = useContractRead({
+    address: contractAddress,
+    abi: feeCollectorAbi,
+    chainId: Chains[chain],
+    functionName: "getVault",
+    args: [BigInt(vaultId ?? 0)],
+    enabled: Boolean(contractAddress && vaultId && chain),
+  })
 
-  const swrResponse = useSWRImmutable(
-    shouldFetch ? ["vault", contractAddress, vaultId, chain] : null,
-    fetchVault
-  )
+  const [owner, token, multiplePayments, fee, balance] = data ?? []
+
   return {
-    ...swrResponse,
-    data: {
-      owner: swrResponse?.data?.owner,
-      fee: swrResponse?.data?.fee,
-      token: swrResponse?.data?.token,
-      collected: swrResponse?.data?.balance ?? swrResponse?.data?.collected,
-      multiplePayments: swrResponse?.data?.multiplePayments,
-    },
+    owner,
+    token,
+    multiplePayments,
+    fee,
+    balance,
+    error,
+    isLoading,
+    refetch,
   }
 }
 

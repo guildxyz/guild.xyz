@@ -11,33 +11,34 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { Chains, RPC } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
+import { useAccount, useChainId } from "wagmi"
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import { useRequirementContext } from "../RequirementContext"
 import AlphaTag from "./components/AlphaTag"
-import ConnectWalletButton from "./components/buttons/ConnectWalletButton"
-import PurchaseAllowanceButton from "./components/buttons/PurchaseAllowanceButton"
-import PurchaseButton from "./components/buttons/PurchaseButton"
-import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import ErrorCollapse from "./components/ErrorCollapse"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
 import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
 import PaymentMethodButtons from "./components/PaymentMethodButtons"
-import PurchasedRequirementInfo from "./components/PurchasedRequirementInfo"
 import PurchaseFeeAndTotal from "./components/PurchaseFeeAndTotal"
+import PurchasedRequirementInfo from "./components/PurchasedRequirementInfo"
 import TOSCheckbox from "./components/TOSCheckbox"
+import ConnectWalletButton from "./components/buttons/ConnectWalletButton"
+import PurchaseAllowanceButton from "./components/buttons/PurchaseAllowanceButton"
+import PurchaseButton from "./components/buttons/PurchaseButton"
+import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 import usePrice from "./hooks/usePrice"
 
 const PurchaseRequirement = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
-  const { account, chainId } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
 
   const requirement = useRequirementContext()
   const { isOpen, onOpen, onClose } = useGuildCheckoutContext()
@@ -120,7 +121,7 @@ const PurchaseRequirement = (): JSX.Element => {
                   },
                 }}
               >
-                {!account ? (
+                {!address ? (
                   <ConnectWalletButton />
                 ) : (
                   !error && (

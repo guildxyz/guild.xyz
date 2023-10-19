@@ -19,7 +19,6 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
@@ -30,6 +29,7 @@ import { CaretDown, Trophy } from "phosphor-react"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import shortenHex from "utils/shortenHex"
+import { useAccount } from "wagmi"
 
 const DynamicScoreFormulaPopover = dynamic(() => import("./ScoreFormulaPopover"), {
   ssr: false,
@@ -63,15 +63,16 @@ const getTrophyColor = (position: number) => {
 }
 
 const LeaderboardUserCard = ({
-  address,
+  address: addressParam,
   score,
   position,
   pinMetadataArray,
 }: Props) => {
-  const { account } = useWeb3React()
-  const shouldRenderScoreTooltip = address?.toLowerCase() === account?.toLowerCase()
+  const { address } = useAccount()
+  const shouldRenderScoreTooltip =
+    addressParam?.toLowerCase() === address?.toLowerCase()
 
-  const resolvedAddress = useResolveAddress(address)
+  const resolvedAddress = useResolveAddress(addressParam)
   const positionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const positionBorderColor = useColorModeValue("gray.200", "gray.600")
   const guildAvatarBgColor = useColorModeValue("gray.700", "gray.600")
@@ -133,7 +134,7 @@ const LeaderboardUserCard = ({
         >
           <HStack spacing={{ base: 2, md: 3 }}>
             <Circle size={10} bgColor={guildAvatarBgColor} color="white">
-              <GuildAvatar size={5} address={address} />
+              <GuildAvatar size={5} address={addressParam} />
             </Circle>
 
             <VStack alignItems="start" spacing={0}>
@@ -146,7 +147,7 @@ const LeaderboardUserCard = ({
                 maxW="full"
                 noOfLines={1}
               >
-                {resolvedAddress ?? shortenHex(address)}
+                {resolvedAddress ?? shortenHex(addressParam)}
               </Text>
 
               <HStack spacing={1}>

@@ -1,8 +1,6 @@
-import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
-import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 
 import { useToastWithTweetButton } from "hooks/useToast"
@@ -11,7 +9,8 @@ import { useState } from "react"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
-import { GUILD_PIN_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { useAccount, useChainId } from "wagmi"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 import useGuildPinFee from "./useGuildPinFee"
 import useSubmitTransaction from "./useSubmitTransaction"
@@ -38,15 +37,18 @@ const useMintGuildPin = () => {
   const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { chainId, account } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
   const { pinType, setMintedTokenId } = useMintGuildPinContext()
   const [loadingText, setLoadingText] = useState<string>("")
 
-  const guildPinContract = useContract(
-    GUILD_PIN_CONTRACTS[Chains[chainId]]?.address,
-    GUILD_PIN_CONTRACTS[Chains[chainId]]?.abi,
-    true
-  )
+  // WAGMI TODO
+  // const guildPinContract = useContract(
+  //   GUILD_PIN_CONTRACTS[Chains[chainId]]?.address,
+  //   GUILD_PIN_CONTRACTS[Chains[chainId]]?.abi,
+  //   true
+  // )
+  const guildPinContract = null
 
   const { guildPinFee } = useGuildPinFee()
 
@@ -64,7 +66,7 @@ const useMintGuildPin = () => {
       signature,
     }: MintData = await fetcher(`/v2/guilds/${id}/pin`, {
       body: {
-        userAddress: account,
+        userAddress: address,
         guildId: id,
         guildAction: pinType,
         chainId,

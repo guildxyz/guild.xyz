@@ -1,11 +1,6 @@
-import { BigNumber } from "@ethersproject/bignumber"
-import { TransactionResponse } from "@ethersproject/providers"
-import { formatUnits, parseUnits } from "@ethersproject/units"
-import { useWeb3React } from "@web3-react/core"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains } from "connectors"
-import useContract from "hooks/useContract"
 import useFeeCollectorContract, {
   FEE_COLLECTOR_ADDRESS,
 } from "hooks/useFeeCollectorContract"
@@ -15,9 +10,10 @@ import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
-import ERC20_ABI from "static/abis/erc20Abi.json"
 import fetcher from "utils/fetcher"
 import processWalletError from "utils/processWalletError"
+import { formatUnits, parseUnits } from "viem"
+import { useAccount } from "wagmi"
 import useUserPoapEligibility from "./useUserPoapEligibility"
 
 const usePoapPayFee = (
@@ -26,7 +22,7 @@ const usePoapPayFee = (
   fancyId: string,
   { onSuccess }: UseSubmitOptions = {}
 ) => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { id: guildId } = useGuild()
 
   const showErrorToast = useShowErrorToast()
@@ -38,11 +34,13 @@ const usePoapPayFee = (
 
   const {
     data: { decimals },
-  } = useTokenData(Chains[chainId], vaultData?.token)
+  } = useTokenData(Chains[chainId], vaultData.token)
   const { mutate: mutateUserPoapEligibility } = useUserPoapEligibility(poap?.id)
 
   const feeCollectorContract = useFeeCollectorContract()
-  const erc20Contract = useContract(vaultData?.token, ERC20_ABI, true)
+  // WAGMI TODO
+  // const erc20Contract = useContract(vaultData.token, ERC20_ABI, true)
+  const erc20Contract = null
 
   const fetchPayFee = async () => {
     await fetcher(`/api/poap/can-claim/${poap?.id}/${guildId}`).catch((e) => {
@@ -50,21 +48,21 @@ const usePoapPayFee = (
     })
 
     // Convert fee to the correct unit
-    const feeInNumber = +formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
+    const feeInNumber = formatUnits(vaultData.fee ?? BigInt(0), decimals ?? 18)
     const fee = parseUnits(feeInNumber.toString(), decimals ?? 18)
 
     // Approve spending tokens if necessary
     const shouldApprove =
-      vaultData?.token !== "0x0000000000000000000000000000000000000000"
+      vaultData.token !== "0x0000000000000000000000000000000000000000"
     let approved = false
     if (shouldApprove) {
       // Check allowance - so the user doesn't need to approve again
       const allowance = await erc20Contract?.allowance(
-        account,
+        address,
         FEE_COLLECTOR_ADDRESS
       )
 
-      if (allowance?.gte(vaultData?.fee ?? BigNumber.from(0))) approved = true
+      if (allowance >= (vaultData.fee ?? 0)) approved = true
 
       if (!approved) {
         const approveRes = await erc20Contract?.approve(FEE_COLLECTOR_ADDRESS, fee)
@@ -113,27 +111,27 @@ const usePoapPayFee = (
     return payFee
   }
 
-  const { isLoading: isTxLoading, onSubmit: onSubmitWait } = useSubmit<
-    TransactionResponse,
-    any
-  >(async (tx) => tx?.wait(), {
-    onError: (error) => {
-      showErrorToast(error?.data?.message ?? error?.message ?? error)
-    },
-    onSuccess: () => {
-      toast({
-        title: "Successful transaction!",
-        status: "success",
-      })
-      onSuccess?.()
-      mutateUserPoapEligibility((userPoapEligibilityData) => ({
-        ...userPoapEligibilityData,
-        hasPaid: true,
-      }))
-    },
-  })
+  const { isLoading: isTxLoading, onSubmit: onSubmitWait } = useSubmit<any, any>(
+    async (tx) => tx?.wait(),
+    {
+      onError: (error) => {
+        showErrorToast(error?.data?.message ?? error?.message ?? error)
+      },
+      onSuccess: () => {
+        toast({
+          title: "Successful transaction!",
+          status: "success",
+        })
+        onSuccess?.()
+        mutateUserPoapEligibility((userPoapEligibilityData) => ({
+          ...userPoapEligibilityData,
+          hasPaid: true,
+        }))
+      },
+    }
+  )
 
-  const { isLoading, onSubmit } = useSubmit<null, TransactionResponse>(fetchPayFee, {
+  const { isLoading, onSubmit } = useSubmit<null, any>(fetchPayFee, {
     onError: (error) => {
       showErrorToast(error?.data?.message ?? error?.message ?? error)
     },

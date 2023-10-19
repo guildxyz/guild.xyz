@@ -10,7 +10,6 @@ import {
   Tooltip,
   Wrap,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
@@ -19,6 +18,7 @@ import Button from "components/common/Button"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { useMemo } from "react"
 import { Poap } from "types"
+import { useAccount } from "wagmi"
 import useMintPoapButton, { MintModal } from "../hooks/useMintPoapButton"
 
 type Props = {
@@ -39,7 +39,7 @@ const PoapReward = ({
   isLinkColorful,
 }: Props) => {
   const isMember = useIsMember()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const openJoinModal = useOpenJoinModal()
   const { poapLinks } = usePoapLinks(poap?.id)
   const availableLinks = poapLinks?.total - poapLinks?.claimed
@@ -64,7 +64,7 @@ const PoapReward = ({
           ? { ...buttonProps, colorScheme: "blue" }
           : buttonProps,
       }
-    if (!account || (!isMember && hasAccess))
+    if (!address || (!isMember && hasAccess))
       return {
         tooltipLabel: (
           <>
@@ -78,7 +78,7 @@ const PoapReward = ({
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, account, availableLinks, isLinkColorful])
+  }, [isMember, hasAccess, address, availableLinks, isLinkColorful])
 
   return (
     <HStack pt="3" spacing={2} alignItems={"flex-start"}>

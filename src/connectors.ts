@@ -1,13 +1,30 @@
-import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
-import { Web3ReactHooks } from "@web3-react/core"
-import { GnosisSafe } from "@web3-react/gnosis-safe"
-import { MetaMask } from "@web3-react/metamask"
-import { Connector } from "@web3-react/types"
-import { WalletConnect } from "@web3-react/walletconnect-v2"
-import initializeCoinbaseWalletConnector from "./coinbaseWallet"
-import initializeGnosisConnector from "./gnosis"
-import initializeMetaMaskConnector from "./metaMask"
-import initializeWalletConnectConnector from "./walletConnect"
+import { Chain as ViemChain } from "viem"
+import {
+  arbitrum,
+  arbitrumNova,
+  avalanche,
+  base,
+  baseGoerli,
+  boba,
+  bsc,
+  celo,
+  cronos,
+  evmos,
+  fantom,
+  gnosis,
+  harmonyOne,
+  metis,
+  moonbeam,
+  moonriver,
+  optimism,
+  polygon,
+  polygonMumbai,
+  sepolia,
+  zetachainAthensTestnet,
+  zkSync,
+  zora,
+} from "viem/chains"
+import { mainnet } from "wagmi"
 
 enum Chains {
   ETHEREUM = 1,
@@ -68,6 +85,56 @@ type RpcConfig = Record<
     multicallAddress?: string
   }
 >
+
+// WAGMI TODO: this shouldn't be partial!
+const CHAIN_CONFIG: Partial<Record<Chain, ViemChain>> = {
+  ETHEREUM: mainnet,
+  BSC: bsc,
+  POLYGON: polygon,
+  AVALANCHE: avalanche,
+  GNOSIS: gnosis,
+  FANTOM: fantom,
+  ARBITRUM: arbitrum,
+  NOVA: arbitrumNova,
+  CELO: celo,
+  HARMONY: harmonyOne,
+  OPTIMISM: optimism,
+  MOONBEAM: moonbeam,
+  MOONRIVER: moonriver,
+  METIS: metis,
+  CRONOS: cronos,
+  BOBA: boba,
+  // BOBA_AVAX: null, // WAGMI TODO
+  // PALM: null, // WAGMI TODO
+  BASE_GOERLI: baseGoerli,
+  // EXOSAMA: null, // WAGMI TODO
+  EVMOS: evmos,
+  ZETACHAIN_ATHENS: zetachainAthensTestnet,
+  // SCROLL_ALPHA: null, // WAGMI TODO
+  ZKSYNC_ERA: zkSync,
+  SEPOLIA: sepolia,
+  GOERLI: {
+    id: 5,
+    name: "Görli",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
+    rpcUrls: {
+      public: {
+        http: ["https://ethereum-goerli.publicnode.com"],
+      },
+      default: {
+        http: ["https://ethereum-goerli.publicnode.com"],
+      },
+    },
+    network: "",
+  }, // WAGMI TODO
+  POLYGON_MUMBAI: polygonMumbai,
+  BASE_MAINNET: base,
+  ZORA: zora,
+}
 
 const RPC: RpcConfig = {
   ETHEREUM: {
@@ -691,43 +758,4 @@ supportedChains.forEach(
   (chain) => (RPC_URLS[RPC[chain].chainId] = RPC[chain].rpcUrls)
 )
 
-const [metaMask, metaMaskHooks, metaMaskName] = initializeMetaMaskConnector()
-const [walletConnect, walletConnectHooks, walletConnectName] =
-  initializeWalletConnectConnector()
-const [coinbaseWallet, coinbaseWalletHooks, coinbaseName] =
-  initializeCoinbaseWalletConnector()
-const [gnosisWallet, gnosisWalletHooks, gnosisName] = initializeGnosisConnector()
-
-const connectors: [
-  MetaMask | WalletConnect | CoinbaseWallet | GnosisSafe,
-  Web3ReactHooks
-][] = [
-  [metaMask, metaMaskHooks],
-  [walletConnect, walletConnectHooks],
-  [coinbaseWallet, coinbaseWalletHooks],
-  [gnosisWallet, gnosisWalletHooks],
-]
-
-const connectorsByName = {
-  [metaMaskName]: metaMask,
-  [walletConnectName]: walletConnect,
-  [coinbaseName]: coinbaseWallet,
-  [gnosisName]: gnosisWallet,
-}
-
-type ConnectorName = keyof typeof connectorsByName
-
-const getConnectorName = (connector: Connector): ConnectorName =>
-  (Object.entries(connectorsByName) as [ConnectorName, Connector][]).find(
-    ([, conn]) => conn === connector
-  )[0]
-
-export {
-  Chains,
-  RPC,
-  RPC_URLS,
-  connectors,
-  connectorsByName,
-  getConnectorName,
-  supportedChains,
-}
+export { CHAIN_CONFIG, Chains, RPC, RPC_URLS, supportedChains }

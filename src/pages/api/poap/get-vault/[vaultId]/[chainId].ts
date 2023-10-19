@@ -1,9 +1,4 @@
-import { Contract } from "@ethersproject/contracts"
-import { JsonRpcProvider } from "@ethersproject/providers"
-import { Chains, RPC } from "connectors"
-import { FEE_COLLECTOR_ADDRESS } from "hooks/useFeeCollectorContract"
 import { NextApiRequest, NextApiResponse } from "next"
-import FEE_COLLECTOR_ABI from "static/abis/legacyPoapFeeCollectorAbi.json"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { vaultId, chainId } = req.query
@@ -11,12 +6,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!vaultId || !chainId)
     return res.status(400).json({ error: "Missing parameters" })
 
-  const provider = new JsonRpcProvider(RPC[Chains[+chainId]]?.rpcUrls?.[0])
-  const feeCollectorContract = new Contract(
-    FEE_COLLECTOR_ADDRESS,
-    FEE_COLLECTOR_ABI,
-    provider
-  )
+  // const provider = new JsonRpcProvider(RPC[Chains[+chainId]]?.rpcUrls?.[0])
+  // const feeCollectorContract = new Contract(
+  //   FEE_COLLECTOR_ADDRESS,
+  //   FEE_COLLECTOR_ABI,
+  //   provider
+  // )
+
+  // WAGMI TODO: we do not need this endpoint, we should just implement this flow with viem on the get-withdrawable-amount endpoint
+  const provider = null
+  const feeCollectorContract = null
 
   if (!provider || !feeCollectorContract)
     return res.status(500).json({ error: "Provider/contract error" })

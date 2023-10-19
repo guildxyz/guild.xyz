@@ -1,15 +1,14 @@
-import { BigNumber } from "@ethersproject/bignumber"
 import { Chain, Chains } from "connectors"
-import useBalance from "hooks/useBalance"
 import { PropsWithChildren, createContext, useContext } from "react"
 import { GuildPlatform } from "types"
+import { useAccount, useBalance } from "wagmi"
 
 type Props = {
   roleId: number
   rolePlatformId: number
   guildPlatform: GuildPlatform
   chain: Chain
-  address: string
+  nftAddress: `0x${string}`
   alreadyCollected: boolean
 }
 
@@ -20,12 +19,17 @@ const CollectNftProvider = ({
   rolePlatformId,
   guildPlatform,
   chain,
-  address,
+  nftAddress,
   children,
 }: PropsWithChildren<Omit<Props, "alreadyCollected">>) => {
   // TODO: use `hasTheUserIdClaimed` instead of `balanceOf`, so it shows `Already claimed` for other addresses of the user too
-  const { tokenBalance: nftBalance } = useBalance(address, Chains[chain])
-  const alreadyCollected = nftBalance?.gt(BigNumber.from(0))
+  const { address } = useAccount()
+  const { data } = useBalance({
+    address,
+    token: nftAddress,
+    chainId: Chains[chain],
+  })
+  const alreadyCollected = data?.value > 0
 
   return (
     <CollectNftContext.Provider
@@ -34,7 +38,7 @@ const CollectNftProvider = ({
         rolePlatformId,
         guildPlatform,
         chain,
-        address,
+        nftAddress,
         alreadyCollected,
       }}
     >

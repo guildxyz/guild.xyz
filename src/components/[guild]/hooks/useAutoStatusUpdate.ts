@@ -1,14 +1,14 @@
-import { useWeb3React } from "@web3-react/core"
-import useMemberships from "components/explorer/hooks/useMemberships"
 import { useKeyPair } from "components/_app/KeyPairProvider"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useEffect } from "react"
 import { useFetcherWithSign } from "utils/fetcher"
+import { useAccount } from "wagmi"
 import useAccess from "./useAccess"
 import useGuild from "./useGuild"
 
 const useAutoStatusUpdate = () => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { id } = useGuild()
   const { keyPair } = useKeyPair()
 
@@ -24,7 +24,7 @@ const useAutoStatusUpdate = () => {
   useEffect(() => {
     if (
       !keyPair ||
-      !account ||
+      !address ||
       !Array.isArray(accesses) ||
       !Array.isArray(roleMemberships) ||
       !accesses?.length ||
@@ -50,19 +50,19 @@ const useAutoStatusUpdate = () => {
         roleMemberships.some((roleId) => unaccessedRoleIdsSet.has(roleId)))
     if (shouldSendStatusUpdate) {
       fetcherWithSign([
-        `/user/${account}/statusUpdate/${id}`,
+        `/user/${address}/statusUpdate/${id}`,
         {
           method: "GET",
           body: {},
         },
       ]).then(() =>
         Promise.all([
-          mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`),
-          mutateOptionalAuthSWRKey(`/v2/users/${account}/memberships`),
+          mutateOptionalAuthSWRKey(`/guild/access/${id}/${address}`),
+          mutateOptionalAuthSWRKey(`/v2/users/${address}/memberships`),
         ])
       )
     }
-  }, [accesses, roleMemberships, account, id])
+  }, [accesses, roleMemberships, address, id])
 }
 
 export default useAutoStatusUpdate

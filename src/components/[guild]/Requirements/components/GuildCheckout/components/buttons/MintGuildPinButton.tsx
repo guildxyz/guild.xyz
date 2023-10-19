@@ -1,13 +1,12 @@
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
 import { Chains } from "connectors"
-import useBalance from "hooks/useBalance"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
+import { useAccount, useBalance, useChainId } from "wagmi"
+import { useMintGuildPinContext } from "../../MintGuildPinContext"
 import useGuildPinFee from "../../hooks/useGuildPinFee"
 import useMintGuildPin from "../../hooks/useMintGuildPin"
-import { useMintGuildPinContext } from "../../MintGuildPinContext"
 
 const MintGuildPinButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
@@ -15,7 +14,7 @@ const MintGuildPinButton = (): JSX.Element => {
 
   const { error, isInvalidImage, isTooSmallImage } = useMintGuildPinContext()
 
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   const {
     onSubmit,
@@ -31,12 +30,13 @@ const MintGuildPinButton = (): JSX.Element => {
   )
 
   const { guildPinFee, isGuildPinFeeLoading } = useGuildPinFee()
-  const { coinBalance, isLoading: isBalanceLoading } = useBalance(
-    null,
-    Chains[guildPin?.chain]
-  )
+  const { address } = useAccount()
+  const { data: balanceData, isLoading: isBalanceLoading } = useBalance({
+    address,
+    chainId: Chains[guildPin?.chain],
+  })
   const isSufficientBalance =
-    guildPinFee && coinBalance ? coinBalance.gt(guildPinFee) : false
+    guildPinFee && balanceData ? balanceData.value > guildPinFee : false
 
   const isLoading =
     isMinting || isValidating || isGuildPinFeeLoading || isBalanceLoading

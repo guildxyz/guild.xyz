@@ -1,13 +1,13 @@
 import { Icon, useDisclosure } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Robot } from "phosphor-react"
 import { CompleteCaptchaModal } from "requirements/Captcha/components/CompleteCaptcha"
+import { useAccount } from "wagmi"
 import JoinStep from "./JoinStep"
 
 const CompleteCaptchaJoinStep = (): JSX.Element => {
-  const { isActive } = useWeb3React()
+  const { isConnected } = useAccount()
 
   const { roles } = useGuild()
   const requirements = roles?.flatMap((role) => role.requirements) ?? []
@@ -34,7 +34,7 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
         title="Complete CAPTCHA"
         buttonLabel={isDone ? "Completed" : "Complete"}
         onClick={onOpen}
-        isDisabled={!isActive && "Connect wallet first"}
+        isDisabled={!isConnected && "Connect wallet first"}
       />
 
       <CompleteCaptchaModal isOpen={isOpen} onClose={onClose} />

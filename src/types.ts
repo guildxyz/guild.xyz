@@ -4,7 +4,7 @@ import type { Chain, Chains } from "connectors"
 import { RequirementType } from "requirements"
 
 type Token = {
-  address: string
+  address: `0x${string}`
   name: string
   symbol: string
   decimals: number
@@ -273,7 +273,7 @@ type Trait = {
 type Requirement = {
   id: number
   type: RequirementType
-  address: string
+  address?: `0x${string}`
   chain: Chain
   data?: Record<string, any>
   roleId: number
@@ -347,7 +347,7 @@ type PoapContract = {
   poapId: number
   chainId: number
   vaultId: number
-  contract: string
+  contract: `0x${string}`
 }
 
 type GuildPoap = {
@@ -690,7 +690,6 @@ export type {
   Guild,
   GuildAdmin,
   GuildBase,
-  SimpleGuild,
   GuildFormType,
   GuildPinMetadata,
   GuildPlatform,
@@ -711,10 +710,11 @@ export type {
   Requirement,
   RequirementType,
   Rest,
-  SimpleRole,
   Role,
   RolePlatform,
   SelectOption,
+  SimpleGuild,
+  SimpleRole,
   SocialLinkKey,
   SocialLinks,
   Token,

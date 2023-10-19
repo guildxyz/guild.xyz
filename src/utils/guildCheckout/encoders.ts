@@ -1,20 +1,18 @@
-import { defaultAbiCoder } from "@ethersproject/abi"
-import { BigNumberish } from "@ethersproject/bignumber"
-import { BytesLike } from "@ethersproject/bytes"
+import { encodeAbiParameters, parseAbiParameters } from "viem"
 
-const encodeParameters = (types: readonly string[], values: readonly any[]) =>
-  defaultAbiCoder.encode(types, values)
+const encodeParameters = (types: readonly string[], values: readonly unknown[]) =>
+  encodeAbiParameters(parseAbiParameters(types.join()), values)
 
-const encodeWrapEth = (recipient: string, amountMin: BigNumberish) =>
+const encodeWrapEth = (recipient: string, amountMin: bigint) =>
   encodeParameters(["address", "uint256"], [recipient, amountMin])
 
-const encodeUnwrapEth = (recipient: string, amountMin: BigNumberish) =>
+const encodeUnwrapEth = (recipient: string, amountMin: bigint) =>
   encodeWrapEth(recipient, amountMin)
 
 const encodeV2SwapExactOut = (
   recipient: string,
-  amountOut: BigNumberish,
-  amountInMax: BigNumberish,
+  amountOut: bigint,
+  amountInMax: bigint,
   tokenAddressPath: string[],
   payerIsUser: boolean
 ) =>
@@ -25,9 +23,9 @@ const encodeV2SwapExactOut = (
 
 const encodeV3SwapExactOut = (
   recipient: string,
-  amountOut: BigNumberish,
-  amountInMax: BigNumberish,
-  path: BytesLike,
+  amountOut: bigint,
+  amountInMax: bigint,
+  path: Uint8Array,
   payerIsUser: boolean
 ) =>
   encodeParameters(
@@ -37,12 +35,12 @@ const encodeV3SwapExactOut = (
 
 const encodePermit2Permit = (
   tokenAddress: string,
-  amount: BigNumberish,
-  expiration: BigNumberish,
-  nonce: BigNumberish,
+  amount: bigint,
+  expiration: bigint,
+  nonce: bigint,
   spender: string,
-  sigDeadline: BigNumberish,
-  data: BytesLike
+  sigDeadline: bigint,
+  data: Uint8Array
 ) =>
   encodeParameters(
     ["address", "uint160", "uint48", "uint48", "address", "uint256", "bytes"],
@@ -59,10 +57,10 @@ const UNIVERSAL_ROUTER_COMMANDS = {
 }
 
 export {
-  encodeWrapEth,
+  UNIVERSAL_ROUTER_COMMANDS,
+  encodePermit2Permit,
   encodeUnwrapEth,
   encodeV2SwapExactOut,
   encodeV3SwapExactOut,
-  encodePermit2Permit,
-  UNIVERSAL_ROUTER_COMMANDS,
+  encodeWrapEth,
 }

@@ -1,42 +1,30 @@
-import useSWR, { KeyedMutator } from "swr"
-import fetcher from "utils/fetcher"
+import { FEE_COLLECTOR_ADDRESS } from "hooks/useFeeCollectorContract"
+import legacyPoapFeeCollectorAbi from "static/abis/legacyPoapFeeCollector"
+import { useContractRead } from "wagmi"
 
-type GetVaultResponse = {
-  eventId: number
-  owner: string
-  token: string
-  fee: string
-  collected: string
-}
+const usePoapVault = (vaultId: number, chainId: number) => {
+  const {
+    data,
+    error: vaultError,
+    isLoading: isVaultLoading,
+    refetch: refetchVaultData,
+  } = useContractRead({
+    abi: legacyPoapFeeCollectorAbi,
+    address: FEE_COLLECTOR_ADDRESS,
+    chainId,
+    functionName: "getVault",
+    args: [BigInt(vaultId ?? 0)],
 
-const fetchPoapVault = async ([_, vaultId, chainId]): Promise<GetVaultResponse> =>
-  fetcher(`/api/poap/get-poap-vault/${vaultId}/${chainId}`)
+    enabled: Boolean(typeof vaultId === "number" && chainId),
+  })
 
-const usePoapVault = (
-  vaultId: number,
-  chainId: number
-): {
-  vaultData: GetVaultResponse
-  isVaultLoading: boolean
-  mutateVaultData: KeyedMutator<any>
-  vaultError: any
-} => {
-  const { data, isValidating, mutate, error } = useSWR(
-    typeof vaultId === "number" && typeof chainId === "number"
-      ? ["poapVault", vaultId, chainId]
-      : null,
-    fetchPoapVault,
-    {
-      revalidateOnFocus: false,
-      shouldRetryOnError: false,
-    }
-  )
+  const [eventId, owner, token, fee, collected] = data ?? []
 
   return {
-    vaultData: data,
-    isVaultLoading: !data && isValidating,
-    mutateVaultData: mutate,
-    vaultError: error,
+    vaultData: { eventId, owner, token, fee, collected },
+    isVaultLoading,
+    refetchVaultData,
+    vaultError,
   }
 }
 

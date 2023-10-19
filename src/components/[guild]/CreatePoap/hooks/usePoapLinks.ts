@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useSWR, { KeyedMutator } from "swr"
 
@@ -9,9 +8,7 @@ const usePoapLinks = (
   isPoapLinksLoading: boolean
   mutate: KeyedMutator<any>
 } => {
-  const { account } = useWeb3React()
-  const { poaps, id: guildId } = useGuild()
-  const guildPoap = poaps?.find((p) => p.poapIdentifier === poapId)
+  const { id: guildId } = useGuild()
 
   const {
     data: poapLinks,

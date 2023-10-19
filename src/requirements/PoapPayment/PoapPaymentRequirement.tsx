@@ -1,16 +1,16 @@
 import { Icon, Skeleton, Text } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
 import Withdraw from "components/[guild]/CreatePoap/components/PoapRoleCard/components/Withdraw"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { Chain, Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
 import { GuildPoap, PoapContract, RequirementType } from "types"
+import { formatUnits } from "viem"
 
 type Props = { guildPoap: GuildPoap; poapContract: PoapContract } & RequirementProps
 
@@ -25,7 +25,7 @@ const PoapPaymentRequirement = ({ guildPoap, poapContract, ...props }: Props) =>
   const {
     data: { symbol, decimals },
     isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[vaultChainId], vaultData?.token)
+  } = useTokenData(Chains[vaultChainId], vaultData.token)
 
   const requirement = {
     id,
@@ -53,7 +53,7 @@ const PoapPaymentRequirement = ({ guildPoap, poapContract, ...props }: Props) =>
       >
         <Skeleton as="span" isLoaded={!isVaultLoading && !isTokenDataLoading}>
           <Text as="span">{`Pay ${formatUnits(
-            vaultData?.fee ?? "0",
+            vaultData.fee ?? BigInt(0),
             decimals ?? 18
           )} ${symbol ?? RPC[Chains[vaultChainId]]?.nativeCurrency?.symbol} on ${
             RPC[Chains[vaultChainId]]?.chainName

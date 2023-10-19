@@ -1,5 +1,4 @@
 import { Icon } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -15,6 +14,7 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
+import { formatUnits } from "viem"
 import PaymentTransactionStatusModal from "../../components/[guild]/Requirements/components/GuildCheckout/components/PaymentTransactionStatusModal"
 import WithdrawButton from "./components/WithdrawButton"
 import useVault from "./hooks/useVault"
@@ -31,8 +31,10 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     data: requirementData,
   } = useRequirementContext()
   const {
-    data: { token, fee, multiplePayments },
-    isValidating: isVaultLoading,
+    token,
+    fee,
+    multiplePayments,
+    isLoading: isVaultLoading,
     error: vaultError,
   } = useVault(address, requirementData?.id, chain)
 

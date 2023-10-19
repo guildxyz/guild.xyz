@@ -1,8 +1,8 @@
-import { useWeb3React } from "@web3-react/core"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import { Wallet } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
+import { useChainId } from "wagmi"
 import useWithDraw from "../../../hooks/useWithdraw"
 import ActionButton from "../../ActionButton"
 
@@ -24,7 +24,7 @@ const WithdrawButton = ({
   setIsLoading,
   onComplete,
 }: Props): JSX.Element => {
-  const { chainId: usersChainId } = useWeb3React()
+  const usersChainId = useChainId()
   const { requestNetworkChange } = useWeb3ConnectionManager()
 
   const { onSubmit, response, isLoading } = useWithDraw()

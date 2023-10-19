@@ -1,12 +1,12 @@
 import { Img, useDisclosure } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { ConnectPolygonIDModal } from "requirements/PolygonId/components/ConnectPolygonID"
+import { useAccount } from "wagmi"
 import JoinStep from "./JoinStep"
 
 const ConnectPolygonIDJoinStep = (): JSX.Element => {
-  const { isActive } = useWeb3React()
+  const { isConnected } = useAccount()
 
   const { roles } = useGuild()
   const requirements = roles?.flatMap((role) => role.requirements) ?? []
@@ -17,7 +17,7 @@ const ConnectPolygonIDJoinStep = (): JSX.Element => {
   const { data: accesses } = useAccess()
   const requirementAccesses = accesses?.flatMap((access) => access.requirements)
 
-  const isConnected = requirementAccesses?.some(
+  const isPIDConnected = requirementAccesses?.some(
     (reqAccess) =>
       polygonIDRequirements.includes(reqAccess.requirementId) && reqAccess.access
   )
@@ -29,13 +29,13 @@ const ConnectPolygonIDJoinStep = (): JSX.Element => {
   return (
     <>
       <JoinStep
-        isDone={isConnected}
+        isDone={isPIDConnected}
         colorScheme="purple"
         icon={<Img src="requirementLogos/polygonId_white.svg" width="1.5em" />}
         title="Connect PolygonID"
-        buttonLabel={isConnected ? "Connected" : "Connect"}
+        buttonLabel={isPIDConnected ? "Connected" : "Connect"}
         onClick={onOpen}
-        isDisabled={!isActive && "Connect wallet first"}
+        isDisabled={!isConnected && "Connect wallet first"}
       />
 
       <ConnectPolygonIDModal

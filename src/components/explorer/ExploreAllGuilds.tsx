@@ -9,24 +9,24 @@ import {
   usePrevious,
   VStack,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Section from "components/common/Section"
-import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
-import GuildCard from "components/explorer/GuildCard"
-import GuildCardsGrid from "components/explorer/GuildCardsGrid"
-import SearchBar from "components/explorer/SearchBar"
 import {
   TABS_HEIGHT,
   TABS_HEIGHT_SM,
   TABS_SM_BUTTONS_STYLES,
 } from "components/[guild]/Tabs/Tabs"
 import { BATCH_SIZE } from "components/_app/ExplorerProvider"
+import Section from "components/common/Section"
+import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
+import GuildCard from "components/explorer/GuildCard"
+import GuildCardsGrid from "components/explorer/GuildCardsGrid"
+import SearchBar from "components/explorer/SearchBar"
 import useIsStuck from "hooks/useIsStuck"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { forwardRef, useEffect } from "react"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
+import { useAccount } from "wagmi"
 import SearchBarFilters, { Filters } from "./SearchBarFilters"
 
 type Props = {
@@ -34,7 +34,7 @@ type Props = {
 }
 
 const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const prevSearch = usePrevious(search)
   const [order, setOrder] = useQueryState<Filters>("order", "FEATURED")
@@ -97,7 +97,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
 
   return (
     <Stack spacing={{ base: 8, md: 10 }}>
-      {account && <Divider />}
+      {address && <Divider />}
       <Section
         title="Explore all guilds"
         ref={ref}

@@ -1,8 +1,8 @@
-import { formatUnits } from "@ethersproject/units"
 import { Chains, RPC } from "connectors"
 import { NextApiRequest, NextApiResponse } from "next"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
+import { formatUnits } from "viem"
 
 type GetVaultResponse = {
   eventId: number
@@ -36,6 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   for (const poapContract of poap.poapContracts) {
     withdrawableAmountsPromises.push(
+      // WAGMI TODO: we'll delete this endpoint, so we need to implement the logic from it here with viem
       fetcher(
         `${req.headers.host.includes("localhost") ? "http://" : "https://"}${
           req.headers.host
@@ -61,7 +62,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           chainId: poapContract.chainId,
           vaultId: poapContract.vaultId,
           tokenSymbol: symbol,
-          collected: parseFloat(formatUnits(data.collected, decimals ?? 18)),
+          collected: parseFloat(formatUnits(BigInt(data.collected), decimals ?? 18)),
         }
       })
     )

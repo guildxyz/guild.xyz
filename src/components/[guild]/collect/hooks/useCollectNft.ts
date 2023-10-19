@@ -1,18 +1,14 @@
-import { BigNumber } from "@ethersproject/bignumber"
-import { useWeb3React } from "@web3-react/core"
+import { CONTRACT_CALL_ARGS_TO_SIGN } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { CONTRACT_CALL_ARGS_TO_SIGN } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Chains } from "connectors"
-import useBalance from "hooks/useBalance"
-import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
-import GUILD_REWARD_NFT_ABI from "static/abis/guildRewardNft.json"
 import { useFetcherWithSign } from "utils/fetcher"
+import { useAccount, useBalance, useChainId } from "wagmi"
 import useSubmitTransaction from "../../Requirements/components/GuildCheckout/hooks/useSubmitTransaction"
 import { useCollectNftContext } from "../components/CollectNftContext"
 import useGuildFee from "./useGuildFee"
@@ -32,11 +28,12 @@ const useCollectNft = () => {
   const tweetToast = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { chainId, account } = useWeb3React()
-  const { chain, address, roleId, rolePlatformId, guildPlatform } =
+  const { address } = useAccount()
+  const chainId = useChainId()
+  const { chain, nftAddress, roleId, rolePlatformId, guildPlatform } =
     useCollectNftContext()
   const { guildFee } = useGuildFee(chain)
-  const { data, mutate: mutateNftDetails } = useNftDetails(chain, address)
+  const { fee, name, refetch: refetchNftDetails } = useNftDetails(chain, nftAddress)
   const { mutate: mutateTopCollectors } = useTopCollectors()
 
   const shouldSwitchChain = chainId !== Chains[chain]
@@ -44,9 +41,15 @@ const useCollectNft = () => {
   const [loadingText, setLoadingText] = useState("")
   const fetcherWithSign = useFetcherWithSign()
 
-  const contract = useContract(address, GUILD_REWARD_NFT_ABI, true)
+  // WAGMI TODO
+  // const contract = useContract(nftAddress, guildRewardNftAbi, true)
+  const contract = null
 
-  const { mutateTokenBalance } = useBalance(address, Chains[chain])
+  const { refetch: refetchBalance } = useBalance({
+    address,
+    token: nftAddress,
+    chainId: Chains[chain],
+  })
 
   const mint = async () => {
     if (shouldSwitchChain)
@@ -66,10 +69,13 @@ const useCollectNft = () => {
     ])
 
     const claimFee =
-      guildFee && data.fee ? guildFee.add(data.fee) : BigNumber.from(0)
+      typeof guildFee === "bigint" && typeof fee === "bigint"
+        ? guildFee + fee
+        : BigInt(0)
 
+    // WAGMI TODO: claim flow
     const claimParams = [
-      account,
+      address,
       userId,
       uniqueValue,
       {
@@ -106,24 +112,14 @@ const useCollectNft = () => {
           return
         }
 
-        mutateTokenBalance()
-
-        mutateNftDetails(
-          (prevValue) => ({
-            ...prevValue,
-            totalCollectors: (prevValue?.totalCollectors ?? 0) + 1,
-            totalCollectorsToday: (prevValue?.totalCollectorsToday ?? 0) + 1,
-          }),
-          {
-            revalidate: false,
-          }
-        )
+        refetchBalance()
+        refetchNftDetails()
 
         mutateTopCollectors(
           (prevValue) => ({
             topCollectors: [
               ...(prevValue?.topCollectors ?? []),
-              account?.toLowerCase(),
+              address?.toLowerCase(),
             ],
             uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
           }),
@@ -136,9 +132,7 @@ const useCollectNft = () => {
 
         tweetToast({
           title: "Successfully collected NFT!",
-          tweetText: `Just collected my ${
-            data?.name
-          } NFT!\nguild.xyz/${urlName}/collect/${chain.toLowerCase()}/${address.toLowerCase()}`,
+          tweetText: `Just collected my ${name} NFT!\nguild.xyz/${urlName}/collect/${chain.toLowerCase()}/${nftAddress.toLowerCase()}`,
         })
       },
       onError: (error) => {

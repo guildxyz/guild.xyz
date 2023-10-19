@@ -1,8 +1,8 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
 import { RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useVault from "requirements/Payment/hooks/useVault"
+import { formatUnits } from "viem"
 import { useRequirementContext } from "../../RequirementContext"
 import usePayFee from "../hooks/usePayFee"
 import FeesTable from "./FeesTable"
@@ -13,11 +13,11 @@ const BuyTotal = (): JSX.Element => {
   const requirement = useRequirementContext()
   const { pickedCurrency } = useGuildCheckoutContext()
 
-  const {
-    data: { token, fee },
-    isValidating,
-    error,
-  } = useVault(requirement.address, requirement.data.id, requirement.chain)
+  const { token, fee, isLoading, error } = useVault(
+    requirement.address,
+    requirement.data.id,
+    requirement.chain
+  )
 
   const {
     data: { decimals, symbol },
@@ -51,7 +51,7 @@ const BuyTotal = (): JSX.Element => {
 
           <PriceFallback {...{ error, pickedCurrency }}>
             <Text as="span">
-              <Skeleton isLoaded={!isValidating}>
+              <Skeleton isLoaded={!isLoading}>
                 <Text as="span" fontWeight="semibold">
                   {priceInSellToken
                     ? `${

@@ -6,12 +6,12 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import { Modal } from "components/common/Modal"
+import { useAccount } from "wagmi"
 import NetworkButtonsList from "./NetworkButtonsList"
 
 const NetworkModal = ({ isOpen, onClose }) => {
-  const { isActive } = useWeb3React()
+  const { isConnected } = useAccount()
 
   return (
     <Modal
@@ -22,7 +22,7 @@ const NetworkModal = ({ isOpen, onClose }) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {isActive ? "Supported networks" : "Select network"}
+          {isConnected ? "Supported networks" : "Select network"}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>

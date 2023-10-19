@@ -1,18 +1,18 @@
-import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useIntercom } from "components/_app/IntercomProvider"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useEffect } from "react"
 import { SWRConfiguration } from "swr"
+import { useAccount } from "wagmi"
 
 const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { id } = useGuild()
 
-  const shouldFetch = account && id && roleId !== 0
+  const shouldFetch = address && id && roleId !== 0
 
   const { data, error, isLoading, isValidating, mutate } = useSWRWithOptionalAuth(
-    shouldFetch ? `/guild/access/${id}/${account}` : null,
+    shouldFetch ? `/guild/access/${id}/${address}` : null,
     {
       shouldRetryOnError: false,
       ...swrOptions,

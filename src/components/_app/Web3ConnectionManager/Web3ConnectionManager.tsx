@@ -1,20 +1,18 @@
 import { useDisclosure } from "@chakra-ui/react"
-import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
-import { useWeb3React } from "@web3-react/core"
-import { WalletConnect } from "@web3-react/walletconnect-v2"
-import { Chains, getConnectorName, RPC } from "connectors"
+import { Chains, RPC } from "connectors"
 import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import {
-  createContext,
   PropsWithChildren,
+  createContext,
   useContext,
   useEffect,
   useState,
 } from "react"
 import { PlatformName } from "types"
 import requestNetworkChangeHandler from "utils/requestNetworkChange"
+import { useAccount } from "wagmi"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
@@ -30,9 +28,9 @@ const Web3Connection = createContext({
   openAccountModal: () => {},
   closeAccountModal: () => {},
   requestNetworkChange: (
-    chainId: number,
-    callback?: () => void,
-    errorHandler?: (err) => void
+    _chainId: number,
+    _callback?: () => void,
+    _errorHandler?: (err) => void
   ) => {},
   isDelegateConnection: false,
   setIsDelegateConnection: (_: boolean) => {},
@@ -46,14 +44,13 @@ const Web3Connection = createContext({
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
-  const { isActive, connector } = useWeb3React()
+  const { isConnected, connector } = useAccount()
   const router = useRouter()
 
   useEffect(() => {
-    if (!connector || !isActive) return
-    const connectorName = getConnectorName(connector)
-    window.localStorage.setItem("connector", connectorName)
-  }, [connector, isActive])
+    if (!connector || !isConnected) return
+    window.localStorage.setItem("connector", connector.name)
+  }, [connector, isConnected])
 
   const {
     isOpen: isWalletSelectorModalOpen,
@@ -84,9 +81,9 @@ const Web3ConnectionManager = ({
   const triedEager = useEagerConnect()
 
   useEffect(() => {
-    if (triedEager && !isActive && router.query.redirectUrl)
+    if (triedEager && !isConnected && router.query.redirectUrl)
       openWalletSelectorModal()
-  }, [triedEager, isActive, router.query])
+  }, [triedEager, isConnected, router.query])
 
   const [isNetworkChangeInProgress, setNetworkChangeInProgress] = useState(false)
   const toast = useToast()
@@ -102,7 +99,7 @@ const Web3ConnectionManager = ({
     callback?: () => void,
     errorHandler?: (err: unknown) => void
   ) => {
-    if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet)
+    if (connector.id === "walletConnect" || connector.id === "coinbaseWallet")
       requestManualNetworkChange(Chains[newChainId])()
     else {
       setNetworkChangeInProgress(true)
@@ -158,4 +155,4 @@ const Web3ConnectionManager = ({
 
 const useWeb3ConnectionManager = () => useContext(Web3Connection)
 
-export { useWeb3ConnectionManager, Web3ConnectionManager }
+export { Web3ConnectionManager, useWeb3ConnectionManager }

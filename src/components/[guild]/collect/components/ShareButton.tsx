@@ -1,7 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuList, useClipboard } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
+import Button from "components/common/Button"
 import { CopySimple, ShareNetwork, TwitterLogo } from "phosphor-react"
 import useNftDetails from "../hooks/useNftDetails"
 
@@ -10,8 +10,8 @@ type Props = {
 }
 
 const ShareButton = ({ onClick }: Props): JSX.Element => {
-  const { chain, address } = useCollectNftContext()
-  const { data } = useNftDetails(chain, address)
+  const { chain, nftAddress } = useCollectNftContext()
+  const { name } = useNftDetails(chain, nftAddress)
   const pageLink =
     typeof window !== "undefined"
       ? `https://guild.xyz${window.location.pathname}`
@@ -45,7 +45,7 @@ const ShareButton = ({ onClick }: Props): JSX.Element => {
             window.open(
               `https://twitter.com/intent/tweet?text=${encodeURIComponent(
                 `Check out and collect this awesome ${
-                  data?.name ? `${data.name} ` : " "
+                  name ? `${name} ` : " "
                 }NFT on Guild!\n${pageLink}`
               )}`,
               "_blank"

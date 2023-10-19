@@ -1,7 +1,7 @@
 import { Img, Tooltip } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
+import { useChainId } from "wagmi"
 
 type Props = {
   chain: string
@@ -9,7 +9,7 @@ type Props = {
 }
 
 const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   const isCurrentChain = Chains[chain] === chainId
 

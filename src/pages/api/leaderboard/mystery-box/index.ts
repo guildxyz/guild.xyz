@@ -1,18 +1,16 @@
-import { BigNumber } from "@ethersproject/bignumber"
-import { Contract } from "@ethersproject/contracts"
-import { JsonRpcProvider } from "@ethersproject/providers"
-import { verifyMessage } from "@ethersproject/wallet"
 import { kv } from "@vercel/kv"
 import { sql } from "@vercel/postgres"
-import { Chain, RPC } from "connectors"
+import { CHAIN_CONFIG, Chain } from "connectors"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { OneOf } from "types"
+import { createPublicClient, http, recoverMessageAddress } from "viem"
+import { erc721ABI } from "wagmi"
 
 export type MysteryBoxResponse = OneOf<{ message: string }, { error: string }>
 
 export const MYSTERY_BOX_MESSAGE_TO_SIGN =
   "Please sign this message in order to claim your prize"
-export const MYSTERY_BOX_NFT: { address: string; chain: Chain } = {
+export const MYSTERY_BOX_NFT: { address: `0x${string}`; chain: Chain } = {
   address: "0x295f799Be8ba015Ca9BE5EfFbC5CaeC985cCA11a",
   chain: "POLYGON",
 }
@@ -59,26 +57,30 @@ const handler: NextApiHandler<MysteryBoxResponse> = async (
   )
     return res.status(400).json({ error: "Invalid shipping address" })
 
-  const walletAddress = verifyMessage(
-    MYSTERY_BOX_MESSAGE_TO_SIGN,
-    signedMessage
-  ).toLowerCase()
+  const walletAddress = await recoverMessageAddress({
+    message: MYSTERY_BOX_MESSAGE_TO_SIGN,
+    signature: signedMessage,
+  }).then((address) => address.toLowerCase() as `0x${string}`)
 
-  let balanceOf: BigNumber
+  let balanceOf: bigint
 
   try {
-    const provider = new JsonRpcProvider(RPC[MYSTERY_BOX_NFT.chain].rpcUrls[0])
-    const nftContract = new Contract(
-      MYSTERY_BOX_NFT.address,
-      ["function balanceOf(address owner) view returns (uint)"],
-      provider
-    )
-    balanceOf = await nftContract.balanceOf(walletAddress)
+    const publicClient = createPublicClient({
+      chain: CHAIN_CONFIG[MYSTERY_BOX_NFT.chain],
+      transport: http(),
+    })
+
+    balanceOf = await publicClient.readContract({
+      abi: erc721ABI,
+      address: MYSTERY_BOX_NFT.address,
+      functionName: "balanceOf",
+      args: [walletAddress],
+    })
   } catch {
     return res.status(500).json({ error: "Couldn't check eligibility" })
   }
 
-  if (balanceOf.lt(1))
+  if (balanceOf < 1)
     return res
       .status(403)
       .json({ error: "You are not eligible to claim a Guild Pin Mystery Box" })

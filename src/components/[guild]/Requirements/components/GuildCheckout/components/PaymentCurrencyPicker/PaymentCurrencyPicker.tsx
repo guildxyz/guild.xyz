@@ -10,14 +10,14 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import Button from "components/common/Button"
 import { Chains } from "connectors"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import { useEffect } from "react"
 import { SUPPORTED_CURRENCIES } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
+import { useAccount } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import usePrice from "../../hooks/usePrice"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
@@ -34,7 +34,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
   const borderWidth = useColorModeValue(1, 0)
   const dropdownBgColor = useColorModeValue("gray.50", "blackAlpha.400")
 
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { openAccountModal } = useWeb3ConnectionManager()
 
   const currencyOptions = SUPPORTED_CURRENCIES.filter(
@@ -128,7 +128,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                 ))}
               </Stack>
 
-              {account && (
+              {address && (
                 <HStack
                   justifyContent="space-between"
                   bgColor={lightShade}
@@ -146,7 +146,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                     rightIcon={<Icon as={ArrowSquareOut} />}
                     onClick={openAccountModal}
                   >
-                    {shortenHex(account, 3)}
+                    {shortenHex(address, 3)}
                   </Button>
                 </HStack>
               )}

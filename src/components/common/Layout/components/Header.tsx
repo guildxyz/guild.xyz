@@ -1,7 +1,9 @@
 import { Box, Flex, useColorMode } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import Account from "../components/Account"
+import dynamic from "next/dynamic"
 import NavMenu from "../components/NavMenu"
+
+const DynamicAccount = dynamic(() => import("./Account"), { ssr: false })
 
 const Header = (): JSX.Element => {
   const colorContext = useThemeContext()
@@ -28,9 +30,7 @@ const Header = (): JSX.Element => {
       }}
     >
       <NavMenu />
-      <Box>
-        <Account />
-      </Box>
+      <Box>{typeof window !== "undefined" && <DynamicAccount />}</Box>
     </Flex>
   )
 }
