@@ -90,12 +90,12 @@ const ConnectorButton = ({ connector }: Props): JSX.Element => {
       }
       isDisabled={
         pendingConnector?.id === connector.id ||
-        (address && activeConnector?.id === connector.id && !ready) ||
+        (isConnected && activeConnector?.id === connector.id && !ready) ||
         activeConnector?.id === connector.id
       }
       isLoading={
         (pendingConnector?.id === connector.id ||
-          (address && activeConnector?.id === connector.id && !ready)) &&
+          (isConnected && activeConnector?.id === connector.id && !ready)) &&
         !error
       }
       spinnerPlacement="end"
@@ -106,7 +106,7 @@ const ConnectorButton = ({ connector }: Props): JSX.Element => {
       border={activeConnector?.id === connector.id && "2px"}
       borderColor="primary.500"
     >
-      {!address || !(activeConnector?.id === connector.id)
+      {!isConnected || !(activeConnector?.id === connector.id)
         ? `${connectorName}`
         : shortenHex(address)}
     </Button>

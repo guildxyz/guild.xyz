@@ -52,7 +52,7 @@ const Page = (): JSX.Element => {
   const router = useRouter()
   const { colorMode } = useColorMode()
 
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const { theme, urlName, name, poaps } = useGuild()
 
   const rawPoapFancyIdFromUrl = router.query.fancyId?.toString()
@@ -106,7 +106,7 @@ const Page = (): JSX.Element => {
       }
 
   const requirementRightElement = isActive ? (
-    address ? (
+    isConnected ? (
       <PoapRequiementAccessIndicator poapIdentifier={guildPoap?.poapIdentifier} />
     ) : (
       <ConnectWalletButton />
@@ -122,7 +122,7 @@ const Page = (): JSX.Element => {
                   key="voice"
                   guildPoap={guildPoap}
                   rightElement={
-                    isActive && address && !discordFromDb ? (
+                    isActive && isConnected && !discordFromDb ? (
                       <ConnectDiscordButton />
                     ) : (
                       requirementRightElement
@@ -304,7 +304,7 @@ const Page = (): JSX.Element => {
                       )
                     ) : (
                       <FreeRequirement
-                        rightElement={!address && <ConnectWalletButton />}
+                        rightElement={!isConnected && <ConnectWalletButton />}
                       />
                     )}
                   </Stack>
@@ -319,7 +319,7 @@ const Page = (): JSX.Element => {
                         poapId={guildPoap?.poapIdentifier}
                         colorScheme="purple"
                         w="full"
-                        isDisabled={!isActive || !address || !access}
+                        isDisabled={!isActive || !isConnected || !access}
                       >
                         Mint POAP
                       </JoinAndMintPoapButton>

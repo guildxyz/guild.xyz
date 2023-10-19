@@ -28,13 +28,13 @@ const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
   )
 
 const useContractWalletInfoToast = () => {
-  const { address } = useAccount()
+  const { address, isConnected } = useAccount()
   const chainId = useChainId()
 
   const toast = useToast()
 
   useEffect(() => {
-    if (!address || !chainId) {
+    if (!isConnected || !chainId) {
       return
     }
 
@@ -52,7 +52,7 @@ const useContractWalletInfoToast = () => {
         }
       })
       .catch(() => {})
-  }, [chainId, address])
+  }, [chainId, address, isConnected])
 }
 
 export default useContractWalletInfoToast

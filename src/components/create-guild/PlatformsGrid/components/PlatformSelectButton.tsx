@@ -52,7 +52,7 @@ const PlatformSelectButton = ({
   onSelection,
   ...rest
 }: Props) => {
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
@@ -82,7 +82,7 @@ const PlatformSelectButton = ({
     <DisplayCard
       cursor="pointer"
       onClick={
-        !address
+        !isConnected
           ? openWalletSelectorModal
           : isPlatformConnected
           ? selectPlatform
@@ -125,7 +125,9 @@ const PlatformSelectButton = ({
             </Text>
           )}
         </VStack>
-        <Icon as={isLoading ? Spinner : (address && DynamicCtaIcon) ?? CaretRight} />
+        <Icon
+          as={isLoading ? Spinner : (isConnected && DynamicCtaIcon) ?? CaretRight}
+        />
       </HStack>
     </DisplayCard>
   )

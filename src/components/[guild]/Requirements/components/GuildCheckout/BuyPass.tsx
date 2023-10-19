@@ -39,7 +39,7 @@ import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 const BuyPass = () => {
   const { captureEvent } = usePostHogContext()
 
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const chainId = useChainId()
   const requirement = useRequirementContext()
   const { isOpen, onOpen, onClose, setAgreeWithTOS } = useGuildCheckoutContext()
@@ -69,7 +69,7 @@ const BuyPass = () => {
   }
 
   if (
-    !address ||
+    !isConnected ||
     (!accessData && isAccessValidating) ||
     requirement?.type !== "PAYMENT" ||
     !paymentSupportedChains.includes(requirement?.chain)

@@ -53,7 +53,7 @@ const Reward = ({
   isLinkColorful,
 }: RewardProps) => {
   const isMember = useIsMember()
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   const { hasAccess, isValidating } = useAccess(role.id)
@@ -69,7 +69,7 @@ const Reward = ({
           ? { ...accessButtonProps, colorScheme: "blue" }
           : accessButtonProps,
       }
-    if (!address || (!isMember && hasAccess))
+    if (!isConnected || (!isMember && hasAccess))
       return {
         tooltipLabel: (
           <>
@@ -83,7 +83,7 @@ const Reward = ({
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, address, accessButtonProps, isLinkColorful])
+  }, [isMember, hasAccess, isConnected, accessButtonProps, isLinkColorful])
 
   return (
     <RewardDisplay

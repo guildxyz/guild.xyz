@@ -11,14 +11,14 @@ import UserActivityLogPopover from "./components/UserActivityLogPopover"
 import DelegatePopoverWrapper from "./components/delegate/DelegatePopoverWrapper"
 
 const Account = (): JSX.Element => {
-  const { address } = useAccount()
+  const { address, isConnected } = useAccount()
   const { openWalletSelectorModal, openAccountModal, triedEager } =
     useWeb3ConnectionManager()
 
   const domainName = useResolveAddress(address)
   const { addresses } = useUser()
 
-  if (!address) {
+  if (!isConnected) {
     return (
       <AccountButton
         leftIcon={<SignIn />}

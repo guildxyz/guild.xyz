@@ -39,7 +39,7 @@ const PoapReward = ({
   isLinkColorful,
 }: Props) => {
   const isMember = useIsMember()
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
   const { poapLinks } = usePoapLinks(poap?.id)
   const availableLinks = poapLinks?.total - poapLinks?.claimed
@@ -64,7 +64,7 @@ const PoapReward = ({
           ? { ...buttonProps, colorScheme: "blue" }
           : buttonProps,
       }
-    if (!address || (!isMember && hasAccess))
+    if (!isConnected || (!isMember && hasAccess))
       return {
         tooltipLabel: (
           <>
@@ -78,7 +78,7 @@ const PoapReward = ({
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, address, availableLinks, isLinkColorful])
+  }, [isMember, hasAccess, isConnected, availableLinks, isLinkColorful])
 
   return (
     <HStack pt="3" spacing={2} alignItems={"flex-start"}>

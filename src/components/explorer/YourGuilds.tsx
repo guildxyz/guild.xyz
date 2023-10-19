@@ -17,7 +17,7 @@ const useYourGuilds = () =>
   })
 
 const YourGuilds = forwardRef((_, ref: any) => {
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
   const { data: usersGuilds, isLoading: isGuildsLoading } = useYourGuilds()
@@ -30,7 +30,7 @@ const YourGuilds = forwardRef((_, ref: any) => {
       sx={{ ".chakra-heading": { color: "white" } }}
       scrollMarginTop={20}
     >
-      {!address ? (
+      {!isConnected ? (
         <Card p="6">
           <Stack
             direction={{ base: "column", sm: "row" }}

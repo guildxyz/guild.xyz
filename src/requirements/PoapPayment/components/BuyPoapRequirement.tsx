@@ -45,7 +45,7 @@ type Props = { guildPoap: GuildPoap; poapContract: PoapContract } & ButtonProps
  */
 const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
   const { vaultId, chainId: vaultChainId } = poapContract
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const chainId = useChainId()
 
   const { poap } = usePoapById(guildPoap?.poapIdentifier?.toString())
@@ -162,7 +162,7 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
                   },
                 }}
               >
-                {!address ? (
+                {!isConnected ? (
                   <ConnectWalletButton />
                 ) : (
                   <>

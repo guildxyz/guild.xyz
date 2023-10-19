@@ -37,7 +37,7 @@ import usePrice from "./hooks/usePrice"
 const PurchaseRequirement = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const chainId = useChainId()
 
   const requirement = useRequirementContext()
@@ -121,7 +121,7 @@ const PurchaseRequirement = (): JSX.Element => {
                   },
                 }}
               >
-                {!address ? (
+                {!isConnected ? (
                   <ConnectWalletButton />
                 ) : (
                   !error && (

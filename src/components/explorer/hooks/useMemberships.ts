@@ -9,12 +9,10 @@ export type Memberships = Array<{
 }>
 
 const useMemberships = () => {
-  const { address } = useAccount()
-
-  const shouldFetch = !!address
+  const { address, isConnected } = useAccount()
 
   const { data, mutate, ...rest } = useSWRWithOptionalAuth<Memberships>(
-    shouldFetch ? `/v2/users/${address}/memberships` : null
+    isConnected ? `/v2/users/${address}/memberships` : null
   )
 
   return {

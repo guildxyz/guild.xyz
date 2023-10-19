@@ -8,7 +8,7 @@ import useAccess from "./useAccess"
 import useGuild from "./useGuild"
 
 const useAutoStatusUpdate = () => {
-  const { address } = useAccount()
+  const { isConnected, address } = useAccount()
   const { id } = useGuild()
   const { keyPair } = useKeyPair()
 
@@ -24,7 +24,7 @@ const useAutoStatusUpdate = () => {
   useEffect(() => {
     if (
       !keyPair ||
-      !address ||
+      !isConnected ||
       !Array.isArray(accesses) ||
       !Array.isArray(roleMemberships) ||
       !accesses?.length ||

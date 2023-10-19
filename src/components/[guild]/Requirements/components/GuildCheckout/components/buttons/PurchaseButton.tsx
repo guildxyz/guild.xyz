@@ -14,7 +14,7 @@ const PurchaseButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
-  const { address } = useAccount()
+  const { address, isConnected } = useAccount()
   const chainId = useChainId()
 
   const requirement = useRequirementContext()
@@ -64,7 +64,7 @@ const PurchaseButton = (): JSX.Element => {
       : tokenBalanceData.value >= maxPriceInWei)
 
   const isDisabled =
-    !address ||
+    !isConnected ||
     error ||
     estimateGasError ||
     !agreeWithTOS ||
@@ -83,7 +83,7 @@ const PurchaseButton = (): JSX.Element => {
       (estimateGasError?.data?.message?.includes("insufficient")
         ? "Insufficient funds for gas"
         : "Couldn't estimate gas")) ??
-    (address && !isSufficientBalance && "Insufficient balance")
+    (isConnected && !isSufficientBalance && "Insufficient balance")
 
   const onClick = () => {
     onSubmit()

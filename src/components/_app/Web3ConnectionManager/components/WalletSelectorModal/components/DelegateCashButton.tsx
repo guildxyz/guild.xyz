@@ -17,7 +17,7 @@ import { ArrowSquareOut } from "phosphor-react"
 import { useAccount } from "wagmi"
 
 const DelegateCashButton = (): JSX.Element => {
-  const { address, isConnected } = useAccount()
+  const { isConnected } = useAccount()
   const { ready } = useKeyPair()
 
   const iconUrl = "delegatecash.png"
@@ -25,8 +25,7 @@ const DelegateCashButton = (): JSX.Element => {
 
   const { setIsDelegateConnection } = useWeb3ConnectionManager()
 
-  // WAGMI TODO: do we really need to check both address and isConnected here?
-  if (address && ready && isConnected) return null
+  if (ready && isConnected) return null
 
   return (
     <Popover trigger="hover">

@@ -21,7 +21,7 @@ import { useAccount } from "wagmi"
  */
 const PoapRequiementAccessIndicator = ({ poapIdentifier }) => {
   const { openAccountModal } = useWeb3ConnectionManager()
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const { id, type, data, isNegated } = useRequirementContext()
 
   const { data: accessData } = useUserPoapEligibility(poapIdentifier)
@@ -31,7 +31,7 @@ const PoapRequiementAccessIndicator = ({ poapIdentifier }) => {
     (obj) => obj.requirementId === id
   )
 
-  if (!address) return null
+  if (!isConnected) return null
 
   if (
     reqAccessData?.access ||

@@ -25,7 +25,7 @@ const PoapAccessIndicator = ({
 }: Props): JSX.Element => {
   const { isLoading, data } = useUserPoapEligibility(poapIdentifier)
 
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
 
@@ -37,7 +37,7 @@ const PoapAccessIndicator = ({
       <AccessIndicatorUI colorScheme="gray" label="Not active yet" icon={EyeSlash} />
     )
 
-  if (!address)
+  if (!isConnected)
     return (
       <Button
         leftIcon={!isMobile && <LockSimple width={"0.9em"} height="0.9em" />}

@@ -54,13 +54,13 @@ const triggerChat = () => {
 }
 
 const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
-  const { address } = useAccount()
+  const { address, isConnected } = useAccount()
   const user = useUser()
 
   const { memberships } = useMemberships()
 
   useEffect(() => {
-    if (!address || !user || !memberships) return
+    if (!isConnected || !user || !memberships) return
 
     const connectedPlatforms = user.platformUsers
       ?.map((pu) => pu.platformName)
@@ -77,7 +77,7 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
       connectedPlatforms,
       managedGuilds,
     })
-  }, [address, user, memberships])
+  }, [address, isConnected, user, memberships])
 
   return (
     <IntercomContext.Provider

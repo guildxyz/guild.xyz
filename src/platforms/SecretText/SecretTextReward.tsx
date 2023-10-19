@@ -31,7 +31,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const isMember = useIsMember()
   const { hasAccess, isValidating: isAccessValidating } = useAccess(role.id)
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   // This is a partial duplication of the logic in the `Reward` component. I'll see what'll we need from it during the unique text reward implementation
@@ -41,7 +41,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
         tooltipLabel: "Reveal secret",
         buttonProps: {},
       }
-    if (!address || (!isMember && hasAccess))
+    if (!isConnected || (!isMember && hasAccess))
       return {
         tooltipLabel: (
           <>
@@ -55,7 +55,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, address])
+  }, [isMember, hasAccess, isConnected])
 
   return (
     <>

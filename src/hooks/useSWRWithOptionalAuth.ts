@@ -14,10 +14,10 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
 ): SWRResponse<Data, Error> & { isSigned: boolean } => {
   const useSWRHook = isMutable ? useSWR : useSWRImmutable
 
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const { keyPair, isValid, ready } = useKeyPair()
 
-  const shouldSendAuth = !!keyPair && ready && isValid && !!address
+  const shouldSendAuth = !!keyPair && ready && isValid && isConnected
 
   const fetcherWithSign = useFetcherWithSign()
   const authenticatedResponse = useSWRHook<Data, Error, any>(
