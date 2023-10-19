@@ -1,6 +1,6 @@
 import { Skeleton, SkeletonCircle, Text, VStack } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
-import useResolveAddress from "hooks/resolving/useResolveAddress"
+import useResolveAddress from "hooks/useResolveAddress"
 import shortenHex from "utils/shortenHex"
 
 type Props = {

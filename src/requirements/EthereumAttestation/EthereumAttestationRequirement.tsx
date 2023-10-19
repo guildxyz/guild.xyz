@@ -8,7 +8,7 @@ import Requirement, {
 import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useResolveAddress from "hooks/resolving/useResolveAddress"
+import useResolveAddress from "hooks/useResolveAddress"
 import shortenHex from "utils/shortenHex"
 
 export const EAS_SCAN_BASE = {
