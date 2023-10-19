@@ -82,7 +82,6 @@ type RpcConfig = Record<
     apiUrl?: string
     iconUrls: string[]
     rpcUrls: string[]
-    multicallAddress?: string
   }
 >
 
@@ -130,7 +129,17 @@ const CHAIN_CONFIG: Partial<Record<Chain, ViemChain>> = {
       },
     },
     network: "",
-  }, // WAGMI TODO
+    blockExplorers: {
+      default: {
+        name: "Etherscan",
+        url: "https://goerli.etherscan.io",
+      },
+      etherscan: {
+        name: "Etherscan",
+        url: "https://goerli.etherscan.io",
+      },
+    },
+  },
   POLYGON_MUMBAI: polygonMumbai,
   BASE_MAINNET: base,
   ZORA: zora,
@@ -160,7 +169,6 @@ const RPC: RpcConfig = {
         ? `https://eth-mainnet.g.alchemy.com/v2/${process.env.MAINNET_ALCHEMY_KEY}`
         : "https://cloudflare-eth.com",
     ],
-    multicallAddress: "0x5ba1e12693dc8f9c48aad8770482f4739beed696",
   },
   BSC: {
     chainId: 56,
@@ -181,7 +189,6 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api.bscscan.com",
     iconUrls: ["/networkLogos/bsc.svg"],
-    multicallAddress: "0x41263cba59eb80dc200f3e2544eda4ed6a90e76c",
   },
   POLYGON: {
     chainId: 137,
@@ -206,7 +213,6 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api.polygonscan.com",
     iconUrls: ["/networkLogos/polygon.svg"],
-    multicallAddress: "0x11ce4B23bD875D7F5C6a31084f55fDe1e9A87507",
   },
   AVALANCHE: {
     chainId: 43114,
@@ -227,7 +233,6 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api.snowtrace.io",
     iconUrls: ["/networkLogos/avalanche.svg"],
-    multicallAddress: "0x98e2060F672FD1656a07bc12D7253b5e41bF3876",
   },
   GNOSIS: {
     chainId: 100,
@@ -248,7 +253,6 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api.gnosisscan.io",
     iconUrls: ["/networkLogos/gnosis.svg"],
-    multicallAddress: "0xb5b692a88bdfc81ca69dcb1d924f59f0413a602a",
   },
   FANTOM: {
     chainId: 250,
@@ -269,7 +273,6 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api.ftmscan.com",
     iconUrls: ["/networkLogos/fantom.svg"],
-    multicallAddress: "0xD98e3dBE5950Ca8Ce5a4b59630a5652110403E5c",
   },
   ARBITRUM: {
     chainId: 42161,
@@ -294,7 +297,6 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api.arbiscan.io",
     iconUrls: ["/networkLogos/arbitrum.svg"],
-    multicallAddress: "0x52bfe8fE06c8197a8e3dCcE57cE012e13a7315EB",
   },
   NOVA: {
     chainId: 42170,
@@ -315,7 +317,6 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api-nova.arbiscan.io",
     iconUrls: ["/networkLogos/nova.svg"],
-    multicallAddress: "0x5e1eE626420A354BbC9a95FeA1BAd4492e3bcB86",
   },
   CELO: {
     chainId: 42220,
@@ -336,7 +337,6 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://explorer.celo.org",
     iconUrls: ["/networkLogos/celo.svg"],
-    multicallAddress: "0xb74C3A8108F1534Fc0D9b776A9B487c84fe8eD06",
   },
   HARMONY: {
     chainId: 1666600000,
@@ -356,7 +356,6 @@ const RPC: RpcConfig = {
       dark: "/networkLogos/harmony.svg",
     },
     iconUrls: ["/networkLogos/harmony.svg"],
-    multicallAddress: "0x34b415f4d3b332515e66f70595ace1dcf36254c5",
   },
   OPTIMISM: {
     chainId: 10,
@@ -377,7 +376,6 @@ const RPC: RpcConfig = {
     apiUrl: "https://api-optimistic.etherscan.io",
     iconUrls: ["/networkLogos/optimism.svg"],
     rpcUrls: ["https://optimism.publicnode.com"],
-    multicallAddress: "0x2DC0E2aa608532Da689e89e237dF582B783E552C",
   },
   MOONBEAM: {
     chainId: 1284,
@@ -398,7 +396,6 @@ const RPC: RpcConfig = {
     apiUrl: "https://api-moonbeam.moonscan.io",
     iconUrls: ["/networkLogos/moonbeam.svg"],
     rpcUrls: ["https://rpc.api.moonbeam.network"],
-    multicallAddress: "0x83e3b61886770de2F64AAcaD2724ED4f08F7f36B",
   },
   MOONRIVER: {
     chainId: 1285,
@@ -419,7 +416,6 @@ const RPC: RpcConfig = {
     apiUrl: "https://api-moonriver.moonscan.io",
     iconUrls: ["/networkLogos/moonriver.svg"],
     rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
-    multicallAddress: "0x270f2F35bED92B7A59eA5F08F6B3fd34c8D9D9b5",
   },
   METIS: {
     chainId: 1088,
@@ -440,7 +436,6 @@ const RPC: RpcConfig = {
     apiUrl: "https://andromeda-explorer.metis.io",
     iconUrls: ["/networkLogos/metis.svg"],
     rpcUrls: ["https://andromeda.metis.io/?owner=1088"],
-    multicallAddress: "0x1a2AFb22B8A90A77a93e80ceA61f89D04e05b796",
   },
   CRONOS: {
     chainId: 25,
@@ -461,7 +456,6 @@ const RPC: RpcConfig = {
     apiUrl: "https://cronos.org/explorer",
     iconUrls: ["/networkLogos/cronos.svg"],
     rpcUrls: ["https://evm.cronos.org"],
-    multicallAddress: "0x0fA4d452693F2f45D28c4EC4d20b236C4010dA74",
   },
   BOBA: {
     chainId: 288,
@@ -482,7 +476,6 @@ const RPC: RpcConfig = {
     apiUrl: "https://api.bobascan.com",
     iconUrls: ["/networkLogos/boba.svg"],
     rpcUrls: ["https://mainnet.boba.network"],
-    multicallAddress: "0xbe2Be647F8aC42808E67431B4E1D6c19796bF586",
   },
   BOBA_AVAX: {
     chainId: 43288,
@@ -503,7 +496,6 @@ const RPC: RpcConfig = {
     apiUrl: "https://blockexplorer.avax.boba.network",
     iconUrls: ["/networkLogos/boba.svg"],
     rpcUrls: ["https://avax.boba.network"],
-    multicallAddress: "0x352E11Da7C12EA2440b079A335E67ff9219f6FfB",
   },
   PALM: {
     chainId: 11297108109,
@@ -523,7 +515,6 @@ const RPC: RpcConfig = {
     apiUrl: "https://explorer.palm.io",
     iconUrls: ["/networkLogos/palm.png"],
     rpcUrls: ["https://palm-mainnet.infura.io/v3/3a961d6501e54add9a41aa53f15de99b"],
-    multicallAddress: "0xfFE2FF36c5b8D948f788a34f867784828aa7415D",
   },
   EXOSAMA: {
     chainId: 2109,
@@ -544,7 +535,6 @@ const RPC: RpcConfig = {
     apiUrl: "https://explorer.exosama.com",
     iconUrls: ["/networkLogos/exosama.png"],
     rpcUrls: ["https://rpc.exosama.com"],
-    multicallAddress: "0x2feFC828e2fEfdE0C9f7740919c6A9139F886067",
   },
   EVMOS: {
     chainId: 9001,
@@ -563,7 +553,6 @@ const RPC: RpcConfig = {
     },
     iconUrls: ["/networkLogos/evmos.svg"],
     rpcUrls: ["https://eth.bd.evmos.org:8545"],
-    multicallAddress: "",
   },
   BASE_MAINNET: {
     chainId: 8453,
@@ -584,7 +573,6 @@ const RPC: RpcConfig = {
     apiUrl: "https://api.basescan.org",
     iconUrls: ["/networkLogos/base.svg"],
     rpcUrls: ["https://developer-access-mainnet.base.org"],
-    multicallAddress: "",
   },
   BASE_GOERLI: {
     chainId: 84531,
@@ -605,7 +593,6 @@ const RPC: RpcConfig = {
     apiUrl: "https://api-goerli.basescan.org",
     iconUrls: ["/networkLogos/base.svg"],
     rpcUrls: ["https://goerli.base.org"],
-    multicallAddress: "",
   },
   ZETACHAIN_ATHENS: {
     chainId: 7001,
@@ -726,7 +713,6 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api-goerli.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
-    multicallAddress: "0x77dCa2C955b15e9dE4dbBCf1246B4B85b651e50e",
   },
   POLYGON_MUMBAI: {
     chainId: 80001,
