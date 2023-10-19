@@ -6,16 +6,25 @@ export default async function createAndAwaitJob<
   body: any,
   queryParams: Record<string, any>
 ) {
-  await fetcherWithSign([url, { method: "POST", body }])
+  const poll = (): Promise<Job[]> =>
+    fetcherWithSign([
+      `${url}?${new URLSearchParams(queryParams).toString()}`,
+      { method: "GET" },
+    ])
+
+  const initialPollResult = await poll().catch(() => null as Job[])
+
+  const jobAlreadyInProgress = initialPollResult?.find((job) => !job.done)
+
+  if (!jobAlreadyInProgress) {
+    await fetcherWithSign([url, { method: "POST", body }])
+  }
 
   let interval: ReturnType<typeof setInterval>
 
   return new Promise<Job | null>((resolve, reject) => {
     interval = setInterval(() => {
-      fetcherWithSign([
-        `${url}?${new URLSearchParams(queryParams).toString()}`,
-        { method: "GET" },
-      ]).then(([job = null]) => {
+      poll().then(([job = null]) => {
         if (!job) {
           reject(job)
           return // Return is needed, so TS knows, that after this point job is not null
