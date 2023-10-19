@@ -56,6 +56,7 @@ enum Chains {
   POLYGON_MUMBAI = 80001,
   BASE_MAINNET = 8453,
   ZORA = 7777777,
+  POLYGON_ZKEVM = 1101,
 }
 
 export type Chain = keyof typeof Chains
@@ -212,6 +213,26 @@ const RPC: RpcConfig = {
       dark: "/networkLogos/polygon.svg",
     },
     apiUrl: "https://api.polygonscan.com",
+    iconUrls: ["/networkLogos/polygon.svg"],
+  },
+  POLYGON_ZKEVM: {
+    chainId: 1101,
+    chainName: "Polygon zkEVM",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://zkevm-rpc.com"],
+    blockExplorerUrls: ["https://zkevm.polygonscan.com"],
+    blockExplorerIcons: {
+      light: "/networkLogos/polygon.svg",
+      dark: "/networkLogos/polygon.svg",
+    },
+    // apiUrl: "https://api.polygonscan.com",
     iconUrls: ["/networkLogos/polygon.svg"],
   },
   AVALANCHE: {

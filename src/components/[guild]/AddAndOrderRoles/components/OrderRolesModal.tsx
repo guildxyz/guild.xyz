@@ -10,6 +10,7 @@ import {
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
+import useGroup from "components/[guild]/hooks/useGroup"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Reorder } from "framer-motion"
 import { useMemo, useState } from "react"
@@ -19,6 +20,11 @@ import DraggableRoleCard from "./DraggableRoleCard"
 
 const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { roles } = useGuild()
+  const group = useGroup()
+  const relevantRoles = group
+    ? roles.filter((role) => role.groupId === group.id)
+    : roles.filter((role) => !role.groupId)
+
   const {
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
@@ -27,27 +33,27 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
-    if (roles?.every((role) => role.position === null)) {
-      const byMembers = roles?.sort(
+    if (relevantRoles?.every((role) => role.position === null)) {
+      const byMembers = relevantRoles?.sort(
         (role1, role2) => role2.memberCount - role1.memberCount
       )
       return byMembers
     }
 
     return (
-      roles?.sort((role1, role2) => {
+      relevantRoles?.sort((role1, role2) => {
         if (role1.position === null) return 1
         if (role2.position === null) return -1
         return role1.position - role2.position
       }) ?? []
     )
-  }, [roles])
+  }, [relevantRoles])
 
-  const publicRoles = sortedRoles.filter(
+  const publicAndSecretRoles = sortedRoles.filter(
     (role) => role.visibility !== Visibility.HIDDEN
   )
 
-  const defaultRoleIdsOrder = publicRoles?.map((role) => role.id)
+  const defaultRoleIdsOrder = publicAndSecretRoles?.map((role) => role.id)
   const [roleIdsOrder, setRoleIdsOrder] = useState(defaultRoleIdsOrder)
 
   /**
@@ -66,7 +72,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
         position: i,
       }))
       .filter(({ id: roleId, position }) =>
-        (roles ?? []).some(
+        (relevantRoles ?? []).some(
           (prevRole) => prevRole.id === roleId && prevRole.position !== position
         )
       )
@@ -102,7 +108,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
               {roleIdsOrder?.map((roleId) => (
                 <Reorder.Item key={roleId} value={roleId}>
                   <DraggableRoleCard
-                    role={roles?.find((role) => role.id === roleId)}
+                    role={relevantRoles?.find((role) => role.id === roleId)}
                   />
                 </Reorder.Item>
               ))}

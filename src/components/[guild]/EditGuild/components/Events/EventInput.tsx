@@ -63,7 +63,11 @@ const EventInput = ({ eventSource }: Props) => {
             aria-label="Remove link"
             size="sm"
             rounded="full"
-            onClick={() => setValue(`eventSources.${eventSource}`, undefined)}
+            onClick={() =>
+              setValue(`eventSources.${eventSource}`, undefined, {
+                shouldDirty: true,
+              })
+            }
           />
         </InputRightElement>
       </InputGroup>

@@ -12,6 +12,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
+
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -41,6 +42,7 @@ type Props = {
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
+  // WAGMI TODO: use pendingConnector where needed
   const { connectors, error, isLoading, pendingConnector } = useConnect()
   const { disconnect } = useDisconnect()
   const { isConnected, connector } = useAccount()
@@ -250,6 +252,14 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     onClick={onClose}
                   >
                     Privacy Policy
+                  </Link>{" "}
+                  and
+                  <Link
+                    href="/terms-and-conditions"
+                    fontWeight={"semibold"}
+                    onClick={onClose}
+                  >
+                    Terms & conditions
                   </Link>
                 </Text>
               </Stack>

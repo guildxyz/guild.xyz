@@ -2,14 +2,14 @@ import { ToastId } from "@chakra-ui/react"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRef } from "react"
-import { useSWRConfig } from "swr"
 import { Role } from "types"
-import fetcher from "utils/fetcher"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 import { useAccount } from "wagmi"
@@ -20,16 +20,18 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
   const toastIdRef = useRef<ToastId>()
   const { address } = useAccount()
 
-  const { mutate } = useSWRConfig()
+  const fetcherWithSign = useFetcherWithSign()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const { id, mutateGuild } = useGuild()
 
+  const { mutate: mutateActiveStatusUpdates } = useActiveStatusUpdates()
+
   const fetchData = async (
     signedValidation: SignedValdation
-  ): Promise<RoleOrGuild> => fetcher("/role", signedValidation)
+  ): Promise<RoleOrGuild> => fetcher(`/v2/guilds/${id}/roles`, signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {
     onError: (error_) => {
@@ -50,7 +52,19 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
       })
 
       mutateOptionalAuthSWRKey(`/guild/access/${id}/${address}`)
-      mutate(`/statusUpdate/guild/${id}`)
+
+      // Disabled temporarily, until we test it properly
+      // await fetcherWithSign([
+      //   `/v2/actions/status-update`,
+      //   {
+      //     method: "POST",
+      //     body: {
+      //       roleIds: [response_.id],
+      //       manageRewards: false,
+      //     },
+      //   },
+      // ])
+      mutateActiveStatusUpdates()
 
       await mutateGuild(async (curr) => ({
         ...curr,

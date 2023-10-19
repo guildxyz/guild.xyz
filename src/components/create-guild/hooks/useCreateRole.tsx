@@ -1,3 +1,5 @@
+import useGroup from "components/[guild]/hooks/useGroup"
+
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -26,6 +28,8 @@ type CreateRoleResponse = Role & { createdGuildPlatforms?: GuildPlatform[] }
 
 const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
   const { id, urlName, memberCount, mutateGuild } = useGuild()
+  const group = useGroup()
+
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName, memberCount }
 
@@ -97,6 +101,8 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
       delete data.roleType
 
       if (data.logic !== "ANY_OF") delete data.anyOfNum
+
+      if (group) data.groupId = group.id
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },

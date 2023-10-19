@@ -84,6 +84,7 @@ type PlatformName =
   | "CONTRACT_CALL"
   | "TWITTER_V1"
   | "EMAIL"
+  | "UNIQUE_TEXT"
   | "TEXT"
 
 type PlatformUserData = {
@@ -205,6 +206,7 @@ type PlatformGuildData = {
     symbol?: never
     description?: never
     text?: never
+    texts?: never
     imageUrl?: never
   }
   GOOGLE: {
@@ -223,6 +225,7 @@ type PlatformGuildData = {
     symbol?: never
     description?: never
     text?: never
+    texts?: never
     imageUrl?: never
   }
   CONTRACT_CALL: {
@@ -241,9 +244,29 @@ type PlatformGuildData = {
     mimeType?: never
     iconLink?: never
     text?: never
+    texts?: never
+  }
+  UNIQUE_TEXT: {
+    texts: string[]
+    text?: never
+    name: string
+    imageUrl: string
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    description?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    role?: never
+    mimeType?: never
+    iconLink?: never
   }
   TEXT: {
     text: string
+    texts?: never
     name: string
     imageUrl: string
     chain?: never
@@ -325,6 +348,7 @@ type SimpleRole = {
 }
 
 type Role = SimpleRole & {
+  groupId?: number
   members: string[]
   requirements: Requirement[]
   rolePlatforms: RolePlatform[]
@@ -404,6 +428,7 @@ type Guild = {
   theme: Theme
   guildPlatforms: GuildPlatform[]
   roles: Role[]
+  groups: Group[]
   members: Array<string>
   poaps: Array<GuildPoap>
   onboardingComplete: boolean
@@ -417,6 +442,7 @@ type Guild = {
     isActive: boolean
   }
   isFallback?: boolean
+  isDetailed?: boolean
 }
 type GuildFormType = Partial<
   Pick<
@@ -452,6 +478,17 @@ type GuildFormType = Partial<
     isOwner?: boolean
   }>
   eventSources?: Record<EventSourcesKey, string>
+}
+
+type Group = {
+  id: number
+  urlName: string
+  name: string
+  description?: string
+  imageUrl?: string
+  type?: string
+  position: number
+  guildId: number
 }
 
 type SelectOption<T = string> = {
@@ -519,6 +556,7 @@ export enum PlatformType {
   // "STEAM" = 6,
   "CONTRACT_CALL" = 7,
   "TWITTER_V1" = 8,
+  "UNIQUE_TEXT" = 9,
   "TEXT" = 10,
 }
 
@@ -688,6 +726,7 @@ export type {
   GitPoap,
   GoogleFile,
   Guild,
+  Group,
   GuildAdmin,
   GuildBase,
   GuildFormType,

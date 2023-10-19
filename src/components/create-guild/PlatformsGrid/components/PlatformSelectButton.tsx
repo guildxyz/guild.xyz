@@ -111,7 +111,7 @@ const PlatformSelectButton = ({
           maxW="full"
         >
           <Heading
-            fontSize={{ lg: "lg" }}
+            fontSize="md"
             fontWeight="bold"
             letterSpacing="wide"
             maxW="full"

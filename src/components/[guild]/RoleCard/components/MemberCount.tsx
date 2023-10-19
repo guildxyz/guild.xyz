@@ -13,25 +13,16 @@ type Props = {
   memberCount: number
   roleId?: number
   size?: "sm" | "md"
-  onStatusUpdateSuccess?: () => void
 }
 
-const MemberCount = ({
-  memberCount,
-  roleId,
-  size = "md",
-  onStatusUpdateSuccess,
-}: Props) => {
-  const { status, progress } = useActiveStatusUpdates(roleId, onStatusUpdateSuccess)
+const MemberCount = ({ memberCount, roleId, size = "md" }: Props) => {
+  const { status } = useActiveStatusUpdates(roleId)
 
   const iconSize = size === "sm" ? "14px" : "16px"
 
   if (status === "STARTED")
     return (
-      <Tooltip
-        label={`Syncing ${progress.actionsDone}/${progress.total} members`}
-        hasArrow
-      >
+      <Tooltip label={`Syncing members`} hasArrow>
         <Tag colorScheme="blue" mt="2px !important" flexShrink={0} size={size}>
           <TagLeftIcon as={Users} boxSize={iconSize} />
           <TagLabel mb="-1px">
