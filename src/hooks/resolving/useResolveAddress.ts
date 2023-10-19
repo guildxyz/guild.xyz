@@ -1,13 +1,13 @@
 import { CHAIN_CONFIG, Chain, Chains } from "connectors"
 import { createStore, del, get, set } from "idb-keyval"
+import nnsReverseResolveAbi from "static/abis/nnsReverseResolve"
 import unsRegistryAbi from "static/abis/unsRegistry"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 import { PublicClient, createPublicClient, http } from "viem"
 import { mainnet } from "wagmi"
 
-const ENS_REGISTRY = "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
-const NNS_REGISTRY = "0x3e1970dc478991b49c4327973ea8a4862ef5a4de"
+const NNS_REGISTRY = "0x849f92178950f6254db5d16d1ba265e70521ac1b"
 
 type UnstoppableDomainsChains = Extract<
   Chain,
@@ -37,10 +37,12 @@ const fetchENSName = async (address: `0x${string}`): Promise<string> => {
     chain: mainnet,
     transport: http(),
   })
-  const ens = await publicClient.getEnsName({
-    address,
-    universalResolverAddress: ENS_REGISTRY,
-  })
+
+  const ens = await publicClient
+    .getEnsName({
+      address,
+    })
+    .catch(() => null)
 
   if (ens) {
     await setResolvedAddressToIdb(address, {
@@ -57,10 +59,15 @@ const fetchNNSName = async (address: `0x${string}`): Promise<string> => {
     chain: mainnet,
     transport: http(),
   })
-  const nns = await publicClient.getEnsName({
-    address,
-    universalResolverAddress: NNS_REGISTRY,
-  })
+
+  const nns = await publicClient
+    .readContract({
+      address: NNS_REGISTRY,
+      abi: nnsReverseResolveAbi,
+      functionName: "resolve",
+      args: [address],
+    })
+    .catch(() => null)
 
   if (nns) {
     await setResolvedAddressToIdb(address, {
@@ -83,7 +90,9 @@ const fetchLensProtocolName = async (address: string): Promise<string> => {
         }}
       }`,
     },
-  }).then((res) => res?.data?.profiles?.items?.[0]?.handle)
+  })
+    .then((res) => res?.data?.profiles?.items?.[0]?.handle)
+    .catch(() => null)
 
   if (lens) {
     await setResolvedAddressToIdb(address, {
@@ -112,7 +121,9 @@ const fetchDotbitName = async (address: string): Promise<string> => {
         },
       ],
     },
-  }).then((res) => res.result?.data?.account)
+  })
+    .then((res) => res.result?.data?.account)
+    .catch(() => null)
 
   if (dotbit) {
     await setResolvedAddressToIdb(address, {
