@@ -60,8 +60,8 @@ const PurchaseButton = (): JSX.Element => {
     maxPriceInWei &&
     (coinBalanceData || tokenBalanceData) &&
     (pickedCurrencyIsNative
-      ? coinBalanceData.value >= maxPriceInWei
-      : tokenBalanceData.value >= maxPriceInWei)
+      ? coinBalanceData?.value >= maxPriceInWei
+      : tokenBalanceData?.value >= maxPriceInWei)
 
   const isDisabled =
     !isConnected ||

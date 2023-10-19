@@ -136,8 +136,8 @@ const usePurchaseAsset = () => {
     priceData?.maxPriceInWei &&
     (coinBalanceData || tokenBalanceData) &&
     (pickedCurrencyIsNative
-      ? coinBalanceData.value >= priceData.maxPriceInWei
-      : tokenBalanceData.value >= priceData.maxPriceInWei)
+      ? coinBalanceData?.value >= priceData.maxPriceInWei
+      : tokenBalanceData?.value >= priceData.maxPriceInWei)
 
   const shouldEstimateGas =
     requirement?.chain === Chains[chainId] &&

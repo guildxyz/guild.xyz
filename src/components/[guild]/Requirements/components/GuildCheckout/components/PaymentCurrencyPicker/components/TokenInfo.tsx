@@ -13,7 +13,6 @@ import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Fragment } from "react"
 import { Rest } from "types"
-import { formatUnits } from "viem"
 import { useAccount, useBalance } from "wagmi"
 
 type Props = {
@@ -41,7 +40,7 @@ const TokenInfo = ({
     : undefined
 
   const {
-    data: { symbol, decimals, logoURI },
+    data: { symbol, logoURI },
     error: tokenDataError,
     isValidating: isTokenDataLoading,
   } = useTokenData(Chains[chainId], tokenAddress)
@@ -59,17 +58,13 @@ const TokenInfo = ({
 
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
 
-  const balance = formatUnits(
-    BigInt(
+  const formattedBalance = Number(
+    Number(
       (tokenAddress === RPC[Chains[chainId]]?.nativeCurrency?.symbol
-        ? coinBalanceData?.value
-        : tokenBalanceData?.value) ?? 0
-    ),
-    tokenAddress === RPC[Chains[chainId]]?.nativeCurrency?.symbol
-      ? RPC[Chains[chainId]]?.nativeCurrency?.decimals
-      : decimals ?? 18
+        ? coinBalanceData?.formatted
+        : tokenBalanceData?.formatted) ?? 0
+    ).toFixed(3)
   )
-  const formattedBalance = Number(Number(balance).toFixed(3))
 
   const Wrapper = asMenuItem ? MenuItem : Fragment
 
