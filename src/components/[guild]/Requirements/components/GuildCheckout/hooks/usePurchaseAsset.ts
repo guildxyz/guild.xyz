@@ -141,7 +141,7 @@ const usePurchaseAsset = () => {
 
   const shouldEstimateGas =
     requirement?.chain === Chains[chainId] &&
-    typeof priceData?.maxPriceInWei === "bigint" &&
+    priceData &&
     isSufficientBalance &&
     (ADDRESS_REGEX.test(pickedCurrency)
       ? typeof allowance === "bigint" && priceData.maxPriceInWei <= allowance

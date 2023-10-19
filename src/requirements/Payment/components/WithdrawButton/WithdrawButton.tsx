@@ -24,7 +24,7 @@ const WithdrawButton = (): JSX.Element => {
 
   const isOnVaultsChain = Chains[chain] === chainId
   const isDisabledLabel =
-    typeof balance === "bigint" && balance === BigInt(0)
+    balance === BigInt(0)
       ? "Withdrawable amount is 0"
       : owner && owner !== address
       ? `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
