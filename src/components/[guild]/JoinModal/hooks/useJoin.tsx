@@ -10,8 +10,8 @@ import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { atom, useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { CircleWavyCheck } from "phosphor-react"
+import useSWRImmutable from "swr/immutable"
 import { PlatformName } from "types"
-import createAndAwaitJob from "utils/createAndAwaitJob"
 import { useFetcherWithSign } from "utils/fetcher"
 
 export const QUEUE_FEATURE_FLAG = "GUILD_QUEUES"
@@ -55,6 +55,8 @@ const useJoin = (
   const guild = useGuild()
   const user = useUser()
 
+  const hasFeatureFlag = guild.featureFlags.includes(QUEUE_FEATURE_FLAG)
+
   const toastWithTweetButton = useToastWithTweetButton()
   const toastWithButton = useToastWithButton()
 
@@ -67,28 +69,26 @@ const useJoin = (
     guildId: number
     shareSocials: boolean
     platforms: any[]
-  }): Promise<Response> => {
-    if (true || guild.featureFlags.includes(QUEUE_FEATURE_FLAG)) {
-      const result = await createAndAwaitJob<JoinJob>(
-        fetcherWithSign,
-        "/v2/actions/join",
-        { guildId: data?.guildId },
-        { guildId: `${data?.guildId}` }
-      )
+  }): Promise<Response | string> => {
+    if (hasFeatureFlag) {
+      const initialPollResult: JoinJob[] = await fetcherWithSign([
+        `/v2/actions/join?${new URLSearchParams({
+          guildId: `${guild?.id}`,
+        }).toString()}`,
+        { method: "GET" },
+      ]).catch(() => null as JoinJob[])
 
-      const accessedRoleIds = (result?.roleAccesses ?? [])
-        .filter((roleAccess) => !!roleAccess?.access)
-        .map(({ roleId }) => roleId)
+      const jobAlreadyInProgress = initialPollResult?.find((job) => !job.done)
 
-      if ((result as any)?.failed) {
-        throw new Error((result as any)?.failedErrorMsg)
+      if (jobAlreadyInProgress) {
+        return jobAlreadyInProgress?.id
       }
 
-      return {
-        success: true,
-        accessedRoleIds,
-        platformResults: [],
-      }
+      const { jobId } = await fetcherWithSign([
+        `/v2/actions/join`,
+        { method: "POST", body: { guildId: guild?.id } },
+      ])
+      return jobId
     }
 
     return fetcherWithSign([`/user/join`, { method: "POST", body: data }]).then(
@@ -113,67 +113,126 @@ const useJoin = (
   const { onOpen } = mintGuildPinContext ?? {}
   const { pathname } = useRouter()
 
-  const useSubmitResponse = useSubmit(submit, {
-    onSuccess: (response: Response) => {
-      access?.mutate?.()
-      // mutate user in case they connected new platforms during the join flow
-      user?.mutate?.()
+  const onJoinSuccess = (response: Response) => {
+    access?.mutate?.()
+    // mutate user in case they connected new platforms during the join flow
+    user?.mutate?.()
 
-      onSuccess?.(response)
+    onSuccess?.(response)
 
-      if (!response.success) return
+    if (!response.success) return
 
-      setIsAfterJoin(true)
+    setIsAfterJoin(true)
 
-      setTimeout(() => {
-        mutate(
-          (prev) => [
-            ...(prev ?? []),
-            {
-              guildId: guild.id,
-              isAdmin: false,
-              roleIds: response.accessedRoleIds,
-              joinedAt: new Date().toISOString(),
-            },
-          ],
-          { revalidate: false }
-        )
-        // show user in guild's members
-        guild.mutateGuild()
-      }, 800)
+    setTimeout(() => {
+      mutate(
+        (prev) => [
+          ...(prev ?? []),
+          {
+            guildId: guild.id,
+            isAdmin: false,
+            roleIds: response.accessedRoleIds,
+            joinedAt: new Date().toISOString(),
+          },
+        ],
+        { revalidate: false }
+      )
+      // show user in guild's members
+      guild.mutateGuild()
+    }, 800)
 
-      if (shouldShowSuccessToast) {
-        if (
-          pathname === "/[guild]" &&
-          guild.featureFlags.includes("GUILD_CREDENTIAL")
-        ) {
-          toastWithButton({
-            status: "success",
-            title: "Successfully joined guild",
-            description: "Let others know as well by minting it onchain",
-            buttonProps: {
-              leftIcon: <CircleWavyCheck weight="fill" />,
-              children: "Mint Guild Pin",
-              onClick: onOpen,
-            },
-          })
-        } else {
-          toastWithTweetButton({
-            title: "Successfully joined guild",
-            tweetText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
-          guild.xyz/${guild.urlName}`,
-          })
-        }
+    if (shouldShowSuccessToast) {
+      if (
+        pathname === "/[guild]" &&
+        guild.featureFlags.includes("GUILD_CREDENTIAL")
+      ) {
+        toastWithButton({
+          status: "success",
+          title: "Successfully joined guild",
+          description: "Let others know as well by minting it onchain",
+          buttonProps: {
+            leftIcon: <CircleWavyCheck weight="fill" />,
+            children: "Mint Guild Pin",
+            onClick: onOpen,
+          },
+        })
+      } else {
+        toastWithTweetButton({
+          title: "Successfully joined guild",
+          tweetText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
+        guild.xyz/${guild.urlName}`,
+        })
       }
-    },
+    }
+  }
+
+  const useSubmitResponse = useSubmit(submit, {
+    onSuccess: hasFeatureFlag ? undefined : onJoinSuccess,
     onError: (error) => {
       captureEvent(`Guild join error`, { error })
       onError?.(error)
     },
   })
 
+  const shouldFetchProgress = hasFeatureFlag && !!useSubmitResponse?.response
+
+  const progress = useSWRImmutable<JoinJob>(
+    shouldFetchProgress
+      ? `/v2/actions/join?${new URLSearchParams({
+          guildId: `${guild?.id}`,
+        }).toString()}`
+      : null,
+
+    (key) =>
+      fetcherWithSign([key, { method: "GET" }]).then(
+        (result: JoinJob[]) => result?.[0]
+      ),
+    {
+      onSuccess: (job) => {
+        if (job?.done) {
+          useSubmitResponse?.reset()
+          onJoinSuccess({
+            success: true,
+            accessedRoleIds: (job?.roleAccesses ?? [])
+              .filter((roleAccess) => !!roleAccess?.access)
+              .map(({ roleId }) => roleId),
+            platformResults: [], // Not used
+          })
+        }
+      },
+      refreshInterval:
+        typeof useSubmitResponse?.response === "string" ? 500 : undefined,
+    }
+  )
+
+  const response = hasFeatureFlag
+    ? progress?.data?.done && !(progress?.data as any)?.failed
+      ? {
+          success: true,
+          accessedRoleIds: (progress?.data?.roleAccesses ?? [])
+            .filter((roleAccess) => !!roleAccess?.access)
+            .map(({ roleId }) => roleId),
+          platformResults: [], // Not used
+        }
+      : undefined
+    : (useSubmitResponse?.response as Response)
+
+  const isLoading = hasFeatureFlag
+    ? useSubmitResponse?.isLoading ||
+      progress?.isLoading ||
+      progress?.isValidating ||
+      (!!progress?.data && !progress?.data?.done)
+    : useSubmitResponse?.isLoading
+
+  const error = hasFeatureFlag
+    ? (progress?.data as any)?.failedErrorMsg
+    : useSubmitResponse?.error
+
   return {
-    ...useSubmitResponse,
+    response,
+    isLoading,
+    error,
+    progress: hasFeatureFlag ? progress?.data : undefined,
     onSubmit: (data?) =>
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
