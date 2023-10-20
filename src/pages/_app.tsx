@@ -52,6 +52,12 @@ const config = createConfig({
       chains,
       options: {
         projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+        showQrModal: true,
+        qrModalOptions: {
+          themeVariables: {
+            "--wcm-z-index": "10001",
+          },
+        },
       },
     }),
     new SafeConnector({
