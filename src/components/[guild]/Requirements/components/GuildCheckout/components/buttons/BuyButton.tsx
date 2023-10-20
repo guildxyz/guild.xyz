@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
@@ -79,7 +79,7 @@ const BuyButton = (): JSX.Element => {
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
 
   const pickedCurrencyIsNative =
-    pickedCurrency === RPC[requirement?.chain]?.nativeCurrency?.symbol
+    pickedCurrency === CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
 
   const isSufficientBalance =
     fee &&

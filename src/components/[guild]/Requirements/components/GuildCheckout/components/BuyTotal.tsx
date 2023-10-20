@@ -1,5 +1,5 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
-import { RPC } from "connectors"
+import { CHAIN_CONFIG } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useVault from "requirements/Payment/hooks/useVault"
 import { formatUnits } from "viem"
@@ -24,12 +24,15 @@ const BuyTotal = (): JSX.Element => {
   } = useTokenData(requirement.chain, token)
 
   const isNativeCurrency =
-    pickedCurrency === RPC[requirement.chain].nativeCurrency.symbol
+    pickedCurrency === CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
 
   const { estimatedGasFee, estimateGasError, isEstimateGasLoading } = usePayFee()
   const estimatedGasInFloat = estimatedGasFee
     ? parseFloat(
-        formatUnits(estimatedGasFee, RPC[requirement.chain].nativeCurrency.decimals)
+        formatUnits(
+          estimatedGasFee,
+          CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
+        )
       )
     : null
 
@@ -91,9 +94,11 @@ const BuyTotal = (): JSX.Element => {
               : `${parseFloat(
                   formatUnits(
                     estimatedGasFee,
-                    RPC[requirement.chain].nativeCurrency.decimals
+                    CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
                   )
-                ).toFixed(8)} ${RPC[requirement.chain].nativeCurrency.symbol}`}
+                ).toFixed(8)} ${
+                  CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
+                }`}
           </Skeleton>
         </Td>
       </Tr>

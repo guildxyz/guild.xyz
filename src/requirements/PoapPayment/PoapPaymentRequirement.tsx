@@ -6,7 +6,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { Chain, Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
 import { GuildPoap, PoapContract, RequirementType } from "types"
@@ -25,7 +25,7 @@ const PoapPaymentRequirement = ({ guildPoap, poapContract, ...props }: Props) =>
   const {
     data: { symbol, decimals },
     isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[vaultChainId], vaultData.token)
+  } = useTokenData(Chains[vaultChainId] as Chain, vaultData.token)
 
   const requirement = {
     id,
@@ -55,9 +55,9 @@ const PoapPaymentRequirement = ({ guildPoap, poapContract, ...props }: Props) =>
           <Text as="span">{`Pay ${formatUnits(
             vaultData.fee ?? BigInt(0),
             decimals ?? 18
-          )} ${symbol ?? RPC[Chains[vaultChainId]]?.nativeCurrency?.symbol} on ${
-            RPC[Chains[vaultChainId]]?.chainName
-          }`}</Text>
+          )} ${
+            symbol ?? CHAIN_CONFIG[Chains[vaultChainId]].nativeCurrency.symbol
+          } on ${CHAIN_CONFIG[Chains[vaultChainId]].name}`}</Text>
         </Skeleton>
       </Requirement>
     </RequirementProvider>

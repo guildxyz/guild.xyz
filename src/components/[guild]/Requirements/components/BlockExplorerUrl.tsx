@@ -1,6 +1,6 @@
 import { useColorMode } from "@chakra-ui/react"
 import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
-import { Chain, RPC } from "connectors"
+import { blockExplorerIcons, Chain, CHAIN_CONFIG } from "connectors"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useRequirementContext } from "./RequirementContext"
 
@@ -20,9 +20,11 @@ const BlockExplorerUrl = ({
   const { colorMode } = useColorMode()
   const { chain, type, address, data } = useRequirementContext()
 
-  const blockExplorer = RPC[chainProp ?? chain]?.blockExplorerUrls?.[0]
+  const blockExplorerUrl =
+    CHAIN_CONFIG[chainProp ?? chain].blockExplorers.default.url
 
-  if (type === "COIN" || addressProp === NULL_ADDRESS || !blockExplorer) return null
+  if (type === "COIN" || addressProp === NULL_ADDRESS || !blockExplorerUrl)
+    return null
 
   // explorer.zksync.io doesn't support the /token path
   const path =
@@ -30,13 +32,13 @@ const BlockExplorerUrl = ({
 
   const url =
     (type === "ERC1155" || type === "ERC721") && data?.id
-      ? `${blockExplorer}/token/${addressProp ?? address}?a=${data?.id}`
-      : `${blockExplorer}/${path}/${addressProp ?? address}`
+      ? `${blockExplorerUrl}/token/${addressProp ?? address}?a=${data?.id}`
+      : `${blockExplorerUrl}/${path}/${addressProp ?? address}`
 
   return (
     <RequirementLinkButton
       href={url}
-      imageUrl={RPC[chainProp ?? chain]?.blockExplorerIcons[colorMode]}
+      imageUrl={blockExplorerIcons[chainProp ?? chain][colorMode]}
     >
       {label ?? "View on explorer"}
     </RequirementLinkButton>

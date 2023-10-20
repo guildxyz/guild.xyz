@@ -15,7 +15,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import { ShoppingCartSimple } from "phosphor-react"
 import { useAccount, useChainId } from "wagmi"
 import BlockExplorerUrl from "../BlockExplorerUrl"
@@ -49,7 +49,7 @@ const PurchaseRequirement = (): JSX.Element => {
     data: { estimatedPriceInUSD },
     isValidating,
     error,
-  } = usePrice(RPC[requirement?.chain]?.nativeCurrency?.symbol)
+  } = usePrice(CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol)
 
   const onClick = () => {
     onOpen()

@@ -1,10 +1,10 @@
 import { Img, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains, coinIconUrls } from "connectors"
 import { useChainId } from "wagmi"
 
 type Props = {
-  chain: string
+  chain: Chain
   requestNetworkChange: () => void
 }
 
@@ -16,15 +16,15 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
   return (
     <Tooltip
       isDisabled={!isCurrentChain}
-      label={`${RPC[chain].chainName} is currently selected`}
+      label={`${CHAIN_CONFIG[chain].name} is currently selected`}
       shouldWrapChildren
     >
       <Button
         leftIcon={
           <Img
-            src={RPC[chain].iconUrls[0]}
+            src={coinIconUrls[chain]}
             boxSize={6}
-            alt={`${RPC[chain].chainName} logo`}
+            alt={`${CHAIN_CONFIG[chain].name} logo`}
           />
         }
         border={isCurrentChain && "2px"}
@@ -38,7 +38,7 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
         px={5}
         justifyContent="start"
       >
-        {RPC[chain].chainName}
+        {CHAIN_CONFIG[chain].name}
       </Button>
     </Tooltip>
   )

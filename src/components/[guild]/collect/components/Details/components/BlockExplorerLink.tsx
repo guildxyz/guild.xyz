@@ -1,6 +1,6 @@
 import { Icon, Skeleton, Text } from "@chakra-ui/react"
 import Link from "components/common/Link"
-import { Chain, RPC } from "connectors"
+import { CHAIN_CONFIG, Chain } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 
@@ -20,7 +20,6 @@ const BlockExplorerLink = ({
   error,
 }: Props) => {
   const displayedAddress = address && shortenHex(address, 3)
-  const url = RPC[chain]?.blockExplorerUrls?.[0]
 
   return (
     <Skeleton isLoaded={!isValidating} maxW="max-content" minW="80%">
@@ -29,7 +28,10 @@ const BlockExplorerLink = ({
           Couldn't fetch
         </Text>
       ) : (
-        <Link href={`${url}/${path}/${address}`} isExternal>
+        <Link
+          href={`${CHAIN_CONFIG[chain].blockExplorers.default.url}/${path}/${address}`}
+          isExternal
+        >
           <Text as="span" fontSize="md" mr={1.5} colorScheme="gray" noOfLines={1}>
             {displayedAddress}
           </Text>

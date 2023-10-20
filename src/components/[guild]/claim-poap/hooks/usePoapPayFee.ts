@@ -1,6 +1,6 @@
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { Chains } from "connectors"
+import { Chain, Chains } from "connectors"
 import useFeeCollectorContract, {
   FEE_COLLECTOR_ADDRESS,
 } from "hooks/useFeeCollectorContract"
@@ -34,7 +34,7 @@ const usePoapPayFee = (
 
   const {
     data: { decimals },
-  } = useTokenData(Chains[chainId], vaultData.token)
+  } = useTokenData(Chains[chainId] as Chain, vaultData.token)
   const { mutate: mutateUserPoapEligibility } = useUserPoapEligibility(poap?.id)
 
   const feeCollectorContract = useFeeCollectorContract()

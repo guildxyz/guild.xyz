@@ -27,7 +27,7 @@ import SwitchNetworkButton from "components/[guild]/Requirements/components/Guil
 import usePoapPayFee from "components/[guild]/claim-poap/hooks/usePoapPayFee"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { Chains } from "connectors"
+import { Chain, Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coin } from "phosphor-react"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
@@ -66,7 +66,7 @@ const BuyPoapRequirement = ({ guildPoap, poapContract, ...rest }: Props) => {
   const {
     data: { symbol },
     isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[vaultChainId], vaultData?.token)
+  } = useTokenData(Chains[vaultChainId] as Chain, vaultData?.token)
 
   const payButtonLabel = isWrongChain
     ? "Switch chain"

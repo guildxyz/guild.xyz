@@ -2,7 +2,7 @@ import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { LinkBreak, Wallet } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
@@ -67,7 +67,7 @@ const WithdrawButton = (): JSX.Element => {
                 ? "< 0.001"
                 : formattedWithdrawableAmount.toFixed(3)
             } ${symbol}`
-          : `Switch to ${RPC[chain]?.chainName} to withdraw`}
+          : `Switch to ${CHAIN_CONFIG[chain].name} to withdraw`}
       </Button>
     </Tooltip>
   )

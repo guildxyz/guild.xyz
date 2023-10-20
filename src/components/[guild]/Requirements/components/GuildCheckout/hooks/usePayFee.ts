@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
@@ -105,7 +105,7 @@ const usePayFee = () => {
   })
 
   const pickedCurrencyIsNative =
-    pickedCurrency === RPC[requirement?.chain]?.nativeCurrency?.symbol
+    pickedCurrency === CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
 
   const isSufficientBalance =
     fee &&

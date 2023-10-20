@@ -1,19 +1,22 @@
 import { Img, Tag, TagLabel, useColorModeValue } from "@chakra-ui/react"
-import { RPC } from "connectors"
+import { CHAIN_CONFIG, chainIconUrls } from "connectors"
 import { useRequirementContext } from "./RequirementContext"
 
 const RequirementChainIndicator = () => {
   const { chain } = useRequirementContext()
   const bg = useColorModeValue("white", "blackAlpha.300")
 
-  const { chainName, iconUrls } = RPC[chain] ?? {}
-
-  if (!chainName || !iconUrls?.length) return null
+  if (!chain) return null
 
   return (
     <Tag size="sm" bg={bg}>
-      <Img src={iconUrls[0]} alt={chainName} boxSize={3} mr={1} />
-      <TagLabel>{chainName}</TagLabel>
+      <Img
+        src={chainIconUrls[chain]}
+        alt={CHAIN_CONFIG[chain].name}
+        boxSize={3}
+        mr={1}
+      />
+      <TagLabel>{CHAIN_CONFIG[chain].name}</TagLabel>
     </Tag>
   )
 }

@@ -1,5 +1,5 @@
 import { kv } from "@vercel/kv"
-import { CHAIN_CONFIG, Chain, Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "connectors"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
 import {
@@ -47,8 +47,8 @@ type FetchPriceBodyParams = {
 }
 
 const getDecimals = async (chain: Chain, tokenAddress: string) => {
-  if (tokenAddress === RPC[chain].nativeCurrency.symbol)
-    return RPC[chain].nativeCurrency.decimals
+  if (tokenAddress === CHAIN_CONFIG[chain].nativeCurrency.symbol)
+    return CHAIN_CONFIG[chain].nativeCurrency.decimals
 
   const publicClient = createPublicClient({
     chain: CHAIN_CONFIG[chain],
@@ -94,7 +94,7 @@ const getGuildFee = async (
     abi: tokenBuyerContractData[Chains[chainId]].abi,
     functionName: "baseFee",
     args: [
-      sellToken === RPC[Chains[chainId]].nativeCurrency.symbol
+      sellToken === CHAIN_CONFIG[Chains[chainId]].nativeCurrency.symbol
         ? NULL_ADDRESS
         : sellToken,
     ],
@@ -162,7 +162,7 @@ const validateBody = (
     typeof obj.sellToken !== "string" ||
     !(
       ADDRESS_REGEX.test(obj.sellToken) ||
-      obj.sellToken === RPC[obj.chain].nativeCurrency.symbol
+      obj.sellToken === CHAIN_CONFIG[obj.chain].nativeCurrency.symbol
     )
   )
     return {
@@ -190,7 +190,7 @@ const validateBody = (
 
 export const fetchNativeCurrencyPriceInUSD = async (chain: Chain) =>
   fetch(
-    `https://api.coinbase.com/v2/exchange-rates?currency=${RPC[chain].nativeCurrency.symbol}`
+    `https://api.coinbase.com/v2/exchange-rates?currency=${CHAIN_CONFIG[chain].nativeCurrency.symbol}`
   )
     .then((coinbaseRes) => coinbaseRes.json())
     .then((coinbaseData) => coinbaseData.data.rates.USD)
@@ -229,7 +229,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     if (typeof nativeCurrencyPriceInUSD === "undefined")
       return res.status(500).json({
         error: `Couldn't fetch ${
-          RPC[Chains[chain]].nativeCurrency.symbol
+          CHAIN_CONFIG[Chains[chain]].nativeCurrency.symbol
         }-USD rate.`,
       })
 

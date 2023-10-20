@@ -3,7 +3,7 @@
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
@@ -130,7 +130,7 @@ const usePurchaseAsset = () => {
   })
 
   const pickedCurrencyIsNative =
-    pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
+    pickedCurrency === CHAIN_CONFIG[Chains[chainId]]?.nativeCurrency.symbol
 
   const isSufficientBalance =
     priceData?.maxPriceInWei &&

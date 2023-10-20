@@ -1,4 +1,4 @@
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import { NextApiRequest, NextApiResponse } from "next"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -54,7 +54,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const symbol =
           data.token === "0x0000000000000000000000000000000000000000"
-            ? RPC[Chains[poapContract.chainId]].nativeCurrency.symbol
+            ? CHAIN_CONFIG[Chains[poapContract.chainId]].nativeCurrency.symbol
             : tokenData.symbol
 
         return {

@@ -1,4 +1,4 @@
-import { RPC } from "connectors"
+import { Chain, CHAIN_CONFIG, coinIconUrls } from "connectors"
 import { useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Token } from "types"
@@ -6,9 +6,9 @@ import useTokens from "./useTokens"
 
 const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
 
-const useTokenData = (chain: string, address: string, onFinish?: () => void) => {
+const useTokenData = (chain: Chain, address: string, onFinish?: () => void) => {
   const isCoin =
-    address === RPC[chain]?.nativeCurrency?.symbol ||
+    address === CHAIN_CONFIG[chain]?.nativeCurrency?.symbol ||
     address === "0x0000000000000000000000000000000000000000"
 
   const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && chain && !isCoin
@@ -41,18 +41,17 @@ const useTokenData = (chain: string, address: string, onFinish?: () => void) => 
    */
   const name =
     isCoin && chain
-      ? RPC[chain].nativeCurrency.name
+      ? CHAIN_CONFIG[chain].nativeCurrency.name
       : tokenDataFromApi?.name ?? swrResponse.data?.name
   const symbol =
     isCoin && chain
-      ? RPC[chain].nativeCurrency.symbol
+      ? CHAIN_CONFIG[chain].nativeCurrency.symbol
       : swrResponse.data?.symbol ?? tokenDataFromApi?.symbol
   const decimals =
     isCoin && chain
-      ? RPC[chain].nativeCurrency.decimals
+      ? CHAIN_CONFIG[chain].nativeCurrency.decimals
       : tokenDataFromApi?.decimals ?? swrResponse.data?.decimals
-  const logoURI =
-    isCoin && chain ? RPC[chain].nativeCurrency.logoURI : tokenDataFromApi?.logoURI
+  const logoURI = isCoin && chain ? coinIconUrls[chain] : tokenDataFromApi?.logoURI
 
   return {
     ...swrResponse,

@@ -8,7 +8,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { RPC } from "connectors"
+import { CHAIN_CONFIG } from "connectors"
 import { ArrowsLeftRight, Coins, FileText, IconProps, Wallet } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
@@ -218,7 +218,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                     {requirement.symbol ??
                       (requirement.address
                         ? shortenHex(requirement.address, 3)
-                        : RPC[requirement.chain].nativeCurrency.symbol)}
+                        : CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol)}
                   </>
                 </DataBlock>
                 {requirement.data.timestamps.maxAmount &&
@@ -259,7 +259,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                   {requirement.symbol ??
                     (requirement.address
                       ? shortenHex(requirement.address, 3)
-                      : RPC[requirement.chain].nativeCurrency.symbol)}
+                      : CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol)}
                 </DataBlock>
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>

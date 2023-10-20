@@ -1,5 +1,5 @@
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import { Wallet } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import { useChainId } from "wagmi"
@@ -51,7 +51,7 @@ const WithdrawButton = ({
       loadingText="Withdrawing funds"
     >
       {chainId && chainId !== usersChainId
-        ? `Withdraw on ${RPC[Chains[chainId]]?.chainName}`
+        ? `Withdraw on ${CHAIN_CONFIG[Chains[chainId]].name}`
         : label}
     </ActionButton>
   )

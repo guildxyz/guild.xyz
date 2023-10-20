@@ -24,7 +24,7 @@ import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import { Chains, RPC } from "connectors"
+import { Chains, chainIconUrls } from "connectors"
 import useResolveAddress from "hooks/useResolveAddress"
 import { LinkBreak, SignOut } from "phosphor-react"
 import { useAccount, useChainId, useDisconnect } from "wagmi"
@@ -121,8 +121,8 @@ const AccountModal = () => {
                       mt="-2px"
                     >
                       <Center>
-                        {RPC[Chains[chainId]]?.iconUrls?.[0] ? (
-                          <Img src={RPC[Chains[chainId]].iconUrls[0]} boxSize={4} />
+                        {chainIconUrls[Chains[chainId]] ? (
+                          <Img src={chainIconUrls[Chains[chainId]]} boxSize={4} />
                         ) : (
                           <Icon as={LinkBreak} />
                         )}

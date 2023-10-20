@@ -1,5 +1,5 @@
 import { useDisclosure } from "@chakra-ui/react"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -90,7 +90,7 @@ const Web3ConnectionManager = ({
   const requestManualNetworkChange = (chain) => () =>
     toast({
       title: "Your wallet doesn't support switching chains automatically",
-      description: `Please switch to ${RPC[chain].chainName} from your wallet manually!`,
+      description: `Please switch to ${CHAIN_CONFIG[chain].name} from your wallet manually!`,
       status: "info",
     })
 

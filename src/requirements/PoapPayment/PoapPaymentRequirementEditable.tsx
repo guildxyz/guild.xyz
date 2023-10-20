@@ -12,7 +12,7 @@ import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { Alert } from "components/common/Modal"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useRef } from "react"
 import { GuildPoap, PoapContract } from "types"
@@ -28,7 +28,7 @@ const PoapPaymentRequirementEditable = ({ guildPoap, poapContract }: Props) => {
 
   const {
     data: { symbol },
-  } = useTokenData(Chains[chainId], vaultData.token)
+  } = useTokenData(Chains[chainId] as Chain, vaultData.token)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
@@ -67,7 +67,7 @@ const PoapPaymentRequirementEditable = ({ guildPoap, poapContract }: Props) => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader>{`Remove ${
-              symbol ?? RPC[Chains[chainId]]?.nativeCurrency?.symbol
+              symbol ?? CHAIN_CONFIG[Chains[chainId]].nativeCurrency.symbol
             } payment requirement`}</AlertDialogHeader>
             <AlertDialogBody>Are you sure?</AlertDialogBody>
             <AlertDialogFooter>

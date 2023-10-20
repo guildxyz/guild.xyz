@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
@@ -41,7 +41,7 @@ const PurchaseButton = (): JSX.Element => {
       : false
 
   const pickedCurrencyIsNative =
-    pickedCurrency === RPC[Chains[chainId]]?.nativeCurrency.symbol
+    pickedCurrency === CHAIN_CONFIG[Chains[chainId]]?.nativeCurrency.symbol
 
   const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
     address,

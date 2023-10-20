@@ -1,16 +1,16 @@
-import { Chain, RPC } from "connectors"
+import { Chain, CHAIN_CONFIG } from "connectors"
 import { RequirementType } from "requirements"
 import guildPinAbi from "static/abis/guildPin"
 import oldTokenBuyerAbi from "static/abis/oldTokenBuyer"
 import tokenBuyerAbi from "static/abis/tokenBuyer"
 import { toBytes } from "viem"
 import {
-  UNIVERSAL_ROUTER_COMMANDS,
   encodePermit2Permit,
   encodeUnwrapEth,
   encodeV2SwapExactOut,
   encodeV3SwapExactOut,
   encodeWrapEth,
+  UNIVERSAL_ROUTER_COMMANDS,
 } from "./encoders"
 
 export type TokenBuyerContractConfig = Partial<
@@ -112,8 +112,8 @@ export const PURCHASABLE_REQUIREMENT_TYPES: RequirementType[] = [
 export const SUPPORTED_CURRENCIES: { chainId: number; address: `0x${string}` }[] = [
   // Add native currencies automatically
   ...allPurchaseSupportedChains.map((c) => ({
-    chainId: RPC[c].chainId,
-    address: RPC[c].nativeCurrency.symbol as any, // WAGMI TODO: this should be a valid address!!!
+    chainId: CHAIN_CONFIG[c].id,
+    address: CHAIN_CONFIG[c].nativeCurrency.symbol as any, // WAGMI TODO: this should be a valid address!!!
   })),
   /**
    * We'll be able to add ERC20 tokens here in the following format:

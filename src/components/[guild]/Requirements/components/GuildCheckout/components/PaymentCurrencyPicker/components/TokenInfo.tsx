@@ -9,7 +9,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Fragment } from "react"
 import { Rest } from "types"
@@ -43,7 +43,7 @@ const TokenInfo = ({
     data: { symbol, logoURI },
     error: tokenDataError,
     isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[chainId], tokenAddress)
+  } = useTokenData(Chains[chainId] as Chain, tokenAddress)
 
   const { address } = useAccount()
   const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
@@ -60,7 +60,7 @@ const TokenInfo = ({
 
   const formattedBalance = Number(
     Number(
-      (tokenAddress === RPC[Chains[chainId]]?.nativeCurrency?.symbol
+      (tokenAddress === CHAIN_CONFIG[Chains[chainId]].nativeCurrency.symbol
         ? coinBalanceData?.formatted
         : tokenBalanceData?.formatted) ?? 0
     ).toFixed(3)
@@ -103,7 +103,7 @@ const TokenInfo = ({
                       : Number(requiredAmount?.toFixed(3))
                   } ${symbol}`}
               <Text as="span" colorScheme="gray">
-                {` (${RPC[Chains[chainId]].chainName})`}
+                {` (${CHAIN_CONFIG[Chains[chainId]].name})`}
               </Text>
             </Text>
           </Skeleton>

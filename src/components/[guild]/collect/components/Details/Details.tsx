@@ -1,14 +1,13 @@
 import { SimpleGrid, Skeleton, Text } from "@chakra-ui/react"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import Section from "components/common/Section"
-import { RPC } from "connectors"
+import { CHAIN_CONFIG } from "connectors"
 import useNftDetails from "../../hooks/useNftDetails"
 import BlockExplorerLink from "./components/BlockExplorerLink"
 import InfoBlock from "./components/InfoBlock"
 
 const Details = () => {
   const { chain, nftAddress } = useCollectNftContext()
-  const chainName = RPC[chain].chainName
   const {
     standard,
     creator,
@@ -27,7 +26,7 @@ const Details = () => {
           </Skeleton>
         </InfoBlock>
 
-        <InfoBlock label="Network">{chainName}</InfoBlock>
+        <InfoBlock label="Network">{CHAIN_CONFIG[chain].name}</InfoBlock>
 
         <InfoBlock label="Contract">
           <BlockExplorerLink chain={chain} address={nftAddress} path="token" />

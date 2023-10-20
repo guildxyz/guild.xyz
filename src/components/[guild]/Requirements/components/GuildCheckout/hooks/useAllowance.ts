@@ -1,4 +1,4 @@
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import {
   erc20ABI,
@@ -21,7 +21,7 @@ const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
   const enabled = Boolean(
     tokenAddress &&
       requirement?.chain === Chains[chainId] &&
-      tokenAddress !== RPC[requirement?.chain]?.nativeCurrency?.symbol
+      tokenAddress !== CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
   )
 
   const {

@@ -9,9 +9,10 @@ import ControlledSelect from "components/common/ControlledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { BALANCY_SUPPORTED_CHAINS } from "components/create-guild/Requirements/hooks/useBalancy"
 import {
+  CHAIN_CONFIG,
   Chain,
   Chains,
-  RPC,
+  chainIconUrls,
   supportedChains as defaultSupportedChains,
 } from "connectors"
 import { useRouter } from "next/router"
@@ -29,8 +30,8 @@ type Props = {
 
 const mappedChains: Array<{ img: string; label: string; value: Chain }> =
   defaultSupportedChains.map((chainName: Chain) => ({
-    img: RPC[chainName]?.iconUrls?.[0] || "",
-    label: RPC[chainName]?.chainName,
+    img: chainIconUrls[chainName],
+    label: CHAIN_CONFIG[chainName].name,
     value: chainName,
   }))
 
@@ -81,7 +82,7 @@ const ChainPicker = ({
         <FormLabel>Chain</FormLabel>
         <InputGroup>
           <InputLeftElement>
-            <OptionImage img={RPC[chain]?.iconUrls?.[0]} alt={chain} />
+            <OptionImage img={chainIconUrls[chain]} alt={chain} />
           </InputLeftElement>
 
           <ControlledSelect

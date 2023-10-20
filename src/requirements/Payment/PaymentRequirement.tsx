@@ -11,7 +11,7 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { RPC } from "connectors"
+import { CHAIN_CONFIG } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
 import { formatUnits } from "viem"
@@ -95,7 +95,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
         >
           {convertedFee && symbol ? `${convertedFee} ${symbol}` : "-"}
         </DataBlock>
-        {` on ${RPC[chain].chainName}`}
+        {` on ${CHAIN_CONFIG[chain].name}`}
       </>
     </Requirement>
   )

@@ -43,7 +43,7 @@ const PurchasedRequirementInfo = ({ rightElement, footer }: Props): JSX.Element 
       </Circle>
 
       <VStack alignItems="flex-start" alignSelf="center" spacing={0.5}>
-        <Skeleton isLoaded={symbol}>
+        <Skeleton isLoaded={!!symbol}>
           <Text as="span" fontWeight="bold">
             {requirement && symbol
               ? `${requirement.data?.minAmount} ${symbol}`

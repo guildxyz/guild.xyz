@@ -13,7 +13,7 @@ import {
   Tr,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { RPC } from "connectors"
+import { CHAIN_CONFIG } from "connectors"
 import { ArrowSquareOut, Question } from "phosphor-react"
 import { formatUnits } from "viem"
 import useGuildPinFee from "../hooks/useGuildPinFee"
@@ -23,7 +23,7 @@ import PriceFallback from "./PriceFallback"
 const GuildPinFees = (): JSX.Element => {
   const { guildPin } = useGuild()
   const { guildPinFee, guildPinFeeError, isGuildPinFeeLoading } = useGuildPinFee()
-  const { symbol, decimals } = RPC[guildPin.chain].nativeCurrency
+  const { symbol, decimals } = CHAIN_CONFIG[guildPin.chain].nativeCurrency
 
   const guildPinFeeInFloat =
     guildPinFee && decimals && parseFloat(formatUnits(guildPinFee, decimals))

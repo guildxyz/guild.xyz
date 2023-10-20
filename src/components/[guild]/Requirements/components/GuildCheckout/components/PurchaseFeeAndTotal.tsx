@@ -1,5 +1,5 @@
 import { HStack, Icon, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react"
-import { RPC } from "connectors"
+import { CHAIN_CONFIG } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Info, Question } from "phosphor-react"
 import { GUILD_FEE_PERCENTAGE } from "utils/guildCheckout/constants"
@@ -42,12 +42,15 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
 
   const estimatedGasInFloat = estimatedGasFee
     ? parseFloat(
-        formatUnits(estimatedGasFee, RPC[requirement.chain].nativeCurrency.decimals)
+        formatUnits(
+          estimatedGasFee,
+          CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
+        )
       )
     : null
 
   const isNativeCurrency =
-    pickedCurrency === RPC[requirement.chain].nativeCurrency.symbol
+    pickedCurrency === CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
 
   // 1% + base fee on the estimated price
   const guildFee = Number((estimatedGuildFeeInSellToken ?? 0)?.toFixed(3))
@@ -171,7 +174,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
               {error || estimateGasError || !estimatedGasInFloat
                 ? "Couldn't estimate"
                 : `${estimatedGasInFloat.toFixed(8)} ${
-                    RPC[requirement.chain].nativeCurrency.symbol
+                    CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
                   }`}
             </Text>
           </Skeleton>

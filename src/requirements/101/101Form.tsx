@@ -1,7 +1,7 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -22,7 +22,7 @@ const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
     value: badge.onChainId.toString(),
     label: badge.courses[0]?.title,
     img: badge.courses[0]?.creator.image,
-    details: RPC[Chains[badge.contract.chainId]].chainName,
+    details: CHAIN_CONFIG[Chains[badge.contract.chainId]].chainName,
     chainId: badge.contract.chainId,
     contractAddress: badge.contract.address.toLowerCase(),
   }))

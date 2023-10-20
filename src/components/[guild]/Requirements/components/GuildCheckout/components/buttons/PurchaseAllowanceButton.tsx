@@ -3,7 +3,7 @@ import useAllowance from "components/[guild]/Requirements/components/GuildChecko
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
 import { useChainId } from "wagmi"
@@ -25,7 +25,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   const {
     data: { symbol, name },
   } = useTokenData(requirement.chain, pickedCurrency)
-  const nativeCurrency = RPC[Chains[chainId]]?.nativeCurrency
+  const nativeCurrency = CHAIN_CONFIG[Chains[chainId]]?.nativeCurrency
   const isNativeCurrencyPicked = pickedCurrency === nativeCurrency?.symbol
 
   const tokenSymbol = isNativeCurrencyPicked ? nativeCurrency.symbol : symbol

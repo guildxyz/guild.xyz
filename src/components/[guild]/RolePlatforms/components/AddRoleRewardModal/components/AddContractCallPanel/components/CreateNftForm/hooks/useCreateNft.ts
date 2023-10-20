@@ -1,7 +1,7 @@
 import { NFTDetails } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
@@ -112,7 +112,7 @@ const useCreateNft = (
       tokenTreasury,
       parseUnits(
         price?.toString() ?? "0",
-        RPC[Chains[chainId]]?.nativeCurrency?.decimals ?? 18
+        CHAIN_CONFIG[Chains[chainId]].nativeCurrency.decimals
       ),
     ]
 
@@ -202,7 +202,7 @@ const useCreateNft = (
             description: response.formData.description,
             fee: parseUnits(
               response.formData.price.toString() ?? "0",
-              RPC[response.formData.chain]?.nativeCurrency?.decimals ?? 18
+              CHAIN_CONFIG[response.formData.chain].nativeCurrency.decimals
             ),
           },
           {

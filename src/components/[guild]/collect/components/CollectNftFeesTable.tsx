@@ -1,7 +1,7 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
-import { RPC } from "connectors"
+import { CHAIN_CONFIG } from "connectors"
 import { formatUnits } from "viem"
 import useGuildFee from "../hooks/useGuildFee"
 import useNftDetails from "../hooks/useNftDetails"
@@ -15,13 +15,13 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
 
   const { guildFee } = useGuildFee(chain)
   const formattedGuildFee = guildFee
-    ? Number(formatUnits(guildFee, RPC[chain].nativeCurrency.decimals))
+    ? Number(formatUnits(guildFee, CHAIN_CONFIG[chain].nativeCurrency.decimals))
     : undefined
 
   const { fee } = useNftDetails(chain, nftAddress)
   const formattedFee =
     typeof fee === "bigint"
-      ? Number(formatUnits(fee, RPC[chain].nativeCurrency.decimals))
+      ? Number(formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals))
       : undefined
 
   const isFormattedGuildFeeLoaded = typeof formattedGuildFee === "number"
@@ -40,7 +40,7 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
             >
               {isFormattedGuildFeeLoaded && isFormattedFeeLoaded
                 ? `${Number((formattedGuildFee + formattedFee).toFixed(5))} ${
-                    RPC[chain].nativeCurrency.symbol
+                    CHAIN_CONFIG[chain].nativeCurrency.symbol
                   }`
                 : "Loading"}
             </Skeleton>
@@ -57,7 +57,7 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
         <Td isNumeric>
           <Skeleton display="inline" isLoaded={isFormattedFeeLoaded}>
             {isFormattedFeeLoaded
-              ? `${formattedFee} ${RPC[chain].nativeCurrency.symbol}`
+              ? `${formattedFee} ${CHAIN_CONFIG[chain].nativeCurrency.symbol}`
               : "Loading"}
           </Skeleton>
         </Td>
@@ -68,7 +68,7 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
         <Td isNumeric>
           <Skeleton display="inline" isLoaded={isFormattedGuildFeeLoaded}>
             {isFormattedGuildFeeLoaded
-              ? `${formattedGuildFee} ${RPC[chain].nativeCurrency.symbol}`
+              ? `${formattedGuildFee} ${CHAIN_CONFIG[chain].nativeCurrency.symbol}`
               : "Loading"}
           </Skeleton>
         </Td>
@@ -84,7 +84,7 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
             >
               {isFormattedGuildFeeLoaded && isFormattedFeeLoaded
                 ? `${Number((formattedGuildFee + formattedFee).toFixed(5))} ${
-                    RPC[chain].nativeCurrency.symbol
+                    CHAIN_CONFIG[chain].nativeCurrency.symbol
                   }`
                 : "Loading"}
             </Skeleton>

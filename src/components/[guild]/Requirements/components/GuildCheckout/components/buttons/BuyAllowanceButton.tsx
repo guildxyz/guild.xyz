@@ -2,7 +2,7 @@ import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
@@ -24,8 +24,8 @@ const BuyAllowanceButton = (): JSX.Element => {
   const {
     data: { symbol, name },
   } = useTokenData(requirement.chain, pickedCurrency)
-  const nativeCurrency = RPC[requirement?.chain]?.nativeCurrency
-  const isNativeCurrencyPicked = pickedCurrency === nativeCurrency?.symbol
+  const nativeCurrency = CHAIN_CONFIG[requirement.chain].nativeCurrency
+  const isNativeCurrencyPicked = pickedCurrency === nativeCurrency.symbol
 
   const tokenSymbol = isNativeCurrencyPicked ? nativeCurrency.symbol : symbol
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name

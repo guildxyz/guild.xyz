@@ -33,7 +33,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
 import StyledSelect from "components/common/StyledSelect"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { Chain, Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "connectors"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import {
   FormProvider,
@@ -122,7 +122,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
   const { guildFee } = useGuildFee(chain)
   const formattedGuildFee =
     guildFee && chain
-      ? Number(formatUnits(guildFee, RPC[chain].nativeCurrency.decimals))
+      ? Number(formatUnits(guildFee, CHAIN_CONFIG[chain].nativeCurrency.decimals))
       : undefined
 
   const { fields, append, remove } = useFieldArray({
@@ -358,7 +358,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                   </NumberInput>
 
                   <InputRightAddon>
-                    {RPC[chain]?.nativeCurrency?.symbol}
+                    {CHAIN_CONFIG[chain].nativeCurrency.symbol}
                   </InputRightAddon>
                 </InputGroup>
 
@@ -367,7 +367,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                   <Skeleton display="inline" h={3} isLoaded={!!formattedGuildFee}>
                     {formattedGuildFee ?? "..."}
                   </Skeleton>
-                  {` ${RPC[chain]?.nativeCurrency?.symbol} Guild minting fee. `}
+                  {` ${CHAIN_CONFIG[chain].nativeCurrency.symbol} Guild minting fee. `}
                   <Link
                     href="https://help.guild.xyz/en/articles/8193498-guild-base-fee"
                     isExternal
@@ -414,7 +414,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
               isLoading={isNetworkChangeInProgress}
               loadingText="Check your wallet"
               onClick={() => requestNetworkChange(Chains[chain])}
-            >{`Switch to ${RPC[chain]?.chainName}`}</Button>
+            >{`Switch to ${CHAIN_CONFIG[chain].name}`}</Button>
           )}
           <Tooltip
             label="Please switch to a supported chain"

@@ -1,9 +1,9 @@
-import { RPC } from "connectors"
+import { etherscanApiUrls } from "connectors"
 import fetcher from "./fetcher"
 
 export const getBlockByTime = ([_, chain, timestamp]) =>
   fetcher(
-    `${RPC[chain].apiUrl}/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before`
+    `${etherscanApiUrls[chain]}/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before`
   ).then((json) => {
     if (json.status !== "1")
       throw new Error("Rate limited, will try again in 5 seconds")

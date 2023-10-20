@@ -3,7 +3,7 @@ import { useCollectNftContext } from "components/[guild]/collect/components/Coll
 import useGuild from "components/[guild]/hooks/useGuild"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Section from "components/common/Section"
-import { RPC } from "connectors"
+import { blockExplorerIcons, CHAIN_CONFIG } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import { SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
@@ -19,7 +19,7 @@ const Links = () => {
   return (
     <Section title="Links" spacing={3}>
       <Wrap spacingX={6} spacingY={3}>
-        {openseaBaseUrl[chain] && totalCollectors && (
+        {openseaBaseUrl[chain] && totalCollectors > 0 && (
           <Link
             href={`${openseaBaseUrl[chain]}/${nftAddress}`}
             isExternal
@@ -46,12 +46,12 @@ const Links = () => {
         )}
 
         <Link
-          href={`${RPC[chain].blockExplorerUrls[0]}/token/${nftAddress}`}
+          href={`${CHAIN_CONFIG[chain].blockExplorers.default.url}/token/${nftAddress}`}
           isExternal
           colorScheme="gray"
           fontWeight="medium"
         >
-          <Img src={RPC[chain].blockExplorerIcons[colorMode]} boxSize={5} mr="1.5" />
+          <Img src={blockExplorerIcons[chain][colorMode]} boxSize={5} mr="1.5" />
           Explorer
           <Icon ml={1.5} as={ArrowSquareOut} />
         </Link>

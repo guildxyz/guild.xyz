@@ -1,4 +1,4 @@
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "connectors"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
 import {
   NULL_ADDRESS,
@@ -81,7 +81,7 @@ const generateGetAssetsParams = (
     tokenAddressPath,
   }
 
-  const isNativeCurrency = Object.values(RPC)
+  const isNativeCurrency = Object.values(CHAIN_CONFIG)
     .map((rpcData) => rpcData.nativeCurrency.symbol)
     .includes(pickedCurrency)
 
