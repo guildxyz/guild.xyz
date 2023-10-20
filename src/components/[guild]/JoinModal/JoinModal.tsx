@@ -8,11 +8,11 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useGuild from "components/[guild]/hooks/useGuild"
 import platforms from "platforms/platforms"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
@@ -67,8 +67,6 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     isLoading,
     onSubmit,
     error: joinError,
-    isSigning,
-    signLoadingText,
     response,
   } = useJoin((res) => {
     methods.setValue("platforms", {})
@@ -108,8 +106,8 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               mt="2"
               onClick={handleSubmit(onSubmit)}
               colorScheme="green"
-              isLoading={isSigning || isLoading}
-              loadingText={signLoadingText || "Checking access"}
+              isLoading={isLoading}
+              loadingText={"Checking access"}
               isDisabled={!isActive}
             >
               Check access to join

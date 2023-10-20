@@ -96,6 +96,7 @@
     "cypress": "12.14.0"
   },
   "devDependencies": {
+    "@guildxyz/types": "^1.1.5",
     "@hookform/devtools": "^4.3.0",
     "@svgr/webpack": "^6.5.1",
     "@synthetixio/synpress": "3.5.1",

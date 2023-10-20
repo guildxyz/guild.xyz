@@ -2,19 +2,15 @@ import { IconButton, Tooltip } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useLocalStorage from "hooks/useLocalStorage"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { ArrowsClockwise, Check } from "phosphor-react"
 import { useEffect, useState } from "react"
-import fetcher from "utils/fetcher"
 import useGuild from "./hooks/useGuild"
+import useJoin from "./JoinModal/hooks/useJoin"
 import { useIsTabsStuck } from "./Tabs/Tabs"
 import { useThemeContext } from "./ThemeContext"
 
 const TIMEOUT = 60_000
-
-const rejoin = (signedValidation: SignedValdation) =>
-  fetcher(`/user/join`, signedValidation)
 
 const ResendRewardButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
@@ -31,15 +27,15 @@ const ResendRewardButton = (): JSX.Element => {
   const [dateNow, setDateNow] = useState(Date.now())
   const canResend = dateNow - latestResendDate > TIMEOUT
 
-  const { onSubmit, isLoading, response } = useSubmitWithSign(rejoin, {
-    onSuccess: () => {
+  const { onSubmit, isLoading, response } = useJoin(
+    () => {
       toast({
         status: "success",
         title: "Successfully sent rewards",
       })
       setLatestResendDate(Date.now())
     },
-    onError: (error) => {
+    (error) => {
       const errorMsg = "Couldn't re-send rewards"
       const correlationId = error.correlationId
       showErrorToast(
@@ -51,7 +47,8 @@ const ResendRewardButton = (): JSX.Element => {
           : errorMsg
       )
     },
-  })
+    false
+  )
 
   useEffect(() => {
     const interval = setInterval(() => setDateNow(Date.now()), TIMEOUT)
@@ -106,7 +103,7 @@ const ResendRewardButton = (): JSX.Element => {
         rounded="full"
         onClick={!response && canResend ? onClick : undefined}
         animation={isLoading ? "rotate 1s infinite linear" : undefined}
-        isDisabled={isLoading || response || !canResend}
+        isDisabled={isLoading || !!response || !canResend}
         {...(!isStuck && {
           color: textColor,
           colorScheme: buttonColorScheme,
