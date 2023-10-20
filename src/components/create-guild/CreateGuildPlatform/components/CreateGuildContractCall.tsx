@@ -1,16 +1,23 @@
-import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import CreateNftForm from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm"
-import { useFormContext } from "react-hook-form"
+import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
+import { useFieldArray, useFormContext } from "react-hook-form"
 
 const CreateGuildContractCall = (): JSX.Element => {
-  const { setValue } = useFormContext()
-  const { nextStep } = useCreateGuildContext()
+  const { control } = useFormContext()
+  const { setPlatform } = useCreateGuildContext()
+  const { append } = useFieldArray({
+    control,
+    name: "guildPlatforms",
+  })
 
   return (
     <CreateNftForm
       onSuccess={(newGuildPlatform) => {
-        setValue("guildPlatforms.0", newGuildPlatform)
-        nextStep()
+        append({
+          platformName: "NFT",
+          platformGuildId: newGuildPlatform,
+        })
+        setPlatform("DEFAULT")
       }}
     />
   )

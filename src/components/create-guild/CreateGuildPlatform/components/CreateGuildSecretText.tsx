@@ -17,7 +17,7 @@ import {
   useFormContext,
   useWatch,
 } from "react-hook-form"
-import { GuildFormType } from "types"
+import { GuildFormType, PlatformType } from "types"
 
 const CreateGuildSecretText = () => {
   const { id: userId } = useUser()
@@ -52,6 +52,7 @@ const CreateGuildSecretText = () => {
             append({
               platformName: "TEXT",
               platformGuildId: `text-${userId}-${Date.now()}`,
+              platformId: PlatformType.TEXT,
               platformGuildData: {
                 text,
                 name,

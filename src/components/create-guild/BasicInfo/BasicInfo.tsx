@@ -16,20 +16,27 @@ import Description from "../Description"
 import GuildCreationProgress from "../GuildCreationProgress"
 import IconSelector from "../IconSelector"
 import Name from "../Name"
+import useSetImageAndNameFromPlatformData from "../hooks/useSetImageAndNameFromPlatformData"
 import ContactInfo from "./components/ContactInfo"
 
 const BasicInfo = (): JSX.Element => {
-  const { template, nextStep } = useCreateGuildContext()
-  const { setLocalBackgroundImage } = useThemeContext()
+  const { nextStep } = useCreateGuildContext()
+  const {
+    setLocalBackgroundImage,
+    localThemeColor,
+    setLocalThemeColor,
+    localBackgroundImage,
+  } = useThemeContext()
 
   const {
     control,
     getValues,
     setValue,
-    formState: { errors, dirtyFields },
+    formState: { errors, dirtyFields, touchedFields },
   } = useFormContext<GuildFormType>()
 
   const name = useWatch({ control, name: "name" })
+  const guildPlatforms = useWatch({ control, name: "guildPlatforms" })
 
   const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
@@ -44,18 +51,28 @@ const BasicInfo = (): JSX.Element => {
     },
   })
 
+  useSetImageAndNameFromPlatformData(
+    guildPlatforms.find((platform) => platform.platformName === "TELEGRAM")
+      ?.platformGuildData.imageUrl,
+    guildPlatforms.find((platform) => platform.platformName === "TELEGRAM")
+      ?.platformGuildData.name,
+    iconUploader.onUpload
+  )
+
   useEffect(() => {
     if (name && !dirtyFields.urlName)
       setValue("urlName", slugify(name), { shouldValidate: true })
   }, [name, dirtyFields])
 
+  useEffect(() => {}, [touchedFields.imageUrl])
+
   const backgroundUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
-      /*methods.setValue(
+      setValue(
         "theme.backgroundImage",
         `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
         { shouldDirty: true }
-      )*/
+      )
     },
     onError: () => {
       setLocalBackgroundImage(null)

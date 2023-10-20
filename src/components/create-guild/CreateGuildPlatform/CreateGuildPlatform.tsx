@@ -35,7 +35,8 @@ const CreateGuildPlatform = (): JSX.Element => {
         setPlatform("DEFAULT")
       }}
       scrollBehavior="inside"
-      size="2xl"
+      size="3xl"
+      colorScheme="dark"
     >
       <ModalOverlay />
       <ModalContent>

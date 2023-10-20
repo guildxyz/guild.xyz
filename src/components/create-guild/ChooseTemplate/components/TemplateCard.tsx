@@ -14,11 +14,13 @@ import {
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import HiddenRewards from "components/[guild]/RoleCard/components/HiddenRewards"
-import { RewardDisplay } from "components/[guild]/RoleCard/components/Reward"
+import {
+  RewardDisplay,
+  RewardIcon,
+} from "components/[guild]/RoleCard/components/Reward"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import { Check } from "phosphor-react"
-import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import { Fragment, KeyboardEvent } from "react"
 import { GuildFormType, GuildPlatform, PlatformType, Requirement } from "types"
 import capitalize from "utils/capitalize"
@@ -150,20 +152,16 @@ const TemplateCard = ({
                     <>
                       {getRewardLabel(platform)}
                       <Text as="span" fontWeight="bold">
-                        {platform.platformGuildName || platform.platformGuildId}
+                        {getValueToDisplay(platform)}
                       </Text>
                     </>
                   }
-                  rightElement={
-                    <>
-                      {platform.platformId === PlatformType.GOOGLE && (
-                        <GoogleCardWarning
-                          guildPlatform={platform as GuildPlatform}
-                          roleMemberCount={role.memberCount}
-                          size="sm"
-                        />
-                      )}
-                    </>
+                  icon={
+                    <RewardIcon
+                      rolePlatformId={platform.id}
+                      guildPlatform={platform as any}
+                      withMotionImg={false}
+                    />
                   }
                 />
               ))}
@@ -238,5 +236,18 @@ const TemplateCard = ({
   )
 }
 
+function getValueToDisplay(
+  platform: Partial<GuildPlatform> & {
+    platformName: string
+  }
+): string {
+  if (platform.platformId == PlatformType.TEXT)
+    return platform.platformGuildData.name ?? "Secret"
+
+  if (platform.platformId == PlatformType.TELEGRAM)
+    return platform.platformGuildData.name ?? "Telegram group"
+
+  return platform.platformGuildName || platform.platformGuildId
+}
 export default TemplateCard
 export type { Template }

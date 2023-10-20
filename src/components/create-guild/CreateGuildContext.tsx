@@ -1,9 +1,9 @@
 import { useSteps } from "@chakra-ui/react"
 import {
-  createContext,
   Dispatch,
   PropsWithChildren,
   SetStateAction,
+  createContext,
   useContext,
   useEffect,
   useState,
@@ -27,13 +27,13 @@ type Step = {
 }
 
 const CreateGuildContext = createContext<{
-  template: TemplateType[]
-  setTemplate: (id: TemplateType) => void
+  setTemplate: (id: TemplateType, role: any) => void
   steps: Step[]
   prevStep: () => void
   nextStep: () => void
   activeStep: number
   platform?: PlatformName
+  setActiveStep: (index: number) => void
   setPlatform: Dispatch<SetStateAction<PlatformName>>
   getTemplate: () => Partial<Record<TemplateType, Template>>
   TEMPLATES: Partial<Record<TemplateType, Template>>
@@ -161,12 +161,16 @@ const CreateGuildProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
   const [platform, setPlatform] = useState<PlatformName>(null)
-  const [templatesSelected, setTemplatesSelected] = useState<TemplateType[]>([])
 
   const methods = useForm<GuildFormType>({
     mode: "all",
     defaultValues: {
       guildPlatforms: [],
+      contacts: [{ type: "EMAIL", contact: "" }],
+      theme: {
+        color: "#71717a",
+      },
+      roles: [],
     },
   })
 
@@ -180,27 +184,21 @@ const CreateGuildProvider = ({
     return newTemplates
   }
 
-  const rolePlatforms =
-    platform !== "DEFAULT"
-      ? [
-          {
-            guildPlatformIndex: 0,
-            // This is needed so we don't delete the access type which the user selected in the previous step
-            platformRoleId:
-              platform === "GOOGLE"
-                ? methods.getValues("roles.0.rolePlatforms.0.platformRoleId")
-                : undefined,
-          },
-          { guildPlatformIndex: 10 },
-        ]
-      : undefined
+  const toggleTemplate = (id: TemplateType, roleToSend: any) => {
+    const isSlected = methods
+      .getValues("roles")
+      .find((role) => role.name === TEMPLATES[id].roles[0].name)
 
-  const toggleTemplate = (id: TemplateType) => {
-    const isSelected = templatesSelected.find((template) => template === id)
-
-    if (isSelected) {
-      setTemplatesSelected(templatesSelected.filter((t) => t !== id))
-    } else setTemplatesSelected([...templatesSelected, id])
+    if (isSlected) {
+      methods.setValue(
+        "roles",
+        methods
+          .getValues("roles")
+          .filter((role) => role.name !== TEMPLATES[id].roles[0].name) as any
+      )
+    } else {
+      methods.setValue("roles", [roleToSend, ...methods.getValues("roles")])
+    }
   }
 
   const steps: Step[] = [
@@ -232,6 +230,7 @@ const CreateGuildProvider = ({
     goToPrevious: prevStep,
     goToNext: nextStep,
     activeStep,
+    setActiveStep,
   } = useSteps({
     index: 0,
     count: steps.length,
@@ -255,9 +254,9 @@ const CreateGuildProvider = ({
         activeStep,
         platform,
         setPlatform,
-        template: templatesSelected,
         setTemplate: toggleTemplate,
         getTemplate: buildTemplate,
+        setActiveStep,
         TEMPLATES,
       }}
     >

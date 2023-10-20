@@ -6,6 +6,7 @@ import { useFormContext } from "react-hook-form"
 
 type Props = {
   next: () => void
+  prev?: () => void
   progress: number
   isDisabled?: boolean
   customButton?: JSX.Element
@@ -34,14 +35,14 @@ const GuildCreationProgress = ({
     <Box position={"fixed"} bottom={0} left={0} w={"full"}>
       <Container maxW={"container.lg"}>
         <DisplayCard
-          w={"sm"}
+          w={"fit-content"}
           px={{ base: 2, md: 2 }}
           py={{ base: 2, md: 2 }}
           ml={"auto"}
           mb={3}
         >
           <HStack justify={"space-between"}>
-            <HStack gap={5} pl={3}>
+            <HStack gap={5} pl={3} pr={3}>
               <Box position={"relative"} w={`${logoSize}px`} h={`${logoSize}px`}>
                 <Box opacity={0.1} position={"absolute"} top={0} left={0} zIndex={0}>
                   <Player
@@ -81,7 +82,7 @@ const GuildCreationProgress = ({
                   />
                 </Box>
               </Box>
-              <Text colorScheme="gray"> Guild {progressText} completed</Text>
+              <Text colorScheme="gray">Guild {progressText} completed</Text>
             </HStack>
             {customButton ? (
               customButton

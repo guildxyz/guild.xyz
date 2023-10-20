@@ -6,11 +6,16 @@ const baseStyle = {
       borderWidth: 0,
     },
     "&[data-status=active]": {
-      borderColor: "indigo.500",
+      borderColor: "primary.500",
     },
     "&[data-status=complete]": {
-      background: "indigo.500",
+      background: "primary.500",
       color: "white",
+    },
+  },
+  separator: {
+    "&[data-status=complete]": {
+      background: "primary.500",
     },
   },
   step: {
