@@ -30,7 +30,7 @@ const encodeV3SwapExactOut = (
 ) =>
   encodeParameters(
     ["address", "uint256", "uint256", "bytes", "bool"],
-    [recipient, amountOut, amountInMax, path, payerIsUser]
+    [recipient, amountOut, amountInMax, path.toString(), payerIsUser]
   )
 
 const encodePermit2Permit = (
@@ -44,7 +44,7 @@ const encodePermit2Permit = (
 ) =>
   encodeParameters(
     ["address", "uint160", "uint48", "uint48", "address", "uint256", "bytes"],
-    [tokenAddress, amount, expiration, nonce, spender, sigDeadline, data]
+    [tokenAddress, amount, expiration, nonce, spender, sigDeadline, data.toString()]
   )
 
 // https://docs.uniswap.org/contracts/universal-router/technical-reference#command

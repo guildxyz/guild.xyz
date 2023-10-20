@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chains } from "chains"
+import { Chains } from "chains"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
 import {
   NULL_ADDRESS,
@@ -38,7 +38,7 @@ const generateGetAssetsParams = (
   guildId: number,
   account: string,
   chainId: number,
-  pickedCurrency: string,
+  pickedCurrency: `0x${string}`,
   priceData: FetchPriceResponse<bigint>
 ): GeneratedGetAssetsParams => {
   if (!priceData || !purchaseSupportedChains.ERC20?.includes(Chains[chainId]))
@@ -81,14 +81,12 @@ const generateGetAssetsParams = (
     tokenAddressPath,
   }
 
-  const isNativeCurrency = Object.values(CHAIN_CONFIG)
-    .map((rpcData) => rpcData.nativeCurrency.symbol)
-    .includes(pickedCurrency)
+  const isNativeCurrency = pickedCurrency === NULL_ADDRESS
 
   if (Chains[chainId] === "ARBITRUM")
     return [
       {
-        tokenAddress: isNativeCurrency ? NULL_ADDRESS : pickedCurrency,
+        tokenAddress: pickedCurrency,
         amount: isNativeCurrency ? BigInt(0) : amountInWithFee,
       },
       `0x${
@@ -103,7 +101,7 @@ const generateGetAssetsParams = (
   return [
     guildId,
     {
-      tokenAddress: isNativeCurrency ? NULL_ADDRESS : pickedCurrency,
+      tokenAddress: pickedCurrency,
       amount: isNativeCurrency ? BigInt(0) : amountInWithFee,
     },
     `0x${getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][source].commands}`,

@@ -6,6 +6,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import usePrice from "../../hooks/usePrice"
@@ -26,7 +27,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
     data: { symbol, name },
   } = useTokenData(requirement.chain, pickedCurrency)
   const nativeCurrency = CHAIN_CONFIG[Chains[chainId]]?.nativeCurrency
-  const isNativeCurrencyPicked = pickedCurrency === nativeCurrency?.symbol
+  const isNativeCurrencyPicked = pickedCurrency === NULL_ADDRESS
 
   const tokenSymbol = isNativeCurrencyPicked ? nativeCurrency.symbol : symbol
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name

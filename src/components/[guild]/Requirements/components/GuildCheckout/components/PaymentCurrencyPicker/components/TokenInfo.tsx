@@ -13,6 +13,7 @@ import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import useTokenData from "hooks/useTokenData"
 import { Fragment } from "react"
 import { Rest } from "types"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useAccount, useBalance } from "wagmi"
 
 type Props = {
@@ -54,6 +55,7 @@ const TokenInfo = ({
     address,
     token: tokenAddress,
     chainId,
+    enabled: tokenAddress !== NULL_ADDRESS,
   })
 
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading

@@ -1,7 +1,8 @@
-import { CHAIN_CONFIG, Chains } from "chains"
+import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
@@ -40,8 +41,7 @@ const PurchaseButton = (): JSX.Element => {
       ? maxPriceInWei <= allowance
       : false
 
-  const pickedCurrencyIsNative =
-    pickedCurrency === CHAIN_CONFIG[Chains[chainId]]?.nativeCurrency.symbol
+  const pickedCurrencyIsNative = pickedCurrency === NULL_ADDRESS
 
   const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
     address,

@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chains } from "chains"
+import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -104,13 +104,10 @@ const usePayFee = () => {
     enabled: !!pickedCurrency,
   })
 
-  const pickedCurrencyIsNative =
-    pickedCurrency === CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
-
   const isSufficientBalance =
     fee &&
     (coinBalanceData || tokenBalanceData) &&
-    (pickedCurrencyIsNative
+    (pickedCurrency === NULL_ADDRESS
       ? coinBalanceData.value >= fee
       : tokenBalanceData.value >= fee)
 

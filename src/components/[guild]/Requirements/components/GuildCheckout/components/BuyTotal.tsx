@@ -2,6 +2,7 @@ import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
 import { CHAIN_CONFIG } from "chains"
 import useTokenData from "hooks/useTokenData"
 import useVault from "requirements/Payment/hooks/useVault"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
 import { useRequirementContext } from "../../RequirementContext"
 import usePayFee from "../hooks/usePayFee"
@@ -23,8 +24,7 @@ const BuyTotal = (): JSX.Element => {
     data: { decimals, symbol },
   } = useTokenData(requirement.chain, token)
 
-  const isNativeCurrency =
-    pickedCurrency === CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
+  const isNativeCurrency = pickedCurrency === NULL_ADDRESS
 
   const { estimatedGasFee, estimateGasError, isEstimateGasLoading } = usePayFee()
   const estimatedGasInFloat = estimatedGasFee

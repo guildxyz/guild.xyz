@@ -1,5 +1,6 @@
-import { CHAIN_CONFIG, Chains } from "chains"
+import { Chains } from "chains"
 import useShowErrorToast from "hooks/useShowErrorToast"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import {
   erc20ABI,
   useAccount,
@@ -21,7 +22,7 @@ const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
   const enabled = Boolean(
     tokenAddress &&
       requirement?.chain === Chains[chainId] &&
-      tokenAddress !== CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
+      tokenAddress !== NULL_ADDRESS
   )
 
   const {
@@ -42,6 +43,7 @@ const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
     address: tokenAddress,
     functionName: "approve",
     args: [contract, Number.MAX_SAFE_INTEGER],
+    enabled,
   })
 
   const { isLoading: isAllowing, write: allowSpendingTokens } = useContractWrite({

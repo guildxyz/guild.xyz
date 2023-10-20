@@ -6,6 +6,7 @@ import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
@@ -25,7 +26,7 @@ const BuyAllowanceButton = (): JSX.Element => {
     data: { symbol, name },
   } = useTokenData(requirement.chain, pickedCurrency)
   const nativeCurrency = CHAIN_CONFIG[requirement.chain].nativeCurrency
-  const isNativeCurrencyPicked = pickedCurrency === nativeCurrency.symbol
+  const isNativeCurrencyPicked = pickedCurrency === NULL_ADDRESS
 
   const tokenSymbol = isNativeCurrencyPicked ? nativeCurrency.symbol : symbol
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name

@@ -1,6 +1,6 @@
 // import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
 // import { Contract } from "@ethersproject/contracts"
-import { CHAIN_CONFIG, Chains } from "chains"
+import { Chains } from "chains"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -8,7 +8,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { useMemo } from "react"
-import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
+import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import {
   GeneratedGetAssetsParams,
   generateGetAssetsParams,
@@ -129,13 +129,10 @@ const usePurchaseAsset = () => {
     chainId: Chains[requirement?.chain],
   })
 
-  const pickedCurrencyIsNative =
-    pickedCurrency === CHAIN_CONFIG[Chains[chainId]]?.nativeCurrency.symbol
-
   const isSufficientBalance =
     priceData?.maxPriceInWei &&
     (coinBalanceData || tokenBalanceData) &&
-    (pickedCurrencyIsNative
+    (pickedCurrency === NULL_ADDRESS
       ? coinBalanceData?.value >= priceData.maxPriceInWei
       : tokenBalanceData?.value >= priceData.maxPriceInWei)
 

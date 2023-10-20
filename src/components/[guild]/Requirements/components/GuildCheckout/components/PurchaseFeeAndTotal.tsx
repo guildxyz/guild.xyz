@@ -2,7 +2,7 @@ import { HStack, Icon, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react"
 import { CHAIN_CONFIG } from "chains"
 import useTokenData from "hooks/useTokenData"
 import { Info, Question } from "phosphor-react"
-import { GUILD_FEE_PERCENTAGE } from "utils/guildCheckout/constants"
+import { GUILD_FEE_PERCENTAGE, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
 import { useRequirementContext } from "../../RequirementContext"
 import usePrice from "../hooks/usePrice"
@@ -49,8 +49,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
       )
     : null
 
-  const isNativeCurrency =
-    pickedCurrency === CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
+  const isNativeCurrency = pickedCurrency === NULL_ADDRESS
 
   // 1% + base fee on the estimated price
   const guildFee = Number((estimatedGuildFeeInSellToken ?? 0)?.toFixed(3))

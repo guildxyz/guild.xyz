@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chains } from "chains"
+import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
@@ -6,6 +6,7 @@ import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import fetcher from "utils/fetcher"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
@@ -72,14 +73,13 @@ const BuyButton = (): JSX.Element => {
   })
   const { data: tokenBalanceData, isLoading: isTokenBalanceLoading } = useBalance({
     address,
-    /*token: pickedCurrency, */ chainId,
+    token: pickedCurrency,
+    chainId,
   })
-  // WAGMI TODO: pickedCurrency
 
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
 
-  const pickedCurrencyIsNative =
-    pickedCurrency === CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
+  const pickedCurrencyIsNative = pickedCurrency === NULL_ADDRESS
 
   const isSufficientBalance =
     fee &&

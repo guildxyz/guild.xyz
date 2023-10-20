@@ -29,7 +29,8 @@ export type ZeroXSupportedSources = (typeof ZEROX_SUPPORTED_SOURCES)[number]
 export const GUILD_FEE_PERCENTAGE = 0.01
 
 export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
-export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
+export const NULL_ADDRESS: `0x${string}` =
+  "0x0000000000000000000000000000000000000000"
 
 const DEFAULT_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
   ETHEREUM: {
@@ -113,7 +114,7 @@ export const SUPPORTED_CURRENCIES: { chainId: number; address: `0x${string}` }[]
   // Add native currencies automatically
   ...allPurchaseSupportedChains.map((c) => ({
     chainId: CHAIN_CONFIG[c].id,
-    address: CHAIN_CONFIG[c].nativeCurrency.symbol as any, // WAGMI TODO: this should be a valid address!!!
+    address: NULL_ADDRESS,
   })),
   /**
    * We'll be able to add ERC20 tokens here in the following format:
