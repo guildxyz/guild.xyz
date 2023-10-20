@@ -12,6 +12,9 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
+import RolePlatforms from "components/[guild]/RolePlatforms"
+import SetVisibility from "components/[guild]/SetVisibility"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -22,9 +25,6 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
-import useGuild from "components/[guild]/hooks/useGuild"
-import RolePlatforms from "components/[guild]/RolePlatforms"
-import SetVisibility from "components/[guild]/SetVisibility"
 import { AnimatePresence, motion } from "framer-motion"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
@@ -178,7 +178,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   return (
     <>
-      <OnboardingMarker step={0} onClick={handleOpen}>
+      <OnboardingMarker step={3} onClick={handleOpen}>
         <IconButton
           ref={btnRef}
           icon={<Icon as={PencilSimple} />}
@@ -290,7 +290,7 @@ const EditRoleWrapper = ({ roleId }) => {
   const { isDetailed } = useGuild()
   if (!isDetailed)
     return (
-      <OnboardingMarker step={0}>
+      <OnboardingMarker step={3}>
         <IconButton size="sm" rounded="full" aria-label="Edit role" isLoading />
       </OnboardingMarker>
     )

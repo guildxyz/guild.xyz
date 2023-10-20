@@ -1,17 +1,16 @@
 import {
-  Box,
   Collapse,
-  HStack,
   Text,
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Player } from "@lottiefiles/react-lottie-player"
 import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Card from "components/common/Card"
 import { useEffect, useState } from "react"
+import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
 import { useOnboardingContext } from "./components/OnboardingProvider"
+import SummonMembers from "./components/SummonMembers"
 
 type Props = {
   activeStep: number
@@ -24,28 +23,32 @@ const GUILD_CASTLE_COMPLETED_FRAME = 38
 const steps = [
   {
     title: "Set platforms",
-    content: <></>,
   },
   {
     title: "Customize guild",
-    content: <></>,
   },
   {
     title: "Choose template",
-    content: <></>,
   },
   {
     title: "Edit roles",
-    content: <></>,
+    note: (
+      <>
+        <Text colorScheme="gray" mt={8}>
+          Your guild is created, and you’re already in! Edit & add roles as you want
+        </Text>
+      </>
+    ),
   },
   {
     title: "Finish",
-    content: <></>,
+    note: <SummonMembers activeStep={3} />,
   },
 ]
 
 const Onboarding = (): JSX.Element => {
   const { onboardingComplete } = useGuild()
+  const { localThemeColor } = useThemeContext()
 
   const { localStep, setLocalStep } = useOnboardingContext()
   const { nextStep, prevStep, activeStep, setStep } = useSteps({
@@ -81,7 +84,7 @@ const Onboarding = (): JSX.Element => {
   return (
     <Collapse in={!onboardingComplete} unmountOnExit>
       <Card
-        borderColor={"indigo.500"}
+        borderColor={localThemeColor}
         borderWidth={3}
         p={{ base: 4, sm: 6 }}
         mb="8"
@@ -101,45 +104,16 @@ const Onboarding = (): JSX.Element => {
         sx={{ "*": { zIndex: 1 } }}
       >
         <Steps
-          onClickStep={orientation === "horizontal" ? setStep : undefined}
-          activeStep={activeStep}
+          activeStep={localStep}
           colorScheme="primary"
           orientation={orientation}
           size="sm"
         >
-          {steps.map(({ title, content }) => (
-            <Step label={title} key={title}>
-              <Box pt={{ md: 6 }} textAlign="left">
-                {content}
-              </Box>
-            </Step>
+          {steps.map(({ title }) => (
+            <Step label={title} key={title}></Step>
           ))}
         </Steps>
-        <HStack
-          spacing={3}
-          pos="absolute"
-          bottom={6}
-          opacity={0.8}
-          display={{ base: "none", md: "flex" }}
-        >
-          <Player
-            autoplay
-            keepLastFrame
-            speed={0.5}
-            src="/logo_lottie.json"
-            style={{
-              height: 17,
-              width: 17,
-              opacity: 0.5,
-            }}
-            lottieRef={(instance) => {
-              setPlayer(instance)
-            }}
-          />
-          <Text colorScheme="gray" fontSize={"sm"} fontWeight="medium">
-            guild {(activeStep + 1) * 25}% ready
-          </Text>
-        </HStack>
+        {steps[localStep].note}
       </Card>
     </Collapse>
   )

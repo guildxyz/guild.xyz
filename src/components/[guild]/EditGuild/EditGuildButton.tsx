@@ -10,7 +10,7 @@ const EditGuildButton = (): JSX.Element => {
   const { textColor, buttonColorScheme } = useThemeContext()
 
   return (
-    <OnboardingMarker step={1}>
+    <OnboardingMarker step={4}>
       <IconButton
         icon={<GearSix />}
         aria-label="Edit Guild"

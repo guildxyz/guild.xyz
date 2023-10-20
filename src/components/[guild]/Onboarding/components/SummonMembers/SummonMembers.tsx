@@ -1,18 +1,17 @@
-import { Text, useDisclosure, Wrap } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import PulseMarker from "components/common/PulseMarker"
+import { HStack, Text, useDisclosure, Wrap } from "@chakra-ui/react"
+import { Player } from "@lottiefiles/react-lottie-player"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
+import PulseMarker from "components/common/PulseMarker"
 import { Check, DiscordLogo, TwitterLogo } from "phosphor-react"
+import { useState } from "react"
 import { PlatformType } from "types"
-import PaginationButtons from "../PaginationButtons"
 import SendDiscordJoinButtonAlert from "./components/SendDiscordJoinButtonAlert"
 import SendDiscordJoinButtonModal from "./components/SendDiscordJoinButtonModal"
 
 type Props = {
   activeStep: number
-  prevStep: () => void
-  nextStep: () => void
 }
 
 export type SummonMembersForm = {
@@ -23,7 +22,8 @@ export type SummonMembersForm = {
   button: string
 }
 
-const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
+const SummonMembers = ({ activeStep }: Props) => {
+  const [player, setPlayer] = useState<any>()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
     isOpen: isAlertOpen,
@@ -49,7 +49,7 @@ const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
 
   return (
     <>
-      <Text mb="2">
+      <Text mb="2" mt={8}>
         If you're satisfied with everything, it's time to invite your community to
         join!
       </Text>
@@ -84,12 +84,36 @@ const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
           Share
         </Button>
       </Wrap>
-      <PaginationButtons
-        prevStep={prevStep}
-        nextStep={handleFinish}
-        nextLabel="Finish"
-        nextLoading={isLoading || !!response}
-      />
+      <HStack justifyContent={"space-between"} mt={8}>
+        <HStack>
+          <Player
+            autoplay
+            keepLastFrame
+            speed={0.5}
+            src="/logo_lottie.json"
+            style={{
+              height: 17,
+              width: 17,
+              opacity: 0.5,
+            }}
+            lottieRef={(instance) => {
+              setPlayer(instance)
+            }}
+          />
+          <Text colorScheme="gray" fontSize={"sm"} fontWeight="medium">
+            guild {(activeStep + 1) * 25}% complete
+          </Text>
+        </HStack>
+        <Button
+          size="sm"
+          onClick={handleFinish}
+          isLoading={isLoading || !!response}
+          colorScheme="green"
+        >
+          Close
+        </Button>
+      </HStack>
+
       {discordPlatform && (
         <>
           <SendDiscordJoinButtonModal

@@ -27,6 +27,7 @@ import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
+import FloatingProgress from "components/[guild]/Onboarding/components/FloatingProgress"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
@@ -65,6 +66,7 @@ const DynamicMembersExporter = dynamic(
   () => import("components/[guild]/Members/components/MembersExporter")
 )
 const DynamicOnboarding = dynamic(() => import("components/[guild]/Onboarding"))
+
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 const DynamicActiveStatusUpdates = dynamic(
   () => import("components/[guild]/ActiveStatusUpdates")
@@ -354,6 +356,7 @@ const GuildPage = (): JSX.Element => {
                 )}
               </Box>
             </Section>
+            {showOnboarding && <FloatingProgress />}
           </>
         )}
       </Layout>
