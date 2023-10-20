@@ -109,7 +109,11 @@ const BasicInfo = (): JSX.Element => {
           </Section>
         </Stack>
       </Card>
-      <GuildCreationProgress next={nextStep} progress={35} />
+      <GuildCreationProgress
+        next={nextStep}
+        progress={35}
+        isDisabled={!name || !!Object.values(errors).length}
+      />
     </>
   )
 }

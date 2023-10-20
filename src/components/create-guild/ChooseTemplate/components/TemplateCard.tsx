@@ -222,15 +222,24 @@ const TemplateCard = ({
         pointerEvents="none"
         transition="border 0.16s ease"
       >
-        <Circle
-          bgColor="green.500"
-          color="white"
-          size={6}
-          transition="opacity 0.16s ease"
-          opacity={selected ? 1 : 0}
-        >
-          <Icon as={Check} />
-        </Circle>
+        {selected ? (
+          <Circle
+            bgColor="green.500"
+            color="white"
+            size={6}
+            transition="opacity 0.16s ease"
+            opacity={selected ? 1 : 0}
+          >
+            <Icon as={Check} />
+          </Circle>
+        ) : (
+          <Circle
+            borderColor={"gray"}
+            borderStyle={"solid"}
+            borderWidth={2}
+            size={6}
+          />
+        )}
       </Flex>
     </Box>
   )

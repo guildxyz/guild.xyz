@@ -20,7 +20,7 @@ const CreateGuildButton = ({ isDisabled }: Props): JSX.Element => {
       isDisabled={response || isLoading || isSigning || isDisabled}
       isLoading={isLoading || isSigning}
       loadingText={signLoadingText || "Saving data"}
-      onClick={handleSubmit((form) => console.log(form))}
+      onClick={handleSubmit(onSubmit)}
       data-test="create-guild-button"
     >
       Create Guild

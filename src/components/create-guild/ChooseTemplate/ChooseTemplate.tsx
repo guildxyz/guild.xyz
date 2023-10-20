@@ -61,14 +61,8 @@ const ChooseTemplate = (): JSX.Element => {
       <GuildCreationProgress
         next={nextStep}
         progress={65}
-        isDisabled={!requirements?.length}
-        customButton={
-          <CreateGuildButton
-            isDisabled={
-              !getValues("name") || !!Object.values(formState.errors).length
-            }
-          />
-        }
+        isDisabled={!roles.length}
+        customButton={<CreateGuildButton isDisabled={!roles.length} />}
       />
     </>
   )
