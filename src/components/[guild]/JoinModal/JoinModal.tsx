@@ -10,6 +10,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
+  Text,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -69,6 +70,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   })
 
   const {
+    progress,
     isLoading,
     onSubmit,
     error: joinError,
@@ -104,6 +106,21 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     <AlertDescription>
                       Feel free to close the site & check back later. If you're
                       eligible, you'll already be a member hopefully!
+                      {(() => {
+                        const estTimestamp = progress?.[
+                          "children:manage-reward:jobs"
+                        ]?.find(
+                          (job) => job.flowName === "manage-reward:discord"
+                        )?.delayReadyTimestamp
+                        const estDate = new Date(estTimestamp)
+
+                        if (estTimestamp)
+                          return (
+                            <Text fontWeight={"bold"}>
+                              Estimated join time: {estDate.toLocaleTimeString()}
+                            </Text>
+                          )
+                      })()}
                     </AlertDescription>
                   </Stack>
                 </Alert>
