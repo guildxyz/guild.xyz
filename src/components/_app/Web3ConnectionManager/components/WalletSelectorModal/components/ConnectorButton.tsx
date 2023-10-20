@@ -1,8 +1,9 @@
-import { Center, Img, useColorMode } from "@chakra-ui/react"
+import { Center, Icon, Img, useColorMode } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
+import { Wallet } from "phosphor-react"
 import { useMemo, useRef } from "react"
 import { isMobile } from "react-device-detect"
 import shortenHex from "utils/shortenHex"
@@ -28,7 +29,7 @@ const ConnectorButton = ({ connector }: Props): JSX.Element => {
   const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
   // wrapping with useMemo to make sure it updates on window.ethereum change
   const isBraveWallet = useMemo(
-    () => typeof window !== "undefined" && (window.ethereum as any)?.isBraveWallet,
+    () => typeof window !== "undefined" && window.ethereum?.isBraveWallet,
     [window?.ethereum]
   )
   const { colorMode } = useColorMode()
@@ -44,23 +45,16 @@ const ConnectorButton = ({ connector }: Props): JSX.Element => {
       ? colorMode === "dark"
         ? "gnosis-safe-white.svg"
         : "gnosis-safe-black.svg"
-      : "coinbasewallet.png"
-  // WAGMI TODO: the default value should be something else, not Coinbase Wallet
-  // + maybe we could just define an object with connector ids as keys & icon names as values
+      : connector.id === "coinbaseWallet"
+      ? "coinbasewallet.png"
+      : null
 
   const connectorName =
     connector.id === "injected"
       ? isBraveWallet
-        ? "Brave Wallet"
-        : isMetaMaskInstalled
-        ? "MetaMask"
-        : "Install MetaMask"
-      : connector.id === "walletConnect"
-      ? "WalletConnect"
-      : connector.id === "safe"
-      ? "Gnosis Safe"
-      : "Coinbase Wallet"
-  // WAGMI TODO: the default value should be something else, not Coinbase Wallet
+        ? "Brave"
+        : "MetaMask"
+      : connector.name
 
   if (connector.id === "injected" && isMobile && !isMetaMaskInstalled) return null
 
@@ -77,7 +71,7 @@ const ConnectorButton = ({ connector }: Props): JSX.Element => {
       rightIcon={
         connector && ready ? (
           <GuildAvatar address={address} size={5} />
-        ) : (
+        ) : iconUrl ? (
           <Center boxSize={6}>
             <Img
               src={`/walletLogos/${iconUrl}`}
@@ -86,6 +80,8 @@ const ConnectorButton = ({ connector }: Props): JSX.Element => {
               alt={`${connectorName} logo`}
             />
           </Center>
+        ) : (
+          <Icon as={Wallet} boxSize={6} />
         )
       }
       isDisabled={
