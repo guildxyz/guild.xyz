@@ -1,5 +1,5 @@
 import { Box, Stack, Text, useColorModeValue } from "@chakra-ui/react"
-import { Chains } from "connectors"
+import { Chains } from "chains"
 import useTokenData from "hooks/useTokenData"
 import { useEffect } from "react"
 import useVault from "requirements/Payment/hooks/useVault"

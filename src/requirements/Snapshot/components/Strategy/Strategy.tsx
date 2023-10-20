@@ -11,8 +11,8 @@ import {
   NumberInputStepper,
   Text,
 } from "@chakra-ui/react"
+import { Chain, supportedChains } from "chains"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { Chain, supportedChains } from "connectors"
 import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"

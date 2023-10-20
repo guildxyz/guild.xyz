@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chain, Chains, coinIconUrls } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains, coinIconUrls } from "chains"
 import useSWRImmutable from "swr/immutable"
 import { CoingeckoToken } from "types"
 import fetcher from "utils/fetcher"

@@ -1,4 +1,4 @@
-import { Chain } from "connectors"
+import { Chain } from "chains"
 import useSWR from "swr"
 
 const nounsAddresses = {

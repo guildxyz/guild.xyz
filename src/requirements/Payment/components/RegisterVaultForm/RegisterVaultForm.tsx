@@ -13,12 +13,12 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import { Chain } from "chains"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { Chain } from "connectors"
 import { useController, useFormContext, useWatch } from "react-hook-form"
+import useFeeInUSD from "requirements/PoapPayment/hooks/useFeeInUSD"
 import ChainPicker from "requirements/common/ChainPicker"
 import TokenPicker from "requirements/common/TokenPicker"
-import useFeeInUSD from "requirements/PoapPayment/hooks/useFeeInUSD"
 import {
   ADDRESS_REGEX,
   NULL_ADDRESS,

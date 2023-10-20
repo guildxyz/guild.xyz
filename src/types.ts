@@ -1,6 +1,6 @@
+import type { Chain, Chains } from "chains"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
-import type { Chain, Chains } from "connectors"
 import { RequirementType } from "requirements"
 
 type Token = {

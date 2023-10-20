@@ -8,11 +8,11 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { Alert } from "components/common/Modal"
-import { CHAIN_CONFIG, Chain, Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useRef } from "react"
 import { GuildPoap, PoapContract } from "types"

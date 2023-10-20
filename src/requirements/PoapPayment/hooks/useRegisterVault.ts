@@ -1,4 +1,4 @@
-import { Chains } from "connectors"
+import { Chains } from "chains"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"

@@ -1,5 +1,5 @@
+import { Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
-import { Chains } from "connectors"
 import delegateRegistryAbi from "static/abis/delegateRegistry"
 import { useContractReads } from "wagmi"
 

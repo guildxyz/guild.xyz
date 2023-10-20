@@ -1,6 +1,6 @@
 import { kv } from "@vercel/kv"
+import { Chain } from "chains"
 import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/CreateNftForm"
-import { Chain } from "connectors"
 import { NextApiHandler } from "next"
 import { OneOf } from "types"
 import fetcher from "utils/fetcher"

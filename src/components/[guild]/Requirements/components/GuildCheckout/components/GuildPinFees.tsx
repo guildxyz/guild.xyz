@@ -12,8 +12,8 @@ import {
   Text,
   Tr,
 } from "@chakra-ui/react"
+import { CHAIN_CONFIG } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { CHAIN_CONFIG } from "connectors"
 import { ArrowSquareOut, Question } from "phosphor-react"
 import { formatUnits } from "viem"
 import useGuildPinFee from "../hooks/useGuildPinFee"

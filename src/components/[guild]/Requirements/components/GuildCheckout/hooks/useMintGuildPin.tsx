@@ -1,6 +1,6 @@
+import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { Chains } from "connectors"
 import useShowErrorToast from "hooks/useShowErrorToast"
 
 import { useToastWithTweetButton } from "hooks/useToast"

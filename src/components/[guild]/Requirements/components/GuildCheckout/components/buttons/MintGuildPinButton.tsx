@@ -1,7 +1,7 @@
+import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import { Chains } from "connectors"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"

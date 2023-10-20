@@ -1,4 +1,5 @@
 import { Icon } from "@chakra-ui/react"
+import { CHAIN_CONFIG } from "chains"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -11,7 +12,6 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { CHAIN_CONFIG } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
 import { formatUnits } from "viem"

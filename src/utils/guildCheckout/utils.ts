@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chains } from "connectors"
+import { CHAIN_CONFIG, Chains } from "chains"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
 import {
   NULL_ADDRESS,

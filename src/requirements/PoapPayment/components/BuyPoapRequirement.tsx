@@ -13,6 +13,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import { Chain, Chains } from "chains"
 import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
@@ -27,7 +28,6 @@ import SwitchNetworkButton from "components/[guild]/Requirements/components/Guil
 import usePoapPayFee from "components/[guild]/claim-poap/hooks/usePoapPayFee"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { Chain, Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coin } from "phosphor-react"
 import usePoapById from "requirements/Poap/hooks/usePoapById"

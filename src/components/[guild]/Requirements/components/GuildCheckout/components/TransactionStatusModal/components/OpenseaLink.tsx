@@ -1,6 +1,6 @@
 import { Icon, Img, Text } from "@chakra-ui/react"
+import { Chains } from "chains"
 import Link from "components/common/Link"
-import { Chains } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import { GUILD_PIN_CONTRACTS, openseaBaseUrl } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"

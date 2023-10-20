@@ -9,7 +9,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chain, Chains } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import useTokenData from "hooks/useTokenData"
 import { Fragment } from "react"
 import { Rest } from "types"

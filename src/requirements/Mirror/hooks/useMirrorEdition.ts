@@ -1,4 +1,4 @@
-import { Chain, Chains } from "connectors"
+import { Chain, Chains } from "chains"
 import mirrorAbi from "static/abis/mirror"
 import { useContractReads } from "wagmi"
 

@@ -1,6 +1,6 @@
 import { kv } from "@vercel/kv"
 import { sql } from "@vercel/postgres"
-import { CHAIN_CONFIG, Chain } from "connectors"
+import { CHAIN_CONFIG, Chain } from "chains"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { OneOf } from "types"
 import { createPublicClient, http, recoverMessageAddress } from "viem"

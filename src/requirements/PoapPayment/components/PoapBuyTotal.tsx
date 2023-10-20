@@ -1,9 +1,9 @@
 import { HStack, Skeleton, Stack, Text } from "@chakra-ui/react"
+import { Chains } from "chains"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { useGuildCheckoutContext } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import PriceFallback from "components/[guild]/Requirements/components/GuildCheckout/components/PriceFallback"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { formatUnits } from "viem"
 

@@ -7,6 +7,7 @@ import {
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react"
+import { Chain } from "chains"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
 import Details from "components/[guild]/collect/components/Details"
@@ -27,7 +28,6 @@ import Layout from "components/common/Layout"
 import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import PulseMarker from "components/common/PulseMarker"
-import { Chain } from "connectors"
 import { AnimatePresence, motion } from "framer-motion"
 import useLocalStorage from "hooks/useLocalStorage"
 import useScrollEffect from "hooks/useScrollEffect"

@@ -1,4 +1,4 @@
-import { Chain } from "connectors"
+import { Chain } from "chains"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 

@@ -1,5 +1,5 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
-import { CHAIN_CONFIG } from "connectors"
+import { CHAIN_CONFIG } from "chains"
 import useTokenData from "hooks/useTokenData"
 import useVault from "requirements/Payment/hooks/useVault"
 import { formatUnits } from "viem"

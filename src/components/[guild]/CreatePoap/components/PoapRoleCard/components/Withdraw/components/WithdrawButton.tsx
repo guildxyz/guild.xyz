@@ -1,5 +1,5 @@
+import { CHAIN_CONFIG, Chains } from "chains"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { CHAIN_CONFIG, Chains } from "connectors"
 import { Wallet } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import { useChainId } from "wagmi"

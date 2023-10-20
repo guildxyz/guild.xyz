@@ -1,4 +1,4 @@
-import { Chain, CHAIN_CONFIG } from "connectors"
+import { Chain, CHAIN_CONFIG } from "chains"
 import { RequirementType } from "requirements"
 import guildPinAbi from "static/abis/guildPin"
 import oldTokenBuyerAbi from "static/abis/oldTokenBuyer"

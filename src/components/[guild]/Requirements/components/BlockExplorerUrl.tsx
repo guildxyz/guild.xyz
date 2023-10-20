@@ -1,6 +1,6 @@
 import { useColorMode } from "@chakra-ui/react"
+import { blockExplorerIcons, Chain, CHAIN_CONFIG } from "chains"
 import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
-import { blockExplorerIcons, Chain, CHAIN_CONFIG } from "connectors"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useRequirementContext } from "./RequirementContext"
 

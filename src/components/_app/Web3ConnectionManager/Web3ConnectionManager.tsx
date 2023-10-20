@@ -1,5 +1,5 @@
 import { useDisclosure } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chains } from "connectors"
+import { CHAIN_CONFIG, Chains } from "chains"
 import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"

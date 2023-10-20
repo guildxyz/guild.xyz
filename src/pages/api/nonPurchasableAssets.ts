@@ -1,5 +1,5 @@
 import { kv } from "@vercel/kv"
-import { Chains } from "connectors"
+import { Chains } from "chains"
 import { NextApiRequest, NextApiResponse } from "next"
 import { allPurchaseSupportedChains } from "utils/guildCheckout/constants"
 

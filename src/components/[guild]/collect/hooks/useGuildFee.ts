@@ -1,5 +1,5 @@
+import { Chain, Chains } from "chains"
 import { GUILD_REWARD_NFT_FACTORY_ADDRESSES } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
-import { Chain, Chains } from "connectors"
 import guildRewardNFTFactoryAbi from "static/abis/guildRewardNFTFactory"
 import { useContractRead } from "wagmi"
 

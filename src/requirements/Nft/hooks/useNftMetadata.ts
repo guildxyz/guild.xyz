@@ -1,5 +1,5 @@
 import { ImageData } from "@nouns/assets"
-import { Chain } from "connectors"
+import { Chain } from "chains"
 import useSWRImmutable from "swr/immutable"
 import { nounsAddresses } from "./useNftType"
 

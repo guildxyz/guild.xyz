@@ -10,9 +10,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Chains } from "chains"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
-import { Chains } from "connectors"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import { useEffect } from "react"
 import { SUPPORTED_CURRENCIES } from "utils/guildCheckout/constants"

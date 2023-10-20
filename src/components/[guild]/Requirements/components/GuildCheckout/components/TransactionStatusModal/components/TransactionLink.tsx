@@ -1,5 +1,5 @@
 import { Icon, Link, Text } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chains } from "connectors"
+import { CHAIN_CONFIG, Chains } from "chains"
 import { ArrowSquareOut } from "phosphor-react"
 import { useChainId } from "wagmi"
 import { useTransactionStatusContext } from "../../TransactionStatusContext"

@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chain, Chains } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { NextApiRequest, NextApiResponse } from "next"
 import legacyPoapFeeCollectorAbi from "static/abis/legacyPoapFeeCollector"
 import { PoapEventDetails } from "types"

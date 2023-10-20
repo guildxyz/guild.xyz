@@ -1,4 +1,4 @@
-import { Chains, etherscanApiUrls } from "connectors"
+import { Chains, etherscanApiUrls } from "chains"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 

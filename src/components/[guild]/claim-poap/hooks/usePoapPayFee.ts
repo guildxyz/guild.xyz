@@ -1,6 +1,6 @@
+import { Chain, Chains } from "chains"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { Chain, Chains } from "connectors"
 import useFeeCollectorContract, {
   FEE_COLLECTOR_ADDRESS,
 } from "hooks/useFeeCollectorContract"

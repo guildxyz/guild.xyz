@@ -1,4 +1,4 @@
-import { Chain } from "connectors"
+import { Chain } from "chains"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"

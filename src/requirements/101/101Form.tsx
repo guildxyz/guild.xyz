@@ -1,7 +1,7 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
+import { CHAIN_CONFIG, Chains } from "chains"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { CHAIN_CONFIG, Chains } from "connectors"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"

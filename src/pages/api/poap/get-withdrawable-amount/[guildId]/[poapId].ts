@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chains } from "connectors"
+import { CHAIN_CONFIG, Chains } from "chains"
 import { NextApiRequest, NextApiResponse } from "next"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"

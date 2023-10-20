@@ -1,5 +1,5 @@
+import { CHAIN_CONFIG, Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
-import { CHAIN_CONFIG, Chains } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata, User } from "types"
 import base64ToObject from "utils/base64ToObject"

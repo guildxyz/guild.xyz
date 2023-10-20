@@ -1,4 +1,4 @@
-import { Chain, Chains } from "connectors"
+import { Chain, Chains } from "chains"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { useAccount, useContractRead } from "wagmi"
 

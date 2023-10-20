@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chains } from "connectors"
+import { CHAIN_CONFIG, Chains } from "chains"
 // import EIP1271_ABI from "static/abis/EIP1271.json"
 import gnosisSignMessageLibAbi from "static/abis/gnosisSignMessageLib"
 import { createPublicClient, hashMessage, http } from "viem"

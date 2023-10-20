@@ -1,7 +1,7 @@
+import { CHAIN_CONFIG, Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import { CHAIN_CONFIG, Chains } from "connectors"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"

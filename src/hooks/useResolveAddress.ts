@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chain, Chains } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { createStore, del, get, set } from "idb-keyval"
 import nnsReverseResolveAbi from "static/abis/nnsReverseResolve"
 import unsRegistryAbi from "static/abis/unsRegistry"

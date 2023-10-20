@@ -1,4 +1,4 @@
-import { Chain } from "connectors"
+import { Chain } from "chains"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { UseFieldArrayAppend } from "react-hook-form"

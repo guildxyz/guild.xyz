@@ -1,4 +1,4 @@
-import { etherscanApiUrls } from "connectors"
+import { etherscanApiUrls } from "chains"
 import fetcher from "./fetcher"
 
 export const getBlockByTime = ([_, chain, timestamp]) =>

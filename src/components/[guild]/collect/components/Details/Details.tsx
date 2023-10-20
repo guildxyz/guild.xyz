@@ -1,7 +1,7 @@
 import { SimpleGrid, Skeleton, Text } from "@chakra-ui/react"
+import { CHAIN_CONFIG } from "chains"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import Section from "components/common/Section"
-import { CHAIN_CONFIG } from "connectors"
 import useNftDetails from "../../hooks/useNftDetails"
 import BlockExplorerLink from "./components/BlockExplorerLink"
 import InfoBlock from "./components/InfoBlock"

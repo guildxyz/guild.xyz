@@ -1,4 +1,5 @@
 import { Box, Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react"
+import { Chains } from "chains"
 import LogicDivider from "components/[guild]/LogicDivider"
 import AnyOfHeader from "components/[guild]/Requirements/components/AnyOfHeader"
 import { TransactionStatusProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
@@ -7,7 +8,6 @@ import RequirementDisplayComponent from "components/[guild]/Requirements/compone
 import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import Card from "components/common/Card"
-import { Chains } from "connectors"
 import { Logic, Requirement } from "types"
 import useNftDetails from "../hooks/useNftDetails"
 import CollectNftFeesTable from "./CollectNftFeesTable"

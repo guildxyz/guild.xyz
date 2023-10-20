@@ -1,7 +1,7 @@
 import { HStack, Icon, Stack, Tooltip } from "@chakra-ui/react"
+import { Chains } from "chains"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
-import { Chains } from "connectors"
 import { Check, Question } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"

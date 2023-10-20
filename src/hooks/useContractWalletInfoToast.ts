@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chain, Chains, supportedChains } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains, supportedChains } from "chains"
 import useToast from "hooks/useToast"
 import { useEffect } from "react"
 import { createPublicClient, http, trim } from "viem"

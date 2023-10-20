@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chains } from "connectors"
+import { CHAIN_CONFIG, Chains } from "chains"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import {
   erc20ABI,

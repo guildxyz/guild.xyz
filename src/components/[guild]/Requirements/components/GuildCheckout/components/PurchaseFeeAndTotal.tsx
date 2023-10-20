@@ -1,5 +1,5 @@
 import { HStack, Icon, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react"
-import { CHAIN_CONFIG } from "connectors"
+import { CHAIN_CONFIG } from "chains"
 import useTokenData from "hooks/useTokenData"
 import { Info, Question } from "phosphor-react"
 import { GUILD_FEE_PERCENTAGE } from "utils/guildCheckout/constants"

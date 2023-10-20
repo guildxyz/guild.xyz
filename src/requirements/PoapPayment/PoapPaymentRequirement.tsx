@@ -1,4 +1,5 @@
 import { Icon, Skeleton, Text } from "@chakra-ui/react"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import Withdraw from "components/[guild]/CreatePoap/components/PoapRoleCard/components/Withdraw"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import Requirement, {
@@ -6,7 +7,6 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { CHAIN_CONFIG, Chain, Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
 import { GuildPoap, PoapContract, RequirementType } from "types"

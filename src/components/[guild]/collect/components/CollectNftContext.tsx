@@ -1,4 +1,4 @@
-import { Chain, Chains } from "connectors"
+import { Chain, Chains } from "chains"
 import { PropsWithChildren, createContext, useContext } from "react"
 import { GuildPlatform } from "types"
 import { useAccount, useBalance } from "wagmi"

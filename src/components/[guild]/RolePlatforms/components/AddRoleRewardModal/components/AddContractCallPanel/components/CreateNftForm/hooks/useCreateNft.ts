@@ -1,7 +1,7 @@
+import { CHAIN_CONFIG, Chains } from "chains"
 import { NFTDetails } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { CHAIN_CONFIG, Chains } from "connectors"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"

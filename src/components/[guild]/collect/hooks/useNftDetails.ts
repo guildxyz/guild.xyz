@@ -1,5 +1,5 @@
+import { Chain, Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { Chain, Chains } from "connectors"
 import guildRewardNftAbi from "static/abis/guildRewardNft"
 import useSWRImmutable from "swr/immutable"
 import { PlatformGuildData, PlatformType } from "types"

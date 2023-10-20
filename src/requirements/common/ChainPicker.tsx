@@ -5,16 +5,16 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { BALANCY_SUPPORTED_CHAINS } from "components/create-guild/Requirements/hooks/useBalancy"
 import {
   CHAIN_CONFIG,
   Chain,
   Chains,
   chainIconUrls,
   supportedChains as defaultSupportedChains,
-} from "connectors"
+} from "chains"
+import ControlledSelect from "components/common/ControlledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import { BALANCY_SUPPORTED_CHAINS } from "components/create-guild/Requirements/hooks/useBalancy"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"

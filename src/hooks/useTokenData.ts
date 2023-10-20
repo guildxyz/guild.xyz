@@ -1,4 +1,4 @@
-import { Chain, CHAIN_CONFIG, coinIconUrls } from "connectors"
+import { Chain, CHAIN_CONFIG, coinIconUrls } from "chains"
 import { useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Token } from "types"

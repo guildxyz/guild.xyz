@@ -1,5 +1,5 @@
 import { kv } from "@vercel/kv"
-import { CHAIN_CONFIG, Chain, Chains } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
 import {

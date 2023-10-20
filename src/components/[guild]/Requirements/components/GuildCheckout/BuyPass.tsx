@@ -12,6 +12,7 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react"
+import { Chains } from "chains"
 import PoapReward from "components/[guild]/CreatePoap/components/PoapReward"
 import Reward from "components/[guild]/RoleCard/components/Reward"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -19,7 +20,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { Chains } from "connectors"
 import { Coin } from "phosphor-react"
 import { useEffect } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"

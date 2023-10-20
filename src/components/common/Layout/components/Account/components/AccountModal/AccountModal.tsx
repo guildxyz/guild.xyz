@@ -17,6 +17,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { Chains, chainIconUrls } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
 import { deleteKeyPairFromIdb } from "components/_app/KeyPairProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
@@ -24,7 +25,6 @@ import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import { Chains, chainIconUrls } from "connectors"
 import useResolveAddress from "hooks/useResolveAddress"
 import { LinkBreak, SignOut } from "phosphor-react"
 import { useAccount, useChainId, useDisconnect } from "wagmi"

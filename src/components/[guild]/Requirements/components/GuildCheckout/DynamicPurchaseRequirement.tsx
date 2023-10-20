@@ -1,6 +1,6 @@
+import { Chains } from "chains"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useNonPurchasableAssets from "components/[guild]/hooks/useNonPurchasableAssets"
-import { Chains } from "connectors"
 import dynamic from "next/dynamic"
 import {
   PURCHASABLE_REQUIREMENT_TYPES,
