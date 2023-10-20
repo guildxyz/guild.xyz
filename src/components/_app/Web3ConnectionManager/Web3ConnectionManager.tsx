@@ -11,8 +11,7 @@ import {
   useState,
 } from "react"
 import { PlatformName } from "types"
-import requestNetworkChangeHandler from "utils/requestNetworkChange"
-import { useAccount } from "wagmi"
+import { useAccount, useSwitchNetwork } from "wagmi"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
@@ -85,29 +84,28 @@ const Web3ConnectionManager = ({
       openWalletSelectorModal()
   }, [triedEager, isConnected, router.query])
 
-  const [isNetworkChangeInProgress, setNetworkChangeInProgress] = useState(false)
+  const { switchNetworkAsync, isLoading: isNetworkChangeInProgress } =
+    useSwitchNetwork()
+
   const toast = useToast()
-  const requestManualNetworkChange = (chain) => () =>
-    toast({
-      title: "Your wallet doesn't support switching chains automatically",
-      description: `Please switch to ${CHAIN_CONFIG[chain].name} from your wallet manually!`,
-      status: "info",
-    })
 
   const requestNetworkChange = async (
     newChainId: number,
     callback?: () => void,
     errorHandler?: (err: unknown) => void
   ) => {
-    if (connector.id === "walletConnect" || connector.id === "coinbaseWallet")
-      requestManualNetworkChange(Chains[newChainId])()
-    else {
-      setNetworkChangeInProgress(true)
-      await requestNetworkChangeHandler(
-        Chains[newChainId],
-        callback,
-        errorHandler
-      )().finally(() => setNetworkChangeInProgress(false))
+    if (!switchNetworkAsync) {
+      toast({
+        title: "Your wallet doesn't support switching chains automatically",
+        description: `Please switch to ${
+          CHAIN_CONFIG[Chains[newChainId]].name
+        } from your wallet manually!`,
+        status: "info",
+      })
+    } else {
+      switchNetworkAsync(newChainId)
+        .then(() => callback?.())
+        .catch(errorHandler)
     }
   }
 
