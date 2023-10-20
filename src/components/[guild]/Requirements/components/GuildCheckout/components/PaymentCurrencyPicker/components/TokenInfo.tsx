@@ -51,6 +51,7 @@ const TokenInfo = ({
     address,
     chainId,
   })
+
   const { data: tokenBalanceData, isLoading: isTokenBalanceLoading } = useBalance({
     address,
     token: tokenAddress,
@@ -62,7 +63,7 @@ const TokenInfo = ({
 
   const formattedBalance = Number(
     Number(
-      (tokenAddress === CHAIN_CONFIG[Chains[chainId]].nativeCurrency.symbol
+      (tokenAddress === NULL_ADDRESS
         ? coinBalanceData?.formatted
         : tokenBalanceData?.formatted) ?? 0
     ).toFixed(3)

@@ -57,7 +57,7 @@ const PurchaseButton = (): JSX.Element => {
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
 
   const isSufficientBalance =
-    maxPriceInWei &&
+    typeof maxPriceInWei === "bigint" &&
     (coinBalanceData || tokenBalanceData) &&
     (pickedCurrencyIsNative
       ? coinBalanceData?.value >= maxPriceInWei

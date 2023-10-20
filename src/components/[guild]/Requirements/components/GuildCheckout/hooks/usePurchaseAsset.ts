@@ -125,8 +125,9 @@ const usePurchaseAsset = () => {
   })
   const { data: tokenBalanceData } = useBalance({
     address,
-    token: pickedCurrency as `0x${string}`,
+    token: pickedCurrency,
     chainId: Chains[requirement?.chain],
+    enabled: pickedCurrency !== NULL_ADDRESS,
   })
 
   const isSufficientBalance =

@@ -75,6 +75,7 @@ const BuyButton = (): JSX.Element => {
     address,
     token: pickedCurrency,
     chainId,
+    enabled: pickedCurrency !== NULL_ADDRESS,
   })
 
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
