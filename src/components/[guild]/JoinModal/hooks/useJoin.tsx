@@ -13,8 +13,7 @@ import { PlatformName } from "types"
 import createAndAwaitJob from "utils/createAndAwaitJob"
 import { useFetcherWithSign } from "utils/fetcher"
 
-// as any is only needed until the feature flag is created
-export const QUEUE_FEATURE_FLAG: any = "GUILD_QUEUES"
+export const QUEUE_FEATURE_FLAG = "GUILD_QUEUES"
 
 type PlatformResult = {
   platformId: number
