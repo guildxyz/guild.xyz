@@ -28,9 +28,10 @@ import { publicProvider } from "wagmi/providers/public"
  */
 import "wicg-inert"
 
-const { chains, publicClient } = configureChains(Object.values(CHAIN_CONFIG), [
-  publicProvider(),
-])
+const { chains, publicClient, webSocketPublicClient } = configureChains(
+  Object.values(CHAIN_CONFIG),
+  [publicProvider()]
+)
 
 const config = createConfig({
   autoConnect: false, // true causes hydration error :(
@@ -69,6 +70,7 @@ const config = createConfig({
     }),
   ],
   publicClient,
+  webSocketPublicClient,
 })
 
 const App = ({
