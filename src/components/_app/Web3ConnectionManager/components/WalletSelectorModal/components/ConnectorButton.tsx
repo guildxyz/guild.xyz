@@ -11,9 +11,11 @@ import { Connector, useAccount, useConnect } from "wagmi"
 
 type Props = {
   connector: Connector
+  connect: (args) => void
+  error?: Error
 }
 
-const ConnectorButton = ({ connector }: Props): JSX.Element => {
+const ConnectorButton = ({ connector, connect, error }: Props): JSX.Element => {
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
   if (typeof window !== "undefined") {
@@ -22,7 +24,7 @@ const ConnectorButton = ({ connector }: Props): JSX.Element => {
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
   const { address, isConnected, connector: activeConnector } = useAccount()
-  const { connect, error, pendingConnector } = useConnect()
+  const { pendingConnector } = useConnect()
 
   const { ready } = useKeyPair()
 

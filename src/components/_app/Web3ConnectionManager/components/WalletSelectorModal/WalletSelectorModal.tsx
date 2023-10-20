@@ -42,7 +42,8 @@ type Props = {
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
-  const { connectors, error } = useConnect()
+  const { connectors, error, connect } = useConnect()
+
   const { disconnect } = useDisconnect()
   const { isConnected, connector } = useAccount()
   const { captchaVerifiedSince } = useUserPublic()
@@ -180,7 +181,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 // if (conn.id === 'safe' && !conn?.sdk) return null
                 return (
                   <CardMotionWrapper key={conn.id}>
-                    <ConnectorButton connector={conn} />
+                    <ConnectorButton
+                      connector={conn}
+                      connect={connect}
+                      error={error}
+                    />
                   </CardMotionWrapper>
                 )
               })}
