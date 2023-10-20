@@ -44,7 +44,11 @@ export type JoinData = {
  */
 export const isAfterJoinAtom = atom(false)
 
-const useJoin = (onSuccess?: (response: Response) => void) => {
+const useJoin = (
+  onSuccess?: (response: Response) => void,
+  onError?: (error?: any) => void,
+  shouldShowSuccessToast = true
+) => {
   const { captureEvent } = usePostHogContext()
 
   const access = useAccess()
@@ -64,7 +68,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
     shareSocials: boolean
     platforms: any[]
   }): Promise<Response> => {
-    if (guild.featureFlags.includes(QUEUE_FEATURE_FLAG)) {
+    if (true || guild.featureFlags.includes(QUEUE_FEATURE_FLAG)) {
       const result = await createAndAwaitJob<JoinJob>(
         fetcherWithSign,
         "/v2/actions/join",
@@ -138,30 +142,33 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
         guild.mutateGuild()
       }, 800)
 
-      if (
-        pathname === "/[guild]" &&
-        guild.featureFlags.includes("GUILD_CREDENTIAL")
-      ) {
-        toastWithButton({
-          status: "success",
-          title: "Successfully joined guild",
-          description: "Let others know as well by minting it onchain",
-          buttonProps: {
-            leftIcon: <CircleWavyCheck weight="fill" />,
-            children: "Mint Guild Pin",
-            onClick: onOpen,
-          },
-        })
-      } else {
-        toastWithTweetButton({
-          title: "Successfully joined guild",
-          tweetText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
+      if (shouldShowSuccessToast) {
+        if (
+          pathname === "/[guild]" &&
+          guild.featureFlags.includes("GUILD_CREDENTIAL")
+        ) {
+          toastWithButton({
+            status: "success",
+            title: "Successfully joined guild",
+            description: "Let others know as well by minting it onchain",
+            buttonProps: {
+              leftIcon: <CircleWavyCheck weight="fill" />,
+              children: "Mint Guild Pin",
+              onClick: onOpen,
+            },
+          })
+        } else {
+          toastWithTweetButton({
+            title: "Successfully joined guild",
+            tweetText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
           guild.xyz/${guild.urlName}`,
-        })
+          })
+        }
       }
     },
     onError: (error) => {
       captureEvent(`Guild join error`, { error })
+      onError?.(error)
     },
   })
 
