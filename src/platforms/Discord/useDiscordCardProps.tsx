@@ -1,5 +1,6 @@
 import { Icon, Text } from "@chakra-ui/react"
 import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import { useAtom } from "jotai"
 import { Info } from "phosphor-react"
@@ -8,6 +9,7 @@ import { GuildPlatform, PlatformName } from "types"
 import { useRolePlatform } from "../../components/[guild]/RolePlatforms/components/RolePlatformProvider"
 
 const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
+  const { urlName } = useGuild()
   const rolePlatform = useRolePlatform()
   const { data } = useServerData(guildPlatform.platformGuildId, {
     swrOptions: {
@@ -37,7 +39,8 @@ const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
     name: data?.serverName || "",
     info:
       roleName ??
-      (isAfterJoin && (
+      // temporary for zkSync launch
+      ((isAfterJoin || urlName === "zksync-era") && (
         <Text>
           <Icon as={Info} display="inline-block" mr="0.5" mb="-2px" />
           You might need to wait a few minutes to get your roles

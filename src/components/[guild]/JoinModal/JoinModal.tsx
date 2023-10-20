@@ -1,18 +1,23 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Divider,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Stack,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useGuild from "components/[guild]/hooks/useGuild"
 import platforms from "platforms/platforms"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
@@ -41,7 +46,7 @@ const customJoinStep: Partial<Record<Joinable, () => JSX.Element>> = {
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isActive } = useWeb3React()
-  const { name, requiredPlatforms, featureFlags } = useGuild()
+  const { urlName, name, requiredPlatforms, featureFlags } = useGuild()
 
   const methods = useForm({
     mode: "all",
@@ -81,6 +86,28 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            {/* temporary for zkSync launch */}
+            {urlName === "zksync-era" &&
+              (!isLoading && !response ? (
+                <Alert status="info" mb="8">
+                  <AlertIcon />
+                  <AlertDescription>
+                    This guild is experiencing huge traffic right now. Joining
+                    & getting your role may take up to half an hour
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <Alert status="info" mb="8">
+                  <AlertIcon />
+                  <Stack>
+                    <AlertTitle>Joining in progress</AlertTitle>
+                    <AlertDescription>
+                      Feel free to close the site & check back later. If you're
+                      eligible, you'll already be a member hopefully!
+                    </AlertDescription>
+                  </Stack>
+                </Alert>
+              ))}
             <Error error={joinError} processError={processJoinPlatformError} />
             <VStack
               spacing="3"
