@@ -70,6 +70,7 @@
     "formidable": "^2.1.2",
     "framer-motion": "^7.7.2",
     "idb-keyval": "^6.2.0",
+    "jotai": "^2.4.3",
     "js-confetti": "^0.11.0",
     "lexical": "^0.12.0",
     "next": "^12.3.4",

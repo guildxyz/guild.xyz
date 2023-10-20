@@ -7,6 +7,7 @@ import { useMintGuildPinContext } from "components/[guild]/Requirements/componen
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
+import { atom, useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { CircleWavyCheck } from "phosphor-react"
 import { PlatformName } from "types"
@@ -37,6 +38,12 @@ export type JoinData = {
   oauthData: any
 }
 
+/**
+ * Temporary to show "You might need to wait a few minutes to get your roles" on the
+ * Discord reward card after join until we implement queues generally
+ */
+export const isAfterJoinAtom = atom(false)
+
 const useJoin = (onSuccess?: (response: Response) => void) => {
   const { captureEvent } = usePostHogContext()
 
@@ -48,6 +55,7 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
   const toastWithButton = useToastWithButton()
 
   const { mutate } = useMemberships()
+  const [isAfterJoin, setIsAfterJoin] = useAtom(isAfterJoinAtom)
 
   const fetcherWithSign = useFetcherWithSign()
 
@@ -110,6 +118,8 @@ const useJoin = (onSuccess?: (response: Response) => void) => {
       onSuccess?.(response)
 
       if (!response.success) return
+
+      setIsAfterJoin(true)
 
       setTimeout(() => {
         mutate(
