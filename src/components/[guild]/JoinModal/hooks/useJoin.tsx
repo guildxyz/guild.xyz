@@ -55,7 +55,7 @@ const useJoin = (
   const guild = useGuild()
   const user = useUser()
 
-  const hasFeatureFlag = guild.featureFlags.includes(QUEUE_FEATURE_FLAG)
+  const hasFeatureFlag = guild?.featureFlags?.includes(QUEUE_FEATURE_FLAG)
 
   const toastWithTweetButton = useToastWithTweetButton()
   const toastWithButton = useToastWithButton()
