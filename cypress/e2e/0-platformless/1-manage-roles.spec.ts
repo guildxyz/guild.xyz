@@ -10,9 +10,7 @@ describe("roles", () => {
   beforeEach(() => {
     indexedDB.deleteDatabase("guild.xyz")
     cy.visit(`/${TEST_GUILD_URL_NAME}`)
-    cy.getByDataTest("connect-wallet-button").click()
-    cy.contains("Mock").click()
-    cy.getByDataTest("verify-address-button").click()
+    cy.connectWallet()
   })
 
   it("can fetch guild id", () => {
