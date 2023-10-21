@@ -11,9 +11,6 @@ describe("post-test cleanup", () => {
     cy.visit(URL_NAME, {
       failOnStatusCode: false,
     })
-    cy.getByDataTest("connect-wallet-button").click()
-    cy.contains("Mock").click()
-    cy.getByDataTest("verify-address-button").click()
   })
 
   it("cleans up test guild", () => {
@@ -24,6 +21,10 @@ describe("post-test cleanup", () => {
             $h1.text().toString() !== "404" &&
             $h1.text().toString() !== "Client-side error"
           ) {
+            cy.getByDataTest("connect-wallet-button").click()
+            cy.contains("Mock").click()
+            cy.getByDataTest("verify-address-button").click()
+
             cy.get(".chakra-button[aria-label='Edit Guild']").click()
             cy.get(".chakra-slide h2").should("contain.text", "Edit guild")
 
