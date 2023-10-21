@@ -13,6 +13,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: "https://registry.npmjs.org"
+          cache: "npm"
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
