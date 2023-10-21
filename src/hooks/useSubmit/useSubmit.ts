@@ -1,7 +1,7 @@
 import { useKeyPair } from "components/_app/KeyPairProvider"
-import { randomBytes } from "crypto"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
+import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"

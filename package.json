@@ -52,6 +52,7 @@
     "formidable": "^2.1.2",
     "framer-motion": "^7.7.2",
     "idb-keyval": "^6.2.0",
+    "jotai": "^2.4.3",
     "js-confetti": "^0.11.0",
     "lexical": "^0.12.0",
     "next": "^12.3.4",
@@ -59,6 +60,7 @@
     "phosphor-react": "^1.4.1",
     "posthog-js": "^1.50.4",
     "qrcode.react": "^3.1.0",
+    "randombytes": "^2.1.0",
     "react": "^18.2.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.2.0",
@@ -79,6 +81,7 @@
     "cypress": "12.14.0"
   },
   "devDependencies": {
+    "@guildxyz/types": "^1.1.5",
     "@hookform/devtools": "^4.3.0",
     "@svgr/webpack": "^6.5.1",
     "@synthetixio/synpress": "3.5.1",

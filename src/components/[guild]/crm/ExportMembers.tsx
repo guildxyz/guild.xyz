@@ -28,6 +28,8 @@ const ExportMembers = ({ table }: Props) => {
       download="members"
       href={!isDisabled ? csvContent : undefined}
       onClick={() =>
+        // beeing disabled doesn't prevent onClick automatically, because of being an anchor instead of a button
+        !isDisabled &&
         toast({
           status: "success",
           title: "Successful export",

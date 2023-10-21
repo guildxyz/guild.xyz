@@ -43,12 +43,8 @@ const JoinAndMintPoapButton = forwardRef(
       onMintModalOpen()
     }
 
-    const {
-      isLoading: isJoinLoading,
-      onSubmit: onJoinSubmit,
-      isSigning,
-      signLoadingText,
-    } = useJoin(handleSubmit)
+    const { isLoading: isJoinLoading, onSubmit: onJoinSubmit } =
+      useJoin(handleSubmit)
 
     const props = response
       ? {
@@ -65,8 +61,8 @@ const JoinAndMintPoapButton = forwardRef(
         }
       : {
           onClick: () => onJoinSubmit(),
-          isLoading: isJoinLoading || isSigning,
-          loadingText: signLoadingText || "Joining Guild",
+          isLoading: isJoinLoading,
+          loadingText: "Joining Guild",
           children: "Mint POAP",
         }
 
