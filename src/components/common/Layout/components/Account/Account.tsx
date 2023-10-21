@@ -19,7 +19,11 @@ const Account = (): JSX.Element => {
 
   if (!isConnected) {
     return (
-      <AccountButton leftIcon={<SignIn />} onClick={openWalletSelectorModal}>
+      <AccountButton
+        leftIcon={<SignIn />}
+        onClick={openWalletSelectorModal}
+        data-test="connect-wallet-button"
+      >
         Connect to a wallet
       </AccountButton>
     )

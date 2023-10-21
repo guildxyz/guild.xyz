@@ -204,6 +204,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 />
                 <Box animation={"fadeIn .3s .1s both"}>
                   <ModalButton
+                    data-test="verify-address-button"
                     size="xl"
                     mb="4"
                     colorScheme={"green"}

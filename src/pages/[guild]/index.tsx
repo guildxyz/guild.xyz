@@ -268,7 +268,9 @@ const GuildPage = (): JSX.Element => {
         <AccessHub />
 
         <Section
-          title={(isMember || !!accessedGuildPlatforms?.length) && "Roles"}
+          title={
+            (isAdmin || isMember || !!accessedGuildPlatforms?.length) && "Roles"
+          }
           titleRightElement={
             isAdmin && (
               <Box my="-2 !important" ml="auto !important">

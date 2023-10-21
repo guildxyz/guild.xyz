@@ -1,5 +1,5 @@
 before(() => {
-  cy.disconnectMetamaskWalletFromAllDapps()
+  indexedDB.deleteDatabase("guild.xyz")
 })
 
 describe("without wallet", () => {
@@ -17,7 +17,7 @@ describe("without wallet", () => {
         cy.get("button[aria-label='Close']").click()
       })
 
-    cy.findByText("Create guild without platform").click()
+    cy.contains("Create guild without platform").click()
     cy.getByDataTest("wallet-selector-modal").should("exist")
   })
 })
@@ -25,19 +25,21 @@ describe("without wallet", () => {
 describe("with wallet", () => {
   before(() => {
     cy.visit("/create-guild")
-    cy.connectWalletAndVerifyAccount()
+    cy.getByDataTest("connect-wallet-button").click()
+    cy.contains("Mock").click()
+    cy.getByDataTest("verify-address-button").click()
   })
 
   it("can create a guild without platform", () => {
-    cy.findByText("Create guild without platform").click()
+    cy.contains("Create guild without platform").click()
     cy.get(".chakra-step [data-status='active'] div").should("contain.text", "2")
 
-    cy.findByText("Start from scratch").click({ force: true })
+    cy.contains("Start from scratch").click({ force: true })
     cy.get(".chakra-step p[data-status='active']").should("contain.text", "Basic")
-    cy.findByText("Growth").click({ force: true })
+    cy.contains("Growth").click({ force: true })
     cy.get(".chakra-step p[data-status='active']").should("contain.text", "Growth")
 
-    cy.findByText("Next").click()
+    cy.contains("Next").click()
 
     cy.get("input[name='name']").focus().blur()
     cy.get("input[name='name'] ~ .chakra-collapse")
