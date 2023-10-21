@@ -9,14 +9,14 @@ import Pagination from "../Pagination"
 import TemplateCard from "./components/TemplateCard"
 
 const ChooseTemplate = (): JSX.Element => {
-  const { triedEager, openWalletSelectorModal, isWalletSelectorModalOpen } =
+  const { openWalletSelectorModal, isWalletSelectorModalOpen } =
     useWeb3ConnectionManager()
   const { address } = useAccount()
 
   useEffect(() => {
-    if (!triedEager || address || isWalletSelectorModalOpen) return
+    if (address || isWalletSelectorModalOpen) return
     openWalletSelectorModal()
-  }, [triedEager, address, isWalletSelectorModalOpen])
+  }, [address, isWalletSelectorModalOpen])
 
   const {
     TEMPLATES,

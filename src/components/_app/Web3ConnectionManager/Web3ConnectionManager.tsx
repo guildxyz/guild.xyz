@@ -1,5 +1,6 @@
 import { useDisclosure } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chains } from "chains"
+import ClientOnly from "components/common/ClientOnly"
 import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -15,11 +16,9 @@ import { useAccount, useSwitchNetwork } from "wagmi"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
-import useEagerConnect from "./hooks/useEagerConnect"
 import useNewSharedSocialsToast from "./hooks/useNewSharedSocialsToast"
 
 const Web3Connection = createContext({
-  triedEager: false,
   isWalletSelectorModalOpen: false,
   openWalletSelectorModal: () => {},
   closeWalletSelectorModal: () => {},
@@ -43,13 +42,8 @@ const Web3Connection = createContext({
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
-  const { isConnected, connector } = useAccount()
+  const { isConnected } = useAccount()
   const router = useRouter()
-
-  useEffect(() => {
-    if (!connector || !isConnected) return
-    window.localStorage.setItem("connector", connector.name)
-  }, [connector, isConnected])
 
   const {
     isOpen: isWalletSelectorModalOpen,
@@ -76,13 +70,9 @@ const Web3ConnectionManager = ({
 
   const [isDelegateConnection, setIsDelegateConnection] = useState<boolean>(false)
 
-  // try to eagerly connect to an injected provider, if it exists and has granted access already
-  const triedEager = useEagerConnect()
-
   useEffect(() => {
-    if (triedEager && !isConnected && router.query.redirectUrl)
-      openWalletSelectorModal()
-  }, [triedEager, isConnected, router.query])
+    if (!isConnected && router.query.redirectUrl) openWalletSelectorModal()
+  }, [isConnected, router.query])
 
   const { switchNetworkAsync, isLoading: isNetworkChangeInProgress } =
     useSwitchNetwork()
@@ -125,7 +115,6 @@ const Web3ConnectionManager = ({
         isWalletSelectorModalOpen,
         openWalletSelectorModal,
         closeWalletSelectorModal,
-        triedEager,
         isAccountModalOpen,
         openAccountModal,
         closeAccountModal,
@@ -136,11 +125,14 @@ const Web3ConnectionManager = ({
       }}
     >
       {children}
-      <WalletSelectorModal
-        isOpen={isWalletSelectorModalOpen}
-        onOpen={openWalletSelectorModal}
-        onClose={closeWalletSelectorModal}
-      />
+
+      <ClientOnly>
+        <WalletSelectorModal
+          isOpen={isWalletSelectorModalOpen}
+          onOpen={openWalletSelectorModal}
+          onClose={closeWalletSelectorModal}
+        />
+      </ClientOnly>
       <PlatformMergeErrorAlert
         onClose={closePlatformMergeAlert}
         isOpen={isPlatformMergeAlertOpen}

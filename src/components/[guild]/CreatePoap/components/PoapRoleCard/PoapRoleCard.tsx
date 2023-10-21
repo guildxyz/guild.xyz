@@ -18,13 +18,14 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react"
-import Card from "components/common/Card"
-import Link from "components/common/Link"
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import Card from "components/common/Card"
+import ClientOnly from "components/common/ClientOnly"
+import Link from "components/common/Link"
 import { ArrowSquareOut, Clock } from "phosphor-react"
 import React, { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
@@ -253,13 +254,15 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
               Requirements to qualify
             </Text>
             <Spacer />
-            {!isMobile && (
-              <PoapAccessIndicator
-                poapIdentifier={poap?.id}
-                isExpired={timeDiff < 0}
-                isActive={isActive}
-              />
-            )}
+            <ClientOnly>
+              {!isMobile && (
+                <PoapAccessIndicator
+                  poapIdentifier={poap?.id}
+                  isExpired={timeDiff < 0}
+                  isActive={isActive}
+                />
+              )}
+            </ClientOnly>
           </HStack>
 
           <Stack spacing="0">
@@ -273,13 +276,16 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
           </Stack>
         </Flex>
       </SimpleGrid>
-      {isMobile && (
-        <PoapAccessIndicator
-          poapIdentifier={poap?.id}
-          isExpired={timeDiff < 0}
-          isActive={isActive}
-        />
-      )}
+
+      <ClientOnly>
+        {isMobile && (
+          <PoapAccessIndicator
+            poapIdentifier={poap?.id}
+            isExpired={timeDiff < 0}
+            isActive={isActive}
+          />
+        )}
+      </ClientOnly>
     </Card>
   )
 }

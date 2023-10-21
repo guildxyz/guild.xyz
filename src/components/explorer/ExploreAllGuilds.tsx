@@ -15,6 +15,7 @@ import {
   TABS_SM_BUTTONS_STYLES,
 } from "components/[guild]/Tabs/Tabs"
 import { BATCH_SIZE } from "components/_app/ExplorerProvider"
+import ClientOnly from "components/common/ClientOnly"
 import Section from "components/common/Section"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
 import GuildCard from "components/explorer/GuildCard"
@@ -34,7 +35,7 @@ type Props = {
 }
 
 const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const prevSearch = usePrevious(search)
   const [order, setOrder] = useQueryState<Filters>("order", "FEATURED")
@@ -97,7 +98,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
 
   return (
     <Stack spacing={{ base: 8, md: 10 }}>
-      {address && <Divider />}
+      <ClientOnly>{isConnected && <Divider />}</ClientOnly>
       <Section
         title="Explore all guilds"
         ref={ref}

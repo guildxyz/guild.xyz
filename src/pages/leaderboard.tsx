@@ -1,6 +1,7 @@
 import { Stack, Text } from "@chakra-ui/react"
 import { kv } from "@vercel/kv"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
+import ClientOnly from "components/common/ClientOnly"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import LeaderboardUserCard, {
@@ -109,17 +110,21 @@ const Page = ({ leaderboard: initialData }: Props) => {
       description={<Text>{DESCRIPTION}</Text>}
     >
       <AnimateSharedLayout>
-        <AnimatePresence>
-          {showMysteryBox && (
-            <CardMotionWrapper>
-              <MysteryBoxCard />
-            </CardMotionWrapper>
-          )}
-        </AnimatePresence>
-        <Stack spacing={10}>
+        <ClientOnly>
           <AnimatePresence>
-            {address && <UsersLeaderboardPositionCard />}
+            {showMysteryBox && (
+              <CardMotionWrapper>
+                <MysteryBoxCard />
+              </CardMotionWrapper>
+            )}
           </AnimatePresence>
+        </ClientOnly>
+        <Stack spacing={10}>
+          <ClientOnly>
+            <AnimatePresence>
+              {address && <UsersLeaderboardPositionCard />}
+            </AnimatePresence>
+          </ClientOnly>
 
           <MotionSection layout title={data ? "Leaderboard" : undefined}>
             <>

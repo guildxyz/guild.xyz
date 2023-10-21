@@ -12,19 +12,14 @@ import DelegatePopoverWrapper from "./components/delegate/DelegatePopoverWrapper
 
 const Account = (): JSX.Element => {
   const { address, isConnected } = useAccount()
-  const { openWalletSelectorModal, openAccountModal, triedEager } =
-    useWeb3ConnectionManager()
+  const { openWalletSelectorModal, openAccountModal } = useWeb3ConnectionManager()
 
   const domainName = useResolveAddress(address)
   const { addresses } = useUser()
 
   if (!isConnected) {
     return (
-      <AccountButton
-        leftIcon={<SignIn />}
-        // isLoading={!triedEager}
-        onClick={openWalletSelectorModal}
-      >
+      <AccountButton leftIcon={<SignIn />} onClick={openWalletSelectorModal}>
         Connect to a wallet
       </AccountButton>
     )
