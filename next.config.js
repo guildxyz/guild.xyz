@@ -1,4 +1,7 @@
 module.exports = {
+  eslint: {
+    ignoreDuringBuilds: process.env.CI,
+  },
   webpack(config, options) {
     config.module.rules.push({
       test: /\.svg$/,
