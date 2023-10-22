@@ -36,65 +36,58 @@ const { chains, publicClient } = configureChains(Object.values(CHAIN_CONFIG), [
   publicProvider(),
 ])
 
-const connectors: (
-  | InjectedConnector
-  | CoinbaseWalletConnector
-  | WalletConnectConnector
-  | SafeConnector
-  | MockConnector
-)[] = [
-  new InjectedConnector({
-    chains,
-    options: {
-      name: "Injected",
-      shimDisconnect: true,
-    },
-  }),
-  new CoinbaseWalletConnector({
-    chains,
-    options: {
-      appName: "Guild.xyz",
-    },
-  }),
-  new WalletConnectConnector({
-    chains,
-    options: {
-      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-      showQrModal: true,
-      qrModalOptions: {
-        themeVariables: {
-          "--wcm-z-index": "10001",
-        },
-      },
-    },
-  }),
-  new SafeConnector({
-    chains,
-    options: {
-      allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/],
-      debug: false,
-    },
-  }),
-]
-
-if (process.env.NEXT_PUBLIC_VERCEL_URL?.includes("vercel.app")) {
-  connectors.unshift(
-    new MockConnector({
-      chains: [mainnet],
-      options: {
-        walletClient: createWalletClient({
-          account: mnemonicToAccount(process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC),
-          transport: http(mainnet.rpcUrls.default.http[0]),
-        }),
-      },
-    })
-  )
-}
-
 const config = createConfig({
   autoConnect: process.env.NEXT_PUBLIC_MOCK_CONNECTOR ? false : true,
   publicClient,
-  connectors,
+  connectors:
+    process.env.NEXT_PUBLIC_MOCK_CONNECTOR && typeof window !== "undefined"
+      ? [
+          new MockConnector({
+            chains: [mainnet],
+            options: {
+              walletClient: createWalletClient({
+                account: mnemonicToAccount(
+                  process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC
+                ),
+                transport: http(mainnet.rpcUrls.default.http[0]),
+              }),
+            },
+          }),
+        ]
+      : [
+          new InjectedConnector({
+            chains,
+            options: {
+              name: "Injected",
+              shimDisconnect: true,
+            },
+          }),
+          new CoinbaseWalletConnector({
+            chains,
+            options: {
+              appName: "Guild.xyz",
+            },
+          }),
+          new WalletConnectConnector({
+            chains,
+            options: {
+              projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+              showQrModal: true,
+              qrModalOptions: {
+                themeVariables: {
+                  "--wcm-z-index": "10001",
+                },
+              },
+            },
+          }),
+          new SafeConnector({
+            chains,
+            options: {
+              allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/],
+              debug: false,
+            },
+          }),
+        ],
 })
 
 const App = ({
