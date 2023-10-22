@@ -8,6 +8,7 @@ export default defineConfig({
     baseUrl: "http://localhost:3000",
     userAgent: "cypress",
     specPattern: "./cypress/e2e/**/*.spec.ts",
+    defaultCommandTimeout: 15_000,
     env: {
       guildApiUrl: "https://api.guild.xyz/v2",
       userAddress: "0x304Def656Babc745c53782639D3CaB00aCe8C843",
