@@ -36,6 +36,8 @@ jobs:
           NEXT_PUBLIC_E2E_WALLET_MNEMONIC: ${{ secrets.NEXT_PUBLIC_E2E_WALLET_MNEMONIC }}
           CYPRESS_DC_BOT_TOKEN: ${{ secrets.CYPRESS_DC_BOT_TOKEN }}
           KV_URL: ${{ secrets.KV_URL }}
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
 
       - name: Upload artifacts
         if: failure()

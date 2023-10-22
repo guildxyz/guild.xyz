@@ -1,6 +1,6 @@
 module.exports = {
   eslint: {
-    ignoreDuringBuilds: process.env.CI,
+    ignoreDuringBuilds: Boolean(process.env.CI),
   },
   webpack(config, options) {
     config.module.rules.push({
