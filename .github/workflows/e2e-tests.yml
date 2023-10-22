@@ -29,6 +29,7 @@ jobs:
           NEXT_PUBLIC_MOCK_CONNECTOR: true
           NEXT_PUBLIC_E2E_WALLET_MNEMONIC: ${{ secrets.NEXT_PUBLIC_E2E_WALLET_MNEMONIC }}
           CYPRESS_DC_BOT_TOKEN: ${{ secrets.CYPRESS_DC_BOT_TOKEN }}
+          KV_URL: ${{ secrets.KV_URL }}
 
       - name: Upload artifacts
         if: failure()
