@@ -20,6 +20,10 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: "npm"
 
+      # https://docs.cypress.io/guides/continuous-integration/introduction#Dependencies
+      - name: Install dependencies
+        run: apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
