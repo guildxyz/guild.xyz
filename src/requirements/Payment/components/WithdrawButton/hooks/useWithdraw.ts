@@ -1,69 +1,65 @@
-import { Chain } from "chains"
+import { Chain, Chains } from "chains"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import useVault from "requirements/Payment/hooks/useVault"
-import { useChainId } from "wagmi"
-
-const LEGACY_CONTRACTS: Partial<Record<Chain, string>> = {
-  ETHEREUM: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  POLYGON: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  GOERLI: "0x32547e6cc18651647e58f57164a0117da82f77f0",
-}
+import feeCollectorAbi from "static/abis/feeCollector"
+import {
+  BaseError,
+  ContractFunctionRevertedError,
+  TransactionExecutionError,
+  TransactionReceipt,
+} from "viem"
+import {
+  useChainId,
+  useContractWrite,
+  usePrepareContractWrite,
+  usePublicClient,
+} from "wagmi"
 
 const useWithdraw = (
   contractAddress: `0x${string}`,
   vaultId: number,
   chain: Chain
 ) => {
+  const publicClient = usePublicClient()
+
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
   const chainId = useChainId()
 
-  const isLegacyContract = contractAddress === LEGACY_CONTRACTS[chain]
+  const isOnVaultsChain = Chains[chain] === chainId
 
-  // WAGMI TODO
-  // const feeCollectorContract = useContract(
-  //   Chains[chain] === chainId ? contractAddress : null,
-  //   isLegacyContract ? LEGACY_FEE_COLLECTOR_ABI : FEE_COLLECTOR_ABI,
-  //   true
-  // )
-  const feeCollectorContract = null
+  const {
+    config,
+    isLoading: isPrepareLoading,
+    error: rawPrepareError,
+  } = usePrepareContractWrite({
+    abi: feeCollectorAbi,
+    address: contractAddress,
+    functionName: "withdraw",
+    args: [BigInt(vaultId), "guild"],
+    enabled: isOnVaultsChain,
+  })
 
-  const { refetch } = useVault(contractAddress, vaultId, chain)
-
-  const withdraw = async () => {
-    if (!feeCollectorContract)
-      return Promise.reject("Couldn't find FeeCollector contract.")
-
-    try {
-      await (isLegacyContract
-        ? feeCollectorContract.callStatic.withdraw(vaultId)
-        : feeCollectorContract.callStatic.withdraw(vaultId, "guild"))
-    } catch (callStaticError) {
-      return Promise.reject(
-        callStaticError.errorName === "TransferFailed"
-          ? "Transfer failed"
-          : "Contract error"
-      )
-    }
-
-    const withdrawRes = await (isLegacyContract
-      ? feeCollectorContract.withdraw(vaultId)
-      : feeCollectorContract.withdraw(vaultId, "guild"))
-    return withdrawRes.wait()
-  }
-
-  return useSubmit<null, void>(withdraw, {
+  const { write: withdraw, isLoading } = useContractWrite({
+    ...config,
     onError: (error) => {
-      const prettyError =
-        error?.code === "ACTION_REJECTED"
-          ? "User rejected the transaction"
-          : error?.message ?? error
-      showErrorToast(prettyError)
+      const errorMessage =
+        error instanceof TransactionExecutionError
+          ? error.shortMessage
+          : error.message
+      showErrorToast(errorMessage)
     },
-    onSuccess: () => {
+    onSuccess: async ({ hash }) => {
+      const receipt: TransactionReceipt =
+        await publicClient.waitForTransactionReceipt({ hash })
+
+      if (receipt.status !== "success") {
+        showErrorToast("Transaction failed")
+        return
+      }
+
       toast({
         title: "Successful withdraw",
         status: "success",
@@ -71,6 +67,39 @@ const useWithdraw = (
       refetch()
     },
   })
+
+  const { refetch } = useVault(contractAddress, vaultId, chain)
+
+  return {
+    isPrepareLoading,
+    prepareError: getErrorMessage(rawPrepareError),
+    withdraw,
+    isLoading,
+  }
+}
+
+const getErrorMessage = (rawPrepareError: Error): string => {
+  if (!rawPrepareError) return undefined
+
+  if (rawPrepareError instanceof BaseError) {
+    const revertError = rawPrepareError.walk(
+      (err) => err instanceof ContractFunctionRevertedError
+    )
+    if (revertError instanceof ContractFunctionRevertedError) {
+      const errorName = revertError.data?.errorName ?? ""
+
+      // We aren't really using these right now, but left them here in case we need them in the future
+      switch (errorName) {
+        case "TransferFailed":
+          return "Transfer failed"
+
+        default:
+          return "Contract error"
+      }
+    }
+
+    return rawPrepareError.message ?? "Contract error"
+  }
 }
 
 export default useWithdraw

@@ -23,17 +23,22 @@ const WithdrawButton = (): JSX.Element => {
   const { requestNetworkChange } = useWeb3ConnectionManager()
 
   const isOnVaultsChain = Chains[chain] === chainId
+
+  const formattedWithdrawableAmount =
+    balance && decimals && Number(formatUnits(balance, decimals)) * 0.9
+
+  const { withdraw, isLoading, prepareError } = useWithdraw(
+    vaultAddress,
+    data?.id,
+    chain
+  )
+
   const isDisabledLabel =
     balance === BigInt(0)
       ? "Withdrawable amount is 0"
       : owner && owner !== address
       ? `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
-      : null
-
-  const formattedWithdrawableAmount =
-    balance && decimals && Number(formatUnits(balance, decimals)) * 0.9
-
-  const { onSubmit, isLoading } = useWithdraw(vaultAddress, data?.id, chain)
+      : prepareError
 
   return (
     <Tooltip
@@ -52,9 +57,11 @@ const WithdrawButton = (): JSX.Element => {
             <Icon as={isDisabledLabel || isOnVaultsChain ? Wallet : LinkBreak} />
           )
         }
-        isDisabled={isLoading || isDisabledLabel}
+        isDisabled={!withdraw || isLoading || isDisabledLabel}
         onClick={
-          isOnVaultsChain ? onSubmit : () => requestNetworkChange(Chains[chain])
+          isOnVaultsChain && !!withdraw
+            ? withdraw
+            : () => requestNetworkChange(Chains[chain])
         }
       >
         {isLoading
