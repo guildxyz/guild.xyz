@@ -42,7 +42,7 @@ const BuyButton = (): JSX.Element => {
     requirement.address
   )
 
-  const { estimateGasError, onSubmit, isLoading } = usePayFee()
+  const { prepareError, payFee, isLoading } = usePayFee()
 
   // temporary (in it's current form) until POAPs are real roles and there's a capacity attribute
   const handleSubmit = async () => {
@@ -56,7 +56,7 @@ const BuyButton = (): JSX.Element => {
           title: "All available POAPs have already been claimed",
         })
     }
-    onSubmit()
+    payFee()
     captureEvent("Click: BuyButton (GuildCheckout)", {
       guild: urlName,
     })
@@ -90,8 +90,9 @@ const BuyButton = (): JSX.Element => {
       : tokenBalanceData.value >= fee)
 
   const isDisabled =
+    !payFee ||
     error ||
-    estimateGasError ||
+    prepareError ||
     !agreeWithTOS ||
     Chains[chainId] !== requirement.chain ||
     (!isVaultLoading && !isHasPaidLoading && !multiplePayments && hasPaid) ||
@@ -102,8 +103,8 @@ const BuyButton = (): JSX.Element => {
 
   const errorMsg =
     (error && "Couldn't calculate price") ||
-    (estimateGasError &&
-      (estimateGasError?.data?.message?.includes("insufficient")
+    (prepareError &&
+      (prepareError.includes("insufficient")
         ? "Insufficient funds for gas"
         : "Couldn't estimate gas")) ||
     (!isSufficientBalance && "Insufficient balance") ||

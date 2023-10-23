@@ -5,78 +5,38 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
+import feeCollectorAbi from "static/abis/feeCollector"
 import { mutate } from "swr"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
-import processWalletError from "utils/processWalletError"
-import { useAccount, useBalance, useChainId } from "wagmi"
+import { BaseError, ContractFunctionRevertedError, TransactionReceipt } from "viem"
+import {
+  useAccount,
+  useBalance,
+  useChainId,
+  useContractWrite,
+  usePrepareContractWrite,
+  usePublicClient,
+} from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useAllowance from "./useAllowance"
-import useSubmitTransaction from "./useSubmitTransaction"
-
-const payFee = async (
-  // feeCollectorContract: Contract, // WAGMI TODO
-  feeCollectorContract: any,
-  params: [number, Record<string, any>]
-) => {
-  if (!feeCollectorContract)
-    return Promise.reject("Can't find FeeCollector contract.")
-
-  try {
-    await feeCollectorContract.callStatic.payFee(...params)
-  } catch (callStaticError) {
-    let processedCallStaticError: string
-
-    if (callStaticError.error) {
-      const walletError = processWalletError(callStaticError.error)
-      processedCallStaticError = walletError.title
-    }
-
-    if (!processedCallStaticError) {
-      switch (callStaticError.errorName) {
-        case "VaultDoesNotExist":
-          processedCallStaticError = "Vault doesn't exist"
-          break
-        case "TransferFailed":
-          processedCallStaticError = "Transfer failed"
-          break
-        case "AlreadyPaid":
-          processedCallStaticError = "You've already paid to this vault"
-          break
-        default:
-          processedCallStaticError = "Contract error"
-      }
-    }
-
-    return Promise.reject(processedCallStaticError)
-  }
-
-  return feeCollectorContract.payFee(...params)
-}
 
 const usePayFee = () => {
   const { captureEvent } = usePostHogContext()
   const { id, urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
-  const showErrorToast = useShowErrorToast()
-  const toast = useToast()
-
   const { address } = useAccount()
   const chainId = useChainId()
+  const publicClient = usePublicClient()
 
   const requirement = useRequirementContext()
   const { pickedCurrency } = useGuildCheckoutContext()
 
-  // const feeCollectorContract = useContract(
-  //   requirement.address,
-  //   FEE_COLLECTOR_ABI,
-  //   true
-  // )
-  const feeCollectorContract = null
+  const showErrorToast = useShowErrorToast()
+  const toast = useToast()
 
   const {
-    token,
     fee,
     multiplePayments,
     isLoading: isVaultLoading,
@@ -89,10 +49,6 @@ const usePayFee = () => {
     requirement.chain
   )
 
-  const extraParam = {
-    value: token === NULL_ADDRESS ? fee : undefined,
-  }
-
   const { data: coinBalanceData } = useBalance({
     address,
     chainId: Chains[requirement.chain],
@@ -104,16 +60,18 @@ const usePayFee = () => {
     enabled: !!pickedCurrency,
   })
 
+  const pickedCurrencyIsNative = pickedCurrency === NULL_ADDRESS
+
   const isSufficientBalance =
     fee &&
     (coinBalanceData || tokenBalanceData) &&
-    (pickedCurrency === NULL_ADDRESS
-      ? coinBalanceData.value >= fee
-      : tokenBalanceData.value >= fee)
+    (pickedCurrencyIsNative
+      ? coinBalanceData?.value >= fee
+      : tokenBalanceData?.value >= fee)
 
   const { allowance } = useAllowance(pickedCurrency, requirement.address)
 
-  const shouldEstimateGas =
+  const enabled =
     requirement?.chain === Chains[chainId] &&
     !isVaultLoading &&
     !isHasPaidLoading &&
@@ -124,36 +82,29 @@ const usePayFee = () => {
       ? typeof allowance === "bigint" && fee <= allowance
       : true)
 
-  // const {
-  //   estimatedGasFee,
-  //   estimatedGasFeeInUSD,
-  //   estimateGasError,
-  //   isEstimateGasLoading,
-  // } = useEstimateGasFee(
-  //   requirement?.id?.toString(),
-  //   shouldEstimateGas ? feeCollectorContract : null,
-  //   "payFee",
-  //   [requirement.data.id, extraParam]
-  // )
-  const estimatedGasFee = null
-  const estimatedGasFeeInUSD = null
-  const estimateGasError = null
-  const isEstimateGasLoading = false
+  // WAGMI TODO: for some reason this doesn't return the gas estimation, but we should return both estimatedGasFee & estimatedGasFeeInUSD from this hook
+  const {
+    config,
+    error: rawPrepareError,
+    isLoading: isPrepareLoading,
+  } = usePrepareContractWrite({
+    abi: feeCollectorAbi,
+    address: requirement.address,
+    functionName: "payFee",
+    args: [BigInt(requirement.data.id)],
+    value: pickedCurrencyIsNative ? fee : undefined,
+    chainId: Chains[requirement.chain],
+    enabled,
+  })
 
-  const payFeeTransaction = (vaultId: number) =>
-    payFee(feeCollectorContract, [vaultId, extraParam])
+  const { write, isLoading } = useContractWrite({
+    ...config,
+    onError: () => {},
+    onSuccess: async ({ hash }) => {
+      const receipt: TransactionReceipt =
+        await publicClient.waitForTransactionReceipt({ hash })
 
-  const useSubmitData = useSubmitTransaction<number>(payFeeTransaction, {
-    onError: (error) => {
-      showErrorToast(error)
-      captureEvent("Buy pass error (GuildCheckout)", postHogOptions)
-      captureEvent("payFee pre-call error (GuildCheckout)", {
-        ...postHogOptions,
-        error,
-      })
-    },
-    onSuccess: (receipt) => {
-      if (receipt.status !== 1) {
+      if (receipt.status !== "success") {
         showErrorToast("Transaction failed")
         captureEvent("Buy pass error (GuildCheckout)", {
           ...postHogOptions,
@@ -163,6 +114,7 @@ const usePayFee = () => {
           ...postHogOptions,
           receipt,
         })
+
         return
       }
 
@@ -184,12 +136,40 @@ const usePayFee = () => {
   })
 
   return {
-    ...useSubmitData,
-    onSubmit: () => useSubmitData.onSubmit(requirement.data.id),
-    estimatedGasFee,
-    estimatedGasFeeInUSD,
-    estimateGasError,
-    isEstimateGasLoading,
+    isPrepareLoading,
+    prepareError: getErrorMessage(rawPrepareError),
+    payFee: write,
+    isLoading,
+  }
+}
+
+const getErrorMessage = (rawPrepareError: Error): string => {
+  if (!rawPrepareError) return undefined
+
+  if (rawPrepareError instanceof BaseError) {
+    const revertError = rawPrepareError.walk(
+      (err) => err instanceof ContractFunctionRevertedError
+    )
+    if (revertError instanceof ContractFunctionRevertedError) {
+      const errorName = revertError.data?.errorName ?? ""
+
+      // We aren't really using these right now, but left them here in case we need them in the future
+      switch (errorName) {
+        case "VaultDoesNotExist":
+          return "Vault doesn't exist"
+
+        case "TransferFailed":
+          return "Transfer failed"
+
+        case "AlreadyPaid":
+          return "You've already paid to this vault"
+
+        default:
+          return "Contract error"
+      }
+    }
+
+    return rawPrepareError.message ?? "Contract error"
   }
 }
 
