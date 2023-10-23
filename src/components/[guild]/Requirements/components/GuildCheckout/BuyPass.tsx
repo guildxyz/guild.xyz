@@ -118,14 +118,16 @@ const BuyPass = () => {
 
             {poap ? (
               <PoapReward poap={poap} isInteractive={false} />
-            ) : (
-              role?.rolePlatforms?.map((platform) => (
+            ) : role?.rolePlatforms?.length ? (
+              role.rolePlatforms.map((platform) => (
                 <Reward
                   key={platform.guildPlatformId}
                   platform={platform}
                   role={role}
                 />
-              )) || <NoReward />
+              ))
+            ) : (
+              <NoReward />
             )}
           </ModalBody>
 

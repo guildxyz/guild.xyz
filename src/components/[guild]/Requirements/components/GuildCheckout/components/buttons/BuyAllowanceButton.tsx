@@ -3,11 +3,10 @@ import { CHAIN_CONFIG, Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { useChainId } from "wagmi"
+import { useChainId, useToken } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
 import { useGuildCheckoutContext } from "../GuildCheckoutContex"
@@ -21,14 +20,21 @@ const BuyAllowanceButton = (): JSX.Element => {
   const { pickedCurrency } = useGuildCheckoutContext()
 
   const chainId = useChainId()
-
-  const {
-    data: { symbol, name },
-  } = useTokenData(requirement.chain, pickedCurrency)
-  const nativeCurrency = CHAIN_CONFIG[requirement.chain].nativeCurrency
   const isNativeCurrencyPicked = pickedCurrency === NULL_ADDRESS
 
-  const tokenSymbol = isNativeCurrencyPicked ? nativeCurrency.symbol : symbol
+  const { data: tokenData } = useToken({
+    address: pickedCurrency,
+    chainId: Chains[requirement.chain],
+    enabled: Boolean(
+      pickedCurrency && !isNativeCurrencyPicked && Chains[requirement.chain]
+    ),
+  })
+
+  const nativeCurrency = CHAIN_CONFIG[requirement.chain].nativeCurrency
+
+  const tokenSymbol = isNativeCurrencyPicked
+    ? nativeCurrency.symbol
+    : tokenData?.symbol
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
 
   const { fee, isLoading: isVaultLoading } = useVault(
