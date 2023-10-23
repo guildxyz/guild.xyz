@@ -40,8 +40,6 @@ import { ArrowLeft, Clock } from "phosphor-react"
 import React, { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
-import BuyPoapRequirement from "requirements/PoapPayment/components/BuyPoapRequirement"
-import PoapPaymentRequirement from "requirements/PoapPayment/PoapPaymentRequirement"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
@@ -67,7 +65,7 @@ const Page = (): JSX.Element => {
 
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
   const {
-    data: { access, hasPaid },
+    data: { access },
   } = useUserPoapEligibility(poap?.id)
 
   const timeDiff = guildPoap?.expiryDate * 1000 - Date.now()
@@ -136,32 +134,6 @@ const Page = (): JSX.Element => {
               </>,
             ]
           : []),
-        ...(guildPoap.poapContracts ?? []).map((poapContract, i) => (
-          <React.Fragment key={poapContract.id}>
-            <PoapPaymentRequirement
-              key={poapContract.id}
-              poapContract={poapContract}
-              guildPoap={guildPoap}
-              rightElement={
-                isActive && !hasPaid ? (
-                  <BuyPoapRequirement
-                    size="md"
-                    borderRadius={"xl"}
-                    h="10"
-                    {...{ guildPoap: guildPoap, poapContract }}
-                  />
-                ) : (
-                  requirementRightElement
-                )
-              }
-            />
-            {i < guildPoap.poapContracts?.length - 1 ? (
-              <LogicDivider logic={"OR"} />
-            ) : guildPoap.poapRequirements?.length ? (
-              <LogicDivider logic={"AND"} />
-            ) : null}
-          </React.Fragment>
-        )),
         ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (
           <React.Fragment key={requirement.id}>
             <RequirementDisplayComponent

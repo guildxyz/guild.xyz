@@ -9,12 +9,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chain, Chains } from "chains"
-import useTokenData from "hooks/useTokenData"
+import { CHAIN_CONFIG, Chains } from "chains"
 import { Fragment } from "react"
 import { Rest } from "types"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { useAccount, useBalance } from "wagmi"
+import { useAccount, useBalance, useToken } from "wagmi"
 
 type Props = {
   chainId: number
@@ -40,11 +39,23 @@ const TokenInfo = ({
     ? parseFloat(requiredAmount.toFixed(3)) <= 0.0
     : undefined
 
+  const isNativeCurrency = tokenAddress === NULL_ADDRESS
+
+  // WAGMI TODO: define logo URIs for the most used stable coins
+  const logoURI = undefined
   const {
-    data: { symbol, logoURI },
+    data: tokenData,
     error: tokenDataError,
-    isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[chainId] as Chain, tokenAddress)
+    isLoading: isTokenDataLoading,
+  } = useToken({
+    address: tokenAddress,
+    chainId: chainId,
+    enabled: Boolean(tokenAddress && !isNativeCurrency && chainId),
+  })
+
+  const symbol = isNativeCurrency
+    ? CHAIN_CONFIG[Chains[chainId]].nativeCurrency.symbol
+    : tokenData?.symbol
 
   const { address } = useAccount()
   const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
@@ -121,7 +132,9 @@ const TokenInfo = ({
                   display="inline-flex"
                   alignItems="center"
                 >
-                  {`${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
+                  {`${formattedBalance ?? "0.00"} ${
+                    tokenData?.symbol ?? "currency"
+                  }`}
                 </Skeleton>
               </>
             ) : (

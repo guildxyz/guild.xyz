@@ -1,9 +1,9 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
-import { CHAIN_CONFIG } from "chains"
-import useTokenData from "hooks/useTokenData"
+import { CHAIN_CONFIG, Chains } from "chains"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
+import { useToken } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import usePayFee from "../hooks/usePayFee"
 import FeesTable from "./FeesTable"
@@ -20,13 +20,16 @@ const BuyTotal = (): JSX.Element => {
     requirement.chain
   )
 
-  const {
-    data: { decimals, symbol },
-  } = useTokenData(requirement.chain, token)
+  const { data: tokenData } = useToken({
+    address: token,
+    chainId: Chains[requirement.chain],
+    enabled: Boolean(token !== NULL_ADDRESS && Chains[requirement.chain]),
+  })
 
   const isNativeCurrency = pickedCurrency === NULL_ADDRESS
 
-  const { estimatedGasFee, estimateGasError, isEstimateGasLoading } = usePayFee()
+  const { isPrepareLoading, prepareError } = usePayFee()
+  const estimatedGasFee = BigInt(0)
   const estimatedGasInFloat = estimatedGasFee
     ? parseFloat(
         formatUnits(
@@ -37,8 +40,8 @@ const BuyTotal = (): JSX.Element => {
     : null
 
   const priceInSellToken =
-    fee && decimals
-      ? Number(formatUnits(fee, decimals)) +
+    fee && tokenData?.decimals
+      ? Number(formatUnits(fee, tokenData.decimals)) +
         (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
       : 0
 
@@ -63,7 +66,7 @@ const BuyTotal = (): JSX.Element => {
                           : Number(priceInSellToken.toFixed(3))
                       } `
                     : "0.00 "}
-                  {symbol}
+                  {tokenData?.symbol}
                 </Text>
                 {!isNativeCurrency && (
                   <Text as="span" colorScheme="gray">
@@ -82,14 +85,14 @@ const BuyTotal = (): JSX.Element => {
           {priceInSellToken
             ? `${isTooSmallPrice ? "< 0.001" : Number(priceInSellToken.toFixed(3))} `
             : "0.00 "}
-          {symbol}
+          {tokenData?.symbol}
         </Td>
       </Tr>
       <Tr>
         <Td>Gas fee</Td>
         <Td isNumeric>
-          <Skeleton isLoaded={!isEstimateGasLoading}>
-            {estimateGasError || !estimatedGasFee
+          <Skeleton isLoaded={!isPrepareLoading}>
+            {prepareError || !estimatedGasFee
               ? "Couldn't estimate"
               : `${parseFloat(
                   formatUnits(

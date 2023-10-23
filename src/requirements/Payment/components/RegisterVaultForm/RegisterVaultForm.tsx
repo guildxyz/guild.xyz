@@ -33,9 +33,9 @@ const coingeckoCoinIds: Partial<Record<Chain, string>> = {
 
 export type RegisterVaultFormType = {
   chain: Chain
-  token: string
+  token: `0x${string}`
   fee: number
-  owner: string
+  owner: `0x${string}`
 }
 
 type Props = {

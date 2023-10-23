@@ -8,6 +8,7 @@ import { PostHogProvider } from "components/_app/PostHogProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
+import { connectors, publicClient } from "connectors"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import Script from "next/script"
@@ -22,8 +23,6 @@ import { WagmiConfig, createConfig } from "wagmi"
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
  */
 import "wicg-inert"
-
-import { connectors, publicClient } from "connectors"
 
 const config = createConfig({
   autoConnect: !process.env.NEXT_PUBLIC_MOCK_CONNECTOR,
