@@ -16,7 +16,6 @@ import {
   useFormContext,
 } from "react-hook-form"
 import { RequirementType } from "requirements"
-import PoapPaymentRequirementEditable from "requirements/PoapPayment/PoapPaymentRequirementEditable"
 import PoapVoiceForm from "requirements/PoapVoice/PoapVoiceForm"
 import PoapVoiceRequirementEditable from "requirements/PoapVoice/PoapVoiceRequirementEditable"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
@@ -107,20 +106,6 @@ const PoapRequirements = ({ guildPoap }): JSX.Element => {
             <LogicDivider logic="AND" />
           </CardMotionWrapper>
         )}
-
-        {/* For legacy POAP payment requirement */}
-        {guildPoap?.poapContracts?.map((poapContract, i) => (
-          <CardMotionWrapper key={poapContract.id}>
-            <PoapPaymentRequirementEditable
-              poapContract={poapContract}
-              guildPoap={guildPoap}
-            />
-
-            <LogicDivider
-              logic={i === guildPoap.poapContracts.length - 1 ? "AND" : "OR"}
-            />
-          </CardMotionWrapper>
-        ))}
 
         {controlledFields.map((field, i) => {
           const type: RequirementType = getValues(`requirements.${i}.type`)
