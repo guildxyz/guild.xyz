@@ -1,5 +1,4 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
-import { CHAIN_CONFIG } from "chains"
 import { AddressLinkProvider } from "components/_app/AddressLinkProvider"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
@@ -17,77 +16,19 @@ import { useEffect, useState } from "react"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
-import { createWalletClient, http } from "viem"
-import { mnemonicToAccount } from "viem/accounts"
-import { WagmiConfig, configureChains, createConfig, mainnet } from "wagmi"
-import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet"
-import { InjectedConnector } from "wagmi/connectors/injected"
-import { MockConnector } from "wagmi/connectors/mock"
-import { SafeConnector } from "wagmi/connectors/safe"
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
-import { publicProvider } from "wagmi/providers/public"
+import { WagmiConfig, createConfig } from "wagmi"
 /**
  * Polyfill HTML inert property for Firefox support:
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
  */
 import "wicg-inert"
 
-const { chains, publicClient } = configureChains(Object.values(CHAIN_CONFIG), [
-  publicProvider(),
-])
+import { connectors, publicClient } from "connectors"
 
 const config = createConfig({
-  autoConnect: process.env.NEXT_PUBLIC_MOCK_CONNECTOR ? false : true,
+  autoConnect: !process.env.NEXT_PUBLIC_MOCK_CONNECTOR,
   publicClient,
-  connectors:
-    process.env.NEXT_PUBLIC_MOCK_CONNECTOR && typeof window !== "undefined"
-      ? [
-          new MockConnector({
-            chains: [mainnet],
-            options: {
-              walletClient: createWalletClient({
-                account: mnemonicToAccount(
-                  process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC
-                ),
-                transport: http(mainnet.rpcUrls.default.http[0]),
-              }),
-            },
-          }),
-        ]
-      : [
-          new InjectedConnector({
-            chains,
-            options: {
-              name: "Injected",
-              shimDisconnect: true,
-            },
-          }),
-          new CoinbaseWalletConnector({
-            chains,
-            options: {
-              appName: "Guild.xyz",
-            },
-          }),
-          new WalletConnectConnector({
-            chains,
-            options: {
-              projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-              showQrModal: true,
-              qrModalOptions: {
-                themeVariables: {
-                  "--wcm-z-index": "10001",
-                },
-              },
-            },
-          }),
-          new SafeConnector({
-            chains,
-            options: {
-              allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/],
-              debug: false,
-            },
-          }),
-        ],
+  connectors,
 })
 
 const App = ({
