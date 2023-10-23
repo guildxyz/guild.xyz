@@ -8,7 +8,12 @@ import useVault from "requirements/Payment/hooks/useVault"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { mutate } from "swr"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { BaseError, ContractFunctionRevertedError, TransactionReceipt } from "viem"
+import {
+  BaseError,
+  ContractFunctionRevertedError,
+  TransactionExecutionError,
+  TransactionReceipt,
+} from "viem"
 import {
   useAccount,
   useBalance,
@@ -99,7 +104,13 @@ const usePayFee = () => {
 
   const { write, isLoading } = useContractWrite({
     ...config,
-    onError: () => {},
+    onError: (error) => {
+      const errorMessage =
+        error instanceof TransactionExecutionError
+          ? error.shortMessage
+          : error.message
+      showErrorToast(errorMessage)
+    },
     onSuccess: async ({ hash }) => {
       const receipt: TransactionReceipt =
         await publicClient.waitForTransactionReceipt({ hash })
