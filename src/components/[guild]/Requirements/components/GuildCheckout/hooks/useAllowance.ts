@@ -1,6 +1,7 @@
 import { Chains } from "chains"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { maxUint256 } from "viem"
 import {
   erc20ABI,
   useAccount,
@@ -8,6 +9,7 @@ import {
   useContractRead,
   useContractWrite,
   usePrepareContractWrite,
+  usePublicClient,
 } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 
@@ -16,6 +18,7 @@ const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
 
   const { address } = useAccount()
   const chainId = useChainId()
+  const publicClient = usePublicClient()
 
   const requirement = useRequirementContext()
 
@@ -42,14 +45,17 @@ const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
     abi: erc20ABI,
     address: tokenAddress,
     functionName: "approve",
-    args: [contract, Number.MAX_SAFE_INTEGER],
+    args: [contract, maxUint256],
     enabled,
   })
 
   const { isLoading: isAllowing, write: allowSpendingTokens } = useContractWrite({
     ...config,
-    onError: (err) => showErrorToast(err),
-    onSuccess: () => refetch(),
+    onError: (err: any) => showErrorToast(err?.shortMessage ?? err),
+    onSuccess: async ({ hash }) => {
+      await publicClient.waitForTransactionReceipt({ hash })
+      refetch()
+    },
   })
 
   return {
