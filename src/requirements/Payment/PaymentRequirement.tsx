@@ -1,5 +1,5 @@
 import { Icon } from "@chakra-ui/react"
-import { CHAIN_CONFIG } from "chains"
+import { CHAIN_CONFIG, Chains } from "chains"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -12,9 +12,9 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
 import { formatUnits } from "viem"
+import { useToken } from "wagmi"
 import PaymentTransactionStatusModal from "../../components/[guild]/Requirements/components/GuildCheckout/components/PaymentTransactionStatusModal"
 import WithdrawButton from "./components/WithdrawButton"
 import useVault from "./hooks/useVault"
@@ -39,11 +39,16 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   } = useVault(address, requirementData?.id, chain)
 
   const {
-    data: { symbol, decimals },
+    data: tokenData,
     error: tokenError,
-    isValidating: isTokenDataLoading,
-  } = useTokenData(chain, token)
-  const convertedFee = fee && decimals ? formatUnits(fee, decimals) : undefined
+    isLoading: isTokenDataLoading,
+  } = useToken({
+    address: token,
+    chainId: Chains[chain],
+    enabled: Boolean(token && chain),
+  })
+  const convertedFee =
+    fee && tokenData?.decimals ? formatUnits(fee, tokenData.decimals) : undefined
 
   const { data: accessData } = useAccess(roleId ?? 0)
   // temporary until POAPs are real roles
@@ -93,7 +98,9 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
               : undefined
           }
         >
-          {convertedFee && symbol ? `${convertedFee} ${symbol}` : "-"}
+          {convertedFee && tokenData?.symbol
+            ? `${convertedFee} ${tokenData.symbol}`
+            : "-"}
         </DataBlock>
         {` on ${CHAIN_CONFIG[chain].name}`}
       </>
