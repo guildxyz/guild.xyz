@@ -1,6 +1,7 @@
 import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useEstimateGas from "hooks/useEstimateGas"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
@@ -88,11 +89,7 @@ const usePayFee = () => {
       : true)
 
   // WAGMI TODO: for some reason this doesn't return the gas estimation, but we should return both estimatedGasFee & estimatedGasFeeInUSD from this hook
-  const {
-    config,
-    error: rawPrepareError,
-    isLoading: isPrepareLoading,
-  } = usePrepareContractWrite({
+  const contractCallParams = {
     abi: feeCollectorAbi,
     address: requirement.address,
     functionName: "payFee",
@@ -100,7 +97,19 @@ const usePayFee = () => {
     value: pickedCurrencyIsNative ? fee : undefined,
     chainId: Chains[requirement.chain],
     enabled,
-  })
+  } as const
+
+  const {
+    config,
+    error: prepareError,
+    isLoading: isPrepareLoading,
+  } = usePrepareContractWrite(contractCallParams)
+
+  const {
+    estimatedGas,
+    gasEstimationError,
+    isLoading: isGasEstimationLoading,
+  } = useEstimateGas(contractCallParams)
 
   const { write, isLoading } = useContractWrite({
     ...config,
@@ -148,7 +157,10 @@ const usePayFee = () => {
 
   return {
     isPrepareLoading,
-    prepareError: getErrorMessage(rawPrepareError),
+    prepareError: getErrorMessage(prepareError),
+    estimatedGas,
+    gasEstimationError: getErrorMessage(gasEstimationError),
+    isGasEstimationLoading,
     payFee: write,
     isLoading,
   }
