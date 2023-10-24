@@ -28,16 +28,17 @@ const BuyTotal = (): JSX.Element => {
 
   const isNativeCurrency = pickedCurrency === NULL_ADDRESS
 
-  const { isPrepareLoading, prepareError } = usePayFee()
-  const estimatedGasFee = BigInt(0)
-  const estimatedGasInFloat = estimatedGasFee
-    ? parseFloat(
-        formatUnits(
-          estimatedGasFee,
-          CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
+  const { isGasEstimationLoading, gasEstimationError, estimatedGas } = usePayFee()
+
+  const estimatedGasInFloat =
+    typeof estimatedGas === "bigint"
+      ? parseFloat(
+          formatUnits(
+            estimatedGas,
+            CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
+          )
         )
-      )
-    : null
+      : null
 
   const priceInSellToken =
     fee && tokenData?.decimals
@@ -91,15 +92,10 @@ const BuyTotal = (): JSX.Element => {
       <Tr>
         <Td>Gas fee</Td>
         <Td isNumeric>
-          <Skeleton isLoaded={!isPrepareLoading}>
-            {prepareError || !estimatedGasFee
+          <Skeleton isLoaded={!isGasEstimationLoading}>
+            {gasEstimationError || !estimatedGasInFloat
               ? "Couldn't estimate"
-              : `${parseFloat(
-                  formatUnits(
-                    estimatedGasFee,
-                    CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
-                  )
-                ).toFixed(8)} ${
+              : `${Number(estimatedGasInFloat.toFixed(8))} ${
                   CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
                 }`}
           </Skeleton>
