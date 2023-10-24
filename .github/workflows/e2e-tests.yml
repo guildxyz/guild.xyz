@@ -22,7 +22,7 @@ jobs:
 
       # https://docs.cypress.io/guides/continuous-integration/introduction#Dependencies
       - name: Install dependencies
-        run: sudo pacman -Sy libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+        run: sudo pacman -Sy gtk2 gtk3 libnotify gconf nss xscreensaver alsa-lib libxtst libxss xorg-xauth xorg-server-xvfb
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
