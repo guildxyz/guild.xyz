@@ -20,6 +20,7 @@ export default defineConfig({
       dcServerId: "1096417797292171365", // We'll delete the created roles in this Discord server
       tgId: "-1001653099938",
       DEPLOYMENT_ID: "localhost",
+      TEST_GUILD_URL_NAME: "guild-e2e-cypress",
     },
     setupNodeEvents(on, config) {
       on(

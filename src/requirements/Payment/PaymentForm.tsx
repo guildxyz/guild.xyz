@@ -76,6 +76,7 @@ const PaymentForm = ({
       <HStack pt={4} w="full" justifyContent="end">
         {isOnCorrectChain ? (
           <Button
+            data-test="payment-form-register-vault-button"
             colorScheme={isOnCorrectChain ? "green" : "gray"}
             onClick={registerVaultFormHandleSubmit(onSubmit)}
             isDisabled={
@@ -93,6 +94,7 @@ const PaymentForm = ({
           </Button>
         ) : (
           <Button
+            data-test="payment-form-switch-network-button"
             colorScheme="blue"
             onClick={() => requestNetworkChange(Chains[chain])}
             rightIcon={

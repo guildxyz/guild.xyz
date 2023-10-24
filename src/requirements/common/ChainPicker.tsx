@@ -90,6 +90,7 @@ const ChainPicker = ({
             options={mappedSupportedChains}
             afterOnChange={onChangeHandler}
             isDisabled={isDisabled}
+            data-test="chain-picker-input"
           />
         </InputGroup>
       </FormControl>

@@ -1,7 +1,7 @@
 import { CHAIN_CONFIG } from "chains"
 import { createWalletClient, http } from "viem"
 import { mnemonicToAccount } from "viem/accounts"
-import { configureChains, mainnet } from "wagmi"
+import { configureChains } from "wagmi"
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet"
 import { InjectedConnector } from "wagmi/connectors/injected"
 import { MockConnector } from "wagmi/connectors/mock"
@@ -16,11 +16,12 @@ const { chains, publicClient } = configureChains(Object.values(CHAIN_CONFIG), [
 const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
   ? [
       new MockConnector({
-        chains: [mainnet],
+        chains: chains,
         options: {
           walletClient: createWalletClient({
             account: mnemonicToAccount(process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC),
-            transport: http(mainnet.rpcUrls.default.http[0]),
+            chain: chains[0],
+            transport: http(),
           }),
         },
       }),
