@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chains } from "chains"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import feeCollectorAbi from "static/abis/feeCollector"
@@ -10,6 +10,7 @@ type RegisterVaultParams = {
   owner: `0x${string}`
   token: `0x${string}`
   fee: number
+  chain: Chain
 }
 
 const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
@@ -20,7 +21,7 @@ const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
   const showErrorToast = useShowErrorToast()
 
   const registerVault = async (data: RegisterVaultParams): Promise<string> => {
-    const { owner, token, fee } = data
+    const { owner, token, fee, chain } = data
 
     if (!owner || !token || !fee) throw new Error("Invalid data")
 
@@ -55,6 +56,8 @@ const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
       address: FEE_COLLECTOR_CONTRACT[Chains[chainId]],
       functionName: "registerVault",
       args: registerVaultParams,
+      chainId: Chains[chain],
+      enabled: chainId === Chains[chain],
     })
 
     const hash = await walletClient.writeContract({
