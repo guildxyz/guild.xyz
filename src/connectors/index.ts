@@ -738,8 +738,8 @@ const RPC: RpcConfig = {
     rpcUrls: ["https://neon-mainnet.everstake.one"],
     blockExplorerUrls: ["https://neonscan.org"],
     blockExplorerIcons: {
-      light: "/networkLogos/neonscan.svg",
-      dark: "/networkLogos/neonscan.svg",
+      light: "/explorerLogos/neonscan.svg",
+      dark: "/explorerLogos/neonscan.svg",
     },
     iconUrls: ["/networkLogos/neon.svg"],
   },
