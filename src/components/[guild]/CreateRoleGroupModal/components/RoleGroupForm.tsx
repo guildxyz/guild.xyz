@@ -11,7 +11,7 @@ import IconSelector from "components/create-guild/IconSelector"
 import { Uploader } from "hooks/usePinata/usePinata"
 import { useFormContext } from "react-hook-form"
 
-export type CampaignFormType = {
+export type RoleGroupFormType = {
   imageUrl?: string
   name: string
   description?: string
@@ -21,11 +21,11 @@ type Props = {
   iconUploader: Uploader
 }
 
-const CampaignForm = ({ iconUploader }: Props) => {
+const RoleGroupForm = ({ iconUploader }: Props) => {
   const {
     register,
     formState: { errors },
-  } = useFormContext<CampaignFormType>()
+  } = useFormContext<RoleGroupFormType>()
 
   return (
     <Stack spacing={4}>
@@ -52,4 +52,4 @@ const CampaignForm = ({ iconUploader }: Props) => {
     </Stack>
   )
 }
-export default CampaignForm
+export default RoleGroupForm

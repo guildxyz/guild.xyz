@@ -64,8 +64,8 @@ const DynamicAddAndOrderRoles = dynamic(
 const DynamicAddRewardButton = dynamic(
   () => import("components/[guild]/AddRewardButton")
 )
-const DynamicAddRewardAndCampaign = dynamic(
-  () => import("components/[guild]/AddRewardAndCampaign")
+const DynamicAddRewardAndRoleGroup = dynamic(
+  () => import("components/[guild]/AddRewardAndRoleGroup")
 )
 const DynamicMembersExporter = dynamic(
   () => import("components/[guild]/Members/components/MembersExporter")
@@ -262,7 +262,7 @@ const GuildPage = (): JSX.Element => {
                 ) : isAddRoleStuck ? (
                   <DynamicAddAndOrderRoles />
                 ) : featureFlags.includes("ROLE_GROUPS") ? (
-                  <DynamicAddRewardAndCampaign />
+                  <DynamicAddRewardAndRoleGroup />
                 ) : (
                   <DynamicAddRewardButton />
                 )}

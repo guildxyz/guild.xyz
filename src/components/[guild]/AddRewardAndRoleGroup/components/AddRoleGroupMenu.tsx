@@ -10,16 +10,16 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import CreateCampaignModal from "components/[guild]/CreateCampaignModal"
-import { CampaignFormType } from "components/[guild]/CreateCampaignModal/components/CampaignForm"
+import CreateRoleGroupModal from "components/[guild]/CreateRoleGroupModal"
+import { RoleGroupFormType } from "components/[guild]/CreateRoleGroupModal/components/RoleGroupForm"
 import { CaretDown, Plus } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
-const AddCampaignMenu = () => {
-  const addCampaignButtonRef = useRef(null)
+const AddRoleGroupMenu = () => {
+  const addRoleGroupButtonRef = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const methods = useForm<CampaignFormType>({ mode: "all" })
+  const methods = useForm<RoleGroupFormType>({ mode: "all" })
 
   return (
     <>
@@ -33,7 +33,7 @@ const AddCampaignMenu = () => {
         <Portal>
           <MenuList maxW="sm" py={0} zIndex="popover">
             <MenuItem
-              ref={addCampaignButtonRef}
+              ref={addRoleGroupButtonRef}
               onClick={onOpen}
               icon={
                 <Icon
@@ -59,10 +59,10 @@ const AddCampaignMenu = () => {
       </Menu>
 
       <FormProvider {...methods}>
-        <CreateCampaignModal isOpen={isOpen} onClose={onClose} />
+        <CreateRoleGroupModal isOpen={isOpen} onClose={onClose} />
       </FormProvider>
     </>
   )
 }
 
-export default AddCampaignMenu
+export default AddRoleGroupMenu

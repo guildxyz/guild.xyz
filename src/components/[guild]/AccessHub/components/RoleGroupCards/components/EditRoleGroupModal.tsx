@@ -8,9 +8,9 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import CampaignForm, {
-  CampaignFormType,
-} from "components/[guild]/CreateCampaignModal/components/CampaignForm"
+import RoleGroupForm, {
+  RoleGroupFormType,
+} from "components/[guild]/CreateRoleGroupModal/components/RoleGroupForm"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { useFormContext } from "react-hook-form"
@@ -25,7 +25,7 @@ type Props = {
 }
 
 const EditRoleGroupModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
-  const { setValue, handleSubmit } = useFormContext<CampaignFormType>()
+  const { setValue, handleSubmit } = useFormContext<RoleGroupFormType>()
 
   const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
@@ -50,7 +50,7 @@ const EditRoleGroupModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
         <ModalCloseButton />
 
         <ModalBody>
-          <CampaignForm iconUploader={iconUploader} />
+          <RoleGroupForm iconUploader={iconUploader} />
         </ModalBody>
 
         <ModalFooter pt={0}>

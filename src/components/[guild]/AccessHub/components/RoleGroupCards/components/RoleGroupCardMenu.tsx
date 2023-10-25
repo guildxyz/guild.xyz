@@ -1,5 +1,5 @@
 import { Box, MenuItem, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import { CampaignFormType } from "components/[guild]/CreateCampaignModal/components/CampaignForm"
+import { RoleGroupFormType } from "components/[guild]/CreateRoleGroupModal/components/RoleGroupForm"
 import useGroup from "components/[guild]/hooks/useGroup"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import { PencilSimple, TrashSimple } from "phosphor-react"
@@ -21,7 +21,7 @@ const RoleGroupCardMenu = ({ groupId }: Props) => {
   const { onSubmit: onDeleteRoleGroup, isLoading: isDeleteRoleGroupLoading } =
     useDeleteRoleGroup(groupId)
 
-  const methods = useForm<CampaignFormType>({
+  const methods = useForm<RoleGroupFormType>({
     mode: "all",
     defaultValues: {
       name,

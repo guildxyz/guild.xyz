@@ -3,12 +3,12 @@ import { useRouter } from "next/router"
 import { GearSix } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import EditRoleGroupModal from "../AccessHub/components/RoleGroupCards/components/EditRoleGroupModal"
-import { CampaignFormType } from "../CreateCampaignModal/components/CampaignForm"
+import { RoleGroupFormType } from "../CreateRoleGroupModal/components/RoleGroupForm"
 import useGroup from "../hooks/useGroup"
 import useGuild from "../hooks/useGuild"
 import { useThemeContext } from "../ThemeContext"
 
-const EditCampaignButton = () => {
+const EditRoleGroupButton = () => {
   const router = useRouter()
 
   const { urlName } = useGuild()
@@ -17,7 +17,7 @@ const EditCampaignButton = () => {
 
   const { textColor, buttonColorScheme } = useThemeContext()
 
-  const methods = useForm<CampaignFormType>({
+  const methods = useForm<RoleGroupFormType>({
     mode: "all",
     defaultValues: {
       name,
@@ -53,4 +53,4 @@ const EditCampaignButton = () => {
     </>
   )
 }
-export default EditCampaignButton
+export default EditRoleGroupButton

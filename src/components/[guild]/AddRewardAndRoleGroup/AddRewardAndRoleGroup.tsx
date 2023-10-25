@@ -1,13 +1,13 @@
 import { ButtonGroup, Divider } from "@chakra-ui/react"
 import AddRewardButton from "../AddRewardButton"
-import AddCampaignMenu from "./components/AddCampaignMenu"
+import AddRoleGroupMenu from "./components/AddRoleGroupMenu"
 
-const AddRewardAndCampaign = () => (
+const AddRewardAndRoleGroup = () => (
   <ButtonGroup isAttached size="sm" variant="ghost">
     <AddRewardButton />
     <Divider orientation="vertical" h="8" />
-    <AddCampaignMenu />
+    <AddRoleGroupMenu />
   </ButtonGroup>
 )
 
-export default AddRewardAndCampaign
+export default AddRewardAndRoleGroup
