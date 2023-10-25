@@ -9,6 +9,7 @@ const FEATURE_FLAGS = [
   "GUILD_CREDENTIAL",
   "CRM",
   "GUILD_QUEUES",
+  "ROLE_GROUPS",
 ] as const
 export type FeatureFlag = (typeof FEATURE_FLAGS)[number]
 
