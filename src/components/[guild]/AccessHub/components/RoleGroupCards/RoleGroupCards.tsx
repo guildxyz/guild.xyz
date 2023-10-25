@@ -86,7 +86,7 @@ const RoleGroupCards = () => {
               leftIcon={!groupHasRoles ? <Plus /> : undefined}
               rightIcon={groupHasRoles ? <ArrowRight /> : undefined}
             >
-              Add roles
+              {groupHasRoles ? "View campaign" : "Add roles"}
             </LinkButton>
 
             <ColorCardLabel
