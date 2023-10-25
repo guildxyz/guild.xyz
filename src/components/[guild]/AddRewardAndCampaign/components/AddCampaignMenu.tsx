@@ -5,23 +5,21 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Portal,
   Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Modal } from "components/common/Modal"
+import CreateCampaignModal from "components/[guild]/CreateCampaignModal"
+import { CreateCampaignForm } from "components/[guild]/CreateCampaignModal/CreateCampaignModal"
 import { CaretDown, Plus } from "phosphor-react"
 import { useRef } from "react"
+import { FormProvider, useForm } from "react-hook-form"
 
 const AddCampaignMenu = () => {
   const addCampaignButtonRef = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const methods = useForm<CreateCampaignForm>({ mode: "all" })
 
   return (
     <>
@@ -60,15 +58,9 @@ const AddCampaignMenu = () => {
         </Portal>
       </Menu>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Create campaign</ModalHeader>
-          <ModalCloseButton />
-
-          <ModalBody>TODO</ModalBody>
-        </ModalContent>
-      </Modal>
+      <FormProvider {...methods}>
+        <CreateCampaignModal isOpen={isOpen} onClose={onClose} />
+      </FormProvider>
     </>
   )
 }

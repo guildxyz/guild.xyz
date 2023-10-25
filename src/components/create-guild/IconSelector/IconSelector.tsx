@@ -1,5 +1,6 @@
 import {
   Box,
+  ChakraProps,
   FormControl,
   FormLabel,
   IconButton,
@@ -36,9 +37,10 @@ type Props = {
   isDisabled?: boolean
   minW?: number
   minH?: number
+  boxSize?: ChakraProps["boxSize"]
 }
 
-const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
+const IconSelector = ({ uploader, isDisabled, minW, minH, boxSize }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { control } = useFormContext<GuildFormType>()
 
@@ -81,10 +83,12 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
         autoFocus
         onClick={onOpen}
         rounded="full"
-        boxSize={12}
+        boxSize={boxSize ?? 12}
         flexShrink={0}
         colorScheme="gray"
-        icon={<GuildLogo imageUrl={field.value} bgColor="transparent" />}
+        icon={
+          <GuildLogo imageUrl={field.value} bgColor="transparent" size={boxSize} />
+        }
         aria-label="Guild logo"
         variant="outline"
         borderWidth={1}
