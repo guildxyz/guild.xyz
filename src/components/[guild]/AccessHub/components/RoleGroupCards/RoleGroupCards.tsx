@@ -23,7 +23,12 @@ const DynamicRoleGroupCardMenu = dynamic(
 const RoleGroupCards = () => {
   const { isAdmin } = useGuildPermission()
 
-  const { groups, imageUrl: guildImageUrl, urlName: guildUrlName } = useGuild()
+  const {
+    groups,
+    roles,
+    imageUrl: guildImageUrl,
+    urlName: guildUrlName,
+  } = useGuild()
   const { query } = useRouter()
 
   const imageBgColor = useColorModeValue("gray.700", "gray.600")
@@ -32,57 +37,65 @@ const RoleGroupCards = () => {
 
   return (
     <>
-      {groups.map(({ id, imageUrl, name, urlName }) => (
-        <ColorCard
-          key={id}
-          color="primary.500"
-          pt={{ base: 10, sm: 11 }}
-          display="flex"
-          flexDir="column"
-          justifyContent="space-between"
-        >
-          {isAdmin && <DynamicRoleGroupCardMenu groupId={id} />}
+      {groups.map(({ id, imageUrl, name, urlName }) => {
+        if (!isAdmin && !roles.some((role) => role.groupId === id)) return null
 
-          <HStack spacing={3} minHeight={10} mb={5}>
-            {imageUrl?.length > 0 || guildImageUrl?.length > 0 ? (
-              <Circle
-                overflow={"hidden"}
-                borderRadius="full"
-                size={10}
-                flexShrink={0}
-                position="relative"
-                bgColor={imageBgColor}
-              >
-                {imageUrl?.match("guildLogos") ? (
-                  <Img src={imageUrl} alt="Guild logo" boxSize="40%" />
-                ) : (
-                  <Image src={imageUrl || guildImageUrl} alt={name} layout="fill" />
-                )}
-              </Circle>
-            ) : (
-              <SkeletonCircle size="10" />
-            )}
-            <Text fontWeight="bold">{name}</Text>
-          </HStack>
-
-          <LinkButton
-            href={`/${guildUrlName}/${urlName}`}
-            rightIcon={<ArrowRight />}
+        return (
+          <ColorCard
+            key={id}
+            color="primary.500"
+            pt={{ base: 10, sm: 11 }}
+            display="flex"
+            flexDir="column"
+            justifyContent="space-between"
           >
-            View campaign
-          </LinkButton>
+            {isAdmin && <DynamicRoleGroupCardMenu groupId={id} />}
 
-          <ColorCardLabel
-            fallbackColor="white"
-            backgroundColor={"primary.500"}
-            label="Campaign"
-            top="-2px"
-            left="-2px"
-            borderBottomRightRadius="xl"
-            borderTopLeftRadius="2xl"
-          />
-        </ColorCard>
-      ))}
+            <HStack spacing={3} minHeight={10} mb={5}>
+              {imageUrl?.length > 0 || guildImageUrl?.length > 0 ? (
+                <Circle
+                  overflow={"hidden"}
+                  borderRadius="full"
+                  size={10}
+                  flexShrink={0}
+                  position="relative"
+                  bgColor={imageBgColor}
+                >
+                  {imageUrl?.match("guildLogos") ? (
+                    <Img src={imageUrl} alt="Guild logo" boxSize="40%" />
+                  ) : (
+                    <Image
+                      src={imageUrl || guildImageUrl}
+                      alt={name}
+                      layout="fill"
+                    />
+                  )}
+                </Circle>
+              ) : (
+                <SkeletonCircle size="10" />
+              )}
+              <Text fontWeight="bold">{name}</Text>
+            </HStack>
+
+            <LinkButton
+              href={`/${guildUrlName}/${urlName}`}
+              rightIcon={<ArrowRight />}
+            >
+              View campaign
+            </LinkButton>
+
+            <ColorCardLabel
+              fallbackColor="white"
+              backgroundColor={"primary.500"}
+              label="Campaign"
+              top="-2px"
+              left="-2px"
+              borderBottomRightRadius="xl"
+              borderTopLeftRadius="2xl"
+            />
+          </ColorCard>
+        )
+      })}
     </>
   )
 }
