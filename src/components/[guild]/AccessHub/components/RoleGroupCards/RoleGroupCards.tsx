@@ -53,7 +53,7 @@ const RoleGroupCards = () => {
                 position="relative"
                 bgColor={imageBgColor}
               >
-                {imageUrl.match("guildLogos") ? (
+                {imageUrl?.match("guildLogos") ? (
                   <Img src={imageUrl} alt="Guild logo" boxSize="40%" />
                 ) : (
                   <Image src={imageUrl || guildImageUrl} alt={name} layout="fill" />
