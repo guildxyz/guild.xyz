@@ -31,6 +31,9 @@ import parseDescription from "utils/parseDescription"
 
 const BATCH_SIZE = 10
 
+const DynamicEditCampaignButton = dynamic(
+  () => import("components/[guild]/[group]/EditCampaignButton")
+)
 const DynamicAddAndOrderRoles = dynamic(
   () => import("components/[guild]/AddAndOrderRoles")
 )
@@ -51,7 +54,6 @@ const GroupPage = (): JSX.Element => {
     name: guildName,
     urlName: guildUrlName,
     imageUrl: guildImageUrl,
-    onboardingComplete,
   } = useGuild()
 
   useAutoStatusUpdate()
@@ -134,6 +136,7 @@ const GroupPage = (): JSX.Element => {
             </Link>
           </HStack>
         }
+        action={isAdmin && <DynamicEditCampaignButton />}
         title={group.name}
         textColor={textColor}
         ogDescription={group.description}
@@ -228,12 +231,12 @@ const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
 
   const group = useGroup()
 
-  if (!fallback || !guild.id || !group.id) {
+  if (!fallback || !guild.id || !group?.id) {
     return (
       <Center h="100vh" w="screen">
         <Spinner />
         <Heading fontFamily={"display"} size="md" ml="4" mb="1">
-          Loading guild...
+          Loading campaign...
         </Heading>
       </Center>
     )

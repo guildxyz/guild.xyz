@@ -23,7 +23,11 @@ const RoleGroupCardMenu = ({ groupId }: Props) => {
 
   const methods = useForm<CampaignFormType>({
     mode: "all",
-    defaultValues: { name, imageUrl, description },
+    defaultValues: {
+      name,
+      imageUrl: imageUrl ?? "",
+      description: description ?? "",
+    },
   })
 
   return (

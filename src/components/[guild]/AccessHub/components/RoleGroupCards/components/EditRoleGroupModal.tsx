@@ -14,13 +14,14 @@ import CampaignForm, {
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { useFormContext } from "react-hook-form"
+import { Group } from "types"
 import useEditRoleGroup from "../hooks/useEditRoleGroup"
 
 type Props = {
   isOpen: boolean
   onClose: () => void
   groupId: number
-  onSuccess: () => void
+  onSuccess: (response: Group) => void
 }
 
 const EditRoleGroupModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
