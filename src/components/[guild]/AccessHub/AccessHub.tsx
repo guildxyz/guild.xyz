@@ -116,7 +116,7 @@ const AccessHub = (): JSX.Element => {
         gap={4}
         mb={10}
       >
-        <RoleGroupCards />
+        {featureFlags.includes("ROLE_GROUPS") && <RoleGroupCards />}
         {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
         {accessedGuildPlatforms?.length || futurePoaps?.length ? (
           <>
