@@ -5,7 +5,6 @@ import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
-import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import { keccak256, stringToBytes, trim } from "viem"
 import {
   PublicClient,
@@ -260,9 +259,9 @@ export const sign = async ({
       .sign(
         { name: "ECDSA", hash: "SHA-512" },
         keyPair.privateKey,
-        strToBuffer(getMessage(params))
+        Buffer.from(getMessage(params))
       )
-      .then((signatureBuffer) => bufferToHex(signatureBuffer))
+      .then((signatureBuffer) => Buffer.from(signatureBuffer).toString("hex"))
   } else {
     const bytecode = await publicClient.getBytecode({ address }).catch(() => null)
     const isSmartContract = bytecode && trim(bytecode) !== "0x"

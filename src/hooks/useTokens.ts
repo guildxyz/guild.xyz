@@ -46,6 +46,8 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   POLYGON_MUMBAI: [],
   BASE_MAINNET: [],
   ZORA: [],
+  PGN: [],
+  NEON_EVM: [],
 }
 
 const fetchTokens = async ([_, chain]) =>

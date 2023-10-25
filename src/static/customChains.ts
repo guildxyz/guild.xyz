@@ -114,6 +114,68 @@ export const scrollAlpha = /*#__PURE__*/ defineChain({
   },
 })
 
+export const pgn = /*#__PURE__*/ defineChain({
+  id: 424,
+  name: "PGN",
+  network: "pgn",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.publicgoods.network"],
+    },
+    public: {
+      http: ["https://rpc.publicgoods.network"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BlockScout",
+      url: "https://explorer.publicgoods.network",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 3380209,
+    },
+  },
+})
+
+export const neonEVM = /*#__PURE__*/ defineChain({
+  id: 245022934,
+  name: "Neon EVM",
+  network: "neonEVM",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Neon",
+    symbol: "NEON",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://neon-mainnet.everstake.one"],
+    },
+    public: {
+      http: ["https://neon-mainnet.everstake.one"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Neonscan",
+      url: "https://neonscan.org",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 206545524,
+    },
+  },
+})
+
 export const goerli = /*#__PURE__*/ defineChain({
   id: 5,
   name: "Görli",

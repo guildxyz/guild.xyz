@@ -1,10 +1,10 @@
 import type { JoinJob } from "@guildxyz/types"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { atom, useAtom } from "jotai"
@@ -174,6 +174,14 @@ const useJoin = (
     },
   })
 
+  const getResponseByProgress = (progressRes) => ({
+    success: progressRes.roleAccesses?.some((role) => role.access === true),
+    accessedRoleIds: (progressRes.roleAccesses ?? [])
+      .filter((roleAccess) => !!roleAccess?.access)
+      .map(({ roleId }) => roleId),
+    platformResults: [], // Not used
+  })
+
   const shouldFetchProgress = hasFeatureFlag && !!useSubmitResponse?.response
 
   const progress = useSWRImmutable<JoinJob>(
@@ -188,18 +196,17 @@ const useJoin = (
         (result: JoinJob[]) => result?.[0]
       ),
     {
-      onSuccess: (job) => {
-        if (job?.done) {
+      onSuccess: (res) => {
+        if (res?.done) {
           useSubmitResponse?.reset()
-          onJoinSuccess({
-            success: true,
-            accessedRoleIds: (job?.roleAccesses ?? [])
-              .filter((roleAccess) => !!roleAccess?.access)
-              .map(({ roleId }) => roleId),
-            platformResults: [], // Not used
-          })
+          onJoinSuccess(getResponseByProgress(res))
         }
       },
+      /**
+       * Needed to keep the response, even tough shouldFetchProgress gets set to
+       * false because of reseting useSubmitResponse
+       */
+      keepPreviousData: true,
       refreshInterval:
         typeof useSubmitResponse?.response === "string" ? 500 : undefined,
     }
@@ -207,19 +214,12 @@ const useJoin = (
 
   const response = hasFeatureFlag
     ? progress?.data?.done && !(progress?.data as any)?.failed
-      ? {
-          success: true,
-          accessedRoleIds: (progress?.data?.roleAccesses ?? [])
-            .filter((roleAccess) => !!roleAccess?.access)
-            .map(({ roleId }) => roleId),
-          platformResults: [], // Not used
-        }
+      ? getResponseByProgress(progress?.data)
       : undefined
     : (useSubmitResponse?.response as Response)
 
   const isLoading = hasFeatureFlag
     ? useSubmitResponse?.isLoading ||
-      progress?.isLoading ||
       progress?.isValidating ||
       (!!progress?.data && !progress?.data?.done)
     : useSubmitResponse?.isLoading
