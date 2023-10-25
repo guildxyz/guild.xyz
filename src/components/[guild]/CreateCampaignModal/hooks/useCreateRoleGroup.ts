@@ -17,9 +17,8 @@ const useCreateRoleGroup = () => {
 
   const triggerConfetti = useJsConfetti()
 
-  const createRoleGroup = async (
-    signedValidation: SignedValdation
-  ): Promise<Group> => fetcher(`/v2/guilds/${id}/groups`, signedValidation)
+  const createRoleGroup = (signedValidation: SignedValdation): Promise<Group> =>
+    fetcher(`/v2/guilds/${id}/groups`, signedValidation)
 
   return useSubmitWithSign<Group>(createRoleGroup, {
     onSuccess: (response) => {
