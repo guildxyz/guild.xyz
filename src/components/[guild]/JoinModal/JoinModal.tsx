@@ -90,15 +90,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalBody>
             {/* temporary for zkSync launch */}
             {urlName === "zksync-era" &&
-              (!isLoading && !response ? (
-                <Alert status="info" mb="8">
-                  <AlertIcon />
-                  <AlertDescription>
-                    This guild is experiencing huge traffic right now. Joining
-                    & getting your role may take up to half an hour
-                  </AlertDescription>
-                </Alert>
-              ) : (
+              (isLoading ? (
                 <Alert status="info" mb="8">
                   <AlertIcon />
                   <Stack>
@@ -123,6 +115,14 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                       })()}
                     </AlertDescription>
                   </Stack>
+                </Alert>
+              ) : (
+                <Alert status="info" mb="8">
+                  <AlertIcon />
+                  <AlertDescription>
+                    This guild is experiencing huge traffic right now. Joining
+                    & getting your role may take up to half an hour
+                  </AlertDescription>
                 </Alert>
               ))}
             <Error error={joinError} processError={processJoinPlatformError} />

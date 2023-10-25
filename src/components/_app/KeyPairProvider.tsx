@@ -7,7 +7,6 @@ import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { AddressConnectionProvider, User } from "types"
-import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import { useAccount } from "wagmi"
 import {
@@ -77,7 +76,7 @@ const generateKeyPair = async () => {
       generatedKeys.publicKey
     )
 
-    const generatedPubKeyHex = bufferToHex(generatedPubKey)
+    const generatedPubKeyHex = Buffer.from(generatedPubKey).toString("hex")
     keyPair.pubKey = generatedPubKeyHex
     keyPair.keyPair = generatedKeys
     return keyPair
@@ -419,11 +418,13 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
                 .sign(
                   { name: "ECDSA", hash: "SHA-512" },
                   mainKeyPair?.privateKey,
-                  strToBuffer(
+                  Buffer.from(
                     `Address: ${address.toLowerCase()}\nNonce: ${nonce}\nUserID: ${userId}`
                   )
                 )
-                .then((signatureBuffer) => bufferToHex(signatureBuffer))
+                .then((signatureBuffer) =>
+                  Buffer.from(signatureBuffer).toString("hex")
+                )
 
               if (
                 typeof mainUserSig === "string" &&
