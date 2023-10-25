@@ -30,10 +30,8 @@ const CreateRoleGroupModal = (props: Props) => {
 
   const { onSubmit, isLoading } = useCreateRoleGroup()
 
-  const { handleSubmit: handleSubmitWithUpload } = useSubmitWithUpload(
-    handleSubmit(onSubmit),
-    iconUploader.isUploading
-  )
+  const { handleSubmit: handleSubmitWithUpload, isUploadingShown } =
+    useSubmitWithUpload(handleSubmit(onSubmit), iconUploader.isUploading)
 
   return (
     <Modal {...props}>
@@ -53,7 +51,7 @@ const CreateRoleGroupModal = (props: Props) => {
             h={10}
             variant="solid"
             onClick={handleSubmitWithUpload}
-            isLoading={isLoading}
+            isLoading={isUploadingShown || isLoading}
             loadingText="Creating campaign"
           >
             Create & set roles

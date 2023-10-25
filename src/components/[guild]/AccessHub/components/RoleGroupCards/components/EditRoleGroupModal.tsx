@@ -11,9 +11,10 @@ import { Modal } from "components/common/Modal"
 import RoleGroupForm, {
   RoleGroupFormType,
 } from "components/[guild]/CreateRoleGroupModal/components/RoleGroupForm"
+import useGroup from "components/[guild]/hooks/useGroup"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
-import { useFormContext } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import { Group } from "types"
 import useEditRoleGroup from "../hooks/useEditRoleGroup"
 
@@ -25,7 +26,18 @@ type Props = {
 }
 
 const EditRoleGroupModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
-  const { setValue, handleSubmit } = useFormContext<RoleGroupFormType>()
+  const group = useGroup(groupId)
+  const { name, imageUrl, description } = group ?? {}
+
+  const methods = useForm<RoleGroupFormType>({
+    mode: "all",
+    defaultValues: {
+      name,
+      imageUrl: imageUrl ?? "",
+      description: description ?? "",
+    },
+  })
+  const { setValue, handleSubmit } = methods
 
   const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
@@ -37,35 +49,35 @@ const EditRoleGroupModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
 
   const { onSubmit, isLoading } = useEditRoleGroup(groupId, onSuccess)
 
-  const { handleSubmit: handleSubmitWithUpload } = useSubmitWithUpload(
-    handleSubmit(onSubmit),
-    iconUploader.isUploading
-  )
+  const { handleSubmit: handleSubmitWithUpload, isUploadingShown } =
+    useSubmitWithUpload(handleSubmit(onSubmit), iconUploader.isUploading)
 
   return (
-    <Modal {...modalProps}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Edit campaign</ModalHeader>
-        <ModalCloseButton />
+    <FormProvider {...methods}>
+      <Modal {...modalProps}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit campaign</ModalHeader>
+          <ModalCloseButton />
 
-        <ModalBody>
-          <RoleGroupForm iconUploader={iconUploader} />
-        </ModalBody>
+          <ModalBody>
+            <RoleGroupForm iconUploader={iconUploader} />
+          </ModalBody>
 
-        <ModalFooter pt={0}>
-          <Button
-            colorScheme="green"
-            h={10}
-            variant="solid"
-            onClick={handleSubmitWithUpload}
-            isLoading={isLoading}
-          >
-            Save
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          <ModalFooter pt={0}>
+            <Button
+              colorScheme="green"
+              h={10}
+              variant="solid"
+              onClick={handleSubmitWithUpload}
+              isLoading={isUploadingShown || isLoading}
+            >
+              Save
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </FormProvider>
   )
 }
 export default EditRoleGroupModal
