@@ -6,7 +6,7 @@ const CONTEXT = {
 
 const TEST_GUILD_URL_NAME = "guild-e2e-cypress"
 
-describe.skip("roles", () => {
+describe("roles", () => {
   beforeEach(() => {
     indexedDB.deleteDatabase("guild.xyz")
     cy.visit(`/${TEST_GUILD_URL_NAME}`)
