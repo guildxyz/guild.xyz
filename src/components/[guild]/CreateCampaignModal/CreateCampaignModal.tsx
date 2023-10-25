@@ -12,13 +12,13 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { ArrowRight } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
-import RoleGroupForm, { RoleGroupFormType } from "./components/RoleGroupForm"
+import CampaignForm, { CampaignFormType } from "./components/CampaignForm"
 import useCreateRoleGroup from "./hooks/useCreateRoleGroup"
 
 type Props = { isOpen: boolean; onClose: () => void }
 
-const CreateRoleGroupModal = (props: Props) => {
-  const methods = useForm<RoleGroupFormType>({ mode: "all" })
+const CreateCampaignModal = (props: Props) => {
+  const methods = useForm<CampaignFormType>({ mode: "all" })
   const { setValue, handleSubmit } = methods
 
   const iconUploader = usePinata({
@@ -43,7 +43,7 @@ const CreateRoleGroupModal = (props: Props) => {
           <ModalCloseButton />
 
           <ModalBody>
-            <RoleGroupForm iconUploader={iconUploader} />
+            <CampaignForm iconUploader={iconUploader} />
           </ModalBody>
 
           <ModalFooter pt={0}>
@@ -62,4 +62,4 @@ const CreateRoleGroupModal = (props: Props) => {
     </FormProvider>
   )
 }
-export default CreateRoleGroupModal
+export default CreateCampaignModal

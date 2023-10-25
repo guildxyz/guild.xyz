@@ -20,8 +20,8 @@ import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
 import useRoleGroup from "../hooks/useRoleGroup"
+import CampaignCards from "./components/CampaignCards"
 import PlatformAccessButton from "./components/PlatformAccessButton"
-import RoleGroupCards from "./components/RoleGroupCards"
 
 const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")
@@ -116,7 +116,7 @@ const AccessHub = (): JSX.Element => {
         gap={4}
         mb={10}
       >
-        {featureFlags.includes("ROLE_GROUPS") && <RoleGroupCards />}
+        {featureFlags.includes("ROLE_GROUPS") && <CampaignCards />}
         {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
         {accessedGuildPlatforms?.length || futurePoaps?.length ? (
           <>

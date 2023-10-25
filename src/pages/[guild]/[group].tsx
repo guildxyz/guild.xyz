@@ -31,8 +31,8 @@ import parseDescription from "utils/parseDescription"
 
 const BATCH_SIZE = 10
 
-const DynamicEditRoleGroupButton = dynamic(
-  () => import("components/[guild]/[group]/EditRoleGroupButton")
+const DynamicEditCampaignButton = dynamic(
+  () => import("components/[guild]/[group]/EditCampaignButton")
 )
 const DynamicAddAndOrderRoles = dynamic(
   () => import("components/[guild]/AddAndOrderRoles")
@@ -136,7 +136,7 @@ const GroupPage = (): JSX.Element => {
             </Link>
           </HStack>
         }
-        action={isAdmin && <DynamicEditRoleGroupButton />}
+        action={isAdmin && <DynamicEditCampaignButton />}
         title={group.name}
         textColor={textColor}
         ogDescription={group.description}

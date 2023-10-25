@@ -1,12 +1,12 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { GearSix } from "phosphor-react"
-import EditRoleGroupModal from "../AccessHub/components/RoleGroupCards/components/EditRoleGroupModal"
+import EditCampaignModal from "../AccessHub/components/CampaignCards/components/EditCampaignModal"
 import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
 import useRoleGroup from "../hooks/useRoleGroup"
 
-const EditRoleGroupButton = () => {
+const EditCampaignButton = () => {
   const router = useRouter()
 
   const { urlName } = useGuild()
@@ -28,7 +28,7 @@ const EditRoleGroupButton = () => {
         onClick={onOpen}
       />
 
-      <EditRoleGroupModal
+      <EditCampaignModal
         isOpen={isOpen}
         onClose={onClose}
         groupId={group.id}
@@ -39,4 +39,4 @@ const EditRoleGroupButton = () => {
     </>
   )
 }
-export default EditRoleGroupButton
+export default EditCampaignButton

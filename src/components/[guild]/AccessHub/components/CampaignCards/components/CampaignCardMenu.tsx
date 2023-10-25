@@ -2,13 +2,13 @@ import { Box, MenuItem, useColorModeValue, useDisclosure } from "@chakra-ui/reac
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import { PencilSimple, TrashSimple } from "phosphor-react"
 import useDeleteRoleGroup from "../hooks/useDeleteRoleGroup"
-import EditRoleGroupModal from "./EditRoleGroupModal"
+import EditCampaignModal from "./EditCampaignModal"
 
 type Props = {
   groupId: number
 }
 
-const RoleGroupCardMenu = ({ groupId }: Props) => {
+const CampaignCardMenu = ({ groupId }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const removeMenuItemColor = useColorModeValue("red.600", "red.300")
@@ -31,7 +31,7 @@ const RoleGroupCardMenu = ({ groupId }: Props) => {
         </MenuItem>
       </PlatformCardMenu>
 
-      <EditRoleGroupModal
+      <EditCampaignModal
         isOpen={isOpen}
         onClose={onClose}
         groupId={groupId}
@@ -40,4 +40,4 @@ const RoleGroupCardMenu = ({ groupId }: Props) => {
     </Box>
   )
 }
-export default RoleGroupCardMenu
+export default CampaignCardMenu

@@ -6,9 +6,9 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
-import RoleGroupForm, {
-  RoleGroupFormType,
-} from "components/[guild]/CreateRoleGroupModal/components/RoleGroupForm"
+import CampaignForm, {
+  CampaignFormType,
+} from "components/[guild]/CreateCampaignModal/components/CampaignForm"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
@@ -25,11 +25,11 @@ type Props = {
   onSuccess: (response: Group) => void
 }
 
-const EditRoleGroupModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
+const EditCampaignModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
   const group = useRoleGroup(groupId)
   const { name, imageUrl, description } = group ?? {}
 
-  const methods = useForm<RoleGroupFormType>({
+  const methods = useForm<CampaignFormType>({
     mode: "all",
     defaultValues: {
       name,
@@ -61,7 +61,7 @@ const EditRoleGroupModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
           <ModalCloseButton />
 
           <ModalBody>
-            <RoleGroupForm iconUploader={iconUploader} />
+            <CampaignForm iconUploader={iconUploader} />
           </ModalBody>
 
           <ModalFooter pt={0}>
@@ -80,4 +80,4 @@ const EditRoleGroupModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
     </FormProvider>
   )
 }
-export default EditRoleGroupModal
+export default EditCampaignModal

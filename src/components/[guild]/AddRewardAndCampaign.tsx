@@ -12,13 +12,13 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import CreateRoleGroupModal from "components/[guild]/CreateRoleGroupModal"
+import CreateCampaignModal from "components/[guild]/CreateCampaignModal"
 import { CaretDown, Plus } from "phosphor-react"
-import AddRewardButton from "../AddRewardButton"
-import { useIsTabsStuck } from "../Tabs"
-import { useThemeContext } from "../ThemeContext"
+import AddRewardButton from "./AddRewardButton"
+import { useIsTabsStuck } from "./Tabs"
+import { useThemeContext } from "./ThemeContext"
 
-const AddRewardAndRoleGroup = () => {
+const AddRewardAndCampaign = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isStuck } = useIsTabsStuck()
   const { textColor, buttonColorScheme } = useThemeContext()
@@ -61,9 +61,9 @@ const AddRewardAndRoleGroup = () => {
           </Portal>
         </Menu>
       </ButtonGroup>
-      <CreateRoleGroupModal isOpen={isOpen} onClose={onClose} />
+      <CreateCampaignModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }
 
-export default AddRewardAndRoleGroup
+export default AddRewardAndCampaign

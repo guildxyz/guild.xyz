@@ -6,21 +6,21 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import LinkButton from "components/common/LinkButton"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { ArrowRight, Plus } from "phosphor-react"
 
-const DynamicRoleGroupCardMenu = dynamic(
-  () => import("./components/RoleGroupCardMenu")
+const DynamicCampaignCardMenu = dynamic(
+  () => import("./components/CampaignCardMenu")
 )
 
-const RoleGroupCards = () => {
+const CampaignCards = () => {
   const { isAdmin } = useGuildPermission()
 
   const {
@@ -51,7 +51,7 @@ const RoleGroupCards = () => {
             flexDir="column"
             justifyContent="space-between"
           >
-            {isAdmin && <DynamicRoleGroupCardMenu groupId={id} />}
+            {isAdmin && <DynamicCampaignCardMenu groupId={id} />}
 
             <HStack spacing={3} minHeight={10} mb={5}>
               {imageUrl?.length > 0 || guildImageUrl?.length > 0 ? (
@@ -105,4 +105,4 @@ const RoleGroupCards = () => {
   )
 }
 
-export default RoleGroupCards
+export default CampaignCards
