@@ -32,7 +32,7 @@ const RoleGroupForm = ({ iconUploader }: Props) => {
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>Logo and title</FormLabel>
         <HStack spacing={2} alignItems="start">
-          <IconSelector uploader={iconUploader} boxSize={12} />
+          <IconSelector uploader={iconUploader} />
 
           <Stack spacing={0} w="full">
             <Input

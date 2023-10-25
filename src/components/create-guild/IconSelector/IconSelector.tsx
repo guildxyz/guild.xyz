@@ -1,6 +1,5 @@
 import {
   Box,
-  ChakraProps,
   FormControl,
   FormLabel,
   IconButton,
@@ -21,9 +20,9 @@ import {
   useDisclosure,
   useRadioGroup,
 } from "@chakra-ui/react"
+import LogicDivider from "components/[guild]/LogicDivider"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
-import LogicDivider from "components/[guild]/LogicDivider"
 import { Uploader } from "hooks/usePinata/usePinata"
 import React, { useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
@@ -37,10 +36,9 @@ type Props = {
   isDisabled?: boolean
   minW?: number
   minH?: number
-  boxSize?: ChakraProps["boxSize"]
 }
 
-const IconSelector = ({ uploader, isDisabled, minW, minH, boxSize }: Props) => {
+const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { control } = useFormContext<GuildFormType>()
 
@@ -83,12 +81,10 @@ const IconSelector = ({ uploader, isDisabled, minW, minH, boxSize }: Props) => {
         autoFocus
         onClick={onOpen}
         rounded="full"
-        boxSize={boxSize ?? 12}
+        boxSize={12}
         flexShrink={0}
         colorScheme="gray"
-        icon={
-          <GuildLogo imageUrl={field.value} bgColor="transparent" size={boxSize} />
-        }
+        icon={<GuildLogo imageUrl={field.value} bgColor="transparent" />}
         aria-label="Guild logo"
         variant="outline"
         borderWidth={1}
