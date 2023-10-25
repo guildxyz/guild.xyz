@@ -6,12 +6,12 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import RoleGroupForm, {
   RoleGroupFormType,
 } from "components/[guild]/CreateRoleGroupModal/components/RoleGroupForm"
 import useGroup from "components/[guild]/hooks/useGroup"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { FormProvider, useForm } from "react-hook-form"
@@ -54,7 +54,7 @@ const EditRoleGroupModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
 
   return (
     <FormProvider {...methods}>
-      <Modal {...modalProps}>
+      <Modal {...modalProps} size="lg">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit campaign</ModalHeader>

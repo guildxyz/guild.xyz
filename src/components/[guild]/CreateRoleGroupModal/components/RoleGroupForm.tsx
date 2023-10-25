@@ -28,17 +28,18 @@ const RoleGroupForm = ({ iconUploader }: Props) => {
   } = useFormContext<RoleGroupFormType>()
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={6}>
       <FormControl isInvalid={!!errors.name}>
         <FormLabel>Logo and title</FormLabel>
         <HStack spacing={2} alignItems="start">
-          <IconSelector uploader={iconUploader} boxSize={10} />
+          <IconSelector uploader={iconUploader} boxSize={12} />
 
           <Stack spacing={0} w="full">
             <Input
               {...register("name", {
                 required: "This field is required",
               })}
+              size="lg"
             />
             <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
           </Stack>
@@ -47,7 +48,11 @@ const RoleGroupForm = ({ iconUploader }: Props) => {
 
       <FormControl>
         <FormLabel>Description</FormLabel>
-        <Textarea placeholder="Optional" {...register("description")}></Textarea>
+        <Textarea
+          placeholder="Optional"
+          {...register("description")}
+          size="lg"
+        ></Textarea>
       </FormControl>
     </Stack>
   )

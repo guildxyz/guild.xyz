@@ -36,10 +36,10 @@ const CreateRoleGroupModal = (props: Props) => {
 
   return (
     <FormProvider {...methods}>
-      <Modal {...props}>
+      <Modal {...props} size="lg">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create campaign</ModalHeader>
+          <ModalHeader>Create campaign page</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
@@ -50,8 +50,6 @@ const CreateRoleGroupModal = (props: Props) => {
             <Button
               colorScheme="green"
               rightIcon={<ArrowRight />}
-              h={10}
-              variant="solid"
               onClick={handleSubmitWithUpload}
               isLoading={isUploadingShown || isLoading}
               loadingText="Creating campaign"
