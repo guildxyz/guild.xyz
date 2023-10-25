@@ -14,7 +14,7 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { ArrowRight } from "phosphor-react"
+import { ArrowRight, Plus } from "phosphor-react"
 
 const DynamicRoleGroupCardMenu = dynamic(
   () => import("./components/RoleGroupCardMenu")
@@ -38,12 +38,14 @@ const RoleGroupCards = () => {
   return (
     <>
       {groups.map(({ id, imageUrl, name, urlName }) => {
-        if (!isAdmin && !roles.some((role) => role.groupId === id)) return null
+        const groupHasRoles = roles.some((role) => role.groupId === id)
+        if (!isAdmin && !groupHasRoles) return null
 
         return (
           <ColorCard
             key={id}
-            color="primary.500"
+            color={groupHasRoles ? "primary.500" : "gray.500"}
+            borderStyle={groupHasRoles ? "solid" : "dashed"}
             pt={{ base: 10, sm: 11 }}
             display="flex"
             flexDir="column"
@@ -78,15 +80,18 @@ const RoleGroupCards = () => {
             </HStack>
 
             <LinkButton
+              colorScheme={groupHasRoles ? "primary" : "gray"}
+              variant={groupHasRoles ? "solid" : "outline"}
               href={`/${guildUrlName}/${urlName}`}
-              rightIcon={<ArrowRight />}
+              leftIcon={!groupHasRoles ? <Plus /> : undefined}
+              rightIcon={groupHasRoles ? <ArrowRight /> : undefined}
             >
-              View campaign
+              Add roles
             </LinkButton>
 
             <ColorCardLabel
               fallbackColor="white"
-              backgroundColor={"primary.500"}
+              backgroundColor={groupHasRoles ? "primary.500" : "gray.500"}
               label="Campaign"
               top="-2px"
               left="-2px"
