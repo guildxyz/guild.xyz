@@ -8,16 +8,22 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import CampaignForm, {
+  CampaignFormType,
+} from "components/[guild]/CreateCampaignModal/components/CampaignForm"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
-import { ArrowRight } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
-import CampaignForm, { CampaignFormType } from "./components/CampaignForm"
-import useCreateRoleGroup from "./hooks/useCreateRoleGroup"
+import useEditRoleGroup from "../hooks/useEditRoleGroup"
 
-type Props = { isOpen: boolean; onClose: () => void }
+type Props = {
+  isOpen: boolean
+  onClose: () => void
+  groupId: number
+  onSuccess: () => void
+}
 
-const CreateCampaignModal = (props: Props) => {
+const EditRoleGroupModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
   const { setValue, handleSubmit } = useFormContext<CampaignFormType>()
 
   const iconUploader = usePinata({
@@ -28,7 +34,7 @@ const CreateCampaignModal = (props: Props) => {
     },
   })
 
-  const { onSubmit, isLoading } = useCreateRoleGroup()
+  const { onSubmit, isLoading } = useEditRoleGroup(groupId, onSuccess)
 
   const { handleSubmit: handleSubmitWithUpload } = useSubmitWithUpload(
     handleSubmit(onSubmit),
@@ -36,10 +42,10 @@ const CreateCampaignModal = (props: Props) => {
   )
 
   return (
-    <Modal {...props}>
+    <Modal {...modalProps}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create campaign</ModalHeader>
+        <ModalHeader>Edit campaign</ModalHeader>
         <ModalCloseButton />
 
         <ModalBody>
@@ -49,18 +55,16 @@ const CreateCampaignModal = (props: Props) => {
         <ModalFooter pt={0}>
           <Button
             colorScheme="green"
-            rightIcon={<ArrowRight />}
             h={10}
             variant="solid"
             onClick={handleSubmitWithUpload}
             isLoading={isLoading}
-            loadingText="Creating campaign"
           >
-            Create & set roles
+            Save
           </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
   )
 }
-export default CreateCampaignModal
+export default EditRoleGroupModal
