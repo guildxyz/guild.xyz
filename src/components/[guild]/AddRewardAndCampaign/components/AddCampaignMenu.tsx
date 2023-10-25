@@ -11,7 +11,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import CreateCampaignModal from "components/[guild]/CreateCampaignModal"
-import { CreateCampaignForm } from "components/[guild]/CreateCampaignModal/CreateCampaignModal"
+import { CampaignFormType } from "components/[guild]/CreateCampaignModal/components/CampaignForm"
 import { CaretDown, Plus } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -19,7 +19,7 @@ import { FormProvider, useForm } from "react-hook-form"
 const AddCampaignMenu = () => {
   const addCampaignButtonRef = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const methods = useForm<CreateCampaignForm>({ mode: "all" })
+  const methods = useForm<CampaignFormType>({ mode: "all" })
 
   return (
     <>

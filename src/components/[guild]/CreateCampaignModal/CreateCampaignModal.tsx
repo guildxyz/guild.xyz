@@ -1,42 +1,24 @@
 import {
-  FormControl,
-  FormLabel,
-  HStack,
-  Input,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
-  Textarea,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
-import IconSelector from "components/create-guild/IconSelector"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { ArrowRight } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
+import CampaignForm, { CampaignFormType } from "./components/CampaignForm"
 import useCreateRoleGroup from "./hooks/useCreateRoleGroup"
 
 type Props = { isOpen: boolean; onClose: () => void }
 
-export type CreateCampaignForm = {
-  imageUrl?: string
-  name: string
-  description?: string
-}
-
 const CreateCampaignModal = (props: Props) => {
-  const {
-    register,
-    setValue,
-    formState: { errors },
-    handleSubmit,
-  } = useFormContext<CreateCampaignForm>()
+  const { setValue, handleSubmit } = useFormContext<CampaignFormType>()
 
   const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
@@ -59,31 +41,7 @@ const CreateCampaignModal = (props: Props) => {
         <ModalCloseButton />
 
         <ModalBody>
-          <Stack spacing={4}>
-            <FormControl isInvalid={!!errors.name}>
-              <FormLabel>Logo and title</FormLabel>
-              <HStack spacing={2} alignItems="start">
-                <IconSelector uploader={iconUploader} boxSize={10} />
-
-                <Stack spacing={0} w="full">
-                  <Input
-                    {...register("name", {
-                      required: "This field is required",
-                    })}
-                  />
-                  <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
-                </Stack>
-              </HStack>
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>Description</FormLabel>
-              <Textarea
-                placeholder="Optional"
-                {...register("description")}
-              ></Textarea>
-            </FormControl>
-          </Stack>
+          <CampaignForm iconUploader={iconUploader} />
         </ModalBody>
 
         <ModalFooter pt={0}>
