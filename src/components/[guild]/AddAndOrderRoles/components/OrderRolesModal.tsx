@@ -5,6 +5,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -105,13 +106,17 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
               values={roleIdsOrder}
               onReorder={setRoleIdsOrder}
             >
-              {roleIdsOrder?.map((roleId) => (
-                <Reorder.Item key={roleId} value={roleId}>
-                  <DraggableRoleCard
-                    role={relevantRoles?.find((role) => role.id === roleId)}
-                  />
-                </Reorder.Item>
-              ))}
+              {relevantRoles?.length ? (
+                roleIdsOrder?.map((roleId) => (
+                  <Reorder.Item key={roleId} value={roleId}>
+                    <DraggableRoleCard
+                      role={relevantRoles?.find((role) => role.id === roleId)}
+                    />
+                  </Reorder.Item>
+                ))
+              ) : (
+                <Text>No roles yet</Text>
+              )}
             </Reorder.Group>
           </ModalBody>
 
