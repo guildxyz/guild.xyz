@@ -61,8 +61,8 @@ const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuil
 const DynamicAddAndOrderRoles = dynamic(
   () => import("components/[guild]/AddAndOrderRoles")
 )
-const DynamicAddRewardButton = dynamic(
-  () => import("components/[guild]/AddRewardButton")
+const DynamicAddRewardAndCampaign = dynamic(
+  () => import("components/[guild]/AddRewardAndCampaign")
 )
 const DynamicMembersExporter = dynamic(
   () => import("components/[guild]/Members/components/MembersExporter")
@@ -258,7 +258,7 @@ const GuildPage = (): JSX.Element => {
                 ) : isAddRoleStuck ? (
                   <DynamicAddAndOrderRoles />
                 ) : (
-                  <DynamicAddRewardButton />
+                  <DynamicAddRewardAndCampaign />
                 )}
               </HStack>
             }
