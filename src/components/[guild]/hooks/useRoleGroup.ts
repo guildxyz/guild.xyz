@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import useGuild from "./useGuild"
 
-const useGroup = (groupId?: number) => {
+const useRoleGroup = (groupId?: number) => {
   const { groups } = useGuild()
   const { query } = useRouter()
 
@@ -16,4 +16,4 @@ const useGroup = (groupId?: number) => {
     : null
 }
 
-export default useGroup
+export default useRoleGroup

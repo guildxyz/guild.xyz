@@ -11,15 +11,15 @@ import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
-import platforms from "platforms/platforms"
 import PoapCardMenu from "platforms/Poap/PoapCardMenu"
+import platforms from "platforms/platforms"
 import { PlatformName, PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
-import useGroup from "../hooks/useGroup"
+import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
-import PlatformCard from "../RolePlatforms/components/PlatformCard"
+import useRoleGroup from "../hooks/useRoleGroup"
 import PlatformAccessButton from "./components/PlatformAccessButton"
 import RoleGroupCards from "./components/RoleGroupCards"
 
@@ -85,7 +85,7 @@ const AccessHub = (): JSX.Element => {
     onboardingComplete,
   } = useGuild()
 
-  const group = useGroup()
+  const group = useRoleGroup()
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
   const { isAdmin } = useGuildPermission()

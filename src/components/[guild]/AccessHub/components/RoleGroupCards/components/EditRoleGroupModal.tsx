@@ -9,7 +9,7 @@ import {
 import RoleGroupForm, {
   RoleGroupFormType,
 } from "components/[guild]/CreateRoleGroupModal/components/RoleGroupForm"
-import useGroup from "components/[guild]/hooks/useGroup"
+import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import usePinata from "hooks/usePinata"
@@ -26,7 +26,7 @@ type Props = {
 }
 
 const EditRoleGroupModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
-  const group = useGroup(groupId)
+  const group = useRoleGroup(groupId)
   const { name, imageUrl, description } = group ?? {}
 
   const methods = useForm<RoleGroupFormType>({

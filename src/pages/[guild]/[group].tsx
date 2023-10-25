@@ -1,24 +1,24 @@
 import { Box, Center, Flex, Heading, HStack, Spinner, Stack } from "@chakra-ui/react"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import Link from "components/common/Link"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
-import useGroup from "components/[guild]/hooks/useGroup"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useIsMember from "components/[guild]/hooks/useIsMember"
+import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import Link from "components/common/Link"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -58,7 +58,7 @@ const GroupPage = (): JSX.Element => {
 
   useAutoStatusUpdate()
 
-  const group = useGroup()
+  const group = useRoleGroup()
   const groupRoles = roles?.filter((role) => role.groupId === group.id)
 
   // temporary, will order roles already in the SQL query in the future
@@ -229,7 +229,7 @@ type Props = {
 const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
   const guild = useGuild()
 
-  const group = useGroup()
+  const group = useRoleGroup()
 
   if (!fallback || !guild.id || !group?.id) {
     return (

@@ -2,15 +2,15 @@ import { IconButton, useDisclosure } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { GearSix } from "phosphor-react"
 import EditRoleGroupModal from "../AccessHub/components/RoleGroupCards/components/EditRoleGroupModal"
-import useGroup from "../hooks/useGroup"
-import useGuild from "../hooks/useGuild"
 import { useThemeContext } from "../ThemeContext"
+import useGuild from "../hooks/useGuild"
+import useRoleGroup from "../hooks/useRoleGroup"
 
 const EditRoleGroupButton = () => {
   const router = useRouter()
 
   const { urlName } = useGuild()
-  const group = useGroup()
+  const group = useRoleGroup()
 
   const { textColor, buttonColorScheme } = useThemeContext()
 
