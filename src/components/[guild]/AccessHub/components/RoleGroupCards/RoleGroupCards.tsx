@@ -1,4 +1,11 @@
-import { Box, HStack, SkeletonCircle, Text } from "@chakra-ui/react"
+import {
+  Circle,
+  HStack,
+  Img,
+  SkeletonCircle,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import LinkButton from "components/common/LinkButton"
@@ -19,6 +26,8 @@ const RoleGroupCards = () => {
   const { groups, imageUrl: guildImageUrl, urlName: guildUrlName } = useGuild()
   const { query } = useRouter()
 
+  const imageBgColor = useColorModeValue("gray.700", "gray.600")
+
   if (!groups?.length || !!query.group) return null
 
   return (
@@ -36,15 +45,20 @@ const RoleGroupCards = () => {
 
           <HStack spacing={3} minHeight={10} mb={5}>
             {imageUrl?.length > 0 || guildImageUrl?.length > 0 ? (
-              <Box
+              <Circle
                 overflow={"hidden"}
                 borderRadius="full"
-                boxSize={10}
+                size={10}
                 flexShrink={0}
                 position="relative"
+                bgColor={imageBgColor}
               >
-                <Image src={imageUrl || guildImageUrl} alt={name} layout="fill" />
-              </Box>
+                {imageUrl.match("guildLogos") ? (
+                  <Img src={imageUrl} alt="Guild logo" boxSize="40%" />
+                ) : (
+                  <Image src={imageUrl || guildImageUrl} alt={name} layout="fill" />
+                )}
+              </Circle>
             ) : (
               <SkeletonCircle size="10" />
             )}
