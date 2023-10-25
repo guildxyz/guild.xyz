@@ -11,15 +11,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import CreateRoleGroupModal from "components/[guild]/CreateRoleGroupModal"
-import { RoleGroupFormType } from "components/[guild]/CreateRoleGroupModal/components/RoleGroupForm"
 import { CaretDown, Plus } from "phosphor-react"
 import { useRef } from "react"
-import { FormProvider, useForm } from "react-hook-form"
 
 const AddRoleGroupMenu = () => {
   const addRoleGroupButtonRef = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const methods = useForm<RoleGroupFormType>({ mode: "all" })
 
   return (
     <>
@@ -58,9 +55,7 @@ const AddRoleGroupMenu = () => {
         </Portal>
       </Menu>
 
-      <FormProvider {...methods}>
-        <CreateRoleGroupModal isOpen={isOpen} onClose={onClose} />
-      </FormProvider>
+      <CreateRoleGroupModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

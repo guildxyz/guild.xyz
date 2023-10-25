@@ -11,14 +11,15 @@ import { Modal } from "components/common/Modal"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { ArrowRight } from "phosphor-react"
-import { useFormContext } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import RoleGroupForm, { RoleGroupFormType } from "./components/RoleGroupForm"
 import useCreateRoleGroup from "./hooks/useCreateRoleGroup"
 
 type Props = { isOpen: boolean; onClose: () => void }
 
 const CreateRoleGroupModal = (props: Props) => {
-  const { setValue, handleSubmit } = useFormContext<RoleGroupFormType>()
+  const methods = useForm<RoleGroupFormType>({ mode: "all" })
+  const { setValue, handleSubmit } = methods
 
   const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
@@ -34,31 +35,33 @@ const CreateRoleGroupModal = (props: Props) => {
     useSubmitWithUpload(handleSubmit(onSubmit), iconUploader.isUploading)
 
   return (
-    <Modal {...props}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Create campaign</ModalHeader>
-        <ModalCloseButton />
+    <FormProvider {...methods}>
+      <Modal {...props}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create campaign</ModalHeader>
+          <ModalCloseButton />
 
-        <ModalBody>
-          <RoleGroupForm iconUploader={iconUploader} />
-        </ModalBody>
+          <ModalBody>
+            <RoleGroupForm iconUploader={iconUploader} />
+          </ModalBody>
 
-        <ModalFooter pt={0}>
-          <Button
-            colorScheme="green"
-            rightIcon={<ArrowRight />}
-            h={10}
-            variant="solid"
-            onClick={handleSubmitWithUpload}
-            isLoading={isUploadingShown || isLoading}
-            loadingText="Creating campaign"
-          >
-            Create & set roles
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          <ModalFooter pt={0}>
+            <Button
+              colorScheme="green"
+              rightIcon={<ArrowRight />}
+              h={10}
+              variant="solid"
+              onClick={handleSubmitWithUpload}
+              isLoading={isUploadingShown || isLoading}
+              loadingText="Creating campaign"
+            >
+              Create & set roles
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </FormProvider>
   )
 }
 export default CreateRoleGroupModal
