@@ -31,6 +31,10 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
   const { addresses, platformUsers, roles, joinedAt, areSocialsPrivate } =
     row.original
 
+  const rolesColumn = row
+    .getVisibleCells()
+    .find((cell) => cell.column.id === "publicRoles").column.parent
+
   const primaryAddress = addresses?.[0]
   const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
   const domain = useResolveAddress(primaryAddress)
@@ -98,7 +102,13 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
             {Object.values(roles)
               .flat()
               .map(({ roleId, amount }) => (
-                <ClickableCrmRoleTag key={roleId} roleId={roleId} amount={amount} />
+                <ClickableCrmRoleTag
+                  key={roleId}
+                  roleId={roleId}
+                  amount={amount}
+                  column={rolesColumn}
+                  onFilter={onClose}
+                />
               ))}
           </Wrap>
         </ModalBody>

@@ -12,7 +12,7 @@ const CrmThead = ({ table, isLoading }: Props) => {
   const cardBg = useCardBg()
 
   return (
-    <Thead position="sticky" top="0" zIndex="2" transition="box-shadow .2s">
+    <Thead position="sticky" top="0" zIndex="4" transition="box-shadow .2s">
       <Tr>
         {/* We don't support multiple header groups right now. Should rewrite it based on the example if we'll need it */}
         {table.getHeaderGroups()[0].headers.map((header) => (

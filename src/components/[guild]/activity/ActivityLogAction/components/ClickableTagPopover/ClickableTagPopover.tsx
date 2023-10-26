@@ -4,7 +4,6 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
-  Portal,
   Stack,
 } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
@@ -20,15 +19,13 @@ const ClickableTagPopover = ({
   <Popover>
     <PopoverTrigger>{children}</PopoverTrigger>
 
-    <Portal>
-      <PopoverContent w="max-content">
-        <PopoverArrow />
+    <PopoverContent w="max-content">
+      <PopoverArrow />
 
-        <PopoverBody p={0} borderRadius="xl" overflow="hidden">
-          <Stack spacing={0}>{options}</Stack>
-        </PopoverBody>
-      </PopoverContent>
-    </Portal>
+      <PopoverBody p={0} borderRadius="xl" overflow="hidden">
+        <Stack spacing={0}>{options}</Stack>
+      </PopoverBody>
+    </PopoverContent>
   </Popover>
 )
 
