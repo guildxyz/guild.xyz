@@ -8,10 +8,24 @@ Cypress.Commands.add("connectWallet", () => {
   cy.getByDataTest("verify-address-button").click()
 })
 
+Cypress.Commands.add("cleanIndexedDB", () => {
+  indexedDB.deleteDatabase("guild.xyz")
+})
+
+Cypress.Commands.add("waitForAccessCheck", () => {
+  cy.intercept(
+    "GET",
+    `${Cypress.env("guildApiUrl").replace("v2", "v1")}/guild/access/**`
+  ).as("accessCheckRequest")
+  cy.wait("@accessCheckRequest", { timeout: 30_000 })
+})
+
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Cypress {
   interface Chainable {
     getByDataTest(selector: string): Chainable<JQuery<HTMLElement>>
     connectWallet(): Chainable<JQuery<HTMLElement>>
+    cleanIndexedDB(): Chainable<JQuery<HTMLElement>>
+    waitForAccessCheck(): Chainable<JQuery<HTMLElement>>
   }
 }

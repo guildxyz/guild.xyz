@@ -1,5 +1,5 @@
 before(() => {
-  indexedDB.deleteDatabase("guild.xyz")
+  cy.cleanIndexedDB()
 })
 
 const URL_NAME = `${Cypress.env("platformlessGuildUrlName")}-${Cypress.env(

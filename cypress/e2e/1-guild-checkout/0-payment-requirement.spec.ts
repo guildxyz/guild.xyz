@@ -1,5 +1,5 @@
 before(() => {
-  indexedDB.deleteDatabase("guild.xyz")
+  cy.cleanIndexedDB()
 })
 
 const MUMBAI_USDC_ADDRESS = "0xe9dce89b076ba6107bb64ef30678efec11939234"
