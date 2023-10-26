@@ -26,7 +26,7 @@ describe("payment requirement", () => {
     cy.getByDataTest("payment-form-switch-network-button").click()
     cy.getByDataTest("payment-form-register-vault-button").click()
 
-    cy.getByDataTest("add-requirement-modal").should("not.be.visible")
+    cy.getByDataTest("add-requirement-modal").should("not.exist")
     cy.get(".chakra-modal__body")
       .contains(/^Pay(.)*on Polygon Mumbai/)
       .should("exist")
