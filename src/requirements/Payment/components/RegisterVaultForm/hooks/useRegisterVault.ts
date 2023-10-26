@@ -1,4 +1,5 @@
 import { CHAIN_CONFIG, Chain, Chains } from "chains"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import feeCollectorAbi from "static/abis/feeCollector"
@@ -14,6 +15,7 @@ type RegisterVaultParams = {
 }
 
 const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
+  const { captureEvent } = usePostHogContext()
   const chainId = useChainId()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
@@ -107,6 +109,9 @@ const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
   return useSubmit<RegisterVaultParams, string>(registerVault, {
     onError: (error: any) => {
       showErrorToast(error?.shortMessage ?? error)
+      captureEvent("Register vault error", {
+        error,
+      })
     },
     onSuccess,
   })

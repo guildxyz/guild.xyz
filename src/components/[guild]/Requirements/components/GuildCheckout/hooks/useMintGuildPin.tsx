@@ -208,8 +208,7 @@ const useMintGuildPin = () => {
         showErrorToast(error instanceof BaseError ? error.shortMessage : error)
         setLoadingText("")
 
-        captureEvent("Mint Guild Pin error (GuildCheckout)", postHogOptions)
-        captureEvent("claim pre-call error (GuildCheckout)", {
+        captureEvent("Mint Guild Pin error (GuildCheckout)", {
           ...postHogOptions,
           error,
         })
