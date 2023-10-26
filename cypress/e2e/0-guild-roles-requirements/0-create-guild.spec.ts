@@ -2,7 +2,7 @@ before(() => {
   indexedDB.deleteDatabase("guild.xyz")
 })
 
-describe("without wallet", () => {
+describe("create guild page (without wallet)", () => {
   before(() => {
     cy.visit("/create-guild")
   })
@@ -22,7 +22,7 @@ describe("without wallet", () => {
   })
 })
 
-describe("with wallet", () => {
+describe("create guild page (with wallet)", () => {
   before(() => {
     cy.visit("/create-guild")
     cy.connectWallet()
