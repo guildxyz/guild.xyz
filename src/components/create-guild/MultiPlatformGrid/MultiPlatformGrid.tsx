@@ -15,7 +15,10 @@ type PlatformsGridData = {
 const MultiPlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
   const platformsData: Record<
-    Exclude<PlatformName, "" | "TWITTER" | "TWITTER_V1" | "POAP" | "EMAIL">,
+    Exclude<
+      PlatformName,
+      "" | "TWITTER" | "TWITTER_V1" | "POAP" | "EMAIL" | "UNIQUE_TEXT"
+    >,
     PlatformsGridData
   > = {
     DISCORD: {

@@ -93,7 +93,7 @@ const preprocessRequirements = (
           (requirement.type === "ERC721" ||
             requirement.type === "ERC1155" ||
             requirement.type === "NOUNS") &&
-          requirement.data.attributes &&
+          requirement.data?.attributes &&
           !requirement.data.attributes.length
         ) {
           processedRequirement.data.attributes = undefined
@@ -114,9 +114,20 @@ const preprocessRequirements = (
         }
 
         if (
+          (requirement.type === "ERC721" ||
+            requirement.type === "ERC1155" ||
+            requirement.type === "NOUNS") &&
+          !processedRequirement.data
+        ) {
+          processedRequirement.data = {
+            minAmount: 0,
+          }
+        }
+
+        if (
           requirement.type === "ALLOWLIST" &&
-          !requirement.data.addresses &&
-          !requirement.data.hideAllowlist
+          !requirement.data?.addresses &&
+          !requirement.data?.hideAllowlist
         )
           processedRequirement.data.addresses = []
 

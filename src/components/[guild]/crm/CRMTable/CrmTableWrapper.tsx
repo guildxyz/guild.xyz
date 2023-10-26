@@ -16,7 +16,7 @@ const CHECKBOX_COLUMN_WIDTH = 45
 const CrmTableWrapper = memo(
   ({ isValidating, setSize, children }: PropsWithChildren<Props>) => {
     const cardBg = useCardBg()
-    const theadBoxShadow = useColorModeValue("md", "2xl")
+    const theadBoxShadow = useColorModeValue("md", "xl")
 
     /**
      * Observing if we've scrolled to the bottom of the page. The table has to be the
@@ -81,9 +81,11 @@ const CrmTableWrapper = memo(
            th {border-radius: 0 !important}`}
           {isIdentityStuck &&
             `.identityTd {background: ${cardBg}}
-           @media only screen and (max-width: 600px) {.identityTd {max-width: 130px}}
-           ${IDENTITIES_COLLAPSED_STYLE}
-           .identitiesToggle {display: none}`}
+              @media only screen and (max-width: 600px) {
+                ${IDENTITIES_COLLAPSED_STYLE}
+                .identitiesToggle {display: none}
+                .identityTd {max-width: 130px}
+              }`}
           {/* the table is elevated to be above the headers shadow, and the popovers need to be elevated above that */}
           {`.chakra-popover__popper { z-index: var(--chakra-zIndices-banner) !important }
           body {overflow-x: hidden !important}`}

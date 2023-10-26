@@ -1,8 +1,8 @@
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { randomBytes } from "crypto"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
+import randomBytes from "randombytes"
 import { useEffect, useState } from "react"
 import { OneOf, PlatformName } from "types"
 

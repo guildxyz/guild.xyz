@@ -1,7 +1,7 @@
 import { SimpleGrid, Text, Tooltip } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
+import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
 import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import { useFieldArray, useWatch } from "react-hook-form"
 import { PlatformType, Visibility } from "types"
@@ -35,7 +35,7 @@ const SelectExistingPlatform = ({ onClose }) => {
         Give access to existing platform
       </Text>
 
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={{ base: 4, md: 6 }}>
+      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={4}>
         {filteredPlatforms?.map((platform) => {
           const platformData = platforms[PlatformType[platform.platformId]]
           if (!platformData) return null

@@ -26,7 +26,7 @@ const useContract = (
    * Passing provider in the dependency array is fine, its basically a constant
    * reference, won't mix up the cache keys
    */
-  const { data: contract } = useSWRImmutable(
+  const { data: contract } = useSWRImmutable<Contract>(
     shouldFetch
       ? ["contract", address, withSigner, account, provider, ABI, chainId]
       : null,

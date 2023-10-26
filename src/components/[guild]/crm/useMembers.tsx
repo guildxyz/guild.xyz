@@ -1,4 +1,5 @@
 import { useKeyPair } from "components/_app/KeyPairProvider"
+import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 import { useCallback, useMemo } from "react"
 import useSWRInfinite from "swr/infinite"
 import { PlatformAccountDetails, Visibility } from "types"
@@ -22,6 +23,7 @@ type Member = {
     hidden?: CrmRole[]
     public: CrmRole[]
   }
+  areSocialsPrivate: boolean
 }
 
 const LIMIT = 50
@@ -53,23 +55,29 @@ const useMembers = (queryString: string) => {
           body: {},
         },
       ]).then((res) =>
-        res.map((user) => ({
-          ...user,
-          platformUsers: user.platformUsers.sort(sortAccounts),
-          roles: {
-            hidden: user.roles.filter(
-              (role) => role.visibility === Visibility.HIDDEN
-            ),
-            public: user.roles.filter(
-              (role) => role.visibility !== Visibility.HIDDEN
-            ),
-          },
-        }))
+        res.map((user) => {
+          const areSocialsPrivate = typeof user.addresses === "string"
+
+          return {
+            ...user,
+            areSocialsPrivate,
+            addresses: areSocialsPrivate ? [user.addresses] : user.addresses,
+            platformUsers: user.platformUsers.sort(sortAccounts),
+            roles: {
+              hidden: user.roles.filter(
+                (role) => role.visibility === Visibility.HIDDEN
+              ),
+              public: user.roles.filter(
+                (role) => role.visibility !== Visibility.HIDDEN
+              ),
+            },
+          }
+        })
       ),
     [fetcherWithSign]
   )
 
-  const { data, ...rest } = useSWRInfinite<Member[]>(getKey, fetchMembers, {
+  const { data, mutate, ...rest } = useSWRInfinite<Member[]>(getKey, fetchMembers, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
@@ -80,8 +88,12 @@ const useMembers = (queryString: string) => {
 
   const flattenedData = useMemo(() => data?.flat(), [data])
 
+  // Mutating the data on successful status update
+  useActiveStatusUpdates(null, mutate)
+
   return {
     data: flattenedData,
+    mutate,
     ...rest,
   }
 }

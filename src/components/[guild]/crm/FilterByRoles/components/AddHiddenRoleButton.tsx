@@ -10,12 +10,12 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
+import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { Plus } from "phosphor-react"
@@ -79,7 +79,7 @@ const AddHiddenRoleButton = (buttonProps) => {
     onClose()
     methods.reset(defaultValues)
   }
-  const { onSubmit, isLoading, response, isSigning, signLoadingText } =
+  const { onSubmit, isLoading, isSigning, signLoadingText } =
     useCreateHiddenRole(onSuccess)
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(

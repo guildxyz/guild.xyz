@@ -1,13 +1,17 @@
 import { CheckboxGroup, CheckboxGroupProps, Stack } from "@chakra-ui/react"
+import dynamic from "next/dynamic"
 import { useState } from "react"
 import { Role } from "types"
 import RoleOptionCard from "./RoleOptionCard"
+import useRoleGroup from "./hooks/useRoleGroup"
 
 type Props = {
   roles: Role[]
   size?: "md" | "lg"
   allowMultiple?: boolean
 } & CheckboxGroupProps
+
+const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 
 const RoleSelector = ({
   roles,
@@ -17,6 +21,10 @@ const RoleSelector = ({
   ...checkboxGroupProps
 }: Props) => {
   const [value, setValue] = useState<(string | number)[]>()
+
+  const group = useRoleGroup()
+
+  if (!roles?.length) return <DynamicNoRolesAlert type={group ? "GROUP" : "GUILD"} />
 
   return (
     <CheckboxGroup

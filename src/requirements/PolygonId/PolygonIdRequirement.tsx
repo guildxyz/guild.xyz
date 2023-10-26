@@ -24,7 +24,7 @@ const PolygonIDRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   const proofAge =
-    requirement.data.maxAmount > 0 &&
+    requirement.data?.maxAmount > 0 &&
     formatRelativeTimeFromNow(requirement.data.maxAmount)
 
   if (requirement?.data?.query)

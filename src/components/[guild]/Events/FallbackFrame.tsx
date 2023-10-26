@@ -11,7 +11,7 @@ type FallbackProps = {
 }
 
 const FallbackFrame = ({ isLoading, icon, title, text }: FallbackProps) => (
-  <Card mb={10} paddingY={14} alignItems="center">
+  <Card mb={10} paddingY={14} paddingX={4} alignItems="center">
     {isLoading ? (
       <Spinner mb={2} size="lg" />
     ) : icon ? (
@@ -31,7 +31,7 @@ const FallbackFrame = ({ isLoading, icon, title, text }: FallbackProps) => (
       </Text>
     )}
 
-    <Text colorScheme="gray" mt="2">
+    <Text colorScheme="gray" mt="2" textAlign={"center"}>
       {text}
     </Text>
   </Card>

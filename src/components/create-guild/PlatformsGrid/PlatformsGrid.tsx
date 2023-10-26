@@ -1,4 +1,4 @@
-import { SimpleGrid, Stack } from "@chakra-ui/react"
+import { SimpleGrid, Stack, StackProps } from "@chakra-ui/react"
 import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 import PlatformSelectButton from "./components/PlatformSelectButton"
@@ -6,16 +6,19 @@ import PlatformSelectButton from "./components/PlatformSelectButton"
 type Props = {
   onSelection: (platform: PlatformName) => void
   showPoap?: boolean
-}
+} & StackProps
 
 type PlatformsGridData = {
   description?: string
 }
 
-const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
+const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
   const platformsData: Record<
-    Exclude<PlatformName, "" | "TWITTER" | "TWITTER_V1" | "POAP" | "EMAIL">,
+    Exclude<
+      PlatformName,
+      "" | "TWITTER" | "TWITTER_V1" | "POAP" | "EMAIL" | "UNIQUE_TEXT"
+    >,
     PlatformsGridData
   > = {
     DISCORD: {
@@ -41,12 +44,12 @@ const PlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
       description: "Create a gated NFT",
     },
     TEXT: {
-      description: "Gate any info as revealable text",
+      description: "Gate special content, links, etc",
     },
   }
 
   return (
-    <Stack spacing={8}>
+    <Stack spacing={8} {...rest}>
       <SimpleGrid
         data-test="platforms-grid"
         columns={{ base: 1, md: 2 }}

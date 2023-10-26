@@ -1,4 +1,5 @@
 import {
+  Center,
   forwardRef,
   Img,
   Tag,
@@ -16,10 +17,11 @@ type Props = {
   imageUrl?: string
   isHidden?: boolean
   rightIcon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+  amount?: number
 } & TagProps
 
 const RoleTag = forwardRef<Props, "span">(
-  ({ name, imageUrl, isHidden, rightIcon, ...rest }, ref): JSX.Element => {
+  ({ name, imageUrl, isHidden, rightIcon, amount, ...rest }, ref): JSX.Element => {
     const publicRoleBg = useColorModeValue("gray.700", "blackAlpha.300")
 
     return (
@@ -28,6 +30,7 @@ const RoleTag = forwardRef<Props, "span">(
         {...(isHidden
           ? { variant: "solid", colorScheme: "gray" }
           : { bg: publicRoleBg, color: "white" })}
+        overflow="hidden"
         {...rest}
       >
         {imageUrl &&
@@ -37,8 +40,13 @@ const RoleTag = forwardRef<Props, "span">(
             <TagLeftIcon as={Img} src={imageUrl} borderRadius={"full"} boxSize="4" />
           ))}
         <TagLabel>{name ?? "Unknown role"}</TagLabel>
-
-        {rightIcon && <TagRightIcon as={rightIcon} />}
+        {amount ? (
+          <Center bgColor="blackAlpha.300" h={6} px={1.5} ml={2} mr={-2}>
+            {amount}
+          </Center>
+        ) : rightIcon ? (
+          <TagRightIcon as={rightIcon} />
+        ) : null}
       </Tag>
     )
   }

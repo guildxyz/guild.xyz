@@ -28,7 +28,7 @@ const useGuildPinFee = (): {
     data: guildPinFee,
     isValidating: isGuildPinFeeLoading,
     error: guildPinFeeError,
-  } = useSWRImmutable(["guildPinFee", guildPin.chain, id], fetchFee)
+  } = useSWRImmutable<BigNumber>(["guildPinFee", guildPin.chain, id], fetchFee)
 
   return {
     guildPinFee,

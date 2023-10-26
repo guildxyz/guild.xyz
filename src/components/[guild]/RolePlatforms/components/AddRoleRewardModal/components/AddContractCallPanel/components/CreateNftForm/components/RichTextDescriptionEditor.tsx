@@ -5,8 +5,8 @@ import { ListItemNode, ListNode } from "@lexical/list"
 import {
   $convertFromMarkdownString,
   $convertToMarkdownString,
-  TextMatchTransformer,
   TRANSFORMERS,
+  TextMatchTransformer,
 } from "@lexical/markdown"
 import { InitialConfigType, LexicalComposer } from "@lexical/react/LexicalComposer"
 import { ContentEditable } from "@lexical/react/LexicalContentEditable"
@@ -108,7 +108,7 @@ const RichTextDescriptionEditor = ({
           }
           placeholder={
             <Text
-              colorScheme="gray"
+              color="chakra-placeholder-color"
               position="absolute"
               top="calc(var(--chakra-space-10) + 2px)"
               left={3}

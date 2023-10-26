@@ -34,66 +34,32 @@ const Footer = (): JSX.Element => (
           <Stack
             w="full"
             h="full"
-            spacing={{ base: 0, md: 8 }}
+            spacing={{ base: 0, md: 4, lg: 6 }}
             direction={{ base: "column", md: "row" }}
             alignItems="center"
             justifyContent={{ base: "center", md: "end" }}
+            fontSize={{ base: "md", lg: "lg" }}
+            whiteSpace="nowrap"
+            fontWeight="bold"
+            fontFamily="display"
           >
-            <Link
-              href="https://twitter.com/guildxyz"
-              isExternal
-              fontSize={{ base: "xl", lg: "2xl" }}
-              fontWeight="bold"
-              fontFamily="display"
-            >
+            <Link href="https://twitter.com/guildxyz" isExternal>
               twitter
             </Link>
-            <Link
-              href="https://github.com/agoraxyz/guild.xyz"
-              isExternal
-              fontSize={{ base: "xl", lg: "2xl" }}
-              fontWeight="bold"
-              fontFamily="display"
-            >
+            <Link href="https://github.com/agoraxyz/guild.xyz" isExternal>
               github
             </Link>
-            <Link
-              href="https://guild.mirror.xyz"
-              isExternal
-              fontSize={{ base: "xl", lg: "2xl" }}
-              fontWeight="bold"
-              fontFamily="display"
-            >
+            <Link href="https://guild.mirror.xyz" isExternal>
               mirror
             </Link>
-            <Link
-              href="https://guild.xyz/our-guild"
-              isExternal
-              fontSize={{ base: "xl", lg: "2xl" }}
-              fontWeight="bold"
-              fontFamily="display"
-            >
+            <Link href="https://guild.xyz/our-guild" isExternal>
               guild
             </Link>
-            <Link
-              href="/guild-xyz-brand-kit.zip"
-              isExternal
-              fontSize={{ base: "xl", lg: "2xl" }}
-              whiteSpace="nowrap"
-              fontWeight="bold"
-              fontFamily="display"
-            >
+            <Link href="/guild-xyz-brand-kit.zip" isExternal>
               brand kit
             </Link>
-            <Link
-              href="/privacy-policy"
-              fontSize={{ base: "xl", lg: "2xl" }}
-              whiteSpace="nowrap"
-              fontWeight="bold"
-              fontFamily="display"
-            >
-              privacy policy
-            </Link>
+            <Link href="/privacy-policy">privacy policy</Link>
+            <Link href="/terms-and-conditions">terms & conditions</Link>
           </Stack>
         </GridItem>
       </SimpleGrid>

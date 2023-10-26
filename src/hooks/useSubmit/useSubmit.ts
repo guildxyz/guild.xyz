@@ -5,13 +5,12 @@ import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import { Chains, RPC } from "connectors"
-import { randomBytes } from "crypto"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
+import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
-import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 export type UseSubmitOptions<ResponseType = void> = {
@@ -250,9 +249,9 @@ const sign = async ({
       .sign(
         { name: "ECDSA", hash: "SHA-512" },
         keyPair.privateKey,
-        strToBuffer(getMessage(params))
+        Buffer.from(getMessage(params))
       )
-      .then((signatureBuffer) => bufferToHex(signatureBuffer))
+      .then((signatureBuffer) => Buffer.from(signatureBuffer).toString("hex"))
   } else {
     const rpcUrl = RPC[Chains[paramChainId]]?.rpcUrls?.[0]
     const prov =

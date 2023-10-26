@@ -1,31 +1,18 @@
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import PulseMarker from "components/common/PulseMarker"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useLocalStorage from "hooks/useLocalStorage"
-import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
-import useIsMember from "../hooks/useIsMember"
-import Tabs, { TabsProps } from "./Tabs"
 import TabButton from "./components/TabButton"
+import Tabs, { TabsProps } from "./Tabs"
 
 type Props = {
   activeTab: "HOME" | "EVENTS" | "MEMBERS" | "ACTIVITY"
 } & TabsProps
 
 const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
-  const { onboardingComplete, urlName, featureFlags, guildPlatforms } = useGuild()
+  const { urlName, featureFlags } = useGuild()
   const { isAdmin } = useGuildPermission()
-  const isMember = useIsMember()
-
-  const showOnboarding = isAdmin && !onboardingComplete
-
-  const showAccessHub =
-    (guildPlatforms?.some(
-      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
-    ) ||
-      isMember ||
-      isAdmin) &&
-    !showOnboarding
 
   const [eventsSeen, setEventsSeen] = useLocalStorage<boolean>("eventsSeen", false)
   const { captureEvent } = usePostHogContext()
@@ -33,7 +20,7 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
   return (
     <Tabs {...rest}>
       <TabButton href={`/${urlName}`} isActive={activeTab === "HOME"}>
-        {showAccessHub ? "Home" : "Roles"}
+        Home
       </TabButton>
       <PulseMarker
         placement="top"

@@ -1,7 +1,6 @@
 import {
   Box,
   Collapse,
-  Flex,
   Heading,
   HStack,
   Icon,
@@ -28,6 +27,7 @@ const RadioOption = (props) => {
     isChecked,
     children,
     tooltipLabel,
+    leftComponent,
   } = props
 
   const { colorMode } = useColorMode()
@@ -49,8 +49,8 @@ const RadioOption = (props) => {
           _active={{ bg: null }}
           isDisabled
         >
-          <Flex as="label" py="4" px="5" alignItems="center">
-            {props?.RightComponent && <props.RightComponent />}
+          <HStack as="label" py="4" px="5" alignItems="center" spacing={4}>
+            {leftComponent}
             <Box whiteSpace="break-spaces" w="full">
               <Heading size="sm">
                 {title}
@@ -67,7 +67,7 @@ const RadioOption = (props) => {
               )}
             </Box>
             {icon && <Icon as={icon} width="1.2em" height="1.2em" ml="6" />}
-          </Flex>
+          </HStack>
         </Button>
       </Tooltip>
     )
@@ -104,7 +104,7 @@ const RadioOption = (props) => {
     >
       <HStack as="label" py="4" px="5" cursor="pointer" spacing={4}>
         <input {...input} />
-        {props?.RightComponent && <props.RightComponent />}
+        {leftComponent}
         <Box w="full" ml="0 !important">
           <Heading size="sm">{title}</Heading>
           {description && (

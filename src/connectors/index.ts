@@ -39,6 +39,9 @@ enum Chains {
   POLYGON_MUMBAI = 80001,
   BASE_MAINNET = 8453,
   ZORA = 7777777,
+  POLYGON_ZKEVM = 1101,
+  PGN = 424,
+  NEON_EVM = 245022934,
 }
 
 export type Chain = keyof typeof Chains
@@ -140,6 +143,27 @@ const RPC: RpcConfig = {
     apiUrl: "https://api.polygonscan.com",
     iconUrls: ["/networkLogos/polygon.svg"],
     multicallAddress: "0x11ce4B23bD875D7F5C6a31084f55fDe1e9A87507",
+  },
+  POLYGON_ZKEVM: {
+    chainId: 1101,
+    chainName: "Polygon zkEVM",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://zkevm-rpc.com"],
+    blockExplorerUrls: ["https://zkevm.polygonscan.com"],
+    blockExplorerIcons: {
+      light: "/networkLogos/polygon.svg",
+      dark: "/networkLogos/polygon.svg",
+    },
+    // apiUrl: "https://api.polygonscan.com",
+    iconUrls: ["/networkLogos/polygon.svg"],
+    multicallAddress: "0xca11bde05977b3631167028862be2a173976ca11",
   },
   AVALANCHE: {
     chainId: 43114,
@@ -680,6 +704,44 @@ const RPC: RpcConfig = {
     },
     apiUrl: "https://api-testnet.polygonscan.com",
     iconUrls: ["/networkLogos/polygon.svg"],
+  },
+  PGN: {
+    chainId: 424,
+    chainName: "PGN",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://rpc.publicgoods.network"],
+    blockExplorerUrls: ["https://explorer.publicgoods.network"],
+    blockExplorerIcons: {
+      light: "/networkLogos/pgn-light.svg",
+      dark: "/networkLogos/pgn.svg",
+    },
+    iconUrls: ["/networkLogos/pgn.svg"],
+  },
+  NEON_EVM: {
+    chainId: 245022934,
+    chainName: "Neon EVM",
+    nativeCurrency: {
+      name: "Neon",
+      symbol: "NEON",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/28331/standard/neon_%281%29.png?1696527338",
+    },
+    rpcUrls: ["https://neon-mainnet.everstake.one"],
+    blockExplorerUrls: ["https://neonscan.org"],
+    blockExplorerIcons: {
+      light: "/explorerLogos/neonscan.svg",
+      dark: "/explorerLogos/neonscan.svg",
+    },
+    iconUrls: ["/networkLogos/neon.svg"],
   },
 }
 

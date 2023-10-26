@@ -2,13 +2,12 @@ import { useWeb3React } from "@web3-react/core"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { randomBytes } from "crypto"
 import { createStore, del, get, set } from "idb-keyval"
+import randomBytes from "randombytes"
 import { createContext, PropsWithChildren, useContext, useEffect } from "react"
 import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { AddressConnectionProvider, User } from "types"
-import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import {
   SignedValdation,
@@ -77,7 +76,7 @@ const generateKeyPair = async () => {
       generatedKeys.publicKey
     )
 
-    const generatedPubKeyHex = bufferToHex(generatedPubKey)
+    const generatedPubKeyHex = Buffer.from(generatedPubKey).toString("hex")
     keyPair.pubKey = generatedPubKeyHex
     keyPair.keyPair = generatedKeys
     return keyPair
@@ -419,11 +418,13 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
                 .sign(
                   { name: "ECDSA", hash: "SHA-512" },
                   mainKeyPair?.privateKey,
-                  strToBuffer(
+                  Buffer.from(
                     `Address: ${account.toLowerCase()}\nNonce: ${nonce}\nUserID: ${userId}`
                   )
                 )
-                .then((signatureBuffer) => bufferToHex(signatureBuffer))
+                .then((signatureBuffer) =>
+                  Buffer.from(signatureBuffer).toString("hex")
+                )
 
               if (
                 typeof mainUserSig === "string" &&

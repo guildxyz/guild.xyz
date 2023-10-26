@@ -14,13 +14,13 @@ import {
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useWeb3React } from "@web3-react/core"
 import { GnosisSafe } from "@web3-react/gnosis-safe"
-import { useUserPublic } from "components/[guild]/hooks/useUser"
-import { useKeyPair } from "components/_app/KeyPairProvider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import { connectors } from "connectors"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
@@ -257,6 +257,14 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     onClick={onClose}
                   >
                     Privacy Policy
+                  </Link>{" "}
+                  and
+                  <Link
+                    href="/terms-and-conditions"
+                    fontWeight={"semibold"}
+                    onClick={onClose}
+                  >
+                    Terms & conditions
                   </Link>
                 </Text>
               </Stack>

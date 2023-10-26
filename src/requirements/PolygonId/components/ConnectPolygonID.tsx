@@ -47,7 +47,7 @@ const ConnectPolygonID = (props: ButtonProps) => {
         size="xs"
         onClick={onOpen}
         colorScheme="purple"
-        leftIcon={<Img src="requirementLogos/polygonId_white.svg" width="1.5em" />}
+        leftIcon={<Img src="/requirementLogos/polygonId_white.svg" width="1.5em" />}
         iconSpacing={1}
         {...props}
       >
@@ -96,7 +96,7 @@ const ConnectPolygonIDModal = ({
     isOpen
       ? [
           `/v2/util/gate-callbacks/session?requirementType=${type}`,
-          { body: { query: data.query } },
+          { body: { query: data?.query } },
         ]
       : null,
     fetcherWithSign

@@ -45,7 +45,8 @@ const NftRequirement = (props: RequirementProps) => {
 
   const guildIdAttribute =
     isGuildPin &&
-    requirement.data.attributes?.find((attr) => attr.trait_type === "guildId")?.value
+    requirement.data?.attributes?.find((attr) => attr.trait_type === "guildId")
+      ?.value
   const { data: guildPinImageCID } = useSWRImmutable(
     isGuildPin
       ? // Fallback to "Our Guild" pin image
@@ -55,7 +56,7 @@ const NftRequirement = (props: RequirementProps) => {
   const { name: guildPinGuildName } = useGuild(guildIdAttribute ?? "")
 
   const { metadata: metadataWithTraits, isLoading: isMetadataWithTraitsLoading } =
-    useNftMetadata(requirement.chain, requirement.address, requirement.data.id)
+    useNftMetadata(requirement.chain, requirement.address, requirement.data?.id)
   const { metadata, isLoading } = useNftMetadataWithTraits(
     requirement.chain,
     requirement.address

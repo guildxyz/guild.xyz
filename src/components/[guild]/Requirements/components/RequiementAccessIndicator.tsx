@@ -5,9 +5,9 @@ import {
   PopoverHeader,
   Text,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import Button from "components/common/Button"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import REQUIREMENTS from "requirements"
 import CompleteCaptcha from "requirements/Captcha/components/CompleteCaptcha"
@@ -106,7 +106,7 @@ const RequiementAccessIndicator = () => {
           reqObj?.isPlatform ? "account" : "addresses"
         }`}
       </PopoverHeader>
-      {reqAccessData?.amount !== null && data?.minAmount && (
+      {reqAccessData?.amount !== null && !!data?.minAmount && (
         <PopoverBody pt="0">
           {isNegated
             ? `Expected max amount is ${data.minAmount}${

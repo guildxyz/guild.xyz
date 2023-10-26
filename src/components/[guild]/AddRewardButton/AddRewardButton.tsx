@@ -14,8 +14,8 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
+import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useToast from "hooks/useToast"
 import dynamic from "next/dynamic"
 import { ArrowLeft, Info, Plus } from "phosphor-react"
@@ -31,9 +31,9 @@ import {
   useAddRewardContext,
 } from "../AddRewardContext"
 import { CreatePoapProvider } from "../CreatePoap/components/CreatePoapContext"
-import useGuild from "../hooks/useGuild"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
+import useGuild from "../hooks/useGuild"
 import useAddReward from "./hooks/useAddReward"
 
 // temporary until POAPs are real rewards
@@ -212,7 +212,7 @@ const AddRewardButton = (): JSX.Element => {
                     skipSettings
                   />
                 ) : (
-                  <PlatformsGrid onSelection={setSelection} showPoap />
+                  <PlatformsGrid onSelection={setSelection} showPoap pb="4" />
                 )}
               </ModalBody>
 

@@ -7,6 +7,7 @@ import {
   getRelatedPageLinks,
 } from "components/brain/utils/brainFetchers"
 import Layout from "components/common/Layout"
+import BackButton from "components/common/Layout/components/BackButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import { GetServerSideProps } from "next"
@@ -20,7 +21,7 @@ const PageDetails = ({ blockMap, linkedPageContents, pageId, pageLogo }) => (
     <LinkPreviewHead path="" />
     <DarkMode>
       <Layout
-        backButton={{ href: "/guildverse", text: "Go back to Guildverse" }}
+        backButton={<BackButton href="guildverse">Go back to Guildverse</BackButton>}
         title={blockMap.block[pageId]?.value.properties.title[0][0]}
         image={
           pageLogo && <Image src={pageLogo} boxSize="16" alt="logo" fontSize={0} />

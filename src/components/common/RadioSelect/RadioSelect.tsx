@@ -15,7 +15,7 @@ export type Option = PropsWithChildren<{
   icon?: React.FC
   disabled?: string | boolean
   tooltipLabel?: ReactNode
-  RightComponent?: () => JSX.Element
+  leftComponent?: JSX.Element
 }>
 
 type Props = {

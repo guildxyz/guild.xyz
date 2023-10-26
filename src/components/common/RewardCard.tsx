@@ -80,7 +80,7 @@ const RewardCard = ({
             image
           )}
           <Stack spacing={0}>
-            <HStack>
+            <HStack spacing="0">
               <Skeleton isLoaded={!!title}>
                 <Text fontWeight={"bold"}>{title || "Loading reward..."}</Text>
               </Skeleton>

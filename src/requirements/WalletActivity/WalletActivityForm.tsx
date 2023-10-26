@@ -24,6 +24,10 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "ZORA",
   "AVALANCHE",
   "ZKSYNC_ERA",
+  "POLYGON_ZKEVM",
+  "CRONOS",
+  "PGN",
+  "NEON_EVM",
 ])
 
 // These requirement types do not have a covalent equivalent, remove them once they do
@@ -105,15 +109,19 @@ const WalletActivityForm = ({
   const walletActivitySupportedChains: Chain[] = [
     "ETHEREUM",
     "POLYGON",
+    "POLYGON_ZKEVM",
     "ARBITRUM",
     "OPTIMISM",
-    "GOERLI",
-    "POLYGON_MUMBAI",
     "SCROLL_ALPHA",
     "BASE_MAINNET",
     "BASE_GOERLI",
     "ZORA",
     "ZKSYNC_ERA",
+    "CRONOS",
+    "PGN",
+    "NEON_EVM",
+    "GOERLI",
+    "POLYGON_MUMBAI",
   ]
 
   for (const covalentChain of COVALENT_CHAINS.values()) {

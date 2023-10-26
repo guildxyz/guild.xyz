@@ -1,6 +1,6 @@
 import { Box, HStack, useColorModeValue } from "@chakra-ui/react"
 import useIsStuck from "hooks/useIsStuck"
-import { PropsWithChildren, createContext, useContext } from "react"
+import { createContext, PropsWithChildren, useContext } from "react"
 
 export type TabsProps = {
   isSticky?: boolean
@@ -20,7 +20,7 @@ export const TABS_SM_BUTTONS_STYLES =
 
 const TabsContext = createContext<{
   isStuck: boolean
-}>(null)
+}>({ isStuck: false })
 
 const Tabs = ({
   isSticky = true,

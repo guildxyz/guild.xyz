@@ -19,7 +19,9 @@ const TagManager = (): JSX.Element => {
         .filter((key) => watch(key as GuildTags))
         .map((key) => key as GuildTags)
 
-      setValue("tags", newTags)
+      setValue("tags", newTags, {
+        shouldDirty: true,
+      })
     })
     return () => subscription.unsubscribe()
   }, [watch])

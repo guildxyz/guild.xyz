@@ -30,10 +30,10 @@ module.exports = {
         "@ethersproject/keccak256": false,
         "chakra-react-select": false,
         "chakra-ui-steps": false,
-        crypto: "crypto-browserify",
         stream: false,
         "crypto-addr-codec": false,
         "@ensdomains/address-encoder": false,
+        "decode-named-character-reference": false,
       }
     }
 

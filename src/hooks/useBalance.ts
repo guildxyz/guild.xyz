@@ -53,7 +53,7 @@ const useBalance = (
     data: coinBalance,
     isValidating: isCoinBalanceLoading,
     mutate: mutateCoinBalance,
-  } = useSWR(
+  } = useSWR<BigNumber>(
     shouldFetchCoinBalance
       ? ["coinBalance", account, passedChainId, passedProvider]
       : null,
