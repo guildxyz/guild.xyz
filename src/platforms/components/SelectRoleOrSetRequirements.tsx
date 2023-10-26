@@ -1,12 +1,12 @@
 import { Tab, TabList, TabPanel, TabPanels, TabProps, Tabs } from "@chakra-ui/react"
-import SetRequirements from "components/create-guild/Requirements"
 import {
   RoleTypeToAddTo,
   useAddRewardContext,
 } from "components/[guild]/AddRewardContext"
-import useGroup from "components/[guild]/hooks/useGroup"
-import useGuild from "components/[guild]/hooks/useGuild"
 import RoleSelector from "components/[guild]/RoleSelector"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
+import SetRequirements from "components/create-guild/Requirements"
 import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
@@ -24,7 +24,7 @@ const TAB_STYLE_PROPS: TabProps = {
 
 const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
   const { roles } = useGuild()
-  const group = useGroup()
+  const group = useRoleGroup()
   const relevantRoles = group
     ? roles.filter((role) => role.groupId === group.id)
     : roles.filter((role) => !role.groupId)

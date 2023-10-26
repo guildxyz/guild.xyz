@@ -487,7 +487,7 @@ type Group = {
   description?: string
   imageUrl?: string
   type?: string
-  position: number
+  position?: number
   guildId: number
 }
 
