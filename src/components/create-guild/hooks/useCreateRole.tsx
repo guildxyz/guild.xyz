@@ -1,7 +1,6 @@
-import useGroup from "components/[guild]/hooks/useGroup"
-
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useMatchMutate from "hooks/useMatchMutate"
@@ -28,7 +27,7 @@ type CreateRoleResponse = Role & { createdGuildPlatforms?: GuildPlatform[] }
 
 const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
   const { id, urlName, memberCount, mutateGuild } = useGuild()
-  const group = useGroup()
+  const group = useRoleGroup()
 
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName, memberCount }

@@ -16,12 +16,12 @@ import platforms from "platforms/platforms"
 import { PlatformName, PlatformType } from "types"
 import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
-import useGroup from "../hooks/useGroup"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
+import useRoleGroup from "../hooks/useRoleGroup"
+import CampaignCards from "./components/CampaignCards"
 import PlatformAccessButton from "./components/PlatformAccessButton"
-import RoleGroupCards from "./components/RoleGroupCards"
 
 const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")
@@ -85,7 +85,7 @@ const AccessHub = (): JSX.Element => {
     onboardingComplete,
   } = useGuild()
 
-  const group = useGroup()
+  const group = useRoleGroup()
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
   const { isAdmin } = useGuildPermission()
@@ -116,7 +116,7 @@ const AccessHub = (): JSX.Element => {
         gap={4}
         mb={10}
       >
-        <RoleGroupCards />
+        {featureFlags.includes("ROLE_GROUPS") && <CampaignCards />}
         {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
         {accessedGuildPlatforms?.length || futurePoaps?.length ? (
           <>
@@ -167,11 +167,13 @@ const AccessHub = (): JSX.Element => {
             <Alert status="info" h="full">
               <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
               <Stack>
-                <AlertTitle>No accessed reward</AlertTitle>
+                <AlertTitle>
+                  {!group ? "No accessed reward" : "No rewards yet"}
+                </AlertTitle>
                 <AlertDescription>
-                  You're a member of the guild, but your roles don't give you any
-                  auto-managed rewards. The owner might add some in the future or
-                  reward you another way!
+                  {!group
+                    ? "You're a member of the guild, but your roles don't give you any auto-managed rewards. The owner might add some in the future or reward you another way!"
+                    : "This campaign doesn’t have any auto-managed rewards yet. Add some roles below so their rewards will appear here!"}
                 </AlertDescription>
               </Stack>
             </Alert>
