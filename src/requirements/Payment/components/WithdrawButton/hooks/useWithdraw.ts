@@ -3,12 +3,8 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import useVault from "requirements/Payment/hooks/useVault"
 import feeCollectorAbi from "static/abis/feeCollector"
-import {
-  BaseError,
-  ContractFunctionRevertedError,
-  TransactionExecutionError,
-  TransactionReceipt,
-} from "viem"
+import processViemContractError from "utils/processViemContractError"
+import { TransactionExecutionError, TransactionReceipt } from "viem"
 import {
   useChainId,
   useContractWrite,
@@ -78,28 +74,15 @@ const useWithdraw = (
   }
 }
 
-const getErrorMessage = (rawPrepareError: Error): string => {
-  if (!rawPrepareError) return undefined
+const getErrorMessage = (rawPrepareError: Error) =>
+  processViemContractError(rawPrepareError, (errorName) => {
+    switch (errorName) {
+      case "TransferFailed":
+        return "Transfer failed"
 
-  if (rawPrepareError instanceof BaseError) {
-    const revertError = rawPrepareError.walk(
-      (err) => err instanceof ContractFunctionRevertedError
-    )
-    if (revertError instanceof ContractFunctionRevertedError) {
-      const errorName = revertError.data?.errorName ?? ""
-
-      // We aren't really using these right now, but left them here in case we need them in the future
-      switch (errorName) {
-        case "TransferFailed":
-          return "Transfer failed"
-
-        default:
-          return "Contract error"
-      }
+      default:
+        return "Contract error"
     }
-
-    return rawPrepareError.message ?? "Contract error"
-  }
-}
+  })
 
 export default useWithdraw
