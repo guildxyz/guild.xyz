@@ -85,7 +85,7 @@ const MemberRow = ({ row }) => {
             width: "0px",
             maxWidth: "350px",
             transition: "max-width .2s",
-            zIndex: 1,
+            zIndex: 3,
             className: "identityTd",
           })}
         >

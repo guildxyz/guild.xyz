@@ -122,14 +122,18 @@ const GuildPage = (): JSX.Element => {
                 {
                   id: "hiddenRoles",
                   accessorFn: (row) => row.roles.hidden,
-                  cell: (info) => <RoleTags roles={info.getValue()} />,
+                  cell: (info) => (
+                    <RoleTags roles={info.getValue()} column={info.column.parent} />
+                  ),
                 },
               ]
             : []),
           {
             id: "publicRoles",
             accessorFn: (row) => row.roles.public,
-            cell: (info) => <RoleTags roles={info.getValue()} />,
+            cell: (info) => (
+              <RoleTags roles={info.getValue()} column={info.column.parent} />
+            ),
           },
         ],
       },

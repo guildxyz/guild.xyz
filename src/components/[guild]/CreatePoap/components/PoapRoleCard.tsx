@@ -18,14 +18,13 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react"
-import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
+import Card from "components/common/Card"
+import ClientOnly from "components/common/ClientOnly"
+import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import Card from "components/common/Card"
-import ClientOnly from "components/common/ClientOnly"
-import Link from "components/common/Link"
 import { ArrowSquareOut, Clock } from "phosphor-react"
 import React, { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
@@ -35,10 +34,10 @@ import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
 import { GuildPoap } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import parseDescription from "utils/parseDescription"
-import EditPoapRole from "../EditPoapRole"
-import PoapAccessIndicator from "../PoapAccessIndicator"
-import PoapRequiementAccessIndicator from "../PoapRequirementAccessIndicator"
-import PoapReward from "../PoapReward"
+import EditPoapRole from "./EditPoapRole"
+import PoapAccessIndicator from "./PoapAccessIndicator"
+import PoapRequiementAccessIndicator from "./PoapRequirementAccessIndicator"
+import PoapReward from "./PoapReward"
 
 type Props = {
   guildPoap: GuildPoap
@@ -50,9 +49,6 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
   const { isAdmin } = useGuildPermission()
   const { poap, isLoading } = usePoap(guildPoap.fancyId)
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
-  const {
-    data: { hasPaid },
-  } = useUserPoapEligibility(guildPoap.poapIdentifier)
 
   const timeDiff = guildPoap.expiryDate * 1000 - Date.now()
 
@@ -92,8 +88,7 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
               guildPoap={guildPoap}
               rightElement={requirementRightElement}
             />
-            {guildPoap.poapContracts?.length ||
-            guildPoap.poapRequirements?.length ? (
+            {guildPoap.poapRequirements?.length ? (
               <LogicDivider logic="AND" />
             ) : null}
           </>,

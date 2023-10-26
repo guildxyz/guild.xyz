@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react"
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
-import ActivityLogRoleTag from "../../../ActivityLogAction/components/RoleTag"
+import ActivityLogRoleTag from "../../../ActivityLogAction/components/ActivityLogRoleTag"
 
 import GuildTag from "components/[guild]/activity/ActivityLogAction/components/GuildTag"
 import useGuild from "components/[guild]/hooks/useGuild"

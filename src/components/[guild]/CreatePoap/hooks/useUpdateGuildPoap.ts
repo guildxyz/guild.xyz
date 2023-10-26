@@ -28,7 +28,7 @@ const useUpdateGuildPoap = (
     onSuccess: async (newPoap) => {
       mutatePoapEventDetails({
         ...newPoap,
-        contracts: guildPoap?.poapContracts,
+        contracts: [],
       })
 
       mutateGuild(

@@ -1,5 +1,5 @@
 import * as combobox from "@zag-js/combobox"
-import ActivityLogRoleTag from "components/[guild]/activity/ActivityLogAction/components/RoleTag"
+import ActivityLogRoleTag from "components/[guild]/activity/ActivityLogAction/components/ActivityLogRoleTag"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { HTMLAttributes, useMemo } from "react"
 import Suggestion from "../../Suggestion"

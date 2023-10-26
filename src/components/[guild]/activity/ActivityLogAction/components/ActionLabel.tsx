@@ -5,10 +5,10 @@ import capitalize from "utils/capitalize"
 import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
 import { useActivityLogActionContext } from "../ActivityLogActionContext"
+import { ClickableRoleTag } from "./ActivityLogRoleTag"
 import { ClickableGuildTag } from "./GuildTag"
 import IdentityTag from "./IdentityTag"
 import { ClickableRewardTag } from "./RewardTag"
-import { ClickableRoleTag } from "./RoleTag"
 import { ClickableUserTag } from "./UserTag"
 
 const ActionLabel = (): JSX.Element => {
