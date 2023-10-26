@@ -21,17 +21,6 @@ const useUploadMintLinks = (poapId: number, { onSuccess }: UseSubmitOptions) => 
   const [loadingText, setLoadingText] = useState<string>(null)
 
   const uploadMintLinks = async (signedValidation: SignedValdation) => {
-    // Temporarily disabled this feature, we'll need another solution for it.
-    // setLoadingText("Validating mint links")
-    // const checkMintLinksRes: { validated: boolean } = await fetcher(
-    //   "/api/poap/check-mint-links",
-    //   {
-    //     body: data,
-    //   }
-    // )
-
-    // if (!checkMintLinksRes.validated) return Promise.reject("Invalid mint links")
-
     setLoadingText("Saving mint links")
 
     return fetcher(`/v2/guilds/${guildId}/poaps/${poapId}/links`, signedValidation)
