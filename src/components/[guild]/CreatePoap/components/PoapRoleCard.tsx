@@ -18,28 +18,25 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react"
-import Card from "components/common/Card"
-import Link from "components/common/Link"
-import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import Card from "components/common/Card"
+import Link from "components/common/Link"
 import { ArrowSquareOut, Clock } from "phosphor-react"
 import React, { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
-import BuyPoapRequirement from "requirements/PoapPayment/components/BuyPoapRequirement"
-import PoapPaymentRequirement from "requirements/PoapPayment/PoapPaymentRequirement"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
 import { GuildPoap } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import parseDescription from "utils/parseDescription"
-import EditPoapRole from "../EditPoapRole"
-import PoapAccessIndicator from "../PoapAccessIndicator"
-import PoapRequiementAccessIndicator from "../PoapRequirementAccessIndicator"
-import PoapReward from "../PoapReward"
+import EditPoapRole from "./EditPoapRole"
+import PoapAccessIndicator from "./PoapAccessIndicator"
+import PoapRequiementAccessIndicator from "./PoapRequirementAccessIndicator"
+import PoapReward from "./PoapReward"
 
 type Props = {
   guildPoap: GuildPoap
@@ -51,9 +48,6 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
   const { isAdmin } = useGuildPermission()
   const { poap, isLoading } = usePoap(guildPoap.fancyId)
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
-  const {
-    data: { hasPaid },
-  } = useUserPoapEligibility(guildPoap.poapIdentifier)
 
   const timeDiff = guildPoap.expiryDate * 1000 - Date.now()
 
@@ -93,34 +87,12 @@ const PoapRoleCard = ({ guildPoap }: Props): JSX.Element => {
               guildPoap={guildPoap}
               rightElement={requirementRightElement}
             />
-            {guildPoap.poapContracts?.length ||
-            guildPoap.poapRequirements?.length ? (
+            {guildPoap.poapRequirements?.length ? (
               <LogicDivider logic="AND" />
             ) : null}
           </>,
         ]
       : []),
-    ...(guildPoap.poapContracts ?? []).map((poapContract, i) => (
-      <React.Fragment key={poapContract.id}>
-        <PoapPaymentRequirement
-          key={poapContract.id}
-          poapContract={poapContract}
-          guildPoap={guildPoap}
-          rightElement={
-            isActive && !hasPaid ? (
-              <BuyPoapRequirement {...{ guildPoap: guildPoap, poapContract }} />
-            ) : (
-              requirementRightElement
-            )
-          }
-        />
-        {i < guildPoap.poapContracts?.length - 1 ? (
-          <LogicDivider logic={"OR"} />
-        ) : guildPoap.poapRequirements?.length ? (
-          <LogicDivider logic={"AND"} />
-        ) : null}
-      </React.Fragment>
-    )),
     ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (
       <React.Fragment key={requirement.id}>
         <RequirementDisplayComponent

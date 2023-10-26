@@ -22,9 +22,6 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Card from "components/common/Card"
-import Layout from "components/common/Layout"
-import LinkButton from "components/common/LinkButton"
 import ConnectDiscordButton from "components/[guild]/claim-poap/components/ConnectDiscordButton"
 import ConnectWalletButton from "components/[guild]/claim-poap/components/ConnectWalletButton"
 import JoinAndMintPoapButton from "components/[guild]/claim-poap/components/JoinAndMintPoapButton"
@@ -36,13 +33,14 @@ import useUser from "components/[guild]/hooks/useUser"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { RequirementSkeleton } from "components/[guild]/Requirements/components/Requirement"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import Card from "components/common/Card"
+import Layout from "components/common/Layout"
+import LinkButton from "components/common/LinkButton"
 import { useRouter } from "next/router"
 import { ArrowLeft, Clock } from "phosphor-react"
 import React, { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
-import BuyPoapRequirement from "requirements/PoapPayment/components/BuyPoapRequirement"
-import PoapPaymentRequirement from "requirements/PoapPayment/PoapPaymentRequirement"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
@@ -67,7 +65,7 @@ const Page = (): JSX.Element => {
 
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
   const {
-    data: { access, hasPaid },
+    data: { access },
   } = useUserPoapEligibility(poap?.id)
 
   const timeDiff = guildPoap?.expiryDate * 1000 - Date.now()
@@ -129,39 +127,12 @@ const Page = (): JSX.Element => {
                     )
                   }
                 />
-                {guildPoap.poapContracts?.length ||
-                guildPoap.poapRequirements?.length ? (
+                {guildPoap.poapRequirements?.length ? (
                   <LogicDivider logic="AND" />
                 ) : null}
               </>,
             ]
           : []),
-        ...(guildPoap.poapContracts ?? []).map((poapContract, i) => (
-          <React.Fragment key={poapContract.id}>
-            <PoapPaymentRequirement
-              key={poapContract.id}
-              poapContract={poapContract}
-              guildPoap={guildPoap}
-              rightElement={
-                isActive && !hasPaid ? (
-                  <BuyPoapRequirement
-                    size="md"
-                    borderRadius={"xl"}
-                    h="10"
-                    {...{ guildPoap: guildPoap, poapContract }}
-                  />
-                ) : (
-                  requirementRightElement
-                )
-              }
-            />
-            {i < guildPoap.poapContracts?.length - 1 ? (
-              <LogicDivider logic={"OR"} />
-            ) : guildPoap.poapRequirements?.length ? (
-              <LogicDivider logic={"AND"} />
-            ) : null}
-          </React.Fragment>
-        )),
         ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (
           <React.Fragment key={requirement.id}>
             <RequirementDisplayComponent

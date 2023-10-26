@@ -380,7 +380,6 @@ type GuildPoap = {
   fancyId: string
   activated: boolean
   expiryDate: number
-  poapContracts?: PoapContract[]
   poapRequirements?: Requirement[]
 }
 
@@ -725,11 +724,10 @@ export type {
   EventSourcesKey,
   GitPoap,
   GoogleFile,
-  Guild,
   Group,
+  Guild,
   GuildAdmin,
   GuildBase,
-  SimpleGuild,
   GuildFormType,
   GuildPinMetadata,
   GuildPlatform,
@@ -750,10 +748,11 @@ export type {
   Requirement,
   RequirementType,
   Rest,
-  SimpleRole,
   Role,
   RolePlatform,
   SelectOption,
+  SimpleGuild,
+  SimpleRole,
   SocialLinkKey,
   SocialLinks,
   Token,

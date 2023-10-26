@@ -27,15 +27,13 @@ const useUserPoapEligibility = (poapIdentifier: number) => {
   const voiceEligibility = poapEventDetails?.voiceChannelId
     ? data?.voiceEligibility
     : true
-  const hasPaid = guildPoap?.poapContracts?.length ? data?.hasPaid : true
 
-  const hasAccess = voiceEligibility && hasPaid && generalReqAccess
+  const hasAccess = voiceEligibility && generalReqAccess
 
   return {
     data: {
       ...generalReqData,
       voiceEligibility,
-      hasPaid,
       access: hasAccess,
     },
     isLoading: isValidating && !hasAccess,

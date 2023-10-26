@@ -1,11 +1,11 @@
 import { Icon } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { SpeakerHigh, SpeakerSimpleHigh } from "phosphor-react"
 import { GuildPoap, PlatformType, RequirementType } from "types"
 import ManageEvent from "./components/ManageEvent"
@@ -14,7 +14,7 @@ import useVoiceChannels from "./hooks/useVoiceChannels"
 
 type Props = { guildPoap: GuildPoap } & RequirementProps
 
-const PoapPaymentRequirement = ({ guildPoap, ...props }: Props) => {
+const PoapVoiceRequirement = ({ guildPoap, ...props }: Props) => {
   const { isAdmin } = useGuildPermission()
   const { guildPlatforms } = useGuild()
 
@@ -66,4 +66,4 @@ const PoapPaymentRequirement = ({ guildPoap, ...props }: Props) => {
   )
 }
 
-export default PoapPaymentRequirement
+export default PoapVoiceRequirement
