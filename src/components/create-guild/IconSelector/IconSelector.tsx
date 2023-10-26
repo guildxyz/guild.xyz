@@ -20,9 +20,9 @@ import {
   useDisclosure,
   useRadioGroup,
 } from "@chakra-ui/react"
+import LogicDivider from "components/[guild]/LogicDivider"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
-import LogicDivider from "components/[guild]/LogicDivider"
 import { Uploader } from "hooks/usePinata/usePinata"
 import React, { useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"

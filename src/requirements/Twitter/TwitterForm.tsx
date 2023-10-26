@@ -16,27 +16,27 @@ import TwitterFollowerCount from "./components/TwitterFollowerCount"
 import TwitterListInput from "./components/TwitterListInput"
 import TwitterTextToInclude from "./components/TwitterTextToInclude"
 import TwitterTweetInput from "./components/TwitterTweetInput"
-import TwitterUserInput from "./components/TwitterUserInput"
 
 const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const { featureFlags } = useGuild()
 
   const twitterRequirementTypes = [
-    {
-      label: "Follow user",
-      value: "TWITTER_FOLLOW",
-      TwitterRequirement: TwitterUserInput,
-    },
-    {
-      label: "Be followed by user",
-      value: "TWITTER_FOLLOWED_BY",
-      TwitterRequirement: TwitterUserInput,
-    },
-    {
-      label: "Follow list",
-      value: "TWITTER_LIST_FOLLOW",
-      TwitterRequirement: TwitterListInput,
-    },
+    // Temporarily disabled, because the new Twitter API doesn't provide endpoints for these requirement types
+    // {
+    //   label: "Follow user",
+    //   value: "TWITTER_FOLLOW",
+    //   TwitterRequirement: TwitterUserInput,
+    // },
+    // {
+    //   label: "Be followed by user",
+    //   value: "TWITTER_FOLLOWED_BY",
+    //   TwitterRequirement: TwitterUserInput,
+    // },
+    // {
+    //   label: "Follow list",
+    //   value: "TWITTER_LIST_FOLLOW",
+    //   TwitterRequirement: TwitterListInput,
+    // },
     {
       label: "Be a member of list",
       value: "TWITTER_LIST_MEMBER",
