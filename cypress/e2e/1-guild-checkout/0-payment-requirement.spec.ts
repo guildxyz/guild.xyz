@@ -26,14 +26,10 @@ describe("payment requirement", () => {
     cy.getByDataTest("payment-form-switch-network-button").click()
     cy.getByDataTest("payment-form-register-vault-button").click()
 
-    /**
-     * The dev wallet won't have a balance, so if we get this error, we consider it
-     * as a successful transaction (we would get a different error if the params
-     * wouldn't be correct)
-     */
-    cy.contains(
-      "The total cost (gas * gas fee + value) of executing this transaction exceeds the balance of the account."
-    ).should("exist")
+    cy.getByDataTest("add-requirement-modal").should("not.be.visible")
+    cy.get(".chakra-modal__body")
+      .contains(/^Pay(.)*on Polygon Mumbai/)
+      .should("exist")
   })
 
   it.skip("should be able to buy a pass", () => {

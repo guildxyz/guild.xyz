@@ -60,6 +60,10 @@ const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
       enabled: chainId === Chains[chain],
     })
 
+    if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
+      return Promise.resolve("0")
+    }
+
     const hash = await walletClient.writeContract({
       ...request,
       account: walletClient.account,
