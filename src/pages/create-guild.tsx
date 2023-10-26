@@ -91,11 +91,6 @@ const CreateGuildPage = (): JSX.Element => {
                   {...{
                     alignItems: activeStep === index && !isOpen && "center",
                     gap: 3,
-                    paddingBottom: {
-                      base: index !== steps.length - 1 && isOpen && 4,
-                      md: 0,
-                    },
-                    transition: "padding .2s",
                   }}
                 >
                   <StepIndicator
@@ -139,8 +134,12 @@ const CreateGuildPage = (): JSX.Element => {
                 <StepSeparator
                   {...({
                     minWidth: { md: "4" },
-                    opacity: { base: !isOpen && "0", md: "1" },
-                    position: "relative",
+                    position: "relative !important",
+                    top: "unset !important",
+                    left: "unset !important",
+                    marginLeft: 4,
+                    minHeight: { base: 4, md: "2px" },
+                    height: { base: "4 !important", md: "2px !important" },
                   } as any)}
                 />
               </WrapperComponent>

@@ -1,10 +1,11 @@
-import { HStack, Text, useDisclosure, Wrap } from "@chakra-ui/react"
+import { HStack, Text, useClipboard, useDisclosure, Wrap } from "@chakra-ui/react"
 import { Player } from "@lottiefiles/react-lottie-player"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import PulseMarker from "components/common/PulseMarker"
-import { Check, DiscordLogo, TwitterLogo } from "phosphor-react"
+import { useRouter } from "next/router"
+import { Check, Copy, DiscordLogo, TwitterLogo } from "phosphor-react"
 import { useState } from "react"
 import { PlatformType } from "types"
 import SendDiscordJoinButtonAlert from "./components/SendDiscordJoinButtonAlert"
@@ -24,6 +25,8 @@ export type SummonMembersForm = {
 
 const SummonMembers = ({ activeStep }: Props) => {
   const [player, setPlayer] = useState<any>()
+  const { asPath } = useRouter()
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
     isOpen: isAlertOpen,
@@ -46,6 +49,7 @@ const SummonMembers = ({ activeStep }: Props) => {
 
     onSubmit({ onboardingComplete: true })
   }
+  const { onCopy, hasCopied } = useClipboard("guild.xyz" + asPath)
 
   return (
     <>
@@ -54,6 +58,9 @@ const SummonMembers = ({ activeStep }: Props) => {
         join!
       </Text>
       <Wrap overflow="visible">
+        <Button h="10" onClick={onCopy} leftIcon={hasCopied ? <Check /> : <Copy />}>
+          Copy link
+        </Button>
         {discordPlatform &&
           (hasJoinButton ? (
             <Button h="10" isDisabled colorScheme="DISCORD" leftIcon={<Check />}>

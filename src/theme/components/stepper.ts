@@ -6,10 +6,10 @@ const baseStyle = {
       borderWidth: 0,
     },
     "&[data-status=active]": {
-      borderColor: "primary.500",
+      borderColor: "primary",
     },
     "&[data-status=complete]": {
-      background: "primary.500",
+      background: "primary",
       color: "white",
     },
   },

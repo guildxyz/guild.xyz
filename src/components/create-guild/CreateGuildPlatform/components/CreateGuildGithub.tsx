@@ -1,3 +1,9 @@
+import {
+  ModalBody,
+  ModalCloseButton,
+  ModalFooter,
+  ModalHeader,
+} from "@chakra-ui/react"
 import GitHubGuildSetup from "components/common/GitHubGuildSetup"
 import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import Pagination from "components/create-guild/Pagination"
@@ -11,14 +17,20 @@ const CreateGuildGithub = (): JSX.Element => {
 
   return (
     <>
-      <GitHubGuildSetup
-        onSelection={(newSelectedRepo) => {
-          setValue("guildPlatforms.0.platformGuildId", newSelectedRepo)
-          setValue("name", newSelectedRepo)
-          nextStep()
-        }}
-      />
-      <Pagination nextButtonHidden />
+      <ModalHeader>Add Repositories</ModalHeader>
+      <ModalCloseButton />
+      <ModalBody>
+        <GitHubGuildSetup
+          onSelection={(newSelectedRepo) => {
+            setValue("guildPlatforms.0.platformGuildId", newSelectedRepo)
+            setValue("name", newSelectedRepo)
+            nextStep()
+          }}
+        />
+      </ModalBody>
+      <ModalFooter>
+        <Pagination nextButtonHidden />
+      </ModalFooter>
     </>
   )
 }

@@ -1,3 +1,9 @@
+import {
+  ModalBody,
+  ModalCloseButton,
+  ModalFooter,
+  ModalHeader,
+} from "@chakra-ui/react"
 import GoogleGuildSetup from "components/common/GoogleGuildSetup"
 import { defaultValues } from "components/create-guild/CreateGuildContext"
 import Pagination from "components/create-guild/Pagination"
@@ -14,14 +20,19 @@ const CreateGuildGoogle = (): JSX.Element => {
 
   return (
     <>
-      <GoogleGuildSetup
-        defaultValues={defaultValues.GOOGLE}
-        fieldNameBase="guildPlatforms.0."
-        shouldSetName
-        permissionField="roles.0.rolePlatforms.0.platformRoleId"
-      />
-
-      <Pagination nextButtonDisabled={!selectedDocument} />
+      <ModalHeader>Add Google files</ModalHeader>
+      <ModalCloseButton />
+      <ModalBody>
+        <GoogleGuildSetup
+          defaultValues={defaultValues.GOOGLE}
+          fieldNameBase="guildPlatforms.0."
+          shouldSetName
+          permissionField="roles.0.rolePlatforms.0.platformRoleId"
+        />
+      </ModalBody>
+      <ModalFooter>
+        <Pagination nextButtonDisabled={!selectedDocument} />
+      </ModalFooter>
     </>
   )
 }
