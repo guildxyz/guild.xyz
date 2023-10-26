@@ -11,8 +11,9 @@ import guildPinAbi from "static/abis/guildPin"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import { GUILD_PIN_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { BaseError, TransactionReceipt, decodeEventLog } from "viem"
+import { BaseError, TransactionReceipt } from "viem"
 import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 import { useTransactionStatusContext } from "../components/TransactionStatusContext"
@@ -125,20 +126,7 @@ const useMintGuildPin = () => {
     setLoadingText("")
     setTxSuccess?.(true)
 
-    const events = receipt.logs
-      .map((log) => {
-        try {
-          return decodeEventLog({
-            abi: guildPinAbi,
-            data: log.data,
-            // I think there's a missing property on the TransactionReceipt type
-            topics: (log as any).topics,
-          })
-        } catch {
-          return null
-        }
-      })
-      .filter(Boolean)
+    const events = getEventsFromViemTxReceipt(guildPinAbi, receipt)
 
     const transferEvent: {
       eventName: "Transfer"
