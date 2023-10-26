@@ -79,15 +79,24 @@ const CampaignCards = () => {
               <Text fontWeight="bold">{name}</Text>
             </HStack>
 
-            <LinkButton
-              colorScheme={groupHasRoles ? "primary" : "gray"}
-              variant={groupHasRoles ? "solid" : "outline"}
-              href={`/${guildUrlName}/${urlName}`}
-              leftIcon={!groupHasRoles ? <Plus /> : undefined}
-              rightIcon={groupHasRoles ? <ArrowRight /> : undefined}
-            >
-              {groupHasRoles ? "View campaign" : "Add roles"}
-            </LinkButton>
+            {groupHasRoles ? (
+              <LinkButton
+                colorScheme={"primary"}
+                href={`/${guildUrlName}/${urlName}`}
+                rightIcon={<ArrowRight />}
+              >
+                View campaign
+              </LinkButton>
+            ) : (
+              <LinkButton
+                colorScheme={"gray"}
+                variant={"outline"}
+                href={`/${guildUrlName}/${urlName}`}
+                leftIcon={<Plus />}
+              >
+                Add roles
+              </LinkButton>
+            )}
 
             <ColorCardLabel
               fallbackColor="white"
