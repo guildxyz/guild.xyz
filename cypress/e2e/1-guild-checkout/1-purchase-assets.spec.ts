@@ -1,4 +1,6 @@
 describe("purchase assets", () => {
   // TODO
-  it("TODO")
+  it("TODO", () => {
+    expect(true).to.equal(true)
+  })
 })

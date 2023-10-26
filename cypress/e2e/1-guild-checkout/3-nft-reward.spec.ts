@@ -1,4 +1,6 @@
 describe("nft reward", () => {
   // TODO
-  it("TODO")
+  it("TODO", () => {
+    expect(true).to.equal(true)
+  })
 })
