@@ -1,3 +1,4 @@
-describe.skip("purchase assets", () => {
+describe("purchase assets", () => {
   // TODO
+  it("TODO")
 })

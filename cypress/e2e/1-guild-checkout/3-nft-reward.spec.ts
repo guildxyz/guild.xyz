@@ -1,3 +1,4 @@
-describe.skip("nft reward", () => {
+describe("nft reward", () => {
   // TODO
+  it("TODO")
 })

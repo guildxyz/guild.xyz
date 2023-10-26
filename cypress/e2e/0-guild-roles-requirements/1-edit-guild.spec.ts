@@ -1,3 +1,4 @@
-describe.skip("edit guild", () => {
+describe("edit guild", () => {
   // TODO
+  it("TODO")
 })
