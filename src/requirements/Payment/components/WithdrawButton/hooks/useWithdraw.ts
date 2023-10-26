@@ -4,7 +4,7 @@ import useToast from "hooks/useToast"
 import useVault from "requirements/Payment/hooks/useVault"
 import feeCollectorAbi from "static/abis/feeCollector"
 import processViemContractError from "utils/processViemContractError"
-import { TransactionExecutionError, TransactionReceipt } from "viem"
+import { TransactionReceipt } from "viem"
 import {
   useChainId,
   useContractWrite,
@@ -41,10 +41,7 @@ const useWithdraw = (
   const { write: withdraw, isLoading } = useContractWrite({
     ...config,
     onError: (error) => {
-      const errorMessage =
-        error instanceof TransactionExecutionError
-          ? error.shortMessage
-          : error.message
+      const errorMessage = processViemContractError(error)
       showErrorToast(errorMessage)
     },
     onSuccess: async ({ hash }) => {

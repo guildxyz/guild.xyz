@@ -10,7 +10,7 @@ import feeCollectorAbi from "static/abis/feeCollector"
 import { mutate } from "swr"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import processViemContractError from "utils/processViemContractError"
-import { TransactionExecutionError, TransactionReceipt } from "viem"
+import { TransactionReceipt } from "viem"
 import {
   useAccount,
   useBalance,
@@ -110,10 +110,7 @@ const usePayFee = () => {
   const { write, isLoading } = useContractWrite({
     ...config,
     onError: (error) => {
-      const errorMessage =
-        error instanceof TransactionExecutionError
-          ? error.shortMessage
-          : error.message
+      const errorMessage = processViemContractError(error)
       showErrorToast(errorMessage)
     },
     onSuccess: async ({ hash }) => {
