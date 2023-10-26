@@ -6,7 +6,7 @@ const MUMBAI_USDC_ADDRESS = "0xe9dce89b076ba6107bb64ef30678efec11939234"
 
 describe("payment requirement", () => {
   beforeEach(() => {
-    cy.visit(`/${Cypress.env("TEST_GUILD_URL_NAME")}`)
+    cy.visit(`/${Cypress.env("GUILD_CHECKOUT_TEST_GUILD_URL_NAME")}`)
     cy.connectWallet()
   })
 
@@ -33,7 +33,22 @@ describe("payment requirement", () => {
   })
 
   it.skip("should be able to buy a pass", () => {
-    // TODO
+    cy.getByDataTest("payment-requirement-buy-button").click()
+    cy.getByDataTest("token-info-fee-currency").should("contain", "1 USDC")
+    cy.getByDataTest("token-info-balance").should("contain", "0 USDC")
+    cy.getByDataTest("fees-table").get("span").should("contain", "1 USDC")
+
+    cy.getByDataTest("tos-checkbox").should("not.be.visible")
+    cy.getByDataTest("buy-button").should("be.disabled")
+
+    cy.get(".chakra-modal__footer").get("button").contains("Switch network").click()
+
+    cy.getByDataTest("tos-checkbox").should("be.visible").click()
+    cy.getByDataTest("buy-button").should("be.enabled")
+
+    // TODO: we should somehow skip the allowance button
+
+    cy.getByDataTest("buy-button").click()
   })
 
   it.skip("should be able to withdraw from a vault", () => {

@@ -79,6 +79,7 @@ const BuyPass = () => {
   return (
     <>
       <Button
+        data-test="payment-requirement-buy-button"
         colorScheme="blue"
         size="sm"
         leftIcon={<Icon as={Coin} />}

@@ -106,7 +106,12 @@ const TokenInfo = ({
           textAlign={"left"}
         >
           <Skeleton isLoaded={!isTokenDataLoading && !isLoading} w="full" h={5}>
-            <Text as="span" display="block" isTruncated>
+            <Text
+              as="span"
+              display="block"
+              isTruncated
+              data-test="token-info-fee-currency"
+            >
               {tokenDataError
                 ? "Couldn't fetch token data"
                 : error
@@ -131,6 +136,7 @@ const TokenInfo = ({
                   h={4}
                   display="inline-flex"
                   alignItems="center"
+                  data-test="token-info-balance"
                 >
                   {`${formattedBalance ?? "0.00"} ${
                     tokenData?.symbol ?? "currency"

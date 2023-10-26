@@ -21,7 +21,7 @@ export default defineConfig({
       tgId: "-1001653099938",
       DEPLOYMENT_ID: "localhost",
       TEST_GUILD_URL_NAME: "guild-e2e-cypress",
-      PIN_TEST_GUILD_URL_NAME: "guild-pin-e2e-cypress",
+      GUILD_CHECKOUT_TEST_GUILD_URL_NAME: "guild-checkout-e2e-cypress",
     },
     setupNodeEvents(on, config) {
       on(

@@ -32,7 +32,7 @@ describe("guild pins", () => {
   })
 
   it("should be able to mint a guild pin", () => {
-    cy.visit(Cypress.env("PIN_TEST_GUILD_URL_NAME"))
+    cy.visit(Cypress.env("GUILD_CHECKOUT_TEST_GUILD_URL_NAME"))
     cy.connectWallet()
 
     cy.getByDataTest("guild-pin-reward-card")
