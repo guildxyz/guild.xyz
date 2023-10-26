@@ -5,7 +5,7 @@ import useToast from "hooks/useToast"
 import { Group } from "types"
 import fetcher from "utils/fetcher"
 
-const useEditRoleGroup = (groupId: number, onSuccess: (response: Group) => void) => {
+const useEditRoleGroup = (groupId: number, onSuccess: () => void) => {
   const { id, mutateGuild } = useGuild()
 
   const toast = useToast()
@@ -29,7 +29,7 @@ const useEditRoleGroup = (groupId: number, onSuccess: (response: Group) => void)
           group.id !== groupId ? group : response
         ),
       }))
-      onSuccess(response)
+      onSuccess()
     },
     onError: (error) => showErrorToast(error),
   })

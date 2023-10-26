@@ -1,15 +1,10 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react"
-import { useRouter } from "next/router"
 import { GearSix } from "phosphor-react"
 import EditCampaignModal from "../AccessHub/components/CampaignCards/components/EditCampaignModal"
-import { useThemeContext } from "../ThemeContext"
-import useGuild from "../hooks/useGuild"
 import useRoleGroup from "../hooks/useRoleGroup"
+import { useThemeContext } from "../ThemeContext"
 
 const EditCampaignButton = () => {
-  const router = useRouter()
-
-  const { urlName } = useGuild()
   const group = useRoleGroup()
 
   const { textColor, buttonColorScheme } = useThemeContext()
@@ -32,9 +27,7 @@ const EditCampaignButton = () => {
         isOpen={isOpen}
         onClose={onClose}
         groupId={group.id}
-        onSuccess={(response) => {
-          router?.push(`/${urlName}/${response.urlName}`)
-        }}
+        onSuccess={onClose}
       />
     </>
   )
