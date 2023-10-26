@@ -10,8 +10,9 @@ import { useState } from "react"
 import guildRewardNFTFacotryAbi from "static/abis/guildRewardNFTFactory"
 import { mutate } from "swr"
 import { GuildPlatform, PlatformType } from "types"
+import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import processViemContractError from "utils/processViemContractError"
-import { TransactionReceipt, decodeEventLog, parseUnits } from "viem"
+import { TransactionReceipt, parseUnits } from "viem"
 import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
 
@@ -127,20 +128,7 @@ const useCreateNft = (
       { hash }
     )
 
-    const events = receipt.logs
-      .map((log) => {
-        try {
-          return decodeEventLog({
-            abi: guildRewardNFTFacotryAbi,
-            data: log.data,
-            // I think there's a missing property on the TransactionReceipt type
-            topics: (log as any).topics,
-          })
-        } catch {
-          return null
-        }
-      })
-      .filter(Boolean)
+    const events = getEventsFromViemTxReceipt(guildRewardNFTFacotryAbi, receipt)
 
     const rewardNFTDeployedEvent: {
       eventName: "RewardNFTDeployed"
