@@ -56,7 +56,7 @@ type Props = {
 
 export type CreateNftFormType = {
   chain: Chain
-  tokenTreasury: string
+  tokenTreasury: `0x${string}`
   name: string
   symbol: string
   price: number
@@ -357,9 +357,11 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                     </NumberInputStepper>
                   </NumberInput>
 
-                  <InputRightAddon>
-                    {CHAIN_CONFIG[chain].nativeCurrency.symbol}
-                  </InputRightAddon>
+                  {chain && (
+                    <InputRightAddon>
+                      {CHAIN_CONFIG[chain].nativeCurrency.symbol}
+                    </InputRightAddon>
+                  )}
                 </InputGroup>
 
                 <FormHelperText>
@@ -367,7 +369,9 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                   <Skeleton display="inline" h={3} isLoaded={!!formattedGuildFee}>
                     {formattedGuildFee ?? "..."}
                   </Skeleton>
-                  {` ${CHAIN_CONFIG[chain].nativeCurrency.symbol} Guild minting fee. `}
+                  {` ${
+                    chain ? CHAIN_CONFIG[chain].nativeCurrency.symbol : "COIN"
+                  } Guild minting fee. `}
                   <Link
                     href="https://help.guild.xyz/en/articles/8193498-guild-base-fee"
                     isExternal
@@ -409,7 +413,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
         </Grid>
 
         <HStack justifyContent="end">
-          {Chains[chainId] !== chain && (
+          {chain && Chains[chainId] !== chain && (
             <Button
               isLoading={isNetworkChangeInProgress}
               loadingText="Check your wallet"

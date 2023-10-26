@@ -2,7 +2,7 @@ import { BaseError, ContractFunctionRevertedError } from "viem"
 
 const processViemContractError = (
   error: Error,
-  errorNameMapper: (errorName: string) => string
+  errorNameMapper?: (errorName: string) => string
 ): string | undefined => {
   if (!error) return undefined
   let mappedError: string
@@ -12,13 +12,15 @@ const processViemContractError = (
       (err) => err instanceof ContractFunctionRevertedError
     )
 
-    if (revertError instanceof ContractFunctionRevertedError) {
+    if (
+      typeof errorNameMapper === "function" &&
+      revertError instanceof ContractFunctionRevertedError
+    ) {
       const errorName = revertError.data?.errorName ?? ""
-
       mappedError = errorNameMapper(errorName)
     }
 
-    return mappedError ?? error.message ?? "Contract error"
+    return mappedError ?? error.shortMessage ?? error.message ?? "Contract error"
   }
 
   return undefined

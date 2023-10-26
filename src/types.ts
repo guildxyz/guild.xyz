@@ -380,7 +380,6 @@ type GuildPoap = {
   fancyId: string
   activated: boolean
   expiryDate: number
-  poapContracts?: PoapContract[]
   poapRequirements?: Requirement[]
 }
 

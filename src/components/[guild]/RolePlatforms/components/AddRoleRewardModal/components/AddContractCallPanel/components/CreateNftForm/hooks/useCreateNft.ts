@@ -7,11 +7,13 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useState } from "react"
+import guildRewardNFTFacotryAbi from "static/abis/guildRewardNFTFactory"
 import { mutate } from "swr"
 import { GuildPlatform, PlatformType } from "types"
-import processWalletError from "utils/processWalletError"
-import { parseUnits } from "viem"
-import { useAccount, useChainId } from "wagmi"
+import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
+import processViemContractError from "utils/processViemContractError"
+import { TransactionReceipt, parseUnits } from "viem"
+import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
 
 export const GUILD_REWARD_NFT_FACTORY_ADDRESSES: Record<
@@ -55,19 +57,13 @@ const useCreateNft = (
 
   const { address } = useAccount()
   const chainId = useChainId()
+  const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
 
   const [loadingText, setLoadingText] = useState<string>()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-
-  // WAGMI TODO
-  // const guildRewardNFTFactoryContract = useContract(
-  //   GUILD_REWARD_NFT_FACTORY_ADDRESSES[Chains[chainId]],
-  //   GUILD_REWARD_NFT_FACTORY_ABI,
-  //   true
-  // )
-  const guildRewardNFTFactoryContract = null
 
   const createNft = async (data: CreateNftFormType): Promise<CreateNFTResponse> => {
     setLoadingText("Uploading image")
@@ -114,42 +110,39 @@ const useCreateNft = (
         price?.toString() ?? "0",
         CHAIN_CONFIG[Chains[chainId]].nativeCurrency.decimals
       ),
-    ]
+    ] as const
 
-    try {
-      await guildRewardNFTFactoryContract?.callStatic.deployBasicNFT(
-        ...contractCallParams
-      )
-    } catch (callStaticError) {
-      let processedCallStaticError: string
+    const { request } = await publicClient.simulateContract({
+      abi: guildRewardNFTFacotryAbi,
+      address: GUILD_REWARD_NFT_FACTORY_ADDRESSES[Chains[chainId]],
+      functionName: "deployBasicNFT",
+      args: contractCallParams,
+    })
 
-      if (callStaticError.error) {
-        const walletError = processWalletError(callStaticError.error)
-        processedCallStaticError = walletError.title
+    const hash = await walletClient.writeContract({
+      ...request,
+      account: walletClient.account,
+    })
+
+    const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
+      { hash }
+    )
+
+    const events = getEventsFromViemTxReceipt(guildRewardNFTFacotryAbi, receipt)
+
+    const rewardNFTDeployedEvent: {
+      eventName: "RewardNFTDeployed"
+      args: {
+        deployer: `0x${string}`
+        tokenAddress: `0x${string}`
       }
-
-      const error =
-        processedCallStaticError ?? callStaticError.errorName ?? callStaticError
-
-      captureEvent("useCreateNft callStatic error", { ...postHogOptions, error })
-
-      return Promise.reject(error)
-    }
-
-    const tx = await guildRewardNFTFactoryContract.deployBasicNFT(
-      ...contractCallParams
-    )
-    const txResponse = await tx.wait()
-
-    const rewardNFTDeployedEvent = txResponse?.events.find(
-      (event) => event.event === "RewardNFTDeployed"
-    )
+    } = events.find((event) => event.eventName === "RewardNFTDeployed")
 
     if (!rewardNFTDeployedEvent)
       return Promise.reject("Couldn't find RewardNFTDeployed event")
 
     const createdContractAddress =
-      rewardNFTDeployedEvent.args.tokenAddress.toLowerCase()
+      rewardNFTDeployedEvent.args.tokenAddress.toLowerCase() as `0x${string}`
 
     return {
       formData: data,
@@ -215,16 +208,12 @@ const useCreateNft = (
       onError: (error) => {
         setLoadingText(null)
 
-        console.error("useCreateNft error", error)
-
-        const prettyError =
-          error?.code === "ACTION_REJECTED"
-            ? "User rejected the transaction"
-            : error?.message ?? error
+        const prettyError = processViemContractError(error)
 
         captureEvent("useCreateNft error", {
           ...postHogOptions,
-          error: prettyError,
+          prettyError,
+          error,
         })
 
         showErrorToast(prettyError)

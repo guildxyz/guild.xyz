@@ -1,9 +1,11 @@
 import { CHAIN_CONFIG, Chain, Chains } from "chains"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import feeCollectorAbi from "static/abis/feeCollector"
+import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { TransactionReceipt, decodeEventLog, parseUnits } from "viem"
+import { TransactionReceipt, parseUnits } from "viem"
 import { erc20ABI, useChainId, usePublicClient, useWalletClient } from "wagmi"
 
 type RegisterVaultParams = {
@@ -14,6 +16,7 @@ type RegisterVaultParams = {
 }
 
 const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
+  const { captureEvent } = usePostHogContext()
   const chainId = useChainId()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
@@ -77,20 +80,7 @@ const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
       throw new Error(`Transaction failed. Hash: ${hash}`)
     }
 
-    const events = receipt.logs
-      .map((log) => {
-        try {
-          return decodeEventLog({
-            abi: feeCollectorAbi,
-            data: log.data,
-            // I think there's a missing property on the TransactionReceipt type
-            topics: (log as any).topics,
-          })
-        } catch {
-          return null
-        }
-      })
-      .filter(Boolean)
+    const events = getEventsFromViemTxReceipt(feeCollectorAbi, receipt)
 
     const vaultRegisteredEvent: {
       eventName: "VaultRegistered"
@@ -111,6 +101,9 @@ const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
   return useSubmit<RegisterVaultParams, string>(registerVault, {
     onError: (error: any) => {
       showErrorToast(error?.shortMessage ?? error)
+      captureEvent("Register vault error", {
+        error,
+      })
     },
     onSuccess,
   })

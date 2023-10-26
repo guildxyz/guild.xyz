@@ -1,7 +1,8 @@
-import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
 import { useRouter } from "next/router"
 import { ArrowSquareOut } from "phosphor-react"
+import { useState } from "react"
 
 type Props = {
   roleId: number
@@ -11,6 +12,7 @@ type Props = {
 const ViewRole = ({ roleId, page = "guild" }: Props): JSX.Element => {
   const router = useRouter()
   const { urlName } = useGuild()
+  const [hasClicked, setHasClicked] = useState(false)
 
   return (
     <Button
@@ -18,16 +20,19 @@ const ViewRole = ({ roleId, page = "guild" }: Props): JSX.Element => {
       leftIcon={<ArrowSquareOut />}
       size="sm"
       borderRadius={0}
-      onClick={() =>
+      onClick={() => {
+        setHasClicked(true)
         router.push(
           page === "guild"
             ? `/${urlName}#role-${roleId}`
             : `/${urlName}/activity?roleId=${roleId}`
         )
-      }
+      }}
       justifyContent="start"
+      isLoading={hasClicked}
+      loadingText="Redirecting"
     >
-      {page === "guild" ? "View role" : "View role in activity log"}
+      {page === "guild" ? "View role" : "View activity"}
     </Button>
   )
 }
