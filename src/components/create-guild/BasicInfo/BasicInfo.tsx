@@ -52,10 +52,18 @@ const BasicInfo = (): JSX.Element => {
   })
 
   useSetImageAndNameFromPlatformData(
-    guildPlatforms.find((platform) => platform.platformName === "TELEGRAM")
-      ?.platformGuildData.imageUrl,
-    guildPlatforms.find((platform) => platform.platformName === "TELEGRAM")
-      ?.platformGuildData.name,
+    guildPlatforms.find((platform) => platform.platformName === "DISCORD")
+      ?.platformGuildData.imageUrl
+      ? guildPlatforms.find((platform) => platform.platformName === "DISCORD")
+          ?.platformGuildData.imageUrl
+      : guildPlatforms.find((platform) => platform.platformName === "TELEGRAM")
+          ?.platformGuildData.imageUrl,
+    guildPlatforms.find((platform) => platform.platformName === "DISCORD")
+      ?.platformGuildData.name
+      ? guildPlatforms.find((platform) => platform.platformName === "DISCORD")
+          ?.platformGuildData.name
+      : guildPlatforms.find((platform) => platform.platformName === "TELEGRAM")
+          ?.platformGuildData.name,
     iconUploader.onUpload
   )
 

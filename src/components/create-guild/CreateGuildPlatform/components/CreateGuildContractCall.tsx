@@ -13,10 +13,7 @@ const CreateGuildContractCall = (): JSX.Element => {
   return (
     <CreateNftForm
       onSuccess={(newGuildPlatform) => {
-        append({
-          platformName: "NFT",
-          platformGuildId: newGuildPlatform,
-        })
+        append(newGuildPlatform)
         setPlatform("DEFAULT")
       }}
     />

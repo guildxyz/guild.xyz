@@ -69,6 +69,26 @@ const useCreateNft = (
   )
 
   const createNft = async (data: CreateNftFormType): Promise<CreateNFTResponse> => {
+    const MockCreatedContractAddress = "fds"
+
+    return {
+      formData: data,
+      guildPlatform: {
+        platformId: PlatformType.CONTRACT_CALL,
+        platformName: "CONTRACT_CALL",
+        platformGuildId: `${data.chain}-${MockCreatedContractAddress}-${Date.now()}`,
+        platformGuildData: {
+          chain: data.chain,
+          contractAddress: MockCreatedContractAddress,
+          function: ContractCallFunction.SIMPLE_CLAIM,
+          argsToSign: CONTRACT_CALL_ARGS_TO_SIGN[ContractCallFunction.SIMPLE_CLAIM],
+          name: "trimmedName",
+          symbol: "trimmedSymbol",
+          imageUrl: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${"imageCID"}`,
+          description: data.richTextDescription,
+        },
+      },
+    }
     setLoadingText("Uploading image")
 
     const { IpfsHash: imageCID } = await pinFileToIPFS({

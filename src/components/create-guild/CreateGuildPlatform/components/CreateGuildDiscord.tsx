@@ -6,20 +6,30 @@ import {
   Text,
 } from "@chakra-ui/react"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
-import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType } from "types"
+import {
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useFormContext,
+  useWatch,
+} from "react-hook-form"
+import { GuildFormType, PlatformType } from "types"
 import { defaultValues, useCreateGuildContext } from "../../CreateGuildContext"
 import Pagination from "../../Pagination"
 
 const CreateGuildDiscord = (): JSX.Element => {
-  const selectedServer = useWatch({
-    name: "guildPlatforms.0.platformGuildId",
-  })
   const { setPlatform } = useCreateGuildContext()
   const { control } = useFormContext<GuildFormType>()
-  const { fields } = useFieldArray({
+  const { append } = useFieldArray({
     control,
     name: "guildPlatforms",
+  })
+  const discordMethods = useForm({
+    defaultValues: { discordServerId: "", name: "", img: undefined },
+  })
+  const selectedServer = useWatch({
+    control: discordMethods.control,
+    name: `discordServerId`,
   })
 
   return (
@@ -27,19 +37,35 @@ const CreateGuildDiscord = (): JSX.Element => {
       <ModalHeader>Connect to Discord</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
-        <Text colorScheme="gray" fontWeight="semibold">
+        <Text colorScheme="gray" fontWeight="semibold" mb={4}>
           Adding the bot and creating the Guild won't change anything on your server
         </Text>
-        <DiscordGuildSetup
-          defaultValues={defaultValues.DISCORD}
-          selectedServer={selectedServer}
-          fieldName={`guildPlatforms.${fields.length}.platformGuildId`}
-        />
+        <FormProvider {...discordMethods}>
+          <DiscordGuildSetup
+            defaultValues={defaultValues.DISCORD}
+            selectedServer={selectedServer}
+            fieldName={`discordServerId`}
+            onSelect={(serverData) => {
+              discordMethods.setValue("img", serverData.img)
+              discordMethods.setValue("name", serverData.name)
+            }}
+          />
+        </FormProvider>
       </ModalBody>
       <ModalFooter>
         <Pagination
           nextButtonDisabled={!selectedServer}
           nextStepHandler={() => {
+            append({
+              platformName: "DISCORD",
+              platformGuildId: discordMethods.getValues("discordServerId"),
+              platformId: PlatformType.DISCORD,
+              platformGuildData: {
+                text: undefined,
+                name: discordMethods.getValues("name"),
+                imageUrl: discordMethods.getValues("img"),
+              },
+            })
             setPlatform("DEFAULT")
           }}
         />

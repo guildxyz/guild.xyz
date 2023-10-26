@@ -1,6 +1,6 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react"
-import ErrorAlert from "components/common/ErrorAlert"
 import useGuild from "components/[guild]/hooks/useGuild"
+import ErrorAlert from "components/common/ErrorAlert"
 import { AnimatePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
 import useGateables from "hooks/useGateables"
@@ -18,6 +18,7 @@ const DiscordGuildSetup = ({
   fieldName,
   rolePlatforms = undefined,
   onSubmit = undefined,
+  onSelect = undefined,
 }) => {
   const { reset, setValue } = useFormContext()
 
@@ -93,7 +94,10 @@ const DiscordGuildSetup = ({
               onSelect={
                 selectedServer
                   ? undefined
-                  : (newServerId) => setValue(fieldName, newServerId)
+                  : (newServerId) => {
+                      setValue(fieldName, newServerId)
+                      onSelect(serverData)
+                    }
               }
               onCancel={
                 selectedServer !== serverData.id ? undefined : () => resetForm()

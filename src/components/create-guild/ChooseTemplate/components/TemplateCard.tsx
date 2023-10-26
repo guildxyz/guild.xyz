@@ -256,6 +256,12 @@ function getValueToDisplay(
   if (platform.platformId == PlatformType.TELEGRAM)
     return platform.platformGuildData.name ?? "Telegram group"
 
+  if (platform.platformId == PlatformType.DISCORD)
+    return platform.platformGuildData.name ?? "Discord server"
+
+  if (platform.platformId == PlatformType.CONTRACT_CALL)
+    return platform.platformGuildData.name ?? "NFT"
+
   return platform.platformGuildName || platform.platformGuildId
 }
 export default TemplateCard
