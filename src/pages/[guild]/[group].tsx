@@ -4,10 +4,10 @@ import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHu
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
-import useGroup from "components/[guild]/hooks/useGroup"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useIsMember from "components/[guild]/hooks/useIsMember"
+import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
@@ -31,6 +31,9 @@ import parseDescription from "utils/parseDescription"
 
 const BATCH_SIZE = 10
 
+const DynamicEditCampaignButton = dynamic(
+  () => import("components/[guild]/[group]/EditCampaignButton")
+)
 const DynamicAddAndOrderRoles = dynamic(
   () => import("components/[guild]/AddAndOrderRoles")
 )
@@ -51,12 +54,11 @@ const GroupPage = (): JSX.Element => {
     name: guildName,
     urlName: guildUrlName,
     imageUrl: guildImageUrl,
-    onboardingComplete,
   } = useGuild()
 
   useAutoStatusUpdate()
 
-  const group = useGroup()
+  const group = useRoleGroup()
   const groupRoles = roles?.filter((role) => role.groupId === group.id)
 
   // temporary, will order roles already in the SQL query in the future
@@ -118,7 +120,11 @@ const GroupPage = (): JSX.Element => {
       <Layout
         backButton={
           <HStack mb={3}>
-            <GuildLogo imageUrl={guildImageUrl} size={6} />
+            <GuildLogo
+              imageUrl={guildImageUrl}
+              size={6}
+              bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+            />
             <Link
               href={`/${guildUrlName}`}
               fontFamily="display"
@@ -130,6 +136,7 @@ const GroupPage = (): JSX.Element => {
             </Link>
           </HStack>
         }
+        action={isAdmin && <DynamicEditCampaignButton />}
         title={group.name}
         textColor={textColor}
         ogDescription={group.description}
@@ -222,14 +229,14 @@ type Props = {
 const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
   const guild = useGuild()
 
-  const group = useGroup()
+  const group = useRoleGroup()
 
-  if (!fallback || !guild.id || !group.id) {
+  if (!fallback || !guild.id || !group?.id) {
     return (
       <Center h="100vh" w="screen">
         <Spinner />
         <Heading fontFamily={"display"} size="md" ml="4" mb="1">
-          Loading guild...
+          Loading campaign...
         </Heading>
       </Center>
     )

@@ -5,13 +5,14 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
-import useGroup from "components/[guild]/hooks/useGroup"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Reorder } from "framer-motion"
 import { useMemo, useState } from "react"
 import { Visibility } from "types"
@@ -20,7 +21,7 @@ import DraggableRoleCard from "./DraggableRoleCard"
 
 const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { roles } = useGuild()
-  const group = useGroup()
+  const group = useRoleGroup()
   const relevantRoles = group
     ? roles.filter((role) => role.groupId === group.id)
     : roles.filter((role) => !role.groupId)
@@ -105,13 +106,17 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
               values={roleIdsOrder}
               onReorder={setRoleIdsOrder}
             >
-              {roleIdsOrder?.map((roleId) => (
-                <Reorder.Item key={roleId} value={roleId}>
-                  <DraggableRoleCard
-                    role={relevantRoles?.find((role) => role.id === roleId)}
-                  />
-                </Reorder.Item>
-              ))}
+              {relevantRoles?.length ? (
+                roleIdsOrder?.map((roleId) => (
+                  <Reorder.Item key={roleId} value={roleId}>
+                    <DraggableRoleCard
+                      role={relevantRoles?.find((role) => role.id === roleId)}
+                    />
+                  </Reorder.Item>
+                ))
+              ) : (
+                <Text>No roles yet</Text>
+              )}
             </Reorder.Group>
           </ModalBody>
 
