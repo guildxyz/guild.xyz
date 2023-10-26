@@ -12,7 +12,7 @@ import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import { GUILD_PIN_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { TransactionReceipt, decodeEventLog } from "viem"
+import { BaseError, TransactionReceipt, decodeEventLog } from "viem"
 import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 import { useTransactionStatusContext } from "../components/TransactionStatusContext"
@@ -205,7 +205,7 @@ const useMintGuildPin = () => {
     ...useSubmit(mintGuildPin, {
       onError: (error) => {
         setTxError?.(true)
-        showErrorToast(error)
+        showErrorToast(error instanceof BaseError ? error.shortMessage : error)
         setLoadingText("")
 
         captureEvent("Mint Guild Pin error (GuildCheckout)", postHogOptions)
