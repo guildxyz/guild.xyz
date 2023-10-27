@@ -1,6 +1,25 @@
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
+import { fetchNativeCurrencyPriceInUSD } from "pages/api/fetchPrice"
 import useSWR from "swr"
-import { EstimateContractGasParameters } from "viem"
+import useSWRImmutable from "swr/immutable"
+import { EstimateContractGasParameters, formatUnits } from "viem"
 import { useChainId, useFeeData, usePublicClient, useWalletClient } from "wagmi"
+
+const convertGasFeeToUSD = async ([_, chainId, estimatedGas]: [
+  string,
+  number,
+  bigint
+]) => {
+  const nativeCurrencyPriceInUSD = await fetchNativeCurrencyPriceInUSD(
+    Chains[chainId] as Chain
+  )
+
+  const estimatedGasFeeInFloat = parseFloat(
+    formatUnits(estimatedGas, CHAIN_CONFIG[Chains[chainId]].nativeCurrency.decimals)
+  )
+
+  return estimatedGasFeeInFloat * nativeCurrencyPriceInUSD
+}
 
 const useEstimateGas = (config: EstimateContractGasParameters) => {
   const publicClient = usePublicClient()
@@ -39,13 +58,23 @@ const useEstimateGas = (config: EstimateContractGasParameters) => {
     estimateGas
   )
 
+  const {
+    data: estimatedGasInUSD,
+    isValidating: isConvertLoading,
+    error: convertError,
+  } = useSWRImmutable(
+    !!estimatedGas ? ["estimateGasUSD", chainId, estimatedGas] : null,
+    convertGasFeeToUSD
+  )
+
   return {
     estimatedGas:
       typeof estimatedGas === "bigint" && typeof feeData?.gasPrice === "bigint"
         ? estimatedGas * feeData?.gasPrice
         : undefined,
-    gasEstimationError: estimateGasError ?? feeDataError,
-    isLoading: isFeeDataLoading || isEstimateGasLoading,
+    estimatedGasInUSD: estimatedGasInUSD,
+    gasEstimationError: convertError ?? estimateGasError ?? feeDataError,
+    isLoading: isFeeDataLoading || isEstimateGasLoading || isConvertLoading,
     mutate,
   }
 }
