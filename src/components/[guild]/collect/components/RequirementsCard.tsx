@@ -2,7 +2,6 @@ import { Box, Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import { Chains } from "chains"
 import LogicDivider from "components/[guild]/LogicDivider"
 import AnyOfHeader from "components/[guild]/Requirements/components/AnyOfHeader"
-import { TransactionStatusProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
@@ -74,9 +73,7 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
           {typeof alreadyCollected !== "undefined" && !alreadyCollected && (
             <SwitchNetworkButton targetChainId={Chains[chain]} />
           )}
-          <TransactionStatusProvider>
-            <CollectNftButton label="Collect now" colorScheme="green" />
-          </TransactionStatusProvider>
+          <CollectNftButton label="Collect now" colorScheme="green" />
         </Stack>
 
         <Skeleton
