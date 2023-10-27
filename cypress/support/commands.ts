@@ -5,7 +5,14 @@ Cypress.Commands.add("getByDataTest", (selector: string) =>
 Cypress.Commands.add("connectWallet", () => {
   cy.getByDataTest("connect-wallet-button").click()
   cy.contains("Mock").click()
+
+  cy.intercept("POST", `${Cypress.env("guildApiUrl")}/users/*/public-key`).as(
+    "setPubKey"
+  )
+
   cy.getByDataTest("verify-address-button").click()
+
+  cy.wait("@setPubKey").its("response.statusCode").should("eq", 200)
 })
 
 Cypress.Commands.add("cleanIndexedDB", () => {
