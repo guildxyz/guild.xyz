@@ -13,7 +13,9 @@ describe("payment requirement", () => {
   it("should be able to create a payment requirement", () => {
     cy.getByDataTest("add-role-button").click()
     cy.getByDataTest("add-requirement-button").click()
-    cy.contains("Payment").click()
+    cy.get("button")
+      .contains(/^Payment$/)
+      .click()
 
     cy.get("label").contains("Chain").click().type("Mumbai")
     cy.contains("Polygon Mumbai").click()
