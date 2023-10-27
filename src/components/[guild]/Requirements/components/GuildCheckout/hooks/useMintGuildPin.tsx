@@ -131,9 +131,6 @@ const useMintGuildPin = () => {
       throw new Error(`Transaction failed. Hash: ${hash}`)
     }
 
-    setLoadingText("")
-    setTxSuccess?.(true)
-
     const events = getEventsFromViemTxReceipt(guildPinAbi, receipt)
 
     const transferEvent: {
@@ -200,14 +197,18 @@ const useMintGuildPin = () => {
   return {
     ...useSubmit(mintGuildPin, {
       onError: (error) => {
+        setLoadingText("")
         setTxError?.(true)
         showErrorToast(error instanceof BaseError ? error.shortMessage : error)
-        setLoadingText("")
 
         captureEvent("Mint Guild Pin error (GuildCheckout)", {
           ...postHogOptions,
           error,
         })
+      },
+      onSuccess: () => {
+        setLoadingText("")
+        setTxSuccess?.(true)
       },
     }),
     loadingText,

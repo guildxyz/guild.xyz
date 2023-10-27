@@ -1,22 +1,27 @@
 import { Chains } from "chains"
+import { useTransactionStatusContext } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import { CONTRACT_CALL_ARGS_TO_SIGN } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
+import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
+import guildRewardNftAbi from "static/abis/guildRewardNft"
 import { useFetcherWithSign } from "utils/fetcher"
-import { useAccount, useBalance, useChainId } from "wagmi"
-import useSubmitTransaction from "../../Requirements/components/GuildCheckout/hooks/useSubmitTransaction"
+import processViemContractError from "utils/processViemContractError"
+import { TransactionReceipt } from "viem"
+import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { useCollectNftContext } from "../components/CollectNftContext"
 import useGuildFee from "./useGuildFee"
 import useTopCollectors from "./useTopCollectors"
 
 type ClaimData = {
   // signed value which we need to send in the contract call
-  uniqueValue: string
+  uniqueValue: `0x${string}`
 }
 
 const useCollectNft = () => {
@@ -30,8 +35,13 @@ const useCollectNft = () => {
 
   const { address } = useAccount()
   const chainId = useChainId()
+  const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
+
   const { chain, nftAddress, roleId, rolePlatformId, guildPlatform } =
     useCollectNftContext()
+  const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
+
   const { guildFee } = useGuildFee(chain)
   const { fee, name, refetch: refetchNftDetails } = useNftDetails(chain, nftAddress)
   const { mutate: mutateTopCollectors } = useTopCollectors()
@@ -41,17 +51,16 @@ const useCollectNft = () => {
   const [loadingText, setLoadingText] = useState("")
   const fetcherWithSign = useFetcherWithSign()
 
-  // WAGMI TODO
-  // const contract = useContract(nftAddress, guildRewardNftAbi, true)
-  const contract = null
-
-  const { refetch: refetchBalance } = useBalance({
+  const { refetch: refetchBalance } = useNftBalance({
     address,
-    token: nftAddress,
+    nftAddress,
     chainId: Chains[chain],
   })
 
   const mint = async () => {
+    setTxError(false)
+    setTxSuccess(false)
+
     if (shouldSwitchChain)
       return Promise.reject("Please switch network before minting")
 
@@ -73,44 +82,40 @@ const useCollectNft = () => {
         ? guildFee + fee
         : BigInt(0)
 
-    // WAGMI TODO: claim flow
-    const claimParams = [
-      address,
-      userId,
-      uniqueValue,
-      {
-        value: claimFee,
-      },
-    ]
+    const claimParams = [address, BigInt(userId), uniqueValue] as const
 
-    try {
-      await contract.callStatic.claim(...claimParams)
-    } catch (callstaticError) {
-      return Promise.reject(
-        callstaticError.errorName ?? callstaticError.reason ?? "Contract error"
-      )
+    const { request } = await publicClient.simulateContract({
+      abi: guildRewardNftAbi,
+      address: nftAddress,
+      functionName: "claim",
+      args: claimParams,
+      value: claimFee,
+    })
+
+    const hash = await walletClient.writeContract({
+      ...request,
+      account: walletClient.account,
+    })
+
+    setTxHash(hash)
+
+    const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
+      { hash }
+    )
+
+    if (receipt.status !== "success") {
+      throw new Error(`Transaction failed. Hash: ${hash}`)
     }
 
-    return contract.claim(...claimParams)
+    setTxSuccess(true)
+
+    return receipt
   }
 
   return {
-    ...useSubmitTransaction<null>(mint, {
-      onSuccess: (txReceipt) => {
+    ...useSubmit<undefined, TransactionReceipt>(mint, {
+      onSuccess: () => {
         setLoadingText("")
-
-        if (txReceipt.status !== 1) {
-          showErrorToast("Transaction failed")
-          captureEvent("Mint NFT error (GuildCheckout)", {
-            ...postHogOptions,
-            txReceipt,
-          })
-          captureEvent("claim error (GuildCheckout)", {
-            ...postHogOptions,
-            txReceipt,
-          })
-          return
-        }
 
         refetchBalance()
         refetchNftDetails()
@@ -136,11 +141,16 @@ const useCollectNft = () => {
         })
       },
       onError: (error) => {
-        showErrorToast(error)
         setLoadingText("")
+        setTxError(true)
 
-        captureEvent("Mint NFT error (GuildCheckout)", postHogOptions)
-        captureEvent("mint nft pre-call error (GuildCheckout)", {
+        const prettyError = processViemContractError(error, (errorName) => {
+          if (errorName === "AlreadyClaimed")
+            return "You've already collected this NFT"
+        })
+        showErrorToast(prettyError)
+
+        captureEvent("Mint NFT error (GuildCheckout)", {
           ...postHogOptions,
           error,
         })
