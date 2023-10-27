@@ -18,7 +18,7 @@ describe("payment requirement", () => {
       .click()
 
     cy.get("label").contains("Chain").click().type("Mumbai")
-    cy.contains("Polygon Mumbai").click()
+    cy.getByDataTest("custom-select-option").contains("Polygon Mumbai").click()
     cy.getByDataTest("payment-form-switch-network-button").should("exist")
 
     cy.get("label").contains("Token").click().type(`${MUMBAI_USDC_ADDRESS}{esc}`)
