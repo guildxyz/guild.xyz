@@ -6,7 +6,7 @@ const CONTEXT = {
 
 const TEST_GUILD_URL_NAME = "guild-e2e-cypress"
 
-describe.skip("roles", () => {
+describe("roles", () => {
   beforeEach(() => {
     cy.cleanIndexedDB()
     cy.visit(`/${TEST_GUILD_URL_NAME}`)
@@ -133,13 +133,6 @@ describe.skip("roles", () => {
     if (!CONTEXT.createdRoleId)
       throw new Error("Can't run test, because couldn't create a role.")
 
-    // cy.intercept(
-    //   "DELETE",
-    //   `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}/roles/${
-    //     CONTEXT.createdRoleId
-    //   }/requirements/${CONTEXT.createdRequirement.id}`
-    // ).as("deleteRequirementApiCall")
-
     cy.get(`#role-${CONTEXT.createdRoleId}`).should("exist")
     cy.get(`#role-${CONTEXT.createdRoleId} button[aria-label='Edit role']`).click()
 
@@ -150,20 +143,11 @@ describe.skip("roles", () => {
     cy.getByDataTest("delete-requirement-button").click()
 
     cy.contains("Requirement deleted!")
-
-    // cy.wait("@deleteRequirementApiCall").its("response.statusCode").should("eq", 200)
   })
 
   it("can delete a role", () => {
     if (!CONTEXT.createdRoleId)
       throw new Error("Can't run test, because couldn't create a role.")
-
-    // cy.intercept(
-    //   "DELETE",
-    //   `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}/roles/${
-    //     CONTEXT.createdRoleId
-    //   }`
-    // ).as("deleteRoleApiCall")
 
     cy.get(`#role-${CONTEXT.createdRoleId}`).should("exist")
     cy.get(`#role-${CONTEXT.createdRoleId} button[aria-label='Edit role']`).click()
@@ -176,8 +160,6 @@ describe.skip("roles", () => {
 
     // Couldn't get intercept to work here, so waiting the toast for now
     cy.contains("Role deleted!")
-
-    // cy.wait("@deleteRoleApiCall").its("response.statusCode").should("eq", 200)
   })
 })
 
