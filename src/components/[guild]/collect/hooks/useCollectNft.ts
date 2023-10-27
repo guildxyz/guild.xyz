@@ -5,6 +5,7 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
@@ -13,13 +14,7 @@ import guildRewardNftAbi from "static/abis/guildRewardNft"
 import { useFetcherWithSign } from "utils/fetcher"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
-import {
-  useAccount,
-  useBalance,
-  useChainId,
-  usePublicClient,
-  useWalletClient,
-} from "wagmi"
+import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { useCollectNftContext } from "../components/CollectNftContext"
 import useGuildFee from "./useGuildFee"
 import useTopCollectors from "./useTopCollectors"
@@ -56,9 +51,9 @@ const useCollectNft = () => {
   const [loadingText, setLoadingText] = useState("")
   const fetcherWithSign = useFetcherWithSign()
 
-  const { refetch: refetchBalance } = useBalance({
+  const { refetch: refetchBalance } = useNftBalance({
     address,
-    token: nftAddress,
+    nftAddress,
     chainId: Chains[chain],
   })
 

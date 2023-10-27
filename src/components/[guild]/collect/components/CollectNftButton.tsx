@@ -5,6 +5,7 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
+import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
@@ -53,9 +54,9 @@ const CollectNftButton = ({
   const { fee, isLoading: isNftDetailsLoading } = useNftDetails(chain, nftAddress)
 
   const { address } = useAccount()
-  const { isLoading: isNftBalanceLoading } = useBalance({
+  const { isLoading: isNftBalanceLoading } = useNftBalance({
     address,
-    token: nftAddress,
+    nftAddress,
     chainId: Chains[chain],
   })
   const { data: coinBalanceData, isLoading: isBalanceLoading } = useBalance({

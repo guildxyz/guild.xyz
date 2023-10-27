@@ -51,6 +51,8 @@ const usePayFee = () => {
     requirement.chain
   )
 
+  const pickedCurrencyIsNative = pickedCurrency === NULL_ADDRESS
+
   const { data: coinBalanceData } = useBalance({
     address,
     chainId: Chains[requirement.chain],
@@ -59,10 +61,8 @@ const usePayFee = () => {
     address,
     token: pickedCurrency as `0x${string}`,
     chainId: Chains[requirement.chain],
-    enabled: !!pickedCurrency,
+    enabled: !pickedCurrencyIsNative,
   })
-
-  const pickedCurrencyIsNative = pickedCurrency === NULL_ADDRESS
 
   const isSufficientBalance =
     fee &&
