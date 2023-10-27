@@ -25,13 +25,15 @@ const AddRewardAndCampaign = () => {
 
   return (
     <>
-      <ButtonGroup isAttached size="sm" variant="ghost">
+      <ButtonGroup isAttached>
         <AddRewardButton />
         <Divider orientation="vertical" h="8" />
         <Menu placement="bottom-end" autoSelect={false}>
           <MenuButton
             as={IconButton}
             icon={<CaretDown />}
+            size="sm"
+            variant="ghost"
             borderTopLeftRadius="0"
             borderBottomLeftRadius="0"
             {...(!isStuck && {
