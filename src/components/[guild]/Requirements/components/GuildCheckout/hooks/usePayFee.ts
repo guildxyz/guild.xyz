@@ -84,7 +84,6 @@ const usePayFee = () => {
       ? typeof allowance === "bigint" && fee <= allowance
       : true)
 
-  // WAGMI TODO: for some reason this doesn't return the gas estimation, but we should return both estimatedGasFee & estimatedGasFeeInUSD from this hook
   const contractCallParams = {
     abi: feeCollectorAbi,
     address: requirement.address,

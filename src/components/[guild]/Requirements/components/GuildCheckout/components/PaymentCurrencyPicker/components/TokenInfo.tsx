@@ -9,7 +9,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chains } from "chains"
+import { CHAIN_CONFIG, Chains, coinIconUrls } from "chains"
 import { Fragment } from "react"
 import { Rest } from "types"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
@@ -41,8 +41,7 @@ const TokenInfo = ({
 
   const isNativeCurrency = tokenAddress === NULL_ADDRESS
 
-  // WAGMI TODO: define logo URIs for the most used stable coins
-  const logoURI = undefined
+  const logoURI = isNativeCurrency ? coinIconUrls[Chains[chainId]] : undefined
   const {
     data: tokenData,
     error: tokenDataError,

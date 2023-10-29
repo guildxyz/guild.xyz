@@ -8,31 +8,29 @@ import {
 } from "./constants"
 
 export type GeneratedGetAssetsParams =
-  | [
-      number,
-      {
-        tokenAddress: string
-        amount: bigint
-      },
-      string,
-      string[],
-      {
-        value?: bigint
-        gasLimit?: bigint
-      }
-    ]
-  | [
-      {
-        tokenAddress: string
-        amount: bigint
-      },
-      string,
-      string[],
-      {
-        value?: bigint
-        gasLimit?: bigint
-      }
-    ]
+  | {
+      params: [
+        bigint,
+        {
+          tokenAddress: `0x${string}`
+          amount: bigint
+        },
+        `0x${string}`,
+        `0x${string}`[]
+      ]
+      value?: bigint
+    }
+  | {
+      params: [
+        {
+          tokenAddress: `0x${string}`
+          amount: bigint
+        },
+        `0x${string}`,
+        `0x${string}`[]
+      ]
+      value?: bigint
+    }
 
 const generateGetAssetsParams = (
   guildId: number,
@@ -84,7 +82,25 @@ const generateGetAssetsParams = (
   const isNativeCurrency = pickedCurrency === NULL_ADDRESS
 
   if (Chains[chainId] === "ARBITRUM")
-    return [
+    return {
+      params: [
+        {
+          tokenAddress: pickedCurrency,
+          amount: isNativeCurrency ? BigInt(0) : amountInWithFee,
+        },
+        `0x${
+          getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][source].commands
+        }`,
+        getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][
+          source
+        ].getEncodedParams(formattedData),
+      ],
+      value: isNativeCurrency ? amountInWithFee : undefined,
+    }
+
+  return {
+    params: [
+      BigInt(guildId),
       {
         tokenAddress: pickedCurrency,
         amount: isNativeCurrency ? BigInt(0) : amountInWithFee,
@@ -95,21 +111,9 @@ const generateGetAssetsParams = (
       getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][
         source
       ].getEncodedParams(formattedData),
-      { value: isNativeCurrency ? amountInWithFee : undefined },
-    ]
-
-  return [
-    guildId,
-    {
-      tokenAddress: pickedCurrency,
-      amount: isNativeCurrency ? BigInt(0) : amountInWithFee,
-    },
-    `0x${getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][source].commands}`,
-    getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][
-      source
-    ].getEncodedParams(formattedData),
-    { value: isNativeCurrency ? amountInWithFee : undefined },
-  ]
+    ],
+    value: isNativeCurrency ? amountInWithFee : undefined,
+  }
 }
 
 const flipPath = (pathToFlip: string): string => {
