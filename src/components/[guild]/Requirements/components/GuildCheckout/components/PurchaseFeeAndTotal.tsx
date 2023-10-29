@@ -34,16 +34,16 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
   } = usePrice(pickedCurrency)
 
   const {
-    estimatedGasFee,
-    estimatedGasFeeInUSD,
-    estimateGasError,
+    estimatedGas,
+    estimatedGasInUSD,
+    gasEstimationError,
     isLoading: isEstimateGasLoading,
   } = usePurchaseAsset()
 
-  const estimatedGasInFloat = estimatedGasFee
+  const estimatedGasInFloat = estimatedGas
     ? parseFloat(
         formatUnits(
-          estimatedGasFee,
+          estimatedGas,
           CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
         )
       )
@@ -85,7 +85,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
                     ? `$${(
                         estimatedPriceInUSD +
                         estimatedGuildFeeInUSD +
-                        (estimatedGasFeeInUSD ?? 0)
+                        (estimatedGasInUSD ?? 0)
                       )?.toFixed(2)}`
                     : "$0.00"}
                   {" = "}
@@ -170,7 +170,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
         <Td isNumeric>
           <Skeleton isLoaded={!isEstimateGasLoading}>
             <Text as="span">
-              {error || estimateGasError || !estimatedGasInFloat
+              {error || gasEstimationError || !estimatedGasInFloat
                 ? "Couldn't estimate"
                 : `${estimatedGasInFloat.toFixed(8)} ${
                     CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol

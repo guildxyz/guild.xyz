@@ -3,7 +3,7 @@ import { RequirementType } from "requirements"
 import guildPinAbi from "static/abis/guildPin"
 import oldTokenBuyerAbi from "static/abis/oldTokenBuyer"
 import tokenBuyerAbi from "static/abis/tokenBuyer"
-import { toBytes } from "viem"
+import { Abi, toBytes } from "viem"
 import {
   encodePermit2Permit,
   encodeUnwrapEth,
@@ -17,8 +17,8 @@ export type TokenBuyerContractConfig = Partial<
   Record<
     Chain,
     {
-      address: string
-      abi: object
+      address: `0x${string}`
+      abi: Abi
     }
   >
 >
@@ -161,7 +161,7 @@ export const getAssetsCallParams: Record<
     ZeroXSupportedSources,
     {
       commands: string
-      getEncodedParams: (data: PurchaseAssetData) => string[]
+      getEncodedParams: (data: PurchaseAssetData) => `0x${string}`[]
     }
   >
 > = {

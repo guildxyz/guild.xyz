@@ -34,7 +34,13 @@ const PurchaseButton = (): JSX.Element => {
     tokenBuyerContractData[Chains[chainId]]?.address
   )
 
-  const { onSubmit, isLoading, estimateGasError } = usePurchaseAsset()
+  const {
+    purchaseAsset,
+    isLoading,
+    isPrepareLoading,
+    isGasEstimationLoading,
+    gasEstimationError,
+  } = usePurchaseAsset()
 
   const isSufficientAllowance =
     typeof maxPriceInWei === "bigint" && typeof allowance === "bigint"
@@ -66,7 +72,7 @@ const PurchaseButton = (): JSX.Element => {
   const isDisabled =
     !isConnected ||
     error ||
-    estimateGasError ||
+    gasEstimationError ||
     !agreeWithTOS ||
     Chains[chainId] !== requirement.chain ||
     (!pickedCurrencyIsNative &&
@@ -75,18 +81,18 @@ const PurchaseButton = (): JSX.Element => {
         allowanceError ||
         !isSufficientAllowance)) ||
     isBalanceLoading ||
-    !isSufficientBalance
+    !isSufficientBalance ||
+    isPrepareLoading ||
+    isGasEstimationLoading ||
+    !purchaseAsset
 
   const errorMsg =
     (error && "Couldn't calculate price") ??
-    (estimateGasError &&
-      (estimateGasError?.data?.message?.includes("insufficient")
-        ? "Insufficient funds for gas"
-        : "Couldn't estimate gas")) ??
+    (gasEstimationError && "Couldn't estimate gas") ??
     (isConnected && !isSufficientBalance && "Insufficient balance")
 
   const onClick = () => {
-    onSubmit()
+    purchaseAsset()
     captureEvent("Click: PurchaseButton (GuildCheckout)", {
       guild: urlName,
     })
