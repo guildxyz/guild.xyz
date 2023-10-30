@@ -1,16 +1,10 @@
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   Divider,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
-  Text,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -47,7 +41,7 @@ const customJoinStep: Partial<Record<Joinable, () => JSX.Element>> = {
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isActive } = useWeb3React()
-  const { urlName, name, requiredPlatforms, featureFlags } = useGuild()
+  const { name, requiredPlatforms, featureFlags } = useGuild()
 
   const methods = useForm({
     mode: "all",
@@ -88,43 +82,6 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {/* temporary for zkSync launch */}
-            {urlName === "zksync-era" &&
-              (isLoading ? (
-                <Alert status="info" mb="8">
-                  <AlertIcon />
-                  <Stack>
-                    <AlertTitle>Joining in progress</AlertTitle>
-                    <AlertDescription>
-                      Feel free to close the site & check back later. If you're
-                      eligible, you'll already be a member hopefully!
-                      {(() => {
-                        const estTimestamp = progress?.[
-                          "children:manage-reward:jobs"
-                        ]?.find(
-                          (job) => job.flowName === "manage-reward:discord"
-                        )?.delayReadyTimestamp
-                        const estDate = new Date(estTimestamp)
-
-                        if (estTimestamp)
-                          return (
-                            <Text fontWeight={"bold"}>
-                              Estimated join time: {estDate.toLocaleTimeString()}
-                            </Text>
-                          )
-                      })()}
-                    </AlertDescription>
-                  </Stack>
-                </Alert>
-              ) : (
-                <Alert status="info" mb="8">
-                  <AlertIcon />
-                  <AlertDescription>
-                    This guild is experiencing huge traffic right now. Joining
-                    & getting your role may take up to half an hour
-                  </AlertDescription>
-                </Alert>
-              ))}
             <Error error={joinError} processError={processJoinPlatformError} />
             <VStack
               spacing="3"
