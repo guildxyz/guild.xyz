@@ -104,7 +104,7 @@ const useMintGuildPin = () => {
       abi: guildPinAbi,
       address: contractAddress,
       functionName: "claim",
-      args: contractCallParams as any,
+      args: contractCallParams,
       value: guildPinFee,
     })
 
