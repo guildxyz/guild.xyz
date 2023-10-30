@@ -13,7 +13,8 @@ import base64ToObject from "utils/base64ToObject"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import { GUILD_PIN_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { BaseError, TransactionReceipt } from "viem"
+import processViemContractError from "utils/processViemContractError"
+import { TransactionReceipt } from "viem"
 import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 import { useTransactionStatusContext } from "../components/TransactionStatusContext"
@@ -104,7 +105,7 @@ const useMintGuildPin = () => {
       abi: guildPinAbi,
       address: contractAddress,
       functionName: "claim",
-      args: contractCallParams as any,
+      args: contractCallParams,
       value: guildPinFee,
     })
 
@@ -199,7 +200,9 @@ const useMintGuildPin = () => {
       onError: (error) => {
         setLoadingText("")
         setTxError?.(true)
-        showErrorToast(error instanceof BaseError ? error.shortMessage : error)
+
+        const prettyError = processViemContractError(error)
+        showErrorToast(prettyError)
 
         captureEvent("Mint Guild Pin error (GuildCheckout)", {
           ...postHogOptions,

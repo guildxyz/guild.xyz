@@ -49,7 +49,7 @@ const TokenInfo = ({
   } = useToken({
     address: tokenAddress,
     chainId: chainId,
-    enabled: Boolean(tokenAddress && !isNativeCurrency && chainId),
+    enabled: Boolean(!isNativeCurrency && chainId),
   })
 
   const symbol = isNativeCurrency
@@ -137,9 +137,7 @@ const TokenInfo = ({
                   alignItems="center"
                   data-test="token-info-balance"
                 >
-                  {`${formattedBalance ?? "0.00"} ${
-                    tokenData?.symbol ?? "currency"
-                  }`}
+                  {`${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
                 </Skeleton>
               </>
             ) : (

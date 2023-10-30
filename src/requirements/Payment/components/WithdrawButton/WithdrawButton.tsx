@@ -27,7 +27,7 @@ const WithdrawButton = (): JSX.Element => {
   const formattedWithdrawableAmount =
     balance && decimals && Number(formatUnits(balance, decimals)) * 0.9
 
-  const { withdraw, isLoading, prepareError } = useWithdraw(
+  const { onSubmitTransaction, isPreparing, isLoading, error } = useWithdraw(
     vaultAddress,
     data?.id,
     chain
@@ -38,7 +38,7 @@ const WithdrawButton = (): JSX.Element => {
       ? "Withdrawable amount is 0"
       : owner && owner !== address
       ? `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
-      : prepareError
+      : error
 
   return (
     <Tooltip
@@ -57,10 +57,10 @@ const WithdrawButton = (): JSX.Element => {
             <Icon as={isDisabledLabel || isOnVaultsChain ? Wallet : LinkBreak} />
           )
         }
-        isDisabled={!withdraw || isLoading || isDisabledLabel}
+        isDisabled={isPreparing || isLoading || isDisabledLabel}
         onClick={
-          isOnVaultsChain && !!withdraw
-            ? withdraw
+          isOnVaultsChain && !isPreparing
+            ? onSubmitTransaction
             : () => requestNetworkChange(Chains[chain])
         }
       >

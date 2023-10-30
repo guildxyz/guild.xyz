@@ -1,5 +1,6 @@
 import { Stack, Text } from "@chakra-ui/react"
 import { kv } from "@vercel/kv"
+import { Chains } from "chains"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ClientOnly from "components/common/ClientOnly"
 import Layout from "components/common/Layout"
@@ -12,12 +13,13 @@ import UsersLeaderboardPositionCard from "components/leaderboard/UsersLeaderboar
 import useHasAlreadyClaimedMysteryBox from "components/leaderboard/hooks/useHasAlreadyClaimedMysteryBox"
 import useUsersLeaderboardPosition from "components/leaderboard/hooks/useUsersLeaderboardPosition"
 import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion"
+import useNftBalance from "hooks/useNftBalance"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWRInfinite from "swr/infinite"
 import { DetailedUserLeaderboardData } from "types"
-import { erc721ABI, useAccount, useContractRead } from "wagmi"
+import { useAccount } from "wagmi"
 import { MYSTERY_BOX_NFT } from "./api/leaderboard/mystery-box"
 
 const MotionSection = motion(Section)
@@ -39,11 +41,10 @@ const getKey = (pageIndex: number, previousPageData: any[]) => {
 
 const Page = ({ leaderboard: initialData }: Props) => {
   const { address } = useAccount()
-  const { data: mysteryBoxBalance } = useContractRead({
-    abi: erc721ABI,
-    address: MYSTERY_BOX_NFT.address,
-    functionName: "balanceOf",
-    args: [address],
+  const { data: mysteryBoxBalance } = useNftBalance({
+    address,
+    nftAddress: MYSTERY_BOX_NFT.address,
+    chainId: Chains[MYSTERY_BOX_NFT.chain],
   })
   const {
     data: { alreadyClaimed },

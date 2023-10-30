@@ -28,7 +28,7 @@ const BuyTotal = (): JSX.Element => {
 
   const isNativeCurrency = pickedCurrency === NULL_ADDRESS
 
-  const { isGasEstimationLoading, gasEstimationError, estimatedGas } = usePayFee()
+  const { isPreparing, estimatedGas } = usePayFee()
 
   const estimatedGasInFloat =
     typeof estimatedGas === "bigint"
@@ -92,8 +92,8 @@ const BuyTotal = (): JSX.Element => {
       <Tr>
         <Td>Gas fee</Td>
         <Td isNumeric>
-          <Skeleton isLoaded={!isGasEstimationLoading}>
-            {gasEstimationError || !estimatedGasInFloat
+          <Skeleton isLoaded={!isPreparing}>
+            {!estimatedGasInFloat
               ? "Couldn't estimate"
               : `${Number(estimatedGasInFloat.toFixed(8))} ${
                   CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol

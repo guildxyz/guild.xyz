@@ -49,10 +49,16 @@ const PaymentForm = ({
 
   const token = useWatch({ control: registerVaultFormControl, name: "token" })
   const fee = useWatch({ control: registerVaultFormControl, name: "fee" })
+  const owner = useWatch({ control: registerVaultFormControl, name: "owner" })
 
-  const { onSubmit, isLoading } = useRegisterVault((registeredVaultId) =>
-    setValue(`${baseFieldPath}.data.id`, registeredVaultId)
-  )
+  const { onSubmitTransaction, isLoading } = useRegisterVault({
+    chain,
+    token,
+    fee,
+    owner,
+    onSuccess: (registeredVaultId) =>
+      setValue(`${baseFieldPath}.data.id`, registeredVaultId),
+  })
 
   useEffect(() => {
     if (!vaultId) return
@@ -78,7 +84,7 @@ const PaymentForm = ({
           <Button
             data-test="payment-form-register-vault-button"
             colorScheme={isOnCorrectChain ? "green" : "gray"}
-            onClick={registerVaultFormHandleSubmit(onSubmit)}
+            onClick={registerVaultFormHandleSubmit(() => onSubmitTransaction())}
             isDisabled={
               vaultId ||
               !!Object.keys(registerVaultFormErrors).length ||

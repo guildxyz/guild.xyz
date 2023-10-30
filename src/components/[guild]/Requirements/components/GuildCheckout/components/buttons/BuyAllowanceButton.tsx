@@ -25,9 +25,7 @@ const BuyAllowanceButton = (): JSX.Element => {
   const { data: tokenData } = useToken({
     address: pickedCurrency,
     chainId: Chains[requirement.chain],
-    enabled: Boolean(
-      pickedCurrency && !isNativeCurrencyPicked && Chains[requirement.chain]
-    ),
+    enabled: Boolean(!isNativeCurrencyPicked && Chains[requirement.chain]),
   })
 
   const nativeCurrency = CHAIN_CONFIG[requirement.chain].nativeCurrency
