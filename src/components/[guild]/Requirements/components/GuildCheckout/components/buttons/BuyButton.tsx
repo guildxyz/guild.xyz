@@ -42,7 +42,13 @@ const BuyButton = (): JSX.Element => {
     requirement.address
   )
 
-  const { prepareError, payFee, isLoading } = usePayFee()
+  const {
+    error: payFeeError,
+    isPreparing,
+    estimatedGas,
+    payFee,
+    isLoading,
+  } = usePayFee()
 
   // temporary (in it's current form) until POAPs are real roles and there's a capacity attribute
   const handleSubmit = async () => {
@@ -86,13 +92,13 @@ const BuyButton = (): JSX.Element => {
     fee &&
     (coinBalanceData?.value || tokenBalanceData?.value) &&
     (pickedCurrencyIsNative
-      ? coinBalanceData.value >= fee
-      : tokenBalanceData.value >= fee)
+      ? coinBalanceData?.value >= fee
+      : tokenBalanceData?.value >= fee)
 
   const isDisabled =
     !payFee ||
     error ||
-    prepareError ||
+    payFeeError ||
     !agreeWithTOS ||
     Chains[chainId] !== requirement.chain ||
     (!isVaultLoading && !isHasPaidLoading && !multiplePayments && hasPaid) ||
@@ -102,13 +108,10 @@ const BuyButton = (): JSX.Element => {
     !isSufficientBalance
 
   const errorMsg =
-    (error && "Couldn't calculate price") ||
-    (prepareError &&
-      (prepareError.includes("insufficient")
-        ? "Insufficient funds for gas"
-        : "Couldn't estimate gas")) ||
+    (!multiplePayments && hasPaid && "Already paid") ||
     (!isSufficientBalance && "Insufficient balance") ||
-    (!multiplePayments && hasPaid && "Already paid")
+    (error && "Couldn't calculate price") ||
+    (!isPreparing && !estimatedGas && "Couldn't estimate gas")
 
   return (
     <Button

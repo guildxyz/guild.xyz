@@ -1,24 +1,15 @@
 import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useEstimateGas from "hooks/useEstimateGas"
 import useShowErrorToast from "hooks/useShowErrorToast"
+import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { mutate } from "swr"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
-import processViemContractError from "utils/processViemContractError"
-import { TransactionReceipt } from "viem"
-import {
-  useAccount,
-  useBalance,
-  useChainId,
-  useContractWrite,
-  usePrepareContractWrite,
-  usePublicClient,
-} from "wagmi"
+import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
 import useAllowance from "./useAllowance"
@@ -30,10 +21,9 @@ const usePayFee = () => {
 
   const { address } = useAccount()
   const chainId = useChainId()
-  const publicClient = usePublicClient()
 
   const requirement = useRequirementContext()
-  const { pickedCurrency } = useGuildCheckoutContext()
+  const { pickedCurrency, onClose } = useGuildCheckoutContext()
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
@@ -94,85 +84,47 @@ const usePayFee = () => {
     enabled,
   } as const
 
-  const {
-    config,
-    error: prepareError,
-    isLoading: isPrepareLoading,
-  } = usePrepareContractWrite(contractCallParams)
-
-  const {
-    estimatedGas,
-    gasEstimationError,
-    isLoading: isGasEstimationLoading,
-  } = useEstimateGas(contractCallParams)
-
-  const { write, isLoading } = useContractWrite({
-    ...config,
-    onError: (error) => {
-      const errorMessage = processViemContractError(error)
-      showErrorToast(errorMessage)
-    },
-    onSuccess: async ({ hash }) => {
-      const receipt: TransactionReceipt =
-        await publicClient.waitForTransactionReceipt({ hash })
-
-      if (receipt.status !== "success") {
-        showErrorToast("Transaction failed")
+  const { error, isPreparing, isLoading, estimatedGas, onSubmitTransaction } =
+    useSubmitTransaction(contractCallParams, {
+      customErrorsMap: {
+        VaultDoesNotExist: "Vault doesn't exist",
+        TransferFailed: "Transfer failed",
+        AlreadyPaid: "You've already paid to this vault",
+      },
+      onError: (errorMessage, rawError) => {
+        showErrorToast(errorMessage ?? "Unknown error")
         captureEvent("Buy pass error (GuildCheckout)", {
           ...postHogOptions,
-          receipt,
+          error: rawError,
         })
-        captureEvent("payFee error (GuildCheckout)", {
-          ...postHogOptions,
-          receipt,
+      },
+      onSuccess: () => {
+        captureEvent("Bought pass (GuildCheckout)", postHogOptions)
+        toast({
+          status: "success",
+          title: "Successful payment",
         })
 
-        return
-      }
+        onClose()
 
-      captureEvent("Bought pass (GuildCheckout)", postHogOptions)
-      toast({
-        status: "success",
-        title: "Successful payment",
-      })
+        refetchVault()
 
-      refetchVault()
-
-      // temporary until POAPs are real roles
-      if (requirement?.poapId)
-        mutate(
-          `/v2/guilds/:guildId/poaps/${requirement.poapId}/users/${address}/eligibility`
-        )
-      else mutate(`/guild/access/${id}/${address}`)
-    },
-  })
+        // temporary until POAPs are real roles
+        if (requirement?.poapId)
+          mutate(
+            `/v2/guilds/:guildId/poaps/${requirement.poapId}/users/${address}/eligibility`
+          )
+        else mutate(`/guild/access/${id}/${address}`)
+      },
+    })
 
   return {
-    isPrepareLoading,
-    prepareError: getErrorMessage(prepareError),
+    isPreparing,
+    error,
     estimatedGas,
-    gasEstimationError: getErrorMessage(gasEstimationError),
-    isGasEstimationLoading,
-    payFee: write,
+    payFee: onSubmitTransaction,
     isLoading,
   }
 }
-
-const getErrorMessage = (rawPrepareError: Error) =>
-  processViemContractError(rawPrepareError, (errorName) => {
-    switch (errorName) {
-      case "VaultDoesNotExist":
-        return "Vault doesn't exist"
-
-      case "TransferFailed":
-        return "Transfer failed"
-
-      case "AlreadyPaid":
-        return "You've already paid to this vault"
-
-      default:
-        return "Contract error"
-    }
-  })
 
 export default usePayFee

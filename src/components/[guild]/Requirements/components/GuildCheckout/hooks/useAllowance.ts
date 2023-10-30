@@ -1,16 +1,9 @@
 import { Chains } from "chains"
 import useShowErrorToast from "hooks/useShowErrorToast"
+import useSubmitTransaction from "hooks/useSubmitTransaction"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { maxUint256 } from "viem"
-import {
-  erc20ABI,
-  useAccount,
-  useChainId,
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
-  usePublicClient,
-} from "wagmi"
+import { erc20ABI, useAccount, useChainId, useContractRead } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 
 const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
@@ -18,7 +11,6 @@ const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
 
   const { address } = useAccount()
   const chainId = useChainId()
-  const publicClient = usePublicClient()
 
   const requirement = useRequirementContext()
 
@@ -41,22 +33,21 @@ const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
     enabled,
   })
 
-  const { config } = usePrepareContractWrite({
-    abi: erc20ABI,
-    address: tokenAddress,
-    functionName: "approve",
-    args: [contract, maxUint256],
-    enabled,
-  })
-
-  const { isLoading: isAllowing, write: allowSpendingTokens } = useContractWrite({
-    ...config,
-    onError: (err: any) => showErrorToast(err?.shortMessage ?? err),
-    onSuccess: async ({ hash }) => {
-      await publicClient.waitForTransactionReceipt({ hash })
-      refetch()
-    },
-  })
+  const { isLoading: isAllowing, onSubmitTransaction: allowSpendingTokens } =
+    useSubmitTransaction(
+      {
+        abi: erc20ABI,
+        address: tokenAddress,
+        functionName: "approve",
+        args: [contract, maxUint256],
+        enabled,
+      },
+      {
+        setContext: false,
+        onError: (error) => showErrorToast(error),
+        onSuccess: () => refetch(),
+      }
+    )
 
   return {
     isAllowanceLoading,

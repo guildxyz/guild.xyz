@@ -37,7 +37,6 @@ const GuildCheckoutProvider = ({
 
   useEffect(() => {
     if (!txHash || !isOpen || isTxModalOpen) return
-    onClose()
     onTxModalOpen()
   }, [txHash])
 
