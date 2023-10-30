@@ -187,7 +187,7 @@ const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
         >
           <MenuItemOption
             title="Shared"
-            description="The guild owner can see your account connections"
+            description="The guild owner can see your profile"
             icon={ShieldCheck}
             onClick={() => onSubmit(true)}
             selected={isSharedBoolean}
@@ -195,7 +195,7 @@ const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
           <Divider />
           <MenuItemOption
             title="Hidden"
-            description="Your connections are kept private"
+            description="Your profile is kept private"
             icon={Shield}
             onClick={() => onSubmit(false)}
             selected={!isSharedBoolean}
