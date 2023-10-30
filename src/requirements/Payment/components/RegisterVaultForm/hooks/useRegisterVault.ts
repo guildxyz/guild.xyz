@@ -50,6 +50,7 @@ const useRegisterVault = ({
       enabled: Boolean(feeInWei && chainId === Chains[chain]),
     },
     {
+      setContext: false,
       onError: (errorMessage, error) => {
         showErrorToast(errorMessage)
         captureEvent("Register vault error", {
