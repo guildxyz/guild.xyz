@@ -71,6 +71,7 @@ const useSubmitTransaction = <
     functionName: contractCallConfig.functionName,
     args: contractCallConfig.args as readonly unknown[],
     value: contractCallConfig.value,
+    enabled: contractCallConfig.enabled ?? true,
   })
 
   const {

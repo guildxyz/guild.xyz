@@ -32,15 +32,11 @@ const useEstimateGas = (config: EstimateContractGasParameters) => {
     error: feeDataError,
   } = useFeeData()
 
-  const estimateGas = () => {
-    if (!walletClient?.account || (config.chainId && config.chainId !== chainId))
-      return undefined
-
-    return publicClient.estimateContractGas({
+  const estimateGas = () =>
+    publicClient.estimateContractGas({
       ...config,
       account: walletClient?.account,
     })
-  }
 
   const {
     data: estimatedGas,
@@ -48,13 +44,15 @@ const useEstimateGas = (config: EstimateContractGasParameters) => {
     isLoading: isEstimateGasLoading,
     mutate,
   } = useSWR(
-    [
-      "estimateGas",
-      config.address,
-      config.functionName,
-      config.args?.toString(),
-      chainId,
-    ],
+    !!walletClient?.account && !!config?.enabled
+      ? [
+          "estimateGas",
+          config.address,
+          config.functionName,
+          config.args?.toString(),
+          chainId,
+        ]
+      : null,
     estimateGas
   )
 

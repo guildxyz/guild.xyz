@@ -131,9 +131,7 @@ const TokenInfo = ({
                   display="inline-flex"
                   alignItems="center"
                 >
-                  {`${formattedBalance ?? "0.00"} ${
-                    tokenData?.symbol ?? "currency"
-                  }`}
+                  {`${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
                 </Skeleton>
               </>
             ) : (

@@ -4,26 +4,16 @@ import { Chains } from "chains"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useEstimateGas from "hooks/useEstimateGas"
 import useShowErrorToast from "hooks/useShowErrorToast"
+import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { useMemo } from "react"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { generateGetAssetsParams } from "utils/guildCheckout/utils"
-import processViemContractError from "utils/processViemContractError"
-import { TransactionReceipt } from "viem"
-import {
-  useAccount,
-  useBalance,
-  useChainId,
-  useContractWrite,
-  usePrepareContractWrite,
-  usePublicClient,
-} from "wagmi"
+import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
-import { useTransactionStatusContext } from "../components/TransactionStatusContext"
 import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
 import useTokenBuyerContractData from "./useTokenBuyerContractData"
@@ -44,9 +34,6 @@ const usePurchaseAsset = () => {
 
   const { address } = useAccount()
   const chainId = useChainId()
-  const publicClient = usePublicClient()
-
-  const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext()
 
   const {
     data: { symbol },
@@ -99,7 +86,7 @@ const usePurchaseAsset = () => {
       contractCallParams
   )
 
-  const prepareContractWriteConfig = {
+  const config = {
     abi: tokenBuyerContractData[Chains[chainId]]?.abi,
     address: tokenBuyerContractData[Chains[chainId]]?.address,
     functionName: "getAssets",
@@ -108,47 +95,15 @@ const usePurchaseAsset = () => {
     enabled,
   }
 
-  const {
-    estimatedGas,
-    estimatedGasInUSD,
-    gasEstimationError,
-    isLoading: isGasEstimationLoading,
-  } = useEstimateGas(prepareContractWriteConfig)
-
-  const {
-    config,
-    isLoading: isPrepareLoading,
-    error: prepareError,
-  } = usePrepareContractWrite(prepareContractWriteConfig)
-
-  const { write, isLoading } = useContractWrite({
-    ...config,
-    onError: (error) => {
-      setTxError(true)
-      const errorMessage = processViemContractError(error)
+  return useSubmitTransaction(config, {
+    onError: (errorMessage, error) => {
       showErrorToast(errorMessage)
       captureEvent("Purchase requirement error (GuildCheckout)", {
         ...postHogOptions,
         error,
       })
     },
-    onSuccess: async ({ hash }) => {
-      setTxHash(hash)
-      const receipt: TransactionReceipt =
-        await publicClient.waitForTransactionReceipt({ hash })
-
-      if (receipt.status !== "success") {
-        setTxError(true)
-        showErrorToast("Transaction failed")
-        captureEvent("Purchase requirement error (GuildCheckout)", {
-          ...postHogOptions,
-          receipt,
-        })
-        return
-      }
-
-      setTxSuccess(true)
-
+    onSuccess: () => {
       captureEvent("Purchased requirement (GuildCheckout)", postHogOptions)
 
       mutateAccess()
@@ -160,24 +115,6 @@ const usePurchaseAsset = () => {
       })
     },
   })
-
-  return {
-    isPrepareLoading,
-    prepareError: processViemContractError(prepareError),
-    estimatedGas,
-    estimatedGasInUSD,
-    gasEstimationError: processViemContractError(gasEstimationError),
-    isGasEstimationLoading,
-    purchaseAsset:
-      typeof write === "function"
-        ? () => {
-            setTxError(false)
-            setTxSuccess(false)
-            write()
-          }
-        : undefined,
-    isLoading,
-  }
 }
 
 export default usePurchaseAsset
