@@ -1,6 +1,6 @@
 import { Abi, TransactionReceipt, decodeEventLog } from "viem"
 
-// We could define a better return type for this one
+// TODO: we could pass generics to this util, that way we'd get back the event names / args properly. I haven't experimented with it yet, since we'll only use this util in 2 places for now.
 const getEventsFromViemTxReceipt = (
   abi: Abi,
   receipt: TransactionReceipt
@@ -13,7 +13,6 @@ const getEventsFromViemTxReceipt = (
         return decodeEventLog({
           abi,
           data: log.data,
-          // I think there's a missing property on the TransactionReceipt type
           topics: (log as any).topics,
         })
       } catch {
