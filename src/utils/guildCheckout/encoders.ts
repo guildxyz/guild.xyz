@@ -1,4 +1,4 @@
-import { encodeAbiParameters, parseAbiParameters } from "viem"
+import { encodeAbiParameters, parseAbiParameters, toHex } from "viem"
 
 const encodeParameters = (types: readonly string[], values: readonly unknown[]) =>
   encodeAbiParameters(parseAbiParameters(types.join()), values)
@@ -30,7 +30,7 @@ const encodeV3SwapExactOut = (
 ) =>
   encodeParameters(
     ["address", "uint256", "uint256", "bytes", "bool"],
-    [recipient, amountOut, amountInMax, path.toString(), payerIsUser]
+    [recipient, amountOut, amountInMax, toHex(path), payerIsUser]
   )
 
 const encodePermit2Permit = (
@@ -44,7 +44,7 @@ const encodePermit2Permit = (
 ) =>
   encodeParameters(
     ["address", "uint160", "uint48", "uint48", "address", "uint256", "bytes"],
-    [tokenAddress, amount, expiration, nonce, spender, sigDeadline, data.toString()]
+    [tokenAddress, amount, expiration, nonce, spender, sigDeadline, toHex(data)]
   )
 
 // https://docs.uniswap.org/contracts/universal-router/technical-reference#command
