@@ -49,7 +49,7 @@ const TokenInfo = ({
   } = useToken({
     address: tokenAddress,
     chainId: chainId,
-    enabled: Boolean(tokenAddress && !isNativeCurrency && chainId),
+    enabled: Boolean(!isNativeCurrency && chainId),
   })
 
   const symbol = isNativeCurrency

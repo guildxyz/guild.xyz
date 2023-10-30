@@ -13,6 +13,7 @@ import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserP
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { Coins } from "phosphor-react"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
 import { useToken } from "wagmi"
 import PaymentTransactionStatusModal from "../../components/[guild]/Requirements/components/GuildCheckout/components/PaymentTransactionStatusModal"
@@ -45,7 +46,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   } = useToken({
     address: token,
     chainId: Chains[chain],
-    enabled: Boolean(token && chain),
+    enabled: Boolean(token !== NULL_ADDRESS && chain),
   })
   const convertedFee =
     fee && tokenData?.decimals ? formatUnits(fee, tokenData.decimals) : undefined

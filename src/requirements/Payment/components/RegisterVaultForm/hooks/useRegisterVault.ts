@@ -29,7 +29,7 @@ const useRegisterVault = ({
   const { data: tokenData } = useToken({
     address: token,
     chainId: Chains[chain],
-    enabled: Boolean(token && token !== NULL_ADDRESS && chain),
+    enabled: Boolean(token !== NULL_ADDRESS && chain),
   })
   const tokenDecimals =
     token === NULL_ADDRESS
