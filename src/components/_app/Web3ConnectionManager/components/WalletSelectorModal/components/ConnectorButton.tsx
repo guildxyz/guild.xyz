@@ -1,13 +1,13 @@
 import { Center, Img, useColorMode } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
-import { Web3ReactHooks, useWeb3React } from "@web3-react/core"
+import { useWeb3React, Web3ReactHooks } from "@web3-react/core"
 import { GnosisSafe } from "@web3-react/gnosis-safe"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect-v2"
-import { useKeyPair } from "components/_app/KeyPairProvider"
 import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react"
 import { isMobile } from "react-device-detect"
 import { WalletError } from "types"
@@ -60,12 +60,18 @@ const ConnectorButton = ({
     () => typeof window !== "undefined" && (window.ethereum as any)?.isBraveWallet,
     [window?.ethereum]
   )
+  const isOKXWallet = useMemo(
+    () => typeof window !== "undefined" && !!(window as any)?.okxwallet,
+    [(window as any)?.okxwallet]
+  )
   const { colorMode } = useColorMode()
 
   const iconUrl =
     connector instanceof MetaMask
       ? isBraveWallet
         ? "brave.png"
+        : isOKXWallet
+        ? "okx.png"
         : "metamask.png"
       : connector instanceof WalletConnect
       ? "walletconnect.svg"
@@ -79,6 +85,8 @@ const ConnectorButton = ({
     connector instanceof MetaMask
       ? isBraveWallet
         ? "Brave Wallet"
+        : isOKXWallet
+        ? "OKX Wallet"
         : isMetaMaskInstalled
         ? "MetaMask"
         : "Install MetaMask"
