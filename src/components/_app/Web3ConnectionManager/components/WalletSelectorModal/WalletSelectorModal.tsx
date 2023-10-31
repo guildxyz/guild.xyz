@@ -20,9 +20,10 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import { SAFE_CONTEXT_FLAG } from "connectors"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
@@ -93,20 +94,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
 
   const recaptchaRef = useRef<ReCAPTCHA>()
-
-  const [isInSafeContext, setIsInSafeContext] = useState(false)
-
-  useEffect(() => {
-    console.log("CONNECTORS", connectors)
-    const safeConnector = connectors?.find(({ id }) => id === "safe")
-
-    console.log("SAFE CONNECTOR", safeConnector)
-    if (!safeConnector) return
-    safeConnector.once("connect", () => {
-      console.log("SAFE CONNECTED")
-      setIsInSafeContext(true)
-    })
-  }, [connectors])
 
   return (
     <>
@@ -191,7 +178,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             )}
             <Stack spacing="0">
               {connectors
-                .filter((conn) => isInSafeContext || conn.id !== "safe")
+                .filter((conn) => window[SAFE_CONTEXT_FLAG] || conn.id !== "safe")
                 .map((conn) => (
                   <CardMotionWrapper key={conn.id}>
                     <ConnectorButton

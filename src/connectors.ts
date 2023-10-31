@@ -6,6 +6,8 @@ import { SafeConnector } from "wagmi/connectors/safe"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
 import { publicProvider } from "wagmi/providers/public"
 
+export const SAFE_CONTEXT_FLAG = "safeAutoConnected"
+
 const { chains, publicClient } = configureChains(Object.values(CHAIN_CONFIG), [
   publicProvider(),
 ])
@@ -50,5 +52,10 @@ const connectors = [
     },
   }),
 ]
+
+const [, , , safeConnector] = connectors
+safeConnector.once("connect", () => {
+  ;(window as any)[SAFE_CONTEXT_FLAG] = true
+})
 
 export { connectors, publicClient }
