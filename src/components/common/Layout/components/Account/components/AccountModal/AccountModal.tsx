@@ -21,6 +21,7 @@ import { Chains, chainIconUrls } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
 import { deleteKeyPairFromIdb } from "components/_app/KeyPairProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
@@ -70,6 +71,8 @@ const AccountModal = () => {
 
   const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
 
+  const { connectorName } = useConnectorNameAndIcon()
+
   return (
     <Modal
       isOpen={isOpen}
@@ -111,7 +114,7 @@ const AccountModal = () => {
                       fontWeight="medium"
                       noOfLines={1}
                     >
-                      {`Connected with ${connector?.name} on`}
+                      {`Connected with ${connectorName} on`}
                     </Text>
                     <Button
                       variant="ghost"

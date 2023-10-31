@@ -49,7 +49,7 @@ const Web3ConnectionManager = ({
   const [isInSafeContext, setIsInSafeContext] = useState(false)
 
   useEffect(() => {
-    if (!isConnected || connector.id !== "safe") return
+    if (!isConnected || connector?.id !== "safe") return
     setIsInSafeContext(true)
   }, [isConnected, connector])
 
