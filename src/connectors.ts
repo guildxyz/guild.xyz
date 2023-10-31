@@ -45,7 +45,7 @@ const connectors = [
   new SafeConnector({
     chains,
     options: {
-      allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/],
+      allowedDomains: [/gnosis-safe\.io$/, /app\.safe\.global$/],
       debug: false,
     },
   }),
