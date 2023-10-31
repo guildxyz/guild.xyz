@@ -97,9 +97,13 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const [isInSafeContext, setIsInSafeContext] = useState(false)
 
   useEffect(() => {
+    console.log("CONNECTORS", connectors)
     const safeConnector = connectors?.find(({ id }) => id === "safe")
+
+    console.log("SAFE CONNECTOR", safeConnector)
     if (!safeConnector) return
     safeConnector.once("connect", () => {
+      console.log("SAFE CONNECTED")
       setIsInSafeContext(true)
     })
   }, [connectors])
