@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chain, Chains, coinIconUrls } from "chains"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import useSWRImmutable from "swr/immutable"
 import { CoingeckoToken } from "types"
 import fetcher from "utils/fetcher"
@@ -66,7 +66,7 @@ const fetchTokens = async ([_, chain]) =>
         ? [
             {
               ...CHAIN_CONFIG[chain].nativeCurrency,
-              logoURI: coinIconUrls[chain],
+              logoURI: CHAIN_CONFIG[chain].iconUrl,
               address: NULL_ADDRESS,
             },
           ].concat(finalTokenArray)

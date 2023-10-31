@@ -1,5 +1,5 @@
 import { Img, Tooltip } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chain, Chains, coinIconUrls } from "chains"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import Button from "components/common/Button"
 import { useChainId } from "wagmi"
 
@@ -22,7 +22,7 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
       <Button
         leftIcon={
           <Img
-            src={coinIconUrls[chain]}
+            src={CHAIN_CONFIG[chain].iconUrl}
             boxSize={6}
             alt={`${CHAIN_CONFIG[chain].name} logo`}
           />

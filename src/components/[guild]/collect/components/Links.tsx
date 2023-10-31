@@ -1,5 +1,5 @@
 import { Icon, Img, Link, useColorMode, Wrap } from "@chakra-ui/react"
-import { blockExplorerIcons, CHAIN_CONFIG } from "chains"
+import { CHAIN_CONFIG } from "chains"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import SocialIcon from "components/[guild]/SocialIcon"
@@ -51,7 +51,11 @@ const Links = () => {
           colorScheme="gray"
           fontWeight="medium"
         >
-          <Img src={blockExplorerIcons[chain][colorMode]} boxSize={5} mr="1.5" />
+          <Img
+            src={CHAIN_CONFIG[chain].blockExplorerIconUrl[colorMode]}
+            boxSize={5}
+            mr="1.5"
+          />
           Explorer
           <Icon ml={1.5} as={ArrowSquareOut} />
         </Link>
